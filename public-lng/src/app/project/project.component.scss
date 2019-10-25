@@ -1,0 +1,275 @@
+@import "~assets/styles/base/base.scss";
+
+// Fill vertical space
+:host {
+  @include flex(1 1 auto);
+
+  display: block;
+  background: $white;
+}
+
+#project-header {
+  background: $gray6;
+  color: white;
+  font-weight: 700;
+  padding: 0.3rem 0.7rem;
+  font-size: 26px;
+}
+
+.project-app-header {
+  @include clearfix;
+
+  position: relative;
+  padding: 0;
+  border-bottom: 1px solid $gray5;
+  // background: $gray6;
+  // color: $white;
+  color: $gray8;
+  z-index: 1004;
+}
+
+@media (min-width: 768px) {
+  .project-app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    border-bottom-style: solid;
+    border-bottom-width: 0;
+    border-bottom-color: rgba(#5475a7, 0.4);
+    background-color: transparent;
+    transition: all linear 0.2s;
+  }
+
+  .nav-link.active-link {
+    background: $gray2;
+  }
+
+  .project-app-header--flex {
+    @include flex(0 0 auto);
+
+    position: relative;
+    border-bottom-width: 1px;
+    border-bottom-color: $gray5;
+    // background: $gray6;
+    // color: $white;
+    color: $gray8;
+  }
+
+  .project-app-header--solid {
+    border-bottom: 1px solid $gray5;
+    // background: $gray6;
+    // color: $white;
+    color: $gray8;
+  }
+}
+
+// Navbar Toggle Button
+.navbar-toggler {
+  display: flex;
+  justify-content: flex-end;
+  margin-left: auto;
+  margin-right: 0.5rem;
+  padding: 0.5rem 0.4rem;
+  border: 2px solid $gray4;
+  // color: $white;
+  color: $gray8;
+  font-size: medium;
+  font-weight: 600;
+  outline: none; // override user agent stylesheet default
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &.collapsed {
+    border: 2px solid transparent;
+  }
+
+  i {
+    float: left;
+    margin-top: -0.25rem;
+    margin-bottom: -0.25rem;
+
+    + span {
+      display: none;
+      margin-top: 1px;
+      margin-left: 0.25rem;
+      font-size: $mn-font-size;
+      font-weight: 700;
+      vertical-align: top;
+    }
+  }
+}
+
+@media (min-width: 420px) {
+  .navbar-toggler {
+    i {
+      + span {
+        display: inline-block;
+      }
+    }
+  }
+}
+
+// NAVBAR
+.project-navbar {
+  padding: 0;
+  // background-color: $gray6;
+  z-index: 1000;
+
+  // #projectNav { // Centering buttons
+  //   display: flex;
+  //   // align-items: center;
+  //   justify-content: end;
+  //   margin-left: auto;
+  // }
+
+  .navbar-nav {
+    // margin-top: 0.5rem;
+
+    .nav-link {
+      position: relative;
+      z-index: 1001; // +1 to keep above dropdown menus
+      padding: 0.875rem 1rem;
+      border-top: 1px solid $mn-border-color;
+      // color: $mn-color;
+      color: $gray8;
+      text-transform: uppercase;
+      white-space: nowrap;
+      font-size: $mn-font-size;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .dropdown {
+      &.show {
+        .dropdown-toggle {
+          color: $gray7;
+        }
+      }
+    }
+
+    .dropdown-menu {
+      margin-top: -0.4rem;
+      padding-top: 0;
+      border: none;
+      border-radius: 0;
+      background-color: transparent;
+
+      .dropdown-item {
+        padding: 0.5rem 1rem;
+        color: $mn-color;
+        font-size: $mn-dropdown-menu-size;
+        white-space: normal;
+        cursor: pointer;
+
+        strong {
+          font-weight: 600;
+          transition: color 0.2s ease-out;
+        }
+
+        .dd-item-desc {
+          display: block;
+          font-size: small;
+          opacity: 0.5;
+          transition: opacity 0.2s ease-out;
+        }
+
+        &:focus,
+        &:hover {
+          background: transparent;
+
+          strong {
+            color: $mn-hover-color;
+          }
+
+          .dd-item-desc {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .project-navbar {
+    background: transparent;
+
+    #projectNav { // Centering buttons
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .navbar-toggler {
+      display: none;
+    }
+
+    .navbar-nav {
+      margin-top: 0;
+
+      .nav-link {
+        // height: 3.8rem;
+        // padding: 0.5rem 0.75rem !important;
+        border-top: none;
+
+        span {
+          // margin-top: 0.9rem;
+          display: inline-block;
+        }
+
+        &:hover {
+          background-color: $gray3;
+        }
+      }
+
+      > li {
+        .dropdown-menu {
+          margin: 0;
+          padding: 0.5rem;
+          min-width: 16rem;
+          background-color: #002663;
+
+          &.dm-sm {
+            min-width: 12rem;
+          }
+
+          .dropdown-item {
+            padding: 0.5rem;
+          }
+        }
+
+        &.dropdown {
+          &.show {
+            .dropdown-toggle {
+              color: $mn-color;
+            }
+
+            .dropdown-menu {
+              display: none;
+            }
+          }
+
+          &:hover {
+            > a,
+            > a:hover,
+            > a:focus {
+              background-color: #002663;
+              border: none;
+            }
+
+            .dropdown-menu {
+              display: block;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .navbar-collapse {
+    flex-grow: 0;
+  }
+}

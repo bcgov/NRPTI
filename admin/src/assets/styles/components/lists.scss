@@ -1,0 +1,39 @@
+.nv-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+
+  li {
+    @include clearfix();
+
+    margin-top: 1px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9375rem;
+    background: $nv-list-bg;
+  }
+
+  span {
+    &.name,
+    &.value {
+      float: left;
+      display: block;
+      width: 50%;
+    }
+
+    &.name {
+      margin-bottom: 0.25rem;
+    }
+  }
+}
+
+.list-group-item {
+  border: none;
+
+  &:nth-child(odd) {
+    background: $list-row-bg;
+  }
+
+  &:nth-child(even) {
+    background: $list-row-alt-bg;
+  }
+}

@@ -1,0 +1,34 @@
+@import "~assets/styles/base/base.scss";
+
+:host {
+  display: block;
+
+  @include flex-box();
+  @include flex-direction(column);
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: hidden;
+}
+
+app-header {
+  @include flex(0 0 auto);
+}
+
+.app-body {
+  @include flex-box();
+  @include flex(1 1 auto);
+  @include flex-direction(column);
+
+  position: relative;
+  overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  .app-body {
+    margin-top: 68px; // pad the top of the page so content isn't covered by the floating header bar.
+  }
+}

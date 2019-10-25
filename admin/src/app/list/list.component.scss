@@ -1,0 +1,154 @@
+@import "assets/styles/base/base.scss";
+
+.grid-container {
+  display: grid;
+  grid-auto-rows: minmax(0, auto);
+}
+
+.search-container {
+  padding-top: 2.5rem;
+  padding-bottom: 1.5rem;
+  background: #f7f8fa;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 2rem;
+  margin-top: 2rem;
+
+  .filter-select,
+  .filter-input {
+    margin-bottom: 1rem;
+  }
+
+  .filter-input {
+    @include placeholder {
+      color: $gray7;
+    }
+  }
+
+  .filter-buttons {
+    .filter-btn-clear {
+      margin-right: 1rem;
+      padding: 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+
+    .filter-btn-search {
+      margin-right: 1rem;
+      padding: 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      width: 7rem;
+    }
+
+    .filter-btn-export {
+      padding: 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+
+      i {
+        &.material-icons {
+          font-size: 1.1rem;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+
+  .filter-count {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+  }
+
+  .spinner-border {
+    font-size: 0.7rem;
+    height: 0.95rem;
+    width: 0.95rem;
+  }
+}
+
+.loading-container {
+  position: relative;
+  padding: 3rem 0;
+}
+
+@media (max-width: 768px) {
+  .filter-grid {
+    grid-template-columns: 1fr;
+
+    .filter-count {
+      margin-top: 1rem;
+      align-items: center;
+    }
+
+    .filter-buttons {
+      display: flex;
+      justify-content: center;
+    }
+
+    .pagination-nav {
+      justify-content: center;
+    }
+  }
+}
+
+select {
+  option:first-child {
+    color: $gray6;
+  }
+}
+
+.table-cards {
+  td {
+    padding: 0.75rem;
+  }
+
+  th {
+    padding: 0.75rem;
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 1025px) {
+  .table-cards {
+    td {
+      &.text-align {
+        // center text only when in table view (not in card view)
+        text-align: center;
+      }
+    }
+  }
+}
+
+// pagination
+.pagination-nav {
+  display: flex;
+  flex-direction: row-reverse;
+  margin-top: 0.5rem;
+  grid-column: 1 / -1;
+
+  .pagination {
+    margin-bottom: 0;
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 400;
+    font-family: 'myriad-pro', 'Calibri', 'Arial', sans-serif;
+    cursor: pointer;
+
+    .current-page {
+      font-weight: 550;
+      text-decoration: underline;
+    }
+  }
+
+  .disabled {
+    > * {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+}

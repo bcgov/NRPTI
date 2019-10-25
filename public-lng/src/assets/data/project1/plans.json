@@ -1,0 +1,402 @@
+{
+  "text": [
+    "There are two types of plans submitted to the provincial government - management plans and construction plans.",
+    "Construction plans identify how a certificate holder (company) will build its project. Management plans identify how a company will protect and enhance the various environmental, social, heritage or economic factors during the operational phase of a project.",
+    "The list below provides all plans received to date. Additional plans will be added to this site as they are received. For the full list of authorizations and their associated requirements, please visit the [Authorizations](/project/1/authorizations) page."
+  ],
+  "documents": {
+    "headers": [
+      { "displayName": "Name", "fieldName": "name" },
+      { "displayName": "Government Agency", "fieldName": "agency" },
+      { "displayName": "Phase", "fieldName": "phase" },
+      { "displayName": "Type", "fieldName": "type" },
+      { "displayName": "Date", "fieldName": "date" }
+    ],
+    "filters": [
+      {
+        "displayName": "Government Agency",
+        "textFilters": [
+          {
+            "displayName": "Environmental Assessment Office",
+            "fieldName": "agencyEAO",
+            "documentFieldName": "agency",
+            "documentFieldValues": ["Environmental Assessment Office"]
+          },
+          {
+            "displayName": "BC Oil and Gas Commission",
+            "fieldName": "agencyBCOGC",
+            "documentFieldName": "agency",
+            "documentFieldValues": ["BC Oil and Gas Commission"]
+          }
+        ]
+      },
+      {
+        "displayName": "Type",
+        "textFilters": [
+          {
+            "displayName": "Management",
+            "fieldName": "management",
+            "documentFieldName": "type",
+            "documentFieldValues": ["Management"]
+          },
+          {
+            "displayName": "Construction",
+            "fieldName": "construction",
+            "documentFieldName": "type",
+            "documentFieldValues": ["Construction"]
+          }
+        ]
+      }
+    ],
+    "docs": [
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "",
+        "authorization url": "",
+        "condition number": 1,
+        "name": "Marine Monitoring Plan and Dredge Environmental Management Plan - EAO approval letter",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "19-09-2019",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5d8404bec7d70300214c9cd7/fetch/LNGCanada_MMP_DEMP_EAO%20Approval%20Letter_2019.pdf"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "",
+        "authorization url": "",
+        "condition number": 1,
+        "name": "LNG Canada Marine Monitoring Plan (MMP) Rev2 August 2019",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "19-08-2019",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5d840a0ec7d70300214c9fc0/fetch/L001-00000-HX-5880-0017_R2%20MMP.pdf"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "",
+        "authorization url": "",
+        "condition number": 1,
+        "name": "LNG Canada Dredge Environmental Management Plan (DEMP) Rev2 August 2019",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "19-08-2019",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5d840aa4c7d70300214c9ffb/fetch/L001-00000-HX-5880-0018_R2%20DEMP.pdf"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "",
+        "authorization url": "",
+        "condition number": 1,
+        "name": "Marine Monitoring Plan and Dredge Environmental Management Plan - Consultation Tracking Table",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "30-07-2019",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5d8407f4c7d70300214c9eac/fetch/LNG%20Canada%202019%20Marine%20EMP%20Consultation%20Tracker.pdf"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=26",
+        "condition number": 1,
+        "name": "Air Quality Management Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "07-10-2018",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5a7cc9d537c109001a100b4b/fetch"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=27",
+        "condition number": 2,
+        "name": "Noise Management Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "06-10-2015",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5a7cc9dbf7fae400194a5aae/fetch"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=28",
+        "condition number": 3,
+        "name": "Greenhouse Gas Emissions Management Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "",
+        "url": ""
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=29",
+        "condition number": 4,
+        "name": "Fish Management and Monitoring Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "07-10-2015",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5a7cc9f3f7fae400194a5ad1/fetch/LNG_Canada_Fish_Habitat_Management_Plan_(dated_Oct_7,_2015)"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=30",
+        "condition number": 5,
+        "name": "Marine Mammal Management and Monitoring Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "",
+        "url": ""
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=31",
+        "condition number": 6,
+        "name": "Marine Water Quality Management and Monitoring Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "21-06-2018",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5b2d3ce74aa05000244bcf76/fetch"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=32",
+        "condition number": 8,
+        "name": "Vegetation Management and Monitoring Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "07-10-2015",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5a7cc9cf37c109001a100b28/fetch"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=33",
+        "condition number": 9,
+        "name": "Invasive Plant Management Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "07-10-2015",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5a7cc9eb37c109001a100b91/fetch"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=34",
+        "condition number": 10,
+        "name": "Wetland Compensation Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "01-07-2015",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5a7cc9fc80fc410019e4be82/fetch"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=35",
+        "condition number": 11,
+        "name": "Surface Water Quality Management Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "07-10-2015",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5a7cc9e337c109001a100b6e/fetch"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=36",
+        "condition number": 12,
+        "name": "Wildlife Management Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "14-10-2015",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5a7cc9463ad6770019387f85/fetch"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=37",
+        "condition number": 14,
+        "name": "Community Services and Infrastructure Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "01-06-2016",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5892314bb637cc02bea1632d/fetch"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=38",
+        "condition number": 15,
+        "name": "Health and Medical Services Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "23-07-2018",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5b75e2f52400e500244290d2/fetch"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=39",
+        "condition number": 16,
+        "name": "Traffic Impact Assessment and Traffic Management Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "",
+        "url": ""
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=40",
+        "condition number": 17,
+        "name": "Marine Activities Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "16-01-2018",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5a7cc8073ad6770019387f62/fetch"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=41",
+        "condition number": 18,
+        "name": "wake verification plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "",
+        "url": ""
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=42",
+        "condition number": 19,
+        "name": "Workforce Air Quality Health Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "",
+        "url": ""
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=43",
+        "condition number": 20,
+        "name": "Construction Environmental Management Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "14-10-2015",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5a7cc93af7fae400194a5a8b/fetch"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=44",
+        "condition number": 22,
+        "name": "EAO-Approved LNG Canada Aboriginal Consultation Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "",
+        "url": ""
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=45",
+        "condition number": 22,
+        "name": "EAO-Approved LNG Canada Public Consultation Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "",
+        "url": ""
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=46",
+        "condition number": 22,
+        "name": "Aboriginal Consultation Report",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": " ",
+        "url": ""
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=47",
+        "condition number": 22,
+        "name": "Public Consultation Report",
+        "description": "Due - 2 years Post Construction Commencement & 1 year Post Commencement of Operations",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "",
+        "url": ""
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=48",
+        "condition number": 17,
+        "name": "Marine Access Traffic Management Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "02-10-2017",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5a7cc81980fc410019e4be5f/fetch"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "E15-01",
+        "authorization url": "https://projects.eao.gov.bc.ca/p/lng-canada-export-terminal/docs?folder=49",
+        "condition number": null,
+        "name": "LNG Canada Dredge Environmental Management Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "21-06-2018",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5b2d3ce7d46d3f00242684a4/fetch"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "",
+        "authorization url": "",
+        "condition number": null,
+        "name": "Community-Level Infrastructure and Services Management Plan Rev. 3",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "10-04-2019",
+        "url": "https://www.projects.eao.gov.bc.ca/api/document/5caf7f43f4903600245846ba/fetch/LNG%20Canada%20Community%20Level%20Infrastructure%20and%20Services%20Management%20Plan-Revised%20April%202019.pdf"
+      }
+    ]
+  }
+}

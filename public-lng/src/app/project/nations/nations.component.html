@@ -1,0 +1,15 @@
+<div class="container">
+  <section>
+    <h1>
+      INDIGENOUS NATIONS
+    </h1>
+    <div>
+      <ng-container *ngFor="let line of text | linkify">
+        <p [innerHTML]="line"></p>
+      </ng-container>
+    </div>
+  </section>
+  <section>
+    <app-documents [pageType]="pageType"></app-documents>
+  </section>
+</div>

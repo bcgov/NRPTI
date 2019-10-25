@@ -1,0 +1,49 @@
+<div class="flex-panel">
+  <div class="flex-panel__scroll">
+    <h3 class="title">Filter</h3>
+
+    <div class="form-group">
+      <label class="control-label">Date Range</label>
+      <div class="date-range">
+        <div class="date-range__input">
+          <label class="sr-only">Start Date</label>
+          <app-date-input class="gtm-filter-published-from" [(date)]="_dateRangeFromFilter" [minDate]="minDate" [maxDate]="_dateRangeToFilter ? _dateRangeToFilter : maxDate">
+          </app-date-input>
+        </div>
+        <div class="date-range__spacer">&ndash;</div>
+        <div class="date-range__input end-date">
+          <label class="sr-only">End Date</label>
+          <app-date-input class="gtm-filter-published-to" [(date)]="_dateRangeToFilter" [maxDate]="maxDate" [minDate]="_dateRangeFromFilter ? _dateRangeFromFilter : minDate">
+          </app-date-input>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngFor="let section of filterSections">
+      <div class="form-group">
+        <label class="control-label">{{section.displayName}}</label>
+        <div class="select-badge-group">
+          <ng-container *ngFor="let filter of section.textFilters">
+            <div class="select-badge">
+              <input type="checkbox" name="{{filter.fieldName}}" id="_{{filter.fieldName}}" [(ngModel)]="_textFilters[filter.fieldName]" />
+              <label for="_{{filter.fieldName}}">{{filter.displayName}}</label>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+
+    <div class="form-btns">
+      <button class="btn btn-primary gtm-apply-filters explore-btn-lg-device" type="button" title="Apply filters" (click)="applyAllFilters()">
+        Filter Results
+      </button>
+      <button class="btn btn-primary gtm-apply-filters explore-btn-sm-device" type="button" title="Apply filters" (click)="applyAllFilters(); hideSidePanel.emit()">
+        Filter Results
+      </button>
+      <button class="btn btn-light" type="button" title="Clear filters" (click)="clearAllFilters()">
+        Clear
+      </button>
+    </div>
+
+  </div>
+</div>

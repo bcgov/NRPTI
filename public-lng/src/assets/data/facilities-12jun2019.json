@@ -1,0 +1,18 @@
+{
+"type": "FeatureCollection",
+"name": "facilities",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "LABEL": "Kitimat M\/S" }, "geometry": { "type": "Point", "coordinates": [ -128.683724163565245, 54.022754663275727 ] } },
+{ "type": "Feature", "properties": { "LABEL": "Goosly Falls C\/S" }, "geometry": { "type": "Point", "coordinates": [ -126.450724953758495, 54.118001779220883 ] } },
+{ "type": "Feature", "properties": { "LABEL": "Titanium Peak C\/S" }, "geometry": { "type": "Point", "coordinates": [ -127.598835107667142, 54.220900207494523 ] } },
+{ "type": "Feature", "properties": { "LABEL": "Clear Creek C\/S" }, "geometry": { "type": "Point", "coordinates": [ -124.144138822466061, 54.137901032781578 ] } },
+{ "type": "Feature", "properties": { "LABEL": "Segundo Lake C\/S" }, "geometry": { "type": "Point", "coordinates": [ -125.394072085390746, 54.086352943799824 ] } },
+{ "type": "Feature", "properties": { "LABEL": "Vanderhoof Meter Station" }, "geometry": { "type": "Point", "coordinates": [ -123.695892717631793, 54.160797977639497 ] } },
+{ "type": "Feature", "properties": { "LABEL": "Wilde Lake C\/S" }, "geometry": { "type": "Point", "coordinates": [ -120.891458109128237, 55.799692488820867 ] } },
+{ "type": "Feature", "properties": { "LABEL": "Mount Bracey C\/S" }, "geometry": { "type": "Point", "coordinates": [ -122.226578662513347, 54.916371379448414 ] } },
+{ "type": "Feature", "properties": { "LABEL": "Sukunka Falls C\/S" }, "geometry": { "type": "Point", "coordinates": [ -121.777241003593431, 55.428285934354605 ] } },
+{ "type": "Feature", "properties": { "LABEL": "Racoon Lake C\/S" }, "geometry": { "type": "Point", "coordinates": [ -123.128109793457682, 54.422648211634332 ] } },
+{ "type": "Feature", "properties": { "LABEL": "Wilde Lake M\/S" }, "geometry": { "type": "Point", "coordinates": [ -120.886015366055773, 55.797619985871577 ] } }
+]
+}

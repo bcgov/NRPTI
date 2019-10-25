@@ -1,0 +1,72 @@
+<div class="container">
+  <section id="anchor-point">
+    <div class="hero-banner">
+      <div class="hero-banner__content">
+        <div id="home-content">
+
+          <div id="left-column" class="content">
+            <div id="overview">
+              <h3>OVERVIEW</h3>
+              <p> British Columbia has been the location of natural gas exploration and production for more than 50 years.</p>
+
+              <p>Liquefied natural gas, or LNG, is a technical process that involves cooling raw natural gas into a liquid form. As a liquid, it can be transported overseas by ship.</p>
+
+              <p>LNG Canada will be the first large-scale export facility of its kind in British Columbia. Once operational, LNG Canada will ship natural gas to Asia and other markets where it will be processed for energy needs.</p>
+
+              <p>The Government of British Columbia has statutory responsibilities to ensure the natural gas industry, including the companies involved with LNG Canada and its connecting pipeline - Coastal GasLink - are permitted and compliant with all government legislation and requirements.</p>
+              <p>This site provides context and access to the multiple layers of authorizations, compliance updates and other items that represent the provincial government’s role as it relates to LNG regulation and oversight. Documents from the BC Oil and Gas Commission and British Columbia’s Environmental Assessment Office can be searched and downloaded, and other natural resource ministries will have a growing presence on the site.</p>
+            </div>
+            <div id="activities">
+              <app-activity [activitiesJSON]='activities'></app-activity>
+            </div>
+          </div>
+
+          <div id="right-column" class="sidebar">
+            <div id="map-btn">
+              <button type="button" class="btn btn-primary" routerLink="/map">
+                <i id="btn-icon-left" class="material-icons mr-1">map</i>
+                <span>VIEW PROJECTS ON MAP</span>
+                <i id="btn-icon-right" class="material-icons mr-1">arrow_forward</i>
+              </button>
+            </div>
+            <div id="lng-card">
+              <div class="card">
+                <img class="card-img-top" routerLink="/project/1/overview" src="/assets/images/lng-canada-site-rendering-smaller.jpg" alt="LNG Canada Image">
+                <div class="card-body">
+                  <div class="card-company">LNG CANADA</div>
+                  <div class="card-name">LNG Export Facility</div>
+                  <div class="card-location">KITIMAT, BC</div>
+                  <div class="card-btn">
+                    <button type="button" class="btn btn-light" routerLink="/project/1/overview">
+                      <i class="material-icons mr-1">image</i>
+                      <i class="material-icons mr-1">menu</i>
+                      <span>Go to Details</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="cas-card">
+              <div class="card">
+                <img class="card-img-top" routerLink="/project/2/overview" src="/assets/images/coastal-gaslink-pipeline2.jpg" alt="Coastal Gaslink Image">
+                <div class="card-body">
+                  <div class="card-company">COASTAL GASLINK</div>
+                  <div class="card-name">LNG Pipeline</div>
+                  <div class="card-location">DAWSON CREEK TO KITIMAT</div>
+                  <div class="card-btn">
+                    <button type="button" class="btn btn-light" routerLink="/project/2/overview">
+                      <i class="material-icons mr-1">image</i>
+                      <i class="material-icons mr-1">menu</i>
+                      <span>Go to Details</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
