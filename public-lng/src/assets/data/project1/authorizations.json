@@ -1,0 +1,442 @@
+{
+  "text": [
+    "All Major Projects require layers of approval from the provincial government.",
+    "A company must apply for all the permits and other forms of authorization they require. These applications are then reviewed by the appropriate government agency. If approved, these authorizations allow industry to move forward with construction, development and/or operations. Associated activities, such as the use of resource roads to haul equipment around, are all subject to review and approval as well.",
+    "The provincial government often imposes a set of conditions, or requirements, on these authorizations to increase public safety or strengthen environment protection.",
+    "The list below includes permits and other related documents by the BC Oil and Gas Commission and British Columbia’s Environmental Assessment Office. Additional, ancillary forms of authorizations will be included over time."
+  ],
+  "documents": {
+    "headers": [
+      { "displayName": "Name", "fieldName": "name" },
+      { "displayName": "Government Agency", "fieldName": "agency" },
+      { "displayName": "Type", "fieldName": "complianceDocumentType" },
+      { "displayName": "Subtype", "fieldName": "complianceDocumentSubtype" },
+      { "displayName": "Date", "fieldName": "date" },
+      { "displayName": "Description", "fieldName": "description" }
+    ],
+    "filters": [
+      {
+        "displayName": "Government Agency",
+        "textFilters": [
+          {
+            "displayName": "Environmental Assessment Office",
+            "fieldName": "agencyEAO",
+            "documentFieldName": "agency",
+            "documentFieldValues": ["Environmental Assessment Office"]
+          },
+          {
+            "displayName": "BC Oil and Gas Commission",
+            "fieldName": "agencyBCOGC",
+            "documentFieldName": "agency",
+            "documentFieldValues": ["BC Oil and Gas Commission"]
+          }
+        ]
+      },
+      {
+        "displayName": "Type",
+        "textFilters": [
+          {
+            "displayName": "Project General",
+            "fieldName": "projectGeneral",
+            "documentFieldName": "complianceDocumentSubtype",
+            "documentFieldValues": ["General", "Project Description", "Project Description", "Table of Conditions", "Amendment"]
+          },
+          {
+            "displayName": "Investigative Use",
+            "fieldName": "investigativeUse",
+            "documentFieldName": "complianceDocumentSubtype",
+            "documentFieldValues": ["Investigative Use"]
+          },
+          {
+            "displayName": "Road",
+            "fieldName": "road",
+            "documentFieldName": "complianceDocumentSubtype",
+            "documentFieldValues": ["Road"]
+          },
+          {
+            "displayName": "Water",
+            "fieldName": "water",
+            "documentFieldName": "complianceDocumentSubtype",
+            "documentFieldValues": ["Water"]
+          },
+          {
+            "displayName": "Ancillary Site",
+            "fieldName": "ancillarySite",
+            "documentFieldName": "complianceDocumentSubtype",
+            "documentFieldValues": ["Ancillary Site"]
+          }
+        ]
+      }
+    ],
+    "docs": [
+      {
+        "agency": "Environmental Assessment Office",
+        "author": "",
+        "date": "21-10-2019",
+        "description": " Notification Letter to LNG Canada",
+        "complianceDocumentType": "Letter",
+        "complianceDocumentSubtype": "Amendment",
+        "OGCLabel": "",
+        "name": "LNG Canada - Amendment 2 - Notification Letter to LNG Canada",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5dadfb375cbf570021019671/fetch/LNG%20Canada%20Amendment%202_sec19_Letter_FINAL.pdf"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "author": "",
+        "date": "18-10-2019",
+        "description": "Assessment Report",
+        "complianceDocumentType": "Report",
+        "complianceDocumentSubtype": "Amendment",
+        "OGCLabel": "",
+        "name": "LNG Canada - Amendment 2 - Assessment Report",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5dadf4a65cbf570021019442/fetch/LNG%20Canada%20Amendment%202_Report_20191018.pdf"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "author": "",
+        "date": "18-10-2019",
+        "description": "Certificate",
+        "complianceDocumentType": "Certificate",
+        "complianceDocumentSubtype": "Amendment",
+        "OGCLabel": "",
+        "name": "LNG Canada - Amendment 2 - Certificate",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5dadf42c5cbf570021019417/fetch/LNG%20Canada%20Amendment%202_Certificate_20191018.pdf"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "author": "",
+        "date": "12-08-2019",
+        "description": "LNG Canada application for an amendment to its Environmental Assessment Certificate #E15-01.",
+        "complianceDocumentType": "Certificate",
+        "complianceDocumentSubtype": "Amendment",
+        "OGCLabel": "",
+        "name": "Application for an Amendment to an Environmental Assessment Certificate ",
+        "url": "https://www.projects.eao.gov.bc.ca/api/document/5d5db96511259a001a9f3f7f/fetch/LNGCanada_amendment2application_letter_EAO_20190806_R1.pdf"
+      },
+      {
+        "num": 1,
+        "agency": "Environmental Assessment Office",
+        "author": "",
+        "date": "17-06-2015",
+        "description": "LNG Canada Development Inc. has received an Environmental Assessment Certificate for the LNG Canada Export Terminal Project. The LNG Canada Export Terminal is the first project to be granted a certificate following a substituted environmental assessment.",
+        "complianceDocumentType": "Certificate",
+        "complianceDocumentSubtype": "General",
+        "OGCLabel": "",
+        "name": "Environmental Assessment Certificate #E15-01",
+        "url": "https://projects.eao.gov.bc.ca/api/document/58869074e036fb0105768b53/fetch"
+      },
+      {
+        "num": 2,
+        "agency": "Environmental Assessment Office",
+        "author": "",
+        "date": "17-06-2015",
+        "description": "Table of Conditions for Environmental Assessment Certificate #E15-01 for the LNG Canada Project dated June 2015",
+        "complianceDocumentType": "Certificate",
+        "complianceDocumentSubtype": "Project Description",
+        "OGCLabel": "",
+        "name": "Certified Project Description",
+        "url": "https://projects.eao.gov.bc.ca/api/document/58869074e036fb0105768b52/fetch"
+      },
+      {
+        "num": 3,
+        "agency": "Environmental Assessment Office",
+        "author": "",
+        "date": "17-06-2015",
+        "description": "Certified Project Description for Environmental Assessment Certificate #E15-01 for the LNG Canada Project dated June 2016",
+        "complianceDocumentType": "Certificate",
+        "complianceDocumentSubtype": "Table of Conditions",
+        "OGCLabel": "",
+        "name": "Table of Conditions",
+        "url": "https://projects.eao.gov.bc.ca/api/document/58869074e036fb0105768b51/fetch"
+      },
+      {
+        "num": 4,
+        "agency": "Environmental Assessment Office",
+        "author": "",
+        "date": "05-08-2016",
+        "description": "Environmental Assessment Certificate Amendment #1 to Certificate #E15-01 originally issued June 17, 2015",
+        "complianceDocumentType": "Certificate",
+        "complianceDocumentSubtype": "Amendment",
+        "OGCLabel": "",
+        "name": "Certificate Amendment to #E15-01",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5886907ae036fb0105768b6c/fetch"
+      },
+      {
+        "num": 5,
+        "agency": "Environmental Assessment Office",
+        "author": "",
+        "date": "05-08-2016",
+        "description": "Certificate Amendment 1 - Amended Project Description",
+        "complianceDocumentType": "Certificate",
+        "complianceDocumentSubtype": "Project Description",
+        "OGCLabel": "",
+        "name": "Amended Project Description",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5886907ae036fb0105768b6a/fetch"
+      },
+      {
+        "num": 6,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "03-02-2017",
+        "description": "Authorization to discharge effluent subject to conditions.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "General",
+        "OGCLabel": "Approved Project Permits",
+        "name": " PE108469 PERMIT EMA",
+        "url": " https://www.bcogc.ca/node/13813/download"
+      },
+      {
+        "num": 7,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "17-12-2018",
+        "description": "Permit permissions under sections of the Oil & Gas Activities Act.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "General",
+        "OGCLabel": "Approved Project Permits",
+        "name": " 9709124 PERMIT LNG FACILITY",
+        "url": " https://www.bcogc.ca/node/13812/download"
+      },
+      {
+        "num": 8,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "15-05-2015",
+        "description": "Mapping construction plan.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "General",
+        "OGCLabel": "Approved Project Permits",
+        "name": " 9709124 Construction Plan",
+        "url": " https://www.bcogc.ca/node/13814/download"
+      },
+      {
+        "num": 9,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "25-10-2016",
+        "description": "Permit to construct, maintain and operate an oil and gas road with conditions.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Road",
+        "OGCLabel": "Approved Road Permits",
+        "name": " ROAD 100100866 LNGC",
+        "url": " https://www.bcogc.ca/node/13811/download"
+      },
+      {
+        "num": 10,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "12-08-2016",
+        "description": "Amendment to permit and associated authorizations.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Road",
+        "OGCLabel": "Approved Road Permits",
+        "name": " ROAD 100100061 LNGC (Amend 1 9644498)",
+        "url": " https://www.bcogc.ca/node/13810/download"
+      },
+      {
+        "num": 11,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "12-08-2016",
+        "description": "Amendment to permit and associated authorizations.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Road",
+        "OGCLabel": "Approved Road Permits",
+        "name": " ROAD 100100060 LNGC (Amend 1 9644499)",
+        "url": " https://www.bcogc.ca/node/13809/download"
+      },
+      {
+        "num": 12,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "23-02-2016",
+        "description": "Authorization under section 9 of Water Act.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Water",
+        "OGCLabel": "Approved Water Authorizations",
+        "name": " WATR 9643149 LNGC Sec9",
+        "url": " https://www.bcogc.ca/node/13808/download"
+      },
+      {
+        "num": 13,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "26-02-2016",
+        "description": "Authorization under section 9 of Water Act.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Water",
+        "OGCLabel": "Approved Water Authorizations",
+        "name": " WATR 9643085 LNGC Sec9",
+        "url": " https://www.bcogc.ca/node/13807/download"
+      },
+      {
+        "num": 14,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "27-11-2015",
+        "description": "Approval for short term water use.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Water",
+        "OGCLabel": "Approved Water Authorizations",
+        "name": " WATR 9642948 LNGC Sec8",
+        "url": " https://www.bcogc.ca/node/13006/download"
+      },
+      {
+        "num": 15,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "29-07-2015",
+        "description": "Authorization under section 9 of Water Act.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Water",
+        "OGCLabel": "Approved Water Authorizations",
+        "name": " WATR 9642638 LNGC Sec9",
+        "url": " https://www.bcogc.ca/node/13806/download"
+      },
+      {
+        "num": 16,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "24-06-2016",
+        "description": "Authorization under Water Sustainability Act with conditions.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Water",
+        "OGCLabel": "Approved Water Authorizations",
+        "name": " WATR 9642636  LNGC Sec11",
+        "url": " https://www.bcogc.ca/node/13805/download"
+      },
+      {
+        "num": 17,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "20-03-2014",
+        "description": "Authorization under section 9 of Water Act.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Water",
+        "OGCLabel": "Approved Water Authorizations",
+        "name": " WATR 9639358 LNGC Sec9",
+        "url": " https://www.bcogc.ca/node/13804/download"
+      },
+      {
+        "num": 18,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "16-10-2018",
+        "description": "Authorization under Water Sustainability Act with conditions.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Water",
+        "OGCLabel": "Approved Water Authorizations",
+        "name": " WATR 100106161 LNGC Sec10 16/10/18",
+        "url": " https://www.bcogc.ca/node/15322/download"
+      },
+      {
+        "num": 19,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "31-10-2018",
+        "description": "Authorization under Water Sustainability Act with conditions.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Water",
+        "OGCLabel": "Approved Water Authorizations",
+        "name": " WATR 100105923 LNGC Sec11",
+        "url": " https://www.bcogc.ca/node/15321/download"
+      },
+      {
+        "num": 20,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "26-05-2018",
+        "description": "Authorization under Water Sustainability Act with conditions.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Water",
+        "OGCLabel": "Approved Water Authorizations",
+        "name": " WATR 100105118 LNGC Sec11",
+        "url": " https://www.bcogc.ca/node/14977/download"
+      },
+      {
+        "num": 21,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "26-05-2018",
+        "description": "Authorization under Water Sustainability Act with conditions.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Water",
+        "OGCLabel": "Approved Water Authorizations",
+        "name": " WATR 100104999 LNGC Sec11",
+        "url": " https://www.bcogc.ca/node/14976/download"
+      },
+      {
+        "num": 22,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "26-05-2018",
+        "description": "Authorization under Water Sustainability Act with conditions.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Water",
+        "OGCLabel": "Approved Water Authorizations",
+        "name": " WATR 100104998 LNGC Sec11",
+        "url": " https://www.bcogc.ca/node/14975/download"
+      },
+      {
+        "num": 23,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "11-04-2018",
+        "description": "Authorization under Water Sustainability Act with conditions.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Water",
+        "OGCLabel": "Approved Water Authorizations",
+        "name": " WATR 100104894 LNGC Sec11",
+        "url": " https://www.bcogc.ca/node/14974/download"
+      },
+      {
+        "num": 24,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "17-12-2017",
+        "description": "Correction to amendment.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Water",
+        "OGCLabel": "Approved Water Authorizations",
+        "name": " WATR 100100705 LNGC Sec11",
+        "url": " https://www.bcogc.ca/node/13803/download"
+      },
+      {
+        "num": 25,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "19-09-2016",
+        "description": "Authorization for water us.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Water",
+        "OGCLabel": "Approved Water Authorizations",
+        "name": " WATR 100100473 LNGC Sec10 19/09/16",
+        "url": " https://www.bcogc.ca/node/13802/download"
+      },
+      {
+        "num": 26,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "26-06-2014",
+        "description": "Authorization to occupy Crown land to conduct appraisals, inspections, analyses, etc.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Investigative Use",
+        "OGCLabel": "Approved Investigative Use Permits",
+        "name": " IUP 9640300 LNGC",
+        "url": " https://www.bcogc.ca/node/13977/download"
+      },
+      {
+        "num": 27,
+        "agency": "BC Oil and Gas Commission",
+        "author": "BC Oil and Gas Commission",
+        "date": "26-06-2013",
+        "description": "Authorization to occupy Crown land to conduct appraisals, inspections, analyses, etc.",
+        "complianceDocumentType": "Permit",
+        "complianceDocumentSubtype": "Investigative Use",
+        "OGCLabel": "Approved Investigative Use Permits",
+        "name": " IUP 9638355 LNGC",
+        "url": " https://www.bcogc.ca/node/13976/download"
+      }
+    ]
+  }
+}

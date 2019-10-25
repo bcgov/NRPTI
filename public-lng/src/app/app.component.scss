@@ -1,0 +1,19 @@
+@import "~assets/styles/base/base.scss";
+
+:host {
+  display: block;
+
+  @include flex-box();
+  @include flex-direction(column);
+
+  min-height: 100vh;
+  background: #036;
+}
+
+.no-scroll {
+  :host {
+    min-height: auto;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+}

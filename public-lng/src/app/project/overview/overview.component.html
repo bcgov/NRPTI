@@ -1,0 +1,70 @@
+<div class="container">
+  <div class="overview-content">
+    <section class="left-column">
+      <div class="box1">
+        <h1>OVERVIEW</h1>
+        <ng-container *ngFor="let line of text | linkify">
+          <p [innerHTML]="line"></p>
+        </ng-container>
+      </div>
+      <div class="box2">
+        <div class="details-outer">
+          <div class="details-inner">
+            <div class="details-item">
+              <div class="details-header">
+                <strong>Project Type</strong>
+              </div>
+              <div class="details-content">
+                {{details['type']}}
+              </div>
+            </div>
+            <div class="details-item">
+              <div class="details-header">
+                <strong>Proponent</strong>
+              </div>
+              <div class="details-content">
+                <div>
+                  {{details['proponent']}}
+                </div>
+                <div>
+                  <a href="{{details['proponentURL']}}">{{details['proponentURL']}}</a>
+                </div>
+              </div>
+            </div>
+            <div class="details-item">
+              <div class="details-header">
+                <strong>Location</strong>
+              </div>
+              <div class="details-content">
+                {{details['location']}}
+              </div>
+            </div>
+            <div class="details-item">
+              <div class="details-header">
+                <strong>Status</strong>
+              </div>
+              <div class="details-content">
+                {{details['status']}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="box3">
+        <div class="map-outer">
+          <div class="card-text">
+            SEE PROJECT ON MAP
+          </div>
+          <img class="card-image" routerLink="/map" src="/assets/images/{{images['map']['img']}}"
+            alt="{{images['map']['alt']}}">
+        </div>
+      </div>
+    </section>
+    <section class="right-column">
+      <h2>
+        ACTIVITY UPDATES
+      </h2>
+      <app-activity [activitiesJSON]='activities'></app-activity>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,181 @@
+// Form Label
+label {
+  font-size: 0.875rem;
+}
+
+.control-label {
+  vertical-align: middle;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+
+  em {
+    font-size: 0.875rem;
+    vertical-align: top;
+  }
+
+  &::after {
+    white-space: pre;
+  }
+
+  button {
+    margin-left: 0.25rem;
+    padding: 0;
+    color: blue;
+    border: none;
+    background: transparent;
+    font-size: 0.8rem;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Help Text
+.form-text {
+  margin-top: 0.4rem;
+  color: #999;
+  font-size: 0.85rem;
+}
+
+.form-control-container {
+  position: relative;
+}
+
+// Fieldset/Legend
+fieldset {
+  + fieldset {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid $fc-border-color;
+  }
+}
+
+legend {
+  float: left; // Fix to ensure the legend is bound the the fieldset box
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+// Form Items
+.form-control {
+  border-color: $fc-border-color;
+  background: $fc-bg;
+  font-size: 0.9375rem;
+
+  &:focus {
+    border-color: $fc-focus-border-color;
+  }
+}
+
+.form-check {
+  label {
+    cursor: pointer;
+  }
+}
+
+// Input types
+// Input variants
+input {
+  &[type="tel"],
+  &[type="text"],
+  &[type="email"],
+  &[type="number"] {
+    height: 2.5rem;
+    box-shadow: 0.1rem 0.1rem 0.2rem inset $gray2;
+
+    @include placeholder {
+      color: $fc-placeholder-color;
+    }
+  }
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+select {
+  &.form-control {
+    &:not([size]):not([multiple]) {
+      height: $fc-height;
+      padding: 0 0.5rem;
+    }
+  }
+}
+
+// Textarea
+textarea.form-control {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+
+  @include placeholder {
+    color: $fc-placeholder-color;
+  }
+
+  resize: vertical;
+  box-shadow: $fc-inner-shadow inset;
+}
+
+// Input Group
+.input-group-btn {
+  .btn-icon {
+    border-color: $fc-border-color;
+  }
+}
+
+// Validation
+.invalid-feedback {
+  position: relative;
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: $fc-invalid-color;
+
+  &::after {
+    content: ' ';
+    position: absolute;
+    top: -1rem;
+    left: 1rem;
+    width: 1rem;
+    height: 1rem;
+    border-right: 0.5rem solid transparent;
+    border-bottom: 0.5rem solid $fc-invalid-color;
+    border-left: 0.5rem solid transparent;
+  }
+}
+
+.is-invalid ~ .invalid-feedback {
+  display: inline-block;
+}
+
+.form-control.is-invalid {
+  border-color: $fc-invalid-color;
+}
+
+.input-group.is-invalid {
+  .form-control {
+    border-color: $fc-invalid-color;
+  }
+
+  .input-group-btn {
+    .btn-icon {
+      border-color: $fc-invalid-color;
+    }
+  }
+}
+
+// Form Buttons
+.form-btns {
+  button {
+    min-width: 6rem;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+}

@@ -1,0 +1,106 @@
+@import "~assets/styles/base/base.scss";
+
+$map-control-button-bg: #fff;
+
+#map,
+.map-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+// see app-map.component.ts:_clusterCreate()
+#map {
+  .cluster-marker-count {
+    text-align: center;
+  }
+}
+
+#legend {
+  position: absolute;
+  top: 1rem;
+  right: 2rem;
+  z-index: 1000;
+  background: $white;
+  padding: 0.75rem 0 0.75rem 0;
+  border-radius: 0.5rem;
+  // background-color: #eed;
+  box-shadow: 5px 5px 5px  rgba(0, 0, 0, 0.4);
+}
+
+#legend #title {
+  font-size: 1.5rem;
+  font-weight: bolder;
+  margin-left: 1rem;
+}
+
+#legend #sub-title {
+  position: absolute;
+  font-size: 0.75rem;
+  right: 1rem;
+  margin-top: -1rem;
+  // margin-left: 2rem;
+}
+
+#legend hr {
+  margin: 5px 0 0 0;
+}
+
+#legend .button {
+  padding: 0.75rem;
+  display: grid;
+  grid-template-columns: 2rem auto 12rem;
+  align-items: center;
+  justify-items: start;
+  cursor: pointer;
+}
+
+#legend svg {
+  width: 22px;
+  height: 22px;
+  margin-right: 0.5rem;
+}
+
+#legend button {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+}
+
+#legend button span {
+  margin-left: 1rem;
+}
+
+#legend .button-title {
+  font-weight: 800;
+  margin-right: 2rem;
+}
+
+@media (max-width: 768px) {
+  #legend {
+    display: none;
+  }
+}
+
+// Leaflet Control Customization
+::ng-deep {
+  .map-reset-control {
+    margin-right: 12px !important;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    background: $map-control-button-bg;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 2px;
+    border: none;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+
+    &:hover {
+      background: #f4f4f4;
+    }
+  }
+}

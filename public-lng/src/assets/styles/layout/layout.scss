@@ -1,0 +1,125 @@
+// Container
+.container {
+  margin: 0 auto;
+  padding-top: 2rem;
+  padding-right: 1.25rem;
+  padding-bottom: 4rem;
+  padding-left: 1.25rem;
+  max-width: none;
+
+  h1 {
+    margin-bottom: 1.15rem;
+    line-height: 2.15rem;
+    font-size: 2.25rem;
+    color: $gray8;
+  }
+
+  h2 {
+    margin-bottom: 1rem;
+    letter-spacing: -0.02rem;
+    line-height: 2rem;
+    font-size: 1.75rem;
+    color: $gray7;
+  }
+
+  h3 {
+    margin-bottom: 1.5rem;
+    line-height: 1.75rem;
+    font-size: x-large;
+    color: $gray7;
+
+    span {
+      margin-top: 0.5rem;
+      display: block;
+      line-height: 1.25rem;
+      font-size: medium;
+    }
+  }
+
+  p {
+    line-height: 1.4rem;
+    font-size: 0.9375rem;
+    color: $gray7;
+  }
+}
+
+// Main Element
+main {
+  section {
+    padding-top: 3em;
+    padding-bottom: 3rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-right: 2rem;
+    padding-left: 2rem;
+
+    h2 {
+      line-height: 2.5rem;
+    }
+
+    h3 {
+      font-size: 1.75rem;
+    }
+
+    p {
+      line-height: 1.5rem;
+      font-size: 1rem;
+    }
+  }
+}
+
+hr {
+  margin-top: 2.5rem;
+  margin-bottom: 2.25rem;
+  border-width: 2px;
+}
+
+// Flex panel
+.flex-panel {
+  @include flex-box();
+  @include flex-direction(column);
+
+  background: $gray0;
+}
+
+.flex-panel__header {
+  @include flex-box();
+  @include flex-direction(row);
+  @include flex(0 0 auto);
+
+  padding: 0.75rem 1.5rem;
+  height: 4rem;
+  align-items: center;
+  border-bottom: 1px solid $gray2;
+  background: #fff;
+
+  .title {
+    @include flex(1 1 auto);
+
+    margin: 0;
+    letter-spacing: -0.01rem;
+    font-size: 1rem;
+    font-weight: 400;
+  }
+}
+
+.flex-panel__scroll {
+  @include flex(1 1 auto);
+
+  padding: 1.5rem;
+  overflow-y: auto;
+  border: 2px solid #008cba;
+}
+
+.flex-panel__footer {
+  @include flex(0 0 auto);
+}
+
+@media (min-width: 1200px) {
+  .flex-panel__scroll {
+    overflow-y: auto;
+  }
+}

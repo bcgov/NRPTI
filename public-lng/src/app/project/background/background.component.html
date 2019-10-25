@@ -1,0 +1,18 @@
+<main>
+  <ng-container *ngFor="let section of text; let odd = odd; let first = first">
+    <div [class.bg-light]="odd">
+      <section class="container">
+        <h1 [hidden]="!first">
+          BACKGROUND
+        </h1>
+        <h2 *ngIf="section['heading']">
+          {{section['heading']}}
+        </h2>
+        <!-- <div *ngFor="let line of section['text'] | linkify"> -->
+        <div *ngFor="let line of section['text']">
+          <p [innerHTML]="line"></p>
+        </div>
+      </section>
+    </div>
+  </ng-container>
+</main>

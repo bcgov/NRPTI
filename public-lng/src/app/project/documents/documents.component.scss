@@ -1,0 +1,140 @@
+@import "~assets/styles/base/base.scss";
+
+// basic page layout
+
+.flex {
+  @include flex-box();
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.left-side {
+  &-1 {
+    flex: 1 1;
+  }
+}
+
+.right-side {
+  &-1 {
+    flex: 3 3;
+  }
+}
+
+.section {
+  &-left {
+    margin-right: 1rem;
+  }
+
+  &-right {
+    margin-left: 1rem;
+  }
+}
+
+.documents-view {
+  @include flex-box();
+
+  flex-direction: column;
+  min-height: 40rem;
+}
+
+// table layout
+
+.table-panel {
+  flex: 1 1 auto;
+  position: relative;
+
+  .table-nav-bar {
+    height: 3.5rem;
+
+    .results-count {
+      margin-bottom: 1rem;
+      float: right;
+    }
+  }
+}
+
+.inline-btn {
+  display: inline-flex;
+  vertical-align: middle;
+
+  .material-icons {
+    line-height: 32px !important;
+  }
+
+  > i,
+  label {
+    pointer-events: none;
+  }
+
+  label {
+    margin: 0.3rem 0 0 0.5rem;
+  }
+}
+
+// filter panel layout
+
+.filter-control {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+
+  .filter-button {
+    margin-bottom: 0.5rem;
+  }
+
+  .filter-panel {
+    overflow-x: hidden;
+    background: $white;
+    box-shadow: 0 0.3rem 0.3rem rgba(0, 0, 0, 0.25);
+    transition: transform ease-out 0.2s;
+    transform: translateX(-120%);
+    z-index: 1000;
+
+    .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      z-index: 1001;
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .filter-panel {
+    width: 35rem;
+    box-shadow: 0.3rem 0.3rem 0.3rem rgba(0, 0, 0, 0.25);
+    z-index: 1000;
+    transition: transform ease-out 0.2s;
+    transform: translateX(-120%);
+  }
+}
+
+.filter-panel__open {
+  .filter-panel {
+    transform: translateX(0);
+  }
+}
+
+// specific settings for certain table columns
+@media (min-width: 1024px) {
+  .description {
+    width: 25%;
+  }
+}
+
+.download {
+  padding-left: 1rem;
+  width: 8rem;
+}
+
+tr td {
+  padding: 0.75rem 0.75rem;
+}

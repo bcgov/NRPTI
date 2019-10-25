@@ -1,0 +1,19 @@
+// Fix the type flashing bug that occurs when page loads
+.wf-loading {
+  display: none;
+}
+
+body {
+  color: $gray7;
+  font-family: "myriad-pro", Calibri, Arial, sans-serif;
+  font-weight: 400;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  color: $gray9;
+  letter-spacing: -0.03rem;
+}

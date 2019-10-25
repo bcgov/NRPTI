@@ -1,0 +1,128 @@
+@import "~assets/styles/base/base.scss";
+
+:host {
+  @include flex(1 1 auto);
+
+  display: block;
+  background: $white;
+}
+
+// .h-align {
+//   display: flex;
+//   align-items: center;
+// }
+
+// Contact Blocks
+.block-container {
+  @include clearfix();
+
+  margin: -0.75rem;
+}
+
+.hero-banner__content {
+  padding-top: 0;
+
+  h1 {
+    font-size: 2.45rem;
+  }
+}
+
+.feedback-btn {
+  width: 11rem;
+}
+
+a button {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+/* make text like everywhere else */
+p {
+  font-weight: 500;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+a.min-link {
+  display: flex !important;
+  align-items: center;
+
+  i {
+    width: auto;
+  }
+}
+
+.block {
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 0.9375rem;
+  vertical-align: bottom;
+
+  .inner-block {
+    border: 1px solid $gray8;
+
+    .inner-block-top {
+      padding: 1rem;
+      border-radius: 0.4rem;
+      background: #f7f8fa;
+    }
+
+    .inner-block-bottom {
+      padding: 1rem;
+      background: $gray4;
+      color: $white;
+    }
+  }
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    line-height: 1.25rem;
+  }
+
+  a {
+    display: inline-block;
+    font-weight: 600;
+  }
+
+  strong {
+    font-weight: 600;
+    color: #007bff;
+  }
+
+  .icon-container {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    padding-top: 0.25rem;
+    text-align: center;
+    font-size: 32px !important;
+
+    i {
+      color: $black;
+      font-size: 20px;
+
+      &-light {
+        color: $white;
+      }
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .block {
+    width: 30rem;
+    // width: 33.333%;
+    float: left;
+  }
+}
+
+.material-icons {
+  line-height: 32px !important;
+}

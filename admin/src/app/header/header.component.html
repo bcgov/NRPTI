@@ -1,0 +1,26 @@
+<header class="app-header app-header--solid" id="header">
+  <nav class="navbar navbar-expand-md justify-content-between">
+    <a class="navbar-brand" title="Natural Resources Public Transparency Interface" routerLink="/home">
+      <span class="navbar-brand__title">Natural Resources <span class="wb"><span class="amp"></span>Public Transparency Interface</span></span>
+    </a>
+    <span class="navbar-environment" *ngIf="api.env !== 'prod'">{{api.env}}</span>
+    <button class="navbar-toggler" type="button" title="Toggle Main Navigation"
+      aria-controls="navbarText"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+      (click)="toggleNav()">
+      <i class="material-icons">menu</i>
+      <span>MENU</span>
+    </button>
+    <div class="navbar-collapse" [@toggleNav]="isNavMenuOpen ? 'navOpen' : 'navClosed'" id="mainNav">
+      <ul class="navbar-nav">
+        <!-- LOGGED IN -->
+        <li *ngIf="jwt" class="nav-item" placement="bottom-right">
+          <a class="nav-link" id="welcome" tabindex="0">
+            <span>{{welcomeMsg}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>

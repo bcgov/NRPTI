@@ -1,0 +1,18 @@
+@import "~assets/styles/base/base.scss";
+
+// Page structure
+:host {
+  @include flex(1 1 auto);
+
+  display: block;
+  background: $white;
+}
+
+.container {
+  padding-bottom: 0.2rem;
+  padding-top: 1rem;
+}
+
+main:last-child {
+  margin-bottom: 2rem;
+}

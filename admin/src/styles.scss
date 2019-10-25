@@ -1,0 +1,44 @@
+/* You can add global styles to this file, and also import other style files. */
+
+/* This architecture roughly follows https://sass-guidelin.es/#the-7-1-pattern */
+
+//@import "~mygovbc-bootstrap-theme/dist/mygovbc-bootstrap-theme.min.css";
+
+@import "~bootstrap/dist/css/bootstrap.css";
+
+// Base
+@import "assets/styles/base/base.scss";
+
+// Helpers
+@import "~assets/styles/base/helpers.scss";
+
+// Layout
+@import "assets/styles/layout/layout.scss";
+
+// Typography
+@import "~assets/styles/base/typography.scss";
+
+// Icons
+@import "~assets/styles/base/material-icons.scss";
+
+// Components
+@import "assets/styles/components/accordion.scss";
+@import "assets/styles/components/alert-banner.scss";
+@import "assets/styles/components/aside.scss";
+@import "assets/styles/components/badge.scss";
+@import "assets/styles/components/buttons.scss";
+@import "assets/styles/components/card.scss";
+@import "assets/styles/components/doc-list.scss";
+@import "assets/styles/components/filter-bar.scss";
+@import "assets/styles/components/form-elements.scss";
+@import "assets/styles/components/lists.scss";
+@import "assets/styles/components/material.scss";
+@import "assets/styles/components/modal.scss";
+@import "assets/styles/components/spinner.scss";
+@import "assets/styles/components/tab-nav.scss";
+@import "assets/styles/components/table.scss";
+@import "assets/styles/components/table-cards.scss";
+
+// Third-party Components
+// Required for Angular Material styling: (ref: https://material.angular.io/guide/theming)
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
