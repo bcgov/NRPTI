@@ -1,4 +1,4 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
+# See https://git-scm.com/docs/gitignore for more about ignoring files.
 
 # compiled output
 /dist
@@ -19,28 +19,27 @@
 
 # IDE - VSCode
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
 !.vscode/launch.json
-!.vscode/extensions.json
 
 # misc
 /.sass-cache
 /connect.lock
 /coverage
 /libpeerconnection.log
-npm-debug.log
 testem.log
 /typings
-yarn-error.log
-yarn.lock
 debug.log
 
-# e2e
-/e2e/*.js
-/e2e/*.map
+# npm/yarn
+package-lock.json
+npm-debug.log
+yarn.lock
+yarn-error.log
 
 # System Files
 .DS_Store
 Thumbs.db
-/.vscode/settings.json
+
+# e2e
+/e2e/*.js
+/e2e/*.map
