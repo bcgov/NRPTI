@@ -6,7 +6,7 @@
 /out-tsc
 
 # dependencies
-node_modules
+/node_modules
 
 # IDEs and editors
 /.idea
@@ -26,18 +26,20 @@ node_modules
 /connect.lock
 /coverage
 /libpeerconnection.log
-npm-debug.log
 testem.log
 /typings
-package-lock.json
-yarn-error.log
-yarn.lock
 debug.log
 
-# e2e
-/e2e/*.js
-/e2e/*.map
+# npm/yarn
+package-lock.json
+npm-debug.log
+yarn.lock
+yarn-error.log
 
 # System Files
 .DS_Store
 Thumbs.db
+
+# e2e
+/e2e/*.js
+/e2e/*.map
