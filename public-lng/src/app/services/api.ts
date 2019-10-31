@@ -29,45 +29,45 @@ export class ApiService {
         this.env = 'local';
         break;
 
-      case 'nrts-prc-dev.pathfinder.gov.bc.ca':
+      case 'nrpti-dev.pathfinder.gov.bc.ca':
         // Dev
-        this.apiPath = 'https://nrts-prc-dev.pathfinder.gov.bc.ca/api/public';
-        this.adminUrl = 'https://nrts-prc-dev.pathfinder.gov.bc.ca/admin/';
+        this.apiPath = 'https://nrpti-dev.pathfinder.gov.bc.ca/api/public';
+        this.adminUrl = 'https://nrpti-dev.pathfinder.gov.bc.ca/admin/';
         this.env = 'dev';
         break;
 
-      case 'nrts-prc-test.pathfinder.gov.bc.ca':
+      case 'nrpti-test.pathfinder.gov.bc.ca':
         // Test
-        this.apiPath = 'https://nrts-prc-test.pathfinder.gov.bc.ca/api/public';
-        this.adminUrl = 'https://nrts-prc-test.pathfinder.gov.bc.ca/admin/';
+        this.apiPath = 'https://nrpti-test.pathfinder.gov.bc.ca/api/public';
+        this.adminUrl = 'https://nrpti-test.pathfinder.gov.bc.ca/admin/';
         this.env = 'test';
         break;
 
-      case 'nrts-prc-demo.pathfinder.gov.bc.ca':
+      case 'nrpti-demo.pathfinder.gov.bc.ca':
         // Demo
-        this.apiPath = 'https://nrts-prc-demo.pathfinder.gov.bc.ca/api/public';
-        this.adminUrl = 'https://nrts-prc-demo.pathfinder.gov.bc.ca/admin/';
+        this.apiPath = 'https://nrpti-demo.pathfinder.gov.bc.ca/api/public';
+        this.adminUrl = 'https://nrpti-demo.pathfinder.gov.bc.ca/admin/';
         this.env = 'demo';
         break;
 
-      case 'nrts-prc-scale.pathfinder.gov.bc.ca':
+      case 'nrpti-scale.pathfinder.gov.bc.ca':
         // Scale
-        this.apiPath = 'https://nrts-prc-scale.pathfinder.gov.bc.ca/api/public';
-        this.adminUrl = 'https://nrts-prc-scale.pathfinder.gov.bc.ca/admin/';
+        this.apiPath = 'https://nrpti-scale.pathfinder.gov.bc.ca/api/public';
+        this.adminUrl = 'https://nrpti-scale.pathfinder.gov.bc.ca/admin/';
         this.env = 'scale';
         break;
 
-      case 'nrts-prc-beta.pathfinder.gov.bc.ca':
+      case 'nrpti-beta.pathfinder.gov.bc.ca':
         // Beta
-        this.apiPath = 'https://nrts-prc-beta.pathfinder.gov.bc.ca/api/public';
-        this.adminUrl = 'https://nrts-prc-beta.pathfinder.gov.bc.ca/admin/';
+        this.apiPath = 'https://nrpti-beta.pathfinder.gov.bc.ca/api/public';
+        this.adminUrl = 'https://nrpti-beta.pathfinder.gov.bc.ca/admin/';
         this.env = 'beta';
         break;
 
-      case 'nrts-prc-master.pathfinder.gov.bc.ca':
+      case 'nrpti-master.pathfinder.gov.bc.ca':
         // Master
-        this.apiPath = 'https://nrts-prc-master.pathfinder.gov.bc.ca/api/public';
-        this.adminUrl = 'https://nrts-prc-master.pathfinder.gov.bc.ca/admin/';
+        this.apiPath = 'https://nrpti-master.pathfinder.gov.bc.ca/api/public';
+        this.adminUrl = 'https://nrpti-master.pathfinder.gov.bc.ca/admin/';
         this.env = 'master';
         break;
 

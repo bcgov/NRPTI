@@ -18,19 +18,17 @@ export class KeycloakService {
       case 'https://nrpti-master.pathfinder.gov.bc.ca':
         // Local, Dev, Master
         this.keycloakUrl = 'https://sso-dev.pathfinder.gov.bc.ca/auth';
-        this.keycloakRealm = 'prc';
+        this.keycloakRealm = '3l5nw6dk';
         break;
-
       case 'https://nrpti-test.pathfinder.gov.bc.ca':
         // Test
         this.keycloakUrl = 'https://sso-test.pathfinder.gov.bc.ca/auth';
-        this.keycloakRealm = 'acrfd';
+        this.keycloakRealm = '3l5nw6dk';
         break;
-
       default:
         // Prod
         this.keycloakUrl = 'https://sso.pathfinder.gov.bc.ca/auth';
-        this.keycloakRealm = 'acrfd';
+        this.keycloakRealm = '3l5nw6dk';
     }
   }
 
@@ -40,7 +38,7 @@ export class KeycloakService {
       const config = {
         url: this.keycloakUrl,
         realm: this.keycloakRealm,
-        clientId: 'prc-admin-console'
+        clientId: 'nrpti-admin'
       };
 
       // console.log('KC Auth init.');

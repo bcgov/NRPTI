@@ -12,6 +12,11 @@ export class ApplicationsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
+  // Temporary to satisfy template
+  public isLoading = false;
+  public apps = null;
+  public isApplicationsMapVisible = false;
+
   constructor(private renderer: Renderer2) {}
 
   ngOnInit() {
@@ -19,6 +24,10 @@ export class ApplicationsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {}
+
+  public updateCoordinates() {
+    // Temporary to satisfy template
+  }
 
   ngOnDestroy() {
     this.renderer.removeClass(document.body, 'no-scroll');
