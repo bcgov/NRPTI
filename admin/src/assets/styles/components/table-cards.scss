@@ -1,0 +1,132 @@
+/**
+ * Responsive table that changes to a stacked card layout on screen size change.
+ *
+ * How to use:
+ * <table class="table-cards" id="table-card">
+ *   <thead>
+ *     <tr>
+ *       <th>
+ *         Birth Date
+ *       </th>
+ *     </tr>
+ *   </thead>
+ *   <tbody>
+ *     <tr>
+ *       <td data-label="Birth Date">
+ *         Jan 1, 2000
+ *       </td>
+ *     </tr>
+ *   </tbody>
+ * </table>
+ *
+ * The data-label attribute is used as the row header for the record when it switches to card view.
+ */
+
+.table-cards {
+  width: 100%;
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    float: left;
+    margin: 0 0 2rem;
+  }
+
+  thead {
+    // border-bottom: 3px solid $primary;
+    border-bottom: 2px solid #ddd;
+
+    th {
+      padding: 0.35rem 0 0.35rem;
+      font-weight: 400;
+      text-align: left;
+      font-family: 'myriad-pro', 'Calibri', 'Arial', sans-serif;
+      font-size: 1.25rem;
+    }
+  }
+
+  tbody {
+    // border-bottom: 3px solid $primary;
+
+    tr {
+      border-bottom: 2px solid #ddd;
+
+      td {
+        padding: 0.75rem 0;
+
+        a {
+          color: $primary2;
+          text-decoration: none;
+          display: inline-block;
+          margin: 0 0.5rem 0 0;
+
+          &:hover,
+          &:active,
+          &:focus {
+            color: darken($primary2, 10%);
+            border: none;
+          }
+        }
+      }
+    }
+  }
+
+  tfoot {
+    td {
+      padding: 0.35rem 0 0.35rem;
+      text-align: left;
+      font-size: 1.25rem;
+      font-family: 'myriad-pro', 'Calibri', 'Arial', sans-serif;
+    }
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  #table-card {
+    display: block;
+
+    tbody {
+      border: none;
+    }
+
+    tbody,
+    th,
+    td,
+    tr,
+    tfoot {
+      display: block;
+    }
+
+    thead {
+      display: none;
+    }
+
+    tr {
+      float: left;
+      width: 100%;
+      margin: 0 0 1rem;
+      border: 1px solid $gray4;
+      box-shadow: 0 2px 5px 0 $gray4;
+      border-radius: 4px;
+      // border-top: 5px solid $primary;
+
+      td {
+        padding: 0.5rem 0.5rem 0.5rem 50%;
+        float: left;
+        width: 100%;
+
+        &::before {
+          content: attr(data-label);
+          width: 100%;
+          display: block;
+          float: left;
+          padding: 0.5rem 0.5rem 0.5rem 0;
+          clear: both;
+          margin: -0.5rem 0 0 -100%;
+          font-family: 'myriad-pro', 'Calibri', 'Arial', sans-serif;
+          font-size: 1.125rem;
+        }
+      }
+    }
+  }
+}

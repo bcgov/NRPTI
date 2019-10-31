@@ -1,0 +1,212 @@
+{
+  "text": [
+    "Construction, development and operation activities are subject to oversight by the provincial government and strict compliance procedures.",
+    "Industry is expected to operate in compliance with all conditions and requirements identified by the provincial government. These conditions and requirements are set out in the environmental assessment certificate or individual permit.",
+    "Compliance and enforcement actions vary, and often depend on the severity of the situation requiring attention or correction. When non-compliances are identified the goal is always the same: to bring the company back into compliance.",
+    "The list below includes all compliance actions imposed to date by the BC Oil and Gas Commission and British Columbia’s Environmental Assessment Office. For a full list of all authorizations and their associated requirements, please visit the [Authorizations](/project/1/authorizations) page."
+  ],
+  "documents": {
+    "headers": [
+      { "displayName": "Name", "fieldName": "name" },
+      { "displayName": "Government Agency", "fieldName": "agency" },
+      { "displayName": "Author", "fieldName": "author" },
+      { "displayName": "Type", "fieldName": "complianceDocumentType" },
+      { "displayName": "Date", "fieldName": "date" },
+      { "displayName": "Description", "fieldName": "description" }
+    ],
+    "filters": [
+      {
+        "displayName": "Government Agency",
+        "textFilters": [
+          {
+            "displayName": "Environmental Assessment Office",
+            "fieldName": "agencyEAO",
+            "documentFieldName": "agency",
+            "documentFieldValues": ["Environmental Assessment Office"]
+          },
+          {
+            "displayName": "BC Oil and Gas Commission",
+            "fieldName": "agencyBCOGC",
+            "documentFieldName": "agency",
+            "documentFieldValues": ["BC Oil and Gas Commission"]
+          }
+        ]
+      },
+      {
+        "displayName": "Author",
+        "textFilters": [
+          {
+            "displayName": "Environmental Assessment Office",
+            "fieldName": "authorEAO",
+            "documentFieldName": "author",
+            "documentFieldValues": ["Environmental Assessment Office"]
+          },
+          {
+            "displayName": "LNG Canada",
+            "fieldName": "authorLNG",
+            "documentFieldName": "author",
+            "documentFieldValues": ["LNG Canada"]
+          },
+          {
+            "displayName": "BC Oil and Gas commission",
+            "fieldName": "authorBCOGC",
+            "documentFieldName": "author",
+            "documentFieldValues": ["BC Oil and Gas commission"]
+          }
+        ]
+      },
+      {
+        "displayName": "Document Type",
+        "textFilters": [
+          {
+            "displayName": "Inspection",
+            "fieldName": "inspection",
+            "documentFieldName": "complianceDocumentType",
+            "documentFieldValues": ["Inspection"]
+          },
+          {
+            "displayName": "Enforcement Action",
+            "fieldName": "enforcementAction",
+            "documentFieldName": "complianceDocumentType",
+            "documentFieldValues": ["Enforcement Action"]
+          },
+          {
+            "displayName": "Warning Letter",
+            "fieldName": "warningLetter",
+            "documentFieldName": "complianceDocumentType",
+            "documentFieldValues": ["Warning Letter"]
+          },
+          {
+            "displayName": "Compliance Self-Report",
+            "fieldName": "complianceSelfReport",
+            "documentFieldName": "complianceDocumentType",
+            "documentFieldValues": ["Compliance Self-Report"]
+          }
+        ]
+      }
+    ],
+    "docs": [
+      {
+        "url": "https://projects.eao.gov.bc.ca/api/document/5da736149273f300258a5661/fetch/LNGC%20-%202019-08-13%20Inspection%20Record%20IR2019-029.pdf",
+        "description": "On August 13, 2019 Environmental Assessment Office Compliance & Enforcement Officers inspected against the requirements of EAC E15-01 (Appendices 1-5).",
+        "name": "Inspection Record 2019-08-13",
+        "date": "08-10-2019",
+        "agency": "Environmental Assessment Office",
+        "category": "Compliance",
+        "complianceDocumentType": "Compliance Self-Report",
+        "segment": "",
+        "author": "Environmental Assessment Office"
+      },
+      {
+        "url": "https://projects.eao.gov.bc.ca/api/document/5d42192b4cb2c7001b13591e/fetch/EAO%20Management%20Plan%20Update%20Letter%20-%20LNGCJFJV%2019%2007%2031.pdf",
+        "description": "Updated Schedule (table) for LNG Canada's Management Plans",
+        "name": "Update Schedule for Management Plans - 2019-07-31",
+        "date": "31-07-2019",
+        "agency": "Environmental Assessment Office",
+        "category": "Compliance",
+        "complianceDocumentType": "Compliance Self-Report",
+        "segment": "",
+        "author": "LNG Canada"
+      },
+      {
+        "url": "https://projects.eao.gov.bc.ca/api/document/5d24aa9acd7bec0021b0cf9d/fetch/LNGC%20-%202019-05-28%20Inspection%20Record%20IR2019-004.pdf",
+        "description": "On May 28th, 2019 Environmental Assessment Office Compliance & Enforcement Officer Shayla Frechette (EAO C&E) inspected against the requirements of EAC E15- 01 (Appendix 1, 2, 3, 4 and 5).",
+        "name": "Inspection Record - 2019-05-28",
+        "date": "03-07-2019",
+        "agency": "Environmental Assessment Office",
+        "category": "Compliance",
+        "complianceDocumentType": "Inspection",
+        "segment": "",
+        "author": "Environmental Assessment Office"
+      },
+      {
+        "url": "https://projects.eao.gov.bc.ca/api/document/58869078e036fb0105768b62/fetch",
+        "description": "LNG Canada Annual Status of Condition Compliance Report. Annual Compliance Self-Report submitted in accordance with Condition #1b of the Environmental Assessment Certificate #E15-01 ",
+        "name": "2015 - Compliance Self-Report",
+        "date": "29-01-2016",
+        "agency": "Environmental Assessment Office",
+        "category": "Compliance",
+        "complianceDocumentType": "Compliance Self-Report",
+        "segment": "",
+        "author": "LNG Canada"
+      },
+      {
+        "url": "https://projects.eao.gov.bc.ca/api/document/5908ffd4589f82001db6ec21/fetch",
+        "description": " LNG Canada Annual Status of Condition Compliance Report for\nthe 2015 reporting year. Annual Compliance Self-Report submitted in accordance with Condition #1b of the Environmental Assessment Certificate #E15-01 ",
+        "name": "2016 - Compliance Self-Report",
+        "date": "30-01-2017",
+        "agency": "Environmental Assessment Office",
+        "category": "Compliance",
+        "complianceDocumentType": "Compliance Self-Report",
+        "segment": "",
+        "author": "LNG Canada"
+      },
+      {
+        "url": "https://projects.eao.gov.bc.ca/api/document/58869078e036fb0105768b61/fetch",
+        "description": "Compliance Self-Report submitted in accordance with Condition #1a of the Environmental Assessment Certificate #E15-01. Submitted at least 30 days prior to the start of construction.",
+        "name": "Pre-Construction Compliance Report",
+        "date": "28-10-2015",
+        "agency": "Environmental Assessment Office",
+        "category": "Compliance",
+        "complianceDocumentType": "Compliance Self-Report",
+        "segment": "",
+        "author": "LNG Canada"
+      },
+      {
+        "url": "https://projects.eao.gov.bc.ca/api/document/5c86e2d2e9647600240bf99e/fetch",
+        "description": "2018 Annual Compliance Self-Report submitted in accordance with Condition #1b of the Environmental Assessment Certificate #E15-01 ",
+        "name": "2018 - Compliance Self-Report",
+        "date": "31-01-2019",
+        "agency": "Environmental Assessment Office",
+        "category": "Compliance",
+        "complianceDocumentType": "Compliance Self-Report",
+        "segment": "",
+        "author": "LNG Canada"
+      },
+      {
+        "url": "https://projects.eao.gov.bc.ca/api/document/5a7cd765f7fae400194a5b3e/fetch",
+        "description": "LNG Canada Annual Status of Compliance Report for the 2017 reporting year.  Annual Compliance Self-Report submitted in accordance with Condition #1b of the Environmental Assessment Certificate #E15-01 ",
+        "name": "2017 - Compliance Self-Report",
+        "date": "30-01-2018",
+        "agency": "Environmental Assessment Office",
+        "category": "Compliance",
+        "complianceDocumentType": "Compliance Self-Report",
+        "segment": "",
+        "author": "LNG Canada"
+      },
+      {
+        "url": "https://projects.eao.gov.bc.ca/api/document/5c6f38d5ee3c67002498a798/fetch",
+        "description": "On December 4th, 2018 Environmental Assessment Office (EAO) Compliance and Enforcement Officers Justin Carlson and Shayla Frechette (collectively EAO C&E) conducted a field and administrative inspection on the Project (EAC# E15-01) located near Kitimat, BC.",
+        "name": "Inspection Report",
+        "date": "04-12-2018",
+        "agency": "Environmental Assessment Office",
+        "category": "Compliance",
+        "complianceDocumentType": "Inspection",
+        "segment": "",
+        "author": "Environmental Assessment Office"
+      },
+      {
+        "url": "https://projects.eao.gov.bc.ca/api/document/58869079e036fb0105768b67/fetch",
+        "description": "On 2015-11-02, EAO C&E conducted an inspection of the LNG Canada (LNGC) Project site near Kitimat. LNGC informed EAO C&E September 14, 2015 that they may proceed to construction Mid October 2015 (as per Appendix B Condition 1).",
+        "name": "Inspection Report",
+        "date": "02-11-2015",
+        "agency": "Environmental Assessment Office",
+        "category": "Compliance",
+        "complianceDocumentType": "Inspection",
+        "segment": "",
+        "author": "Environmental Assessment Office"
+      },
+      {
+        "url": "https://www.projects.eao.gov.bc.ca/api/document/5cf843b0e15200001a782e70/fetch/Fee%20Order%20-%202018-12-04%20Inspection",
+        "description": "Enforcement Fees – Inspections under Section 7 of the Fee Regulation",
+        "name": "Fee Order - 2018-12-04 Inspection",
+        "date": "23-05-2019",
+        "agency": "Environmental Assessment Office",
+        "category": "Compliance",
+        "complianceDocumentType": "Inspection",
+        "segment": "",
+        "author": "Environmental Assessment Office"
+      }
+    ]
+  }
+}

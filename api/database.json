@@ -1,0 +1,45 @@
+{
+  "defaultEnv": "local",
+
+  "local": {
+    "driver": "mongodb",
+    "database": "nrpti-dev",
+    "host": "localhost"
+  },
+
+  "dev": {
+    "driver": "mongodb",
+    "database": { "ENV": "MONGODB_DATABASE" },
+    "user": { "ENV": "MONGODB_USERNAME" },
+    "password": { "ENV": "MONGODB_PASSWORD" },
+    "authSource": "admin",
+    "host": "MONGODB_SERVICE_HOST"
+  },
+
+  "master": {
+    "driver": "mongodb",
+    "database": { "ENV": "MONGODB_DATABASE" },
+    "user": { "ENV": "MONGODB_USERNAME" },
+    "password": { "ENV": "MONGODB_PASSWORD" },
+    "authSource": "admin",
+    "host": "MONGODB_MASTER_SERVICE_HOST"
+  },
+
+  "test": {
+    "driver": "mongodb",
+    "database": { "ENV": "MONGODB_DATABASE" },
+    "user": { "ENV": "MONGODB_USERNAME" },
+    "password": { "ENV": "MONGODB_PASSWORD" },
+    "authSource": "admin",
+    "host": "MONGODB_SERVICE_HOST"
+  },
+
+  "prod": {
+    "driver": "mongodb",
+    "database": { "ENV": "MONGODB_DATABASE" },
+    "user": { "ENV": "MONGODB_USERNAME" },
+    "password": { "ENV": "MONGODB_PASSWORD" },
+    "authSource": "admin",
+    "host": "MONGODB_SERVICE_HOST"
+  }
+}

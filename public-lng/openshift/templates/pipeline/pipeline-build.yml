@@ -1,0 +1,24 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: lng-public-pipeline
+    name: lng-public-pipeline
+    template: lng-public-pipeline
+  name: lng-public-pipeline
+  namespace: qf32cm-tools
+spec:
+  nodeSelector: {}
+  output: {}
+  postCommit: {}
+  resources: {}
+  runPolicy: Parallel
+  source:
+    git:
+      ref: master
+      uri: 'https://github.com/bcgov/lngcanada-public.git'
+    type: Git
+  strategy:
+    jenkinsPipelineStrategy:
+      jenkinsfilePath: Jenkinsfile
+    type: JenkinsPipeline

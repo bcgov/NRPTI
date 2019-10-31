@@ -1,0 +1,8 @@
+@import "~assets/styles/base/base.scss";
+
+:host {
+  @include flex(1 1 auto);
+
+  display: block;
+  background: $white;
+}

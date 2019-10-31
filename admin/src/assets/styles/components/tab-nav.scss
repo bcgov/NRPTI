@@ -1,0 +1,63 @@
+$nav-tab-border-width: 0;
+$nav-tab-border-color: #fff;
+$nav-tab-bg: #f7f8fa;
+$nav-tab-pane-bg: #fff;
+$nav-tab-bg-active: #fff;
+
+.nav-tabs {
+  border-color: $nav-tab-border-color;
+  border-width: $nav-tab-border-width;
+  background: $nav-tab-bg;
+  text-transform: normal;
+
+  .nav-item {
+    margin-bottom: calc(#{$nav-tab-border-width} * -1);
+  }
+
+  .nav-link {
+    min-width: 6rem;
+    padding: 1rem 1.5rem;
+    color: #999;
+    border-width: $nav-tab-border-width;
+    border-bottom-width: 0;
+    border-radius: 0;
+    text-align: center;
+    font-size: 0.9375rem;
+    font-weight: 700;
+
+    &:focus,
+    &:hover {
+      color: #333;
+      border: $nav-tab-border-width solid transparent;
+      border-bottom-width: 0;
+      background: rgba($nav-tab-bg, 0.5);
+    }
+
+    &.active {
+      color: #000;
+      border-color: $nav-tab-border-color;
+      border-width: $nav-tab-border-width;
+      border-bottom-width: 0;
+      background: $nav-tab-bg-active;
+
+      &:focus,
+      &:hover {
+        border: $nav-tab-border-width solid $nav-tab-border-color;
+        border-bottom-color: transparent;
+        border-bottom-width: 0;
+      }
+    }
+
+    i {
+      margin-top: -0.2rem;
+      margin-right: 0.2rem;
+      margin-left: -0.2rem;
+      vertical-align: middle;
+    }
+  }
+}
+
+.tab-pane {
+  padding: 2rem 1.5rem;
+  background: $nav-tab-pane-bg;
+}

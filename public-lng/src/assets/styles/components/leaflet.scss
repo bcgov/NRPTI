@@ -1,0 +1,126 @@
+.leaflet-container {
+  font-family: "myriad-pro", Calibri, Arial, sans-serif;
+
+  a.leaflet-popup-close-button {
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.5rem 0;
+    width: 2rem;
+    height: 2rem;
+    color: $gray6;
+    border-radius: 0.25rem;
+    font-size: 24px; // default material-icon size
+    font-weight: normal;
+    transition: all ease-out 0.2s;
+
+    &:active,
+    &:focus,
+    &:hover {
+      color: $gray9;
+      background: $gray1;
+    }
+  }
+}
+
+// Popup
+.leaflet-popup {
+  margin-bottom: 30px; // Offset so we can see the marker
+}
+
+#map .popup-header {
+  background-color: $primary6;
+  color: white;
+  padding: 0.35rem;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+#map .popup-content {
+  padding: 0.5rem;
+}
+
+#map .popup-hr {
+  margin: 0.2rem 0 0.2rem 0;
+}
+
+#map .popup-title {
+  font-size: 1.2rem;
+  font-weight: bolder;
+}
+
+#map .popup-subtitle {
+  font-size: 1rem;
+}
+
+#map .popup-button button {
+  right: 0.1rem;
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  margin-left: 8.4rem;
+}
+
+#map .popup-desc-title {
+  font-weight: 600;
+  color: $primary6;
+  margin-bottom: 0.2rem;
+}
+
+#map .popup-value {
+  font-weight: 600;
+  color: $primary6;
+}
+
+.leaflet-popup-content-wrapper {
+  padding: 0;
+  border-radius: 0.5rem;
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  width: 20rem !important;
+  overflow: hidden;
+  line-height: 1.5;
+}
+
+// Map Attribution
+.leaflet-control-attribution {
+  padding: 0.5rem;
+  line-height: 0.75rem;
+  font-size: 0.75rem;
+}
+
+// Marker cluster size variants
+// * small  = 1-9
+// * medium = 10-99
+// * large  = 100+
+
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  background-color: transparent !important;
+  background-image: url("~assets/images/cluster-pin.svg");
+  background-size: 100%;
+  background-repeat: no-repeat;
+
+  div {
+    width: 100%;
+    height: 48px;
+    color: #fff;
+    background-color: transparent !important;
+    text-align: center;
+    line-height: 2.25rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+}
+
+// Layer Control
+.leaflet-touch .leaflet-control-layers-toggle {
+  width: 32px;
+  height: 32px;
+  background: url("~assets/images/baseline-layers-24px.svg") no-repeat center 5px;
+}
+
+.leaflet-top.leaflet-right .leaflet-control {
+  margin-top: 14px;
+}

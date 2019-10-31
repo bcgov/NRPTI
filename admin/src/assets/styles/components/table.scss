@@ -1,0 +1,122 @@
+.table {
+  width: 100%;
+  table-layout: fixed;
+
+  td,
+  th {
+    text-align: left;
+
+    &:first-child {
+      padding-left: 1rem;
+    }
+
+    &:last-child {
+      padding-right: 1rem;
+    }
+  }
+
+  thead {
+    background: $table-header-bg;
+    border-bottom: 2px solid $white;
+
+    th {
+      padding: 0.5rem;
+      border-bottom: 3px solid $lightgray;
+      vertical-align: middle;
+      text-shadow: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+
+      &.sortable {
+        transition: border-color ease-out 0.2s;
+        cursor: pointer;
+        user-select: none;
+
+        &:hover {
+          border-bottom-color: $table-header-sort-active;
+        }
+
+        &.sort-asc,
+        &.sort-desc {
+          color: $black;
+          border-bottom-color: $table-header-sort-active;
+          background: transparent;
+          text-shadow: none;
+        }
+      }
+    }
+  }
+
+  tbody {
+    td {
+      padding: 0.25rem 0.5rem;
+      vertical-align: top;
+    }
+  }
+
+  + pagination-template {
+    margin-top: 1rem;
+  }
+}
+
+th {
+  &.sortable {
+    cursor: pointer;
+  }
+
+  .sort {
+    position: relative;
+    margin-left: 0.15rem;
+    width: calc(#{$table-sort-icon-size} * 2);
+    height: calc(#{$table-sort-icon-size} * 2);
+    display: inline-block;
+
+    &::before,
+    &::after {
+      content: ' ';
+      position: absolute;
+      display: block;
+      border-color: $table-sort-icon-color transparent;
+      border-style: solid;
+    }
+
+    &::before {
+      top: -1px;
+      border-width: 0 $table-sort-icon-size $table-sort-icon-size $table-sort-icon-size;
+    }
+
+    &::after {
+      content: ' ';
+      bottom: -1px;
+      border-width: $table-sort-icon-size $table-sort-icon-size 0 $table-sort-icon-size;
+    }
+
+    &.sort-asc,
+    &.sort-desc {
+      &::before,
+      &::after {
+        border-color: $table-sort-icon-active-color transparent;
+      }
+    }
+
+    &.sort-asc {
+      &::before {
+        top: 25%;
+      }
+
+      &::after {
+        display: none;
+      }
+    }
+
+    &.sort-desc {
+      &::before {
+        display: none;
+      }
+
+      &::after {
+        bottom: 25%;
+      }
+    }
+  }
+}

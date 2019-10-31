@@ -1,0 +1,12 @@
+// Material Snackbar
+// ref: https://material.angular.io/components/snack-bar/
+.mat-snack-bar-container {
+  // background: yellow;
+  // color: $black;
+  .mat-simple-snackbar {
+    .mat-simple-snackbar-action {
+      // color: unset;
+      font-weight: 600;
+    }
+  }
+}

@@ -1,0 +1,142 @@
+@import '~assets/styles/base/base.scss';
+
+$popup-border-radius: 0.2rem;
+$popup-title-color: #fff;
+$popup-title-bg: #036;
+
+.popup-content {
+  padding: 1rem;
+}
+
+.popup-body {
+  border-bottom-right-radius: $popup-border-radius;
+  border-bottom-left-radius: $popup-border-radius;
+  line-height: 1.4em;
+  font-size: 0.875em;
+
+  ul {
+    margin-bottom: 0;
+    padding-left: 0;
+    list-style-type: none;
+    font-size: inherit;
+  }
+}
+
+// Title Section Contents
+.file-number {
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.applicant-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: $gray9;
+}
+
+.applicant-name,
+.purpose {
+  line-height: 1.25rem;
+}
+
+// Status
+.status-container {
+  margin-top: 0.8rem;
+  margin-bottom: 0;
+  padding: 0;
+  overflow: hidden;
+
+  li {
+    padding-left: 1.75rem;
+    overflow: hidden;
+    white-space: nowrap;
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-size: 18px;
+    text-overflow: ellipsis;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  li + li {
+    margin-top: 0.3rem;
+  }
+}
+
+// Status Iconography
+.commenting-open {
+  background: url('~assets/images/baseline-insert_comment-24px.svg');
+}
+
+.commenting-closed {
+  background: url('~assets/images/baseline-cancel-24px.svg');
+}
+
+.under-review {
+  background: url('~assets/images/baseline-access_time-24px.svg');
+}
+
+.review-complete,
+.unknown {
+  background: url('~assets/images/outline-info-24px.svg');
+}
+
+.approved {
+  background: url('~assets/images/baseline-check-24px.svg');
+}
+
+.abandoned,
+.not-approved {
+  background: url('~assets/images/baseline-cancel-24px.svg');
+}
+
+.meta-container {
+  position: relative;
+  overflow: hidden;
+
+  li {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  li.app-description {
+    margin-bottom: 0.5em;
+  }
+
+  li:not(.app-description) {
+    white-space: nowrap;
+
+    + li {
+      margin-top: 0.1em;
+    }
+  }
+
+  .key {
+    padding-right: 0.25em;
+    font-weight: 700;
+  }
+}
+
+hr {
+  margin-top: 0.875em;
+  margin-bottom: 0.875em;
+}
+
+@media (max-width: 1023px) {
+  .popup-content {
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .popup-content {
+    font-size: 1rem;
+  }
+}
+
+.app-link {
+  margin-top: 1rem;
+  width: 100%;
+  font-size: 0.75rem;
+  font-weight: 700;
+}

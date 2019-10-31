@@ -1,0 +1,39 @@
+<div class="files-info" *ngIf="showInfo">
+  <ng-container *ngIf="maxFiles > 0">Maximum of {{maxFiles}} files. </ng-container>
+  <ng-container *ngIf="maxSize > 0">File size up to {{maxSize}}MB each.</ng-container>
+  <br>
+  <ng-container *ngIf="fileExt.length > 0">Acceptable file types: {{fileExt.slice().join(', ')}}</ng-container>
+</div>
+
+<div draggable="true" ngClass="{{dragDropClass}}">
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <a href="javascript:void(0)" (click)="file.click()">
+        <i class="material-icons">file_upload</i>
+        Drop files to attach, or browse.
+      </a>
+      <input type="file" #file [multiple]="(maxFiles !== 1)" (change)="onFileChange($event)" style="display:none" />
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showList && files.length > 0" class="files-list">
+  <ul>
+    <li *ngFor="let f of files">
+      <span class="name">{{f.name}}</span>
+      <span class="value">
+        <button type="button" class="btn btn-danger btn-xs" (click)="removeFile(f)" title="Remove this file">
+          <i class="material-icons">clear</i>
+          <span>Remove</span>
+        </button>
+      </span>
+    </li>
+  </ul>
+</div>
+
+<div *ngIf="errors.length > 0" class="errors-list">
+  <ul>
+    <li *ngFor="let err of errors">
+      <i class="material-icons">error</i>&nbsp;{{err}}</li>
+  </ul>
+</div>

@@ -1,0 +1,253 @@
+.btn {
+  transition: all linear 0.2s;
+  cursor: pointer;
+
+  &.inverted {
+    color: #fff;
+    border: 2px solid #fff;
+    background: transparent;
+
+    &:active,
+    &:focus,
+    &:hover {
+      border-color: $gold;
+      background: darken($gold, 8%);
+    }
+  }
+
+  span {
+    vertical-align: middle;
+
+    + i {
+      vertical-align: middle;
+    }
+  }
+
+  i {
+    + span {
+      vertical-align: middle;
+    }
+  }
+
+  &:disabled {
+    pointer-events: none;
+  }
+}
+
+.btn-inverted {
+  background: darken($gold, 5%);
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+// Slide Buttons
+.slide-r-btn,
+.slide-l-btn {
+  padding: 0.5rem;
+  border-radius: 0.2rem;
+  transition: all ease-out 0.2s;
+
+  i {
+    vertical-align: middle;
+  }
+
+  img,
+  i,
+  span {
+    transition: all ease-out 0.2s;
+  }
+
+  img,
+  i {
+    opacity: 0;
+  }
+
+  span {
+    display: inline-block;
+  }
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+
+    img,
+    i,
+    span {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}
+
+.slide-r-btn {
+  img,
+  i {
+    margin-left: 0.25rem;
+    transform: translateX(20px);
+  }
+
+  span {
+    margin-left: 0.25rem;
+    transform: translateX(12px);
+  }
+}
+
+.slide-l-btn {
+  img,
+  i {
+    margin-right: 0.25rem;
+    transform: translateX(-20px);
+  }
+
+  span {
+    margin-right: 0.25rem;
+    transform: translateX(-12px);
+  }
+}
+
+@media (max-device-width: 1024px) {
+  .slide-r-btn,
+  .slide-l-btn {
+    img,
+    i,
+    span {
+      transform: translateX(0);
+    }
+
+    img,
+    i {
+      opacity: 1;
+    }
+  }
+}
+
+// Content Buttons
+.content-btns {
+  margin-top: 3rem;
+}
+
+.content-btn {
+  padding: 0.5rem;
+  background: $lightgray;
+  color: $link-color;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+
+  &:focus,
+  &:hover {
+    border-color: $gold;
+    background: $gold;
+  }
+
+  &:not([href]):not([tabindex]) {
+    color: $link-color;
+  }
+}
+
+.content-btn-alt {
+  padding: 0.35rem 1rem;
+  color: #007bff;
+  border: 2px solid #007bff;
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 700;
+
+  &:focus,
+  &:hover {
+    color: #fff;
+    border-color: #0275d8;
+    background: #0275d8;
+  }
+}
+
+// Scroll Top Button
+.scroll-top-btn {
+  position: fixed;
+  bottom: 3rem;
+  right: 1rem;
+  padding: 0.5rem;
+  opacity: 0;
+  border-color: $gold;
+  background: $gold;
+  z-index: 9999;
+  transform: translateY(1rem);
+  transition: all ease-out 0.2s;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  i {
+    vertical-align: middle;
+  }
+}
+
+// Fix active and focus stats for btn-light
+.btn-light {
+  background: #f1f1f1;
+
+  &:active,
+  &:focus {
+    box-shadow: 0 0 0 0.2rem #ccc;
+  }
+}
+
+// Icon Button
+.btn-icon {
+  width: 2rem;
+  padding-top: 0.35rem;
+  padding-right: 0;
+  padding-bottom: 0.35rem;
+  padding-left: 0;
+  overflow: hidden;
+  color: $gray6;
+  background-color: transparent;
+  transition: all ease-out 0.2s;
+  cursor: pointer;
+
+  i {
+    margin-top: -0.25rem;
+    vertical-align: middle;
+  }
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: $gray9;
+    background-color: $gray2;
+  }
+}
+
+// Generic close button for panels, popups, etc.
+.close-btn {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  color: $gray6;
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: $gray9;
+    background: $gray1;
+  }
+}
+
+// Label buttons (help, info, etc.)
+.label-btn {
+  margin-top: -0.2rem;
+  padding: 0;
+  width: auto;
+
+  i {
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+    background-image: url('~/assets/images/baseline-info-24px.svg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 18px;
+  }
+}

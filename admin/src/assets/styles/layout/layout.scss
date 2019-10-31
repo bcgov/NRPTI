@@ -1,0 +1,213 @@
+html,
+body {
+  min-height: 100%;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+}
+
+// Container
+.container {
+  margin: 0 auto;
+  // Need to override bootstrap responsive behaviour for the container class here to ensure we aren't squeezing the interface unneccessarily
+  max-width: 1140px !important;
+  padding: 1.5rem;
+
+  section {
+    &.last {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Main Element
+main {
+  h2 {
+    margin-bottom: 1rem;
+    line-height: 2rem;
+    font-size: 1.75rem;
+  }
+
+  h3 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+
+    span {
+      margin-top: 0.5rem;
+      display: block;
+      line-height: 1.25rem;
+      font-size: 1rem;
+    }
+  }
+
+  p {
+    line-height: 1.4rem;
+    font-size: 0.9375rem;
+  }
+
+  section {
+    + section {
+      margin-top: 2rem;
+    }
+
+    &.last {
+      margin-bottom: 0;
+    }
+
+    &.add-spacer {
+      padding-bottom: 2.5rem;
+      border-bottom: 2px solid #ccc;
+    }
+
+    h3 {
+      margin-bottom: 1.5rem;
+    }
+
+    h4 {
+      margin-bottom: 1.5rem;
+      line-height: 1.9rem;
+    }
+
+    h5 {
+      line-height: 1.25rem;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    ul {
+      margin-bottom: 1.75rem;
+      list-style-type: square;
+    }
+
+    ol {
+      margin-bottom: 1.75rem;
+    }
+  }
+
+  ul.content-external-links {
+    margin-bottom: 2rem;
+  }
+
+  // Named anchor helper
+  .pg-anchor[id]::before {
+    content: " ";
+    display: block;
+    height: 98px;
+    margin: -98px 0 0;
+  }
+
+  .main-footer {
+    padding: 1.5rem;
+    background-color: rgba(0, 51, 102, 0.8);
+    color: $white;
+
+    a {
+      color: $gold;
+    }
+  }
+}
+
+@media (min-width: 760px) {
+  main {
+    h2 {
+      line-height: 2.5rem;
+      font-size: 2rem;
+
+      span {
+        display: block;
+      }
+    }
+
+    h3 {
+      font-size: 1.75rem;
+    }
+
+    p {
+      line-height: 1.8rem;
+      font-size: 1rem;
+    }
+  }
+}
+
+hr {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-width: 2px;
+}
+
+/* class to make divs look like anchors */
+.clickable {
+  cursor: pointer !important;
+  color: $link-color !important;
+
+  &:focus,
+  &:hover {
+    text-decoration: underline !important;
+  }
+}
+
+// This should be in helper classes
+// hide the footer when a component (e.g. the map) is shown full screen
+.full-screen {
+  + app-footer {
+    display: none;
+  }
+}
+
+// Page Title Container
+.title-container {
+  @include flex-box();
+
+  &__title {
+    @include flex(1 1 auto);
+
+    margin: 0;
+
+    h1 {
+      margin-bottom: 0;
+      font-size: 1.65rem;
+    }
+  }
+
+  &__actions {
+    @include flex(0 0 auto);
+
+    .btn {
+      min-width: 5rem;
+      font-size: 0.875rem;
+      font-weight: bold;
+
+      + .btn {
+        margin-left: 0.25rem;
+      }
+    }
+  }
+}
+
+.title-container__sub {
+  display: block;
+  letter-spacing: 0.01rem;
+}
+
+.top-container {
+  @include flex(0 0 auto);
+
+  position: relative;
+  padding-right: 17px; // Offset approximate width of scrollbar
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.15);
+  z-index: 999;
+
+  .container {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+}
+
+.bottom-container {
+  @include flex(1 1 auto);
+
+  overflow-y: scroll;
+  background: #f7f8fa;
+}

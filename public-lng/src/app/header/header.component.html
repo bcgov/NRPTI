@@ -1,0 +1,50 @@
+<header class="app-header app-header--flex" id="header">
+  <nav class="navbar navbar-expand-md justify-content-between">
+    <a class="navbar-brand" title="LNG Regulatory Interface" routerLink="/home">
+      <span class="navbar-brand__title">LNG Regulatory Interface - BETA</span>
+    </a>
+    <button class="navbar-toggler" type="button" title="Toggle Main Navigation"
+      data-toggle="collapse"
+      data-target="#mainNav"
+      aria-controls="navbarText"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      <i class="material-icons">menu</i>
+      <span>MENU</span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav">
+        <!-- <li class="nav-item dropdown" [hidden]="router.url.startsWith('/map')"> -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span>{{project}}</span>
+            <span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" title="LNG Canada" routerLink="/project/1">
+              <strong>LNG Canada</strong>
+            </a>
+            <a class="dropdown-item" title="Coastal GasLink" routerLink="/project/2">
+              <strong>Coastal GasLink</strong>
+            </a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" title="Projects" routerLink="/map">
+            <span>Map</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" title="FAQ" routerLink="/faq">
+            <span>FAQ</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" title="Connect with us" routerLink="/connect">
+            <span>Connect</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
