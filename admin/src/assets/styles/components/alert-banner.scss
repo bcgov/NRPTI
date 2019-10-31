@@ -1,0 +1,18 @@
+@import "assets/styles/base/base.scss";
+
+.alert-contents {
+  @include flex-box();
+  @include flex-direction(row);
+
+  align-items: center;
+}
+
+.alert-contents i {
+  @include flex(0 0 auto);
+
+  margin-right: 1rem;
+}
+
+.alert-msg {
+  @include flex(1 1 auto);
+}

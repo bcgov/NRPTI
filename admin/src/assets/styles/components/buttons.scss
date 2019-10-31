@@ -1,0 +1,246 @@
+.btn {
+  border-radius: 0.25rem;
+  font-weight: 400;
+  transition: all linear 0.2s;
+  cursor: pointer;
+
+  &.inverted {
+    color: $white;
+    border: 2px solid $white;
+    background: transparent;
+    text-transform: uppercase;
+    font-weight: 700;
+
+    &:active,
+    &:focus,
+    &:hover {
+      border-color: $gold;
+      background: darken($gold, 8%);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+  }
+
+  i {
+    vertical-align: middle;
+  }
+
+  &:disabled {
+    pointer-events: none;
+  }
+}
+
+.btn-inverted {
+  background: darken($gold, 5%);
+  text-transform: uppercase;
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+// Main Button
+main {
+  .btn-default {
+    padding: 0.5rem;
+  }
+}
+
+// Slide Buttons
+.slide-r-btn,
+.slide-l-btn {
+  padding: 0.5rem;
+  border-radius: 0.2rem;
+  transition: all ease-out 0.2s;
+
+  img,
+  i,
+  span {
+    transition: all ease-out 0.2s;
+  }
+
+  img,
+  i {
+    opacity: 0;
+  }
+
+  span {
+    display: inline-block;
+  }
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+
+    img,
+    i,
+    span {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}
+
+.slide-r-btn {
+  img,
+  i {
+    margin-left: 0.25rem;
+    transform: translateX(20px);
+  }
+
+  span {
+    margin-left: 0.25rem;
+    transform: translateX(12px);
+  }
+}
+
+.slide-l-btn {
+  img,
+  i {
+    margin-right: 0.25rem;
+    transform: translateX(-20px);
+  }
+
+  span {
+    margin-right: 0.25rem;
+    transform: translateX(-12px);
+  }
+}
+
+@media (max-device-width: 1024px) {
+  .slide-r-btn,
+  .slide-l-btn {
+    img,
+    i,
+    span {
+      transform: translateX(0);
+    }
+
+    img,
+    i {
+      opacity: 1;
+    }
+  }
+}
+
+// Content Buttons
+.content-btns {
+  margin-top: 3rem;
+}
+
+.content-btn {
+  padding: 0.5rem;
+  background: $lightgray;
+  color: $link-color;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow:
+    0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12),
+    0 3px 1px -2px rgba(0, 0, 0, 0.2);
+
+  &:focus,
+  &:hover {
+    border-color: $gold;
+    background: $gold;
+  }
+
+  &:not([href]):not([tabindex]) {
+    color: $link-color;
+  }
+}
+
+.content-btn-alt {
+  padding: 0.35rem 1rem;
+  color: #007bff;
+  border: 2px solid #007bff;
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 700;
+
+  &:focus,
+  &:hover {
+    color: $white;
+    border-color: #007bff;
+    background: #007bff;
+  }
+
+  i {
+    margin-top: -0.2rem;
+    margin-left: -0.2rem;
+  }
+}
+
+.content-btn-alt.danger {
+  color: #dc3545;
+  border-color: #dc3545;
+
+  &:focus,
+  &:hover {
+    color: $white;
+    border-color: #dc3545;
+    background: #dc3545;
+  }
+}
+
+// Scroll Top Button
+.scroll-top-btn {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  padding: 0.5rem;
+  opacity: 0;
+  border-color: $gold;
+  background: $gold;
+  transform: translateY(1rem);
+  transition: all ease-out 0.2s;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Submit Button
+.submit-btn {
+  border-color: $gold;
+  background: $gold;
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+// Fix active and focus stats for btn-light
+.btn-light {
+  background: #f1f1f1;
+
+  &:active,
+  &:focus {
+    box-shadow: 0 0 0 0.2rem #ccc;
+  }
+}
+
+.btn-icon {
+  min-width: 2.5rem !important;
+  padding-top: 0.35rem;
+  padding-right: 0;
+  padding-bottom: 0.35rem;
+  padding-left: 0;
+  overflow: hidden;
+  color: #808080;
+  background: transparent;
+  transition: all ease-out 0.2s;
+  cursor: pointer;
+
+  i {
+    margin-top: -0.1rem;
+  }
+
+  .btn-txt {
+    visibility: hidden;
+  }
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: #000;
+    background: #eee;
+  }
+}

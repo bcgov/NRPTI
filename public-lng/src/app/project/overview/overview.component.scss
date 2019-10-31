@@ -1,0 +1,139 @@
+@import "~assets/styles/base/base.scss";
+
+// Page structure
+:host {
+  @include flex(1 1 auto);
+
+  display: block;
+  background: $white;
+}
+
+.overview-content {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: 2fr 40rem;
+  grid-template-areas: "content activities";
+}
+
+.left-column {
+  grid-area: content;
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 20rem minmax(20rem, auto);
+  grid-template-areas:
+    "text text"
+    "details map";
+}
+
+.right-column {
+  grid-area: activities;
+}
+
+.box1 {
+  grid-area: text;
+}
+
+.box2 {
+  grid-area: details;
+  height: 22rem;
+}
+
+.box3 {
+  grid-area: map;
+  height: 22rem;
+}
+
+// details box
+
+.details-outer {
+  border: 1px solid $black;
+  height: 100%;
+
+  .details-inner {
+    margin: 1rem;
+
+    .details-item {
+      margin-bottom: 0.5rem;
+
+      .details-header {
+        border-bottom: 1px solid $black;
+
+        strong {
+          font-weight: 600;
+          color: $gray8;
+        }
+      }
+
+      .details-content {
+        margin-bottom: 0.25rem;
+      }
+    }
+  }
+}
+
+// image box
+
+.map-outer {
+  position: relative;
+  border: 1px solid $black;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  .card-text {
+    position: absolute;
+    bottom: 0;
+    right: 0.4rem;
+    font-size: 1.5rem;
+    color: $white;
+    z-index: 1001; // must be larger than .card-image
+    pointer-events: none;
+  }
+
+  .card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.8;
+    z-index: 1000;
+    transition: 0.5s ease-in-out;
+
+    &:hover {
+      opacity: 1;
+      cursor: pointer;
+    }
+  }
+}
+
+// media
+
+@media (max-width: 1440px) {
+  .overview-content {
+    grid-template-columns: 5fr 4fr;
+
+    .left-column {
+      display: block;
+
+      .box2 {
+        margin-bottom: 1rem;
+      }
+
+      .box3 {
+        margin-bottom: 1rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .overview-content {
+    display: block;
+  }
+}
+
+// other
+
+.material-icons {
+  line-height: 32px !important;
+}

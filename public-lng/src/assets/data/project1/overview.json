@@ -1,0 +1,87 @@
+{
+  "text": [
+    "LNG Canada will be the first large-scale LNG export facility built in Canada.",
+    "The facility is a joint-venture between multiple companies – Shell, PETRONAS, PetroChina, Mitsubishi Corporation and KOGAS.",
+    "Natural gas supply will come primarily from the Montney basin in northeast British Columbia. The Coastal GasLink pipeline will transport natural gas from the Dawson Creek area to the export facility in Kitimat.",
+    "After natural gas is converted into a liquid form at the export facility it will be shipped to Asia and other markets.",
+    "Initial site construction is underway in Kitimat. LNG Canada is scheduled to be in service before mid-next decade."
+  ],
+  "details": {
+    "type": "Liquefied natural gas export facility",
+    "proponent": "LNG Canada",
+    "proponentURL" :"https://www.lngcanada.ca/",
+    "location": "Kitimat, BC",
+    "status": "Preliminary construction activities underway"
+  },
+  "images": {
+    "map": {
+      "img": "lng-canada-site-rendering-smaller.jpg",
+      "alt": "LNG Canada Image"
+    }
+  },
+  "activities": [
+    {
+      "type": "REPORT_ADDED",
+      "title": "Certificate Amended",
+      "description": "The Environmental Assessment Certificate for the LNG Canada Export Terminal Project has been amended to change the LNG production unit referenced in the Certified Project Description to a volume measurement.",
+      "date": "21-10-2019",
+      "url": "/project/1/authorizations"
+    },
+    {
+      "type": "DOCUMENT_ADDED",
+      "title": "Management Plan Filed",
+      "description": "LNG Canada’s updated Marine Monitoring Plan issued.",
+      "date": "29-08-2019",
+      "url": "/project/1/plans"
+    },
+    {
+      "type": "DOCUMENT_ADDED",
+      "title": "Management Plan Filed",
+      "description": "LNG Canada’s updated Dredge Environmental Management Plan issued.",
+      "date": "29-08-2019",
+      "url": "/project/1/plans"
+    },
+    {
+      "type": "DOCUMENT_ADDED",
+      "title": "Amendment Application",
+      "description": "The BC Environmental Assessment Office has accepted LNG Canada’s application requesting a simple amendment to its EA Certificate #E15-01. ",
+      "date": "12-08-2019",
+      "url": "/project/1/authorizations"
+    },
+    {
+      "type": "INSPECTION_COMPLETE",
+      "title": "Inspection Completed",
+      "description": "The BC Environmental Assessment Office’s inspection record for a site visit (LNG Canada) on May 28, 2019.",
+      "date": "03-07-2019",
+      "url": "/project/1/compliance"
+    },
+    {
+      "type": "DOCUMENT_ADDED",
+      "title": "Management Plan Filed",
+      "description": "LNG Canada's Community-Level Infrastructure and Services Management Plan submitted.",
+      "date": "10-04-2019",
+      "url": "/project/1/plans"
+    },
+    {
+      "type": "IMPORTANT_DATE",
+      "title": "Regulatory Interface Launched",
+      "description": "Welcome to British Columbia’s website providing details about the environmental assessment process, permitting, regulatory oversight and compliance procedures as it relates to LNG Canada and the Coastal GasLink pipeline.",
+      "date": "01-06-2019",
+      "url": ""
+    },
+    {
+      "type": "DOCUMENT_ADDED",
+      "title": "Compliance Self-Reported",
+      "description": "LNG Canada’s self-report providing a status of compliance with the conditions outlined in the project’s environmental assessment certificate.",
+      "date": "31-01-2019",
+      "url": "/project/1/compliance"
+    },
+    {
+      "type": "REPORT_ADDED",
+      "title": "Inspection Report Filed",
+      "description": "The BC Environmental Assessment Office’s field and administrative inspection report of work underway at the LNG Canada export site.",
+      "date": "04-12-2018",
+      "url": "/project/1/compliance"
+    }
+  ]
+}

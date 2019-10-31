@@ -1,0 +1,162 @@
+@import "~assets/styles/base/base.scss";
+
+$icon-padding: 2rem;
+$vertical-line-width: 0.2rem;
+
+.activity-list {
+  @include flex-box();
+
+  flex-direction: column;
+}
+
+.activity-link {
+  text-decoration: none;
+  color: $gray8;
+}
+
+.activity-link:hover {
+  background: $gray1;
+}
+
+// Contact Blocks
+.activity-item {
+  @include flex-box();
+
+  flex-direction: row;
+  min-height: 7rem;
+  // margin-right: 1rem;
+  // font-size: 0.9375rem;
+
+  .extend-border {
+    border-left-style: solid;
+    border-width: 4px;
+    border-color: #001f3f;
+  }
+
+  .block-left {
+    width: $icon-padding;
+    position: relative;
+  }
+
+  .block-right {
+    @include flex-box();
+
+    flex: 1;
+    flex-direction: column;
+    padding: 1rem 2rem 1rem $icon-padding+0.25rem;
+    border-bottom: 1px solid $gray4;
+
+    .extend-border {
+      padding-left: 2rem !important;
+    }
+  }
+
+  .inner-block-top {
+    @include flex-box();
+
+    flex-direction: row;
+
+    .inner-block-top-left {
+      flex: 1;
+    }
+
+    // .inner-block-top-right {
+    // }
+  }
+
+  .inner-block-bottom {
+    @include flex-box();
+
+    flex-direction: row;
+
+    .inner-block-bottom-left {
+      flex: 1;
+    }
+
+    // .inner-block-bottom-right {
+    // }
+  }
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: $gray8;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    line-height: 1.25rem;
+    color: $gray7;
+  }
+
+  a {
+    display: inline-block;
+    font-weight: 600;
+  }
+
+  strong {
+    font-weight: 600;
+    color: $gray8;
+  }
+
+  img.activity-icon {
+    z-index: 100000;
+    margin-top: 20px;
+    margin-left: 9px;
+  }
+
+  .icon-container {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    padding-top: 0.25rem;
+    text-align: center;
+    font-size: 32px !important;
+
+    i {
+      font-size: 20px;
+
+      &-light {
+        color: $white;
+      }
+    }
+  }
+}
+
+.material-icons-activity {
+  position: absolute;
+  font-size: 4rem;
+  color: $gray7;
+  top: 12%;
+}
+
+.vertical-line {
+  z-index: -1;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  margin-left: $vertical-line-width/2; // half the width of the line
+  border-right: $vertical-line-width solid $gray5;
+}
+
+// pagination
+.pagination-nav {
+  margin-left: $icon-padding;
+  padding-right: 2rem;
+
+  ul {
+    justify-content: flex-end;
+  }
+
+  li {
+    max-width: 3rem;
+  }
+}
+
+@media (max-width: 1025px) {
+  .pagination-nav {
+    margin-bottom: 2rem;
+  }
+}

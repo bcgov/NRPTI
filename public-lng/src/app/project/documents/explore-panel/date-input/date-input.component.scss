@@ -1,0 +1,69 @@
+@import "~assets/styles/base/base.scss";
+
+$date-input-btn-color: $gray7;
+$date-input-btn-color-active: $gray9;
+$date-input-border-color-active: $primary1;
+
+.date-input {
+  position: relative;
+}
+
+.date-input__calendar-btn {
+  position: absolute;
+  top: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  color: $date-input-btn-color;
+  background: transparent;
+  text-align: right;
+  cursor: pointer;
+  transition: all ease-out 0.2s;
+
+  i {
+    margin-top: 0.2rem;
+  }
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: $date-input-btn-color-active;
+    border-color: $date-input-border-color-active;
+  }
+}
+
+.date-input__clear-btn {
+  position: absolute;
+  top: 0.28rem;
+  right: 0.32em;
+  bottom: 0.28rem;
+  padding: 0.15rem;
+  color: $date-input-btn-color;
+  background-color: #fff;
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: $date-input-btn-color-active;
+    background-color: $gray2;
+  }
+}
+
+input {
+  padding-right: 2.5rem;
+  font-size: 0.875rem;
+}
+
+input.form-control {
+  border: none;
+  background: #fff;
+}
+
+// Validation
+.is-invalid ~ .invalid-feedback {
+  display: inline-block;
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+}

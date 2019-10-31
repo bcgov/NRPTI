@@ -1,0 +1,92 @@
+.modal-header {
+  @include flex-box();
+
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: 1rem;
+  padding-right: 1.5rem;
+  padding-bottom: 1rem;
+  padding-left: 1.5rem;
+
+  .close-btn {
+    @include flex(0 0 auto);
+
+    margin-top: 0;
+    margin-right: -0.75rem;
+  }
+}
+
+.modal-title {
+  @include flex(1 1 auto);
+
+  letter-spacing: -0.03rem;
+  line-height: 1.65rem;
+  font-weight: 600;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  background: $gray0;
+}
+
+.modal-footer {
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+// Fixed Modal w/ Scrolling Body
+.modal-open .modal-fixed {
+  overflow: hidden;
+}
+
+.modal-fixed {
+  overflow: hidden;
+
+  .modal-dialog.modal-lg {
+    margin: 30px;
+    max-width: none !important;
+  }
+
+  .modal-dialog,
+  .modal-content {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  // Host components should reflect this class to ensure the content can flex as expected
+  .modal-content-flex {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+
+  .modal-header {
+    flex: 0 0 auto;
+    background: #fff;
+  }
+
+  .modal-body {
+    overflow-y: auto;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 799px) {
+  .modal-fixed .modal-dialog {
+    max-width: auto !important;
+    margin: 30px auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .modal-fixed .modal-content {
+    width: 800px;
+    left: 50%;
+    margin-left: -400px;
+  }
+}

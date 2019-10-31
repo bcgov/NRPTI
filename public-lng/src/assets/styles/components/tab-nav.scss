@@ -1,0 +1,41 @@
+$tab-border-width: 3px;
+
+.nav-tabs {
+  width: 100%;
+  border-bottom: none;
+}
+
+.nav-tabs .nav-item {
+  margin-bottom: calc(#{$tab-border-width} * -1);
+}
+
+.nav-tabs .nav-link {
+  padding: 0.4rem 1rem;
+  color: $gray5;
+  border: none;
+  border-bottom: $tab-border-width solid $gray3;
+  border-radius: 0;
+  background: transparent;
+  letter-spacing: -0.02rem;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: all ease-out 0.2s;
+
+  &:active,
+  &:hover,
+  &:hover {
+    border-color: $gray5;
+  }
+}
+
+.nav-tabs .nav-link.active {
+  color: $primary0;
+  border-bottom-color: $primary0;
+  background: transparent;
+}
+
+.tab-pane {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}

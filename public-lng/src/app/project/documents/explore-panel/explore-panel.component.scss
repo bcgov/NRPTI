@@ -1,0 +1,128 @@
+@import "~assets/styles/base/base.scss";
+
+.form-group {
+  margin-bottom: 2rem;
+}
+
+.form-btns {
+  .btn-primary {
+    font-weight: 700;
+  }
+
+  .btn-light {
+    font-weight: 400;
+  }
+}
+
+// Date Range Inputs
+.date-range {
+  @include flex-box();
+  @include flex-direction(row);
+}
+
+.date-range__input {
+  @include flex(1 1 auto);
+}
+
+.date-range__spacer {
+  margin: 0.35rem 0.5rem;
+}
+
+// TODO: We shouldn't be encapsulating these controls in a single component
+// Prevents us from utilizing properties for placement of the dropmenu
+// Have to hack the position of the drop menu for the end date considering the above
+.date-range__input.end-date {
+  ::ng-deep {
+    ngb-datepicker {
+      right: 0 !important;
+      left: auto !important;
+    }
+  }
+}
+
+// Select Badge Groups
+$select-badge-hover-bg: #d0ebff;
+$select-badge-active-border-color: #74c0fc;
+$select-badge-active-bg: #a5d8ff;
+
+.select-badge-group {
+  margin: -0.2rem -0.15rem;
+  overflow: hidden;
+}
+
+.select-badge {
+  position: relative;
+  margin: 0.2rem 0.15rem;
+  float: left;
+
+  label {
+    position: relative;
+    margin: 0;
+    padding-top: 0.2rem;
+    padding-right: 1rem;
+    padding-bottom: 0.2rem;
+    padding-left: 2rem;
+    color: $gray7;
+    border-radius: 1rem;
+    border: 2px solid transparent;
+    background-color: $gray2;
+    background-image: url("~assets/images/baseline-remove-24px.svg");
+    background-position: 8px center;
+    background-repeat: no-repeat;
+    background-size: 18px;
+    font-size: 0.825rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all ease-out 0.2s;
+  }
+
+  input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+
+  input:focus,
+  input:active {
+    + label {
+      color: $gray9;
+      border-color: $select-badge-active-border-color;
+      background-color: $select-badge-hover-bg;
+    }
+  }
+
+  input:hover {
+    + label {
+      color: $gray9;
+      background-color: $select-badge-hover-bg;
+    }
+  }
+
+  input:checked {
+    + label {
+      color: $gray9;
+      background-color: $select-badge-active-bg;
+      background-image: url("~assets/images/baseline-check-24px.svg");
+    }
+
+    ~ button {
+      background-color: $select-badge-active-bg;
+    }
+  }
+}
+
+// show/hide button variants for large and small devices
+@media (max-width: 1023px) {
+  .explore-btn-lg-device {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .explore-btn-sm-device {
+    display: none;
+  }
+}

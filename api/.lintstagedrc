@@ -1,0 +1,7 @@
+{
+  "*.js": [
+    "eslint --fix",
+    "prettier --write --loglevel warn",
+    "git add"
+  ]
+}
