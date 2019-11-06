@@ -1,0 +1,45 @@
+# See https://git-scm.com/docs/gitignore for more about ignoring files.
+
+**/.gitignore
+
+# dependencies
+**/node_modules
+
+# compiled output
+**/dist
+**/tmp
+**/out-tsc
+
+# IDEs and editors
+**/.idea
+**/.project
+**/.classpath
+**/.c9
+**.launch
+**/.settings
+**.sublime-workspace
+
+# IDE - VSCode
+**/.vscode/*
+**/!.vscode/launch.json
+
+# misc/.sass-cache
+**/connect.lock
+**/coverage
+**/libpeerconnection.log
+**/testem.log
+**/typings
+**/debug.log
+
+# npm/yarn
+**/package-lock.json
+**/npm-debug.log
+**/yarn.lock
+**/yarn-error.log
+
+# System Files
+**/.DS_Store
+**/Thumbs.db
+
+# Project Files/folders
+api/uploads

@@ -5,9 +5,8 @@
   "main": "app",
   "scripts": {
     "start": "node app",
-    "test": "echo Test suite should be run with `npm run tests` or `npm run tests-ci`",
-    "tests": "SET \"UPLOAD_DIRECTORY=./api/test/uploads/\" & jest --runInBand",
-    "tests-debug": "SET \"UPLOAD_DIRECTORY=./api/test/uploads/\" & node --inspect ./node_modules/jest/bin/jest.js --runInBand",
+    "test": "SET \"UPLOAD_DIRECTORY=./api/test/uploads/\" & jest --runInBand",
+    "test-debug": "SET \"UPLOAD_DIRECTORY=./api/test/uploads/\" & node --inspect ./node_modules/jest/bin/jest.js --runInBand",
     "lint": "eslint .",
     "lint-fix:1": "eslint ./**/*.js --fix",
     "lint-fix:2": "prettier ./**/*.js --write --loglevel warn",
