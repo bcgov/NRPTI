@@ -2,8 +2,7 @@
 
 API for the Natural Resources Public Transparency Interface (NRPTI).
 
-* [Api](https://github.com/bcgov/nrpti/api) - back-end that serves both admin and public requests.
-* [Admin](https://github.com/bcgov/nrpti/admin) - front-end for admin users.
+* [api](https://github.com/bcgov/nrpti/api) - back-end that serves all admin and public requests.
 
 # Prerequisites
 
@@ -229,47 +228,6 @@ External http calls (such as GETs to BCGW) are mocked with a tool called [nock](
       });
   });
 ```
-### Running locally with Keycloak
+### Keycloak
 
 This project uses [Keycloak](https://www.keycloak.org/) to handle authentication and manage user roles.
-
-Required environment variables:
-```
-TTLS_API_ENDPOINT="<see OpenShift api deployment variables>"
-WEBADE_AUTH_ENDPOINT="<see OpenShift api deployment variables>"
-WEBADE_USERNAME="<see OpenShift api deployment variables>"
-WEBADE_PASSWORD="<see OpenShift ttls-api-test secret>"
-```
-
-# VSCode Extensions
-
-A list of recommended/helpful VS Code extensions.
-
-## Linting/Formatting
-
-* TSLint
-* ESLint
-* Prettier - Code formatter
-* stylelint
-* EditorConfig for VS Code
-
-## Languages
-
-* npm
-* Angular Extension pack
-  * This may include 'Beautify' which should be disabled as we are using Prettier.
-* JavaScript (ES6) code snippets
-
-## General
-
-* Auto Comment Blocks
-* Auto-Open Markdown Preview
-* autoDocstring
-* Document This
-* Better Comments
-* Bracket Pair Colorizer
-* Code Spell Checker
-* Declarative Jenkinsfile Support
-* Path intellisense
-* SCSS intellisense
-* Shell launcher

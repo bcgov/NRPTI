@@ -1,0 +1,327 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "admin-nrced": {
+      "root": "projects/admin-nrced",
+      "sourceRoot": "projects/admin-nrced/src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/admin-nrced",
+            "index": "projects/admin-nrced/src/index.html",
+            "main": "projects/admin-nrced/src/main.ts",
+            "tsConfig": "projects/admin-nrced/tsconfig.app.json",
+            "baseHref": "/admin/",
+            "polyfills": "projects/admin-nrced/src/polyfills.ts",
+            "assets": [
+              "projects/admin-nrced/src/assets",
+              "projects/admin-nrced/src/favicon.ico"
+            ],
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "projects/admin-nrced/src/styles.scss"
+            ],
+            "scripts": [
+              "node_modules/moment/min/moment.min.js",
+              "node_modules/keycloak-js/dist/keycloak.min.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "projects/admin-nrced/src/environments/environment.ts",
+                  "with": "projects/admin-nrced/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "admin-nrced:build",
+            "port": 4200,
+            "baseHref": "/admin/",
+            "deployUrl": "/admin/"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "admin-nrced:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "admin-nrced:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/admin-nrced/src/test.ts",
+            "karmaConfig": "karma.conf.js",
+            "polyfills": "projects/admin-nrced/src/polyfills.ts",
+            "tsConfig": "projects/admin-nrced/tsconfig.spec.json",
+            "scripts": [
+              "node_modules/moment/min/moment.min.js",
+              "node_modules/keycloak-js/dist/keycloak.min.js"
+            ],
+            "watch": false,
+            "codeCoverage": true,
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "projects/admin-nrced/src/styles.scss"
+            ],
+            "assets": [
+              "projects/admin-nrced/src/assets",
+              "projects/admin-nrced/src/favicon.ico"
+            ]
+          }
+        },
+        "test-ci": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/admin-nrced/src/test.ts",
+            "karmaConfig": "karma.conf.js",
+            "polyfills": "projects/admin-nrced/src/polyfills.ts",
+            "tsConfig": "projects/admin-nrced/tsconfig.spec.json",
+            "scripts": [
+              "node_modules/moment/min/moment.min.js",
+              "node_modules/keycloak-js/dist/keycloak.min.js"
+            ],
+            "watch": true,
+            "codeCoverage": false,
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "projects/admin-nrced/src/styles.scss"
+            ],
+            "assets": [
+              "projects/admin-nrced/src/assets",
+              "projects/admin-nrced/src/favicon.ico"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/admin-nrced/tsconfig.app.json",
+              "projects/admin-nrced/tsconfig.spec.json"
+            ],
+            "exclude": []
+          }
+        }
+      }
+    },
+    "public-lng": {
+      "root": "projects/public-lng",
+      "sourceRoot": "projects/public-lng/src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/public-lng",
+            "index": "projects/public-lng/src/index.html",
+            "main": "projects/public-lng/src/main.ts",
+            "tsConfig": "projects/public-lng/tsconfig.app.json",
+            "polyfills": "projects/public-lng/src/polyfills.ts",
+            "assets": [
+              "projects/public-lng/src/assets",
+              "projects/public-lng/src/favicon.ico"
+            ],
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "node_modules/leaflet.markercluster/dist/MarkerCluster.css",
+              "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
+              "projects/public-lng/src/styles.scss"
+            ],
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/popper.js/dist/umd/popper.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "node_modules/moment/min/moment.min.js",
+              "node_modules/async/dist/async.min.js",
+              "node_modules/leaflet/dist/leaflet.js",
+              "node_modules/topojson-client/dist/topojson-client.min.js",
+              "node_modules/leaflet.markercluster/dist/leaflet.markercluster.js",
+              "projects/public-lng/src/assets/js/utils.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "projects/public-lng/src/environments/environment.ts",
+                  "with": "projects/public-lng/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "public-lng:build",
+            "port": 4300
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "public-lng:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "public-lng:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/public-lng/src/test.ts",
+            "karmaConfig": "karma.conf.js",
+            "polyfills": "projects/public-lng/src/polyfills.ts",
+            "tsConfig": "projects/public-lng/tsconfig.spec.json",
+            "watch": false,
+            "codeCoverage": true,
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/popper.js/dist/umd/popper.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "node_modules/moment/min/moment.min.js",
+              "node_modules/leaflet/dist/leaflet.js",
+              "node_modules/leaflet.markercluster/dist/leaflet.markercluster.js",
+              "projects/public-lng/src/assets/js/utils.js"
+            ],
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "node_modules/leaflet.markercluster/dist/MarkerCluster.css",
+              "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
+              "projects/public-lng/src/styles.scss"
+            ],
+            "assets": [
+              "projects/public-lng/src/assets",
+              "projects/public-lng/src/favicon.ico"
+            ]
+          }
+        },
+        "test-ci": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/public-lng/src/test.ts",
+            "karmaConfig": "karma.conf.js",
+            "polyfills": "projects/public-lng/src/polyfills.ts",
+            "tsConfig": "projects/public-lng/tsconfig.spec.json",
+            "watch": true,
+            "codeCoverage": false,
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/popper.js/dist/umd/popper.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "node_modules/moment/min/moment.min.js",
+              "node_modules/leaflet/dist/leaflet.js",
+              "node_modules/leaflet.markercluster/dist/leaflet.markercluster.js",
+              "projects/public-lng/src/assets/js/utils.js"
+            ],
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "node_modules/leaflet.markercluster/dist/MarkerCluster.css",
+              "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css",
+              "projects/public-lng/src/styles.scss"
+            ],
+            "assets": [
+              "projects/public-lng/src/assets",
+              "projects/public-lng/src/favicon.ico"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/public-lng/tsconfig.app.json",
+              "projects/public-lng/tsconfig.spec.json"
+            ],
+            "exclude": []
+          }
+        }
+      }
+    },
+    "global": {
+      "root": "projects/global",
+      "sourceRoot": "projects/global/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/global/tsconfig.lib.json",
+            "project": "projects/global/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/global/src/test.ts",
+            "tsConfig": "projects/global/tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/global/tsconfig.lib.json",
+              "projects/global/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "prefix": "app",
+      "styleext": "scss"
+    },
+    "@schematics/angular:directive": {
+      "prefix": "app"
+    }
+  }
+}
