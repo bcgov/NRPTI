@@ -58,7 +58,8 @@
     "no-implicit-dependencies": [
       true,
       [
-        "app"
+        "app",
+        "nrpti-angular-components"
       ],
       "dev"
     ],

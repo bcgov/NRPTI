@@ -1,9 +1,14 @@
 {
-  "name": "global",
+  "name": "nrpti-angular-components",
   "version": "0.0.1",
+  "keywords": ["Angular", "Library", "BCGov"],
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/bcgov/nrpti-angular-components"
+  },
   "peerDependencies": {
-    "@angular/common": "^7.2.0",
-    "@angular/core": "^7.2.0",
+    "@angular/common": "~7.2.0",
+    "@angular/core": "~7.2.0",
     "@angular/platform-browser-dynamic": "~7.2.0",
     "core-js": "^2.5.4",
     "zone.js": "~0.8.26"
