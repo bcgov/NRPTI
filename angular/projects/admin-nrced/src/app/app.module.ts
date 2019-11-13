@@ -11,6 +11,7 @@ import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { SharedModule } from './shared.module';
 import { AppRoutingModule } from './app-routing.module';
 import { CommonModule } from '../../../common/src/app/common.module';
+import { GlobalModule } from 'nrpti-angular-components';
 
 // components
 import { AppComponent } from './app.component';
@@ -52,6 +53,7 @@ export function kcFactory(keycloakService: KeycloakService) {
     HttpClientModule,
     SharedModule,
     CommonModule,
+    GlobalModule,
     AppRoutingModule, // <-- module import order matters - https://angular.io/guide/router#module-import-order-matters
     NgbModule.forRoot(),
     NgxPaginationModule,
