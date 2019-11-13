@@ -14,7 +14,7 @@ objects:
     repo.owner: "${REPO_OWNER}"
   kind: ConfigMap
   metadata:
-    name: jobs-config
+    name:  "${JOBS_CONFIG}
 parameters:
 - name: REPO_OWNER
   displayName: Application Repository Owner
@@ -32,3 +32,8 @@ parameters:
   description: Internet domain for the application
   required: true
   value: pathfinder.gov.bc.ca
+- name: JOBS_CONFIG
+  displayName: Jobs Config Name
+  description: A name of the jobs config for Jenkins
+  required: true
+  value: jobs-config
