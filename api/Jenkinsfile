@@ -74,7 +74,7 @@ pipeline {
       agent any
       steps {
         script {
-          dir('demo-sq') {
+          dir('api') {
             try {
               timeout(10) {
                 echo 'Installing NPM Dependencies...'
@@ -92,7 +92,7 @@ pipeline {
       }
       post {
         success {
-          stash name: COVERAGE_STASH, includes: 'demo-sq/coverage/**'
+          stash name: COVERAGE_STASH, includes: 'api/coverage/**'
 
           echo 'All Tests passed'
         }
