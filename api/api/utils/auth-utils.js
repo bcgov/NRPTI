@@ -3,7 +3,7 @@
 const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
 
-const defaultLog = require('./logger')('authUtils');
+const defaultLog = require('./logger')('auth-utils');
 
 const SSO_ISSUER = process.env.SSO_ISSUER || 'https://sso-dev.pathfinder.gov.bc.ca/auth/realms/3l5nw6dk';
 const SSO_JWKSURI =
