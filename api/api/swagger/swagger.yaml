@@ -160,7 +160,7 @@ paths:
 ### Record Routes
 ###
   /record:
-    x-swagger-router-controller: recordController
+    x-swagger-router-controller: record-controller
     options:
       tags:
         - record
@@ -324,7 +324,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
   /record/{recordId}:
-    x-swagger-router-controller: recordController
+    x-swagger-router-controller: record-controller
     options:
       tags:
         - record
@@ -479,7 +479,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
   /record/{recordId}/publish:
-    x-swagger-router-controller: recordController
+    x-swagger-router-controller: record-controller
     options:
       tags:
         - record
@@ -529,7 +529,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
   /record/{recordId}/unpublish:
-    x-swagger-router-controller: recordController
+    x-swagger-router-controller: record-controller
     options:
       tags:
         - record
@@ -579,7 +579,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
   /public/record:
-    x-swagger-router-controller: recordController
+    x-swagger-router-controller: record-controller
     options:
       tags:
         - record
@@ -681,7 +681,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
   /public/record/{recordId}:
-    x-swagger-router-controller: recordController
+    x-swagger-router-controller: record-controller
     options:
       tags:
         - record
@@ -738,7 +738,7 @@ paths:
 ### Document Routes
 ###
   /document:
-    x-swagger-router-controller: documentController
+    x-swagger-router-controller: document-controller
     options:
       tags:
         - document
@@ -836,7 +836,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
   /document/{docId}:
-    x-swagger-router-controller: documentController
+    x-swagger-router-controller: document-controller
     options:
       tags:
         - document
@@ -965,7 +965,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
   /document/{docId}/publish:
-    x-swagger-router-controller: documentController
+    x-swagger-router-controller: document-controller
     options:
       tags:
         - document
@@ -1015,7 +1015,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
   /document/{docId}/unpublish:
-    x-swagger-router-controller: documentController
+    x-swagger-router-controller: document-controller
     options:
       tags:
         - document
@@ -1065,7 +1065,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
   /document/{docId}/download:
-    x-swagger-router-controller: documentController
+    x-swagger-router-controller: document-controller
     options:
       tags:
         - document
@@ -1114,7 +1114,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
   /public/document:
-    x-swagger-router-controller: documentController
+    x-swagger-router-controller: document-controller
     options:
       tags:
         - document
@@ -1197,7 +1197,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
   /public/document/{docId}:
-    x-swagger-router-controller: documentController
+    x-swagger-router-controller: document-controller
     options:
       tags:
         - document
@@ -1250,7 +1250,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
   /public/document/{docId}/download:
-    x-swagger-router-controller: documentController
+    x-swagger-router-controller: document-controller
     options:
       tags:
         - document

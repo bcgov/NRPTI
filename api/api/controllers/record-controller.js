@@ -1,7 +1,7 @@
 let _ = require('lodash');
 let qs = require('qs');
-let queryActions = require('../utils/queryActions');
-let queryUtils = require('../utils/queryUtils');
+let queryActions = require('../utils/query-actions');
+let queryUtils = require('../utils/query-utils');
 
 let defaultLog = require('../utils/logger')('record');
 
