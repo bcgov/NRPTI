@@ -3,18 +3,40 @@
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
+
     "start": "npm-run-all -l -p -c start:*",
     "start:admin-nrced": "ng serve admin-nrced -o",
     "start:public-lng": "ng serve public-lng -o",
-    "build": "npm-run-all -l -s -c lint clean:* build:*",
-    "build:admin-nrced": "ng build admin-nrced --prod",
-    "build:public-lng": "ng build public-lng --prod",
-    "build:global": "ng build global",
-    "build:common": "ng build common",
+
+    "build": "npm-run-all -l -s -c lint clean:* build:library library:link build:app:*",
+    "build:prod": "npm-run-all -l -s -c lint clean:* build:app:*",
+
+    "build:app:common": "ng build common --prod",
+    "build:app:admin-nrced": "ng build admin-nrced --prod",
+    "build:app:public-lng": "ng build public-lng --prod",
+
+    "build:library": "ng build global",
+
+    "library:link": "npm-run-all -l -s -c library:link:*",
+    "library:link:1": "cd dist/nrpti-angular-components && yarn link",
+    "library:link:2": "yarn link nrpti-angular-components",
+
+    "library:package": "npm-run-all -l -s -c library:copy:* library:package:*",
+    "library:package:1": "cd dist/nrpti-angular-components && npm pack",
+
+    "library:publish": "npm-run-all -l -s -c library:copy:* library:publish:*",
+    "library:publish:1": "npm publish projects/global",
+
+    "library:copy": "npm-run-all -l -s -c library:copy:*",
+    "library:copy:license": "copy ..\\LICENSE .\\dist\\global",
+    "library:copy:readme": "copy .\\projects\\global\\README.md .\\dist\\global",
+
     "clean": "npm-run-all -l -s -c clean:*",
     "clean:dist": "rimraf dist",
+
     "test": "ng test",
     "test-ci": "ng test-ci",
+
     "lint": "npm-run-all -l -s -c lint:ts lint:scss",
     "lint:ts": "npm-run-all -l -s -c lint:ts:*",
     "lint:ts:1": "ng lint --fix --format=stylish",

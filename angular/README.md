@@ -2,8 +2,10 @@
 
 Angular front-ends for the Natural Resources Public Transparency Interface (NRPTI) application.
 
-- [admin-nrced](https://github.com/bcgov/nrpti/angular/src/admin-nrced) - front-end for nrced admin users.
-- [public-lng](https://github.com/bcgov/nrpti/angular/src/admin-nrced) - front-end for lng public users.
+- [admin-nrced](https://github.com/bcgov/nrpti/angular/projects/admin-nrced) - front-end for nrced admin users.
+- [public-lng](https://github.com/bcgov/nrpti/angular/projects/public-lng) - front-end for lng public users.
+- [common](https://github.com/bcgov/nrpti/angular/projects/common) - common components for NRPTI front-end sites.
+- [global](https://github.com/bcgov/nrpti/angular/projects/global) - global components for angular front-end sites.
 
 # Prerequisites
 
@@ -40,41 +42,60 @@ npm install -g yarn
 
 1. Download dependencies
 
-```
-yarn install
-```
+    ```
+    yarn
+    ```
 
-2. Run the app
+3. Build library/symlink and apps
 
-```
-npm start
-```
+    - Build library/symlink and all apps
 
-3. Go to http://localhost:4200 to verify that the application is running.
+      ```
+      npm run build
+      ```
 
-   _Note: To change the default port edit `angular.json`._
+    - Build specific library/symlink and specific app(s)
+
+      ```
+      npm run build:library
+      npm run library:link
+      npm run build:app:<project-name>
+      ```
+
+
+4. Run the app(s)
+
+    - Run all apps
+
+      ```
+      npm start
+      ```
+
+    - Run specific app
+
+      ```
+      npm start:<project-name>
+      ```
 
 ## Prod
 
 1. Download dependencies
 
-```
-yarn install
-```
+    ```
+    yarn
+    ```
 
-2. Run the build
+2. Run the build(s)
 
-   The build artifacts will be stored in the `./dist/` directory.
+    The build artifacts will be stored in the `./dist/<project-name>` directory.
 
-```
-npm run build
-```
+    _Note: This assumes all necessary libraries have been published and are included as dependencies in `package.json`_
 
-3. (Optional) Use the `--prod` flag to run the app in prod mode
+    - Run all app builds
 
-```
-ng serve --prod
-```
+      ```
+      npm run build:prod
+      ```
 
 # Linting and Formatting
 
@@ -104,49 +125,29 @@ Package.json has been configured to use `husky` with `lint-staged` to run the `l
 
 If the linters or formatters find issues that cannot be automatically fixed, it will throw an error and provide output as to what is wrong. Fix the issues and commit again.
 
-## Run Linters
-
-- Lint the `*.ts` files using `TSLint`.
-
-```
-npm run lint:ts
-```
-
-- Lint the `*.scss` files using `Stylelint`.
-
-```
-npm run lint:scss
-```
-
-- Run all linters in series
-
-```
-npm run lint
-```
-
 ## Run Linters + Formatters + Auto Fix
 
 _Note: In the worst case scenario, where linting/formatting has been neglected, then these `lint-fix` commands have the potential to create hundreds or thousands of file changes. In this case, it is recommended to only run these commands as part of a separate commit._
 
 _Note: Not all linting/formatting errors can be automatically fixed, and will require human intervention._
 
+- Run all linters and fix all problems, in series
+
+  ```
+  npm run lint-fix
+  ```
+
 - Lint and fix the `*.ts` files using `TSLint` + `Prettier`.
 
-```
-npm run lint-fix:ts
-```
+  ```
+  npm run lint-fix:ts
+  ```
 
 - Lint and fix the `*.scss` files using `Stylelint`.
 
-```
-npm run lint-fix:scss
-```
-
-- Run all linters and fix all problems, in series
-
-```
-npm run lint-fix
-```
+  ```
+  npm run lint-fix:scss
+  ```
 
 # Testing
 
@@ -166,25 +167,17 @@ When viewing test output in the browser, via localhost:9876, Firefox produces so
 
   View the coverage report at `./coverage/<project>/index.html`
 
-```
-npm test
-```
+  ```
+  npm test
+  ```
 
 - Run the unit tests with `watch=true`
 
   The live test page can be viewed at localhost:9876.
 
-```
-npm run test-ci
-```
-
-- Run the end-to-end tests
-
-  Before running the tests make sure you are serving the app via `ng serve`
-
-```
-npm run e2e
-```
+  ```
+  npm run test-ci
+  ```
 
 # Code Scaffolding Using Angular CLI
 

@@ -23,12 +23,18 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "preserveSymlinks": true,
     "paths": {
       "global": [
         "dist/global"
       ],
       "global/*": [
         "dist/global/*"
+      ],
+      "@angular/*": [
+        // Necessary during development for libraries when using `yarn link` to reference local unpublished packages:
+        // resolves issue of missing peerDependencies, which don't get installed when using the package this way.
+        "node_modules/@angular/*"
       ]
     }
   }
