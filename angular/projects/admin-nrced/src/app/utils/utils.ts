@@ -12,7 +12,7 @@ export class Utils {
    */
   static convertArrayIntoPipeString(collection: string[]): string {
     let values = '';
-    for (let value of collection) {
+    for (const value of collection) {
       values += value + '|';
     }
     // trim the last |

@@ -29,7 +29,7 @@ export class ExplorePanelComponent implements OnInit {
   public textFilters: object = {}; // applied filters
   public _textFilters: object = {}; // temporary filters for Cancel feature
 
-  constructor(private urlService: UrlService) { }
+  constructor(private urlService: UrlService) {}
 
   public ngOnInit() {
     for (const section of this.filterSections) {
@@ -77,7 +77,7 @@ export class ExplorePanelComponent implements OnInit {
     const hasChanges =
       !(this._dateRangeFromFilter.valueOf() === this.dateRangeFromFilter.valueOf()) ||
       !(this._dateRangeToFilter.valueOf() === this.dateRangeToFilter.valueOf()) ||
-      !(JSON.stringify(this._textFilters) === JSON.stringify(this.textFilters))
+      !(JSON.stringify(this._textFilters) === JSON.stringify(this.textFilters));
 
     // copy all data from applied filters to temporary filters
     this._dateRangeFromFilter = this.dateRangeFromFilter;
@@ -98,14 +98,14 @@ export class ExplorePanelComponent implements OnInit {
 
     documentFilters.dateRangeFrom = this.dateRangeFromFilter
       ? moment(this.dateRangeFromFilter)
-        .startOf('day')
-        .toDate()
+          .startOf('day')
+          .toDate()
       : null;
 
     documentFilters.dateRangeTo = this.dateRangeToFilter
       ? moment(this.dateRangeToFilter)
-        .endOf('day')
-        .toDate()
+          .endOf('day')
+          .toDate()
       : null;
 
     Object.keys(this.textFilters).forEach(key => {

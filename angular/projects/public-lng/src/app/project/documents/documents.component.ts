@@ -48,7 +48,7 @@ export class DocumentsComponent implements OnInit {
 
   public isFilterPanelVisible = false;
 
-  constructor(private dataService: DataService, public route: ActivatedRoute) { }
+  constructor(private dataService: DataService, public route: ActivatedRoute) {}
 
   ngOnInit() {
     this.route.parent.params.subscribe(params => {
