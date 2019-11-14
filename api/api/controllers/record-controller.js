@@ -1,4 +1,3 @@
-let _ = require('lodash');
 let qs = require('qs');
 let queryActions = require('../utils/query-actions');
 let queryUtils = require('../utils/query-utils');
@@ -53,9 +52,9 @@ exports.protectedHead = function(args, res, next) {
 
   // Unless they specifically ask for it, hide deleted results.
   if (args.swagger.params.isDeleted && args.swagger.params.isDeleted.value !== undefined) {
-    _.assignIn(query, { isDeleted: args.swagger.params.isDeleted.value });
+    query = { ...query, ...{ isDeleted: args.swagger.params.isDeleted.value } };
   } else {
-    _.assignIn(query, { isDeleted: false });
+    query = { ...query, ...{ isDeleted: false } };
   }
 
   queryUtils
@@ -131,9 +130,9 @@ exports.protectedGet = function(args, res, next) {
 
   // Unless they specifically ask for it, hide deleted results.
   if (args.swagger.params.isDeleted && args.swagger.params.isDeleted.value !== undefined) {
-    _.assignIn(query, { isDeleted: args.swagger.params.isDeleted.value });
+    query = { ...query, ...{ isDeleted: args.swagger.params.isDeleted.value } };
   } else {
-    _.assignIn(query, { isDeleted: false });
+    query = { ...query, ...{ isDeleted: false } };
   }
 
   queryUtils
@@ -251,36 +250,48 @@ let addStandardQueryFilters = function(query, args) {
     let queryString = qs.parse(args.swagger.params.publishDate.value);
     if (queryString.since && queryString.until) {
       // Combine queries as logical AND for the dataset.
-      _.assignIn(query, {
-        $and: [
-          {
-            publishDate: { $gte: new Date(queryString.since) }
-          },
-          {
-            publishDate: { $lte: new Date(queryString.until) }
-          }
-        ]
-      });
+      query = {
+        ...query,
+        ...{
+          $and: [
+            {
+              publishDate: { $gte: new Date(queryString.since) }
+            },
+            {
+              publishDate: { $lte: new Date(queryString.until) }
+            }
+          ]
+        }
+      };
     } else if (queryString.eq) {
-      _.assignIn(query, {
-        publishDate: { $eq: new Date(queryString.eq) }
-      });
+      query = {
+        ...query,
+        ...{
+          publishDate: { $eq: new Date(queryString.eq) }
+        }
+      };
     } else {
       // Which param was set?
       if (queryString.since) {
-        _.assignIn(query, {
-          publishDate: { $gte: new Date(queryString.since) }
-        });
+        query = {
+          ...query,
+          ...{
+            publishDate: { $gte: new Date(queryString.since) }
+          }
+        };
       }
       if (queryString.until) {
-        _.assignIn(query, {
-          publishDate: { $lte: new Date(queryString.until) }
-        });
+        query = {
+          ...query,
+          ...{
+            publishDate: { $lte: new Date(queryString.until) }
+          }
+        };
       }
     }
   }
   if (args.swagger.params.cl_file && args.swagger.params.cl_file.value !== undefined) {
-    _.assignIn(query, { cl_file: args.swagger.params.cl_file.value });
+    query = { ...query, ...{ cl_file: args.swagger.params.cl_file.value } };
   }
   if (args.swagger.params.purpose && args.swagger.params.purpose.value !== undefined) {
     let queryString = qs.parse(args.swagger.params.purpose.value);
@@ -290,7 +301,7 @@ let addStandardQueryFilters = function(query, args) {
     } else {
       queryArray.push(queryString.eq);
     }
-    _.assignIn(query, { purpose: { $in: queryArray } });
+    query = { ...query, ...{ purpose: { $in: queryArray } } };
   }
   if (args.swagger.params.subpurpose && args.swagger.params.subpurpose.value !== undefined) {
     let queryString = qs.parse(args.swagger.params.subpurpose.value);
@@ -300,13 +311,13 @@ let addStandardQueryFilters = function(query, args) {
     } else {
       queryArray.push(queryString.eq);
     }
-    _.assignIn(query, { subpurpose: { $in: queryArray } });
+    query = { ...query, ...{ subpurpose: { $in: queryArray } } };
   }
   if (args.swagger.params.type && args.swagger.params.type.value !== undefined) {
-    _.assignIn(query, { type: args.swagger.params.type.value });
+    query = { ...query, ...{ type: args.swagger.params.type.value } };
   }
   if (args.swagger.params.subtype && args.swagger.params.subtype.value !== undefined) {
-    _.assignIn(query, { subtype: args.swagger.params.subtype.value });
+    query = { ...query, ...{ subtype: args.swagger.params.subtype.value } };
   }
   if (args.swagger.params.status && args.swagger.params.status.value !== undefined) {
     let queryString = qs.parse(args.swagger.params.status.value);
@@ -316,7 +327,7 @@ let addStandardQueryFilters = function(query, args) {
     } else {
       queryArray.push(queryString.eq);
     }
-    _.assignIn(query, { status: { $in: queryArray } });
+    query = { ...query, ...{ status: { $in: queryArray } } };
   }
   if (args.swagger.params.reason && args.swagger.params.reason.value !== undefined) {
     let queryString = qs.parse(args.swagger.params.reason.value);
@@ -327,21 +338,21 @@ let addStandardQueryFilters = function(query, args) {
       } else {
         queryArray.push(queryString.eq);
       }
-      _.assignIn(query, { reason: { $in: queryArray } });
+      query = { ...query, ...{ reason: { $in: queryArray } } };
     } else if (queryString.ne) {
       if (Array.isArray(queryString.ne)) {
         queryArray = queryString.ne;
       } else {
         queryArray.push(queryString.ne);
       }
-      _.assignIn(query, { reason: { $nin: queryArray } });
+      query = { ...query, ...{ reason: { $in: queryArray } } };
     }
   }
   if (args.swagger.params.agency && args.swagger.params.agency.value !== undefined) {
-    _.assignIn(query, { agency: args.swagger.params.agency.value });
+    query = { ...query, ...{ agency: args.swagger.params.agency.value } };
   }
   if (args.swagger.params.businessUnit && args.swagger.params.businessUnit.value !== undefined) {
-    _.assignIn(query, { businessUnit: { $eq: args.swagger.params.businessUnit.value.eq } });
+    query = { ...query, ...{ businessUnit: { $eq: args.swagger.params.businessUnit.value.eq } } };
   }
   if (args.swagger.params.client && args.swagger.params.client.value !== undefined) {
     let queryString = qs.parse(args.swagger.params.client.value);
@@ -349,44 +360,50 @@ let addStandardQueryFilters = function(query, args) {
       // This searches for text indexed fields, which client is currently marked as in the record model.
       // If more fields are added to the text index, this logic may need to change as it will then search those fields
       // as well, which may be un-desired. See docs.mongodb.com/manual/reference/operator/query/text/
-      _.assignIn(query, { $text: { $search: queryString.text } });
+      query = { ...query, ...{ $text: { $search: queryString.text } } };
     } else if (queryString.eq) {
-      _.assignIn(query, { client: { $eq: queryString.eq } });
+      query = { ...query, ...{ client: { $eq: queryString.eq } } };
     }
   }
   if (args.swagger.params.tenureStage && args.swagger.params.tenureStage.value !== undefined) {
-    _.assignIn(query, { tenureStage: args.swagger.params.tenureStage.value });
+    query = { ...query, ...{ tenureStage: args.swagger.params.tenureStage.value } };
   }
   if (args.swagger.params.areaHectares && args.swagger.params.areaHectares.value !== undefined) {
     let queryString = qs.parse(args.swagger.params.areaHectares.value);
     if (queryString.gte && queryString.lte) {
       // Combine queries as logical AND to compute a Rnage of values.
-      _.assignIn(query, {
-        $and: [
-          {
-            areaHectares: { $gte: parseFloat(queryString.gte, 10) }
-          },
-          {
-            areaHectares: { $lte: parseFloat(queryString.lte, 10) }
-          }
-        ]
-      });
+      query = {
+        ...query,
+        ...{
+          $and: [
+            {
+              areaHectares: { $gte: parseFloat(queryString.gte, 10) }
+            },
+            {
+              areaHectares: { $lte: parseFloat(queryString.lte, 10) }
+            }
+          ]
+        }
+      };
     } else if (queryString.eq) {
       // invalid or not specified, treat as equal
-      _.assignIn(query, {
-        areaHectares: { $eq: parseFloat(queryString.eq, 10) }
-      });
+      query = {
+        ...query,
+        ...{ areaHectares: { $eq: parseFloat(queryString.eq, 10) } }
+      };
     } else {
       // Which param was set?
       if (queryString.gte) {
-        _.assignIn(query, {
-          areaHectares: { $gte: parseFloat(queryString.gte, 10) }
-        });
+        query = {
+          ...query,
+          ...{ areaHectares: { $gte: parseFloat(queryString.gte, 10) } }
+        };
       }
       if (queryString.lte) {
-        _.assignIn(query, {
-          areaHectares: { $lte: parseFloat(queryString.lte, 10) }
-        });
+        query = {
+          ...query,
+          ...{ areaHectares: { $lte: parseFloat(queryString.lte, 10) } }
+        };
       }
     }
   }
@@ -404,30 +421,36 @@ let addStandardQueryFilters = function(query, args) {
 
     if (coordinates.length == 2) {
       // use geoWithin box query
-      _.assignIn(query, {
-        centroid: {
-          $geoWithin: {
-            $box: coordinates
+      query = {
+        ...query,
+        ...{
+          centroid: {
+            $geoWithin: {
+              $box: coordinates
+            }
           }
         }
-      });
+      };
     } else {
       // use geoIntersects polygon query
       // specify custom MongoDB CRS to support queries with area larger than a single hemisphere
-      _.assignIn(query, {
-        centroid: {
-          $geoIntersects: {
-            $geometry: {
-              type: 'Polygon',
-              coordinates: [coordinates],
-              crs: {
-                type: 'name',
-                properties: { name: 'urn:x-mongodb:crs:strictwinding:EPSG:4326' }
+      query = {
+        ...query,
+        ...{
+          centroid: {
+            $geoIntersects: {
+              $geometry: {
+                type: 'Polygon',
+                coordinates: [coordinates],
+                crs: {
+                  type: 'name',
+                  properties: { name: 'urn:x-mongodb:crs:strictwinding:EPSG:4326' }
+                }
               }
             }
           }
         }
-      });
+      };
     }
   }
 
@@ -438,26 +461,35 @@ let addStandardQueryFilters = function(query, args) {
   ) {
     let queryString = qs.parse(args.swagger.params.statusHistoryEffectiveDate.value);
     if (queryString.since && queryString.until) {
-      _.assignIn(query, {
-        $and: [
-          { statusHistoryEffectiveDate: { $gte: new Date(queryString.since) } },
-          { statusHistoryEffectiveDate: { $lte: new Date(queryString.until) } }
-        ]
-      });
+      query = {
+        ...query,
+        ...{
+          $and: [
+            { statusHistoryEffectiveDate: { $gte: new Date(queryString.since) } },
+            { statusHistoryEffectiveDate: { $lte: new Date(queryString.until) } }
+          ]
+        }
+      };
     } else if (queryString.since) {
-      _.assignIn(query, {
-        $or: [
-          { statusHistoryEffectiveDate: null },
-          { statusHistoryEffectiveDate: { $gte: new Date(queryString.since) } }
-        ]
-      });
+      query = {
+        ...query,
+        ...{
+          $or: [
+            { statusHistoryEffectiveDate: null },
+            { statusHistoryEffectiveDate: { $gte: new Date(queryString.since) } }
+          ]
+        }
+      };
     } else if (queryString.until) {
-      _.assignIn(query, {
-        $or: [
-          { statusHistoryEffectiveDate: null },
-          { statusHistoryEffectiveDate: { $lte: new Date(queryString.until) } }
-        ]
-      });
+      query = {
+        ...query,
+        ...{
+          $or: [
+            { statusHistoryEffectiveDate: null },
+            { statusHistoryEffectiveDate: { $lte: new Date(queryString.until) } }
+          ]
+        }
+      };
     }
   }
 

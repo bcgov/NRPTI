@@ -1,6 +1,5 @@
 'use strict';
 
-let _ = require('lodash');
 let mongoose = require('mongoose');
 let mime = require('mime-types');
 let queryActions = require('../utils/query-actions');
@@ -54,9 +53,9 @@ exports.protectedHead = function(args, res, next) {
   }
   // Unless they specifically ask for it, hide deleted results.
   if (args.swagger.params.isDeleted && args.swagger.params.isDeleted.value != undefined) {
-    _.assignIn(query, { isDeleted: args.swagger.params.isDeleted.value });
+    query = { ...query, ...{ isDeleted: args.swagger.params.isDeleted.value } };
   } else {
-    _.assignIn(query, { isDeleted: false });
+    query = { ...query, ...{ isDeleted: false } };
   }
 
   queryUtils
@@ -104,9 +103,9 @@ exports.protectedGet = function(args, res, next) {
   }
   // Unless they specifically ask for it, hide deleted results.
   if (args.swagger.params.isDeleted && args.swagger.params.isDeleted.value != undefined) {
-    _.assignIn(query, { isDeleted: args.swagger.params.isDeleted.value });
+    query = { ...query, ...{ isDeleted: args.swagger.params.isDeleted.value } };
   } else {
-    _.assignIn(query, { isDeleted: false });
+    query = { ...query, ...{ isDeleted: false } };
   }
 
   queryUtils
@@ -415,7 +414,7 @@ exports.publicGet = function(args, res, next) {
   if (args.swagger.params._record && args.swagger.params._record.value) {
     query = queryUtils.buildQuery('_record', args.swagger.params._record.value, query);
   }
-  _.assignIn(query, { isDeleted: false });
+  query = { ...query, ...{ isDeleted: false } };
 
   queryUtils
     .runDataQuery(
