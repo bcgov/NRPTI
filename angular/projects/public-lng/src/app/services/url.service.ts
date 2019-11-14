@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Params, ActivatedRoute, Router, NavigationEnd, Event } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, share } from 'rxjs/operators';
-import _ from 'lodash';
 import { Location } from '@angular/common';
+import { debounce } from 'lodash.debounce';
 
 //
 // This service/class provides a centralized mechanism to save and restore a page's parameters
@@ -82,7 +82,7 @@ export class UrlService {
   // update browser URL
   // NB: debounced function executes when 100ms have elapsed since last call
   // tslint:disable-next-line:member-ordering
-  private navigate = _.debounce(refresh => {
+  private navigate = debounce(refresh => {
     if (refresh) {
       this.router.navigate([], {
         relativeTo: this.activatedRoute,

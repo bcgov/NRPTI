@@ -17,7 +17,8 @@ import { takeUntil } from 'rxjs/operators';
 // import { takeUntil, map } from 'rxjs/operators';
 import 'leaflet';
 import 'leaflet.markercluster';
-import _ from 'lodash';
+import { debounce } from 'lodash.debounce';
+import { differenceBy } from 'lodash.differenceby';
 import 'async';
 import 'topojson-client';
 import 'jquery';
@@ -106,7 +107,7 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
     private injector: Injector,
     private resolver: ComponentFactoryResolver
   ) {
-    this.urlService.onNavEnd$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {});
+    this.urlService.onNavEnd$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => { });
   }
 
   // for creating custom cluster icon
@@ -640,12 +641,12 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
       if (changes.applications && !changes.applications.firstChange && changes.applications.currentValue) {
         // console.log('map: got changed apps =', changes.applications);
 
-        const deletedApps = _.differenceBy(
+        const deletedApps = differenceBy(
           changes.applications.previousValue as Application[],
           changes.applications.currentValue as Application[],
           '_id'
         );
-        const addedApps = _.differenceBy(
+        const addedApps = differenceBy(
           changes.applications.currentValue as Application[],
           changes.applications.previousValue as Application[],
           '_id'
@@ -701,7 +702,7 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
    * Debounced function executes when 250ms have elapsed since last call.
    */
   // tslint:disable-next-line:member-ordering
-  private emitCoordinates = _.debounce(() => {
+  private emitCoordinates = debounce(() => {
     this.updateCoordinates.emit();
   }, 250);
 
@@ -756,7 +757,9 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     // remove deleted apps from list and map
     deletedApps.forEach(app => {
-      const markerIndex = _.findIndex(this.markerList, { dispositionId: app.tantalisID });
+      const markerIndex = this.markerList.findIndex(element => {
+        return JSON.stringify(element) === JSON.stringify({ dispositionId: app.tantalisID })
+      });
       if (markerIndex >= 0) {
         const markers = this.markerList.splice(markerIndex, 1);
         this.markerClusterGroup.removeLayer(markers[0]);
@@ -771,7 +774,7 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
         // derive unique applicants
         if (app.client) {
           const clients = app.client.split(', ');
-          app['applicants'] = _.uniq(clients).join(', ');
+          app['applicants'] = [...new Set(clients)].join(', ');
         }
         const title =
           `${app['applicants'] || 'Applicant Name Not Available'}\n` +
@@ -852,7 +855,9 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
         await this.delay(100);
       }
 
-      const marker = _.find(this.markerList, { dispositionId: app.tantalisID });
+      const marker = this.markerList.find(element => {
+        return JSON.stringify(element) === JSON.stringify({ dispositionId: app.tantalisID })
+      });
       if (marker) {
         this.currentMarker = marker;
         marker.setIcon(markerIconLg);

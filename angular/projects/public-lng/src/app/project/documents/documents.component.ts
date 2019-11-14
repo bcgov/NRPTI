@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import _ from 'lodash';
 import moment from 'moment';
 
 import { ExplorePanelComponent } from './explore-panel/explore-panel.component';
@@ -49,7 +48,7 @@ export class DocumentsComponent implements OnInit {
 
   public isFilterPanelVisible = false;
 
-  constructor(private dataService: DataService, public route: ActivatedRoute) {}
+  constructor(private dataService: DataService, public route: ActivatedRoute) { }
 
   ngOnInit() {
     this.route.parent.params.subscribe(params => {

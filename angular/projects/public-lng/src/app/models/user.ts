@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export class User {
   _id: string;
   username: string;
@@ -19,7 +17,7 @@ export class User {
 
     // copy roles
     if (obj && obj.roles) {
-      this.roles = _.cloneDeep(obj.roles);
+      this.roles = JSON.parse(JSON.stringify(obj.roles));
     }
   }
 }

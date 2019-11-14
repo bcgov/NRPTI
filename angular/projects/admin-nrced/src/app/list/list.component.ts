@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Params, Router } from '@angular/router';
 import moment from 'moment';
-import _ from 'lodash';
+import flatMap from 'loadash.flatMap';
 import { Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IRecordQueryParamSet, QueryParamModifier } from '../services/api';
@@ -80,7 +80,7 @@ export class ListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private exportService: ExportService,
     private recordService: RecordService
-  ) {}
+  ) { }
 
   /**
    * Component init.
@@ -211,7 +211,7 @@ export class ListComponent implements OnInit, OnDestroy {
       pageNum: this.pagination.currentPage - 1, // API starts at 0, while this component starts at 1
       pageSize: this.pagination.itemsPerPage,
       demo: {
-        value: _.flatMap(this.demoCodeFilters.map(demoCode => ConstantUtils.getCode(CodeType.DEMO, demoCode))),
+        value: flatMap(this.demoCodeFilters.map(demoCode => ConstantUtils.getCode(CodeType.DEMO, demoCode))),
         modifier: QueryParamModifier.Equal
       }
     };

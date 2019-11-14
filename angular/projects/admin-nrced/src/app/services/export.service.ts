@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { saveAs } from 'file-saver';
 import { Parser } from 'json2csv';
-import _ from 'lodash';
+import get from 'lodash.get';
 import moment from 'moment';
 
 /**
@@ -12,7 +12,7 @@ import moment from 'moment';
  */
 @Injectable()
 export class ExportService {
-  constructor() {}
+  constructor() { }
 
   /**
    * Generates and downloads the given data as a csv file.
@@ -41,7 +41,7 @@ export class ExportService {
    */
   public static getExportDateFormatter(dateProperty: string): (row) => string {
     return row => {
-      const dateProp = _.get(row, dateProperty);
+      const dateProp = get(row, dateProperty);
 
       if (!dateProp) {
         return null;
@@ -79,7 +79,7 @@ export class ExportService {
     padEnd: boolean = false
   ): (row) => string {
     return row => {
-      const prop = _.get(row, property);
+      const prop = get(row, property);
 
       if (!prop) {
         return null;
