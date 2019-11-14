@@ -5,7 +5,6 @@ const documentFactory = require('./factories/document-factory').factory;
 const recordFactory = require('./factories/record-factory').factory;
 const request = require('supertest');
 const shell = require('shelljs');
-const _ = require('lodash');
 
 const documentController = require('../controllers/document-controller.js');
 require('../models/document');
@@ -28,62 +27,62 @@ function publicParamsWithDocId(req) {
   return testUtils.createPublicSwaggerParams(fieldNames, params);
 }
 
-app.get('/api/document', function (req, res) {
+app.get('/api/document', function(req, res) {
   let swaggerParams = testUtils.createSwaggerParams(fieldNames);
   return documentController.protectedGet(swaggerParams, res);
 });
 
-app.get('/api/document/:id', function (req, res) {
+app.get('/api/document/:id', function(req, res) {
   return documentController.protectedGet(paramsWithDocId(req), res);
 });
 
-app.get('/api/document/:id/download', function (req, res) {
+app.get('/api/document/:id/download', function(req, res) {
   return documentController.protectedDownload(paramsWithDocId(req), res);
 });
 
-app.post('/api/document', function (req, res) {
+app.post('/api/document', function(req, res) {
   let extraFields = testUtils.buildParams(req.body);
   let params = testUtils.createSwaggerParams(fieldNames, extraFields, idirUsername);
 
   return documentController.protectedPost(params, res);
 });
 
-app.put('/api/document/:id', function (req, res) {
+app.put('/api/document/:id', function(req, res) {
   let extraFields = testUtils.buildParams(req.body);
-  extraFields.assign({ docId: { value: req.params.id } })
+  extraFields = { ...extraFields, ...{ docId: { value: req.params.id } } };
   let params = testUtils.createSwaggerParams(fieldNames, extraFields, idirUsername);
   return documentController.protectedPut(params, res);
 });
 
-app.get('/api/public/document', function (req, res) {
+app.get('/api/public/document', function(req, res) {
   let publicSwaggerParams = testUtils.createPublicSwaggerParams(fieldNames);
   return documentController.publicGet(publicSwaggerParams, res);
 });
 
-app.get('/api/public/document/:id', function (req, res) {
+app.get('/api/public/document/:id', function(req, res) {
   return documentController.publicGet(publicParamsWithDocId(req), res);
 });
 
-app.get('/api/public/document/:id/download', function (req, res) {
+app.get('/api/public/document/:id/download', function(req, res) {
   return documentController.publicDownload(publicParamsWithDocId(req), res);
 });
 
-app.post('/api/public/document', function (req, res) {
+app.post('/api/public/document', function(req, res) {
   let extraFields = testUtils.buildParams(req.body);
   let params = testUtils.createPublicSwaggerParams(fieldNames, extraFields, idirUsername);
 
   return documentController.publicPost(params, res);
 });
 
-app.put('/api/document/:id/publish', function (req, res) {
+app.put('/api/document/:id/publish', function(req, res) {
   return documentController.protectedPublish(paramsWithDocId(req), res);
 });
 
-app.put('/api/document/:id/unpublish', function (req, res) {
+app.put('/api/document/:id/unpublish', function(req, res) {
   return documentController.protectedUnPublish(paramsWithDocId(req), res);
 });
 
-app.delete('/api/document/:id', function (req, res) {
+app.delete('/api/document/:id', function(req, res) {
   return documentController.protectedDelete(paramsWithDocId(req), res);
 });
 
@@ -104,7 +103,7 @@ const documentsData = [
 ];
 
 function setupDocuments(documentsData) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function(resolve, reject) {
     documentFactory
       .createMany('document', documentsData)
       .then(documentsArray => {
@@ -139,17 +138,17 @@ describe('GET /document', () => {
         .then(response => {
           expect(response.body.length).toEqual(3);
 
-          let firstDocument = _.find(response.body, { documentFileName: 'special_file.csv' });
+          let firstDocument = response.body.find({ documentFileName: 'special_file.csv' });
           expect(firstDocument).toHaveProperty('_id');
           expect(firstDocument.displayName).toBe('Special File');
           expect(firstDocument['tags']).toEqual(expect.arrayContaining([['public'], ['sysadmin']]));
 
-          let secondDocument = _.find(response.body, { documentFileName: 'vanilla.docx' });
+          let secondDocument = response.body.find({ documentFileName: 'vanilla.docx' });
           expect(secondDocument).toHaveProperty('_id');
           expect(secondDocument.displayName).toBe('Vanilla Ice Cream');
           expect(secondDocument['tags']).toEqual(expect.arrayContaining([['public']]));
 
-          let secretDocument = _.find(response.body, { documentFileName: '1099_FBI.docx.gpg' });
+          let secretDocument = response.body.find({ documentFileName: '1099_FBI.docx.gpg' });
           expect(secretDocument).toHaveProperty('_id');
           expect(secretDocument.displayName).toBe('Confidential File');
           expect(secretDocument['tags']).toEqual(expect.arrayContaining([['sysadmin']]));
@@ -196,7 +195,7 @@ describe('GET /document', () => {
 describe('GET /document/{id}', () => {
   test('returns a single Document ', done => {
     setupDocuments(documentsData).then(documents => {
-      Document.findOne({ displayName: 'Special File' }).exec(function (error, document) {
+      Document.findOne({ displayName: 'Special File' }).exec(function(error, document) {
         let documentId = document._id.toString();
         let uri = '/api/document/' + documentId;
 
@@ -228,12 +227,12 @@ describe('GET /public/document', () => {
         .then(response => {
           expect(response.body.length).toEqual(2);
 
-          let firstDocument = _.find(response.body, { documentFileName: 'special_file.csv' });
+          let firstDocument = response.body.find({ documentFileName: 'special_file.csv' });
           expect(firstDocument).toHaveProperty('_id');
           expect(firstDocument.displayName).toBe('Special File');
           expect(firstDocument['tags']).toEqual(expect.arrayContaining([['public'], ['sysadmin']]));
 
-          let secondDocument = _.find(response.body, { documentFileName: 'vanilla.docx' });
+          let secondDocument = response.body.find({ documentFileName: 'vanilla.docx' });
           expect(secondDocument).toHaveProperty('_id');
           expect(secondDocument.displayName).toBe('Vanilla Ice Cream');
           expect(secondDocument['tags']).toEqual(expect.arrayContaining([['public']]));
@@ -281,7 +280,7 @@ describe('GET /public/document', () => {
 describe('GET /public/document/{id}', () => {
   test('returns a single public document ', done => {
     setupDocuments(documentsData).then(documents => {
-      Document.findOne({ displayName: 'Special File' }).exec(function (error, document) {
+      Document.findOne({ displayName: 'Special File' }).exec(function(error, document) {
         if (error) {
           throw error;
         }
@@ -336,7 +335,7 @@ describe('POST /document', () => {
       .then(response => {
         expect(response.body._id).toBeDefined();
         expect(response.body._id).not.toBeNull();
-        Document.findById(response.body._id).exec(function (error, document) {
+        Document.findById(response.body._id).exec(function(error, document) {
           expect(document).not.toBeNull();
           expect(document.displayName).toBe('Critically Important File');
           done();
@@ -352,7 +351,7 @@ describe('POST /document', () => {
       .expect(200)
       .then(response => {
         expect(response.body._id).not.toBeNull();
-        Document.findById(response.body._id).exec(function (error, document) {
+        Document.findById(response.body._id).exec(function(error, document) {
           expect(document).not.toBeNull();
           expect(document._record.toString()).toBe(recordId);
           done();
@@ -368,7 +367,7 @@ describe('POST /document', () => {
       .expect(200)
       .then(response => {
         expect(response.body._id).not.toBeNull();
-        Document.findById(response.body._id).exec(function (error, document) {
+        Document.findById(response.body._id).exec(function(error, document) {
           expect(document).not.toBeNull();
           expect(document.internalMime).toBe('text/plain');
 
@@ -389,7 +388,7 @@ describe('POST /document', () => {
       .expect(200)
       .then(response => {
         expect(response.body._id).not.toBeNull();
-        Document.findById(response.body._id).exec(function (error, document) {
+        Document.findById(response.body._id).exec(function(error, document) {
           expect(document).not.toBeNull();
           expect(document._addedBy).not.toBeNull();
           expect(document._addedBy).toEqual(idirUsername);
@@ -398,7 +397,7 @@ describe('POST /document', () => {
       });
   });
 
-  test.skip('Runs a virus scan', done => { });
+  test.skip('Runs a virus scan', done => {});
 });
 
 // It appears this endpoint does not work.
@@ -436,7 +435,7 @@ describe.skip('PUT /document/{:id}', () => {
         .send(documentParams)
         .expect(200)
         .then(response => {
-          Document.findById(document.id).exec(function (error, updatedDocument) {
+          Document.findById(document.id).exec(function(error, updatedDocument) {
             expect(updatedDocument).not.toBeNull();
             expect(updatedDocument.displayName).toBe('Exciting new Document!');
             done();
@@ -521,7 +520,7 @@ describe('POST /public/document', () => {
       .then(response => {
         expect(response.body._id).toBeDefined();
         expect(response.body._id).not.toBeNull();
-        Document.findById(response.body._id).exec(function (error, document) {
+        Document.findById(response.body._id).exec(function(error, document) {
           expect(document).not.toBeNull();
           expect(document.displayName).toBe('Critically Important File');
           done();
@@ -537,7 +536,7 @@ describe('POST /public/document', () => {
       .expect(200)
       .then(response => {
         expect(response.body._id).not.toBeNull();
-        Document.findById(response.body._id).exec(function (error, document) {
+        Document.findById(response.body._id).exec(function(error, document) {
           expect(document).not.toBeNull();
           expect(document._record.toString()).toBe(recordId);
           done();
@@ -553,7 +552,7 @@ describe('POST /public/document', () => {
       .expect(200)
       .then(response => {
         expect(response.body._id).not.toBeNull();
-        Document.findById(response.body._id).exec(function (error, document) {
+        Document.findById(response.body._id).exec(function(error, document) {
           expect(document).not.toBeNull();
           expect(document.internalMime).toBe('text/plain');
 
@@ -566,7 +565,7 @@ describe('POST /public/document', () => {
       });
   });
 
-  test.skip('Runs a virus scan', done => { });
+  test.skip('Runs a virus scan', done => {});
 });
 
 describe('GET /public/document/{:id}/download', () => {
@@ -627,7 +626,7 @@ describe('PUT /document/:id/publish', () => {
         .expect(200)
         .send({})
         .then(response => {
-          Document.findOne({ displayName: 'Existing Document' }).exec(function (error, updatedDocument) {
+          Document.findOne({ displayName: 'Existing Document' }).exec(function(error, updatedDocument) {
             expect(updatedDocument).toBeDefined();
             expect(updatedDocument.tags[0]).toEqual(expect.arrayContaining(['public']));
             done();
@@ -661,7 +660,7 @@ describe('PUT /document/:id/unpublish', () => {
         .expect(200)
         .send({})
         .then(response => {
-          Document.findOne({ displayName: 'Existing Document' }).exec(function (error, updatedDocument) {
+          Document.findOne({ displayName: 'Existing Document' }).exec(function(error, updatedDocument) {
             expect(updatedDocument).toBeDefined();
             expect(updatedDocument.tags[0]).toEqual(expect.arrayContaining([]));
             done();
@@ -685,14 +684,14 @@ describe('PUT /document/:id/unpublish', () => {
 describe('DELETE /document/:id', () => {
   test('It soft deletes a document', done => {
     setupDocuments(documentsData).then(documents => {
-      Document.findOne({ displayName: 'Vanilla Ice Cream' }).exec(function (error, document) {
+      Document.findOne({ displayName: 'Vanilla Ice Cream' }).exec(function(error, document) {
         let vanillaDocumentId = document._id.toString();
         let uri = '/api/document/' + vanillaDocumentId;
         request(app)
           .delete(uri)
           .expect(200)
           .then(response => {
-            Document.findOne({ displayName: 'Vanilla Ice Cream' }).exec(function (error, updatedDocument) {
+            Document.findOne({ displayName: 'Vanilla Ice Cream' }).exec(function(error, updatedDocument) {
               expect(updatedDocument.isDeleted).toBe(true);
               done();
             });
