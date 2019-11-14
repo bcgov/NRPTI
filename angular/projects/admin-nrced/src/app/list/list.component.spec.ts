@@ -8,7 +8,7 @@ import { OrderByPipe } from '../pipes/order-by.pipe';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Record } from '../models/record';
 import { ActivatedRouteStub } from '../spec/helpers';
-import { ExportService } from '../services/export.service';
+import { ExportService } from 'nrpti-angular-components';
 import { QueryParamModifier } from '../services/api';
 
 describe('ListComponent', () => {
