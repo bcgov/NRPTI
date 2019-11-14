@@ -30,7 +30,7 @@
           "git": {
             "uri": "${GIT_REPO_URL}"
           },
-          "contextDir": "tools/jenkins/openshift/templates/nginx-runtime/"
+          "contextDir": "tools/jenkins/openshift/nginx-runtime/"
         },
         "strategy": {
           "type": "Docker"
