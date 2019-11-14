@@ -36,9 +36,27 @@ npm install -g @angular/cli
 npm install -g yarn
 ```
 
+# Angular Multi-Project Workspace
+
+This is a multi-project angular workspace.
+
+It contains many angular applications/libraries, under a single base set of dependencies and configs.
+
+### Applications
+
+Traditional Angular applications which can be built and served.
+
+### Libraries
+
+Angular libraries must be published to NPM, or similar, and be imported into an Applications package.json
+
+During development, a library can be built and symlinked instead of published. This eliminates the need to constantly publish a work-in-progress library.
+
 # Build and Run
 
 ## Dev
+
+### Serve
 
 1. Download dependencies
 
@@ -46,7 +64,42 @@ npm install -g yarn
     yarn
     ```
 
-3. Build library/symlink and apps
+2. Build library/symlink
+
+    ```
+    npm run build:library
+    npm run library:link
+    ```
+
+    _Note: Creating the library link only needs to be done once, as long as it is not unlinked (manually or by some other process that destroys symlinks)._
+
+    _Note: You must re-build the library whenever a change is made that needs to be captured by the consuming angular projects._
+
+3. Serve the app(s)
+
+    - Serve all apps
+
+      ```
+      npm start
+      ```
+
+      _Note: This will run all angular applications in parallel, in the same console._
+
+    - Serve specific app
+
+      ```
+      npm start:<project-name>
+      ```
+
+### Build
+
+1. Download dependencies
+
+    ```
+    yarn
+    ```
+
+2. Build library/symlink and apps
 
     - Build library/symlink and all apps
 
@@ -60,21 +113,6 @@ npm install -g yarn
       npm run build:library
       npm run library:link
       npm run build:app:<project-name>
-      ```
-
-
-4. Run the app(s)
-
-    - Run all apps
-
-      ```
-      npm start
-      ```
-
-    - Run specific app
-
-      ```
-      npm start:<project-name>
       ```
 
 ## Prod
@@ -91,7 +129,7 @@ npm install -g yarn
 
     _Note: This assumes all necessary libraries have been published and are included as dependencies in `package.json`_
 
-    - Run all app builds
+    - Build all apps
 
       ```
       npm run build:prod
@@ -121,32 +159,32 @@ Recommend installing the [VSCode Prettier extension](https://github.com/prettier
 
 ### Pre-Commit Hooks
 
-Package.json has been configured to use `husky` with `lint-staged` to run the `lint-fix` (linting + formatting) commands, against the files staged to be committed, whenever you perform a commit. This ensures that all committed code has been linted and formatted correctly.
+Package.json has been configured to use `husky` with `lint-staged` to run the `lint` (linting + formatting + auto fix) commands, against the files staged to be committed, whenever you perform a commit. This ensures that all committed code has been linted and formatted correctly.
 
 If the linters or formatters find issues that cannot be automatically fixed, it will throw an error and provide output as to what is wrong. Fix the issues and commit again.
 
 ## Run Linters + Formatters + Auto Fix
 
-_Note: In the worst case scenario, where linting/formatting has been neglected, then these `lint-fix` commands have the potential to create hundreds or thousands of file changes. In this case, it is recommended to only run these commands as part of a separate commit._
+_Note: In the worst case scenario, where linting/formatting has been neglected, then these `lint` commands have the potential to create hundreds or thousands of file changes. In this case, it is recommended to only run these commands as part of a separate commit._
 
 _Note: Not all linting/formatting errors can be automatically fixed, and will require human intervention._
 
 - Run all linters and fix all problems, in series
 
   ```
-  npm run lint-fix
+  npm run lint
   ```
 
 - Lint and fix the `*.ts` files using `TSLint` + `Prettier`.
 
   ```
-  npm run lint-fix:ts
+  npm run lint:ts
   ```
 
 - Lint and fix the `*.scss` files using `Stylelint`.
 
   ```
-  npm run lint-fix:scss
+  npm run lint:scss
   ```
 
 # Testing

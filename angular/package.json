@@ -15,6 +15,13 @@
     "library:link": "npm-run-all -l -s -c library:link:*",
     "library:link:1": "cd dist/nrpti-angular-components && npm link",
     "library:link:2": "npm link nrpti-angular-components",
+
+    "link:list": "npm ls -g --depth=0 --link=true",
+
+    "library:unlink": "npm-run-all -l -s -c library:unlink:*",
+    "library:unlink:1": "npm unlink --no-save nrpti-angular-components",
+    "library:unlink:2": "cd dist/nrpti-angular-components && npm unlink",
+
     "library:package": "npm-run-all -l -s -c library:copy:* library:package:*",
     "library:package:1": "cd dist/nrpti-angular-components && npm pack",
     "library:publish": "npm-run-all -l -s -c library:copy:* library:publish:*",
@@ -23,6 +30,7 @@
     "library:copy:license": "copy ..\\LICENSE .\\dist\\global",
     "library:copy:readme": "copy .\\projects\\global\\README.md .\\dist\\global",
     "clean": "npm-run-all -l -s -c clean:*",
+    "clean:library": "rimraf dist/nrpti-angular-components",
     "clean:dist": "rimraf dist",
     "test": "ng test",
     "test-ci": "ng test-ci",

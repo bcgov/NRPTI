@@ -14,7 +14,7 @@ import flatten from 'lodash.flatten';
  */
 @Injectable()
 export class RecordService {
-  constructor(public api: ApiService) { }
+  constructor(public api: ApiService) {}
 
   /**
    * Return all records that match the provided filters.

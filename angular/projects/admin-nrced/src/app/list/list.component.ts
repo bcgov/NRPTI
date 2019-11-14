@@ -2,13 +2,13 @@ import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Params, Router } from '@angular/router';
 import moment from 'moment';
-import flatMap from 'loadash.flatMap';
+import flatMap from 'lodash.flatmap';
 import { Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IRecordQueryParamSet, QueryParamModifier } from '../services/api';
 import { RecordService } from '../services/record.service';
 import { Record } from '../models/record';
-import { ExportService } from '../services/export.service';
+import { ExportService } from 'nrpti-angular-components';
 import { Utils } from '../utils/utils'; // used in template
 import { DemoCodes } from '../utils/constants/recordConstants';
 import { ConstantUtils, CodeType } from '../utils/constants/constantUtils';
@@ -80,7 +80,7 @@ export class ListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private exportService: ExportService,
     private recordService: RecordService
-  ) { }
+  ) {}
 
   /**
    * Component init.
@@ -92,7 +92,7 @@ export class ListComponent implements OnInit, OnDestroy {
       this.paramMap = paramMap;
 
       this.setInitialQueryParameters();
-      this.getRecords();
+      // this.getRecords();
     });
   }
 
@@ -105,7 +105,7 @@ export class ListComponent implements OnInit, OnDestroy {
    *
    * @memberof ListComponent
    */
-  public getRecords(): void {
+  public getRecords = (): void => {
     this.isSearching = true;
 
     if (this.filterChanged) {
@@ -131,7 +131,7 @@ export class ListComponent implements OnInit, OnDestroy {
           this.router.navigate(['/']);
         }
       );
-  }
+  };
 
   // Export
 

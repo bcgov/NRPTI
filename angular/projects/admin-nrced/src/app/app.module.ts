@@ -6,12 +6,12 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
+import { GlobalModule } from 'nrpti-angular-components';
 
 // modules
 import { SharedModule } from './shared.module';
 import { AppRoutingModule } from './app-routing.module';
 import { CommonModule } from '../../../common/src/app/common.module';
-import { GlobalModule } from 'nrpti-angular-components';
 
 // components
 import { AppComponent } from './app.component';
@@ -22,12 +22,10 @@ import { FooterComponent } from './footer/footer.component';
 
 // services
 import { ApiService } from './services/api';
-import { AuthenticationService } from './services/authentication.service';
 import { RecordService } from './services/record.service';
 import { DocumentService } from './services/document.service';
 import { CanDeactivateGuard } from './services/can-deactivate-guard.service';
 import { KeycloakService } from './services/keycloak.service';
-import { ExportService } from './services/export.service';
 
 // feature modules
 import { TokenInterceptor } from './utils/token-interceptor';
@@ -51,9 +49,9 @@ export function kcFactory(keycloakService: KeycloakService) {
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
-    SharedModule,
-    CommonModule,
     GlobalModule,
+    CommonModule,
+    SharedModule,
     AppRoutingModule, // <-- module import order matters - https://angular.io/guide/router#module-import-order-matters
     NgbModule.forRoot(),
     NgxPaginationModule,
@@ -73,11 +71,9 @@ export function kcFactory(keycloakService: KeycloakService) {
       multi: true
     },
     ApiService,
-    AuthenticationService,
     RecordService,
     DocumentService,
-    CanDeactivateGuard,
-    ExportService
+    CanDeactivateGuard
   ],
   entryComponents: [ConfirmComponent],
   bootstrap: [AppComponent]

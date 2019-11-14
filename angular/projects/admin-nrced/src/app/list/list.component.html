@@ -10,7 +10,7 @@
             [disabled]="isSearching || isExporting" title="Filter by Region">
             <option value="">Filter by Demo</option>
             <option *ngFor="let demoCode of demoCodes" [value]="demoCode.param"
-              [selected]="demoCode === demoCode.param">{{demoCode.text.long}}</option>
+              [selected]="demoCodeFilters[0] === demoCode.param">{{demoCode.text.long}}</option>
           </select>
           <!-- <select class="form-control filter-select" (change)="setPurposeFilter($event.target.value)"
             [disabled]="isSearching || isExporting" title="Filter by Purpose">
@@ -35,11 +35,9 @@
         <div class="filter-buttons">
           <button class="filter-btn-clear btn btn-secondary" (click)="clearQueryParameters()"
             [disabled]="isSearching || isExporting" title="Clear search filters">Clear</button>
-          <button class="filter-btn-search btn btn-primary" type="submit" (click)="getRecords()"
-            [disabled]="isSearching || isExporting" title="Search for records">
-            Search
-            <i class="spinner-border" [hidden]="!isSearching"></i>
-          </button>
+          <lib-button-spinner class="filter-btn-search" [btnClick]="getRecords" [btnIsDisabled]="isSearching || isExporting"
+            [btnShowSpinner]="isSearching" [btnTitle]="'Search for records'" [btnType]="'submit'" [btnText]="'Search'">
+          </lib-button-spinner>
           <button class="filter-btn-export btn btn-light" (click)="export()"
             [disabled]="isSearching || isExporting || pagination.totalItems <= 0" title="Export record list as CSV">
             Export
