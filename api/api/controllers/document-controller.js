@@ -3,9 +3,9 @@
 let _ = require('lodash');
 let mongoose = require('mongoose');
 let mime = require('mime-types');
-let queryActions = require('../utils/queryActions');
-let queryUtils = require('../utils/queryUtils');
-let documentUtils = require('../utils/documentUtils');
+let queryActions = require('../utils/query-actions');
+let queryUtils = require('../utils/query-utils');
+let documentUtils = require('../utils/document-utils');
 let FlakeIdGen = require('flake-idgen'),
   intformat = require('biguint-format'),
   generator = new FlakeIdGen();
