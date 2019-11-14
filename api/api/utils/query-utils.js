@@ -4,7 +4,6 @@
  * This file contains query builder utility functions.
  */
 
-let _ = require('lodash');
 let mongoose = require('mongoose');
 
 let MAX_LIMIT = 1000;
@@ -18,8 +17,8 @@ let DEFAULT_PAGESIZE = 100;
  * @returns array of fields that is a subset of allowedFields.
  */
 exports.getSanitizedFields = function(allowedFields, fields) {
-  return _.remove(fields, function(field) {
-    return _.indexOf(allowedFields, field) !== -1;
+  return fields.filter(function(field) {
+    return allowedFields.indexOf(allowedFields, field) !== -1;
   });
 };
 
@@ -33,18 +32,21 @@ exports.getSanitizedFields = function(allowedFields, fields) {
  */
 exports.buildQuery = function(property, values, query) {
   let objectIDs = [];
-  if (_.isArray(values)) {
-    _.each(values, function(id) {
+  if (Array.isArray(values)) {
+    for (let id in values) {
       objectIDs.push(mongoose.Types.ObjectId(id));
-    });
+    }
   } else {
     objectIDs.push(mongoose.Types.ObjectId(values));
   }
-  return _.assignIn(query, {
-    [property]: {
-      $in: objectIDs
+  return {
+    ...query,
+    ...{
+      [property]: {
+        $in: objectIDs
+      }
     }
-  });
+  };
 };
 
 /**
@@ -110,17 +112,17 @@ exports.runDataQuery = function(
     } else {
       // Fields we always return
       let defaultFields = ['_id', 'code', 'tags'];
-      _.each(defaultFields, function(field) {
+      for (let field in defaultFields) {
         projection[field] = 1;
-      });
+      }
 
       // Add requested fields - sanitize first by including only those that we can/want to return
-      _.each(fields, function(field) {
+      for (let field in fields) {
         projection[field] = 1;
-      });
+      }
     }
 
-    let aggregations = _.compact([
+    let aggregations = [
       {
         $match: query
       },
@@ -147,7 +149,7 @@ exports.runDataQuery = function(
 
       sortWarmUp, // Used to setup the sort if a temporary projection is needed.
 
-      !_.isEmpty(sort) ? { $sort: sort } : null,
+      !sort.length == 0 ? { $sort: sort } : null,
 
       sort ? { $project: projection } : null, // Reset the projection just in case the sortWarmUp changed it.
 
@@ -160,7 +162,9 @@ exports.runDataQuery = function(
       },
       { $skip: skip || 0 },
       { $limit: limit || MAX_LIMIT }
-    ]);
+    ].filter(function(el) {
+      return !!el;
+    });
 
     // Pre-pend the aggregation with other pipeline steps if we are joining on another datasource
     if (preQueryPipelineSteps && preQueryPipelineSteps.length > 0) {

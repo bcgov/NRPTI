@@ -1,7 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
-
 const defaultLog = require('./logger')('queryActions');
 
 /**
@@ -12,9 +10,10 @@ const defaultLog = require('./logger')('queryActions');
  */
 exports.publish = function(obj) {
   return new Promise(function(resolve, reject) {
-    let exists = _.find(obj.tags, function(item) {
-      return _.isEqual(item, ['public']);
-    });
+    let exists = false;
+    for (let tag in obj.tags) {
+      exists = tag.includes('public');
+    }
 
     // Object was already published?
     if (exists) {
@@ -40,9 +39,9 @@ exports.publish = function(obj) {
  * @returns
  */
 exports.isPublished = function(obj) {
-  return _.find(obj.tags, function(item) {
-    return _.isEqual(item, ['public']);
-  });
+  for (let tag in obj.tags) {
+    return tag.includes('public');
+  }
 };
 
 /**
@@ -53,8 +52,8 @@ exports.isPublished = function(obj) {
  */
 exports.unPublish = function(obj) {
   return new Promise(function(resolve, reject) {
-    let exists = _.remove(obj.tags, function(item) {
-      return _.isEqual(item, ['public']);
+    let exists = obj.tags.filter(function(item) {
+      return item.includes(['public']);
     });
     // Object wasn't already published?
     if (exists.length === 0) {
@@ -81,8 +80,8 @@ exports.unPublish = function(obj) {
  */
 exports.delete = function(obj) {
   return new Promise(function(resolve, reject) {
-    _.remove(obj.tags, function(item) {
-      return _.isEqual(item, ['public']);
+    obj.tags = obj.tags.filter(function(item) {
+      return item.includes(['public']);
     });
     obj.isDeleted = true;
     obj.markModified('tags');

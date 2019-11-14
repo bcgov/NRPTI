@@ -5,7 +5,6 @@ const dbCleaner = new DatabaseCleaner('mongodb');
 const mongoose = require('mongoose');
 const mongooseOpts = require('./config/mongoose-options').mongooseOptions;
 const mongoDbMemoryServer = require('mongodb-memory-server');
-const _ = require('lodash');
 
 const app = express();
 let mongoServer;
@@ -57,7 +56,7 @@ function createSwaggerParams(fieldNames, additionalValues = {}, username = null)
   let defaultParams = defaultProtectedParams(fieldNames, username);
   let swaggerObject = {
     swagger: {
-      params: _.merge(defaultParams, additionalValues),
+      params: { ...defaultParams, ...additionalValues },
       operation: {
         'x-security-scopes': ['sysadmin', 'public']
       }
@@ -70,7 +69,7 @@ function createPublicSwaggerParams(fieldNames, additionalValues = {}) {
   let defaultParams = defaultPublicParams(fieldNames);
   let swaggerObject = {
     swagger: {
-      params: _.merge(defaultParams, additionalValues)
+      params: { ...defaultParams, ...additionalValues }
     }
   };
   return swaggerObject;
@@ -85,23 +84,23 @@ function defaultProtectedParams(fieldNames, username = null) {
       preferred_username: username
     },
     fields: {
-      value: _.cloneDeep(fieldNames)
+      value: JSON.parse(JSON.stringify(fieldNames))
     }
   };
 }
 function defaultPublicParams(fieldNames) {
   return {
     fields: {
-      value: _.cloneDeep(fieldNames)
+      value: JSON.parse(JSON.stringify(fieldNames))
     }
   };
 }
 
 function buildParams(nameValueMapping) {
   let paramObj = {};
-  _.mapKeys(nameValueMapping, function(value, key) {
+  for (let [key, value] of Object.entries(nameValueMapping)) {
     paramObj[key] = { value: value };
-  });
+  }
   return paramObj;
 }
 
