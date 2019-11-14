@@ -1,7 +1,6 @@
 'use strict';
 
 let mongoose = require('mongoose');
-let _ = require('lodash');
 
 const defaultLog = require('./logger')('modelSchemaGenerator');
 
@@ -17,7 +16,7 @@ let genSchema = function(name, definition) {
   let indexes = [];
 
   // parse out model properties
-  _.forEach(definition, function(value, key) {
+  for (let [key, value] of Object.entries(definition)) {
     if (key.substr(0, 2) === '__') {
       delete definition[key];
 
@@ -27,7 +26,7 @@ let genSchema = function(name, definition) {
           break;
       }
     }
-  });
+  }
 
   // schema options
   const options = {
@@ -39,9 +38,9 @@ let genSchema = function(name, definition) {
 
   // add model properties - post schema creation
   if (indexes && indexes.length) {
-    _.forEach(indexes, function(value) {
-      schema.index(value);
-    });
+    for (let index in indexes) {
+      schema.index(index);
+    }
   }
 
   return schema;
