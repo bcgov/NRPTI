@@ -10,9 +10,12 @@ import moment from 'moment';
  * @export
  * @class ExportService
  */
-@Injectable()
+// @dynamic
+@Injectable({
+  providedIn: 'root'
+})
 export class ExportService {
-  constructor() { }
+  constructor() {}
 
   /**
    * Generates and downloads the given data as a csv file.

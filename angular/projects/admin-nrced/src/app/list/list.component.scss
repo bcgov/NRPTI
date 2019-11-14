@@ -37,11 +37,27 @@
     }
 
     .filter-btn-search {
-      margin-right: 1rem;
-      padding: 0.75rem;
-      font-size: 0.875rem;
-      font-weight: 700;
-      width: 7rem;
+      ::ng-deep {
+        button {
+          margin-right: 1rem;
+          padding: 0.75rem;
+          font-size: 0.875rem;
+          font-weight: 700;
+          width: 7rem;
+        }
+
+        i {
+          font-size: 0.7rem;
+          height: 0.95rem;
+          width: 0.95rem;
+
+          &.spinner-border {
+            font-size: 0.7rem;
+            height: 0.95rem;
+            width: 0.95rem;
+          }
+        }
+      }
     }
 
     .filter-btn-export {

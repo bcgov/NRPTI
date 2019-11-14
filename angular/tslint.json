@@ -59,6 +59,7 @@
       true,
       [
         "app",
+        "projects",
         "nrpti-angular-components"
       ],
       "dev"

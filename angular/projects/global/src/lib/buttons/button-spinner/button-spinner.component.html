@@ -1,0 +1,9 @@
+<button
+  class="btn btn-primary"
+  type="btnType"
+  (click)="btnClick()"
+  [disabled]="btnIsDisabled"
+  title="btnTitle">
+  {{ btnText }}
+  <i class="spinner-border" [hidden]="!btnShowSpinner"></i>
+</button>

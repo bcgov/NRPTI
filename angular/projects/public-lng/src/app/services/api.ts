@@ -82,8 +82,8 @@ export class ApiService {
     const reason = error.message
       ? error.message
       : error.status
-        ? `${error.status} - ${error.statusText}`
-        : 'Server error';
+      ? `${error.status} - ${error.statusText}`
+      : 'Server error';
     console.log('API error:', reason);
     return throwError(error);
   }
