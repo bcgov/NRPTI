@@ -3,7 +3,6 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 
 import { Observable, of, combineLatest, merge, throwError } from 'rxjs';
 import { map, mergeMap, toArray } from 'rxjs/operators';
-import _ from 'lodash';
 
 import { Application } from '../models/application';
 import { Document } from '../models/document';
@@ -83,8 +82,8 @@ export class ApiService {
     const reason = error.message
       ? error.message
       : error.status
-      ? `${error.status} - ${error.statusText}`
-      : 'Server error';
+        ? `${error.status} - ${error.statusText}`
+        : 'Server error';
     console.log('API error:', reason);
     return throwError(error);
   }
@@ -294,9 +293,9 @@ export class ApiService {
   //
   private buildValues(collection: any[]): string {
     let values = '';
-    _.each(collection, a => {
-      values += a + '|';
-    });
+    for (const value of collection) {
+      values += value + '|';
+    }
     // trim the last |
     return values.replace(/\|$/, '');
   }

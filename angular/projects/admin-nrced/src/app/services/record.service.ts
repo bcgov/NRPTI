@@ -4,7 +4,7 @@ import { Observable, of, combineLatest } from 'rxjs';
 import { ApiService, IRecordQueryParamSet } from './api';
 import { Record } from '../models/record';
 import { mergeMap, catchError } from 'rxjs/operators';
-import _ from 'lodash';
+import flatten from 'lodash.flatten';
 
 /**
  * Provides methods for retrieving and working with records.
@@ -14,7 +14,7 @@ import _ from 'lodash';
  */
 @Injectable()
 export class RecordService {
-  constructor(public api: ApiService) {}
+  constructor(public api: ApiService) { }
 
   /**
    * Return all records that match the provided filters.
@@ -34,7 +34,7 @@ export class RecordService {
 
     return combineLatest(...observables).pipe(
       mergeMap((results: Record[][]) => {
-        const flattenedResults = _.flatten(results);
+        const flattenedResults = flatten(results);
         if (!flattenedResults || !flattenedResults.length) {
           return of([] as Record[]);
         }

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { JwtUtil } from '../utils/jwt-utils';
 import { Observable } from 'rxjs';
-import _ from 'lodash';
 
 declare let Keycloak: any;
 
@@ -108,7 +107,7 @@ export class KeycloakService {
     const jwt = JwtUtil.decodeToken(this.getToken());
 
     if (jwt && jwt.realm_access && jwt.realm_access.roles) {
-      return _.includes(jwt.realm_access.roles, 'sysadmin');
+      return jwt.realm_access.roles.includes('sysadmin');
     } else {
       return false;
     }
@@ -145,7 +144,7 @@ export class KeycloakService {
           observer.error();
         });
 
-      return { unsubscribe() {} };
+      return { unsubscribe() { } };
     });
   }
 }
