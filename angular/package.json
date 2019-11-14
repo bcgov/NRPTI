@@ -18,8 +18,8 @@
     "build:library": "ng build global",
 
     "library:link": "npm-run-all -l -s -c library:link:*",
-    "library:link:1": "cd dist/nrpti-angular-components && yarn link",
-    "library:link:2": "yarn link nrpti-angular-components",
+    "library:link:1": "cd dist/nrpti-angular-components && npm link",
+    "library:link:2": "npm link nrpti-angular-components",
 
     "library:package": "npm-run-all -l -s -c library:copy:* library:package:*",
     "library:package:1": "cd dist/nrpti-angular-components && npm pack",
