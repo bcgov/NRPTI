@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = require('../utils/modelSchemaGenerator')('Document', {
+module.exports = require('../utils/model-schema-generator')('Document', {
   _addedBy: { type: String, default: null },
   _record: { type: 'ObjectId', ref: 'Record', default: null },
   documentFileName: { type: String, default: '' },

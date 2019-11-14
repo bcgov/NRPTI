@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const DatabaseCleaner = require('database-cleaner');
 const dbCleaner = new DatabaseCleaner('mongodb');
 const mongoose = require('mongoose');
-const mongooseOpts = require('./config/mongoose_options').mongooseOptions;
+const mongooseOpts = require('./config/mongoose-options').mongooseOptions;
 const mongoDbMemoryServer = require('mongodb-memory-server');
 const _ = require('lodash');
 

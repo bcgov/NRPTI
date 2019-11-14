@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const swaggerConfig = YAML.load('./api/swagger/swagger.yaml');
 
 const defaultLog = require('./api/utils/logger')('app');
-const authUtils = require('./api/utils/authUtils');
+const authUtils = require('./api/utils/auth-utils');
 
 const UPLOAD_DIR = process.env.UPLOAD_DIRECTORY || './uploads/';
 const HOSTNAME = process.env.API_HOSTNAME || 'localhost:3000';
