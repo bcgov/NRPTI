@@ -1,5 +1,4 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import _ from 'lodash';
 import moment from 'moment';
 
 import { UrlService } from '../../../services/url.service';
@@ -30,7 +29,7 @@ export class ExplorePanelComponent implements OnInit {
   public textFilters: object = {}; // applied filters
   public _textFilters: object = {}; // temporary filters for Cancel feature
 
-  constructor(private urlService: UrlService) {}
+  constructor(private urlService: UrlService) { }
 
   public ngOnInit() {
     for (const section of this.filterSections) {
@@ -76,9 +75,9 @@ export class ExplorePanelComponent implements OnInit {
 
     // true, if the applied filters, pulled from the url, differ from the temporary filters
     const hasChanges =
-      !_.isEqual(this._dateRangeFromFilter, this.dateRangeFromFilter) ||
-      !_.isEqual(this._dateRangeToFilter, this.dateRangeToFilter) ||
-      !_.isEqual(this._textFilters, this.textFilters);
+      !(this._dateRangeFromFilter.valueOf() === this.dateRangeFromFilter.valueOf()) ||
+      !(this._dateRangeToFilter.valueOf() === this.dateRangeToFilter.valueOf()) ||
+      !(JSON.stringify(this._textFilters) === JSON.stringify(this.textFilters))
 
     // copy all data from applied filters to temporary filters
     this._dateRangeFromFilter = this.dateRangeFromFilter;
@@ -99,17 +98,17 @@ export class ExplorePanelComponent implements OnInit {
 
     documentFilters.dateRangeFrom = this.dateRangeFromFilter
       ? moment(this.dateRangeFromFilter)
-          .startOf('day')
-          .toDate()
+        .startOf('day')
+        .toDate()
       : null;
 
     documentFilters.dateRangeTo = this.dateRangeToFilter
       ? moment(this.dateRangeToFilter)
-          .endOf('day')
-          .toDate()
+        .endOf('day')
+        .toDate()
       : null;
 
-    _.keys(this.textFilters).forEach(key => {
+    Object.keys(this.textFilters).forEach(key => {
       if (this.textFilters[key]) {
         documentFilters.textFilters.push(new TextFilter({ fieldName: key }));
       }

@@ -1,5 +1,4 @@
 import moment from 'moment';
-import _ from 'lodash';
 
 export class Utils {
   /**
@@ -13,9 +12,9 @@ export class Utils {
    */
   static convertArrayIntoPipeString(collection: string[]): string {
     let values = '';
-    _.each(collection, a => {
-      values += a + '|';
-    });
+    for (let value of collection) {
+      values += value + '|';
+    }
     // trim the last |
     return values.replace(/\|$/, '');
   }
