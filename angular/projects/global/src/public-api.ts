@@ -3,7 +3,9 @@
  */
 
 // components
-export * from './lib/buttons/button-spinner/button-spinner.component';
+export * from './lib/components/buttons/button-spinner/button-spinner.component';
+export * from './lib/components/table-template/table-template.component';
+export * from './lib/components/table-template/table-object';
 
 // services
 export * from './lib/services/export.service';
