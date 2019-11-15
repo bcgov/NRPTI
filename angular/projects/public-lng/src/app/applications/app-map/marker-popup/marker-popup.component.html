@@ -3,14 +3,13 @@
 </div>
 
 <div class="popup-content" *ngIf="app">
-  <div class="file-number">Crown Land File: {{app['clFile'] || '-'}}</div>
+  <div class="file-number">Crown Land File: {{ app['clFile'] || '-' }}</div>
 
-  <div class="applicant-name">{{app['applicants'] | titlecase}}</div>
-  <div class="purpose">{{app.purpose | titlecase}} - {{app.subpurpose | titlecase}}</div>
+  <div class="applicant-name">{{ app['applicants'] | titlecase }}</div>
+  <div class="purpose">{{ app.purpose | titlecase }} - {{ app.subpurpose | titlecase }}</div>
 
   <ul class="status-container">
-    <li class="app-status">{{app.appStatus}}
-    </li>
+    <li class="app-status">{{ app.appStatus }}</li>
   </ul>
 
   <button class="app-link btn btn-primary" (click)="showDetails()">View Application Details</button>

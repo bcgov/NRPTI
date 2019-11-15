@@ -15,7 +15,7 @@
                 <strong>Project Type</strong>
               </div>
               <div class="details-content">
-                {{details['type']}}
+                {{ details['type'] }}
               </div>
             </div>
             <div class="details-item">
@@ -24,10 +24,10 @@
               </div>
               <div class="details-content">
                 <div>
-                  {{details['proponent']}}
+                  {{ details['proponent'] }}
                 </div>
                 <div>
-                  <a href="{{details['proponentURL']}}">{{details['proponentURL']}}</a>
+                  <a href="{{ details['proponentURL'] }}">{{ details['proponentURL'] }}</a>
                 </div>
               </div>
             </div>
@@ -36,7 +36,7 @@
                 <strong>Location</strong>
               </div>
               <div class="details-content">
-                {{details['location']}}
+                {{ details['location'] }}
               </div>
             </div>
             <div class="details-item">
@@ -44,7 +44,7 @@
                 <strong>Status</strong>
               </div>
               <div class="details-content">
-                {{details['status']}}
+                {{ details['status'] }}
               </div>
             </div>
           </div>
@@ -55,8 +55,12 @@
           <div class="card-text">
             SEE PROJECT ON MAP
           </div>
-          <img class="card-image" routerLink="/map" src="/assets/images/{{images['map']['img']}}"
-            alt="{{images['map']['alt']}}">
+          <img
+            class="card-image"
+            routerLink="/map"
+            src="/assets/images/{{ images['map']['img'] }}"
+            alt="{{ images['map']['alt'] }}"
+          />
         </div>
       </div>
     </section>
@@ -64,7 +68,7 @@
       <h2>
         ACTIVITY UPDATES
       </h2>
-      <app-activity [activitiesJSON]='activities'></app-activity>
+      <app-activity [activitiesJSON]="activities"></app-activity>
     </section>
   </div>
 </div>

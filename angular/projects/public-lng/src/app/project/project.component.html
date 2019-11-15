@@ -1,46 +1,70 @@
 <div class="project-app-header project-app-header--flex">
   <div id="project-header">
-    {{project}}
+    {{ project }}
   </div>
   <nav class="project-navbar navbar-expand-md justify-content-between">
-    <button class="navbar-toggler" type="button" title="Toggle Project Navigation"
+    <button
+      class="navbar-toggler"
+      type="button"
+      title="Toggle Project Navigation"
       data-toggle="collapse"
       data-target="#projectNav"
       aria-controls="navbarText"
       aria-expanded="false"
-      aria-label="Toggle navigation">
+      aria-label="Toggle navigation"
+    >
       <i class="material-icons">menu</i>
       <span>PROJECT MENU</span>
     </button>
     <div class="collapse navbar-collapse" id="projectNav">
       <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link" title="Overview" routerLinkActive="active-link" routerLink="/project/{{id}}/overview">
+          <a class="nav-link" title="Overview" routerLinkActive="active-link" routerLink="/project/{{ id }}/overview">
             <span>Overview</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" title="Background" routerLinkActive="active-link" routerLink="/project/{{id}}/background">
+          <a
+            class="nav-link"
+            title="Background"
+            routerLinkActive="active-link"
+            routerLink="/project/{{ id }}/background"
+          >
             <span>Background</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" title="Authorizations" routerLinkActive="active-link" routerLink="/project/{{id}}/authorizations">
+          <a
+            class="nav-link"
+            title="Authorizations"
+            routerLinkActive="active-link"
+            routerLink="/project/{{ id }}/authorizations"
+          >
             <span>Authorizations</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" title="Compliance" routerLinkActive="active-link" routerLink="/project/{{id}}/compliance">
+          <a
+            class="nav-link"
+            title="Compliance"
+            routerLinkActive="active-link"
+            routerLink="/project/{{ id }}/compliance"
+          >
             <span>Compliance</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" title="Plans" routerLinkActive="active-link" routerLink="/project/{{id}}/plans">
+          <a class="nav-link" title="Plans" routerLinkActive="active-link" routerLink="/project/{{ id }}/plans">
             <span>Plans</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" title="Indigenous Nations" routerLinkActive="active-link" routerLink="/project/{{id}}/nations">
+          <a
+            class="nav-link"
+            title="Indigenous Nations"
+            routerLinkActive="active-link"
+            routerLink="/project/{{ id }}/nations"
+          >
             <span>Indigenous Nations</span>
           </a>
         </li>
