@@ -1,6 +1,6 @@
 # NRPTI
 
-Natural Resources Public Transparency Initiative
+Natural Resources Public Transparency Initiative monorepo
 
 # How to Contribute
 
