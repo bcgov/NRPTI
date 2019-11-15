@@ -1,5 +1,5 @@
-import { DemoCodes } from './recordConstants';
-import { ICodeSet, ICodeGroup } from './constantInterfaces';
+import { DemoCodes } from './record-constants';
+import { ICodeSet, ICodeGroup } from './constant-interfaces';
 
 /**
  * Enum of supported code sets.

@@ -9,12 +9,13 @@ import { KeycloakService } from './keycloak.service';
  */
 @Injectable()
 export class FactoryService {
-  private _exportService: KeycloakService;
+  private _keycloakService: KeycloakService;
+
   public get keycloakService(): KeycloakService {
-    if (!this._exportService) {
-      this._exportService = this.injector.get(KeycloakService);
+    if (!this._keycloakService) {
+      this._keycloakService = this.injector.get(KeycloakService);
     }
-    return this._exportService;
+    return this._keycloakService;
   }
 
   constructor(private injector: Injector) {}

@@ -11,6 +11,10 @@
     ],
     "curly": true,
     "eofline": true,
+    "file-name-casing": [
+      true,
+      "kebab-case"
+    ],
     "forin": true,
     "import-spacing": true,
     "indent": [
@@ -55,6 +59,7 @@
     "no-empty": false,
     "no-empty-interface": true,
     "no-eval": true,
+    "no-for-in-array": true,
     "no-implicit-dependencies": [
       true,
       [
@@ -69,6 +74,7 @@
       "ignore-params"
     ],
     "no-shadowed-variable": true,
+    "no-sparse-arrays": true,
     "no-string-literal": false,
     "no-string-throw": true,
     "no-submodule-imports": false,

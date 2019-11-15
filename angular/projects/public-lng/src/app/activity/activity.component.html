@@ -1,27 +1,25 @@
 <div class="activity-list">
   <ng-container *ngFor="let activityItem of activitiesToDisplay">
-
-    <a class="activity-link" href="{{activityItem.url}}">
+    <a class="activity-link" href="{{ activityItem.url }}">
       <div class="activity-item">
         <div class="block-left">
           <div class="vertical-line"></div>
-          <img class='activity-icon' src="/assets/images/{{activityItem.type}}.svg">
+          <img class="activity-icon" src="/assets/images/{{ activityItem.type }}.svg" />
         </div>
         <div class="block-right extend-border">
           <div class="inner-block-top">
             <div class="inner-block-top-left">
-              <strong>{{activityItem.title}}</strong>
+              <strong>{{ activityItem.title }}</strong>
             </div>
             <div class="inner-block-top-right">
-              {{activityItem.date | date}}
+              {{ activityItem.date | date }}
             </div>
           </div>
           <div class="inner-block-bottom">
             <div class="inner-block-bottom-left">
-              {{activityItem.description}}
+              {{ activityItem.description }}
             </div>
-            <div class="inner-block-bottom-right">
-            </div>
+            <div class="inner-block-bottom-right"></div>
           </div>
         </div>
       </div>
@@ -33,13 +31,20 @@
         <a class="page-link" (click)="updatePage(-1)" [hidden]="pagination.currentPage <= 1">Prev</a>
       </li>
       <li>
-        <a class="page-link" (click)="setPage(pagination.currentPage - 1)" [hidden]="pagination.currentPage <= 1">{{pagination.currentPage - 1}}</a>
+        <a class="page-link" (click)="setPage(pagination.currentPage - 1)" [hidden]="pagination.currentPage <= 1">{{
+          pagination.currentPage - 1
+        }}</a>
       </li>
       <li>
-        <a class="page-link" (click)="setPage(pagination.currentPage)">{{pagination.currentPage}}</a>
+        <a class="page-link" (click)="setPage(pagination.currentPage)">{{ pagination.currentPage }}</a>
       </li>
       <li>
-        <a class="page-link" (click)="setPage(pagination.currentPage + 1)" [hidden]="pagination.currentPage >= pagination.pageCount">{{pagination.currentPage + 1}}</a>
+        <a
+          class="page-link"
+          (click)="setPage(pagination.currentPage + 1)"
+          [hidden]="pagination.currentPage >= pagination.pageCount"
+          >{{ pagination.currentPage + 1 }}</a
+        >
       </li>
       <li>
         <a class="page-link" (click)="updatePage(1)" [hidden]="pagination.currentPage === pagination.pageCount">Next</a>

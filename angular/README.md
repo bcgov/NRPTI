@@ -67,11 +67,8 @@ During development, a library can be built and symlinked instead of published. T
 2. Build library/symlink
 
     ```
-    npm run build:library
-    npm run library:link
+    npm run build:library:dev
     ```
-
-    _Note: Creating the library link only needs to be done once, as long as it is not unlinked (manually or by some other process that destroys symlinks)._
 
     _Note: You must re-build the library whenever a change is made that needs to be captured by the consuming angular projects._
 
@@ -110,8 +107,7 @@ During development, a library can be built and symlinked instead of published. T
     - Build specific library/symlink and specific app(s)
 
       ```
-      npm run build:library
-      npm run library:link
+      npm run build:library:dev
       npm run build:app:<project-name>
       ```
 

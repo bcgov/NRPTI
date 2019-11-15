@@ -5,8 +5,8 @@ import moment from 'moment';
 
 import { ExplorePanelComponent } from './explore-panel/explore-panel.component';
 import { Document } from '../../models/document';
-import { DocumentHeader } from '../../models/documentHeader';
-import { FilterSection, TextFilter } from '../../models/documentFilter';
+import { DocumentHeader } from '../../models/document-header';
+import { FilterSection, TextFilter } from '../../models/document-filter';
 import { PageTypes } from '../../utils/page-types.enum';
 import { DataService } from '../../services/data.service';
 
