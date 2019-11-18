@@ -3,7 +3,7 @@ import moment from 'moment';
 
 import { UrlService } from '../../../services/url.service';
 import { IDocumentFilters } from '../documents.component';
-import { FilterSection, TextFilter } from '../../../models/documentFilter';
+import { FilterSection, TextFilter } from '../../../models/document-filter';
 
 @Component({
   selector: 'app-explore-panel',

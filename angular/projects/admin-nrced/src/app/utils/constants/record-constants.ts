@@ -1,4 +1,4 @@
-import { ICodeSet, ICodeGroup } from './constantInterfaces';
+import { ICodeSet, ICodeGroup } from './constant-interfaces';
 
 /**
  * Demo codes.

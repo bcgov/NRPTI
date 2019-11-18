@@ -1,124 +1,170 @@
 <div class="container">
-    <section id="anchor-point">
-      <div class="hero-banner">
-        <div class="hero-banner__content">
-          <h2>Frequently Asked Questions</h2>
-        </div>
-        <div id="show-hide-all" (click)="toggleOpen()">
-          <div *ngIf="showAll">Hide All (-)</div>
-          <div *ngIf="!showAll">Show All (+)</div>
-        </div>
-        <hr id="top-hr">
-        <div class="question-answer">
-          <div
-            class="question"
-            (click)="status1=!status1"
-            [ngClass]="status1 ? 'open' : 'closed'"
-          ><i class="material-icons">chevron_right</i>Why does the provincial government have a regulatory interface for LNG projects?</div>
-          <div class="faq-answer">
-            <p>Major industry projects require provincial approval and the appropriate permits before development can move forward. This site provides context and access to the multiple layers of authorizations, compliance updates and other items that represent the provincial government’s role as it relates to LNG regulation and oversight.</p>
-          </div>
-        </div>
-        <div class="question-answer">
-          <div
-            class="question"
-            (click)="status2=!status2"
-            [ngClass]="status2 ? 'open' : 'closed'"
-          ><i class="material-icons">chevron_right</i>Does this site include information about the federal government?</div>
-          <div class="faq-answer">
-            <p>This site provides specifics about the provincial government’s role. There are multiple layers of authorizations and approvals the industry must also obtain from the federal government, including a licence to export natural gas overseas.</p> 
-            <p>The National Energy Board is Canada’s regulator for the energy industry. More details can be found at <a href="https://www.neb-one.gc.ca/">www.neb-one.gc.ca</a></p>
-          </div>
-        </div>
-        <div class="question-answer">
-          <div
-            class="question"
-            (click)="status3=!status3"
-            [ngClass]="status3 ? 'open' : 'closed'"
-          ><i class="material-icons">chevron_right</i>Why does this site only have information for LNG Canada and Coastal GasLink?</div>
-          <div class="faq-answer">
-            <p>LNG Canada represents the first large-scale export project to announce a final investment decision – an industry term confirming a proposed project is moving forward. The Coastal GasLink pipeline will be built to supply natural gas to the export facility.</p>
-            <p>Now that construction is underway, provincial oversight ensures each project is compliant with all government regulations and requirements. This site provides access to the multiple layers of oversight applied to both LNG Canada and Coastal GasLink.</p>
-            <p>Other industry projects will be considered for this site moving forward.</p>
-          </div>
-        </div>
-        <div class="question-answer">
-          <div
-            class="question"
-            (click)="status4=!status4"
-            [ngClass]="status4 ? 'open' : 'closed'"
-          ><i class="material-icons">chevron_right</i>LNG projects will source natural gas from northeast British Columbia – how is that aspect of the industry regulated? </div>
-          <div class="faq-answer">
-            <p>Natural gas extraction activities, also known as upstream development, is regulated by the BC Oil and Gas Commission.</p>
-            <p>The BC Oil and Gas Commission is an independent, single-window regulator for the natural gas industry, overseeing the lifecycle of every project, including exploration, development, consultation, pipeline transportation and reclamation.</p>
-            <p>All permitting and oversight authorities are delegated to the BC Oil and Gas Commission through the <a href="http://www.bclaws.ca/civix/document/id/complete/statreg/08036_01">Oil and Gas Activities Act</a> – British Columbia’s regulatory framework for all oil and gas activities in the province.</p>
-            <p>More details about the Commission can be found at <a href="https://www.bcogc.ca/">www.bcogc.ca</a>.</p>
-          </div>
-        </div>
-        <div class="question-answer">
-          <div
-            class="question"
-            (click)="status5=!status5"
-            [ngClass]="status5 ? 'open' : 'closed'"
-          ><i class="material-icons">chevron_right</i>How are workforce accommodations regulated?</div>
-          <div class="faq-answer">
-            <p>There are multiple government agencies involved with regulating workforce accommodations.</p>
-            <p>It starts with the environmental assessment process that assesses environmental, economic, health, cultural/heritage and social effects – and that includes workforce accommodations. Conditions can be imposed on a project’s environmental assessment certificate to add specific regulatory requirements related to the workforce. </p>
-            <p>The BC Oil and Gas Commission permits the use of Crown Land where the accommodations are built. Northern Health approves construction, food services, drinking water and other necessities. Local governments have a role too by providing permits linked to the BC Building Code – provincial regulation that governs how new constructions are completed.</p>
-            <p>Other agencies with a role can include the Ministry of Environment and Climate Change Strategy, Ministry of Transportation, Technical Safety BC, and WorkSafeBC.</p>
-          </div>
-        </div>
-        <div class="question-answer">
-          <div
-            class="question"
-            (click)="status6=!status6"
-            [ngClass]="status6 ? 'open' : 'closed'"
-          ><i class="material-icons">chevron_right</i>Will Coastal GasLink’s pipeline transport oil or other products?</div>
-          <div class="faq-answer">
-            <p>The pipeline will only transport natural gas. In fact, pipelines built to supply natural gas to an LNG facility in British Columbia can not be converted or permitted to transport other products, including oil and bitumen.</p>
-          </div>
-        </div>
-        <div class="question-answer">
-          <div
-            class="question"
-            (click)="status7=!status7"
-            [ngClass]="status7 ? 'open' : 'closed'"
-          ><i class="material-icons">chevron_right</i>Where can I find more details about LNG?</div>
-          <div class="faq-answer">
-            <p>This website is dedicated to the provincial government’s role as a regulator. If you are looking for more details from the provincial government as it relates to LNG, you can also visit the <a href="https://www2.gov.bc.ca/gov/content/industry/natural-gas-oil">Natural Gas and Oil site</a></p>
-          </div>
-        </div>
-        <div class="question-answer">
-          <div
-            class="question"
-            (click)="status9=!status9"
-            [ngClass]="status9 ? 'open' : 'closed'"
-          ><i class="material-icons">chevron_right</i>Where can I find information released by LNG Canada about their project?</div>
-          <div class="faq-answer">
-            <p>More details are accessible on the project’s website: <a href="https://www.lngcanada.ca/">www.lngcanada.ca</a></p>
-          </div>
-        </div>
-        <div class="question-answer">
-          <div
-            class="question"
-            (click)="status11=!status11"
-            [ngClass]="status11 ? 'open' : 'closed'"
-          ><i class="material-icons">chevron_right</i>Where can I find information released by Coastal GasLink about their project?</div>
-          <div class="faq-answer">
-            <p>More details are accessible on the project’s website: <a href="https://www.coastalgaslink.com/">www.coastalgaslink.com</a></p>
-          </div>
-        </div>
-        <div class="question-answer">
-          <div
-            class="question"
-            (click)="status10=!status10"
-            [ngClass]="status10 ? 'open' : 'closed'"
-          ><i class="material-icons">chevron_right</i>What can I do if I don’t see details I am looking for?</div>
-          <div class="faq-answer">
-            <p>Please note that information and features will be added to this website on an ongoing basis. If you are interested in providing feedback, please send an email to <a href="mailto: lng@gov.bc.ca">lng@gov.bc.ca</a></p>
-          </div>
-        </div>
-        <hr>
+  <section id="anchor-point">
+    <div class="hero-banner">
+      <div class="hero-banner__content">
+        <h2>Frequently Asked Questions</h2>
       </div>
-    </section>
-  </div>
+      <div id="show-hide-all" (click)="toggleOpen()">
+        <div *ngIf="showAll">Hide All (-)</div>
+        <div *ngIf="!showAll">Show All (+)</div>
+      </div>
+      <hr id="top-hr" />
+      <div class="question-answer">
+        <div class="question" (click)="status1 = !status1" [ngClass]="status1 ? 'open' : 'closed'">
+          <i class="material-icons">chevron_right</i>Why does the provincial government have a regulatory interface for
+          LNG projects?
+        </div>
+        <div class="faq-answer">
+          <p>
+            Major industry projects require provincial approval and the appropriate permits before development can move
+            forward. This site provides context and access to the multiple layers of authorizations, compliance updates
+            and other items that represent the provincial government’s role as it relates to LNG regulation and
+            oversight.
+          </p>
+        </div>
+      </div>
+      <div class="question-answer">
+        <div class="question" (click)="status2 = !status2" [ngClass]="status2 ? 'open' : 'closed'">
+          <i class="material-icons">chevron_right</i>Does this site include information about the federal government?
+        </div>
+        <div class="faq-answer">
+          <p>
+            This site provides specifics about the provincial government’s role. There are multiple layers of
+            authorizations and approvals the industry must also obtain from the federal government, including a licence
+            to export natural gas overseas.
+          </p>
+          <p>
+            The National Energy Board is Canada’s regulator for the energy industry. More details can be found at
+            <a href="https://www.neb-one.gc.ca/">www.neb-one.gc.ca</a>
+          </p>
+        </div>
+      </div>
+      <div class="question-answer">
+        <div class="question" (click)="status3 = !status3" [ngClass]="status3 ? 'open' : 'closed'">
+          <i class="material-icons">chevron_right</i>Why does this site only have information for LNG Canada and Coastal
+          GasLink?
+        </div>
+        <div class="faq-answer">
+          <p>
+            LNG Canada represents the first large-scale export project to announce a final investment decision – an
+            industry term confirming a proposed project is moving forward. The Coastal GasLink pipeline will be built to
+            supply natural gas to the export facility.
+          </p>
+          <p>
+            Now that construction is underway, provincial oversight ensures each project is compliant with all
+            government regulations and requirements. This site provides access to the multiple layers of oversight
+            applied to both LNG Canada and Coastal GasLink.
+          </p>
+          <p>Other industry projects will be considered for this site moving forward.</p>
+        </div>
+      </div>
+      <div class="question-answer">
+        <div class="question" (click)="status4 = !status4" [ngClass]="status4 ? 'open' : 'closed'">
+          <i class="material-icons">chevron_right</i>LNG projects will source natural gas from northeast British
+          Columbia – how is that aspect of the industry regulated?
+        </div>
+        <div class="faq-answer">
+          <p>
+            Natural gas extraction activities, also known as upstream development, is regulated by the BC Oil and Gas
+            Commission.
+          </p>
+          <p>
+            The BC Oil and Gas Commission is an independent, single-window regulator for the natural gas industry,
+            overseeing the lifecycle of every project, including exploration, development, consultation, pipeline
+            transportation and reclamation.
+          </p>
+          <p>
+            All permitting and oversight authorities are delegated to the BC Oil and Gas Commission through the
+            <a href="http://www.bclaws.ca/civix/document/id/complete/statreg/08036_01">Oil and Gas Activities Act</a> –
+            British Columbia’s regulatory framework for all oil and gas activities in the province.
+          </p>
+          <p>More details about the Commission can be found at <a href="https://www.bcogc.ca/">www.bcogc.ca</a>.</p>
+        </div>
+      </div>
+      <div class="question-answer">
+        <div class="question" (click)="status5 = !status5" [ngClass]="status5 ? 'open' : 'closed'">
+          <i class="material-icons">chevron_right</i>How are workforce accommodations regulated?
+        </div>
+        <div class="faq-answer">
+          <p>There are multiple government agencies involved with regulating workforce accommodations.</p>
+          <p>
+            It starts with the environmental assessment process that assesses environmental, economic, health,
+            cultural/heritage and social effects – and that includes workforce accommodations. Conditions can be imposed
+            on a project’s environmental assessment certificate to add specific regulatory requirements related to the
+            workforce.
+          </p>
+          <p>
+            The BC Oil and Gas Commission permits the use of Crown Land where the accommodations are built. Northern
+            Health approves construction, food services, drinking water and other necessities. Local governments have a
+            role too by providing permits linked to the BC Building Code – provincial regulation that governs how new
+            constructions are completed.
+          </p>
+          <p>
+            Other agencies with a role can include the Ministry of Environment and Climate Change Strategy, Ministry of
+            Transportation, Technical Safety BC, and WorkSafeBC.
+          </p>
+        </div>
+      </div>
+      <div class="question-answer">
+        <div class="question" (click)="status6 = !status6" [ngClass]="status6 ? 'open' : 'closed'">
+          <i class="material-icons">chevron_right</i>Will Coastal GasLink’s pipeline transport oil or other products?
+        </div>
+        <div class="faq-answer">
+          <p>
+            The pipeline will only transport natural gas. In fact, pipelines built to supply natural gas to an LNG
+            facility in British Columbia can not be converted or permitted to transport other products, including oil
+            and bitumen.
+          </p>
+        </div>
+      </div>
+      <div class="question-answer">
+        <div class="question" (click)="status7 = !status7" [ngClass]="status7 ? 'open' : 'closed'">
+          <i class="material-icons">chevron_right</i>Where can I find more details about LNG?
+        </div>
+        <div class="faq-answer">
+          <p>
+            This website is dedicated to the provincial government’s role as a regulator. If you are looking for more
+            details from the provincial government as it relates to LNG, you can also visit the
+            <a href="https://www2.gov.bc.ca/gov/content/industry/natural-gas-oil">Natural Gas and Oil site</a>
+          </p>
+        </div>
+      </div>
+      <div class="question-answer">
+        <div class="question" (click)="status9 = !status9" [ngClass]="status9 ? 'open' : 'closed'">
+          <i class="material-icons">chevron_right</i>Where can I find information released by LNG Canada about their
+          project?
+        </div>
+        <div class="faq-answer">
+          <p>
+            More details are accessible on the project’s website:
+            <a href="https://www.lngcanada.ca/">www.lngcanada.ca</a>
+          </p>
+        </div>
+      </div>
+      <div class="question-answer">
+        <div class="question" (click)="status11 = !status11" [ngClass]="status11 ? 'open' : 'closed'">
+          <i class="material-icons">chevron_right</i>Where can I find information released by Coastal GasLink about
+          their project?
+        </div>
+        <div class="faq-answer">
+          <p>
+            More details are accessible on the project’s website:
+            <a href="https://www.coastalgaslink.com/">www.coastalgaslink.com</a>
+          </p>
+        </div>
+      </div>
+      <div class="question-answer">
+        <div class="question" (click)="status10 = !status10" [ngClass]="status10 ? 'open' : 'closed'">
+          <i class="material-icons">chevron_right</i>What can I do if I don’t see details I am looking for?
+        </div>
+        <div class="faq-answer">
+          <p>
+            Please note that information and features will be added to this website on an ongoing basis. If you are
+            interested in providing feedback, please send an email to <a href="mailto: lng@gov.bc.ca">lng@gov.bc.ca</a>
+          </p>
+        </div>
+      </div>
+      <hr />
+    </div>
+  </section>
+</div>

@@ -1,4 +1,4 @@
-import { DemoCodes } from './recordConstants';
+import { DemoCodes } from './record-constants';
 
 describe('record constants', () => {
   describe('DemoCodes', () => {

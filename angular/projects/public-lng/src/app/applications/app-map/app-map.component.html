@@ -1,24 +1,19 @@
 <div class="map-container">
   <div id="map" name="Map of BC that displays Crown land applications"></div>
   <div id="legend" name="List for choosing project to view">
-    <div id="title"> PROJECTS </div>
+    <div id="title">PROJECTS</div>
     <div id="sub-title">Select a project to see more details</div>
-    <hr>
-    <div class="button" id="lng-button"
-      (mouseenter) = "ngOnLegendLngEnter()"
-      (mouseleave) = "ngOnLegendLngLeave()"
-      (click) = "ngOnLegendLngClick()"
+    <hr />
+    <div
+      class="button"
+      id="lng-button"
+      (mouseenter)="ngOnLegendLngEnter()"
+      (mouseleave)="ngOnLegendLngLeave()"
+      (click)="ngOnLegendLngClick()"
     >
       <div class="icon">
         <svg>
-          <circle
-            cx="10px"
-            cy="10px"
-            r="8px"
-            fill="#a5ff82"
-            stroke-width="3px"
-            stroke="#6092ff">
-          </circle>
+          <circle cx="10px" cy="10px" r="8px" fill="#a5ff82" stroke-width="3px" stroke="#6092ff"></circle>
         </svg>
       </div>
       <div class="button-title">LNG CANADA</div>
@@ -30,21 +25,16 @@
         </button>
       </div>
     </div>
-    <div class="button" id="gas-button"
-      (mouseenter) = "ngOnLegendGasEnter()"
-      (mouseleave) = "ngOnLegendGasLeave()"
-      (click) = "ngOnLegendGasClick()"
+    <div
+      class="button"
+      id="gas-button"
+      (mouseenter)="ngOnLegendGasEnter()"
+      (mouseleave)="ngOnLegendGasLeave()"
+      (click)="ngOnLegendGasClick()"
     >
       <div class="icon">
         <svg>
-          <circle
-            cx="10px"
-            cy="10px"
-            r="8px"
-            fill="white"
-            stroke-width="3px"
-            stroke="#6092ff">
-          </circle>
+          <circle cx="10px" cy="10px" r="8px" fill="white" stroke-width="3px" stroke="#6092ff"></circle>
         </svg>
       </div>
       <div class="button-title">COASTAL GASLINK</div>

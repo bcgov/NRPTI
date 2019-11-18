@@ -1,5 +1,5 @@
-import { ConstantUtils, CodeType } from './constantUtils';
-import { DemoCodes } from './recordConstants';
+import { ConstantUtils, CodeType } from './constant-utils';
+import { DemoCodes } from './record-constants';
 
 describe('constantUtils', () => {
   describe('getCodeSet()', () => {
