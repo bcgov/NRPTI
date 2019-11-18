@@ -1,16 +1,23 @@
 <div class="grid-container">
-
   <div class="search-container">
     <div class="container" id="anchor-point">
       <h1>List Compliance and Enforcement Records</h1>
 
       <div class="filter-grid">
         <div>
-          <select class="form-control filter-select" (change)="setDemoFilter($event.target.value)"
-            [disabled]="isSearching || isExporting" title="Filter by Region">
+          <select
+            class="form-control filter-select"
+            (change)="setDemoFilter($event.target.value)"
+            [disabled]="isSearching || isExporting"
+            title="Filter by Region"
+          >
             <option value="">Filter by Demo</option>
-            <option *ngFor="let demoCode of demoCodes" [value]="demoCode.param"
-              [selected]="demoCodeFilters[0] === demoCode.param">{{demoCode.text.long}}</option>
+            <option
+              *ngFor="let demoCode of demoCodes"
+              [value]="demoCode.param"
+              [selected]="demoCodeFilters[0] === demoCode.param"
+              >{{ demoCode.text.long }}</option
+            >
           </select>
           <!-- <select class="form-control filter-select" (change)="setPurposeFilter($event.target.value)"
             [disabled]="isSearching || isExporting" title="Filter by Purpose">
@@ -33,13 +40,30 @@
         </div>
 
         <div class="filter-buttons">
-          <button class="filter-btn-clear btn btn-secondary" (click)="clearQueryParameters()"
-            [disabled]="isSearching || isExporting" title="Clear search filters">Clear</button>
-          <lib-button-spinner class="filter-btn-search" [btnClick]="getRecords" [btnIsDisabled]="isSearching || isExporting"
-            [btnShowSpinner]="isSearching" [btnTitle]="'Search for records'" [btnType]="'submit'" [btnText]="'Search'">
+          <button
+            class="filter-btn-clear btn btn-secondary"
+            (click)="clearQueryParameters()"
+            [disabled]="isSearching || isExporting"
+            title="Clear search filters"
+          >
+            Clear
+          </button>
+          <lib-button-spinner
+            class="filter-btn-search"
+            [btnClick]="getRecords"
+            [btnIsDisabled]="isSearching || isExporting"
+            [btnShowSpinner]="isSearching"
+            [btnTitle]="'Search for records'"
+            [btnType]="'submit'"
+            [btnText]="'Search'"
+          >
           </lib-button-spinner>
-          <button class="filter-btn-export btn btn-light" (click)="export()"
-            [disabled]="isSearching || isExporting || pagination.totalItems <= 0" title="Export record list as CSV">
+          <button
+            class="filter-btn-export btn btn-light"
+            (click)="export()"
+            [disabled]="isSearching || isExporting || pagination.totalItems <= 0"
+            title="Export record list as CSV"
+          >
             Export
             <i class="material-icons" [hidden]="isExporting">file_download</i>
             <i class="spinner-border" [hidden]="!isExporting"></i>
@@ -48,37 +72,58 @@
 
         <div>
           <div class="filter-count">
-            {{this.pagination.message}}
+            {{ this.pagination.message }}
           </div>
 
           <div class="pagination-nav" [hidden]="pagination.pageCount <= 1">
-            <ul class="pagination" [ngClass]="{'disabled': isSearching || isExporting}">
+            <ul class="pagination" [ngClass]="{ disabled: isSearching || isExporting }">
               <li>
-                <a class="page-link" (click)="updatePage(-1)" [hidden]="pagination.currentPage <= 1"
-                  title="Previous page">Prev</a>
-              </li>
-              <li>
-                <a class="page-link" (click)="setPage(pagination.currentPage - 1)"
+                <a
+                  class="page-link"
+                  (click)="updatePage(-1)"
                   [hidden]="pagination.currentPage <= 1"
-                  title="Page {{pagination.currentPage - 1}}">{{pagination.currentPage - 1}}</a>
+                  title="Previous page"
+                  >Prev</a
+                >
               </li>
               <li>
-                <a class="page-link current-page" (click)="setPage(pagination.currentPage)"
-                  title="Page {{pagination.currentPage}}">{{pagination.currentPage}}</a>
+                <a
+                  class="page-link"
+                  (click)="setPage(pagination.currentPage - 1)"
+                  [hidden]="pagination.currentPage <= 1"
+                  title="Page {{ pagination.currentPage - 1 }}"
+                  >{{ pagination.currentPage - 1 }}</a
+                >
               </li>
               <li>
-                <a class="page-link" (click)="setPage(pagination.currentPage + 1)"
+                <a
+                  class="page-link current-page"
+                  (click)="setPage(pagination.currentPage)"
+                  title="Page {{ pagination.currentPage }}"
+                  >{{ pagination.currentPage }}</a
+                >
+              </li>
+              <li>
+                <a
+                  class="page-link"
+                  (click)="setPage(pagination.currentPage + 1)"
                   [hidden]="pagination.currentPage >= pagination.pageCount"
-                  title="Page {{pagination.currentPage + 1}}">{{pagination.currentPage + 1}}</a>
+                  title="Page {{ pagination.currentPage + 1 }}"
+                  >{{ pagination.currentPage + 1 }}</a
+                >
               </li>
               <li>
-                <a class="page-link" (click)="updatePage(1)" [hidden]="pagination.currentPage === pagination.pageCount"
-                  title="Next page">Next</a>
+                <a
+                  class="page-link"
+                  (click)="updatePage(1)"
+                  [hidden]="pagination.currentPage === pagination.pageCount"
+                  title="Next page"
+                  >Next</a
+                >
               </li>
             </ul>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -91,30 +136,65 @@
       <table class="table-cards" id="table-card">
         <thead>
           <tr>
-            <th class="sortable" (click)="sort('client')">Applicant(s)
-              <i class="sort"
-                [ngClass]="{'sort-asc': (sorting.column == 'client' && sorting.direction < 0), 'sort-desc': (sorting.column == 'client' && sorting.direction > 0) }"
-                aria-hidden="true" title="Sort by applicant"></i>
+            <th class="sortable" (click)="sort('client')">
+              Applicant(s)
+              <i
+                class="sort"
+                [ngClass]="{
+                  'sort-asc': sorting.column == 'client' && sorting.direction < 0,
+                  'sort-desc': sorting.column == 'client' && sorting.direction > 0
+                }"
+                aria-hidden="true"
+                title="Sort by applicant"
+              ></i>
             </th>
-            <th class="sortable" (click)="sort('cl_file')">CL File
-              <i class="sort"
-                [ngClass]="{'sort-asc': (sorting.column == 'cl_file' && sorting.direction < 0), 'sort-desc': (sorting.column == 'cl_file' && sorting.direction > 0) }"
-                aria-hidden="true" title="Sort by cl file"></i>
+            <th class="sortable" (click)="sort('cl_file')">
+              CL File
+              <i
+                class="sort"
+                [ngClass]="{
+                  'sort-asc': sorting.column == 'cl_file' && sorting.direction < 0,
+                  'sort-desc': sorting.column == 'cl_file' && sorting.direction > 0
+                }"
+                aria-hidden="true"
+                title="Sort by cl file"
+              ></i>
             </th>
-            <th class="sortable" (click)="sort('businessUnit')">Region
-              <i class="sort"
-                [ngClass]="{'sort-asc': (sorting.column == 'businessUnit' && sorting.direction < 0), 'sort-desc': (sorting.column == 'businessUnit' && sorting.direction > 0) }"
-                aria-hidden="true" title="Sort by region"></i>
+            <th class="sortable" (click)="sort('businessUnit')">
+              Region
+              <i
+                class="sort"
+                [ngClass]="{
+                  'sort-asc': sorting.column == 'businessUnit' && sorting.direction < 0,
+                  'sort-desc': sorting.column == 'businessUnit' && sorting.direction > 0
+                }"
+                aria-hidden="true"
+                title="Sort by region"
+              ></i>
             </th>
-            <th class="sortable" (click)="sort('createdDate')">Created
-              <i class="sort"
-                [ngClass]="{'sort-asc': (sorting.column == 'createdDate' && sorting.direction < 0), 'sort-desc': (sorting.column == 'createdDate' && sorting.direction > 0) }"
-                aria-hidden="true" title="Sort by created date"></i>
+            <th class="sortable" (click)="sort('createdDate')">
+              Created
+              <i
+                class="sort"
+                [ngClass]="{
+                  'sort-asc': sorting.column == 'createdDate' && sorting.direction < 0,
+                  'sort-desc': sorting.column == 'createdDate' && sorting.direction > 0
+                }"
+                aria-hidden="true"
+                title="Sort by created date"
+              ></i>
             </th>
-            <th class="sortable" (click)="sort('purpose')">Purpose / Subpurpose
-              <i class="sort"
-                [ngClass]="{'sort-asc': (sorting.column == 'purpose' && sorting.direction < 0), 'sort-desc': (sorting.column == 'purpose' && sorting.direction > 0) }"
-                aria-hidden="true" title="Sort by purpose"></i>
+            <th class="sortable" (click)="sort('purpose')">
+              Purpose / Subpurpose
+              <i
+                class="sort"
+                [ngClass]="{
+                  'sort-asc': sorting.column == 'purpose' && sorting.direction < 0,
+                  'sort-desc': sorting.column == 'purpose' && sorting.direction > 0
+                }"
+                aria-hidden="true"
+                title="Sort by purpose"
+              ></i>
             </th>
             <th>Status</th>
           </tr>
@@ -124,25 +204,26 @@
           <ng-container *ngFor="let record of records">
             <tr>
               <td data-label="Applicant(s)">
-                <span>{{(record.meta.applicants | titlecase) || '-'}}</span>
+                <span>{{ (record.meta.applicants | titlecase) || '-' }}</span>
               </td>
               <td data-label="CL File">
                 <span>
-                  <a [routerLink]="['/a', record._id]"
-                    title="View record details">{{record.meta.clFile.padStart(7, '0') || '-'}}</a>
+                  <a [routerLink]="['/a', record._id]" title="View record details">{{
+                    record.meta.clFile.padStart(7, '0') || '-'
+                  }}</a>
                 </span>
               </td>
               <td data-label="Region">
-                <span>{{record.meta.region || '-'}}</span>
+                <span>{{ record.meta.region || '-' }}</span>
               </td>
               <td data-label="Created">
-                <span>{{Utils.getFormattedDate(record.createdDate) || '-'}}</span>
+                <span>{{ Utils.getFormattedDate(record.createdDate) || '-' }}</span>
               </td>
               <td data-label="Purpose / Subpurpose">
-                <span>{{(record.purpose | titlecase) || '-'}} / {{(record.subpurpose | titlecase) || '-'}}</span>
+                <span>{{ (record.purpose | titlecase) || '-' }} / {{ (record.subpurpose | titlecase) || '-' }}</span>
               </td>
               <td data-label="Status">
-                <span>{{getStatusStringLong(record) || '-'}}</span>
+                <span>{{ getStatusStringLong(record) || '-' }}</span>
               </td>
             </tr>
           </ng-container>
@@ -150,5 +231,4 @@
       </table>
     </div>
   </div>
-
 </div>

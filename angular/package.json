@@ -12,16 +12,12 @@
     "build:app:admin-nrced": "ng build admin-nrced --prod",
     "build:app:public-lng": "ng build public-lng --prod",
     "build:library": "ng build global",
+    "build:library:dev": "npm-run-all -l -s -c library:unlink clean:library build:library library:link",
     "library:link": "npm-run-all -l -s -c library:link:*",
     "library:link:1": "cd dist/nrpti-angular-components && npm link",
     "library:link:2": "npm link nrpti-angular-components",
-
+    "library:unlink": "cd dist/nrpti-angular-components && npm unlink",
     "link:list": "npm ls -g --depth=0 --link=true",
-
-    "library:unlink": "npm-run-all -l -s -c library:unlink:*",
-    "library:unlink:1": "npm unlink --no-save nrpti-angular-components",
-    "library:unlink:2": "cd dist/nrpti-angular-components && npm unlink",
-
     "library:package": "npm-run-all -l -s -c library:copy:* library:package:*",
     "library:package:1": "cd dist/nrpti-angular-components && npm pack",
     "library:publish": "npm-run-all -l -s -c library:copy:* library:publish:*",
@@ -34,10 +30,11 @@
     "clean:dist": "rimraf dist",
     "test": "ng test",
     "test-ci": "ng test-ci",
-    "lint": "npm-run-all -l -s -c lint:ts lint:scss",
+    "lint": "npm-run-all -l -s -c lint:ts:* lint:html lint:scss",
     "lint:ts": "npm-run-all -l -s -c lint:ts:*",
     "lint:ts:1": "ng lint --fix --format=stylish",
     "lint:ts:2": "prettier projects/**/*.ts --write --loglevel warn",
+    "lint:html": "prettier projects/**/*.html --write --loglevel warn",
     "lint:scss": "stylelint projects/**/*.scss --fix"
   },
   "private": true,

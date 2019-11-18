@@ -3,12 +3,16 @@
     <a class="navbar-brand" title="LNG Regulatory Interface" routerLink="/home">
       <span class="navbar-brand__title">LNG Regulatory Interface - BETA</span>
     </a>
-    <button class="navbar-toggler" type="button" title="Toggle Main Navigation"
+    <button
+      class="navbar-toggler"
+      type="button"
+      title="Toggle Main Navigation"
       data-toggle="collapse"
       data-target="#mainNav"
       aria-controls="navbarText"
       aria-expanded="false"
-      aria-label="Toggle navigation">
+      aria-label="Toggle navigation"
+    >
       <i class="material-icons">menu</i>
       <span>MENU</span>
     </button>
@@ -17,7 +21,7 @@
         <!-- <li class="nav-item dropdown" [hidden]="router.url.startsWith('/map')"> -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span>{{project}}</span>
+            <span>{{ project }}</span>
             <span class="caret"></span>
           </a>
           <div class="dropdown-menu">

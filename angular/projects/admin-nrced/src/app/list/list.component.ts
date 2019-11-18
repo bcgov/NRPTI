@@ -10,8 +10,8 @@ import { RecordService } from '../services/record.service';
 import { Record } from '../models/record';
 import { ExportService } from 'nrpti-angular-components';
 import { Utils } from '../utils/utils'; // used in template
-import { DemoCodes } from '../utils/constants/recordConstants';
-import { ConstantUtils, CodeType } from '../utils/constants/constantUtils';
+import { DemoCodes } from '../utils/constants/record-constants';
+import { ConstantUtils, CodeType } from '../utils/constants/constant-utils';
 
 interface IPaginationParameters {
   totalItems?: number;

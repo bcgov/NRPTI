@@ -1,10 +1,13 @@
 <div class="applications-view">
   <div class="main-panel">
-    <app-map class="app-map" #appmap
+    <app-map
+      class="app-map"
+      #appmap
       [isLoading]="isLoading"
       [applications]="apps"
       [isMapVisible]="isApplicationsMapVisible"
-      (updateCoordinates)="updateCoordinates()">
+      (updateCoordinates)="updateCoordinates()"
+    >
     </app-map>
   </div>
 </div>
