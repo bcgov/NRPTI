@@ -16,7 +16,7 @@ import { TableDirective } from './components/table-template/table.directive';
 import { ExportService } from './services/export.service';
 
 /**
- *
+ * Primary module for the library.
  *
  * @publicApi
  * @export

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, combineLatest } from 'rxjs';
 
-import { ApiService, IRecordQueryParamSet } from './api';
+import { ApiService, IRecordQueryParamSet } from './api.service';
 import { Record } from '../models/record';
 import { mergeMap, catchError } from 'rxjs/operators';
 import flatten from 'lodash.flatten';
@@ -12,9 +12,29 @@ import flatten from 'lodash.flatten';
  * @export
  * @class RecordService
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class RecordService {
   constructor(public api: ApiService) {}
+
+  /**
+   * Return the record for the given id.
+   *
+   * @param {IRecordQueryParamSet} queryParamSet query parameter set.
+   * @returns {Observable<Record>} An observable that emits the matching record or null if none found.
+   * @memberof RecordService
+   */
+  public getbyId(queryParamSet: IRecordQueryParamSet = null): Observable<Record> {
+    return this.api.getRecords(queryParamSet).pipe(
+      mergeMap((records: Record[]) => {
+        if (!(records && records.length)) {
+          return of(null);
+        }
+
+        return of(records[0]);
+      }),
+      catchError(this.api.handleError)
+    );
+  }
 
   /**
    * Return all records that match the provided filters.

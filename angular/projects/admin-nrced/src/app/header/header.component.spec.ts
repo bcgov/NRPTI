@@ -1,37 +1,35 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 
 import { HeaderComponent } from './header.component';
-import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ApiService } from '../services/api';
-import { KeycloakService } from '../services/keycloak.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FactoryService } from '../services/factory.service';
+import { Router, RouterEvent } from '@angular/router';
+import { TestBedHelper } from '../../../../common/src/app/spec/spec-utils';
+import { ReplaySubject } from 'rxjs';
 
 describe('HeaderComponent', () => {
-  let component: HeaderComponent;
-  let fixture: ComponentFixture<HeaderComponent>;
+  const testBedHelper = new TestBedHelper<HeaderComponent>(HeaderComponent);
 
-  const keycloakServiceStub = {
-    isValidForSite: () => {
-      return true;
-    }
-  };
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['getWelcomeMessage', 'getEnvironment']);
+  mockFactoryService.getWelcomeMessage.and.returnValue('hello test');
+  mockFactoryService.getEnvironment.and.returnValue('dev');
+
+  const mockRouter = jasmine.createSpyObj('Router', ['navigate', 'events']);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [ApiService, { provide: KeycloakService, useValue: keycloakServiceStub }],
+      imports: [BrowserAnimationsModule],
       declarations: [HeaderComponent],
-      imports: [RouterTestingModule, HttpClientTestingModule, BrowserAnimationsModule]
+      providers: [{ provide: FactoryService, useValue: mockFactoryService }, { provide: Router, useValue: mockRouter }]
     }).compileComponents();
   }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(HeaderComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
   it('should create', () => {
+    const routerMock = TestBed.get(Router);
+    routerMock.events = new ReplaySubject<RouterEvent>(1).asObservable();
+
+    const { component } = testBedHelper.createComponent();
+
     expect(component).toBeTruthy();
   });
 });
