@@ -6,10 +6,10 @@ const swaggerTools = require('swagger-tools');
 const YAML = require('yamljs');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const swaggerConfig = YAML.load('./api/swagger/swagger.yaml');
+const swaggerConfig = YAML.load('./src/swagger/swagger.yaml');
 
-const defaultLog = require('./api/utils/logger')('app');
-const authUtils = require('./api/utils/auth-utils');
+const defaultLog = require('./src/utils/logger')('app');
+const authUtils = require('./src/utils/auth-utils');
 
 const UPLOAD_DIR = process.env.UPLOAD_DIRECTORY || './uploads/';
 const HOSTNAME = process.env.API_HOSTNAME || 'localhost:3000';
@@ -57,13 +57,13 @@ swaggerTools.initializeMiddleware(swaggerConfig, function(middleware) {
   app.use(middleware.swaggerSecurity(swaggerSecurityConfig));
 
   const swaggerRouterConfig = {
-    controllers: './api/controllers',
+    controllers: './src/controllers',
     useStubs: false
   };
 
   app.use(middleware.swaggerRouter(swaggerRouterConfig));
 
-  const swaggerUIConfig = { apiDocs: '/api/docs', swaggerUi: '/api/docs' };
+  const swaggerUIConfig = { apiDocs: '/src/docs', swaggerUi: '/src/docs' };
 
   app.use(middleware.swaggerUi(swaggerUIConfig));
 
@@ -102,8 +102,8 @@ swaggerTools.initializeMiddleware(swaggerConfig, function(middleware) {
       defaultLog.info('Loading database models');
 
       // Load database models
-      require('./api/models/record');
-      require('./api/models/document');
+      require('./src/models/record');
+      require('./src/models/document');
 
       // Start application
       app.listen(3000, '0.0.0.0', function() {

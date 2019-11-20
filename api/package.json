@@ -5,8 +5,8 @@
   "main": "app",
   "scripts": {
     "start": "node app",
-    "tests": "SET \"UPLOAD_DIRECTORY=./api/test/uploads/\" & jest --runInBand",
-    "test-debug": "SET \"UPLOAD_DIRECTORY=./api/test/uploads/\" & node --inspect ./node_modules/jest/bin/jest.js --runInBand",
+    "tests": "SET \"UPLOAD_DIRECTORY=./src/tests/uploads/\" & jest --runInBand",
+    "test-debug": "SET \"UPLOAD_DIRECTORY=./src/test/uploads/\" & node --inspect ./node_modules/jest/bin/jest.js --runInBand",
     "lint": "eslint .",
     "lint-fix:1": "eslint ./**/*.js --fix",
     "lint-fix:2": "prettier ./**/*.js --write --loglevel warn",

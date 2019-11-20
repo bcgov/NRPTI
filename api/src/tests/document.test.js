@@ -6,7 +6,7 @@ const recordFactory = require('./factories/record-factory').factory;
 const request = require('supertest');
 const shell = require('shelljs');
 
-const documentController = require('../controllers/document-controller.js');
+const documentController = require('../controllers/document-controller.js.js');
 require('../models/document');
 const Document = mongoose.model('Document');
 

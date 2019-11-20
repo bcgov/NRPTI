@@ -1,0 +1,45 @@
+.table {
+  border: none;
+
+  thead {
+    tr {
+      background: #e8eff5;
+      align-items: flex-start;
+    }
+
+    th {
+      background-color: #e8eff5;
+      padding: 0.7rem 0.15rem 0.85rem;
+      border: none;
+      // border-bottom: 2px solid transparent;
+
+      @media screen and (max-width: 600px) {
+        padding: 0.7rem 0.5rem 0.85rem;
+      }
+      // &:hover {
+      //   border-bottom: 2px solid #007bff;
+      // }
+    }
+  }
+
+  td {
+    border: none;
+  }
+
+  tr {
+    border: none;
+  }
+
+  tr td:first-child,
+  tr th:first-child {
+    padding-left: 1rem;
+
+    @media screen and (max-width: 600px) {
+      padding-left: 0.5rem;
+    }
+  }
+
+  thead {
+    border-bottom: none;
+  }
+}
