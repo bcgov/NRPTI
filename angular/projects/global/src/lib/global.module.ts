@@ -14,6 +14,7 @@ import { TableDirective } from './components/table-template/table.directive';
 
 // services
 import { ExportService } from './services/export.service';
+import { StoreService } from './services/store.service';
 
 /**
  *
@@ -25,7 +26,7 @@ import { ExportService } from './services/export.service';
 @NgModule({
   imports: [BrowserModule, NgxPaginationModule],
   declarations: [GlobalComponent, ButtonSpinnerComponent, TableDirective, TableTemplateComponent],
-  providers: [ExportService],
+  providers: [ExportService, StoreService],
   exports: [GlobalComponent, ButtonSpinnerComponent, TableTemplateComponent]
 })
-export class GlobalModule {}
+export class GlobalModule { }
