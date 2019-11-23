@@ -1,82 +1,77 @@
-const queryActions = require('./queryActions');
+require('../tests/test-utils');
+const queryActions = require('./query-actions');
 const Record = require('../models/record');
 
-describe('#publish', () => {
+describe('## publish ##', () => {
   describe('with an object that has already been published', () => {
-    test('it returns 409 with a status message', done => {
-      let publishedOrg = new Record({ tags: ['public'] });
-      queryActions.publish(publishedOrg).catch(error => {
-        expect(error.code).toEqual(409);
-        expect(error.message).toEqual('Object already published');
-        done();
-      });
+    test('it returns 409 with a status message', async () => {
+      let publishedOrg = new Record({ read: ['public'] });
+      try {
+        let res = await queryActions.publish(publishedOrg);
+        expect(res.code).toEqual(409);
+        expect(res.message).toEqual('Object already published');
+      } catch (e) {
+        console.log('err:', e);
+      }
     });
   });
 
   describe('with an object that has not been published', () => {
-    test('it adds the public tag and saves it', () => {
-      let newOrg = new Record({ tags: [] });
-      queryActions.publish(newOrg);
-      expect(newOrg.tags[0]).toEqual(expect.arrayContaining(['public']));
+    test('it adds the public tag and saves it', async () => {
+      let newOrg = new Record({ read: [] });
+      try {
+        let res = await queryActions.publish(newOrg);
+        expect(res.read[0]).toEqual('public');
+      } catch (e) {
+        console.log('err:', e);
+      }
+    });
+  });
+
+  describe('with an object that has not been published, but has other roles in the read array', () => {
+    test('Testing publish', () => {
+      let obj = {};
+      obj.read = ['sysadmin'];
+
+      expect(queryActions.isPublished(obj)).toEqual(false);
+
+      obj.read = ['sysadmin', 'public'];
+      expect(queryActions.isPublished(obj)).toEqual(true);
     });
   });
 });
 
-test('Testing publish', () => {
-  let obj = {};
-  obj.tags = [['sysadmin']];
-
-  expect(queryActions.isPublished(obj)).toEqual(undefined);
-
-  obj.tags = [['sysadmin'], ['public']];
-  expect(queryActions.isPublished(obj)).toEqual(['public']);
-});
-
-describe('#isPublished', () => {
+describe('## isPublished ##', () => {
   let record = new Record({});
 
-  test('it returns the array of public tags', () => {
-    record.tags = [['sysadmin'], ['public']];
-    expect(queryActions.isPublished(record)).toEqual(expect.arrayContaining(['public']));
+  test('it returns the array of public read', () => {
+    record.read = ['sysadmin', 'public'];
+    expect(queryActions.isPublished(record)).toEqual(true);
   });
 
-  test('it returns undefined if there is no matching public tag', () => {
-    record.tags = [['sysadmin']];
-    expect(queryActions.isPublished(record)).toBeUndefined();
+  test('it returns false if there is no matching public tag', () => {
+    record.read = ['sysadmin'];
+    expect(!queryActions.isPublished(record)).toEqual(true);
   });
 });
 
-describe('#unpublish', () => {
+describe('## unpublish ##', () => {
   describe('with an object that has been published', () => {
-    test('it removes the public tag and saves it', () => {
-      let publishedOrg = new Record({ tags: ['public'] });
-      queryActions.unPublish(publishedOrg);
-      expect(publishedOrg.tags).toHaveLength(0);
+    test('it removes the public tag and saves it', async () => {
+      let publishedOrg = new Record({ read: ['public'] });
+      let res = await queryActions.unPublish(publishedOrg);
+      expect(res.read).toHaveLength(0);
     });
   });
 
   describe('with an object that is unpublished', () => {
-    test('it returns 409 with a status message', done => {
-      let newOrg = new Record({ tags: [] });
-      queryActions.unPublish(newOrg).catch(error => {
-        expect(error.code).toEqual(409);
-        expect(error.message).toEqual('Object already unpublished');
-        done();
-      });
+    test('it returns 409 with a status message', async () => {
+      let newOrg = new Record({ read: [] });
+      let res = await queryActions.unPublish(newOrg);
+      if (res.code) {
+        expect(res.code).toEqual(409);
+        expect(res.message).toEqual('Object already unpublished');
+      }
     });
-  });
-});
-
-describe('#delete', () => {
-  test('it removes the public tag', () => {
-    let publishedOrg = new Record({ tags: ['public'] });
-    queryActions.delete(publishedOrg);
-    expect(publishedOrg.tags).toHaveLength(0);
-  });
-
-  test('it soft-deletes the object', () => {
-    let newOrg = new Record({ tags: [] });
-    queryActions.delete(newOrg);
-    expect(newOrg.isDeleted).toEqual(true);
   });
 });
