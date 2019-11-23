@@ -5,10 +5,10 @@ factory.define('record', Record, {
   code: factory.seq('Record.code', element => `app-code-${element}`),
   isDeleted: false,
   internal: {
-    tags: [['public'], ['sysadmin']]
+    read: ['public', 'sysadmin']
   },
   name: factory.seq('Record.name', element => `record-${element}`),
-  tags: [['public'], ['sysadmin']]
+  read: ['public', 'sysadmin']
 });
 
 exports.factory = factory;
