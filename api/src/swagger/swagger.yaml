@@ -4,7 +4,7 @@ info:
   title: NRPTI API
 host: localhost:3000
 basePath: /api
-tags:
+read:
 - name: "search"
   description: "Search operations"
   externalDocs:
@@ -66,9 +66,9 @@ definitions:
       isDeleted:
         type: boolean
         example: false
-      tags:
+      read:
         type: string
-        example: [["sysadmin"], ["public"]]
+        example: ["sysadmin", "public"]
   RecordFields:
     type: string
     description: "Optional Record fields to return"
@@ -124,9 +124,9 @@ definitions:
       isDeleted:
         type: boolean
         example: false
-      tags:
+      read:
         type: string
-        example: [["sysadmin"], ["public"]]
+        example: ["sysadmin", "public"]
   DocumentFields:
     type: string
     description: "Optional Document fields to return"
@@ -162,7 +162,7 @@ paths:
   /record:
     x-swagger-router-controller: record-controller
     options:
-      tags:
+      read:
         - record
       summary: "Pre-flight request"
       operationId: protectedOptions
@@ -176,56 +176,8 @@ paths:
           description: "Access Denied"
           schema:
             $ref: "#/definitions/Error"
-    head:
-      tags:
-        - record
-      summary: "Get META for a list of Records"
-      operationId: protectedHead
-      description: "Authenticated access to retrieve META for Record objects, without returning the subject payload"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-        - user
-      parameters:
-        - in: query
-          name: isDeleted
-          type: boolean
-          required: false
-          description: "Whether to return deleted Records"
-        - in: query
-          name: pageNum
-          type: number
-          required: false
-          description: "Page Number (default: 0)"
-        - in: query
-          name: pageSize
-          type: number
-          required: false
-          description: "Number of results per page (if 'pageNum' is specified; default: 100)"
-        - in: query
-          name: type
-          type: string
-          required: false
-          description: "Type that Records must match"
-        - in: query
-          name: publishDate
-          collectionFormat: multi
-          required: false
-          description: "Publish Date(s) that Records must match"
-          type: string
-          format: date-time
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Record"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
     get:
-      tags:
+      read:
         - record
       summary: "Get a list of Records"
       operationId: protectedGet
@@ -234,7 +186,6 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
-        - user
       parameters:
         - in: query
           name: fields
@@ -293,7 +244,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     post:
-      tags:
+      read:
         - record
       summary: "Create a new Record"
       operationId: protectedPost
@@ -302,7 +253,6 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
-        - write:record
       parameters:
         - name: app
           in: body
@@ -326,7 +276,7 @@ paths:
   /record/{recordId}:
     x-swagger-router-controller: record-controller
     options:
-      tags:
+      read:
         - record
       summary: "Pre-flight request"
       operationId: protectedOptions
@@ -346,39 +296,8 @@ paths:
           description: "Access Denied"
           schema:
             $ref: "#/definitions/Error"
-    head:
-      tags:
-        - record
-      summary: "Get META for an Record"
-      operationId: protectedHead
-      description: "Authenticated access to retrieve META for the specified Record, without returning the subject payload"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-        - user
-      parameters:
-        - name: recordId
-          in: path
-          description: "ID of Record to get"
-          required: true
-          type: string
-        - in: query
-          name: isDeleted
-          type: boolean
-          required: false
-          description: "Whether to return a deleted Record"
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Record"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
     get:
-      tags:
+      read:
         - record
       summary: "Get an Record"
       operationId: protectedGet
@@ -387,7 +306,6 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
-        - user
       parameters:
         - name: recordId
           in: path
@@ -418,7 +336,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     put:
-      tags:
+      read:
         - record
       summary: "Update an Record"
       operationId: protectedPut
@@ -427,7 +345,6 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
-        - write:record
       parameters:
         - name: recordId
           in: path
@@ -449,7 +366,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     delete:
-      tags:
+      read:
         - record
       summary: "Delete an Record"
       operationId: protectedDelete
@@ -481,7 +398,7 @@ paths:
   /record/{recordId}/publish:
     x-swagger-router-controller: record-controller
     options:
-      tags:
+      read:
         - record
       summary: "Pre-flight request"
       operationId: protectedOptions
@@ -502,7 +419,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     put:
-      tags:
+      read:
         - record
       summary: "Publish an Record"
       operationId: protectedPublish
@@ -511,8 +428,6 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
-        - write:record
-        # TODO: Define publish roles.
       parameters:
         - name: recordId
           in: path
@@ -531,7 +446,7 @@ paths:
   /record/{recordId}/unpublish:
     x-swagger-router-controller: record-controller
     options:
-      tags:
+      read:
         - record
       summary: "Pre-flight request"
       operationId: protectedOptions
@@ -552,7 +467,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     put:
-      tags:
+      read:
         - record
       summary: "Unpublish an Record"
       operationId: protectedUnPublish
@@ -561,8 +476,6 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
-        - write:record
-        # TODO: Define publish roles.
       parameters:
         - name: recordId
           in: path
@@ -581,7 +494,7 @@ paths:
   /public/record:
     x-swagger-router-controller: record-controller
     options:
-      tags:
+      read:
         - record
       summary: "Pre-flight request"
       operationId: protectedOptions
@@ -595,46 +508,8 @@ paths:
           description: "Access Denied"
           schema:
             $ref: "#/definitions/Error"
-    head:
-      tags:
-        - record
-      summary: "Get META for a list of Records"
-      operationId: publicHead
-      description: "Retrieve META for Record objects, without returning the subject payload"
-      parameters:
-        - in: query
-          name: pageNum
-          type: number
-          required: false
-          description: "Page Number (default: 0)"
-        - in: query
-          name: pageSize
-          type: number
-          required: false
-          description: "Number of results per page (if 'pageNum' is specified; default: 100)"
-        - in: query
-          name: type
-          type: string
-          required: false
-          description: "Type that Records must match"
-        - in: query
-          name: publishDate
-          collectionFormat: multi
-          required: false
-          description: "Publish Date(s) that Records must match"
-          type: string
-          format: date-time
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Record"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
     get:
-      tags:
+      read:
         - record
       summary: "Get a list of Records"
       operationId: publicGet
@@ -683,7 +558,7 @@ paths:
   /public/record/{recordId}:
     x-swagger-router-controller: record-controller
     options:
-      tags:
+      read:
         - record
       summary: "Pre-flight request"
       operationId: protectedOptions
@@ -704,7 +579,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     get:
-      tags:
+      read:
         - record
       summary: "Get an Record"
       operationId: publicGet
@@ -740,7 +615,7 @@ paths:
   /document:
     x-swagger-router-controller: document-controller
     options:
-      tags:
+      read:
         - document
       summary: "Pre-flight request"
       operationId: protectedOptions
@@ -755,7 +630,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     post:
-      tags:
+      read:
         - document
       summary: "Upload a new Document"
       operationId: protectedPost
@@ -764,7 +639,6 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
-        - write:document
       consumes:
         - multipart/form-data
       parameters:
@@ -793,7 +667,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     get:
-      tags:
+      read:
         - document
       summary: "Get a list of Documents"
       operationId: protectedGet
@@ -802,7 +676,6 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
-        - user
       parameters:
         - in: query
           name: _record
@@ -838,7 +711,7 @@ paths:
   /document/{docId}:
     x-swagger-router-controller: document-controller
     options:
-      tags:
+      read:
         - document
       summary: "Pre-flight request"
       operationId: protectedOptions
@@ -859,7 +732,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     get:
-      tags:
+      read:
         - document
       summary: "Get a Document"
       operationId: protectedGet
@@ -868,7 +741,6 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
-        - user
       parameters:
         - name: docId
           in: path
@@ -894,7 +766,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     put:
-      tags:
+      read:
         - document
       summary: "Update a Document"
       operationId: protectedPut
@@ -903,7 +775,6 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
-        - write:document
       consumes:
         - multipart/form-data
       parameters:
@@ -937,7 +808,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     delete:
-      tags:
+      read:
         - document
       summary: "Delete a Document"
       operationId: protectedDelete
@@ -946,7 +817,6 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
-        - write:document
       consumes:
         - application/json
       parameters:
@@ -967,7 +837,7 @@ paths:
   /document/{docId}/publish:
     x-swagger-router-controller: document-controller
     options:
-      tags:
+      read:
         - document
       summary: "Pre-flight request"
       operationId: protectedOptions
@@ -988,7 +858,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     put:
-      tags:
+      read:
         - document
       summary: "Publish a Document"
       operationId: protectedPublish
@@ -997,8 +867,6 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
-        - write:document
-        # TODO: Define publish roles.
       parameters:
         - name: docId
           in: path
@@ -1017,7 +885,7 @@ paths:
   /document/{docId}/unpublish:
     x-swagger-router-controller: document-controller
     options:
-      tags:
+      read:
         - document
       summary: "Pre-flight request"
       operationId: protectedOptions
@@ -1038,7 +906,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     put:
-      tags:
+      read:
         - document
       summary: "Unpublish a Document"
       operationId: protectedUnPublish
@@ -1047,8 +915,6 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
-        - write:document
-        # TODO: Define unpublish roles.
       parameters:
         - name: docId
           in: path
@@ -1067,7 +933,7 @@ paths:
   /document/{docId}/download:
     x-swagger-router-controller: document-controller
     options:
-      tags:
+      read:
         - document
       summary: "Pre-flight request"
       operationId: protectedOptions
@@ -1088,7 +954,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     get:
-      tags:
+      read:
         - document
       summary: "Download a Document"
       operationId: protectedDownload
@@ -1116,7 +982,7 @@ paths:
   /public/document:
     x-swagger-router-controller: document-controller
     options:
-      tags:
+      read:
         - document
       summary: "Pre-flight request"
       operationId: protectedOptions
@@ -1131,7 +997,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     post:
-      tags:
+      read:
         - document
       summary: "Upload a new Document"
       operationId: publicPost
@@ -1164,7 +1030,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     get:
-      tags:
+      read:
         - document
       summary: "Get a list of Documents"
       operationId: publicGet
@@ -1199,7 +1065,7 @@ paths:
   /public/document/{docId}:
     x-swagger-router-controller: document-controller
     options:
-      tags:
+      read:
         - document
       summary: "Pre-flight request"
       operationId: protectedOptions
@@ -1220,7 +1086,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     get:
-      tags:
+      read:
         - document
       summary: "Get a Document"
       operationId: publicGet
@@ -1252,7 +1118,7 @@ paths:
   /public/document/{docId}/download:
     x-swagger-router-controller: document-controller
     options:
-      tags:
+      read:
         - document
       summary: "Pre-flight request"
       operationId: protectedOptions
@@ -1273,7 +1139,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
     get:
-      tags:
+      read:
         - document
       summary: "Download a Document"
       operationId: publicDownload

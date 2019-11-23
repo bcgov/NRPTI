@@ -8,26 +8,28 @@ const defaultLog = require('./logger')('queryActions');
  * @param {*} obj
  * @returns
  */
-exports.publish = function(obj) {
-  return new Promise(function(resolve, reject) {
-    let exists = false;
-    for (let tag in obj.tags) {
-      exists = tag.includes('public');
-    }
-
+exports.publish = async function(obj) {
+  let self = this;
+  return new Promise(async function(resolve, reject) {
     // Object was already published?
-    if (exists) {
-      defaultLog.info('HTTP 409, Object already published:', exists);
-      reject({
+    if (self.isPublished(obj)) {
+      defaultLog.info('HTTP 409, Object already published:', obj);
+      resolve({
         code: 409,
         message: 'Object already published'
       });
     } else {
       // Add publish, save then return.
-      obj.tags.push(['public']);
-      obj.save().then(resolve, function(err) {
-        reject({ code: 400, message: err.message });
-      });
+      obj.read.push('public');
+      let thing = await obj.save();
+      if (!thing.code) {
+        resolve(thing);
+      } else {
+        resolve({
+          code: thing.code,
+          message: 'Error:' + thing.message
+        });
+      }
     }
   });
 };
@@ -39,9 +41,7 @@ exports.publish = function(obj) {
  * @returns
  */
 exports.isPublished = function(obj) {
-  for (let tag in obj.tags) {
-    return tag.includes('public');
-  }
+  return obj.read.includes('public');
 };
 
 /**
@@ -50,46 +50,35 @@ exports.isPublished = function(obj) {
  * @param {*} obj
  * @returns
  */
-exports.unPublish = function(obj) {
-  return new Promise(function(resolve, reject) {
-    let exists = obj.tags.filter(function(item) {
-      return item.includes(['public']);
-    });
+exports.unPublish = async function(obj) {
+  let self = this;
+  return new Promise(async function(resolve, reject) {
     // Object wasn't already published?
-    if (exists.length === 0) {
-      defaultLog.info('HTTP 409, Object already unpublished:', exists);
-      reject({
+    if (!self.isPublished(obj)) {
+      defaultLog.info('HTTP 409, Object already unpublished:', obj);
+      resolve({
         code: 409,
         message: 'Object already unpublished'
       });
     } else {
-      obj.markModified('tags');
       // Remove publish, save then return.
-      obj.save().then(resolve, function(err) {
-        reject({ code: 400, message: err.message });
-      });
-    }
-  });
-};
+      for (let i = obj.read.length - 1; i >= 0; i--) {
+        if (obj.read[i] == 'public') {
+          obj.read.splice(i, 1);
+        }
+      }
+      obj.markModified('read');
 
-/**
- * TODO: populate this documentation
- *
- * @param {*} obj
- * @returns
- */
-exports.delete = function(obj) {
-  return new Promise(function(resolve, reject) {
-    obj.tags = obj.tags.filter(function(item) {
-      return item.includes(['public']);
-    });
-    obj.isDeleted = true;
-    obj.markModified('tags');
-    obj.markModified('isDeleted');
-    // save then return.
-    obj.save().then(resolve, function(err) {
-      reject({ code: 400, message: err.message });
-    });
+      let thing = await obj.save();
+      if (!thing.code) {
+        resolve(thing);
+      } else {
+        resolve({
+          code: thing.code,
+          message: 'Error:' + thing.message
+        });
+      }
+    }
   });
 };
 
