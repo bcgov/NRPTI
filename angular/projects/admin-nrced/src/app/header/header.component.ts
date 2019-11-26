@@ -1,9 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Router } from '@angular/router';
-import { ApiService } from '../services/api';
-import { JwtUtil } from '../utils/jwt-utils';
-import { KeycloakService } from '../services/keycloak.service';
+import { FactoryService } from '../services/factory.service';
 
 @Component({
   selector: 'app-header',
@@ -18,51 +16,20 @@ import { KeycloakService } from '../services/keycloak.service';
     ])
   ]
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   isNavMenuOpen = false;
   welcomeMsg: string;
-  // private _api: ApiService;
-  public jwt: {
-    username: string;
-    realm_access: {
-      roles: string[];
-    };
-    scopes: string[];
-  };
 
-  constructor(public api: ApiService, private keycloakService: KeycloakService, public router: Router) {
-    // this._api = api;
+  isAuthenticated: boolean;
+  environment: string;
+
+  constructor(public factoryService: FactoryService, public router: Router) {
     router.events.subscribe(() => {
-      const token = this.keycloakService.getToken();
-      // TODO: Change this to observe the change in the _api.token
-      if (token) {
-        const jwt = JwtUtil.decodeToken(token);
-        this.welcomeMsg = jwt ? 'Hello ' + jwt.displayName : 'Login';
-        this.jwt = jwt;
-      } else {
-        this.welcomeMsg = 'Login';
-        this.jwt = null;
-      }
+      this.isAuthenticated = this.factoryService.isAuthenticated();
+      this.welcomeMsg = this.factoryService.getWelcomeMessage();
     });
-  }
 
-  ngOnInit() {
-    // Make sure they have the right role.
-    if (!this.keycloakService.isValidForSite()) {
-      this.router.navigate(['/not-authorized']);
-    }
-  }
-
-  renderMenu(route: string) {
-    // Sysadmin's get administration.
-    if (route === 'administration') {
-      return (
-        this.jwt &&
-        this.jwt.realm_access &&
-        this.jwt.realm_access.roles.find(x => x === 'sysadmin') &&
-        this.jwt.username === 'admin'
-      );
-    }
+    this.environment = this.factoryService.getEnvironment();
   }
 
   toggleNav() {

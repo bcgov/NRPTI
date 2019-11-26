@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { RecordService } from './record.service';
-import { ApiService } from './api';
+import { ApiService } from './api.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('RecordService', () => {

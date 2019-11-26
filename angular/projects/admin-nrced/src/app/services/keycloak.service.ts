@@ -97,20 +97,23 @@ export class KeycloakService {
   /**
    * Check if the current user is logged in and has admin access.
    *
-   * @returns true if the user has access, false otherwise.
+   * @returns {boolean} true if the user has access, false otherwise.
    * @memberof KeycloakService
    */
-  isValidForSite(): boolean {
-    if (!this.getToken()) {
-      return false;
-    }
-    const jwt = JwtUtil.decodeToken(this.getToken());
+  isAuthenticated(): boolean {
+    const token = this.getToken();
 
-    if (jwt && jwt.realm_access && jwt.realm_access.roles) {
-      return jwt.realm_access.roles.includes('sysadmin');
-    } else {
+    if (!token) {
       return false;
     }
+
+    const jwt = JwtUtil.decodeToken(token);
+
+    if (!(jwt && jwt.realm_access && jwt.realm_access.roles)) {
+      return false;
+    }
+
+    return jwt.realm_access.roles.includes('sysadmin');
   }
 
   /**

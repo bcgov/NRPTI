@@ -1,22 +1,24 @@
 import { Location } from '@angular/common';
 import { async, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RecordService } from '../services/record.service';
-import { ListComponent } from './list.component';
+import { RecordsListComponent } from './records-list.component';
 import { of, throwError } from 'rxjs';
-import { OrderByPipe } from '../pipes/order-by.pipe';
+import { OrderByPipe } from '../../pipes/order-by.pipe';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Record } from '../models/record';
-import { ActivatedRouteStub } from '../spec/helpers';
-import { ExportService } from 'nrpti-angular-components';
-import { QueryParamModifier } from '../services/api';
+import { Record } from '../../models/record';
+import { ActivatedRouteStub, TestBedHelper } from '../../../../../common/src/app/spec/spec-utils';
+import { ExportService, GlobalModule } from 'nrpti-angular-components';
+import { QueryParamModifier } from '../../services/api.service';
+import { FactoryService } from '../../services/factory.service';
 
-describe('ListComponent', () => {
+describe('RecordsListComponent', () => {
+  const testBedHelper = new TestBedHelper<RecordsListComponent>(RecordsListComponent);
+
   // component constructor mocks
   const mockLocation = jasmine.createSpyObj('Location', ['go']);
   const mockRouter = jasmine.createSpyObj('Router', ['navigate', 'createUrlTree', 'events']);
   const mockActivatedRoute = new ActivatedRouteStub();
-  const mockRecordService = jasmine.createSpyObj('RecordService', ['getAll', 'getCount']);
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['getAll', 'getCount']);
   const mockExportService = jasmine.createSpyObj('ExportService', ['exportAsCSV']);
 
   /**
@@ -26,15 +28,15 @@ describe('ListComponent', () => {
     setDefaultMockBehaviour();
 
     TestBed.configureTestingModule({
-      declarations: [ListComponent, OrderByPipe],
+      declarations: [RecordsListComponent, OrderByPipe],
       providers: [
         { provide: Location, useValue: mockLocation },
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        { provide: RecordService, useValue: mockRecordService },
+        { provide: FactoryService, useValue: mockFactoryService },
         { provide: ExportService, useValue: mockExportService }
       ],
-      imports: [RouterTestingModule]
+      imports: [RouterTestingModule, GlobalModule]
     }).compileComponents();
   }));
 
@@ -52,41 +54,20 @@ describe('ListComponent', () => {
     mockLocation.go.and.stub();
     mockRouter.createUrlTree.and.returnValue('');
     mockActivatedRoute.clear();
-    mockRecordService.getAll.and.returnValue(of([]));
-    mockRecordService.getCount.and.returnValue(of(0));
+    mockFactoryService.getAll.and.returnValue(of([]));
+    mockFactoryService.getCount.and.returnValue(of(0));
     mockExportService.exportAsCSV.and.stub();
   }
 
-  /**
-   * Initializes the component and fixture.
-   *
-   * - In most cases, this will be called in the beforeEach.
-   * - In tests that require custom mock behaviour, set up the mock behaviour before calling this.
-   *
-   * @param {boolean} [detectChanges=true] set to false if you want to manually call fixture.detectChanges(), etc.
-   *   Usually you want to control this when the timing of ngOnInit, and similar auto-exec functions, matters.
-   * @returns {{component, fixture}} Object containing the component and test fixture.
-   */
-  function createComponent(detectChanges: boolean = true) {
-    const fixture = TestBed.createComponent(ListComponent);
-    const component = fixture.componentInstance;
-
-    if (detectChanges) {
-      fixture.detectChanges();
-    }
-
-    return { component, fixture };
-  }
-
   it('should create', () => {
-    const { component } = createComponent();
+    const { component } = testBedHelper.createComponent();
     expect(component).toBeTruthy();
   });
 
   describe('getRecordQueryParamSets', () => {
     let component;
     beforeEach(() => {
-      ({ component } = createComponent());
+      ({ component } = testBedHelper.createComponent());
     });
 
     it('returns record query parameters', () => {
@@ -106,33 +87,33 @@ describe('ListComponent', () => {
   describe('getRecords', () => {
     describe('happy path', () => {
       let component;
-      let recordServiceMock;
+      let factoryServiceMock;
 
       const records = [new Record({ _id: 1 }), new Record({ _id: 2 })];
 
       beforeEach(async(() => {
-        ({ component } = createComponent());
+        ({ component } = testBedHelper.createComponent());
 
         component.records = [];
         component.pagination.totalItems = 0;
         component.isSearching = true;
         component.isLoading = true;
 
-        recordServiceMock = TestBed.get(RecordService);
-        recordServiceMock.getAll.calls.reset();
-        recordServiceMock.getAll.and.returnValue(of(records));
-        recordServiceMock.getCount.calls.reset();
-        recordServiceMock.getCount.and.returnValue(of(2));
+        factoryServiceMock = TestBed.get(FactoryService);
+        factoryServiceMock.getAll.calls.reset();
+        factoryServiceMock.getAll.and.returnValue(of(records));
+        factoryServiceMock.getCount.calls.reset();
+        factoryServiceMock.getCount.and.returnValue(of(2));
 
         component.getRecords();
       }));
 
-      it('calls RecordService.getAll', () => {
-        expect(recordServiceMock.getAll).toHaveBeenCalledWith(component.getRecordQueryParamSets());
+      it('calls FactoryService.getAll', () => {
+        expect(factoryServiceMock.getAll).toHaveBeenCalledWith(component.getRecordQueryParamSets());
       });
 
-      it('calls RecordService.getCount', () => {
-        expect(recordServiceMock.getCount).toHaveBeenCalledWith(component.getRecordQueryParamSets());
+      it('calls FactoryService.getCount', () => {
+        expect(factoryServiceMock.getCount).toHaveBeenCalledWith(component.getRecordQueryParamSets());
       });
 
       it('updates records', () => {
@@ -152,12 +133,12 @@ describe('ListComponent', () => {
     describe('on error', () => {
       let component;
       beforeEach(async(() => {
-        ({ component } = createComponent());
+        ({ component } = testBedHelper.createComponent());
       }));
 
       it('re-navigates to the list page on error', async(() => {
-        const recordServiceMock = TestBed.get(RecordService);
-        recordServiceMock.getAll.and.returnValue(throwError('some error'));
+        const factoryServiceMock = TestBed.get(FactoryService);
+        factoryServiceMock.getAll.and.returnValue(throwError('some error'));
 
         const routerMock = TestBed.get(Router);
         routerMock.navigate.calls.reset();
@@ -172,22 +153,22 @@ describe('ListComponent', () => {
   describe('export', () => {
     describe('happy path', () => {
       let component;
-      let recordServiceMock;
+      let factoryServiceMock;
       let exportServiceMock;
 
       const records = [new Record({ _id: 3 })];
 
       beforeEach(async(() => {
-        ({ component } = createComponent());
+        ({ component } = testBedHelper.createComponent());
 
         component.pagination.currentPage = 8;
         component.pagination.itemsPerPage = 18;
         component.demoCodeFilters = ['demoFilterF'];
         component.isExporting = true;
 
-        recordServiceMock = TestBed.get(RecordService);
-        recordServiceMock.getAll.calls.reset();
-        recordServiceMock.getAll.and.returnValue(of(records));
+        factoryServiceMock = TestBed.get(FactoryService);
+        factoryServiceMock.getAll.calls.reset();
+        factoryServiceMock.getAll.and.returnValue(of(records));
 
         exportServiceMock = TestBed.get(ExportService);
         exportServiceMock.exportAsCSV.calls.reset();
@@ -212,13 +193,13 @@ describe('ListComponent', () => {
       const records = [new Record({ _id: 4 })];
 
       beforeEach(async(() => {
-        ({ component } = createComponent());
+        ({ component } = testBedHelper.createComponent());
 
         component.isExporting = true;
 
-        const recordServiceMock = TestBed.get(RecordService);
-        recordServiceMock.getAll.calls.reset();
-        recordServiceMock.getAll.and.returnValue(of(records));
+        const factoryServiceMock = TestBed.get(FactoryService);
+        factoryServiceMock.getAll.calls.reset();
+        factoryServiceMock.getAll.and.returnValue(of(records));
 
         exportServiceMock = TestBed.get(ExportService);
         exportServiceMock.exportAsCSV.calls.reset();
@@ -240,7 +221,7 @@ describe('ListComponent', () => {
 
   describe('setInitialQueryParameters', () => {
     it('sets default query parameters when parameters are not saved to the url', () => {
-      const { component } = createComponent();
+      const { component } = testBedHelper.createComponent();
 
       component.pagination.currentPage = 7;
       component.sorting.column = 'columnC';
@@ -263,7 +244,7 @@ describe('ListComponent', () => {
         demo: 'demo1|demo2'
       });
 
-      const { component } = createComponent();
+      const { component } = testBedHelper.createComponent();
 
       component.pagination.currentPage = 77;
       component.sorting.column = 'columnCC';
@@ -281,12 +262,12 @@ describe('ListComponent', () => {
 
   describe('saveQueryParameters', () => {
     let component;
-    let spyRouter;
-    let spyLocation;
+    let routerMock;
+    let locationMock;
 
     beforeEach(() => {
-      spyRouter = TestBed.get(Router);
-      spyRouter.createUrlTree.and.callFake((...args) => {
+      routerMock = TestBed.get(Router);
+      routerMock.createUrlTree.and.callFake((...args) => {
         expect(args[1].queryParams).toEqual({
           page: 4,
           sortBy: '-columnA',
@@ -295,10 +276,10 @@ describe('ListComponent', () => {
         return 'I was called 1';
       });
 
-      spyLocation = TestBed.get(Location);
-      spyLocation.go.calls.reset();
+      locationMock = TestBed.get(Location);
+      locationMock.go.calls.reset();
 
-      ({ component } = createComponent());
+      ({ component } = testBedHelper.createComponent());
     });
 
     it('saves all query parameters to the url', () => {
@@ -309,26 +290,26 @@ describe('ListComponent', () => {
 
       component.saveQueryParameters();
 
-      expect(spyLocation.go).toHaveBeenCalledWith('I was called 1');
+      expect(locationMock.go).toHaveBeenCalledWith('I was called 1');
     });
   });
 
   describe('clearQueryParameters', () => {
     let component;
-    let spyRouter;
-    let spyLocation;
+    let routerMock;
+    let locationMock;
 
     beforeEach(() => {
-      spyRouter = TestBed.get(Router);
-      spyRouter.createUrlTree.and.callFake((...args) => {
+      routerMock = TestBed.get(Router);
+      routerMock.createUrlTree.and.callFake((...args) => {
         expect(args[1]['queryParams']).toBeUndefined();
         return 'I was called 2';
       });
 
-      spyLocation = TestBed.get(Location);
-      spyLocation.go.calls.reset();
+      locationMock = TestBed.get(Location);
+      locationMock.go.calls.reset();
 
-      ({ component } = createComponent());
+      ({ component } = testBedHelper.createComponent());
     });
 
     it('sets all query parameters to their default values', () => {
@@ -346,14 +327,14 @@ describe('ListComponent', () => {
       expect(component.sorting.direction).toEqual(0);
       expect(component.demoCodeFilters).toEqual([]);
 
-      expect(spyLocation.go).toHaveBeenCalledWith('I was called 2');
+      expect(locationMock.go).toHaveBeenCalledWith('I was called 2');
     });
   });
 
   describe('setDemoFilter', () => {
     let component;
     beforeEach(() => {
-      ({ component } = createComponent());
+      ({ component } = testBedHelper.createComponent());
     });
 
     describe('demo is undefined', () => {
@@ -428,7 +409,7 @@ describe('ListComponent', () => {
   describe('sort', () => {
     let component;
     beforeEach(() => {
-      ({ component } = createComponent());
+      ({ component } = testBedHelper.createComponent());
     });
 
     it('does nothing if sortBy is undefined', () => {
@@ -482,7 +463,7 @@ describe('ListComponent', () => {
 
     let component;
     beforeEach(() => {
-      ({ component } = createComponent());
+      ({ component } = testBedHelper.createComponent());
       component.pagination = { ...initialPaginationValues };
     });
 
@@ -611,7 +592,7 @@ describe('ListComponent', () => {
   describe('resetPagination', () => {
     let component;
     beforeEach(() => {
-      ({ component } = createComponent());
+      ({ component } = testBedHelper.createComponent());
     });
 
     it('sets current page to 1', () => {
@@ -630,7 +611,7 @@ describe('ListComponent', () => {
   describe('updatePage', () => {
     let component;
     beforeEach(() => {
-      ({ component } = createComponent());
+      ({ component } = testBedHelper.createComponent());
     });
 
     it('does nothing when page is undefined', () => {
@@ -711,7 +692,7 @@ describe('ListComponent', () => {
   describe('setPage', () => {
     let component;
     beforeEach(() => {
-      ({ component } = createComponent());
+      ({ component } = testBedHelper.createComponent());
     });
 
     it('does nothing when page is undefined', () => {

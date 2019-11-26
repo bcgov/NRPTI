@@ -53,6 +53,7 @@ export interface IQueryParamValue<T> {
  * @interface IRecordQueryParamSet
  */
 export interface IRecordQueryParamSet {
+  _id?: string;
   pageNum?: number;
   pageSize?: number;
   sortBy?: string;
@@ -82,7 +83,7 @@ export interface IDocumentQueryParamSet {
  * @export
  * @class ApiService
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ApiService {
   public token: string;
   public isMS: boolean; // IE, Edge, etc

@@ -1,11 +1,11 @@
 <header class="app-header app-header--solid" id="header">
   <nav class="navbar navbar-expand-md justify-content-between">
-    <a class="navbar-brand" title="Natural Resources Public Transparency Interface" routerLink="/home">
+    <a class="navbar-brand" title="Natural Resources Public Transparency Interface" routerLink="/">
       <span class="navbar-brand__title"
         >Natural Resources <span class="wb"><span class="amp"></span>Public Transparency Interface</span></span
       >
     </a>
-    <span class="navbar-environment" *ngIf="api.env !== 'prod'">{{ api.env }}</span>
+    <span class="navbar-environment" *ngIf="environment !== 'prod'">{{ environment }}</span>
     <button
       class="navbar-toggler"
       type="button"
@@ -21,7 +21,7 @@
     <div class="navbar-collapse" [@toggleNav]="isNavMenuOpen ? 'navOpen' : 'navClosed'" id="mainNav">
       <ul class="navbar-nav">
         <!-- LOGGED IN -->
-        <li *ngIf="jwt" class="nav-item" placement="bottom-right">
+        <li *ngIf="isAuthenticated" class="nav-item" placement="bottom-right">
           <a class="nav-link" id="welcome" tabindex="0">
             <span>{{ welcomeMsg }}</span>
           </a>
