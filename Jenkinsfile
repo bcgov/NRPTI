@@ -8,7 +8,7 @@ pipeline {
       agent { label 'build' }
       steps {
         script {
-          def filesInThisCommitAsString = sh(script:"git diff --name-only HEAD~1..HEAD | grep '^tools/jenkins/' || echo -n ''", returnStatus: false, returnStdout: true).trim()
+          def filesInThisCommitAsString = sh(script:"git diff --name-only HEAD~1..HEAD | grep '^api/' || echo -n ''", returnStatus: false, returnStdout: true).trim()
           def hasChangesInPath = (filesInThisCommitAsString.length() > 0)
           echo "Files Changed ..."
           echo "${filesInThisCommitAsString}"
