@@ -2,22 +2,17 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
-import { CanDeactivateGuard } from './services/can-deactivate-guard.service';
-import { ListComponent } from './list/list.component';
 
 const routes: Routes = [
   {
     path: 'not-authorized',
+    pathMatch: 'full',
     component: NotAuthorizedComponent
   },
   {
-    path: '',
-    component: ListComponent
-  },
-  {
-    // wildcard route
+    // wildcard default route
     path: '**',
-    redirectTo: '',
+    redirectTo: 'records/list',
     pathMatch: 'full'
   }
 ];
@@ -25,6 +20,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
-  providers: [CanDeactivateGuard]
+  providers: []
 })
 export class AppRoutingModule {}

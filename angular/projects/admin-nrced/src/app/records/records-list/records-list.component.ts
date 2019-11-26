@@ -5,13 +5,13 @@ import moment from 'moment';
 import flatMap from 'lodash.flatmap';
 import { Subject, forkJoin } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IRecordQueryParamSet, QueryParamModifier } from '../services/api';
-import { RecordService } from '../services/record.service';
-import { Record } from '../models/record';
+import { IRecordQueryParamSet, QueryParamModifier } from '../../services/api.service';
+import { Record } from '../../models/record';
 import { ExportService } from 'nrpti-angular-components';
-import { Utils } from '../utils/utils'; // used in template
-import { DemoCodes } from '../utils/constants/record-constants';
-import { ConstantUtils, CodeType } from '../utils/constants/constant-utils';
+import { Utils } from '../../utils/utils'; // used in template
+import { DemoCodes } from '../../utils/constants/record-constants';
+import { ConstantUtils, CodeType } from '../../utils/constants/constant-utils';
+import { FactoryService } from '../../services/factory.service';
 
 interface IPaginationParameters {
   totalItems?: number;
@@ -25,16 +25,16 @@ interface IPaginationParameters {
  * All parameters are saved to and read from the URL for easy link sharing.
  *
  * @export
- * @class ListComponent
+ * @class RecordsListComponent
  * @implements {OnInit}
  * @implements {OnDestroy}
  */
 @Component({
-  selector: 'app-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss']
+  selector: 'app-records-list',
+  templateUrl: './records-list.component.html',
+  styleUrls: ['./records-list.component.scss']
 })
-export class ListComponent implements OnInit, OnDestroy {
+export class RecordsListComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   // url parameters, used to set the initial state of the page on load
@@ -75,17 +75,17 @@ export class ListComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    private location: Location,
-    private router: Router,
-    private route: ActivatedRoute,
-    private exportService: ExportService,
-    private recordService: RecordService
+    public location: Location,
+    public router: Router,
+    public route: ActivatedRoute,
+    public factoryService: FactoryService,
+    public exportService: ExportService
   ) {}
 
   /**
    * Component init.
    *
-   * @memberof ListComponent
+   * @memberof RecordsListComponent
    */
   ngOnInit(): void {
     this.route.queryParamMap.pipe(takeUntil(this.ngUnsubscribe)).subscribe(paramMap => {
@@ -103,7 +103,7 @@ export class ListComponent implements OnInit, OnDestroy {
    * - get records (fetches at most pagination.itemsPerPage records)
    * - get records count (the total count of matching records, used when rendering pagination controls)
    *
-   * @memberof ListComponent
+   * @memberof RecordsListComponent
    */
   public getRecords = (): void => {
     this.isSearching = true;
@@ -113,8 +113,8 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     forkJoin(
-      this.recordService.getAll(this.getRecordQueryParamSets()),
-      this.recordService.getCount(this.getRecordQueryParamSets())
+      this.factoryService.getAll(this.getRecordQueryParamSets()),
+      this.factoryService.getCount(this.getRecordQueryParamSets())
     )
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(
@@ -139,7 +139,7 @@ export class ListComponent implements OnInit, OnDestroy {
    * Fetches all records that match the filter criteria (ignores pagination) and parses the resulting json into
    * a csv for download.  Includes more fields than are shown on the web-page.
    *
-   * @memberof ListComponent
+   * @memberof RecordsListComponent
    */
   public export(): void {
     this.isExporting = true;
@@ -151,7 +151,7 @@ export class ListComponent implements OnInit, OnDestroy {
       delete element.pageSize;
     });
 
-    this.recordService
+    this.factoryService
       .getAll(queryParamsSet)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(
@@ -181,7 +181,7 @@ export class ListComponent implements OnInit, OnDestroy {
   /**
    * Set any initial filter, pagination, and sort values that were saved in the URL.
    *
-   * @memberof ListComponent
+   * @memberof RecordsListComponent
    */
   public setInitialQueryParameters(): void {
     this.pagination.currentPage = +this.paramMap.get('page') || 1;
@@ -201,7 +201,7 @@ export class ListComponent implements OnInit, OnDestroy {
    * The combined results from all query parameter sets is needed to fully satisfy the filters.
    *
    * @returns {IRecordQueryParamSet[]} An array of distinct query parameter sets.
-   * @memberof ListComponent
+   * @memberof RecordsListComponent
    */
   public getRecordQueryParamSets(): IRecordQueryParamSet[] {
     const recordQueryParamSet: IRecordQueryParamSet[] = [];
@@ -228,7 +228,7 @@ export class ListComponent implements OnInit, OnDestroy {
   /**
    * Save filter, pagination, and sort values as params in the URL.
    *
-   * @memberof ListComponent
+   * @memberof RecordsListComponent
    */
   public saveQueryParameters(): void {
     const params: Params = {};
@@ -250,7 +250,7 @@ export class ListComponent implements OnInit, OnDestroy {
   /**
    * Reset filter, pagination, and sort values to their defaults.
    *
-   * @memberof ListComponent
+   * @memberof RecordsListComponent
    */
   public clearQueryParameters(): void {
     this.pagination.currentPage = 1;
@@ -272,7 +272,7 @@ export class ListComponent implements OnInit, OnDestroy {
    * Set record demo filter.
    *
    * @param {string} demo
-   * @memberof ListComponent
+   * @memberof RecordsListComponent
    */
   public setDemoFilter(demo: string): void {
     this.demoCodeFilters = demo ? [demo] : [];
@@ -316,7 +316,7 @@ export class ListComponent implements OnInit, OnDestroy {
    *
    * @param {IPaginationParameters} [paginationParams=null]
    * @returns {void}
-   * @memberof ListComponent
+   * @memberof RecordsListComponent
    */
   public updatePagination(paginationParams: IPaginationParameters = null): void {
     if (!paginationParams) {
@@ -352,7 +352,7 @@ export class ListComponent implements OnInit, OnDestroy {
   /**
    * Resets the pagination.currentPage variable locally and in the URL.
    *
-   * @memberof ListComponent
+   * @memberof RecordsListComponent
    */
   public resetPagination(): void {
     // Minor UI improvement: don't call updatePagination here directly, as it will change the message briefly, before
@@ -366,7 +366,7 @@ export class ListComponent implements OnInit, OnDestroy {
    * Increments or decrements the pagination.currentPage by 1.
    *
    * @param {number} [page=0] either 1 or -1
-   * @memberof ListComponent
+   * @memberof RecordsListComponent
    */
   public updatePage(page: number = 0): void {
     if (
@@ -383,7 +383,7 @@ export class ListComponent implements OnInit, OnDestroy {
    * Jumps the pagination to the specified page.  Won't allow changes to pages that have no results.
    *
    * @param {number} [page=0] a number > 0
-   * @memberof ListComponent
+   * @memberof RecordsListComponent
    */
   public setPage(page: number = 0): void {
     if (page >= 1 && this.pagination.pageCount >= page) {
@@ -398,7 +398,7 @@ export class ListComponent implements OnInit, OnDestroy {
   /**
    * Cleanup on component destroy.
    *
-   * @memberof ListComponent
+   * @memberof RecordsListComponent
    */
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();

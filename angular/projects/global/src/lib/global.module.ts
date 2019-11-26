@@ -17,7 +17,7 @@ import { ExportService } from './services/export.service';
 import { StoreService } from './services/store.service';
 
 /**
- *
+ * Primary module for the library.
  *
  * @publicApi
  * @export
