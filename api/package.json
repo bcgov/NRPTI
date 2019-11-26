@@ -35,7 +35,7 @@
     "testResultsProcessor": "jest-sonar-reporter"
   },
   "jestSonar": {
-    "reportPath": "coverage"
+    "reportPath": "api/coverage"
   },
   "dependencies": {
     "biguint-format": "1.0.1",
