@@ -16,15 +16,37 @@
     "node": ">= 10.0.0",
     "npm": ">= 6.0.0"
   },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json"
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
+    "testMatch": [
+      "**/tests/*.test.(js|jsx|ts|tsx)"
+    ],
+    "testURL": "http://localhost/",
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/*.js"
+    ],
+    "testResultsProcessor": "jest-sonar-reporter"
+  },
+  "jestSonar": {
+    "reportPath": "coverage"
+  },
   "dependencies": {
     "biguint-format": "1.0.1",
     "body-parser": "1.19.0",
     "clamav.js": "0.12.0",
-    "db-migrate-mongodb": "1.5.0",
     "db-migrate": "0.11.6",
+    "db-migrate-mongodb": "1.5.0",
     "epsg": "0.5.0",
     "express": "4.17.1",
     "flake-idgen": "1.1.2",
+    "jest-sonar-reporter": "^2.0.0",
     "jsonwebtoken": "8.5.1",
     "jwks-rsa": "1.6.0",
     "moment": "2.24.0",
