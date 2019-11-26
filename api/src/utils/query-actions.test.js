@@ -1,4 +1,4 @@
-require('../tests/test-utils');
+require('../../tests/test-utils');
 const queryActions = require('./query-actions');
 const Record = require('../models/record');
 
