@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
-import { ApiService } from './api';
+import { ApiService } from './api.service';
 import { Document } from '../models/document';
 
 /**
@@ -10,7 +10,7 @@ import { Document } from '../models/document';
  * @export
  * @class DocumentService
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class DocumentService {
   constructor(public api: ApiService) {}
 
