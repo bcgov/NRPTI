@@ -119,7 +119,7 @@ pipeline {
               sonar-scanner \
                 -Dsonar.host.url='${SONARQUBE_URL_INT}' \
                 -Dsonar.projectKey='${REPO_NAME}-${JOB_NAME}' \
-                -Dsonar.projectName='Demo SQ (${JOB_NAME.toUpperCase()})'
+                -Dsonar.projectName='NRPTI (${JOB_NAME.toUpperCase()})'
               """
             }
           }
