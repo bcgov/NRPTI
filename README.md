@@ -43,3 +43,21 @@ A list of recommended/helpful VS Code extensions.
 ## Other
 
 - Declarative Jenkinsfile Support
+
+## Environments
+
+### LNG
+- Dev: 
+- Test:
+- Prod:
+
+### NRCED
+- Dev:
+- Test:
+- Prod:
+
+### Jenkins
+- https://jenkins-prod-iarjfo-tools.pathfinder.gov.bc.ca/
+
+### SonarQube
+- https://sonarqube-iarjfo-tools.pathfinder.gov.bc.ca/projects
