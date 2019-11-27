@@ -47,13 +47,18 @@ A list of recommended/helpful VS Code extensions.
 ## Environments
 
 ### LNG
-- Dev: 
-- Test:
+- Dev: https://public-lng-dev.pathfinder.gov.bc.ca/
+- Test: https://public-lng-test.pathfinder.gov.bc.ca/
 - Prod:
 
 ### NRCED
-- Dev:
-- Test:
+- Dev: https://admin-nrced-dev.pathfinder.gov.bc.ca/admin/
+- Test: https://admin-nrced-test.pathfinder.gov.bc.ca/admin/
+- Prod:
+
+### NRPTI API
+- Dev: https://nrpti-dev.pathfinder.gov.bc.ca/api/docs/
+- Test: https://nrpti-test.pathfinder.gov.bc.ca/api/docs/
 - Prod:
 
 ### Jenkins
