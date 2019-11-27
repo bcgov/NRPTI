@@ -52,13 +52,13 @@ A list of recommended/helpful VS Code extensions.
 - Prod:
 
 ### NRCED
-- Dev: https://admin-nrced-dev.pathfinder.gov.bc.ca/admin/
-- Test: https://admin-nrced-test.pathfinder.gov.bc.ca/admin/
-- Prod:
+- Dev: todo
+- Test: todo
+- Prod: todo
 
-### NRPTI API
-- Dev: https://nrpti-dev.pathfinder.gov.bc.ca/api/docs/
-- Test: https://nrpti-test.pathfinder.gov.bc.ca/api/docs/
+### NRPTI API/ADMIN
+- Dev: https://nrpti-dev.pathfinder.gov.bc.ca/api/docs/, https://admin-nrpti-dev.pathfinder.gov.bc.ca/
+- Test: https://nrpti-test.pathfinder.gov.bc.ca/api/docs/, https://admin-nrpti-test.pathfinder.gov.bc.ca/
 - Prod:
 
 ### Jenkins
