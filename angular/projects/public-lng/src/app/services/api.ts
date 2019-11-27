@@ -21,6 +21,8 @@ export class ApiService {
     this.isMS = window.navigator.msSaveOrOpenBlob ? true : false;
     const { hostname } = window.location;
     switch (hostname) {
+      // This needs to change according to: https://github.com/bcgov/NRPTI/issues/25
+
       case 'localhost':
         // Local
         this.apiPath = 'http://localhost:3000/api/public';
@@ -31,49 +33,21 @@ export class ApiService {
       case 'nrpti-dev.pathfinder.gov.bc.ca':
         // Dev
         this.apiPath = 'https://nrpti-dev.pathfinder.gov.bc.ca/api/public';
-        this.adminUrl = 'https://nrpti-dev.pathfinder.gov.bc.ca/admin/';
+        this.adminUrl = 'https://admin-nrpti-dev.pathfinder.gov.bc.ca/';
         this.env = 'dev';
         break;
 
       case 'nrpti-test.pathfinder.gov.bc.ca':
         // Test
         this.apiPath = 'https://nrpti-test.pathfinder.gov.bc.ca/api/public';
-        this.adminUrl = 'https://nrpti-test.pathfinder.gov.bc.ca/admin/';
+        this.adminUrl = 'https://admin-nrpti-test.pathfinder.gov.bc.ca/';
         this.env = 'test';
-        break;
-
-      case 'nrpti-demo.pathfinder.gov.bc.ca':
-        // Demo
-        this.apiPath = 'https://nrpti-demo.pathfinder.gov.bc.ca/api/public';
-        this.adminUrl = 'https://nrpti-demo.pathfinder.gov.bc.ca/admin/';
-        this.env = 'demo';
-        break;
-
-      case 'nrpti-scale.pathfinder.gov.bc.ca':
-        // Scale
-        this.apiPath = 'https://nrpti-scale.pathfinder.gov.bc.ca/api/public';
-        this.adminUrl = 'https://nrpti-scale.pathfinder.gov.bc.ca/admin/';
-        this.env = 'scale';
-        break;
-
-      case 'nrpti-beta.pathfinder.gov.bc.ca':
-        // Beta
-        this.apiPath = 'https://nrpti-beta.pathfinder.gov.bc.ca/api/public';
-        this.adminUrl = 'https://nrpti-beta.pathfinder.gov.bc.ca/admin/';
-        this.env = 'beta';
-        break;
-
-      case 'nrpti-master.pathfinder.gov.bc.ca':
-        // Master
-        this.apiPath = 'https://nrpti-master.pathfinder.gov.bc.ca/api/public';
-        this.adminUrl = 'https://nrpti-master.pathfinder.gov.bc.ca/admin/';
-        this.env = 'master';
         break;
 
       default:
         // Prod
-        this.apiPath = 'https://comment.nrs.gov.bc.ca/api/public';
-        this.adminUrl = 'https://comment.nrs.gov.bc.ca/admin/';
+        // this.apiPath = 'https://TODO.gov.bc.ca/api/public';
+        // this.adminUrl = 'https://TODO.gov.bc.ca/';
         this.env = 'prod';
     }
   }

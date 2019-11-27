@@ -3,9 +3,9 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "admin-nrced": {
-      "root": "projects/admin-nrced",
-      "sourceRoot": "projects/admin-nrced/src",
+    "admin-nrpti": {
+      "root": "projects/admin-nrpti",
+      "sourceRoot": "projects/admin-nrpti/src",
       "projectType": "application",
       "prefix": "app",
       "schematics": {
@@ -21,20 +21,19 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/admin-nrced",
-            "index": "projects/admin-nrced/src/index.html",
-            "main": "projects/admin-nrced/src/main.ts",
-            "tsConfig": "projects/admin-nrced/tsconfig.app.json",
-            "baseHref": "/admin/",
-            "polyfills": "projects/admin-nrced/src/polyfills.ts",
+            "outputPath": "dist/admin-nrpti",
+            "index": "projects/admin-nrpti/src/index.html",
+            "main": "projects/admin-nrpti/src/main.ts",
+            "tsConfig": "projects/admin-nrpti/tsconfig.app.json",
+            "polyfills": "projects/admin-nrpti/src/polyfills.ts",
             "assets": [
-              "projects/admin-nrced/src/assets",
-              "projects/admin-nrced/src/favicon.ico"
+              "projects/admin-nrpti/src/assets",
+              "projects/admin-nrpti/src/favicon.ico"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/leaflet/dist/leaflet.css",
-              "projects/admin-nrced/src/styles.scss"
+              "projects/admin-nrpti/src/styles.scss"
             ],
             "scripts": [
               "node_modules/moment/min/moment.min.js",
@@ -54,8 +53,8 @@
               "buildOptimizer": true,
               "fileReplacements": [
                 {
-                  "replace": "projects/admin-nrced/src/environments/environment.ts",
-                  "with": "projects/admin-nrced/src/environments/environment.prod.ts"
+                  "replace": "projects/admin-nrpti/src/environments/environment.ts",
+                  "with": "projects/admin-nrpti/src/environments/environment.prod.ts"
                 }
               ]
             }
@@ -64,30 +63,28 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "admin-nrced:build",
-            "port": 4200,
-            "baseHref": "/admin/",
-            "deployUrl": "/admin/"
+            "browserTarget": "admin-nrpti:build",
+            "port": 4200
           },
           "configurations": {
             "production": {
-              "browserTarget": "admin-nrced:build:production"
+              "browserTarget": "admin-nrpti:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "admin-nrced:build"
+            "browserTarget": "admin-nrpti:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/admin-nrced/src/test.ts",
+            "main": "projects/admin-nrpti/src/test.ts",
             "karmaConfig": "karma.conf.js",
-            "polyfills": "projects/admin-nrced/src/polyfills.ts",
-            "tsConfig": "projects/admin-nrced/tsconfig.spec.json",
+            "polyfills": "projects/admin-nrpti/src/polyfills.ts",
+            "tsConfig": "projects/admin-nrpti/tsconfig.spec.json",
             "scripts": [
               "node_modules/moment/min/moment.min.js",
               "node_modules/keycloak-js/dist/keycloak.min.js"
@@ -97,21 +94,21 @@
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/leaflet/dist/leaflet.css",
-              "projects/admin-nrced/src/styles.scss"
+              "projects/admin-nrpti/src/styles.scss"
             ],
             "assets": [
-              "projects/admin-nrced/src/assets",
-              "projects/admin-nrced/src/favicon.ico"
+              "projects/admin-nrpti/src/assets",
+              "projects/admin-nrpti/src/favicon.ico"
             ]
           }
         },
         "test-ci": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/admin-nrced/src/test.ts",
+            "main": "projects/admin-nrpti/src/test.ts",
             "karmaConfig": "karma.conf.js",
-            "polyfills": "projects/admin-nrced/src/polyfills.ts",
-            "tsConfig": "projects/admin-nrced/tsconfig.spec.json",
+            "polyfills": "projects/admin-nrpti/src/polyfills.ts",
+            "tsConfig": "projects/admin-nrpti/tsconfig.spec.json",
             "scripts": [
               "node_modules/moment/min/moment.min.js",
               "node_modules/keycloak-js/dist/keycloak.min.js"
@@ -121,11 +118,11 @@
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/leaflet/dist/leaflet.css",
-              "projects/admin-nrced/src/styles.scss"
+              "projects/admin-nrpti/src/styles.scss"
             ],
             "assets": [
-              "projects/admin-nrced/src/assets",
-              "projects/admin-nrced/src/favicon.ico"
+              "projects/admin-nrpti/src/assets",
+              "projects/admin-nrpti/src/favicon.ico"
             ]
           }
         },
@@ -133,8 +130,8 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/admin-nrced/tsconfig.app.json",
-              "projects/admin-nrced/tsconfig.spec.json"
+              "projects/admin-nrpti/tsconfig.app.json",
+              "projects/admin-nrpti/tsconfig.spec.json"
             ],
             "exclude": []
           }

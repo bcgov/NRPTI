@@ -7,7 +7,7 @@ import { Record } from '../models/record';
 import { ApiService } from './api.service';
 
 /**
- * Facade service for all admin-nrced services.
+ * Facade service for all admin-nrpti services.
  *
  * Note: All services should be accessed through this parent service only.
  *
