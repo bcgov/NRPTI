@@ -43,6 +43,7 @@ export class TableTemplateComponent implements OnInit, OnChanges, OnDestroy {
       this.data.component = changes['data'].currentValue.component;
       this.data.items = changes['data'].currentValue.items;
       this.data.columns = changes['data'].currentValue.columns;
+      this.data.dataset = changes['data'].currentValue.dataset;
       this.data.currentPage = changes['data'].currentValue.currentPage;
       this.data.filter = changes['data'].currentValue.filter;
       this.data.keywords = changes['data'].currentValue.keywords;

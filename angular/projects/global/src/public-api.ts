@@ -6,6 +6,7 @@
 export * from './lib/components/buttons/button-spinner/button-spinner.component';
 export * from './lib/components/table-template/table-template.component';
 export * from './lib/components/table-template/table-object';
+export * from './lib/components/table-template/table-template-utils';
 
 // services
 export * from './lib/services/export.service';

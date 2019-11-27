@@ -16,6 +16,9 @@ import { TableDirective } from './components/table-template/table.directive';
 import { ExportService } from './services/export.service';
 import { StoreService } from './services/store.service';
 
+// utils
+import { TableTemplateUtils } from './components/table-template/table-template-utils';
+
 /**
  * Primary module for the library.
  *
@@ -26,7 +29,7 @@ import { StoreService } from './services/store.service';
 @NgModule({
   imports: [BrowserModule, NgxPaginationModule],
   declarations: [GlobalComponent, ButtonSpinnerComponent, TableDirective, TableTemplateComponent],
-  providers: [ExportService, StoreService],
+  providers: [ExportService, StoreService, TableTemplateUtils],
   exports: [GlobalComponent, ButtonSpinnerComponent, TableTemplateComponent]
 })
 export class GlobalModule {}
