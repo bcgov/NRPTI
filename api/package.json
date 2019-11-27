@@ -58,6 +58,7 @@
     "winston": "2.4.4",
     "wkx": "0.4.8",
     "jest": "24.9.0",
+    "jest-sonar-reporter": "^2.0.0",
     "yamljs": "0.3.0"
   },
   "devDependencies": {
@@ -68,7 +69,6 @@
     "factory-girl": "5.0.4",
     "husky": "3.0.9",
     "jsonwebtoken": "8.5.1",
-    "jest-sonar-reporter": "^2.0.0",
     "lint-staged": "9.4.2",
     "mongodb-memory-server": "5.2.8",
     "nock": "11.4.0",
