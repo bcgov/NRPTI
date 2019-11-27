@@ -49,17 +49,17 @@ A list of recommended/helpful VS Code extensions.
 ### LNG
 - Dev: https://public-lng-dev.pathfinder.gov.bc.ca/
 - Test: https://public-lng-test.pathfinder.gov.bc.ca/
-- Prod:
+- Prod: TBD
 
 ### NRCED
-- Dev: todo
-- Test: todo
-- Prod: todo
+- Dev: TBD
+- Test: TBD
+- Prod: TBD
 
 ### NRPTI API/ADMIN
 - Dev: https://nrpti-dev.pathfinder.gov.bc.ca/api/docs/, https://admin-nrpti-dev.pathfinder.gov.bc.ca/
 - Test: https://nrpti-test.pathfinder.gov.bc.ca/api/docs/, https://admin-nrpti-test.pathfinder.gov.bc.ca/
-- Prod:
+- Prod: TBD
 
 ### Jenkins
 - https://jenkins-prod-iarjfo-tools.pathfinder.gov.bc.ca/
