@@ -63,7 +63,7 @@ swaggerTools.initializeMiddleware(swaggerConfig, function(middleware) {
 
   app.use(middleware.swaggerRouter(swaggerRouterConfig));
 
-  const swaggerUIConfig = { apiDocs: '/src/docs', swaggerUi: '/src/docs' };
+  const swaggerUIConfig = { apiDocs: '/api/docs', swaggerUi: '/api/docs' };
 
   app.use(middleware.swaggerUi(swaggerUIConfig));
 
