@@ -1,3 +1,9 @@
+/**
+ * JWT specific utils.
+ *
+ * @export
+ * @class JwtUtil
+ */
 export class JwtUtil {
   /**
    * TODO: populate this documentation

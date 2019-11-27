@@ -26,9 +26,28 @@
             "main": "projects/admin-nrpti/src/main.ts",
             "tsConfig": "projects/admin-nrpti/tsconfig.app.json",
             "polyfills": "projects/admin-nrpti/src/polyfills.ts",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "projects/shared-assets/src"
+              ]
+            },
             "assets": [
-              "projects/admin-nrpti/src/assets",
-              "projects/admin-nrpti/src/favicon.ico"
+              {
+                "glob": "**/*",
+                "ignore": [
+                  "styles"
+                ],
+                "input": "projects/admin-nrpti/src/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*",
+                "ignore": [
+                  "styles"
+                ],
+                "input": "projects/shared-assets/src/assets",
+                "output": "assets"
+              }
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -97,8 +116,16 @@
               "projects/admin-nrpti/src/styles.scss"
             ],
             "assets": [
-              "projects/admin-nrpti/src/assets",
-              "projects/admin-nrpti/src/favicon.ico"
+              {
+                "glob": "**/*",
+                "input": "projects/admin-nrpti/src/assets",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/shared-assets/src/assets",
+                "output": "/assets/"
+              }
             ]
           }
         },
@@ -121,8 +148,16 @@
               "projects/admin-nrpti/src/styles.scss"
             ],
             "assets": [
-              "projects/admin-nrpti/src/assets",
-              "projects/admin-nrpti/src/favicon.ico"
+              {
+                "glob": "**/*",
+                "input": "projects/admin-nrpti/src/assets",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
+                "input": "projects/shared-assets/src/assets",
+                "output": "/assets/"
+              }
             ]
           }
         },

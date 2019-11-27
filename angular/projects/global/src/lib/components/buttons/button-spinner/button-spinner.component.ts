@@ -6,7 +6,6 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./button-spinner.component.scss']
 })
 export class ButtonSpinnerComponent {
-  @Input() btnClick: () => any = () => {};
   @Input() btnIsDisabled = false;
   @Input() btnShowSpinner = false;
   @Input() btnTitle = 'button';

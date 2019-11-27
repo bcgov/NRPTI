@@ -50,7 +50,7 @@
           </button>
           <lib-button-spinner
             class="filter-btn-search"
-            [btnClick]="getRecords"
+            (click)="getRecords()"
             [btnIsDisabled]="isSearching || isExporting"
             [btnShowSpinner]="isSearching"
             [btnTitle]="'Search for records'"

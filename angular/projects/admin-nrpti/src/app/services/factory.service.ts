@@ -7,9 +7,11 @@ import { Record } from '../models/record';
 import { ApiService } from './api.service';
 
 /**
- * Facade service for all admin-nrpti services.
+ * Facade service for all admin services.
  *
  * Note: All services should be accessed through this parent service only.
+ *
+ * Why? Components only need to import 1 service (this one) instead of multiple.
  *
  * @export
  * @class FactoryService
@@ -20,6 +22,12 @@ export class FactoryService {
   private _recordService: RecordService;
   private _apiService: ApiService;
 
+  /**
+   * Creates an instance of FactoryService.
+   *
+   * @param {Injector} injector
+   * @memberof FactoryService
+   */
   constructor(private injector: Injector) {}
 
   /**

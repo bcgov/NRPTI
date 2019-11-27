@@ -1,5 +1,11 @@
 import moment from 'moment';
 
+/**
+ * General purpose utils.
+ *
+ * @export
+ * @class Utils
+ */
 export class Utils {
   /**
    * Turns an array of strings into a single string where each element is deliminited with a pipe character.

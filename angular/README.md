@@ -2,7 +2,7 @@
 
 Angular front-ends for the Natural Resources Public Transparency Interface (NRPTI) application.
 
-- [admin-nrpti](https://github.com/bcgov/nrpti/angular/projects/admin-nrpti) - front-end for nrced admin users.
+- [admin-nrpti](https://github.com/bcgov/nrpti/angular/projects/admin-nrpti) - front-end for nrpti admin users.
 - [public-lng](https://github.com/bcgov/nrpti/angular/projects/public-lng) - front-end for lng public users.
 - [common](https://github.com/bcgov/nrpti/angular/projects/common) - common components for NRPTI front-end sites.
 - [global](https://github.com/bcgov/nrpti/angular/projects/global) - global components for angular front-end sites.

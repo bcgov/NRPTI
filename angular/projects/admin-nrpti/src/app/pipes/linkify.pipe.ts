@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import LinkifyIt from 'linkify-it';
 
 /**
- * Finds urls and replaces them with anchor tags.
+ * Finds urls in a string and replaces them with anchor tags.
  *
  * @export
  * @class LinkifyPipe
@@ -10,6 +10,13 @@ import LinkifyIt from 'linkify-it';
  */
 @Pipe({ name: 'linkify' })
 export class LinkifyPipe implements PipeTransform {
+  /**
+   * Finds urls in a string and replaces them with anchor tags.
+   *
+   * @param {string} str string to find and replce urls in.
+   * @returns {string}
+   * @memberof LinkifyPipe
+   */
   transform(str: string): string {
     if (!str) {
       return '';

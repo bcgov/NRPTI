@@ -140,12 +140,14 @@ export class ApiService {
       `${this.buildRecordQueryParametersString(queryParams)}&` +
       `fields=${Utils.convertArrayIntoPipeString(Record.getFields())}`;
 
-    return this.http.head<HttpResponse<object>>(`${this.pathAPI}/${queryString}`, { observe: 'response' }).pipe(
-      map(res => {
-        // retrieve the count from the response headers
-        return parseInt(res.headers.get('x-total-count'), 10);
-      })
-    );
+    return this.http
+      .head<HttpResponse<object>>(`${this.pathAPI}/${queryString}`, { observe: 'response' })
+      .pipe(
+        map(res => {
+          // retrieve the count from the response headers
+          return parseInt(res.headers.get('x-total-count'), 10);
+        })
+      );
   }
 
   /**
@@ -197,7 +199,9 @@ export class ApiService {
 
   private downloadResource(id: string): Promise<Blob> {
     const queryString = `document/${id}/download`;
-    return this.http.get<Blob>(this.pathAPI + '/' + queryString, { responseType: 'blob' as 'json' }).toPromise();
+    return this.http
+      .get<Blob>(this.pathAPI + '/' + queryString, { responseType: 'blob' as 'json' })
+      .toPromise();
   }
 
   public async downloadDocument(document: Document): Promise<void> {
