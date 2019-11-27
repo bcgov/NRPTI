@@ -6,7 +6,7 @@
       "description": "Deployment template for a angular on nginx",
       "tags": "angular,nginx"
     },
-    "name": "admin-nrced"
+    "name": "admin-nrpti"
   },
   "objects": [
     {
@@ -175,7 +175,6 @@
         "port": {
           "targetPort": "8080-tcp"
         },
-        "path": "/admin/",
         "tls": {
           "insecureEdgeTerminationPolicy": "Redirect",
           "termination": "edge"
@@ -194,7 +193,7 @@
       "displayName": "Name",
       "name": "NAME",
       "required": true,
-      "value": "admin-nrced"
+      "value": "admin-nrpti"
     },
     {
       "description": "The namespace where to get the above image name",
@@ -225,7 +224,7 @@
       "description": "The exposed hostname that will route to the service, e.g., myappname.pathfinder.gov.bc.ca, if left blank a value will be defaulted.",
       "displayName": "Application Hostname",
       "name": "APPLICATION_DOMAIN",
-      "value": "admin-nrced-dev.pathfinder.gov.bc.ca"
+      "value": "admin-nrpti-dev.pathfinder.gov.bc.ca"
     },
     {
       "description": "The TAG name for this environment, e.g., dev, test, prod",

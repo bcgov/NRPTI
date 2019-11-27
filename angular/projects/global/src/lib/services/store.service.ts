@@ -16,12 +16,12 @@ export class StoreService {
   }
 
   public getNavigationStack() {
-    return this.state && this.state.navigationStack || [];
+    return (this.state && this.state.navigationStack) || [];
   }
 
   public getLastBackRef() {
     const stack = this.getNavigationStack();
-    return stack && stack[stack.length - 1] && stack[stack.length - 1].backRef || ['/'];
+    return (stack && stack[stack.length - 1] && stack[stack.length - 1].backRef) || ['/'];
   }
 
   public getLastNavigationObject() {
@@ -83,8 +83,6 @@ export class StoreService {
     this.state.navigationStack = null;
   }
 }
-
-
 
 /*
   Example of a back ref array:
