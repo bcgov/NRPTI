@@ -29,4 +29,4 @@ import { StoreService } from './services/store.service';
   providers: [ExportService, StoreService],
   exports: [GlobalComponent, ButtonSpinnerComponent, TableTemplateComponent]
 })
-export class GlobalModule { }
+export class GlobalModule {}
