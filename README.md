@@ -66,3 +66,4 @@ A list of recommended/helpful VS Code extensions.
 
 ### SonarQube
 - https://sonarqube-iarjfo-tools.pathfinder.gov.bc.ca/projects
+
