@@ -2,6 +2,9 @@
 
 **/.gitignore
 
+# Coverage
+**/coverage
+
 # dependencies
 **/node_modules
 

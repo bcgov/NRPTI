@@ -70,7 +70,7 @@ pipeline {
       }
     }
 
-    stage('Tests') {
+    stage('API Tests') {
       agent any
       steps {
         script {
@@ -93,6 +93,38 @@ pipeline {
       post {
         success {
           stash name: COVERAGE_STASH, includes: 'api/coverage/**'
+
+          echo 'All Tests passed'
+        }
+        failure {
+          echo 'Some Tests failed'
+        }
+      }
+    }
+
+    stage('FE Tests') {
+      agent any
+      steps {
+        script {
+          dir('angular') {
+            try {
+              timeout(10) {
+                echo 'Installing NPM Dependencies...'
+                sh 'npm ci'
+
+                echo "Testing ${APP_NAME}-${JOB_NAME}..."
+                sh 'npm run test'
+              }
+            } catch (e) {
+              echo "${APP_NAME}-${JOB_NAME} failed"
+              throw e
+            }
+          }
+        }
+      }
+      post {
+        success {
+          stash name: COVERAGE_STASH, includes: 'angular/coverage/**'
 
           echo 'All Tests passed'
         }
