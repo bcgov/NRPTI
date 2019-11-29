@@ -14,7 +14,7 @@ pipeline {
           echo "${filesInThisCommitAsString}"
           if (!currentBuild.rawBuild.getCauses()[0].toString().contains('UserIdCause') && !hasChangesInPath){
             currentBuild.rawBuild.delete()
-            error("No changes detected in the path ('^tools/jenkins/')")
+            error("No changes detected in the path ('^')")
           }
         }
       }
