@@ -6,7 +6,7 @@ let queryUtils = require('../utils/query-utils');
 
 let defaultLog = require('../utils/logger')('record');
 
-let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
+// let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 
 // Authenticated Requests
 

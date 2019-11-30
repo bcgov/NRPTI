@@ -25,7 +25,9 @@ exports.avScan = function(buffer) {
 
     clamav.ping(CLAMAV_SERVICE_PORT, CLAMAV_SERVICE_HOST, 1000, function(error) {
       if (error) {
-        defaultLog.error(`ClamAV service: ${CLAMAV_SERVICE_HOST}:${CLAMAV_SERVICE_PORT} is not available: ${error}`);
+        defaultLog.error(
+          `ClamAV service: ${CLAMAV_SERVICE_HOST}:${CLAMAV_SERVICE_PORT} is not available: ${error.message}`
+        );
         resolve(false);
       } else {
         defaultLog.info(`ClamAV service is alive: ${CLAMAV_SERVICE_HOST}:${CLAMAV_SERVICE_PORT}`);
