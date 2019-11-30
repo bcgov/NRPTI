@@ -20,8 +20,8 @@ import { ConfirmComponent } from './confirm/confirm.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
-import { HomeComponent } from 'app/home/home.component';
-import { ImportComponent } from 'app/import/import.component';
+import { HomeComponent } from './home/home.component';
+import { ImportComponent } from './import/import.component';
 
 // services
 import { ApiService } from './services/api.service';

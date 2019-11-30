@@ -1,0 +1,43 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  labels:
+    app: integrations-template
+  name: integrations
+  namespace: iarjfo-prod
+spec:
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            parent: integrations
+        spec:
+          containers:
+            - name: integrations
+                - name: JSON_PAYLOAD
+                  value: '{"attachments":[{"text":"Integrations Job for NRPTI <env> Succeeded!", "color":"#00FF00"}]}'
+                - name: JSON_PAYLOAD_FAIL
+                  value: '{"attachments":[{"text":"Integrations Job for NRPTI <env> Failed!", "color":"#FF0000"}]}'
+              image: docker-registry.default.svc:5000/nrts-prc-tools/nrts-prc-api:master
+              command:
+                - bash
+                - -c
+                - 'node src/integrations/integration.js;
+                   if [ "${PIPESTATUS[0]}" -ne "1" ];
+                   then curl -X POST -H "Content-type: application/json" --data "${JSON_PAYLOAD}" "${NOTIFICATION_URL}";
+                   else curl -X POST -H "Content-type: application/json" --data "${JSON_PAYLOAD_FAIL}" "${NOTIFICATION_URL}";
+                   fi;'
+              imagePullPolicy: Always
+              resources: {}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+          dnsPolicy: ClusterFirst
+          restartPolicy: Never
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+  schedule: '1 2 * * *'
+  startingDeadlineSeconds: 999
+  suspend: false

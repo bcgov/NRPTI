@@ -2,6 +2,9 @@
  * Public API Surface of global
  */
 
+// models
+export * from './lib/models/search';
+
 // components
 export * from './lib/components/breadcrumb/breadcrumb.component';
 export * from './lib/components/buttons/button-spinner/button-spinner.component';

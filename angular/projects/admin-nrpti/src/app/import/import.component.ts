@@ -119,6 +119,6 @@ export class ImportComponent implements OnInit {
   }
 
   postToApi(): Observable<any> {
-    return this.factoryService.startTask({ dataSource: 'epic' });
+    return this.factoryService.startTask({ dataSource: 'epic', recordType: 'inspection' });
   }
 }

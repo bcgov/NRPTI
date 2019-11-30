@@ -41,6 +41,15 @@ produces:
   - application/json
 
 definitions:
+### Record Type Definitions
+  RecordType:
+    type: string
+    description: "Supported record types"
+    example: "order"
+    enum: &recordType
+      - order
+      - inspection
+
 ### Search Definitions
   SearchObject:
     type: object
@@ -68,17 +77,14 @@ definitions:
       - +documentFileSize
       - -documentFileSize
 
- ### Task Definitions
+### Task Definitions
   TaskObject:
     type: object
     example: "A task object"
     properties:
-      orders:
-        type: boolean
-        example: "true"
-      inspections:
-        type: boolean
-        example: "true"
+      recordType:
+        type: string
+        enum: *recordType
       dataSource:
         type: string
         example: "epic"
@@ -199,9 +205,9 @@ paths:
           description: "Access Denied"
           schema:
             $ref: "#/definitions/Error"
-  ###
-  ### Task Routes
-  ###
+###
+### Task Routes
+###
   /task:
     x-swagger-router-controller: import-task
     options:

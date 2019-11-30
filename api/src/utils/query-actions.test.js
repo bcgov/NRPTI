@@ -1,12 +1,12 @@
 require('../../tests/test-utils');
 const queryActions = require('./query-actions');
-const Record = require('../models/record');
-const Audit = require('../models/audit');
+const Order = require('../models/order');
+// const Audit = require('../models/audit');
 
 describe('## publish ##', () => {
   describe('with an object that has already been published', () => {
     test('it returns 409 with a status message', async () => {
-      let publishedOrg = new Record({ read: ['public'] });
+      let publishedOrg = new Order({ read: ['public'] });
       try {
         let res = await queryActions.publish(publishedOrg);
         expect(res.code).toEqual(409);
@@ -19,7 +19,7 @@ describe('## publish ##', () => {
 
   describe('with an object that has not been published', () => {
     test('it adds the public tag and saves it', async () => {
-      let newOrg = new Record({ read: [] });
+      let newOrg = new Order({ read: [] });
       try {
         let res = await queryActions.publish(newOrg);
         expect(res.read[0]).toEqual('public');
@@ -43,7 +43,7 @@ describe('## publish ##', () => {
 });
 
 describe('## isPublished ##', () => {
-  let record = new Record({});
+  let record = new Order({});
 
   test('it returns the array of public read', () => {
     record.read = ['sysadmin', 'public'];
@@ -59,7 +59,7 @@ describe('## isPublished ##', () => {
 describe('## unpublish ##', () => {
   describe('with an object that has been published', () => {
     test('it removes the public tag and saves it', async () => {
-      let publishedOrg = new Record({ read: ['public'] });
+      let publishedOrg = new Order({ read: ['public'] });
       let res = await queryActions.unPublish(publishedOrg);
       expect(res.read).toHaveLength(0);
     });
@@ -67,7 +67,7 @@ describe('## unpublish ##', () => {
 
   describe('with an object that is unpublished', () => {
     test('it returns 409 with a status message', async () => {
-      let newOrg = new Record({ read: [] });
+      let newOrg = new Order({ read: [] });
       let res = await queryActions.unPublish(newOrg);
       if (res.code) {
         expect(res.code).toEqual(409);

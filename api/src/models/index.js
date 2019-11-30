@@ -1,5 +1,6 @@
 // Global Importer for models.
 
-exports.audit = require('./audit.js');
-exports.record = require('./record.js');
-exports.task = require('./task.js');
+exports.audit = require('./audit');
+exports.inspection = require('./inspection');
+exports.order = require('./order');
+exports.task = require('./task');

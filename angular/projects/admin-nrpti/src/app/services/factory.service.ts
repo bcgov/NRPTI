@@ -5,10 +5,7 @@ import { JwtUtil } from '../utils/jwt-utils';
 import { Observable } from 'rxjs';
 // import { Record } from '../models/record';
 import { ApiService } from './api.service';
-import { SearchService } from '../../../../global/src/lib/services/search.service';
-import { SearchResults } from '../../../../global/src/lib/models/search';
-
-import { HttpClient } from '@angular/common/http';
+import { SearchService, SearchResults } from 'nrpti-angular-components';
 
 /**
  * Facade service for all admin-nrpti services.
@@ -26,7 +23,7 @@ export class FactoryService {
   private _searchService: SearchService;
   // private _pathAPI: string;
 
-  constructor(private injector: Injector, private http: HttpClient) {
+  constructor(private injector: Injector) {
     // The following items are loaded by a file that is only present on cluster builds.
     // Locally, this will be empty and local defaults will be used.
     // const remote_api_path = window.localStorage.getItem('from_admin_server--remote_api_path');
@@ -170,8 +167,14 @@ export class FactoryService {
     return this.apiService.env;
   }
 
-  public startTask(obj: any) {
-    // TODO: Convert this to a service
-    return this.http.post<any>('http://localhost:3000/api/task', { dataSource: 'epic' }, {});
+  /**
+   * Sends request to start a task.
+   *
+   * @param {*} obj request payload
+   * @returns {*}
+   * @memberof FactoryService
+   */
+  public startTask(obj: any): any {
+    return this.apiService.startTask(obj);
   }
 }
