@@ -20,6 +20,8 @@ import { ConfirmComponent } from './confirm/confirm.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
+import { HomeComponent } from 'app/home/home.component';
+import { ImportComponent } from 'app/import/import.component';
 
 // services
 import { ApiService } from './services/api.service';
@@ -40,7 +42,15 @@ export function keycloakFactory(keycloakService: KeycloakService) {
 }
 
 @NgModule({
-  declarations: [AppComponent, ConfirmComponent, HeaderComponent, FooterComponent, NotAuthorizedComponent],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    ImportComponent,
+    ConfirmComponent,
+    HeaderComponent,
+    FooterComponent,
+    NotAuthorizedComponent
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -75,7 +85,7 @@ export function keycloakFactory(keycloakService: KeycloakService) {
     CanActivateGuard,
     CanDeactivateGuard
   ],
-  entryComponents: [ConfirmComponent],
+  entryComponents: [ConfirmComponent, HomeComponent, ImportComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {
