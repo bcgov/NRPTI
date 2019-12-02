@@ -1,9 +1,11 @@
 .card-header {
   padding: 0.5rem 1rem;
   color: $card-header-color;
-  background: $card-header-bg;
+  background: $card-header-bg !important;
   font-size: 0.875rem;
   font-weight: 700;
+  box-shadow: 0.1rem 0.1rem 0.5rem rgba(158, 158, 158, 0.24);
+  border: none;
 }
 
 .card-body {

@@ -24,7 +24,7 @@
 
   .filter-input {
     @include placeholder {
-      color: $gray7;
+      color: $font-gray;
     }
   }
 
@@ -114,7 +114,7 @@
 
 select {
   option:first-child {
-    color: $gray6;
+    color: $font-gray;
   }
 }
 
