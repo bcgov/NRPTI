@@ -1,0 +1,42 @@
+/* New CSS - KD */
+
+h2 {
+  border-bottom: 1px solid #cecece;
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  padding-bottom: 6px;
+}
+
+h3 {
+  margin-bottom: 1rem;
+  letter-spacing: -0.02rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+section {
+  + section {
+    margin-top: 3rem;
+  }
+}
+
+.label-pair {
+  h3 {
+    display: inline-block;
+    margin-right: 8px;
+  }
+
+  p {
+    display: inline-block;
+  }
+
+  &.full {
+    p {
+      display: block;
+      max-width: 600px;
+    }
+  }
+}

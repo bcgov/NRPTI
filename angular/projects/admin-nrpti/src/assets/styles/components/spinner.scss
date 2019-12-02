@@ -4,8 +4,8 @@
   left: 50%;
   width: $spinner-lg;
   height: $spinner-lg;
-  margin-top: -calc(#{$spinner-lg} / 1.5);
-  margin-left: -calc(#{$spinner-lg} / 2);
+  margin-top: calc(-#{$spinner-lg} / 1.5);
+  margin-left: calc(-#{$spinner-lg} / 2);
   background-image: url(./assets/images/spinner.png);
 }
 
@@ -19,15 +19,15 @@
   &.spinner-sm {
     width: $spinner-sm;
     height: $spinner-sm;
-    margin-top: -calc(#{$spinner-sm} / 1.5);
-    margin-left: -calc(#{$spinner-sm} / 2);
+    margin-top: calc(-#{$spinner-sm} / 1.5);
+    margin-left: calc(-#{$spinner-sm} / 2);
   }
 
   &.spinner-lg {
     width: $spinner-lg;
     height: $spinner-lg;
-    margin-top: -calc(#{$spinner-lg} / 1.5);
-    margin-left: -calc(#{$spinner-lg} / 2);
+    margin-top: calc(-#{$spinner-lg} / 1.5);
+    margin-left: calc(-#{$spinner-lg} / 2);
   }
 }
 

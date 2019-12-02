@@ -5,6 +5,8 @@
     "no-descending-specificity": null,
     "selector-type-no-unknown": null,
     "selector-pseudo-element-no-unknown": null,
-    "no-empty-source": null
+    "no-empty-source": null,
+    "function-calc-no-invalid": null,
+    "declaration-block-no-shorthand-property-overrides": null
   }
 }

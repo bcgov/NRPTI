@@ -1,0 +1,43 @@
+<main id="anchor-point">
+  <div class="container">
+    <div class="home-title-container">
+      <h1 id="pgTitle">
+        <span>Import Module</span>
+      </h1>
+    </div>
+
+    <div class="container-fluid-padding m-3">
+      <div class="row date-range">
+        <div class="col-md-6">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="yyyy-mm-dd"
+              name="dateStart"
+              [(ngModel)]="dateStart"
+              ngbDatepicker
+              #dateStartPicker="ngbDatepicker"
+            />
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar" (click)="dateStartPicker.toggle()" type="button">
+                <i class="material-icons">date_range</i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-group m-3">
+      <lib-button-spinner
+        class="filter-btn-search"
+        [btnClick]="startJob"
+        [btnTitle]="'Start Import'"
+        [btnType]="'submit'"
+        [btnText]="'Start Import'"
+      >
+      </lib-button-spinner>
+    </div>
+  </div>
+</main>

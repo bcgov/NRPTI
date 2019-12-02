@@ -4,16 +4,6 @@
   &__collapse-item {
     margin-bottom: 0.25rem;
 
-    .accordion__collapse-header {
-      background: $table-row-bg;
-    }
-
-    &:nth-child(even) {
-      .accordion__collapse-header {
-        background: $table-alt-row-bg;
-      }
-    }
-
     &:last-child {
       margin-bottom: 0;
     }

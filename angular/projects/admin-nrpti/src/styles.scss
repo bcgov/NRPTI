@@ -7,13 +7,13 @@
 @import "~bootstrap/dist/css/bootstrap.css";
 
 // Base
-@import "~assets/styles/base/base.scss";
+@import "assets/styles/base/base.scss";
 
 // Helpers
 @import "~assets/styles/base/helpers.scss";
 
 // Layout
-@import "~assets/styles/layout/layout.scss";
+@import "assets/styles/layout/layout.scss";
 
 // Typography
 @import "~assets/styles/base/typography.scss";
@@ -22,22 +22,21 @@
 @import "~assets/styles/base/material-icons.scss";
 
 // Components
-@import "~assets/styles/components/accordion.scss";
-@import "~assets/styles/components/alert-banner.scss";
-@import "~assets/styles/components/aside.scss";
-@import "~assets/styles/components/badge.scss";
-@import "~assets/styles/components/buttons.scss";
-@import "~assets/styles/components/card.scss";
-@import "~assets/styles/components/doc-list.scss";
-@import "~assets/styles/components/filter-bar.scss";
-@import "~assets/styles/components/form-elements.scss";
-@import "~assets/styles/components/lists.scss";
-@import "~assets/styles/components/material.scss";
-@import "~assets/styles/components/modal.scss";
-@import "~assets/styles/components/spinner.scss";
-@import "~assets/styles/components/tab-nav.scss";
-@import "~assets/styles/components/table.scss";
-@import "~assets/styles/components/table-cards.scss";
+@import "assets/styles/components/accordion.scss";
+@import "assets/styles/components/aside.scss";
+@import "assets/styles/components/badge.scss";
+@import "assets/styles/components/buttons.scss";
+@import "assets/styles/components/card.scss";
+@import "assets/styles/components/doc-list.scss";
+@import "assets/styles/components/filter-bar.scss";
+@import "assets/styles/components/form-elements.scss";
+@import "assets/styles/components/lists.scss";
+@import "assets/styles/components/material.scss";
+@import "assets/styles/components/modal.scss";
+@import "assets/styles/components/pagination.scss";
+@import "assets/styles/components/spinner.scss";
+@import "assets/styles/components/tab-nav.scss";
+@import "assets/styles/components/table.scss";
 
 // Third-party Components
 // Required for Angular Material styling: (ref: https://material.angular.io/guide/theming)
