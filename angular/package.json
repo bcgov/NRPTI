@@ -30,6 +30,7 @@
     "clean:dist": "rimraf dist",
     "test": "ng test --watch=false --code-coverage",
     "test:admin-nrpti": "ng test admin-nrpti",
+    "test:global": "ng test global",
     "test-ci": "ng test-ci",
     "test-ci:admin-nrpti": "ng test-ci admin-nrpti",
     "lint": "npm-run-all -l -s -c lint:ts:* lint:html lint:scss",
