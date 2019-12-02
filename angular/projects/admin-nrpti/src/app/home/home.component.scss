@@ -1,0 +1,180 @@
+@import "~assets/styles/base/base.scss";
+
+:host {
+  display: block;
+
+  /* fill the entire viewport and offset the fixed header and footer height (68px + 61px = 129px;) */
+  min-height: calc(100vh - 129px);
+  background-position: center -8rem;
+  background-size: 250%;
+  background-repeat: no-repeat;
+}
+
+@media (min-width: 768px) and
+  (orientation: portrait) {
+  :host {
+    background-size: 200%;
+    background-position: center -15rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :host {
+    background-position: center -20rem;
+    background-size: 170%;
+  }
+}
+
+@media (min-width: 1200px) {
+  :host {
+    background-position: center -25rem;
+    background-size: 125%;
+  }
+}
+
+// Home Title Container
+.home-title-container {
+  margin-bottom: 1.5rem;
+
+  h1 {
+    line-height: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+  }
+
+  .badge {
+    color: $gold;
+  }
+}
+
+@media (min-width: 768px) {
+  .home-title-container {
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+
+    h1 {
+      font-size: 2.8rem;
+      line-height: 2.5rem;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      line-height: 1.8rem;
+    }
+  }
+}
+
+// Feature Blocks
+.feature-blocks {
+  [class^="col"] {
+    padding: 0.5rem;
+  }
+
+  .feature-block {
+    height: 100%;
+
+    &__list {
+      margin-left: 0;
+      padding: 0;
+      vertical-align: middle;
+      text-align: left;
+
+      &-item {
+        @include flex-box();
+
+        padding: 0.2rem 0.5rem;
+        border-top: 1px solid $white;
+        font-size: 0.875rem;
+
+        .name {
+          @include flex(1 1 auto);
+        }
+
+        .badge {
+          @include flex(0 0 auto);
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  .feature-blocks {
+    [class^="col"] {
+      padding: 1rem;
+    }
+
+    .feature-block {
+      height: 17rem;
+    }
+  }
+}
+
+main {
+  color: $font-gray;
+
+  .home-page {
+    &__header {
+      margin-top: 4rem;
+
+      h1 {
+        font-size: 2rem;
+        line-height: 2rem;
+
+        span {
+          display: inline-block;
+        }
+      }
+
+      h2 {
+        font-size: 1.5rem;
+        line-height: 1.5rem;
+
+        span {
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  main {
+    .home-page {
+      padding-top: 2rem;
+
+      &__header {
+        h1 {
+          font-size: 2.8rem;
+          line-height: 2.5rem;
+        }
+
+        h2 {
+          font-size: 1.8rem;
+          line-height: 1.8rem;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  main {
+    .home-page {
+      &__header {
+        h1 {
+          font-size: 2.8rem;
+          line-height: 2.8rem;
+        }
+
+        h2 {
+          line-height: 2rem;
+          font-size: 2rem;
+        }
+      }
+    }
+  }
+}

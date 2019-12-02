@@ -6,6 +6,10 @@
   }
 }
 
+.modal-dialog {
+  max-width: 800px;
+}
+
 .modal-body {
   background-color: $modal-bg;
 
