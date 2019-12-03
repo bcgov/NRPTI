@@ -31,6 +31,7 @@ import { FaqComponent } from './faq/faq.component';
 
 @NgModule({
   imports: [
+    AppRoutingModule, // <-- module import order matters - https://angular.io/guide/router#module-import-order-matters
     BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
@@ -41,7 +42,6 @@ import { FaqComponent } from './faq/faq.component';
     SharedModule,
     ApplicationsModule,
     ProjectModule,
-    AppRoutingModule, // <-- module import order matters - https://angular.io/guide/router#module-import-order-matters
     BootstrapModalModule.forRoot({ container: document.body })
   ],
   declarations: [
