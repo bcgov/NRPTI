@@ -41,14 +41,14 @@ export class TableTemplateUtils {
   }
 
   public setKeywordsInUrl(currentUrl: string, keywords: string) {
-    if (!keywords) {
+    if (keywords) {
       currentUrl += `;keywords=${keywords}`;
     }
     return currentUrl;
   }
 
   public setSortByInUrl(currentUrl: string, sortBy: string) {
-    if (!sortBy) {
+    if (sortBy) {
       currentUrl += `;sortBy=${sortBy}`;
     }
     return currentUrl;
