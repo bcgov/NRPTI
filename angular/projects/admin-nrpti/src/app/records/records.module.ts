@@ -15,9 +15,11 @@ import { RecordsRoutingModule } from './records-routing.module';
 // components
 import { RecordsListComponent } from './records-list/records-list.component';
 import { RecordsAddEditComponent } from './records-add-edit/records-add-edit.component';
+import { RecordsTableRowsComponent } from './records-rows/records-table-rows.component';
 
-// services
-import { RecordService } from '../services/record.service';
+// resolvers
+import { RecordsListResolver } from '../records/records-list/records-list-resolver';
+import { SearchService } from '../services/search.service';
 
 @NgModule({
   imports: [
@@ -31,8 +33,8 @@ import { RecordService } from '../services/record.service';
     InlineSVGModule.forRoot(),
     RecordsRoutingModule
   ],
-  declarations: [RecordsListComponent, RecordsAddEditComponent],
-  providers: [RecordService],
+  declarations: [RecordsListComponent, RecordsAddEditComponent, RecordsTableRowsComponent],
+  providers: [RecordsListResolver, SearchService],
   exports: []
 })
 export class RecordsModule {}

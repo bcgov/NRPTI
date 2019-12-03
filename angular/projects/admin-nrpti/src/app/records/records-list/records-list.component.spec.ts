@@ -18,7 +18,7 @@ describe('RecordsListComponent', () => {
   const mockLocation = jasmine.createSpyObj('Location', ['go']);
   const mockRouter = jasmine.createSpyObj('Router', ['navigate', 'createUrlTree', 'events']);
   const mockActivatedRoute = new ActivatedRouteStub();
-  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['getAll', 'getCount']);
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['getAll']);
   const mockExportService = jasmine.createSpyObj('ExportService', ['exportAsCSV']);
 
   /**
@@ -55,7 +55,6 @@ describe('RecordsListComponent', () => {
     mockRouter.createUrlTree.and.returnValue('');
     mockActivatedRoute.clear();
     mockFactoryService.getAll.and.returnValue(of([]));
-    mockFactoryService.getCount.and.returnValue(of(0));
     mockExportService.exportAsCSV.and.stub();
   }
 
@@ -102,18 +101,12 @@ describe('RecordsListComponent', () => {
         factoryServiceMock = TestBed.get(FactoryService);
         factoryServiceMock.getAll.calls.reset();
         factoryServiceMock.getAll.and.returnValue(of(records));
-        factoryServiceMock.getCount.calls.reset();
-        factoryServiceMock.getCount.and.returnValue(of(2));
 
         component.getRecords();
       }));
 
       it('calls FactoryService.getAll', () => {
         expect(factoryServiceMock.getAll).toHaveBeenCalledWith(component.getRecordQueryParamSets());
-      });
-
-      it('calls FactoryService.getCount', () => {
-        expect(factoryServiceMock.getCount).toHaveBeenCalledWith(component.getRecordQueryParamSets());
       });
 
       it('updates records', () => {

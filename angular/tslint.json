@@ -56,6 +56,7 @@
     "no-construct": true,
     "no-debugger": true,
     "no-duplicate-variable": true,
+    "no-duplicate-imports": false,
     "no-empty": false,
     "no-empty-interface": true,
     "no-eval": true,
@@ -152,8 +153,7 @@
     "component-selector": [
       true,
       "element",
-      "app",
-      "kebab-case"
+      "app"
     ],
     "trailing-comma": false,
     "no-output-on-prefix": true,

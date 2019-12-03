@@ -12,7 +12,7 @@ describe('ImportComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ImportComponent],
-      imports: [RouterTestingModule, NgbModule.forRoot(), FormsModule ]
+      imports: [RouterTestingModule, NgbModule.forRoot(), FormsModule]
     }).compileComponents();
   }));
 
