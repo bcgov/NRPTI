@@ -10,7 +10,7 @@ describe('DateInputComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [DateInputComponent],
-      imports: [NgbModule, FormsModule],
+      imports: [NgbModule.forRoot(), FormsModule],
       providers: [NgbCalendar, NgbDateParserFormatter]
     }).compileComponents();
   }));
