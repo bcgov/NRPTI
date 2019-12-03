@@ -30,14 +30,9 @@
     </div>
 
     <div class="input-group m-3">
-      <lib-button-spinner
-        class="filter-btn-search"
-        [btnClick]="startJob"
-        [btnTitle]="'Start Import'"
-        [btnType]="'submit'"
-        [btnText]="'Start Import'"
-      >
-      </lib-button-spinner>
+      <button type="button"
+              class="btn btn-primary"
+              (click)="startJob()" >Start Job</button>
     </div>
   </div>
 </main>
