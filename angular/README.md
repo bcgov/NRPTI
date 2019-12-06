@@ -143,25 +143,16 @@ Recommend installing the [VSCode Prettier extension](https://github.com/prettier
 
 ### Technolgies used
 
-[TSLint](https://palantir.github.io/tslint/), [Prettier](https://prettier.io/), [Stylelint](https://stylelint.io/), [husky](https://www.npmjs.com/package/husky), [lint-staged](https://github.com/okonet/lint-staged)
+[TSLint](https://palantir.github.io/tslint/), [Prettier](https://prettier.io/), [Stylelint](https://stylelint.io/)
 
 ### Configuration files
 
 - TSlint: tslint.json
 - Prettier: .prettierrc .prettierignore
 - Stylelint: .styleintrc
-- Husky: .huskyrc
 - lint-staged: .lintstagedrc
 
-### Pre-Commit Hooks
-
-Package.json has been configured to use `husky` with `lint-staged` to run the `lint` (linting + formatting + auto fix) commands, against the files staged to be committed, whenever you perform a commit. This ensures that all committed code has been linted and formatted correctly.
-
-If the linters or formatters find issues that cannot be automatically fixed, it will throw an error and provide output as to what is wrong. Fix the issues and commit again.
-
 ## Run Linters + Formatters + Auto Fix
-
-_Note: In the worst case scenario, where linting/formatting has been neglected, then these `lint` commands have the potential to create hundreds or thousands of file changes. In this case, it is recommended to only run these commands as part of a separate commit._
 
 _Note: Not all linting/formatting errors can be automatically fixed, and will require human intervention._
 

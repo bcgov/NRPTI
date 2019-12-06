@@ -49,7 +49,7 @@ These 2 linters (tslint, Prettier) do have overlapping rules.  To avoid weird ru
 
 ### Technolgies used
 
-[TSLint](https://palantir.github.io/tslint/), [Prettier](https://prettier.io/), [Stylelint](https://stylelint.io/), [husky](https://www.npmjs.com/package/husky), [lint-staged](https://github.com/okonet/lint-staged)
+[TSLint](https://palantir.github.io/tslint/), [Prettier](https://prettier.io/), [Stylelint](https://stylelint.io/)
 
 ### Configuration files
 
@@ -57,12 +57,6 @@ These 2 linters (tslint, Prettier) do have overlapping rules.  To avoid weird ru
 * Prettier: .prettierrc .prettierignore
 * Husky: package.json
 * lint-staged: package.json
-
-### Pre-Commit Hooks
-
-Package.json has been configured to use `husky`/`lint-staged` to run the `lint-fix` (linting + formatting) commands, against the files staged to be committed, whenever you perform a commit.  This ensures that all committed code has been linted and formatted correctly.
-
-If the linters or formatters find issues that cannot be automatically fixed, it will throw an error and provide output as to what is wrong.  Fix the issues and commit again.
 
 ## Run Linters
 
