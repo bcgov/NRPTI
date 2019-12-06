@@ -15,6 +15,11 @@ tags:
   externalDocs:
     description: "Find out more about our API"
     url: "https://github.com/bcgov/NRPTI.git"
+- name: 'task'
+  description: 'Operations on tasks'
+  externalDocs:
+    description: 'Find out more about our API'
+    url: 'http://github.com/bcgov/nrptiapi.git'
 schemes:
   - http
 securityDefinitions:
@@ -71,6 +76,21 @@ definitions:
     # TODO: Fix enums
     enum: &searchFields
       - name
+
+ ### Task Definitions
+  TaskObject:
+    type: object
+    example: "A task object"
+    properties:
+      orders:
+        type: boolean
+        example: "true"
+      inspections:
+        type: boolean
+        example: "true"
+      dataSource:
+        type: string
+        example: "epic"
 
 ### Common Definitions
   Token:
@@ -188,3 +208,45 @@ paths:
           description: "Access Denied"
           schema:
             $ref: "#/definitions/Error"
+  ###
+  ### Task Routes
+  ###
+  /task:
+    x-swagger-router-controller: import-task
+    options:
+      tags:
+        - task
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated task route'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - task
+      summary: 'Create a new Task'
+      operationId: protectedPost
+      description: 'Authenticated access to create a Task Worker'
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+      parameters:
+        - name: task
+          in: body
+          description: 'Flag to import records'
+          required: true
+          schema:
+            $ref: "#/definitions/TaskObject"
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'

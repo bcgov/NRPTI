@@ -9,8 +9,9 @@
             totalItems: data.totalListItems
           }
   "
+  (click)="onItemClicked(item)"
 >
-  <td data-label="Select" (click)="selectItem(item)" scope="row" class="col-1">
+  <td data-label="Select" (click)="onItemSelected(item); $event.stopPropagation()" scope="row" class="col-1">
     <input type="checkbox" aria-label="Checkbox for row item" [(ngModel)]="item.checkbox" />
   </td>
   <td scope="row" data-label="Name" class="col-6">{{ item.name || '-' }}</td>

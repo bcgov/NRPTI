@@ -28,7 +28,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   // public entries: User[] = null;
   // public terms = new SearchTerms();
   public typeFilters = [];
-  public selectedCount = 0;
   public navigationObject;
 
   public tableData: TableObject = new TableObject({ component: RecordsTableRowsComponent });
@@ -77,12 +76,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
       if (res) {
-        console.log('RES', res);
-        // this.tableData.items = res.records[0].data.searchResults;
+        this.tableData.items = res.records[0].data.searchResults;
 
-        // MOCK
-        this.tableData.items = [{ name: 'foo', prop: 'yay' }];
-        this.tableData.totalListItems = 1; // CHANGEME
+        this.tableData.totalListItems = res.records[0].data.meta[0].searchResultsTotal;
 
         this.tableData.columns = this.tableColumns;
         this.loading = false;
@@ -93,6 +89,17 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         this.router.navigate(['/search']);
       }
     });
+  }
+
+  setColumnSort(event) {
+    console.log('event', event);
+  }
+
+  itemClicked(item) {
+    console.log('itemClickedxxx', item);
+  }
+  itemSelected(item) {
+    console.log('itemSelectedxxx', item);
   }
 
   /**

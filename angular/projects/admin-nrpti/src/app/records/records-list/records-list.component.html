@@ -19,7 +19,7 @@
   <br />
 
   <div *ngIf="!loading && tableData.totalListItems === 0">
-    No Participating Indigenous Nations found.
+    No Records found.
   </div>
 
   <lib-table-template
@@ -27,7 +27,8 @@
     (checkboxChange)="checkChange($event)"
     [data]="tableData"
     (columnSort)="setColumnSort($event)"
-    (selectedRow)="updateSelectedRow($event)"
+    (itemClicked)="itemClicked($event)"
+    (itemSelected)="itemSelected($event)"
     (pageNumUpdate)="onSubmit($event, null, null)"
   >
   </lib-table-template>
