@@ -248,91 +248,6 @@ var searchCollection = async function (roles, keywords, collection, pageNum, pag
 
   console.log('collation:', collation);
 
-  if (collection === 'Document') {
-    // Allow documents to be sorted by status based on publish existence
-    aggregation.push(
-      {
-        $addFields: {
-          "status": {
-            $cond: {
-              if: {
-                // This way, if read isn't present, we assume public no roles array.
-                $and: [
-                  { $cond: { if: "$read", then: true, else: false } },
-                  {
-                    $anyElementTrue: {
-                      $map: {
-                        input: "$read",
-                        as: "fieldTag",
-                        in: { $setIsSubset: [["$$fieldTag"], ['public']] }
-                      }
-                    }
-                  }
-                ]
-              },
-              then: 'published',
-              else: 'unpublished'
-            }
-          }
-        }
-      }
-    );
-  }
-
-  if (collection === 'Project') {
-    // pop proponent if exists.
-    aggregation.push(
-      {
-        '$lookup': {
-          "from": "epic",
-          "localField": "proponent",
-          "foreignField": "_id",
-          "as": "proponent"
-        }
-      });
-    aggregation.push(
-      {
-        "$unwind": "$proponent"
-      },
-    );
-  }
-
-  if (collection === 'Group') {
-    // pop project and user if exists.
-    aggregation.push(
-      {
-        '$lookup': {
-          "from": "epic",
-          "localField": "project",
-          "foreignField": "_id",
-          "as": "project"
-        }
-      });
-    aggregation.push(
-      {
-        "$unwind": "$project"
-      },
-    );
-  }
-
-  if (collection === 'User') {
-    // pop proponent if exists.
-    aggregation.push(
-      {
-        '$lookup': {
-          "from": "epic",
-          "localField": "org",
-          "foreignField": "_id",
-          "as": "org"
-        }
-      });
-    aggregation.push(
-      {
-        "$unwind": "$org"
-      },
-    );
-  }
-
   console.log('populate:', populate);
   if (populate === true && collection !== 'Project') {
     aggregation.push({
@@ -354,80 +269,6 @@ var searchCollection = async function (roles, keywords, collection, pageNum, pag
         "preserveNullAndEmptyArrays": true
       }
     });
-  }
-
-  if (populate === true && collection === 'Inspection') {
-    // pop elements and their items.
-    aggregation.push(
-      {
-        '$lookup': {
-          "from": "epic",
-          "localField": "elements",
-          "foreignField": "_id",
-          "as": "elements"
-        }
-      }
-    );
-  } else if (populate === true && collection === 'InspectionElement') {
-    aggregation.push(
-      {
-        '$lookup': {
-          "from": "epic",
-          "localField": "items",
-          "foreignField": "_id",
-          "as": "items"
-        }
-      }
-    );
-  }
-
-  if (populate === true && collection === 'NotificationProject') {
-    aggregation.push(
-      {
-        $lookup: {
-          from: 'epic',
-          as: 'documents',
-          let: { project: "$_id", schema: 'Document' },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ['$project', '$$project'] },
-                    { $eq: ['$_schemaName', 'Document'] }
-                  ]
-                }
-              }
-            },
-            {
-              $redact: {
-                $cond: {
-                  if: {
-                    // This way, if read isn't present, we assume public no roles array.
-                    $and: [
-                      { $cond: { if: "$read", then: true, else: false } },
-                      {
-                        $anyElementTrue: {
-                          $map: {
-                            input: "$read",
-                            as: "fieldTag",
-                            in: { $setIsSubset: [["$$fieldTag"], ['public']] }
-                          }
-                        }
-                      }
-                    ]
-                  },
-                  then: "$$KEEP",
-                  else: {
-                    $cond: { if: "$read", then: "$$PRUNE", else: "$$DESCEND" }
-                  }
-                }
-              }
-            }
-          ]
-        }
-      }
-    );
   }
 
   aggregation.push({
@@ -472,6 +313,8 @@ var searchCollection = async function (roles, keywords, collection, pageNum, pag
       ]
     }
   })
+
+  console.log("collection:", collection);
 
   return new Promise(function (resolve, reject) {
     var collectionObj = mongoose.model(collection);

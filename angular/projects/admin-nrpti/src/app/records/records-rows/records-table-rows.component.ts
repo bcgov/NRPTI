@@ -1,7 +1,6 @@
-import { Component, Input, OnInit, EventEmitter, Output, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 
 import { TableObject } from 'nrpti-angular-components';
-import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -11,32 +10,30 @@ import { Subject } from 'rxjs';
 })
 export class RecordsTableRowsComponent implements OnInit, OnDestroy {
   @Input() data: TableObject;
-  @Output() selectedCount: EventEmitter<any> = new EventEmitter();
+  @Output() itemClicked: EventEmitter<any> = new EventEmitter();
+  @Output() itemSelected: EventEmitter<any> = new EventEmitter();
 
   public dropdownItems = ['Edit', 'Delete'];
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private router: Router) {}
+  constructor() {}
 
   async ngOnInit() {}
 
   goToItem(activity) {
-    // console.log('activity:', activity);
-    this.router.navigate(['/project-pins', activity._id, 'edit']);
+    console.log('activity:', activity);
+    // this.router.navigate(['/project-pins', activity._id, 'edit']);
   }
 
-  selectItem(item) {
-    console.log('selecting item:', item);
-    // item.checkbox = !item.checkbox;
+  onItemClicked(item) {
+    console.log('itemClicked:', item);
+    this.itemClicked.emit(item);
+  }
 
-    // let count = 0;
-    // this.contacts.map(row => {
-    //   if (row.checkbox === true) {
-    //     count++;
-    //   }
-    // });
-    // this.selectedCount.emit(count);
+  onItemSelected(item) {
+    console.log('itemSelected?:', item);
+    this.itemSelected.emit(item);
   }
 
   ngOnDestroy() {
