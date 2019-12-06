@@ -1,0 +1,18 @@
+<tr
+  *ngFor="
+    let item of data.items
+      | paginate
+        : {
+            id: 'table-template-pagination',
+            itemsPerPage: data.pageSize,
+            currentPage: data.currentPage,
+            totalItems: data.totalListItems
+          }
+  "
+>
+  <td data-label="Select" (click)="selectItem(item)" scope="row" class="col-1">
+    <input type="checkbox" aria-label="Checkbox for row item" [(ngModel)]="item.checkbox" />
+  </td>
+  <td scope="row" data-label="Name" class="col-6">{{ item.name || '-' }}</td>
+  <td scope="row" data-label="Prop" class="col-5">{{ item.prop || '-' }}</td>
+</tr>

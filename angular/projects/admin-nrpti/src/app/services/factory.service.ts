@@ -2,9 +2,11 @@ import { Injectable, Injector } from '@angular/core';
 import { KeycloakService } from './keycloak.service';
 import { RecordService } from './record.service';
 import { JwtUtil } from '../utils/jwt-utils';
-import { Observable, of } from 'rxjs';
-import { Record } from '../models/record';
+import { Observable } from 'rxjs';
+// import { Record } from '../models/record';
 import { ApiService } from './api.service';
+import { SearchService } from './search.service';
+import { SearchResults } from '../models/search';
 
 /**
  * Facade service for all admin-nrpti services.
@@ -19,8 +21,17 @@ export class FactoryService {
   private _keycloakService: KeycloakService;
   private _recordService: RecordService;
   private _apiService: ApiService;
+  private _searchService: SearchService;
+  // private _pathAPI: string;
 
-  constructor(private injector: Injector) {}
+  constructor(private injector: Injector) {
+    // The following items are loaded by a file that is only present on cluster builds.
+    // Locally, this will be empty and local defaults will be used.
+    // const remote_api_path = window.localStorage.getItem('from_admin_server--remote_api_path');
+    // // const remote_public_path = window.localStorage.getItem('from_admin_server--remote_public_path');  // available in case its ever needed
+    // const deployment_env = window.localStorage.getItem('from_admin_server--deployment_env');
+    // this._pathAPI = 'http://localhost:3000/api/public';
+  }
 
   /**
    * Inject keycloak service if it hasn't already been injected.
@@ -49,6 +60,20 @@ export class FactoryService {
       this._recordService = this.injector.get(RecordService);
     }
     return this._recordService;
+  }
+
+  /**
+   * Inject record service if it hasn't already been injected.
+   *
+   * @readonly
+   * @type {SearchService}
+   * @memberof FactoryService
+   */
+  public get searchService(): SearchService {
+    if (!this._searchService) {
+      this._searchService = this.injector.get(SearchService);
+    }
+    return this._searchService;
   }
 
   /**
@@ -125,19 +150,13 @@ export class FactoryService {
    * @returns {Observable<Record>} An observable that emits the matching record or null if none found.
    * @memberof FactoryService
    */
-  public getRecord(recordId: string): Observable<Record> {
-    return this.recordService.getbyId({ _id: recordId });
+  public getRecord(recordId: string, schema: string): Observable<SearchResults[]> {
+    return this.searchService.getItem(recordId, schema);
   }
 
-  // TODO: This is just a dummy function to satisfy the current list page.
-  public getAll(...args: any): Observable<Record[]> {
-    return of([]);
-  }
-
-  // TODO: This is just a dummy function to satisfy the current list page.
-  public getCount(...args: any): Observable<number> {
-    return of(0);
-  }
+  // public getFullList(schema: string): Observable<Record[]> {
+  //   return this.searchService.getFullList(schema);
+  // }
 
   /**
    * Get the current environment.

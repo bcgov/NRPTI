@@ -123,6 +123,7 @@ export class KeycloakService {
    * @memberof KeycloakService
    */
   getToken(): string {
+    console.log('token:', this.keycloakAuth.token);
     return this.keycloakAuth.token;
   }
 
