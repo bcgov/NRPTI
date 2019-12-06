@@ -57,7 +57,7 @@ swaggerTools.initializeMiddleware(swaggerConfig, function(middleware) {
   app.use(middleware.swaggerSecurity(swaggerSecurityConfig));
 
   const swaggerRouterConfig = {
-    controllers: './src/controllers',
+    controllers: ['./src/controllers', './src/tasks'],
     useStubs: false
   };
 
