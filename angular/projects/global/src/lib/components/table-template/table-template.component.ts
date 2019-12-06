@@ -26,7 +26,7 @@ export class TableTemplateComponent implements OnInit, OnChanges, OnDestroy {
 
   @Output() pageNumUpdate: EventEmitter<any> = new EventEmitter();
   @Output() itemClicked: EventEmitter<any> = new EventEmitter();
-  @Output() selectedRow: EventEmitter<any> = new EventEmitter();
+  @Output() itemSelected: EventEmitter<any> = new EventEmitter();
   @Output() columnSort: EventEmitter<any> = new EventEmitter();
 
   interval: any;
@@ -68,9 +68,9 @@ export class TableTemplateComponent implements OnInit, OnChanges, OnDestroy {
     (componentRef.instance as ITableComponent).data = this.data;
 
     // Don't subscribe if it doesn't exist.
-    if (componentRef.instance.selectedCount) {
-      componentRef.instance.selectedCount.subscribe(msg => {
-        this.selectedRow.emit(msg);
+    if (componentRef.instance.itemSelected) {
+      componentRef.instance.itemSelected.subscribe(msg => {
+        this.itemSelected.emit(msg);
       });
     }
 
