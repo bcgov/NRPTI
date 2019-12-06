@@ -29,80 +29,14 @@ exports.protectedOptions = function(args, res, next) {
  * @param {*} next
  * @returns
  */
-exports.protectedHead = function(args, res, next) {
-  defaultLog.info(
-    'args.swagger.operation.x-security-scopes:',
-    JSON.stringify(args.swagger.operation['x-security-scopes'])
-  );
-
-  // Build match query if on recordId route
-  let query = {};
-
-  // Add in the default fields to the projection so that the incoming query will work for any selected fields.
-  allowedFields.push('_id');
-  allowedFields.push('tags');
-
-  if (args.swagger.params.recordId) {
-    query = queryUtils.buildQuery('_id', args.swagger.params.recordId.value, query);
-  } else {
-    try {
-      query = addStandardQueryFilters(query, args);
-    } catch (error) {
-      return queryActions.sendResponse(res, 400, { error: error.message });
-    }
-  }
-
-  // Unless they specifically ask for it, hide deleted results.
-  if (args.swagger.params.isDeleted && args.swagger.params.isDeleted.value !== undefined) {
-    query = { ...query, ...{ isDeleted: args.swagger.params.isDeleted.value } };
-  } else {
-    query = { ...query, ...{ isDeleted: false } };
-  }
-
-  queryUtils
-    .runDataQuery(
-      'Record',
-      args.swagger.operation['x-security-scopes'],
-      query,
-      allowedFields, // Fields
-      null, // sort warmup
-      null, // sort
-      null, // skip
-      1000000, // limit
-      true
-    ) // count
-    .then(function(data) {
-      if (!(args.swagger.params.recordId && args.swagger.params.recordId.value) || (data && data.length > 0)) {
-        res.setHeader('x-total-count', data && data.length > 0 ? data[0].total_items : 0);
-        return queryActions.sendResponse(res, 200, data);
-      } else {
-        return queryActions.sendResponse(res, 404, data);
-      }
-    })
-    .catch(function(err) {
-      defaultLog.error('record protectedHead runDataQuery:', err);
-      return queryActions.sendResponse(res, 400, err);
-    });
-};
-
-/**
- * TODO: populate this documentation
- *
- * @param {*} args
- * @param {*} res
- * @param {*} next
- * @returns
- */
 exports.protectedGet = function(args, res, next) {
   let query = {};
   let sort = {};
   let skip = null;
   let limit = null;
+  let scopes = args.swagger.params.auth_payload.realm_access.roles;
 
-  defaultLog.info(
-    'args.swagger.operation.x-security-scopes:',
-    JSON.stringify(args.swagger.operation['x-security-scopes'])
-  );
+  defaultLog.info('scopes:',scopes);
 
   // Build match query if on recordId route
   if (args.swagger.params.recordId) {
@@ -140,9 +74,9 @@ exports.protectedGet = function(args, res, next) {
   queryUtils
     .runDataQuery(
       'Record',
-      args.swagger.operation['x-security-scopes'],
+      scopes,
       query,
-      queryUtils.getSanitizedFields(allowedFields, args.swagger.params.fields.value), // Fields
+      '',
       null, // sort warmup
       sort, // sort
       skip, // skip

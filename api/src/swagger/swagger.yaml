@@ -9,17 +9,12 @@ tags:
   description: "Search operations"
   externalDocs:
     description: "Find out more about our API"
-    url: "http://github.com/bcgov/nrpti/api.git"
+    url: "https://github.com/bcgov/NRPTI.git"
 - name: "record"
   description: "Operations on Record objects"
   externalDocs:
     description: "Find out more about our API"
-    url: "http://github.com/bcgov/nrpti/api.git"
-- name: "document"
-  description: "Operations on Document objects"
-  externalDocs:
-    description: "Find out more about our API"
-    url: "http://github.com/bcgov/nrptiapi.git"
+    url: "https://github.com/bcgov/NRPTI.git"
 schemes:
   - http
 securityDefinitions:
@@ -41,46 +36,30 @@ produces:
   - application/json
 
 definitions:
-### Record Definitions
-  Record:
+### Search Definitions
+  SearchObject:
     type: object
     properties:
-      _id:
+      keywords:
         type: string
-        example: "5be3605e21ad2500237d5e0f"
-      _createdBy:
-        type: string
-        example: "idir\/username"
-      createdDate:
-        type: string
-        example: "2018-03-23 20:12:31.000Z"
-      description:
-        type: string
-        example: "A description of this record."
-      publishDate:
-        type: string
-        example: "2018-11-07T21:59:58.000Z"
-      type:
-        type: string
-        example: "LICENCE"
-      isDeleted:
-        type: boolean
-        example: false
-      read:
-        type: string
-        example: ["sysadmin", "public"]
-  RecordFields:
+        example: "Project Name"
+  SearchSortByFields:
     type: string
-    description: "Optional Record fields to return"
-    example: "agency|areaHectares|etc"
-    enum: &RecordFields
-      - _createdBy
-      - createdDate
-      - description
-      - publishDate
-      - type
-      - isDeleted
-      - tags
+    description: "Optional fields to sort by (prefixed with + or - for order)"
+    example: +score,-score
+    enum: &searchSortByFields
+      - +headline
+      - -headline
+      - +score
+      - -score
+      - +displayName
+      - -displayName
+      - +datePosted
+      - -datePosted
+      - +documentType
+      - -documentType
+      - +documentFileSize
+      - -documentFileSize
 
 ### Search Definitions
   Search:
@@ -92,55 +71,6 @@ definitions:
     # TODO: Fix enums
     enum: &searchFields
       - name
-
-### Document Definitions
-  Document:
-    type: object
-    properties:
-      _id:
-        type: string
-        example: "5ab560ea91b5ea001975f3dc"
-      _record:
-        type: string
-        example: "5be3605e21ad2500237d5e0f"
-      _addedBy:
-        type: string
-        example: "5ab3cd64999d65001916febb"
-      documentFileName:
-        type: string
-        example: "6406200_Referral_Maps.PDF"
-      displayName:
-        type: string
-        example: "6406200_Referral_Maps.PDF"
-      internalURL:
-        type: string
-        example: "./uploads/6383043941972836352.pdf"
-      internalMime:
-        type: string
-        example: "application/pdf"
-      passedAVCheck:
-        type: boolean
-        example: true
-      isDeleted:
-        type: boolean
-        example: false
-      read:
-        type: string
-        example: ["sysadmin", "public"]
-  DocumentFields:
-    type: string
-    description: "Optional Document fields to return"
-    example: "displayName|documentFileName|etc"
-    enum: &documentFields
-      - _record
-      - _addedBy
-      - documentFileName
-      - displayName
-      - internalURL
-      - internalMime
-      - passedAVCheck
-      - isDeleted
-      - tags
 
 ### Common Definitions
   Token:
@@ -156,1005 +86,104 @@ definitions:
         type: string
 
 paths:
-###
-### Record Routes
-###
-  /record:
-    x-swagger-router-controller: record-controller
+  /search:
+    x-swagger-router-controller: search
     options:
       tags:
-        - record
+        - search
       summary: "Pre-flight request"
       operationId: protectedOptions
-      description: "Options on authenticated Record route"
+      description: "Options on search Route"
       responses:
         "200":
           description: "Success"
           schema:
-            $ref: "#/definitions/Record"
+            $ref: "#/definitions/SearchObject"
         "403":
           description: "Access Denied"
           schema:
             $ref: "#/definitions/Error"
     get:
       tags:
-        - record
-      summary: "Get a list of Records"
+        - search
+      summary: "Get a list of things related to these keywords"
       operationId: protectedGet
-      description: "Authenticated access to retrieve Record objects"
+      description: "Retreiving items relating to the given keywords."
       security:
         - Bearer: []
       x-security-scopes:
         - sysadmin
       parameters:
         - in: query
-          name: fields
-          description: "Record fields to return"
+          name: _id
+          description: "Grab (via _id) specific document"
+          type: string
           required: false
-          type: array
+          items:
+            type: string
+        - in: query
+          name: keywords
+          description: "Full Text Search based on keywords"
+          type: string
+          required: false
           collectionFormat: pipes
           items:
             type: string
-            enum: *RecordFields
         - in: query
-          name: isDeleted
+          name: populate
+          description: "Populate Project object ID"
           type: boolean
           required: false
-          description: "Whether to return deleted Records"
+        - in: query
+          name: dataset
+          description: "Dataset to search on"
+          type: string
+          required: false
+        - in: query
+          name: _schemaName
+          description: "Schema to search on"
+          type: string
+          required: false
+        - in: query
+          name: project
+          description: "Project to specifically query"
+          type: string
+          required: false
         - in: query
           name: pageNum
+          description: "Page number to skip to."
           type: number
           required: false
-          description: "Page Number (default: 0)"
         - in: query
           name: pageSize
+          description: "# Records to limit"
           type: number
           required: false
-          description: "Number of results per page (if 'pageNum' is specified; default: 100)"
-        - in: query
-          name: type
-          type: string
-          required: false
-          description: "Type that Records must match"
-        - in: query
-          name: publishDate
-          collectionFormat: multi
-          type: string
-          format: date-time
-          required: false
-          description: "Publish Date(s) that Records must match"
-        - in: query
-          name: statusHistoryEffectiveDate
-          type: string
-          format: date-time
-          required: false
-          description: "Status History Effective Date that Records must compare to"
         - in: query
           name: sortBy
-          type: string
-          required: false
-          description: "Record field to sort by"
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Record"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    post:
-      tags:
-        - record
-      summary: "Create a new Record"
-      operationId: protectedPost
-      description: "Authenticated access to create an Record object"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-      parameters:
-        - name: app
-          in: body
-          required: true
-          description: "Data for Record to create"
-          schema:
-            type: object
-            properties:
-              _id:
-                type: string
-                example: "54759eb3c090d83494e2d804"
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Record"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-  /record/{recordId}:
-    x-swagger-router-controller: record-controller
-    options:
-      tags:
-        - record
-      summary: "Pre-flight request"
-      operationId: protectedOptions
-      description: "Options on authenticated Record 'get' route"
-      parameters:
-        - name: recordId
-          in: path
-          description: "ID of Record to get"
-          required: true
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Record"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    get:
-      tags:
-        - record
-      summary: "Get an Record"
-      operationId: protectedGet
-      description: "Authenticated access to retrieve the specified Record object"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-      parameters:
-        - name: recordId
-          in: path
-          description: "ID of Record to get"
-          required: true
-          type: string
-        - in: query
-          name: fields
-          description: "Record fields to return"
+          description: "Fields to sort by."
           required: false
           type: array
-          collectionFormat: pipes
           items:
             type: string
-            enum: *RecordFields
+            enum: *searchSortByFields
         - in: query
-          name: isDeleted
-          type: boolean
-          required: false
-          description: "Whether to return a deleted Record"
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Record"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    put:
-      tags:
-        - record
-      summary: "Update an Record"
-      operationId: protectedPut
-      description: "Authenticated access to update the specified Record object"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-      parameters:
-        - name: recordId
-          in: path
-          description: "ID of Record to update"
-          required: true
-          type: string
-        - name: AppObject
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/Record"
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Record"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    delete:
-      tags:
-        - record
-      summary: "Delete an Record"
-      operationId: protectedDelete
-      description: "Authenticated access to delete the specified Record object"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-      parameters:
-        - name: recordId
-          in: path
-          description: "ID of Record to delete"
-          required: true
-          type: string
-        - name: AppObject
-          in: body
-          required: true
-          schema:
-            $ref: "#/definitions/Record"
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Record"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-  /record/{recordId}/publish:
-    x-swagger-router-controller: record-controller
-    options:
-      tags:
-        - record
-      summary: "Pre-flight request"
-      operationId: protectedOptions
-      description: "Options on authenticated Record 'publish' route"
-      parameters:
-        - name: recordId
-          in: path
-          description: "ID of Record to publish"
-          required: true
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Record"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    put:
-      tags:
-        - record
-      summary: "Publish an Record"
-      operationId: protectedPublish
-      description: "Authenticated access to add the singular instance of the 'public' role to the specified Record"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-      parameters:
-        - name: recordId
-          in: path
-          description: "ID of Record to publish"
-          required: true
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Record"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-  /record/{recordId}/unpublish:
-    x-swagger-router-controller: record-controller
-    options:
-      tags:
-        - record
-      summary: "Pre-flight request"
-      operationId: protectedOptions
-      description: "Options on authenticated Record 'unpublish' route"
-      parameters:
-        - name: recordId
-          in: path
-          description: "ID of Record to unpublish"
-          required: true
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Record"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    put:
-      tags:
-        - record
-      summary: "Unpublish an Record"
-      operationId: protectedUnPublish
-      description: "Authenticated access to remove the singular instance of the 'public' role from the specified Record"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-      parameters:
-        - name: recordId
-          in: path
-          description: "ID of Record to unpublish"
-          required: true
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Record"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-  /public/record:
-    x-swagger-router-controller: record-controller
-    options:
-      tags:
-        - record
-      summary: "Pre-flight request"
-      operationId: protectedOptions
-      description: "Options on Record route"
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Record"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    get:
-      tags:
-        - record
-      summary: "Get a list of Records"
-      operationId: publicGet
-      description: "Retrieve Record objects"
-      parameters:
-        - in: query
-          name: fields
-          description: "Record fields to return"
-          required: false
-          type: array
-          collectionFormat: pipes
-          items:
-            type: string
-            enum: *RecordFields
-        - in: query
-          name: pageNum
-          type: number
-          required: false
-          description: "Page Number (default: 0)"
-        - in: query
-          name: pageSize
-          type: number
-          required: false
-          description: "Number of results per page (if 'pageNum' is specified; default: 100)"
-        - in: query
-          name: type
-          type: string
-          required: false
-          description: "Type that Records must match"
-        - in: query
-          name: publishDate
+          name: and
           collectionFormat: multi
           required: false
-          description: "Publish Date(s) that Records must match"
-          type: string
-          format: date-time
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Record"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-  /public/record/{recordId}:
-    x-swagger-router-controller: record-controller
-    options:
-      tags:
-        - record
-      summary: "Pre-flight request"
-      operationId: protectedOptions
-      description: "Options on Record 'get' route"
-      parameters:
-        - name: recordId
-          in: path
-          description: "ID of Record to get"
-          required: true
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Record"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    get:
-      tags:
-        - record
-      summary: "Get an Record"
-      operationId: publicGet
-      description: "Retrieve the specified Record object"
-      parameters:
-        - name: recordId
-          in: path
-          description: "ID of Record to get"
-          required: true
+          description: "Query: multiple parameter instances are supported using AND."
           type: string
         - in: query
-          name: fields
-          description: "Record fields to return"
+          name: or
+          collectionFormat: multi
           required: false
-          type: array
-          collectionFormat: pipes
-          items:
-            type: string
-            enum: *RecordFields
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Record"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-
-###
-### Document Routes
-###
-  /document:
-    x-swagger-router-controller: document-controller
-    options:
-      tags:
-        - document
-      summary: "Pre-flight request"
-      operationId: protectedOptions
-      description: "Options on authenticated Document route"
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    post:
-      tags:
-        - document
-      summary: "Upload a new Document"
-      operationId: protectedPost
-      description: "Authenticated access to create a Document object"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-      consumes:
-        - multipart/form-data
-      parameters:
-        - name: upfile
-          in: formData
-          description: "The file to upload"
-          required: true
-          type: file
-        - name: _record
-          in: formData
-          description: "The Record this Document relates to"
-          required: false
-          type: string
-        - name: displayName
-          in: formData
-          description: "The Display Name of the file"
-          required: false
+          description: "Query: multiple parameter instances are supported using OR."
           type: string
       responses:
         "200":
           description: "Success"
           schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    get:
-      tags:
-        - document
-      summary: "Get a list of Documents"
-      operationId: protectedGet
-      description: "Authenticated access to retrieve Document objects"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-      parameters:
-        - in: query
-          name: _record
-          description: "Record ID(s) that Documents must relate to"
-          type: array
-          required: false
-          collectionFormat: pipes
-          items:
-            type: string
-        - in: query
-          name: fields
-          description: "Document fields to return"
-          required: false
-          type: array
-          collectionFormat: pipes
-          items:
-            type: string
-            enum: *documentFields
-        - in: query
-          name: isDeleted
-          type: boolean
-          required: false
-          description: "Whether to return deleted Documents"
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-  /document/{docId}:
-    x-swagger-router-controller: document-controller
-    options:
-      tags:
-        - document
-      summary: "Pre-flight request"
-      operationId: protectedOptions
-      description: "Options on authenticated Document 'get' route"
-      parameters:
-        - name: docId
-          in: path
-          description: "ID of Document to get"
-          required: true
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    get:
-      tags:
-        - document
-      summary: "Get a Document"
-      operationId: protectedGet
-      description: "Authenticated access to retrieve the specified Document object"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-      parameters:
-        - name: docId
-          in: path
-          description: "ID of Document to get"
-          required: true
-          type: string
-        - in: query
-          name: fields
-          description: "Document fields to return"
-          required: false
-          type: array
-          collectionFormat: pipes
-          items:
-            type: string
-            enum: *documentFields
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    put:
-      tags:
-        - document
-      summary: "Update a Document"
-      operationId: protectedPut
-      description: "Authenticated access to update the specified Document object"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-      consumes:
-        - multipart/form-data
-      parameters:
-        - name: docId
-          in: path
-          description: "ID of Document to update"
-          required: true
-          type: string
-        - name: upfile
-          in: formData
-          description: "The file to upload"
-          required: true
-          type: file
-        - name: _record
-          in: formData
-          description: "The Record this Document relates to"
-          required: false
-          type: string
-        - name: displayName
-          in: formData
-          description: "The Display Name of the file"
-          required: false
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    delete:
-      tags:
-        - document
-      summary: "Delete a Document"
-      operationId: protectedDelete
-      description: "Authenticated access to delete the specified Document object"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-      consumes:
-        - application/json
-      parameters:
-        - name: docId
-          in: path
-          description: "ID of Document to delete"
-          required: true
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-  /document/{docId}/publish:
-    x-swagger-router-controller: document-controller
-    options:
-      tags:
-        - document
-      summary: "Pre-flight request"
-      operationId: protectedOptions
-      description: "Options on authenticated Document 'publish' route"
-      parameters:
-        - name: docId
-          in: path
-          description: "ID of Document to publish"
-          required: true
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    put:
-      tags:
-        - document
-      summary: "Publish a Document"
-      operationId: protectedPublish
-      description: "Authenticated access to add the singular instance of the 'public' role to the specified Document"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-      parameters:
-        - name: docId
-          in: path
-          description: "ID of Document to publish"
-          required: true
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-  /document/{docId}/unpublish:
-    x-swagger-router-controller: document-controller
-    options:
-      tags:
-        - document
-      summary: "Pre-flight request"
-      operationId: protectedOptions
-      description: "Options on authenticated Document 'unpublish' route"
-      parameters:
-        - name: docId
-          in: path
-          description: "ID of Document to unpublish"
-          required: true
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    put:
-      tags:
-        - document
-      summary: "Unpublish a Document"
-      operationId: protectedUnPublish
-      description: "Authenticated access to remove the singular instance of the 'public' role from the specified Document"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-      parameters:
-        - name: docId
-          in: path
-          description: "ID of Document to unpublish"
-          required: true
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-  /document/{docId}/download:
-    x-swagger-router-controller: document-controller
-    options:
-      tags:
-        - document
-      summary: "Pre-flight request"
-      operationId: protectedOptions
-      description: "Options on authenticated Document 'download' route"
-      parameters:
-        - name: docId
-          in: path
-          description: "ID of Document to download"
-          required: true
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    get:
-      tags:
-        - document
-      summary: "Download a Document"
-      operationId: protectedDownload
-      description: "Authenticated access to download the specified Document's binary"
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-        - user
-      parameters:
-        - name: docId
-          in: path
-          description: "ID of Document to download"
-          required: true
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-  /public/document:
-    x-swagger-router-controller: document-controller
-    options:
-      tags:
-        - document
-      summary: "Pre-flight request"
-      operationId: protectedOptions
-      description: "Options on Document route"
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    post:
-      tags:
-        - document
-      summary: "Upload a new Document"
-      operationId: publicPost
-      description: "Create a Document object"
-      consumes:
-        - multipart/form-data
-      parameters:
-        - name: upfile
-          in: formData
-          description: "The file to upload"
-          required: true
-          type: file
-        - name: _record
-          in: formData
-          description: "The Record this Document relates to"
-          required: false
-          type: string
-        - name: displayName
-          in: formData
-          description: "The Display Name of the file"
-          required: false
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    get:
-      tags:
-        - document
-      summary: "Get a list of Documents"
-      operationId: publicGet
-      description: "Retrieve Document objects"
-      parameters:
-        - in: query
-          name: _record
-          description: "Record ID(s) that Documents must relate to"
-          type: array
-          required: false
-          collectionFormat: pipes
-          items:
-            type: string
-        - in: query
-          name: fields
-          description: "Document fields to return"
-          required: false
-          type: array
-          collectionFormat: pipes
-          items:
-            type: string
-            enum: *documentFields
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-  /public/document/{docId}:
-    x-swagger-router-controller: document-controller
-    options:
-      tags:
-        - document
-      summary: "Pre-flight request"
-      operationId: protectedOptions
-      description: "Options on Document 'get' route"
-      parameters:
-        - name: docId
-          in: path
-          description: "ID of Document to get"
-          required: true
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    get:
-      tags:
-        - document
-      summary: "Get a Document"
-      operationId: publicGet
-      description: "Retrieve the specified Document object"
-      parameters:
-        - name: docId
-          in: path
-          description: "ID of Document to get"
-          required: true
-          type: string
-        - in: query
-          name: fields
-          description: "Document fields to return"
-          required: false
-          type: array
-          collectionFormat: pipes
-          items:
-            type: string
-            enum: *documentFields
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-  /public/document/{docId}/download:
-    x-swagger-router-controller: document-controller
-    options:
-      tags:
-        - document
-      summary: "Pre-flight request"
-      operationId: protectedOptions
-      description: "Options on Document 'download' route"
-      parameters:
-        - name: docId
-          in: path
-          description: "ID of Document to download"
-          required: true
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
-        "403":
-          description: "Access Denied"
-          schema:
-            $ref: "#/definitions/Error"
-    get:
-      tags:
-        - document
-      summary: "Download a Document"
-      operationId: publicDownload
-      description: "Download the specified Document's binary"
-      parameters:
-        - name: docId
-          in: path
-          description: "ID of Document to download"
-          required: true
-          type: string
-      responses:
-        "200":
-          description: "Success"
-          schema:
-            $ref: "#/definitions/Document"
+            $ref: "#/definitions/SearchObject"
         "403":
           description: "Access Denied"
           schema:

@@ -23,6 +23,7 @@ export interface ITableObjectParams {
   keywords?: string;
   pageSize?: number;
   sortBy?: string;
+  totalListItems?: number;
 }
 export class TableObject {
   public columns: IColumnObject[];
@@ -35,14 +36,7 @@ export class TableObject {
   public pageSize: number;
   public sortBy: string;
   public totalListItems: number;
-  constructor(params: ITableObjectParams) {
-    if (!params) {
-      throw Error('Params are required');
-    }
-    if (!params.component) {
-      throw Error('You must pass in a row component');
-    }
-
+  constructor(params: ITableObjectParams = { component: null }) {
     this.columns = (params && params.columns) || [];
     this.component = params && params.component;
     this.dataset = (params && params.dataset) || DEFAULT_TABLE_DATASET;
@@ -52,6 +46,6 @@ export class TableObject {
     this.keywords = (params && params.keywords) || DEFAULT_TABLE_KEYWORDS;
     this.pageSize = (params.pageSize && params.pageSize) || DEFAULT_TABLE_PAGE_SIZE;
     this.sortBy = (params && params.sortBy) || DEFAULT_TABLE_SORT_BY;
-    this.totalListItems = this.items.length;
+    this.totalListItems = (params && params.totalListItems) || 0;
   }
 }

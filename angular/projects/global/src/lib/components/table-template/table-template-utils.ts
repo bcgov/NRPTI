@@ -13,6 +13,8 @@ import {
 export class TableTemplateUtils {
   constructor(private platformLocation: PlatformLocation, private router: Router) {}
 
+  // Use this to change the query params, causes a window navigate.
+  // Call this when you handle onSubmit()
   public updateUrl(tableObject: TableObject) {
     if (tableObject == null) {
       throw Error('Navigation Object cannot be null.');

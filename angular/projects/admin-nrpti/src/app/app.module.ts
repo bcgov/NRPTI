@@ -36,6 +36,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate-guard.service';
 
 // utils
 import { TokenInterceptor } from './utils/token-interceptor';
+import { RecordsTableRowsComponent } from './records/records-rows/records-table-rows.component';
 
 export function keycloakFactory(keycloakService: KeycloakService) {
   return () => keycloakService.init();
@@ -85,7 +86,7 @@ export function keycloakFactory(keycloakService: KeycloakService) {
     CanActivateGuard,
     CanDeactivateGuard
   ],
-  entryComponents: [ConfirmComponent, HomeComponent, ImportComponent],
+  entryComponents: [ConfirmComponent, HomeComponent, ImportComponent, RecordsTableRowsComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {
