@@ -92,7 +92,7 @@ exports.unPublish = async function(obj) {
  * @param {*} object the response data.
  * @returns {*} res an http response
  */
-exports.sendResponse = function(res, code, object) {
+exports.sendResponse = async function(res, code, object) {
   const httpErrorCode = code || (object && object.code) || 500;
   res.writeHead(httpErrorCode, { 'Content-Type': 'application/json' });
   return res.end(JSON.stringify(object));
