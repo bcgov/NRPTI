@@ -230,7 +230,7 @@ paths:
       tags:
         - task
       summary: 'Create a new Task'
-      operationId: protectedPost
+      operationId: protectedCreateTask
       description: 'Authenticated access to create a Task Worker'
       security:
         - Bearer: []
