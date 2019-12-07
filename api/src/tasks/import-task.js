@@ -105,7 +105,9 @@ let processRecords = async function(records) {
       _schemaName: 'Record',
       documentEPICId: record._id,
       documentType: record.documentType,
-      documentFileName: record.documentFileName
+      documentFileName: record.documentFileName,
+      read: ['sysadmin'],
+      write: ['sysadmin']
     };
     console.log('This is the object', obj);
 
