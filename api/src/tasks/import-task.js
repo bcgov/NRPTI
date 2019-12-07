@@ -4,7 +4,11 @@ var queryActions = require('../utils/query-actions');
 var request = require('request');
 let mongoose = require('mongoose');
 
-exports.protectedPost = async function(args, res, next) {
+exports.protectedOptions = async function(args, res, next) {
+  res.status(200).send();
+}
+
+exports.protectedCreateTask = async function(args, res, next) {
   // Job has come in
   let scopes = args.swagger.params.auth_payload.realm_access.roles;
   defaultLog.info('scopes:', scopes);
