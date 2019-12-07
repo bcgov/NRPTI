@@ -4,6 +4,7 @@ import { ImportComponent } from './import.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ImportComponent', () => {
   let component: ImportComponent;
@@ -12,7 +13,7 @@ describe('ImportComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ImportComponent],
-      imports: [RouterTestingModule, NgbModule.forRoot(), FormsModule]
+      imports: [RouterTestingModule, NgbModule.forRoot(), FormsModule, HttpClientTestingModule]
     }).compileComponents();
   }));
 

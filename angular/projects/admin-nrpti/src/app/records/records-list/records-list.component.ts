@@ -38,13 +38,13 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       nosort: true
     },
     {
-      name: 'Name',
-      value: 'name',
+      name: 'Document File Name',
+      value: 'documentFileName',
       width: 'col-6'
     },
     {
-      name: 'Prop',
-      value: 'prop',
+      name: 'Document Type',
+      value: 'documentType',
       width: 'col-5'
     }
   ];

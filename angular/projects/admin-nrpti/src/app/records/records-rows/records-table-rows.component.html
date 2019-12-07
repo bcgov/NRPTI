@@ -14,6 +14,6 @@
   <td data-label="Select" (click)="onItemSelected(item); $event.stopPropagation()" scope="row" class="col-1">
     <input type="checkbox" aria-label="Checkbox for row item" [(ngModel)]="item.checkbox" />
   </td>
-  <td scope="row" data-label="Name" class="col-6">{{ item.name || '-' }}</td>
-  <td scope="row" data-label="Prop" class="col-5">{{ item.prop || '-' }}</td>
+  <td scope="row" data-label="Name" class="col-6">{{ item.documentFileName || '-' }}</td>
+  <td scope="row" data-label="Prop" class="col-5">{{ item.documentType || '-' }}</td>
 </tr>

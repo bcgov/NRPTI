@@ -107,7 +107,6 @@ export class FactoryService {
    * @memberof FactoryService
    */
   public getToken(): string {
-    console.log(this.keycloakService.getToken());
     return this.keycloakService.getToken();
   }
 

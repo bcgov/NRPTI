@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-import',
@@ -8,12 +10,16 @@ import { Component, OnInit } from '@angular/core';
 export class ImportComponent implements OnInit {
   public dateStart: object = {};
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {}
 
   startJob() {
     console.log('start job');
-    // TODO
+    this.postToApi().subscribe();
+  }
+
+  postToApi(): Observable<any> {
+    return this.http.post<any>('http://localhost:3000/api/task', { dataSource: 'epic' }, {});
   }
 }
