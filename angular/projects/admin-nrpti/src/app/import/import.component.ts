@@ -20,6 +20,6 @@ export class ImportComponent implements OnInit {
   }
 
   postToApi(): Observable<any> {
-    return this.http.post<any>('http://localhost:3000/api/task', { dataSource: 'epic' }, {});
+    return this.http.post<any>('https://nrpti-dev.pathfinder.gov.bc.ca/api/task', { dataSource: 'epic' }, {});
   }
 }
