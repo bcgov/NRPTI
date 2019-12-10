@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { FactoryService } from '../services/factory.service';
 
 @Component({
   selector: 'app-import',
@@ -10,7 +10,7 @@ import { Observable } from 'rxjs/Observable';
 export class ImportComponent implements OnInit {
   public dateStart: object = {};
 
-  constructor(private http: HttpClient) {}
+  constructor(public factoryService: FactoryService) {}
 
   ngOnInit() {}
 
@@ -20,6 +20,6 @@ export class ImportComponent implements OnInit {
   }
 
   postToApi(): Observable<any> {
-    return this.http.post<any>('https://nrpti-dev.pathfinder.gov.bc.ca/api/task', { dataSource: 'epic' }, {});
+    return this.factoryService.startTask({ dataSource: 'epic' });
   }
 }

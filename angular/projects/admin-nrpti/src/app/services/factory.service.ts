@@ -5,8 +5,10 @@ import { JwtUtil } from '../utils/jwt-utils';
 import { Observable } from 'rxjs';
 // import { Record } from '../models/record';
 import { ApiService } from './api.service';
-import { SearchService } from './search.service';
-import { SearchResults } from '../models/search';
+import { SearchService } from '../../../../global/src/lib/services/search.service';
+import { SearchResults } from '../../../../global/src/lib/models/search';
+
+import { HttpClient } from '@angular/common/http';
 
 /**
  * Facade service for all admin-nrpti services.
@@ -24,7 +26,7 @@ export class FactoryService {
   private _searchService: SearchService;
   // private _pathAPI: string;
 
-  constructor(private injector: Injector) {
+  constructor(private injector: Injector, private http: HttpClient) {
     // The following items are loaded by a file that is only present on cluster builds.
     // Locally, this will be empty and local defaults will be used.
     // const remote_api_path = window.localStorage.getItem('from_admin_server--remote_api_path');
@@ -151,7 +153,7 @@ export class FactoryService {
    * @memberof FactoryService
    */
   public getRecord(recordId: string, schema: string): Observable<SearchResults[]> {
-    return this.searchService.getItem(recordId, schema);
+    return this.searchService.getItem('http://localhost:3000/api', recordId, schema);
   }
 
   // public getFullList(schema: string): Observable<Record[]> {
@@ -166,5 +168,10 @@ export class FactoryService {
    */
   public getEnvironment(): string {
     return this.apiService.env;
+  }
+
+  public startTask(obj: any) {
+    // TODO: Convert this to a service
+    return this.http.post<any>('http://localhost:3000/api/task', { dataSource: 'epic' }, {});
   }
 }
