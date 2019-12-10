@@ -5,15 +5,24 @@ import { map } from 'rxjs/operators';
 
 import { SearchResults } from '../models/search';
 
-@Injectable()
+/**
+ * Service to search against NRPTI API.
+ *
+ * @export
+ * @class SearchService
+ */
+// @dynamic
+@Injectable({
+  providedIn: 'root'
+})
 export class SearchService {
   public isError = false;
 
   constructor(private http: HttpClient) {}
 
-  getItem(_id: string, schema: string): Observable<SearchResults[]> {
+  getItem(pathAPI: string, _id: string, schema: string): Observable<SearchResults[]> {
     const queryString = `search?dataset=Item&_id=${_id}&_schemaName=${schema}`;
-    return this.http.get<SearchResults[]>(`${'http://localhost:3000/api'}/${queryString}`, {}).pipe(
+    return this.http.get<SearchResults[]>(`${pathAPI}/${queryString}`, {}).pipe(
       map(res => {
         const allResults = [] as any;
         res.forEach(item => {
@@ -34,6 +43,7 @@ export class SearchService {
   // }
 
   getSearchResults(
+    pathAPI: string,
     keys: string,
     dataset: string,
     fields: any[],
@@ -83,7 +93,7 @@ export class SearchService {
       });
     }
     queryString += `&fields=${this.buildValues(fields)}`;
-    return this.http.get<SearchResults[]>(`${'http://localhost:3000/api'}/${queryString}`, {}).pipe(
+    return this.http.get<SearchResults[]>(`${pathAPI}/${queryString}`, {}).pipe(
       map(res => {
         const allResults = [] as any;
         res.forEach(item => {

@@ -11,6 +11,7 @@ export * from './lib/components/table-template/table-template-utils';
 // services
 export * from './lib/services/export.service';
 export * from './lib/services/store.service';
+export * from './lib/services/search.service';
 
 export * from './lib/global.service';
 export * from './lib/global.component';
