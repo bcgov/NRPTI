@@ -12,9 +12,7 @@ import { SearchResults } from '../models/search';
  * @class SearchService
  */
 // @dynamic
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class SearchService {
   public isError = false;
 
