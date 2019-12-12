@@ -1,6 +1,7 @@
 module.exports = require('../utils/model-schema-generator')('Task', {
   _schemaName: { type: String, default: 'Task' },
   dataSource: { type: String, default: '' },
+  dataSourceLabel: { type: String, default: '' },
   startDate: { type: Date, default: new Date() },
   finishDate: { type: Date, default: null },
   itemTotal: { type: Number, default: 0 },
