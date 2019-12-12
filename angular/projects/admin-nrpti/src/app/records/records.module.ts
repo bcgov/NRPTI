@@ -19,7 +19,6 @@ import { RecordsTableRowsComponent } from './records-rows/records-table-rows.com
 
 // resolvers
 import { RecordsListResolver } from '../records/records-list/records-list-resolver';
-import { SearchService } from '../services/search.service';
 
 @NgModule({
   imports: [
@@ -34,7 +33,7 @@ import { SearchService } from '../services/search.service';
     RecordsRoutingModule
   ],
   declarations: [RecordsListComponent, RecordsAddEditComponent, RecordsTableRowsComponent],
-  providers: [RecordsListResolver, SearchService],
+  providers: [RecordsListResolver],
   exports: []
 })
 export class RecordsModule {}

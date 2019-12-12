@@ -101,9 +101,8 @@ swaggerTools.initializeMiddleware(swaggerConfig, function(middleware) {
 
       defaultLog.info('Loading database models');
 
-      // Load database models
-      require('./src/models/audit');
-      require('./src/models/record');
+      // Load database models (from directory)
+      require('./src/models');
 
       // Start application
       app.listen(3000, '0.0.0.0', function() {
