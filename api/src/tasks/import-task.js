@@ -1,7 +1,7 @@
 'use strict';
 const defaultLog = require('../utils/logger')('task');
 let queryActions = require('../utils/query-actions');
-let request = require('request');
+let axios = require('axios');
 let mongoose = require('mongoose');
 
 exports.protectedOptions = async function(args, res, next) {
@@ -25,7 +25,8 @@ exports.protectedCreateTask = async function(args, res, next) {
   }
 
   let jobDetails = {
-    dataSource: args.swagger.params.task.value.dataSource,
+    dataSource: searchUrl,
+    dataSourceLabel: args.swagger.params.task.value.dataSource,
     startDate: new Date()
   };
   jobDetails = await updateAudit(jobDetails);
@@ -45,8 +46,12 @@ exports.protectedCreateTask = async function(args, res, next) {
   // // an HTTPS GET or a DB call via oracle, or some other thing.
   console.log('Getting records...');
   let records = await getRecords(searchUrl);
-  if (records.length === 0) {
+  if (!records) {
+    // err
+    return await updateAudit({_id: mongoose.Types.ObjectId(jobDetails._id), status: 'Error', finishDate: new Date()});
+  } else if (records.length === 0) {
     console.log('No records found');
+    await updateAudit({_id: mongoose.Types.ObjectId(jobDetails._id), status: 'Completed', finishDate: new Date()});
     return queryActions.sendResponse(res, 200, []);
   } else {
     console.log('Got Records:', records.length);
@@ -58,8 +63,6 @@ exports.protectedCreateTask = async function(args, res, next) {
   await processRecords(records, jobDetails._id);
 
   // emit to rocket.
-  // await updateAudit();
-
   return queryActions.sendResponse(res, 200);
 };
 
@@ -95,30 +98,18 @@ let updateAudit = async function(job) {
     // New
     return TaskRecord.create(job);
   }
-  
-  return Promise.resolve();
 };
 
 let getRecords = async function(searchUrl) {
-  return new Promise(function(resolve, reject) {
-    request({ url: searchUrl }, function(err, res, body) {
-      if (err) {
-        resolve([]);
-      } else if (res.statusCode !== 200) {
-        resolve([]);
-      } else {
-        let obj = {};
-        try {
-          obj = JSON.parse(body);
-          // console.log(obj[0].searchResults);
-          resolve(obj[0].searchResults);
-        } catch (e) {
-          defaultLog.error('Parsing Failed.', e);
-          resolve([]);
-        }
-      }
-    });
-  });
+  try {
+    const response = await axios.get(searchUrl);
+    const data = response.data[0].searchResults;
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 };
 
 let processRecords = async function(records, jobID) {
@@ -151,22 +142,21 @@ let processRecords = async function(records, jobID) {
 
     // Step 4: Update the database with the new record, and optionally the location of the file blob in S3
     console.log('saving record.', record._id);
-    //await saveRecordToNRPTI(obj);
+    await saveRecordToNRPTI(obj);
 
-    await sleep(1000);
+    // await sleep(1000);
 
     // Step 5: Update the audit log, saying we've processed this particular record.
     await TaskRecord.updateOne({ _id: mongoose.Types.ObjectId(jobID) }, { $inc: { itemsProcessed: 1 } });
   };
 
   // We're all done:
-  await TaskRecord.updateOne({ _id: mongoose.Types.ObjectId(jobID) }, { $set: { status: 'Complete', finishDate: new Date() } });
-  return;
+  return await TaskRecord.updateOne({ _id: mongoose.Types.ObjectId(jobID) }, { $set: { status: 'Complete', finishDate: new Date() } });
 };
 
-const sleep = (milliseconds) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds))
-}
+// const sleep = (milliseconds) => {
+//   return new Promise(resolve => setTimeout(resolve, milliseconds))
+// }
 
 
 let saveRecordToNRPTI = async function(obj) {
