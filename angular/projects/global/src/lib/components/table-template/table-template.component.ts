@@ -21,7 +21,7 @@ import { ITableComponent } from './table.component';
   styleUrls: ['./table-template.component.scss']
 })
 export class TableTemplateComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() data: TableObject;
+  @Input() public data: TableObject;
   @ViewChild(TableDirective) tableHost: TableDirective;
 
   @Output() pageNumUpdate: EventEmitter<any> = new EventEmitter();
