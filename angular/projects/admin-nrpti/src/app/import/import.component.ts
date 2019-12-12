@@ -1,6 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FactoryService } from '../services/factory.service';
+import { Subject } from 'rxjs';
+import { TableObject, TableTemplateUtils, ExportService } from 'nrpti-angular-components';
+import { ImportTableRowsComponent } from '../import/import-rows/import-table-rows.component';
+import { takeUntil } from 'rxjs/operators';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-import',
@@ -9,10 +14,88 @@ import { FactoryService } from '../services/factory.service';
 })
 export class ImportComponent implements OnInit {
   public dateStart: object = {};
+  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  public loading = true;
+  // public entries: User[] = null;
+  // public terms = new SearchTerms();
+  public typeFilters = [];
+  public navigationObject;
 
-  constructor(public factoryService: FactoryService) {}
+  public tableData: TableObject = new TableObject({ component: ImportTableRowsComponent });
+  public tableColumns: any[] = [
+    {
+      name: 'Start',
+      value: 'startDate',
+      width: 'col-2'
+    },
+    {
+      name: 'Finish',
+      value: 'finishDate',
+      width: 'col-2'
+    },
+    {
+      name: 'Status',
+      value: 'status',
+      width: 'col-1'
+    },
+    {
+      name: 'Source',
+      value: 'dataSourceLabel',
+      width: 'col-1'
+    },
+      {
+      name: 'Items',
+      value: 'itemTotal',
+      width: 'col-5'
+    },
+    {
+      name: 'URL',
+      value: 'dataSource',
+      width: 'col-1'
+    }
+  ];
+  constructor(
+    public router: Router,
+    public route: ActivatedRoute,
+    private tableTemplateUtils: TableTemplateUtils,
+    private _changeDetectionRef: ChangeDetectorRef,
+    public factoryService: FactoryService,
+    public exportService: ExportService
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
+      // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
+      this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, this.tableData);
+
+      // Make api call with tableData params.
+
+      this._changeDetectionRef.detectChanges();
+    });
+
+    this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
+      if (res) {
+        this.tableData.items = res.records[0].data.searchResults;
+
+        if (res.records[0].data.meta.length > 0) {
+          this.tableData.totalListItems = res.records[0].data.meta[0].searchResultsTotal;
+        }
+
+        this.tableData.columns = this.tableColumns;
+        this.loading = false;
+        this._changeDetectionRef.detectChanges();
+      } else {
+        alert("Uh-oh, couldn't load valued components");
+        // project not found --> navigate back to search
+        this.router.navigate(['/search']);
+      }
+    });
+  }
+
+  setColumnSort(event) {
+    console.log('event', event);
+  }
+
 
   startJob() {
     console.log('start job');

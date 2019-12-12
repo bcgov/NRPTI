@@ -27,7 +27,9 @@ exports.protectedCreateTask = async function(args, res, next) {
   let jobDetails = {
     dataSource: searchUrl,
     dataSourceLabel: args.swagger.params.task.value.dataSource,
-    startDate: new Date()
+    startDate: new Date(),
+    read: ['sysadmin'],
+    write: ['sysadmin']
   };
   jobDetails = await updateAudit(jobDetails);
 

@@ -7,11 +7,11 @@
   </ol>
 </nav>
 
-<main id="anchor-point">
+<!-- <main id="anchor-point">
   <div class="container">
     <div class="home-title-container">
       <h1 id="pgTitle">
-        <span>Import Module</span>
+        <span>Import Logs</span>
       </h1>
     </div>
 
@@ -42,4 +42,25 @@
       <button type="button" class="btn btn-primary" (click)="startJob()">Start Job</button>
     </div>
   </div>
-</main>
+</main> -->
+
+<div class="container-fluid-padding">
+  <div class="input-group m-3">
+    <button type="button" class="btn btn-primary" (click)="startJob()">Start Job</button>
+  </div>
+
+  <div *ngIf="!loading && tableData.totalListItems === 0">
+    No Records found.
+  </div>
+
+  <lib-table-template
+    *ngIf="!loading && tableData.totalListItems != 0"
+    (checkboxChange)="checkChange($event)"
+    [data]="tableData"
+    (columnSort)="setColumnSort($event)"
+    (itemClicked)="itemClicked($event)"
+    (itemSelected)="itemSelected($event)"
+    (pageNumUpdate)="onSubmit($event, null, null)"
+  >
+  </lib-table-template>
+</div>

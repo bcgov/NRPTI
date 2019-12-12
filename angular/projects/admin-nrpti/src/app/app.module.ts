@@ -30,6 +30,9 @@ import { DocumentService } from './services/document.service';
 import { FactoryService } from './services/factory.service';
 import { KeycloakService } from './services/keycloak.service';
 
+// resolvers
+import { ImportListResolver } from './import/import-list-resolver';
+
 // guards
 import { CanActivateGuard } from './guards/can-activate-guard.service';
 import { CanDeactivateGuard } from './guards/can-deactivate-guard.service';
@@ -37,6 +40,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate-guard.service';
 // utils
 import { TokenInterceptor } from './utils/token-interceptor';
 import { RecordsTableRowsComponent } from './records/records-rows/records-table-rows.component';
+import { ImportTableRowsComponent } from './import/import-rows/import-table-rows.component';
 
 export function keycloakFactory(keycloakService: KeycloakService) {
   return () => keycloakService.init();
@@ -50,7 +54,8 @@ export function keycloakFactory(keycloakService: KeycloakService) {
     ConfirmComponent,
     HeaderComponent,
     FooterComponent,
-    NotAuthorizedComponent
+    NotAuthorizedComponent,
+    ImportTableRowsComponent
   ],
   imports: [
     BrowserModule,
@@ -83,10 +88,11 @@ export function keycloakFactory(keycloakService: KeycloakService) {
     RecordService,
     DocumentService,
     FactoryService,
+    ImportListResolver,
     CanActivateGuard,
     CanDeactivateGuard
   ],
-  entryComponents: [ConfirmComponent, HomeComponent, ImportComponent, RecordsTableRowsComponent],
+  entryComponents: [ConfirmComponent, HomeComponent, ImportComponent, RecordsTableRowsComponent, ImportTableRowsComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

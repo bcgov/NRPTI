@@ -78,7 +78,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       if (res) {
         this.tableData.items = res.records[0].data.searchResults;
 
-        this.tableData.totalListItems = res.records[0].data.meta[0].searchResultsTotal;
+        if (res.records[0].data.meta.length > 0) {
+          this.tableData.totalListItems = res.records[0].data.meta[0].searchResultsTotal;
+        }
 
         this.tableData.columns = this.tableColumns;
         this.loading = false;
