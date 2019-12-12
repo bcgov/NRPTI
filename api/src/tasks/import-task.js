@@ -1,7 +1,7 @@
 'use strict';
 const defaultLog = require('../utils/logger')('task');
-var queryActions = require('../utils/query-actions');
-var request = require('request');
+let queryActions = require('../utils/query-actions');
+let request = require('request');
 let mongoose = require('mongoose');
 
 exports.protectedOptions = async function(args, res, next) {
@@ -16,7 +16,7 @@ exports.protectedCreateTask = async function(args, res, next) {
   // Inspect payload
 
   // Determine data source
-  var searchUrl = '';
+  let searchUrl = '';
   if (args.swagger.params.task && args.swagger.params.task.value.dataSource) {
     searchUrl = await getDataSourceUrl(args.swagger.params.task.value.dataSource);
   }
@@ -24,32 +24,41 @@ exports.protectedCreateTask = async function(args, res, next) {
     return queryActions.sendResponse(res, 500, 'You must pass in a valid data source');
   }
 
-  // Determine date to update from
+  let jobDetails = {
+    dataSource: args.swagger.params.task.value.dataSource,
+    startDate: new Date()
+  };
+  jobDetails = await updateAudit(jobDetails);
 
+  console.log("Job:", jobDetails);
+
+  // Determine date to update from
   await setUpWorker();
 
   // Get the initial set of records since date: xxxx
   // We're going to possibly do one at a time, or a bunch with a set number of items per batch.
-  await saveAudit();
 
   // // call endpoint, get records.
   // // Subtask: Update the logger with the payload size, start date, total record count in this batch, and the configuration object
   // // ie, the payload that came in on the original request, so that we might resume this job if the task fails for some reason.
   // getRecords(); // needs to be able to take in all jobs, and inside this function we'll split out the specific tasks of calling
   // // an HTTPS GET or a DB call via oracle, or some other thing.
-  console.log('Getting record!!!');
+  console.log('Getting records...');
   let records = await getRecords(searchUrl);
   if (records.length === 0) {
+    console.log('No records found');
     return queryActions.sendResponse(res, 200, []);
+  } else {
+    console.log('Got Records:', records.length);
+    jobDetails = await updateAudit({_id: mongoose.Types.ObjectId(jobDetails._id), itemTotal: records.length});
   }
-  console.log('Got Record!!!');
 
   // now that we have all the count/number of items we are going to process, process them!
-  console.log('Processing record!!!');
-  await processRecords(records);
+  console.log('Processing records [' + jobDetails._id + ']...');
+  await processRecords(records, jobDetails._id);
 
   // emit to rocket.
-  await saveAudit();
+  // await updateAudit();
 
   return queryActions.sendResponse(res, 200);
 };
@@ -76,7 +85,17 @@ let setUpWorker = async function(query, args) {
   return Promise.resolve();
 };
 
-let saveAudit = async function(query, args) {
+let updateAudit = async function(job) {
+  let TaskRecord = mongoose.model('Task');
+
+  if (job._id) {
+    // Update
+    return TaskRecord.findOneAndUpdate({ _id: mongoose.Types.ObjectId(job._id) }, { $set: job }, { new : true });
+  } else {
+    // New
+    return TaskRecord.create(job);
+  }
+  
   return Promise.resolve();
 };
 
@@ -88,10 +107,10 @@ let getRecords = async function(searchUrl) {
       } else if (res.statusCode !== 200) {
         resolve([]);
       } else {
-        var obj = {};
+        let obj = {};
         try {
           obj = JSON.parse(body);
-          console.log(obj[0].searchResults);
+          // console.log(obj[0].searchResults);
           resolve(obj[0].searchResults);
         } catch (e) {
           defaultLog.error('Parsing Failed.', e);
@@ -102,9 +121,13 @@ let getRecords = async function(searchUrl) {
   });
 };
 
-let processRecords = async function(records) {
-  records.forEach(async record => {
-    console.log('This is the record', record);
+let processRecords = async function(records, jobID) {
+  let TaskRecord = mongoose.model('Task');
+
+  await TaskRecord.updateOne({ _id: mongoose.Types.ObjectId(jobID) }, { $set: { status: 'Running' } });
+
+  for (const record of records) {
+    // console.log('This is the record', record);
     let obj = {
       _schemaName: 'Record',
       documentEPICId: record._id,
@@ -113,7 +136,7 @@ let processRecords = async function(records) {
       read: ['sysadmin'],
       write: ['sysadmin']
     };
-    console.log('This is the object', obj);
+    // console.log('This is the object', obj);
 
     //     // Step 1:
     //     // Do we need to download any files?
@@ -127,18 +150,28 @@ let processRecords = async function(records) {
     //     uploadObject(..);
 
     // Step 4: Update the database with the new record, and optionally the location of the file blob in S3
-    console.log('saving record!!!!');
-    await saveRecordToNRPTI(obj);
+    console.log('saving record.', record._id);
+    //await saveRecordToNRPTI(obj);
 
-    //     // Step 5: Update the audit log, saying we've processed this particular record.
-    //     saveAuditStuff(...);
-  });
+    await sleep(1000);
+
+    // Step 5: Update the audit log, saying we've processed this particular record.
+    await TaskRecord.updateOne({ _id: mongoose.Types.ObjectId(jobID) }, { $inc: { itemsProcessed: 1 } });
+  };
+
+  // We're all done:
+  await TaskRecord.updateOne({ _id: mongoose.Types.ObjectId(jobID) }, { $set: { status: 'Complete', finishDate: new Date() } });
   return;
 };
 
+const sleep = (milliseconds) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+
+
 let saveRecordToNRPTI = async function(obj) {
-  var Record = mongoose.model('Record');
-  var record = new Record(obj);
-  console.log('attempting to save!!!!', record);
-  return await record.save();
+  let Record = mongoose.model('Record');
+  let rec = new Record(obj);
+  console.log('attempting to save: ', rec);
+  return await rec.save();
 };

@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
-import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
-
-import { SearchService } from 'app/services/search.service';
+import { TableTemplateUtils, TableObject, SearchService } from 'nrpti-angular-components';
 
 @Injectable()
 export class RecordsListResolver implements Resolve<Observable<object>> {
@@ -16,6 +14,7 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
 
     // force-reload so we always have latest data
     return this.searchService.getSearchResults(
+      'http://localhost:3000/api',
       '',
       'Record',
       [],
