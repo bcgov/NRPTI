@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
 import { HomeComponent } from './home/home.component';
 import { ImportComponent } from './import/import.component';
+import { ImportListResolver } from './import/import-list-resolver';
 
 const routes: Routes = [
   {
@@ -19,7 +20,10 @@ const routes: Routes = [
   {
     path: 'import',
     pathMatch: 'full',
-    component: ImportComponent
+    component: ImportComponent,
+    resolve: {
+      records: ImportListResolver
+    }
   },
   {
     // wildcard default route
