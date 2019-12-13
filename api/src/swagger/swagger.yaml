@@ -53,6 +53,8 @@ definitions:
     description: "Optional fields to sort by (prefixed with + or - for order)"
     example: +score,-score
     enum: &searchSortByFields
+      - +startDate
+      - -startDate
       - +headline
       - -headline
       - +score
@@ -65,17 +67,6 @@ definitions:
       - -documentType
       - +documentFileSize
       - -documentFileSize
-
-### Search Definitions
-  Search:
-    type: object
-  SearchFields:
-    type: string
-    description: "Optional Search fields to return"
-    example: "name|etc"
-    # TODO: Fix enums
-    enum: &searchFields
-      - name
 
  ### Task Definitions
   TaskObject:
