@@ -16,6 +16,7 @@ export class ImportComponent implements OnInit {
   public dateStart: object = {};
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
   public loading = true;
+  public showAlert = false;
   // public entries: User[] = null;
   // public terms = new SearchTerms();
   public typeFilters = [];
@@ -43,7 +44,7 @@ export class ImportComponent implements OnInit {
       value: 'dataSourceLabel',
       width: 'col-1'
     },
-      {
+    {
       name: 'Items',
       value: 'itemTotal',
       width: 'col-5'
@@ -96,10 +97,16 @@ export class ImportComponent implements OnInit {
     console.log('event', event);
   }
 
-
   startJob() {
     console.log('start job');
-    this.postToApi().subscribe();
+    // tslint:disable-next-line: no-this-assignment
+    const self = this;
+    this.postToApi().subscribe(job => {
+      self.showAlert = true;
+      setTimeout(() => {
+        self.showAlert = false;
+      }, 5000);
+    });
   }
 
   postToApi(): Observable<any> {
