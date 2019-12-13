@@ -1,11 +1,16 @@
-import { Router } from '@angular/router';
+import { ActivatedRoute, Params, PRIMARY_OUTLET } from '@angular/router';
+
+export interface IBreadcrumb {
+  label: string;
+  params: Params;
+  url: string;
+}
 
 export class StoreService {
   private currentState: any;
 
   constructor() {
     this.currentState = {};
-    this.state.navigationStack = [];
   }
 
   get state(): any {
@@ -15,156 +20,54 @@ export class StoreService {
     this[state.type] = state.data;
   }
 
-  public getNavigationStack() {
-    return (this.state && this.state.navigationStack) || [];
-  }
+  /**
+   * Returns array of IBreadcrumb objects that represent the breadcrumb
+   *
+   * @class DetailComponent
+   * @method getBreadcrumbs
+   * @param {ActivateRoute} route
+   * @param {string} url
+   * @param {IBreadcrumb[]} breadcrumbs
+   */
+  public getBreadcrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: IBreadcrumb[] = []): IBreadcrumb[] {
+    const ROUTE_DATA_BREADCRUMB = 'breadcrumb';
 
-  public getLastBackRef() {
-    const stack = this.getNavigationStack();
-    return (stack && stack[stack.length - 1] && stack[stack.length - 1].backRef) || ['/'];
-  }
+    // get the child routes
+    const children: ActivatedRoute[] = route.children;
 
-  public getLastNavigationObject() {
-    const stack = this.getNavigationStack();
-    if (stack) {
-      return stack[stack.length - 1];
-    } else {
-      return null;
+    // return if there are no more children
+    if (children.length === 0) {
+      return breadcrumbs;
     }
-  }
 
-  public pushNavigationStack(navigationObject: NavigationObject) {
-    const stack = this.getNavigationStack();
-    if (stack) {
-      stack.push(navigationObject);
-      this.state.navigationStack = stack;
-    } else {
-      this.state.navigationStack = [navigationObject];
-    }
-  }
-
-  public popNavigationStack() {
-    const stack = this.getNavigationStack();
-    if (stack) {
-      let stackObject = stack.pop();
-      if (stack.length === 0) {
-        this.clearNavigationStack();
-        stackObject = null;
-      } else {
-        this.state.navigationStack = stack;
+    // iterate over each children
+    for (const child of children) {
+      // verify primary route
+      if (child.outlet !== PRIMARY_OUTLET) {
+        continue;
       }
-      return stackObject;
-    } else {
-      this.clearNavigationStack();
-      return null;
-    }
-  }
 
-  public navigateBreadcrumb(breadcrumb: Breadcrumb, router: Router) {
-    const stack = this.getNavigationStack();
-    let poppedItem = null;
-    let isPopping = true;
-    if (stack) {
-      while (isPopping) {
-        poppedItem = this.popNavigationStack();
-        if (poppedItem == null) {
-          break;
-        } else if (poppedItem.breadcrumbs[poppedItem.breadcrumbs.length - 1] === breadcrumb) {
-          isPopping = false;
-        }
+      // verify the custom data property "breadcrumb" is specified on the route
+      if (!child.snapshot.data.hasOwnProperty(ROUTE_DATA_BREADCRUMB)) {
+        return this.getBreadcrumbs(child, url, breadcrumbs);
       }
-      router.navigate(breadcrumb.route);
-    } else {
-      router.navigate(['/']);
-    }
-  }
 
-  public clearNavigationStack() {
-    this.state.navigationStack = null;
-  }
-}
+      // get the route's URL segment
+      const routeURL: string = child.snapshot.url.map(segment => segment.path).join('/');
 
-/*
-  Example of a back ref array:
-  ['/p', this.project._id, 'edit']
+      // append route URL to URL
+      url += `/${routeURL}`;
 
-  Example of a breadcrumbs array:
-  Note that the objects in the array contain a route and a label.
-  [
-      {
-          route: ['/projects'],
-          label: 'All Projects'
-      },
-      {
-          route: ['/p', this.project._id],
-          label: this.project.name
-      },
-      {
-          route: ['/p', this.project._id, 'edit'],
-          label: 'Edit'
-      }
-  ]
-*/
+      // add breadcrumb
+      const breadcrumb: IBreadcrumb = {
+        label: child.snapshot.data[ROUTE_DATA_BREADCRUMB],
+        params: child.snapshot.params,
+        url: url
+      };
+      breadcrumbs.push(breadcrumb);
 
-export interface IBreadcrumb {
-  route: string[];
-  label: string;
-}
-
-export class Breadcrumb {
-  public route: string[];
-  public label: string;
-
-  constructor(params: IBreadcrumb) {
-    if (!params) {
-      throw Error('Params are required');
-    }
-
-    if (!params.route) {
-      throw Error('You must pass in a route');
-    }
-
-    if (!params.label) {
-      throw Error('You must pass in a label');
-    }
-
-    this.route = (params && params.route) || [];
-    this.label = (params && params.label) || '';
-  }
-}
-
-export interface INavigationObjectParams {
-  breadcrumbs: Breadcrumb[];
-  componentName?: string;
-  componentId?: string;
-  pageData?: any;
-}
-
-export class NavigationObject {
-  public backRef;
-  public breadcrumbs;
-  public componentName;
-  public componentId;
-  public pageData;
-
-  constructor(params: INavigationObjectParams) {
-    if (!params) {
-      throw Error('Params are required');
-    }
-
-    if (!params.breadcrumbs) {
-      throw Error('You must pass in a breadcrumbs');
-    }
-
-    this.breadcrumbs = (params && params.breadcrumbs) || [];
-    this.componentName = (params && params.componentName) || '';
-    this.componentId = (params && params.componentId) || '';
-
-    // Set backRef
-    if (this.breadcrumbs.length > 1) {
-      this.backRef = this.breadcrumbs[this.breadcrumbs.length - 2].route;
-    } else {
-      this.backRef = ['/'];
+      // recursive
+      return this.getBreadcrumbs(child, url, breadcrumbs);
     }
   }
 }
