@@ -9,8 +9,11 @@ import { RecordsListResolver } from './records-list/records-list-resolver';
 
 const routes: Routes = [
   {
-    path: 'records/list',
+    path: 'records',
     component: RecordsListComponent,
+    data: {
+      breadcrumb: 'NRPTI Records'
+    },
     canActivate: [CanActivateGuard],
     resolve: {
       records: RecordsListResolver

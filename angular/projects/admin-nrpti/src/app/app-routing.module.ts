@@ -13,7 +13,7 @@ const routes: Routes = [
     component: NotAuthorizedComponent
   },
   {
-    path: 'home',
+    path: '',
     pathMatch: 'full',
     component: HomeComponent
   },
@@ -23,12 +23,15 @@ const routes: Routes = [
     component: ImportComponent,
     resolve: {
       records: ImportListResolver
+    },
+    data: {
+      breadcrumb: 'Import'
     }
   },
   {
     // wildcard default route
     path: '**',
-    redirectTo: 'home',
+    redirectTo: '',
     pathMatch: 'full'
   }
 ];
