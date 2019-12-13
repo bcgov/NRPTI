@@ -46,7 +46,12 @@
 
 <div class="container-fluid-padding">
   <div class="input-group m-3">
-    <button type="button" class="btn btn-primary" (click)="startJob()">Start Job</button>
+    <button type="button" [disabled]="showAlert" class="btn btn-primary" (click)="startJob()">Start Job</button>
+  </div>
+  <div class="input-group m-3">
+    <div *ngIf="showAlert" class="alert alert-success" role="alert">
+      Job has started.
+    </div>
   </div>
 
   <div *ngIf="!loading && tableData.totalListItems === 0">

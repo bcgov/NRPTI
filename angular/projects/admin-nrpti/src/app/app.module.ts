@@ -92,7 +92,13 @@ export function keycloakFactory(keycloakService: KeycloakService) {
     CanActivateGuard,
     CanDeactivateGuard
   ],
-  entryComponents: [ConfirmComponent, HomeComponent, ImportComponent, RecordsTableRowsComponent, ImportTableRowsComponent],
+  entryComponents: [
+    ConfirmComponent,
+    HomeComponent,
+    ImportComponent,
+    RecordsTableRowsComponent,
+    ImportTableRowsComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
