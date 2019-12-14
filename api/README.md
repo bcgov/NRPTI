@@ -55,7 +55,6 @@ These 2 linters (tslint, Prettier) do have overlapping rules.  To avoid weird ru
 
 * ESlint: eslint.json
 * Prettier: .prettierrc .prettierignore
-* Husky: package.json
 * lint-staged: package.json
 
 ## Run Linters
