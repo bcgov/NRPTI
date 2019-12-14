@@ -3,10 +3,15 @@ import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import { TableTemplateUtils, TableObject, SearchService } from 'nrpti-angular-components';
+import { ApiService } from '../services/api.service';
 
 @Injectable()
 export class ImportListResolver implements Resolve<Observable<object>> {
-  constructor(private searchService: SearchService, private tableTemplateUtils: TableTemplateUtils) {}
+  constructor(
+    private searchService: SearchService,
+    private tableTemplateUtils: TableTemplateUtils,
+    private apiService: ApiService
+  ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
@@ -14,7 +19,7 @@ export class ImportListResolver implements Resolve<Observable<object>> {
 
     // force-reload so we always have latest data
     return this.searchService.getSearchResults(
-      'http://localhost:3000/api',
+      this.apiService.pathAPI,
       '',
       'Task',
       [],
