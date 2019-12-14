@@ -153,7 +153,7 @@ export class FactoryService {
    * @memberof FactoryService
    */
   public getRecord(recordId: string, schema: string): Observable<SearchResults[]> {
-    return this.searchService.getItem('http://localhost:3000/api', recordId, schema);
+    return this.searchService.getItem(this.apiService.pathAPI, recordId, schema);
   }
 
   // public getFullList(schema: string): Observable<Record[]> {
@@ -172,6 +172,6 @@ export class FactoryService {
 
   public startTask(obj: any) {
     // TODO: Convert this to a service
-    return this.http.post<any>('http://localhost:3000/api/task', { dataSource: 'epic' }, {});
+    return this.http.post<any>(this.apiService.pathAPI + 'task', { dataSource: 'epic' }, {});
   }
 }
