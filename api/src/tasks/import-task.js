@@ -46,7 +46,7 @@ exports.protectedCreateTask = async function(args, res, next) {
   // // ie, the payload that came in on the original request, so that we might resume this job if the task fails for some reason.
   // getRecords(); // needs to be able to take in all jobs, and inside this function we'll split out the specific tasks of calling
   // // an HTTPS GET or a DB call via oracle, or some other thing.
-  console.log('Getting records...');
+  console.log('Getting records...', searchUrl);
   let records = await getRecords(searchUrl);
   if (!records) {
     // err
