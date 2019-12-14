@@ -8,6 +8,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { GlobalComponent } from './global.component';
 import { ButtonSpinnerComponent } from './components/buttons/button-spinner/button-spinner.component';
 import { TableTemplateComponent } from './components/table-template/table-template.component';
+import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 
 // directives
 import { TableDirective } from './components/table-template/table.directive';
@@ -29,8 +30,8 @@ import { TableTemplateUtils } from './components/table-template/table-template-u
  */
 @NgModule({
   imports: [BrowserModule, NgxPaginationModule],
-  declarations: [GlobalComponent, ButtonSpinnerComponent, TableDirective, TableTemplateComponent],
+  declarations: [GlobalComponent, ButtonSpinnerComponent, TableDirective, TableTemplateComponent, BreadcrumbComponent],
   providers: [ExportService, StoreService, SearchService, TableTemplateUtils],
-  exports: [GlobalComponent, ButtonSpinnerComponent, TableTemplateComponent]
+  exports: [GlobalComponent, ButtonSpinnerComponent, TableTemplateComponent, BreadcrumbComponent]
 })
 export class GlobalModule {}

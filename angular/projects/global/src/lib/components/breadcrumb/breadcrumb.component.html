@@ -1,0 +1,18 @@
+<nav class="action-container" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li *ngIf="activeBreadcrumb" class="breadcrumb-item">
+      <a href="javascript:void(0);" (click)="emitBreadcrumb('', null)">Home</a>
+    </li>
+    <li *ngIf="!activeBreadcrumb" class="breadcrumb-item active" aria-current="page">Home</li>
+
+    <span *ngIf="breadcrumbs.length > 0">
+      <li class="breadcrumb-item" *ngFor="let breadcrumb of breadcrumbs">
+        <a href="javascript:void(0);" (click)="emitBreadcrumb(breadcrumb.url, breadcrumb.params)">
+          {{ breadcrumb.label }}
+        </a>
+      </li>
+    </span>
+
+    <li *ngIf="activeBreadcrumb" class="breadcrumb-item active" aria-current="page">{{ activeBreadcrumb.label }}</li>
+  </ol>
+</nav>
