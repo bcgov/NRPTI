@@ -17,11 +17,8 @@ export class ImportComponent implements OnInit {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
   public loading = true;
   public showAlert = false;
-  // public entries: User[] = null;
-  // public terms = new SearchTerms();
   public typeFilters = [];
   public navigationObject;
-
   public tableData: TableObject = new TableObject({ component: ImportTableRowsComponent });
   public tableColumns: any[] = [
     {
@@ -93,8 +90,20 @@ export class ImportComponent implements OnInit {
     });
   }
 
-  setColumnSort(event) {
-    console.log('event', event);
+  setColumnSort(column) {
+    console.log('setColumnSort', column);
+    if (this.tableData.sortBy.charAt(0) === '+') {
+      this.tableData.sortBy = '-' + column;
+    } else {
+      this.tableData.sortBy = '+' + column;
+    }
+    this.onSubmit(this.tableData.currentPage);
+  }
+
+  onSubmit(pageNumber) {
+    console.log('onSubmit', pageNumber);
+    this.tableData.currentPage = pageNumber;
+    this.tableTemplateUtils.navigateUsingParams(this.tableData, ['import']);
   }
 
   startJob() {

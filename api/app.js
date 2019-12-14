@@ -47,8 +47,9 @@ if (HOSTNAME !== 'localhost:3000') {
 swaggerTools.initializeMiddleware(swaggerConfig, function(middleware) {
   app.use(middleware.swaggerMetadata());
 
-  const swaggerValidatorConfig = { validateResponse: false };
-  app.use(middleware.swaggerValidator(swaggerValidatorConfig));
+  // This prevents +/- params, such as sortBy
+  // const swaggerValidatorConfig = { validateResponse: false };
+  // app.use(middleware.swaggerValidator(swaggerValidatorConfig));
 
   const swaggerSecurityConfig = {
     Bearer: authUtils.verifyToken
