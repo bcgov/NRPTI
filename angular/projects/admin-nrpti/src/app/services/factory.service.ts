@@ -172,6 +172,6 @@ export class FactoryService {
 
   public startTask(obj: any) {
     // TODO: Convert this to a service
-    return this.http.post<any>(this.apiService.pathAPI + 'task', { dataSource: 'epic' }, {});
+    return this.http.post<any>(this.apiService.pathAPI + '/task', { dataSource: 'epic' }, {});
   }
 }
