@@ -80,7 +80,7 @@ let getDataSourceUrl = async function(dataSource) {
       // Get all C&E Inspections
       // https://eagle-prod.pathfinder.gov.bc.ca/api/search?dataset=Document&or[milestone]=5cf00c03a266b7e1877504ef&or[type]=5cf00c03a266b7e1877504d9
 
-      return "https://projects.eao.gov.bc.ca/api/public/search?dataset=Document&or[milestone]=5cf00c03a266b7e1877504ef&or[type]=5cf00c03a266b7e1877504d1";
+      return "https://eagle-prod.pathfinder.gov.bc.ca/api/public/search?dataset=Document&or[milestone]=5cf00c03a266b7e1877504ef&or[type]=5cf00c03a266b7e1877504d1";
     default:
       return '';
   }
