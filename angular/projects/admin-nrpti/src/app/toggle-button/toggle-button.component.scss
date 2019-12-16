@@ -1,0 +1,34 @@
+button {
+  background: #38598a;
+  border-radius: 0 6px 6px 0;
+  /* z-index: 17; */
+  box-shadow: 0.1rem 0.1rem 0.5rem rgba(0, 0, 0, 0.25);
+  height: 48px;
+  width: 35px;
+  padding: 0;
+
+  @media screen and (max-width: 768px) {
+    border-radius: 6px 0 0 6px;
+  }
+}
+
+.side-arrow:after, .side-arrow:before {
+  top: 24px;
+  border-left: 3px solid #fff;
+  content: " ";
+  height: 13px;
+  width: 13px;
+  position: absolute;
+  pointer-events: none;
+  left: 13px;
+}
+
+.side-arrow:after {
+	-webkit-transform: rotate(135deg);
+    left: 6px;
+
+}
+.side-arrow:before {
+	-webkit-transform: rotate(45deg);
+    top: 16px;
+}

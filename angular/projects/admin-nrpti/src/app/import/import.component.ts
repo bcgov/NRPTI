@@ -103,7 +103,7 @@ export class ImportComponent implements OnInit {
   onSubmit(pageNumber) {
     console.log('onSubmit', pageNumber);
     this.tableData.currentPage = pageNumber;
-    this.tableTemplateUtils.navigateUsingParams(this.tableData, ['import']);
+    this.tableTemplateUtils.navigateUsingParams(this.tableData, ['imports']);
   }
 
   startJob() {
