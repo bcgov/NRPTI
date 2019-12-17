@@ -1,0 +1,122 @@
+/* The side navigation menu */
+.sidebar {
+  margin: 0;
+  padding: 20px 0 15px 5px;
+  width: 250px;
+  background-color: #38598a;
+  position: fixed;
+  /* Probably should not hardcode to account for the footer*/
+  height: calc(100% - 71px - 37px);
+  overflow: auto;
+  transition: 0.3s;
+
+  @media screen and (min-width: 768px) {
+    margin-top: 71px;
+  }
+}
+
+/* Sidebar links */
+.sidebar a {
+  display: block;
+  color: white;
+  padding: 8px 12px 14px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.project-nav {
+  background: #00274e;
+  border-radius: 4px 0 0 4px;
+  padding-bottom: 12px;
+  margin: 4px 0 8px;
+}
+
+.sidebar .project-menu {
+  padding: 6px 16px 8px;
+  padding-left: .8rem;
+
+  .material-icons {
+    margin-right: .5rem;
+    font-size: 16px;
+    top: 2px;
+  }
+}
+
+/* Active/current link */
+.sidebar a.active {
+  color: #FCB118;
+}
+
+.sidebar .dropdown-btn {
+  border-radius: 4px 0 0 4px;
+}
+
+/* Links on mouse-over */
+.sidebar a:hover:not(.active) {
+  background-color: #FCB118;
+  color: #036;
+}
+
+
+// /* On screens that are less than 650px wide, make the sidebar into a topbar */
+// @media screen and (max-width: 650px) {
+//   .is-open {
+//     visibility: hidden;
+//     overflow: hidden;
+//     z-index: 5;
+//     position: absolute;
+//   }
+// }
+
+
+// /* On screens that are less than 400px, display the bar vertically, instead of horizontally */
+// @media screen and (max-width: 350px) {
+//   .sidebar a {
+//     text-align: center;
+//     float: none;
+//   }
+// }
+
+/* Style the sidenav links and the dropdown button */
+.sidenav a, .dropdown-btn {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #818181;
+  display: block;
+  border: none;
+  background: none;
+  width:100%;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+  transition: 0.3s;
+}
+
+/* On mouse-over */
+.sidenav a:hover, .dropdown-btn:hover {
+  color: #f1f1f1;
+}
+
+/* Main content */
+.main {
+  margin-left: 250px; /* Same as the width of the sidenav */
+  font-size: 20px; /* Increased text to enable scrolling */
+  padding: 0px 10px;
+}
+
+/* Add an active class to the active dropdown button */
+// .active {
+//   background-color: #003366;
+//   color: white;
+// }
+
+/* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+.project-details-dropdown-container {
+  padding-left: 8px;
+}
+
+.material-icons {
+  position: relative;
+  top: 5px;
+}
