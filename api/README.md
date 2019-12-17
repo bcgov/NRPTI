@@ -221,7 +221,7 @@ External http calls (such as GETs to BCGW) are mocked with a tool called [nock](
       });
   });
 ```
-`
+
 ### Keycloak
 
 This project uses [Keycloak](https://www.keycloak.org/) to handle authentication and manage user roles.
