@@ -27,7 +27,8 @@ pipeline {
             if (filesInThisCommitAsString.startsWith('api/')) {
               // Fire up the api builder
               echo "Running API builder"
-              openshiftBuild bldCfg: 'nrpti-api', showBuildLogs: 'true'
+              // openshiftBuild bldCfg: 'nrpti-api', showBuildLogs: 'true'
+              openshift.selector("bc", "nrpti-api").startBuild()
             }
           }
         }
