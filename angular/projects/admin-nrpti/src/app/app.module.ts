@@ -22,6 +22,7 @@ import { FooterComponent } from './footer/footer.component';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
 import { HomeComponent } from 'app/home/home.component';
 import { ImportComponent } from 'app/import/import.component';
+import { SidebarComponent } from 'app/sidebar/sidebar.component';
 
 // services
 import { ApiService } from './services/api.service';
@@ -41,6 +42,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate-guard.service';
 import { TokenInterceptor } from './utils/token-interceptor';
 import { RecordsTableRowsComponent } from './records/records-rows/records-table-rows.component';
 import { ImportTableRowsComponent } from './import/import-rows/import-table-rows.component';
+import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
 
 export function keycloakFactory(keycloakService: KeycloakService) {
   return () => keycloakService.init();
@@ -51,8 +53,10 @@ export function keycloakFactory(keycloakService: KeycloakService) {
     AppComponent,
     HomeComponent,
     ImportComponent,
+    ToggleButtonComponent,
     ConfirmComponent,
     HeaderComponent,
+    SidebarComponent,
     FooterComponent,
     NotAuthorizedComponent,
     ImportTableRowsComponent

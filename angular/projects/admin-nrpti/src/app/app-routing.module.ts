@@ -18,14 +18,14 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'import',
+    path: 'imports',
     pathMatch: 'full',
     component: ImportComponent,
     resolve: {
       records: ImportListResolver
     },
     data: {
-      breadcrumb: 'Import'
+      breadcrumb: 'Imports'
     }
   },
   {
