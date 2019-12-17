@@ -20,14 +20,28 @@ pipeline {
             if (filesInThisCommitAsString.startsWith('angular/projects')) {
               // Fire up the angular builder
               echo "Running Angular builder"
-              openshiftBuild bldCfg: 'angular-app-build', showBuildLogs: 'true'
-              openshiftBuild bldCfg: 'admin-nrced-build', showBuildLogs: 'true'
-              openshiftBuild bldCfg: 'public-lng-build', showBuildLogs: 'true'
+              // openshiftBuild bldCfg: 'angular-app-build', showBuildLogs: 'true'
+              // openshiftBuild bldCfg: 'admin-nrced-build', showBuildLogs: 'true'
+              // openshiftBuild bldCfg: 'public-lng-build', showBuildLogs: 'true'
+              def angularSelector = openshift.selector("bc", "angular-app-build").startBuild()
+              angularSelector.untilEach(1) {
+                return it.object().status.phase == "Complete"
+              }
+              echo "Deploying to NRCED Admin"
+              def nrcedSelector = openshift.selector("bc", "admin-nrced-build").startBuild()
+              nrcedSelector.untilEach(1) {
+                return it.object().status.phase == "Complete"
+              }
+              echo "Deploying to PUBLIC LNG"
+              def lngSelector = openshift.selector("bc", "public-lng-build").startBuild()
+              lngSelector.untilEach(1) {
+                return it.object().status.phase == "Complete"
+              }
+              echo "Front end builds complete and deployed to Dev"
             }
             if (filesInThisCommitAsString.startsWith('api/')) {
               // Fire up the api builder
               echo "Running API builder"
-              // openshiftBuild bldCfg: 'nrpti-api', showBuildLogs: 'true'
               def apiSelector = openshift.selector("bc", "nrpti-api").startBuild()
               apiSelector.untilEach(1) {
                 return it.object().status.phase == "Complete"
