@@ -29,13 +29,8 @@ pipeline {
               echo "Running API builder"
               // openshiftBuild bldCfg: 'nrpti-api', showBuildLogs: 'true'
               def apiSelector = openshift.selector("bc", "nrpti-api").startBuild()
-              timeout(20) {
-                apiSelector.watch {
-                  // Within the body, the variable 'it' is bound to the watched Selector (i.e. builds)
-                  echo "So far, ${apiSelector.name()} has created builds: ${it.names()}"
-                  // End the watch only once a build object has been created.
-                  return it.count() > 0
-                }
+              apiSelector.untilEach(1) {
+                return it.object().status.phase == "Complete"
               }
               echo "Deploying to Dev"
             }
