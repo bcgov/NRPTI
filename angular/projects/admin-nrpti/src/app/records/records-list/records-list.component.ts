@@ -33,19 +33,38 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   public tableData: TableObject = new TableObject({ component: RecordsTableRowsComponent });
   public tableColumns: any[] = [
     {
-      value: 'checkbox',
+      name: 'Issued To',
+      value: '',
+      width: 'col-2'
+    },
+    {
+      name: 'Name',
+      value: 'documentFileName',
+      width: 'col-2'
+    },
+    {
+      name: 'Type',
+      value: '',
+      width: 'col-2'
+    },
+    {
+      name: 'Location',
+      value: '',
+      width: 'col-2'
+    },
+    {
+      name: 'Date',
+      value: '',
+      width: 'col-2'
+    },
+    {
+      name: 'Attachments',
+      value: '',
+      width: 'col-1'
+    },
+    {
       width: 'col-1',
       nosort: true
-    },
-    {
-      name: 'Document File Name',
-      value: 'documentFileName',
-      width: 'col-6'
-    },
-    {
-      name: 'Document Type',
-      value: 'documentType',
-      width: 'col-5'
     }
   ];
 

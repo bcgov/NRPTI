@@ -18,7 +18,8 @@ import { RecordsAddEditComponent } from './records-add-edit/records-add-edit.com
 import { RecordsTableRowsComponent } from './records-rows/records-table-rows.component';
 
 // resolvers
-import { RecordsListResolver } from '../records/records-list/records-list-resolver';
+import { RecordsListResolver } from './records-list/records-list-resolver';
+import { RecordDetailComponent } from './record-detail/record-detail.component';
 
 @NgModule({
   imports: [
@@ -32,7 +33,7 @@ import { RecordsListResolver } from '../records/records-list/records-list-resolv
     InlineSVGModule.forRoot(),
     RecordsRoutingModule
   ],
-  declarations: [RecordsListComponent, RecordsAddEditComponent, RecordsTableRowsComponent],
+  declarations: [RecordsListComponent, RecordsAddEditComponent, RecordsTableRowsComponent, RecordDetailComponent],
   providers: [RecordsListResolver],
   exports: []
 })
