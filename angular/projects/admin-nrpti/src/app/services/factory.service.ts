@@ -1,9 +1,7 @@
 import { Injectable, Injector } from '@angular/core';
 import { KeycloakService } from './keycloak.service';
-import { RecordService } from './record.service';
 import { JwtUtil } from '../utils/jwt-utils';
 import { Observable } from 'rxjs';
-// import { Record } from '../models/record';
 import { ApiService } from './api.service';
 import { SearchService, SearchResults } from 'nrpti-angular-components';
 
@@ -18,7 +16,6 @@ import { SearchService, SearchResults } from 'nrpti-angular-components';
 @Injectable({ providedIn: 'root' })
 export class FactoryService {
   private _keycloakService: KeycloakService;
-  private _recordService: RecordService;
   private _apiService: ApiService;
   private _searchService: SearchService;
   // private _pathAPI: string;
@@ -45,20 +42,6 @@ export class FactoryService {
     }
 
     return this._keycloakService;
-  }
-
-  /**
-   * Inject record service if it hasn't already been injected.
-   *
-   * @readonly
-   * @type {RecordService}
-   * @memberof FactoryService
-   */
-  public get recordService(): RecordService {
-    if (!this._recordService) {
-      this._recordService = this.injector.get(RecordService);
-    }
-    return this._recordService;
   }
 
   /**

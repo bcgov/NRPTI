@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FactoryService } from '../services/factory.service';
-import { Subject } from 'rxjs';
-import { TableObject, TableTemplateUtils, ExportService } from 'nrpti-angular-components';
+import { Subject, forkJoin } from 'rxjs';
+import { TableObject, TableTemplateUtils, IPageSizePickerOption } from 'nrpti-angular-components';
 import { ImportTableRowsComponent } from '../import/import-rows/import-table-rows.component';
 import { takeUntil } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -57,8 +57,7 @@ export class ImportComponent implements OnInit {
     public route: ActivatedRoute,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef,
-    public factoryService: FactoryService,
-    public exportService: ExportService
+    public factoryService: FactoryService
   ) {}
 
   ngOnInit() {
@@ -90,6 +89,10 @@ export class ImportComponent implements OnInit {
     });
   }
 
+  itemClicked() {}
+
+  itemSelected() {}
+
   setColumnSort(column) {
     console.log('setColumnSort', column);
     if (this.tableData.sortBy.charAt(0) === '+') {
@@ -97,20 +100,32 @@ export class ImportComponent implements OnInit {
     } else {
       this.tableData.sortBy = '+' + column;
     }
-    this.onSubmit(this.tableData.currentPage);
+    this.submit();
   }
 
-  onSubmit(pageNumber) {
-    console.log('onSubmit', pageNumber);
+  onPageNumUpdate(pageNumber) {
+    console.log('onPageNumUpdate', pageNumber);
     this.tableData.currentPage = pageNumber;
+    this.submit();
+  }
+
+  onPageSizeUpdate(pageSize: IPageSizePickerOption) {
+    console.log('onPageSizeUpdate', pageSize);
+    this.tableData.pageSize = pageSize.value;
+    this.submit();
+  }
+
+  submit() {
     this.tableTemplateUtils.navigateUsingParams(this.tableData, ['imports']);
   }
+
+  checkChange() {}
 
   startJob() {
     console.log('start job');
     // tslint:disable-next-line: no-this-assignment
     const self = this;
-    this.postToApi().subscribe(job => {
+    this.postToApi().subscribe(jobs => {
       self.showAlert = true;
       setTimeout(() => {
         self.showAlert = false;
@@ -119,6 +134,9 @@ export class ImportComponent implements OnInit {
   }
 
   postToApi(): Observable<any> {
-    return this.factoryService.startTask({ dataSourceType: 'epic', recordType: 'order' });
+    return forkJoin(
+      this.factoryService.startTask({ dataSourceType: 'epic', recordType: 'inspection' }),
+      this.factoryService.startTask({ dataSourceType: 'epic', recordType: 'order' })
+    );
   }
 }

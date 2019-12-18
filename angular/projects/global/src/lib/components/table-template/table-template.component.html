@@ -1,3 +1,21 @@
+<div class="page-controls-top">
+  <lib-page-count-display
+    [isHidden]="false"
+    [currentPageNum]="data.currentPage"
+    [currentPageSize]="data.pageSize"
+    [totalItems]="data.totalListItems"
+    id="table-template-page-count-display"
+  >
+  </lib-page-count-display>
+  <lib-page-size-picker
+    [isHidden]="false"
+    [currentPageSize]="data.pageSize"
+    [sizeOptions]="data.pageSizeOptions"
+    (pageSizeChosen)="updatePageSize($event)"
+    id="table-template-page-size-picker"
+  >
+  </lib-page-size-picker>
+</div>
 <table class="table">
   <thead class="thead-light">
     <tr>
@@ -22,7 +40,7 @@
   </thead>
   <ng-template libTable></ng-template>
 </table>
-<div class="page-controls text-center pt-3">
+<div class="page-controls-bottom">
   <pagination-controls (pageChange)="updatePageNumber($event)" id="table-template-pagination" autoHide="true">
   </pagination-controls>
 </div>

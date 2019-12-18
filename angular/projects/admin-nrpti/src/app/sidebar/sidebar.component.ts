@@ -11,7 +11,6 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-
 export class SidebarComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
@@ -26,14 +25,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
   @HostBinding('class.is-toggled')
   isOpen = false;
 
-  constructor(
-    private router: Router,
-    private storeService: StoreService
-  ) {
-
-    this.router.events.pipe(
-      takeUntil(this.ngUnsubscribe),
-      filter(event => event instanceof NavigationEnd)
+  constructor(private router: Router, private storeService: StoreService) {
+    this.router.events
+      .pipe(
+        takeUntil(this.ngUnsubscribe),
+        filter(event => event instanceof NavigationEnd)
       )
       .subscribe(event => {
         this.routerSnapshot = event;
@@ -42,15 +38,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.storeService.change.pipe(
-      takeUntil(this.ngUnsubscribe))
-      .subscribe(isOpen => {
-        this.isOpen = isOpen;
-      });
+    this.storeService.change.pipe(takeUntil(this.ngUnsubscribe)).subscribe(isOpen => {
+      this.isOpen = isOpen;
+    });
   }
 
   SetActiveSidebarItem() {
-    let urlArray = this.routerSnapshot.url.split('/');
+    const urlArray = this.routerSnapshot.url.split('/');
     // urlArray[0] will be empty so we use shift to get rid of it.
     urlArray.shift();
     this.currentMenu = urlArray[0];

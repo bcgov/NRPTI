@@ -5,10 +5,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 // components
-import { GlobalComponent } from './global.component';
 import { ButtonSpinnerComponent } from './components/buttons/button-spinner/button-spinner.component';
 import { TableTemplateComponent } from './components/table-template/table-template.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
+import { PageSizePickerComponent } from './components/page-size-picker/page-size-picker.component';
+import { PageCountDisplayComponent } from './components/page-count-display/page-count-display.component';
 
 // directives
 import { TableDirective } from './components/table-template/table.directive';
@@ -30,8 +31,21 @@ import { TableTemplateUtils } from './components/table-template/table-template-u
  */
 @NgModule({
   imports: [BrowserModule, NgxPaginationModule],
-  declarations: [GlobalComponent, ButtonSpinnerComponent, TableDirective, TableTemplateComponent, BreadcrumbComponent],
+  declarations: [
+    ButtonSpinnerComponent,
+    TableDirective,
+    TableTemplateComponent,
+    BreadcrumbComponent,
+    PageSizePickerComponent,
+    PageCountDisplayComponent
+  ],
   providers: [ExportService, StoreService, SearchService, TableTemplateUtils],
-  exports: [GlobalComponent, ButtonSpinnerComponent, TableTemplateComponent, BreadcrumbComponent]
+  exports: [
+    ButtonSpinnerComponent,
+    TableTemplateComponent,
+    BreadcrumbComponent,
+    PageSizePickerComponent,
+    PageCountDisplayComponent
+  ]
 })
 export class GlobalModule {}

@@ -21,7 +21,7 @@ app-header {
 app-toggle-button {
   position: fixed;
   z-index: 1000;
-  margin-top: 17px;
+  margin-top: -60px;
   margin-left: 0;
 
   @media screen and (max-width: 768px) {
@@ -40,7 +40,7 @@ app-toggle-button {
   font-family: 'Noto Sans', sans-serif;
 
   @media screen and (min-width: 768px) {
-    margin-top: 68px;
+    margin-top: 139px;
   }
 }
 
