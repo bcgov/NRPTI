@@ -9,25 +9,17 @@ import { IBreadcrumb, StoreService } from 'nrpti-angular-components';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-
   @HostBinding('class.sidebarcontrol')
   isOpen = false;
 
   public breadcrumbs: IBreadcrumb[];
   public activeBreadcrumb: IBreadcrumb;
-  constructor(
-    private router: Router,
-    private storeService: StoreService
-    ) {
+  constructor(private router: Router, private storeService: StoreService) {
     this.breadcrumbs = [];
   }
 
   public navigateBreadcrumb(breadcrumbData) {
-    if (breadcrumbData.params) {
-      this.router.navigate([breadcrumbData.url, breadcrumbData.params]);
-    } else {
-      this.router.navigate([breadcrumbData.url]);
-    }
+    this.router.navigate([breadcrumbData.url]);
   }
 
   ngOnInit() {

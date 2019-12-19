@@ -11,9 +11,18 @@
   "
   (click)="onItemClicked(item)"
 >
-  <td data-label="Select" (click)="onItemSelected(item); $event.stopPropagation()" scope="row" class="col-1">
+  <!-- <td data-label="Select" (click)="onItemSelected(item); $event.stopPropagation()" scope="row" class="col-1">
     <input type="checkbox" aria-label="Checkbox for row item" [(ngModel)]="item.checkbox" />
+  </td> -->
+  <td scope="row" data-label="Prop" class="col-2">-</td>
+  <td scope="row" data-label="Name" class="col-2">{{ item.documentFileName || '-' }}</td>
+  <td scope="row" data-label="Type" class="col-2">{{ item.documentType || '-' }}</td>
+  <td scope="row" data-label="Location" class="col-2">-</td>
+  <td scope="row" data-label="Date" class="col-2">-</td>
+  <td scope="row" data-label="Attachments" class="col-1">-</td>
+  <td scope="row" data-label="Edit" class="col-1">
+    <button (click)="edit(item)" class="btn btn-primary" type="button" id="button-d">
+      <i class="material-icons">create</i>&nbsp;Edit
+    </button>
   </td>
-  <td scope="row" data-label="Name" class="col-6">{{ item.documentFileName || '-' }}</td>
-  <td scope="row" data-label="Prop" class="col-5">{{ item.documentType || '-' }}</td>
 </tr>
