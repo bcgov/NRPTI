@@ -166,7 +166,7 @@ exports.runDataQuery = function(
       return !!el;
     });
 
-    // Pre-pend the aggregation with other pipeline steps if we are joining on another datasource
+    // Pre-pend the aggregation with other pipeline steps if we are joining on another dataSource
     if (preQueryPipelineSteps && preQueryPipelineSteps.length > 0) {
       for (let step of preQueryPipelineSteps) {
         aggregations.unshift(step);
