@@ -3,7 +3,9 @@
 .project-list {
   &__options {
     @include flex(0 0 auto);
-    padding: 1rem 0rem;
+
+    padding: 1rem 0;
+
     mat-slide-toggle {
       white-space: normal;
     }
@@ -18,13 +20,17 @@
   .accordion__collapse-header {
     background: transparent;
   }
+
   &__project-details {
     font-size: 0.85rem;
+
     &--links {
       padding-top: 1.5rem;
     }
+
     &--description {
       margin-bottom: 1.25rem;
+
       &::ng-deep {
         p {
           margin: 0;
@@ -33,19 +39,23 @@
         }
       }
     }
+
     &--list {
       li {
         @include align-items(start);
-        +li {
+
+        + li {
           border-top: 1px solid $white;
         }
       }
+
       .name,
       .value {
         margin: 0;
         padding: 0.25rem 0.75rem;
         width: 50%;
       }
+
       .name {
         font-weight: bold;
       }
@@ -56,44 +66,56 @@
 @media (max-width: 767px) {
   .project-table {
     table-layout: auto;
+
     thead {
       display: block;
       width: 100%;
+
       tr {
         @include flex-box();
       }
+
       th {
         border-top: none;
         padding-left: 0.75rem;
         padding-right: 0.75rem;
+
         &.project-table__name-col {
           @include flex(1 1 auto);
         }
       }
     }
+
     &__name-col {
       // width: 45%;
     }
+
     &__cl_file-col {
       width: 25%;
     }
+
     &__purpose-col {
       display: none;
     }
+
     &__region-col {
       display: none;
     }
+
     &__status-col {
       width: 30%;
     }
+
     &__commenting-col {
       display: none;
     }
+
     &__project-details {
       &--links {
         .btn {
           width: 100%;
-          +.btn {
+
+          + .btn {
             margin-top: 0.5rem;
           }
         }
@@ -103,53 +125,64 @@
 }
 
 @media (min-width: 768px) {
-    .project-table {
-        &__name-col {
-            // width: 20%;
-        }
-        &__cl_file-col {
-            width: 12.5%;
-        }
-        &__purpose-col {
-            width: 25%;
-        }
-        &__region-col {
-            width: 12.5%;
-        }
-        &__status-col {
-            width: 14%;
-        }
-        &__commenting-col {
-            width: 16%;
-        }
-        &__project-details {
-            font-size: 0.9375rem;
-            &--description {
-                &::ng-deep {
-                    p {
-                        line-height: calc(0.9375rem * 1.5);
-                        font-size: 0.9375rem;
-                    }
-                }
-            }
-            &--list {
-                list-style-type: none;
-                .name {
-                    width: 15rem;
-                }
-                .value {
-                    width: auto;
-                }
-            }
-            &--links {
-                .btn {
-                    +.btn {
-                        margin-left: 0.5rem;
-                    }
-                }
-            }
-        }
+  .project-table {
+    &__name-col {
+      // width: 20%;
     }
+
+    &__cl_file-col {
+      width: 12.5%;
+    }
+
+    &__purpose-col {
+      width: 25%;
+    }
+
+    &__region-col {
+      width: 12.5%;
+    }
+
+    &__status-col {
+      width: 14%;
+    }
+
+    &__commenting-col {
+      width: 16%;
+    }
+
+    &__project-details {
+      font-size: 0.9375rem;
+
+      &--description {
+        &::ng-deep {
+          p {
+            line-height: calc(0.9375rem * 1.5);
+            font-size: 0.9375rem;
+          }
+        }
+      }
+
+      &--list {
+        list-style-type: none;
+
+        .name {
+          width: 15rem;
+        }
+
+        .value {
+          width: auto;
+        }
+      }
+
+      &--links {
+        .btn {
+          + .btn {
+            margin-left: 0.5rem;
+          }
+        }
+      }
+    }
+  }
 }
 
 .search-area {
@@ -158,7 +191,7 @@
 }
 
 .main-search-field {
-  margin-left: 0px;
+  margin-left: 0;
   padding: 8px;
 }
 
@@ -210,7 +243,7 @@
     margin-right: 8px;
 
     .sub-filters {
-      margin-left: 0px;
+      margin-left: 0;
 
       hr {
         margin-left: -1rem;
@@ -219,7 +252,7 @@
   }
 
   .btn {
-    margin: 8px 0px 8px 8px;
+    margin: 8px 0 8px 8px;
   }
 
   .type-btn {
@@ -235,11 +268,11 @@
   }
 
   .calendar {
-    margin: 0px;
+    margin: 0;
   }
 
   .date {
-    margin-left: 0px;
+    margin-left: 0;
   }
 
   .date-range {
@@ -247,7 +280,7 @@
     margin-top: 15px;
 
     .form-control {
-      z-index: 0px !important;
+      z-index: 0 !important;
     }
   }
 
@@ -268,18 +301,18 @@
 }
 
 .btn-group-toggle > .btn {
-    margin-bottom: 0;
-    background: none;
-    color: #13477b;
-    border: 1px solid #858b99;
-    font-weight: 600;
+  margin-bottom: 0;
+  background: none;
+  color: #13477b;
+  border: 1px solid #858b99;
+  font-weight: 600;
 
-    &:hover {
-      background: #fcb118;
-    }
-
-    &.active {
-        background: #235383;
-        color: #fff;
-    }
+  &:hover {
+    background: #fcb118;
   }
+
+  &.active {
+    background: #235383;
+    color: #fff;
+  }
+}

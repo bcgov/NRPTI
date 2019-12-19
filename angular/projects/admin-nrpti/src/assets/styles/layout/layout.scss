@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   min-height: 100%;
 }
 
@@ -8,7 +9,7 @@ app-root {
 }
 
 div.content {
-  transition: .25s all;
+  transition: 0.25s all;
   height: 1000px;
 }
 
@@ -39,7 +40,7 @@ div.content {
   }
 
   .sidebarcontrol div.content {
-    margin-left: 0px;
+    margin-left: 0;
   }
 
   .sidebarcontrol {
@@ -59,21 +60,22 @@ div.content {
   div.content {
     margin-left: 0;
   }
+
   .sidebarcontrol div.content {
     margin-left: 250px;
   }
+
   .slidebtn {
     transform: rotate(180deg);
     -webkit-transform: rotate(180deg);
   }
-  .sidebarcontrol {
 
+  .sidebarcontrol {
     .slidebtn {
       transform: rotate(0deg);
       -webkit-transform: rotate(0deg);
       border-radius: 0 6px 6px 0;
     }
-
   }
 }
 
@@ -131,7 +133,7 @@ main {
 
     &.add-spacer {
       padding-bottom: 2.5rem;
-      border-bottom: 2px solid #CCC;
+      border-bottom: 2px solid #ccc;
     }
 
     h3 {
@@ -164,11 +166,11 @@ main {
   }
 
   // Named anchor helper
-  .pg-anchor[id]:before {
-    content:" ";
-    display:block;
+  .pg-anchor[id]::before {
+    content: " ";
+    display: block;
     height: 98px;
-    margin:-98px 0 0;
+    margin: -98px 0 0;
   }
 
   .main-footer {
@@ -188,7 +190,7 @@ main {
   background: #e9ecef;
   padding: 10px 10px 12px 38px;
   position: fixed;
-  transition: .25s all;
+  transition: 0.25s all;
   z-index: 4;
 
   button[type="cancel"] {
@@ -257,7 +259,6 @@ button.btn-outline-secondary:hover {
   border-color: #036;
 }
 
-
 @media (min-width: 760px) {
   main {
     h2 {
@@ -290,6 +291,7 @@ hr {
 .clickable {
   cursor: pointer !important;
   color: $link-color !important;
+
   &:focus,
   &:hover {
     text-decoration: underline !important;
@@ -299,7 +301,7 @@ hr {
 // This should be in helper classes
 // hide the footer when a component (e.g. the map) is shown full screen
 .full-screen {
-  +app-footer {
+  + app-footer {
     display: none;
   }
 }
@@ -310,6 +312,7 @@ hr {
 
   &__title {
     @include flex(1 1 auto);
+
     margin: 0;
 
     h1 {
@@ -340,8 +343,9 @@ hr {
 
 .top-container {
   @include flex(0 0 auto);
+
   position: relative;
-  box-shadow: 0 0 0.5rem rgba(0,0,0,0.15);
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.15);
   z-index: 999;
 
   .container {
@@ -352,6 +356,7 @@ hr {
 
 .bottom-container {
   @include flex(1 1 auto);
+
   overflow-y: scroll;
   background: white;
 }
@@ -359,11 +364,12 @@ hr {
 ol.breadcrumb {
   @media screen and (max-width: 768px) {
     margin-bottom: 0;
-    font-size: .85rem;
-    padding: .85rem .65rem;
+    font-size: 0.85rem;
+    padding: 0.85rem 0.65rem;
 
-    li, a {
-      font-size: .85rem;
+    li,
+    a {
+      font-size: 0.85rem;
     }
   }
 }

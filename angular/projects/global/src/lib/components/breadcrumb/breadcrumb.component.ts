@@ -10,7 +10,8 @@ export interface IBreadcrumb {
 
 @Component({
   selector: 'lib-breadcrumb',
-  templateUrl: './breadcrumb.component.html'
+  templateUrl: './breadcrumb.component.html',
+  styleUrls: ['./breadcrumb.component.scss']
 })
 export class BreadcrumbComponent implements OnInit {
   @Output() navigateBreadcrumb: EventEmitter<any> = new EventEmitter();
@@ -63,6 +64,11 @@ export class BreadcrumbComponent implements OnInit {
 
       // verify the custom data property "breadcrumb" is specified on the route
       if (!child.snapshot.data.hasOwnProperty(ROUTE_DATA_BREADCRUMB)) {
+        return this.getBreadcrumbs(child, url, breadcrumbs);
+      }
+
+      // skip if breadcrumb data is null
+      if (!child.snapshot.data[ROUTE_DATA_BREADCRUMB]) {
         return this.getBreadcrumbs(child, url, breadcrumbs);
       }
 

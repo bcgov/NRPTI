@@ -2,6 +2,7 @@ import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angu
 
 import { TableObject } from 'nrpti-angular-components';
 import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'tbody[app-records-table-rows]',
@@ -17,7 +18,7 @@ export class RecordsTableRowsComponent implements OnInit, OnDestroy {
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   async ngOnInit() {}
 
@@ -39,5 +40,9 @@ export class RecordsTableRowsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  edit(item) {
+    this.router.navigate(['records', item._id, 'edit']);
   }
 }
