@@ -286,4 +286,3 @@ ng set default.styleExt css
 ```
 ng new my-app --routing --style scss
 ```
-
