@@ -17,7 +17,19 @@ pipeline {
               currentBuild.rawBuild.delete()
               error("No changes detected in the path ('^')")
             }
-            if (filesInThisCommitAsString.startsWith('angular/projects')) {
+
+            // Need to check eachline for either angular/ or api/
+            def angular = false;
+            def api = false;
+            filesInThisCommitAsString.eachLine {
+              if (it =~ /angular/) {
+                angular = true;
+              }
+              if (it =~ /api/) {
+                api = true;
+              }
+            }
+            if (angular) {
               // Fire up the angular builder
               echo "Running Angular builder"
               // openshiftBuild bldCfg: 'angular-app-build', showBuildLogs: 'true'
@@ -39,7 +51,7 @@ pipeline {
               }
               echo "Front end builds complete and deployed to Dev"
             }
-            if (filesInThisCommitAsString.startsWith('api/')) {
+            if (api) {
               // Fire up the api builder
               echo "Running API builder"
               def apiSelector = openshift.selector("bc", "nrpti-api").startBuild()
