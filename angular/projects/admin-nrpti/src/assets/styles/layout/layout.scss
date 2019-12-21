@@ -14,7 +14,7 @@ div.content {
 }
 
 .container-fluid-padding {
-  padding: 98px 1.5rem 14px;
+  padding: 0 1.5rem 14px;
 
   @media screen and (max-width: 768px) {
     padding: 1.2rem 1rem 14px;
@@ -193,7 +193,7 @@ main {
   transition: 0.25s all;
   z-index: 4;
 
-  button[type="cancel"] {
+  button[type='cancel'] {
     background: none;
     border-width: 2px;
     color: #007bff;
@@ -212,7 +212,7 @@ main {
   @media screen and (min-width: 768px) {
     display: flex;
     left: 250px;
-    top: 75px;
+    top: 69px;
     right: 0;
 
     ol {

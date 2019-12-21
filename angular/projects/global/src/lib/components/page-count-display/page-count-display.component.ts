@@ -1,0 +1,39 @@
+import { Component, Input, OnChanges } from '@angular/core';
+
+@Component({
+  selector: 'lib-page-count-display',
+  templateUrl: './page-count-display.component.html',
+  styleUrls: ['./page-count-display.component.scss']
+})
+export class PageCountDisplayComponent implements OnChanges {
+  @Input() isHidden = false;
+  @Input() currentPageNum = 1;
+  @Input() currentPageSize = 25;
+  @Input() totalItems = 0;
+
+  message = '';
+
+  constructor() {}
+
+  ngOnChanges() {
+    this.setCountDisplayMessage();
+  }
+
+  setCountDisplayMessage(): void {
+    const pageCount = Math.max(1, Math.ceil(this.totalItems / this.currentPageSize));
+
+    if (this.totalItems <= 0) {
+      this.message = 'No Records found';
+    } else if (this.currentPageNum > pageCount) {
+      // This check is necessary due to a rare edge-case where the user has manually incremented the page parameter in
+      // the URL beyond what would normally be allowed. As a result when records are fetched, there aren't enough
+      // to reach this page, and so the total records found is > 0, but the records displayed for this page
+      // is 0, which may confuse users.  Tell them to press clear button which will reset the pagination url parameter.
+      this.message = 'Unable to display results, please clear and re-try';
+    } else {
+      const low = Math.max((this.currentPageNum - 1) * this.currentPageSize + 1, 1);
+      const high = Math.min(this.totalItems, this.currentPageNum * this.currentPageSize);
+      this.message = `Displaying ${low} - ${high} of ${this.totalItems} records`;
+    }
+  }
+}

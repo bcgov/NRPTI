@@ -14,39 +14,4 @@ describe('ApiService', () => {
     const service = TestBed.get(ApiService);
     expect(service).toBeTruthy();
   });
-
-  describe('buildRecordQueryParametersString', () => {
-    let service;
-
-    beforeEach(() => {
-      service = TestBed.get(ApiService);
-    });
-
-    it('given undefined query params returns empty string', () => {
-      const result = service.buildRecordQueryParametersString(undefined);
-
-      expect(result).toEqual('');
-    });
-
-    it('given null query params returns empty string', () => {
-      const result = service.buildRecordQueryParametersString(null);
-
-      expect(result).toEqual('');
-    });
-
-    it('given all query params', () => {
-      const queryParams: IRecordQueryParamSet = {
-        pageNum: 0,
-        pageSize: 30,
-        sortBy: 'status',
-        isDeleted: false
-      };
-
-      const result = service.buildRecordQueryParametersString(queryParams);
-
-      const expectedResult = 'isDeleted=false&' + 'sortBy=status&' + 'pageNum=0&' + 'pageSize=30';
-
-      expect(result).toEqual(expectedResult);
-    });
-  });
 });

@@ -2,11 +2,8 @@ import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-// import { Record } from '../../models/record';
-import { ExportService } from 'nrpti-angular-components';
-import { FactoryService } from '../../services/factory.service';
 import { takeUntil } from 'rxjs/operators';
-import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
+import { TableTemplateUtils, TableObject, IColumnObject, IPageSizePickerOption } from 'nrpti-angular-components';
 import { RecordsTableRowsComponent } from '../records-rows/records-table-rows.component';
 
 /**
@@ -31,36 +28,36 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   public navigationObject;
 
   public tableData: TableObject = new TableObject({ component: RecordsTableRowsComponent });
-  public tableColumns: any[] = [
+  public tableColumns: IColumnObject[] = [
     {
       name: 'Issued To',
-      value: '',
+      value: 'issuedTo',
       width: 'col-2'
     },
     {
       name: 'Name',
       value: 'documentFileName',
-      width: 'col-2'
+      width: 'col-4'
     },
     {
       name: 'Type',
-      value: '',
-      width: 'col-2'
+      value: 'type',
+      width: 'col-1'
     },
     {
       name: 'Location',
-      value: '',
+      value: 'location',
       width: 'col-2'
     },
     {
       name: 'Date',
-      value: '',
-      width: 'col-2'
+      value: 'documentDate',
+      width: 'col-1'
     },
     {
       name: 'Attachments',
       value: '',
-      width: 'col-1'
+      width: 'col-2'
     },
     {
       width: 'col-1',
@@ -73,9 +70,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     public router: Router,
     public route: ActivatedRoute,
     private tableTemplateUtils: TableTemplateUtils,
-    private _changeDetectionRef: ChangeDetectorRef,
-    public factoryService: FactoryService,
-    public exportService: ExportService
+    private _changeDetectionRef: ChangeDetectorRef
   ) {}
 
   /**
@@ -94,34 +89,83 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     });
 
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
-      if (res) {
-        this.tableData.items = res.records[0].data.searchResults;
-
-        if (res.records[0].data.meta.length > 0) {
-          this.tableData.totalListItems = res.records[0].data.meta[0].searchResultsTotal;
-        }
-
-        this.tableData.columns = this.tableColumns;
-        this.loading = false;
-        this._changeDetectionRef.detectChanges();
-      } else {
-        alert("Uh-oh, couldn't load valued components");
-        // project not found --> navigate back to search
-        this.router.navigate(['/search']);
+      if (!res || !res.records) {
+        alert("Uh-oh, couldn't load NRPTI records");
+        // project not found --> navigate back to home
+        this.router.navigate(['/']);
+        return;
       }
+
+      this.tableData.items = res.records[0] && res.records[0].data && res.records[0].data.searchResults;
+      if (res.records[0] && res.records[0].data && res.records[0].data.meta && res.records[0].data.meta.length) {
+        this.tableData.totalListItems = res.records[0].data.meta[0].searchResultsTotal;
+      }
+
+      this.tableData.columns = this.tableColumns;
+      this.loading = false;
+      this._changeDetectionRef.detectChanges();
     });
   }
 
-  setColumnSort(event) {
-    console.log('event', event);
+  /**
+   * Record item click handler.
+   *
+   * @param {*} item record data item.
+   * @memberof RecordsListComponent
+   */
+  itemClicked(item) {
+    this.router.navigate(['records', item._id, 'details']);
   }
 
-  itemClicked(item) {
-    console.log('itemClickedxxx', item);
+  itemSelected(item) {}
+
+  /**
+   * Column sorting handler.
+   *
+   * @param {*} column
+   * @memberof RecordsListComponent
+   */
+  setColumnSort(column) {
+    if (this.tableData.sortBy.charAt(0) === '+') {
+      this.tableData.sortBy = '-' + column;
+    } else {
+      this.tableData.sortBy = '+' + column;
+    }
+    this.submit();
   }
-  itemSelected(item) {
-    console.log('itemSelectedxxx', item);
+
+  /**
+   * Page number changed (pagination).
+   *
+   * @param {*} pageNumber
+   * @memberof RecordsListComponent
+   */
+  onPageNumUpdate(pageNumber) {
+    this.tableData.currentPage = pageNumber;
+    this.submit();
   }
+
+  /**
+   * Page size picker option selected handler.
+   *
+   * @param {IPageSizePickerOption} pageSize
+   * @memberof RecordsListComponent
+   */
+  onPageSizeUpdate(pageSize: IPageSizePickerOption) {
+    this.tableData.pageSize = pageSize.value;
+    this.submit();
+  }
+
+  /**
+   * Update record table with latest values (whatever is set in this.tableData).
+   *
+   * @memberof RecordsListComponent
+   */
+  submit() {
+    this.tableTemplateUtils.navigateUsingParams(this.tableData, ['records']);
+  }
+
+  checkChange() {}
 
   /**
    * Cleanup on component destroy.

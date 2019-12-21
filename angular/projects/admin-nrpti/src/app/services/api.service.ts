@@ -1,81 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 
 import { Document } from '../models/document';
 import { Utils } from '../utils/utils';
-import { Record } from '../models/record';
-import { map } from 'rxjs/operators';
-
-/**
- * Supported query param field modifiers used by the api to interpret the query param value.
- *
- * @export
- * @enum {number}
- */
-export enum QueryParamModifier {
-  Equal = 'eq', // value must be equal to this, for multiple values must match at least one
-  Not_Equal = 'ne', // value must not be equal to this, for multiple values must not match any
-  Since = 'since', // date must be on or after this date
-  Until = 'until' // date must be before this date
-}
-
-/**
- * A complete set of query param fields used to make a single call to the api.
- *
- * Note: this can contain multiple properties as long as the keys are strings and the values are IQueryParamValue.
- *
- * @export
- * @interface IQueryParamSet
- */
-export interface IQueryParamSet {
-  [key: string]: IQueryParamValue<any>;
-}
-
-/**
- * A single query param field with optional modifier.
- *
- * @export
- * @interface IQueryParamValue
- * @template T
- */
-export interface IQueryParamValue<T> {
-  value: T;
-  modifier?: QueryParamModifier;
-}
-
-/**
- * Supported query parameters for record requests.
- *
- * Note: all parameters are optional.
- *
- * @export
- * @interface IRecordQueryParamSet
- */
-export interface IRecordQueryParamSet {
-  _id?: string;
-  pageNum?: number;
-  pageSize?: number;
-  sortBy?: string;
-  isDeleted?: boolean;
-
-  demo?: IQueryParamValue<string[]>;
-}
-
-/**
- * Supported query parameters for document requests.
- *
- * Note: all parameters are optional.
- *
- * @export
- * @interface IRecordQueryParamSet
- */
-export interface IDocumentQueryParamSet {
-  pageNum?: number;
-  pageSize?: number;
-  sortBy?: string;
-  isDeleted?: boolean;
-}
 
 /**
  * TODO: populate this documentation
@@ -134,52 +62,9 @@ export class ApiService {
     return this.http.post<any>(`${this.pathAPI}/${queryString}`, obj, {});
   }
 
-  /**
-   * Get count of matching records.
-   *
-   * @param {IRecordQueryParamSet} [queryParams=null]
-   * @returns {Observable<Record[]>} Observable that emits the count of matching records.
-   * @memberof ApiService
-   */
-  getRecordsCount(queryParams: IRecordQueryParamSet = null): Observable<number> {
-    const queryString =
-      'record?' +
-      `${this.buildRecordQueryParametersString(queryParams)}&` +
-      `fields=${Utils.convertArrayIntoPipeString(Record.getFields())}`;
-
-    return this.http.head<HttpResponse<object>>(`${this.pathAPI}/${queryString}`, { observe: 'response' }).pipe(
-      map(res => {
-        // retrieve the count from the response headers
-        return parseInt(res.headers.get('x-total-count'), 10);
-      })
-    );
-  }
-
-  /**
-   * Get matching records.
-   *
-   * @param {IRecordQueryParamSet} [queryParams=null]
-   * @returns {Observable<Record[]>} Observable that emits an array of matching records.
-   * @memberof ApiService
-   */
-  getRecords(queryParams: IRecordQueryParamSet = null): Observable<Record[]> {
-    const queryString =
-      'record?' +
-      `${this.buildRecordQueryParametersString(queryParams)}&` +
-      `fields=${Utils.convertArrayIntoPipeString(Record.getFields())}`;
-
-    return this.http.get<Record[]>(`${this.pathAPI}/${queryString}`, {});
-  }
-
   //
   // Documents
   //
-
-  // NB: returns array with 1 element
-  getDocument(id: string): Observable<Document[]> {
-    const queryString = `document/${id}`;
-    return this.http.get<Document[]>(`${this.pathAPI}/${queryString}`, {});
-  }
 
   deleteDocument(doc: Document): Observable<Document> {
     const queryString = `document/${doc._id}`;
@@ -237,74 +122,6 @@ export class ApiService {
       const fileURL = URL.createObjectURL(blob);
       tab.location.href = fileURL;
     }
-  }
-
-  /**
-   * Checks each record query parameter of the given queryParams and builds a single query string.
-   *
-   * @param {IRecordQueryParamSet} queryParams
-   * @returns {string}
-   * @memberof ApiService
-   */
-  public buildRecordQueryParametersString(params: IRecordQueryParamSet): string {
-    if (!params) {
-      return '';
-    }
-
-    let queryString = '';
-
-    if ([true, false].includes(params.isDeleted)) {
-      queryString += `isDeleted=${params.isDeleted}&`;
-    }
-
-    if (params.sortBy) {
-      queryString += `sortBy=${params.sortBy}&`;
-    }
-
-    if (params.pageNum >= 0) {
-      queryString += `pageNum=${params.pageNum}&`;
-    }
-
-    if (params.pageSize >= 0) {
-      queryString += `pageSize=${params.pageSize}&`;
-    }
-
-    // trim the last &
-    return queryString.replace(/\&$/, '');
-  }
-
-  /**
-   * Checks each document query parameter of the given queryParams and builds a single query string.
-   *
-   * @param {IDocumentQueryParamSet} queryParams
-   * @returns {string}
-   * @memberof ApiService
-   */
-  public buildDocumentQueryParametersString(params: IDocumentQueryParamSet): string {
-    if (!params) {
-      return '';
-    }
-
-    let queryString = '';
-
-    if ([true, false].includes(params.isDeleted)) {
-      queryString += `isDeleted=${params.isDeleted}&`;
-    }
-
-    if (params.sortBy) {
-      queryString += `sortBy=${params.sortBy}&`;
-    }
-
-    if (params.pageNum >= 0) {
-      queryString += `pageNum=${params.pageNum}&`;
-    }
-
-    if (params.pageSize >= 0) {
-      queryString += `pageSize=${params.pageSize}&`;
-    }
-
-    // trim the last &
-    return queryString.replace(/\&$/, '');
   }
 
   /**

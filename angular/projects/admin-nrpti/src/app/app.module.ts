@@ -22,11 +22,13 @@ import { FooterComponent } from './footer/footer.component';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
 import { HomeComponent } from './home/home.component';
 import { ImportComponent } from './import/import.component';
-import { SidebarComponent } from 'app/sidebar/sidebar.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { RecordsTableRowsComponent } from './records/records-rows/records-table-rows.component';
+import { ImportTableRowsComponent } from './import/import-rows/import-table-rows.component';
+import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
 
 // services
 import { ApiService } from './services/api.service';
-import { RecordService } from './services/record.service';
 import { DocumentService } from './services/document.service';
 import { FactoryService } from './services/factory.service';
 import { KeycloakService } from './services/keycloak.service';
@@ -40,9 +42,6 @@ import { CanDeactivateGuard } from './guards/can-deactivate-guard.service';
 
 // utils
 import { TokenInterceptor } from './utils/token-interceptor';
-import { RecordsTableRowsComponent } from './records/records-rows/records-table-rows.component';
-import { ImportTableRowsComponent } from './import/import-rows/import-table-rows.component';
-import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
 
 export function keycloakFactory(keycloakService: KeycloakService) {
   return () => keycloakService.init();
@@ -89,7 +88,6 @@ export function keycloakFactory(keycloakService: KeycloakService) {
       multi: true
     },
     ApiService,
-    RecordService,
     DocumentService,
     FactoryService,
     ImportListResolver,
