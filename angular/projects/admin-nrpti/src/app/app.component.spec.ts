@@ -8,6 +8,10 @@ import { ApiService } from './services/api.service';
 import { KeycloakService } from './services/keycloak.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
+import { BreadcrumbComponent, StoreService } from 'nrpti-angular-components';
+import { of } from 'rxjs';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -17,10 +21,26 @@ describe('AppComponent', () => {
       }
     };
 
+    const mockStoreService = {
+      change: of(),
+      toggleSideNave: () => {}
+    };
+
     TestBed.configureTestingModule({
-      declarations: [AppComponent, HeaderComponent, FooterComponent],
+      declarations: [
+        AppComponent,
+        HeaderComponent,
+        FooterComponent,
+        SidebarComponent,
+        ToggleButtonComponent,
+        BreadcrumbComponent
+      ],
       imports: [RouterTestingModule, HttpClientTestingModule, BrowserAnimationsModule],
-      providers: [ApiService, { provide: KeycloakService, useValue: mockKeycloakService }]
+      providers: [
+        ApiService,
+        { provide: KeycloakService, useValue: mockKeycloakService },
+        { provide: StoreService, useValue: mockStoreService }
+      ]
     }).compileComponents();
   }));
 

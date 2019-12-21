@@ -16,10 +16,10 @@ import { RecordsRoutingModule } from './records-routing.module';
 import { RecordsListComponent } from './records-list/records-list.component';
 import { RecordsAddEditComponent } from './records-add-edit/records-add-edit.component';
 import { RecordsTableRowsComponent } from './records-rows/records-table-rows.component';
+import { RecordDetailComponent } from './record-detail/record-detail.component';
 
 // resolvers
 import { RecordsListResolver } from './records-list/records-list-resolver';
-import { RecordDetailComponent } from './record-detail/record-detail.component';
 
 @NgModule({
   imports: [

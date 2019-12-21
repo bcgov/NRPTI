@@ -5,13 +5,14 @@
   width: 250px;
   background-color: #38598a;
   position: fixed;
-  /* Probably should not hardcode to account for the footer*/
+
+  /* Probably should not hardcode to account for the footer */
   height: calc(100% - 71px - 37px);
   overflow: auto;
   transition: 0.3s;
 
   @media screen and (min-width: 768px) {
-    margin-top: 71px;
+    margin-top: 69px;
   }
 }
 
@@ -33,10 +34,10 @@
 
 .sidebar .project-menu {
   padding: 6px 16px 8px;
-  padding-left: .8rem;
+  padding-left: 0.8rem;
 
   .material-icons {
-    margin-right: .5rem;
+    margin-right: 0.5rem;
     font-size: 16px;
     top: 2px;
   }
@@ -44,7 +45,7 @@
 
 /* Active/current link */
 .sidebar a.active {
-  color: #FCB118;
+  color: #fcb118;
 }
 
 .sidebar .dropdown-btn {
@@ -53,10 +54,9 @@
 
 /* Links on mouse-over */
 .sidebar a:hover:not(.active) {
-  background-color: #FCB118;
+  background-color: #fcb118;
   color: #036;
 }
-
 
 // /* On screens that are less than 650px wide, make the sidebar into a topbar */
 // @media screen and (max-width: 650px) {
@@ -68,7 +68,6 @@
 //   }
 // }
 
-
 // /* On screens that are less than 400px, display the bar vertically, instead of horizontally */
 // @media screen and (max-width: 350px) {
 //   .sidebar a {
@@ -78,7 +77,8 @@
 // }
 
 /* Style the sidenav links and the dropdown button */
-.sidenav a, .dropdown-btn {
+.sidenav a,
+.dropdown-btn {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   font-size: 20px;
@@ -86,7 +86,7 @@
   display: block;
   border: none;
   background: none;
-  width:100%;
+  width: 100%;
   text-align: left;
   cursor: pointer;
   outline: none;
@@ -94,7 +94,8 @@
 }
 
 /* On mouse-over */
-.sidenav a:hover, .dropdown-btn:hover {
+.sidenav a:hover,
+.dropdown-btn:hover {
   color: #f1f1f1;
 }
 
@@ -102,7 +103,7 @@
 .main {
   margin-left: 250px; /* Same as the width of the sidenav */
   font-size: 20px; /* Increased text to enable scrolling */
-  padding: 0px 10px;
+  padding: 0 10px;
 }
 
 /* Add an active class to the active dropdown button */

@@ -1,11 +1,25 @@
-<div class="sidebar" [ngClass]="{'isOpen': isOpen === true}" >
+<div class="sidebar" [ngClass]="{ isOpen: isOpen === true }">
   <section class="full-nav">
-    <a [ngClass]="{'active': currentMenu === 'records'}" id="records" [routerLink]="['/records']"><i class="material-icons mr-3 ">view_list</i>All Records</a>
-    <a [ngClass]="{'active': currentMenu === 'news'}" id="news" [routerLink]="['/news']"><i class="material-icons mr-3">notifications_active</i>News List</a>
-    <a [ngClass]="{'active': currentMenu === 'analytics'}" id="analytics" [routerLink]="['/analytics']"><i class="material-icons mr-3 ">assessment</i>Analytics</a>
-    <a [ngClass]="{'active': currentMenu === 'map'}" id="map" [routerLink]="['/map']"><i class="material-icons mr-3 ">map</i>Map</a>
-    <a [ngClass]="{'active': currentMenu === 'entities'}" id="entities" [routerLink]="['/entities']"><i class="material-icons mr-3 ">people</i>Entities</a>
-    <a [ngClass]="{'active': currentMenu === 'projects'}" id="projects" [routerLink]="['/projects']"><i class="material-icons mr-3">view_list</i>Projects</a>
-    <a [ngClass]="{'active': currentMenu === 'imports'}" id="imports" [routerLink]="['/imports']"><i class="material-icons mr-3">import_export</i>Imports</a>
+    <a [ngClass]="{ active: currentMenu === 'records' }" id="records" [routerLink]="['/records']"
+      ><i class="material-icons mr-3 ">view_list</i>All Records</a
+    >
+    <a [ngClass]="{ active: currentMenu === 'news' }" id="news" [routerLink]="['/news']"
+      ><i class="material-icons mr-3">notifications_active</i>News List</a
+    >
+    <a [ngClass]="{ active: currentMenu === 'analytics' }" id="analytics" [routerLink]="['/analytics']"
+      ><i class="material-icons mr-3 ">assessment</i>Analytics</a
+    >
+    <a [ngClass]="{ active: currentMenu === 'map' }" id="map" [routerLink]="['/map']"
+      ><i class="material-icons mr-3 ">map</i>Map</a
+    >
+    <a [ngClass]="{ active: currentMenu === 'entities' }" id="entities" [routerLink]="['/entities']"
+      ><i class="material-icons mr-3 ">people</i>Entities</a
+    >
+    <a [ngClass]="{ active: currentMenu === 'projects' }" id="projects" [routerLink]="['/projects']"
+      ><i class="material-icons mr-3">view_list</i>Projects</a
+    >
+    <a [ngClass]="{ active: currentMenu === 'imports' }" id="imports" [routerLink]="['/imports']"
+      ><i class="material-icons mr-3">import_export</i>Imports</a
+    >
   </section>
 </div>

@@ -46,7 +46,7 @@ let genSchema = function(name, definition) {
   // to come in handy somewhere, likely with permission setting since the
   // ids are unbound from their model types
   //
-  definition._schemaName = { type: String, default: name, index: true };
+  definition._schemaName = { ...{ type: String, default: name, index: true }, ...definition._schemaName };
 
   //
   // create the schema

@@ -25,6 +25,7 @@ export class TableTemplateComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild(TableDirective) tableHost: TableDirective;
 
   @Output() pageNumUpdate: EventEmitter<any> = new EventEmitter();
+  @Output() pageSizeUpdate: EventEmitter<any> = new EventEmitter();
   @Output() itemClicked: EventEmitter<any> = new EventEmitter();
   @Output() itemSelected: EventEmitter<any> = new EventEmitter();
   @Output() columnSort: EventEmitter<any> = new EventEmitter();
@@ -47,6 +48,7 @@ export class TableTemplateComponent implements OnInit, OnChanges, OnDestroy {
       this.data.currentPage = changes['data'].currentValue.currentPage;
       this.data.filter = changes['data'].currentValue.filter;
       this.data.keywords = changes['data'].currentValue.keywords;
+      this.data.pageSizeOptions = changes['data'].currentValue.pageSizeOptions;
       this.data.pageSize = changes['data'].currentValue.pageSize;
       this.data.sortBy = changes['data'].currentValue.sortBy;
       this.data.totalListItems = changes['data'].currentValue.totalListItems;
@@ -58,6 +60,11 @@ export class TableTemplateComponent implements OnInit, OnChanges, OnDestroy {
     this.columnSort.emit(property);
   }
 
+  /**
+   * Loads the component specified in TableObject.component.
+   *
+   * @memberof TableTemplateComponent
+   */
   loadComponent() {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.data.component);
 
@@ -83,6 +90,10 @@ export class TableTemplateComponent implements OnInit, OnChanges, OnDestroy {
 
   updatePageNumber(pageNum) {
     this.pageNumUpdate.emit(pageNum);
+  }
+
+  updatePageSize(pageSize) {
+    this.pageSizeUpdate.emit(pageSize);
   }
 
   ngOnDestroy() {

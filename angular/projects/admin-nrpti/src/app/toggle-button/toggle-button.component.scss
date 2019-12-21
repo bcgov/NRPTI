@@ -13,24 +13,26 @@ button {
   }
 }
 
-.side-arrow::after,
-.side-arrow::before {
-  top: 24px;
-  border-left: 3px solid #fff;
-  content: " ";
-  height: 13px;
-  width: 13px;
-  position: absolute;
-  pointer-events: none;
-  left: 13px;
-}
+.side-arrow {
+  &::after,
+  &::before {
+    top: 24px;
+    border-left: 3px solid #fff;
+    content: ' ';
+    height: 13px;
+    width: 13px;
+    position: absolute;
+    pointer-events: none;
+    left: 13px;
+  }
 
-.side-arrow::after {
-  -webkit-transform: rotate(135deg);
-  left: 6px;
-}
+  &::after {
+    -webkit-transform: rotate(135deg);
+    left: 6px;
+  }
 
-.side-arrow::before {
-  -webkit-transform: rotate(45deg);
-  top: 16px;
+  &::before {
+    -webkit-transform: rotate(45deg);
+    top: 16px;
+  }
 }

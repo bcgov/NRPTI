@@ -11,16 +11,13 @@
   "
   (click)="onItemClicked(item)"
 >
-  <!-- <td data-label="Select" (click)="onItemSelected(item); $event.stopPropagation()" scope="row" class="col-1">
-    <input type="checkbox" aria-label="Checkbox for row item" [(ngModel)]="item.checkbox" />
-  </td> -->
-  <td scope="row" data-label="Prop" class="col-2">-</td>
-  <td scope="row" data-label="Name" class="col-2">{{ item.documentFileName || '-' }}</td>
-  <td scope="row" data-label="Type" class="col-2">{{ item.documentType || '-' }}</td>
-  <td scope="row" data-label="Location" class="col-2">-</td>
-  <td scope="row" data-label="Date" class="col-2">-</td>
-  <td scope="row" data-label="Attachments" class="col-1">-</td>
-  <td scope="row" data-label="Edit" class="col-1">
+  <td scope="row" data-label="Issued To" class="col-2">{{ item.issuedTo || '-' }}</td>
+  <td scope="row" data-label="Name" class="col-4">{{ item.documentFileName || '-' }}</td>
+  <td scope="row" data-label="Type" class="col-1">{{ item.documentType || '-' }}</td>
+  <td scope="row" data-label="Location" class="col-2">{{ item.location || '-' }}</td>
+  <td scope="row" data-label="Date" class="col-1">{{ item.documentDate | date: 'mediumDate' || '-' }}</td>
+  <td scope="row" data-label="Attachments" class="col-2">-</td>
+  <td scope="row" data-label="" class="col-1">
     <button (click)="edit(item)" class="btn btn-primary" type="button" id="button-d">
       <i class="material-icons">create</i>&nbsp;Edit
     </button>

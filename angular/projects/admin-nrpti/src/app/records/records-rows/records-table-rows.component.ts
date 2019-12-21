@@ -22,18 +22,13 @@ export class RecordsTableRowsComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {}
 
-  goToItem(activity) {
-    console.log('activity:', activity);
-    // this.router.navigate(['/project-pins', activity._id, 'edit']);
-  }
-
   onItemClicked(item) {
     console.log('itemClicked:', item);
     this.itemClicked.emit(item);
   }
 
   onItemSelected(item) {
-    console.log('itemSelected?:', item);
+    console.log('itemSelected:', item);
     this.itemSelected.emit(item);
   }
 

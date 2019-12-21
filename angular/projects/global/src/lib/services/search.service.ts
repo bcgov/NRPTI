@@ -43,7 +43,7 @@ export class SearchService {
   getSearchResults(
     pathAPI: string,
     keys: string,
-    dataset: string,
+    dataset: string[],
     fields: any[],
     pageNum: number = 1,
     pageSize: number = 10,

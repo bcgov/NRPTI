@@ -12,7 +12,7 @@ module.exports = require('../../utils/model-schema-generator')(
     issuingAgency: { type: String, default: '' },
     author: { type: String, default: '' },
     type: { type: String, default: '' },
-    quarter: { type: String, default: '' },
+    quarter: { type: Date, default: null },
     entityType: { type: String, default: '' },
     issuedTo: { type: String, default: '' }, // first, middle, last OR company
     birthDate: { type: Date, default: null }, // for individual

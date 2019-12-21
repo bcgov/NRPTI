@@ -17,7 +17,7 @@ export class StoreService {
     this[state.type] = state.data;
   }
 
-  toggle() {
+  toggleSideNav() {
     this.isOpen = !this.isOpen;
     this.change.emit(this.isOpen);
   }

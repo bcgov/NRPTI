@@ -24,15 +24,4 @@ export class Document {
     this.isDeleted = (obj && obj.isDeleted) || null;
     this.internalMime = (obj && obj.internalMime) || null;
   }
-
-  /**
-   * Return an array of model fields.
-   *
-   * @static
-   * @returns {string[]}
-   * @memberof Record
-   */
-  static getFields(): string[] {
-    return ['_record', '_addedBy', 'documentFileName', 'displayName', 'internalURL', 'isDeleted', 'internalMime'];
-  }
 }

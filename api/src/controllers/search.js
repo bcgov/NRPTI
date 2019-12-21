@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var Actions = require('../utils/actions');
 var Utils = require('../utils/utils');
 var qs = require('qs');
+var mongodb = require('../utils/mongodb');
 
 function isEmpty(obj) {
   for (var key in obj) {
@@ -17,12 +18,12 @@ var generateExpArray = async function (field, roles) {
   var expArray = [];
   if (field && field != undefined) {
     var queryString = qs.parse(field);
-    console.log("queryString:", queryString);
+    defaultLog.info("queryString:", queryString);
     // Note that we need map and not forEach here because Promise.all uses
     // the returned array!
     await Promise.all(Object.keys(queryString).map(async item => {
       var entry = queryString[item];
-      console.log("item:", item, entry);
+      defaultLog.info("item:", item, entry);
       if (item === 'pcp') {
         await handlePCPItem(roles, expArray, entry);
       } else if (Array.isArray(entry)) {
@@ -53,33 +54,33 @@ var generateExpArray = async function (field, roles) {
       }
     }));
   }
-  console.log("expArray:", expArray);
+  defaultLog.info("expArray:", expArray);
   return expArray;
 }
 
 var getConvertedValue = function (item, entry) {
   if (isNaN(entry)) {
     if (mongoose.Types.ObjectId.isValid(entry)) {
-      console.log("objectid");
+      defaultLog.info("objectid");
       // ObjectID
       return { [item]: mongoose.Types.ObjectId(entry) };
     } else if (entry === 'true') {
-      console.log("bool");
+      defaultLog.info("bool");
       // Bool
       var tempObj = {}
       tempObj[item] = true;
       tempObj.active = true;
       return tempObj;
     } else if (entry === 'false') {
-      console.log("bool");
+      defaultLog.info("bool");
       // Bool
       return { [item]: false };
     } else {
-      console.log("string");
+      defaultLog.info("string");
       return { [item]: entry };
     }
   } else {
-    console.log("number");
+    defaultLog.info("number");
     return { [item]: parseInt(entry) };
   }
 }
@@ -100,7 +101,7 @@ var handlePCPItem = async function (roles, expArray, value) {
 }
 
 var getPCPValue = async function (roles, entry) {
-  console.log('pcp: ', entry);
+  defaultLog.info('pcp: ', entry);
 
   var query = null;
   var now = new Date();
@@ -137,7 +138,7 @@ var getPCPValue = async function (roles, entry) {
       break;
 
     default:
-      console.log('Unknown PCP entry');
+      defaultLog.info('Unknown PCP entry');
   }
 
   var pcp = {};
@@ -148,7 +149,7 @@ var getPCPValue = async function (roles, entry) {
     pcp = { _id: { $in: ids } };
   }
 
-  console.log('pcp', pcp);
+  defaultLog.info('pcp', pcp);
   return pcp;
 }
 
@@ -172,7 +173,7 @@ var handleDateEndItem = function (expArray, field, entry) {
   }
 }
 
-var searchCollection = async function (roles, keywords, collection, pageNum, pageSize, project, sortField = undefined, sortDirection = undefined, caseSensitive, populate = false, and, or) {
+var searchCollection = async function (roles, keywords, schemaName, pageNum, pageSize, project, sortField = undefined, sortDirection = undefined, caseSensitive, populate = false, and, or) {
   var properties = undefined;
   if (project) {
     properties = { project: mongoose.Types.ObjectId(project) };
@@ -200,7 +201,7 @@ var searchCollection = async function (roles, keywords, collection, pageNum, pag
   }
 
   var match = {
-    _schemaName: collection,
+    _schemaName: Array.isArray(schemaName) ? { $in: schemaName } : schemaName,
     ...(isEmpty(modifier) ? undefined : modifier),
     ...(searchProperties ? searchProperties : undefined),
     ...(properties ? properties : undefined),
@@ -210,8 +211,8 @@ var searchCollection = async function (roles, keywords, collection, pageNum, pag
     ]
   };
 
-  console.log("modifier:", modifier);
-  console.log("match:", match);
+  defaultLog.info("modifier:", modifier);
+  defaultLog.info("match:", match);
 
   var sortingValue = {};
   sortingValue[sortField] = sortDirection;
@@ -246,10 +247,10 @@ var searchCollection = async function (roles, keywords, collection, pageNum, pag
     strength: 2
   };
 
-  console.log('collation:', collation);
+  defaultLog.info('collation:', collation);
 
-  console.log('populate:', populate);
-  if (populate === true && collection !== 'Project') {
+  defaultLog.info('populate:', populate);
+  if (populate === true && schemaName !== 'Project') {
     aggregation.push({
       "$lookup": {
         "from": "epic",
@@ -314,16 +315,19 @@ var searchCollection = async function (roles, keywords, collection, pageNum, pag
     }
   })
 
-  console.log("collection:", collection);
+  defaultLog.info("Executing searching on schema(s):", schemaName);
 
   return new Promise(function (resolve, reject) {
-    var collectionObj = mongoose.model(collection);
-    collectionObj.aggregate(aggregation)
-      .collation(collation)
-      .exec()
-      .then(function (data) {
-        resolve(Utils.filterData(collection, data, roles));
-      }, reject);
+    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const collection = db.collection('nrpti');
+    collection.aggregate(aggregation, function (err, data) {
+      if (err) {
+        defaultLog.info("err:", err);
+        resolve([]);
+      } else {
+        resolve(data);
+      }
+    })
   });
 }
 
@@ -361,11 +365,11 @@ var executeQuery = async function (args, res, next) {
 
   var roles = args.swagger.params.auth_payload ? args.swagger.params.auth_payload.realm_access.roles : ['public'];
 
-  console.log("Searching Collection:", dataset);
+  defaultLog.info("Searching Collection:", dataset);
 
-  console.log("******************************************************************");
-  console.log(roles);
-  console.log("******************************************************************");
+  defaultLog.info("******************************************************************");
+  defaultLog.info(roles);
+  defaultLog.info("******************************************************************");
 
   Utils.recordAction('Search', keywords, args.swagger.params.auth_payload ? args.swagger.params.auth_payload.preferred_username : 'public')
 
@@ -379,28 +383,22 @@ var executeQuery = async function (args, res, next) {
     sortingValue[sortField] = sortDirection;
   });
 
-  console.log("sortingValue:", sortingValue);
+  defaultLog.info("sortingValue:", sortingValue);
   defaultLog.info("sortField:", sortField);
   defaultLog.info("sortDirection:", sortDirection);
 
   if (dataset !== 'Item') {
 
-    console.log("Searching Collection:", dataset);
-    console.log("sortField:", sortField);
-    var itemData = await searchCollection(roles, keywords, dataset, pageNum, pageSize, project, sortField, sortDirection, caseSensitive, populate, and, or)
-    if (dataset === 'Comment') {
-      // Filter
-      _.each(itemData[0].searchResults, function (item) {
-        if (item.isAnonymous === true) {
-          delete item.author;
-        }
-      });
-    }
+    defaultLog.info("Searching Dataset:", dataset);
+    defaultLog.info("sortField:", sortField);
+
+    let itemData = await searchCollection(roles, keywords, dataset, pageNum, pageSize, project, sortField, sortDirection, caseSensitive, populate, and, or)
+
     return Actions.sendResponse(res, 200, itemData);
 
   } else if (dataset === 'Item') {
     var collectionObj = mongoose.model(args.swagger.params._schemaName.value);
-    console.log("ITEM GET", { _id: args.swagger.params._id.value })
+    defaultLog.info("ITEM GET", { _id: args.swagger.params._id.value })
 
     let aggregation = [
       {
@@ -433,59 +431,7 @@ var executeQuery = async function (args, res, next) {
       }
     ];
 
-    if (args.swagger.params._schemaName.value === 'Inspection') {
-      // pop elements and their items.
-      aggregation.push(
-        {
-          '$lookup': {
-            "from": "epic",
-            "localField": "elements",
-            "foreignField": "_id",
-            "as": "elements"
-          }
-        }
-      );
-      aggregation.push({
-        "$lookup": {
-          "from": "epic",
-          "localField": "project",
-          "foreignField": "_id",
-          "as": "project"
-        }
-      });
-      aggregation.push({
-        "$addFields": {
-          project: "$project",
-        }
-      });
-      aggregation.push({
-        "$unwind": {
-          "path": "$project",
-          "preserveNullAndEmptyArrays": true
-        }
-      });
-    } else if (args.swagger.params._schemaName.value === 'InspectionElement') {
-      aggregation.push(
-        {
-          '$lookup': {
-            "from": "epic",
-            "localField": "items",
-            "foreignField": "_id",
-            "as": "items"
-          }
-        }
-      );
-    }
     var data = await collectionObj.aggregate(aggregation);
-
-    if (args.swagger.params._schemaName.value === 'Comment') {
-      // Filter
-      _.each(data, function (item) {
-        if (item.isAnonymous === true) {
-          delete item.author;
-        }
-      });
-    }
 
     if (args.swagger.params._schemaName.value === 'Project') {
       // If we are a project, and we are not authed, we need to sanitize some fields.
@@ -493,7 +439,7 @@ var executeQuery = async function (args, res, next) {
     }
     return Actions.sendResponse(res, 200, data);
   } else {
-    console.log('Bad Request');
+    defaultLog.info('Bad Request');
     return Actions.sendResponse(res, 400, {});
   }
 };

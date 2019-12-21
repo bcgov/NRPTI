@@ -63,6 +63,13 @@ definitions:
       keywords:
         type: string
         example: "Project Name"
+  SearchDataSetParams:
+    type: string
+    description: "Optional datasets to search on in the DB"
+    example: ['Order']
+    enum: &searchDataSetParams
+      - Order
+      - Inspection
   SearchSortByFields:
     type: string
     description: "Optional fields to sort by (prefixed with + or - for order)"
@@ -165,7 +172,10 @@ paths:
         - in: query
           name: dataset
           description: "Dataset to search on"
-          type: string
+          type: array
+          items:
+            type: string
+            enum: *searchDataSetParams
           required: false
         - in: query
           name: _schemaName

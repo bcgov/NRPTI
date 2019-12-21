@@ -8,12 +8,10 @@ import { StoreService } from 'nrpti-angular-components';
 })
 export class ToggleButtonComponent {
   public loading = true;
-  public classApplied = false;
 
   constructor(private storeService: StoreService) {}
 
   toggleSideNav() {
-    this.storeService.toggle();
-    this.classApplied = !this.classApplied;
+    this.storeService.toggleSideNav();
   }
 }
