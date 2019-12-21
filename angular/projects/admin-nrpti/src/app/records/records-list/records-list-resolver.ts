@@ -21,11 +21,11 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
     return this.searchService.getSearchResults(
       this.apiService.pathAPI,
       '',
-      'Order', // TODO change this to 'Record' and update backend to return all types (Order, Inspection, etc)
+      ['Order', 'Inspection'], // We want two different datasets
       [],
       tableObject.currentPage,
       tableObject.pageSize,
-      tableObject.sortBy || '-documentDate',
+      tableObject.sortBy || '-documentDate', // This needs to be common between both datasets to work properly
       {},
       false
     );

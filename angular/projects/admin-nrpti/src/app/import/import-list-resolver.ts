@@ -17,7 +17,7 @@ export class ImportListResolver implements Resolve<Observable<object>> {
     return this.factoryService.searchService.getSearchResults(
       this.factoryService.apiService.pathAPI,
       '',
-      'Task',
+      ['Task'],
       [],
       tableObject.currentPage,
       tableObject.pageSize,
