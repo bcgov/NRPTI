@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { PageTypes } from '../utils/page-types.enum';
-import { DataService } from '../services/data.service';
+import { SearchService, SearchResults, TableObject, TableTemplateUtils } from 'nrpti-angular-components';
+import { ApiService } from 'app/services/api';
+
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -8,16 +12,29 @@ import { DataService } from '../services/data.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
   public pageType: PageTypes = PageTypes.HOME;
 
   public activities: object[] = [];
 
-  constructor(private dataService: DataService) {}
+  constructor(private _searchService: SearchService,
+    private _apiService: ApiService) {}
 
   ngOnInit() {
-    const homeJson = this.dataService.getHome();
-    if (homeJson.activities) {
-      this.activities = homeJson.activities;
-    }
+    this.activities = [];
+
+    this._searchService.getSearchResults(
+      this._apiService.apiPath,
+      '',
+      ['Order'],
+      [],
+      1, // tableObject.currentPage,
+      100000, // tableObject.pageSize,
+      null,// tableObject.sortBy,
+      {},
+      false).pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
+        console.log("res:", res);
+        return [res];
+      });
   }
 }
