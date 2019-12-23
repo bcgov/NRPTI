@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PageTypes } from '../utils/page-types.enum';
-import { SearchService, SearchResults, TableObject, TableTemplateUtils } from 'nrpti-angular-components';
+import { SearchService } from 'nrpti-angular-components';
 import { ApiService } from 'app/services/api';
 
 import { takeUntil } from 'rxjs/operators';
@@ -11,7 +11,7 @@ import { Subject } from 'rxjs';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
   public pageType: PageTypes = PageTypes.HOME;
 
@@ -26,15 +26,21 @@ export class HomeComponent implements OnInit {
     this._searchService.getSearchResults(
       this._apiService.apiPath,
       '',
-      ['Order'],
+      ['Activity'],
       [],
       1, // tableObject.currentPage,
       100000, // tableObject.pageSize,
       null,// tableObject.sortBy,
       {},
       false).pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
-        console.log("res:", res);
-        return [res];
+        if (res && res[0] && res[0].data.meta.length > 0) {
+          this.activities = res[0].data.searchResults;
+        }
       });
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import home from '../../assets/data/general/home.json';
-
 import project1Overview from '../../assets/data/project1/overview.json';
 import project1Background from '../../assets/data/project1/background.json';
 import project1Authorizations from '../../assets/data/project1/authorizations.json';
@@ -17,11 +15,6 @@ import project2Plans from '../../assets/data/project2/plans.json';
 import project2Nations from '../../assets/data/project2/nations.json';
 
 import { PageTypes } from '../utils/page-types.enum.js';
-
-// general site data
-const generalData = {
-  home: home
-};
 
 // project specific data
 const projectData = {
@@ -52,12 +45,6 @@ const projectData = {
 @Injectable()
 export class DataService {
   constructor() {}
-
-  // general site data
-
-  getHome() {
-    return generalData.home;
-  }
 
   // project specific data
 
