@@ -28,6 +28,7 @@ import { ProjectsComponent } from './projects/projects.component';
 import { UrlService } from './services/url.service';
 import { DataService } from './services/data.service';
 import { FaqComponent } from './faq/faq.component';
+import { SearchService } from 'nrpti-angular-components';
 
 @NgModule({
   imports: [
@@ -53,7 +54,7 @@ import { FaqComponent } from './faq/faq.component';
     FaqComponent,
     HomeComponent
   ],
-  providers: [ApiService, DocumentService, UrlService, DataService],
+  providers: [ApiService, DocumentService, UrlService, DataService, SearchService],
   entryComponents: [],
   bootstrap: [AppComponent]
 })
