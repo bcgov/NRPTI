@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 
 import { TableObject } from 'nrpti-angular-components';
 import { Subject } from 'rxjs';
@@ -11,8 +11,6 @@ import { Router } from '@angular/router';
 })
 export class RecordsTableRowsComponent implements OnInit, OnDestroy {
   @Input() data: TableObject;
-  @Output() itemClicked: EventEmitter<any> = new EventEmitter();
-  @Output() itemSelected: EventEmitter<any> = new EventEmitter();
 
   public dropdownItems = ['Edit', 'Delete'];
 
@@ -22,14 +20,17 @@ export class RecordsTableRowsComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {}
 
-  onItemClicked(item) {
-    console.log('itemClicked:', item);
-    this.itemClicked.emit(item);
-  }
-
-  onItemSelected(item) {
-    console.log('itemSelected:', item);
-    this.itemSelected.emit(item);
+  goToItem(item) {
+    switch (item._schemaName) {
+      case 'Order':
+        this.router.navigate(['records', 'orders', item._id, 'detail']);
+        break;
+      case 'Inspection':
+        // TODO
+        break;
+      default:
+      // TODO
+    }
   }
 
   ngOnDestroy() {
@@ -38,6 +39,15 @@ export class RecordsTableRowsComponent implements OnInit, OnDestroy {
   }
 
   edit(item) {
-    this.router.navigate(['records', item._id, 'edit']);
+    switch (item._schemaName) {
+      case 'Order':
+        this.router.navigate(['records', 'orders', item._id, 'edit']);
+        break;
+      case 'Inspection':
+        // TODO
+        break;
+      default:
+      // TODO
+    }
   }
 }

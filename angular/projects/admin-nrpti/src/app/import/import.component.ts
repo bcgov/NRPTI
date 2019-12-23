@@ -82,9 +82,9 @@ export class ImportComponent implements OnInit {
         this.loading = false;
         this._changeDetectionRef.detectChanges();
       } else {
-        alert("Uh-oh, couldn't load valued components");
+        alert("Uh-oh, couldn't load import Page");
         // project not found --> navigate back to search
-        this.router.navigate(['/search']);
+        this.router.navigate(['/']);
       }
     });
   }

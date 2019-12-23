@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { RecordsListComponent } from './records-list/records-list.component';
-import { RecordsAddEditComponent } from './records-add-edit/records-add-edit.component';
-import { RecordsListResolver } from './records-list/records-list-resolver';
-import { RecordDetailComponent } from './record-detail/record-detail.component';
-
 import { CanActivateGuard } from '../guards/can-activate-guard.service';
+import { RecordsListComponent } from './records-list/records-list.component';
+import { RecordsResolver } from './records-resolver';
+import { OrderDetailComponent } from './orders/order-detail/order-detail.component';
+import { OrderAddEditComponent } from './orders/order-add-edit/order-add-edit.component';
 import { CanDeactivateGuard } from '../guards/can-deactivate-guard.service';
+import { OrderEditResolver } from './orders/order-add-edit/order-edit-resolver.services';
 
 const routes: Routes = [
   {
@@ -24,18 +24,23 @@ const routes: Routes = [
         component: RecordsListComponent,
         canActivate: [CanActivateGuard],
         resolve: {
-          records: RecordsListResolver
+          records: RecordsResolver
         }
       },
       {
-        path: ':recordId',
+        path: 'orders/:orderId',
         data: {
-          breadcrumb: 'Record Details'
+          breadcrumb: 'Order Details'
         },
         children: [
           {
-            path: 'details',
-            component: RecordDetailComponent,
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: OrderDetailComponent,
             canActivate: [CanActivateGuard],
             data: {
               breadcrumb: null
@@ -43,17 +48,15 @@ const routes: Routes = [
           },
           {
             path: 'edit',
-            component: RecordsAddEditComponent,
+            component: OrderAddEditComponent,
             canActivate: [CanActivateGuard],
             canDeactivate: [CanDeactivateGuard],
             data: {
               breadcrumb: 'Edit'
+            },
+            resolve: {
+              order: OrderEditResolver
             }
-          },
-          {
-            path: '',
-            redirectTo: 'details',
-            pathMatch: 'full'
           }
         ]
       }
@@ -64,6 +67,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [RecordsListResolver]
+  providers: [RecordsResolver, OrderEditResolver]
 })
 export class RecordsRoutingModule {}

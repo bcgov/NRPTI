@@ -9,15 +9,16 @@
             totalItems: data.totalListItems
           }
   "
-  (click)="onItemClicked(item)"
 >
-  <td scope="row" data-label="Issued To" class="col-2">{{ item.issuedTo || '-' }}</td>
-  <td scope="row" data-label="Name" class="col-4">{{ item.documentFileName || '-' }}</td>
-  <td scope="row" data-label="Type" class="col-1">{{ item.documentType || '-' }}</td>
-  <td scope="row" data-label="Location" class="col-2">{{ item.location || '-' }}</td>
-  <td scope="row" data-label="Date" class="col-1">{{ item.documentDate | date: 'mediumDate' || '-' }}</td>
-  <td scope="row" data-label="Attachments" class="col-2">-</td>
-  <td scope="row" data-label="" class="col-1">
+  <td scope="row" (click)="goToItem(item)" data-label="Issued To" class="col-2">{{ item.issuedTo || '-' }}</td>
+  <td scope="row" (click)="goToItem(item)" data-label="Name" class="col-4">{{ item.documentFileName || '-' }}</td>
+  <td scope="row" (click)="goToItem(item)" data-label="Type" class="col-1">{{ item.documentType || '-' }}</td>
+  <td scope="row" (click)="goToItem(item)" data-label="Location" class="col-2">{{ item.location || '-' }}</td>
+  <td scope="row" (click)="goToItem(item)" data-label="Date" class="col-1">
+    {{ item.documentDate | date: 'mediumDate' || '-' }}
+  </td>
+  <td scope="row" (click)="goToItem(item)" data-label="Attachments" class="col-2">-</td>
+  <td scope="row" data-label="Edit" class="col-1">
     <button (click)="edit(item)" class="btn btn-primary" type="button" id="button-d">
       <i class="material-icons">create</i>&nbsp;Edit
     </button>

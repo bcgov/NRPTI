@@ -378,7 +378,7 @@ var executeQuery = async function (args, res, next) {
   defaultLog.info("sortField:", sortField);
   defaultLog.info("sortDirection:", sortDirection);
 
-  if (dataset !== 'Item') {
+  if (dataset[0] !== 'Item') {
 
     defaultLog.info("Searching Dataset:", dataset);
     defaultLog.info("sortField:", sortField);
@@ -387,7 +387,7 @@ var executeQuery = async function (args, res, next) {
 
     return Actions.sendResponse(res, 200, itemData);
 
-  } else if (dataset === 'Item') {
+  } else if (dataset[0] === 'Item') {
     var collectionObj = mongoose.model(args.swagger.params._schemaName.value);
     defaultLog.info("ITEM GET", { _id: args.swagger.params._id.value })
 
