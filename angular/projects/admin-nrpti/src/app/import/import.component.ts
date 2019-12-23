@@ -71,26 +71,21 @@ export class ImportComponent implements OnInit {
     });
 
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
-      if (!res) {
+      if (res) {
+        this.tableData.items = res.records[0].data.searchResults;
+
+        if (res.records[0].data.meta.length > 0) {
+          this.tableData.totalListItems = res.records[0].data.meta[0].searchResultsTotal;
+        }
+
+        this.tableData.columns = this.tableColumns;
+        this.loading = false;
+        this._changeDetectionRef.detectChanges();
+      } else {
         alert("Uh-oh, couldn't load valued components");
-        // project not found --> navigate back to home
-        this.router.navigate(['/']);
-        return;
+        // project not found --> navigate back to search
+        this.router.navigate(['/search']);
       }
-
-      this.tableData.items = res.records && res.records[0] && res.records[0].data && res.records[0].data.searchResults;
-
-      this.tableData.totalListItems =
-        res.records &&
-        res.records[0] &&
-        res.records[0].data &&
-        res.records[0].data.meta &&
-        res.records[0].data.meta[0] &&
-        res.records[0].data.meta[0].searchResultsTotal;
-
-      this.tableData.columns = this.tableColumns;
-      this.loading = false;
-      this._changeDetectionRef.detectChanges();
     });
   }
 
