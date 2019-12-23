@@ -1,0 +1,407 @@
+[
+  {
+    "type": "INSPECTION_COMPLETE",
+    "title": "Inspection Completed",
+    "description": "The BC Environmental Assessment Office’s inspection for a site visit (Coastal GasLink) on August 15, 2019.",
+    "date": "24-10-19",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/2/compliance"
+  },
+  {
+    "type": "REPORT_ADDED",
+    "title": "Certificate Amended",
+    "description": "The Environmental Assessment Certificate for the LNG Canada Export Terminal Project has been amended to change the LNG production unit referenced in the Certified Project Description to a volume measurement.",
+    "date": "21-10-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/1/authorizations"
+  },
+  {
+    "type": "INSPECTION_COMPLETE",
+    "title": "Extension Granted",
+    "description": "Coastal GasLink received an extension to the deadline in their Environment Assessment Certificate to substantially start the CGL Project. The extension is granted under Section 18(4)(a) of the Act.",
+    "date": "18-10-19",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/2/authorizations"
+  },
+  {
+    "type": "INSPECTION_COMPLETE",
+    "title": "Inspection Complete",
+    "description": "The BC Environmental Assessment Office’s inspection for a site visit (Coastal GasLink) on August 19, 2019.",
+    "date": "08-10-19",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/2/compliance"
+  },
+  {
+    "type": "INSPECTION_COMPLETE",
+    "title": "Inspection Completed",
+    "description": "The BC Environmental Assessment Office’s inspection for a site visit (LNG Canada) on August 13, 2019.",
+    "date": "08-10-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/1/compliance"
+  },
+  {
+    "type": "INSPECTION_COMPLETE",
+    "title": "Inspection Complete",
+    "description": "The BC Environmental Assessment Office’s inspection for a site visit (Coastal GasLink) on July 17, 2019.",
+    "date": "01-10-19",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/2/compliance"
+  },
+  {
+    "type": "DOCUMENT_ADDED",
+    "title": "Management Plan Filed",
+    "description": "LNG Canada’s updated Marine Monitoring Plan issued.",
+    "date": "29-08-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/1/plans"
+  },
+  {
+    "type": "DOCUMENT_ADDED",
+    "title": "Management Plan Filed",
+    "description": "LNG Canada’s updated Dredge Environmental Management Plan issued.",
+    "date": "29-08-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/1/plans"
+  },
+  {
+    "type": "ENFORCEMENT_ACTION",
+    "title": "Order Issued",
+    "description": "Order issued to Coastal GasLink as a result of cutting activity that occurred without a completed archaeological impact assessment.",
+    "date": "13-09-19",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/2/compliance"
+  },
+  {
+    "type": "DOCUMENT_ADDED",
+    "title": "Amendment Application",
+    "description": "The BC Environmental Assessment Office has accepted LNG Canada’s application requesting a simple amendment to its EA Certificate #E15-01. ",
+    "date": "12-08-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/1/authorizations"
+  },
+  {
+    "type": "INSPECTION_COMPLETE",
+    "title": "Investigation Started",
+    "description": "The BC Oil and Gas Commission has started an investigation following Coastal GasLink’s self-disclosed cutting in the pipeline right-of-way, and a section of road, without the necessary archaeological assessment",
+    "date": "01-08-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "https://www.bcogc.ca/whats-new/media/commission-addresses-questions-related-coastal-gaslink-cutting-right-way"
+  },
+  {
+    "type": "DOCUMENT_ADDED",
+    "title": "Status Report Filed",
+    "description": "Coastal GasLink’s first status report for their Socio-economic Effects Management Plan, covering December 2018 to June 2019.",
+    "date": "15-07-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/2/compliance"
+  },
+  {
+    "type": "INSPECTION_COMPLETE",
+    "title": "Inspection Completed",
+    "description": "The BC Environmental Assessment Office’s inspection record for a site visit (Coastal GasLink) on June 18, 2019.",
+    "date": "09-07-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/2/compliance"
+  },
+  {
+    "type": "INSPECTION_COMPLETE",
+    "title": "Inspection Completed",
+    "description": "The BC Environmental Assessment Office’s inspection record for a site visit (LNG Canada) on May 28, 2019.",
+    "date": "03-07-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/1/compliance"
+  },
+  {
+    "type": "INSPECTION_COMPLETE",
+    "title": "Inspection Completed",
+    "description": "The BC Environmental Assessment Office’s inspection record for a site visit (Coastal GasLink) on May 29 and May 30, 2019.",
+    "date": "03-07-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/2/compliance"
+  },
+  {
+    "type": "ENFORCEMENT_ACTION",
+    "title": "Enforcement Order Issued",
+    "description": "Enforcement order requiring Coastal GasLink to manage all wildlife attractants.",
+    "date": "17-06-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/2/compliance"
+  },
+  {
+    "type": "DOCUMENT_ADDED",
+    "title": "Management Plan Filed",
+    "description": "LNG Canada's Community-Level Infrastructure and Services Management Plan submitted.",
+    "date": "10-04-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/1/plans"
+  },
+  {
+    "type": "IMPORTANT_DATE",
+    "title": "Regulatory Interface Launched",
+    "description": "Welcome to British Columbia’s website providing details about the environmental assessment process, permitting, regulatory oversight and compliance procedures as it relates to LNG Canada and the Coastal GasLink pipeline.",
+    "date": "01-06-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": ""
+  },
+  {
+    "type": "DOCUMENT_ADDED",
+    "title": "Pipeline Permit Amended",
+    "description": "The BC Oil and Gas Commission provided Coastal GasLink with an approved amendment to re-route a 41-kilometre portion of their pipeline.",
+    "date": "06-05-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/2/authorizations"
+  },
+  {
+    "type": "INSPECTION_COMPLETE",
+    "title": "Inspection Completed",
+    "description": "The BC Environmental Assessment Office’s inspection record for a site visit conducted March 21, 2019. The report identifies three minor incidences of non-compliance.",
+    "date": "30-04-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/2/compliance"
+  },
+  {
+    "type": "ENFORCEMENT_ACTION",
+    "title": "Enforcement Order Issued",
+    "description": "Enforcement order requiring Coastal GasLink to provide appropriate notice to registered trapline holders and cease activities under specific conditions.",
+    "date": "26-02-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/2/compliance"
+  },
+  {
+    "type": "ENFORCEMENT_ACTION",
+    "title": "Enforcement Order Issued",
+    "description": "Enforcement order requiring Coastal GasLink to fully conduct habitat assessments and propose mitigation to address adverse effects to plants and ecological communities.",
+    "date": "20-02-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/2/compliance"
+  },
+  {
+    "type": "DOCUMENT_ADDED",
+    "title": "Management Plan Submitted",
+    "description": "Coastal GasLink’s contingency plans (appendix C) submitted.",
+    "date": "13-02-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/2/plans"
+  },
+  {
+    "type": "DOCUMENT_ADDED",
+    "title": "Management Plan Submitted",
+    "description": "Coastal GasLink’s mitigation and monitoring plans (appendix E) submitted.",
+    "date": "13-02-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/2/plans"
+  },
+  {
+    "type": "ENFORECMENT_ACTION",
+    "title": "Warning Letter Issued",
+    "description": "Letter identifying activity that started before the required notification was sent to the BC Oil and Gas Commission.",
+    "date": "13-02-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/2/compliance"
+  },
+  {
+    "type": "REPORT_ADDED",
+    "title": "Compliance Self-Reported",
+    "description": "LNG Canada’s self-report providing a status of compliance with the conditions outlined in the project’s environmental assessment certificate.",
+    "date": "31-01-2019",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/1/compliance"
+  },
+  {
+    "type": "REPORT_ADDED",
+    "title": "Inspection Report Filed",
+    "description": "The BC Environmental Assessment Office’s field and administrative inspection report of work underway at the LNG Canada export site.",
+    "date": "04-12-2018",
+    "_schemaName": "Activity",
+    "read": [
+      "public",
+      "sysadmin"
+    ],
+    "write": [
+      "sysadmin"
+    ],
+    "url": "/project/1/compliance"
+  }
+]
