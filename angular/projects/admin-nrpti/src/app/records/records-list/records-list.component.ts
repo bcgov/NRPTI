@@ -89,22 +89,17 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     });
 
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
-      if (!res) {
+      if (!res || !res.records) {
         alert("Uh-oh, couldn't load NRPTI records");
         // project not found --> navigate back to home
         this.router.navigate(['/']);
         return;
       }
 
-      this.tableData.items = res.records && res.records[0] && res.records[0].data && res.records[0].data.searchResults;
-
-      this.tableData.totalListItems =
-        res.records &&
-        res.records[0] &&
-        res.records[0].data &&
-        res.records[0].data.meta &&
-        res.records[0].data.meta[0] &&
-        res.records[0].data.meta[0].searchResultsTotal;
+      this.tableData.items = res.records[0] && res.records[0].data && res.records[0].data.searchResults;
+      if (res.records[0] && res.records[0].data && res.records[0].data.meta && res.records[0].data.meta.length) {
+        this.tableData.totalListItems = res.records[0].data.meta[0].searchResultsTotal;
+      }
 
       this.tableData.columns = this.tableColumns;
       this.loading = false;

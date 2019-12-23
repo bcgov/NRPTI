@@ -325,7 +325,7 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
         defaultLog.info("err:", err);
         resolve([]);
       } else {
-        resolve(data.toArray());
+        resolve(data);
       }
     })
   });
