@@ -29,6 +29,7 @@ pipeline {
                 api = true;
               }
             }
+            echo "Angular: ${angular}, API: ${api}"
             if (angular) {
               // Fire up the angular builder
               echo "Running Angular builder"
