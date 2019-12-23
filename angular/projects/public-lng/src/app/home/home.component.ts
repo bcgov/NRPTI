@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PageTypes } from '../utils/page-types.enum';
 import { SearchService } from 'nrpti-angular-components';
-import { ApiService } from 'app/services/api';
+import { ApiService } from '../services/api';
 
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
