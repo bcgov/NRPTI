@@ -317,18 +317,9 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
 
   defaultLog.info("Executing searching on schema(s):", schemaName);
 
-  return new Promise(function (resolve, reject) {
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
-    const collection = db.collection('nrpti');
-    collection.aggregate(aggregation, function (err, data) {
-      if (err) {
-        defaultLog.info("err:", err);
-        resolve([]);
-      } else {
-        resolve(data);
-      }
-    })
-  });
+  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const collection = db.collection('nrpti');
+  return collection.aggregate(aggregation).toArray();
 }
 
 exports.publicGet = async function (args, res, next) {
