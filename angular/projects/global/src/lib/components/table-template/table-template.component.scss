@@ -42,12 +42,22 @@
   border-bottom: none;
 }
 
-.page-controls-top {
+.page-controls-top-left {
   padding-bottom: 1rem;
-  text-align: center;
+  text-align: left;
 }
 
-.page-controls-bottom {
+.page-controls-top-right {
+  padding-bottom: 1rem;
+  text-align: right;
+}
+
+.page-controls-bottom-left {
   padding-top: 1rem;
-  text-align: center;
+  text-align: left;
+}
+
+.page-controls-bottom-right {
+  padding-top: 1rem;
+  text-align: right;
 }
