@@ -33,7 +33,7 @@ export class PageCountDisplayComponent implements OnChanges {
     } else {
       const low = Math.max((this.currentPageNum - 1) * this.currentPageSize + 1, 1);
       const high = Math.min(this.totalItems, this.currentPageNum * this.currentPageSize);
-      this.message = `Displaying ${low} - ${high} of ${this.totalItems} records`;
+      this.message = `${low} - ${high} of ${this.totalItems}`;
     }
   }
 }
