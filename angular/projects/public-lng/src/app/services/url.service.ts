@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { Params, ActivatedRoute, Router, NavigationEnd, Event } from '@angular/router';
 import { Observable } from 'rxjs';
 import { filter, share } from 'rxjs/operators';
-import { Location } from '@angular/common';
-import { debounce } from 'lodash.debounce';
 
 //
 // This service/class provides a centralized mechanism to save and restore a page's parameters
@@ -17,7 +15,7 @@ export class UrlService {
   private _params: Params = {};
   private _fragment: string = null;
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private location: Location) {
+  constructor(private activatedRoute: ActivatedRoute, private router: Router) {
     // create a new observable that publishes only the NavigationEnd event
     // used for subscribers to know when to refresh their parameters
     // NB: use share() so this fires only once each time even with multiple subscriptions
@@ -66,7 +64,7 @@ export class UrlService {
         // remove key
         delete this._params[key];
       }
-      this.navigate(refresh);
+      // this.navigate(refresh);
     }
   }
 
@@ -75,30 +73,7 @@ export class UrlService {
     // check if fragment has changed
     if (fragment !== this._fragment) {
       this._fragment = fragment;
-      this.navigate(refresh);
+      // this.navigate(refresh);
     }
   }
-
-  // update browser URL
-  // NB: debounced function executes when 100ms have elapsed since last call
-  // tslint:disable-next-line:member-ordering
-  private navigate = debounce(refresh => {
-    if (refresh) {
-      this.router.navigate([], {
-        relativeTo: this.activatedRoute,
-        queryParams: this._params,
-        fragment: this._fragment
-      });
-    } else {
-      const url = this.router
-        .createUrlTree([], {
-          relativeTo: this.activatedRoute,
-          queryParams: this._params,
-          fragment: this._fragment
-        })
-        .toString();
-
-      this.location.go(url);
-    }
-  }, 100);
 }
