@@ -17,22 +17,25 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   public activities: object[] = [];
 
-  constructor(private _searchService: SearchService,
-    private _apiService: ApiService) {}
+  constructor(private _searchService: SearchService, private _apiService: ApiService) {}
 
   ngOnInit() {
     this.activities = [];
 
-    this._searchService.getSearchResults(
-      this._apiService.apiPath,
-      '',
-      ['Activity'],
-      [],
-      1, // tableObject.currentPage,
-      100000, // tableObject.pageSize,
-      null,// tableObject.sortBy,
-      {},
-      false).pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
+    this._searchService
+      .getSearchResults(
+        this._apiService.apiPath,
+        '',
+        ['Activity'],
+        [],
+        1, // tableObject.currentPage,
+        100000, // tableObject.pageSize,
+        null, // tableObject.sortBy,
+        {},
+        false
+      )
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((res: any) => {
         if (res && res[0] && res[0].data.meta.length > 0) {
           this.activities = res[0].data.searchResults;
         }
