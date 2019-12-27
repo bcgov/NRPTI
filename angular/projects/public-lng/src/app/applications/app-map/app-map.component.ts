@@ -6,18 +6,14 @@ import {
   Input,
   Output,
   EventEmitter,
-  ApplicationRef,
   ElementRef,
-  SimpleChanges,
-  Injector,
-  ComponentFactoryResolver
+  SimpleChanges
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 // import { takeUntil, map } from 'rxjs/operators';
 import 'leaflet';
 import 'leaflet.markercluster';
-import { debounce } from 'lodash.debounce';
 import { differenceBy } from 'lodash.differenceby';
 import 'async';
 import 'topojson-client';
@@ -25,7 +21,6 @@ import 'jquery';
 
 import { Application } from '../../models/application';
 import { UrlService } from '../../services/url.service';
-import { MarkerPopupComponent } from './marker-popup/marker-popup.component';
 
 declare module 'leaflet' {
   // tslint:disable-next-line:interface-name
@@ -93,7 +88,6 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
   });
   // private oldZoom: number = null;
   private isMapReady = false;
-  private doNotify = true; // whether to emit notification
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   private mapBaseLayerName = 'World Topographic';
@@ -101,11 +95,9 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
   readonly defaultBounds = L.latLngBounds([53.6, -129.5], [56.1, -120]); // all of BC
 
   constructor(
-    private appRef: ApplicationRef,
+    // private appRef: ApplicationRef,
     private elementRef: ElementRef,
-    public urlService: UrlService,
-    private injector: Injector,
-    private resolver: ComponentFactoryResolver
+    public urlService: UrlService
   ) {
     this.urlService.onNavEnd$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {});
   }
@@ -217,16 +209,15 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
     // NB: fitBounds() also ends up here
     this.map.on('moveend', () => {
       // console.log('moveend');
-
       // notify applications component of updated coordinates
       // const newZoom = this.map.getZoom();
       // const doEmit = newZoom <= this.oldZoom; // ignore zooming in
       // this.oldZoom = newZoom;
       // if (doEmit) { this.emitCoordinates(); }
-      if (this.isMapReady && this.doNotify) {
-        this.emitCoordinates();
-      }
-      this.doNotify = true; // reset for next time
+      // if (this.isMapReady && this.doNotify) {
+      //   this.emitCoordinates();
+      // }
+      // this.doNotify = true; // reset for next time
     });
 
     const dataUrls = [
@@ -271,29 +262,6 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
           { direction: 'center', offset: tooltipOffset, sticky: true }
         )
         .addTo(this.map);
-
-      // Add the pipeline segment layer
-      // layers.sections = L.geoJSON(data.sections, {
-      //   style: { color: '#6092ff', weight: 5 },
-      //   onEachFeature: (feature, layer) => {
-      //     layer.on('mouseover', e => {
-      //       e.target.setStyle({ color: '#00f6ff' });
-      //       $('#gas-button').css('background', '#c4f9ff');
-      //     });
-      //     layer.on('mouseout', e => {
-      //       e.target.setStyle({ color: '#6092ff' });
-      //       $('#gas-button').css('background', '#ffffff');
-      //     });
-      //   }
-      // })
-      //   .bindTooltip(
-      //     layer => {
-      //       const p = layer.feature.properties;
-      //       return `From ${p.from} to ${p.to}.`;
-      //     },
-      //     { direction: 'top', offset: tooltipOffset }
-      //   )
-      //   .addTo(this.map);
 
       // Default marker style
       const markerOptions = {
@@ -369,14 +337,6 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
             autoPanPaddingBottomRight: L.point(40, 20)
           };
           switch (featureLayer.feature.properties.LABEL) {
-            case 'Vanderhoof Meter Station': {
-              featureLayer.setStyle({
-                radius: 0,
-                stroke: false,
-                fill: false
-              });
-              break;
-            }
             case 'Wilde Lake M/S': {
               featureLayer.setStyle({
                 radius: 8,
@@ -442,42 +402,6 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
         )
         .addTo(this.map);
     };
-
-    // map state change events
-    // this.map.on(
-    //   'zoomend',
-    //   () => {
-    //     const z = this.map.getZoom();
-    //     if (z >= 10) {
-    //       if (layers.sections) {
-    //         this.map.removeLayer(layers.sections);
-    //       }
-    //       if (layers.facilities) {
-    //         this.map.removeLayer(layers.facilities);
-    //       }
-    //       if (layers.facility) {
-    //         this.map.addLayer(layers.facility);
-    //       }
-    //       if (layers.pipeline) {
-    //         this.map.addLayer(layers.pipeline);
-    //       }
-    //     } else {
-    //       if (layers.sections) {
-    //         this.map.addLayer(layers.sections);
-    //       }
-    //       if (layers.facilities) {
-    //         this.map.addLayer(layers.facilities);
-    //       }
-    //       if (layers.facility) {
-    //         this.map.removeLayer(layers.facility);
-    //       }
-    //       if (layers.pipeline) {
-    //         this.map.removeLayer(layers.pipeline);
-    //       }
-    //     }
-    //   },
-    //   this
-    // );
 
     // Data collection function
     const getIt = (loc: string, callback: any) => {
@@ -570,11 +494,6 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
       setTimeout(this.fixMap.bind(this), 50);
     }
   }
-
-  // facility: null,
-  // facilities: null,
-  // pipeline: null,
-  // sections: null
 
   public ngOnLegendLngClick() {
     layers.facilities.eachLayer((layer: any) => {
@@ -686,25 +605,8 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
    */
   public resetView(doNotify: boolean = true) {
     // console.log('resetting view');
-    this.doNotify = doNotify;
     this.fitBounds(); // default bounds
-
-    // FUTURE
-    // // clear map state
-    // this.urlService.save('lat', null);
-    // this.urlService.save('lng', null);
-    // this.urlService.save('zoom', null);
-    // this.emitCoordinates();
   }
-
-  /**
-   * Emits an event to notify applications component of updated coordinates.
-   * Debounced function executes when 250ms have elapsed since last call.
-   */
-  // tslint:disable-next-line:member-ordering
-  private emitCoordinates = debounce(() => {
-    this.updateCoordinates.emit();
-  }, 250);
 
   /**
    * Returns coordinates in GeoJSON format that specify map bounding box.
@@ -776,64 +678,8 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
           const clients = app.client.split(', ');
           app['applicants'] = Array.from(new Set(clients)).join(', ');
         }
-        const title =
-          `${app['applicants'] || 'Applicant Name Not Available'}\n` +
-          `${app.purpose || '-'} / ${app.subpurpose || '-'}\n` +
-          `${app.location || 'Location Not Available'}\n`;
-        const marker = L.marker(L.latLng(app.centroid[1], app.centroid[0]), { title: title })
-          .setIcon(markerIcon)
-          .on('click', L.Util.bind(this.onMarkerClick, this, app));
-        marker.dispositionId = app.tantalisID;
-        this.markerList.push(marker); // save to list
-        this.markerClusterGroup.addLayer(marker); // save to marker clusters group
       }
     });
-  }
-
-  // called when user clicks on app marker
-
-  // update selected item in app list
-  // this.toggleCurrentApp.emit(app); // DO NOT TOGGLE LIST ITEM AT THIS TIME
-
-  // called when user clicks on app marker
-  private onMarkerClick(...args: any[]) {
-    const app = args[0] as Application;
-    const marker = args[1].target as L.Marker;
-
-    // update selected item in app list
-    // this.toggleCurrentApp.emit(app); // DO NOT TOGGLE LIST ITEM AT THIS TIME
-
-    // if there's already a popup, delete it
-    let popup = marker.getPopup();
-    if (popup) {
-      const wasOpen = popup.isOpen();
-      popup.remove();
-      marker.unbindPopup();
-      if (wasOpen) {
-        return;
-      }
-    }
-
-    const popupOptions = {
-      className: 'map-popup-content',
-      autoPanPaddingTopLeft: L.point(40, 300),
-      autoPanPaddingBottomRight: L.point(40, 20)
-    };
-
-    // compile marker popup component
-    const compFactory = this.resolver.resolveComponentFactory(MarkerPopupComponent);
-    const compRef = compFactory.create(this.injector);
-    compRef.instance.id = app._id;
-    this.appRef.attachView(compRef.hostView);
-    compRef.onDestroy(() => this.appRef.detachView(compRef.hostView));
-    const div = document.createElement('div').appendChild(compRef.location.nativeElement);
-
-    popup = L.popup(popupOptions)
-      .setLatLng(marker.getLatLng())
-      .setContent(div);
-
-    // bind popup to marker so it automatically closes when marker is removed
-    marker.bindPopup(popup).openPopup();
   }
 
   /**
@@ -867,9 +713,9 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
           this.markerClusterGroup.zoomToShowLayer(marker);
         }
         // if not already open, show popup
-        if (!marker.getPopup() || !marker.getPopup().isOpen()) {
-          this.onMarkerClick(app, { target: marker });
-        }
+        // if (!marker.getPopup() || !marker.getPopup().isOpen()) {
+        //   this.onMarkerClick(app, { target: marker });
+        // }
       }
     }
   }
