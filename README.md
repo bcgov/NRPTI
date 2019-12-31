@@ -56,9 +56,9 @@ A list of recommended/helpful VS Code extensions.
 - Test: TBD
 - Prod: TBD
 
-### NRPTI API/ADMIN
-- Dev: https://nrpti-dev.pathfinder.gov.bc.ca/api/docs/, https://admin-nrpti-dev.pathfinder.gov.bc.ca/
-- Test: https://nrpti-test.pathfinder.gov.bc.ca/api/docs/, https://admin-nrpti-test.pathfinder.gov.bc.ca/
+### NRPTI API/ADMIN/PUBLIC
+- Dev: https://nrpti-dev.pathfinder.gov.bc.ca/api/docs/, https://admin-nrpti-dev.pathfinder.gov.bc.ca/, https://public-nrpti-dev.pathfinder.gov.bc.ca/
+- Test: https://nrpti-test.pathfinder.gov.bc.ca/api/docs/, https://admin-nrpti-test.pathfinder.gov.bc.ca/, https://public-nrpti-test.pathfinder.gov.bc.ca/
 - Prod: TBD
 
 ### Jenkins

@@ -1,0 +1,136 @@
+.spinner-new {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: $spinner-lg;
+  height: $spinner-lg;
+  margin-top: calc(-#{$spinner-lg} / 1.5);
+  margin-left: calc(-#{$spinner-lg} / 2);
+  background-image: url(./assets/images/spinner.png);
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-image: url(./assets/images/spinner.png);
+  background-size: 100%;
+
+  &.spinner-sm {
+    width: $spinner-sm;
+    height: $spinner-sm;
+    margin-top: calc(-#{$spinner-sm} / 1.5);
+    margin-left: calc(-#{$spinner-sm} / 2);
+  }
+
+  &.spinner-lg {
+    width: $spinner-lg;
+    height: $spinner-lg;
+    margin-top: calc(-#{$spinner-lg} / 1.5);
+    margin-left: calc(-#{$spinner-lg} / 2);
+  }
+}
+
+.spinner__msg {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  margin-top: 1rem;
+  width: 100%;
+  color: #5091cd;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.spinner-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 5%;
+  background: $spinner-bg;
+  z-index: 9999; // to keep above everything else
+  transition: all linear 0.5s;
+
+  &.inverted,
+  &.transparent {
+    background: $spinner-invert-bg;
+
+    .spinner-new {
+      background-image: url(./assets/images/spinner.png);
+    }
+  }
+
+  &.inverted {
+    background: $spinner-invert-bg;
+  }
+
+  &.transparent {
+    background: transparent;
+  }
+
+  &.full-screen {
+    position: fixed;
+    z-index: 9999; // to keep above everything else
+  }
+}
+
+@-webkit-keyframes rotating {
+  from {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  to {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotating {
+  from {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  to {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.rotating {
+  -webkit-animation: rotating 0.75s linear infinite;
+  -moz-animation: rotating 0.75s linear infinite;
+  -ms-animation: rotating 0.75s linear infinite;
+  -o-animation: rotating 0.75s linear infinite;
+  animation: rotating 0.75s linear infinite;
+}
+
+// Button Variant
+.btn {
+  .spinner {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin-top: -0.1rem;
+    margin-right: 0.5rem;
+    display: inline-block;
+    background-image: url(./assets/images/spinner-inverted.png);
+    width: 1rem;
+    height: 1rem;
+  }
+}

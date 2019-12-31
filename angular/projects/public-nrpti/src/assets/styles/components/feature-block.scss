@@ -1,0 +1,136 @@
+.feature-block {
+  @include flex-box();
+  @include flex-direction(column);
+
+  position: relative;
+  padding: 1rem;
+  background-size: 200%;
+  background-color: $feature-block-bg;
+  color: $feature-block-color;
+  text-align: center;
+
+  &__header {
+    @include flex(0 0 auto);
+  }
+
+  &__body {
+    @include flex(1 1 auto);
+  }
+
+  &__footer {
+    @include flex(0 0 auto);
+  }
+
+  &.dark {
+    background-color: $feature-block-bg;
+    color: $feature-block-color;
+
+    a:not([class^="btn"]) {
+      color: $gold;
+    }
+  }
+
+  &.light {
+    background-color: $feature-block-light-bg;
+    color: $feature-block-light-color;
+
+    a:not[class^="btn"] {
+      color: $feature-block-primary;
+    }
+  }
+
+  h3,
+  h4,
+  p {
+    color: inherit;
+    font-weight: normal;
+  }
+
+  h3 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+
+  h4 {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+  }
+
+  p {
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    line-height: 1.4rem;
+  }
+
+  .btn {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+  .watermark {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    background-color: rgba($feature-block-bg, 0.8);
+    text-align: center;
+
+    &__txt {
+      display: inline-block;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      margin-top: -0.75rem;
+      transform: translate(50%, -50%) rotate(-15deg);
+      transform-origin: 50% 50%;
+      color: $gold;
+      text-transform: uppercase;
+      font-size: 1.5rem;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  .feature-block {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+
+    h3 {
+      margin-bottom: 1.25rem;
+      line-height: 2rem;
+      font-size: 1.75rem;
+    }
+
+    h4 {
+      margin-bottom: 1.25rem;
+      font-size: 1.5rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+    }
+  }
+}
+
+@media (min-width: 768px) and (orientation: portrait) {
+  .fb-container {
+    .row {
+      margin-right: -0.5rem;
+      margin-left: -0.5rem;
+    }
+
+    .col-md-4 {
+      padding-right: 0.5rem;
+      padding-left: 0.5rem;
+    }
+  }
+}

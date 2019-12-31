@@ -138,6 +138,141 @@
         }
       }
     },
+    "public-nrpti": {
+      "root": "projects/public-nrpti",
+      "sourceRoot": "projects/public-nrpti/src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {
+        "@schematics/angular:component": {
+          "prefix": "app",
+          "styleext": "scss"
+        },
+        "@schematics/angular:directive": {
+          "prefix": "app"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/public-nrpti",
+            "index": "projects/public-nrpti/src/index.html",
+            "main": "projects/public-nrpti/src/main.ts",
+            "tsConfig": "projects/public-nrpti/tsconfig.app.json",
+            "polyfills": "projects/public-nrpti/src/polyfills.ts",
+            "assets": [
+              "projects/public-nrpti/src/assets",
+              "projects/public-nrpti/src/favicon.ico"
+            ],
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "projects/public-nrpti/src/styles.scss"
+            ],
+            "scripts": [
+              "node_modules/moment/min/moment.min.js",
+              "node_modules/keycloak-js/dist/keycloak.min.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "projects/public-nrpti/src/environments/environment.ts",
+                  "with": "projects/public-nrpti/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "public-nrpti:build",
+            "port": 4400
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "public-nrpti:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "public-nrpti:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/public-nrpti/src/test.ts",
+            "karmaConfig": "karma.conf.js",
+            "polyfills": "projects/public-nrpti/src/polyfills.ts",
+            "tsConfig": "projects/public-nrpti/tsconfig.spec.json",
+            "scripts": [
+              "node_modules/moment/min/moment.min.js",
+              "node_modules/keycloak-js/dist/keycloak.min.js"
+            ],
+            "watch": false,
+            "codeCoverage": true,
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "projects/public-nrpti/src/styles.scss"
+            ],
+            "assets": [
+              "projects/public-nrpti/src/assets",
+              "projects/public-nrpti/src/favicon.ico"
+            ]
+          }
+        },
+        "test-ci": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/public-nrpti/src/test.ts",
+            "karmaConfig": "karma.conf.js",
+            "polyfills": "projects/public-nrpti/src/polyfills.ts",
+            "tsConfig": "projects/public-nrpti/tsconfig.spec.json",
+            "scripts": [
+              "node_modules/moment/min/moment.min.js",
+              "node_modules/keycloak-js/dist/keycloak.min.js"
+            ],
+            "watch": true,
+            "codeCoverage": false,
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/leaflet/dist/leaflet.css",
+              "projects/public-nrpti/src/styles.scss"
+            ],
+            "assets": [
+              "projects/public-nrpti/src/assets",
+              "projects/public-nrpti/src/favicon.ico"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/public-nrpti/tsconfig.app.json",
+              "projects/public-nrpti/tsconfig.spec.json"
+            ],
+            "exclude": []
+          }
+        }
+      }
+    },
     "public-lng": {
       "root": "projects/public-lng",
       "sourceRoot": "projects/public-lng/src",

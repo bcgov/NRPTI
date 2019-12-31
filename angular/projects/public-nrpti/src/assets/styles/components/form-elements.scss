@@ -1,0 +1,127 @@
+.form-control {
+  border-color: $fc-border-color;
+  background: $fc-bg;
+  font-size: 0.9375rem;
+
+  &:focus {
+    border-color: $fc-focus-border-color;
+  }
+}
+
+input {
+  &.form-control {
+    height: $fc-height;
+  }
+
+  &[type="text"],
+  &[type="email"],
+  &[type="number"] {
+    @include placeholder {
+      color: $fc-placeholder-color;
+    }
+
+    height: $fc-height;
+    padding: 0.75rem;
+    box-shadow: $fc-inner-shadow inset;
+  }
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+select {
+  &.form-control {
+    &:not([size]):not([multiple]) {
+      height: $fc-height;
+      padding: 0 0.5rem;
+    }
+  }
+}
+
+textarea {
+  @include placeholder {
+    color: $fc-placeholder-color;
+  }
+
+  resize: vertical;
+  box-shadow: $fc-inner-shadow inset;
+}
+
+.control-label {
+  vertical-align: middle;
+
+  em {
+    font-size: 0.875rem;
+    vertical-align: top;
+  }
+}
+
+fieldset {
+  + fieldset {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid #ddd;
+  }
+}
+
+legend {
+  float: left; // Fix to ensure the legend is bound the the fieldset box
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+label {
+  font-size: 0.875rem;
+}
+
+// Input Group
+.input-group-append {
+  .btn-icon {
+    border-color: #ccc;
+  }
+}
+
+// Validation
+.invalid-feedback {
+  position: relative;
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  color: #fff;
+
+  &::after {
+    content: ' ';
+    position: absolute;
+    top: -1rem;
+    left: 1rem;
+    width: 1rem;
+    height: 1rem;
+    border-right: 0.5rem solid transparent;
+    border-bottom: 0.5rem solid #dc3545;
+    border-left: 0.5rem solid transparent;
+  }
+}
+
+.is-invalid ~ .invalid-feedback {
+  display: inline-block;
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+}
+
+.input-group.is-invalid {
+  .form-control {
+    border-color: #dc3545;
+  }
+
+  .input-group-append {
+    .btn-icon {
+      border-color: #dc3545;
+    }
+  }
+}

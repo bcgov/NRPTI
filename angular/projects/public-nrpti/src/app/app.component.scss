@@ -1,0 +1,49 @@
+@import "~assets/styles/base/base.scss";
+
+:host {
+  display: block;
+
+  @include flex-box();
+  @include flex-direction(column);
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+app-header {
+  @include flex(0 0 auto);
+}
+
+app-toggle-button {
+  position: fixed;
+  z-index: 1000;
+  margin-top: -60px;
+  margin-left: 0;
+
+  @media screen and (max-width: 768px) {
+    margin-top: 10px;
+  }
+}
+
+.app-body {
+  @include flex-box();
+  @include flex(1 1 auto);
+  @include flex-direction(column);
+
+  background: #fff;
+  position: relative;
+  overflow-y: auto;
+  font-family: 'Noto Sans', sans-serif;
+
+  @media screen and (min-width: 768px) {
+    margin-top: 139px;
+  }
+}
+
+// @media screen and (max-width: 650px) {
+//   div.content {margin-left: 0;}
+// }
