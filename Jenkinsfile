@@ -45,6 +45,11 @@ pipeline {
               nrcedSelector.untilEach(1) {
                 return it.object().status.phase == "Complete"
               }
+              echo "Deploying to NRCED Public"
+              def publicNRPTI = openshift.selector("bc", "public-nrpti-build").startBuild()
+              publicNRPTI.untilEach(1) {
+                return it.object().status.phase == "Complete"
+              }
               echo "Deploying to PUBLIC LNG"
               def lngSelector = openshift.selector("bc", "public-lng-build").startBuild()
               lngSelector.untilEach(1) {
@@ -65,31 +70,5 @@ pipeline {
         }
       }
     }
-    // stage('Deploy (DEV)') {
-    //   agent { label 'deploy' }
-    //   steps {
-    //     echo "Deploying ..."
-    //   }
-    // }
-    // stage('Deploy (PROD)') {
-    //   agent { label 'deploy' }
-    //   input {
-    //     message "Should we continue with deployment to PROD?"
-    //     ok "Yes!"
-    //   }
-    //   steps {
-    //     echo "Deploying ..."
-    //   }
-    // }
-    // stage('Acceptance') {
-    //   agent { label 'deploy' }
-    //   input {
-    //     message "Should we continue with cleanup?"
-    //     ok "Yes!"
-    //   }
-    //   steps {
-    //     echo "Cleaning ..."
-    //   }
-    // }
   }
 }
