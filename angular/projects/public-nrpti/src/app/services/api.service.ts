@@ -30,13 +30,13 @@ export class ApiService {
         this.env = 'local';
         break;
 
-      case 'public-nrpti-dev.pathfinder.gov.bc.ca':
+      case 'public-nrced-dev.pathfinder.gov.bc.ca':
         // Dev
         this.pathAPI = 'https://nrpti-dev.pathfinder.gov.bc.ca/api/public';
         this.env = 'dev';
         break;
 
-      case 'public-nrpti-test.pathfinder.gov.bc.ca':
+      case 'public-nrced-test.pathfinder.gov.bc.ca':
         // Test
         this.pathAPI = 'https://nrpti-test.pathfinder.gov.bc.ca/api/public';
         this.env = 'test';
