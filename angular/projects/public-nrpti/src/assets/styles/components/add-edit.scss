@@ -1,0 +1,193 @@
+/* New CSS - KD */
+
+h2 {
+  border-bottom: 1px solid #cecece;
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  padding-bottom: 6px;
+}
+
+label {
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+select {
+  font-size: 1rem;
+  border: 1px solid #ababab;
+
+  &:focus {
+    border-color: #5091cd;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+}
+
+textarea,
+input[type="text"] {
+  border-radius: 2px;
+  box-shadow: none;
+  -webkit-appearance: none;
+  border: 1px solid #ababab;
+  font-size: 1rem;
+
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    border-color: #5091cd;
+  }
+}
+
+textarea {
+  height: 125px;
+}
+
+section {
+  + section {
+    margin-top: 2rem;
+  }
+}
+
+legend {
+  float: none;
+}
+
+.radio-group,
+.checkbox-group {
+  display: flex;
+  height: 44px;
+
+  .radio,
+  .checkbox {
+    margin-top: 6px;
+    margin-right: 15px;
+
+    input {
+      margin-right: 5px;
+      display: inline-block;
+    }
+  }
+}
+
+.money {
+  position: relative;
+
+  i {
+    position: absolute;
+    z-index: 10;
+    top: 8px;
+  }
+
+  input {
+    padding-left: 24px;
+  }
+}
+
+.file {
+  position: relative;
+
+  i {
+    position: absolute;
+    z-index: 10;
+    top: 8px;
+  }
+
+  input {
+    padding-left: 24px;
+  }
+}
+
+.add-btn {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding-top: 5px;
+  height: 44px;
+  width: 45px;
+  background: transparent;
+  border: none;
+
+  button:focus {
+    border-color: #5091cd;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+
+  i {
+    font-size: 35px;
+    color: #036;
+    margin-right: 0;
+  }
+}
+
+.add-row {
+  input {
+    padding-right: 2.5rem;
+  }
+}
+
+.label-pair {
+  margin-bottom: 1rem;
+  position: relative;
+
+  @media screen and (min-width: 800px) {
+    width: 32%;
+    margin-right: 1%;
+    display: inline-block;
+    vertical-align: top;
+
+    &.sm {
+      width: 15.5%;
+    }
+
+    &.med {
+      width: 65%;
+    }
+
+    &.lrg {
+      width: 100%;
+    }
+  }
+}
+
+fieldset {
+  border: none;
+  margin-top: 0;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+
+  @media screen and (min-width: 800px) {
+    border-right: 1px solid #eee;
+    width: 32%;
+    padding-right: 2%;
+    margin-right: 2%;
+
+    &:last-of-type {
+      border-right: none;
+    }
+
+    &:nth-child(3n) {
+      padding-right: 0;
+      margin-right: 0;
+    }
+  }
+
+  .label-pair {
+    width: 100%;
+  }
+}
+
+button.calendar,
+button.calendar:active {
+  width: 2.75rem;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAcCAYAAAAEN20fAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEUSURBVEiJ7ZQxToVAEIY/YCHGxN6XGOIpnpaEsBSeQC9ArZbm9TZ6ADyBNzAhQGGl8Riv4BLAWAgmkpBYkH1b8FWT2WK/zJ8ZJ4qiI6XUI3ANnGKWBnht2/ZBDRK3hgVGNsCd7/ui+JkEIrKtqurLpEWaphd933+IyI3LEIdpCYCiKD6HcuOa/nwOa0ScJEnk0BJg0UTUWJRl6RxCYEzEmomsIlPU3IPW+grIAbquy+q6fluy/28RIBeRMwDXdXMgXLj/B2uimRXpui4D9sBeRLKl+1N+L+t6RwbWrZliTTTr1oxYtzVWiTQAcRxvTX+eJMnlUDaO1vpZRO5NS0x48sIwfPc87xg4B04MCzQi8hIEwe4bl1DnFMCN2zsAAAAASUVORK5CYII=') !important;
+  background-repeat: no-repeat;
+  background-size: 23px;
+  background-position: center;
+}
+
+#add-remove-open-house,
+select {
+  cursor: pointer;
+}

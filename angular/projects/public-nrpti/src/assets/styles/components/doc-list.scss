@@ -1,0 +1,118 @@
+$doc-list-link-color: #007bff;
+
+// Document List Shared Styling
+.doc-list {
+  margin: 0;
+  padding: 0;
+
+  li {
+    @include flex-box();
+    @include flex-direction(row);
+
+    background: #f7f8fa;
+
+    + li {
+      margin-top: 2px;
+    }
+  }
+
+  .cell {
+    padding: 0.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    // Text Content
+    &__txt-content {
+      margin-top: 0.5rem;
+      display: inline-block;
+      white-space: nowrap;
+
+      a {
+        color: $doc-list-link-color;
+        cursor: pointer;
+
+        &:hover {
+          color: $doc-list-link-color;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    // Icon Column
+    &.icon {
+      @include flex(0 0 auto);
+
+      padding-left: 0.75rem;
+
+      i {
+        margin-top: 0.5rem;
+        font-size: 1.35rem;
+        color: #999;
+        cursor: default;
+
+        &.link {
+          color: $doc-list-link-color;
+          cursor: pointer;
+        }
+      }
+    }
+
+    // Name Column
+    &.name {
+      @include flex(1 1 auto);
+
+      font-size: 0.875rem;
+    }
+
+    // Actions Column
+    &.actions {
+      @include flex(0 0 auto);
+    }
+  }
+
+  .no-results {
+    padding: 0.75rem;
+    font-size: 0.9375rem;
+  }
+}
+
+// Document List Publish Actions
+.publish-actions {
+  @include flex(0 0 auto);
+
+  padding-right: 0;
+  overflow: visible;
+
+  .btn {
+    height: 2rem;
+    width: 5.5rem;
+    font-size: 0.75rem;
+
+    &.active {
+      box-shadow: none;
+    }
+
+    // TODO: remove when we the toggle buttons here to a radio group
+    &:disabled {
+      opacity: 1;
+    }
+  }
+}
+
+.doc-list.inline {
+  margin: -0.2rem;
+
+  li {
+    margin: 0.2rem;
+    display: inline-block;
+    width: auto;
+
+    .cell {
+      display: inline-block;
+    }
+  }
+
+  .cell__txt-content {
+    margin: 0;
+  }
+}
