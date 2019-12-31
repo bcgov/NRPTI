@@ -57,7 +57,7 @@ A list of recommended/helpful VS Code extensions.
 - Prod: TBD
 
 ### NRPTI API/ADMIN/PUBLIC
-- Dev: https://nrpti-dev.pathfinder.gov.bc.ca/api/docs/, https://admin-nrpti-dev.pathfinder.gov.bc.ca/, https://public-nrpti-dev.pathfinder.gov.bc.ca/
+- Dev: https://nrpti-dev.pathfinder.gov.bc.ca/api/docs/, https://admin-nrpti-dev.pathfinder.gov.bc.ca/, https://public-nrced-dev.pathfinder.gov.bc.ca/
 - Test: https://nrpti-test.pathfinder.gov.bc.ca/api/docs/, https://admin-nrpti-test.pathfinder.gov.bc.ca/, https://public-nrpti-test.pathfinder.gov.bc.ca/
 - Prod: TBD
 
