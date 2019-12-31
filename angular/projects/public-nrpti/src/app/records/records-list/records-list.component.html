@@ -1,0 +1,24 @@
+<div class="container-fluid-padding">
+  <div class="input-group-prepend">
+    <!-- <button (click)="selectAction('selectAll')" class="btn btn-outline-secondary mr-1" type="button" id="button-sa">
+      Select All
+    </button> -->
+  </div>
+  <br />
+
+  <div *ngIf="!loading && tableData.totalListItems === 0">
+    No Records found.
+  </div>
+
+  <lib-table-template
+    *ngIf="!loading && tableData.totalListItems != 0"
+    (checkboxChange)="checkChange($event)"
+    [data]="tableData"
+    (columnSort)="setColumnSort($event)"
+    (itemClicked)="itemClicked($event)"
+    (itemSelected)="itemSelected($event)"
+    (pageNumUpdate)="onPageNumUpdate($event)"
+    (pageSizeUpdate)="onPageSizeUpdate($event)"
+  >
+  </lib-table-template>
+</div>
