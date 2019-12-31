@@ -1,7 +1,7 @@
 import { NgModule, APP_INITIALIZER, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -23,7 +23,6 @@ import { NotAuthorizedComponent } from './not-authorized/not-authorized.componen
 import { HomeComponent } from './home/home.component';
 import { ImportComponent } from './import/import.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { RecordsTableRowsComponent } from './records/records-rows/records-table-rows.component';
 import { ImportTableRowsComponent } from './import/import-rows/import-table-rows.component';
 import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
 
@@ -64,6 +63,7 @@ export function keycloakFactory(keycloakService: KeycloakService) {
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     GlobalModule,
     CommonModule,
@@ -94,13 +94,7 @@ export function keycloakFactory(keycloakService: KeycloakService) {
     CanActivateGuard,
     CanDeactivateGuard
   ],
-  entryComponents: [
-    ConfirmComponent,
-    HomeComponent,
-    ImportComponent,
-    RecordsTableRowsComponent,
-    ImportTableRowsComponent
-  ],
+  entryComponents: [ConfirmComponent, HomeComponent, ImportComponent, ImportTableRowsComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

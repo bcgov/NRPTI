@@ -10,7 +10,7 @@ import { RecordsTableRowsComponent } from '../records-rows/records-table-rows.co
  * List page component.
  *
  * @export
- * @class RecordsListComponent
+ * @class SearchListComponent
  * @implements {OnInit}
  * @implements {OnDestroy}
  */
@@ -60,6 +60,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       width: 'col-2'
     },
     {
+      name: '',
+      value: '',
       width: 'col-1',
       nosort: true
     }
@@ -76,7 +78,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   /**
    * Component init.
    *
-   * @memberof RecordsListComponent
+   * @memberof SearchComponent
    */
   ngOnInit(): void {
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
@@ -108,22 +110,10 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Record item click handler.
-   *
-   * @param {*} item record data item.
-   * @memberof RecordsListComponent
-   */
-  itemClicked(item) {
-    this.router.navigate(['records', item._id, 'details']);
-  }
-
-  itemSelected(item) {}
-
-  /**
    * Column sorting handler.
    *
    * @param {*} column
-   * @memberof RecordsListComponent
+   * @memberof SearchComponent
    */
   setColumnSort(column) {
     if (this.tableData.sortBy.charAt(0) === '+') {
@@ -138,7 +128,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * Page number changed (pagination).
    *
    * @param {*} pageNumber
-   * @memberof RecordsListComponent
+   * @memberof SearchComponent
    */
   onPageNumUpdate(pageNumber) {
     this.tableData.currentPage = pageNumber;
@@ -149,7 +139,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * Page size picker option selected handler.
    *
    * @param {IPageSizePickerOption} pageSize
-   * @memberof RecordsListComponent
+   * @memberof SearchComponent
    */
   onPageSizeUpdate(pageSize: IPageSizePickerOption) {
     this.tableData.pageSize = pageSize.value;
@@ -159,7 +149,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   /**
    * Update record table with latest values (whatever is set in this.tableData).
    *
-   * @memberof RecordsListComponent
+   * @memberof SearchComponent
    */
   submit() {
     this.tableTemplateUtils.navigateUsingParams(this.tableData, ['records']);
@@ -170,7 +160,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   /**
    * Cleanup on component destroy.
    *
-   * @memberof RecordsListComponent
+   * @memberof SearchComponent
    */
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
