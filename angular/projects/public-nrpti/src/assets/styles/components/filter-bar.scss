@@ -1,0 +1,125 @@
+.filter-bar {
+  label {
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  .form-group {
+    position: relative;
+    margin-bottom: 1rem;
+  }
+
+  .form-control {
+    &:focus {
+      border-color: $fc-focus-border-color;
+      z-index: 2;
+    }
+  }
+
+  .button-row {
+    margin-top: 1rem;
+
+    button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+    }
+  }
+}
+
+.filter-input-row {
+  &.filters-basic {
+    @include flex-box();
+
+    .form-group {
+      @include flex(1 1 auto);
+
+      .form-control {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+
+    .toggle-filter-btn {
+      @include flex(0 0 auto);
+
+      height: 2.75rem;
+      margin-left: -1px;
+      padding: 0.5rem;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border: 1px solid $fc-border-color;
+
+      i {
+        margin: 0;
+      }
+
+      .btn-txt {
+        display: none;
+        min-width: 5rem;
+      }
+
+      &:focus {
+        z-index: 2;
+      }
+    }
+  }
+}
+
+@media (min-width: 760px) {
+  .filter-input-row {
+    position: relative;
+
+    .form-group {
+      margin-bottom: 0;
+    }
+
+    &.filters-basic {
+      .toggle-filter-btn {
+        .btn-txt {
+          display: inline-block;
+          min-width: 5rem;
+          vertical-align: middle;
+        }
+      }
+    }
+
+    &.filters-advanced {
+      @include flex-box();
+
+      .form-group {
+        @include flex(1 1 33%);
+
+        margin-left: -1px;
+
+        .form-control {
+          position: relative;
+          border-radius: 0;
+
+          &:focus {
+            z-index: 2;
+          }
+        }
+
+        &:first-child {
+          margin-left: -1px;
+
+          .form-control {
+            border-top-left-radius: 0.25rem;
+            border-bottom-left-radius: 0.25rem;
+          }
+        }
+
+        &:last-child {
+          .form-control {
+            border-top-right-radius: 0.25rem;
+            border-bottom-right-radius: 0.25rem;
+          }
+        }
+      }
+    }
+
+    + .filter-input-row {
+      margin-top: 2rem;
+    }
+  }
+}
