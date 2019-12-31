@@ -1,0 +1,49 @@
+<main class="container-fluid-padding">
+  <div class="spinner-container" *ngIf="loading">
+    <div class="spinner-new rotating"></div>
+  </div>
+
+  <!-- <form [formGroup]="myForm" novalidate> -->
+  <section>
+    <header>
+      <div class="row">
+        <div class="col-6">
+          <h4 class="top-header">Shared Data [Master]</h4>
+          <span class="last-edited-text">Last Edited on YYYY-MM-DD</span>
+        </div>
+        <div class="col-6 go-to-details-btn">
+          <button *ngIf="isEditing" class="btn btn-primary" type="submit" (click)="navigateToDetails()">
+            Go to Record Details
+          </button>
+        </div>
+      </div>
+    </header>
+    <h4>Basic Information</h4>
+    <div class="flex-container">
+      <div class="label-pair">
+        <label for="name">Record Name </label>
+        <input name="name" id="name" type="text" class="form-control" />
+      </div>
+
+      <div class="label-pair">
+        <label for="subtype">Record Type - Subtype</label>
+        <select name="subtype" id="subtype" class="form-control">
+          <!-- <option [selected]="isSelected('new')" value="new">New Construction</option> -->
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <header>
+      <h4>NRCED Data</h4>
+    </header>
+  </section>
+
+  <section>
+    <header>
+      <h4>LNG Data</h4>
+    </header>
+  </section>
+  <!-- </form> -->
+</main>

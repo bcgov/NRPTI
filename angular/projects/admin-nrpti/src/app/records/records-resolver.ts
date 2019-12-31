@@ -3,10 +3,10 @@ import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import { TableTemplateUtils, TableObject, SearchService } from 'nrpti-angular-components';
-import { ApiService } from '../../services/api.service';
+import { ApiService } from '../services/api.service';
 
 @Injectable()
-export class RecordsListResolver implements Resolve<Observable<object>> {
+export class RecordsResolver implements Resolve<Observable<object>> {
   constructor(
     private searchService: SearchService,
     private tableTemplateUtils: TableTemplateUtils,
