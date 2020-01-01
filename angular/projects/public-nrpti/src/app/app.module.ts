@@ -21,7 +21,6 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './home/home.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { RecordsTableRowsComponent } from './records/records-rows/records-table-rows.component';
 import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
 
 // services
@@ -54,7 +53,7 @@ import { FactoryService } from './services/factory.service';
     BootstrapModalModule.forRoot({ container: document.body })
   ],
   providers: [ApiService, DocumentService, FactoryService],
-  entryComponents: [ConfirmComponent, HomeComponent, RecordsTableRowsComponent],
+  entryComponents: [ConfirmComponent, HomeComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

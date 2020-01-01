@@ -5,6 +5,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 
 // Modules
+import { GlobalModule } from 'nrpti-angular-components';
 import { SharedModule } from '../shared.module';
 import { DocumentsModule } from './documents/documents.module';
 
@@ -18,7 +19,7 @@ import { NationsComponent } from './nations/nations.component';
 import { PlansComponent } from './plans/plans.component';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, NgbModule.forRoot(), RouterModule, DocumentsModule, SharedModule],
+  imports: [CommonModule, FormsModule, NgbModule.forRoot(), RouterModule, DocumentsModule, GlobalModule, SharedModule],
   declarations: [
     ProjectComponent,
     OverviewComponent,
