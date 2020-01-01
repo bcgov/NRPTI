@@ -9,6 +9,8 @@ import { NgxPageScrollModule } from 'ngx-page-scroll';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 
 // modules
+import { GlobalModule } from 'nrpti-angular-components';
+import { CommonModule } from '../../../common/src/app/common.module';
 import { SharedModule } from './shared.module';
 import { AppRoutingModule } from './app-routing.module';
 import { ApplicationsModule } from './applications/applications.module';
@@ -23,8 +25,6 @@ import { HomeComponent } from './home/home.component';
 
 // services
 import { ApiService } from './services/api';
-import { DocumentService } from './services/document.service';
-import { ProjectsComponent } from './projects/projects.component';
 import { UrlService } from './services/url.service';
 import { DataService } from './services/data.service';
 import { FaqComponent } from './faq/faq.component';
@@ -35,6 +35,8 @@ import { SearchService } from 'nrpti-angular-components';
     AppRoutingModule, // <-- module import order matters - https://angular.io/guide/router#module-import-order-matters
     BrowserAnimationsModule,
     BrowserModule,
+    GlobalModule,
+    CommonModule,
     FormsModule,
     HttpClientModule,
     NgbModule.forRoot(),
@@ -50,11 +52,10 @@ import { SearchService } from 'nrpti-angular-components';
     ContactComponent,
     HeaderComponent,
     FooterComponent,
-    ProjectsComponent,
     FaqComponent,
     HomeComponent
   ],
-  providers: [ApiService, DocumentService, UrlService, DataService, SearchService],
+  providers: [ApiService, UrlService, DataService, SearchService],
   entryComponents: [],
   bootstrap: [AppComponent]
 })

@@ -72,30 +72,6 @@ export class DataService {
     return projectData[id][pageType.toString()].images;
   }
 
-  getDocumentHeaders(id: number, pageType: PageTypes) {
-    if (!id || !pageType) {
-      return;
-    }
-
-    return projectData[id][pageType.toString()].documents.headers;
-  }
-
-  getDocumentFilters(id: number, pageType: PageTypes) {
-    if (!id || !pageType) {
-      return;
-    }
-
-    return projectData[id][pageType.toString()].documents.filters;
-  }
-
-  getDocuments(id: number, pageType: PageTypes) {
-    if (!id || !pageType) {
-      return;
-    }
-
-    return projectData[id][pageType.toString()].documents.docs;
-  }
-
   getActivities(id: number, pageType: PageTypes) {
     if (!id || !pageType) {
       return;

@@ -11,23 +11,46 @@ import { OverviewComponent } from './project/overview/overview.component';
 import { BackgroundComponent } from './project/background/background.component';
 import { PlansComponent } from './project/plans/plans.component';
 import { ProjectComponent } from './project/project.component';
-import { ProjectsComponent } from './projects/projects.component';
+import { ComplianceResolver } from './project/compliance/compliance-resolver';
+import { AuthorizationsResolver } from './project/authorizations/authorizations-resolver';
+import { PlansResolver } from './project/plans/plans-resolver';
+import { NationsResolver } from './project/nations/nations-resolver';
 
 const routes: Routes = [
-  {
-    path: 'projects',
-    component: ProjectsComponent
-  },
   {
     path: 'project/:id',
     component: ProjectComponent,
     children: [
       { path: 'overview', component: OverviewComponent },
       { path: 'background', component: BackgroundComponent },
-      { path: 'authorizations', component: AuthorizationsComponent },
-      { path: 'compliance', component: ComplianceComponent },
-      { path: 'plans', component: PlansComponent },
-      { path: 'nations', component: NationsComponent },
+      {
+        path: 'authorizations',
+        component: AuthorizationsComponent,
+        resolve: {
+          records: AuthorizationsResolver
+        }
+      },
+      {
+        path: 'compliance',
+        component: ComplianceComponent,
+        resolve: {
+          records: ComplianceResolver
+        }
+      },
+      {
+        path: 'plans',
+        component: PlansComponent,
+        resolve: {
+          records: PlansResolver
+        }
+      },
+      {
+        path: 'nations',
+        component: NationsComponent,
+        resolve: {
+          records: NationsResolver
+        }
+      },
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: '**', redirectTo: 'overview' }
     ]
@@ -57,6 +80,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
+  providers: [ComplianceResolver, AuthorizationsResolver, PlansResolver, NationsResolver],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
