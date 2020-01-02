@@ -5,9 +5,9 @@
 
 describe('EpicDataSource', () => {
   it('Is True', () => {
-    expect(true).toEqual(true)
-  })
-})
+    expect(true).toEqual(true);
+  });
+});
 
 // describe('EpicDataSource', () => {
 //   describe('constructor', () => {

@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FactoryService } from '../services/factory.service';
 import { Subject, forkJoin } from 'rxjs';
-import { TableObject, TableTemplateUtils, IPageSizePickerOption } from 'nrpti-angular-components';
+import { TableObject, TableTemplateUtils, IColumnObject, IPageSizePickerOption, ITableMessage } from 'nrpti-angular-components';
 import { ImportTableRowsComponent } from '../import/import-rows/import-table-rows.component';
 import { takeUntil } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -20,7 +20,7 @@ export class ImportComponent implements OnInit {
   public typeFilters = [];
   public navigationObject;
   public tableData: TableObject = new TableObject({ component: ImportTableRowsComponent });
-  public tableColumns: any[] = [
+  public tableColumns: IColumnObject[] = [
     {
       name: 'Start',
       value: 'startDate',
@@ -45,11 +45,6 @@ export class ImportComponent implements OnInit {
       name: 'Items',
       value: 'itemTotal',
       width: 'col-5'
-    },
-    {
-      name: 'URL',
-      value: 'dataSource',
-      width: 'col-1'
     }
   ];
   constructor(
@@ -71,30 +66,53 @@ export class ImportComponent implements OnInit {
     });
 
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
-      if (res) {
-        this.tableData.items = res.records[0].data.searchResults;
-
-        if (res.records[0].data.meta.length > 0) {
-          this.tableData.totalListItems = res.records[0].data.meta[0].searchResultsTotal;
-        }
-
-        this.tableData.columns = this.tableColumns;
-        this.loading = false;
-        this._changeDetectionRef.detectChanges();
-      } else {
-        alert("Uh-oh, couldn't load import Page");
-        // project not found --> navigate back to search
+      if (!res || !res.records) {
+        alert("Uh-oh, couldn't load NRPTI records");
+        // project not found --> navigate back to home
         this.router.navigate(['/']);
+        return;
       }
+
+      const records = (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || [];
+      this.tableData.items = records.map(record => {
+        return { rowData: record };
+      });
+
+      this.tableData.totalListItems =
+        (res.records[0] &&
+          res.records[0].data &&
+          res.records[0].data.meta &&
+          res.records[0].data.meta[0] &&
+          res.records[0].data.meta[0].searchResultsTotal) ||
+        0;
+
+      this.tableData.columns = this.tableColumns;
+      this.loading = false;
+      this._changeDetectionRef.detectChanges();
     });
   }
 
-  itemClicked() {}
-
-  itemSelected() {}
+  onMessageOut(msg: ITableMessage) {
+    switch (msg.label) {
+      case 'rowClicked':
+        break;
+      case 'rowSelected':
+        break;
+      case 'columnSort':
+        this.setColumnSort(msg.data);
+        break;
+      case 'pageNum':
+        this.onPageNumUpdate(msg.data);
+        break;
+      case 'pageSize':
+        this.onPageSizeUpdate(msg.data);
+        break;
+      default:
+        break;
+    }
+  }
 
   setColumnSort(column) {
-    console.log('setColumnSort', column);
     if (this.tableData.sortBy.charAt(0) === '+') {
       this.tableData.sortBy = '-' + column;
     } else {
@@ -104,13 +122,11 @@ export class ImportComponent implements OnInit {
   }
 
   onPageNumUpdate(pageNumber) {
-    console.log('onPageNumUpdate', pageNumber);
     this.tableData.currentPage = pageNumber;
     this.submit();
   }
 
   onPageSizeUpdate(pageSize: IPageSizePickerOption) {
-    console.log('onPageSizeUpdate', pageSize);
     this.tableData.pageSize = pageSize.value;
     this.submit();
   }
@@ -122,7 +138,6 @@ export class ImportComponent implements OnInit {
   checkChange() {}
 
   startJob() {
-    console.log('start job');
     // tslint:disable-next-line: no-this-assignment
     const self = this;
     this.postToApi().subscribe(jobs => {

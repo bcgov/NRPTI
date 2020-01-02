@@ -1,11 +1,10 @@
 // const EpicOrders = require('./epic-orders');
 
-
 describe('EpicOrders', () => {
   it('Is True', () => {
-    expect(true).toEqual(true)
-  })
-})
+    expect(true).toEqual(true);
+  });
+});
 
 // describe('EpicOrders', () => {
 //   describe('transformRecord', () => {

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ApiService, IRecordQueryParamSet } from './api.service';
+import { ApiService } from './api.service';
 
 describe('ApiService', () => {
   beforeEach(() => {

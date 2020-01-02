@@ -2,9 +2,9 @@
 
 describe('IntegrationUtils', () => {
   it('Is True', () => {
-    expect(true).toEqual(true)
-  })
-})
+    expect(true).toEqual(true);
+  });
+});
 
 // describe('IntegrationUtils', () => {
 //   describe('getRecords', () => {

@@ -1,5 +1,73 @@
-<div class="container-fluid-padding">
-  <p>
-    order-detail works!
-  </p>
-</div>
+<main class="detail-page">
+  <div>
+    <section class="nav-section">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{ active: isTabActive('detail') }" (click)="toggleTab('detail')">Details</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{ active: isTabActive('location') }" (click)="toggleTab('location')"
+            >Location</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{ active: isTabActive('report') }" (click)="toggleTab('report')">Reports</a>
+        </li>
+      </ul>
+    </section>
+    <section class="content-section" *ngIf="isTabActive('detail')">
+      <section>
+        <ul class="nv-list">
+          <li>
+            <span class="name">Record Name:</span>
+            <span class="value">{{ data && data.recordName || '-' }}</span>
+          </li>
+          <li>
+            <span class="name">Issued To:</span>
+            <span class="value">{{ data && data.issuedTo || '-' }}</span>
+          </li>
+          <li>
+            <span class="name">Record Type:</span>
+            <span class="value">{{ data && data.recordType || '-' }}</span>
+          </li>
+          <li>
+            <span class="name">Location Description:</span>
+            <span class="value">{{ data && data.location || '-' }}</span>
+          </li>
+          <li>
+            <span class="name">Issued On:</span>
+            <span class="value">{{ data && data.dateIssued || '-' }}</span>
+          </li>
+        </ul>
+      </section>
+      <section>
+        <lib-button-spinner
+          *ngIf="!isPublished()"
+          [btnIsDisabled]="isLoading || isPublishing"
+          [btnShowSpinner]="isPublishing"
+          [btnTitle]="'Publish this order record'"
+          [btnType]="'submit'"
+          [btnText]="'Publish'"
+          class="btn btn-primary"
+          (click)="publishOrder()"
+        ></lib-button-spinner>
+        <lib-button-spinner
+          *ngIf="isPublished()"
+          [btnIsDisabled]="isLoading || isPublishing"
+          [btnShowSpinner]="isPublishing"
+          [btnTitle]="'Unpublish this order record'"
+          [btnType]="'submit'"
+          [btnText]="'Unpublish'"
+          class="btn btn-primary"
+          (click)="unPublishOrder()"
+        ></lib-button-spinner>
+      </section>
+    </section>
+    <section class="content-section" *ngIf="isTabActive('location')">
+      This is a map!
+    </section>
+    <section class="content-section" *ngIf="isTabActive('report')">
+      This is a report!
+    </section>
+  </div>
+</main>

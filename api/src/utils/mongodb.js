@@ -9,14 +9,21 @@ function MongoDriver(options) {
   let self = this;
 
   if (process.env.MONGODB_USERNAME && process.env.MONGODB_PASSWORD) {
-    DB_CONNECTION = 'mongodb://' + process.env.MONGODB_USERNAME + ':' + process.env.MONGODB_PASSWORD + '@' + (process.env.MONGODB_SERVICE_HOST || process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost');
+    DB_CONNECTION =
+      'mongodb://' +
+      process.env.MONGODB_USERNAME +
+      ':' +
+      process.env.MONGODB_PASSWORD +
+      '@' +
+      (process.env.MONGODB_SERVICE_HOST || process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost');
   } else {
-    DB_CONNECTION = 'mongodb://' + (process.env.MONGODB_SERVICE_HOST || process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost');
+    DB_CONNECTION =
+      'mongodb://' + (process.env.MONGODB_SERVICE_HOST || process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost');
   }
 
   DB_CONNECTION += '/' + (process.env.MONGODB_DATABASE || 'nrpti-dev');
 
-  console.log("db conn:", DB_CONNECTION);
+  console.log('db conn:', DB_CONNECTION);
 
   MongoClient.connect(DB_CONNECTION, function(err, db) {
     console.log('db err:', err);

@@ -1,16 +1,19 @@
 <ng-container *ngIf="!isHidden">
-  <div id="table-template-page-size-picker">
-    <ng-container *ngFor="let sizeOption of sizeOptions">
-      <button
-        [class.current]="isSizeOptionActive(sizeOption)"
-        class="btn"
-        type="btnType"
-        (click)="sizeOptionChosen(sizeOption)"
-        [disabled]="isDisabled"
-        title="getTitle(sizeOption)"
-      >
-        {{ sizeOption.displayText }}
-      </button>
-    </ng-container>
+  <div class="lib-page-count-display">
+    # of results per page
+    <div>
+      <ng-container *ngFor="let sizeOption of sizeOptions">
+        <button
+          [class.current]="isSizeOptionActive(sizeOption)"
+          class="btn size-picker-option"
+          type="btnType"
+          (click)="sizeOptionChosen(sizeOption)"
+          [disabled]="isDisabled"
+          title="getTitle(sizeOption)"
+        >
+          {{ sizeOption.displayText }}
+        </button>
+      </ng-container>
+    </div>
   </div>
 </ng-container>

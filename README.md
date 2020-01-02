@@ -46,24 +46,29 @@ A list of recommended/helpful VS Code extensions.
 
 ## Environments
 
-### LNG
+### PUBLIC-LNG
 - Dev: https://public-lng-dev.pathfinder.gov.bc.ca/
 - Test: https://public-lng-test.pathfinder.gov.bc.ca/
 - Prod: TBD
 
-### NRCED
-- Dev: TBD
-- Test: TBD
+### PUBLIC-NRCED
+- Dev: https://public-nrced-dev.pathfinder.gov.bc.ca/
+- Test: https://public-nrpti-test.pathfinder.gov.bc.ca/
 - Prod: TBD
 
-### NRPTI API/ADMIN/PUBLIC
-- Dev: https://nrpti-dev.pathfinder.gov.bc.ca/api/docs/, https://admin-nrpti-dev.pathfinder.gov.bc.ca/, https://public-nrced-dev.pathfinder.gov.bc.ca/
-- Test: https://nrpti-test.pathfinder.gov.bc.ca/api/docs/, https://admin-nrpti-test.pathfinder.gov.bc.ca/, https://public-nrpti-test.pathfinder.gov.bc.ca/
-- Prod: TBD
+### NRPTI API/ADMIN
+- Dev:
+  - Api: https://nrpti-dev.pathfinder.gov.bc.ca/api/docs/
+  - Admin: https://admin-nrpti-dev.pathfinder.gov.bc.ca/
+- Test:
+  - Api: https://nrpti-test.pathfinder.gov.bc.ca/api/docs/
+  - Admin: https://admin-nrpti-test.pathfinder.gov.bc.ca/,
+- Prod:
+  - Api: TBD
+  - Admin: TBD
 
 ### Jenkins
 - https://jenkins-prod-iarjfo-tools.pathfinder.gov.bc.ca/
 
 ### SonarQube
 - https://sonarqube-iarjfo-tools.pathfinder.gov.bc.ca/projects
-

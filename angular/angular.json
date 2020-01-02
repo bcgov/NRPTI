@@ -138,7 +138,7 @@
         }
       }
     },
-    "public-nrpti": {
+    "public-nrced": {
       "root": "projects/public-nrpti",
       "sourceRoot": "projects/public-nrpti/src",
       "projectType": "application",
@@ -156,7 +156,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/public-nrpti",
+            "outputPath": "dist/public-nrced",
             "index": "projects/public-nrpti/src/index.html",
             "main": "projects/public-nrpti/src/main.ts",
             "tsConfig": "projects/public-nrpti/tsconfig.app.json",
@@ -198,19 +198,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "public-nrpti:build",
+            "browserTarget": "public-nrced:build",
             "port": 4400
           },
           "configurations": {
             "production": {
-              "browserTarget": "public-nrpti:build:production"
+              "browserTarget": "public-nrced:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "public-nrpti:build"
+            "browserTarget": "public-nrced:build"
           }
         },
         "test": {

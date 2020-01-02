@@ -83,4 +83,4 @@ const routes: Routes = [
   providers: [ComplianceResolver, AuthorizationsResolver, PlansResolver, NationsResolver],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

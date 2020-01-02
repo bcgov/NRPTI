@@ -19,5 +19,24 @@
 }
 
 .ngx-pagination {
+  margin-bottom: 0 !important;
   padding-left: 0;
+
+  & li {
+    border-radius: 6px !important;
+
+    &:not(.current) a {
+      transition: all linear 0.2s !important;
+
+      &:hover {
+        border-radius: 6px !important;
+        transition: all linear 0.2s !important;
+      }
+    }
+
+    &.current {
+      transition: all linear 0.2s !important;
+      background-color: #38598a;
+    }
+  }
 }
