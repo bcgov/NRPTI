@@ -71,7 +71,7 @@ class EpicDataSource {
       this.status.epicMeta = data && data[0] && data[0].meta;
 
       // Process records
-      this.processRecords(epicRecords);
+      await this.processRecords(epicRecords);
     } catch (error) {
       this.status.message = 'unexpected error';
       this.status.error = JSON.stringify(error);
@@ -90,7 +90,7 @@ class EpicDataSource {
    * @param {*} epicRecords
    * @memberof EpicDataSource
    */
-  processRecords(epicRecords) {
+  async processRecords(epicRecords) {
     // Get type specific utils
     this.typeUtils = this.getRecordTypeUtils(this.type);
 
@@ -98,13 +98,11 @@ class EpicDataSource {
       try {
         // TODO fetch/stream epic documents somewhere around here?
 
-        // TODO do we need to slow this down, so we aren't hammering the database? (debounce)
-
         // Perform any data transformations necessary to convert Epic record to NRPTI record
-        const nrptiRecord = this.typeUtils.transformRecord(epicRecords[i]);
+        const nrptiRecord = await this.typeUtils.transformRecord(epicRecords[i]);
 
         // Persist NRPTI record
-        const savedRecord = this.typeUtils.saveRecord(nrptiRecord);
+        const savedRecord = await this.typeUtils.saveRecord(nrptiRecord);
 
         if (savedRecord) {
           this.status.itemsProcessed++;
