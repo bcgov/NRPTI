@@ -46,7 +46,7 @@ pipeline {
                 return it.object().status.phase == "Complete"
               }
               echo "Deploying to NRCED Public"
-              def publicNRPTI = openshift.selector("bc", "public-nrpti-build").startBuild()
+              def publicNRPTI = openshift.selector("bc", "public-nrced-build").startBuild()
               publicNRPTI.untilEach(1) {
                 return it.object().status.phase == "Complete"
               }
