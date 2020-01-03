@@ -1,0 +1,10 @@
+<tr
+  *ngFor="let item of data.items"
+  (click)="onItemClicked(item)"
+>
+  <td scope="row" data-label="Name" class="col-2">{{ item.recordName }}</td>
+  <td scope="row" data-label="Government Agency" class="col-2">{{ item.issuingAgency }}</td>
+  <td scope="row" data-label="Phase" class="col-2">{{ item.phase }}</td>
+  <td scope="row" data-label="Type" class="col-2">{{ item.type }}</td>
+  <td scope="row" data-label="Date" class="col-2">{{ item.documentDate }}</td>
+</tr>
