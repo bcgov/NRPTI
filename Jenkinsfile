@@ -33,9 +33,6 @@ pipeline {
             if (angular) {
               // Fire up the angular builder
               echo "Running Angular builder"
-              // openshiftBuild bldCfg: 'angular-app-build', showBuildLogs: 'true'
-              // openshiftBuild bldCfg: 'admin-nrced-build', showBuildLogs: 'true'
-              // openshiftBuild bldCfg: 'public-lng-build', showBuildLogs: 'true'
               def angularSelector = openshift.selector("bc", "angular-app-build").startBuild()
               angularSelector.untilEach(1) {
                 return it.object().status.phase == "Complete"

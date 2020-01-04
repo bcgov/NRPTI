@@ -17,12 +17,7 @@ export class PlansResolver implements Resolve<Observable<object>> {
     // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
     const tableObject = this.tableTemplateUtils.updateTableObjectWithUrlParams(route.params, new TableObject());
 
-    let project = '0';
-    try {
-      project = route.parent.url[1].path;
-    } catch (e) {
-      console.log('error:', e);
-    }
+    const project = this._apiService.getProjectObjectId(route.parent.url[1].path);
 
     return this._searchService
       .getSearchResults(
@@ -34,7 +29,7 @@ export class PlansResolver implements Resolve<Observable<object>> {
         tableObject.pageSize,
         tableObject.sortBy || '-documentDate', // This needs to be common between both datasets to work properly
         {
-          project: project
+          _epicProjectId: project
         },
         false
       );
