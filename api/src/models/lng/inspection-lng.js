@@ -8,7 +8,7 @@ module.exports = require('../../utils/model-schema-generator')(
     read: [{ type: String, trim: true, default: 'sysadmin' }],
     write: [{ type: String, trim: true, default: 'sysadmin' }],
 
-    _order: { type: 'ObjectId', ref: 'Order' },
+    _master: { type: 'ObjectId', ref: 'Inspection' },
 
     description: { type: String, default: '' },
 
