@@ -2,48 +2,72 @@
   <div class="spinner-container" *ngIf="loading">
     <div class="spinner-new rotating"></div>
   </div>
-
-  <!-- <form [formGroup]="myForm" novalidate> -->
-  <section>
-    <header>
-      <div class="row">
-        <div class="col-6">
-          <h4 class="top-header">Shared Data [Master]</h4>
-          <span class="last-edited-text">Last Edited on YYYY-MM-DD</span>
+  <form *ngIf="myForm" [formGroup]="myForm" novalidate>
+    <section>
+      <header>
+        <div class="row">
+          <div class="col-6">
+            <h4 class="top-header">Shared Data [Master]</h4>
+            <span class="sub-text">Last Edited on YYYY-MM-DD</span>
+          </div>
+          <div class="col-6 go-to-details-btn">
+            <button *ngIf="isEditing" class="btn btn-primary" type="submit" (click)="navigateToDetails()">
+              Go to Record Details
+            </button>
+          </div>
         </div>
-        <div class="col-6 go-to-details-btn">
-          <button *ngIf="isEditing" class="btn btn-primary" type="submit" (click)="navigateToDetails()">
-            Go to Record Details
-          </button>
+      </header>
+      <h4>Basic Information</h4>
+      <div class="flex-container">
+        <div class="label-pair">
+          <label for="recordName">Record Name</label>
+          <input name="recordName" formControlName="recordName" id="recordName" type="text" class="form-control" />
+        </div>
+        <div class="label-pair">
+          <label for="subtype">Record Type - Subtype</label>
+          <select name="subtype" id="subtype" class="form-control">
+            <option [selected]="subtypeSelected('subtype')" value="subtype">Subtypes go here</option>
+          </select>
+        </div>
+        <div class="label-pair">
+          <label for="dateIssued">Date Issued</label><span class="sub-text">(YYYY-MM-DD)</span>
+          <input name="dateIssued" formControlName="dateIssued" id="dateIssued" type="text" class="form-control" />
+        </div>
+        <label for="documentDate">Date Issued*</label>
+        <div class="input-group">
+          <input
+            required
+            id="documentDate"
+            container="body"
+            type="text"
+            class="form-control"
+            placeholder="Select a start date"
+            name="documentDate"
+            formControlName="documentDate"
+            ngbDatepicker
+            #startDatePicker="ngbDatepicker"
+          />
+          <div class="input-group-append">
+            <button
+              class="btn btn-outline-secondary calendar"
+              (click)="startDatePicker.toggle()"
+              type="button"
+            ></button>
+          </div>
         </div>
       </div>
-    </header>
-    <h4>Basic Information</h4>
-    <div class="flex-container">
-      <div class="label-pair">
-        <label for="name">Record Name </label>
-        <input name="name" id="name" type="text" class="form-control" />
-      </div>
+    </section>
 
-      <div class="label-pair">
-        <label for="subtype">Record Type - Subtype</label>
-        <select name="subtype" id="subtype" class="form-control">
-          <!-- <option [selected]="isSelected('new')" value="new">New Construction</option> -->
-        </select>
-      </div>
-    </div>
-  </section>
+    <section>
+      <header>
+        <h4>NRCED Data</h4>
+      </header>
+    </section>
 
-  <section>
-    <header>
-      <h4>NRCED Data</h4>
-    </header>
-  </section>
-
-  <section>
-    <header>
-      <h4>LNG Data</h4>
-    </header>
-  </section>
-  <!-- </form> -->
+    <section>
+      <header>
+        <h4>LNG Data</h4>
+      </header>
+    </section>
+  </form>
 </main>

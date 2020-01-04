@@ -1,6 +1,6 @@
 // modules
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -23,6 +23,7 @@ import { OrderDetailComponent } from './orders/order-detail/order-detail.compone
     FormsModule,
     CommonModule,
     GlobalModule,
+    ReactiveFormsModule,
     NrptiCommonModule,
     SharedModule,
     NgxPaginationModule,

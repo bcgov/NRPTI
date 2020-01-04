@@ -2,6 +2,9 @@
 
 const mongoose = require('mongoose');
 const defaultLog = require('../../utils/logger')('epic-orders');
+const axios = require('axios');
+const hostPath = `https://${process.env.EPIC_API_HOSTNAME || 'eagle-prod.pathfinder.gov.bc.ca'}${process.env
+  .EPIC_API_PROJECT_PATHNAME || '/api/project'}/`;
 
 /**
  * Epic Order record handler.
@@ -21,49 +24,38 @@ class EpicOrders {
    * @throws {Error} if record is not provided.
    * @memberof EpicOrders
    */
-  transformRecord(epicRecord) {
+  async transformRecord(epicRecord) {
     if (!epicRecord) {
       throw Error('transformRecord - required record must be non-null.');
     }
 
+    let response = await axios.get(`${hostPath}${epicRecord.project}?fields=name|location|centroid|legislation`);
+    var project = response.data[0];
+
     return {
       _schemaName: 'Order',
+      _epicProjectId: epicRecord.project || '',
+      _sourceRefId: epicRecord._id || '',
+      _epicMilestoneId: epicRecord.milestone,
 
       read: ['sysadmin'],
       write: ['sysadmin'],
 
       recordName: epicRecord.displayName || '',
-      issuingAgency: epicRecord.documentName || '',
+      recordType: epicRecord.documentType,
+      // recordSubtype: // TODO,
+      dateIssued: epicRecord.documentDate || null,
+      issuingAgency: 'Environmental Assessment Agency',
       author: epicRecord.documentAuthor || '',
-      type: `${epicRecord.documentType || ''} - ${epicRecord.milestone || ''}`,
-      // quarter: // TODO
-      // entityType: // TODO
+      legislation: project.legislation,
       // issuedTo: // TODO
-      // birthDate: // TODO
-      description: epicRecord.description || '',
-      // centroid: // TODO
-      // location: // TODO
-      // nationName: // N/A
-      sourceSystemRef: 'epic',
-      // legislation: // TODO
-      // status: // N/A
-      // relatedRecords:
-      // outcomeDescription:
-      project: epicRecord.project || '',
-      // projectSector: // TODO
-      // projectType: // TODO
-      // penalty: // N/A
-      // courtConvictionOutcome: // N/A
-      // tabSelection: // TODO ??
+      projectName: project.name || '',
+      location: project.location || '',
+      centroid: project.centroid || '',
+      // outcomeStatus: // TODO
+      // outcomeDescription: // TODO
 
-      documentId: epicRecord._id || '', // TODO is this even allowed to be empty/null?
-      documentType: epicRecord.documentType || '',
-      documentFileName: epicRecord.documentFileName || '',
-      documentDate: epicRecord.documentDate || null,
-
-      // dateAdded - let default value take care of this field.
       dateUpdated: new Date(),
-
       sourceDateAdded: epicRecord.dateAdded || epicRecord._createdDate || null,
       sourceDateUpdated: epicRecord.dateUpdated || epicRecord._updatedDate || null
     };
@@ -86,7 +78,7 @@ class EpicOrders {
       const Order = mongoose.model('Order');
 
       const record = await Order.findOneAndUpdate(
-        { documentId: orderRecord.documentId },
+        { _schemaName: 'Order', _sourceRefId: orderRecord._sourceRefId },
         { $set: orderRecord },
         { upsert: true, new: true }
       );
