@@ -21,7 +21,10 @@ pipeline {
             // Need to check eachline for either angular/ or api/
             def angular = false;
             def api = false;
-            filesInThisCommitAsString.eachLine {
+
+            // 2 years and it's still not fixed :s
+            // https://issues.jenkins-ci.org/browse/JENKINS-46988
+            filesInThisCommitAsString.split('\n').each {
               if (it =~ /angular/) {
                 angular = true;
               }
