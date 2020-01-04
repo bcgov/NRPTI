@@ -31,17 +31,17 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   public tableColumns: IColumnObject[] = [
     {
       name: 'Issued To',
-      value: 'issuedTo',
+      value: 'projectName',
       width: 'col-2'
     },
     {
       name: 'Name',
-      value: 'documentFileName',
+      value: 'recordName',
       width: 'col-4'
     },
     {
       name: 'Type',
-      value: 'type',
+      value: 'recordType',
       width: 'col-1'
     },
     {
@@ -51,7 +51,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     },
     {
       name: 'Date',
-      value: 'documentDate',
+      value: 'dateIssued',
       width: 'col-1'
     },
     {

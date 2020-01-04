@@ -1,8 +1,10 @@
-.last-edited-text {
+@import "assets/styles/components/add-edit.scss";
+
+.sub-text {
   color: grey;
   font-size: 15px;
   font-style: italic;
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 .top-header {
@@ -15,5 +17,10 @@
 }
 
 section {
+  padding-bottom: 20px;
   border-bottom: 1px solid lightgrey;
+}
+
+form {
+  margin-top: 20px;
 }

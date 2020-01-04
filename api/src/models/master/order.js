@@ -3,47 +3,33 @@
 module.exports = require('../../utils/model-schema-generator')(
   'Order',
   {
-    _schemaName: { type: String, default: 'Order' },
+    _schemaName: { type: String, default: 'Order', index: true },
+    _epicProjectId: { type: 'ObjectId', default: null, index: true },
+    _sourceRefId: { type: 'ObjectId', default: null, index: true },
+    _epicMilestoneId: { type: 'ObjectId', default: null, index: true },
 
     read: [{ type: String, trim: true, default: 'sysadmin' }],
     write: [{ type: String, trim: true, default: 'sysadmin' }],
 
     recordName: { type: String, default: '' },
+    recordType: { type: String, default: '' },
+    recordSubtype: { type: String, default: '' }, //epic value?
+    dateIssued: { type: Date, default: Date.now() },
     issuingAgency: { type: String, default: '' },
     author: { type: String, default: '' },
-    type: { type: String, default: '' },
-    quarter: { type: Date, default: null },
-    entityType: { type: String, default: '' },
-    issuedTo: { type: String, default: '' }, // first, middle, last OR company
-    birthDate: { type: Date, default: null }, // for individual
-    description: { type: String, default: '' },
-    centroid: [{ type: Number, default: 0.0 }],
+    legislation: { type: String, default: '' },
+    issuedTo: { type: String, default: '' }, // epic value?
+    projectName: { type: String, default: '' },
     location: { type: String, default: '' },
-    nationName: { type: String, default: '' },
-    documentAttachments: { type: String, default: '' },
-    sourceSystemRef: { type: String, default: '' },
-    legislation: { type: String, default: '' }, // section, sub section, reg, etc
-    status: { type: String, default: '' }, // open or closed
-    // relatedRecords: { type: String, default: '' }, // out of scope?
-    // outcomeDescription: { type: String, default: '' }, // out of scope?
-    project: { type: String, default: '' },
-    projectSector: { type: String, default: '' },
-    projectType: { type: String, default: '' },
-    penalty: { type: String, default: '' }, // dollars or text
-    courtConvictionOutcome: { type: String, default: '' },
-
-    tabSelection: { type: String, default: '' }, // TODO what is this?
-
-    documentId: { type: 'ObjectId', default: null }, // source _id
-    documentType: { type: String, default: '' },
-    documentFileName: { type: String, default: '' },
-    documentDate: { type: Date, default: null },
+    centroid: [{ type: Number, default: 0.0 }],
+    outcomeStatus: { type: String, default: '' }, // epic value?
+    outcomeDescription: { type: String, default: '' }, // out of scope?
 
     dateAdded: { type: Date, default: Date.now() },
     dateUpdated: { type: Date, default: Date.now() },
-
     sourceDateAdded: { type: Date, default: null },
-    sourceDateUpdated: { type: Date, default: null }
+    sourceDateUpdated: { type: Date, default: null },
+    sourceSystemRef: { type: String, default: '' }
   },
   'nrpti'
 );
