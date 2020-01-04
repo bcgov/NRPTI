@@ -45,6 +45,19 @@ export class ApiService {
     }
   }
 
+  getProjectObjectId(value: string) {
+    try {
+      if (value === '1') {
+        return '588511c4aaecd9001b825604'; // LNG Canada/Coastal Gaslink
+      } else {
+        return '588510cdaaecd9001b815f84'; // Kitimat
+      }
+    } catch (e) {
+      console.log('error:', e);
+      return '';
+    }
+  }
+
   handleError(error: any): Observable<never> {
     const reason = error.message
       ? error.message

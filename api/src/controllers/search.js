@@ -24,9 +24,7 @@ var generateExpArray = async function (field, roles) {
     await Promise.all(Object.keys(queryString).map(async item => {
       var entry = queryString[item];
       defaultLog.info("item:", item, entry);
-      if (item === 'pcp') {
-        await handlePCPItem(roles, expArray, entry);
-      } else if (Array.isArray(entry)) {
+      if (Array.isArray(entry)) {
         // Arrays are a list of options so will always be ors
         var orArray = [];
         entry.map(element => {
@@ -61,7 +59,7 @@ var generateExpArray = async function (field, roles) {
 var getConvertedValue = function (item, entry) {
   if (isNaN(entry)) {
     if (mongoose.Types.ObjectId.isValid(entry)) {
-      defaultLog.info("objectid");
+      defaultLog.info("objectid", entry);
       // ObjectID
       return { [item]: mongoose.Types.ObjectId(entry) };
     } else if (entry === 'true') {
@@ -83,74 +81,6 @@ var getConvertedValue = function (item, entry) {
     defaultLog.info("number");
     return { [item]: parseInt(entry) };
   }
-}
-
-var handlePCPItem = async function (roles, expArray, value) {
-  if (Array.isArray(value)) {
-    // Arrays are a list of options so will always be ors
-    var orArray = [];
-    // Note that we need map and not forEach here because Promise.all uses
-    // the returned array!
-    await Promise.all(value.map(async entry => {
-      orArray.push(await getPCPValue(roles, entry));
-    }));
-    expArray.push({ $or: orArray });
-  } else {
-    expArray.push(await getPCPValue(roles, value));
-  }
-}
-
-var getPCPValue = async function (roles, entry) {
-  defaultLog.info('pcp: ', entry);
-
-  var query = null;
-  var now = new Date();
-
-  switch (entry) {
-    case 'pending':
-      var in7days = new Date();
-      in7days.setDate(now.getDate() + 7);
-
-      query = {
-        _schemaName: 'CommentPeriod',
-        $and: [
-          { dateStarted: { $gt: now } },
-          { dateStarted: { $lte: in7days } }
-        ]
-      };
-      break;
-
-    case 'open':
-      query = {
-        _schemaName: 'CommentPeriod',
-        $and: [
-          { dateStarted: { $lte: now } },
-          { dateCompleted: { $gt: now } }
-        ]
-      };
-      break;
-
-    case 'closed':
-      query = {
-        _schemaName: 'CommentPeriod',
-        dateCompleted: { $lt: now }
-      };
-      break;
-
-    default:
-      defaultLog.info('Unknown PCP entry');
-  }
-
-  var pcp = {};
-
-  if (query) {
-    var data = await Utils.runDataQuery('CommentPeriod', roles, query, ['project'], null, null, null, null, false, null);
-    var ids = _.map(data, 'project');
-    pcp = { _id: { $in: ids } };
-  }
-
-  defaultLog.info('pcp', pcp);
-  return pcp;
 }
 
 var handleDateStartItem = function (expArray, field, entry) {
@@ -186,7 +116,26 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
   }
 
   // query modifiers
-  var andExpArray = await generateExpArray(and, roles);
+  var andExpArrayProcess = await generateExpArray(and, roles);
+  var andExpArray = [];
+
+  // Pluck the _epicProjectId from the array if a flavour record query is coming in.
+  let _epicProjectId = '';
+  const flavourRecords = ['OrderLNG', 'InspectionLNG', 'PlanLNG', 'AuthorizationLNG', 'NationLNG'];
+
+  if (schemaName.some(item => flavourRecords.includes(item))) {
+    for(i = 0;i < andExpArrayProcess.length; i++) {
+      const obj = andExpArrayProcess[i];
+      if (obj && obj._epicProjectId) {
+        _epicProjectId = mongoose.Types.ObjectId(obj._epicProjectId);
+      } else {
+        andExpArray.push(obj);
+      }
+    }
+  } else {
+    // No plucking required
+    andExpArray = andExpArrayProcess;
+  }
 
   // filters
   var orExpArray = await generateExpArray(or, roles);
@@ -249,28 +198,29 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
 
   defaultLog.info('collation:', collation);
 
-  defaultLog.info('populate:', populate);
-  if (populate === true && schemaName !== 'Project') {
+  // This only happens when we are getting queried from the LNG flavour perspective.
+  if (schemaName.some(item => flavourRecords.includes(item))) {
+    // Grab the master record that's backreferenced to these ones.
     aggregation.push({
       "$lookup": {
-        "from": "epic",
-        "localField": "project",
+        "from": "nrpti",
+        "localField": "_master",
         "foreignField": "_id",
-        "as": "project"
+        "as": "_master"
       }
     });
     aggregation.push({
-      "$addFields": {
-        project: "$project",
-      }
+      "$match": {
+        "_master._epicProjectId": _epicProjectId
+      },
     });
     aggregation.push({
       "$unwind": {
-        "path": "$project",
+        "path": "$_master",
         "preserveNullAndEmptyArrays": true
       }
     });
-  }
+  };
 
   aggregation.push({
     $redact: {
