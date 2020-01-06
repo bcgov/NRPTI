@@ -21,39 +21,31 @@ var generateExpArray = async function (field, roles) {
     defaultLog.info("queryString:", queryString);
     // Note that we need map and not forEach here because Promise.all uses
     // the returned array!
-    await Promise.all(Object.keys(queryString).map(async item => {
+    return await Promise.all(Object.keys(queryString).map(async item => {
       var entry = queryString[item];
       defaultLog.info("item:", item, entry);
       if (Array.isArray(entry)) {
         // Arrays are a list of options so will always be ors
-        var orArray = [];
-        entry.map(element => {
+        var orArray = entry.map(element => {
           orArray.push(getConvertedValue(item, element));
         });
-        expArray.push({ $or: orArray });
+        return { $or: orArray };
       } else {
         switch (item) {
           case 'decisionDateStart':
-            handleDateStartItem(expArray, 'decisionDate', entry);
-            break;
+            return handleDateStartItem('decisionDate', entry);
           case 'decisionDateEnd':
-            handleDateEndItem(expArray, 'decisionDate', entry);
-            break;
+            return handleDateEndItem('decisionDate', entry);
           case 'datePostedStart':
-            handleDateStartItem(expArray, 'datePosted', entry);
-            break;
+            return handleDateStartItem('datePosted', entry);
           case 'datePostedEnd':
-            handleDateEndItem(expArray, 'datePosted', entry);
-            break;
+            return handleDateEndItem('datePosted', entry);
           default:
-            expArray.push(getConvertedValue(item, entry));
-            break;
+            return getConvertedValue(item, entry);
         }
       }
     }));
   }
-  defaultLog.info("expArray:", expArray);
-  return expArray;
 }
 
 var getConvertedValue = function (item, entry) {
@@ -89,7 +81,7 @@ var handleDateStartItem = function (expArray, field, entry) {
   // Validate: valid date?
   if (!isNaN(date)) {
     var start = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
-    expArray.push({ [field]: { $gte: start } });
+    return { [field]: { $gte: start } };
   }
 }
 
@@ -99,7 +91,7 @@ var handleDateEndItem = function (expArray, field, entry) {
   // Validate: valid date?
   if (!isNaN(date)) {
     var end = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + 1);
-    expArray.push({ [field]: { $lt: end } });
+    return { [field]: { $lt: end } };
   }
 }
 
