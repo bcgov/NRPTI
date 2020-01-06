@@ -16,6 +16,10 @@ const hostPath = `https://${process.env.EPIC_API_HOSTNAME || 'eagle-prod.pathfin
  * @class EpicOrders
  */
 class EpicOrders {
+  constructor(auth_payload) {
+    this.auth_payload = auth_payload;
+  }
+
   /**
    * Transform an Epic order record into a NRPTI Order record.
    *
@@ -36,28 +40,31 @@ class EpicOrders {
       _schemaName: 'Order',
       _epicProjectId: epicRecord.project || '',
       _sourceRefId: epicRecord._id || '',
-      _epicMilestoneId: epicRecord.milestone,
+      _epicMilestoneId: epicRecord.milestone || '',
 
       read: ['sysadmin'],
       write: ['sysadmin'],
 
       recordName: epicRecord.displayName || '',
       recordType: epicRecord.documentType,
-      // recordSubtype: // TODO,
+      // recordSubtype: // No mapping
       dateIssued: epicRecord.documentDate || null,
       issuingAgency: 'Environmental Assessment Agency',
       author: epicRecord.documentAuthor || '',
       legislation: project.legislation,
-      // issuedTo: // TODO
+      // issuedTo: // No mapping
       projectName: project.name || '',
       location: project.location || '',
       centroid: project.centroid || '',
-      // outcomeStatus: // TODO
-      // outcomeDescription: // TODO
+      // outcomeStatus: // No mapping
+      // outcomeDescription: // No mapping
 
       dateUpdated: new Date(),
+      dateUpdated: new Date(),
+      updatedBy: this.auth_payload.displayName,
       sourceDateAdded: epicRecord.dateAdded || epicRecord._createdDate || null,
-      sourceDateUpdated: epicRecord.dateUpdated || epicRecord._updatedDate || null
+      sourceDateUpdated: epicRecord.dateUpdated || epicRecord._updatedDate || null,
+      sourceSystemRef: 'epic'
     };
   }
 

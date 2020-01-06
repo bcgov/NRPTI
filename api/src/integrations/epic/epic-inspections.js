@@ -16,6 +16,9 @@ const hostPath = `https://${process.env.EPIC_API_HOSTNAME || 'eagle-prod.pathfin
  * @class EpicInspections
  */
 class EpicInspections {
+  constructor(auth_payload) {
+    this.auth_payload = auth_payload;
+  }
   /**
    * Transform an Epic inspection record into a NRPTI Inspection record.
    *
@@ -36,7 +39,7 @@ class EpicInspections {
       _schemaName: 'Inspection',
       _epicProjectId: epicRecord.project || '',
       _sourceRefId: epicRecord._id || '',
-      _epicMilestoneId: epicRecord.milestone,
+      _epicMilestoneId: epicRecord.milestone || '',
 
       read: ['sysadmin'],
       write: ['sysadmin'],
@@ -54,7 +57,9 @@ class EpicInspections {
       // outcomeStatus: // TODO
       // outcomeDescription: // TODO
 
+      dateAdded: new Date(),
       dateUpdated: new Date(),
+      updatedBy: this.auth_payload.displayName,
       sourceDateAdded: epicRecord.dateAdded || epicRecord._createdDate || null,
       sourceDateUpdated: epicRecord.dateUpdated || epicRecord._updatedDate || null
     };
