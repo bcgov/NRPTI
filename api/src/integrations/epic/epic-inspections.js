@@ -61,7 +61,8 @@ class EpicInspections {
       dateUpdated: new Date(),
       updatedBy: this.auth_payload.displayName,
       sourceDateAdded: epicRecord.dateAdded || epicRecord._createdDate || null,
-      sourceDateUpdated: epicRecord.dateUpdated || epicRecord._updatedDate || null
+      sourceDateUpdated: epicRecord.dateUpdated || epicRecord._updatedDate || null,
+      sourceSystemRef: 'epic'
     };
   }
 
