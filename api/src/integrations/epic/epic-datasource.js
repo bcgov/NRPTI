@@ -93,7 +93,7 @@ class EpicDataSource {
    */
   async processRecords(epicRecords) {
     // Get type specific utils
-    this.typeUtils = this.getRecordTypeUtils(this.type);
+    this.typeUtils = this.getRecordTypeUtils();
 
     for (let i = 0; i < epicRecords.length; i++) {
       try {

@@ -27,7 +27,7 @@ var generateExpArray = async function (field, roles) {
       if (Array.isArray(entry)) {
         // Arrays are a list of options so will always be ors
         var orArray = entry.map(element => {
-          orArray.push(getConvertedValue(item, element));
+          return getConvertedValue(item, element);
         });
         return { $or: orArray };
       } else {
