@@ -32,7 +32,8 @@
       "!src/**/*.test.js",
       "!src/test/**"
     ],
-    "testResultsProcessor": "jest-sonar-reporter"
+    "testResultsProcessor": "jest-sonar-reporter",
+    "testEnvironment": "node"
   },
   "jestSonar": {
     "reportPath": "coverage"
