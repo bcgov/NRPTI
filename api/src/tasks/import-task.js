@@ -40,7 +40,8 @@ exports.protectedCreateTask = async function(args, res, next) {
     taskAuditRecord,
     args.swagger.params.task.value.dataSourceType,
     args.swagger.params.task.value.recordType,
-    args.swagger.params.task.value.params
+    args.swagger.params.task.value.params,
+    args.swagger.params.auth_payload
   );
 
   // send response immediately as the tasks will run in the background
@@ -54,10 +55,10 @@ exports.protectedCreateTask = async function(args, res, next) {
  * @param {*} dataSourceType
  * @param {*} recordType
  */
-async function runTask(taskAuditRecord, dataSourceType, recordType, params) {
+async function runTask(taskAuditRecord, dataSourceType, recordType, params, auth_payload) {
   try {
     // Get dataSource
-    const dataSource = getDataSource(dataSourceType, recordType, params);
+    const dataSource = getDataSource(dataSourceType, recordType, params, auth_payload);
 
     if (!dataSource) {
       throw Error(`runTask - could not find supported dataSource for dataSourceType: ${dataSourceType}`);
@@ -88,10 +89,10 @@ async function runTask(taskAuditRecord, dataSourceType, recordType, params) {
  * @returns {object} an instance of the specified dataSource, or null if no supported dataSource found.
  * @throws {Error} if utils for specified type cannot be found.
  */
-function getDataSource(dataSourceType, recordType, params) {
+function getDataSource(dataSourceType, recordType, params, auth_payload) {
   switch (dataSourceType) {
     case DATASOURCE_TYPE.epic:
-      return new (require('../integrations/epic/epic-datasource'))(recordType, params);
+      return new (require('../integrations/epic/epic-datasource'))(recordType, params, auth_payload);
     default:
       throw Error(
         `getDataSource - failed to find dataSource for (dataSourceType, recordType): (${dataSourceType}, ${recordType})`

@@ -15,7 +15,7 @@ class EpicDataSource {
    * @param {*} params params to filter epic records (optional).
    * @memberof EpicDataSource
    */
-  constructor(recordType, params) {
+  constructor(recordType, params, auth_payload) {
     if (!recordType) {
       throw Error('EpicDataSource - missing required recordType parameter');
     }
@@ -24,6 +24,7 @@ class EpicDataSource {
       throw Error('EpicDataSource - recordType parameter is not supported');
     }
 
+    this.auth_payload = auth_payload;
     this.type = EPIC_TYPE[recordType];
     this.params = params || {};
 
@@ -192,9 +193,9 @@ class EpicDataSource {
   getRecordTypeUtils() {
     switch (this.type) {
       case EPIC_TYPE.inspection:
-        return new (require('./epic-inspections'))();
+        return new (require('./epic-inspections'))(this.auth_payload);
       case EPIC_TYPE.order:
-        return new (require('./epic-orders'))();
+        return new (require('./epic-orders'))(this.auth_payload);
       default:
         throw Error(`getTypeUtil - failed to find utils for type: ${this.type}`);
     }
