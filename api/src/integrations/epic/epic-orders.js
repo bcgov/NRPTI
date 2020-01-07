@@ -60,7 +60,6 @@ class EpicOrders {
       // outcomeDescription: // No mapping
 
       dateUpdated: new Date(),
-      dateUpdated: new Date(),
       updatedBy: this.auth_payload.displayName,
       sourceDateAdded: epicRecord.dateAdded || epicRecord._createdDate || null,
       sourceDateUpdated: epicRecord.dateUpdated || epicRecord._updatedDate || null,
