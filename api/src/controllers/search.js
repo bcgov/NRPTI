@@ -15,7 +15,6 @@ function isEmpty(obj) {
 }
 
 var generateExpArray = async function (field, roles) {
-  var expArray = [];
   if (field && field != undefined) {
     var queryString = qs.parse(field);
     defaultLog.info("queryString:", queryString);
@@ -116,7 +115,7 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
   const flavourRecords = ['OrderLNG', 'InspectionLNG', 'PlanLNG', 'AuthorizationLNG', 'NationLNG'];
 
   if (schemaName.some(item => flavourRecords.includes(item))) {
-    for(i = 0;i < andExpArrayProcess.length; i++) {
+    for(let i = 0;i < andExpArrayProcess.length; i++) {
       const obj = andExpArrayProcess[i];
       if (obj && obj._epicProjectId) {
         _epicProjectId = mongoose.Types.ObjectId(obj._epicProjectId);
