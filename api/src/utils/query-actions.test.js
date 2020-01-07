@@ -1,7 +1,7 @@
 require('../../tests/test-utils');
 const queryActions = require('./query-actions');
 const Order = require('../models/master/order');
-// const Audit = require('../models/audit');
+const Audit = require('../models/audit');
 
 describe('## publish ##', () => {
   describe('with an object that has already been published', () => {
