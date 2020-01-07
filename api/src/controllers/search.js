@@ -107,7 +107,7 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
   }
 
   // query modifiers
-  var andExpArrayProcess = await generateExpArray(and, roles);
+  var andExpArrayProcess = await generateExpArray(and, roles) || [];
   var andExpArray = [];
 
   // Pluck the _epicProjectId from the array if a flavour record query is coming in.
@@ -129,7 +129,7 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
   }
 
   // filters
-  var orExpArray = await generateExpArray(or, roles);
+  var orExpArray = await generateExpArray(or, roles) || [];
 
   var modifier = {};
   if (andExpArray.length > 0 && orExpArray.length > 0) {
