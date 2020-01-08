@@ -4,7 +4,7 @@ var dbm;
 var type;
 var seed;
 
-let listItems = require(process.cwd() + '/migrations_data/home');
+let listItems = require(process.cwd() + '/migrations_data/home').recs;
 
 /**
   * We receive the dbmigrate dependency from dbmigrate initially.

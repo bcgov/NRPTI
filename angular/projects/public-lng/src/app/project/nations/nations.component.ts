@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 export class NationsComponent implements OnInit {
   public pageType: PageTypes = PageTypes.NATIONS;
 
-  public id: number;
+  public id: string;
   public text: string[];
 
   constructor(private dataService: DataService, private route: ActivatedRoute) {
