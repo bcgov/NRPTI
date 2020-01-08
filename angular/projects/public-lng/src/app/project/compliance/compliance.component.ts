@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 export class ComplianceComponent implements OnInit {
   public pageType: PageTypes = PageTypes.COMPLIANCE;
 
-  public id: number;
+  public id: string;
   public text: string[];
 
   constructor(private dataService: DataService, private route: ActivatedRoute) {
