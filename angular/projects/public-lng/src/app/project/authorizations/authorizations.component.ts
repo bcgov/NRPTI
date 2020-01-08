@@ -22,7 +22,7 @@ export interface IImage {
 export class AuthorizationsComponent implements OnInit {
   public pageType: PageTypes = PageTypes.AUTHORIZATIONS;
 
-  public id: number;
+  public id: string;
   public text: string[];
 
   constructor(private dataService: DataService, private route: ActivatedRoute) {
