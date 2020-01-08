@@ -12,7 +12,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class BackgroundComponent implements OnInit {
   public pageType: PageTypes = PageTypes.BACKGROUND;
 
-  public id: number;
+  public id: string;
   public text: string[];
   public trustedUrl: object;
 

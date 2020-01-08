@@ -48,7 +48,7 @@ export class DataService {
 
   // project specific data
 
-  getText(id: number, pageType: PageTypes) {
+  getText(id: string, pageType: PageTypes) {
     if (!id || !pageType) {
       return;
     }
@@ -56,7 +56,7 @@ export class DataService {
     return projectData[id][pageType.toString()].text;
   }
 
-  getDetails(id: number, pageType: PageTypes) {
+  getDetails(id: string, pageType: PageTypes) {
     if (!id || !pageType) {
       return;
     }
@@ -64,7 +64,7 @@ export class DataService {
     return projectData[id][pageType.toString()].details;
   }
 
-  getImages(id: number, pageType: PageTypes) {
+  getImages(id: string, pageType: PageTypes) {
     if (!id || !pageType) {
       return;
     }
@@ -72,7 +72,7 @@ export class DataService {
     return projectData[id][pageType.toString()].images;
   }
 
-  getActivities(id: number, pageType: PageTypes) {
+  getActivities(id: string, pageType: PageTypes) {
     if (!id || !pageType) {
       return;
     }

@@ -1,4 +1,7 @@
-[
+var ObjectId = require('mongodb').ObjectID;
+
+module.exports = {
+recs: [
   {
     "type": "INSPECTION_COMPLETE",
     "title": "Inspection Completed",
@@ -12,7 +15,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/2/compliance"
+    "url": "/project/2/compliance",
+    "_project": new ObjectId("588510cdaaecd9001b815f84")
   },
   {
     "type": "REPORT_ADDED",
@@ -27,7 +31,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/1/authorizations"
+    "url": "/project/1/authorizations",
+    "_project": new ObjectId("588511c4aaecd9001b825604")
   },
   {
     "type": "INSPECTION_COMPLETE",
@@ -42,7 +47,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/2/authorizations"
+    "url": "/project/2/authorizations",
+    "_project": new ObjectId("588510cdaaecd9001b815f84")
   },
   {
     "type": "INSPECTION_COMPLETE",
@@ -57,7 +63,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/2/compliance"
+    "url": "/project/2/compliance",
+    "_project": new ObjectId("588510cdaaecd9001b815f84")
   },
   {
     "type": "INSPECTION_COMPLETE",
@@ -72,7 +79,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/1/compliance"
+    "url": "/project/1/compliance",
+    "_project": new ObjectId("588511c4aaecd9001b825604")
   },
   {
     "type": "INSPECTION_COMPLETE",
@@ -87,7 +95,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/2/compliance"
+    "url": "/project/2/compliance",
+    "_project": new ObjectId("588510cdaaecd9001b815f84")
   },
   {
     "type": "DOCUMENT_ADDED",
@@ -102,7 +111,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/1/plans"
+    "url": "/project/1/plans",
+    "_project": new ObjectId("588511c4aaecd9001b825604")
   },
   {
     "type": "DOCUMENT_ADDED",
@@ -117,7 +127,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/1/plans"
+    "url": "/project/1/plans",
+    "_project": new ObjectId("588511c4aaecd9001b825604")
   },
   {
     "type": "ENFORCEMENT_ACTION",
@@ -132,7 +143,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/2/compliance"
+    "url": "/project/2/compliance",
+    "_project": new ObjectId("588510cdaaecd9001b815f84")
   },
   {
     "type": "DOCUMENT_ADDED",
@@ -147,7 +159,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/1/authorizations"
+    "url": "/project/1/authorizations",
+    "_project": new ObjectId("588511c4aaecd9001b825604")
   },
   {
     "type": "INSPECTION_COMPLETE",
@@ -177,7 +190,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/2/compliance"
+    "url": "/project/2/compliance",
+    "_project": new ObjectId("588510cdaaecd9001b815f84")
   },
   {
     "type": "INSPECTION_COMPLETE",
@@ -192,7 +206,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/2/compliance"
+    "url": "/project/2/compliance",
+    "_project": new ObjectId("588510cdaaecd9001b815f84")
   },
   {
     "type": "INSPECTION_COMPLETE",
@@ -207,7 +222,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/1/compliance"
+    "url": "/project/1/compliance",
+    "_project": new ObjectId("588511c4aaecd9001b825604")
   },
   {
     "type": "INSPECTION_COMPLETE",
@@ -222,7 +238,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/2/compliance"
+    "url": "/project/2/compliance",
+    "_project": new ObjectId("588510cdaaecd9001b815f84")
   },
   {
     "type": "ENFORCEMENT_ACTION",
@@ -237,7 +254,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/2/compliance"
+    "url": "/project/2/compliance",
+    "_project": new ObjectId("588510cdaaecd9001b815f84")
   },
   {
     "type": "DOCUMENT_ADDED",
@@ -252,7 +270,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/1/plans"
+    "url": "/project/1/plans",
+    "_project": new ObjectId("588511c4aaecd9001b825604")
   },
   {
     "type": "IMPORTANT_DATE",
@@ -282,7 +301,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/2/authorizations"
+    "url": "/project/2/authorizations",
+    "_project": new ObjectId("588510cdaaecd9001b815f84")
   },
   {
     "type": "INSPECTION_COMPLETE",
@@ -297,7 +317,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/2/compliance"
+    "url": "/project/2/compliance",
+    "_project": new ObjectId("588511c4aaecd9001b825604")
   },
   {
     "type": "ENFORCEMENT_ACTION",
@@ -312,7 +333,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/2/compliance"
+    "url": "/project/2/compliance",
+    "_project": new ObjectId("588510cdaaecd9001b815f84")
   },
   {
     "type": "ENFORCEMENT_ACTION",
@@ -327,7 +349,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/2/compliance"
+    "url": "/project/2/compliance",
+    "_project": new ObjectId("588510cdaaecd9001b815f84")
   },
   {
     "type": "DOCUMENT_ADDED",
@@ -342,7 +365,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/2/plans"
+    "url": "/project/2/plans",
+    "_project": new ObjectId("588510cdaaecd9001b815f84")
   },
   {
     "type": "DOCUMENT_ADDED",
@@ -357,7 +381,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/2/plans"
+    "url": "/project/2/plans",
+    "_project": new ObjectId("588510cdaaecd9001b815f84")
   },
   {
     "type": "ENFORECMENT_ACTION",
@@ -372,7 +397,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/2/compliance"
+    "url": "/project/2/compliance",
+    "_project": new ObjectId("588510cdaaecd9001b815f84")
   },
   {
     "type": "REPORT_ADDED",
@@ -387,7 +413,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/1/compliance"
+    "url": "/project/1/compliance",
+    "_project": new ObjectId("588511c4aaecd9001b825604")
   },
   {
     "type": "REPORT_ADDED",
@@ -402,6 +429,8 @@
     "write": [
       "sysadmin"
     ],
-    "url": "/project/1/compliance"
+    "url": "/project/1/compliance",
+    "_project": new ObjectId("588511c4aaecd9001b825604")
   }
 ]
+}
