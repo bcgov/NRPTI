@@ -105,9 +105,19 @@ class EpicDataSource {
         // Persist NRPTI record
         const savedRecord = await this.typeUtils.saveRecord(nrptiRecord);
 
-        if (savedRecord) {
-          this.status.itemsProcessed++;
+        if (!savedRecord) {
+          defaultLog.error('processRecords - failed to save record.');
+          continue;
         }
+
+        const saveFlavourRecords = await this.typeUtils.createFlavourRecords(savedRecord);
+
+        if (!saveFlavourRecords) {
+          defaultLog.error('processRecords - failed to save flavour records.');
+          continue;
+        }
+
+        this.status.itemsProcessed++;
       } catch (error) {
         defaultLog.error(`processRecords - record failed: ${error.message}`);
         defaultLog.debug(`processRecords - record failed - error.stack: ${error.stack}`);

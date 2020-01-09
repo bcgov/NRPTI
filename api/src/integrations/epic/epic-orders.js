@@ -3,6 +3,7 @@
 const mongoose = require('mongoose');
 const defaultLog = require('../../utils/logger')('epic-orders');
 const axios = require('axios');
+const INTEGRATION_SCHEMA = require('../integration-schema-enum');
 const hostPath = `https://${process.env.EPIC_API_HOSTNAME || 'eagle-prod.pathfinder.gov.bc.ca'}${process.env
   .EPIC_API_PROJECT_PATHNAME || '/api/project'}/`;
 
@@ -33,8 +34,8 @@ class EpicOrders {
       throw Error('transformRecord - required record must be non-null.');
     }
 
-    let response = await axios.get(`${hostPath}${epicRecord.project}?fields=name|location|centroid|legislation`);
-    var project = response.data[0];
+    const response = await axios.get(`${hostPath}${epicRecord.project}?fields=name|location|centroid|legislation`);
+    const project = response.data[0];
 
     return {
       _schemaName: 'Order',
@@ -72,7 +73,7 @@ class EpicOrders {
    *
    * @async
    * @param {Order} orderRecord NRPTI Order record (required)
-   * @returns {string} status of the add/update operations.
+   * @returns {*} result of the add/update operations.
    * @memberof EpicOrders
    */
   async saveRecord(orderRecord) {
@@ -93,6 +94,49 @@ class EpicOrders {
     } catch (error) {
       defaultLog.error(`Failed to save Epic Order record: ${error.message}`);
       defaultLog.debug(`Failed to save Epic Order record - error.stack: ${error.stack}`);
+    }
+  }
+
+  /**
+   * Create the initial default flavour records for the given order record.
+   *
+   * @async
+   * @param {Order} orderRecord NRPTI Order record (required)
+   * @returns {[*]} results of the create operations.
+   * @memberof EpicOrders
+   */
+  async createFlavourRecords(orderRecord) {
+    if (!orderRecord) {
+      throw Error('saveRecord - required record must be non-null.');
+    }
+
+    const flavourRecords = [];
+
+    try {
+      INTEGRATION_SCHEMA.order.flavourSchemas.forEach(async flavourSchema => {
+        const flavourModel = mongoose.model(flavourSchema);
+
+        const flavourAlreadyExists = await flavourModel.exists({
+          _schemaName: flavourSchema,
+          _master: orderRecord._id
+        });
+
+        if (!flavourAlreadyExists) {
+          const flavourRecord = await flavourModel.create({
+            _schemaName: flavourSchema,
+            _master: orderRecord._id,
+            read: ['sysadmin'],
+            write: ['sysadmin']
+          });
+
+          flavourRecords.push(flavourRecord);
+        }
+      });
+
+      return flavourRecords;
+    } catch (error) {
+      defaultLog.error(`Failed to create all Epic Order flavour records: ${error.message}`);
+      defaultLog.debug(`Failed to create all Epic Order flavour records - error.stack: ${error.stack}`);
     }
   }
 }
