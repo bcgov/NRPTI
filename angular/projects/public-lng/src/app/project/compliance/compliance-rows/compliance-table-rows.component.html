@@ -2,10 +2,10 @@
   *ngFor="let item of data.items"
   (click)="onItemClicked(item)"
 >
-  <td scope="row" data-label="Name" class="col-2">{{ item.recordName }}</td>
-  <td scope="row" data-label="Government Agency" class="col-2">{{ item.issuingAgency }}</td>
-  <td scope="row" data-label="Author" class="col-2">{{ item.author }}</td>
-  <td scope="row" data-label="Type" class="col-2">{{ item.type }}</td>
-  <td scope="row" data-label="Date" class="col-2">{{ item.documentDate }}</td>
+  <td scope="row" data-label="Name" class="col-2">{{ item._master.recordName }}</td>
+  <td scope="row" data-label="Government Agency" class="col-2">{{ item._master.issuingAgency }}</td>
+  <td scope="row" data-label="Author" class="col-2">{{ item._master.author }}</td>
+  <td scope="row" data-label="Type" class="col-2">{{ item._master.recordType }}</td>
+  <td scope="row" data-label="Date" class="col-2">{{ item._master.dateIssued | date: 'LLLL d, y' }}</td>
   <td scope="row" data-label="Description" class="col-2">{{ item.description }}</td>
 </tr>

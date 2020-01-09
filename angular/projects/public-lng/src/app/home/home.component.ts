@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       .getSearchResults(
         this._apiService.apiPath,
         '',
-        ['Activity'],
+        ['ActivityLNG'],
         [],
         1, // tableObject.currentPage,
         100000, // tableObject.pageSize,

@@ -44,14 +44,14 @@ export class OverviewComponent implements OnInit {
       .getSearchResults(
         this._apiService.apiPath,
         '',
-        ['Activity'],
+        ['ActivityLNG'],
         [],
         1, // tableObject.currentPage,
         100000, // tableObject.pageSize,
         null, // tableObject.sortBy,
         {
           // Select either LNG Canada or Coastal Gaslink based on route.
-          _project: this.id === '1' ? '588511c4aaecd9001b825604' : '588510cdaaecd9001b815f84'
+          _epicProjectId: this.id === '1' ? '588511c4aaecd9001b825604' : '588510cdaaecd9001b815f84'
         },
         false
       )
