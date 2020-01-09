@@ -1,2 +1,1 @@
-exports.order = require('./order');
-exports.inspection = require('./inspection');
+exports.data = require('.');

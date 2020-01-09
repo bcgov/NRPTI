@@ -23,7 +23,7 @@ export class NationsResolver implements Resolve<Observable<object>> {
       .getSearchResults(
         this._apiService.apiPath,
         '',
-        ['NationLNG'],
+        ['AgreementLNG'],
         [],
         tableObject.currentPage,
         tableObject.pageSize,
