@@ -112,7 +112,20 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
 
   // Pluck the _epicProjectId from the array if a flavour record query is coming in.
   let _epicProjectId = '';
-  const flavourRecords = ['OrderLNG', 'InspectionLNG', 'PlanLNG', 'AuthorizationLNG', 'NationLNG'];
+  const flavourRecords = [
+    'InspectionLNG',
+    'OrderLNG',
+    'SelfReportLNG',
+    'TicketLNG',
+    'CourtConvictionLNG',
+    'AdministrativePenaltyLNG',
+    'AdministrativeSanctionLNG',
+    'RestorativeJusticeLNG',
+    'WarningLetterLNG',
+    'PlanLNG',
+    'AuthorizationLNG',
+    'AgreementLNG',
+  ];
 
   if (schemaName.some(item => flavourRecords.includes(item))) {
     for(let i = 0;i < andExpArrayProcess.length; i++) {

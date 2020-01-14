@@ -1,9 +1,9 @@
 'use strict';
 
 module.exports = require('../../utils/model-schema-generator')(
-  'Inspection',
+  'Plan',
   {
-    _schemaName: { type: String, default: 'Inspection', index: true },
+    _schemaName: { type: String, default: 'Plan', index: true },
     _epicProjectId: { type: 'ObjectId', default: null, index: true },
     _sourceRefId: { type: 'ObjectId', default: null, index: true },
     _epicMilestoneId: { type: 'ObjectId', default: null, index: true },
@@ -13,16 +13,9 @@ module.exports = require('../../utils/model-schema-generator')(
 
     recordName: { type: String, default: '' },
     recordType: { type: String, default: '' },
+    recordPhase: { type: String, default: '' },
     dateIssued: { type: Date, default: Date.now() },
     issuingAgency: { type: String, default: '' },
-    author: { type: String, default: '' },
-    legislation: { type: String, default: '' }, // section, sub section, reg, etc
-    issuedTo: { type: String, default: '' }, // first, middle, last OR company
-    projectName: { type: String, default: '' },
-    location: { type: String, default: '' },
-    centroid: [{ type: Number, default: 0.0 }],
-    outcomeStatus: { type: String, default: '' },
-    outcomeDescription: { type: String, default: '' },
     documentURL: { type: String, default: null },
 
     dateAdded: { type: Date, default: Date.now() },
