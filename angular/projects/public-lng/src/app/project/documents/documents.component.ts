@@ -53,27 +53,27 @@ export class DocumentsComponent implements OnInit {
         tableColumns = [
           {
             name: 'Name',
-            value: 'recordName',
+            value: '_master.recordName',
             width: 'col-2'
           },
           {
             name: 'Government Agency',
-            value: 'issuingAgency',
+            value: '_master.issuingAgency',
             width: 'col-2'
           },
           {
             name: 'Author',
-            value: 'author',
+            value: '_master.author',
             width: 'col-2'
           },
           {
             name: 'Type',
-            value: 'type',
+            value: '_master.recordType',
             width: 'col-2'
           },
           {
             name: 'Date',
-            value: 'documentDate',
+            value: '_master.dateIssued',
             width: 'col-2'
           },
           {
@@ -90,27 +90,27 @@ export class DocumentsComponent implements OnInit {
           tableColumns = [
             {
               name: 'Name',
-              value: 'recordName',
+              value: '_master.recordName',
               width: 'col-2'
             },
             {
               name: 'Government Agency',
-              value: 'issuingAgency',
+              value: '_master.issuingAgency',
               width: 'col-2'
             },
             {
               name: 'Type',
-              value: 'type',
+              value: '_master.recordType',
               width: 'col-2'
             },
             {
               name: 'Subtype',
-              value: 'subtype',
+              value: '_master.recordSubType',
               width: 'col-2'
             },
             {
               name: 'Date',
-              value: 'documentDate',
+              value: '_master.dateIssued',
               width: 'col-2'
             },
             {
@@ -127,27 +127,27 @@ export class DocumentsComponent implements OnInit {
           tableColumns = [
             {
               name: 'Name',
-              value: 'recordName',
+              value: '_master.recordName',
               width: 'col-2'
             },
             {
               name: 'Government Agency',
-              value: 'issuingAgency',
+              value: '_master.issuingAgency',
               width: 'col-2'
             },
             {
               name: 'Phase',
-              value: 'phase',
+              value: '_master.recordPhase',
               width: 'col-2'
             },
             {
               name: 'Type',
-              value: 'type',
+              value: '_master.recordType',
               width: 'col-2'
             },
             {
               name: 'Date',
-              value: 'documentDate',
+              value: '_master.dateIssued',
               width: 'col-2'
             }
           ];
@@ -158,17 +158,17 @@ export class DocumentsComponent implements OnInit {
         tableColumns = [
           {
             name: 'Name',
-            value: 'recordName',
+            value: '_master.recordName',
             width: 'col-2'
           },
           {
             name: 'Indigenous Nation',
-            value: 'nation',
+            value: '_master.nationName',
             width: 'col-2'
           },
           {
             name: 'Date',
-            value: 'date',
+            value: '_master.date',
             width: 'col-2'
           }
         ];

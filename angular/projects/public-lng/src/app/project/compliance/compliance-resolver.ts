@@ -23,7 +23,17 @@ export class ComplianceResolver implements Resolve<Observable<object>> {
       .getSearchResults(
         this._apiService.apiPath,
         '',
-        ['OrderLNG'],
+        [
+          'InspectionLNG',
+          'OrderLNG',
+          'SelfReportLNG',
+          'TicketLNG',
+          'CourtConvictionLNG',
+          'AdministrativePenaltyLNG',
+          'AdministrativeSanctionLNG',
+          'RestorativeJusticeLNG',
+          'WarningLetterLNG'
+        ],
         [],
         tableObject.currentPage,
         tableObject.pageSize,
