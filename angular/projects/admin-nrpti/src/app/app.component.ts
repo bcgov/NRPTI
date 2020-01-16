@@ -1,6 +1,5 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
-import 'rxjs/add/operator/filter';
 import { IBreadcrumb, StoreService } from 'nrpti-angular-components';
 
 @Component({

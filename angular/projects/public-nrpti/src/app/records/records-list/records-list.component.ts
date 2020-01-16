@@ -28,14 +28,22 @@ import { RecordsTableRowComponent } from '../records-row/records-table-row.compo
 export class RecordsListComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
+  public messageIn: EventEmitter<ITableMessage> = new EventEmitter<ITableMessage>();
+
   public loading = true;
   public typeFilters = [];
   public navigationObject;
 
   public tableData: TableObject = new TableObject({
-    options: { showHeader: false },
+    options: {
+      showHeader: false,
+      showPagination: true,
+      showPageSizePicker: true,
+      showPageCountDisplay: true
+    },
     component: RecordsTableRowComponent
   });
+
   public tableColumns: IColumnObject[] = [
     {
       name: 'Activity',
@@ -59,15 +67,12 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     },
     {
       name: 'Issued On',
-      value: 'documentDate',
-      width: 'col-1'
+      value: 'documentDate'
     },
     {
       width: 'col-1'
     }
   ];
-
-  public messageIn: EventEmitter<ITableMessage> = new EventEmitter<ITableMessage>();
 
   constructor(
     public location: Location,

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { Order } from '../../../models/order';
+import { Order } from '../../../../../../common/src/app/models/master';
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FactoryService } from '../../../services/factory.service';

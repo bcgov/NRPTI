@@ -1,5 +1,6 @@
-import { OrderDetailComponent } from '../records/orders/order-detail/order-detail.component';
+import { OrderDetailComponent } from '../orders/order-detail/order-detail.component';
 import { Type } from '@angular/core';
+import { InspectionDetailComponent } from '../inspections/inspection-detail/inspection-detail.component';
 
 export class RecordUtils {
   /**
@@ -16,10 +17,10 @@ export class RecordUtils {
     }
 
     switch (recordType) {
-      case 'Order':
+      case 'OrderNRCED':
         return OrderDetailComponent;
-      case 'Inspection':
-        return null;
+      case 'InspectionNRCED':
+        return InspectionDetailComponent;
       default:
         return null;
     }

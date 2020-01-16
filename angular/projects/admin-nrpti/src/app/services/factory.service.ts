@@ -6,7 +6,7 @@ import { ApiService } from './api.service';
 import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService, IRecordObject } from './record.service';
 import { catchError } from 'rxjs/operators';
-import { Order } from '../models/order';
+import { Order } from '../../../../common/src/app/models/master';
 
 /**
  * Facade service for all admin-nrpti services.

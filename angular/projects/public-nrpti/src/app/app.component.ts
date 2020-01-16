@@ -1,7 +1,6 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import 'rxjs/add/operator/filter';
-import { IBreadcrumb, StoreService } from 'nrpti-angular-components';
+import { IBreadcrumb } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-root',
@@ -9,12 +8,9 @@ import { IBreadcrumb, StoreService } from 'nrpti-angular-components';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  @HostBinding('class.sidebarcontrol')
-  isOpen = false;
-
   public breadcrumbs: IBreadcrumb[];
   public activeBreadcrumb: IBreadcrumb;
-  constructor(private router: Router, private storeService: StoreService) {
+  constructor(private router: Router) {
     this.breadcrumbs = [];
   }
 
@@ -22,9 +18,5 @@ export class AppComponent implements OnInit {
     this.router.navigate([breadcrumbData.url]);
   }
 
-  ngOnInit() {
-    this.storeService.change.subscribe(isOpen => {
-      this.isOpen = isOpen;
-    });
-  }
+  ngOnInit() {}
 }
