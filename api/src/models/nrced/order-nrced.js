@@ -13,8 +13,8 @@ module.exports = require('../../utils/model-schema-generator')(
     summary: { type: String, default: '' },
 
     dateAdded: { type: Date, default: Date.now() },
-    dateUpdated: { type: Date, default: Date.now() },
-    datePublished: { type: Date, default: Date.now() }
+    dateUpdated: { type: Date, default: null },
+    datePublished: { type: Date, default: null }
   },
   'nrpti'
 );

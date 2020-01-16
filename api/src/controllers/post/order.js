@@ -24,7 +24,7 @@ exports.createMaster = async function (args, res, next, incomingObj) {
     incomingObj._epicMilestoneId && ObjectId.isValid(incomingObj._epicMilestoneId) && (order._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
     incomingObj.recordName && (order.recordName = incomingObj.recordName);
-    incomingObj.recordType && (order.recordType = incomingObj.recordType);
+    order.recordType = 'Order';
     incomingObj.recordSubtype && (order.recordSubtype = incomingObj.recordSubtype);
     incomingObj.dateIssued && (order.dateIssued = incomingObj.dateIssued);
     incomingObj.issuingAgency && (order.issuingAgency = incomingObj.issuingAgency);
@@ -90,14 +90,8 @@ exports.createMaster = async function (args, res, next, incomingObj) {
  *  }
  */
 exports.createLNG = async function (args, res, next, incomingObj, masterId) {
-    var OrderLNG = mongoose.model('OrderLNG');
-    var orderLNG = new OrderLNG();
-
-    orderLNG._schemaName = 'OrderLNG';
-
     // We must have a valid master ObjectID to continue.
-    masterId && ObjectId.isValid(masterId) && (orderLNG._master = new ObjectId(masterId));
-    if (!orderLNG._master) {
+    if (!masterId || !ObjectId.isValid(masterId)) {
         return {
             status: 'failure',
             object: incomingObj,
@@ -105,6 +99,11 @@ exports.createLNG = async function (args, res, next, incomingObj, masterId) {
         }
     }
 
+    var OrderLNG = mongoose.model('OrderLNG');
+    var orderLNG = new OrderLNG();
+
+    orderLNG._schemaName = 'OrderLNG';
+    orderLNG._master = new ObjectId(masterId);
     orderLNG.read = ['sysadmin'];
     orderLNG.write = ['sysadmin'];
     // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
@@ -139,14 +138,8 @@ exports.createLNG = async function (args, res, next, incomingObj, masterId) {
  *  }
  */
 exports.createNRCED = async function (args, res, next, incomingObj, masterId) {
-    var OrderNRCED = mongoose.model('OrderNRCED');
-    var orderNRCED = new OrderNRCED();
-
-    orderNRCED._schemaName = 'OrderNRCED';
-
     // We must have a valid master ObjectID to continue.
-    masterId && ObjectId.isValid(masterId) && (orderNRCED._master = new ObjectId(masterId));
-    if (!orderNRCED._master) {
+    if (!masterId || !ObjectId.isValid(masterId)) {
         return {
             status: 'failure',
             object: incomingObj,
@@ -154,6 +147,11 @@ exports.createNRCED = async function (args, res, next, incomingObj, masterId) {
         }
     }
 
+    var OrderNRCED = mongoose.model('OrderNRCED');
+    var orderNRCED = new OrderNRCED();
+
+    orderNRCED._schemaName = 'OrderNRCED';
+    orderNRCED._master = new ObjectId(masterId);
     orderNRCED.read = ['sysadmin'];
     orderNRCED.write = ['sysadmin'];
     // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']

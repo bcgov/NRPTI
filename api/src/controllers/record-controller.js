@@ -7,6 +7,7 @@ let queryUtils = require('../utils/query-utils');
 let defaultLog = require('../utils/logger')('record');
 
 let Order = require('./post/order');
+let Inspection = require('./post/inspection');
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 
@@ -490,6 +491,13 @@ let addStandardQueryFilters = function (query, args) {
 };
 
 let processPostRequest = async function (args, res, next, property, data) {
+  if (data.length === 0) {
+    return {
+      status: 'success',
+      object: {}
+    }
+  }
+
   var i = data.length - 1;
   var observables = [];
 
@@ -497,7 +505,8 @@ let processPostRequest = async function (args, res, next, property, data) {
     switch (property) {
       case 'orders':
         observables.push(Order.createMaster(args, res, next, data[i]));
-      case 'inpsections':
+      case 'inspections':
+        observables.push(Inspection.createMaster(args, res, next, data[i]));
         break;
       default:
         return {
