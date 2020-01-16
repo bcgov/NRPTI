@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { PageTypes } from '../../utils/page-types.enum';
 import { DataService } from '../../services/data.service';
 import { ActivatedRoute } from '@angular/router';
-import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-background',
@@ -14,24 +13,17 @@ export class BackgroundComponent implements OnInit {
 
   public id: string;
   public text: string[];
-  public trustedUrl: object;
 
-  constructor(private sanitizer: DomSanitizer, private dataService: DataService, private route: ActivatedRoute) {
-    this.trustedUrl = sanitizer.bypassSecurityTrustUrl('https://www.projects.eao.gov.bc.ca/');
-
+  constructor(
+    private dataService: DataService,
+    private route: ActivatedRoute
+  ) {
     this.route.parent.params.subscribe(params => {
       this.id = params.id;
       this.text = this.dataService.getText(this.id, this.pageType);
     });
   }
 
-  sanitizedUrl;
-
   ngOnInit() {
-    this.sanitizedUrl = this.sanitizer.bypassSecurityTrustUrl('https://www.projects.eao.gov.bc.ca/');
-  }
-
-  sanitize(url: string) {
-    return this.sanitizer.bypassSecurityTrustUrl(url);
   }
 }
