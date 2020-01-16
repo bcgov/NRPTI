@@ -504,6 +504,7 @@ let processPostRequest = async function (args, res, next, property, data) {
     switch (property) {
       case 'orders':
         observables.push(Order.createMaster(args, res, next, data[i]));
+        break;
       case 'inspections':
         observables.push(Inspection.createMaster(args, res, next, data[i]));
         break;
