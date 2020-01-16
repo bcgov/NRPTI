@@ -21,6 +21,7 @@ exports.publish = async function(obj) {
     } else {
       // publish
       obj.read.push('public');
+      obj.markModified('read');
 
       // save and return
       let savedObj = await obj.save();
