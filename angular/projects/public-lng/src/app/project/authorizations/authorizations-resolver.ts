@@ -26,7 +26,7 @@ export class AuthorizationsResolver implements Resolve<Observable<object>> {
       [],
       tableObject.currentPage,
       tableObject.pageSize,
-      tableObject.sortBy || '-dateIssued', // This needs to be common between both datasets to work properly
+      tableObject.sortBy || '-_master.dateIssued', // This needs to be common between both datasets to work properly
       {
         _epicProjectId: project
       },

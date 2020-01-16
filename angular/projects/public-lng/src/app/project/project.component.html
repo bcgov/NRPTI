@@ -37,8 +37,7 @@
           <a
             class="nav-link"
             title="Authorizations"
-            routerLinkActive="active-link"
-            routerLink="/project/{{ id }}/authorizations"
+            (click)=navToAuthorizations()
           >
             <span>Authorizations</span>
           </a>
@@ -47,14 +46,17 @@
           <a
             class="nav-link"
             title="Compliance"
-            routerLinkActive="active-link"
-            routerLink="/project/{{ id }}/compliance"
+            (click)=navToCompliance()
           >
             <span>Compliance</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" title="Plans" routerLinkActive="active-link" routerLink="/project/{{ id }}/plans">
+          <a 
+            class="nav-link"
+            title="Plans"
+            (click)=navToPlans()
+            >
             <span>Plans</span>
           </a>
         </li>
@@ -63,7 +65,7 @@
             class="nav-link"
             title="Indigenous Nations"
             routerLinkActive="active-link"
-            routerLink="/project/{{ id }}/nations"
+            (click)=navToIndigenousNations()
           >
             <span>Indigenous Nations</span>
           </a>

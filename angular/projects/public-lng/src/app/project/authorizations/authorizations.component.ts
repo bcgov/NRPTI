@@ -33,10 +33,4 @@ export class AuthorizationsComponent implements OnInit {
   }
 
   ngOnInit() {}
-
-  public openInNewWindow(url: string): void {
-    if (url) {
-      window.open(url);
-    }
-  }
 }
