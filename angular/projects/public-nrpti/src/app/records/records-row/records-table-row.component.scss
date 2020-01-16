@@ -1,0 +1,77 @@
+@import 'assets/styles/base/base.scss';
+
+// style the wrapping <tr></tr> tags
+:host-context(tr) {
+  border: 1px solid $mn-border-color;
+  border-radius: 6px;
+  margin-bottom: 0.25rem;
+
+  &:hover {
+    background-color: $table-row-hover-bg;
+  }
+}
+
+.table-card-outer {
+  position: relative;
+
+  .table-card {
+    flex-basis: 0;
+    flex-grow: 1;
+    max-width: 100%;
+    cursor: pointer;
+
+    .table-card-inner {
+      display: grid;
+      grid-gap: 0.25rem;
+      grid-template-columns:
+        minmax(100px, 3fr) minmax(100px, 1fr) minmax(100px, 1fr) minmax(100px, 3fr) minmax(100px, 1fr)
+        minmax(100px, 1fr);
+
+      .card-col {
+        display: grid;
+
+        .card-col-label {
+          display: grid;
+          font-weight: 600;
+        }
+
+        .download-btn {
+          display: grid;
+        }
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      .table-card-inner {
+        grid-gap: 0.5rem;
+        grid-template-columns: auto;
+        grid-auto-rows: auto;
+
+        .card-col {
+          grid-gap: 0.5rem;
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    }
+  }
+
+  .closeToggleContainer {
+    position: absolute;
+    top: 0.75rem;
+    right: 1rem;
+    cursor: pointer;
+    font-size: 2.4rem;
+    padding: 0.48rem;
+
+    &:hover {
+      background-color: $gray2;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .closeToggleContainer {
+      top: 0.75rem;
+      right: 0.75rem;
+    }
+  }
+}

@@ -1,6 +1,7 @@
 @import "assets/styles/base/base.scss";
 
-tr:hover {
-  // cursor: pointer;
-  background-color: #e2f1ff;
+:host-context(tr) {
+  &:hover {
+    background-color: $mn-border-color;
+  }
 }

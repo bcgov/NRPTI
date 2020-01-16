@@ -14,7 +14,7 @@ import { RecordsRoutingModule } from './records-routing.module';
 
 // components
 import { RecordsListComponent } from './records-list/records-list.component';
-import { RecordsTableRowsComponent } from './records-rows/records-table-rows.component';
+import { RecordsTableRowComponent } from './records-rows/records-table-row.component';
 import { OrderAddEditComponent } from './orders/order-add-edit/order-add-edit.component';
 import { OrderDetailComponent } from './orders/order-detail/order-detail.component';
 
@@ -31,9 +31,9 @@ import { OrderDetailComponent } from './orders/order-detail/order-detail.compone
     InlineSVGModule.forRoot(),
     RecordsRoutingModule
   ],
-  declarations: [OrderAddEditComponent, OrderDetailComponent, RecordsListComponent, RecordsTableRowsComponent],
+  declarations: [OrderAddEditComponent, OrderDetailComponent, RecordsListComponent, RecordsTableRowComponent],
   providers: [],
-  entryComponents: [OrderAddEditComponent, RecordsTableRowsComponent],
+  entryComponents: [OrderAddEditComponent, RecordsTableRowComponent],
   exports: []
 })
 export class RecordsModule {}

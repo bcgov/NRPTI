@@ -1,15 +1,15 @@
-var _ = require('lodash');
 var defaultLog = require('winston').loggers.get('default');
 var mongoose = require('mongoose');
-var Actions = require('../utils/actions');
-var Utils = require('../utils/utils');
+var QueryActions = require('../utils/query-actions');
+var QueryUtils = require('../utils/query-utils');
 var qs = require('qs');
 var mongodb = require('../utils/mongodb');
 
 function isEmpty(obj) {
-  for (var key in obj) {
-    if (obj.hasOwnProperty(key))
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
       return false;
+    }
   }
   return true;
 }
@@ -157,11 +157,7 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
     _schemaName: Array.isArray(schemaName) ? { $in: schemaName } : schemaName,
     ...(isEmpty(modifier) ? undefined : modifier),
     ...(searchProperties ? searchProperties : undefined),
-    ...(properties ? properties : undefined),
-    $or: [
-      { isDeleted: { $exists: false } },
-      { isDeleted: false },
-    ]
+    ...(properties ? properties : undefined)
   };
 
   defaultLog.info("modifier:", modifier);
@@ -316,7 +312,7 @@ var executeQuery = async function (args, res, next) {
   defaultLog.info(roles);
   defaultLog.info("******************************************************************");
 
-  Utils.recordAction('Search', keywords, args.swagger.params.auth_payload ? args.swagger.params.auth_payload.preferred_username : 'public')
+  QueryUtils.recordAction('Search', keywords, args.swagger.params.auth_payload ? args.swagger.params.auth_payload.preferred_username : 'public')
 
   var sortDirection = undefined;
   var sortField = undefined;
@@ -339,7 +335,7 @@ var executeQuery = async function (args, res, next) {
 
     let itemData = await searchCollection(roles, keywords, dataset, pageNum, pageSize, project, sortField, sortDirection, caseSensitive, populate, and, or)
 
-    return Actions.sendResponse(res, 200, itemData);
+    return QueryActions.sendResponse(res, 200, itemData);
 
   } else if (dataset[0] === 'Item') {
     var collectionObj = mongoose.model(args.swagger.params._schemaName.value);
@@ -378,14 +374,10 @@ var executeQuery = async function (args, res, next) {
 
     var data = await collectionObj.aggregate(aggregation);
 
-    if (args.swagger.params._schemaName.value === 'Project') {
-      // If we are a project, and we are not authed, we need to sanitize some fields.
-      data = Utils.filterData(args.swagger.params._schemaName.value, data, roles);
-    }
-    return Actions.sendResponse(res, 200, data);
+    return QueryActions.sendResponse(res, 200, data);
   } else {
     defaultLog.info('Bad Request');
-    return Actions.sendResponse(res, 400, {});
+    return QueryActions.sendResponse(res, 400, {});
   }
 };
 

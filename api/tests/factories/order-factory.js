@@ -3,7 +3,6 @@ const Order = require('../../src/models/master/order');
 
 factory.define('order', Order, {
   code: factory.seq('Order.code', element => `app-code-${element}`),
-  isDeleted: false,
   internal: {
     read: ['public', 'sysadmin']
   },

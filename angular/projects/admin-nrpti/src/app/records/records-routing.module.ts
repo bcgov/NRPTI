@@ -7,7 +7,7 @@ import { RecordsResolver } from './records-resolver';
 import { OrderDetailComponent } from './orders/order-detail/order-detail.component';
 import { OrderAddEditComponent } from './orders/order-add-edit/order-add-edit.component';
 import { CanDeactivateGuard } from '../guards/can-deactivate-guard.service';
-import { OrderEditResolver } from './orders/order-add-edit/order-edit-resolver.services';
+import { OrderResolver } from './orders/order-resolver';
 
 const routes: Routes = [
   {
@@ -44,6 +44,9 @@ const routes: Routes = [
             canActivate: [CanActivateGuard],
             data: {
               breadcrumb: null
+            },
+            resolve: {
+              records: OrderResolver
             }
           },
           {
@@ -55,7 +58,7 @@ const routes: Routes = [
               breadcrumb: 'Edit'
             },
             resolve: {
-              order: OrderEditResolver
+              records: OrderResolver
             }
           }
         ]
@@ -67,6 +70,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [RecordsResolver, OrderEditResolver]
+  providers: [RecordsResolver, OrderResolver]
 })
 export class RecordsRoutingModule {}

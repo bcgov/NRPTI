@@ -6,19 +6,15 @@
   </div>
   <br />
 
-  <div *ngIf="!loading && tableData.totalListItems === 0">
+  <div *ngIf="!loading && tableData.totalListItems <= 0">
     No Records found.
   </div>
 
   <lib-table-template
-    *ngIf="!loading && tableData.totalListItems != 0"
-    (checkboxChange)="checkChange($event)"
+    *ngIf="!loading && tableData.totalListItems > 0"
     [data]="tableData"
-    (columnSort)="setColumnSort($event)"
-    (itemClicked)="itemClicked($event)"
-    (itemSelected)="itemSelected($event)"
-    (pageNumUpdate)="onPageNumUpdate($event)"
-    (pageSizeUpdate)="onPageSizeUpdate($event)"
+    [messageIn]="messageIn"
+    (messageOut)="onMessageOut($event)"
   >
   </lib-table-template>
 </div>

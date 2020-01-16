@@ -3,7 +3,9 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { RecordsListComponent } from './records-list/records-list.component';
 import { RecordsListResolver } from './records-list/records-list-resolver';
-import { RecordDetailComponent } from './record-detail/record-detail.component';
+
+import { OrderDetailComponent } from './orders/order-detail/order-detail.component';
+import { OrderResolver } from './orders/order-detail/order-resolver';
 
 const routes: Routes = [
   {
@@ -23,22 +25,25 @@ const routes: Routes = [
         }
       },
       {
-        path: ':recordId',
+        path: 'orders/:orderId',
         data: {
-          breadcrumb: 'Record Details'
+          breadcrumb: 'Order Details'
         },
         children: [
           {
-            path: 'details',
-            component: RecordDetailComponent,
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: OrderDetailComponent,
+            resolve: {
+              records: OrderResolver
+            },
             data: {
               breadcrumb: null
             }
-          },
-          {
-            path: '',
-            redirectTo: 'details',
-            pathMatch: 'full'
           }
         ]
       }
@@ -49,6 +54,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [RecordsListResolver]
+  providers: [RecordsListResolver, OrderResolver]
 })
 export class RecordsRoutingModule {}

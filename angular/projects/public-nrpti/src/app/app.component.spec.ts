@@ -5,7 +5,6 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { ApiService } from './services/api.service';
-import { KeycloakService } from './services/keycloak.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -15,11 +14,6 @@ import { of } from 'rxjs';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
-    const mockKeycloakService = {
-      isValidForSite: () => {
-        return true;
-      }
-    };
 
     const mockStoreService = {
       change: of(),
@@ -38,7 +32,6 @@ describe('AppComponent', () => {
       imports: [RouterTestingModule, HttpClientTestingModule, BrowserAnimationsModule],
       providers: [
         ApiService,
-        { provide: KeycloakService, useValue: mockKeycloakService },
         { provide: StoreService, useValue: mockStoreService }
       ]
     }).compileComponents();

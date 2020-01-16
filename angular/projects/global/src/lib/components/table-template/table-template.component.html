@@ -1,56 +1,88 @@
-<div class="row">
-  <div class="col-6 page-controls-top-left">
-    <lib-page-count-display
-      [isHidden]="false"
-      [currentPageNum]="data.currentPage"
-      [currentPageSize]="data.pageSize"
-      [totalItems]="data.totalListItems"
-      id="table-template-page-count-display"
-    >
-    </lib-page-count-display>
-  </div>
-  <div class="col-6 page-controls-top-right">
-    <pagination-controls (pageChange)="updatePageNumber($event)" id="table-template-pagination" autoHide="true">
-    </pagination-controls>
-  </div>
-</div>
-<table class="table">
-  <thead class="thead-light">
-    <tr>
-      <th
-        *ngFor="let entry of data.columns"
-        class="project-table__name-col sortable"
-        (click)="!entry.nosort && sort(entry.value)"
-        [ngClass]="entry.width"
+<div class="table-template">
+  <div class="table-controls-top">
+    <div class="top-left">
+      <lib-page-size-picker
+        *ngIf="data.options.showPageSizePicker"
+        [isHidden]="false"
+        [currentPageSize]="data.pageSize"
+        [sizeOptions]="data.pageSizeOptions"
+        (pageSizeChosen)="onUpdatePageSize($event)"
+        id="table-template-page-size-picker"
       >
-        {{ entry.name }}
-        <i
-          *ngIf="entry.nosort !== true"
-          class="sort"
-          [ngClass]="{
-            'sort-asc': data.sortBy.slice(1) == entry.value && data.sortBy.charAt(0) === '+',
-            'sort-desc': data.sortBy.slice(1) == entry.value && data.sortBy.charAt(0) === '-'
-          }"
-          aria-hidden="true"
-        ></i>
-      </th>
-    </tr>
-  </thead>
-  <ng-template libTable></ng-template>
-</table>
-<div class="row">
-  <div class="col-6 page-controls-bottom-left">
-    <lib-page-size-picker
-      [isHidden]="false"
-      [currentPageSize]="data.pageSize"
-      [sizeOptions]="data.pageSizeOptions"
-      (pageSizeChosen)="updatePageSize($event)"
-      id="table-template-page-size-picker"
-    >
-    </lib-page-size-picker>
+      </lib-page-size-picker>
+    </div>
+    <div class="top-center">
+      <lib-page-count-display
+        *ngIf="data.options.showPageCountDisplay"
+        [isHidden]="false"
+        [currentPageNum]="data.currentPage"
+        [currentPageSize]="data.pageSize"
+        [totalItems]="data.totalListItems"
+        id="table-template-page-count-display"
+      >
+      </lib-page-count-display>
+    </div>
+    <div class="top-right">
+      <pagination-controls
+        *ngIf="data.options.showPagination"
+        (pageChange)="onUpdatePageNumber($event)"
+        id="table-template-pagination"
+        autoHide="true"
+      >
+      </pagination-controls>
+    </div>
   </div>
-  <div class="col-6 page-controls-bottom-right">
-    <pagination-controls (pageChange)="updatePageNumber($event)" id="table-template-pagination" autoHide="true">
-    </pagination-controls>
+  <table class="table">
+    <thead class="thead-light" *ngIf="data.options.showHeader">
+      <tr>
+        <th
+          *ngFor="let entry of data.columns"
+          class="project-table__name-col sortable"
+          (click)="!entry.nosort && onSort(entry.value)"
+          [ngClass]="entry.width"
+        >
+          {{ entry.name }}
+          <i
+            *ngIf="entry.nosort !== true"
+            class="sort"
+            [ngClass]="{
+              'sort-asc': data.sortBy.slice(1) == entry.value && data.sortBy.charAt(0) === '+',
+              'sort-desc': data.sortBy.slice(1) == entry.value && data.sortBy.charAt(0) === '-'
+            }"
+            aria-hidden="true"
+          ></i>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container
+        *ngFor="
+          let item of data.items
+            | paginate
+              : {
+                  id: 'table-template-pagination',
+                  itemsPerPage: data.pageSize,
+                  currentPage: data.currentPage,
+                  totalItems: data.totalListItems
+                }
+        "
+        [libTableRow]="item"
+        [tableData]="data"
+        [messageIn]="messageIn"
+        (messageOut)="onMessageOut($event)"
+      >
+      </ng-container>
+    </tbody>
+  </table>
+  <div class="table-controls-bottom">
+    <div class="bottom-right">
+      <pagination-controls
+        *ngIf="data.options.showPagination"
+        (pageChange)="onUpdatePageNumber($event)"
+        id="table-template-pagination"
+        autoHide="true"
+      >
+      </pagination-controls>
+    </div>
   </div>
 </div>

@@ -1,0 +1,49 @@
+<main class="detail-page">
+  <div>
+    <section class="nav-section">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{ active: isTabActive('detail') }" (click)="toggleTab('detail')">Details</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{ active: isTabActive('location') }" (click)="toggleTab('location')"
+            >Location</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [ngClass]="{ active: isTabActive('report') }" (click)="toggleTab('report')">Reports</a>
+        </li>
+      </ul>
+    </section>
+    <section class="content-section" *ngIf="isTabActive('detail')">
+      <ul class="nv-list">
+        <li>
+          <span class="name">Activity:</span>
+          <span class="value">{{ (data && data.recordName) || '-' }}</span>
+        </li>
+        <li>
+          <span class="name">Issued To:</span>
+          <span class="value">{{ (data && data.issuedTo) || '-' }}</span>
+        </li>
+        <li>
+          <span class="name">Activity Type:</span>
+          <span class="value">{{ (data && data.recordType) || '-' }}</span>
+        </li>
+        <li>
+          <span class="name">Location Description:</span>
+          <span class="value">{{ (data && data.location) || '-' }}</span>
+        </li>
+        <li>
+          <span class="name">Issued On:</span>
+          <span class="value">{{ (data && data.dateIssued) || '-' }}</span>
+        </li>
+      </ul>
+    </section>
+    <section class="content-section" *ngIf="isTabActive('location')">
+      This is a map!
+    </section>
+    <section class="content-section" *ngIf="isTabActive('report')">
+      This is a report!
+    </section>
+  </div>
+</main>

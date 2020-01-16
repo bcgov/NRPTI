@@ -11,7 +11,6 @@ export class Document {
   documentFileName: string;
   displayName: string;
   internalURL: string;
-  isDeleted: boolean;
   internalMime: string;
 
   constructor(obj?: any) {
@@ -21,7 +20,6 @@ export class Document {
     this.documentFileName = (obj && obj.documentFileName) || null;
     this.displayName = (obj && obj.displayName) || null;
     this.internalURL = (obj && obj.internalURL) || null;
-    this.isDeleted = (obj && obj.isDeleted) || null;
     this.internalMime = (obj && obj.internalMime) || null;
   }
 }

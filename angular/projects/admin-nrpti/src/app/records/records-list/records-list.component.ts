@@ -3,8 +3,8 @@ import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { TableTemplateUtils, TableObject, IColumnObject, IPageSizePickerOption } from 'nrpti-angular-components';
-import { RecordsTableRowsComponent } from '../records-rows/records-table-rows.component';
+import { TableTemplateUtils, TableObject, IColumnObject, IPageSizePickerOption, ITableMessage } from 'nrpti-angular-components';
+import { RecordsTableRowComponent } from '../records-rows/records-table-row.component';
 
 /**
  * List page component.
@@ -27,7 +27,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   public typeFilters = [];
   public navigationObject;
 
-  public tableData: TableObject = new TableObject({ component: RecordsTableRowsComponent });
+  public tableData: TableObject = new TableObject({ component: RecordsTableRowComponent });
   public tableColumns: IColumnObject[] = [
     {
       name: 'Issued To',
@@ -98,15 +98,43 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.tableData.items = res.records[0] && res.records[0].data && res.records[0].data.searchResults;
-      if (res.records[0] && res.records[0].data && res.records[0].data.meta && res.records[0].data.meta.length) {
-        this.tableData.totalListItems = res.records[0].data.meta[0].searchResultsTotal;
-      }
+      const records = (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || [];
+      this.tableData.items = records.map(record => {
+        return { rowData: record };
+      });
+
+      this.tableData.totalListItems =
+        (res.records[0] &&
+          res.records[0].data &&
+          res.records[0].data.meta &&
+          res.records[0].data.meta[0] &&
+          res.records[0].data.meta[0].searchResultsTotal) ||
+        0;
 
       this.tableData.columns = this.tableColumns;
       this.loading = false;
       this._changeDetectionRef.detectChanges();
     });
+  }
+
+  onMessageOut(msg: ITableMessage) {
+    switch (msg.label) {
+      case 'rowClicked':
+        break;
+      case 'rowSelected':
+        break;
+      case 'columnSort':
+        this.setColumnSort(msg.data);
+        break;
+      case 'pageNum':
+        this.onPageNumUpdate(msg.data);
+        break;
+      case 'pageSize':
+        this.onPageSizeUpdate(msg.data);
+        break;
+      default:
+        break;
+    }
   }
 
   /**

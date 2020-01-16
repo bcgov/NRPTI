@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 module.exports = require('../../utils/model-schema-generator')(
   'Authorization',
@@ -22,5 +22,6 @@ module.exports = require('../../utils/model-schema-generator')(
     sourceDateAdded: { type: Date, default: null },
     sourceDateUpdated: { type: Date, default: null },
     sourceSystemRef: { type: String, default: '' }
-  }
-)
+  },
+  'nrpti'
+);

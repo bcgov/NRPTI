@@ -1,6 +1,9 @@
 node_modules
 
 dist
+migrations
+migrations_data
+openshift
 
 openshift
 sonar-runner

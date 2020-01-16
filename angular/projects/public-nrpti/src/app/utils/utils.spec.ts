@@ -1,4 +1,4 @@
-import { Utils } from './utils';
+import { Utils } from 'nrpti-angular-components';
 
 describe('Utils', () => {
   describe('convertArrayIntoPipeString', () => {

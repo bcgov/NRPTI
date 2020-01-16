@@ -1,5 +1,9 @@
-import moment from 'moment';
-
+/**
+ * General purpose utils.
+ *
+ * @export
+ * @class Utils
+ */
 export class Utils {
   /**
    * Turns an array of strings into a single string where each element is deliminited with a pipe character.
@@ -17,21 +21,5 @@ export class Utils {
     }
     // trim the last |
     return values.replace(/\|$/, '');
-  }
-
-  /**
-   * Turns a non-null date into a formatted date string, or else returns null.
-   *
-   * @static
-   * @param {Date} [date=null] a Date.
-   * @returns {string}  formatted date string, or null.
-   * @memberof Utils
-   */
-  static getFormattedDate(date: Date = null): string {
-    if (!Date) {
-      return null;
-    }
-
-    return moment(date).format('YYYY-MM-DD');
   }
 }
