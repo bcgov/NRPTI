@@ -7,7 +7,7 @@
     "start:admin-nrpti": "ng serve admin-nrpti -o",
     "start:public-nrced": "ng serve public-nrced -o",
     "start:public-lng": "ng serve public-lng -o",
-    "build": "npm-run-all -l -s -c lint clean:* build:library library:link build:app:*",
+    "build": "npm-run-all -l -s -c build:library library:link build:app:*",
     "build:prod": "npm-run-all -l -s -c lint clean:* build:app:*",
     "build:app:common": "ng build common --prod",
     "build:app:admin-nrpti": "ng build admin-nrpti --prod",
