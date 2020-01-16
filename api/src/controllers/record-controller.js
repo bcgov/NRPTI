@@ -6,6 +6,9 @@ let queryUtils = require('../utils/query-utils');
 
 let defaultLog = require('../utils/logger')('record');
 
+let Order = require('./post/order');
+let Inspection = require('./post/inspection');
+
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 
 // Authenticated Requests
@@ -17,7 +20,7 @@ let defaultLog = require('../utils/logger')('record');
  * @param {*} res
  * @param {*} next
  */
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
 
@@ -29,14 +32,14 @@ exports.protectedOptions = function(args, res, next) {
  * @param {*} next
  * @returns
  */
-exports.protectedGet = function(args, res, next) {
+exports.protectedGet = function (args, res, next) {
   let query = {};
   let sort = {};
   let skip = null;
   let limit = null;
   let scopes = args.swagger.params.auth_payload.realm_access.roles;
 
-  defaultLog.info('scopes:',scopes);
+  defaultLog.info('scopes:', scopes);
 
   // Build match query if on recordId route
   if (args.swagger.params.recordId) {
@@ -83,10 +86,10 @@ exports.protectedGet = function(args, res, next) {
       limit, // limit
       false
     ) // count
-    .then(function(data) {
+    .then(function (data) {
       return queryActions.sendResponse(res, 200, data);
     })
-    .catch(function(err) {
+    .catch(function (err) {
       defaultLog.error('record protectedGet runDataQuery:', err);
       return queryActions.sendResponse(res, 400, err);
     });
@@ -99,7 +102,71 @@ exports.protectedGet = function(args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedPost = function(args, res, next) {
+/**
+ * Example of args.swagger.params.data.value
+ * {
+ *   orders: [
+ *     {
+ *       recordName: 'test abc',
+ *       recordType: 'whatever',
+ *       ...
+ *       OrderLNG: {
+ *          description: 'lng description'
+ *          addRole: 'public',
+ *       }
+ *     },
+ *     {
+ *       recordName: 'this is a name',
+ *       recordType: 'this is a type',
+ *       ...
+ *     }
+ *   ],
+ *   inspections: [
+ *     {
+ *       recordName: 'test 123',
+ *       recordType: 'test type',
+ *       ...
+ *     },
+ *     {
+ *       recordName: 'inspection test name',
+ *       recordType: 'inspection type',
+ *       ...
+ *     },
+ *     ...
+ *   ],
+ *   authorizations: [...],
+ *   ...
+ * }
+ */
+exports.protectedPost = async function (args, res, next) {
+  var observables = [];
+
+  if (args.swagger.params.data && args.swagger.params.data.value) {
+    var data = args.swagger.params.data.value;
+
+    if (data.orders) {
+      observables.push(processPostRequest(args, res, next, 'orders', data.orders));
+    }
+    if (data.inspections) {
+      observables.push(processPostRequest(args, res, next, 'inspections', data.inspections));
+    }
+
+    var response = await Promise.all(observables);
+
+    return queryActions.sendResponse(res, 200, response);
+  } else {
+    return queryActions.sendResponse(res, 500, { error: 'You must provide data' });
+  }
+};
+
+/**
+ * TODO: populate this documentation
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ */
+exports.protectedPut = function (args, res, next) {
   return queryActions.sendResponse(res, 501);
 };
 
@@ -110,7 +177,7 @@ exports.protectedPost = function(args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedPut = function(args, res, next) {
+exports.protectedDelete = function (args, res, next) {
   return queryActions.sendResponse(res, 501);
 };
 
@@ -121,18 +188,7 @@ exports.protectedPut = function(args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedDelete = function(args, res, next) {
-  return queryActions.sendResponse(res, 501);
-};
-
-/**
- * TODO: populate this documentation
- *
- * @param {*} args
- * @param {*} res
- * @param {*} next
- */
-exports.protectedPublish = function(args, res, next) {
+exports.protectedPublish = function (args, res, next) {
   return queryActions.sendResponse(res, 501);
 };
 
@@ -143,7 +199,7 @@ exports.protectedPublish = function(args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedUnPublish = function(args, res, next) {
+exports.protectedUnPublish = function (args, res, next) {
   return queryActions.sendResponse(res, 501);
 };
 
@@ -157,7 +213,7 @@ exports.protectedUnPublish = function(args, res, next) {
  * @param {*} next
  * @returns
  */
-exports.publicHead = function(args, res, next) {
+exports.publicHead = function (args, res, next) {
   return queryActions.sendResponse(res, 501);
 };
 
@@ -169,7 +225,7 @@ exports.publicHead = function(args, res, next) {
  * @param {*} next
  * @returns
  */
-exports.publicGet = function(args, res, next) {
+exports.publicGet = function (args, res, next) {
   return queryActions.sendResponse(res, 501);
 };
 
@@ -181,7 +237,7 @@ exports.publicGet = function(args, res, next) {
  * @param {*} args
  * @returns
  */
-let addStandardQueryFilters = function(query, args) {
+let addStandardQueryFilters = function (query, args) {
   if (args.swagger.params.publishDate && args.swagger.params.publishDate.value !== undefined) {
     let queryString = qs.parse(args.swagger.params.publishDate.value);
     if (queryString.since && queryString.until) {
@@ -349,7 +405,7 @@ let addStandardQueryFilters = function(query, args) {
     let coordinates = JSON.parse(args.swagger.params.centroid.value)[0];
     // restrict lat and lng to valid bounds
     // safety check: fallback for invalid lat or lng is 0
-    coordinates = coordinates.map(function(coord) {
+    coordinates = coordinates.map(function (coord) {
       const lng = Math.max(Math.min(coord[0] || 0, 179.9999), -180); // -180 to +179.9999
       const lat = Math.max(Math.min(coord[1] || 0, 89.9999), -90); // -90 to +89.9999
       return [lng, lat];
@@ -433,4 +489,41 @@ let addStandardQueryFilters = function(query, args) {
 
   return query;
 };
+
+let processPostRequest = async function (args, res, next, property, data) {
+  if (data.length === 0) {
+    return {
+      status: 'success',
+      object: {}
+    }
+  }
+
+  var i = data.length - 1;
+  var observables = [];
+
+  do {
+    switch (property) {
+      case 'orders':
+        observables.push(Order.createMaster(args, res, next, data[i]));
+      case 'inspections':
+        observables.push(Inspection.createMaster(args, res, next, data[i]));
+        break;
+      default:
+        return {
+          errorMessage: `Property ${property} does not exist.`
+        }
+    }
+  } while (i-- > 0);
+
+  try {
+    return await Promise.all(observables);
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: observables,
+      errorMessage: e
+    }
+  }
+};
+
 /* eslint-enable no-redeclare */
