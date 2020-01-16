@@ -1,77 +1,84 @@
 require('../../tests/test-utils');
 const queryActions = require('./query-actions');
-const Order = require('../models/master/order');
-const Audit = require('../models/audit');
 
-describe('## publish ##', () => {
+describe('publish', () => {
   describe('with an object that has already been published', () => {
     test('it returns 409 with a status message', async () => {
-      let publishedOrg = new Order({ read: ['public'] });
-      try {
-        let res = await queryActions.publish(publishedOrg);
-        expect(res.code).toEqual(409);
-        expect(res.message).toEqual('Object already published');
-      } catch (e) {
-        console.log('err:', e);
-      }
+      let record = { read: ['public'] };
+
+      let response = await queryActions.publish(record);
+
+      expect(response.code).toEqual(409);
+      expect(response.message).toEqual('Object already published');
     });
   });
 
   describe('with an object that has not been published', () => {
     test('it adds the public tag and saves it', async () => {
-      let newOrg = new Order({ read: [] });
-      try {
-        let res = await queryActions.publish(newOrg);
-        expect(res.read[0]).toEqual('public');
-      } catch (e) {
-        console.log('err:', e);
-      }
+      let record = { read: [] };
+      // stub save method to return itself
+      record.save = function() {
+        return this;
+      };
+      record.markModified = () => {};
+
+      let response = await queryActions.publish(record);
+
+      expect(response.read[0]).toEqual('public');
     });
   });
 
   describe('with an object that has not been published, but has other roles in the read array', () => {
     test('Testing publish', () => {
-      let obj = {};
-      obj.read = ['sysadmin'];
+      let record = { read: ['sysadmin'] };
 
-      expect(queryActions.isPublished(obj)).toEqual(false);
+      expect(queryActions.isPublished(record)).toEqual(false);
 
-      obj.read = ['sysadmin', 'public'];
-      expect(queryActions.isPublished(obj)).toEqual(true);
+      record.read = ['sysadmin', 'public'];
+      expect(queryActions.isPublished(record)).toEqual(true);
     });
   });
 });
 
-describe('## isPublished ##', () => {
-  let record = new Order({});
-
+describe('isPublished', () => {
   test('it returns the array of public read', () => {
-    record.read = ['sysadmin', 'public'];
+    const record = { read: ['sysadmin', 'public'] };
+
     expect(queryActions.isPublished(record)).toEqual(true);
   });
 
   test('it returns false if there is no matching public tag', () => {
-    record.read = ['sysadmin'];
-    expect(!queryActions.isPublished(record)).toEqual(true);
+    const record = { read: ['sysadmin'] };
+
+    expect(queryActions.isPublished(record)).toEqual(false);
   });
 });
 
-describe('## unpublish ##', () => {
+describe('unPublish', () => {
   describe('with an object that has been published', () => {
     test('it removes the public tag and saves it', async () => {
-      let publishedOrg = new Order({ read: ['public'] });
-      let res = await queryActions.unPublish(publishedOrg);
-      expect(res.read).toHaveLength(0);
+      let record = { read: ['public'] };
+      // stub save method to return itself
+      record.save = function() {
+        return this;
+      };
+      record.markModified = () => {};
+
+      let response = await queryActions.unPublish(record);
+
+      expect(response.read).toHaveLength(0);
     });
   });
 
   describe('with an object that is unpublished', () => {
     test('it returns 409 with a status message', async () => {
-      let newOrg = new Order({ read: [] });
-      let res = await queryActions.unPublish(newOrg);
-      if (res.code) {
-        expect(res.code).toEqual(409);
-        expect(res.message).toEqual('Object already unpublished');
+      let record = { read: [] };
+
+      let response = await queryActions.unPublish(record);
+
+      if (response.code) {
+        expect(response.code).toEqual(409);
+        expect(response.message).toEqual('Object already unpublished');
       }
     });
   });

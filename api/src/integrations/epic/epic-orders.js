@@ -2,9 +2,6 @@
 
 const mongoose = require('mongoose');
 const defaultLog = require('../../utils/logger')('epic-orders');
-const axios = require('axios');
-const hostPath = `https://${process.env.EPIC_API_HOSTNAME || 'eagle-prod.pathfinder.gov.bc.ca'}${process.env
-  .EPIC_API_PROJECT_PATHNAME || '/api/project'}/`;
 
 /**
  * Epic Order record handler.
@@ -33,12 +30,9 @@ class EpicOrders {
       throw Error('transformRecord - required record must be non-null.');
     }
 
-    const response = await axios.get(`${hostPath}${epicRecord.project}?fields=name|location|centroid|legislation`);
-    const project = response.data[0];
-
     return {
       _schemaName: 'Order',
-      _epicProjectId: epicRecord.project || '',
+      _epicProjectId: (epicRecord.project && epicRecord.project._id) || '',
       _sourceRefId: epicRecord._id || '',
       _epicMilestoneId: epicRecord.milestone || '',
 
@@ -46,21 +40,22 @@ class EpicOrders {
       write: ['sysadmin'],
 
       recordName: epicRecord.displayName || '',
-      recordType: epicRecord.documentType,
+      recordType: epicRecord.documentType || '',
       // recordSubtype: // No mapping
       dateIssued: epicRecord.documentDate || null,
-      issuingAgency: 'Environmental Assessment Office',
+      issuingAgency: 'Environmental Assessment Agency',
       author: epicRecord.documentAuthor || '',
-      legislation: project.legislation,
+      legislation: (epicRecord.project && epicRecord.project.legislation) || '',
       // issuedTo: // No mapping
-      projectName: project.name || '',
-      location: project.location || '',
-      centroid: project.centroid || '',
+      projectName: (epicRecord.project && epicRecord.project.name) || '',
+      location: (epicRecord.project && epicRecord.project.location) || '',
+      centroid: (epicRecord.project && epicRecord.project.centroid) || '',
       // outcomeStatus: // No mapping
       // outcomeDescription: // No mapping
 
+      dateAdded: new Date(),
       dateUpdated: new Date(),
-      updatedBy: this.auth_payload.displayName,
+      updatedBy: (this.auth_payload && this.auth_payload.displayName) || '',
       sourceDateAdded: epicRecord.dateAdded || epicRecord._createdDate || null,
       sourceDateUpdated: epicRecord.dateUpdated || epicRecord._updatedDate || null,
       sourceSystemRef: 'epic'

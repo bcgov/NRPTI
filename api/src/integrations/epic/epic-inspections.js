@@ -2,9 +2,6 @@
 
 const mongoose = require('mongoose');
 const defaultLog = require('../../utils/logger')('epic-inspections');
-const axios = require('axios');
-const hostPath = `https://${process.env.EPIC_API_HOSTNAME || 'eagle-prod.pathfinder.gov.bc.ca'}${process.env
-  .EPIC_API_PROJECT_PATHNAME || '/api/project'}/`;
 
 /**
  * Epic Inspection record handler.
@@ -19,6 +16,7 @@ class EpicInspections {
   constructor(auth_payload) {
     this.auth_payload = auth_payload;
   }
+
   /**
    * Transform an Epic inspection record into a NRPTI Inspection record.
    *
@@ -32,12 +30,9 @@ class EpicInspections {
       throw Error('transformRecord - required record must be non-null.');
     }
 
-    const response = await axios.get(`${hostPath}${epicRecord.project}?fields=name|location|centroid|legislation`);
-    const project = response.data[0];
-
     return {
       _schemaName: 'Inspection',
-      _epicProjectId: epicRecord.project || '',
+      _epicProjectId: (epicRecord.project && epicRecord.project._id) || '',
       _sourceRefId: epicRecord._id || '',
       _epicMilestoneId: epicRecord.milestone || '',
 
@@ -45,21 +40,22 @@ class EpicInspections {
       write: ['sysadmin'],
 
       recordName: epicRecord.displayName || '',
-      recordType: epicRecord.documentType,
+      recordType: epicRecord.documentType || '',
+      // recordSubtype: // No mapping
       dateIssued: epicRecord.documentDate || null,
-      issuingAgency: 'Environmental Assessment Office',
+      issuingAgency: 'Environmental Assessment Agency',
       author: epicRecord.documentAuthor || '',
-      legislation: project.legislation,
-      // issuedTo: // TODO
-      projectName: project.name || '',
-      location: project.location || '',
-      centroid: project.centroid || '',
-      // outcomeStatus: // TODO
-      // outcomeDescription: // TODO
+      legislation: (epicRecord.project && epicRecord.project.legislation) || '',
+      // issuedTo: // No mapping
+      projectName: (epicRecord.project && epicRecord.project.name) || '',
+      location: (epicRecord.project && epicRecord.project.location) || '',
+      centroid: (epicRecord.project && epicRecord.project.centroid) || '',
+      // outcomeStatus: // No mapping
+      // outcomeDescription: // No mapping
 
       dateAdded: new Date(),
       dateUpdated: new Date(),
-      updatedBy: this.auth_payload.displayName,
+      updatedBy: (this.auth_payload && this.auth_payload.displayName) || '',
       sourceDateAdded: epicRecord.dateAdded || epicRecord._createdDate || null,
       sourceDateUpdated: epicRecord.dateUpdated || epicRecord._updatedDate || null,
       sourceSystemRef: 'epic'
