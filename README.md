@@ -53,7 +53,7 @@ A list of recommended/helpful VS Code extensions.
 
 ### PUBLIC-NRCED
 - Dev: https://public-nrced-dev.pathfinder.gov.bc.ca/
-- Test: https://public-nrpti-test.pathfinder.gov.bc.ca/
+- Test: https://public-nrced-test.pathfinder.gov.bc.ca/
 - Prod: TBD
 
 ### NRPTI API/ADMIN
