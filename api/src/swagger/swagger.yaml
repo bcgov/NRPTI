@@ -41,7 +41,11 @@ produces:
   - application/json
 
 definitions:
-  ### Record Type Definitions
+### Record Type Definitions
+  RecordRequestObject:
+    type: object
+  RecordResponseObject:
+    type: object
   RecordType:
     type: string
     description: 'Supported record types'
@@ -484,3 +488,49 @@ paths:
           description: 'Access Denied'
           schema:
             $ref: '#/definitions/Error'
+
+###
+### Record Routes
+###
+  /record:
+    x-swagger-router-controller: record-controller
+    options:
+      tags:
+        - task
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated task route'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - record
+      summary: 'Create new record(s)'
+      operationId: protectedPost
+      description: 'Authenticated access to create a record'
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+      parameters:
+        - in: body
+          name: data
+          description: "Records in an array that you would like to save"
+          required: true
+          schema:
+            $ref: '#/definitions/RecordRequestObject'
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/RecordResponseObject'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+
