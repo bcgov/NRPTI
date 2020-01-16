@@ -1,6 +1,5 @@
 'use strict';
 
-let qs = require('qs');
 let queryActions = require('../utils/query-actions');
 let queryUtils = require('../utils/query-utils');
 

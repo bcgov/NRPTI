@@ -1,9 +1,11 @@
 import { Injectable, Injector } from '@angular/core';
 import { KeycloakService } from './keycloak.service';
 import { JwtUtil } from '../utils/jwt-utils';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ApiService } from './api.service';
 import { SearchService, SearchResults } from 'nrpti-angular-components';
+import { RecordService, IRecordObject } from './record.service';
+import { catchError } from 'rxjs/operators';
 
 /**
  * Facade service for all admin-nrpti services.
@@ -18,7 +20,7 @@ export class FactoryService {
   private _keycloakService: KeycloakService;
   private _apiService: ApiService;
   private _searchService: SearchService;
-  // private _pathAPI: string;
+  private _recordService: RecordService;
 
   constructor(private injector: Injector) {
     // The following items are loaded by a file that is only present on cluster builds.
@@ -70,6 +72,20 @@ export class FactoryService {
       this._apiService = this.injector.get(ApiService);
     }
     return this._apiService;
+  }
+
+  /**
+   * Inject record service if it hasn't already been injected.
+   *
+   * @readonly
+   * @type {RecordService}
+   * @memberof FactoryService
+   */
+  public get recordService(): RecordService {
+    if (!this._recordService) {
+      this._recordService = this.injector.get(RecordService);
+    }
+    return this._recordService;
   }
 
   /**
@@ -129,11 +145,55 @@ export class FactoryService {
    * Return the record for the given id.
    *
    * @param {string} recordId record id.
-   * @returns {Observable<Record>} An observable that emits the matching record or null if none found.
+   * @param {string} schema model schema name for this record type.
+   * @returns {Observable<SearchResults[]>} An observable that emits the matching record or null if none found.
    * @memberof FactoryService
    */
   public getRecord(recordId: string, schema: string): Observable<SearchResults[]> {
+    if (!recordId || !schema) {
+      return of([] as SearchResults[]);
+    }
     return this.searchService.getItem(this.apiService.pathAPI, recordId, schema);
+  }
+
+  /**
+   * Get records via the search service.
+   *
+   * @param {string} keys
+   * @param {string[]} dataset
+   * @param {any[]} fields
+   * @param {number} [pageNum=1]
+   * @param {number} [pageSize=10]
+   * @param {string} [sortBy=null]
+   * @param {object} [queryModifier={}]
+   * @param {boolean} [populate=false]
+   * @param {object} [filter={}]
+   * @returns {Observable<any[]>}
+   * @memberof FactoryService
+   */
+  public getRecords(
+    keys: string,
+    dataset: string[],
+    fields: any[],
+    pageNum: number = 1,
+    pageSize: number = 10,
+    sortBy: string = null,
+    queryModifier: object = {},
+    populate: boolean = false,
+    filter: object = {}
+  ): Observable<any[]> {
+    return this.searchService.getSearchResults(
+      this.getApiPath(),
+      keys,
+      dataset,
+      fields,
+      pageNum,
+      pageSize,
+      sortBy,
+      queryModifier,
+      populate,
+      filter
+    );
   }
 
   // public getFullList(schema: string): Observable<Record[]> {
@@ -151,6 +211,16 @@ export class FactoryService {
   }
 
   /**
+   * Get the current environment.
+   *
+   * @returns {String} environment.
+   * @memberof FactoryService
+   */
+  public getApiPath(): string {
+    return this.apiService.pathAPI;
+  }
+
+  /**
    * Sends request to start a task.
    *
    * @param {*} obj request payload
@@ -159,5 +229,27 @@ export class FactoryService {
    */
   public startTask(obj: any): any {
     return this.apiService.startTask(obj);
+  }
+
+  /**
+   * Publish records.
+   *
+   * @param {IRecordObject[]} records
+   * @returns {Observable<object>}
+   * @memberof FactoryService
+   */
+  public publishRecords(records: IRecordObject[]): Observable<object> {
+    return this.recordService.publishRecord(records).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  /**
+   * Unpublish records.
+   *
+   * @param {IRecordObject[]} records
+   * @returns {Observable<object>}
+   * @memberof FactoryService
+   */
+  public unPublishRecords(records: IRecordObject[]): Observable<object> {
+    return this.recordService.unPublishRecord(records).pipe(catchError(error => this.apiService.handleError(error)));
   }
 }

@@ -1,10 +1,16 @@
 import { Location } from '@angular/common';
-import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { TableTemplateUtils, TableObject, IColumnObject, IPageSizePickerOption } from 'nrpti-angular-components';
-import { RecordsTableRowsComponent } from '../records-rows/records-table-rows.component';
+import {
+  TableObject,
+  IColumnObject,
+  IPageSizePickerOption,
+  TableTemplateUtils,
+  ITableMessage
+} from 'nrpti-angular-components';
+import { RecordsTableRowComponent } from '../records-row/records-table-row.component';
 
 /**
  * List page component.
@@ -21,49 +27,47 @@ import { RecordsTableRowsComponent } from '../records-rows/records-table-rows.co
 })
 export class RecordsListComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+
   public loading = true;
-  // public entries: User[] = null;
-  // public terms = new SearchTerms();
   public typeFilters = [];
   public navigationObject;
 
-  public tableData: TableObject = new TableObject({ component: RecordsTableRowsComponent });
+  public tableData: TableObject = new TableObject({
+    options: { showHeader: false },
+    component: RecordsTableRowComponent
+  });
   public tableColumns: IColumnObject[] = [
     {
-      name: 'Issued To',
-      value: 'issuedTo',
+      name: 'Activity',
+      value: 'activity',
       width: 'col-2'
     },
     {
-      name: 'Name',
+      name: 'Issued To',
       value: 'documentFileName',
-      width: 'col-4'
+      width: 'col-3'
     },
     {
-      name: 'Type',
+      name: 'Activity Type',
       value: 'type',
       width: 'col-1'
     },
     {
-      name: 'Location',
+      name: 'Location Description',
       value: 'location',
       width: 'col-2'
     },
     {
-      name: 'Date',
+      name: 'Issued On',
       value: 'documentDate',
       width: 'col-1'
     },
     {
-      name: 'Attachments',
-      value: '',
-      width: 'col-2'
-    },
-    {
-      width: 'col-1',
-      nosort: true
+      width: 'col-1'
     }
   ];
+
+  public messageIn: EventEmitter<ITableMessage> = new EventEmitter<ITableMessage>();
 
   constructor(
     public location: Location,
@@ -96,10 +100,18 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.tableData.items = res.records[0] && res.records[0].data && res.records[0].data.searchResults;
-      if (res.records[0] && res.records[0].data && res.records[0].data.meta && res.records[0].data.meta.length) {
-        this.tableData.totalListItems = res.records[0].data.meta[0].searchResultsTotal;
-      }
+      const records = (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || [];
+      this.tableData.items = records.map(record => {
+        return { rowData: record };
+      });
+
+      this.tableData.totalListItems =
+        (res.records[0] &&
+          res.records[0].data &&
+          res.records[0].data.meta &&
+          res.records[0].data.meta[0] &&
+          res.records[0].data.meta[0].searchResultsTotal) ||
+        0;
 
       this.tableData.columns = this.tableColumns;
       this.loading = false;
@@ -107,17 +119,45 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Record item click handler.
-   *
-   * @param {*} item record data item.
-   * @memberof RecordsListComponent
-   */
-  itemClicked(item) {
-    this.router.navigate(['records', item._id, 'details']);
+  onMessageOut(msg: ITableMessage) {
+    switch (msg.label) {
+      case 'rowClicked':
+        this.rowClicked(msg);
+        break;
+      case 'rowSelected':
+        this.rowSelected(msg);
+        break;
+      case 'columnSort':
+        this.setColumnSort(msg.data);
+        break;
+      case 'pageNum':
+        this.onPageNumUpdate(msg.data);
+        break;
+      case 'pageSize':
+        this.onPageSizeUpdate(msg.data);
+        break;
+      default:
+        break;
+    }
   }
 
-  itemSelected(item) {}
+  /**
+   * Record row click handler.
+   *
+   * @param {ITableMessage} msg
+   * @memberof RecordsListComponent
+   */
+  rowClicked(msg: ITableMessage) {
+    this.messageIn.emit(msg);
+  }
+
+  /**
+   * Record row select handler.
+   *
+   * @param {ITableMessage} msg
+   * @memberof RecordsListComponent
+   */
+  rowSelected(msg: ITableMessage) {}
 
   /**
    * Column sorting handler.
@@ -165,7 +205,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     this.tableTemplateUtils.navigateUsingParams(this.tableData, ['records']);
   }
 
-  checkChange() {}
+  checkboxChange() {}
 
   /**
    * Cleanup on component destroy.

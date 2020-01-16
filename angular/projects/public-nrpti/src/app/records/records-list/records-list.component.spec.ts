@@ -3,13 +3,8 @@ import { RecordsListComponent } from './records-list.component';
 import { TestBedHelper, ActivatedRouteStub } from '../../../../../common/src/app/spec/spec-utils';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router, ActivatedRoute } from '@angular/router';
-import {
-  TableTemplateComponent,
-  PageCountDisplayComponent,
-  PageSizePickerComponent,
-  TableTemplateUtils
-} from 'nrpti-angular-components';
-import { PaginationControlsComponent, PaginationControlsDirective } from 'ngx-pagination';
+import { GlobalModule } from 'nrpti-angular-components';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 describe('RecordsListComponent', () => {
   const testBedHelper = new TestBedHelper<RecordsListComponent>(RecordsListComponent);
@@ -21,20 +16,12 @@ describe('RecordsListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      declarations: [
-        RecordsListComponent,
-        TableTemplateComponent,
-        PageCountDisplayComponent,
-        PageSizePickerComponent,
-        PaginationControlsComponent,
-        PaginationControlsDirective
-      ],
+      imports: [RouterTestingModule, GlobalModule, NgxPaginationModule],
+      declarations: [RecordsListComponent],
       providers: [
         { provide: Location, useValue: mockLocation },
         { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        TableTemplateUtils
+        { provide: ActivatedRoute, useValue: mockActivatedRoute }
       ]
     }).compileComponents();
   }));

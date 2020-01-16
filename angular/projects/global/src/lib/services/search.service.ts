@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { SearchResults } from '../models/search';
+import { Utils } from '../utils/utils';
 
 /**
  * Service to search against NRPTI API.
@@ -14,24 +15,26 @@ import { SearchResults } from '../models/search';
 // @dynamic
 @Injectable()
 export class SearchService {
-  public isError = false;
-
   constructor(private http: HttpClient) {}
 
+  /**
+   * Fetches a record based on its _id.  May return multiple items.
+   *
+   * @param {string} pathAPI
+   * @param {string} _id
+   * @param {string} schema
+   * @returns {Observable<SearchResults[]>} Array of items
+   * @memberof SearchService
+   */
   getItem(pathAPI: string, _id: string, schema: string): Observable<SearchResults[]> {
     const queryString = `search?dataset=Item&_id=${_id}&_schemaName=${schema}`;
     return this.http.get<SearchResults[]>(`${pathAPI}/${queryString}`, {}).pipe(
       map(res => {
-        const allResults = [] as any;
-        res.forEach(item => {
-          const r = new SearchResults({ type: item._schemaName, data: item });
-          allResults.push(r);
-        });
-        if (allResults.length === 1) {
-          return allResults[0];
-        } else {
-          return {};
+        if (!res || !res.length) {
+          return [] as SearchResults[];
         }
+
+        return res.map(item => new SearchResults({ _schemaName: item._schemaName, data: item }));
       })
     );
   }
@@ -51,7 +54,7 @@ export class SearchService {
     queryModifier: object = {},
     populate: boolean = false,
     filter: object = {}
-  ): Observable<any[]> {
+  ): Observable<SearchResults[]> {
     if (sortBy === '') {
       sortBy = null;
     }
@@ -90,25 +93,15 @@ export class SearchService {
         });
       });
     }
-    queryString += `&fields=${this.buildValues(fields)}`;
+    queryString += `&fields=${Utils.convertArrayIntoPipeString(fields)}`;
     return this.http.get<SearchResults[]>(`${pathAPI}/${queryString}`, {}).pipe(
       map(res => {
-        const allResults = [] as any;
-        res.forEach(item => {
-          const r = new SearchResults({ type: item._schemaName, data: item });
-          allResults.push(r);
-        });
-        return allResults;
+        if (!res || !res.length) {
+          return [] as SearchResults[];
+        }
+
+        return res.map(item => new SearchResults({ type: item._schemaName, data: item }));
       })
     );
-  }
-
-  private buildValues(collection: any[]): string {
-    let values = '';
-    collection.forEach(item => {
-      values += item + '|';
-    });
-    // trim the last |
-    return values.replace(/\|$/, '');
   }
 }

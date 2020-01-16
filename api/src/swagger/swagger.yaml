@@ -1,25 +1,25 @@
-swagger: "2.0"
+swagger: '2.0'
 info:
-  version: "0.0.0"
+  version: '0.0.0'
   title: NRPTI API
 host: localhost:3000
 basePath: /api
 tags:
-- name: "search"
-  description: "Search operations"
-  externalDocs:
-    description: "Find out more about our API"
-    url: "https://github.com/bcgov/NRPTI.git"
-- name: "record"
-  description: "Operations on Record objects"
-  externalDocs:
-    description: "Find out more about our API"
-    url: "https://github.com/bcgov/NRPTI.git"
-- name: 'task'
-  description: 'Operations on tasks'
-  externalDocs:
-    description: 'Find out more about our API'
-    url: 'http://github.com/bcgov/nrptiapi.git'
+  - name: 'search'
+    description: 'Search operations'
+    externalDocs:
+      description: 'Find out more about our API'
+      url: 'https://github.com/bcgov/NRPTI.git'
+  - name: 'record'
+    description: 'Operations on Record objects'
+    externalDocs:
+      description: 'Find out more about our API'
+      url: 'https://github.com/bcgov/NRPTI.git'
+  - name: 'task'
+    description: 'Operations on tasks'
+    externalDocs:
+      description: 'Find out more about our API'
+      url: 'http://github.com/bcgov/nrptiapi.git'
 schemes:
   - http
 securityDefinitions:
@@ -48,35 +48,35 @@ definitions:
     type: object
   RecordType:
     type: string
-    description: "Supported record types"
-    example: "order"
+    description: 'Supported record types'
+    example: 'order'
     enum: &recordType
       - order
       - inspection
   dataSourceType:
     type: string
-    description: "Supported data sources"
-    example: "epic"
+    description: 'Supported data sources'
+    example: 'epic'
     enum: &dataSourceType
       - epic
 
-### Search Definitions
+  ### Search Definitions
   SearchObject:
     type: object
     properties:
       keywords:
         type: string
-        example: "Project Name"
+        example: 'Project Name'
   SearchDataSetParams:
     type: string
-    description: "Optional datasets to search on in the DB"
+    description: 'Optional datasets to search on in the DB'
     example: ['Order']
     enum: &searchDataSetParams
       - Order
       - Inspection
   SearchSortByFields:
     type: string
-    description: "Optional fields to sort by (prefixed with + or - for order)"
+    description: 'Optional fields to sort by (prefixed with + or - for order)'
     example: +score,-score
     enum: &searchSortByFields
       - +startDate
@@ -94,24 +94,36 @@ definitions:
       - +documentFileSize
       - -documentFileSize
 
-### Task Definitions
+  ### Task Definitions
   TaskObject:
     type: object
-    example: "A task object"
+    example: 'A task object'
     properties:
       params:
         type: object
         example: '{"dateSince": "30-10-2019"}'
       recordType:
         type: string
-        example: "order"
+        example: 'order'
         enum: *recordType
       dataSourceType:
         type: string
-        example: "epic"
+        example: 'epic'
         enum: *dataSourceType
 
-### Common Definitions
+  ### Record Definitions
+  RecordObject:
+    type: object
+    example: 'A record object'
+    properties:
+      recordId:
+        type: string
+        example: '123123123123'
+      recordType:
+        type: string
+        example: 'Order'
+
+  ### Common Definitions
   Token:
     type: object
     properties:
@@ -130,24 +142,24 @@ paths:
     options:
       tags:
         - search
-      summary: "Pre-flight request"
+      summary: 'Pre-flight request'
       operationId: protectedOptions
-      description: "Options on search Route"
+      description: 'Options on search Route'
       responses:
-        "200":
-          description: "Success"
+        '200':
+          description: 'Success'
           schema:
-            $ref: "#/definitions/SearchObject"
-        "403":
-          description: "Access Denied"
+            $ref: '#/definitions/SearchObject'
+        '403':
+          description: 'Access Denied'
           schema:
-            $ref: "#/definitions/Error"
+            $ref: '#/definitions/Error'
     get:
       tags:
         - search
-      summary: "Get a list of things related to these keywords"
+      summary: 'Get a list of things related to these keywords'
       operationId: protectedGet
-      description: "Retreiving items relating to the given keywords."
+      description: 'Retreiving items relating to the given keywords.'
       security:
         - Bearer: []
       x-security-scopes:
@@ -155,14 +167,14 @@ paths:
       parameters:
         - in: query
           name: _id
-          description: "Grab (via _id) specific document"
+          description: 'Grab (via _id) specific document'
           type: string
           required: false
           items:
             type: string
         - in: query
           name: keywords
-          description: "Full Text Search based on keywords"
+          description: 'Full Text Search based on keywords'
           type: string
           required: false
           collectionFormat: pipes
@@ -170,12 +182,12 @@ paths:
             type: string
         - in: query
           name: populate
-          description: "Populate Project object ID"
+          description: 'Populate Project object ID'
           type: boolean
           required: false
         - in: query
           name: dataset
-          description: "Dataset to search on"
+          description: 'Dataset to search on'
           type: array
           items:
             type: string
@@ -183,27 +195,27 @@ paths:
           required: false
         - in: query
           name: _schemaName
-          description: "Schema to search on"
+          description: 'Schema to search on'
           type: string
           required: false
         - in: query
           name: project
-          description: "Project to specifically query"
+          description: 'Project to specifically query'
           type: string
           required: false
         - in: query
           name: pageNum
-          description: "Page number to skip to."
+          description: 'Page number to skip to.'
           type: number
           required: false
         - in: query
           name: pageSize
-          description: "# Records to limit"
+          description: '# Records to limit'
           type: number
           required: false
         - in: query
           name: sortBy
-          description: "Fields to sort by."
+          description: 'Fields to sort by.'
           required: false
           type: array
           items:
@@ -213,57 +225,57 @@ paths:
           name: and
           collectionFormat: multi
           required: false
-          description: "Query: multiple parameter instances are supported using AND."
+          description: 'Query: multiple parameter instances are supported using AND.'
           type: string
         - in: query
           name: or
           collectionFormat: multi
           required: false
-          description: "Query: multiple parameter instances are supported using OR."
+          description: 'Query: multiple parameter instances are supported using OR.'
           type: string
       responses:
-        "200":
-          description: "Success"
+        '200':
+          description: 'Success'
           schema:
-            $ref: "#/definitions/SearchObject"
-        "403":
-          description: "Access Denied"
+            $ref: '#/definitions/SearchObject'
+        '403':
+          description: 'Access Denied'
           schema:
-            $ref: "#/definitions/Error"
+            $ref: '#/definitions/Error'
   /public/search:
     x-swagger-router-controller: search
     options:
       tags:
         - search
-      summary: "Pre-flight request"
+      summary: 'Pre-flight request'
       operationId: protectedOptions
-      description: "Options on search Route"
+      description: 'Options on search Route'
       responses:
-        "200":
-          description: "Success"
+        '200':
+          description: 'Success'
           schema:
-            $ref: "#/definitions/SearchObject"
-        "403":
-          description: "Access Denied"
+            $ref: '#/definitions/SearchObject'
+        '403':
+          description: 'Access Denied'
           schema:
-            $ref: "#/definitions/Error"
+            $ref: '#/definitions/Error'
     get:
       tags:
         - search
-      summary: "Get a list of things related to these keywords"
+      summary: 'Get a list of things related to these keywords'
       operationId: publicGet
-      description: "Retreiving items relating to the given keywords."
+      description: 'Retreiving items relating to the given keywords.'
       parameters:
         - in: query
           name: _id
-          description: "Grab (via _id) specific document"
+          description: 'Grab (via _id) specific document'
           type: string
           required: false
           items:
             type: string
         - in: query
           name: keywords
-          description: "Full Text Search based on keywords"
+          description: 'Full Text Search based on keywords'
           type: string
           required: false
           collectionFormat: pipes
@@ -271,12 +283,12 @@ paths:
             type: string
         - in: query
           name: populate
-          description: "Populate Project object ID"
+          description: 'Populate Project object ID'
           type: boolean
           required: false
         - in: query
           name: dataset
-          description: "Dataset to search on"
+          description: 'Dataset to search on'
           type: array
           items:
             type: string
@@ -284,27 +296,27 @@ paths:
           required: false
         - in: query
           name: _schemaName
-          description: "Schema to search on"
+          description: 'Schema to search on'
           type: string
           required: false
         - in: query
           name: project
-          description: "Project to specifically query"
+          description: 'Project to specifically query'
           type: string
           required: false
         - in: query
           name: pageNum
-          description: "Page number to skip to."
+          description: 'Page number to skip to.'
           type: number
           required: false
         - in: query
           name: pageSize
-          description: "# Records to limit"
+          description: '# Records to limit'
           type: number
           required: false
         - in: query
           name: sortBy
-          description: "Fields to sort by."
+          description: 'Fields to sort by.'
           required: false
           type: array
           items:
@@ -314,26 +326,26 @@ paths:
           name: and
           collectionFormat: multi
           required: false
-          description: "Query: multiple parameter instances are supported using AND."
+          description: 'Query: multiple parameter instances are supported using AND.'
           type: string
         - in: query
           name: or
           collectionFormat: multi
           required: false
-          description: "Query: multiple parameter instances are supported using OR."
+          description: 'Query: multiple parameter instances are supported using OR.'
           type: string
       responses:
-        "200":
-          description: "Success"
+        '200':
+          description: 'Success'
           schema:
-            $ref: "#/definitions/SearchObject"
-        "403":
-          description: "Access Denied"
+            $ref: '#/definitions/SearchObject'
+        '403':
+          description: 'Access Denied'
           schema:
-            $ref: "#/definitions/Error"
-###
-### Task Routes
-###
+            $ref: '#/definitions/Error'
+  ###
+  ### Task Routes
+  ###
   /task:
     x-swagger-router-controller: import-task
     options:
@@ -365,7 +377,110 @@ paths:
           description: 'Flag to import records'
           required: true
           schema:
-            $ref: "#/definitions/TaskObject"
+            $ref: '#/definitions/TaskObject'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  ###
+  ### Record Routes
+  ###
+  /records/publish:
+    x-swagger-router-controller: record-controller
+    options:
+      tags:
+        - record
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated record route'
+      parameters:
+        - name: records
+          in: body
+          description: 'records to publish'
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RecordObject'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - record
+      summary: 'Publish records'
+      operationId: protectedPublish
+      description: "Adds the singular instance of the 'public' role to all supplied records."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+      parameters:
+        - name: records
+          in: body
+          description: 'records to publish'
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RecordObject'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /records/unpublish:
+    x-swagger-router-controller: record-controller
+    options:
+      tags:
+        - record
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated record route'
+      parameters:
+        - name: records
+          in: body
+          description: 'records to unpublish'
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RecordObject'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - record
+      summary: 'Unpublish records'
+      operationId: protectedUnPublish
+      description: "Adds the singular instance of the 'public' role to all supplied records."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+      parameters:
+        - name: records
+          in: body
+          description: 'records to unpublish'
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RecordObject'
       responses:
         '200':
           description: 'Success'

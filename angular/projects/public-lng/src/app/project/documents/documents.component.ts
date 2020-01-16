@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Document } from '../../models/document';
 import { PageTypes } from '../../utils/page-types.enum';
-import { TableObject, TableTemplateUtils, IPageSizePickerOption } from 'nrpti-angular-components';
+import { TableObject, TableTemplateUtils, IPageSizePickerOption, ITableMessage } from 'nrpti-angular-components';
 import { ComplianceTableRowsComponent } from '../compliance/compliance-rows/compliance-table-rows.component';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -186,7 +186,10 @@ export class DocumentsComponent implements OnInit {
 
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
       if (res && res.records !== undefined) {
-        this.tableData.items = res.records[0].data.searchResults;
+        const records = (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || [];
+        this.tableData.items = records.map(record => {
+          return { rowData: record };
+        });
 
         if (res.records[0].data.meta.length > 0) {
           this.tableData.totalListItems = res.records[0].data.meta[0].searchResultsTotal;
@@ -199,9 +202,25 @@ export class DocumentsComponent implements OnInit {
     });
   }
 
-  itemClicked() { }
-
-  itemSelected() { }
+  onMessageOut(msg: ITableMessage) {
+    switch (msg.label) {
+      case 'rowClicked':
+        break;
+      case 'rowSelected':
+        break;
+      case 'columnSort':
+        this.setColumnSort(msg.data);
+        break;
+      case 'pageNum':
+        this.onPageNumUpdate(msg.data);
+        break;
+      case 'pageSize':
+        this.onPageSizeUpdate(msg.data);
+        break;
+      default:
+        break;
+    }
+  }
 
   setColumnSort(column) {
     if (this.tableData.sortBy.charAt(0) === '+') {

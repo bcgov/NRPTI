@@ -1,19 +1,17 @@
 import {
   Component,
   Input,
-  OnInit,
-  ComponentFactoryResolver,
   OnDestroy,
-  ViewChild,
   Output,
   EventEmitter,
   SimpleChanges,
-  OnChanges
+  OnChanges,
+  Injector,
+  OnInit
 } from '@angular/core';
 
-import { TableDirective } from './table.directive';
 import { TableObject } from './table-object';
-import { ITableComponent } from './table.component';
+import { ITableMessage } from './table-row-component';
 
 @Component({
   selector: 'lib-table-template',
@@ -21,27 +19,25 @@ import { ITableComponent } from './table.component';
   styleUrls: ['./table-template.component.scss']
 })
 export class TableTemplateComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() public data: TableObject;
-  @ViewChild(TableDirective) tableHost: TableDirective;
+  @Input() data: TableObject;
 
-  @Output() pageNumUpdate: EventEmitter<any> = new EventEmitter();
-  @Output() pageSizeUpdate: EventEmitter<any> = new EventEmitter();
-  @Output() itemClicked: EventEmitter<any> = new EventEmitter();
-  @Output() itemSelected: EventEmitter<any> = new EventEmitter();
-  @Output() columnSort: EventEmitter<any> = new EventEmitter();
+  @Input() messageIn: EventEmitter<ITableMessage> = new EventEmitter<ITableMessage>();
+  @Output() messageOut: EventEmitter<ITableMessage> = new EventEmitter<ITableMessage>();
 
-  interval: any;
+  // @Output() pageNumUpdate: EventEmitter<any> = new EventEmitter();
+  // @Output() pageSizeUpdate: EventEmitter<any> = new EventEmitter();
+  // @Output() rowClicked: EventEmitter<any> = new EventEmitter();
+  // @Output() rowSelected: EventEmitter<any> = new EventEmitter();
+  // @Output() columnSort: EventEmitter<any> = new EventEmitter();
 
-  constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
+  constructor(public injector: Injector) {}
 
-  ngOnInit() {
-    this.loadComponent();
-  }
+  ngOnInit() {}
 
   ngOnChanges(changes: SimpleChanges) {
     // only run when property "data" changed
     if (!changes.firstChange && changes['data'].currentValue) {
-      this.data.component = changes['data'].currentValue.component;
+      this.data.options = changes['data'].currentValue.options;
       this.data.items = changes['data'].currentValue.items;
       this.data.columns = changes['data'].currentValue.columns;
       this.data.dataset = changes['data'].currentValue.dataset;
@@ -52,51 +48,24 @@ export class TableTemplateComponent implements OnInit, OnChanges, OnDestroy {
       this.data.pageSize = changes['data'].currentValue.pageSize;
       this.data.sortBy = changes['data'].currentValue.sortBy;
       this.data.totalListItems = changes['data'].currentValue.totalListItems;
-      this.loadComponent();
     }
   }
 
-  public sort(property: string) {
-    this.columnSort.emit(property);
+  public onSort(property: string) {
+    this.messageOut.emit({ label: 'columnSort', data: property });
   }
 
-  /**
-   * Loads the component specified in TableObject.component.
-   *
-   * @memberof TableTemplateComponent
-   */
-  loadComponent() {
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.data.component);
-
-    const viewContainerRef = this.tableHost.viewContainerRef;
-    viewContainerRef.clear();
-
-    const componentRef = viewContainerRef.createComponent(componentFactory);
-    (componentRef.instance as ITableComponent).data = this.data;
-
-    // Don't subscribe if it doesn't exist.
-    if (componentRef.instance.itemSelected) {
-      componentRef.instance.itemSelected.subscribe(msg => {
-        this.itemSelected.emit(msg);
-      });
-    }
-
-    if (componentRef.instance.itemClicked) {
-      componentRef.instance.itemClicked.subscribe(msg => {
-        this.itemClicked.emit(msg);
-      });
-    }
+  onMessageOut(msg: ITableMessage) {
+    this.messageOut.emit(msg);
   }
 
-  updatePageNumber(pageNum) {
-    this.pageNumUpdate.emit(pageNum);
+  onUpdatePageNumber(pageNum) {
+    this.messageOut.emit({ label: 'pageNum', data: pageNum });
   }
 
-  updatePageSize(pageSize) {
-    this.pageSizeUpdate.emit(pageSize);
+  onUpdatePageSize(pageSize) {
+    this.messageOut.emit({ label: 'pageSize', data: pageSize });
   }
 
-  ngOnDestroy() {
-    clearInterval(this.interval);
-  }
+  ngOnDestroy() {}
 }

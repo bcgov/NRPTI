@@ -1,20 +1,7 @@
-<tr
-  *ngFor="
-    let item of data.items
-      | paginate
-        : {
-            id: 'table-template-pagination',
-            itemsPerPage: data.pageSize,
-            currentPage: data.currentPage,
-            totalItems: data.totalListItems
-          }
-  "
-  (click)="onItemClicked(item)"
->
-  <td scope="row" data-label="Name" class="col-2">{{ item.startDate | date: 'medium' }}</td>
-  <td scope="row" data-label="Name" class="col-2">{{ item.finishDate | date: 'medium' }}</td>
-  <td scope="row" data-label="Name" class="col-1">{{ item.status || '-' }}</td>
-  <td scope="row" data-label="Name" class="col-1">{{ item.dataSourceLabel || '-' }}</td>
-  <td scope="row" data-label="Name" class="col-1">{{ item.itemsProcessed || '0' }} / {{ item.itemTotal || '0' }}</td>
-  <td scope="row" data-label="Name" class="col-5">{{ item.dataSource || '-' }}</td>
-</tr>
+<td scope="row" data-label="Start" class="col-3">{{ rowData.startDate | date: 'medium' }}</td>
+<td scope="row" data-label="Finish" class="col-3">{{ rowData.finishDate | date: 'medium' }}</td>
+<td scope="row" data-label="Status" class="col-2">{{ rowData.status || '-' }}</td>
+<td scope="row" data-label="Source" class="col-2">{{ rowData.dataSourceLabel || '-' }}</td>
+<td scope="row" data-label="Items" class="col-2">
+  {{ rowData.itemsProcessed || '0' }} / {{ rowData.itemTotal || '0' }}
+</td>

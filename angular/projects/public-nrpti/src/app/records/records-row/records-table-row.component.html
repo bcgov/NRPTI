@@ -1,0 +1,62 @@
+<td class="table-card-outer">
+  <div (click)="rowClicked()">
+    <div *ngIf="!toggleComponent" class="table-card">
+      <div class="table-card-inner">
+        <div class="card-col">
+          <div class="card-col-label">
+            {{ tableData.columns[0].name }}
+          </div>
+          <div class="card-col-data">
+            {{ rowData.recordName || '-' }}
+          </div>
+        </div>
+        <div class="card-col">
+          <div class="card-col-label">
+            {{ tableData.columns[1].name }}
+          </div>
+          <div class="card-col-data">
+            {{ rowData.issuedTo || '-' }}
+          </div>
+        </div>
+        <div class="card-col">
+          <div class="card-col-label">
+            {{ tableData.columns[2].name }}
+          </div>
+          <div class="card-col-data">
+            {{ rowData.recordType || '-' }}
+          </div>
+        </div>
+        <div class="card-col">
+          <div class="card-col-label">
+            {{ tableData.columns[3].name }}
+          </div>
+          <div class="card-col-data">
+            {{ rowData.location || '-' }}
+          </div>
+        </div>
+        <div class="card-col">
+          <div class="card-col-label">
+            {{ tableData.columns[4].name }}
+          </div>
+          <div class="card-col-data">
+            {{ (rowData.dateIssued | date: 'mediumDate') || '-' }}
+          </div>
+        </div>
+        <div class="card-col">
+          <button
+            (click)="downloadDocument(); $event.stopPropagation()"
+            class="btn btn-primary download-btn"
+            type="button"
+          >
+            <i class="material-icons">cloud_download</i>
+            <div>Download Document</div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-container #toggleView></ng-container>
+  <div *ngIf="toggleComponent" (click)="toggleOff()">
+    <i class="material-icons closeToggleContainer">close</i>
+  </div>
+</td>

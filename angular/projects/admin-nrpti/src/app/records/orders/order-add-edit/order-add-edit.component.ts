@@ -25,7 +25,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       this.isEditing = Object.keys(res).length === 0 && res.constructor === Object ? false : true;
       if (this.isEditing) {
         if (res) {
-          this.currentItem = new Order(res.order.data);
+          this.currentItem = res.records[0] && new Order(res.records[0].data);
           console.log(this.currentItem);
           this.loading = false;
           this._changeDetectionRef.detectChanges();

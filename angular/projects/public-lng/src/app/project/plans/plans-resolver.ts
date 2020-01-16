@@ -11,7 +11,7 @@ export class PlansResolver implements Resolve<Observable<object>> {
     public tableTemplateUtils: TableTemplateUtils,
     public _searchService: SearchService,
     private _apiService: ApiService
-    ) {}
+  ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
@@ -19,19 +19,18 @@ export class PlansResolver implements Resolve<Observable<object>> {
 
     const project = this._apiService.getProjectObjectId(route.parent.url[1].path);
 
-    return this._searchService
-      .getSearchResults(
-        this._apiService.apiPath,
-        '',
-        ['PlanLNG'],
-        [],
-        tableObject.currentPage,
-        tableObject.pageSize,
-        tableObject.sortBy || '-documentDate', // This needs to be common between both datasets to work properly
-        {
-          _epicProjectId: project
-        },
-        false
-      );
+    return this._searchService.getSearchResults(
+      this._apiService.apiPath,
+      '',
+      ['PlanLNG'],
+      [],
+      tableObject.currentPage,
+      tableObject.pageSize,
+      tableObject.sortBy || '-dateIssued', // This needs to be common between both datasets to work properly
+      {
+        _epicProjectId: project
+      },
+      false
+    );
   }
 }

@@ -2,9 +2,9 @@
 
 describe('EpicInspections', () => {
   it('Is True', () => {
-    expect(true).toEqual(true)
-  })
-})
+    expect(true).toEqual(true);
+  });
+});
 
 // describe('EpicInspections', () => {
 //   describe('transformRecord', () => {

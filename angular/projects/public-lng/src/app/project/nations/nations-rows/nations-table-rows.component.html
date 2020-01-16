@@ -1,8 +1,3 @@
-<tr
-  *ngFor="let item of data.items"
-  (click)="onItemClicked(item)"
->
-  <td scope="row" data-label="Name" class="col-2">{{ item._master.recordName }}</td>
-  <td scope="row" data-label="Nation" class="col-2">{{ item._master.nationName }}</td>
-  <td scope="row" data-label="Date" class="col-2">{{ item._master.date | date: 'LLLL d, y' }}</td>
-</tr>
+<td scope="row" data-label="Name" class="col-2">{{ rowData._master.recordName }}</td>
+<td scope="row" data-label="Nation" class="col-2">{{ rowData._master.nationName }}</td>
+<td scope="row" data-label="Date" class="col-2">{{ rowData._master.date | date: 'LLLL d, y' }}</td>

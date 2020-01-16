@@ -5,13 +5,8 @@
 
   <lib-table-template
     *ngIf="!loading && tableData.totalListItems != 0"
-    (checkboxChange)="checkChange($event)"
     [data]="tableData"
-    (columnSort)="setColumnSort($event)"
-    (itemClicked)="itemClicked($event)"
-    (itemSelected)="itemSelected($event)"
-    (pageNumUpdate)="onPageNumUpdate($event)"
-    (pageSizeUpdate)="onPageSizeUpdate($event)"
+    (messageOut)="onMessageOut($event)"
   >
   </lib-table-template>
 </div>

@@ -1,35 +1,23 @@
-import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { TableObject } from 'nrpti-angular-components';
+import { TableRowComponent } from 'nrpti-angular-components';
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'tbody[app-import-table-rows]',
+  selector: 'tr[app-import-table-rows]',
   templateUrl: './import-table-rows.component.html',
   styleUrls: ['./import-table-rows.component.scss']
 })
-export class ImportTableRowsComponent implements OnInit, OnDestroy {
-  @Input() data: TableObject;
-  @Output() itemClicked: EventEmitter<any> = new EventEmitter();
-  @Output() itemSelected: EventEmitter<any> = new EventEmitter();
-
+export class ImportTableRowsComponent extends TableRowComponent implements OnInit, OnDestroy {
   public dropdownItems = ['Edit', 'Delete'];
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
-  constructor() {}
+  constructor() {
+    super();
+  }
 
   async ngOnInit() {}
-
-  onItemClicked(item) {
-    console.log('itemClicked:', item);
-    this.itemClicked.emit(item);
-  }
-
-  onItemSelected(item) {
-    console.log('itemSelected:', item);
-    this.itemSelected.emit(item);
-  }
 
   ngOnDestroy() {
     this.ngUnsubscribe.next();

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 
 import { Document } from '../models/document';
-import { Utils } from '../utils/utils';
+import { Utils } from 'nrpti-angular-components';
 
 /**
  * TODO: populate this documentation

@@ -33,8 +33,8 @@ class EpicOrders {
       throw Error('transformRecord - required record must be non-null.');
     }
 
-    let response = await axios.get(`${hostPath}${epicRecord.project}?fields=name|location|centroid|legislation`);
-    var project = response.data[0];
+    const response = await axios.get(`${hostPath}${epicRecord.project}?fields=name|location|centroid|legislation`);
+    const project = response.data[0];
 
     return {
       _schemaName: 'Order',

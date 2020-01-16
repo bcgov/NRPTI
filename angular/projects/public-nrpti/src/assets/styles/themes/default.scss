@@ -5,6 +5,18 @@ $white:                         #fff;
 $black:                         #000;
 $lightgray:                     #eee;
 
+// Gray
+$gray9:                         #212529;
+$gray8:                         #343a40;
+$gray7:                         #495057;
+$gray6:                         #868e96;
+$gray5:                         #adb5bd;
+$gray4:                         #ced4da;
+$gray3:                         #dee2e6;
+$gray2:                         #e9ecef;
+$gray1:                         #f1f3f5;
+$gray0:                         #f8f9fa;
+
 // Background Colors
 $bg-dark:                       $primary;
 $bg-dark-color:                 $white;
@@ -104,6 +116,7 @@ $table-alt-row-bg:              #f4f4f4;
 $table-sort-icon-color:         #ccc;
 $table-sort-icon-active-color:  $black;
 $table-sort-icon-size:          0.25rem;
+$table-row-hover-bg:          #e2f1ff;
 
 // Modal
 $modal-bg:                      $white;
