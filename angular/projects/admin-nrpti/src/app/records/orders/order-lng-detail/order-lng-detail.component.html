@@ -1,0 +1,34 @@
+<main class="detail-page">
+  <div>
+    <section class="content-section">
+      <div class="content-grid">
+        <div class="grid-section-header">
+          <div class="grid-section-header-title">
+            <span class="grid-section-header-title-text">LNG Data</span>
+            <span class="grid-section-header-title-sub-text">
+              Last Edited {{ (data && data.dateUpdated | date: 'mediumDate') || '-' }}
+            </span>
+          </div>
+          <div class="grid-section-header-button">
+            <span class="grid-section-header-button-sub-text">{{ publishStatusString }}</span>
+            <button *ngIf="!isPublished" class="button-publish" (click)="publish()">
+              <i class="material-icons">check</i>
+              <span>Publish to LNG</span>
+            </button>
+            <button *ngIf="isPublished" class="button-unpublish" (click)="unPublish()">
+              <i class="material-icons">close</i>
+              <span>Unpublish from LNG</span>
+            </button>
+          </div>
+        </div>
+        <div class="grid-section-1">
+          <div class="grid-item">
+            <span class="grid-item-name">Description</span>
+            <span class="grid-item-value">{{ (data && data.description) || '-' }}</span>
+          </div>
+        </div>
+        <div class="grid-section-border"></div>
+      </div>
+    </section>
+  </div>
+</main>

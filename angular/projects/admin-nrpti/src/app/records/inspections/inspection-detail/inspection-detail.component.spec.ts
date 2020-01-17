@@ -1,5 +1,5 @@
 import { async, TestBed } from '@angular/core/testing';
-import { OrderDetailComponent } from './order-detail.component';
+import { InspectionDetailComponent } from './inspection-detail.component';
 import { TestBedHelper, ActivatedRouteStub } from '../../../../../../common/src/app/spec/spec-utils';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -7,8 +7,8 @@ import { GlobalModule } from 'nrpti-angular-components';
 import { RecordDetailDirective } from '../../utils/record-detail.directive';
 import { DatePipe } from '@angular/common';
 
-describe('OrderDetailComponent', () => {
-  const testBedHelper = new TestBedHelper<OrderDetailComponent>(OrderDetailComponent);
+describe('InspectionDetailComponent', () => {
+  const testBedHelper = new TestBedHelper<InspectionDetailComponent>(InspectionDetailComponent);
 
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
@@ -17,7 +17,7 @@ describe('OrderDetailComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, GlobalModule],
-      declarations: [OrderDetailComponent, RecordDetailDirective],
+      declarations: [InspectionDetailComponent, RecordDetailDirective],
       providers: [
         DatePipe,
         { provide: Router, useValue: mockRouter },

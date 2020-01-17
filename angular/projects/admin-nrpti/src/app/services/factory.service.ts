@@ -4,7 +4,7 @@ import { JwtUtil } from '../utils/jwt-utils';
 import { Observable, of } from 'rxjs';
 import { ApiService } from './api.service';
 import { SearchService, SearchResults } from 'nrpti-angular-components';
-import { RecordService, IRecordObject } from './record.service';
+import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import { Order } from '../../../../common/src/app/models/master';
 
@@ -233,25 +233,25 @@ export class FactoryService {
   }
 
   /**
-   * Publish records.
+   * Publish a record.
    *
-   * @param {IRecordObject[]} records
-   * @returns {Observable<object>}
+   * @param {string} record record to publish
+   * @returns {Observable<object>} the updated record
    * @memberof FactoryService
    */
-  public publishRecords(records: IRecordObject[]): Observable<object> {
-    return this.recordService.publishRecord(records).pipe(catchError(error => this.apiService.handleError(error)));
+  public publishRecord(record: any): Observable<object> {
+    return this.recordService.publishRecord(record).pipe(catchError(error => this.apiService.handleError(error)));
   }
 
   /**
-   * Unpublish records.
+   * Unpublish a record.
    *
-   * @param {IRecordObject[]} records
-   * @returns {Observable<object>}
+   * @param {string} record record to unpublish
+   * @returns {Observable<object>} the updated record
    * @memberof FactoryService
    */
-  public unPublishRecords(records: IRecordObject[]): Observable<object> {
-    return this.recordService.unPublishRecord(records).pipe(catchError(error => this.apiService.handleError(error)));
+  public unPublishRecord(record: any): Observable<object> {
+    return this.recordService.unPublishRecord(record).pipe(catchError(error => this.apiService.handleError(error)));
   }
 
   // ORDERS

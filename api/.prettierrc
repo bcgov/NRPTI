@@ -10,5 +10,6 @@
   "arrowParens": "avoid",
   "requirePragma": false,
   "insertPragma": false,
-  "proseWrap": "never"
+  "proseWrap": "never",
+  "htmlWhitespaceSensitivity": "ignore"
 }

@@ -1,13 +1,24 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+// guards
 import { CanActivateGuard } from '../guards/can-activate-guard.service';
-import { RecordsListComponent } from './records-list/records-list.component';
-import { RecordsResolver } from './records-resolver';
-import { OrderDetailComponent } from './orders/order-detail/order-detail.component';
-import { OrderAddEditComponent } from './orders/order-add-edit/order-add-edit.component';
 import { CanDeactivateGuard } from '../guards/can-deactivate-guard.service';
-import { OrderResolver } from './orders/order-resolver.services';
+
+// records
+import { RecordsResolver } from './records-resolver';
+import { RecordsListComponent } from './records-list/records-list.component';
+
+// orders
+import { OrderResolver } from './orders/order-resolver';
+import { OrderAddEditComponent } from './orders/order-add-edit/order-add-edit.component';
+import { OrderDetailComponent } from './orders/order-detail/order-detail.component';
+
+// inspections
+import { InspectionResolver } from './inspections/inspection-resolver';
+import { InspectionDetailComponent } from './inspections/inspection-detail/inspection-detail.component';
+
+// other
 import { Utils } from 'nrpti-angular-components';
 
 const routes: Routes = [
@@ -55,7 +66,7 @@ const routes: Routes = [
               breadcrumb: null
             },
             resolve: {
-              order: OrderResolver
+              records: OrderResolver
             }
           },
           {
@@ -71,6 +82,30 @@ const routes: Routes = [
             }
           }
         ]
+      },
+      {
+        path: 'inspections/:inspectionId',
+        data: {
+          breadcrumb: 'Inspection Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: InspectionDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: InspectionResolver
+            }
+          }
+        ]
       }
     ]
   }
@@ -79,6 +114,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [RecordsResolver, OrderResolver, Utils]
+  providers: [RecordsResolver, OrderResolver, InspectionResolver, Utils]
 })
 export class RecordsRoutingModule {}
