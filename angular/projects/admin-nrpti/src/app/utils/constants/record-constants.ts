@@ -25,13 +25,7 @@ export class DemoCodes implements ICodeSet {
 }
 
 export class Picklists {
-  public static readonly orderSubtypesPicklist = [
-    'Cease',
-    'Remedy',
-    'Stop Work',
-    'None',
-    'Other'
-  ];
+  public static readonly orderSubtypesPicklist = ['Cease', 'Remedy', 'Stop Work', 'None', 'Other'];
 
   public static readonly agenciesPicklist = [
     'Environmental Assessment Office',
@@ -48,14 +42,7 @@ export class Picklists {
     'Environmental Protection Division'
   ];
 
-  public static readonly authorPicklist = [
-    'BC Government',
-    'Proponent',
-    'Other',
-  ];
+  public static readonly authorPicklist = ['BC Government', 'Proponent', 'Other'];
 
-  public static readonly outcomeStatusPicklist = [
-    'Open',
-    'Closed'
-  ];
+  public static readonly outcomeStatusPicklist = ['Open', 'Closed'];
 }

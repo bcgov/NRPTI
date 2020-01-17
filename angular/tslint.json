@@ -4,7 +4,7 @@
   ],
   "rules": {
     "align": [
-      true,
+      false,
       "parameters",
       "arguments",
       "statements",
@@ -89,7 +89,7 @@
     "no-submodule-imports": false,
     "no-switch-case-fall-through": true,
     "no-trailing-whitespace": true,
-    "no-unused-expression": true,
+    "no-unused-expression": [true, "allow-fast-null-checks"],
     "no-var-keyword": true,
     "object-literal-sort-keys": false,
     "object-literal-shorthand": false,

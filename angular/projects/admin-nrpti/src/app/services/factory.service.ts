@@ -256,9 +256,9 @@ export class FactoryService {
 
   // ORDERS
   public createOrder(order: Order): Observable<object> {
-    let outboundObject = {
+    const outboundObject = {
       orders: [order]
-    }
+    };
     return this.recordService.createOrder(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
 }

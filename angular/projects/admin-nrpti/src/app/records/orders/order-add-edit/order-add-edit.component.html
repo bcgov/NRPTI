@@ -27,8 +27,10 @@
           <div class="row">
             <div class="col-7"></div>
             <div class="col-5">
-              <span class="grey-subtext">If content is published on any site, hitting the Save/Update
-                Record button will update the public site immediately</span>
+              <span class="grey-subtext">
+                If content is published on any site, hitting the Save/Update Record button will update the public site
+                immediately
+              </span>
             </div>
           </div>
         </div>
@@ -43,7 +45,7 @@
           <label for="dateIssued">Date Issued</label>
           <div class="input-group">
             <input class="form-control" placeholder="yyyy-mm-dd" name="dp" formControlName="dateIssued" ngbDatepicker
-              #d="ngbDatepicker">
+              #d="ngbDatepicker" />
             <div class="input-group-append">
               <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
             </div>
@@ -59,20 +61,19 @@
         <div class="label-pair">
           <label for="recordSubtype">Record Sub-Type</label>
           <select name="recordSubtype" id="recordSubtype" formControlName="recordSubtype" class="form-control">
-            <option *ngFor="let subtype of orderSubtypesPicklist" [ngValue]="subtype">{{subtype}}
-            </option>
+            <option *ngFor="let subtype of orderSubtypesPicklist" [ngValue]="subtype">{{ subtype }} </option>
           </select>
         </div>
         <div class="label-pair">
           <label for="issuingAgency">Issuing Agency</label>
           <select name="issuingAgency" id="issuingAgency" formControlName="issuingAgency" class="form-control">
-            <option *ngFor="let agency of agenciesPicklist" [ngValue]="agency">{{agency}}</option>
+            <option *ngFor="let agency of agenciesPicklist" [ngValue]="agency">{{ agency }}</option>
           </select>
         </div>
         <div class="label-pair">
           <label for="author">Author</label>
-          <select name="author" id="author" class="form-control">
-            <option *ngFor="let author of authorsPicklist" [ngValue]="author">{{author}}</option>
+          <select name="author" id="author" formControlName="author" class="form-control">
+            <option *ngFor="let auth of authorsPicklist" [ngValue]="auth">{{ auth }}</option>
           </select>
         </div>
       </div>
@@ -84,14 +85,12 @@
         <!-- TODO -->
         <div class="label-pair">
           <label for="legislation">Act/Legislation</label>
-          <select disabled name="legislation" id="legislation" class="form-control">
-          </select>
+          <select disabled name="legislation" id="legislation" class="form-control"> </select>
         </div>
         <!-- TODO -->
         <div class="label-pair">
           <label for="regulation">Regulation</label>
-          <select disabled name="regulation" id="regulation" class="form-control">
-          </select>
+          <select disabled name="regulation" id="regulation" class="form-control"> </select>
         </div>
         <!-- TODO -->
         <div class="label-pair xsm">
@@ -117,8 +116,7 @@
         <!-- TODO -->
         <div class="label-pair">
           <label for="entityType">Entity Type</label>
-          <select disabled name="entityType" id="entityType" class="form-control">
-          </select>
+          <select disabled name="entityType" id="entityType" class="form-control"> </select>
         </div>
         <!-- TODO -->
         <div class="label-pair">
@@ -137,11 +135,11 @@
         </div>
         <div class="label-pair xsm">
           <label for="latitude">Latitude</label>
-          <input name="latitude" id="latitude" type="text" formControlName="latitude" class="form-control" />
+          <input name="latitude" id="latitude" type="number" formControlName="latitude" class="form-control" />
         </div>
         <div class="label-pair xsm">
           <label for="longitude">Longitude</label>
-          <input name="longitude" id="longitude" type="text" formControlName="longitude" class="form-control" />
+          <input name="longitude" id="longitude" type="number" formControlName="longitude" class="form-control" />
         </div>
       </div>
     </section>
@@ -152,7 +150,7 @@
         <div class="label-pair xsm">
           <label for="outcomeStatus">Status</label>
           <select name="outcomeStatus" id="outcomeStatus" formControlName="outcomeStatus" class="form-control">
-            <option *ngFor="let outcomeStatus of outcomeStatusPicklist" [ngValue]="outcomeStatus">{{outcomeStatus}}
+            <option *ngFor="let outcomeStatus of outcomeStatusPicklist" [ngValue]="outcomeStatus">{{ outcomeStatus }}
             </option>
           </select>
         </div>
@@ -172,19 +170,20 @@
       <div class="row mb-4">
         <div class="col-2">
           <h4 class="blue-header mb-0">NRCED Site Content</h4>
-          <br>
-          <span class="grey-subtext-no-margins">{{nrcedPublishSubtext}}</span>
+          <br />
+          <span class="grey-subtext-no-margins">{{ nrcedPublishSubtext }}</span>
         </div>
         <div class="col-4">
-          <mat-slide-toggle (toggleChange)="togglePublish('nrced')">{{nrcedPublishStatus}}</mat-slide-toggle>
-          <br>
+          <mat-slide-toggle (toggleChange)="togglePublish('nrced')">{{ nrcedPublishStatus }}</mat-slide-toggle>
+          <br />
           <span class="grey-subtext-no-margins">*Changes made will take effect once you click "Update Record"</span>
         </div>
       </div>
       <div class="flex-container">
         <div class="label-pair med">
           <label for="nrcedSummary">Summary</label>
-          <textarea name="nrcedSummary" id="nrcedSummary" type="text" formControlName="nrcedSummary" class="form-control"></textarea>
+          <textarea name="nrcedSummary" id="nrcedSummary" type="text" formControlName="nrcedSummary"
+            class="form-control"></textarea>
         </div>
       </div>
     </section>
@@ -193,19 +192,20 @@
       <div class="row mb-4">
         <div class="col-2">
           <h4 class="blue-header mb-0">LNG Site Content</h4>
-          <br>
-          <span class="grey-subtext-no-margins">{{lngPublishSubtext}}</span>
+          <br />
+          <span class="grey-subtext-no-margins">{{ lngPublishSubtext }}</span>
         </div>
         <div class="col-4">
-          <mat-slide-toggle (toggleChange)="togglePublish('lng')">{{lngPublishStatus}}</mat-slide-toggle>
-          <br>
+          <mat-slide-toggle (toggleChange)="togglePublish('lng')">{{ lngPublishStatus }}</mat-slide-toggle>
+          <br />
           <span class="grey-subtext-no-margins">*Changes made will take effect once you click "Update Record"</span>
         </div>
       </div>
       <div class="flex-container">
         <div class="label-pair med">
           <label for="lngDescription">Description</label>
-          <textarea name="lngDescription" id="lngDescription" type="text" formControlName="lngDescription" class="form-control"></textarea>
+          <textarea name="lngDescription" id="lngDescription" type="text" formControlName="lngDescription"
+            class="form-control"></textarea>
         </div>
       </div>
     </section>
@@ -229,8 +229,11 @@
       <div class="row">
         <div class="col-7"></div>
         <div class="col-5">
-          <span class="grey-subtext">If content is published on any site, hitting the Save/Update
-            Record button will update the public site immediately</span>
+          <span class="grey-subtext">
+            If content is published on any site, hitting the Save/Update Record button will
+            update the public site
+            immediately
+          </span>
         </div>
       </div>
     </div>

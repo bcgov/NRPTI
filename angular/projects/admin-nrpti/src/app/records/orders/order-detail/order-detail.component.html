@@ -20,23 +20,23 @@
         <ul class="nv-list">
           <li>
             <span class="name">Record Name:</span>
-            <span class="value">{{ data && data.recordName || '-' }}</span>
+            <span class="value">{{ (data && data.recordName) || '-' }}</span>
           </li>
           <li>
             <span class="name">Issued To:</span>
-            <span class="value">{{ data && data.issuedTo || '-' }}</span>
+            <span class="value">{{ (data && data.issuedTo) || '-' }}</span>
           </li>
           <li>
             <span class="name">Record Type:</span>
-            <span class="value">{{ data && data.recordType || '-' }}</span>
+            <span class="value">{{ (data && data.recordType) || '-' }}</span>
           </li>
           <li>
             <span class="name">Location Description:</span>
-            <span class="value">{{ data && data.location || '-' }}</span>
+            <span class="value">{{ (data && data.location) || '-' }}</span>
           </li>
           <li>
             <span class="name">Issued On:</span>
-            <span class="value">{{ data && data.dateIssued || '-' }}</span>
+            <span class="value">{{ (data && data.dateIssued) || '-' }}</span>
           </li>
         </ul>
       </section>

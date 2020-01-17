@@ -81,4 +81,4 @@ const routes: Routes = [
   exports: [RouterModule],
   providers: [RecordsResolver, OrderResolver, Utils]
 })
-export class RecordsRoutingModule { }
+export class RecordsRoutingModule {}

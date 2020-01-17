@@ -23,7 +23,7 @@ export interface IRecordObject {
  */
 @Injectable({ providedIn: 'root' })
 export class RecordService {
-  constructor(public apiService: ApiService, public http: HttpClient) { }
+  constructor(public apiService: ApiService, public http: HttpClient) {}
 
   publishRecord(records: IRecordObject[]): Observable<object> {
     const queryString = 'records/publish';

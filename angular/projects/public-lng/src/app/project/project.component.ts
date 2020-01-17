@@ -10,10 +10,7 @@ export class ProjectComponent implements OnInit {
   public id: string;
   public project: string;
 
-  constructor(
-    private route: ActivatedRoute,
-    public router: Router
-    ) {}
+  constructor(private route: ActivatedRoute, public router: Router) {}
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -32,19 +29,18 @@ export class ProjectComponent implements OnInit {
   }
 
   navToAuthorizations() {
-    this.router.navigate(['/project', this.id, 'authorizations', { sortBy: '-_master.dateIssued'}]);
+    this.router.navigate(['/project', this.id, 'authorizations', { sortBy: '-_master.dateIssued' }]);
   }
 
   navToCompliance() {
-    this.router.navigate(['/project', this.id, 'compliance', { sortBy: '-_master.dateIssued'}]);
+    this.router.navigate(['/project', this.id, 'compliance', { sortBy: '-_master.dateIssued' }]);
   }
 
   navToPlans() {
-    this.router.navigate(['/project', this.id, 'plans', { sortBy: '-_master.dateIssued'}]);
+    this.router.navigate(['/project', this.id, 'plans', { sortBy: '-_master.dateIssued' }]);
   }
 
   navToIndigenousNations() {
-    this.router.navigate(['/project', this.id, 'nations', { sortBy: '-_master.date'}]);
+    this.router.navigate(['/project', this.id, 'nations', { sortBy: '-_master.date' }]);
   }
-
 }

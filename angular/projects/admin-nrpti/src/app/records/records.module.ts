@@ -11,6 +11,7 @@ import { GlobalModule } from 'nrpti-angular-components';
 import { CommonModule as NrptiCommonModule } from '../../../../common/src/app/common.module';
 import { SharedModule } from '../shared.module';
 import { RecordsRoutingModule } from './records-routing.module';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 // components
 import { RecordsListComponent } from './records-list/records-list.component';
@@ -31,6 +32,7 @@ import { RecordsTableRowComponent } from './records-rows/records-table-row.compo
     NrptiCommonModule,
     SharedModule,
     NgxPaginationModule,
+    MatSlideToggleModule,
     NgbModule.forRoot(),
     InlineSVGModule.forRoot(),
     RecordsRoutingModule

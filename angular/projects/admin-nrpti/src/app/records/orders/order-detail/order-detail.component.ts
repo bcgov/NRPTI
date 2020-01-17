@@ -18,7 +18,7 @@ export class OrderDetailComponent implements OnInit {
   public data: Order;
   public activeTab = 'detail';
 
-  constructor(public route: ActivatedRoute, public router: Router, public factoryService: FactoryService) { }
+  constructor(public route: ActivatedRoute, public router: Router, public factoryService: FactoryService) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -42,9 +42,9 @@ export class OrderDetailComponent implements OnInit {
     return this.activeTab === tabLabel;
   }
 
-  publishOrder(): void { }
+  publishOrder(): void {}
 
-  unPublishOrder(): void { }
+  unPublishOrder(): void {}
 
   isPublished(): boolean {
     return this.data && this.data.read && this.data.read.includes('public');

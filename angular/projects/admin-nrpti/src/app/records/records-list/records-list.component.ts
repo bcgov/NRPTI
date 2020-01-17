@@ -3,7 +3,13 @@ import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { TableTemplateUtils, TableObject, IColumnObject, IPageSizePickerOption, ITableMessage } from 'nrpti-angular-components';
+import {
+  TableTemplateUtils,
+  TableObject,
+  IColumnObject,
+  IPageSizePickerOption,
+  ITableMessage
+} from 'nrpti-angular-components';
 import { RecordsTableRowComponent } from '../records-rows/records-table-row.component';
 
 /**
@@ -73,7 +79,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   /**
    * Component init.
@@ -183,7 +189,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     this.tableTemplateUtils.navigateUsingParams(this.tableData, ['records']);
   }
 
-  checkChange() { }
+  checkChange() {}
 
   add(item) {
     switch (item) {

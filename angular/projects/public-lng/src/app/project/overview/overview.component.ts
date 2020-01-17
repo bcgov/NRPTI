@@ -27,7 +27,7 @@ export class OverviewComponent implements OnInit {
     private route: ActivatedRoute,
     private _searchService: SearchService,
     private _apiService: ApiService
-    ) {
+  ) {
     this.route.parent.params.subscribe(params => {
       this.id = params.id;
 
@@ -61,6 +61,5 @@ export class OverviewComponent implements OnInit {
           this.activities = res[0].data.searchResults;
         }
       });
-
   }
 }

@@ -32,16 +32,22 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
 
   public dateIssued = null;
 
-  constructor(public route: ActivatedRoute, public router: Router, private factoryService: FactoryService, private utils: Utils, private _changeDetectionRef: ChangeDetectorRef) { }
+  constructor(
+    public route: ActivatedRoute,
+    public router: Router,
+    private factoryService: FactoryService,
+    private utils: Utils,
+    private _changeDetectionRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
       !(res.breadcrumb === 'Add Order') && (this.isEditing = true);
       if (this.isEditing) {
-        if (res) {
+        if (res && res.order && res.order.data) {
           this.currentOrder = res.order.data;
         } else {
-          alert("Error: could not load edit order.");
+          alert('Error: could not load edit order.');
           this.router.navigate(['/']);
         }
       }
@@ -74,7 +80,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
 
       // LNG
       // TODO for edit
-      lngDescription: new FormControl((this.currentOrder && this.currentOrder.lngDescription) || ''),
+      lngDescription: new FormControl((this.currentOrder && this.currentOrder.lngDescription) || '')
     });
   }
 
@@ -88,7 +94,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         if (this.lngPublishStatus === 'Unpublish') {
           this.lngPublishStatus = 'Publish';
         } else {
-          this.lngPublishStatus = 'Unpublish'
+          this.lngPublishStatus = 'Unpublish';
         }
         break;
       case 'nrced':
@@ -112,7 +118,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     // projectName
     // documentURL
 
-    let order = new Order({
+    const order = new Order({
       recordName: this.myForm.controls.recordName.value,
       recordSubtype: this.myForm.controls.recordSubtype.value,
       dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
@@ -122,32 +128,47 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       location: this.myForm.controls.location.value,
       centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],
       outcomeStatus: this.myForm.controls.outcomeStatus.value,
-      outcomeDescription: this.myForm.controls.outcomeDescription.value,
+      outcomeDescription: this.myForm.controls.outcomeDescription.value
     });
 
     order.OrderNRCED = {
-      description: this.myForm.controls.nrcedSummary.value
-    }
+      summary: this.myForm.controls.nrcedSummary.value
+    };
     this.nrcedPublishStatus === 'Publish' && (order.OrderNRCED['addRole'] = 'public');
-
 
     order.OrderLNG = {
       description: this.myForm.controls.lngDescription.value
-    }
+    };
     this.lngPublishStatus === 'Publish' && (order.OrderLNG['addRole'] = 'public');
 
     if (!this.isEditing) {
-      this.factoryService.createOrder(order)
-        .subscribe(res => {
-          console.log(res);
-          this.router.navigate(['records']);
-        });
-    }
+      this.factoryService.createOrder(order).subscribe(res => {
+        console.log(res[0][0]);
 
+        if (res[0][0].status === 'failure') {
+          alert('Master record failed to save.');
+        }
+
+        if (res[0][0].flavours) {
+          let flavourFailure = false;
+          res[0][0].flavours.forEach(flavour => {
+            if (flavour.status === 'failure') {
+              flavourFailure = true;
+            }
+          });
+          if (flavourFailure) {
+            alert('One or more of your flavours have failed to save.');
+          }
+        }
+        this.router.navigate(['records']);
+      });
+    }
   }
 
   cancel() {
-    let shouldCancel = confirm("Leaving this page will discard unsaved changes. Are you sure you would like to continue?");
+    const shouldCancel = confirm(
+      'Leaving this page will discard unsaved changes. Are you sure you would like to continue?'
+    );
     if (shouldCancel) {
       if (!this.isEditing) {
         this.router.navigate(['records']);

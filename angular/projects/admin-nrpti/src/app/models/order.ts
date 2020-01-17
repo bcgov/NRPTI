@@ -32,8 +32,8 @@ export class Order {
   sourceSystemRef: string;
 
   // Fields for saving flavour in API.
-  OrderLNG: Object;
-  OrderNRCED: Object;
+  OrderLNG: object;
+  OrderNRCED: object;
 
   constructor(obj?: any) {
     this._id = (obj && obj._id) || null;

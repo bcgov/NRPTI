@@ -14,16 +14,12 @@ export class BackgroundComponent implements OnInit {
   public id: string;
   public text: string[];
 
-  constructor(
-    private dataService: DataService,
-    private route: ActivatedRoute
-  ) {
+  constructor(private dataService: DataService, private route: ActivatedRoute) {
     this.route.parent.params.subscribe(params => {
       this.id = params.id;
       this.text = this.dataService.getText(this.id, this.pageType);
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 }
