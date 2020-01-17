@@ -107,19 +107,10 @@ hr {
 }
 
 .flex-panel__scroll {
-  @include flex(1 1 auto);
-
   padding: 1.5rem;
-  overflow-y: auto;
   border: 2px solid #008cba;
 }
 
 .flex-panel__footer {
   @include flex(0 0 auto);
-}
-
-@media (min-width: 1200px) {
-  .flex-panel__scroll {
-    overflow-y: auto;
-  }
 }

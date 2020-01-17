@@ -8,6 +8,8 @@ import { RouterModule } from '@angular/router';
 import { GlobalModule } from 'nrpti-angular-components';
 import { SharedModule } from '../shared.module';
 import { DocumentsModule } from './documents/documents.module';
+import { ExplorePanelComponent } from '../explore-panel/explore-panel.component';
+import { DateInputComponent } from '../explore-panel/date-input/date-input.component';
 
 // Components
 import { ProjectComponent } from './project.component';
@@ -19,7 +21,15 @@ import { NationsComponent } from './nations/nations.component';
 import { PlansComponent } from './plans/plans.component';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, NgbModule.forRoot(), RouterModule, DocumentsModule, GlobalModule, SharedModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    NgbModule.forRoot(),
+    RouterModule,
+    DocumentsModule,
+    GlobalModule,
+    SharedModule
+  ],
   declarations: [
     ProjectComponent,
     OverviewComponent,
@@ -27,6 +37,8 @@ import { PlansComponent } from './plans/plans.component';
     AuthorizationsComponent,
     ComplianceComponent,
     NationsComponent,
+    ExplorePanelComponent,
+    DateInputComponent,
     PlansComponent
   ],
   entryComponents: []

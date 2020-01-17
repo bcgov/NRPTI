@@ -79,7 +79,12 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes,
+    {
+      onSameUrlNavigation: 'reload'
+    })
+  ],
   providers: [ComplianceResolver, AuthorizationsResolver, PlansResolver, NationsResolver],
   exports: [RouterModule]
 })
