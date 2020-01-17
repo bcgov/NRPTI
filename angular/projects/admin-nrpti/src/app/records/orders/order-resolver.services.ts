@@ -6,7 +6,7 @@ import { SearchResults } from 'nrpti-angular-components';
 
 @Injectable()
 export class OrderResolver implements Resolve<Observable<SearchResults[]>> {
-  constructor(private factoryService: FactoryService) {}
+  constructor(private factoryService: FactoryService) { }
 
   resolve(route: ActivatedRouteSnapshot): Observable<SearchResults[]> {
     const orderId = route.paramMap.get('orderId');

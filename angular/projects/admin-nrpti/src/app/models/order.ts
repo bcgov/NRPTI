@@ -31,6 +31,10 @@ export class Order {
   sourceDateUpdated: Date;
   sourceSystemRef: string;
 
+  // Fields for saving flavour in API.
+  OrderLNG: Object;
+  OrderNRCED: Object;
+
   constructor(obj?: any) {
     this._id = (obj && obj._id) || null;
     this._schemaName = (obj && obj._schemaName) || null;

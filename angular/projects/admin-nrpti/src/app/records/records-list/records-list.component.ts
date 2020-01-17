@@ -73,7 +73,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   /**
    * Component init.
@@ -183,7 +183,20 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     this.tableTemplateUtils.navigateUsingParams(this.tableData, ['records']);
   }
 
-  checkChange() {}
+  checkChange() { }
+
+  add(item) {
+    switch (item) {
+      case 'order':
+        this.router.navigate(['records', 'orders', 'add']);
+        break;
+      case 'inspection':
+        this.router.navigate(['records', 'inspections', 'add']);
+        break;
+      default:
+        break;
+    }
+  }
 
   /**
    * Cleanup on component destroy.

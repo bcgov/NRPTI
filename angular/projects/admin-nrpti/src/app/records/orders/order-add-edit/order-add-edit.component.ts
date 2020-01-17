@@ -3,7 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Picklists } from '../../../utils/constants/record-constants';
 import { Order } from '../../../models/order';
+import { FactoryService } from '../../../services/factory.service';
+import { Utils } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-order-add-edit',
@@ -15,78 +18,141 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
 
   public loading = true;
   public isEditing = false;
-  public currentItem = null;
+  public currentOrder = null;
   public myForm: FormGroup;
+  public lngPublishStatus = 'Unpublish';
+  public nrcedPublishStatus = 'Unpublish';
+  public lngPublishSubtext = 'Not published';
+  public nrcedPublishSubtext = 'Not published';
 
-  constructor(public route: ActivatedRoute, public router: Router, private _changeDetectionRef: ChangeDetectorRef) {}
+  public orderSubtypesPicklist = Picklists.orderSubtypesPicklist;
+  public agenciesPicklist = Picklists.agenciesPicklist;
+  public authorsPicklist = Picklists.authorPicklist;
+  public outcomeStatusPicklist = Picklists.outcomeStatusPicklist;
+
+  public dateIssued = null;
+
+  constructor(public route: ActivatedRoute, public router: Router, private factoryService: FactoryService, private utils: Utils, private _changeDetectionRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
-      this.isEditing = Object.keys(res).length === 0 && res.constructor === Object ? false : true;
+      !(res.breadcrumb === 'Add Order') && (this.isEditing = true);
       if (this.isEditing) {
         if (res) {
-          this.currentItem = res.records[0] && new Order(res.records[0].data);
-          console.log(this.currentItem);
-          this.loading = false;
-          this._changeDetectionRef.detectChanges();
+          this.currentOrder = res.order.data;
         } else {
-          alert("Uh-oh, couldn't load edit order");
+          alert("Error: could not load edit order.");
           this.router.navigate(['/']);
         }
-        this.buildForm();
       }
+      this.buildForm();
+      this.loading = false;
+      this._changeDetectionRef.detectChanges();
     });
   }
 
   private buildForm() {
     this.myForm = new FormGroup({
-      recordName: new FormControl((this.isEditing && this.currentItem && this.currentItem.recordName) || ''),
-      issuingAgency: new FormControl((this.isEditing && this.currentItem && this.currentItem.issuingAgency) || ''),
-      author: new FormControl((this.isEditing && this.currentItem && this.currentItem.author) || ''),
-      type: new FormControl((this.isEditing && this.currentItem && this.currentItem.type) || ''),
-      dateIssued: new FormControl((this.isEditing && this.currentItem && this.currentItem.dateIssued) || ''),
-      entityType: new FormControl((this.isEditing && this.currentItem && this.currentItem.entityType) || ''),
-      issuedTo: new FormControl((this.isEditing && this.currentItem && this.currentItem.issuedTo) || ''),
-      birthDate: new FormControl((this.isEditing && this.currentItem && this.currentItem.birthDate) || ''),
-      description: new FormControl((this.isEditing && this.currentItem && this.currentItem.description) || ''),
-      centroid: new FormControl((this.isEditing && this.currentItem && this.currentItem.centroid) || ''),
-      location: new FormControl((this.isEditing && this.currentItem && this.currentItem.location) || ''),
-      nationName: new FormControl((this.isEditing && this.currentItem && this.currentItem.nationName) || ''),
-      documentAttachments: new FormControl(
-        (this.isEditing && this.currentItem && this.currentItem.documentAttachments) || ''
-      ),
-      sourceSystemRef: new FormControl((this.isEditing && this.currentItem && this.currentItem.sourceSystemRef) || ''),
-      legislation: new FormControl((this.isEditing && this.currentItem && this.currentItem.legislation) || ''),
-      status: new FormControl((this.isEditing && this.currentItem && this.currentItem.status) || ''),
-      project: new FormControl((this.isEditing && this.currentItem && this.currentItem.project) || ''),
-      projectSector: new FormControl((this.isEditing && this.currentItem && this.currentItem.projectSector) || ''),
-      projectType: new FormControl((this.isEditing && this.currentItem && this.currentItem.projectType) || ''),
-      penalty: new FormControl((this.isEditing && this.currentItem && this.currentItem.penalty) || ''),
-      courtConvictionOutcome: new FormControl(
-        (this.isEditing && this.currentItem && this.currentItem.courtConvictionOutcome) || ''
-      ),
-      tabSelection: new FormControl((this.isEditing && this.currentItem && this.currentItem.tabSelection) || ''),
-      documentId: new FormControl((this.isEditing && this.currentItem && this.currentItem.documentId) || ''),
-      documentType: new FormControl((this.isEditing && this.currentItem && this.currentItem.documentType) || ''),
-      documentFileName: new FormControl(
-        (this.isEditing && this.currentItem && this.currentItem.documentFileName) || ''
-      ),
-      documentDate: new FormControl((this.isEditing && this.currentItem && this.currentItem.documentDate) || ''),
-      dateAdded: new FormControl((this.isEditing && this.currentItem && this.currentItem.dateAdded) || ''),
-      dateUpdated: new FormControl((this.isEditing && this.currentItem && this.currentItem.dateUpdated) || ''),
-      sourceDateAdded: new FormControl((this.isEditing && this.currentItem && this.currentItem.sourceDateAdded) || ''),
-      sourceDateUpdated: new FormControl(
-        (this.isEditing && this.currentItem && this.currentItem.sourceDateUpdated) || ''
-      )
+      // Master
+      recordName: new FormControl((this.currentOrder && this.currentOrder.recordName) || ''),
+      recordSubtype: new FormControl((this.currentOrder && this.currentOrder.recordSubtype) || ''),
+      dateIssued: new FormControl((this.currentOrder && this.currentOrder.dateIssued) || ''),
+      issuingAgency: new FormControl((this.currentOrder && this.currentOrder.issuingAgency) || ''),
+      author: new FormControl((this.currentOrder && this.currentOrder.author) || ''),
+      legislation: new FormControl((this.currentOrder && this.currentOrder.legislation) || ''),
+      issuedTo: new FormControl((this.currentOrder && this.currentOrder.issuedTo) || ''),
+      projectName: new FormControl((this.currentOrder && this.currentOrder.projectName) || ''),
+      location: new FormControl((this.currentOrder && this.currentOrder.location) || ''),
+      latitude: new FormControl((this.currentOrder && this.currentOrder.centroid[0]) || ''),
+      longitude: new FormControl((this.currentOrder && this.currentOrder.centroid[1]) || ''),
+      outcomeStatus: new FormControl((this.currentOrder && this.currentOrder.outcomeStatus) || ''),
+      outcomeDescription: new FormControl((this.currentOrder && this.currentOrder.outcomeDescription) || ''),
+
+      // NRCED
+      // TODO for edit
+      nrcedSummary: new FormControl((this.currentOrder && this.currentOrder.nrcedSummary) || ''),
+
+      // LNG
+      // TODO for edit
+      lngDescription: new FormControl((this.currentOrder && this.currentOrder.lngDescription) || ''),
     });
   }
 
-  subtypeSelected(subtype) {
-    console.log(subtype);
+  navigateToDetails() {
+    this.router.navigate(['records', 'orders', this.currentOrder._id, 'detail']);
   }
 
-  navigateToDetails() {
-    this.router.navigate(['records', 'orders', this.currentItem._id, 'detail']);
+  togglePublish(flavour) {
+    switch (flavour) {
+      case 'lng':
+        if (this.lngPublishStatus === 'Unpublish') {
+          this.lngPublishStatus = 'Publish';
+        } else {
+          this.lngPublishStatus = 'Unpublish'
+        }
+        break;
+      case 'nrced':
+        if (this.lngPublishStatus === 'Unpublish') {
+          this.nrcedPublishStatus = 'Publish';
+        } else {
+          this.nrcedPublishStatus = 'Unpublish';
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  submit() {
+    // TODO
+    // _epicProjectId
+    // _sourceRefId
+    // _epicMilestoneId
+    // legislation
+    // projectName
+    // documentURL
+
+    let order = new Order({
+      recordName: this.myForm.controls.recordName.value,
+      recordSubtype: this.myForm.controls.recordSubtype.value,
+      dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
+      issuingAgency: this.myForm.controls.issuingAgency.value,
+      author: this.myForm.controls.author.value,
+      issuedTo: this.myForm.controls.issuedTo.value,
+      location: this.myForm.controls.location.value,
+      centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],
+      outcomeStatus: this.myForm.controls.outcomeStatus.value,
+      outcomeDescription: this.myForm.controls.outcomeDescription.value,
+    });
+
+    order.OrderNRCED = {
+      description: this.myForm.controls.nrcedSummary.value
+    }
+    this.nrcedPublishStatus === 'Publish' && (order.OrderNRCED['addRole'] = 'public');
+
+
+    order.OrderLNG = {
+      description: this.myForm.controls.lngDescription.value
+    }
+    this.lngPublishStatus === 'Publish' && (order.OrderLNG['addRole'] = 'public');
+
+    if (!this.isEditing) {
+      this.factoryService.createOrder(order)
+        .subscribe(res => {
+          console.log(res);
+          this.router.navigate(['records']);
+        });
+    }
+
+  }
+
+  cancel() {
+    let shouldCancel = confirm("Leaving this page will discard unsaved changes. Are you sure you would like to continue?");
+    if (shouldCancel) {
+      if (!this.isEditing) {
+        this.router.navigate(['records']);
+      }
+    }
   }
 
   ngOnDestroy(): void {
