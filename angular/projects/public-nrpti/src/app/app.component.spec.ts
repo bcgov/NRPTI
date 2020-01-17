@@ -14,7 +14,6 @@ import { of } from 'rxjs';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
-
     const mockStoreService = {
       change: of(),
       toggleSideNave: () => {}
@@ -30,10 +29,7 @@ describe('AppComponent', () => {
         BreadcrumbComponent
       ],
       imports: [RouterTestingModule, HttpClientTestingModule, BrowserAnimationsModule],
-      providers: [
-        ApiService,
-        { provide: StoreService, useValue: mockStoreService }
-      ]
+      providers: [ApiService, { provide: StoreService, useValue: mockStoreService }]
     }).compileComponents();
   }));
 

@@ -47,14 +47,7 @@ import { SearchService } from 'nrpti-angular-components';
     ProjectModule,
     BootstrapModalModule.forRoot({ container: document.body })
   ],
-  declarations: [
-    AppComponent,
-    ContactComponent,
-    HeaderComponent,
-    FooterComponent,
-    FaqComponent,
-    HomeComponent
-  ],
+  declarations: [AppComponent, ContactComponent, HeaderComponent, FooterComponent, FaqComponent, HomeComponent],
   providers: [ApiService, UrlService, DataService, SearchService],
   entryComponents: [],
   bootstrap: [AppComponent]
