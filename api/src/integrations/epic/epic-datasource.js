@@ -50,7 +50,7 @@ class EpicDataSource {
         ...this.params,
         ...this.getBaseParams(typeId, this.type.milestone, MAX_PAGE_SIZE, 0)
       };
-      const url = this.getIntegrationUrl(this.getHostname(), this.getPathname(), queryParams);
+      const url = this.getIntegrationUrl(this.getHostname(), this.getEpicSearchPathname(), queryParams);
 
       // Add url to status
       this.status.dataSource = url;
@@ -99,8 +99,14 @@ class EpicDataSource {
       try {
         // TODO fetch/stream epic documents somewhere around here?
 
+        let epicRecord = epicRecords[i];
+
+        // Fetch and add project data to the record;
+        const epicProject = await this.getRecordProject(epicRecord);
+        epicRecord = { ...epicRecord, ...{ project: epicProject } };
+
         // Perform any data transformations necessary to convert Epic record to NRPTI record
-        const nrptiRecord = await this.typeUtils.transformRecord(epicRecords[i]);
+        const nrptiRecord = await this.typeUtils.transformRecord(epicRecord);
 
         // Persist NRPTI record
         const savedRecord = await this.typeUtils.saveRecord(nrptiRecord);
@@ -132,17 +138,32 @@ class EpicDataSource {
   }
 
   /**
-   * Get the Epic API pathname.
+   * Get the Epic API Search pathname.
    *
-   * Will return the env variable `EPIC_API_INSPECTIONS_PATHNAME` if it exists.
+   * Will return the env variable `EPIC_API_SEARCH_PATHNAME` if it exists.
    *
    * Example: '/api/some/route'
    *
    * @returns {string} Epic api inspections path.
    * @memberof EpicDataSource
    */
-  getPathname() {
-    return process.env.EPIC_API_INSPECTIONS_PATHNAME || '/api/public/search';
+  getEpicSearchPathname() {
+    return process.env.EPIC_API_SEARCH_PATHNAME || '/api/public/search';
+  }
+
+  /**
+   * Get the Epic API Project pathname.
+   *
+   * Will return the env variable `EPIC_API_PROJECT_PATHNAME` if it exists.
+   *
+   * Example: '/api/some/route'
+   *
+   * @param {*} projectId epic project _id
+   * @returns
+   * @memberof EpicDataSource
+   */
+  getEpicProjectPathname(projectId) {
+    return `${process.env.EPIC_API_PROJECT_PATHNAME || '/api/project'}/${projectId}`;
   }
 
   /**
@@ -212,7 +233,7 @@ class EpicDataSource {
    */
   // TODO does this ever change? Can we just hard-code this like milestone in EPIC_TYPE enum?
   async getRecordTypeId() {
-    const url = this.getIntegrationUrl(this.getHostname(), this.getPathname(), { dataset: 'List' });
+    const url = this.getIntegrationUrl(this.getHostname(), this.getEpicSearchPathname(), { dataset: 'List' });
 
     const response = await integrationUtils.getRecords(url);
 
@@ -229,6 +250,28 @@ class EpicDataSource {
     }
 
     return desiredType._id;
+  }
+
+  /**
+   * Get the epic project data for the given epic records projectId.
+   *
+   * @param {*} epicRecord
+   * @returns epic project data
+   * @throws {Error} if record project data cannot be found.
+   * @memberof EpicDataSource
+   */
+  async getRecordProject(epicRecord) {
+    const url = this.getIntegrationUrl(this.getHostname(), `${this.getEpicProjectPathname(epicRecord.project)}`, {
+      fields: 'name|location|centroid|legislation'
+    });
+
+    const response = await integrationUtils.getRecords(url);
+
+    if (!response || !response[0]) {
+      throw Error('getRecordProject - failed to fetch Project dataset.');
+    }
+
+    return response[0];
   }
 }
 

@@ -6,10 +6,12 @@
   "scripts": {
     "start": "node app",
     "test": "node_modules/.bin/jest --verbose",
-    "lint": "eslint . --no-fix --ignore-pattern 'node_modules' --ext .js",
-    "lint-fix:1": "eslint --fix --ignore-pattern 'node_modules' --ext .js",
-    "lint-fix:2": "prettier ./**/*.js --write --loglevel warn",
-    "lint-fix": "npm-run-all -l -s -c lint-fix:*"
+    "lint": "npm-run-all -l -s -c lint:*",
+    "lint:1": "eslint . --ignore-pattern 'node_modules' --ext .js",
+    "lint:2": "prettier --check ./**/*.js ",
+    "lint-fix": "npm-run-all -l -s -c lint-fix:*",
+    "lint-fix:1": "eslint . -fix --ignore-pattern 'node_modules' --ext .js",
+    "lint-fix:2": "prettier ./**/*.js --write --loglevel warn"
   },
   "engines": {
     "node": ">= 10.0.0",
