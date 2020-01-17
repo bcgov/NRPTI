@@ -107,11 +107,28 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
   }
 
   // query modifiers
-  var andExpArrayProcess = await generateExpArray(and, roles) || [];
-  var andExpArray = [];
+  // Pluck the __master elements, and the flavour elements.  process them in different parts of the
+  // pipeline because of the linking of flavour to master records.
+  let __flavour = {};
+  let __master = {};
+  for (item in and) {
+    if ( item.startsWith('_master')) {
+      __master[item] = and[item];
+    } else {
+      __flavour[item] = and[item];
+    }
+  }
+
+  defaultLog.info("__master:", __master);
+  defaultLog.info("__flavour:", __flavour);
+
+  const andExpArray = await generateExpArray(__flavour, roles) || [];
+  const andMasterExpArray = await generateExpArray(__master, roles) || [];
+
+  defaultLog.info("andExpArray:", andExpArray);
+  defaultLog.info("andMasterExpArray:", andMasterExpArray);
 
   // Pluck the _epicProjectId from the array if a flavour record query is coming in.
-  let _epicProjectId = '';
   const flavourRecords = [
     'InspectionLNG',
     'OrderLNG',
@@ -126,20 +143,6 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
     'AuthorizationLNG',
     'AgreementLNG',
   ];
-
-  if (schemaName.some(item => flavourRecords.includes(item))) {
-    for(let i = 0;i < andExpArrayProcess.length; i++) {
-      const obj = andExpArrayProcess[i];
-      if (obj && obj._epicProjectId) {
-        _epicProjectId = mongoose.Types.ObjectId(obj._epicProjectId);
-      } else {
-        andExpArray.push(obj);
-      }
-    }
-  } else {
-    // No plucking required
-    andExpArray = andExpArrayProcess;
-  }
 
   // filters
   var orExpArray = await generateExpArray(or, roles) || [];
@@ -209,11 +212,17 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
         "as": "_master"
       }
     });
-    aggregation.push({
-      "$match": {
-        "_master._epicProjectId": _epicProjectId
-      },
-    });
+
+    // Master matching - optional
+    if (!isEmpty(andMasterExpArray)) {
+      aggregation.push({
+        "$match":
+        {
+          $and: andMasterExpArray
+        }
+      });
+    }
+
     aggregation.push({
       "$unwind": {
         "path": "$_master",
