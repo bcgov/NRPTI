@@ -111,7 +111,7 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
   // pipeline because of the linking of flavour to master records.
   let __flavour = {};
   let __master = {};
-  for (item in and) {
+  for (const item in and) {
     if ( item.startsWith('_master.')) {
       __master[item] = and[item];
     } else {
