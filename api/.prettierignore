@@ -1,6 +1,10 @@
 node_modules
 
 dist
+coverage
+
+migrations
+migrations_data
 
 openshift
 sonar-runner
