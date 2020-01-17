@@ -112,7 +112,7 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
   let __flavour = {};
   let __master = {};
   for (item in and) {
-    if ( item.startsWith('_master')) {
+    if ( item.startsWith('_master.')) {
       __master[item] = and[item];
     } else {
       __flavour[item] = and[item];
