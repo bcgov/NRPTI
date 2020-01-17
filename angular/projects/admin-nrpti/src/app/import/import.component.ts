@@ -2,7 +2,13 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FactoryService } from '../services/factory.service';
 import { Subject, forkJoin } from 'rxjs';
-import { TableObject, TableTemplateUtils, IColumnObject, IPageSizePickerOption, ITableMessage } from 'nrpti-angular-components';
+import {
+  TableObject,
+  TableTemplateUtils,
+  IColumnObject,
+  IPageSizePickerOption,
+  ITableMessage
+} from 'nrpti-angular-components';
 import { ImportTableRowsComponent } from '../import/import-rows/import-table-rows.component';
 import { takeUntil } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';

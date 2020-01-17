@@ -6,6 +6,7 @@ import { ApiService } from './api.service';
 import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService, IRecordObject } from './record.service';
 import { catchError } from 'rxjs/operators';
+import { Order } from '../models/order';
 
 /**
  * Facade service for all admin-nrpti services.
@@ -251,5 +252,13 @@ export class FactoryService {
    */
   public unPublishRecords(records: IRecordObject[]): Observable<object> {
     return this.recordService.unPublishRecord(records).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // ORDERS
+  public createOrder(order: Order): Observable<object> {
+    const outboundObject = {
+      orders: [order]
+    };
+    return this.recordService.createOrder(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
 }

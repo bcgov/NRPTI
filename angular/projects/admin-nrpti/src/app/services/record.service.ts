@@ -34,4 +34,9 @@ export class RecordService {
     const queryString = 'records/unpublish';
     return this.http.post<object>(`${this.apiService.pathAPI}/${queryString}`, records, {});
   }
+
+  createOrder(order: object): Observable<object> {
+    const queryString = 'record';
+    return this.http.post<object>(`${this.apiService.pathAPI}/${queryString}`, order, {});
+  }
 }

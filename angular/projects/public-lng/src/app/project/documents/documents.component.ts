@@ -39,7 +39,7 @@ export class DocumentsComponent implements OnInit {
     private _changeDetectionRef: ChangeDetectorRef,
     private tableTemplateUtils: TableTemplateUtils,
     public route: ActivatedRoute
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.basePath = this.router.url.split(';')[0];
@@ -49,41 +49,42 @@ export class DocumentsComponent implements OnInit {
     let tableColumns = null;
 
     switch (projectPath) {
-      case 'compliance': {
-        tableColumns = [
-          {
-            name: 'Name',
-            value: '_master.recordName',
-            width: 'col-2'
-          },
-          {
-            name: 'Government Agency',
-            value: '_master.issuingAgency',
-            width: 'col-2'
-          },
-          {
-            name: 'Author',
-            value: '_master.author',
-            width: 'col-2'
-          },
-          {
-            name: 'Type',
-            value: '_master.recordType',
-            width: 'col-2'
-          },
-          {
-            name: 'Date',
-            value: '_master.dateIssued',
-            width: 'col-2'
-          },
-          {
-            name: 'Description',
-            value: 'description',
-            width: 'col-2'
-          }
-        ];
-        this.tableData = new TableObject({ component: ComplianceTableRowsComponent });
-      }
+      case 'compliance':
+        {
+          tableColumns = [
+            {
+              name: 'Name',
+              value: '_master.recordName',
+              width: 'col-2'
+            },
+            {
+              name: 'Government Agency',
+              value: '_master.issuingAgency',
+              width: 'col-2'
+            },
+            {
+              name: 'Author',
+              value: '_master.author',
+              width: 'col-2'
+            },
+            {
+              name: 'Type',
+              value: '_master.recordType',
+              width: 'col-2'
+            },
+            {
+              name: 'Date',
+              value: '_master.dateIssued',
+              width: 'col-2'
+            },
+            {
+              name: 'Description',
+              value: 'description',
+              width: 'col-2'
+            }
+          ];
+          this.tableData = new TableObject({ component: ComplianceTableRowsComponent });
+        }
         break;
       case 'authorizations':
         {
@@ -154,26 +155,27 @@ export class DocumentsComponent implements OnInit {
           this.tableData = new TableObject({ component: PlansTableRowsComponent });
         }
         break;
-      case 'nations': {
-        tableColumns = [
-          {
-            name: 'Name',
-            value: '_master.recordName',
-            width: 'col-2'
-          },
-          {
-            name: 'Indigenous Nation',
-            value: '_master.nationName',
-            width: 'col-2'
-          },
-          {
-            name: 'Date',
-            value: '_master.date',
-            width: 'col-2'
-          }
-        ];
-        this.tableData = new TableObject({ component: NationsTableRowsComponent });
-      }
+      case 'nations':
+        {
+          tableColumns = [
+            {
+              name: 'Name',
+              value: '_master.recordName',
+              width: 'col-2'
+            },
+            {
+              name: 'Indigenous Nation',
+              value: '_master.nationName',
+              width: 'col-2'
+            },
+            {
+              name: 'Date',
+              value: '_master.date',
+              width: 'col-2'
+            }
+          ];
+          this.tableData = new TableObject({ component: NationsTableRowsComponent });
+        }
         break;
     }
 
@@ -245,5 +247,5 @@ export class DocumentsComponent implements OnInit {
     this.tableTemplateUtils.navigateUsingParams(this.tableData, [this.basePath]);
   }
 
-  checkChange() { }
+  checkChange() {}
 }

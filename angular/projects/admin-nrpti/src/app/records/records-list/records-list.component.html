@@ -1,8 +1,17 @@
 <main class="container-fluid-padding">
-  <div class="input-group-prepend">
-    <!-- <button (click)="selectAction('selectAll')" class="btn btn-outline-secondary mr-1" type="button" id="button-sa">
-      Select All
-    </button> -->
+  <div class="row mt-3">
+    <div class="col-6"></div>
+    <div class="col-6 text-right">
+      <div ngbDropdown class="d-inline-block">
+        <button class="btn btn-primary" ngbDropdownToggle>
+          Add Record
+        </button>
+        <div ngbDropdownMenu>
+          <button ngbDropdownItem (click)="add('order')">Order</button>
+          <button ngbDropdownItem (click)="add('inspection')">Inspection</button>
+        </div>
+      </div>
+    </div>
   </div>
   <br />
 

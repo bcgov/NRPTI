@@ -137,6 +137,10 @@ legend {
     display: inline-block;
     vertical-align: top;
 
+    &.xsm {
+      width: 8%;
+    }
+
     &.sm {
       width: 15.5%;
     }

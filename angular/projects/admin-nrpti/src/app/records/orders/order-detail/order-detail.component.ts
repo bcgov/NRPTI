@@ -22,13 +22,13 @@ export class OrderDetailComponent implements OnInit {
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
-      if (!res || !res.records) {
+      if (!res || !res.order) {
         alert("Uh-oh, couldn't load Order");
         this.router.navigate(['/']);
         return;
       }
 
-      this.data = res.records[0] && new Order(res.records[0].data);
+      this.data = res.order[0] && new Order(res.order[0].data);
 
       this.isLoading = false;
     });

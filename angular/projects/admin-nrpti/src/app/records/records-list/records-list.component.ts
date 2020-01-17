@@ -3,7 +3,13 @@ import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { TableTemplateUtils, TableObject, IColumnObject, IPageSizePickerOption, ITableMessage } from 'nrpti-angular-components';
+import {
+  TableTemplateUtils,
+  TableObject,
+  IColumnObject,
+  IPageSizePickerOption,
+  ITableMessage
+} from 'nrpti-angular-components';
 import { RecordsTableRowComponent } from '../records-rows/records-table-row.component';
 
 /**
@@ -184,6 +190,19 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   }
 
   checkChange() {}
+
+  add(item) {
+    switch (item) {
+      case 'order':
+        this.router.navigate(['records', 'orders', 'add']);
+        break;
+      case 'inspection':
+        this.router.navigate(['records', 'inspections', 'add']);
+        break;
+      default:
+        break;
+    }
+  }
 
   /**
    * Cleanup on component destroy.
