@@ -113,6 +113,27 @@
     <section>
       <h4>Issued To</h4>
       <div class="flex-container">
+        <div class="label-pair">
+          <label for="projectName">Project</label>
+          <span class="grey-subtext-no-margins">
+            (If Applicable)
+          </span>
+          <div name="projectName" class="radio-group">
+            <div class="radio">
+              <input default type="radio" id="Other" value="" formControlName="projectName" name="projectName" />
+              <label for="Other">Other</label>
+            </div>
+            <div class="radio">
+              <input type="radio" id="coastalGaslink" value="Coastal Gaslink" formControlName="projectName"
+                name="projectName" />
+              <label for="coastalGaslink">Coastal Gaslink</label>
+            </div>
+            <div class="radio">
+              <input type="radio" id="lngCanada" value="LNG Canada" formControlName="projectName" name="projectName" />
+              <label for="lngCanada">LNG Canada</label>
+            </div>
+          </div>
+        </div>
         <!-- TODO -->
         <div class="label-pair">
           <label for="entityType">Entity Type</label>

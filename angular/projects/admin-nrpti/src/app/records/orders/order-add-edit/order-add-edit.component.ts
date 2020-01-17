@@ -4,6 +4,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Picklists } from '../../../utils/constants/record-constants';
+import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { Order } from '../../../models/order';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -98,7 +99,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         }
         break;
       case 'nrced':
-        if (this.lngPublishStatus === 'Unpublish') {
+        if (this.nrcedPublishStatus === 'Unpublish') {
           this.nrcedPublishStatus = 'Publish';
         } else {
           this.nrcedPublishStatus = 'Unpublish';
@@ -107,6 +108,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       default:
         break;
     }
+    this._changeDetectionRef.detectChanges();
   }
 
   submit() {
@@ -125,12 +127,22 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       issuingAgency: this.myForm.controls.issuingAgency.value,
       author: this.myForm.controls.author.value,
       issuedTo: this.myForm.controls.issuedTo.value,
+      projectName: this.myForm.controls.projectName.value,
       location: this.myForm.controls.location.value,
       centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],
       outcomeStatus: this.myForm.controls.outcomeStatus.value,
       outcomeDescription: this.myForm.controls.outcomeDescription.value
     });
 
+    // Project name logic
+    // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
+    if (order.projectName === 'LNG Canada') {
+      order._epicProjectId = EpicProjectIds.lngCanadaId;
+    } else if (order.projectName === 'Coastal Gaslink') {
+      order._epicProjectId = EpicProjectIds.coastalGaslinkId;
+    }
+
+    // Publishing logic
     order.OrderNRCED = {
       summary: this.myForm.controls.nrcedSummary.value
     };
