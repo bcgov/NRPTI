@@ -29,7 +29,7 @@ export class NationsResolver implements Resolve<Observable<object>> {
         tableObject.pageSize,
         tableObject.sortBy || '-documentDate', // This needs to be common between both datasets to work properly
         {
-          _epicProjectId: project
+          '_master._epicProjectId': project,
         },
         false
       );
