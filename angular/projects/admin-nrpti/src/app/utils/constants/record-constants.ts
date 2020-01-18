@@ -25,8 +25,8 @@ export class DemoCodes implements ICodeSet {
 }
 
 export class EpicProjectIds {
-  public static readonly lngCanadaId = '588511c4aaecd9001b825604'
-  public static readonly coastalGaslinkId = '588510cdaaecd9001b815f84'
+  public static readonly lngCanadaId = '588511c4aaecd9001b825604';
+  public static readonly coastalGaslinkId = '588510cdaaecd9001b815f84';
 }
 
 export class Picklists {
