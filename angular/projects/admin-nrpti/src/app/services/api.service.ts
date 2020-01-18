@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 
-import { Document } from '../models/document';
+import { Document } from '../../../../common/src/app/models/document';
 import { Utils } from 'nrpti-angular-components';
 
 /**

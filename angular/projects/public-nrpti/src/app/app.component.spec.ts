@@ -7,8 +7,6 @@ import { FooterComponent } from './footer/footer.component';
 import { ApiService } from './services/api.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
 import { BreadcrumbComponent, StoreService } from 'nrpti-angular-components';
 import { of } from 'rxjs';
 
@@ -20,14 +18,7 @@ describe('AppComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [
-        AppComponent,
-        HeaderComponent,
-        FooterComponent,
-        SidebarComponent,
-        ToggleButtonComponent,
-        BreadcrumbComponent
-      ],
+      declarations: [AppComponent, HeaderComponent, FooterComponent, BreadcrumbComponent],
       imports: [RouterTestingModule, HttpClientTestingModule, BrowserAnimationsModule],
       providers: [ApiService, { provide: StoreService, useValue: mockStoreService }]
     }).compileComponents();

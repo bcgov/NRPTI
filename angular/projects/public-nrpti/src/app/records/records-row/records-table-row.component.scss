@@ -41,7 +41,7 @@
       }
     }
 
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 768px) {
       .table-card-inner {
         grid-gap: 0.5rem;
         grid-template-columns: auto;
@@ -55,23 +55,24 @@
     }
   }
 
-  .closeToggleContainer {
+  .closeDetailsContainerButton {
     position: absolute;
-    top: 0.75rem;
-    right: 1rem;
+    top: 0;
+    right: 0;
+    background: none;
+    border: none;
+    outline: none;
     cursor: pointer;
-    font-size: 2.4rem;
-    padding: 0.48rem;
 
-    &:hover {
-      background-color: $gray2;
+    i {
+      font-size: 3rem;
     }
   }
 
-  @media screen and (max-width: 600px) {
-    .closeToggleContainer {
-      top: 0.75rem;
-      right: 0.75rem;
+  @media screen and (max-width: 768px) {
+    .closeDetailsContainerButton {
+      top: 0;
+      right: -5px;
     }
   }
 }

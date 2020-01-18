@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 import { ApiService } from './api.service';
-import { Document } from '../models/document';
+import { Document } from '../../../../common/src/app/models/document';
 
 /**
  * Provides methods for retrieving and working with documents.

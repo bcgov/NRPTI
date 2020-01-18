@@ -5,14 +5,13 @@ import { NgModule } from '@angular/core';
 import { GlobalModule } from 'nrpti-angular-components';
 
 // components
-import { CommonComponent } from './common.component';
 
 // services
 
 @NgModule({
-  declarations: [CommonComponent],
+  declarations: [],
   imports: [BrowserModule, GlobalModule],
   providers: [],
-  exports: [CommonComponent]
+  exports: []
 })
 export class CommonModule {}

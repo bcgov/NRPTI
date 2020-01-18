@@ -142,6 +142,8 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
     'PlanLNG',
     'AuthorizationLNG',
     'AgreementLNG',
+    'OrderNRCED',
+    'InspectionNRCED'
   ];
 
   // filters
