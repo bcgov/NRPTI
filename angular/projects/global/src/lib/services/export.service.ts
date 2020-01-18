@@ -50,7 +50,7 @@ export class ExportService {
         return null;
       }
 
-      const date = moment(dateProp);
+      const date = moment(dateProp, 'YYYY-MM-DD');
 
       if (!date.isValid()) {
         return null;
