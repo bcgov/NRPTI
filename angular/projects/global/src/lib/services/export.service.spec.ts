@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ExportService } from './export.service';
-import moment from 'moment';
 
 describe('ExportService', () => {
   beforeEach(() => {
@@ -36,14 +35,9 @@ describe('ExportService', () => {
     it('returns the formatted date', () => {
       const rowFunction = ExportService.getExportDateFormatter('dateCreated');
 
-      const result = rowFunction({
-        dateCreated: moment()
-          .year(2019)
-          .month('april')
-          .date(20)
-      });
+      const result = rowFunction({dateCreated: '2015-11-11'});
 
-      expect(result).toBe('2019-04-20');
+      expect(result).toBe('2015-11-11');
     });
   });
 
