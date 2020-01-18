@@ -18,17 +18,6 @@ app-header {
   @include flex(0 0 auto);
 }
 
-app-toggle-button {
-  position: fixed;
-  z-index: 1000;
-  margin-top: -60px;
-  margin-left: 0;
-
-  @media screen and (max-width: 768px) {
-    margin-top: 10px;
-  }
-}
-
 .app-body {
   @include flex-box();
   @include flex(1 1 auto);
@@ -38,9 +27,12 @@ app-toggle-button {
   position: relative;
   overflow-y: auto;
   font-family: 'Noto Sans', sans-serif;
+  margin-top: 57px;
+  padding-top: 0;
 
   @media screen and (min-width: 768px) {
-    margin-top: 139px;
+    margin-top: 138px;
+    padding-top: 1.2rem;
   }
 }
 

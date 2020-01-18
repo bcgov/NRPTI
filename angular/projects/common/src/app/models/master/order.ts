@@ -1,10 +1,10 @@
 /**
- * Inspection data model.
+ * Order data model.
  *
  * @export
- * @class Inspection
+ * @class Order
  */
-export class Inspection {
+export class Order {
   _id: string;
   _schemaName: string;
   _epicProjectId: string;
@@ -14,6 +14,7 @@ export class Inspection {
   write: string[];
   recordName: string;
   recordType: string;
+  recordSubtype: string;
   dateIssued: Date;
   issuingAgency: string;
   author: string;
@@ -30,9 +31,13 @@ export class Inspection {
   sourceDateUpdated: Date;
   sourceSystemRef: string;
 
+  // Fields for saving flavour in API.
+  OrderLNG: object;
+  OrderNRCED: object;
+
   constructor(obj?: any) {
     this._id = (obj && obj._id) || null;
-    this._schemaName = (obj && obj._schemaName) || null;
+    this._schemaName = (obj && obj._schemaName) || 'Order';
     this._epicProjectId = (obj && obj._epicProjectId) || null;
     this._sourceRefId = (obj && obj._sourceRefId) || null;
     this._epicMilestoneId = (obj && obj._epicMilestoneId) || null;
@@ -40,6 +45,7 @@ export class Inspection {
     this.write = (obj && obj.write) || null;
     this.recordName = (obj && obj.recordName) || null;
     this.recordType = (obj && obj.recordType) || null;
+    this.recordSubtype = (obj && obj.recordSubtype) || null;
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || null;
     this.author = (obj && obj.author) || null;

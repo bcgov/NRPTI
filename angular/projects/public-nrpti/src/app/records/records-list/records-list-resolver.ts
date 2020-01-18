@@ -14,7 +14,7 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
 
     return this.factoryService.getRecords(
       '',
-      ['Order', 'Inspection'],
+      ['OrderNRCED', 'InspectionNRCED'],
       [],
       tableObject.currentPage,
       tableObject.pageSize,

@@ -4,11 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-order-detail',
-  templateUrl: './order-detail.component.html',
-  styleUrls: ['./order-detail.component.scss']
+  selector: 'app-inspection-detail',
+  templateUrl: './inspection-detail.component.html',
+  styleUrls: ['./inspection-detail.component.scss']
 })
-export class OrderDetailComponent implements OnInit, OnDestroy {
+export class InspectionDetailComponent implements OnInit, OnDestroy {
   @Input() data: any;
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
@@ -27,7 +27,7 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
 
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
       if (!res || !res.records) {
-        alert("Uh-oh, couldn't load order");
+        alert("Uh-oh, couldn't load inspection");
         this.router.navigate(['/']);
         return;
       }

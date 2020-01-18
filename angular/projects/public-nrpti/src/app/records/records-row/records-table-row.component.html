@@ -1,13 +1,13 @@
 <td class="table-card-outer">
-  <div (click)="rowClicked()">
-    <div *ngIf="!toggleComponent" class="table-card">
+  <div (click)="rowClicked()" title="Show record details">
+    <div *ngIf="!displayDetailsComponent" class="table-card">
       <div class="table-card-inner">
         <div class="card-col">
           <div class="card-col-label">
             {{ tableData.columns[0].name }}
           </div>
           <div class="card-col-data">
-            {{ rowData.recordName || '-' }}
+            {{ rowData._master.recordName || '-' }}
           </div>
         </div>
         <div class="card-col">
@@ -15,7 +15,7 @@
             {{ tableData.columns[1].name }}
           </div>
           <div class="card-col-data">
-            {{ rowData.issuedTo || '-' }}
+            {{ rowData._master.issuedTo || '-' }}
           </div>
         </div>
         <div class="card-col">
@@ -23,7 +23,7 @@
             {{ tableData.columns[2].name }}
           </div>
           <div class="card-col-data">
-            {{ rowData.recordType || '-' }}
+            {{ rowData._master.recordType || '-' }}
           </div>
         </div>
         <div class="card-col">
@@ -31,7 +31,7 @@
             {{ tableData.columns[3].name }}
           </div>
           <div class="card-col-data">
-            {{ rowData.location || '-' }}
+            {{ rowData._master.location || '-' }}
           </div>
         </div>
         <div class="card-col">
@@ -39,7 +39,7 @@
             {{ tableData.columns[4].name }}
           </div>
           <div class="card-col-data">
-            {{ (rowData.dateIssued | date: 'mediumDate') || '-' }}
+            {{ (rowData._master.dateIssued | date: 'mediumDate') || '-' }}
           </div>
         </div>
         <div class="card-col">
@@ -55,8 +55,14 @@
       </div>
     </div>
   </div>
-  <ng-container #toggleView></ng-container>
-  <div *ngIf="toggleComponent" (click)="toggleOff()">
-    <i class="material-icons closeToggleContainer">close</i>
-  </div>
+  <ng-container #detailsComponentContainer></ng-container>
+  <button
+    *ngIf="displayDetailsComponent"
+    class="closeDetailsContainerButton"
+    type="submit"
+    title="Close record details"
+    (click)="removeDetailsComponent()"
+  >
+    <i class="material-icons">close</i>
+  </button>
 </td>

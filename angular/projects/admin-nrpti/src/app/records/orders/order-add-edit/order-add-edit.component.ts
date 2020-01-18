@@ -4,7 +4,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Picklists } from '../../../utils/constants/record-constants';
-import { Order } from '../../../models/order';
+import { Order } from '../../../../../../common/src/app/models/master';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 

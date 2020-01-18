@@ -55,9 +55,6 @@ export class SearchService {
     populate: boolean = false,
     filter: object = {}
   ): Observable<SearchResults[]> {
-    if (sortBy === '') {
-      sortBy = null;
-    }
     let queryString = `search?dataset=${dataset}`;
     if (fields && fields.length > 0) {
       fields.map(item => {
@@ -67,33 +64,36 @@ export class SearchService {
     if (keys) {
       queryString += `&keywords=${keys}`;
     }
-    if (pageNum !== null) {
+    if (pageNum && pageNum > 0) {
       queryString += `&pageNum=${pageNum - 1}`;
     }
-    if (pageSize !== null) {
+    if (pageSize && pageSize > 0) {
       queryString += `&pageSize=${pageSize}`;
     }
-    if (sortBy !== '' && sortBy !== null) {
+    if (sortBy) {
       queryString += `&sortBy=${sortBy}`;
     }
-    if (populate !== null) {
+    if (populate) {
       queryString += `&populate=${populate}`;
     }
-    if (queryModifier !== {}) {
+    if (queryModifier && queryModifier !== {}) {
       Object.keys(queryModifier).map(key => {
         queryModifier[key].split(',').map(item => {
           queryString += `&and[${key}]=${item}`;
         });
       });
     }
-    if (filter !== {}) {
+    if (filter && filter !== {}) {
       Object.keys(filter).map(key => {
         filter[key].split(',').map(item => {
           queryString += `&or[${key}]=${item}`;
         });
       });
     }
-    queryString += `&fields=${Utils.convertArrayIntoPipeString(fields)}`;
+    if (fields) {
+      queryString += `&fields=${Utils.convertArrayIntoPipeString(fields)}`;
+    }
+
     return this.http.get<SearchResults[]>(`${pathAPI}/${queryString}`, {}).pipe(
       map(res => {
         if (!res || !res.length) {

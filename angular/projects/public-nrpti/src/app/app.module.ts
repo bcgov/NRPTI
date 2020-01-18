@@ -20,8 +20,6 @@ import { ConfirmComponent } from './confirm/confirm.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { HomeComponent } from './home/home.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
 
 // services
 import { ApiService } from './services/api.service';
@@ -32,10 +30,8 @@ import { FactoryService } from './services/factory.service';
   declarations: [
     AppComponent,
     HomeComponent,
-    ToggleButtonComponent,
     ConfirmComponent,
     HeaderComponent,
-    SidebarComponent,
     FooterComponent
   ],
   imports: [
