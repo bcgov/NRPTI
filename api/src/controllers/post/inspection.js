@@ -59,7 +59,7 @@ exports.createMaster = async function (args, res, next, incomingObj) {
 
     var observables = [];
     incomingObj.InspectionLNG && observables.push(this.createLNG(args, res, next, incomingObj.InspectionLNG, savedInspection._id));
-    incomingObj.InspectionNRCED && observables.push(this.createNRCED(args, res, next, incomingObj.InspectionLNG, savedInspection._id));
+    incomingObj.InspectionNRCED && observables.push(this.createNRCED(args, res, next, incomingObj.InspectionNRCED, savedInspection._id));
 
     var flavourRes = null;
     try {
