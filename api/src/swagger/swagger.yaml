@@ -533,4 +533,30 @@ paths:
           description: 'Access Denied'
           schema:
             $ref: '#/definitions/Error'
+    put:
+      tags:
+        - record
+      summary: 'Edit record(s)'
+      operationId: protectedPut
+      description: 'Authenticated access to create a record'
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+      parameters:
+        - in: body
+          name: data
+          description: "Records in an array that you would like to save"
+          required: true
+          schema:
+            $ref: '#/definitions/RecordRequestObject'
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/RecordResponseObject'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
 
