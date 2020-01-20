@@ -2,9 +2,11 @@
 
 const mongoose = require('mongoose');
 const defaultLog = require('../../utils/logger')('epic-inspections');
+const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+const { preTransformRecord } = require('./epic-utils');
 
 /**
- * Epic Inspection record handler.
+ * Epic Inspection record handler for { type: 'Inspection Record', milestone: 'Compliance & Enforcement' }.
  *
  * Must contain the following functions:
  * - transformRecord: (object) => Inspection
@@ -13,6 +15,12 @@ const defaultLog = require('../../utils/logger')('epic-inspections');
  * @class EpicInspections
  */
 class EpicInspections {
+  /**
+   * Creates an instance of EpicInspections.
+   *
+   * @param {*} auth_payload user information for auditing
+   * @memberof EpicInspections
+   */
   constructor(auth_payload) {
     this.auth_payload = auth_payload;
   }
@@ -30,19 +38,11 @@ class EpicInspections {
       throw Error('transformRecord - required record must be non-null.');
     }
 
-    // Project names must change to how we name them in NRPTI
-    if (epicRecord.project && epicRecord.project.name) {
-      switch (epicRecord.project.name) {
-        case 'LNG Canada Export Terminal':
-          epicRecord.project.name = 'LNG Canada';
-          break;
-        case 'Coastal GasLink Pipeline':
-          epicRecord.project.name = 'Coastal Gaslink';
-      }
-    }
+    // Apply common Epic pre-processing/transformations
+    epicRecord = preTransformRecord(epicRecord);
 
     return {
-      _schemaName: 'Inspection',
+      _schemaName: RECORD_TYPE.Inspection._schemaName,
       _epicProjectId: (epicRecord.project && epicRecord.project._id) || '',
       _sourceRefId: epicRecord._id || '',
       _epicMilestoneId: epicRecord.milestone || '',
@@ -51,7 +51,7 @@ class EpicInspections {
       write: ['sysadmin'],
 
       recordName: epicRecord.displayName || '',
-      recordType: 'Inspection',
+      recordType: RECORD_TYPE.Inspection.displayName,
       // recordSubtype: // No mapping
       dateIssued: epicRecord.datePosted || null,
       issuingAgency: 'Environmental Assessment Office',
@@ -87,10 +87,10 @@ class EpicInspections {
     }
 
     try {
-      const Inspection = mongoose.model('Inspection');
+      const Inspection = mongoose.model(RECORD_TYPE.Inspection._schemaName);
 
       const record = await Inspection.findOneAndUpdate(
-        { _schemaName: 'Inspection', _sourceRefId: inspectionRecord._sourceRefId },
+        { _schemaName: RECORD_TYPE.Inspection._schemaName, _sourceRefId: inspectionRecord._sourceRefId },
         { $set: inspectionRecord },
         { upsert: true, new: true }
       );

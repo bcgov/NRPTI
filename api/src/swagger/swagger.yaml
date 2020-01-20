@@ -46,13 +46,6 @@ definitions:
     type: object
   RecordResponseObject:
     type: object
-  RecordType:
-    type: string
-    description: 'Supported record types'
-    example: 'order'
-    enum: &recordType
-      - order
-      - inspection
   dataSourceType:
     type: string
     description: 'Supported data sources'
@@ -79,8 +72,10 @@ definitions:
     description: 'Optional fields to sort by (prefixed with + or - for order)'
     example: +dateAdded,-startDate
     enum: &searchSortByFields
-      - -dateAdded
+      - +dateIssued
+      - -dateIssued
       - +dateAdded
+      - -dateAdded
       - +startDate
       - -startDate
       - +displayName
@@ -96,10 +91,6 @@ definitions:
       params:
         type: object
         example: '{"dateSince": "30-10-2019"}'
-      recordType:
-        type: string
-        example: 'order'
-        enum: *recordType
       dataSourceType:
         type: string
         example: 'epic'

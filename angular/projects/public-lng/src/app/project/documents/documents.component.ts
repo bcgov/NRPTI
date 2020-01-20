@@ -106,7 +106,7 @@ export class DocumentsComponent implements OnInit {
             },
             {
               name: 'Subtype',
-              value: '_master.recordSubType',
+              value: '_master.recordSubtype',
               width: 'col-2'
             },
             {
