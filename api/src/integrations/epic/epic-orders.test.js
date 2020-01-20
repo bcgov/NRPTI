@@ -1,4 +1,5 @@
 const EpicOrders = require('./epic-orders');
+const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 describe('EpicOrders', () => {
   describe('transformRecord', () => {
@@ -17,13 +18,10 @@ describe('EpicOrders', () => {
 
       const epicRecord = {};
 
-      let actualRecord = await epicOrders.transformRecord(epicRecord);
-
-      delete actualRecord.dateAdded;
-      delete actualRecord.dateUpdated;
+      const actualRecord = await epicOrders.transformRecord(epicRecord);
 
       const expectedRecord = {
-        _schemaName: 'Order',
+        _schemaName: RECORD_TYPE.Order._schemaName,
 
         _epicProjectId: '',
         _sourceRefId: '',
@@ -33,7 +31,7 @@ describe('EpicOrders', () => {
         write: ['sysadmin'],
 
         recordName: '',
-        recordType: 'Order',
+        recordType: RECORD_TYPE.Order.displayName,
         dateIssued: null,
         issuingAgency: 'Environmental Assessment Office',
         author: '',
@@ -42,8 +40,8 @@ describe('EpicOrders', () => {
         location: '',
         centroid: '',
 
-        // dateAdded: expect.any(Date),
-        // dateUpdated: expect.any(Date),
+        dateAdded: expect.any(Date),
+        dateUpdated: expect.any(Date),
         updatedBy: '',
         sourceDateAdded: null,
         sourceDateUpdated: null,
@@ -59,7 +57,6 @@ describe('EpicOrders', () => {
       const epicRecord = {
         _id: 123,
         displayName: 'docDisplay',
-        documentType: 'docType',
         documentFileName: 'docFileName',
         project: {
           name: 'projectName',
@@ -68,13 +65,10 @@ describe('EpicOrders', () => {
         milestone: 'milestone'
       };
 
-      let actualRecord = await epicOrders.transformRecord(epicRecord);
-
-      delete actualRecord.dateAdded;
-      delete actualRecord.dateUpdated;
+      const actualRecord = await epicOrders.transformRecord(epicRecord);
 
       const expectedRecord = {
-        _schemaName: 'Order',
+        _schemaName: RECORD_TYPE.Order._schemaName,
 
         _epicProjectId: '',
         _sourceRefId: 123,
@@ -84,7 +78,7 @@ describe('EpicOrders', () => {
         write: ['sysadmin'],
 
         recordName: 'docDisplay',
-        recordType: 'Order',
+        recordType: RECORD_TYPE.Order.displayName,
         dateIssued: null,
         issuingAgency: 'Environmental Assessment Office',
         author: '',
@@ -93,8 +87,8 @@ describe('EpicOrders', () => {
         location: '',
         centroid: '',
 
-        // dateAdded: expect.any(Date),
-        // dateUpdated: expect.any(Date),
+        dateAdded: expect.any(Date),
+        dateUpdated: expect.any(Date),
         updatedBy: '',
         sourceDateAdded: null,
         sourceDateUpdated: null,

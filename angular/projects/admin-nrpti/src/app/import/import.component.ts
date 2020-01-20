@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FactoryService } from '../services/factory.service';
-import { Subject, forkJoin } from 'rxjs';
+import { Subject } from 'rxjs';
 import {
   TableObject,
   TableTemplateUtils,
@@ -155,9 +155,6 @@ export class ImportComponent implements OnInit {
   }
 
   postToApi(): Observable<any> {
-    return forkJoin(
-      this.factoryService.startTask({ dataSourceType: 'epic', recordType: 'inspection' }),
-      this.factoryService.startTask({ dataSourceType: 'epic', recordType: 'order' })
-    );
+    return this.factoryService.startTask({ dataSourceType: 'epic' });
   }
 }

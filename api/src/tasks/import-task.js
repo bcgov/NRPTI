@@ -3,7 +3,7 @@
 const defaultLog = require('../utils/logger')('import-task');
 const queryActions = require('../utils/query-actions');
 const TaskAuditRecord = require('../utils/task-audit-record');
-const DATASOURCE_TYPE = require('./utils/datasource-type-enum');
+const INTEGRATION_DATASOURCE = require('../integrations/integration-datasource-enum');
 
 exports.protectedOptions = async function(args, res, next) {
   res.status(200).send();
@@ -22,26 +22,20 @@ exports.protectedCreateTask = async function(args, res, next) {
     throw Error('protectedCreateTask - missing required dataSourceType');
   }
 
-  if (!args.swagger.params.task.value.recordType) {
-    throw Error('protectedCreateTask - missing required recordType');
+  const nrptiDataSource = INTEGRATION_DATASOURCE[args.swagger.params.task.value.dataSourceType];
+
+  if (!nrptiDataSource) {
+    throw Error(
+      `protectedCreateTask - could not find nrptiDataSource for dataSourceType: ${args.swagger.params.task.value.dataSourceType}`
+    );
   }
 
-  // Init task record
-  const taskAuditRecord = new TaskAuditRecord();
-  taskAuditRecord.updateTaskRecord({
-    dataSourceLabel: args.swagger.params.task.value.dataSourceType,
-    startDate: new Date(),
-    read: ['sysadmin'],
-    write: ['sysadmin']
-  });
-
-  // create an async task, do not await this call
+  // run data source record updates
   runTask(
-    taskAuditRecord,
-    args.swagger.params.task.value.dataSourceType,
-    args.swagger.params.task.value.recordType,
+    nrptiDataSource,
+    args.swagger.params.auth_payload,
     args.swagger.params.task.value.params,
-    args.swagger.params.auth_payload
+    args.swagger.params.task.value.recordTypes
   );
 
   // send response immediately as the tasks will run in the background
@@ -49,23 +43,20 @@ exports.protectedCreateTask = async function(args, res, next) {
 };
 
 /**
- * Runs an update for a single (dataSourceType, recordType) pair.
+ * Runs an update for a single nrpti data source.
  *
- * @param {*} taskAuditRecord
- * @param {*} dataSourceType
- * @param {*} recordType
+ * @param {INTEGRATION_DATASOURCE} nrptiDataSource nrpti data source
+ * @param {*} auth_payload user information for auditing
+ * @param {*} [params=null] additional filter parameters to use when fetching records from the data source (optional)
+ * @param {*} [recordType=null] specific record types to update (optional)
  */
-async function runTask(taskAuditRecord, dataSourceType, recordType, params, auth_payload) {
+async function runTask(nrptiDataSource, auth_payload, params = null, recordTypes = null) {
+  const taskAuditRecord = new TaskAuditRecord();
+
   try {
-    // Get dataSource
-    const dataSource = getDataSource(dataSourceType, recordType, params, auth_payload);
+    taskAuditRecord.updateTaskRecord({ dataSourceLabel: nrptiDataSource.dataSourceLabel, startDate: new Date() });
 
-    if (!dataSource) {
-      throw Error(`runTask - could not find supported dataSource for dataSourceType: ${dataSourceType}`);
-    }
-
-    // Run updateRecords
-    const status = await dataSource.updateRecords();
+    const status = await nrptiDataSource.getDataSource(auth_payload, params, recordTypes).updateRecords();
 
     defaultLog.info(`runTask - completed: ${JSON.stringify(status)}`);
 
@@ -77,25 +68,5 @@ async function runTask(taskAuditRecord, dataSourceType, recordType, params, auth
 
     // Update task as encountering unexpected error
     await taskAuditRecord.updateTaskRecord({ status: 'Error', finishDate: new Date() });
-  }
-}
-
-/**
- * Get the dataSource specific util.
- *
- * @param {*} dataSourceType type of dataSource
- * @param {*} recordType type of record
- * @param {*} params optional params to filter which records the dataSource updates (optional)
- * @returns {object} an instance of the specified dataSource, or null if no supported dataSource found.
- * @throws {Error} if utils for specified type cannot be found.
- */
-function getDataSource(dataSourceType, recordType, params, auth_payload) {
-  switch (dataSourceType) {
-    case DATASOURCE_TYPE.epic:
-      return new (require('../integrations/epic/epic-datasource'))(recordType, params, auth_payload);
-    default:
-      throw Error(
-        `getDataSource - failed to find dataSource for (dataSourceType, recordType): (${dataSourceType}, ${recordType})`
-      );
   }
 }

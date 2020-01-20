@@ -2,9 +2,11 @@
 
 const mongoose = require('mongoose');
 const defaultLog = require('../../utils/logger')('epic-orders');
+const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+const EpicUtils = require('./epic-utils');
 
 /**
- * Epic Order record handler.
+ * Epic Order record handler for { type: 'Order', milestone: 'Compliance and Enforcement' }.
  *
  * Must contain the following functions:
  * - transformRecord: (object) => Order
@@ -13,6 +15,12 @@ const defaultLog = require('../../utils/logger')('epic-orders');
  * @class EpicOrders
  */
 class EpicOrders {
+  /**
+   * Creates an instance of EpicOrders.
+   *
+   * @param {*} auth_payload user information for auditing
+   * @memberof EpicOrders
+   */
   constructor(auth_payload) {
     this.auth_payload = auth_payload;
   }
@@ -30,30 +38,22 @@ class EpicOrders {
       throw Error('transformRecord - required record must be non-null.');
     }
 
-    // Project names must change to how we name them in NRPTI
-    if (epicRecord.project && epicRecord.project.name) {
-      switch (epicRecord.project.name) {
-        case 'LNG Canada Export Terminal':
-          epicRecord.project.name = 'LNG Canada';
-          break;
-        case 'Coastal GasLink Pipeline':
-          epicRecord.project.name = 'Coastal Gaslink';
-      }
-    }
+    // Apply common Epic pre-processing/transformations
+    epicRecord = EpicUtils.preTransformRecord(epicRecord);
 
     // Generate a link that will get us the document when placed in an href.
-    var attachments = [];
+    const attachments = [];
     if (epicRecord._id && epicRecord.documentFileName) {
-      attachments.push(
-        {
-          url: `https://projects.eao.gov.bc.ca/api/document/${epicRecord._id}/fetch/${encodeURIComponent(epicRecord.documentFileName)}`,
-          fileName: epicRecord.documentFileName
-        }
-      );
+      attachments.push({
+        url: `https://projects.eao.gov.bc.ca/api/document/${epicRecord._id}/fetch/${encodeURIComponent(
+          epicRecord.documentFileName
+        )}`,
+        fileName: epicRecord.documentFileName
+      });
     }
 
     return {
-      _schemaName: 'Order',
+      _schemaName: RECORD_TYPE.Order._schemaName,
       _epicProjectId: (epicRecord.project && epicRecord.project._id) || '',
       _sourceRefId: epicRecord._id || '',
       _epicMilestoneId: epicRecord.milestone || '',
@@ -62,7 +62,7 @@ class EpicOrders {
       write: ['sysadmin'],
 
       recordName: epicRecord.displayName || '',
-      recordType: 'Order',
+      recordType: RECORD_TYPE.Order.displayName,
       // recordSubtype: // No mapping
       dateIssued: epicRecord.datePosted || null,
       issuingAgency: 'Environmental Assessment Office',
@@ -99,10 +99,10 @@ class EpicOrders {
     }
 
     try {
-      const Order = mongoose.model('Order');
+      const Order = mongoose.model(RECORD_TYPE.Order._schemaName);
 
       const record = await Order.findOneAndUpdate(
-        { _schemaName: 'Order', _sourceRefId: orderRecord._sourceRefId },
+        { _schemaName: RECORD_TYPE.Order._schemaName, _sourceRefId: orderRecord._sourceRefId },
         { $set: orderRecord },
         { upsert: true, new: true }
       );
