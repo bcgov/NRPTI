@@ -1,4 +1,5 @@
 const EpicInspections = require('./epic-inspections');
+const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 describe('EpicInspections', () => {
   describe('transformRecord', () => {
@@ -20,7 +21,7 @@ describe('EpicInspections', () => {
       const actualRecord = await epicInspections.transformRecord(epicRecord);
 
       const expectedRecord = {
-        _schemaName: 'Inspection',
+        _schemaName: RECORD_TYPE.Inspection._schemaName,
 
         _epicProjectId: '',
         _sourceRefId: '',
@@ -30,9 +31,9 @@ describe('EpicInspections', () => {
         write: ['sysadmin'],
 
         recordName: '',
-        recordType: '',
+        recordType: RECORD_TYPE.Inspection.displayName,
         dateIssued: null,
-        issuingAgency: 'Environmental Assessment Agency',
+        issuingAgency: 'Environmental Assessment Office',
         author: '',
         legislation: '',
         projectName: '',
@@ -68,7 +69,7 @@ describe('EpicInspections', () => {
       const actualRecord = await epicInspections.transformRecord(epicRecord);
 
       const expectedRecord = {
-        _schemaName: 'Inspection',
+        _schemaName: RECORD_TYPE.Inspection._schemaName,
 
         _epicProjectId: '',
         _sourceRefId: 123,
@@ -78,9 +79,9 @@ describe('EpicInspections', () => {
         write: ['sysadmin'],
 
         recordName: 'docDisplay',
-        recordType: 'docType',
+        recordType: RECORD_TYPE.Inspection.displayName,
         dateIssued: null,
-        issuingAgency: 'Environmental Assessment Agency',
+        issuingAgency: 'Environmental Assessment Office',
         author: '',
         legislation: 'projectLegislation',
         projectName: 'projectName',

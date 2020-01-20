@@ -1,9 +1,9 @@
 'use strict';
 
 module.exports = require('../../utils/model-schema-generator')(
-  'Order',
+  'ManagementPlan',
   {
-    _schemaName: { type: String, default: 'Order', index: true },
+    _schemaName: { type: String, default: 'ManagementPlan', index: true },
     _epicProjectId: { type: 'ObjectId', default: null, index: true },
     _sourceRefId: { type: 'ObjectId', default: null, index: true },
     _epicMilestoneId: { type: 'ObjectId', default: null, index: true },
@@ -13,21 +13,15 @@ module.exports = require('../../utils/model-schema-generator')(
 
     recordName: { type: String, default: '' },
     recordType: { type: String, default: '' },
-    recordSubtype: { type: String, default: '' },
-    dateIssued: { type: Date, default: new Date() },
-    issuingAgency: { type: String, default: '' },
+    dateIssued: { type: Date, default: Date.now() },
+    agency: { type: String, default: '' },
     author: { type: String, default: '' },
-    legislation: { type: String, default: '' },
-    issuedTo: { type: String, default: '' },
     projectName: { type: String, default: '' },
     location: { type: String, default: '' },
     centroid: [{ type: Number, default: 0.0 }],
-    outcomeStatus: { type: String, default: '' },
-    outcomeDescription: { type: String, default: '' },
-    documentURL: { type: String, default: null },
 
     dateAdded: { type: Date, default: Date.now() },
-    dateUpdated: { type: Date, default: null },
+    dateUpdated: { type: Date, default: Date.now() },
     updatedBy: { type: String, default: '' },
     publishedBy: { type: String, default: '' },
     sourceDateAdded: { type: Date, default: null },

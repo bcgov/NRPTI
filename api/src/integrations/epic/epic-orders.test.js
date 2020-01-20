@@ -1,4 +1,5 @@
 const EpicOrders = require('./epic-orders');
+const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 describe('EpicOrders', () => {
   describe('transformRecord', () => {
@@ -20,7 +21,7 @@ describe('EpicOrders', () => {
       const actualRecord = await epicOrders.transformRecord(epicRecord);
 
       const expectedRecord = {
-        _schemaName: 'Order',
+        _schemaName: RECORD_TYPE.Order._schemaName,
 
         _epicProjectId: '',
         _sourceRefId: '',
@@ -30,9 +31,9 @@ describe('EpicOrders', () => {
         write: ['sysadmin'],
 
         recordName: '',
-        recordType: '',
+        recordType: RECORD_TYPE.Order.displayName,
         dateIssued: null,
-        issuingAgency: 'Environmental Assessment Agency',
+        issuingAgency: 'Environmental Assessment Office',
         author: '',
         legislation: '',
         projectName: '',
@@ -68,7 +69,7 @@ describe('EpicOrders', () => {
       const actualRecord = await epicOrders.transformRecord(epicRecord);
 
       const expectedRecord = {
-        _schemaName: 'Order',
+        _schemaName: RECORD_TYPE.Order._schemaName,
 
         _epicProjectId: '',
         _sourceRefId: 123,
@@ -78,9 +79,9 @@ describe('EpicOrders', () => {
         write: ['sysadmin'],
 
         recordName: 'docDisplay',
-        recordType: 'docType',
+        recordType: RECORD_TYPE.Order.displayName,
         dateIssued: null,
-        issuingAgency: 'Environmental Assessment Agency',
+        issuingAgency: 'Environmental Assessment Office',
         author: '',
         legislation: 'projectLegislation',
         projectName: 'projectName',

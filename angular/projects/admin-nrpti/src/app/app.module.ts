@@ -32,6 +32,7 @@ import { DocumentService } from './services/document.service';
 import { FactoryService } from './services/factory.service';
 import { KeycloakService } from './services/keycloak.service';
 import { RecordService } from './services/record.service';
+import { TaskService } from './services/task.service';
 
 // resolvers
 import { ImportListResolver } from './import/import-list-resolver';
@@ -92,6 +93,7 @@ export function keycloakFactory(keycloakService: KeycloakService) {
     DocumentService,
     FactoryService,
     RecordService,
+    TaskService,
     ImportListResolver,
     CanActivateGuard,
     CanDeactivateGuard

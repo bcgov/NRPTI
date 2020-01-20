@@ -10,7 +10,7 @@ module.exports = require('../../utils/model-schema-generator')(
 
     recordName: { type: String, default: '' },
     recordType: { type: String, default: '' },
-    recordSubType: { type: String, default: '' },
+    recordSubtype: { type: String, default: '' },
     dateIssued: { type: Date, default: Date.now() },
     issuingAgency: { type: String, default: '' },
     documentURL: { type: String, default: null },

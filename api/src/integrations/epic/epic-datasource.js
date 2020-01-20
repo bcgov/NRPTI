@@ -2,8 +2,8 @@
 
 const QS = require('qs');
 const integrationUtils = require('../integration-utils');
-const EPIC_TYPE = require('./epic-type-enum');
-const defaultLog = require('../../utils/logger')('epic-integration');
+const defaultLog = require('../../utils/logger')('epic-datasource');
+const EPIC_RECORD_TYPE = require('./epic-record-type-enum');
 
 const MAX_PAGE_SIZE = Number.MAX_SAFE_INTEGER;
 
@@ -11,74 +11,113 @@ class EpicDataSource {
   /**
    * Creates an instance of EpicDataSource.
    *
-   * @param {EPIC_TYPE} recordType epic record type to fetch/update (required).
    * @param {*} params params to filter epic records (optional).
+   * @param {*} auth_payload information about the user account that started this update.
    * @memberof EpicDataSource
    */
-  constructor(recordType, params, auth_payload) {
-    if (!recordType) {
-      throw Error('EpicDataSource - missing required recordType parameter');
-    }
-
-    if (!(recordType in EPIC_TYPE)) {
-      throw Error('EpicDataSource - recordType parameter is not supported');
-    }
-
-    this.auth_payload = auth_payload;
-    this.type = EPIC_TYPE[recordType];
+  constructor(params, auth_payload) {
     this.params = params || {};
+    this.auth_payload = auth_payload;
 
-    defaultLog.info(`EpicDataSource - type: ${JSON.stringify(this.type)}`);
     defaultLog.info(`EpicDataSource - params: ${JSON.stringify(this.params)}`);
+    defaultLog.debug(`EpicDataSource - auth_payload: ${JSON.stringify(this.auth_payload)}`);
 
     // Set initial status
-    this.status = { itemsProcessed: 0, itemTotal: 0 };
+    this.status = { itemsProcessed: 0, itemTotal: 0, typeStatus: [] };
   }
 
   /**
    * Main function that runs all necessary operations to update Epic records for a given type.
    *
    * @async
-   * @returns {object} overall status of update
+   * @returns {object} Overall status of the update + array of individual record type statuses.
    * @memberof EpicDataSource
    */
   async updateRecords() {
     try {
-      // Build request url
-      const typeId = await this.getRecordTypeId();
-      const queryParams = {
-        ...this.params,
-        ...this.getBaseParams(typeId, this.type.milestone, MAX_PAGE_SIZE, 0)
-      };
-      const url = this.getIntegrationUrl(this.getHostname(), this.getEpicSearchPathname(), queryParams);
-
-      // Add url to status
-      this.status.dataSource = url;
-
-      // Get Epic records
-      const data = await integrationUtils.getRecords(url);
-      const epicRecords = data && data[0] && data[0].searchResults;
-
-      // Failed to find any epic records
-      if (!epicRecords || !epicRecords.length) {
-        this.status.message = 'no records found';
-        return this.status;
+      for (const recordType of EPIC_RECORD_TYPE.recordTypes) {
+        const typeStatus = await this.updateRecordType(recordType);
+        defaultLog.info(
+          `updateRecords - type: ${recordType.type.name}, milestone: ${recordType.milestone.name}` +
+            ` - upserted ${typeStatus.itemsProcessed} of ${typeStatus.itemTotal} records`
+        );
+        this.status.typeStatus.push(typeStatus);
       }
 
-      // Add total epic items found to status
-      this.status.itemTotal = epicRecords.length;
+      // reduce the record type statuses to get the overall total number of items and total number of items processed
+      const typeStatusTotals = this.status.typeStatus.reduce((total, status) => {
+        return {
+          itemsProcessed: total.itemsProcessed + status.itemsProcessed,
+          itemTotal: total.itemTotal + status.itemTotal
+        };
+      });
 
-      // Add epic meta (whatever it contains) to the status
-      this.status.epicMeta = data && data[0] && data[0].meta;
-
-      // Process records
-      await this.processRecords(epicRecords);
+      this.status = { ...this.status, ...typeStatusTotals };
     } catch (error) {
-      this.status.message = 'unexpected error';
+      this.status.message = 'updateRecords - unexpected error';
       this.status.error = JSON.stringify(error);
     }
 
     return this.status;
+  }
+
+  /**
+   * Runs all necessary operations to update a single epic record type.
+   *
+   * @async
+   * @param {*} recordType epic record type to update.
+   * @returns {object} status of the update operation for this record type.
+   * @memberof EpicDataSource
+   */
+  async updateRecordType(recordType) {
+    let recordTypeStatus = { itemsProcessed: 0, itemTotal: 0, url: '' };
+
+    try {
+      // Build request url
+      const queryParams = {
+        ...this.params,
+        ...this.getBaseParams(recordType.type.id, recordType.milestone.id, MAX_PAGE_SIZE, 0)
+      };
+      const url = this.getIntegrationUrl(this.getHostname(), this.getEpicSearchPathname(), queryParams);
+
+      recordTypeStatus.url = url.href;
+
+      // Get Epic records
+      const data = await integrationUtils.getRecords(url);
+
+      // Get records from response
+      const epicRecords = data && data[0] && data[0].searchResults;
+
+      // Failed to find any epic records
+      if (!epicRecords || !epicRecords.length) {
+        recordTypeStatus.message = 'updateRecordType - no records found';
+        return recordTypeStatus;
+      }
+
+      recordTypeStatus.itemTotal = epicRecords.length;
+
+      // Add epic meta (whatever it contains) to the status
+      recordTypeStatus.epicMeta = data && data[0] && data[0].meta;
+
+      // Get the record type specific utils, that contain the unique transformations, etc, for this record type.
+      const recordTypeUtils = recordType.getUtil();
+
+      if (!recordTypeUtils) {
+        recordTypeStatus.message = 'updateRecordType - no record type utils found';
+        return recordTypeStatus;
+      }
+
+      // Process records
+      const processStatus = await this.processRecords(recordTypeUtils, epicRecords);
+
+      // update status
+      recordTypeStatus = { ...recordTypeStatus, ...processStatus };
+    } catch (error) {
+      recordTypeStatus.message = 'updateRecordType - unexpected error';
+      recordTypeStatus.error = JSON.stringify(error);
+    }
+
+    return recordTypeStatus;
   }
 
   /**
@@ -88,12 +127,21 @@ class EpicDataSource {
    *
    * Note: individual records failing should not stop the remaining records from processing successfully.
    *
-   * @param {*} epicRecords
+   * @param {*} recordTypeUtils record type specific utils that contain the unique transformations, etc, for this type.
+   * @param {*} epicRecords epic records to process.
+   * @returns {object} status of the process operation for this record type.
    * @memberof EpicDataSource
    */
-  async processRecords(epicRecords) {
-    // Get type specific utils
-    this.typeUtils = this.getRecordTypeUtils();
+  async processRecords(recordTypeUtils, epicRecords) {
+    if (!recordTypeUtils) {
+      throw Error('processRecords - required recordTypeUtils is null.');
+    }
+
+    if (!epicRecords) {
+      throw Error('processRecords - required epicRecords is null.');
+    }
+
+    const recordTypeStatus = { itemsProcessed: 0 };
 
     for (let i = 0; i < epicRecords.length; i++) {
       try {
@@ -103,16 +151,16 @@ class EpicDataSource {
 
         // Fetch and add project data to the record;
         const epicProject = await this.getRecordProject(epicRecord);
-        epicRecord = { ...epicRecord, ...{ project: epicProject } };
+        epicRecord = { ...epicRecord, project: epicProject };
 
         // Perform any data transformations necessary to convert Epic record to NRPTI record
-        const nrptiRecord = await this.typeUtils.transformRecord(epicRecord);
+        const nrptiRecord = await recordTypeUtils.transformRecord(epicRecord);
 
         // Persist NRPTI record
-        const savedRecord = await this.typeUtils.saveRecord(nrptiRecord);
+        const savedRecord = await recordTypeUtils.saveRecord(nrptiRecord);
 
         if (savedRecord) {
-          this.status.itemsProcessed++;
+          recordTypeStatus.itemsProcessed++;
         }
       } catch (error) {
         defaultLog.error(`processRecords - record failed: ${error.message}`);
@@ -121,6 +169,8 @@ class EpicDataSource {
         // TODO put any logging or special handling when a single record fails?
       }
     }
+
+    return recordTypeStatus;
   }
 
   /**
@@ -170,7 +220,7 @@ class EpicDataSource {
    * Get base record query params.
    *
    * @param {string} typeId record type _id.
-   * @param {string} milestoneId record milestone id.
+   * @param {string} milestoneId record milestone _id.
    * @returns {object} base record query params.
    * @memberof EpicDataSource
    */
@@ -202,54 +252,6 @@ class EpicDataSource {
 
     defaultLog.debug(`getIntegrationUrl - URL: ${url}`);
     return url;
-  }
-
-  /**
-   * Get the record type specific util.
-   *
-   * @returns {object} the type specific util, or null if no matching util found.
-   * @throws {Error} if utils for specified type cannot be found.
-   * @memberof EpicDataSource
-   */
-  getRecordTypeUtils() {
-    switch (this.type) {
-      case EPIC_TYPE.inspection:
-        return new (require('./epic-inspections'))(this.auth_payload);
-      case EPIC_TYPE.order:
-        return new (require('./epic-orders'))(this.auth_payload);
-      default:
-        throw Error(`getTypeUtil - failed to find utils for type: ${this.type}`);
-    }
-  }
-
-  /**
-   * Get the id of the Epic record type based on the List name field.
-   *
-   * @async
-   * @param {EPIC_TYPE} type the name field on the List dataset for the desired document type id.
-   * @returns document type _id
-   * @throws {Error} if record type id cannot be found.
-   * @memberof EpicDataSource
-   */
-  // TODO does this ever change? Can we just hard-code this like milestone in EPIC_TYPE enum?
-  async getRecordTypeId() {
-    const url = this.getIntegrationUrl(this.getHostname(), this.getEpicSearchPathname(), { dataset: 'List' });
-
-    const response = await integrationUtils.getRecords(url);
-
-    if (!response || !response[0] || !response[0].searchResults) {
-      throw Error('getTypeUtil - failed to fetch List dataset.');
-    }
-
-    const types = response[0].searchResults;
-
-    const desiredType = types.find(element => element.type === 'doctype' && element.name === this.type.epicType);
-
-    if (!desiredType) {
-      throw Error(`getTypeUtil - failed to find type _id for epic type: ${this.type.epicType}`);
-    }
-
-    return desiredType._id;
   }
 
   /**

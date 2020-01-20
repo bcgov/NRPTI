@@ -8,6 +8,7 @@ import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import { Order } from '../../../../common/src/app/models/master';
 import { Inspection } from '../../../../common/src/app/models/master';
+import { TaskService } from './task.service';
 
 /**
  * Facade service for all admin-nrpti services.
@@ -23,6 +24,7 @@ export class FactoryService {
   private _apiService: ApiService;
   private _searchService: SearchService;
   private _recordService: RecordService;
+  private _taskService: TaskService;
 
   constructor(private injector: Injector) {
     // The following items are loaded by a file that is only present on cluster builds.
@@ -88,6 +90,20 @@ export class FactoryService {
       this._recordService = this.injector.get(RecordService);
     }
     return this._recordService;
+  }
+
+  /**
+   * Inject task service if it hasn't already been injected.
+   *
+   * @readonly
+   * @type {TaskService}
+   * @memberof FactoryService
+   */
+  public get taskService(): TaskService {
+    if (!this._taskService) {
+      this._taskService = this.injector.get(TaskService);
+    }
+    return this._taskService;
   }
 
   /**
@@ -242,7 +258,7 @@ export class FactoryService {
    * @memberof FactoryService
    */
   public startTask(obj: any): any {
-    return this.apiService.startTask(obj);
+    return this.taskService.startTask(obj);
   }
 
   /**

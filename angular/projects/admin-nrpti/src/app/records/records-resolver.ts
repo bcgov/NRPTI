@@ -16,7 +16,17 @@ export class RecordsResolver implements Resolve<Observable<object>> {
     // force-reload so we always have latest data
     return this.factoryService.getRecords(
       '',
-      ['Order', 'Inspection', 'SelfReport', 'Agreement', 'Plan', 'WarningLetter', 'Authorization'],
+      [
+        'Order',
+        'Inspection',
+        'Certificate',
+        'ManagementPlan',
+        'SelfReport',
+        'Agreement',
+        'Plan',
+        'WarningLetter',
+        'Authorization'
+      ],
       [],
       tableObject.currentPage,
       tableObject.pageSize,

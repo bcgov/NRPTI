@@ -3,23 +3,23 @@
 const mongoose = require('mongoose');
 const defaultLog = require('../../utils/logger')('epic-orders');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
-const epicUtils = require('./epic-utils');
+const { preTransformRecord } = require('./epic-utils');
 
 /**
- * Epic Order record handler for { type: 'Order', milestone: 'Compliance and Enforcement' }.
+ * Epic Order record handler for { type: 'Order', milestone: 'Other' }.
  *
  * Must contain the following functions:
  * - transformRecord: (object) => Order
  * - saveRecord: (Order) => any
  *
- * @class EpicOrders
+ * @class EpicOrdersOther
  */
-class EpicOrders {
+class EpicOrdersOther {
   /**
-   * Creates an instance of EpicOrders.
+   * Creates an instance of EpicOrdersOther.
    *
    * @param {*} auth_payload user information for auditing
-   * @memberof EpicOrders
+   * @memberof EpicOrdersOther
    */
   constructor(auth_payload) {
     this.auth_payload = auth_payload;
@@ -31,7 +31,7 @@ class EpicOrders {
    * @param {object} epicRecord Epic order record (required)
    * @returns {Order} NRPTI order record.
    * @throws {Error} if record is not provided.
-   * @memberof EpicOrders
+   * @memberof EpicOrdersOther
    */
   async transformRecord(epicRecord) {
     if (!epicRecord) {
@@ -39,7 +39,7 @@ class EpicOrders {
     }
 
     // Apply common Epic pre-processing/transformations
-    epicRecord = epicUtils.preTransformRecord(epicRecord);
+    epicRecord = preTransformRecord(epicRecord);
 
     return {
       _schemaName: RECORD_TYPE.Order._schemaName,
@@ -79,7 +79,7 @@ class EpicOrders {
    * @async
    * @param {Order} orderRecord NRPTI Order record (required)
    * @returns {string} status of the add/update operations.
-   * @memberof EpicOrders
+   * @memberof EpicOrdersOther
    */
   async saveRecord(orderRecord) {
     if (!orderRecord) {
@@ -103,4 +103,4 @@ class EpicOrders {
   }
 }
 
-module.exports = EpicOrders;
+module.exports = EpicOrdersOther;

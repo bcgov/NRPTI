@@ -6,3 +6,5 @@ exports.orderLNG = require('./order-lng');
 exports.planLNG = require('./plan-lng');
 exports.selfReportLNG = require('./selfReport-lng');
 exports.warningLetterLNG = require('./warningLetter-lng');
+exports.certificateLNG = require('./certificate-lng');
+exports.managementPlanLNG = require('./managementPlan-lng');

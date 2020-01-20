@@ -10,3 +10,5 @@ exports.restorativeJustice = require('./restorativeJustice');
 exports.selfReport = require('./selfReport');
 exports.ticket = require('./ticket');
 exports.warningLetter = require('./warningLetter');
+exports.certificate = require('./certificate');
+exports.managementPlan = require('./managementPlan');
