@@ -112,7 +112,7 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
   let __flavour = {};
   let __master = {};
   for (const item in and) {
-    if ( item.startsWith('_master.')) {
+    if (item.startsWith('_master.')) {
       __master[item] = and[item];
     } else {
       __flavour[item] = and[item];
@@ -382,6 +382,17 @@ var executeQuery = async function (args, res, next) {
         }
       }
     ];
+
+    populate && QueryUtils.recordTypes.includes(args.swagger.params._schemaName.value) && aggregation.push(
+      {
+        '$lookup': {
+          "from": "nrpti",
+          "localField": "_id",
+          "foreignField": "_master",
+          "as": "flavours"
+        }
+      }
+    );
 
     var data = await collectionObj.aggregate(aggregation);
 
