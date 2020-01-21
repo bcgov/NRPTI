@@ -26,8 +26,9 @@ export class SearchService {
    * @returns {Observable<SearchResults[]>} Array of items
    * @memberof SearchService
    */
-  getItem(pathAPI: string, _id: string, schema: string): Observable<SearchResults[]> {
-    const queryString = `search?dataset=Item&_id=${_id}&_schemaName=${schema}`;
+  getItem(pathAPI: string, _id: string, schema: string, populate?: boolean): Observable<SearchResults[]> {
+    let queryString = `search?dataset=Item&_id=${_id}&_schemaName=${schema}`;
+    populate && (queryString += `&populate=${populate}`);
     return this.http.get<SearchResults[]>(`${pathAPI}/${queryString}`, {}).pipe(
       map(res => {
         if (!res || !res.length) {
