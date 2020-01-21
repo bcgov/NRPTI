@@ -10,18 +10,6 @@ export class OrderResolver implements Resolve<Observable<SearchResults[]>> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<SearchResults[]> {
     const orderId = route.paramMap.get('orderId');
-    return this.factoryService.getRecords(
-      null,
-      ['OrderNRCED', 'OrderLNG'],
-      null,
-      null,
-      null,
-      null,
-      {
-        _master: orderId
-      },
-      null,
-      null
-    );
+    return this.factoryService.getRecordWithFlavours(orderId, 'Order');
   }
 }
