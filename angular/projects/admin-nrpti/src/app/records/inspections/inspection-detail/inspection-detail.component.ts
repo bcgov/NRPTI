@@ -26,11 +26,14 @@ export class InspectionDetailComponent extends RecordComponent implements OnInit
         return;
       }
 
-      const records = res.records[0] && res.records[0].data && res.records[0].data.searchResults;
+      const record = res.records[0] && res.records[0].data;
 
       this.data = {
-        _master: records && records[0] && new Inspection(records[0]._master),
-        flavourData: records.map(record => RecordUtils.getRecordModelInstance(record)) || []
+        _master: new Inspection(record),
+        flavourData:
+          (record.flavours &&
+            record.flavours.map(flavourRecord => RecordUtils.getRecordModelInstance(flavourRecord))) ||
+          []
       };
 
       this.changeDetectionRef.detectChanges();
