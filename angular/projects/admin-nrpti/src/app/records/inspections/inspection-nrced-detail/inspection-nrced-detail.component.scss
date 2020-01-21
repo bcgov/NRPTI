@@ -7,11 +7,11 @@
     .content-grid {
       display: grid;
       grid-template-rows: auto;
-      grid-row-gap: 1.25rem;
+      grid-row-gap: 0.75rem;
 
       .grid-section-header {
         display: grid;
-        grid-template-columns: 1fr minmax(10rem, min-content);
+        grid-template-columns: 1fr minmax(min-content, max-content);
         margin-bottom: 0.5rem;
 
         .grid-section-header-title {
@@ -35,10 +35,16 @@
             border-radius: 6px;
             font-weight: 600;
 
-            &.button-edit {
-              color: $button-edit-text-color;
-              background-color: $button-edit-bg-color;
-              border: 1px solid $button-edit-border-color;
+            &.button-publish {
+              color: $button-publish-text-color;
+              background-color: $button-publish-bg-color;
+              border: 1px solid $button-publish-border-color;
+            }
+
+            &.button-unpublish {
+              color: $button-unpublish-text-color;
+              background-color: $button-unpublish-bg-color;
+              border: 1px solid $button-unpublish-border-color;
             }
 
             span {
@@ -47,7 +53,7 @@
 
             i {
               float: left;
-              margin-right: -100%;
+              // margin-right: -100%;
             }
           }
 
@@ -74,34 +80,14 @@
 
       .grid-section-1 {
         display: grid;
-        grid-template-columns: 3fr 2fr 2fr 2fr 2fr;
-      }
-
-      .grid-section-2 {
-        display: grid;
-        grid-template-columns: 3fr 4fr 4fr;
-      }
-
-      .grid-section-3 {
-        display: grid;
-        grid-template-columns: 3fr 2fr 6fr;
-      }
-
-      .grid-section-4 {
-        display: grid;
-        grid-template-columns: 3fr 8fr;
-      }
-
-      .grid-section-5 {
-        display: grid;
-        grid-template-columns: auto;
+        grid-template-columns: 1fr;
       }
 
       .grid-item {
         display: grid;
         grid-template-rows: auto;
         grid-gap: 0.25rem;
-        margin-left: 0.5rem;
+        margin-left: 0.75rem;
 
         .grid-item-name {
           font-weight: 600;

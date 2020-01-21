@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 
 import { TableRowComponent } from 'nrpti-angular-components';
-import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,16 +8,12 @@ import { Router } from '@angular/router';
   templateUrl: './records-table-row.component.html',
   styleUrls: ['./records-table-row.component.scss']
 })
-export class RecordsTableRowComponent extends TableRowComponent implements OnInit, OnDestroy {
+export class RecordsTableRowComponent extends TableRowComponent {
   public dropdownItems = ['Edit', 'Delete'];
-
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   constructor(private router: Router) {
     super();
   }
-
-  ngOnInit() {}
 
   @HostListener('click') onItemClicked() {
     switch (this.rowData._schemaName) {
@@ -26,7 +21,7 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
         this.router.navigate(['records', 'orders', this.rowData._id, 'detail']);
         break;
       case 'Inspection':
-        // TODO
+        this.router.navigate(['records', 'inspections', this.rowData._id, 'detail']);
         break;
       default:
       // TODO
@@ -44,10 +39,5 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
       default:
       // TODO
     }
-  }
-
-  ngOnDestroy() {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
   }
 }
