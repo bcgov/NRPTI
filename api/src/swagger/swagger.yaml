@@ -41,7 +41,7 @@ produces:
   - application/json
 
 definitions:
-### Record Type Definitions
+  ### Record Type Definitions
   RecordRequestObject:
     type: object
   RecordResponseObject:
@@ -110,18 +110,6 @@ definitions:
         type: string
         example: 'epic'
         enum: *dataSourceType
-
-  ### Record Definitions
-  RecordObject:
-    type: object
-    example: 'A record object'
-    properties:
-      recordId:
-        type: string
-        example: '123123123123'
-      recordType:
-        type: string
-        example: 'Order'
 
   ### Common Definitions
   Token:
@@ -388,7 +376,7 @@ paths:
   ###
   ### Record Routes
   ###
-  /records/publish:
+  /record/{recordId}/publish:
     x-swagger-router-controller: record-controller
     options:
       tags:
@@ -397,14 +385,17 @@ paths:
       operationId: protectedOptions
       description: 'Options on authenticated record route'
       parameters:
-        - name: records
+        - name: recordId
+          in: path
+          description: "_id of record to publish"
+          required: true
+          type: string
+        - name: record
           in: body
-          description: 'records to publish'
+          description: 'record to publish'
           required: true
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/RecordObject'
+            $ref: '#/definitions/RecordRequestObject'
       responses:
         '200':
           description: 'Success'
@@ -415,22 +406,25 @@ paths:
     post:
       tags:
         - record
-      summary: 'Publish records'
+      summary: 'Publish a record'
       operationId: protectedPublish
-      description: "Adds the singular instance of the 'public' role to all supplied records."
+      description: "Adds the singular instance of the 'public' role to a record."
       security:
         - Bearer: []
       x-security-scopes:
         - sysadmin
       parameters:
-        - name: records
+        - name: recordId
+          in: path
+          description: "_id of record to publish"
+          required: true
+          type: string
+        - name: record
           in: body
-          description: 'records to publish'
+          description: 'record to publish'
           required: true
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/RecordObject'
+            $ref: '#/definitions/RecordRequestObject'
       responses:
         '200':
           description: 'Success'
@@ -438,7 +432,7 @@ paths:
           description: 'Access Denied'
           schema:
             $ref: '#/definitions/Error'
-  /records/unpublish:
+  /record/{recordId}/unpublish:
     x-swagger-router-controller: record-controller
     options:
       tags:
@@ -447,14 +441,17 @@ paths:
       operationId: protectedOptions
       description: 'Options on authenticated record route'
       parameters:
-        - name: records
+        - name: recordId
+          in: path
+          description: "_id of record to publish"
+          required: true
+          type: string
+        - name: record
           in: body
-          description: 'records to unpublish'
+          description: 'record to unpublish'
           required: true
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/RecordObject'
+            $ref: '#/definitions/RecordRequestObject'
       responses:
         '200':
           description: 'Success'
@@ -465,22 +462,25 @@ paths:
     post:
       tags:
         - record
-      summary: 'Unpublish records'
+      summary: 'Unpublish a record'
       operationId: protectedUnPublish
-      description: "Adds the singular instance of the 'public' role to all supplied records."
+      description: "Adds the singular instance of the 'public' role to a record."
       security:
         - Bearer: []
       x-security-scopes:
         - sysadmin
       parameters:
-        - name: records
+        - name: recordId
+          in: path
+          description: "_id of record to publish"
+          required: true
+          type: string
+        - name: record
           in: body
-          description: 'records to unpublish'
+          description: 'record to unpublish'
           required: true
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/RecordObject'
+            $ref: '#/definitions/RecordRequestObject'
       responses:
         '200':
           description: 'Success'
@@ -489,9 +489,9 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
-###
-### Record Routes
-###
+  ###
+  ### Record Routes
+  ###
   /record:
     x-swagger-router-controller: record-controller
     options:
@@ -520,7 +520,7 @@ paths:
       parameters:
         - in: body
           name: data
-          description: "Records in an array that you would like to save"
+          description: 'Records in an array that you would like to save'
           required: true
           schema:
             $ref: '#/definitions/RecordRequestObject'
@@ -533,4 +533,3 @@ paths:
           description: 'Access Denied'
           schema:
             $ref: '#/definitions/Error'
-

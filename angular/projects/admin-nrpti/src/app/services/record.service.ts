@@ -5,17 +5,6 @@ import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 
 /**
- * Defines a recordObject used by batch api operations.
- *
- * @export
- * @interface IRecordObject
- */
-export interface IRecordObject {
-  recordId: string;
-  recordType: string;
-}
-
-/**
  * Order http request handlers.
  *
  * @export
@@ -25,14 +14,36 @@ export interface IRecordObject {
 export class RecordService {
   constructor(public apiService: ApiService, public http: HttpClient) {}
 
-  publishRecord(records: IRecordObject[]): Observable<object> {
-    const queryString = 'records/publish';
-    return this.http.post<object>(`${this.apiService.pathAPI}/${queryString}`, records, {});
+  /**
+   * Publish a record.
+   *
+   * @param {string} record record to publish
+   * @returns {Observable<object>} the updated record
+   * @memberof RecordService
+   */
+  publishRecord(record: any): Observable<object> {
+    if (!record) {
+      throw Error('RecordService - publishRecord - missing required record');
+    }
+
+    const queryString = `record/${record._id}/publish`;
+    return this.http.post<object>(`${this.apiService.pathAPI}/${queryString}`, record, {});
   }
 
-  unPublishRecord(records: IRecordObject[]): Observable<object> {
-    const queryString = 'records/unpublish';
-    return this.http.post<object>(`${this.apiService.pathAPI}/${queryString}`, records, {});
+  /**
+   * Unpublish a record.
+   *
+   * @param {string} record record to unpublish
+   * @returns {Observable<object>} the updated record
+   * @memberof RecordService
+   */
+  unPublishRecord(record: any): Observable<object> {
+    if (!record) {
+      throw Error('RecordService - unPublishRecord - missing required record');
+    }
+
+    const queryString = `record/${record._id}/unpublish`;
+    return this.http.post<object>(`${this.apiService.pathAPI}/${queryString}`, record, {});
   }
 
   createOrder(order: object): Observable<object> {

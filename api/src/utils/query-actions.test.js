@@ -1,4 +1,3 @@
-require('../../tests/test-utils');
 const queryActions = require('./query-actions');
 
 describe('publish', () => {
@@ -25,17 +24,6 @@ describe('publish', () => {
       let response = await queryActions.publish(record);
 
       expect(response.read[0]).toEqual('public');
-    });
-  });
-
-  describe('with an object that has not been published, but has other roles in the read array', () => {
-    test('Testing publish', () => {
-      let record = { read: ['sysadmin'] };
-
-      expect(queryActions.isPublished(record)).toEqual(false);
-
-      record.read = ['sysadmin', 'public'];
-      expect(queryActions.isPublished(record)).toEqual(true);
     });
   });
 });
