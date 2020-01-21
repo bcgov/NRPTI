@@ -12,7 +12,7 @@ import { ApiService } from './api.service';
  */
 @Injectable({ providedIn: 'root' })
 export class RecordService {
-  constructor(public apiService: ApiService, public http: HttpClient) {}
+  constructor(public apiService: ApiService, public http: HttpClient) { }
 
   /**
    * Publish a record.
@@ -49,5 +49,10 @@ export class RecordService {
   createOrder(order: object): Observable<object> {
     const queryString = 'record';
     return this.http.post<object>(`${this.apiService.pathAPI}/${queryString}`, order, {});
+  }
+
+  editOrder(order: object): Observable<object> {
+    const queryString = 'record';
+    return this.http.put<object>(`${this.apiService.pathAPI}/${queryString}`, order, {});
   }
 }

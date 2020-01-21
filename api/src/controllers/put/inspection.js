@@ -47,22 +47,18 @@ exports.editMaster = async function (args, res, next, incomingObj) {
     }
   }
 
-  // Get flavours
-  var observables = [];
-  incomingObj.InspectionLNG && observables.push(this.editLNG(args, res, next, incomingObj.InspectionLNG)) && delete incomingObj.InspectionLNG;
-  incomingObj.InspectionNRCED && observables.push(this.editNRCED(args, res, next, incomingObj.InspectionNRCED)) && delete incomingObj.InspectionNRCED;
-
   var finalRes = {
     status: 'success',
     object: sanitizedObj,
     flavours: null
   }
+  var savedInspection = null;
   // Skip if there is nothing to update for master
   if (sanitizedObj !== {}) {
     sanitizedObj['dateUpdated'] = new Date();
     sanitizedObj['updatedBy'] = args.swagger.params.auth_payload.displayName;
     try {
-      var savedInspection = savedInspection = await Inspection.findOneAndUpdate(
+      savedInspection = await Inspection.findOneAndUpdate(
         { _schemaName: 'Inspection', _id: _id },
         { $set: sanitizedObj },
         { new: true }
@@ -72,6 +68,24 @@ exports.editMaster = async function (args, res, next, incomingObj) {
       finalRes.status = 'failure';
       finalRes['errorMessage'] = e;
     }
+  }
+
+  // Flavours:
+  // When editing, we might get a request to make a brand new flavour rather than edit.
+  var observables = [];
+  if (incomingObj.InspectionLNG && incomingObj.InspectionLNG._id) {
+    observables.push(this.editLNG(args, res, next, incomingObj.InspectionLNG));
+    delete incomingObj.InspectionLNG;
+  } else if (incomingObj.InspectionLNG) {
+    observables.push(InspectionPost.createLNG(args, res, next, incomingObj.InspectionLNG, savedInspection._id));
+    delete incomingObj.InspectionLNG;
+  }
+  if (incomingObj.InspectionNRCED && incomingObj.InspectionNRCED._id) {
+    observables.push(this.editNRCED(args, res, next, incomingObj.InspectionNRCED));
+    delete incomingObj.InspectionNRCED;
+  } else if (incomingObj.InspectionNRCED) {
+    observables.push(InspectionPost.createNRCED(args, res, next, incomingObj.InspectionNRCED, savedInspection._id));
+    delete incomingObj.InspectionNRCED;
   }
 
   // Execute edit flavours

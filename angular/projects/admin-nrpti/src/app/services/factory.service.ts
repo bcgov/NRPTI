@@ -273,4 +273,11 @@ export class FactoryService {
     };
     return this.recordService.createOrder(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
+
+  public editOrder(order: Order): Observable<object> {
+    const outboundObject = {
+      orders: [order]
+    };
+    return this.recordService.editOrder(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
 }

@@ -78,7 +78,7 @@ const routes: Routes = [
               breadcrumb: 'Edit'
             },
             resolve: {
-              order: OrderResolver
+              record: OrderResolver
             }
           }
         ]
@@ -116,4 +116,4 @@ const routes: Routes = [
   exports: [RouterModule],
   providers: [RecordsResolver, OrderResolver, InspectionResolver, Utils]
 })
-export class RecordsRoutingModule {}
+export class RecordsRoutingModule { }

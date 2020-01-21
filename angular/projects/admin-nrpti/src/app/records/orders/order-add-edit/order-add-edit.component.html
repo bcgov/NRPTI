@@ -8,7 +8,7 @@
       <div class="row">
         <div class="col-6">
           <h4 class="blue-header">Shared Data [Master]</h4>
-          <span *ngIf="isEditing" class="grey-subtext">Last Edited on YYYY-MM-DD</span>
+          <span *ngIf="isEditing" class="grey-subtext">{{lastEditedSubText}}</span>
         </div>
         <div class="col-6 right-justified-action-btn">
           <div class="row mb-2">
@@ -195,7 +195,9 @@
           <span class="grey-subtext-no-margins">{{ nrcedPublishSubtext }}</span>
         </div>
         <div class="col-4">
-          <mat-slide-toggle (toggleChange)="togglePublish('nrced')">{{ nrcedPublishStatus }}</mat-slide-toggle>
+          <mat-slide-toggle (toggleChange)="togglePublish('nrced')" [checked]="nrcedPublishStatus === 'Publish'">
+            {{ nrcedPublishStatus }}
+          </mat-slide-toggle>
           <br />
           <span class="grey-subtext-no-margins">*Changes made will take effect once you click "Update Record"</span>
         </div>
@@ -217,7 +219,9 @@
           <span class="grey-subtext-no-margins">{{ lngPublishSubtext }}</span>
         </div>
         <div class="col-4">
-          <mat-slide-toggle (toggleChange)="togglePublish('lng')">{{ lngPublishStatus }}</mat-slide-toggle>
+          <mat-slide-toggle (toggleChange)="togglePublish('lng')" [checked]="lngPublishStatus === 'Publish'">
+            {{ lngPublishStatus }}
+          </mat-slide-toggle>
           <br />
           <span class="grey-subtext-no-margins">*Changes made will take effect once you click "Update Record"</span>
         </div>
