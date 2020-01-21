@@ -45,7 +45,7 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     NgxPaginationModule,
     NgbModule.forRoot(),
     InlineSVGModule.forRoot(),
-    RecordsRoutingModule
+    RecordsRoutingModule,
   ],
   declarations: [
     OrderAddEditComponent,

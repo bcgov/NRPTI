@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
-var putUtils = require('../../utils/put-utils');
+var PutUtils = require('../../utils/put-utils');
+var OrderPost = require('../post/order')
 
 // Example of incomingObj
 /**
@@ -38,7 +39,7 @@ exports.editMaster = async function (args, res, next, incomingObj) {
 
   var Order = mongoose.model('Order');
   try {
-    var sanitizedObj = putUtils.validateObjectAgainstModel(Order, incomingObj);
+    var sanitizedObj = PutUtils.validateObjectAgainstModel(Order, incomingObj);
   } catch (e) {
     return {
       status: 'failure',
@@ -47,22 +48,18 @@ exports.editMaster = async function (args, res, next, incomingObj) {
     }
   }
 
-  // Get flavours
-  var observables = [];
-  incomingObj.OrderLNG && observables.push(this.editLNG(args, res, next, incomingObj.OrderLNG)) && delete incomingObj.OrderLNG;
-  incomingObj.OrderNRCED && observables.push(this.editNRCED(args, res, next, incomingObj.OrderNRCED)) && delete incomingObj.OrderNRCED;
-
   var finalRes = {
     status: 'success',
     object: sanitizedObj,
     flavours: null
   }
+  var savedOrder = null;
   // Skip if there is nothing to update for master
   if (sanitizedObj !== {}) {
     sanitizedObj['dateUpdated'] = new Date();
     sanitizedObj['updatedBy'] = args.swagger.params.auth_payload.displayName;
     try {
-      var savedOrder = savedOrder = await Order.findOneAndUpdate(
+      savedOrder = await Order.findOneAndUpdate(
         { _schemaName: 'Order', _id: _id },
         { $set: sanitizedObj },
         { new: true }
@@ -72,6 +69,24 @@ exports.editMaster = async function (args, res, next, incomingObj) {
       finalRes.status = 'failure';
       finalRes['errorMessage'] = e;
     }
+  }
+
+  // Flavours:
+  // When editing, we might get a request to make a brand new flavour rather than edit.
+  var observables = [];
+  if (incomingObj.OrderLNG && incomingObj.OrderLNG._id) {
+    observables.push(this.editLNG(args, res, next, incomingObj.OrderLNG));
+    delete incomingObj.OrderLNG;
+  } else if (incomingObj.OrderLNG) {
+    observables.push(OrderPost.createLNG(args, res, next, incomingObj.OrderLNG, savedOrder._id));
+    delete incomingObj.OrderLNG;
+  }
+  if (incomingObj.OrderNRCED && incomingObj.OrderNRCED._id) {
+    observables.push(this.editNRCED(args, res, next, incomingObj.OrderNRCED));
+    delete incomingObj.OrderNRCED;
+  } else if (incomingObj.OrderNRCED) {
+    observables.push(OrderPost.createNRCED(args, res, next, incomingObj.OrderNRCED, savedOrder._id));
+    delete incomingObj.OrderNRCED;
   }
 
   // Execute edit flavours
@@ -121,7 +136,7 @@ exports.editLNG = async function (args, res, next, incomingObj) {
   var OrderLNG = mongoose.model('OrderLNG');
 
   try {
-    var sanitizedObj = putUtils.validateObjectAgainstModel(OrderLNG, incomingObj);
+    var sanitizedObj = PutUtils.validateObjectAgainstModel(OrderLNG, incomingObj);
   } catch (e) {
     return {
       status: 'failure',
@@ -192,7 +207,7 @@ exports.editNRCED = async function (args, res, next, incomingObj) {
 
   var OrderNRCED = mongoose.model('OrderNRCED');
   try {
-    var sanitizedObj = putUtils.validateObjectAgainstModel(OrderNRCED, incomingObj);
+    var sanitizedObj = PutUtils.validateObjectAgainstModel(OrderNRCED, incomingObj);
   } catch (e) {
     return {
       status: 'failure',
