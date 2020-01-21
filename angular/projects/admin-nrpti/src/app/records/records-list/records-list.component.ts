@@ -64,14 +64,13 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       name: 'Attachments',
       value: '',
       width: 'col-2'
+    },
+    {
+      name: '',
+      value: '',
+      width: 'col-1',
+      nosort: true
     }
-    // TODO Add this back when documents are available
-    // {
-    //   name: '',
-    //   value: '',
-    //   width: 'col-1',
-    //   nosort: true
-    // }
   ];
 
   constructor(
