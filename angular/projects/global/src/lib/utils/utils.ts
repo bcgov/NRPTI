@@ -31,6 +31,10 @@ export class Utils {
     };
   }
 
+  public convertJSDateToString(jSDate: Date) {
+    return `${jSDate.getFullYear()}-${jSDate.getMonth() + 1}-${jSDate.getDate()}`;
+  }
+
   public convertFormGroupNGBDateToJSDate(nGBDate, nGBTime = null) {
     if (nGBTime === null) {
       return new Date(nGBDate.year, nGBDate.month - 1, nGBDate.day);
