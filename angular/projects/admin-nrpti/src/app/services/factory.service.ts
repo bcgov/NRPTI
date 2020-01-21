@@ -157,6 +157,18 @@ export class FactoryService {
     return this.searchService.getItem(this.apiService.pathAPI, recordId, schema);
   }
 
+  public getRecordWithFlavours(recordId: string, schema: string): Observable<SearchResults[]> {
+    if (!recordId || !schema) {
+      return of([] as SearchResults[]);
+    }
+    return this.searchService.getItem(
+      this.apiService.pathAPI,
+      recordId,
+      schema,
+      true
+    );
+  }
+
   /**
    * Get records via the search service.
    *
