@@ -5,8 +5,10 @@ let queryUtils = require('../utils/query-utils');
 
 let defaultLog = require('../utils/logger')('record');
 
-let Order = require('./post/order');
-let Inspection = require('./post/inspection');
+let AddOrder = require('./post/order');
+let AddInspection = require('./post/inspection');
+let EditOrder = require('./put/order');
+let EditInspection = require('./put/inspection');
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 
@@ -19,7 +21,7 @@ let Inspection = require('./post/inspection');
  * @param {*} res
  * @param {*} next
  */
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
 
@@ -31,7 +33,7 @@ exports.protectedOptions = function(args, res, next) {
  * @param {*} next
  * @returns
  */
-exports.protectedGet = function(args, res, next) {
+exports.protectedGet = function (args, res, next) {
   return queryActions.sendResponse(res, 501);
 };
 
@@ -78,7 +80,7 @@ exports.protectedGet = function(args, res, next) {
  *   ...
  * }
  */
-exports.protectedPost = async function(args, res, next) {
+exports.protectedPost = async function (args, res, next) {
   var observables = [];
 
   if (args.swagger.params.data && args.swagger.params.data.value) {
@@ -106,8 +108,25 @@ exports.protectedPost = async function(args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedPut = function(args, res, next) {
-  return queryActions.sendResponse(res, 501);
+exports.protectedPut = async function (args, res, next) {
+  var observables = [];
+
+  if (args.swagger.params.data && args.swagger.params.data.value) {
+    var data = args.swagger.params.data.value;
+
+    if (data.orders) {
+      observables.push(processPutRequest(args, res, next, 'orders', data.orders));
+    }
+    if (data.inspections) {
+      observables.push(processPutRequest(args, res, next, 'inspections', data.inspections));
+    }
+
+    var response = await Promise.all(observables);
+
+    return queryActions.sendResponse(res, 200, response);
+  } else {
+    return queryActions.sendResponse(res, 500, { error: 'You must provide data' });
+  }
 };
 
 /**
@@ -117,7 +136,7 @@ exports.protectedPut = function(args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedDelete = function(args, res, next) {
+exports.protectedDelete = function (args, res, next) {
   return queryActions.sendResponse(res, 501);
 };
 
@@ -128,7 +147,7 @@ exports.protectedDelete = function(args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedPublish = async function(args, res, next) {
+exports.protectedPublish = async function (args, res, next) {
   try {
     const recordData = args.swagger.params.record.value;
     defaultLog.info(`protectedPublish - recordId: ${recordData._id}`);
@@ -161,7 +180,7 @@ exports.protectedPublish = async function(args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedUnPublish = async function(args, res, next) {
+exports.protectedUnPublish = async function (args, res, next) {
   try {
     const recordData = args.swagger.params.record.value;
     defaultLog.info(`protectedUnPublish - recordId: ${recordData._id}`);
@@ -197,11 +216,11 @@ exports.protectedUnPublish = async function(args, res, next) {
  * @param {*} next
  * @returns
  */
-exports.publicGet = function(args, res, next) {
+exports.publicGet = function (args, res, next) {
   return queryActions.sendResponse(res, 501);
 };
 
-let processPostRequest = async function(args, res, next, property, data) {
+let processPostRequest = async function (args, res, next, property, data) {
   if (data.length === 0) {
     return {
       status: 'success',
@@ -215,10 +234,47 @@ let processPostRequest = async function(args, res, next, property, data) {
   do {
     switch (property) {
       case 'orders':
-        observables.push(Order.createMaster(args, res, next, data[i]));
+        observables.push(AddOrder.createMaster(args, res, next, data[i]));
         break;
       case 'inspections':
-        observables.push(Inspection.createMaster(args, res, next, data[i]));
+        observables.push(AddInspection.createMaster(args, res, next, data[i]));
+        break;
+      default:
+        return {
+          errorMessage: `Property ${property} does not exist.`
+        }
+    }
+  } while (i-- > 0);
+
+  try {
+    return await Promise.all(observables);
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: observables,
+      errorMessage: e
+    }
+  }
+};
+
+let processPutRequest = async function (args, res, next, property, data) {
+  if (data.length === 0) {
+    return {
+      status: 'success',
+      object: {}
+    }
+  }
+
+  var i = data.length - 1;
+  var observables = [];
+
+  do {
+    switch (property) {
+      case 'orders':
+        observables.push(EditOrder.editMaster(args, res, next, data[i]));
+        break;
+      case 'inspections':
+        observables.push(EditInspection.editMaster(args, res, next, data[i]));
         break;
       default:
         return {
