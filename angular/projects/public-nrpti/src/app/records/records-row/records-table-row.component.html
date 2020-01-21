@@ -42,7 +42,8 @@
             {{ (rowData._master.dateIssued | date: 'mediumDate') || '-' }}
           </div>
         </div>
-        <div class="card-col">
+        <!-- TODO enable this when documents are available -->
+        <!-- <div class="card-col">
           <button
             (click)="downloadDocument(); $event.stopPropagation()"
             class="btn btn-primary download-btn"
@@ -51,7 +52,7 @@
             <i class="material-icons">cloud_download</i>
             <div>Download Document</div>
           </button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
