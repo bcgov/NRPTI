@@ -10,18 +10,6 @@ export class InspectionResolver implements Resolve<Observable<SearchResults[]>> 
 
   resolve(route: ActivatedRouteSnapshot): Observable<SearchResults[]> {
     const inspectionId = route.paramMap.get('inspectionId');
-    return this.factoryService.getRecords(
-      null,
-      ['InspectionNRCED', 'InspectionLNG'],
-      null,
-      null,
-      null,
-      null,
-      {
-        _master: inspectionId
-      },
-      null,
-      null
-    );
+    return this.factoryService.getRecordWithFlavours(inspectionId, 'Inspection');
   }
 }

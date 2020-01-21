@@ -77,22 +77,16 @@ definitions:
   SearchSortByFields:
     type: string
     description: 'Optional fields to sort by (prefixed with + or - for order)'
-    example: +score,-score
+    example: +dateAdded,-startDate
     enum: &searchSortByFields
+      - -dateAdded
+      - +dateAdded
       - +startDate
       - -startDate
-      - +headline
-      - -headline
-      - +score
-      - -score
       - +displayName
       - -displayName
-      - +datePosted
-      - -datePosted
       - +documentType
       - -documentType
-      - +documentFileSize
-      - -documentFileSize
 
   ### Task Definitions
   TaskObject:
