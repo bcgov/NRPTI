@@ -7,6 +7,7 @@ import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import { Order } from '../../../../common/src/app/models/master';
+import { Inspection } from '../../../../common/src/app/models/master';
 
 /**
  * Facade service for all admin-nrpti services.
@@ -266,18 +267,37 @@ export class FactoryService {
     return this.recordService.unPublishRecord(record).pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  // ORDERS
+  // Orders
   public createOrder(order: Order): Observable<object> {
     const outboundObject = {
       orders: [order]
     };
-    return this.recordService.createOrder(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+    return this.recordService.createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
   public editOrder(order: Order): Observable<object> {
     const outboundObject = {
       orders: [order]
     };
-    return this.recordService.editOrder(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+    return this.recordService.editRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // Inspections
+  public createInspection(inspection: Inspection): Observable<object> {
+    const outboundObject = {
+      inspections: [inspection]
+    };
+    return this.recordService.createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editInspection(inspection: Inspection): Observable<object> {
+    const outboundObject = {
+      inspections: [inspection]
+    };
+    return this.recordService.editRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
   }
 }

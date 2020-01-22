@@ -4,17 +4,17 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Picklists } from '../../../utils/constants/record-constants';
-import { Order } from '../../../../../../common/src/app/models/master';
+import { Inspection } from '../../../../../../common/src/app/models/master';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 
 @Component({
-  selector: 'app-order-add-edit',
-  templateUrl: './order-add-edit.component.html',
-  styleUrls: ['./order-add-edit.component.scss']
+  selector: 'app-inspection-add-edit',
+  templateUrl: './inspection-add-edit.component.html',
+  styleUrls: ['./inspection-add-edit.component.scss']
 })
-export class OrderAddEditComponent implements OnInit, OnDestroy {
+export class InspectionAddEditComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   public loading = true;
@@ -32,7 +32,6 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
   public nrcedPublishSubtext = 'Not published';
 
   // Pick lists
-  public orderSubtypesPicklist = Picklists.orderSubtypesPicklist;
   public agenciesPicklist = Picklists.agenciesPicklist;
   public authorsPicklist = Picklists.authorPicklist;
   public outcomeStatusPicklist = Picklists.outcomeStatusPicklist;
@@ -47,13 +46,13 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
-      this.isEditing = res.breadcrumb !== 'Add Order';
+      this.isEditing = res.breadcrumb !== 'Add Inspection';
       if (this.isEditing) {
         if (res && res.record && res.record[0] && res.record[0].data) {
           this.currentRecord = res.record[0].data;
           this.populateTextFields();
         } else {
-          alert('Error: could not load edit order.');
+          alert('Error: could not load edit inspection.');
           this.router.navigate(['/']);
         }
       }
@@ -72,12 +71,12 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     }
     for (const flavour of this.currentRecord.flavours) {
       switch (flavour._schemaName) {
-        case ('OrderLNG'):
+        case ('InspectionLNG'):
           this.lngFlavour = flavour;
           this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Publish');
           this.lngFlavour.read.includes('public') && (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(new Date(this.lngFlavour.datePublished))}`);
           break;
-        case ('OrderNRCED'):
+        case ('InspectionNRCED'):
           this.nrcedFlavour = flavour;
           this.nrcedFlavour.read.includes('public') && (this.nrcedPublishStatus = 'Publish');
           this.nrcedFlavour.read.includes('public') && (this.nrcedPublishSubtext = `Published on ${this.utils.convertJSDateToString(new Date(this.nrcedFlavour.datePublished))}`);
@@ -89,10 +88,10 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
   }
 
   private buildForm() {
+
     this.myForm = new FormGroup({
       // Master
       recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
-      recordSubtype: new FormControl((this.currentRecord && this.currentRecord.recordSubtype) || ''),
       dateIssued: new FormControl(
         (
           this.currentRecord &&
@@ -121,7 +120,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
   }
 
   navigateToDetails() {
-    this.router.navigate(['records', 'orders', this.currentRecord._id, 'detail']);
+    this.router.navigate(['records', 'inspections', this.currentRecord._id, 'detail']);
   }
 
   togglePublish(flavour) {
@@ -156,10 +155,9 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     // documentURL
 
     // TODO: For editing we should create an object with only the changed fields.
-    const order = new Order({
+    const inspection = new Inspection({
       recordName: this.myForm.controls.recordName.value,
-      recordType: 'Order',
-      recordSubtype: this.myForm.controls.recordSubtype.value,
+      recordType: 'Inspection',
       dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
       issuingAgency: this.myForm.controls.issuingAgency.value,
       author: this.myForm.controls.author.value,
@@ -173,49 +171,47 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    if (order.projectName === 'LNG Canada') {
-      order._epicProjectId = EpicProjectIds.lngCanadaId;
-    } else if (order.projectName === 'Coastal Gaslink') {
-      order._epicProjectId = EpicProjectIds.coastalGaslinkId;
+    if (inspection.projectName === 'LNG Canada') {
+      inspection._epicProjectId = EpicProjectIds.lngCanadaId;
+    } else if (inspection.projectName === 'Coastal Gaslink') {
+      inspection._epicProjectId = EpicProjectIds.coastalGaslinkId;
     }
 
     // Publishing logic
-    order.OrderNRCED = {
+    inspection.InspectionNRCED = {
       summary: this.myForm.controls.nrcedSummary.value
     };
     if (this.nrcedPublishStatus === 'Publish') {
-      order.OrderNRCED['addRole'] = 'public';
-
+      inspection.InspectionNRCED['addRole'] = 'public';
     } else if (this.isEditing && this.nrcedPublishStatus === 'Unpublish') {
-      order.OrderNRCED['removeRole'] = 'public';
+      inspection.InspectionNRCED['removeRole'] = 'public';
     }
 
-    order.OrderLNG = {
+    inspection.InspectionLNG = {
       description: this.myForm.controls.lngDescription.value
     };
     if (this.lngPublishStatus === 'Publish') {
-      order.OrderLNG['addRole'] = 'public';
-    } else if (this.isEditing && (this.lngPublishStatus === 'Unpublish')) {
-      order.OrderLNG['removeRole'] = 'public';
+      inspection.InspectionLNG['addRole'] = 'public';
+    } else if (this.isEditing && this.lngPublishStatus === 'Unpublish') {
+      inspection.InspectionLNG['removeRole'] = 'public';
     }
 
-
     if (!this.isEditing) {
-      this.factoryService.createOrder(order).subscribe(res => {
+      this.factoryService.createInspection(inspection).subscribe(res => {
         console.log(res[0][0]);
         this.parResForErrors(res);
         this.router.navigate(['records']);
       });
     } else {
-      order._id = this.currentRecord._id;
+      inspection._id = this.currentRecord._id;
 
-      this.nrcedFlavour && (order.OrderNRCED['_id'] = this.nrcedFlavour._id);
-      this.lngFlavour && (order.OrderLNG['_id'] = this.lngFlavour._id);
+      this.nrcedFlavour && (inspection.InspectionNRCED['_id'] = this.nrcedFlavour._id);
+      this.lngFlavour && (inspection.InspectionLNG['_id'] = this.lngFlavour._id);
 
-      this.factoryService.editOrder(order).subscribe(res => {
+      this.factoryService.editInspection(inspection).subscribe(res => {
         console.log(res[0][0]);
         this.parResForErrors(res);
-        this.router.navigate(['records', 'orders', this.currentRecord._id, 'detail']);
+        this.router.navigate(['records', 'inspections', this.currentRecord._id, 'detail']);
       });
     }
   }
@@ -246,7 +242,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       if (!this.isEditing) {
         this.router.navigate(['records']);
       } else {
-        this.router.navigate(['records', 'orders', this.currentRecord._id, 'detail']);
+        this.router.navigate(['records', 'inspections', this.currentRecord._id, 'detail']);
       }
     }
   }

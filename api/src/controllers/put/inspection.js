@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var putUtils = require('../../utils/put-utils');
+var InspectionPost = require('../post/inspection')
 
 // Example of incomingObj
 /**

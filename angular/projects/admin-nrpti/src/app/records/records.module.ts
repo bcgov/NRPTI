@@ -24,6 +24,7 @@ import { OrderNRCEDDetailComponent } from './orders/order-nrced-detail/order-nrc
 import { OrderLNGDetailComponent } from './orders/order-lng-detail/order-lng-detail.component';
 
 // Inspections
+import { InspectionAddEditComponent } from './inspections/inspection-add-edit/inspection-add-edit.component';
 import { InspectionDetailComponent } from './inspections/inspection-detail/inspection-detail.component';
 import { InspectionNRCEDDetailComponent } from './inspections/inspection-nrced-detail/inspection-nrced-detail.component';
 import { InspectionLNGDetailComponent } from './inspections/inspection-lng-detail/inspection-lng-detail.component';
@@ -48,6 +49,7 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     RecordsRoutingModule,
   ],
   declarations: [
+    InspectionAddEditComponent,
     OrderAddEditComponent,
     OrderDetailComponent,
     OrderNRCEDDetailComponent,
@@ -62,6 +64,7 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
   providers: [],
   entryComponents: [
     RecordsTableRowComponent,
+    InspectionAddEditComponent,
     OrderAddEditComponent,
     OrderNRCEDDetailComponent,
     OrderLNGDetailComponent,
@@ -70,4 +73,4 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
   ],
   exports: []
 })
-export class RecordsModule {}
+export class RecordsModule { }
