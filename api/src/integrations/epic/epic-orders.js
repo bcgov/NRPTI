@@ -30,6 +30,17 @@ class EpicOrders {
       throw Error('transformRecord - required record must be non-null.');
     }
 
+    // Project names must change to how we name them in NRPTI
+    if (epicRecord.project && epicRecord.project.name) {
+      switch (epicRecord.project.name) {
+        case 'LNG Canada Export Terminal':
+          epicRecord.project.name = 'LNG Canada';
+          break;
+        case 'Coastal GasLink Pipeline':
+          epicRecord.project.name = 'Coastal Gaslink';
+      }
+    }
+
     return {
       _schemaName: 'Order',
       _epicProjectId: (epicRecord.project && epicRecord.project._id) || '',
@@ -43,7 +54,7 @@ class EpicOrders {
       recordType: 'Order',
       // recordSubtype: // No mapping
       dateIssued: epicRecord.documentDate || null,
-      issuingAgency: 'Environmental Assessment Agency',
+      issuingAgency: 'Environmental Assessment Office',
       author: epicRecord.documentAuthor || '',
       legislation: (epicRecord.project && epicRecord.project.legislation) || '',
       // issuedTo: // No mapping
