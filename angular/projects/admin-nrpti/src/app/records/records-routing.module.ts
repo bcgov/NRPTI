@@ -17,6 +17,7 @@ import { OrderDetailComponent } from './orders/order-detail/order-detail.compone
 // inspections
 import { InspectionResolver } from './inspections/inspection-resolver';
 import { InspectionDetailComponent } from './inspections/inspection-detail/inspection-detail.component';
+import { InspectionAddEditComponent } from './inspections/inspection-add-edit/inspection-add-edit.component';
 
 // other
 import { Utils } from 'nrpti-angular-components';
@@ -84,6 +85,14 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'inspections/add',
+        component: InspectionAddEditComponent,
+        canActivate: [CanActivateGuard],
+        data: {
+          breadcrumb: 'Add Inspection'
+        }
+      },
+      {
         path: 'inspections/:inspectionId',
         data: {
           breadcrumb: 'Inspection Details'
@@ -103,6 +112,18 @@ const routes: Routes = [
             },
             resolve: {
               records: InspectionResolver
+            }
+          },
+          {
+            path: 'edit',
+            component: InspectionAddEditComponent,
+            canActivate: [CanActivateGuard],
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+              breadcrumb: 'Edit'
+            },
+            resolve: {
+              record: InspectionResolver
             }
           }
         ]

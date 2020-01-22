@@ -30,6 +30,9 @@ export class Inspection {
   sourceDateUpdated: Date;
   sourceSystemRef: string;
 
+  InspectionNRCED: object;
+  InspectionLNG: object;
+
   constructor(obj?: any) {
     this._id = (obj && obj._id) || null;
     this._schemaName = (obj && obj._schemaName) || 'Inspection';

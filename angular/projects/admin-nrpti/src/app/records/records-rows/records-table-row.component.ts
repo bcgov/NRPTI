@@ -34,10 +34,10 @@ export class RecordsTableRowComponent extends TableRowComponent {
         this.router.navigate(['records', 'orders', this.rowData._id, 'edit']);
         break;
       case 'Inspection':
-        // TODO
+        this.router.navigate(['records', 'inspections', this.rowData._id, 'edit']);
         break;
       default:
-      // TODO
+        break;
     }
   }
 }
