@@ -7,7 +7,7 @@ var seed;
 var ObjectID = require('mongodb').ObjectID;
 var moment = require('moment');
 
-let activities =  require(process.cwd() + '/../angular/projects/public-lng/src/assets/data/general/home.json').activities;
+let activities = require(process.cwd() + '/../angular/projects/public-lng/src/assets/data/general/home.json').activities;
 
 let project1Authorizations = require(process.cwd() + '/../angular/projects/public-lng/src/assets/data/project1/authorizations.json').documents.docs;
 let project1Compliances = require(process.cwd() + '/../angular/projects/public-lng/src/assets/data/project1/compliance.json').documents.docs;
@@ -140,6 +140,7 @@ let createActivityRecord = async function (item, project, nrptiCollection) {
     type: item.type,
     title: item.title,
     description: item.description,
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
     // Prefer to store dates in the DB as ISO, not some random format.
     date: moment(item.date, 'DD-MM-YYYY').toISOString()
   }
@@ -150,46 +151,47 @@ let createActivityRecord = async function (item, project, nrptiCollection) {
 }
 
 let createAgreementRecord = async function (item, project, nrptiCollection) {
-    // Create the master record
-    const master = {
-      _schemaName: 'Agreement',
-      _epicProjectId: new ObjectID(project),
-      read: ['sysadmin'],
-      write: ['sysadmin'],
-      recordName: item.name,
-      recordType: item.complianceDocumentType,
-      // Prefer to store dates in the DB as ISO, not some random format.
-      date: moment(item.date, 'DD-MM-YYYY').toISOString(),
-      nationName: item.nation,
-      documentURL: item.url,
-  
-      dateAdded: new Date(),
-      dateUpdated: new Date(),
-      updatedBy: 'System',
-      publishedBy: 'System',
-      sourceDateAdded: new Date,
-      sourceDateUpdated: new Date,
-      sourceSystemRef: ''
-    }
-  
-    const resMaster = await nrptiCollection.insertOne(master)
-    let masterID = resMaster.insertedId.toString()
-    console.log('Inserted MasterID:', masterID)
-  
-    // Create the related flavour record
-    let flavourLNG = {
-      _schemaName: 'AgreementLNG',
-      read: [
-        'public',
-        'sysadmin'
-      ],
-      write: ['sysadmin'],
-      _master: new ObjectID(masterID),
-      description: item.description,
-    }
-  
-    const resFlavour = await nrptiCollection.insertOne(flavourLNG)
-    console.log('Inserted FlavourLNGID:', resFlavour.insertedId.toString())
+  // Create the master record
+  const master = {
+    _schemaName: 'Agreement',
+    _epicProjectId: new ObjectID(project),
+    read: ['sysadmin'],
+    write: ['sysadmin'],
+    recordName: item.name,
+    recordType: item.complianceDocumentType,
+    // Prefer to store dates in the DB as ISO, not some random format.
+    date: moment(item.date, 'DD-MM-YYYY').toISOString(),
+    nationName: item.nation,
+    documentURL: item.url,
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    updatedBy: 'System',
+    publishedBy: 'System',
+    sourceDateAdded: new Date,
+    sourceDateUpdated: new Date,
+    sourceSystemRef: ''
+  }
+
+  const resMaster = await nrptiCollection.insertOne(master)
+  let masterID = resMaster.insertedId.toString()
+  console.log('Inserted MasterID:', masterID)
+
+  // Create the related flavour record
+  let flavourLNG = {
+    _schemaName: 'AgreementLNG',
+    read: [
+      'public',
+      'sysadmin'
+    ],
+    write: ['sysadmin'],
+    _master: new ObjectID(masterID),
+    description: item.description,
+  }
+
+  const resFlavour = await nrptiCollection.insertOne(flavourLNG)
+  console.log('Inserted FlavourLNGID:', resFlavour.insertedId.toString())
 }
 
 let createPlanRecord = async function (item, project, nrptiCollection) {
@@ -208,6 +210,7 @@ let createPlanRecord = async function (item, project, nrptiCollection) {
     recordPhase: item.phase || item.complianceDocumentSubtype,
     issuingAgency: item.agency,
     documentURL: item.url,
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -256,6 +259,7 @@ let createWarningLetterRecord = async function (item, project, nrptiCollection) 
     issuingAgency: item.agency,
     documentURL: item.url,
     author: item.author,
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -300,6 +304,7 @@ let createReportRecord = async function (item, project, nrptiCollection) {
     issuingAgency: item.agency,
     documentURL: item.url,
     author: item.author,
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -344,6 +349,7 @@ let createAuthorizationRecord = async function (item, project, nrptiCollection) 
     dateIssued: moment(item.date, 'DD-MM-YYYY').toISOString(),
     issuingAgency: item.agency,
     documentURL: item.url,
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -382,12 +388,13 @@ let createOrderRecord = async function (item, project, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
     recordName: item.name,
-    recordType: item.complianceDocumentType,
+    recordType: 'Order',
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toISOString(),
     issuingAgency: item.agency,
     documentURL: item.url,
     author: item.author,
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -426,12 +433,13 @@ let createInspectionRecord = async function (item, project, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
     recordName: item.name,
-    recordType: item.complianceDocumentType,
+    recordType: 'Inspection',
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toISOString(),
     issuingAgency: item.agency,
     documentURL: item.url,
     author: item.author,
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
