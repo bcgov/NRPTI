@@ -18,7 +18,7 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
       [],
       tableObject.currentPage,
       tableObject.pageSize,
-      tableObject.sortBy || '-dateIssued', // This needs to be common between all datasets to work properly
+      tableObject.sortBy || '-_master.dateIssued', // This needs to be common between all datasets to work properly
       {},
       false
     );
