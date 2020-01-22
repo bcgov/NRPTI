@@ -16,7 +16,6 @@ export class OrderLNGDetailComponent extends RecordComponent implements OnInit, 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   public isPublished: boolean;
-  public publishStatusString: string;
 
   constructor(
     public route: ActivatedRoute,
@@ -46,7 +45,6 @@ export class OrderLNGDetailComponent extends RecordComponent implements OnInit, 
     }
 
     this.isPublished = this.isRecordPublished();
-    this.publishStatusString = this.getPublishStatusString();
   }
 
   publish(): void {
@@ -71,7 +69,6 @@ export class OrderLNGDetailComponent extends RecordComponent implements OnInit, 
 
         this.data = new OrderLNG(response);
         this.isPublished = this.isRecordPublished();
-        this.publishStatusString = this.getPublishStatusString();
 
         this.changeDetectionRef.detectChanges();
       });
@@ -99,7 +96,6 @@ export class OrderLNGDetailComponent extends RecordComponent implements OnInit, 
 
         this.data = new OrderLNG(response);
         this.isPublished = this.isRecordPublished();
-        this.publishStatusString = this.getPublishStatusString();
 
         this.changeDetectionRef.detectChanges();
       });
@@ -107,14 +103,6 @@ export class OrderLNGDetailComponent extends RecordComponent implements OnInit, 
 
   isRecordPublished(): boolean {
     return this.data && this.data.read && this.data.read.includes('public');
-  }
-
-  getPublishStatusString(): string {
-    if (!this.isPublished) {
-      return 'Not Published';
-    }
-
-    return `Published on ${this.datePipe.transform(this.data.datePublished, 'mediumDate')}`;
   }
 
   ngOnDestroy() {

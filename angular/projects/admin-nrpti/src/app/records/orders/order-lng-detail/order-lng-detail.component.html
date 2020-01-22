@@ -10,7 +10,10 @@
             </span>
           </div>
           <div class="grid-section-header-button">
-            <span class="grid-section-header-button-sub-text">{{ publishStatusString }}</span>
+            <span *ngIf="!isPublished" class="grid-section-header-button-sub-text">Not Published</span>
+            <span *ngIf="isPublished" class="grid-section-header-button-sub-text">
+              Published on {{ (data && data.datePublished | date: 'mediumDate') || '-' }}
+            </span>
             <button *ngIf="!isPublished" class="button-publish" (click)="publish()">
               <i class="material-icons">check</i>
               <span>Publish to LNG</span>

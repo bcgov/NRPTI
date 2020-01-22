@@ -24,6 +24,14 @@ exports.publish = async function(obj) {
       obj.read.push('public');
       obj.markModified('read');
 
+      const date = new Date();
+
+      obj.datePublished = date;
+      obj.markModified('datePublished');
+
+      obj.dateUpdated = date;
+      obj.markModified('dateUpdated');
+
       // save and return
       let savedObj = await obj.save();
 
@@ -60,6 +68,12 @@ exports.unPublish = async function(obj) {
       // unpublish
       obj.read = obj.read.filter(role => role !== 'public');
       obj.markModified('read');
+
+      obj.datePublished = null;
+      obj.markModified('datePublished');
+
+      obj.dateUpdated = new Date();
+      obj.markModified('dateUpdated');
 
       // save and return
       let savedObj = await obj.save();
