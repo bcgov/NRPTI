@@ -41,8 +41,7 @@ export class OrderDetailComponent extends RecordComponent implements OnInit, OnD
   }
 
   navigateToEditPage() {
-    // TODO enable this route when the edit page is ready
-    // this.router.navigate(['records', 'orders', this.data._master._id, 'edit']);
+    this.router.navigate(['records', 'orders', this.data._master._id, 'edit']);
   }
 
   ngOnDestroy() {

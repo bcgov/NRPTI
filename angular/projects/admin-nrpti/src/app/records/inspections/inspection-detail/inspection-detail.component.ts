@@ -41,8 +41,7 @@ export class InspectionDetailComponent extends RecordComponent implements OnInit
   }
 
   navigateToEditPage() {
-    // TODO enable this route when the edit page is ready
-    // this.router.navigate(['records', 'inspections', this.data._master._id, 'edit']);
+    this.router.navigate(['records', 'inspections', this.data._master._id, 'edit']);
   }
 
   ngOnDestroy() {

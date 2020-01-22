@@ -1,4 +1,13 @@
-import { Directive, ViewContainerRef, Input, ComponentFactoryResolver, OnInit, ComponentRef } from '@angular/core';
+import {
+  Directive,
+  ViewContainerRef,
+  Input,
+  ComponentFactoryResolver,
+  OnInit,
+  ComponentRef,
+  SimpleChanges,
+  OnChanges
+} from '@angular/core';
 import { InjectComponentService } from 'nrpti-angular-components';
 import { RecordComponent } from './record-component';
 import { RecordUtils } from './record-utils';
@@ -13,7 +22,7 @@ import { RecordUtils } from './record-utils';
 @Directive({
   selector: '[appRecordDetail]'
 })
-export class RecordDetailDirective implements OnInit {
+export class RecordDetailDirective implements OnInit, OnChanges {
   @Input('appRecordDetail') data: any;
 
   constructor(
@@ -24,6 +33,14 @@ export class RecordDetailDirective implements OnInit {
 
   ngOnInit() {
     this.loadComponent();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (!changes.firstChange && changes.data && changes.data.currentValue) {
+      this.data = changes.data.currentValue;
+
+      this.loadComponent();
+    }
   }
 
   /**
