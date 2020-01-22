@@ -26,8 +26,8 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
   // Flavour data
   public nrcedFlavour = null;
   public lngFlavour = null;
-  public lngPublishStatus = 'Unpublish';
-  public nrcedPublishStatus = 'Unpublish';
+  public lngPublishStatus = 'Unpublished';
+  public nrcedPublishStatus = 'Unpublished';
   public lngPublishSubtext = 'Not published';
   public nrcedPublishSubtext = 'Not published';
 
@@ -74,12 +74,12 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       switch (flavour._schemaName) {
         case ('OrderLNG'):
           this.lngFlavour = flavour;
-          this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Publish');
+          this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
           this.lngFlavour.read.includes('public') && (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(new Date(this.lngFlavour.datePublished))}`);
           break;
         case ('OrderNRCED'):
           this.nrcedFlavour = flavour;
-          this.nrcedFlavour.read.includes('public') && (this.nrcedPublishStatus = 'Publish');
+          this.nrcedFlavour.read.includes('public') && (this.nrcedPublishStatus = 'Published');
           this.nrcedFlavour.read.includes('public') && (this.nrcedPublishSubtext = `Published on ${this.utils.convertJSDateToString(new Date(this.nrcedFlavour.datePublished))}`);
           break;
         default:
@@ -107,8 +107,20 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       issuedTo: new FormControl((this.currentRecord && this.currentRecord.issuedTo) || ''),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
-      latitude: new FormControl((this.currentRecord && this.currentRecord.centroid[0]) || ''),
-      longitude: new FormControl((this.currentRecord && this.currentRecord.centroid[1]) || ''),
+      latitude: new FormControl(
+        (
+          this.currentRecord &&
+          this.currentRecord.centroid &&
+          this.currentRecord.centroid[0]
+        ) || ''
+      ),
+      longitude: new FormControl(
+        (
+          this.currentRecord &&
+          this.currentRecord.centroid &&
+          this.currentRecord.centroid[1]
+        ) || ''
+      ),
       outcomeStatus: new FormControl((this.currentRecord && this.currentRecord.outcomeStatus) || ''),
       outcomeDescription: new FormControl((this.currentRecord && this.currentRecord.outcomeDescription) || ''),
 
@@ -127,17 +139,17 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
   togglePublish(flavour) {
     switch (flavour) {
       case 'lng':
-        if (this.lngPublishStatus === 'Unpublish') {
-          this.lngPublishStatus = 'Publish';
+        if (this.lngPublishStatus === 'Unpublished') {
+          this.lngPublishStatus = 'Published';
         } else {
-          this.lngPublishStatus = 'Unpublish';
+          this.lngPublishStatus = 'Unpublished';
         }
         break;
       case 'nrced':
-        if (this.nrcedPublishStatus === 'Unpublish') {
-          this.nrcedPublishStatus = 'Publish';
+        if (this.nrcedPublishStatus === 'Unpublished') {
+          this.nrcedPublishStatus = 'Published';
         } else {
-          this.nrcedPublishStatus = 'Unpublish';
+          this.nrcedPublishStatus = 'Unpublished';
         }
         break;
       default:
@@ -183,19 +195,19 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     order.OrderNRCED = {
       summary: this.myForm.controls.nrcedSummary.value
     };
-    if (this.nrcedPublishStatus === 'Publish') {
+    if (this.nrcedPublishStatus === 'Published') {
       order.OrderNRCED['addRole'] = 'public';
 
-    } else if (this.isEditing && this.nrcedPublishStatus === 'Unpublish') {
+    } else if (this.isEditing && this.nrcedPublishStatus === 'Unpublished') {
       order.OrderNRCED['removeRole'] = 'public';
     }
 
     order.OrderLNG = {
       description: this.myForm.controls.lngDescription.value
     };
-    if (this.lngPublishStatus === 'Publish') {
+    if (this.lngPublishStatus === 'Published') {
       order.OrderLNG['addRole'] = 'public';
-    } else if (this.isEditing && (this.lngPublishStatus === 'Unpublish')) {
+    } else if (this.isEditing && (this.lngPublishStatus === 'Unpublished')) {
       order.OrderLNG['removeRole'] = 'public';
     }
 
