@@ -26,8 +26,8 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
   // Flavour data
   public nrcedFlavour = null;
   public lngFlavour = null;
-  public lngPublishStatus = 'Unpublish';
-  public nrcedPublishStatus = 'Unpublish';
+  public lngPublishStatus = 'Unpublished';
+  public nrcedPublishStatus = 'Unpublished';
   public lngPublishSubtext = 'Not published';
   public nrcedPublishSubtext = 'Not published';
 
@@ -64,7 +64,6 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
 
   private populateTextFields() {
     if (this.currentRecord.dateUpdated) {
-
       this.lastEditedSubText = `Last Edited on ${this.utils.convertJSDateToString(new Date(this.currentRecord.dateUpdated))}`;
     } else {
       this.lastEditedSubText = `Added on ${this.utils.convertJSDateToString(new Date(this.currentRecord.dateAdded))}`;
@@ -73,12 +72,12 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
       switch (flavour._schemaName) {
         case ('InspectionLNG'):
           this.lngFlavour = flavour;
-          this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Publish');
+          this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
           this.lngFlavour.read.includes('public') && (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(new Date(this.lngFlavour.datePublished))}`);
           break;
         case ('InspectionNRCED'):
           this.nrcedFlavour = flavour;
-          this.nrcedFlavour.read.includes('public') && (this.nrcedPublishStatus = 'Publish');
+          this.nrcedFlavour.read.includes('public') && (this.nrcedPublishStatus = 'Published');
           this.nrcedFlavour.read.includes('public') && (this.nrcedPublishSubtext = `Published on ${this.utils.convertJSDateToString(new Date(this.nrcedFlavour.datePublished))}`);
           break;
         default:
@@ -88,7 +87,6 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
   }
 
   private buildForm() {
-
     this.myForm = new FormGroup({
       // Master
       recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
@@ -106,8 +104,20 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
       issuedTo: new FormControl((this.currentRecord && this.currentRecord.issuedTo) || ''),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
-      latitude: new FormControl((this.currentRecord && this.currentRecord.centroid[0]) || ''),
-      longitude: new FormControl((this.currentRecord && this.currentRecord.centroid[1]) || ''),
+      latitude: new FormControl(
+        (
+          this.currentRecord &&
+          this.currentRecord.centroid &&
+          this.currentRecord.centroid[0]
+        ) || ''
+      ),
+      longitude: new FormControl(
+        (
+          this.currentRecord &&
+          this.currentRecord.centroid &&
+          this.currentRecord.centroid[1]
+        ) || ''
+      ),
       outcomeStatus: new FormControl((this.currentRecord && this.currentRecord.outcomeStatus) || ''),
       outcomeDescription: new FormControl((this.currentRecord && this.currentRecord.outcomeDescription) || ''),
 
@@ -126,17 +136,17 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
   togglePublish(flavour) {
     switch (flavour) {
       case 'lng':
-        if (this.lngPublishStatus === 'Unpublish') {
-          this.lngPublishStatus = 'Publish';
+        if (this.lngPublishStatus === 'Unpublished') {
+          this.lngPublishStatus = 'Published';
         } else {
-          this.lngPublishStatus = 'Unpublish';
+          this.lngPublishStatus = 'Unpublished';
         }
         break;
       case 'nrced':
-        if (this.nrcedPublishStatus === 'Unpublish') {
-          this.nrcedPublishStatus = 'Publish';
+        if (this.nrcedPublishStatus === 'Unpublished') {
+          this.nrcedPublishStatus = 'Published';
         } else {
-          this.nrcedPublishStatus = 'Unpublish';
+          this.nrcedPublishStatus = 'Unpublished';
         }
         break;
       default:
@@ -181,18 +191,18 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
     inspection.InspectionNRCED = {
       summary: this.myForm.controls.nrcedSummary.value
     };
-    if (this.nrcedPublishStatus === 'Publish') {
+    if (this.nrcedPublishStatus === 'Published') {
       inspection.InspectionNRCED['addRole'] = 'public';
-    } else if (this.isEditing && this.nrcedPublishStatus === 'Unpublish') {
+    } else if (this.isEditing && this.nrcedPublishStatus === 'Unpublished') {
       inspection.InspectionNRCED['removeRole'] = 'public';
     }
 
     inspection.InspectionLNG = {
       description: this.myForm.controls.lngDescription.value
     };
-    if (this.lngPublishStatus === 'Publish') {
+    if (this.lngPublishStatus === 'Published') {
       inspection.InspectionLNG['addRole'] = 'public';
-    } else if (this.isEditing && this.lngPublishStatus === 'Unpublish') {
+    } else if (this.isEditing && this.lngPublishStatus === 'Unpublished') {
       inspection.InspectionLNG['removeRole'] = 'public';
     }
 
