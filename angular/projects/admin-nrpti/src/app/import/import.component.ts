@@ -30,27 +30,27 @@ export class ImportComponent implements OnInit {
     {
       name: 'Start',
       value: 'startDate',
-      width: 'col-2'
+      width: 'col-3'
     },
     {
       name: 'Finish',
       value: 'finishDate',
-      width: 'col-2'
+      width: 'col-3'
     },
     {
       name: 'Status',
       value: 'status',
-      width: 'col-1'
+      width: 'col-2'
     },
     {
       name: 'Source',
       value: 'dataSourceLabel',
-      width: 'col-1'
+      width: 'col-2'
     },
     {
       name: 'Items',
       value: 'itemTotal',
-      width: 'col-5'
+      width: 'col-2'
     }
   ];
   constructor(
