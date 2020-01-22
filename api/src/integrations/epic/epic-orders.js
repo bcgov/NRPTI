@@ -40,7 +40,7 @@ class EpicOrders {
       write: ['sysadmin'],
 
       recordName: epicRecord.displayName || '',
-      recordType: epicRecord.documentType || '',
+      recordType: 'Order',
       // recordSubtype: // No mapping
       dateIssued: epicRecord.documentDate || null,
       issuingAgency: 'Environmental Assessment Agency',
