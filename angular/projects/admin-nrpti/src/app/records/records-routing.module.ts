@@ -76,7 +76,7 @@ const routes: Routes = [
             canActivate: [CanActivateGuard],
             canDeactivate: [CanDeactivateGuard],
             data: {
-              breadcrumb: 'Edit'
+              breadcrumb: 'Edit Order'
             },
             resolve: {
               record: OrderResolver
@@ -120,7 +120,7 @@ const routes: Routes = [
             canActivate: [CanActivateGuard],
             canDeactivate: [CanDeactivateGuard],
             data: {
-              breadcrumb: 'Edit'
+              breadcrumb: 'Edit Inspection'
             },
             resolve: {
               record: InspectionResolver
