@@ -21,7 +21,7 @@
           }
 
           .grid-section-header-title-sub-text {
-            margin-left: 0.75rem;
+            margin-left: 1.25rem;
             font-size: 0.75rem;
           }
         }
@@ -117,4 +117,14 @@
       }
     }
   }
+}
+
+.blue-header {
+  display: inline-block;
+  color: #38598a;
+}
+
+.grey-sub-text {
+  color: grey;
+  font-style: italic;
 }
