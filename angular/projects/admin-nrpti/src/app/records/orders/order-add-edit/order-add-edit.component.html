@@ -195,7 +195,7 @@
           <span class="grey-subtext-no-margins">{{ nrcedPublishSubtext }}</span>
         </div>
         <div class="col-4">
-          <mat-slide-toggle (toggleChange)="togglePublish('nrced')" [checked]="nrcedPublishStatus === 'Publish'">
+          <mat-slide-toggle (toggleChange)="togglePublish('nrced')" [checked]="nrcedPublishStatus === 'Published'">
             {{ nrcedPublishStatus }}
           </mat-slide-toggle>
           <br />
@@ -219,7 +219,7 @@
           <span class="grey-subtext-no-margins">{{ lngPublishSubtext }}</span>
         </div>
         <div class="col-4">
-          <mat-slide-toggle (toggleChange)="togglePublish('lng')" [checked]="lngPublishStatus === 'Publish'">
+          <mat-slide-toggle (toggleChange)="togglePublish('lng')" [checked]="lngPublishStatus === 'Published'">
             {{ lngPublishStatus }}
           </mat-slide-toggle>
           <br />
