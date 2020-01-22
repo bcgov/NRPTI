@@ -181,6 +181,8 @@ let createAgreementRecord = async function (item, project, nrptiCollection) {
   // Create the related flavour record
   let flavourLNG = {
     _schemaName: 'AgreementLNG',
+    dateUpdated: new Date(),
+    datePublished: new Date(),
     read: [
       'public',
       'sysadmin'
@@ -228,6 +230,8 @@ let createPlanRecord = async function (item, project, nrptiCollection) {
   // Create the related flavour record
   let flavourLNG = {
     _schemaName: 'PlanLNG',
+    dateUpdated: new Date(),
+    datePublished: new Date(),
     read: [
       'public',
       'sysadmin'
@@ -277,6 +281,8 @@ let createWarningLetterRecord = async function (item, project, nrptiCollection) 
   // Create the related flavour record
   let flavourLNG = {
     _schemaName: 'WarningLetterLNG',
+    dateUpdated: new Date(),
+    datePublished: new Date(),
     read: [
       'public',
       'sysadmin'
@@ -322,6 +328,8 @@ let createReportRecord = async function (item, project, nrptiCollection) {
   // Create the related flavour record
   let flavourLNG = {
     _schemaName: 'SelfReportLNG',
+    dateUpdated: new Date(),
+    datePublished: new Date(),
     read: [
       'public',
       'sysadmin'
@@ -367,6 +375,8 @@ let createAuthorizationRecord = async function (item, project, nrptiCollection) 
   // Create the related flavour record
   let authorizationLNG = {
     _schemaName: 'AuthorizationLNG',
+    dateUpdated: new Date(),
+    datePublished: new Date(),
     read: [
       'public',
       'sysadmin'
@@ -412,6 +422,8 @@ let createOrderRecord = async function (item, project, nrptiCollection) {
   // Create the related flavour record
   let flavourLNG = {
     _schemaName: 'OrderLNG',
+    dateUpdated: new Date(),
+    datePublished: new Date(),
     read: [
       'public',
       'sysadmin'
@@ -457,6 +469,8 @@ let createInspectionRecord = async function (item, project, nrptiCollection) {
   // Create the related flavour record
   let flavourLNG = {
     _schemaName: 'InspectionLNG',
+    dateUpdated: new Date(),
+    datePublished: new Date(),
     read: [
       'public',
       'sysadmin'
