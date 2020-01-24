@@ -6,8 +6,7 @@ import { ApiService } from './api.service';
 import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
-import { Order } from '../../../../common/src/app/models/master';
-import { Inspection } from '../../../../common/src/app/models/master';
+import { Order, Inspection, Certificate } from '../../../../common/src/app/models/master';
 import { TaskService, ITaskParams } from './task.service';
 
 /**
@@ -315,5 +314,22 @@ export class FactoryService {
     };
     return this.recordService.editRecord(outboundObject)
       .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // Certificates
+  public createCertificate(certificate: Certificate): Observable<object> {
+    const outboundObject = {
+      certificates: [certificate]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editCertificate(certificate: Certificate): Observable<object> {
+    const outboundObject = {
+      certificates: [certificate]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
 }

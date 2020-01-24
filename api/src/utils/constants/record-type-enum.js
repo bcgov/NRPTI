@@ -5,7 +5,11 @@ const RECORD_TYPE = Object.freeze({
   AdministrativePenalty: { _schemaName: 'AdministrativePenalty', displayName: 'Administrative Penalty' },
   AdministrativeSanction: { _schemaName: 'AdministrativeSanction', displayName: 'Administrative Sanction' },
   Agreement: { _schemaName: 'Agreement', displayName: 'Agreement' },
-  Certificate: { _schemaName: 'Certificate', displayName: 'Certificate' },
+  Certificate: {
+    _schemaName: 'Certificate',
+    displayName: 'Certificate',
+    flavours: { lng: { _schemaName: 'CertificateLNG' } }
+  },
   ConstructionPlan: { _schemaName: 'ConstructionPlan', displayName: 'Construction Plan' },
   CourtConviction: { _schemaName: 'CourtConviction', displayName: 'Court Conviction' },
   Inspection: { _schemaName: 'Inspection', displayName: 'Inspection' },
