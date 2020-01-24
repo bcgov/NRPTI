@@ -1,16 +1,27 @@
 import { Type } from '@angular/core';
 import {
   Order,
-  OrderLNG,
   OrderNRCED,
+  OrderLNG,
   Inspection,
+  InspectionNRCED,
   InspectionLNG,
-  InspectionNRCED
+  Certificate,
+  CertificateLNG
 } from '../../../../../common/src/app/models';
+
+// orders
 import { OrderNRCEDDetailComponent } from '../orders/order-nrced-detail/order-nrced-detail.component';
 import { OrderLNGDetailComponent } from '../orders/order-lng-detail/order-lng-detail.component';
+
+// inspections
 import { InspectionNRCEDDetailComponent } from '../inspections/inspection-nrced-detail/inspection-nrced-detail.component';
 import { InspectionLNGDetailComponent } from '../inspections/inspection-lng-detail/inspection-lng-detail.component';
+
+// certificates
+import { CertificateLNGDetailComponent } from '../certificates/certificate-lng-detail/certificate-lng-detail.component';
+
+// other
 import { RecordComponent } from './record-component';
 
 export class RecordUtils {
@@ -41,6 +52,10 @@ export class RecordUtils {
         return new InspectionLNG(data);
       case 'InspectionNRCED':
         return new InspectionNRCED(data);
+      case 'Certificate':
+        return new Certificate(data);
+      case 'CertificateLNG':
+        return new CertificateLNG(data);
       default:
         return null;
     }
@@ -69,6 +84,8 @@ export class RecordUtils {
         return InspectionNRCEDDetailComponent;
       case 'InspectionLNG':
         return InspectionLNGDetailComponent;
+      case 'CertificateLNG':
+        return CertificateLNGDetailComponent;
       default:
         return null;
     }
