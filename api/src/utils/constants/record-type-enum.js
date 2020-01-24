@@ -27,9 +27,21 @@ const RECORD_TYPE = Object.freeze({
     flavours: { lng: { _schemaName: 'ConstructionPlanLNG' } }
   },
   CourtConviction: { _schemaName: 'CourtConviction', displayName: 'Court Conviction' },
-  Inspection: { _schemaName: 'Inspection', displayName: 'Inspection' },
-  ManagementPlan: { _schemaName: 'ManagementPlan', displayName: 'Management Plan' },
-  Order: { _schemaName: 'Order', displayName: 'Order' },
+  Inspection: {
+    _schemaName: 'Inspection',
+    displayName: 'Inspection',
+    flavours: { lng: { _schemaName: 'InspectionLNG' }, nrced: { _schemaName: 'InspectionNRCED' } }
+  },
+  ManagementPlan: {
+    _schemaName: 'ManagementPlan',
+    displayName: 'Management Plan',
+    flavours: { lng: { _schemaName: 'ManagementPlanLNG' } }
+  },
+  Order: {
+    _schemaName: 'Order',
+    displayName: 'Order',
+    flavours: { lng: { _schemaName: 'OrderLNG' }, nrced: { _schemaName: 'OrderNRCED' } }
+  },
   Permit: { _schemaName: 'Permit', displayName: 'Permit', flavours: { lng: { _schemaName: 'PermitLNG' } } },
   RestorativeJustice: {
     _schemaName: 'RestorativeJustice',

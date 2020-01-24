@@ -6,7 +6,7 @@ import { ApiService } from './api.service';
 import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
-import { Order, Inspection, Certificate, Permit, Agreement, SelfReport, RestorativeJustice, Ticket, AdministrativePenalty, AdministrativeSanction, Warning, ConstructionPlan } from '../../../../common/src/app/models/master';
+import { Order, Inspection, Certificate, Permit, Agreement, SelfReport, RestorativeJustice, Ticket, AdministrativePenalty, AdministrativeSanction, Warning, ConstructionPlan, ManagementPlan } from '../../../../common/src/app/models/master';
 import { TaskService, ITaskParams } from './task.service';
 
 /**
@@ -485,4 +485,23 @@ export class FactoryService {
     };
     return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
+
+  // Management Plans
+  public createManagementPlan(managementPLan: ManagementPlan): Observable<object> {
+    const outboundObject = {
+      managementPlans: [managementPLan]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+
+  public editManagementPlan(managementPLan: ManagementPlan): Observable<object> {
+    const outboundObject = {
+      managementPlans: [managementPLan]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
 }

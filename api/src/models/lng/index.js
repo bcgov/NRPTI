@@ -13,4 +13,5 @@ exports.ticketLNG = require('./ticket-lng');
 exports.administrativePenaltyLNG = require('./administrativePenalty-lng');
 exports.warningLNG = require('./warning-lng');
 exports.constructionPlanLNG = require('./constructionPlan-lng');
+exports.managementPlanLNG = require('./managementPlan-lng');
 
