@@ -23,6 +23,12 @@ export class RecordsTableRowComponent extends TableRowComponent {
       case 'Inspection':
         this.router.navigate(['records', 'inspections', this.rowData._id, 'detail']);
         break;
+      case 'Certificate':
+        this.router.navigate(['records', 'certificates', this.rowData._id, 'detail']);
+        break;
+      case 'ManagementPlan':
+        this.router.navigate(['records', 'management-plans', this.rowData._id, 'detail']);
+        break;
       default:
       // TODO
     }

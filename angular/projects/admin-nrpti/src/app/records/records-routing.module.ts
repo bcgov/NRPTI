@@ -19,6 +19,14 @@ import { InspectionResolver } from './inspections/inspection-resolver';
 import { InspectionDetailComponent } from './inspections/inspection-detail/inspection-detail.component';
 import { InspectionAddEditComponent } from './inspections/inspection-add-edit/inspection-add-edit.component';
 
+// certificates
+import { CertificateResolver } from './certificates/certificate-resolver';
+import { CertificateDetailComponent } from './certificates/certificate-detail/certificate-detail.component';
+
+// management plans
+import { ManagementPlanResolver } from './management-plans/management-plan-resolver';
+import { ManagementPlanDetailComponent } from './management-plans/management-plan-detail/management-plan-detail.component';
+
 // other
 import { Utils } from 'nrpti-angular-components';
 
@@ -29,6 +37,7 @@ const routes: Routes = [
       breadcrumb: 'Records List'
     },
     children: [
+      // records
       {
         path: '',
         data: {
@@ -40,6 +49,7 @@ const routes: Routes = [
           records: RecordsResolver
         }
       },
+      // orders
       {
         path: 'orders/add',
         component: OrderAddEditComponent,
@@ -84,6 +94,7 @@ const routes: Routes = [
           }
         ]
       },
+      // inspections
       {
         path: 'inspections/add',
         component: InspectionAddEditComponent,
@@ -127,6 +138,56 @@ const routes: Routes = [
             }
           }
         ]
+      },
+      // certificates
+      {
+        path: 'certificates/:certificateId',
+        data: {
+          breadcrumb: 'Certificate Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: CertificateDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: CertificateResolver
+            }
+          }
+        ]
+      },
+      // management plans
+      {
+        path: 'management-plans/:managementPlanId',
+        data: {
+          breadcrumb: 'Management Plan Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: ManagementPlanDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: ManagementPlanResolver
+            }
+          }
+        ]
       }
     ]
   }
@@ -135,6 +196,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [RecordsResolver, OrderResolver, InspectionResolver, Utils]
+  providers: [RecordsResolver, OrderResolver, InspectionResolver, CertificateResolver, ManagementPlanResolver, Utils]
 })
-export class RecordsRoutingModule { }
+export class RecordsRoutingModule {}
