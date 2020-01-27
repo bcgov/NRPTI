@@ -49,19 +49,6 @@ export class ApiService {
     }
   }
 
-  /**
-   * Send request to start a task.
-   *
-   * @param {*} obj post body payload
-   * @returns {Observable<any>}
-   * @memberof ApiService
-   */
-  // TODO dont use any
-  startTask(obj: any): Observable<any> {
-    const queryString = 'task';
-    return this.http.post<any>(`${this.pathAPI}/${queryString}`, obj, {});
-  }
-
   //
   // Documents
   //
