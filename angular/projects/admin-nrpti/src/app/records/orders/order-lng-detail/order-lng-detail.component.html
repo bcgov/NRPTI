@@ -5,8 +5,8 @@
         <div class="grid-section-header">
           <div class="grid-section-header-title">
             <span class="grid-section-header-title-text">LNG Data</span>
-            <span *ngIf="data.dateUpdated" class="grid-section-header-title-sub-text grey-sub-text">
-              Last Edited {{ (data.dateUpdated | date: 'mediumDate') || '-' }}
+            <span *ngIf="data && data.dateUpdated" class="grid-section-header-title-sub-text grey-sub-text">
+              Last Edited {{ (data && data.dateUpdated | date: 'mediumDate') || '-' }}
             </span>
           </div>
           <div class="grid-section-header-button">
