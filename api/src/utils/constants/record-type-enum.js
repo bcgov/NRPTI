@@ -21,7 +21,11 @@ const RECORD_TYPE = Object.freeze({
     displayName: 'Certificate',
     flavours: { lng: { _schemaName: 'CertificateLNG' } }
   },
-  ConstructionPlan: { _schemaName: 'ConstructionPlan', displayName: 'Construction Plan' },
+  ConstructionPlan: {
+    _schemaName: 'ConstructionPlan',
+    displayName: 'Construction Plan',
+    flavours: { lng: { _schemaName: 'ConstructionPlanLNG' } }
+  },
   CourtConviction: { _schemaName: 'CourtConviction', displayName: 'Court Conviction' },
   Inspection: { _schemaName: 'Inspection', displayName: 'Inspection' },
   ManagementPlan: { _schemaName: 'ManagementPlan', displayName: 'Management Plan' },
