@@ -43,7 +43,7 @@ export class AuthorizationsResolver implements Resolve<Observable<object>> {
     return this._searchService.getSearchResults(
       this._apiService.apiPath,
       '',
-      ['AuthorizationLNG', 'CertificateLNG'],
+      ['AuthorizationLNG', 'CertificateLNG', 'PermitLNG'],
       [],
       tableObject.currentPage,
       tableObject.pageSize,

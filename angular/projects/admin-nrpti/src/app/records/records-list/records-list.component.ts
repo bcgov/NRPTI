@@ -202,6 +202,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       case 'certificate':
         this.router.navigate(['records', 'certificates', 'add']);
         break;
+      case 'permit':
+        this.router.navigate(['records', 'permits', 'add']);
+        break;
       default:
         break;
     }
