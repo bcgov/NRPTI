@@ -53,7 +53,7 @@ class EpicInspections {
       recordName: epicRecord.displayName || '',
       recordType: 'Inspection',
       // recordSubtype: // No mapping
-      dateIssued: epicRecord.documentDate || null,
+      dateIssued: epicRecord.datePosted || null,
       issuingAgency: 'Environmental Assessment Office',
       author: epicRecord.documentAuthor || '',
       legislation: (epicRecord.project && epicRecord.project.legislation) || '',
