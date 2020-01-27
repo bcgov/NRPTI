@@ -53,7 +53,7 @@ class EpicOrders {
       recordName: epicRecord.displayName || '',
       recordType: 'Order',
       // recordSubtype: // No mapping
-      dateIssued: epicRecord.documentDate || null,
+      dateIssued: epicRecord.datePosted || null,
       issuingAgency: 'Environmental Assessment Office',
       author: epicRecord.documentAuthor || '',
       legislation: (epicRecord.project && epicRecord.project.legislation) || '',
