@@ -66,6 +66,11 @@ A list of recommended/helpful VS Code extensions.
 - Prod:
   - Api: TBD
   - Admin: TBD
+  
+### METABASE
+- Dev: https://metabase-nrpti-dev.pathfinder.gov.bc.ca
+- Test: https://metabase-nrpti-test.pathfinder.gov.bc.ca
+- Prod: https://metabase-nrpti-prod.pathfinder.gov.bc.ca
 
 ### Jenkins
 - https://jenkins-prod-iarjfo-tools.pathfinder.gov.bc.ca/
