@@ -47,18 +47,20 @@
       </div>
     </ng-container>
     
-    <div class="form-btns">
-      <button
-        class="btn btn-primary gtm-apply-filters explore-btn-lg-device"
-        type="button"
-        title="Apply filters"
-        (click)="applyAllFilters(); hideSidePanel.emit()">Apply</button>
-      <button
-        class="btn btn-light"
-        type="button"
-        title="Clear filters"
-        (click)="clearAllFilters()">Clear</button>
+    <ng-container>
+      <div class="form-group">
+        <button
+          class="btn btn-primary"
+          type="button"
+          title="Apply filters"
+          (click)="applyAllFilters(); hideSidePanel.emit()">Apply</button>
+        <button
+          class="btn btn-light ml-1"
+          type="button"
+          title="Clear filters"
+          (click)="clearAllFilters()">Clear</button>
+      </div>
+    </ng-container>
 
-    </div>
   </div>
 </div>

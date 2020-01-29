@@ -66,7 +66,9 @@ export class AuthorizationsComponent implements OnInit {
       });
 
       Object.keys(event).forEach(item => {
-        if (event[item] === undefined || event[item].length === 0) {
+        if (!event || (event[item] === undefined || event[item] === null)
+                   || (event[item].length === 0)
+        ) {
           // console.log('skipping:', e);
         } else {
           newParams[item] = event[item];

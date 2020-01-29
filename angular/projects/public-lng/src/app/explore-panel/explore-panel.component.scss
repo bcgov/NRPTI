@@ -108,16 +108,3 @@
     }
   }
 }
-
-// show/hide button variants for large and small devices
-@media (max-width: 1023px) {
-  .explore-btn-lg-device {
-    display: none;
-  }
-}
-
-@media (min-width: 1024px) {
-  .explore-btn-sm-device {
-    display: none;
-  }
-}

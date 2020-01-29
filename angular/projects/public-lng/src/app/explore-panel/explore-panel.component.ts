@@ -1,18 +1,22 @@
-import { Component, OnInit, Output, EventEmitter, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
 
 import { FilterSection } from '../models/document-filter';
 import { ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-explore-panel',
   templateUrl: './explore-panel.component.html',
   styleUrls: ['./explore-panel.component.scss']
 })
-export class ExplorePanelComponent implements OnInit {
+export class ExplorePanelComponent implements OnInit, OnDestroy {
   @Input() filterSections: FilterSection[] = []; // document filter sections // used in template
 
   @Output() updateFilters = new EventEmitter();
   @Output() hideSidePanel = new EventEmitter();
+
+  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   readonly minDate = new Date('01-01-1900'); // first app created
   readonly maxDate = new Date(); // today
@@ -32,7 +36,7 @@ export class ExplorePanelComponent implements OnInit {
 
   public ngOnInit() {
     // For each filter coming in, make the filter bucket array
-    this.route.params.subscribe(params => {
+    this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
       const keys = Object.keys(params);
       this.filterSections.forEach((object) => {
         // e.g.:
@@ -101,5 +105,10 @@ export class ExplorePanelComponent implements OnInit {
     });
     this.applyAllFilters();
     this.togglePanel();
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }
