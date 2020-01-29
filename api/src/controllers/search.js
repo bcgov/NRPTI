@@ -4,6 +4,7 @@ var QueryActions = require('../utils/query-actions');
 var QueryUtils = require('../utils/query-utils');
 var qs = require('qs');
 var mongodb = require('../utils/mongodb');
+var moment = require('moment');
 
 function isEmpty(obj) {
   for (const key in obj) {
@@ -14,7 +15,7 @@ function isEmpty(obj) {
   return true;
 }
 
-var generateExpArray = async function (field, roles) {
+var generateExpArray = async function (field, prefix = '') {
   if (field && field != undefined) {
     var queryString = qs.parse(field);
     defaultLog.info("queryString:", queryString);
@@ -29,19 +30,27 @@ var generateExpArray = async function (field, roles) {
           return getConvertedValue(item, element);
         });
         return { $or: orArray };
-      } else {
-        switch (item) {
-          case 'decisionDateStart':
-            return handleDateStartItem('decisionDate', entry);
-          case 'decisionDateEnd':
-            return handleDateEndItem('decisionDate', entry);
-          case 'datePostedStart':
-            return handleDateStartItem('datePosted', entry);
-          case 'datePostedEnd':
-            return handleDateEndItem('datePosted', entry);
-          default:
-            return getConvertedValue(item, entry);
+      } else if (moment(entry, moment.ISO_8601).isValid()) {
+        // Pluck the variable off the string because this is a date object.  It should
+        // always start with either dateRangeFromFilter or _master.dateRangeFromFilter
+
+        const dateRangeFromSearchString = prefix + 'dateRangeFromFilter';
+        const dateRangeToSearchString = prefix + 'dateRangeToFilter';
+
+        if (item.startsWith(dateRangeFromSearchString)) {
+          const propertyName = item.substr(item.indexOf(dateRangeFromSearchString) + dateRangeFromSearchString.length);
+          
+          return handleDateStartItem(prefix + propertyName, entry);
+        } else if (item.startsWith(dateRangeToSearchString)) {
+          const propertyName = item.substr(item.indexOf('dateRangeToFilter') + 'dateRangeToFilter'.length);
+          
+          return handleDateEndItem(prefix + propertyName, entry);
+        } else {
+          // Invalid. return empty {}
+          return {};
         }
+      } else {
+        return getConvertedValue(item, entry);
       }
     }));
   }
@@ -74,7 +83,7 @@ var getConvertedValue = function (item, entry) {
   }
 }
 
-var handleDateStartItem = function (expArray, field, entry) {
+var handleDateStartItem = function (field, entry) {
   var date = new Date(entry);
 
   // Validate: valid date?
@@ -84,7 +93,7 @@ var handleDateStartItem = function (expArray, field, entry) {
   }
 }
 
-var handleDateEndItem = function (expArray, field, entry) {
+var handleDateEndItem = function (field, entry) {
   var date = new Date(entry);
 
   // Validate: valid date?
@@ -106,28 +115,6 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
     searchProperties = { $text: { $search: keywords, $caseSensitive: caseSensitive } };
   }
 
-  // query modifiers
-  // Pluck the __master elements, and the flavour elements.  process them in different parts of the
-  // pipeline because of the linking of flavour to master records.
-  let __flavour = {};
-  let __master = {};
-  for (const item in and) {
-    if (item.startsWith('_master.')) {
-      __master[item] = and[item];
-    } else {
-      __flavour[item] = and[item];
-    }
-  }
-
-  defaultLog.info("__master:", __master);
-  defaultLog.info("__flavour:", __flavour);
-
-  const andExpArray = await generateExpArray(__flavour, roles) || [];
-  const andMasterExpArray = await generateExpArray(__master, roles) || [];
-
-  defaultLog.info("andExpArray:", andExpArray);
-  defaultLog.info("andMasterExpArray:", andMasterExpArray);
-
   // Pluck the _epicProjectId from the array if a flavour record query is coming in.
   const flavourRecords = [
     'InspectionLNG',
@@ -146,27 +133,10 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
     'InspectionNRCED'
   ];
 
-  // filters
-  var orExpArray = await generateExpArray(or, roles) || [];
+  var matches = await generateMatchesForAggregation(and, or, searchProperties, properties, schemaName, roles);
 
-  var modifier = {};
-  if (andExpArray.length > 0 && orExpArray.length > 0) {
-    modifier = { $and: [{ $and: andExpArray }, { $and: orExpArray }] };
-  } else if (andExpArray.length === 0 && orExpArray.length > 0) {
-    modifier = { $and: orExpArray };
-  } else if (andExpArray.length > 0 && orExpArray.length === 0) {
-    modifier = { $and: andExpArray };
-  }
-
-  var match = {
-    _schemaName: Array.isArray(schemaName) ? { $in: schemaName } : schemaName,
-    ...(isEmpty(modifier) ? undefined : modifier),
-    ...(searchProperties ? searchProperties : undefined),
-    ...(properties ? properties : undefined)
-  };
-
-  defaultLog.info("modifier:", modifier);
-  defaultLog.info("match:", match);
+  defaultLog.info("mainMatch:", matches.mainMatch);
+  defaultLog.info("masterMatch:", matches.masterMatch);
 
   var sortingValue = {};
   sortingValue[sortField] = sortDirection;
@@ -192,7 +162,7 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
 
   var aggregation = [
     {
-      $match: match
+      $match: matches.mainMatch
     }
   ];
 
@@ -216,12 +186,9 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
     });
 
     // Master matching - optional
-    if (!isEmpty(andMasterExpArray)) {
+    if (!isEmpty(matches.masterMatch)) {
       aggregation.push({
-        "$match":
-        {
-          $and: andMasterExpArray
-        }
+        $match: matches.masterMatch
       });
     }
 
@@ -290,6 +257,89 @@ exports.publicGet = async function (args, res, next) {
 exports.protectedGet = function (args, res, next) {
   executeQuery(args, res, next);
 };
+
+// Generates the main match query, and optionally generates the master field match to be used
+// later in the pipeline.
+var generateMatchesForAggregation = async function (and, or, searchProperties, properties, schemaName, roles) {
+  // query modifiers
+  // Pluck the __master elements, and the flavour elements.  process them in different parts of the
+  // pipeline because of the linking of flavour to master records.
+  let __flavour = {};
+  let __master = {};
+  for (item in and) {
+    if ( item.startsWith('_master.')) {
+      __master[item] = and[item];
+    } else {
+      __flavour[item] = and[item];
+    }
+  }
+
+  defaultLog.info("__master:", __master);
+  defaultLog.info("__flavour:", __flavour);
+
+  const andExpArray = await generateExpArray(__flavour) || [];
+  const andMasterExpArray = await generateExpArray(__master, '_master.') || [];
+
+  defaultLog.info("andExpArray:", andExpArray);
+  defaultLog.info("andMasterExpArray:", andMasterExpArray);
+
+  // filters
+  // query modifiers
+  // Pluck the __master elements, and the flavour elements.  process them in different parts of the
+  // pipeline because of the linking of flavour to master records.
+  let __flavourOr = {};
+  let __masterOr = {};
+  for (item in or) {
+    if ( item.startsWith('_master.')) {
+      __masterOr[item] = or[item];
+    } else {
+      __flavourOr[item] = or[item];
+    }
+  }
+
+  defaultLog.info("__masterOr:", __masterOr);
+  defaultLog.info("__flavourOr:", __flavourOr);
+
+  const orExpArray = await generateExpArray(__flavourOr) || [];
+  const orMasterExpArray = await generateExpArray(__masterOr, '_master.') || [];
+
+  defaultLog.info("orExpArray:", orExpArray);
+  defaultLog.info("orMasterExpArray:", orMasterExpArray);
+
+  var modifier = {};
+  if (andExpArray.length > 0 && orExpArray.length > 0) {
+    modifier = { $and: [{ $and: andExpArray }, { $and: orExpArray }] };
+  } else if (andExpArray.length === 0 && orExpArray.length > 0) {
+    modifier = { $and: orExpArray };
+  } else if (andExpArray.length > 0 && orExpArray.length === 0) {
+    modifier = { $and: andExpArray };
+  }
+
+  var masterModifier = {};
+  if (andMasterExpArray.length > 0 && orMasterExpArray.length > 0) {
+    masterModifier = { $and: [{ $and: andMasterExpArray }, { $and: orMasterExpArray }] };
+  } else if (andMasterExpArray.length === 0 && orMasterExpArray.length > 0) {
+    masterModifier = { $and: orMasterExpArray };
+  } else if (andMasterExpArray.length > 0 && orMasterExpArray.length === 0) {
+    masterModifier = { $and: andMasterExpArray };
+  }
+
+  var match = {
+    _schemaName: Array.isArray(schemaName) ? { $in: schemaName } : schemaName,
+    ...(isEmpty(modifier) ? undefined : modifier),
+    ...(searchProperties ? searchProperties : undefined),
+    ...(properties ? properties : undefined)
+  };
+
+  var masterMatch = {
+    ...(isEmpty(masterModifier) ? undefined : masterModifier)
+  };
+
+  return {
+    mainMatch: match,
+    masterMatch: masterMatch
+  }
+}
 
 var executeQuery = async function (args, res, next) {
   var _id = args.swagger.params._id ? args.swagger.params._id.value : null;

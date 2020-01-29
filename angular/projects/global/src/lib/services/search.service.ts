@@ -40,10 +40,6 @@ export class SearchService {
     );
   }
 
-  // getFullList(schema: string): Observable<any> {
-  //   return this.api.getFullDataSet(schema);
-  // }
-
   getSearchResults(
     pathAPI: string,
     keys: string,

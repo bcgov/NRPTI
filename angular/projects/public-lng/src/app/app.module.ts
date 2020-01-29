@@ -15,6 +15,7 @@ import { SharedModule } from './shared.module';
 import { AppRoutingModule } from './app-routing.module';
 import { ApplicationsModule } from './applications/applications.module';
 import { ProjectModule } from './project/project.module';
+import { Utils } from 'nrpti-angular-components';
 
 // components
 import { AppComponent } from './app.component';
@@ -48,7 +49,7 @@ import { SearchService } from 'nrpti-angular-components';
     BootstrapModalModule.forRoot({ container: document.body })
   ],
   declarations: [AppComponent, ContactComponent, HeaderComponent, FooterComponent, FaqComponent, HomeComponent],
-  providers: [ApiService, UrlService, DataService, SearchService],
+  providers: [ApiService, UrlService, DataService, SearchService, Utils],
   entryComponents: [],
   bootstrap: [AppComponent]
 })
