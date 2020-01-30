@@ -6,7 +6,7 @@ import { ApiService } from './api.service';
 import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
-import { Order, Inspection, Certificate, Permit, Agreement } from '../../../../common/src/app/models/master';
+import { Order, Inspection, Certificate, Permit, Agreement, SelfReport } from '../../../../common/src/app/models/master';
 import { TaskService, ITaskParams } from './task.service';
 
 /**
@@ -363,6 +363,23 @@ export class FactoryService {
   public editAgreement(agreement: Agreement): Observable<object> {
     const outboundObject = {
       agreements: [agreement]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // SelfReports
+  public createSelfReport(selfReport: SelfReport): Observable<object> {
+    const outboundObject = {
+      selfReports: [selfReport]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editSelfReport(selfReport: SelfReport): Observable<object> {
+    const outboundObject = {
+      selfReports: [selfReport]
     };
     return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }

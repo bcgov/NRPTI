@@ -34,6 +34,11 @@ import { AgreementResolver } from './agreements/agreement-resolver';
 import { AgreementDetailComponent } from './agreements/agreement-detail/agreement-detail.component';
 import { AgreementAddEditComponent } from './agreements/agreement-add-edit/agreement-add-edit.component';
 
+// self-reports
+import { SelfReportResolver } from './self-reports/self-report-resolver';
+import { SelfReportDetailComponent } from './self-reports/self-report-detail/self-report-detail.component';
+import { SelfReportAddEditComponent } from './self-reports/self-report-add-edit/self-report-add-edit.component';
+
 // other
 import { Utils } from 'nrpti-angular-components';
 
@@ -280,6 +285,51 @@ const routes: Routes = [
             }
           }
         ]
+      },
+      // self reports
+      {
+        path: 'self-reports/add',
+        component: SelfReportAddEditComponent,
+        canActivate: [CanActivateGuard],
+        data: {
+          breadcrumb: 'Add Compliance Self-Report'
+        }
+      },
+      {
+        path: 'self-reports/:selfReportId',
+        data: {
+          breadcrumb: 'Compliance Self-Report Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: SelfReportDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: SelfReportResolver
+            }
+          },
+          {
+            path: 'edit',
+            component: SelfReportAddEditComponent,
+            canActivate: [CanActivateGuard],
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+              breadcrumb: 'Edit Compliance Self-Report'
+            },
+            resolve: {
+              record: SelfReportResolver
+            }
+          }
+        ]
       }
     ]
   }
@@ -295,6 +345,7 @@ const routes: Routes = [
     CertificateResolver,
     PermitResolver,
     AgreementResolver,
+    SelfReportResolver,
     Utils
   ]
 })

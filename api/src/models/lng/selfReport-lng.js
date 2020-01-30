@@ -10,6 +10,7 @@ module.exports = require('../../utils/model-schema-generator')(
 
     _master: { type: 'ObjectId', ref: 'SelfReport' },
 
+    relatedPhase: { type: String, default: '' },
     description: { type: String, default: '' },
 
     dateAdded: { type: Date, default: Date.now() },

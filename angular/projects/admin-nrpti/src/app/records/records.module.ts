@@ -44,6 +44,11 @@ import { AgreementAddEditComponent } from './agreements/agreement-add-edit/agree
 import { AgreementDetailComponent } from './agreements/agreement-detail/agreement-detail.component';
 import { AgreementLNGDetailComponent } from './agreements/agreement-lng-detail/agreement-lng-detail.component';
 
+// SelfReports
+import { SelfReportAddEditComponent } from './self-reports/self-report-add-edit/self-report-add-edit.component';
+import { SelfReportDetailComponent } from './self-reports/self-report-detail/self-report-detail.component';
+import { SelfReportLNGDetailComponent } from './self-reports/self-report-lng-detail/self-report-lng-detail.component';
+
 // directives
 import { RecordDetailDirective } from './utils/record-detail.directive';
 
@@ -89,7 +94,11 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     // agreements
     AgreementDetailComponent,
     AgreementAddEditComponent,
-    AgreementLNGDetailComponent
+    AgreementLNGDetailComponent,
+    // self reports
+    SelfReportAddEditComponent,
+    SelfReportDetailComponent,
+    SelfReportLNGDetailComponent
   ],
   providers: [],
   entryComponents: [
@@ -114,7 +123,11 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     // agreements
     AgreementDetailComponent,
     AgreementAddEditComponent,
-    AgreementLNGDetailComponent
+    AgreementLNGDetailComponent,
+    // self reports
+    SelfReportAddEditComponent,
+    SelfReportDetailComponent,
+    SelfReportLNGDetailComponent
   ],
   exports: []
 })
