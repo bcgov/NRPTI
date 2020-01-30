@@ -35,7 +35,6 @@ export class OrderDetailComponent extends RecordComponent implements OnInit, OnD
             record.flavours.map(flavourRecord => RecordUtils.getRecordModelInstance(flavourRecord))) ||
           []
       };
-
       this.changeDetectionRef.detectChanges();
     });
   }

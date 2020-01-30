@@ -24,7 +24,7 @@ module.exports = require('../../utils/model-schema-generator')(
     centroid: [{ type: Number, default: 0.0 }],
     outcomeStatus: { type: String, default: '' },
     outcomeDescription: { type: String, default: '' },
-    documentURL: { type: String, default: null },
+    attachments: [{ type: Object, default: null }],
 
     dateAdded: { type: Date, default: Date.now() },
     dateUpdated: { type: Date, default: null },
