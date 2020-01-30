@@ -93,7 +93,17 @@
         </div>
         <div class="grid-section-5">
           <div class="grid-item">
-            <span class="grid-item-value">{{ (data && data._master.attachments) || '-' }}</span>
+            <span *ngIf="
+            data._master.attachments &&
+            data._master.attachments.length > 0 &&
+            data._master.sourceSystemRef === 'epic'
+            ">
+              <span *ngFor="let attachment of data._master.attachments">
+                <a href="{{attachment.url}}" target=" _blank">{{attachment.fileName}}</a>
+              </span>
+            </span>
+            <span *ngIf="!data._master.attachments.length === 0 || !data._master.sourceSystemRef === 'epic'"
+              class="grid-item-value">This record does not have attachemnts</span>
           </div>
         </div>
         <div class="grid-section-border"></div>

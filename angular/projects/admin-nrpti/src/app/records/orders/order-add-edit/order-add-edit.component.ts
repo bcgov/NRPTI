@@ -165,7 +165,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     // _epicMilestoneId
     // legislation
     // projectName
-    // documentURL
+    // attachments
 
     // TODO: For editing we should create an object with only the changed fields.
     const order = new Order({

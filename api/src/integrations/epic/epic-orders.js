@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const defaultLog = require('../../utils/logger')('epic-orders');
+const QueryUtils = require('../../utils/query-utils');
 
 /**
  * Epic Order record handler.
@@ -41,6 +42,21 @@ class EpicOrders {
       }
     }
 
+    // Generate a link that will get us the document when placed in an href.
+    var documentURL = '';
+    var attachments = [];
+    if (epicRecord._id && epicRecord.documentFileName) {
+      const encodedDocumentFileName = QueryUtils.encodeFileName(epicRecord.documentFileName);
+      documentURL = `https://projects.eao.gov.bc.ca/api/document/${epicRecord._id}/fetch/${encodedDocumentFileName}`
+      attachments.push(
+        {
+
+          url: documentURL,
+          fileName: epicRecord.documentFileName
+        }
+      );
+    }
+
     return {
       _schemaName: 'Order',
       _epicProjectId: (epicRecord.project && epicRecord.project._id) || '',
@@ -63,6 +79,7 @@ class EpicOrders {
       centroid: (epicRecord.project && epicRecord.project.centroid) || '',
       // outcomeStatus: // No mapping
       // outcomeDescription: // No mapping
+      attachments: attachments,
 
       dateAdded: new Date(),
       dateUpdated: new Date(),
