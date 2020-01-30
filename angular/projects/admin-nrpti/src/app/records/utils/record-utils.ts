@@ -9,7 +9,9 @@ import {
   Certificate,
   CertificateLNG,
   Permit,
-  PermitLNG
+  PermitLNG,
+  Agreement,
+  AgreementLNG
 } from '../../../../../common/src/app/models';
 
 // orders
@@ -26,7 +28,11 @@ import { CertificateLNGDetailComponent } from '../certificates/certificate-lng-d
 // permits
 import { PermitLNGDetailComponent } from '../permits/permit-lng-detail/permit-lng-detail.component';
 
+// agreements
+import { AgreementLNGDetailComponent } from '../agreements/agreement-lng-detail/agreement-lng-detail.component';
+
 // other
+
 import { RecordComponent } from './record-component';
 
 export class RecordUtils {
@@ -65,6 +71,10 @@ export class RecordUtils {
         return new Permit(data);
       case 'PermitLNG':
         return new PermitLNG(data);
+      case 'Agreement':
+        return new Agreement(data);
+      case 'AgreementLNG':
+        return new AgreementLNG(data);
       default:
         return null;
     }
@@ -97,6 +107,8 @@ export class RecordUtils {
         return CertificateLNGDetailComponent;
       case 'PermitLNG':
         return PermitLNGDetailComponent;
+      case 'AgreementLNG':
+        return AgreementLNGDetailComponent;
       default:
         return null;
     }

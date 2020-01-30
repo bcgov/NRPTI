@@ -10,6 +10,8 @@ module.exports = require('../../utils/model-schema-generator')(
 
     _master: { type: 'ObjectId', ref: 'Agreement' },
 
+    description: { type: String, default: '' },
+
     dateAdded: { type: Date, default: Date.now() },
     dateUpdated: { type: Date, default: Date.now() },
     datePublished: { type: Date, default: Date.now() }
