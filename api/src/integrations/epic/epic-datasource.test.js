@@ -80,7 +80,7 @@ describe('EpicDataSource', () => {
       epicDataSource.getEpicProjectPathname = jest.fn();
       epicDataSource.processRecords = jest.fn();
 
-      const recordType = { type: { id: '123' }, milestone: { id: '123' }, getUtil: jest.fn() };
+      const recordType = { type: { typeId: '123' }, milestone: { milestoneId: '123' }, getUtil: jest.fn() };
 
       const recordTypeStatus = await epicDataSource.updateRecordType(recordType);
 
@@ -128,7 +128,7 @@ describe('EpicDataSource', () => {
         };
       });
 
-      const recordType = { type: { id: '111' }, milestone: { id: '222' }, getUtil: jest.fn(() => 'utils') };
+      const recordType = { type: { typeId: '111' }, milestone: { milestoneId: '222' }, getUtil: jest.fn(() => 'utils') };
 
       const status = await epicDataSource.updateRecordType(recordType);
 

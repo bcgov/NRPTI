@@ -4,16 +4,16 @@
 const EPIC_RECORD_TYPE = Object.freeze({
   Order: {
     // type and milestone from legislation 2002
-    type: { name: 'Order', id: '5cf00c03a266b7e1877504d1' },
-    milestone: { name: 'Compliance & Enforcement', id: '5cf00c03a266b7e1877504ef' },
+    type: { name: 'Order', typeId: '5cf00c03a266b7e1877504d1' },
+    milestone: { name: 'Compliance & Enforcement', milestoneId: '5cf00c03a266b7e1877504ef' },
     getUtil: (...args) => {
       return new (require('./epic-orders'))(...args);
     }
   },
   Inspection: {
     // type and milestone from legislation 2002
-    type: { name: 'Inspection Record', id: '5cf00c03a266b7e1877504d9' },
-    milestone: { name: 'Compliance & Enforcement', id: '5cf00c03a266b7e1877504ef' },
+    type: { name: 'Inspection Record', typeId: '5cf00c03a266b7e1877504d9' },
+    milestone: { name: 'Compliance & Enforcement', milestoneId: '5cf00c03a266b7e1877504ef' },
     getUtil: (...args) => {
       return new (require('./epic-inspections'))(...args);
     }
@@ -26,7 +26,7 @@ const EPIC_RECORD_TYPE = Object.freeze({
    * @returns array of a subset of EPIC record types.
    */
   getSome: function(recordTypes) {
-    if (!recordTypes || recordTypes.length) {
+    if (!recordTypes || !recordTypes.length) {
       return null;
     }
 

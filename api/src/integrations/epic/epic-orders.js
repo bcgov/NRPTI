@@ -110,7 +110,6 @@ class EpicOrders {
       return record;
     } catch (error) {
       defaultLog.error(`Failed to save Epic Order record: ${error.message}`);
-      defaultLog.debug(`Failed to save Epic Order record - error.stack: ${error.stack}`);
     }
   }
 }

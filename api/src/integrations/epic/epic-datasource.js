@@ -21,10 +21,6 @@ class EpicDataSource {
     this.params = params || {};
     this.recordTypes = recordTypes || null;
 
-    defaultLog.debug(`EpicDataSource - auth_payload: ${JSON.stringify(this.auth_payload)}`);
-    defaultLog.debug(`EpicDataSource - params: ${JSON.stringify(this.params)}`);
-    defaultLog.debug(`EpicDataSource - recordTypes: ${this.recordTypes}`);
-
     // Set initial status
     this.status = { itemsProcessed: 0, itemTotal: 0, typeStatus: [] };
   }
@@ -57,7 +53,7 @@ class EpicDataSource {
       this.status.message = 'updateRecords - unexpected error';
       this.status.error = error.message;
 
-      defaultLog.debug(`updateRecords - unexpected error - error.stack: ${error.stack}`);
+      defaultLog.error(`updateRecords - unexpected error: ${error.message}`);
     }
 
     return this.status;
@@ -79,10 +75,6 @@ class EpicDataSource {
       // for each supported type, run the update, and add the resulting status object to the root status object
       for (const recordType of recordTypes) {
         const typeStatus = await this.updateRecordType(recordType);
-        defaultLog.info(
-          `_updateRecords - type: ${recordType.type.name}, milestone: ${recordType.milestone.name}` +
-            ` - upserted ${typeStatus.itemsProcessed} of ${typeStatus.itemTotal} records`
-        );
 
         this.status.typeStatus.push(typeStatus);
       }
@@ -90,7 +82,7 @@ class EpicDataSource {
       this.status.message = '_updateRecords - unexpected error';
       this.status.error = error.message;
 
-      defaultLog.debug(`_updateRecords - unexpected error - error.stack: ${error.stack}`);
+      defaultLog.error(`_updateRecords - unexpected error: ${error.message}`);
     }
   }
 
@@ -109,7 +101,7 @@ class EpicDataSource {
       // Build request url
       const queryParams = {
         ...this.params,
-        ...this.getBaseParams(recordType.type.id, recordType.milestone.id, MAX_PAGE_SIZE, 0)
+        ...this.getBaseParams(recordType.type.typeId, recordType.milestone.milestoneId, MAX_PAGE_SIZE, 0)
       };
       const url = this.getIntegrationUrl(this.getHostname(), this.getEpicSearchPathname(), queryParams);
 
@@ -149,7 +141,7 @@ class EpicDataSource {
       recordTypeStatus.message = 'updateRecordType - unexpected error';
       recordTypeStatus.error = error.message;
 
-      defaultLog.debug(`updateRecordType - unexpected error - error.stack: ${error.stack}`);
+      defaultLog.error(`updateRecordType - unexpected error: ${error.message}`);
     }
 
     return recordTypeStatus;
@@ -199,7 +191,6 @@ class EpicDataSource {
         }
       } catch (error) {
         defaultLog.error(`processRecords - unexpected error: ${error.message}`);
-        defaultLog.debug(`processRecords - unexpected error - error.stack: ${error.stack}`);
         // Do not re-throw error, as a single failure is not cause to stop the other records from processing
       }
     }
@@ -284,7 +275,6 @@ class EpicDataSource {
     const path = `${pathname}?${query}`;
     const url = new URL(path, `https://${hostname}`);
 
-    defaultLog.debug(`getIntegrationUrl - URL: ${url}`);
     return url;
   }
 

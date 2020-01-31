@@ -106,7 +106,7 @@ definitions:
         enum: *dataSourceType
       recordTypes:
         type: array
-        description: 'Specific record types to update'
+        description: 'Specific record types to update.  If not provided, all supported types will be updated.'
         items:
           type: string
           enum: *recordType

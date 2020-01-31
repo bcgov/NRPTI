@@ -4,6 +4,23 @@ import { Observable } from 'rxjs';
 
 import { ApiService } from './api.service';
 
+export interface ITaskParams {
+  /**
+   * Data source type to update.
+   *
+   * @type {string}
+   * @memberof ITaskParams
+   */
+  dataSourceType: string;
+  /**
+   * Specific record types to update.  If not specified, all record types are updated.
+   *
+   * @type {string[]}
+   * @memberof ITaskParams
+   */
+  recordTypes?: string[];
+}
+
 /**
  * Task request handlers.
  *
@@ -17,12 +34,12 @@ export class TaskService {
   /**
    * Send request to start a task.
    *
-   * @param {*} obj post body payload
-   * @returns {Observable<any>}
+   * @param {ITaskParams} taskParams
+   * @returns {Observable<object>}
    * @memberof ApiService
    */
-  startTask(obj: any): Observable<object> {
+  startTask(taskParams: ITaskParams): Observable<object> {
     const queryString = 'task';
-    return this.http.post<object>(`${this.apiService.pathAPI}/${queryString}`, obj, {});
+    return this.http.post<object>(`${this.apiService.pathAPI}/${queryString}`, taskParams, {});
   }
 }

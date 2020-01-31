@@ -110,7 +110,6 @@ class EpicInspections {
       return record;
     } catch (error) {
       defaultLog.error(`Failed to save Epic Inspection record: ${error.message}`);
-      defaultLog.debug(`Failed to save Epic Inspection record - error.stack: ${error.stack}`);
     }
   }
 }
