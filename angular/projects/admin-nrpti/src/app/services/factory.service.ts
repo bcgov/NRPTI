@@ -8,7 +8,7 @@ import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import { Order } from '../../../../common/src/app/models/master';
 import { Inspection } from '../../../../common/src/app/models/master';
-import { TaskService } from './task.service';
+import { TaskService, ITaskParams } from './task.service';
 
 /**
  * Facade service for all admin-nrpti services.
@@ -251,14 +251,14 @@ export class FactoryService {
   }
 
   /**
-   * Sends request to start a task.
+   * Sends request to start an import task.
    *
-   * @param {*} obj request payload
-   * @returns {*}
+   * @param {ITaskParams} taskParams import task parameters
+   * @returns {Observable<object>}
    * @memberof FactoryService
    */
-  public startTask(obj: any): Observable<object> {
-    return this.taskService.startTask(obj);
+  public startTask(taskParams: ITaskParams): Observable<object> {
+    return this.taskService.startTask(taskParams);
   }
 
   /**

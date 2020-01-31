@@ -1,5 +1,5 @@
 pk (autoindex),_schemaName (autoindex),idx,idx,idx,,,,,,,,,,,,,,,,,,,
-_id,Order,_epicProjectId,_sourceRefId,_epicMilestoneId,recordName,recordType,recordSubType,dateIssued,issuingAgency,legislation,issuedTo,projectName,location,centroid,outcomeStatus,outcomeDescription,dateAdded,dateUpdated,updatedBy,publishedBy,sourceDateAdded,sourceDateUpdated,sourceSystemRef
+_id,Order,_epicProjectId,_sourceRefId,_epicMilestoneId,recordName,recordType,recordSubtype,dateIssued,issuingAgency,legislation,issuedTo,projectName,location,centroid,outcomeStatus,outcomeDescription,dateAdded,dateUpdated,updatedBy,publishedBy,sourceDateAdded,sourceDateUpdated,sourceSystemRef
 _id,OrderLNG,_master,,,description,dateAdded,dateUpdated,datePublished,,,,,,,,,,,,,,,
 _id,OrderNRCED,_master,,,summary,dateAdded,dateUpdated,datePublished,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,
