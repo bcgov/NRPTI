@@ -16,6 +16,9 @@ class TaskAuditRecord {
    * @memberof TaskAuditRecord
    */
   async updateTaskRecord(params) {
+    // add default sysadmin roles
+    params = { ...params, read: ['sysadmin'], write: ['sysadmin'] };
+
     const Task = mongoose.model('Task');
 
     // create a new record

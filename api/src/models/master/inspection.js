@@ -13,7 +13,7 @@ module.exports = require('../../utils/model-schema-generator')(
 
     recordName: { type: String, default: '' },
     recordType: { type: String, default: '' },
-    dateIssued: { type: Date, default: Date.now() },
+    dateIssued: { type: Date, default: null },
     issuingAgency: { type: String, default: '' },
     author: { type: String, default: '' },
     legislation: { type: String, default: '' }, // section, sub section, reg, etc
@@ -26,7 +26,7 @@ module.exports = require('../../utils/model-schema-generator')(
     attachments: [{ type: Object, default: null }],
 
     dateAdded: { type: Date, default: Date.now() },
-    dateUpdated: { type: Date, default: Date.now() },
+    dateUpdated: { type: Date, default: null },
     updatedBy: { type: String, default: '' },
     publishedBy: { type: String, default: '' },
     sourceDateAdded: { type: Date, default: null },

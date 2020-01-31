@@ -352,7 +352,7 @@ let createAuthorizationRecord = async function (item, project, nrptiCollection) 
     write: ['sysadmin'],
     recordName: item.name,
     recordType: item.complianceDocumentType,
-    recordSubType: item.complianceDocumentSubtype,
+    recordSubtype: item.complianceDocumentSubtype,
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
     issuingAgency: item.agency,

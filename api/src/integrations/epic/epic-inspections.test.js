@@ -1,4 +1,5 @@
 const EpicInspections = require('./epic-inspections');
+const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 describe('EpicInspections', () => {
   describe('transformRecord', () => {
@@ -17,13 +18,10 @@ describe('EpicInspections', () => {
 
       const epicRecord = {};
 
-      let actualRecord = await epicInspections.transformRecord(epicRecord);
-
-      delete actualRecord.dateAdded;
-      delete actualRecord.dateUpdated;
+      const actualRecord = await epicInspections.transformRecord(epicRecord);
 
       const expectedRecord = {
-        _schemaName: 'Inspection',
+        _schemaName: RECORD_TYPE.Inspection._schemaName,
 
         _epicProjectId: '',
         _sourceRefId: '',
@@ -33,7 +31,7 @@ describe('EpicInspections', () => {
         write: ['sysadmin'],
 
         recordName: '',
-        recordType: 'Inspection',
+        recordType: RECORD_TYPE.Inspection.displayName,
         dateIssued: null,
         issuingAgency: 'Environmental Assessment Office',
         author: '',
@@ -42,8 +40,8 @@ describe('EpicInspections', () => {
         location: '',
         centroid: '',
 
-        // dateAdded: expect.any(Date),
-        // dateUpdated: expect.any(Date),
+        dateAdded: expect.any(Date),
+        dateUpdated: expect.any(Date),
         updatedBy: '',
         sourceDateAdded: null,
         sourceDateUpdated: null,
@@ -59,7 +57,6 @@ describe('EpicInspections', () => {
       const epicRecord = {
         _id: 123,
         displayName: 'docDisplay',
-        documentType: 'Order',
         documentFileName: 'docFileName',
         project: {
           name: 'projectName',
@@ -68,13 +65,10 @@ describe('EpicInspections', () => {
         milestone: 'milestone'
       };
 
-      let actualRecord = await epicInspections.transformRecord(epicRecord);
-
-      delete actualRecord.dateAdded;
-      delete actualRecord.dateUpdated;
+      const actualRecord = await epicInspections.transformRecord(epicRecord);
 
       const expectedRecord = {
-        _schemaName: 'Inspection',
+        _schemaName: RECORD_TYPE.Inspection._schemaName,
 
         _epicProjectId: '',
         _sourceRefId: 123,
@@ -84,7 +78,7 @@ describe('EpicInspections', () => {
         write: ['sysadmin'],
 
         recordName: 'docDisplay',
-        recordType: 'Inspection',
+        recordType: RECORD_TYPE.Inspection.displayName,
         dateIssued: null,
         issuingAgency: 'Environmental Assessment Office',
         author: '',
@@ -93,8 +87,8 @@ describe('EpicInspections', () => {
         location: '',
         centroid: '',
 
-        // dateAdded: expect.any(Date),
-        // dateUpdated: expect.any(Date),
+        dateAdded: expect.any(Date),
+        dateUpdated: expect.any(Date),
         updatedBy: '',
         sourceDateAdded: null,
         sourceDateUpdated: null,
