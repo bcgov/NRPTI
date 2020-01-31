@@ -35,7 +35,7 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('span.navbar-brand__title').textContent).toContain(
-      'Natural Resources Public Transparency Interface'
+      'Natural Resources Compliance & Enforcement Database'
     );
   }));
 });
