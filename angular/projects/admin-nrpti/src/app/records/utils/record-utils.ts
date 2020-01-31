@@ -16,7 +16,10 @@ import {
   SelfReportLNG,
   RestorativeJustice,
   RestorativeJusticeLNG,
-  RestorativeJusticeNRCED
+  RestorativeJusticeNRCED,
+  Ticket,
+  TicketLNG,
+  TicketNRCED
 } from '../../../../../common/src/app/models';
 
 // orders
@@ -42,6 +45,10 @@ import { SelfReportLNGDetailComponent } from '../self-reports/self-report-lng-de
 // restorative justices
 import { RestorativeJusticeNRCEDDetailComponent } from '../restorative-justices/restorative-justice-nrced-detail/restorative-justice-nrced-detail.component';
 import { RestorativeJusticeLNGDetailComponent } from '../restorative-justices/restorative-justice-lng-detail/restorative-justice-lng-detail.component';
+
+// tickets
+import { TicketLNGDetailComponent } from '../tickets/ticket-lng-detail/ticket-lng-detail.component';
+import { TicketNRCEDDetailComponent } from '../tickets/ticket-nrced-detail/ticket-nrced-detail.component';
 
 // other
 import { RecordComponent } from './record-component';
@@ -96,6 +103,12 @@ export class RecordUtils {
         return new RestorativeJusticeLNG(data);
       case 'RestorativeJusticeNRCED':
         return new RestorativeJusticeNRCED(data);
+      case 'Ticket':
+        return new Ticket(data);
+      case 'TicketLNG':
+        return new TicketLNG(data);
+      case 'TicketNRCED':
+        return new TicketNRCED(data);
       default:
         return null;
     }
@@ -136,6 +149,10 @@ export class RecordUtils {
         return RestorativeJusticeNRCEDDetailComponent;
       case 'RestorativeJusticeLNG':
         return RestorativeJusticeLNGDetailComponent;
+      case 'TicketLNG':
+        return TicketLNGDetailComponent;
+      case 'TicketNRCED':
+        return TicketNRCEDDetailComponent;
       default:
         return null;
     }

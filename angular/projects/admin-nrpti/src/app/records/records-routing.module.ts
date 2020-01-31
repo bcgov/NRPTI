@@ -44,6 +44,11 @@ import { RestorativeJusticeResolver } from './restorative-justices/restorative-j
 import { RestorativeJusticeDetailComponent } from './restorative-justices/restorative-justice-detail/restorative-justice-detail.component';
 import { RestorativeJusticeAddEditComponent } from './restorative-justices/restorative-justice-add-edit/restorative-justice-add-edit.component';
 
+// tickets
+import { TicketResolver } from './tickets/ticket-resolver';
+import { TicketDetailComponent } from './tickets/ticket-detail/ticket-detail.component';
+import { TicketAddEditComponent } from './tickets/ticket-add-edit/ticket-add-edit.component';
+
 // other
 import { Utils } from 'nrpti-angular-components';
 
@@ -380,6 +385,50 @@ const routes: Routes = [
             }
           }
         ]
+      },
+      {
+        path: 'tickets/add',
+        component: TicketAddEditComponent,
+        canActivate: [CanActivateGuard],
+        data: {
+          breadcrumb: 'Add Ticket'
+        }
+      },
+      {
+        path: 'tickets/:ticketId',
+        data: {
+          breadcrumb: 'Ticket Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: TicketDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: TicketResolver
+            }
+          },
+          {
+            path: 'edit',
+            component: TicketAddEditComponent,
+            canActivate: [CanActivateGuard],
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+              breadcrumb: 'Edit Ticket'
+            },
+            resolve: {
+              record: TicketResolver
+            }
+          }
+        ]
       }
     ]
   }
@@ -397,6 +446,7 @@ const routes: Routes = [
     AgreementResolver,
     SelfReportResolver,
     RestorativeJusticeResolver,
+    TicketResolver,
     Utils
   ]
 })
