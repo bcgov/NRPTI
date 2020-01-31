@@ -16,7 +16,7 @@ module.exports = require('../../utils/model-schema-generator')(
     dateIssued: { type: Date, default: Date.now() },
     issuingAgency: { type: String, default: '' },
     author: { type: String, default: '' },
-    documentURL: { type: String, default: null },
+    attachments: [{ type: Object, default: null }],
 
     dateAdded: { type: Date, default: Date.now() },
     dateUpdated: { type: Date, default: Date.now() },

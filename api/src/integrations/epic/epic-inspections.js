@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const defaultLog = require('../../utils/logger')('epic-inspections');
+const QueryUtils = require('../../utils/query-utils');
 
 /**
  * Epic Inspection record handler.
@@ -41,6 +42,17 @@ class EpicInspections {
       }
     }
 
+    // Generate a link that will get us the document when placed in an href.
+    var attachments = [];
+    if (epicRecord._id && epicRecord.documentFileName) {
+      attachments.push(
+        {
+          url: `https://projects.eao.gov.bc.ca/api/document/${epicRecord._id}/fetch/${encodeURIComponent(epicRecord.documentFileName)}`,
+          fileName: epicRecord.documentFileName
+        }
+      );
+    }
+
     return {
       _schemaName: 'Inspection',
       _epicProjectId: (epicRecord.project && epicRecord.project._id) || '',
@@ -63,6 +75,7 @@ class EpicInspections {
       centroid: (epicRecord.project && epicRecord.project.centroid) || '',
       // outcomeStatus: // No mapping
       // outcomeDescription: // No mapping
+      attachments: attachments,
 
       dateAdded: new Date(),
       dateUpdated: new Date(),

@@ -25,8 +25,9 @@ export class Order {
   centroid: number[];
   outcomeStatus: string; // epic value?
   outcomeDescription: string; // out of scope?
-  dateAdded: Date;
   dateUpdated: Date;
+  dateAdded: Date;
+  attachments: object[];
   sourceDateAdded: Date;
   sourceDateUpdated: Date;
   sourceSystemRef: string;
@@ -56,6 +57,7 @@ export class Order {
     this.centroid = (obj && obj.centroid) || null;
     this.outcomeStatus = (obj && obj.outcomeStatus) || null;
     this.outcomeDescription = (obj && obj.outcomeDescription) || null;
+    this.attachments = (obj && obj.attachments) || null;
     this.dateAdded = (obj && obj.dateAdded) || null;
     this.dateUpdated = (obj && obj.dateUpdated) || null;
     this.sourceDateAdded = (obj && obj.sourceDateAdded) || null;
