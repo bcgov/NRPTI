@@ -10,11 +10,11 @@ const axios = require('axios');
  * @returns {Promise<any>} promise that resolves with the data property of the response object, or null.
  * @throws {Error} if any errors occur, or necessary function calls fail.
  */
-exports.getRecords = async function(url) {
+exports.getRecords = async function(url, options = undefined) {
   let response;
 
   try {
-    response = await axios.get(url.href);
+    response = await axios.get(url.href, options);
   } catch (error) {
     throw Error(`getRecords - error: ${error.message}.`);
   }
