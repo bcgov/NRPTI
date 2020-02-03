@@ -52,7 +52,7 @@ async function runTask(nrptiDataSource, auth_payload, params = null, recordTypes
   try {
     defaultLog.info(`runTask - ${nrptiDataSource.dataSourceLabel} - started`);
 
-    taskAuditRecord.updateTaskRecord({ dataSourceLabel: nrptiDataSource.dataSourceLabel, startDate: new Date() });
+    await taskAuditRecord.updateTaskRecord({ dataSourceLabel: nrptiDataSource.dataSourceLabel, startDate: new Date() });
 
     const dataSource = new nrptiDataSource.dataSourceClass(auth_payload, params, recordTypes);
 
@@ -60,15 +60,15 @@ async function runTask(nrptiDataSource, auth_payload, params = null, recordTypes
       throw Error(`runTask - ${nrptiDataSource.dataSourceLabel} - failed - could not create instance of dataSource`);
     }
 
-    // Runs all functions necessary to upsert the specified data source and record types.
-    const status = await dataSource.updateRecords();
+    // Run the datasource loop, passing in the audit object.
+    const res = await dataSource.run(taskAuditRecord);
 
-    defaultLog.info(`runTask - ${nrptiDataSource.dataSourceLabel} - completed`);
+    defaultLog.info(`runTask - ${nrptiDataSource.dataSourceLabel} - ${res.status}`);
 
     // Update task as completed (does not necessarily mean all records were successfully updated)
-    await taskAuditRecord.updateTaskRecord({ status: 'Completed', finishDate: new Date(), ...status });
+    await taskAuditRecord.updateTaskRecord({ status: res.status, finishDate: new Date(), ...res });
   } catch (error) {
-    defaultLog.error(`runTask - ${nrptiDataSource.dataSourceLabel} - failed - unexpected error: ${error.message}`);
+    defaultLog.error(`runTask - ${nrptiDataSource.dataSourceLabel} - ${error.status} - unexpected error: ${error.message}`);
 
     // Update task as encountering unexpected error
     await taskAuditRecord.updateTaskRecord({ status: 'Error', finishDate: new Date() });
@@ -91,6 +91,11 @@ function getDataSourceConfig(dataSourceType) {
       return {
         dataSourceLabel: 'epic',
         dataSourceClass: require('../integrations/epic/datasource')
+      };
+    case 'nris':
+      return {
+        dataSourceLabel: 'nris',
+        dataSourceClass: require('../integrations/nris/datasource')
       };
     default:
       return null;

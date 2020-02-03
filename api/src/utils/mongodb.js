@@ -26,8 +26,9 @@ function MongoDriver(options) {
   console.log('db conn:', DB_CONNECTION);
 
   MongoClient.connect(DB_CONNECTION, function(err, db) {
-    console.log('db err:', err);
-    console.log('db:', db);
+    if (err) {
+      console.log('db err:', err);
+    }
     if (err === null) {
       self.connections.push(db);
     }
