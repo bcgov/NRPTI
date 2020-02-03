@@ -39,6 +39,11 @@ import { SelfReportResolver } from './self-reports/self-report-resolver';
 import { SelfReportDetailComponent } from './self-reports/self-report-detail/self-report-detail.component';
 import { SelfReportAddEditComponent } from './self-reports/self-report-add-edit/self-report-add-edit.component';
 
+// restorative justices
+import { RestorativeJusticeResolver } from './restorative-justices/restorative-justice-resolver';
+import { RestorativeJusticeDetailComponent } from './restorative-justices/restorative-justice-detail/restorative-justice-detail.component';
+import { RestorativeJusticeAddEditComponent } from './restorative-justices/restorative-justice-add-edit/restorative-justice-add-edit.component';
+
 // other
 import { Utils } from 'nrpti-angular-components';
 
@@ -330,6 +335,51 @@ const routes: Routes = [
             }
           }
         ]
+      },
+      // restorative justices
+      {
+        path: 'restorative-justices/add',
+        component: RestorativeJusticeAddEditComponent,
+        canActivate: [CanActivateGuard],
+        data: {
+          breadcrumb: 'Add Restorative Justice'
+        }
+      },
+      {
+        path: 'restorative-justices/:restorativeJusticeId',
+        data: {
+          breadcrumb: 'Restorative Justice Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: RestorativeJusticeDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: RestorativeJusticeResolver
+            }
+          },
+          {
+            path: 'edit',
+            component: RestorativeJusticeAddEditComponent,
+            canActivate: [CanActivateGuard],
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+              breadcrumb: 'Edit Restorative Justice'
+            },
+            resolve: {
+              record: RestorativeJusticeResolver
+            }
+          }
+        ]
       }
     ]
   }
@@ -346,6 +396,7 @@ const routes: Routes = [
     PermitResolver,
     AgreementResolver,
     SelfReportResolver,
+    RestorativeJusticeResolver,
     Utils
   ]
 })

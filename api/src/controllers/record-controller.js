@@ -11,6 +11,7 @@ let AddCertificate = require('./post/certificate');
 let AddPermit = require('./post/permit');
 let AddAgreement = require('./post/agreement');
 let AddSelfReport = require('./post/self-report');
+let AddRestorativeJustice = require('./post/restorative-justice');
 
 let EditOrder = require('./put/order');
 let EditInspection = require('./put/inspection');
@@ -18,6 +19,7 @@ let EditCertificate = require('./put/certificate');
 let EditPermit = require('./put/permit');
 let EditAgreement = require('./put/agreement');
 let EditSelfReport = require('./put/self-report');
+let EditRestorativeJustice = require('./put/restorative-justice');
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 
@@ -113,6 +115,9 @@ exports.protectedPost = async function (args, res, next) {
     if (data.selfReports) {
       observables.push(processPostRequest(args, res, next, 'selfReports', data.selfReports));
     }
+    if (data.restorativeJustices) {
+      observables.push(processPostRequest(args, res, next, 'restorativeJustices', data.restorativeJustices));
+    }
 
     var response = await Promise.all(observables);
 
@@ -152,6 +157,9 @@ exports.protectedPut = async function (args, res, next) {
     }
     if (data.selfReports) {
       observables.push(processPutRequest(args, res, next, 'selfReports', data.selfReports));
+    }
+    if (data.restorativeJustices) {
+      observables.push(processPutRequest(args, res, next, 'restorativeJustices', data.restorativeJustices));
     }
 
     var response = await Promise.all(observables);
@@ -284,6 +292,9 @@ let processPostRequest = async function (args, res, next, property, data) {
       case 'selfReports':
         observables.push(AddSelfReport.createMaster(args, res, next, data[i]));
         break;
+      case 'restorativeJustices':
+        observables.push(AddRestorativeJustice.createMaster(args, res, next, data[i]));
+        break;
       default:
         return {
           errorMessage: `Property ${property} does not exist.`
@@ -332,6 +343,9 @@ let processPutRequest = async function (args, res, next, property, data) {
         break;
       case 'selfReports':
         observables.push(EditSelfReport.editMaster(args, res, next, data[i]));
+        break;
+      case 'restorativeJustices':
+        observables.push(EditRestorativeJustice.editMaster(args, res, next, data[i]));
         break;
       default:
         return {
