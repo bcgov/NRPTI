@@ -22,15 +22,15 @@ const preTransformRecord = function(epicRecord) {
   }
 
   // Transform Epic author names to match values tracked by NRPTI
+  // See admin-nrpti/../record-constants.ts -> authorPicklist
   if (epicRecord.documentAuthor) {
     switch (epicRecord.documentAuthor) {
-      case 'EPIC':
-        epicRecord.documentAuthor = 'NRPTI';
-        break;
-      case 'EAO':
+      case '5cf00c03a266b7e1877504db': // 'EAO' - legislation 2002
+      case '5df79dd77b5abbf7da6f51d1': // 'EAO - legislation 2018
         epicRecord.documentAuthor = 'BC Government';
         break;
-      case 'Proponent/Certificate Holder':
+      case '5cf00c03a266b7e1877504dc': // 'Proponent / Certificate Holder' - legislation 2002
+      case '5df79dd77b5abbf7da6f51d2': // 'Proponent/Certificate Holder' - legislation 2018
         epicRecord.documentAuthor = 'Proponent';
         break;
       default:
