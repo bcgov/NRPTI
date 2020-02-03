@@ -42,6 +42,8 @@ export class RecordsTableRowComponent extends TableRowComponent {
         break;
       case 'AdministrativePenalty':
         this.router.navigate(['records', 'administrative-penalties', this.rowData._id, 'detail']);
+      case 'AdministrativeSanction':
+        this.router.navigate(['records', 'administrative-sanctions', this.rowData._id, 'detail']);
       default:
       // TODO
     }
@@ -75,6 +77,9 @@ export class RecordsTableRowComponent extends TableRowComponent {
         break;
       case 'AdministrativePenalty':
         this.router.navigate(['records', 'administrative-penalties', this.rowData._id, 'edit']);
+        break;
+      case 'AdministrativeSanction':
+        this.router.navigate(['records', 'administrative-sanctions', this.rowData._id, 'edit']);
         break;
       default:
         break;

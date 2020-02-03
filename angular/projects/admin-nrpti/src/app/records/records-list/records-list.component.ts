@@ -220,6 +220,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       case 'administrativePenalty':
         this.router.navigate(['records', 'administrative-penalties', 'add']);
         break;
+      case 'administrativeSanction':
+        this.router.navigate(['records', 'administrative-sanctions', 'add']);
+        break;
       default:
         break;
     }

@@ -54,6 +54,11 @@ import { AdministrativePenaltyResolver } from './administrative-penalties/admini
 import { AdministrativePenaltyDetailComponent } from './administrative-penalties/administrative-penalty-detail/administrative-penalty-detail.component';
 import { AdministrativePenaltyAddEditComponent } from './administrative-penalties/administrative-penalty-add-edit/administrative-penalty-add-edit.component';
 
+// administrative sanctions
+import { AdministrativeSanctionResolver } from './administrative-sanctions/administrative-sanction-resolver';
+import { AdministrativeSanctionDetailComponent } from './administrative-sanctions/administrative-sanction-detail/administrative-sanction-detail.component';
+import { AdministrativeSanctionAddEditComponent } from './administrative-sanctions/administrative-sanction-add-edit/administrative-sanction-add-edit.component';
+
 // other
 import { Utils } from 'nrpti-angular-components';
 
@@ -479,6 +484,51 @@ const routes: Routes = [
             }
           }
         ]
+      },
+      {
+        path: 'administrative-sanctions/add',
+        component: AdministrativeSanctionAddEditComponent,
+        canActivate: [CanActivateGuard],
+        data: {
+          breadcrumb: 'Add Administrative Sanction'
+
+        }
+      },
+      {
+        path: 'administrative-sanctions/:administrativeSanctionId',
+        data: {
+          breadcrumb: 'Administrative Sanction Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: AdministrativeSanctionDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: AdministrativeSanctionResolver
+            }
+          },
+          {
+            path: 'edit',
+            component: AdministrativeSanctionAddEditComponent,
+            canActivate: [CanActivateGuard],
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+              breadcrumb: 'Edit Administrative Sanction'
+            },
+            resolve: {
+              record: AdministrativeSanctionResolver
+            }
+          }
+        ]
       }
     ]
   }
@@ -498,6 +548,7 @@ const routes: Routes = [
     RestorativeJusticeResolver,
     TicketResolver,
     AdministrativePenaltyResolver,
+    AdministrativeSanctionResolver,
     Utils
   ]
 })
