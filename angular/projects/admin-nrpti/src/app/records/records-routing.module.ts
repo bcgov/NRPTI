@@ -49,6 +49,11 @@ import { TicketResolver } from './tickets/ticket-resolver';
 import { TicketDetailComponent } from './tickets/ticket-detail/ticket-detail.component';
 import { TicketAddEditComponent } from './tickets/ticket-add-edit/ticket-add-edit.component';
 
+// administrative penalties
+import { AdministrativePenaltyResolver } from './administrative-penalties/administrative-penalty-resolver';
+import { AdministrativePenaltyDetailComponent } from './administrative-penalties/administrative-penalty-detail/administrative-penalty-detail.component';
+import { AdministrativePenaltyAddEditComponent } from './administrative-penalties/administrative-penalty-add-edit/administrative-penalty-add-edit.component';
+
 // other
 import { Utils } from 'nrpti-angular-components';
 
@@ -428,6 +433,51 @@ const routes: Routes = [
               record: TicketResolver
             }
           }
+      },
+      // administrative penalties
+      {
+        path: 'administrative-penalties/add',
+        component: AdministrativePenaltyAddEditComponent,
+        canActivate: [CanActivateGuard],
+        data: {
+          breadcrumb: 'Add Administrative Penalty'
+
+        }
+      },
+      {
+        path: 'administrative-penalties/:administrativePenaltyId',
+        data: {
+          breadcrumb: 'Administrative Penalty Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: AdministrativePenaltyDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: AdministrativePenaltyResolver
+            }
+          },
+          {
+            path: 'edit',
+            component: AdministrativePenaltyAddEditComponent,
+            canActivate: [CanActivateGuard],
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+              breadcrumb: 'Edit Administrative Penalty'
+            },
+            resolve: {
+              record: AdministrativePenaltyResolver
+            }
+          }
         ]
       }
     ]
@@ -447,6 +497,7 @@ const routes: Routes = [
     SelfReportResolver,
     RestorativeJusticeResolver,
     TicketResolver,
+    AdministrativePenaltyResolver,
     Utils
   ]
 })

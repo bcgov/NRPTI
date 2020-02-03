@@ -19,7 +19,10 @@ import {
   RestorativeJusticeNRCED,
   Ticket,
   TicketLNG,
-  TicketNRCED
+  TicketNRCED,
+  AdministrativePenalty,
+  AdministrativePenaltyLNG,
+  AdministrativePenaltyNRCED
 } from '../../../../../common/src/app/models';
 
 // orders
@@ -49,6 +52,10 @@ import { RestorativeJusticeLNGDetailComponent } from '../restorative-justices/re
 // tickets
 import { TicketLNGDetailComponent } from '../tickets/ticket-lng-detail/ticket-lng-detail.component';
 import { TicketNRCEDDetailComponent } from '../tickets/ticket-nrced-detail/ticket-nrced-detail.component';
+
+// administrative penalties
+import { AdministrativePenaltyNRCEDDetailComponent } from '../administrative-penalties/administrative-penalty-nrced-detail/administrative-penalty-nrced-detail.component';
+import { AdministrativePenaltyLNGDetailComponent } from '../administrative-penalties/administrative-penalty-lng-detail/administrative-penalty-lng-detail.component';
 
 // other
 import { RecordComponent } from './record-component';
@@ -109,6 +116,12 @@ export class RecordUtils {
         return new TicketLNG(data);
       case 'TicketNRCED':
         return new TicketNRCED(data);
+      case 'AdministrativePenalty':
+        return new AdministrativePenalty(data);
+      case 'AdministrativePenaltyLNG':
+        return new AdministrativePenaltyLNG(data);
+      case 'AdministrativePenaltyNRCED':
+        return new AdministrativePenaltyNRCED(data);
       default:
         return null;
     }
@@ -153,6 +166,10 @@ export class RecordUtils {
         return TicketLNGDetailComponent;
       case 'TicketNRCED':
         return TicketNRCEDDetailComponent;
+      case 'AdministrativePenaltyLNG':
+        return AdministrativePenaltyLNGDetailComponent;
+      case 'AdministrativePenaltyNRCED':
+        return AdministrativePenaltyNRCEDDetailComponent;
       default:
         return null;
     }

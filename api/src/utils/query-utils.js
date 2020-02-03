@@ -6,8 +6,6 @@
 
 let mongoose = require('mongoose');
 let DEFAULT_PAGESIZE = 100;
-const encode = encodeURIComponent;
-
 
 /**
  * Removes properties from fields that are not present in allowedFields
@@ -16,7 +14,7 @@ const encode = encodeURIComponent;
  * @param {*} fields array of fields that will have all non-allowed fields removed.
  * @returns array of fields that is a subset of allowedFields.
  */
-exports.getSanitizedFields = function (allowedFields, fields) {
+exports.getSanitizedFields = function(allowedFields, fields) {
   return fields.filter(function (field) {
     return allowedFields.indexOf(allowedFields, field) !== -1;
   });
@@ -30,7 +28,7 @@ exports.getSanitizedFields = function (allowedFields, fields) {
  * @param {*} query
  * @returns
  */
-exports.buildQuery = function (property, values, query) {
+exports.buildQuery = function(property, values, query) {
   let objectIDs = [];
   if (Array.isArray(values)) {
     for (let id in values) {
@@ -56,7 +54,7 @@ exports.buildQuery = function (property, values, query) {
  * @param {*} pageNum
  * @returns
  */
-exports.getSkipLimitParameters = function (pageSize, pageNum) {
+exports.getSkipLimitParameters = function(pageSize, pageNum) {
   const params = {};
 
   let ps = DEFAULT_PAGESIZE; // Default
@@ -74,7 +72,7 @@ exports.getSkipLimitParameters = function (pageSize, pageNum) {
   return params;
 };
 
-exports.recordAction = async function (action, meta, username, objId = null) {
+exports.recordAction = async function(action, meta, username, objId = null) {
   const Audit = mongoose.model('Audit');
   const audit = new Audit({
     _objectSchema: 'Query',
@@ -94,5 +92,6 @@ exports.recordTypes = [
   'Agreement',
   'SelfReport',
   'RestorativeJustice',
-  'Ticket'
+  'Ticket',
+  'AdministrativePenalty'
 ];

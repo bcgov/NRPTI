@@ -40,6 +40,8 @@ export class RecordsTableRowComponent extends TableRowComponent {
       case 'Ticket':
         this.router.navigate(['records', 'tickets', this.rowData._id, 'detail']);
         break;
+      case 'AdministrativePenalty':
+        this.router.navigate(['records', 'administrative-penalties', this.rowData._id, 'detail']);
       default:
       // TODO
     }
@@ -70,6 +72,9 @@ export class RecordsTableRowComponent extends TableRowComponent {
         break;
       case 'Ticket':
         this.router.navigate(['records', 'tickets', this.rowData._id, 'edit']);
+        break;
+      case 'AdministrativePenalty':
+        this.router.navigate(['records', 'administrative-penalties', this.rowData._id, 'edit']);
         break;
       default:
         break;

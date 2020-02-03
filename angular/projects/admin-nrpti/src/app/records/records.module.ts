@@ -61,6 +61,12 @@ import { TicketDetailComponent } from './tickets/ticket-detail/ticket-detail.com
 import { TicketNRCEDDetailComponent } from './tickets/ticket-nrced-detail/ticket-nrced-detail.component';
 import { TicketLNGDetailComponent } from './tickets/ticket-lng-detail/ticket-lng-detail.component';
 
+// Administrative Penalties
+import { AdministrativePenaltyAddEditComponent } from './administrative-penalties/administrative-penalty-add-edit/administrative-penalty-add-edit.component';
+import { AdministrativePenaltyDetailComponent } from './administrative-penalties/administrative-penalty-detail/administrative-penalty-detail.component';
+import { AdministrativePenaltyNRCEDDetailComponent } from './administrative-penalties/administrative-penalty-nrced-detail/administrative-penalty-nrced-detail.component';
+import { AdministrativePenaltyLNGDetailComponent } from './administrative-penalties/administrative-penalty-lng-detail/administrative-penalty-lng-detail.component';
+
 // directives
 import { RecordDetailDirective } from './utils/record-detail.directive';
 
@@ -120,7 +126,12 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     TicketAddEditComponent,
     TicketDetailComponent,
     TicketNRCEDDetailComponent,
-    TicketLNGDetailComponent
+    TicketLNGDetailComponent,
+    // administrative penatlies
+    AdministrativePenaltyAddEditComponent,
+    AdministrativePenaltyDetailComponent,
+    AdministrativePenaltyNRCEDDetailComponent,
+    AdministrativePenaltyLNGDetailComponent
   ],
   providers: [],
   entryComponents: [
@@ -159,7 +170,12 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     TicketAddEditComponent,
     TicketDetailComponent,
     TicketNRCEDDetailComponent,
-    TicketLNGDetailComponent
+    TicketLNGDetailComponent,
+    // administrative penalties
+    AdministrativePenaltyAddEditComponent,
+    AdministrativePenaltyDetailComponent,
+    AdministrativePenaltyNRCEDDetailComponent,
+    AdministrativePenaltyLNGDetailComponent
   ],
   exports: []
 })
