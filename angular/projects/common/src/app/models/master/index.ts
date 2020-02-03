@@ -8,3 +8,4 @@ export * from './restorativeJustice';
 export * from './ticket';
 export * from './administrativePenalty';
 export * from './administrativeSanction';
+export * from './warning';

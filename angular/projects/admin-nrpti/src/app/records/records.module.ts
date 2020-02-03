@@ -73,6 +73,12 @@ import { AdministrativeSanctionDetailComponent } from './administrative-sanction
 import { AdministrativeSanctionNRCEDDetailComponent } from './administrative-sanctions/administrative-sanction-nrced-detail/administrative-sanction-nrced-detail.component';
 import { AdministrativeSanctionLNGDetailComponent } from './administrative-sanctions/administrative-sanction-lng-detail/administrative-sanction-lng-detail.component';
 
+// Warnings
+import { WarningAddEditComponent } from './warnings/warning-add-edit/warning-add-edit.component';
+import { WarningDetailComponent } from './warnings/warning-detail/warning-detail.component';
+import { WarningNRCEDDetailComponent } from './warnings/warning-nrced-detail/warning-nrced-detail.component';
+import { WarningLNGDetailComponent } from './warnings/warning-lng-detail/warning-lng-detail.component';
+
 // directives
 import { RecordDetailDirective } from './utils/record-detail.directive';
 
@@ -142,7 +148,12 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     AdministrativeSanctionAddEditComponent,
     AdministrativeSanctionDetailComponent,
     AdministrativeSanctionNRCEDDetailComponent,
-    AdministrativeSanctionLNGDetailComponent
+    AdministrativeSanctionLNGDetailComponent,
+    // warnings
+    WarningAddEditComponent,
+    WarningDetailComponent,
+    WarningNRCEDDetailComponent,
+    WarningLNGDetailComponent
   ],
   providers: [],
   entryComponents: [
@@ -191,7 +202,12 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     AdministrativeSanctionAddEditComponent,
     AdministrativeSanctionDetailComponent,
     AdministrativeSanctionNRCEDDetailComponent,
-    AdministrativeSanctionLNGDetailComponent
+    AdministrativeSanctionLNGDetailComponent,
+    // warnings
+    WarningAddEditComponent,
+    WarningDetailComponent,
+    WarningNRCEDDetailComponent,
+    WarningLNGDetailComponent
   ],
   exports: []
 })

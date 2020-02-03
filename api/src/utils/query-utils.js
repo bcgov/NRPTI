@@ -94,5 +94,6 @@ exports.recordTypes = [
   'RestorativeJustice',
   'Ticket',
   'AdministrativePenalty',
-  'AdministrativeSanction'
+  'AdministrativeSanction',
+  'Warning'
 ];

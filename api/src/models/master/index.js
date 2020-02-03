@@ -12,3 +12,4 @@ exports.ticket = require('./ticket');
 exports.warningLetter = require('./warningLetter');
 exports.certificate = require('./certificate');
 exports.permit = require('./permit');
+exports.warning = require('./warning');
