@@ -138,7 +138,7 @@ export class DocumentsComponent implements OnInit {
             },
             {
               name: 'Phase',
-              value: '_master.recordPhase',
+              value: 'relatedPhase',
               width: 'col-2'
             },
             {
