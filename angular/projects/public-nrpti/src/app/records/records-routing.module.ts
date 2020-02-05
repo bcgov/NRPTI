@@ -13,6 +13,9 @@ import { InspectionResolver } from './inspections/inspection-detail/inspection-r
 import { RestorativeJusticeDetailComponent } from './restorative-justices/restorative-justice-detail/restorative-justice-detail.component';
 import { RestorativeJusticeResolver } from './restorative-justices/restorative-justice-resolver';
 
+import { AdministrativePenaltyDetailComponent } from './administrative-penalties/administrative-penalty-detail/administrative-penalty-detail.component';
+import { AdministrativePenaltyResolver } from './administrative-penalties/administrative-penalty-resolver';
+
 const routes: Routes = [
   {
     path: 'records',
@@ -95,6 +98,26 @@ const routes: Routes = [
             },
             data: {
               breadcrumb: null
+      },
+      {
+        path: 'administrative-penalties/:administrativePenaltyId',
+        data: {
+          breadcrumb: 'Administrative Penalty Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: AdministrativePenaltyDetailComponent,
+            resolve: {
+              records: AdministrativePenaltyResolver
+            },
+            data: {
+              breadcrumb: null
             }
           }
         ]
@@ -106,6 +129,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [RecordsListResolver, OrderResolver, InspectionResolver, RestorativeJusticeResolver]
+  providers: [RecordsListResolver, OrderResolver, InspectionResolver, RestorativeJusticeResolver, AdministrativePenaltyResolver]
 })
 export class RecordsRoutingModule {}
