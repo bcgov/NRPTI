@@ -23,6 +23,29 @@ describe('EpicDataSource', () => {
     });
   });
 
+  describe('updateRecords', () => {
+    it('catches any thrown exceptions and returns gracefully', async () => {
+      // mock function to throw an error
+      const mock_updateRecords = jest.fn(() => {
+        throw Error('unexpected error!');
+      });
+
+      const epicDataSource = new EpicDataSource();
+
+      epicDataSource._updateRecords = mock_updateRecords;
+
+      const status = await epicDataSource.updateRecords();
+
+      expect(status).toEqual({
+        message: 'updateRecords - unexpected error',
+        error: 'unexpected error!',
+        itemsProcessed: 0,
+        itemTotal: 0,
+        typeStatus: []
+      });
+    });
+  });
+
   describe('_updateRecords', () => {
     it('catches any thrown exceptions and returns gracefully', async () => {
       // mock function to throw an error
@@ -34,9 +57,9 @@ describe('EpicDataSource', () => {
 
       epicDataSource.updateRecordType = mockUpdateRecordType;
 
-      const status = await epicDataSource.updateRecords();
+      await epicDataSource._updateRecords([{}]);
 
-      expect(status).toEqual({
+      expect(epicDataSource.status).toEqual({
         message: '_updateRecords - unexpected error',
         error: 'unexpected error!',
         itemsProcessed: 0,
