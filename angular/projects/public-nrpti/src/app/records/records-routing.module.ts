@@ -19,6 +19,9 @@ import { AdministrativePenaltyResolver } from './administrative-penalties/admini
 import { AdministrativeSanctionDetailComponent } from './administrative-sanctions/administrative-sanction-detail/administrative-sanction-detail.component';
 import { AdministrativeSanctionResolver } from './administrative-sanctions/administrative-sanction-resolver';
 
+import { TicketDetailComponent } from './tickets/ticket-detail/ticket-detail.component';
+import { TicketResolver } from './tickets/ticket-resolver';
+
 const routes: Routes = [
   {
     path: 'records',
@@ -150,6 +153,29 @@ const routes: Routes = [
             }
           }
         ]
+      },
+      {
+        path: 'tickets/:ticketId',
+        data: {
+          breadcrumb: 'Ticket Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: TicketDetailComponent,
+            resolve: {
+              records: TicketResolver
+            },
+            data: {
+              breadcrumb: null
+            }
+          }
+        ]
       }
     ]
   }
@@ -164,7 +190,8 @@ const routes: Routes = [
     InspectionResolver,
     RestorativeJusticeResolver,
     AdministrativePenaltyResolver,
-    AdministrativeSanctionResolver
+    AdministrativeSanctionResolver,
+    Ticket
   ]
 })
 export class RecordsRoutingModule {}
