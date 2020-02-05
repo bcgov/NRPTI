@@ -10,6 +10,9 @@ import { OrderResolver } from './orders/order-detail/order-resolver';
 import { InspectionDetailComponent } from './inspections/inspection-detail/inspection-detail.component';
 import { InspectionResolver } from './inspections/inspection-detail/inspection-resolver';
 
+import { RestorativeJusticeDetailComponent } from './restorative-justices/restorative-justice-detail/restorative-justice-detail.component';
+import { RestorativeJusticeResolver } from './restorative-justices/restorative-justice-resolver';
+
 const routes: Routes = [
   {
     path: 'records',
@@ -72,6 +75,29 @@ const routes: Routes = [
             }
           }
         ]
+      },
+      {
+        path: 'restorative-justices/:restorativeJusticeId',
+        data: {
+          breadcrumb: 'Restorative Justice Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: RestorativeJusticeDetailComponent,
+            resolve: {
+              records: RestorativeJusticeResolver
+            },
+            data: {
+              breadcrumb: null
+            }
+          }
+        ]
       }
     ]
   }
@@ -80,6 +106,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [RecordsListResolver, OrderResolver]
+  providers: [RecordsListResolver, OrderResolver, InspectionResolver, RestorativeJusticeResolver]
 })
 export class RecordsRoutingModule {}

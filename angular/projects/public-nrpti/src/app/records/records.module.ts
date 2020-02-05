@@ -17,10 +17,10 @@ import { RecordsListComponent } from './records-list/records-list.component';
 import { RecordsTableRowComponent } from './records-row/records-table-row.component';
 import { OrderDetailComponent } from './orders/order-detail/order-detail.component';
 import { InspectionDetailComponent } from './inspections/inspection-detail/inspection-detail.component';
+import { RestorativeJusticeDetailComponent } from './restorative-justices/restorative-justice-detail/restorative-justice-detail.component';
 
 // resolvers
 import { RecordsListResolver } from './records-list/records-list-resolver';
-import { OrderResolver } from './orders/order-detail/order-resolver';
 
 @NgModule({
   imports: [
@@ -34,8 +34,14 @@ import { OrderResolver } from './orders/order-detail/order-resolver';
     InlineSVGModule.forRoot(),
     RecordsRoutingModule
   ],
-  declarations: [RecordsListComponent, RecordsTableRowComponent, OrderDetailComponent, InspectionDetailComponent],
-  providers: [RecordsListResolver, OrderResolver],
+  declarations: [
+    RecordsListComponent,
+    RecordsTableRowComponent,
+    OrderDetailComponent,
+    InspectionDetailComponent,
+    RestorativeJusticeDetailComponent
+  ],
+  providers: [RecordsListResolver],
   entryComponents: [RecordsTableRowComponent],
   exports: []
 })
