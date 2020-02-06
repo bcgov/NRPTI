@@ -160,7 +160,7 @@ let createAgreementRecord = async function (item, project, nrptiCollection) {
     recordName: item.name,
     recordType: item.complianceDocumentType,
     // Prefer to store dates in the DB as ISO, not some random format.
-    date: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
     nationName: item.nation,
     attachments: [{ url: item.url }],
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',

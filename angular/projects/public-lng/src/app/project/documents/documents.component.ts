@@ -170,7 +170,7 @@ export class DocumentsComponent implements OnInit {
             },
             {
               name: 'Date',
-              value: '_master.date',
+              value: '_master.dateIssued',
               width: 'col-2'
             }
           ];

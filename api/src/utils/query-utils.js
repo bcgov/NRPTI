@@ -86,4 +86,4 @@ exports.recordAction = async function (action, meta, username, objId = null) {
   return await audit.save();
 };
 
-exports.recordTypes = ['Order', 'Inspection', 'Certificate', 'Permit'];
+exports.recordTypes = ['Order', 'Inspection', 'Certificate', 'Permit', 'Agreement'];
