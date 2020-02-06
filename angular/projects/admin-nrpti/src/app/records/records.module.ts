@@ -39,6 +39,11 @@ import { PermitAddEditComponent } from './permits/permit-add-edit/permit-add-edi
 import { PermitDetailComponent } from './permits/permit-detail/permit-detail.component';
 import { PermitLNGDetailComponent } from './permits/permit-lng-detail/permit-lng-detail.component';
 
+// Agreements
+import { AgreementAddEditComponent } from './agreements/agreement-add-edit/agreement-add-edit.component';
+import { AgreementDetailComponent } from './agreements/agreement-detail/agreement-detail.component';
+import { AgreementLNGDetailComponent } from './agreements/agreement-lng-detail/agreement-lng-detail.component';
+
 // directives
 import { RecordDetailDirective } from './utils/record-detail.directive';
 
@@ -80,7 +85,11 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     // permits
     PermitAddEditComponent,
     PermitDetailComponent,
-    PermitLNGDetailComponent
+    PermitLNGDetailComponent,
+    // agreements
+    AgreementDetailComponent,
+    AgreementAddEditComponent,
+    AgreementLNGDetailComponent
   ],
   providers: [],
   entryComponents: [
@@ -101,7 +110,11 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     // permits
     PermitAddEditComponent,
     PermitDetailComponent,
-    PermitLNGDetailComponent
+    PermitLNGDetailComponent,
+    // agreements
+    AgreementDetailComponent,
+    AgreementAddEditComponent,
+    AgreementLNGDetailComponent
   ],
   exports: []
 })

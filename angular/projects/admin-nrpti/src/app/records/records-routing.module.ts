@@ -29,6 +29,11 @@ import { PermitResolver } from './permits/permit-resolver';
 import { PermitAddEditComponent } from './permits/permit-add-edit/permit-add-edit.component';
 import { PermitDetailComponent } from './permits/permit-detail/permit-detail.component';
 
+// agreements
+import { AgreementResolver } from './agreements/agreement-resolver';
+import { AgreementDetailComponent } from './agreements/agreement-detail/agreement-detail.component';
+import { AgreementAddEditComponent } from './agreements/agreement-add-edit/agreement-add-edit.component';
+
 // other
 import { Utils } from 'nrpti-angular-components';
 
@@ -230,6 +235,51 @@ const routes: Routes = [
             }
           }
         ]
+      },
+      // agreements
+      {
+        path: 'agreements/add',
+        component: AgreementAddEditComponent,
+        canActivate: [CanActivateGuard],
+        data: {
+          breadcrumb: 'Add Agreement'
+        }
+      },
+      {
+        path: 'agreements/:agreementId',
+        data: {
+          breadcrumb: 'Agreement Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: AgreementDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: AgreementResolver
+            }
+          },
+          {
+            path: 'edit',
+            component: AgreementAddEditComponent,
+            canActivate: [CanActivateGuard],
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+              breadcrumb: 'Edit Agreement'
+            },
+            resolve: {
+              record: AgreementResolver
+            }
+          }
+        ]
       }
     ]
   }
@@ -238,6 +288,14 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [RecordsResolver, OrderResolver, InspectionResolver, CertificateResolver, PermitResolver, Utils]
+  providers: [
+    RecordsResolver,
+    OrderResolver,
+    InspectionResolver,
+    CertificateResolver,
+    PermitResolver,
+    AgreementResolver,
+    Utils
+  ]
 })
 export class RecordsRoutingModule {}

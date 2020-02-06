@@ -41,6 +41,6 @@ export class ProjectComponent implements OnInit {
   }
 
   navToIndigenousNations() {
-    this.router.navigate(['/project', this.id, 'nations', { sortBy: '-_master.date' }]);
+    this.router.navigate(['/project', this.id, 'nations', { sortBy: '-_master.dateIssued' }]);
   }
 }

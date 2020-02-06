@@ -12,8 +12,10 @@ module.exports = require('../../utils/model-schema-generator')(
     write: [{ type: String, trim: true, default: 'sysadmin' }],
 
     recordName: { type: String, default: '' },
-    date: { type: Date, default: Date.now() },
+    recordType: { type: String, default: '' },
+    dateIssued: { type: Date, default: null },
     nationName: { type: String, default: '' },
+    projectName: { type: String, default: '' },
     attachments: [{ type: Object, default: null }],
 
     dateAdded: { type: Date, default: Date.now() },
