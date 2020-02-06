@@ -7,7 +7,9 @@ import {
   InspectionNRCED,
   InspectionLNG,
   Certificate,
-  CertificateLNG
+  CertificateLNG,
+  Permit,
+  PermitLNG
 } from '../../../../../common/src/app/models';
 
 // orders
@@ -20,6 +22,9 @@ import { InspectionLNGDetailComponent } from '../inspections/inspection-lng-deta
 
 // certificates
 import { CertificateLNGDetailComponent } from '../certificates/certificate-lng-detail/certificate-lng-detail.component';
+
+// permits
+import { PermitLNGDetailComponent } from '../permits/permit-lng-detail/permit-lng-detail.component';
 
 // other
 import { RecordComponent } from './record-component';
@@ -56,6 +61,10 @@ export class RecordUtils {
         return new Certificate(data);
       case 'CertificateLNG':
         return new CertificateLNG(data);
+      case 'Permit':
+        return new Permit(data);
+      case 'PermitLNG':
+        return new PermitLNG(data);
       default:
         return null;
     }
@@ -86,6 +95,8 @@ export class RecordUtils {
         return InspectionLNGDetailComponent;
       case 'CertificateLNG':
         return CertificateLNGDetailComponent;
+      case 'PermitLNG':
+        return PermitLNGDetailComponent;
       default:
         return null;
     }

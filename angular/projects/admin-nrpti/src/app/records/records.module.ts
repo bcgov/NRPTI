@@ -16,7 +16,6 @@ import { BrowserModule } from '@angular/platform-browser';
 // records
 import { RecordsListComponent } from './records-list/records-list.component';
 import { RecordsTableRowComponent } from './records-rows/records-table-row.component';
-import { RecordDetailDirective } from './utils/record-detail.directive';
 
 // Orders
 import { OrderAddEditComponent } from './orders/order-add-edit/order-add-edit.component';
@@ -34,6 +33,14 @@ import { InspectionLNGDetailComponent } from './inspections/inspection-lng-detai
 import { CertificateAddEditComponent } from './certificates/certificate-add-edit/certificate-add-edit.component';
 import { CertificateDetailComponent } from './certificates/certificate-detail/certificate-detail.component';
 import { CertificateLNGDetailComponent } from './certificates/certificate-lng-detail/certificate-lng-detail.component';
+
+// Permits
+import { PermitAddEditComponent } from './permits/permit-add-edit/permit-add-edit.component';
+import { PermitDetailComponent } from './permits/permit-detail/permit-detail.component';
+import { PermitLNGDetailComponent } from './permits/permit-lng-detail/permit-lng-detail.component';
+
+// directives
+import { RecordDetailDirective } from './utils/record-detail.directive';
 
 @NgModule({
   imports: [
@@ -69,7 +76,11 @@ import { CertificateLNGDetailComponent } from './certificates/certificate-lng-de
     // certificates
     CertificateAddEditComponent,
     CertificateDetailComponent,
-    CertificateLNGDetailComponent
+    CertificateLNGDetailComponent,
+    // permits
+    PermitAddEditComponent,
+    PermitDetailComponent,
+    PermitLNGDetailComponent
   ],
   providers: [],
   entryComponents: [
@@ -86,7 +97,11 @@ import { CertificateLNGDetailComponent } from './certificates/certificate-lng-de
     // certificates
     CertificateAddEditComponent,
     CertificateDetailComponent,
-    CertificateLNGDetailComponent
+    CertificateLNGDetailComponent,
+    // permits
+    PermitAddEditComponent,
+    PermitDetailComponent,
+    PermitLNGDetailComponent
   ],
   exports: []
 })

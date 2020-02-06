@@ -26,6 +26,9 @@ export class RecordsTableRowComponent extends TableRowComponent {
       case 'Certificate':
         this.router.navigate(['records', 'certificates', this.rowData._id, 'detail']);
         break;
+      case 'Permit':
+        this.router.navigate(['records', 'permits', this.rowData._id, 'detail']);
+        break;
       default:
       // TODO
     }
@@ -41,6 +44,9 @@ export class RecordsTableRowComponent extends TableRowComponent {
         break;
       case 'Certificate':
         this.router.navigate(['records', 'certificates', this.rowData._id, 'edit']);
+        break;
+      case 'Permit':
+        this.router.navigate(['records', 'permits', this.rowData._id, 'edit']);
         break;
       default:
         break;
