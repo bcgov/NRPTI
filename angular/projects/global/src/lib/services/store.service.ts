@@ -4,7 +4,7 @@ export class StoreService {
   @Output() change: EventEmitter<boolean> = new EventEmitter();
 
   private currentState: any;
-  isOpen = false;
+  isOpen = true;
 
   constructor() {
     this.currentState = {};

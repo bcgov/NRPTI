@@ -1,3 +1,5 @@
+@import "~assets/styles/base/base.scss";
+
 .detail-page {
   .nav-section {
     font-weight: 600;
@@ -31,6 +33,12 @@
           margin-left: 0.25rem;
         }
       }
+
+      @media screen and (max-width: $media-query-md) {
+        .nav-item {
+          margin: 0 0.5rem;
+        }
+      }
     }
   }
 
@@ -41,7 +49,7 @@
     .content-grid {
       display: grid;
       grid-template-rows: auto;
-      grid-gap: 0.75rem;
+      grid-gap: 1.25rem;
 
       .grid-section-1 {
         display: grid;
@@ -106,6 +114,34 @@
               font-size: 0.75rem;
             }
           }
+        }
+      }
+
+      @media screen and (max-width: $media-query-md) {
+        .grid-section-1 {
+          grid-template-columns: none;
+        }
+
+        .grid-section-2 {
+          grid-template-columns: none;
+        }
+
+        .grid-section-3 {
+          grid-template-columns: none;
+        }
+
+        .grid-section-4 {
+          grid-template-columns: none;
+        }
+
+        .grid-section-5 {
+          grid-template-columns: none;
+        }
+
+        .grid-item {
+          grid-template-rows: none;
+          grid-template-columns: 1fr 2fr;
+          grid-gap: 0.625rem;
         }
       }
     }

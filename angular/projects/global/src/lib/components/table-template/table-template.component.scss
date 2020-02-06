@@ -21,7 +21,7 @@
         border: none;
         border-bottom: 2px solid transparent;
 
-        @media screen and (max-width: 600px) {
+        @media screen and (max-width: 768px) {
           padding: 0.7rem 0.5rem 0.85rem;
         }
 
@@ -43,7 +43,7 @@
     tr th:first-child {
       padding-left: 1rem;
 
-      @media screen and (max-width: 600px) {
+      @media screen and (max-width: 768px) {
         padding-left: 0.5rem;
       }
     }

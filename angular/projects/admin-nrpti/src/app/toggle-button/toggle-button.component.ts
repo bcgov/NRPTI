@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { StoreService } from 'nrpti-angular-components';
 
 @Component({
@@ -6,10 +6,16 @@ import { StoreService } from 'nrpti-angular-components';
   templateUrl: './toggle-button.component.html',
   styleUrls: ['./toggle-button.component.scss']
 })
-export class ToggleButtonComponent {
-  public loading = true;
+export class ToggleButtonComponent implements OnInit {
+  isOpen = true;
 
   constructor(private storeService: StoreService) {}
+
+  ngOnInit() {
+    this.storeService.change.subscribe(isOpen => {
+      this.isOpen = isOpen;
+    });
+  }
 
   toggleSideNav() {
     this.storeService.toggleSideNav();

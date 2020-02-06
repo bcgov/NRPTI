@@ -1,3 +1,5 @@
+@import "~assets/styles/base/base.scss";
+
 html,
 body {
   min-height: 100%;
@@ -8,9 +10,8 @@ app-root {
   flex-direction: column;
 }
 
-div.content {
+body-content {
   transition: 0.25s all;
-  height: 1000px;
 }
 
 .container-fluid-padding {
@@ -18,64 +19,6 @@ div.content {
 
   @media screen and (max-width: 768px) {
     padding: 1.2rem 1rem 14px;
-  }
-}
-
-.project-container h1 {
-  background: #00274e;
-  color: #fff;
-  font-size: 2.1rem;
-  margin: -19px -24px 30px;
-  padding: 9px 26px 14px;
-  box-sizing: content-box;
-
-  @media screen and (max-width: 768px) {
-    font-size: 1.5rem;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  div.content {
-    margin-left: 250px;
-  }
-
-  .sidebarcontrol div.content {
-    margin-left: 0;
-  }
-
-  .sidebarcontrol {
-    .action-container {
-      left: 0;
-    }
-
-    .slidebtn {
-      transform: rotate(180deg);
-      -webkit-transform: rotate(180deg);
-      border-radius: 6px 0 0 6px;
-    }
-  }
-}
-
-@media screen and (max-width: 768px) {
-  div.content {
-    margin-left: 0;
-  }
-
-  .sidebarcontrol div.content {
-    margin-left: 250px;
-  }
-
-  .slidebtn {
-    transform: rotate(180deg);
-    -webkit-transform: rotate(180deg);
-  }
-
-  .sidebarcontrol {
-    .slidebtn {
-      transform: rotate(0deg);
-      -webkit-transform: rotate(0deg);
-      border-radius: 0 6px 6px 0;
-    }
   }
 }
 
@@ -95,6 +38,8 @@ div.content {
 
 // Main Element
 main {
+  margin-top: 25px;
+
   h2 {
     margin-bottom: 1rem;
     line-height: 2rem;
@@ -160,45 +105,16 @@ main {
       margin-bottom: 1.75rem;
     }
   }
-
-  ul.content-external-links {
-    margin-bottom: 2rem;
-  }
-
-  // Named anchor helper
-  .pg-anchor[id]::before {
-    content: " ";
-    display: block;
-    height: 98px;
-    margin: -98px 0 0;
-  }
-
-  .main-footer {
-    padding: 1.5rem;
-    background-color: rgba(0, 51, 102, 0.8);
-    color: $white;
-
-    a {
-      color: $gold;
-    }
-  }
 }
 
 .action-container {
   left: 0;
   right: 0;
+  margin: 0;
   background: #e9ecef;
   padding: 10px 10px 12px 38px;
-  position: fixed;
-  transition: 0.25s all;
+  transition: height 0.25s;
   z-index: 4;
-
-  button[type='cancel'] {
-    background: none;
-    border-width: 2px;
-    color: #007bff;
-    font-weight: 600;
-  }
 
   .btn {
     padding: 0.74rem 0.75rem;
@@ -209,39 +125,8 @@ main {
     }
   }
 
-  @media screen and (min-width: 768px) {
-    display: flex;
-    left: 250px;
-    top: 69px;
-    right: 0;
-
-    ol {
-      flex: 100%;
-      margin-bottom: 0;
-    }
-  }
-
   @media screen and (max-width: 768px) {
-    position: relative;
-    top: 0;
-    padding-left: 45px;
-
-    .btn {
-      width: 100%;
-    }
-
-    .dropdown {
-      width: 100%;
-    }
-  }
-}
-
-.btn-container {
-  display: flex;
-
-  button.btn {
-    margin-left: 10px;
-    width: 130px;
+    padding: 5px 10px 7px 38px;
   }
 }
 
@@ -287,25 +172,6 @@ hr {
   border-width: 2px;
 }
 
-/* class to make divs look like anchors */
-.clickable {
-  cursor: pointer !important;
-  color: $link-color !important;
-
-  &:focus,
-  &:hover {
-    text-decoration: underline !important;
-  }
-}
-
-// This should be in helper classes
-// hide the footer when a component (e.g. the map) is shown full screen
-.full-screen {
-  + app-footer {
-    display: none;
-  }
-}
-
 // Page Title Container
 .title-container {
   @include flex-box();
@@ -336,41 +202,11 @@ hr {
   }
 }
 
-.title-container__sub {
-  display: block;
-  letter-spacing: 0.01rem;
-}
-
-.top-container {
-  @include flex(0 0 auto);
-
-  position: relative;
-  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.15);
-  z-index: 999;
-
-  .container {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-  }
-}
-
-.bottom-container {
-  @include flex(1 1 auto);
-
-  overflow-y: scroll;
-  background: white;
-}
-
 ol.breadcrumb {
-  @media screen and (max-width: 768px) {
-    margin-bottom: 0;
-    font-size: 0.85rem;
-    padding: 0.85rem 0.65rem;
+  margin: 0;
 
-    li,
-    a {
-      font-size: 0.85rem;
-    }
+  @media screen and (max-width: 768px) {
+    font-size: 0.85rem;
   }
 }
 
@@ -381,19 +217,4 @@ ol.breadcrumb {
 
 .breadcrumb-item.active {
   color: #036;
-}
-
-#comments-received-details {
-  .status-container {
-    text-align: left;
-
-    > div {
-      margin-bottom: 10px;
-
-      span {
-        vertical-align: top;
-        margin-top: 3px;
-      }
-    }
-  }
 }
