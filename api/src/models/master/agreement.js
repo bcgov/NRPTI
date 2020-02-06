@@ -13,7 +13,7 @@ module.exports = require('../../utils/model-schema-generator')(
 
     recordName: { type: String, default: '' },
     recordType: { type: String, default: '' },
-    dateIssued: { type: Date, default: Date.now() },
+    dateIssued: { type: Date, default: null },
     nationName: { type: String, default: '' },
     projectName: { type: String, default: '' },
     attachments: [{ type: Object, default: null }],
