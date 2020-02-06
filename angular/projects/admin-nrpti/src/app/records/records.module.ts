@@ -13,9 +13,10 @@ import { SharedModule } from '../shared.module';
 import { RecordsRoutingModule } from './records-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
 
-// components
+// records
 import { RecordsListComponent } from './records-list/records-list.component';
 import { RecordsTableRowComponent } from './records-rows/records-table-row.component';
+import { RecordDetailDirective } from './utils/record-detail.directive';
 
 // Orders
 import { OrderAddEditComponent } from './orders/order-add-edit/order-add-edit.component';
@@ -29,8 +30,10 @@ import { InspectionDetailComponent } from './inspections/inspection-detail/inspe
 import { InspectionNRCEDDetailComponent } from './inspections/inspection-nrced-detail/inspection-nrced-detail.component';
 import { InspectionLNGDetailComponent } from './inspections/inspection-lng-detail/inspection-lng-detail.component';
 
-// directives
-import { RecordDetailDirective } from './utils/record-detail.directive';
+// certificates
+import { CertificateAddEditComponent } from './certificates/certificate-add-edit/certificate-add-edit.component';
+import { CertificateDetailComponent } from './certificates/certificate-detail/certificate-detail.component';
+import { CertificateLNGDetailComponent } from './certificates/certificate-lng-detail/certificate-lng-detail.component';
 
 @NgModule({
   imports: [
@@ -46,31 +49,45 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     NgxPaginationModule,
     NgbModule.forRoot(),
     InlineSVGModule.forRoot(),
-    RecordsRoutingModule,
+    RecordsRoutingModule
   ],
   declarations: [
-    InspectionAddEditComponent,
+    // records
+    RecordsListComponent,
+    RecordsTableRowComponent,
+    RecordDetailDirective,
+    // orders
     OrderAddEditComponent,
     OrderDetailComponent,
     OrderNRCEDDetailComponent,
     OrderLNGDetailComponent,
+    // inspections
+    InspectionAddEditComponent,
     InspectionDetailComponent,
     InspectionNRCEDDetailComponent,
     InspectionLNGDetailComponent,
-    RecordsListComponent,
-    RecordsTableRowComponent,
-    RecordDetailDirective
+    // certificates
+    CertificateAddEditComponent,
+    CertificateDetailComponent,
+    CertificateLNGDetailComponent
   ],
   providers: [],
   entryComponents: [
+    // records
     RecordsTableRowComponent,
-    InspectionAddEditComponent,
+    // orders
     OrderAddEditComponent,
-    OrderNRCEDDetailComponent,
     OrderLNGDetailComponent,
+    OrderNRCEDDetailComponent,
+    // inspections
+    InspectionAddEditComponent,
     InspectionNRCEDDetailComponent,
-    InspectionLNGDetailComponent
+    InspectionLNGDetailComponent,
+    // certificates
+    CertificateAddEditComponent,
+    CertificateDetailComponent,
+    CertificateLNGDetailComponent
   ],
   exports: []
 })
-export class RecordsModule { }
+export class RecordsModule {}

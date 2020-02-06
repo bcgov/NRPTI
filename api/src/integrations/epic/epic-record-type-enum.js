@@ -30,6 +30,24 @@ const EPIC_RECORD_TYPE = Object.freeze({
       }
     }
   ],
+  Certificate: [
+    {
+      // type and milestone from legislation 2002
+      type: { name: 'Certificate Package', typeId: '5cf00c03a266b7e1877504d5' },
+      milestone: { name: 'Certificate', milestoneId: '5cf00c03a266b7e1877504eb' },
+      getUtil: (...args) => {
+        return new (require('./epic-certificates'))(...args);
+      }
+    },
+    {
+      // type and milestone from legislation 2002
+      type: { name: 'Amendment Package', typeId: '5cf00c03a266b7e1877504d7' },
+      milestone: { name: 'Amendment', milestoneId: '5cf00c03a266b7e1877504f2' },
+      getUtil: (...args) => {
+        return new (require('./epic-certificates-amendment'))(...args);
+      }
+    }
+  ],
 
   /**
    * Get a subset of all supported EPIC record types.
@@ -61,7 +79,7 @@ const EPIC_RECORD_TYPE = Object.freeze({
    * @returns flattened array of all EPIC record types.
    */
   getAll: function() {
-    return [...this.Order, ...this.Inspection];
+    return [...this.Order, ...this.Inspection, ...this.Certificate];
   }
 });
 

@@ -31,6 +31,13 @@ export class EpicProjectIds {
 
 export class Picklists {
   public static readonly orderSubtypesPicklist = ['Cease', 'Remedy', 'Stop Work', 'None', 'Other'];
+  public static readonly certificateSubtypesPicklist = [
+    'General',
+    'Amendment',
+    'Project Description',
+    'Project Conditions',
+    'Other'
+  ];
 
   public static readonly agenciesPicklist = [
     'Environmental Assessment Office',
