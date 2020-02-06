@@ -8,10 +8,12 @@ let defaultLog = require('../utils/logger')('record');
 let AddOrder = require('./post/order');
 let AddInspection = require('./post/inspection');
 let AddCertificate = require('./post/certificate');
+let AddPermit = require('./post/permit');
 
 let EditOrder = require('./put/order');
 let EditInspection = require('./put/inspection');
 let EditCertificate = require('./put/certificate');
+let EditPermit = require('./put/permit');
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 
@@ -98,6 +100,9 @@ exports.protectedPost = async function (args, res, next) {
     if (data.certificates) {
       observables.push(processPostRequest(args, res, next, 'certificates', data.certificates));
     }
+    if (data.permits) {
+      observables.push(processPostRequest(args, res, next, 'permits', data.permits));
+    }
 
     var response = await Promise.all(observables);
 
@@ -128,6 +133,9 @@ exports.protectedPut = async function (args, res, next) {
     }
     if (data.certificates) {
       observables.push(processPutRequest(args, res, next, 'certificates', data.certificates));
+    }
+    if (data.permits) {
+      observables.push(processPutRequest(args, res, next, 'permits', data.permits));
     }
 
     var response = await Promise.all(observables);
@@ -251,6 +259,9 @@ let processPostRequest = async function (args, res, next, property, data) {
       case 'certificates':
         observables.push(AddCertificate.createMaster(args, res, next, data[i]));
         break;
+      case 'permits':
+        observables.push(AddPermit.createMaster(args, res, next, data[i]));
+        break;
       default:
         return {
           errorMessage: `Property ${property} does not exist.`
@@ -290,6 +301,9 @@ let processPutRequest = async function (args, res, next, property, data) {
         break;
       case 'certificates':
         observables.push(EditCertificate.editMaster(args, res, next, data[i]));
+        break;
+      case 'permits':
+        observables.push(EditPermit.editMaster(args, res, next, data[i]));
         break;
       default:
         return {

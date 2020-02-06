@@ -120,6 +120,7 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
     'InspectionLNG',
     'OrderLNG',
     'Certificate',
+    'PermitLNG',
     'SelfReportLNG',
     'TicketLNG',
     'CourtConvictionLNG',
