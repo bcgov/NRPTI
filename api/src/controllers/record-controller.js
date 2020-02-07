@@ -10,12 +10,14 @@ let AddInspection = require('./post/inspection');
 let AddCertificate = require('./post/certificate');
 let AddPermit = require('./post/permit');
 let AddAgreement = require('./post/agreement');
+let AddSelfReport = require('./post/self-report');
 
 let EditOrder = require('./put/order');
 let EditInspection = require('./put/inspection');
 let EditCertificate = require('./put/certificate');
 let EditPermit = require('./put/permit');
 let EditAgreement = require('./put/agreement');
+let EditSelfReport = require('./put/self-report');
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 
@@ -108,6 +110,9 @@ exports.protectedPost = async function (args, res, next) {
     if (data.agreements) {
       observables.push(processPostRequest(args, res, next, 'agreements', data.agreements));
     }
+    if (data.selfReports) {
+      observables.push(processPostRequest(args, res, next, 'selfReports', data.selfReports));
+    }
 
     var response = await Promise.all(observables);
 
@@ -144,6 +149,9 @@ exports.protectedPut = async function (args, res, next) {
     }
     if (data.agreements) {
       observables.push(processPutRequest(args, res, next, 'agreements', data.agreements));
+    }
+    if (data.selfReports) {
+      observables.push(processPutRequest(args, res, next, 'selfReports', data.selfReports));
     }
 
     var response = await Promise.all(observables);
@@ -273,6 +281,9 @@ let processPostRequest = async function (args, res, next, property, data) {
       case 'agreements':
         observables.push(AddAgreement.createMaster(args, res, next, data[i]));
         break;
+      case 'selfReports':
+        observables.push(AddSelfReport.createMaster(args, res, next, data[i]));
+        break;
       default:
         return {
           errorMessage: `Property ${property} does not exist.`
@@ -318,6 +329,9 @@ let processPutRequest = async function (args, res, next, property, data) {
         break;
       case 'agreements':
         observables.push(EditAgreement.editMaster(args, res, next, data[i]));
+        break;
+      case 'selfReports':
+        observables.push(EditSelfReport.editMaster(args, res, next, data[i]));
         break;
       default:
         return {
