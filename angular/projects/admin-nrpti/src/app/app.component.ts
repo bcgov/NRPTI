@@ -23,7 +23,6 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.storeService.change.subscribe(isOpen => {
       this.isOpen = isOpen;
-      console.log(this.isOpen);
     });
   }
 }
