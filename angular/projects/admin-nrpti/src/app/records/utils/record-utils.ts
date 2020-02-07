@@ -11,7 +11,9 @@ import {
   Permit,
   PermitLNG,
   Agreement,
-  AgreementLNG
+  AgreementLNG,
+  SelfReport,
+  SelfReportLNG
 } from '../../../../../common/src/app/models';
 
 // orders
@@ -31,8 +33,10 @@ import { PermitLNGDetailComponent } from '../permits/permit-lng-detail/permit-ln
 // agreements
 import { AgreementLNGDetailComponent } from '../agreements/agreement-lng-detail/agreement-lng-detail.component';
 
-// other
+// self reports
+import { SelfReportLNGDetailComponent } from '../self-reports/self-report-lng-detail/self-report-lng-detail.component';
 
+// other
 import { RecordComponent } from './record-component';
 
 export class RecordUtils {
@@ -75,6 +79,10 @@ export class RecordUtils {
         return new Agreement(data);
       case 'AgreementLNG':
         return new AgreementLNG(data);
+      case 'SelfReport':
+        return new SelfReport(data);
+      case 'SelfReportLNG':
+        return new SelfReportLNG(data);
       default:
         return null;
     }
@@ -109,6 +117,8 @@ export class RecordUtils {
         return PermitLNGDetailComponent;
       case 'AgreementLNG':
         return AgreementLNGDetailComponent;
+      case 'SelfReportLNG':
+        return SelfReportLNGDetailComponent;
       default:
         return null;
     }

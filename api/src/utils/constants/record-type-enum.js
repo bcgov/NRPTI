@@ -17,7 +17,11 @@ const RECORD_TYPE = Object.freeze({
   Order: { _schemaName: 'Order', displayName: 'Order' },
   Permit: { _schemaName: 'Permit', displayName: 'Permit', flavours: { lng: { _schemaName: 'PermitLNG' } } },
   RestorativeJustice: { _schemaName: 'RestorativeJustice', displayName: 'Restorative Justice' },
-  SelfReport: { _schemaName: 'SelfReport', displayName: 'Compliance Self Report' },
+  SelfReport: {
+    _schemaName: 'SelfReport',
+    displayName: 'Compliance Self-Report',
+    flavours: { lng: { _schemaName: 'SelfReportLNG' } }
+  },
   Ticket: { _schemaName: 'Ticket', displayName: 'Ticket' },
   Warning: { _schemaName: 'Warning', displayName: 'Warning' }
 });
