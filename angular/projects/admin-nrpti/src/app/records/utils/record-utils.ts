@@ -13,7 +13,10 @@ import {
   Agreement,
   AgreementLNG,
   SelfReport,
-  SelfReportLNG
+  SelfReportLNG,
+  RestorativeJustice,
+  RestorativeJusticeLNG,
+  RestorativeJusticeNRCED
 } from '../../../../../common/src/app/models';
 
 // orders
@@ -35,6 +38,10 @@ import { AgreementLNGDetailComponent } from '../agreements/agreement-lng-detail/
 
 // self reports
 import { SelfReportLNGDetailComponent } from '../self-reports/self-report-lng-detail/self-report-lng-detail.component';
+
+// restorative justices
+import { RestorativeJusticeNRCEDDetailComponent } from '../restorative-justices/restorative-justice-nrced-detail/restorative-justice-nrced-detail.component';
+import { RestorativeJusticeLNGDetailComponent } from '../restorative-justices/restorative-justice-lng-detail/restorative-justice-lng-detail.component';
 
 // other
 import { RecordComponent } from './record-component';
@@ -83,6 +90,12 @@ export class RecordUtils {
         return new SelfReport(data);
       case 'SelfReportLNG':
         return new SelfReportLNG(data);
+      case 'RestorativeJustice':
+        return new RestorativeJustice(data);
+      case 'RestorativeJusticeLNG':
+        return new RestorativeJusticeLNG(data);
+      case 'RestorativeJusticeNRCED':
+        return new RestorativeJusticeNRCED(data);
       default:
         return null;
     }
@@ -119,6 +132,10 @@ export class RecordUtils {
         return AgreementLNGDetailComponent;
       case 'SelfReportLNG':
         return SelfReportLNGDetailComponent;
+      case 'RestorativeJusticeNRCED':
+        return RestorativeJusticeNRCEDDetailComponent;
+      case 'RestorativeJusticeLNG':
+        return RestorativeJusticeLNGDetailComponent;
       default:
         return null;
     }

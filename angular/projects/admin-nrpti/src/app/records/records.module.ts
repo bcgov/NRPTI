@@ -49,6 +49,12 @@ import { SelfReportAddEditComponent } from './self-reports/self-report-add-edit/
 import { SelfReportDetailComponent } from './self-reports/self-report-detail/self-report-detail.component';
 import { SelfReportLNGDetailComponent } from './self-reports/self-report-lng-detail/self-report-lng-detail.component';
 
+// Restorative Justices
+import { RestorativeJusticeAddEditComponent } from './restorative-justices/restorative-justice-add-edit/restorative-justice-add-edit.component';
+import { RestorativeJusticeDetailComponent } from './restorative-justices/restorative-justice-detail/restorative-justice-detail.component';
+import { RestorativeJusticeNRCEDDetailComponent } from './restorative-justices/restorative-justice-nrced-detail/restorative-justice-nrced-detail.component';
+import { RestorativeJusticeLNGDetailComponent } from './restorative-justices/restorative-justice-lng-detail/restorative-justice-lng-detail.component';
+
 // directives
 import { RecordDetailDirective } from './utils/record-detail.directive';
 
@@ -98,7 +104,12 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     // self reports
     SelfReportAddEditComponent,
     SelfReportDetailComponent,
-    SelfReportLNGDetailComponent
+    SelfReportLNGDetailComponent,
+    // restorative justices
+    RestorativeJusticeAddEditComponent,
+    RestorativeJusticeDetailComponent,
+    RestorativeJusticeNRCEDDetailComponent,
+    RestorativeJusticeLNGDetailComponent,
   ],
   providers: [],
   entryComponents: [
@@ -127,7 +138,12 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     // self reports
     SelfReportAddEditComponent,
     SelfReportDetailComponent,
-    SelfReportLNGDetailComponent
+    SelfReportLNGDetailComponent,
+    // restorative justices
+    RestorativeJusticeAddEditComponent,
+    RestorativeJusticeDetailComponent,
+    RestorativeJusticeNRCEDDetailComponent,
+    RestorativeJusticeLNGDetailComponent
   ],
   exports: []
 })
