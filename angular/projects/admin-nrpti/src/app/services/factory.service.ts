@@ -6,7 +6,7 @@ import { ApiService } from './api.service';
 import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
-import { Order, Inspection, Certificate, Permit, Agreement, SelfReport } from '../../../../common/src/app/models/master';
+import { Order, Inspection, Certificate, Permit, Agreement, SelfReport, RestorativeJustice } from '../../../../common/src/app/models/master';
 import { TaskService, ITaskParams } from './task.service';
 
 /**
@@ -380,6 +380,23 @@ export class FactoryService {
   public editSelfReport(selfReport: SelfReport): Observable<object> {
     const outboundObject = {
       selfReports: [selfReport]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // Restorative Justices
+  public createRestorativeJustice(restorativeJustice: RestorativeJustice): Observable<object> {
+    const outboundObject = {
+      restorativeJustices: [restorativeJustice]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editRestorativeJustice(restorativeJustice: RestorativeJustice): Observable<object> {
+    const outboundObject = {
+      restorativeJustices: [restorativeJustice]
     };
     return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }

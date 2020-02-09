@@ -39,11 +39,11 @@ var generateExpArray = async function (field, prefix = '') {
 
         if (item.startsWith(dateRangeFromSearchString)) {
           const propertyName = item.substr(item.indexOf(dateRangeFromSearchString) + dateRangeFromSearchString.length);
-          
+
           return handleDateStartItem(prefix + propertyName, entry);
         } else if (item.startsWith(dateRangeToSearchString)) {
           const propertyName = item.substr(item.indexOf('dateRangeToFilter') + 'dateRangeToFilter'.length);
-          
+
           return handleDateEndItem(prefix + propertyName, entry);
         } else {
           // Invalid. return empty {}
@@ -132,7 +132,8 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
     'AuthorizationLNG',
     'AgreementLNG',
     'OrderNRCED',
-    'InspectionNRCED'
+    'InspectionNRCED',
+    'RestorativeJusticeNRCED'
   ];
 
   var matches = await generateMatchesForAggregation(and, or, searchProperties, properties, schemaName, roles);

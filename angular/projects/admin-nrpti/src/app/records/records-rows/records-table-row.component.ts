@@ -34,6 +34,9 @@ export class RecordsTableRowComponent extends TableRowComponent {
         break;
       case 'SelfReport':
         this.router.navigate(['records', 'self-reports', this.rowData._id, 'detail']);
+      case 'RestorativeJustice':
+        this.router.navigate(['records', 'restorative-justices', this.rowData._id, 'detail']);
+        break;
       default:
       // TODO
     }
@@ -58,6 +61,9 @@ export class RecordsTableRowComponent extends TableRowComponent {
         break;
       case 'SelfReport':
         this.router.navigate(['records', 'self-reports', this.rowData._id, 'edit']);
+        break;
+      case 'RestorativeJustice':
+        this.router.navigate(['records', 'restorative-justices', this.rowData._id, 'edit']);
         break;
       default:
         break;

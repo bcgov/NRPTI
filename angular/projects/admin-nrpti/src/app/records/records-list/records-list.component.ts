@@ -211,6 +211,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       case 'selfReport':
         this.router.navigate(['records', 'self-reports', 'add']);
         break;
+      case 'restorativeJustice':
+        this.router.navigate(['records', 'restorative-justices', 'add']);
+        break;
       default:
         break;
     }

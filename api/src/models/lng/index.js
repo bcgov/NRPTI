@@ -8,3 +8,4 @@ exports.selfReportLNG = require('./selfReport-lng');
 exports.warningLetterLNG = require('./warningLetter-lng');
 exports.certificateLNG = require('./certificate-lng');
 exports.permitLNG = require('./permit-lng');
+exports.restorativeJusticeLNG = require('./restorativeJustice-lng');
