@@ -16,6 +16,9 @@ import { RestorativeJusticeResolver } from './restorative-justices/restorative-j
 import { AdministrativePenaltyDetailComponent } from './administrative-penalties/administrative-penalty-detail/administrative-penalty-detail.component';
 import { AdministrativePenaltyResolver } from './administrative-penalties/administrative-penalty-resolver';
 
+import { AdministrativeSanctionDetailComponent } from './administrative-sanctions/administrative-sanction-detail/administrative-sanction-detail.component';
+import { AdministrativeSanctionResolver } from './administrative-sanctions/administrative-sanction-resolver';
+
 const routes: Routes = [
   {
     path: 'records',
@@ -98,6 +101,9 @@ const routes: Routes = [
             },
             data: {
               breadcrumb: null
+            }
+          }
+        ]
       },
       {
         path: 'administrative-penalties/:administrativePenaltyId',
@@ -121,6 +127,29 @@ const routes: Routes = [
             }
           }
         ]
+      },
+      {
+        path: 'administrative-sanctions/:administrativeSanctionId',
+        data: {
+          breadcrumb: 'Administrative Sanction Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: AdministrativeSanctionDetailComponent,
+            resolve: {
+              records: AdministrativeSanctionResolver
+            },
+            data: {
+              breadcrumb: null
+            }
+          }
+        ]
       }
     ]
   }
@@ -129,6 +158,13 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [RecordsListResolver, OrderResolver, InspectionResolver, RestorativeJusticeResolver, AdministrativePenaltyResolver]
+  providers: [
+    RecordsListResolver,
+    OrderResolver,
+    InspectionResolver,
+    RestorativeJusticeResolver,
+    AdministrativePenaltyResolver,
+    AdministrativeSanctionResolver
+  ]
 })
 export class RecordsRoutingModule {}
