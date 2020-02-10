@@ -18,7 +18,8 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
         'InspectionNRCED',
         'RestorativeJusticeNRCED',
         'AdministrativePenaltyNRCED',
-        'AdministrativeSanctionNRCED'
+        'AdministrativeSanctionNRCED',
+        'TicketNRCED'
       ],
       [],
       tableObject.currentPage,
