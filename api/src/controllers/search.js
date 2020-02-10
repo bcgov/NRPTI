@@ -134,7 +134,8 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
     'OrderNRCED',
     'InspectionNRCED',
     'RestorativeJusticeNRCED',
-    'TicketNRCED'
+    'TicketNRCED',
+    'AdministrativePenaltyNRCED'
   ];
 
   var matches = await generateMatchesForAggregation(and, or, searchProperties, properties, schemaName, roles);

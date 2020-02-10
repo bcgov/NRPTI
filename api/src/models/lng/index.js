@@ -10,3 +10,4 @@ exports.certificateLNG = require('./certificate-lng');
 exports.permitLNG = require('./permit-lng');
 exports.restorativeJusticeLNG = require('./restorativeJustice-lng');
 exports.ticketLNG = require('./ticket-lng');
+exports.administrativePenaltyLNG = require('./administrativePenalty-lng');
