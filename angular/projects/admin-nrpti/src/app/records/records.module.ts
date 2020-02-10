@@ -55,6 +55,12 @@ import { RestorativeJusticeDetailComponent } from './restorative-justices/restor
 import { RestorativeJusticeNRCEDDetailComponent } from './restorative-justices/restorative-justice-nrced-detail/restorative-justice-nrced-detail.component';
 import { RestorativeJusticeLNGDetailComponent } from './restorative-justices/restorative-justice-lng-detail/restorative-justice-lng-detail.component';
 
+// Tickets
+import { TicketAddEditComponent } from './tickets/ticket-add-edit/ticket-add-edit.component';
+import { TicketDetailComponent } from './tickets/ticket-detail/ticket-detail.component';
+import { TicketNRCEDDetailComponent } from './tickets/ticket-nrced-detail/ticket-nrced-detail.component';
+import { TicketLNGDetailComponent } from './tickets/ticket-lng-detail/ticket-lng-detail.component';
+
 // directives
 import { RecordDetailDirective } from './utils/record-detail.directive';
 
@@ -110,6 +116,11 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     RestorativeJusticeDetailComponent,
     RestorativeJusticeNRCEDDetailComponent,
     RestorativeJusticeLNGDetailComponent,
+    // tickets
+    TicketAddEditComponent,
+    TicketDetailComponent,
+    TicketNRCEDDetailComponent,
+    TicketLNGDetailComponent
   ],
   providers: [],
   entryComponents: [
@@ -143,7 +154,12 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     RestorativeJusticeAddEditComponent,
     RestorativeJusticeDetailComponent,
     RestorativeJusticeNRCEDDetailComponent,
-    RestorativeJusticeLNGDetailComponent
+    RestorativeJusticeLNGDetailComponent,
+    // tickets
+    TicketAddEditComponent,
+    TicketDetailComponent,
+    TicketNRCEDDetailComponent,
+    TicketLNGDetailComponent
   ],
   exports: []
 })

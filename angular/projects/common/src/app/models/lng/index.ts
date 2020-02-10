@@ -5,3 +5,4 @@ export * from './permit-lng';
 export * from './agreement-lng';
 export * from './selfReport-lng';
 export * from './restorativeJustice-lng';
+export * from './ticket-lng';

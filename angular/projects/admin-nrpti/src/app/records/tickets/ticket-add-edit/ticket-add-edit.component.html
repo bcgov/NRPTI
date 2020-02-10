@@ -1,0 +1,264 @@
+<main class="container-fluid-padding">
+  <div class="spinner-container" *ngIf="loading">
+    <div class="spinner-new rotating"></div>
+  </div>
+
+  <form *ngIf="!loading" [formGroup]="myForm" novalidate>
+    <section>
+      <div class="row">
+        <div class="col-6">
+          <h4 class="blue-header">Shared Data [Master]</h4>
+          <span *ngIf="isEditing" class="grey-subtext">{{lastEditedSubText}}</span>
+        </div>
+        <div class="col-6 right-justified-action-btn">
+          <div class="row mb-2">
+            <div class="col-12">
+              <button type="button" class="btn btn-link" (click)="cancel()">Cancel</button>
+              <button class="btn btn-primary" type="submit" (click)="submit()">
+                <i class="material-icons">
+                  save
+                </i>
+                &nbsp;
+                <span *ngIf="!isEditing">Save Record</span>
+                <span *ngIf="isEditing">Update Record</span>
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-7"></div>
+            <div class="col-5">
+              <span class="grey-subtext">
+                If content is published on any site, hitting the Save/Update Record button will update the public site
+                immediately
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h4>Basic Information</h4>
+      <div class="flex-container">
+        <div class="label-pair">
+          <label for="recordName">Record Name</label>
+          <input name="recordName" id="recordName" type="text" formControlName="recordName" class="form-control" />
+        </div>
+        <div class="label-pair">
+          <label for="dateIssued">Date Issued</label>
+          <div class="input-group">
+            <input class="form-control" placeholder="yyyy-mm-dd" name="dp" formControlName="dateIssued" ngbDatepicker
+              #d="ngbDatepicker" />
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+            </div>
+          </div>
+        </div>
+        <div class="label-pair">
+          <label for="recordType">Type</label>
+          <span class="grey-subtext">(This value cannot be changed)</span>
+          <input readonly name="recordType" id="recordType" type="text" value="Ticket" class="form-control" />
+        </div>
+      </div>
+      <div class="flex-container">
+        <div class="label-pair">
+          <label for="issuingAgency">Issuing Agency</label>
+          <select name="issuingAgency" id="issuingAgency" formControlName="issuingAgency" class="form-control">
+            <option *ngFor="let agency of agenciesPicklist" [ngValue]="agency">{{ agency }}</option>
+          </select>
+        </div>
+        <div class="label-pair">
+          <label for="author">Author</label>
+          <select name="author" id="author" formControlName="author" class="form-control">
+            <option *ngFor="let auth of authorsPicklist" [ngValue]="auth">{{ auth }}</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h4>Legislation</h4>
+      <div class="flex-container">
+        <!-- TODO -->
+        <div class="label-pair">
+          <label for="legislation">Act/Legislation</label>
+          <select disabled name="legislation" id="legislation" class="form-control"> </select>
+        </div>
+        <!-- TODO -->
+        <div class="label-pair">
+          <label for="regulation">Regulation</label>
+          <select disabled name="regulation" id="regulation" class="form-control"> </select>
+        </div>
+        <!-- TODO -->
+        <div class="label-pair xsm">
+          <label for="section">Section</label>
+          <input disabled name="section" id="section" type="text" class="form-control" />
+        </div>
+        <!-- TODO -->
+        <div class="label-pair xsm">
+          <label for="subSection1">Sub-Section</label>
+          <input disabled name="subSection1" id="subSection1" type="text" class="form-control" />
+        </div>
+        <!-- TODO -->
+        <div class="label-pair xsm">
+          <label for="subSection2">Sub-Section</label>
+          <input disabled name="subSection2" id="subSection2" type="text" class="form-control" />
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h4>Issued To</h4>
+      <div class="flex-container">
+        <div class="label-pair">
+          <label for="projectName">Project</label>
+          <span class="grey-subtext-no-margins">
+            (If Applicable)
+          </span>
+          <div name="projectName" class="radio-group">
+            <div class="radio">
+              <input default type="radio" id="Other" value="" formControlName="projectName" name="projectName" />
+              <label for="Other">Other</label>
+            </div>
+            <div class="radio">
+              <input type="radio" id="coastalGaslink" value="Coastal Gaslink" formControlName="projectName"
+                name="projectName" />
+              <label for="coastalGaslink">Coastal Gaslink</label>
+            </div>
+            <div class="radio">
+              <input type="radio" id="lngCanada" value="LNG Canada" formControlName="projectName" name="projectName" />
+              <label for="lngCanada">LNG Canada</label>
+            </div>
+          </div>
+        </div>
+        <!-- TODO -->
+        <div class="label-pair">
+          <label for="entityType">Entity Type</label>
+          <select disabled name="entityType" id="entityType" class="form-control"> </select>
+        </div>
+        <!-- TODO -->
+        <div class="label-pair">
+          <label for="companyName">Company Name</label>
+          <input disabled name="companyName" id="companyName" type="text" class="form-control" />
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h4>Location Details</h4>
+      <div class="flex-container">
+        <div class="label-pair">
+          <label for="location">Location Description</label>
+          <input name="location" id="location" type="text" formControlName="location" class="form-control" />
+        </div>
+        <div class="label-pair xsm">
+          <label for="latitude">Latitude</label>
+          <input name="latitude" id="latitude" type="number" formControlName="latitude" class="form-control" />
+        </div>
+        <div class="label-pair xsm">
+          <label for="longitude">Longitude</label>
+          <input name="longitude" id="longitude" type="number" formControlName="longitude" class="form-control" />
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h4>Outcome Details</h4>
+      <div class="flex-container">
+        <div class="label-pair xsm">
+          <label for="outcomeStatus">Status</label>
+          <select name="outcomeStatus" id="outcomeStatus" formControlName="outcomeStatus" class="form-control">
+            <option *ngFor="let outcomeStatus of outcomeStatusPicklist" [ngValue]="outcomeStatus">{{ outcomeStatus }}
+            </option>
+          </select>
+        </div>
+        <div class="label-pair med">
+          <label for="outcomeDescription">Outcome Description</label>
+          <textarea name="outcomeDescription" id="outcomeDescription" type="text" formControlName="outcomeDescription"
+            class="form-control"></textarea>
+        </div>
+        <div class="label-pair med">
+          <label for="penalty">Penalty</label>
+          <input name="penalty" id="penalty" formControlName="penalty" class="form-control" />
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h4>Documents</h4>
+    </section>
+
+    <section>
+      <div class="row mb-4">
+        <div class="col-2">
+          <h4 class="blue-header mb-0">NRCED Site Content</h4>
+          <br />
+          <span class="grey-subtext-no-margins">{{ nrcedPublishSubtext }}</span>
+        </div>
+        <div class="col-4">
+          <mat-slide-toggle (toggleChange)="togglePublish('nrced')" [checked]="nrcedPublishStatus === 'Published'">
+            {{ nrcedPublishStatus }}
+          </mat-slide-toggle>
+          <br />
+          <span class="grey-subtext-no-margins">*Changes made will take effect once you click "Update Record"</span>
+        </div>
+      </div>
+      <div class="flex-container">
+        <div class="label-pair med">
+          <label for="nrcedSummary">Summary</label>
+          <textarea name="nrcedSummary" id="nrcedSummary" type="text" formControlName="nrcedSummary"
+            class="form-control"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="row mb-4">
+        <div class="col-2">
+          <h4 class="blue-header mb-0">LNG Site Content</h4>
+          <br />
+          <span class="grey-subtext-no-margins">{{ lngPublishSubtext }}</span>
+        </div>
+        <div class="col-4">
+          <mat-slide-toggle (toggleChange)="togglePublish('lng')" [checked]="lngPublishStatus === 'Published'">
+            {{ lngPublishStatus }}
+          </mat-slide-toggle>
+          <br />
+          <span class="grey-subtext-no-margins">*Changes made will take effect once you click "Update Record"</span>
+        </div>
+      </div>
+      <div class="flex-container">
+        <div class="label-pair med">
+          <label for="lngDescription">Description</label>
+          <textarea name="lngDescription" id="lngDescription" type="text" formControlName="lngDescription"
+            class="form-control"></textarea>
+        </div>
+      </div>
+    </section>
+  </form>
+  <div class="row mt-4">
+    <div class="col-6"></div>
+    <div class="col-6 right-justified-action-btn">
+      <div class="row mb-2">
+        <div class="col-12">
+          <button type="button" class="btn btn-link" (click)="cancel()">Cancel</button>
+          <button class="btn btn-primary" type="submit" (click)="submit()">
+            <i class="material-icons">
+              save
+            </i>
+            &nbsp;
+            <span *ngIf="!isEditing">Save Record</span>
+            <span *ngIf="isEditing">Update Record</span>
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-7"></div>
+        <div class="col-5">
+          <span class="grey-subtext">
+            If content is published on any site, hitting the Save/Update Record button will
+            update the public site
+            immediately
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

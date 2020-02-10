@@ -26,7 +26,11 @@ const RECORD_TYPE = Object.freeze({
     displayName: 'Compliance Self-Report',
     flavours: { lng: { _schemaName: 'SelfReportLNG' } }
   },
-  Ticket: { _schemaName: 'Ticket', displayName: 'Ticket' },
+  Ticket: {
+    _schemaName: 'Ticket',
+    displayName: 'Ticket',
+    flavours: { lng: { _schemaName: 'TicketLNG' }, nrced: { _schemaName: 'TicketNRCED' } }
+  },
   Warning: { _schemaName: 'Warning', displayName: 'Warning' }
 });
 
