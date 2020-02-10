@@ -28,7 +28,9 @@ import {
   AdministrativeSanctionNRCED,
   Warning,
   WarningLNG,
-  WarningNRCED
+  WarningNRCED,
+  ConstructionPlan,
+  ConstructionPlanLNG
 } from '../../../../../common/src/app/models';
 
 // orders
@@ -72,6 +74,7 @@ import { WarningNRCEDDetailComponent } from '../warnings/warning-nrced-detail/wa
 import { WarningLNGDetailComponent } from '../warnings/warning-lng-detail/warning-lng-detail.component';
 
 // other
+import { ConstructionPlanLNGDetailComponent } from '../construction-plans/construction-plan-lng-detail/construction-plan-lng-detail.component';
 import { RecordComponent } from './record-component';
 
 export class RecordUtils {
@@ -148,6 +151,10 @@ export class RecordUtils {
         return new WarningLNG(data);
       case 'WarningNRCED':
         return new WarningNRCED(data);
+      case 'ConstructionPlan':
+        return new ConstructionPlan(data);
+      case 'ConstructionPlanLNG':
+        return new ConstructionPlanLNG(data);
       default:
         return null;
     }
@@ -204,6 +211,8 @@ export class RecordUtils {
         return WarningLNGDetailComponent;
       case 'WarningNRCED':
         return WarningNRCEDDetailComponent;
+      case 'ConstructionPlanLNG':
+        return ConstructionPlanLNGDetailComponent;
       default:
         return null;
     }

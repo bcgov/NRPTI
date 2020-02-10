@@ -64,6 +64,11 @@ import { WarningResolver } from './warnings/warning-resolver';
 import { WarningDetailComponent } from './warnings/warning-detail/warning-detail.component';
 import { WarningAddEditComponent } from './warnings/warning-add-edit/warning-add-edit.component';
 
+// construction plans
+import { ConstructionPlanResolver } from './construction-plans/construction-plan-resolver';
+import { ConstructionPlanDetailComponent } from './construction-plans/construction-plan-detail/construction-plan-detail.component';
+import { ConstructionPlanAddEditComponent } from './construction-plans/construction-plan-add-edit/construction-plan-add-edit.component';
+
 // other
 import { Utils } from 'nrpti-angular-components';
 
@@ -580,6 +585,43 @@ const routes: Routes = [
             }
           }
         ]
+      },
+      // construction plans
+      {
+        path: 'construction-plans/:constructionPlanId',
+        data: {
+          breadcrumb: 'Construction Plan Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: ConstructionPlanDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: ConstructionPlanResolver
+            }
+          },
+          {
+            path: 'edit',
+            component: ConstructionPlanAddEditComponent,
+            canActivate: [CanActivateGuard],
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+              breadcrumb: 'Edit Construction Plan'
+            },
+            resolve: {
+              record: ConstructionPlanResolver
+            }
+          }
+        ]
       }
     ]
   }
@@ -601,6 +643,7 @@ const routes: Routes = [
     AdministrativePenaltyResolver,
     AdministrativeSanctionResolver,
     WarningResolver,
+    ConstructionPlanResolver,
     Utils
   ]
 })

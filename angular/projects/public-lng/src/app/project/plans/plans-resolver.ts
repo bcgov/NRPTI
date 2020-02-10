@@ -22,7 +22,7 @@ export class PlansResolver implements Resolve<Observable<object>> {
     return this._searchService.getSearchResults(
       this._apiService.apiPath,
       '',
-      ['PlanLNG'],
+      ['PlanLNG', 'ConstructionPlanLNG'],
       [],
       tableObject.currentPage,
       tableObject.pageSize,

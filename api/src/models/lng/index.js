@@ -12,3 +12,5 @@ exports.restorativeJusticeLNG = require('./restorativeJustice-lng');
 exports.ticketLNG = require('./ticket-lng');
 exports.administrativePenaltyLNG = require('./administrativePenalty-lng');
 exports.warningLNG = require('./warning-lng');
+exports.constructionPlanLNG = require('./constructionPlan-lng');
+

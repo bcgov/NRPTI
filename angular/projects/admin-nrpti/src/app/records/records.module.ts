@@ -79,6 +79,11 @@ import { WarningDetailComponent } from './warnings/warning-detail/warning-detail
 import { WarningNRCEDDetailComponent } from './warnings/warning-nrced-detail/warning-nrced-detail.component';
 import { WarningLNGDetailComponent } from './warnings/warning-lng-detail/warning-lng-detail.component';
 
+// ConstructionPlans
+import { ConstructionPlanAddEditComponent } from './construction-plans/construction-plan-add-edit/construction-plan-add-edit.component';
+import { ConstructionPlanDetailComponent } from './construction-plans/construction-plan-detail/construction-plan-detail.component';
+import { ConstructionPlanLNGDetailComponent } from './construction-plans/construction-plan-lng-detail/construction-plan-lng-detail.component';
+
 // directives
 import { RecordDetailDirective } from './utils/record-detail.directive';
 
@@ -153,7 +158,11 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     WarningAddEditComponent,
     WarningDetailComponent,
     WarningNRCEDDetailComponent,
-    WarningLNGDetailComponent
+    WarningLNGDetailComponent,
+    // construction plans
+    ConstructionPlanDetailComponent,
+    ConstructionPlanAddEditComponent,
+    ConstructionPlanLNGDetailComponent
   ],
   providers: [],
   entryComponents: [
@@ -207,7 +216,11 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     WarningAddEditComponent,
     WarningDetailComponent,
     WarningNRCEDDetailComponent,
-    WarningLNGDetailComponent
+    WarningLNGDetailComponent,
+    // construction plans
+    ConstructionPlanDetailComponent,
+    ConstructionPlanAddEditComponent,
+    ConstructionPlanLNGDetailComponent
   ],
   exports: []
 })

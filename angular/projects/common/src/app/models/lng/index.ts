@@ -9,3 +9,4 @@ export * from './ticket-lng';
 export * from './administrativePenalty-lng';
 export * from './administrativeSanction-lng';
 export * from './warning-lng';
+export * from './constructionPlan-lng';
