@@ -1,4 +1,4 @@
-<div class="container-fluid-padding">
+<main class="container-fluid-padding">
   <div *ngIf="!loading && tableData.totalListItems <= 0">
     No Records found.
   </div>
@@ -8,6 +8,5 @@
     [data]="tableData"
     [messageIn]="messageIn"
     (messageOut)="onMessageOut($event)"
-  >
-  </lib-table-template>
-</div>
+  ></lib-table-template>
+</main>

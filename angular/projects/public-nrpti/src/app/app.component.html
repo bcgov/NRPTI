@@ -1,8 +1,12 @@
 <app-header></app-header>
 
-<div class="app-body content" id="scrollTop">
-  <lib-breadcrumb (navigateBreadcrumb)="navigateBreadcrumb($event)"></lib-breadcrumb>
-  <router-outlet></router-outlet>
+<div class="app-body">
+  <div class="body-content" id="scrollTop">
+    <lib-breadcrumb (navigateBreadcrumb)="navigateBreadcrumb($event)"></lib-breadcrumb>
+    <div class="content-component">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
 </div>
 
 <app-footer></app-footer>

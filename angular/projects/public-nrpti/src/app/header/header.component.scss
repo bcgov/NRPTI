@@ -12,7 +12,7 @@
 
 @media (min-width: 768px) {
   .app-header {
-    position: fixed;
+    position: relative;
     top: 0;
     left: 0;
     right: 0;
@@ -276,7 +276,7 @@
   vertical-align: top;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 768px) {
   .navbar-brand {
     height: 4.2rem;
     background-image: url(/assets/images/bcgov-header-vert-MD.png);
