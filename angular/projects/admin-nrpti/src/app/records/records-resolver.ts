@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/forkJoin';
 import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
 import { FactoryService } from '../services/factory.service';
 
@@ -26,7 +25,8 @@ export class RecordsResolver implements Resolve<Observable<object>> {
         'Plan',
         'WarningLetter',
         'Authorization',
-        'RestorativeJustice'
+        'RestorativeJustice',
+        'Ticket'
       ],
       [],
       tableObject.currentPage,

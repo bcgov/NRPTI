@@ -12,6 +12,7 @@ let AddPermit = require('./post/permit');
 let AddAgreement = require('./post/agreement');
 let AddSelfReport = require('./post/self-report');
 let AddRestorativeJustice = require('./post/restorative-justice');
+let AddTicket = require('./post/ticket');
 
 let EditOrder = require('./put/order');
 let EditInspection = require('./put/inspection');
@@ -20,6 +21,7 @@ let EditPermit = require('./put/permit');
 let EditAgreement = require('./put/agreement');
 let EditSelfReport = require('./put/self-report');
 let EditRestorativeJustice = require('./put/restorative-justice');
+let EditTicket = require('./put/ticket');
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 
@@ -118,6 +120,9 @@ exports.protectedPost = async function (args, res, next) {
     if (data.restorativeJustices) {
       observables.push(processPostRequest(args, res, next, 'restorativeJustices', data.restorativeJustices));
     }
+    if (data.tickets) {
+      observables.push(processPostRequest(args, res, next, 'tickets', data.tickets));
+    }
 
     var response = await Promise.all(observables);
 
@@ -160,6 +165,9 @@ exports.protectedPut = async function (args, res, next) {
     }
     if (data.restorativeJustices) {
       observables.push(processPutRequest(args, res, next, 'restorativeJustices', data.restorativeJustices));
+    }
+    if (data.tickets) {
+      observables.push(processPutRequest(args, res, next, 'tickets', data.tickets));
     }
 
     var response = await Promise.all(observables);
@@ -295,6 +303,9 @@ let processPostRequest = async function (args, res, next, property, data) {
       case 'restorativeJustices':
         observables.push(AddRestorativeJustice.createMaster(args, res, next, data[i]));
         break;
+      case 'tickets':
+        observables.push(AddTicket.createMaster(args, res, next, data[i]));
+        break;
       default:
         return {
           errorMessage: `Property ${property} does not exist.`
@@ -346,6 +357,9 @@ let processPutRequest = async function (args, res, next, property, data) {
         break;
       case 'restorativeJustices':
         observables.push(EditRestorativeJustice.editMaster(args, res, next, data[i]));
+        break;
+      case 'tickets':
+        observables.push(EditTicket.editMaster(args, res, next, data[i]));
         break;
       default:
         return {
