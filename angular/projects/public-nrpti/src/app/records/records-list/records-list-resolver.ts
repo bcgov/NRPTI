@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/forkJoin';
 import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
 import { FactoryService } from '../../services/factory.service';
 
@@ -14,7 +13,13 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
 
     return this.factoryService.getRecords(
       '',
-      ['OrderNRCED', 'InspectionNRCED', 'RestorativeJusticeNRCED', 'AdministrativePenaltyNRCED'],
+      [
+        'OrderNRCED',
+        'InspectionNRCED',
+        'RestorativeJusticeNRCED',
+        'AdministrativePenaltyNRCED',
+        'AdministrativeSanctionNRCED'
+      ],
       [],
       tableObject.currentPage,
       tableObject.pageSize,
