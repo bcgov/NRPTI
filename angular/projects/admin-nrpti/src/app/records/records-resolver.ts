@@ -28,7 +28,8 @@ export class RecordsResolver implements Resolve<Observable<object>> {
         'RestorativeJustice',
         'Ticket',
         'AdministrativePenalty',
-        'AdministrativeSanction'
+        'AdministrativeSanction',
+        'Warning'
       ],
       [],
       tableObject.currentPage,

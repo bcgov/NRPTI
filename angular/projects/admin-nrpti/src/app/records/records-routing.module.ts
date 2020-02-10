@@ -59,6 +59,11 @@ import { AdministrativeSanctionResolver } from './administrative-sanctions/admin
 import { AdministrativeSanctionDetailComponent } from './administrative-sanctions/administrative-sanction-detail/administrative-sanction-detail.component';
 import { AdministrativeSanctionAddEditComponent } from './administrative-sanctions/administrative-sanction-add-edit/administrative-sanction-add-edit.component';
 
+// warnings
+import { WarningResolver } from './warnings/warning-resolver';
+import { WarningDetailComponent } from './warnings/warning-detail/warning-detail.component';
+import { WarningAddEditComponent } from './warnings/warning-add-edit/warning-add-edit.component';
+
 // other
 import { Utils } from 'nrpti-angular-components';
 
@@ -529,6 +534,52 @@ const routes: Routes = [
             }
           }
         ]
+      },
+      // warnings
+      {
+        path: 'warnings/add',
+        component: WarningAddEditComponent,
+        canActivate: [CanActivateGuard],
+        data: {
+          breadcrumb: 'Add Warning'
+
+        }
+      },
+      {
+        path: 'warnings/:warningId',
+        data: {
+          breadcrumb: 'Warning Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: WarningDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: WarningResolver
+            }
+          },
+          {
+            path: 'edit',
+            component: WarningAddEditComponent,
+            canActivate: [CanActivateGuard],
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+              breadcrumb: 'Edit Warning'
+            },
+            resolve: {
+              record: WarningResolver
+            }
+          }
+        ]
       }
     ]
   }
@@ -549,6 +600,7 @@ const routes: Routes = [
     TicketResolver,
     AdministrativePenaltyResolver,
     AdministrativeSanctionResolver,
+    WarningResolver,
     Utils
   ]
 })
