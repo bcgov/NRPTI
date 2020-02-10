@@ -9,3 +9,4 @@ export * from './ticket';
 export * from './administrativePenalty';
 export * from './administrativeSanction';
 export * from './warning';
+export * from './constructionPlan';

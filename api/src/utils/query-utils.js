@@ -95,5 +95,6 @@ exports.recordTypes = [
   'Ticket',
   'AdministrativePenalty',
   'AdministrativeSanction',
-  'Warning'
+  'Warning',
+  'ConstructionPlan'
 ];
