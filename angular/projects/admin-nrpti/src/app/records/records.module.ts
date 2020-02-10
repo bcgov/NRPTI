@@ -67,6 +67,12 @@ import { AdministrativePenaltyDetailComponent } from './administrative-penalties
 import { AdministrativePenaltyNRCEDDetailComponent } from './administrative-penalties/administrative-penalty-nrced-detail/administrative-penalty-nrced-detail.component';
 import { AdministrativePenaltyLNGDetailComponent } from './administrative-penalties/administrative-penalty-lng-detail/administrative-penalty-lng-detail.component';
 
+// Administrative Sanctions
+import { AdministrativeSanctionAddEditComponent } from './administrative-sanctions/administrative-sanction-add-edit/administrative-sanction-add-edit.component';
+import { AdministrativeSanctionDetailComponent } from './administrative-sanctions/administrative-sanction-detail/administrative-sanction-detail.component';
+import { AdministrativeSanctionNRCEDDetailComponent } from './administrative-sanctions/administrative-sanction-nrced-detail/administrative-sanction-nrced-detail.component';
+import { AdministrativeSanctionLNGDetailComponent } from './administrative-sanctions/administrative-sanction-lng-detail/administrative-sanction-lng-detail.component';
+
 // directives
 import { RecordDetailDirective } from './utils/record-detail.directive';
 
@@ -131,7 +137,12 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     AdministrativePenaltyAddEditComponent,
     AdministrativePenaltyDetailComponent,
     AdministrativePenaltyNRCEDDetailComponent,
-    AdministrativePenaltyLNGDetailComponent
+    AdministrativePenaltyLNGDetailComponent,
+    // administrative sanctions
+    AdministrativeSanctionAddEditComponent,
+    AdministrativeSanctionDetailComponent,
+    AdministrativeSanctionNRCEDDetailComponent,
+    AdministrativeSanctionLNGDetailComponent
   ],
   providers: [],
   entryComponents: [
@@ -175,7 +186,12 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     AdministrativePenaltyAddEditComponent,
     AdministrativePenaltyDetailComponent,
     AdministrativePenaltyNRCEDDetailComponent,
-    AdministrativePenaltyLNGDetailComponent
+    AdministrativePenaltyLNGDetailComponent,
+    // administrative sanctions
+    AdministrativeSanctionAddEditComponent,
+    AdministrativeSanctionDetailComponent,
+    AdministrativeSanctionNRCEDDetailComponent,
+    AdministrativeSanctionLNGDetailComponent
   ],
   exports: []
 })

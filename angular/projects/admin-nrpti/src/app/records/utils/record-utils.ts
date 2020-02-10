@@ -22,7 +22,10 @@ import {
   TicketNRCED,
   AdministrativePenalty,
   AdministrativePenaltyLNG,
-  AdministrativePenaltyNRCED
+  AdministrativePenaltyNRCED,
+  AdministrativeSanction,
+  AdministrativeSanctionLNG,
+  AdministrativeSanctionNRCED
 } from '../../../../../common/src/app/models';
 
 // orders
@@ -56,6 +59,10 @@ import { TicketNRCEDDetailComponent } from '../tickets/ticket-nrced-detail/ticke
 // administrative penalties
 import { AdministrativePenaltyNRCEDDetailComponent } from '../administrative-penalties/administrative-penalty-nrced-detail/administrative-penalty-nrced-detail.component';
 import { AdministrativePenaltyLNGDetailComponent } from '../administrative-penalties/administrative-penalty-lng-detail/administrative-penalty-lng-detail.component';
+
+// administrative sanctions
+import { AdministrativeSanctionNRCEDDetailComponent } from '../administrative-sanctions/administrative-sanction-nrced-detail/administrative-sanction-nrced-detail.component';
+import { AdministrativeSanctionLNGDetailComponent } from '../administrative-sanctions/administrative-sanction-lng-detail/administrative-sanction-lng-detail.component';
 
 // other
 import { RecordComponent } from './record-component';
@@ -122,6 +129,12 @@ export class RecordUtils {
         return new AdministrativePenaltyLNG(data);
       case 'AdministrativePenaltyNRCED':
         return new AdministrativePenaltyNRCED(data);
+      case 'AdministrativeSanction':
+        return new AdministrativeSanction(data);
+      case 'AdministrativeSanctionLNG':
+        return new AdministrativeSanctionLNG(data);
+      case 'AdministrativeSanctionNRCED':
+        return new AdministrativeSanctionNRCED(data);
       default:
         return null;
     }
@@ -170,6 +183,10 @@ export class RecordUtils {
         return AdministrativePenaltyLNGDetailComponent;
       case 'AdministrativePenaltyNRCED':
         return AdministrativePenaltyNRCEDDetailComponent;
+      case 'AdministrativeSanctionLNG':
+        return AdministrativeSanctionLNGDetailComponent;
+      case 'AdministrativeSanctionNRCED':
+        return AdministrativeSanctionNRCEDDetailComponent;
       default:
         return null;
     }

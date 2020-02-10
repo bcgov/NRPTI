@@ -7,7 +7,14 @@ const RECORD_TYPE = Object.freeze({
     displayName: 'Administrative Penalty',
     flavours: { lng: { _schemaName: 'AdministrativePenaltyLNG' }, nrced: { _schemaName: 'AdministrativePenaltyNRCED' } }
   },
-  AdministrativeSanction: { _schemaName: 'AdministrativeSanction', displayName: 'Administrative Sanction' },
+  AdministrativeSanction: {
+    _schemaName: 'AdministrativeSanction',
+    displayName: 'Administrative Sanction',
+    flavours: {
+      lng: { _schemaName: 'AdministrativeSanctionLNG' },
+      nrced: { _schemaName: 'AdministrativeSanctionNRCED' }
+    }
+  },
   Agreement: { _schemaName: 'Agreement', displayName: 'Agreement', flavours: { lng: { _schemaName: 'AgreementLNG' } } },
   Certificate: {
     _schemaName: 'Certificate',
