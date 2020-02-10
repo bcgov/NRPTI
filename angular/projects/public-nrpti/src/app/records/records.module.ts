@@ -21,6 +21,7 @@ import { RestorativeJusticeDetailComponent } from './restorative-justices/restor
 import { AdministrativePenaltyDetailComponent } from './administrative-penalties/administrative-penalty-detail/administrative-penalty-detail.component';
 import { AdministrativeSanctionDetailComponent } from './administrative-sanctions/administrative-sanction-detail/administrative-sanction-detail.component';
 import { TicketDetailComponent } from './tickets/ticket-detail/ticket-detail.component';
+import { WarningDetailComponent } from './warnings/warning-detail/warning-detail.component';
 
 // resolvers
 import { RecordsListResolver } from './records-list/records-list-resolver';
@@ -45,7 +46,8 @@ import { RecordsListResolver } from './records-list/records-list-resolver';
     RestorativeJusticeDetailComponent,
     AdministrativePenaltyDetailComponent,
     AdministrativeSanctionDetailComponent,
-    TicketDetailComponent
+    TicketDetailComponent,
+    WarningDetailComponent
   ],
   providers: [RecordsListResolver],
   entryComponents: [RecordsTableRowComponent],
