@@ -1,0 +1,89 @@
+<main class="detail-page">
+  <div>
+    <section class="nav-section">
+      <ul class="nav-items">
+        <li
+          class="nav-item"
+          [ngClass]="{ active: isTabActive('detail') }"
+          (click)="activateTab('detail')"
+          title="Restorative justice activity details"
+        >
+          <i class="nav-item-icon material-icons">info</i>
+          <a class="nav-item-value">Activity Details</a>
+        </li>
+        <li
+          class="nav-item"
+          [ngClass]="{ active: isTabActive('location') }"
+          (click)="activateTab('location')"
+          title="Restorative justice location details"
+        >
+          <i class="nav-item-icon material-icons">room</i>
+          <a class="nav-item-value">Location</a>
+        </li>
+      </ul>
+    </section>
+    <section class="content-section" *ngIf="isTabActive('detail')">
+      <div class="content-grid">
+        <div class="grid-section-1">
+          <div class="grid-item">
+            <span class="grid-item-name">Activity</span>
+            <span class="grid-item-value">{{ (data && data._master.recordName) || '-' }}</span>
+          </div>
+          <div class="grid-item">
+            <span class="grid-item-name">Issued To</span>
+            <span class="grid-item-value">{{ (data && data._master.issuedTo) || '-' }}</span>
+          </div>
+          <div class="grid-item">
+            <span class="grid-item-name">Activity Type</span>
+            <span class="grid-item-value">{{ (data && data._master.recordType) || '-' }}</span>
+          </div>
+          <div class="grid-item">
+            <span class="grid-item-name">Issued On</span>
+            <span class="gird-item-value">{{ (data && data._master.dateIssued | date: 'mediumDate') || '-' }}</span>
+          </div>
+        </div>
+        <div class="grid-section-2">
+          <div class="grid-item">
+            <span class="grid-item-name">Summary</span>
+            <span class="grid-item-value">{{ (data && data.summary) || '-' }}</span>
+          </div>
+          <div class="grid-item">
+            <span class="grid-item-name">Issuing Agency</span>
+            <span class="grid-item-value">{{ (data && data._master.issuingAgency) || '-' }}</span>
+          </div>
+          <div class="grid-item">
+            <span class="grid-item-name">Legislation</span>
+            <span class="grid-item-value">{{ (data && data._master.legislation) || '-' }}</span>
+          </div>
+          <div class="grid-item">
+            <span class="grid-item-name">Penalty</span>
+            <span class="grid-item-value">{{ (data && data._master.penalty) || '-' }}</span>
+          </div>
+        </div>
+        <div class="grid-section-3">
+          <div class="grid-item">
+            <span class="grid-item-name">Site/Project</span>
+            <span class="grid-item-value">{{ (data && data._master.projectName) || '-' }}</span>
+          </div>
+          <div class="grid-item">
+            <span class="grid-item-name">Location Description</span>
+            <span class="grid-item-value">{{ (data && data._master.location) || '-' }}</span>
+          </div>
+          <div class="grid-item">
+            <span class="grid-item-name">Lat/Long</span>
+            <span class="grid-item-value">{{ (data && data._master.centroid) || '-' }}</span>
+          </div>
+        </div>
+        <div class="grid-section-5">
+          <div class="grid-item">
+            <span class="grid-item-name">Attachments</span>
+            <span class="grid-item-value">{{ (data && data._master.attachments) || '-' }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="content-section" *ngIf="isTabActive('location')">
+      This is a map!
+    </section>
+  </div>
+</main>

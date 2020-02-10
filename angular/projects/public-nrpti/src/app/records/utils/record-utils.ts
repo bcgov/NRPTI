@@ -1,6 +1,7 @@
-import { OrderDetailComponent } from '../orders/order-detail/order-detail.component';
 import { Type } from '@angular/core';
+import { OrderDetailComponent } from '../orders/order-detail/order-detail.component';
 import { InspectionDetailComponent } from '../inspections/inspection-detail/inspection-detail.component';
+import { RestorativeJusticeDetailComponent } from '../restorative-justices/restorative-justice-detail/restorative-justice-detail.component';
 
 export class RecordUtils {
   /**
@@ -21,6 +22,8 @@ export class RecordUtils {
         return OrderDetailComponent;
       case 'InspectionNRCED':
         return InspectionDetailComponent;
+      case 'RestorativeJusticeNRCED':
+        return RestorativeJusticeDetailComponent;
       default:
         return null;
     }
