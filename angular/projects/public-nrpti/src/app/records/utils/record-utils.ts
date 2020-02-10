@@ -2,6 +2,7 @@ import { Type } from '@angular/core';
 import { OrderDetailComponent } from '../orders/order-detail/order-detail.component';
 import { InspectionDetailComponent } from '../inspections/inspection-detail/inspection-detail.component';
 import { RestorativeJusticeDetailComponent } from '../restorative-justices/restorative-justice-detail/restorative-justice-detail.component';
+import { AdministrativePenaltyDetailComponent } from '../administrative-penalties/administrative-penalty-detail/administrative-penalty-detail.component';
 
 export class RecordUtils {
   /**
@@ -24,6 +25,8 @@ export class RecordUtils {
         return InspectionDetailComponent;
       case 'RestorativeJusticeNRCED':
         return RestorativeJusticeDetailComponent;
+      case 'AdministrativePenaltyNRCED':
+        return AdministrativePenaltyDetailComponent;
       default:
         return null;
     }
