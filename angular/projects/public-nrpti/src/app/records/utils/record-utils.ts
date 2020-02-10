@@ -4,6 +4,7 @@ import { InspectionDetailComponent } from '../inspections/inspection-detail/insp
 import { RestorativeJusticeDetailComponent } from '../restorative-justices/restorative-justice-detail/restorative-justice-detail.component';
 import { AdministrativePenaltyDetailComponent } from '../administrative-penalties/administrative-penalty-detail/administrative-penalty-detail.component';
 import { AdministrativeSanctionDetailComponent } from '../administrative-sanctions/administrative-sanction-detail/administrative-sanction-detail.component';
+import { TicketDetailComponent } from '../tickets/ticket-detail/ticket-detail.component';
 
 export class RecordUtils {
   /**
@@ -30,6 +31,8 @@ export class RecordUtils {
         return AdministrativePenaltyDetailComponent;
       case 'AdministrativeSanctionNRCED':
         return AdministrativeSanctionDetailComponent;
+      case 'TicketNRCED':
+        return TicketDetailComponent;
       default:
         return null;
     }
