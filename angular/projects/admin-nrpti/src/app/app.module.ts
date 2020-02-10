@@ -10,7 +10,7 @@ import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 // modules
 import { GlobalModule } from 'nrpti-angular-components';
 import { CommonModule } from '../../../common/src/app/common.module';
-import { SharedModule } from './shared.module';
+import { SharedModule } from './shared/shared.module';
 import { AppRoutingModule } from './app-routing.module';
 import { RecordsModule } from './records/records.module';
 

@@ -9,7 +9,7 @@ import { InlineSVGModule } from 'ng-inline-svg';
 // modules
 import { GlobalModule } from 'nrpti-angular-components';
 import { CommonModule as NrptiCommonModule } from '../../../../common/src/app/common.module';
-import { SharedModule } from '../shared.module';
+import { SharedModule } from '../shared/shared.module';
 import { RecordsRoutingModule } from './records-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
 

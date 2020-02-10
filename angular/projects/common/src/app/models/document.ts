@@ -6,20 +6,17 @@
  */
 export class Document {
   _id: string;
-  _record: string;
   _addedBy: string;
-  documentFileName: string;
-  displayName: string;
-  internalURL: string;
-  internalMime: string;
+  fileName: string;
+  key: string;
+  url: string;
+  upfile: File;
 
   constructor(obj?: any) {
     this._id = (obj && obj._id) || null;
-    this._record = (obj && obj._record) || null;
     this._addedBy = (obj && obj._addedBy) || null;
-    this.documentFileName = (obj && obj.documentFileName) || null;
-    this.displayName = (obj && obj.displayName) || null;
-    this.internalURL = (obj && obj.internalURL) || null;
-    this.internalMime = (obj && obj.internalMime) || null;
+    this.fileName = (obj && obj.fileName) || null;
+    this.url = (obj && obj.url) || null;
+    this.key = (obj && obj.key) || null;
   }
 }
