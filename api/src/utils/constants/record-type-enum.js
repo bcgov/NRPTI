@@ -2,7 +2,11 @@
  * Supported NRPTI record types.
  */
 const RECORD_TYPE = Object.freeze({
-  AdministrativePenalty: { _schemaName: 'AdministrativePenalty', displayName: 'Administrative Penalty' },
+  AdministrativePenalty: {
+    _schemaName: 'AdministrativePenalty',
+    displayName: 'Administrative Penalty',
+    flavours: { lng: { _schemaName: 'AdministrativePenaltyLNG' }, nrced: { _schemaName: 'AdministrativePenaltyNRCED' } }
+  },
   AdministrativeSanction: { _schemaName: 'AdministrativeSanction', displayName: 'Administrative Sanction' },
   Agreement: { _schemaName: 'Agreement', displayName: 'Agreement', flavours: { lng: { _schemaName: 'AgreementLNG' } } },
   Certificate: {

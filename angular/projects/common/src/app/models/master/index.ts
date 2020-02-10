@@ -6,3 +6,4 @@ export * from './agreement';
 export * from './selfReport';
 export * from './restorativeJustice';
 export * from './ticket';
+export * from './administrativePenalty';
