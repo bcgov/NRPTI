@@ -1,17 +1,17 @@
-import { Component, HostBinding, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 import { filter } from 'rxjs/operators';
-import { StoreService } from 'nrpti-angular-components';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
+import { IBreadcrumb } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit, OnDestroy {
+export class SidebarComponent implements OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   public isNavMenuOpen = false;
@@ -22,10 +22,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
   public currentProjectId = '';
   public currentMenu = '';
 
-  @HostBinding('class.is-toggled')
-  isOpen = false;
+  public breadcrumbs: IBreadcrumb[];
+  public activeBreadcrumb: IBreadcrumb;
 
-  constructor(private router: Router, private storeService: StoreService) {
+  constructor(private router: Router) {
     this.router.events
       .pipe(
         takeUntil(this.ngUnsubscribe),
@@ -35,12 +35,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
         this.routerSnapshot = event;
         this.SetActiveSidebarItem();
       });
-  }
 
-  ngOnInit() {
-    this.storeService.change.pipe(takeUntil(this.ngUnsubscribe)).subscribe(isOpen => {
-      this.isOpen = isOpen;
-    });
+      this.breadcrumbs = [];
   }
 
   SetActiveSidebarItem() {

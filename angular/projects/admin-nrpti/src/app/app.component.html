@@ -1,10 +1,16 @@
 <app-header></app-header>
-<app-sidebar></app-sidebar>
 
-<div class="app-body content" id="scrollTop">
-  <app-toggle-button class="app-toggle"></app-toggle-button>
-  <lib-breadcrumb (navigateBreadcrumb)="navigateBreadcrumb($event)"></lib-breadcrumb>
-  <router-outlet></router-outlet>
+<div class="app-body">
+  <div class="side-content" [ngClass]="{ sideContentClosed: !isOpen }">
+    <app-sidebar></app-sidebar>
+    <app-toggle-button class="app-toggle"></app-toggle-button>
+  </div>
+  <div class="body-content" id="scrollTop">
+    <lib-breadcrumb (navigateBreadcrumb)="navigateBreadcrumb($event)"></lib-breadcrumb>
+    <div class="content-component">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
 </div>
 
 <app-footer></app-footer>

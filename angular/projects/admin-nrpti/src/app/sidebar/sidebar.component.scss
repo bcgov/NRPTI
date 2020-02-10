@@ -1,18 +1,20 @@
+@import "~assets/styles/base/base.scss";
+
 /* The side navigation menu */
 .sidebar {
   margin: 0;
   padding: 20px 0 15px 5px;
-  width: 250px;
+  width: $side-content-width;
   background-color: #38598a;
   position: fixed;
 
   /* Probably should not hardcode to account for the footer */
-  height: calc(100% - 71px - 37px);
+  height: calc(100% - 67.2px - 41px);
   overflow: auto;
-  transition: 0.3s;
+  transition: width 0.3s;
 
-  @media screen and (min-width: 768px) {
-    margin-top: 69px;
+  @media screen and (max-width: 768px) {
+    height: calc(100% - 55px - 41px);
   }
 }
 
@@ -58,24 +60,6 @@
   color: #036;
 }
 
-// /* On screens that are less than 650px wide, make the sidebar into a topbar */
-// @media screen and (max-width: 650px) {
-//   .is-open {
-//     visibility: hidden;
-//     overflow: hidden;
-//     z-index: 5;
-//     position: absolute;
-//   }
-// }
-
-// /* On screens that are less than 400px, display the bar vertically, instead of horizontally */
-// @media screen and (max-width: 350px) {
-//   .sidebar a {
-//     text-align: center;
-//     float: none;
-//   }
-// }
-
 /* Style the sidenav links and the dropdown button */
 .sidenav a,
 .dropdown-btn {
@@ -101,16 +85,10 @@
 
 /* Main content */
 .main {
-  margin-left: 250px; /* Same as the width of the sidenav */
+  margin-left: $side-content-width; /* Same as the width of the sidenav */
   font-size: 20px; /* Increased text to enable scrolling */
   padding: 0 10px;
 }
-
-/* Add an active class to the active dropdown button */
-// .active {
-//   background-color: #003366;
-//   color: white;
-// }
 
 /* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
 .project-details-dropdown-container {
