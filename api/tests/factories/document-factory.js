@@ -3,9 +3,9 @@ const Document = require('../../models/document');
 
 factory.define('document', Document, buildOptions => {
   let attrs = {
-    displayName: factory.chance('name'),
-    documentFileName: factory.seq('Document.documentFileName', element => `test-document-${element}.docx`),
-    internalURL: './api/test/fixtures/test_document.txt',
+    fileName: factory.seq('Document.fileName', element => `test-document-${element}.docx`),
+    key: '89bd9fd384864fe58d5f711f117f1922/test_document.txt',
+    url: './api/test/fixtures/test_document.txt',
     read: ['sysadmin']
   };
 

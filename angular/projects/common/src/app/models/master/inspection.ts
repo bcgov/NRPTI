@@ -29,7 +29,7 @@ export class Inspection {
   sourceDateAdded: Date;
   sourceDateUpdated: Date;
   sourceSystemRef: string;
-  attachments: object[];
+  documents: object[];
 
   InspectionNRCED: object;
   InspectionLNG: object;
@@ -54,7 +54,7 @@ export class Inspection {
     this.centroid = (obj && obj.centroid) || null;
     this.outcomeStatus = (obj && obj.outcomeStatus) || null;
     this.outcomeDescription = (obj && obj.outcomeDescription) || null;
-    this.attachments = (obj && obj.attachments) || null;
+    this.documents = (obj && obj.documents) || null;
     this.dateAdded = (obj && obj.dateAdded) || null;
     this.dateUpdated = (obj && obj.dateUpdated) || null;
     this.sourceDateAdded = (obj && obj.sourceDateAdded) || null;
