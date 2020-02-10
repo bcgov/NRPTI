@@ -22,6 +22,9 @@ import { AdministrativeSanctionResolver } from './administrative-sanctions/admin
 import { TicketDetailComponent } from './tickets/ticket-detail/ticket-detail.component';
 import { TicketResolver } from './tickets/ticket-resolver';
 
+import { WarningDetailComponent } from './warnings/warning-detail/warning-detail.component';
+import { WarningResolver } from './warnings/warning-resolver';
+
 const routes: Routes = [
   {
     path: 'records',
@@ -176,6 +179,29 @@ const routes: Routes = [
             }
           }
         ]
+      },
+      {
+        path: 'warnings/:warningId',
+        data: {
+          breadcrumb: 'Warning Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: WarningDetailComponent,
+            resolve: {
+              records: WarningResolver
+            },
+            data: {
+              breadcrumb: null
+            }
+          }
+        ]
       }
     ]
   }
@@ -191,6 +217,7 @@ const routes: Routes = [
     RestorativeJusticeResolver,
     AdministrativePenaltyResolver,
     AdministrativeSanctionResolver,
+    WarningResolver,
     Ticket
   ]
 })
