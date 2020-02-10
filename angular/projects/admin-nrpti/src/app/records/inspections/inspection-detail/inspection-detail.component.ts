@@ -34,7 +34,7 @@ export class InspectionDetailComponent extends RecordComponent implements OnInit
           (record.flavours &&
             record.flavours.map(flavourRecord => RecordUtils.getRecordModelInstance(flavourRecord))) ||
           []
-      }; 
+      };
 
       this.changeDetectionRef.detectChanges();
     });
