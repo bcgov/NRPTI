@@ -42,7 +42,11 @@ const RECORD_TYPE = Object.freeze({
     displayName: 'Ticket',
     flavours: { lng: { _schemaName: 'TicketLNG' }, nrced: { _schemaName: 'TicketNRCED' } }
   },
-  Warning: { _schemaName: 'Warning', displayName: 'Warning' }
+  Warning: {
+    _schemaName: 'Warning',
+    displayName: 'Warning',
+    flavours: { lng: { _schemaName: 'WarningLNG' }, nrced: { _schemaName: 'WarningNRCED' } }
+  }
 });
 
 module.exports = RECORD_TYPE;

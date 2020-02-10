@@ -25,7 +25,10 @@ import {
   AdministrativePenaltyNRCED,
   AdministrativeSanction,
   AdministrativeSanctionLNG,
-  AdministrativeSanctionNRCED
+  AdministrativeSanctionNRCED,
+  Warning,
+  WarningLNG,
+  WarningNRCED
 } from '../../../../../common/src/app/models';
 
 // orders
@@ -63,6 +66,10 @@ import { AdministrativePenaltyLNGDetailComponent } from '../administrative-penal
 // administrative sanctions
 import { AdministrativeSanctionNRCEDDetailComponent } from '../administrative-sanctions/administrative-sanction-nrced-detail/administrative-sanction-nrced-detail.component';
 import { AdministrativeSanctionLNGDetailComponent } from '../administrative-sanctions/administrative-sanction-lng-detail/administrative-sanction-lng-detail.component';
+
+// warnings
+import { WarningNRCEDDetailComponent } from '../warnings/warning-nrced-detail/warning-nrced-detail.component';
+import { WarningLNGDetailComponent } from '../warnings/warning-lng-detail/warning-lng-detail.component';
 
 // other
 import { RecordComponent } from './record-component';
@@ -135,6 +142,12 @@ export class RecordUtils {
         return new AdministrativeSanctionLNG(data);
       case 'AdministrativeSanctionNRCED':
         return new AdministrativeSanctionNRCED(data);
+      case 'Warning':
+        return new Warning(data);
+      case 'WarningLNG':
+        return new WarningLNG(data);
+      case 'WarningNRCED':
+        return new WarningNRCED(data);
       default:
         return null;
     }
@@ -187,6 +200,10 @@ export class RecordUtils {
         return AdministrativeSanctionLNGDetailComponent;
       case 'AdministrativeSanctionNRCED':
         return AdministrativeSanctionNRCEDDetailComponent;
+      case 'WarningLNG':
+        return WarningLNGDetailComponent;
+      case 'WarningNRCED':
+        return WarningNRCEDDetailComponent;
       default:
         return null;
     }
