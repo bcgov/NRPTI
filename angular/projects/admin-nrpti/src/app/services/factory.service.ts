@@ -6,7 +6,7 @@ import { ApiService } from './api.service';
 import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
-import { Order, Inspection, Certificate, Permit, Agreement, SelfReport, RestorativeJustice, Ticket, AdministrativePenalty } from '../../../../common/src/app/models/master';
+import { Order, Inspection, Certificate, Permit, Agreement, SelfReport, RestorativeJustice, Ticket, AdministrativePenalty, AdministrativeSanction } from '../../../../common/src/app/models/master';
 import { TaskService, ITaskParams } from './task.service';
 
 /**
@@ -431,6 +431,23 @@ export class FactoryService {
   public editAdministrativePenalty(administrativePenalty: AdministrativePenalty): Observable<object> {
     const outboundObject = {
       administrativePenalties: [administrativePenalty]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // Administrative Sanctions
+  public createAdministrativeSanction(administrativeSanction: AdministrativeSanction): Observable<object> {
+    const outboundObject = {
+      administrativeSanctions: [administrativeSanction]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editAdministrativeSanction(administrativeSanction: AdministrativeSanction): Observable<object> {
+    const outboundObject = {
+      administrativeSanctions: [administrativeSanction]
     };
     return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }

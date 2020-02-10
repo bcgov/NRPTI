@@ -7,3 +7,4 @@ export * from './selfReport-lng';
 export * from './restorativeJustice-lng';
 export * from './ticket-lng';
 export * from './administrativePenalty-lng';
+export * from './administrativeSanction-lng';
