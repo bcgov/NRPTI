@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { IBreadcrumb, StoreService } from 'nrpti-angular-components';
 
@@ -8,11 +8,10 @@ import { IBreadcrumb, StoreService } from 'nrpti-angular-components';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  @HostBinding('class.sidebarcontrol')
-  isOpen = false;
-
+  public isOpen = true;
   public breadcrumbs: IBreadcrumb[];
   public activeBreadcrumb: IBreadcrumb;
+
   constructor(private router: Router, private storeService: StoreService) {
     this.breadcrumbs = [];
   }
