@@ -144,7 +144,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
     // TODO: For editing we should create an object with only the changed fields.
     const constructionPlan = new ConstructionPlan({
       recordName: this.myForm.controls.recordName.value,
-      recordType: 'ConstructionPlan',
+      recordType: 'Construction Plan',
       dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
       agency: this.myForm.controls.agency.value,
       author: this.myForm.controls.author.value,

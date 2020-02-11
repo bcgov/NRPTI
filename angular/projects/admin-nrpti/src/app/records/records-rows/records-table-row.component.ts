@@ -42,10 +42,13 @@ export class RecordsTableRowComponent extends TableRowComponent {
         break;
       case 'AdministrativePenalty':
         this.router.navigate(['records', 'administrative-penalties', this.rowData._id, 'detail']);
+        break;
       case 'AdministrativeSanction':
         this.router.navigate(['records', 'administrative-sanctions', this.rowData._id, 'detail']);
+        break;
       case 'Warning':
         this.router.navigate(['records', 'warnings', this.rowData._id, 'detail']);
+        break;
       case 'ConstructionPlan':
         this.router.navigate(['records', 'construction-plans', this.rowData._id, 'detail']);
         break;
