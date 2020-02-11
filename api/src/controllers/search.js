@@ -45,13 +45,13 @@ var generateExpArray = async function (field, prefix = '') {
           const propertyName = item.substr(item.indexOf('dateRangeToFilter') + 'dateRangeToFilter'.length);
 
           return handleDateEndItem(prefix + propertyName, entry);
-      } else {
+        } else {
           // Invalid. return empty {}
           return {};
         }
       } else {
-            return getConvertedValue(item, entry);
-        }
+        return getConvertedValue(item, entry);
+      }
     }));
   }
 }
@@ -127,11 +127,8 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
     'AdministrativePenaltyLNG',
     'AdministrativeSanctionLNG',
     'RestorativeJusticeLNG',
-    'WarningLetterLNG',
     'ConstructionPlanLNG',
     'ManagementPlanLNG',
-    'PlanLNG',
-    'AuthorizationLNG',
     'AgreementLNG',
     'OrderNRCED',
     'InspectionNRCED',

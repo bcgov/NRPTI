@@ -49,7 +49,21 @@ exports.up = async function (db) {
       }
 
       for (const item of project1Authorizations) {
-        promises.push(createAuthorizationRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
+        switch (item.complianceDocumentType) {
+          case 'Letter':
+          case 'Report':
+          case 'Certificate':
+            promises.push(createCertificateRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
+            break;
+          case 'Permit':
+            promises.push(createPermitRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
+            break;
+          default:
+            console.log('-------------------')
+            console.log(`Unknown - skipping: (${item.complianceDocumentType}) ${item.name}`)
+            console.log('-------------------')
+            break;
+        }
       }
 
       for (const item of project1Compliances) {
@@ -58,19 +72,22 @@ exports.up = async function (db) {
             promises.push(createInspectionRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
             break;
           case 'Memo':
-          case 'Compliance Self-Report':
+          case 'Letter':
           case 'Self Report':
-            promises.push(createReportRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
+          case 'Compliance Self-Report':
+            promises.push(createComplianceSelfReportRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
             break;
           case 'Enforcement Action':
-            promises.push(createEnforcementActionRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
+          case 'Order':
+            promises.push(createOrderRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
             break;
           case 'Warning Letter':
-            promises.push(createWarningLetterRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
+          case 'Warning':
+            promises.push(createWarningRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
             break;
           default:
             console.log('-------------------')
-            console.log('Unknown - skipping: ', item.name)
+            console.log(`Unknown - skipping: (${item.complianceDocumentType}) ${item.name}`)
             console.log('-------------------')
             break;
         }
@@ -79,42 +96,91 @@ exports.up = async function (db) {
       for (const item of project1Nations) {
         promises.push(createAgreementRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
       }
+
       for (const item of project1Plans) {
-        promises.push(createPlanRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
+        switch (item.complianceDocumentType || item.type) {
+          case 'Construction':
+          case 'Construction Plan':
+            promises.push(createConstructionPlanRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
+            break;
+          case 'Management':
+          case 'Management Plan':
+            promises.push(createManagementPlanRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
+            break;
+          default:
+            console.log('-------------------')
+            console.log(`Unknown - skipping: (${item.complianceDocumentType}) ${item.name}`)
+            console.log('-------------------')
+            break;
+        }
       }
 
       for (const item of project2Authorizations) {
-        promises.push(createAuthorizationRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+        switch (item.complianceDocumentType) {
+          case 'Letter':
+          case 'Report':
+          case 'Certificate':
+            promises.push(createCertificateRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+            break;
+          case 'Permit':
+            promises.push(createPermitRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+            break;
+          default:
+            console.log('-------------------')
+            console.log(`Unknown - skipping: (${item.complianceDocumentType}) ${item.name}`)
+            console.log('-------------------')
+            break;
+        }
       }
+
       for (const item of project2Compliances) {
         switch (item.complianceDocumentType) {
           case 'Inspection':
             promises.push(createInspectionRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
             break;
-          case 'Letter':
           case 'Memo':
-          case 'Compliance Self-Report':
+          case 'Letter':
           case 'Self Report':
-            promises.push(createReportRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+          case 'Compliance Self-Report':
+            promises.push(createComplianceSelfReportRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
             break;
           case 'Enforcement Action':
-            promises.push(createEnforcementActionRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+          case 'Order':
+            promises.push(createOrderRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
             break;
           case 'Warning Letter':
-            promises.push(createWarningLetterRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+          case 'Warning':
+            promises.push(createWarningRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
             break;
           default:
             console.log('-------------------')
-            console.log('Unknown - skipping: ', item.name)
+            console.log(`Unknown - skipping: (${item.complianceDocumentType}) ${item.name}`)
             console.log('-------------------')
             break;
         }
       }
+
       for (const item of project2Nations) {
         promises.push(createAgreementRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
       }
+
       for (const item of project2Plans) {
-        promises.push(createPlanRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+        switch (item.complianceDocumentType || item.type) {
+          case 'Permit':
+          case 'Construction':
+          case 'Construction Plan':
+            promises.push(createConstructionPlanRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+            break;
+          case 'Management':
+          case 'Management Plan':
+            promises.push(createManagementPlanRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+            break;
+          default:
+            console.log('-------------------')
+            console.log(`Unknown - skipping: (${item.complianceDocumentType}) ${item.name}`)
+            console.log('-------------------')
+            break;
+        }
       }
 
       // Wait for all the pushed promises to resolve
@@ -158,7 +224,7 @@ let createAgreementRecord = async function (item, project, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
     recordName: item.name,
-    recordType: item.complianceDocumentType,
+    recordType: 'Agreement',
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
     nationName: item.nation,
@@ -196,20 +262,17 @@ let createAgreementRecord = async function (item, project, nrptiCollection) {
   console.log('Inserted FlavourLNGID:', resFlavour.insertedId.toString())
 }
 
-let createPlanRecord = async function (item, project, nrptiCollection) {
+let createManagementPlanRecord = async function (item, project, nrptiCollection) {
   // Create the master record
   const master = {
-    _schemaName: 'Plan',
+    _schemaName: 'ManagementPlan',
     _epicProjectId: new ObjectID(project),
     read: ['sysadmin'],
     write: ['sysadmin'],
     recordName: item.name,
-    recordType: item.complianceDocumentType,
+    recordType: 'Management Plan',
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
-    recordName: item.name,
-    recordType: item.type || item.complianceDocumentType,
-    recordPhase: item.phase || item.complianceDocumentSubtype,
     issuingAgency: item.agency,
     attachments: [{ url: item.url }],
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
@@ -229,7 +292,7 @@ let createPlanRecord = async function (item, project, nrptiCollection) {
 
   // Create the related flavour record
   let flavourLNG = {
-    _schemaName: 'PlanLNG',
+    _schemaName: 'ManagementPlanLNG',
     dateUpdated: new Date(),
     datePublished: new Date(),
     read: [
@@ -238,6 +301,7 @@ let createPlanRecord = async function (item, project, nrptiCollection) {
     ],
     write: ['sysadmin'],
     _master: new ObjectID(masterID),
+    relatedPhase: item.phase || item.complianceDocumentSubtype,
     description: item.description,
   }
 
@@ -245,19 +309,63 @@ let createPlanRecord = async function (item, project, nrptiCollection) {
   console.log('Inserted FlavourLNGID:', resFlavour.insertedId.toString())
 }
 
-let createEnforcementActionRecord = async function (item, project, nrptiCollection) {
-  await createOrderRecord(item, project, nrptiCollection);
-}
-
-let createWarningLetterRecord = async function (item, project, nrptiCollection) {
+let createConstructionPlanRecord = async function (item, project, nrptiCollection) {
   // Create the master record
   const master = {
-    _schemaName: 'WarningLetter',
+    _schemaName: 'ConstructionPlan',
     _epicProjectId: new ObjectID(project),
     read: ['sysadmin'],
     write: ['sysadmin'],
     recordName: item.name,
-    recordType: item.complianceDocumentType,
+    recordType: 'Construction Plan',
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    issuingAgency: item.agency,
+    attachments: [{ url: item.url }],
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    updatedBy: 'System',
+    publishedBy: 'System',
+    sourceDateAdded: new Date,
+    sourceDateUpdated: new Date,
+    sourceSystemRef: ''
+  }
+
+  const resMaster = await nrptiCollection.insertOne(master)
+  let masterID = resMaster.insertedId.toString()
+  console.log('Inserted MasterID:', masterID)
+
+  // Create the related flavour record
+  let flavourLNG = {
+    _schemaName: 'ConstructionPlanLNG',
+    dateUpdated: new Date(),
+    datePublished: new Date(),
+    read: [
+      'public',
+      'sysadmin'
+    ],
+    write: ['sysadmin'],
+    _master: new ObjectID(masterID),
+    relatedPhase: item.phase || item.complianceDocumentSubtype,
+    description: item.description,
+  }
+
+  const resFlavour = await nrptiCollection.insertOne(flavourLNG)
+  console.log('Inserted FlavourLNGID:', resFlavour.insertedId.toString())
+}
+
+let createWarningRecord = async function (item, project, nrptiCollection) {
+  // Create the master record
+  const master = {
+    _schemaName: 'Warning',
+    _epicProjectId: new ObjectID(project),
+    read: ['sysadmin'],
+    write: ['sysadmin'],
+    recordName: item.name,
+    recordType: 'Warning',
+    recordSubtype: item.complianceDocumentSubtype,
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
     issuingAgency: item.agency,
@@ -280,7 +388,7 @@ let createWarningLetterRecord = async function (item, project, nrptiCollection) 
 
   // Create the related flavour record
   let flavourLNG = {
-    _schemaName: 'WarningLetterLNG',
+    _schemaName: 'WarningLNG',
     dateUpdated: new Date(),
     datePublished: new Date(),
     read: [
@@ -296,7 +404,7 @@ let createWarningLetterRecord = async function (item, project, nrptiCollection) 
   console.log('Inserted FlavourLNGID:', resFlavour.insertedId.toString())
 }
 
-let createReportRecord = async function (item, project, nrptiCollection) {
+let createComplianceSelfReportRecord = async function (item, project, nrptiCollection) {
   // Create the master record
   const master = {
     _schemaName: 'SelfReport',
@@ -304,7 +412,7 @@ let createReportRecord = async function (item, project, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
     recordName: item.name,
-    recordType: item.complianceDocumentType,
+    recordType: 'Compliance Self-Report',
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
     issuingAgency: item.agency,
@@ -336,6 +444,7 @@ let createReportRecord = async function (item, project, nrptiCollection) {
     ],
     write: ['sysadmin'],
     _master: new ObjectID(masterID),
+    relatedPhase: item.phase,
     description: item.description,
   }
 
@@ -343,15 +452,15 @@ let createReportRecord = async function (item, project, nrptiCollection) {
   console.log('Inserted FlavourLNGID:', resFlavour.insertedId.toString())
 }
 
-let createAuthorizationRecord = async function (item, project, nrptiCollection) {
+let createCertificateRecord = async function (item, project, nrptiCollection) {
   // Create the master record
-  const authorizationMaster = {
-    _schemaName: 'Authorization',
+  const certificateMaster = {
+    _schemaName: 'Certificate',
     _epicProjectId: new ObjectID(project),
     read: ['sysadmin'],
     write: ['sysadmin'],
     recordName: item.name,
-    recordType: item.complianceDocumentType,
+    recordType: 'Certificate',
     recordSubtype: item.complianceDocumentSubtype,
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
@@ -368,13 +477,13 @@ let createAuthorizationRecord = async function (item, project, nrptiCollection) 
     sourceSystemRef: ''
   }
 
-  const resMaster = await nrptiCollection.insertOne(authorizationMaster)
-  let authorizationLNGId = resMaster.insertedId.toString()
-  console.log('Inserted MasterAuthorizationID:', authorizationLNGId)
+  const resMaster = await nrptiCollection.insertOne(certificateMaster)
+  let certificateLNGId = resMaster.insertedId.toString()
+  console.log('Inserted MasterCertificateID:', certificateLNGId)
 
   // Create the related flavour record
-  let authorizationLNG = {
-    _schemaName: 'AuthorizationLNG',
+  let certificateLNG = {
+    _schemaName: 'CertificateLNG',
     dateUpdated: new Date(),
     datePublished: new Date(),
     read: [
@@ -382,11 +491,58 @@ let createAuthorizationRecord = async function (item, project, nrptiCollection) 
       'sysadmin'
     ],
     write: ['sysadmin'],
-    _master: new ObjectID(authorizationLNGId),
+    _master: new ObjectID(certificateLNGId),
     description: item.description,
   }
 
-  const resFlavour = await nrptiCollection.insertOne(authorizationLNG)
+  const resFlavour = await nrptiCollection.insertOne(certificateLNG)
+  console.log('Inserted AuthLNGID:', resFlavour.insertedId.toString())
+}
+
+let createPermitRecord = async function (item, project, nrptiCollection) {
+  // Create the master record
+  const permitMaster = {
+    _schemaName: 'Permit',
+    _epicProjectId: new ObjectID(project),
+    read: ['sysadmin'],
+    write: ['sysadmin'],
+    recordName: item.name,
+    recordType: 'Permit',
+    recordSubtype: item.complianceDocumentSubtype,
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    issuingAgency: item.agency,
+    attachments: [{ url: item.url }],
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    updatedBy: 'System',
+    publishedBy: 'System',
+    sourceDateAdded: new Date,
+    sourceDateUpdated: new Date,
+    sourceSystemRef: ''
+  }
+
+  const resMaster = await nrptiCollection.insertOne(permitMaster)
+  let permitLNGId = resMaster.insertedId.toString()
+  console.log('Inserted MasterPermitID:', permitLNGId)
+
+  // Create the related flavour record
+  let permitLNG = {
+    _schemaName: 'PermitLNG',
+    dateUpdated: new Date(),
+    datePublished: new Date(),
+    read: [
+      'public',
+      'sysadmin'
+    ],
+    write: ['sysadmin'],
+    _master: new ObjectID(permitLNGId),
+    description: item.description,
+  }
+
+  const resFlavour = await nrptiCollection.insertOne(permitLNG)
   console.log('Inserted AuthLNGID:', resFlavour.insertedId.toString())
 }
 
@@ -399,6 +555,7 @@ let createOrderRecord = async function (item, project, nrptiCollection) {
     write: ['sysadmin'],
     recordName: item.name,
     recordType: 'Order',
+    recordSubtype: item.complianceDocumentSubtype,
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
     issuingAgency: item.agency,

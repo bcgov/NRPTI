@@ -31,7 +31,6 @@ export class ComplianceResolver implements Resolve<Observable<object>> {
         'AdministrativePenaltyLNG',
         'AdministrativeSanctionLNG',
         'RestorativeJusticeLNG',
-        'WarningLetterLNG',
         'WarningLNG'
       ],
       [],
