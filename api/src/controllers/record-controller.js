@@ -17,6 +17,7 @@ let AddAdministrativePenalty = require('./post/administrative-penalty');
 let AddAdministrativeSanction = require('./post/administrative-sanction');
 let AddWarning = require('./post/warning');
 let AddConstructionPlan = require('./post/construction-plan');
+let AddManagementPlan = require('./post/management-plan');
 
 let EditOrder = require('./put/order');
 let EditInspection = require('./put/inspection');
@@ -30,6 +31,7 @@ let EditAdministrativePenalty = require('./put/administrative-penalty');
 let EditAdministrativeSanction = require('./put/administrative-sanction');
 let EditWarning = require('./put/warning');
 let EditConstructionPlan = require('./put/construction-plan');
+let EditManagementPlan = require('./put/management-plan');
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 
@@ -143,6 +145,9 @@ exports.protectedPost = async function (args, res, next) {
     if (data.constructionPlans) {
       observables.push(processPostRequest(args, res, next, 'constructionPlans', data.constructionPlans));
     }
+    if (data.managementPlans) {
+      observables.push(processPostRequest(args, res, next, 'managementPlans', data.managementPlans));
+    }
 
     var response = await Promise.all(observables);
 
@@ -200,6 +205,9 @@ exports.protectedPut = async function (args, res, next) {
     }
     if (data.constructionPlans) {
       observables.push(processPutRequest(args, res, next, 'constructionPlans', data.constructionPlans));
+    }
+    if (data.managementPlans) {
+      observables.push(processPutRequest(args, res, next, 'managementPlans', data.managementPlans));
     }
 
     var response = await Promise.all(observables);
@@ -350,6 +358,9 @@ let processPostRequest = async function (args, res, next, property, data) {
       case 'constructionPlans':
         observables.push(AddConstructionPlan.createMaster(args, res, next, data[i]));
         break;
+      case 'managementPlans':
+        observables.push(AddManagementPlan.createMaster(args, res, next, data[i]));
+        break;
       default:
         return {
           errorMessage: `Property ${property} does not exist.`
@@ -416,6 +427,9 @@ let processPutRequest = async function (args, res, next, property, data) {
         break;
       case 'constructionPlans':
         observables.push(EditConstructionPlan.editMaster(args, res, next, data[i]));
+        break;
+      case 'managementPlans':
+        observables.push(EditManagementPlan.editMaster(args, res, next, data[i]));
         break;
       default:
         return {

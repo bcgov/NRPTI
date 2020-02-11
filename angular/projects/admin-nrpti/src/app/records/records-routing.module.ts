@@ -69,6 +69,11 @@ import { ConstructionPlanResolver } from './construction-plans/construction-plan
 import { ConstructionPlanDetailComponent } from './construction-plans/construction-plan-detail/construction-plan-detail.component';
 import { ConstructionPlanAddEditComponent } from './construction-plans/construction-plan-add-edit/construction-plan-add-edit.component';
 
+// management plans
+import { ManagementPlanResolver } from './management-plans/management-plan-resolver';
+import { ManagementPlanDetailComponent } from './management-plans/management-plan-detail/management-plan-detail.component';
+import { ManagementPlanAddEditComponent } from './management-plans/management-plan-add-edit/management-plan-add-edit.component';
+
 // other
 import { Utils } from 'nrpti-angular-components';
 
@@ -448,6 +453,7 @@ const routes: Routes = [
               record: TicketResolver
             }
           }
+        ]
       },
       // administrative penalties
       {
@@ -456,7 +462,6 @@ const routes: Routes = [
         canActivate: [CanActivateGuard],
         data: {
           breadcrumb: 'Add Administrative Penalty'
-
         }
       },
       {
@@ -501,7 +506,6 @@ const routes: Routes = [
         canActivate: [CanActivateGuard],
         data: {
           breadcrumb: 'Add Administrative Sanction'
-
         }
       },
       {
@@ -547,7 +551,6 @@ const routes: Routes = [
         canActivate: [CanActivateGuard],
         data: {
           breadcrumb: 'Add Warning'
-
         }
       },
       {
@@ -588,6 +591,14 @@ const routes: Routes = [
       },
       // construction plans
       {
+        path: 'construction-plans/add',
+        component: ConstructionPlanAddEditComponent,
+        canActivate: [CanActivateGuard],
+        data: {
+          breadcrumb: 'Add Construction Plan'
+        }
+      },
+      {
         path: 'construction-plans/:constructionPlanId',
         data: {
           breadcrumb: 'Construction Plan Details'
@@ -622,6 +633,51 @@ const routes: Routes = [
             }
           }
         ]
+      },
+      // management plans
+      {
+        path: 'management-plans/add',
+        component: ManagementPlanAddEditComponent,
+        canActivate: [CanActivateGuard],
+        data: {
+          breadcrumb: 'Add Management Plan'
+        }
+      },
+      {
+        path: 'management-plans/:managementPlanId',
+        data: {
+          breadcrumb: 'Management Plan Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: ManagementPlanDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: ManagementPlanResolver
+            }
+          },
+          {
+            path: 'edit',
+            component: ManagementPlanAddEditComponent,
+            canActivate: [CanActivateGuard],
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+              breadcrumb: 'Edit Management Plan'
+            },
+            resolve: {
+              record: ManagementPlanResolver
+            }
+          }
+        ]
       }
     ]
   }
@@ -644,6 +700,7 @@ const routes: Routes = [
     AdministrativeSanctionResolver,
     WarningResolver,
     ConstructionPlanResolver,
+    ManagementPlanResolver,
     Utils
   ]
 })

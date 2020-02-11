@@ -48,6 +48,25 @@ const EPIC_RECORD_TYPE = Object.freeze({
       }
     }
   ],
+  ManagementPlan: [
+    {
+      // type and milestone from legislation 2002
+      type: { name: 'Plan', typeId: '5cf00c03a266b7e1877504ce' },
+      milestone: { name: 'Post-Decision Materials', milestoneId: '5cf00c03a266b7e1877504f1' },
+      getUtil: (...args) => {
+        return new (require('./epic-management-plans'))(...args);
+      }
+    },
+
+    {
+      // type and milestone from legislation 2018 ('Management Plan' doesn't exist in Legislation 2002)
+      type: { name: 'Management Plan', typeId: '5df79dd77b5abbf7da6f51c2' },
+      milestone: { name: 'Post-Decision Materials', milestoneId: '5df79dd77b5abbf7da6f51fa' },
+      getUtil: (...args) => {
+        return new (require('./epic-management-plans'))(...args);
+      }
+    }
+  ],
 
   /**
    * Get a subset of all supported EPIC record types.
@@ -79,7 +98,7 @@ const EPIC_RECORD_TYPE = Object.freeze({
    * @returns flattened array of all EPIC record types.
    */
   getAll: function() {
-    return [...this.Order, ...this.Inspection, ...this.Certificate];
+    return [...this.Order, ...this.Inspection, ...this.Certificate, ...this.ManagementPlan];
   }
 });
 

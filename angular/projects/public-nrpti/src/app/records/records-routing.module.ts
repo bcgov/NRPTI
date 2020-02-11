@@ -218,7 +218,7 @@ const routes: Routes = [
     AdministrativePenaltyResolver,
     AdministrativeSanctionResolver,
     WarningResolver,
-    Ticket
+    TicketResolver
   ]
 })
 export class RecordsRoutingModule {}

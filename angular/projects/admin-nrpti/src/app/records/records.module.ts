@@ -16,6 +16,7 @@ import { BrowserModule } from '@angular/platform-browser';
 // records
 import { RecordsListComponent } from './records-list/records-list.component';
 import { RecordsTableRowComponent } from './records-rows/records-table-row.component';
+import { RecordDetailDirective } from './utils/record-detail.directive';
 
 // Orders
 import { OrderAddEditComponent } from './orders/order-add-edit/order-add-edit.component';
@@ -84,8 +85,10 @@ import { ConstructionPlanAddEditComponent } from './construction-plans/construct
 import { ConstructionPlanDetailComponent } from './construction-plans/construction-plan-detail/construction-plan-detail.component';
 import { ConstructionPlanLNGDetailComponent } from './construction-plans/construction-plan-lng-detail/construction-plan-lng-detail.component';
 
-// directives
-import { RecordDetailDirective } from './utils/record-detail.directive';
+// management plans
+import { ManagementPlanAddEditComponent } from './management-plans/management-plan-add-edit/management-plan-add-edit.component';
+import { ManagementPlanDetailComponent } from './management-plans/management-plan-detail/management-plan-detail.component';
+import { ManagementPlanLNGDetailComponent } from './management-plans/management-plan-lng-detail/management-plan-lng-detail.component';
 
 @NgModule({
   imports: [
@@ -162,7 +165,11 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     // construction plans
     ConstructionPlanDetailComponent,
     ConstructionPlanAddEditComponent,
-    ConstructionPlanLNGDetailComponent
+    ConstructionPlanLNGDetailComponent,
+    // management plans
+    ManagementPlanAddEditComponent,
+    ManagementPlanDetailComponent,
+    ManagementPlanLNGDetailComponent
   ],
   providers: [],
   entryComponents: [
@@ -220,7 +227,11 @@ import { RecordDetailDirective } from './utils/record-detail.directive';
     // construction plans
     ConstructionPlanDetailComponent,
     ConstructionPlanAddEditComponent,
-    ConstructionPlanLNGDetailComponent
+    ConstructionPlanLNGDetailComponent,
+    // management plans
+    ManagementPlanAddEditComponent,
+    ManagementPlanDetailComponent,
+    ManagementPlanLNGDetailComponent
   ],
   exports: []
 })
