@@ -22,7 +22,7 @@ exports.setup = function(options, seedLink) {
   seed = seedLink;
 };
 
-exports.up = function(db) {
+exports.up = async function(db) {
   console.log('---------------------------------------------------------------');
   console.log(`Inserting records from csv file: '${CSV_FILENAME}'`);
 
@@ -33,9 +33,8 @@ exports.up = function(db) {
 
       const promises = [];
 
-      let count = 0;
       let total = 0;
-      await new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         fs.createReadStream(`./migrations/${CSV_FILENAME}`)
           .pipe(csvParse())
           .on('data', row => {
@@ -62,7 +61,6 @@ exports.up = function(db) {
               19: penalty amount
               20: penalty text
             */
-            count++;
             total++;
             switch (row[0]) {
               case 'Administrative Penalty':
@@ -76,6 +74,7 @@ exports.up = function(db) {
                 );
                 break;
               case 'Court Conviction':
+                // TODO when court convictions are ready
                 promises.push(createCourtConviction(row, nrptiCollection));
                 break;
               case 'Compliance Inspection':
@@ -94,20 +93,21 @@ exports.up = function(db) {
                 promises.push(createWarning(row, nrptiCollection));
                 break;
               default:
-                count--;
                 console.log(` - Skipping unrecognized type - type: '${row[0]}' - row: ${total}`);
                 break;
             }
           })
           .on('end', async () => {
-            console.log(`Inserted ${count} records from ${total} csv rows`);
+            console.log(`Inserting ${promises.length} master records from ${total} csv rows`);
             console.log('---------------------------------------------------------------');
             await Promise.all(promises);
+            mongoClientInstance.close();
             resolve();
           })
           .on('error', error => {
             console.log(`CSV Error: ${error}`);
             console.log('---------------------------------------------------------------');
+            mongoClientInstance.close();
             reject(error);
           });
       });
