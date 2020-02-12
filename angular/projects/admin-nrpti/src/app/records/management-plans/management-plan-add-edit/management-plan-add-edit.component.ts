@@ -155,7 +155,8 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
       location: this.myForm.controls.location.value,
       centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],
       outcomeStatus: this.myForm.controls.outcomeStatus.value,
-      outcomeDescription: this.myForm.controls.outcomeDescription.value
+      outcomeDescription: this.myForm.controls.outcomeDescription.value,
+      attachments: this.currentRecord.attachments
     });
 
     // Project name logic
