@@ -1,0 +1,51 @@
+<div class="flex-panel border-bottom">
+  <div class="flex-panel__scroll">
+    <label class="control-label text-uppercase font-weight-bold">Filters</label>
+    <div class="form-group">
+      <div class="date-range">
+        <div class="date-range__input">
+          <label class="control-label">Start Date</label>
+          <app-date-input
+            (click)="applyAllFilters()"
+            class="gtm-filter-published-from"
+            [(date)]="_dateRangeFromFilter"
+            [minDate]="minDate"
+            [maxDate]="_dateRangeToFilter ? _dateRangeToFilter : maxDate">
+          </app-date-input>
+        </div>
+        <div class="date-range__spacer"></div>
+        <div class="date-range__input end-date">
+          <label class="control-label">End Date</label>
+          <app-date-input 
+            (click)="applyAllFilters()"
+            class="gtm-filter-published-to"
+            [(date)]="_dateRangeToFilter" 
+            [maxDate]="maxDate" 
+            [minDate]="_dateRangeFromFilter ? _dateRangeFromFilter : minDate">
+          </app-date-input>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngFor="let section of filterSections">
+      <div class="form-group">
+        <label class="control-label">{{section.displayName}}</label>
+        <div class="select-badge-group">
+          <ng-container *ngFor="let filter of section.textFilters">
+            <div class="select-badge">
+              <input
+                (click)="applyAllFilters()"
+                type="checkbox"
+                name="{{filter.displayName}}"
+                id="_{{filter.displayName}}"
+                (ngModelChange)="dataChanged($event, filter.fieldName, filter.displayName)"
+                [ngModel]="isEnabled(filter.fieldName,filter.displayName)"
+                />
+              <label for="_{{filter.displayName}}">{{filter.displayName}}</label>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

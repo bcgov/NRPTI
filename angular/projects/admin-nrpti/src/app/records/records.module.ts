@@ -90,6 +90,9 @@ import { ManagementPlanAddEditComponent } from './management-plans/management-pl
 import { ManagementPlanDetailComponent } from './management-plans/management-plan-detail/management-plan-detail.component';
 import { ManagementPlanLNGDetailComponent } from './management-plans/management-plan-lng-detail/management-plan-lng-detail.component';
 
+import { ExplorePanelComponent } from '../explore-panel/explore-panel.component';
+import { DateInputComponent } from '../explore-panel/date-input/date-input.component';
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -107,6 +110,8 @@ import { ManagementPlanLNGDetailComponent } from './management-plans/management-
     RecordsRoutingModule
   ],
   declarations: [
+    DateInputComponent,
+    ExplorePanelComponent,
     // records
     RecordsListComponent,
     RecordsTableRowComponent,
