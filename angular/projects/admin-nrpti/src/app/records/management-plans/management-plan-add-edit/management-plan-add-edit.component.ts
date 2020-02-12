@@ -29,8 +29,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
   public lngPublishSubtext = 'Not published';
 
   // Pick lists
-  public authorsPicklist = Picklists.authorPicklist;
-  public outcomeStatusPicklist = Picklists.outcomeStatusPicklist;
+  public agenciesPicklist = Picklists.agenciesPicklist;
 
   constructor(
     public route: ActivatedRoute,

@@ -53,7 +53,9 @@
         </div>
         <div class="label-pair">
           <label for="agency">Agency</label>
-          <input name="agency" id="agency" type="text" formControlName="agency" class="form-control" />
+          <select name="agency" id="agency" formControlName="agency" class="form-control">
+            <option *ngFor="let agency of agenciesPicklist" [ngValue]="agency">{{ agency }}</option>
+          </select>
         </div>
         <div class="label-pair">
           <label for="recordType">Type</label>
