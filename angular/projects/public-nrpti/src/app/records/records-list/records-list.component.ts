@@ -67,7 +67,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     },
     {
       name: 'Issued On',
-      value: 'documentDate'
+      value: 'dateIssued'
     },
     {
       width: 'col-1'

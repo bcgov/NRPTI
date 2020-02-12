@@ -26,7 +26,7 @@ export class PlansResolver implements Resolve<Observable<object>> {
       [],
       tableObject.currentPage,
       tableObject.pageSize,
-      tableObject.sortBy || '-dateIssued', // This needs to be common between both datasets to work properly
+      tableObject.sortBy || '-_master.dateIssued', // This needs to be common between both datasets to work properly
       {
         '_master._epicProjectId': project
       },
