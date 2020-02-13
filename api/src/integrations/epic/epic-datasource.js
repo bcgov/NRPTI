@@ -22,7 +22,7 @@ class EpicDataSource {
     this.recordTypes = recordTypes || null;
 
     // Set initial status
-    this.status = { itemsProcessed: 0, itemTotal: 0, typeStatus: [] };
+    this.status = { itemsProcessed: 0, itemTotal: 0, typeStatus: [], individualRecordStatus: [] };
   }
 
   /**
@@ -31,7 +31,7 @@ class EpicDataSource {
    * Note: supported types specified in epic-record-type-enum.js
    *
    * @async
-   * @returns {object} Overall status of the update + array of individual record type statuses.
+   * @returns {object} Overall status of the update + array of statuses by record type + array of any failed records.
    * @memberof EpicDataSource
    */
   async updateRecords() {
@@ -46,9 +46,18 @@ class EpicDataSource {
         recordTypesToUpdate = EPIC_RECORD_TYPE.getAll();
       }
 
-      await this._updateRecords(recordTypesToUpdate);
+      if (!recordTypesToUpdate || !recordTypesToUpdate.length) {
+        defaultLog.error('updateRecords - no supported record types to update');
+      }
 
-      this.status = { ...this.status, ...this.getStatusTotals() };
+      const promises = [];
+
+      // for each supported type, run the update, and add the resulting status object to the root status object
+      for (const recordType of recordTypesToUpdate) {
+        promises.push(this.updateRecordType(recordType));
+      }
+
+      await Promise.all(promises);
     } catch (error) {
       this.status.message = 'updateRecords - unexpected error';
       this.status.error = error.message;
@@ -60,33 +69,6 @@ class EpicDataSource {
   }
 
   /**
-   * Updates the record types specified.
-   *
-   * @param {*} recordTypes array of EPIC_RECORD_TYPE.recordTypes to update  (optional)
-   * @returns null if no record types provided.
-   * @memberof EpicDataSource
-   */
-  async _updateRecords(recordTypes) {
-    if (!recordTypes || !recordTypes.length) {
-      return null;
-    }
-
-    try {
-      // for each supported type, run the update, and add the resulting status object to the root status object
-      for (const recordType of recordTypes) {
-        const typeStatus = await this.updateRecordType(recordType);
-
-        this.status.typeStatus.push(typeStatus);
-      }
-    } catch (error) {
-      this.status.message = '_updateRecords - unexpected error';
-      this.status.error = error.message;
-
-      defaultLog.error(`_updateRecords - unexpected error: ${error.message}`);
-    }
-  }
-
-  /**
    * Runs all necessary operations to update a single epic record type.
    *
    * @async
@@ -95,9 +77,14 @@ class EpicDataSource {
    * @memberof EpicDataSource
    */
   async updateRecordType(recordType) {
-    let recordTypeStatus = { itemsProcessed: 0, itemTotal: 0, url: '' };
+    // set status defaults
+    let recordTypeStatus = { type: recordType, itemTotal: 0, url: '' };
 
     try {
+      if (!recordType) {
+        throw Error('updateRecordType - required recordType is null.');
+      }
+
       // Build request url
       const queryParams = {
         ...this.params,
@@ -120,6 +107,7 @@ class EpicDataSource {
       }
 
       recordTypeStatus.itemTotal = epicRecords.length;
+      this.status.itemTotal += epicRecords.length;
 
       // Add epic meta (whatever it contains) to the status
       recordTypeStatus.epicMeta = data && data[0] && data[0].meta;
@@ -132,15 +120,21 @@ class EpicDataSource {
         return recordTypeStatus;
       }
 
-      // Process records
-      const processStatus = await this.processRecords(recordTypeUtils, epicRecords);
+      const promises = [];
 
-      // update status
-      recordTypeStatus = { ...recordTypeStatus, ...processStatus };
+      for (const epicRecord of epicRecords) {
+        promises.push(this.processRecord(recordTypeUtils, epicRecord));
+      }
+
+      await Promise.all(promises);
+
+      // Add this types specific status object to the array of type statuses
+      this.status.typeStatus.push(recordTypeStatus);
     } catch (error) {
       recordTypeStatus.message = 'updateRecordType - unexpected error';
       recordTypeStatus.error = error.message;
 
+      // Do not re-throw error, as a single failure is not cause to stop the other record types from processing
       defaultLog.error(`updateRecordType - unexpected error: ${error.message}`);
     }
 
@@ -148,54 +142,56 @@ class EpicDataSource {
   }
 
   /**
-   * Process the epic records one by one:
+   * Process an epic record.
+   *
+   * For this record:
    * - Transform into a NRPTI record
    * - Persist to the database
    *
-   * Note: individual records failing should not stop the remaining records from processing successfully.
-   *
    * @param {*} recordTypeUtils record type specific utils that contain the unique transformations, etc, for this type.
-   * @param {*} epicRecords epic records to process.
-   * @returns {object} status of the process operation for this record type.
+   * @param {*} epicRecord epic record to process.
+   * @returns {object} status of the process operation for this record.
    * @memberof EpicDataSource
    */
-  async processRecords(recordTypeUtils, epicRecords) {
-    if (!recordTypeUtils) {
-      throw Error('processRecords - required recordTypeUtils is null.');
-    }
+  async processRecord(recordTypeUtils, epicRecord) {
+    // set status defaults
+    let recordStatus = {};
 
-    if (!epicRecords) {
-      throw Error('processRecords - required epicRecords is null.');
-    }
-
-    const recordTypeStatus = { itemsProcessed: 0 };
-
-    for (let i = 0; i < epicRecords.length; i++) {
-      try {
-        // TODO fetch/stream epic documents somewhere around here?
-
-        let epicRecord = epicRecords[i];
-
-        // Fetch and add project data to the record;
-        const epicProject = await this.getRecordProject(epicRecord);
-        epicRecord = { ...epicRecord, project: epicProject };
-
-        // Perform any data transformations necessary to convert Epic record to NRPTI record
-        const nrptiRecord = await recordTypeUtils.transformRecord(epicRecord);
-
-        // Persist NRPTI record
-        const savedRecord = await recordTypeUtils.saveRecord(nrptiRecord);
-
-        if (savedRecord) {
-          recordTypeStatus.itemsProcessed++;
-        }
-      } catch (error) {
-        defaultLog.error(`processRecords - unexpected error: ${error.message}`);
-        // Do not re-throw error, as a single failure is not cause to stop the other records from processing
+    try {
+      if (!recordTypeUtils) {
+        throw Error('processRecord - required recordTypeUtils is null.');
       }
-    }
 
-    return recordTypeStatus;
+      if (!epicRecord) {
+        throw Error('processRecord - required epicRecord is null.');
+      }
+
+      // Fetch and add project data to the record;
+      const epicProject = await this.getRecordProject(epicRecord);
+      epicRecord = { ...epicRecord, project: epicProject };
+
+      // Perform any data transformations necessary to convert Epic record to NRPTI record
+      const nrptiRecord = await recordTypeUtils.transformRecord(epicRecord);
+
+      // Persist NRPTI record
+      const savedRecord = await recordTypeUtils.saveRecord(nrptiRecord);
+
+      if (savedRecord) {
+        this.status.itemsProcessed++;
+      } else {
+        throw Error('processRecord - savedRecord is null.');
+      }
+    } catch (error) {
+      recordStatus.epicId = epicRecord && epicRecord._id;
+      recordStatus.message = 'processRecord - unexpected error';
+      recordStatus.error = error.message;
+
+      // only add individual record status when an error occurs
+      this.status.individualRecordStatus.push(recordStatus);
+
+      // Do not re-throw error, as a single failure is not cause to stop the other records from processing
+      defaultLog.error(`processRecords - unexpected error: ${error.message}`);
+    }
   }
 
   /**
@@ -298,28 +294,6 @@ class EpicDataSource {
     }
 
     return response[0];
-  }
-
-  /**
-   * Reduce the individual record type statuses to get the overall total number of items and total number of items
-   * processed.
-   *
-   * @returns {{itemsProcessed: number, itemTotal: number}} status totals, or null.
-   * @memberof EpicDataSource
-   */
-  getStatusTotals() {
-    if (!this.status.typeStatus || !this.status.typeStatus.length) {
-      return null;
-    }
-
-    const typeStatusTotals = this.status.typeStatus.reduce((total, status) => {
-      return {
-        itemsProcessed: total.itemsProcessed + status.itemsProcessed,
-        itemTotal: total.itemTotal + status.itemTotal
-      };
-    });
-
-    return typeStatusTotals;
   }
 }
 
