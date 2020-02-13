@@ -8,8 +8,31 @@
         <p [innerHTML]="line"></p>
       </ng-container>
     </div>
+    <div >
+      <button
+        class="btn btn-primary mb-3"
+        type="button"
+        title="Apply filters"
+        (click)="togglePanel()"
+        >
+        Filter Results
+      </button>
+    </div>
   </section>
   <section>
-    <app-documents [pageType]="pageType"></app-documents>
+    <div class="row">
+      <div class="col" [hidden]="showpanel">
+        <app-explore-panel
+          #explorePanel
+          (hideSidePanel)="togglePanel()"
+          [filterSections]="filters"
+          (updateFilters)="filterChange($event)"
+          >
+        </app-explore-panel>
+      </div>
+      <div class="col">
+        <app-documents [pageType]="pageType"></app-documents>
+      </div>
+    </div>
   </section>
 </div>
