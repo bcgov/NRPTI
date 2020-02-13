@@ -29,9 +29,9 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
   public lngPublishSubtext = 'Not published';
 
   // Pick lists
-  public agenciesPicklist = Picklists.agenciesPicklist;
-  public authorsPicklist = Picklists.authorPicklist;
-  public outcomeStatusPicklist = Picklists.outcomeStatusPicklist;
+  public agencies = Picklists.agencyPicklist;
+  public authors = Picklists.authorPicklist;
+  public outcomeStatuses = Picklists.outcomeStatusPicklist;
 
   constructor(
     public route: ActivatedRoute,
@@ -67,7 +67,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
     }
     for (const flavour of this.currentRecord.flavours) {
       switch (flavour._schemaName) {
-        case ('SelfReportLNG'):
+        case 'SelfReportLNG':
           this.lngFlavour = flavour;
           this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
           this.lngFlavour.read.includes('public') && (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(new Date(this.lngFlavour.datePublished))}`);
@@ -87,8 +87,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
           this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))
-        ) ||
-        ''
+        ) || ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -123,11 +122,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
   togglePublish(flavour) {
     switch (flavour) {
       case 'lng':
-        if (this.lngPublishStatus === 'Unpublished') {
-          this.lngPublishStatus = 'Published';
-        } else {
-          this.lngPublishStatus = 'Unpublished';
-        }
+        this.lngPublishStatus = this.lngPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
         break;
       default:
         break;
@@ -177,8 +172,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
 
     if (!this.isEditing) {
       this.factoryService.createSelfReport(selfReport).subscribe(res => {
-        console.log(res[0][0]);
-        this.parResForErrors(res);
+        this.parseResForErrors(res);
         this.router.navigate(['records']);
       });
     } else {
@@ -187,16 +181,19 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
       this.lngFlavour && (selfReport.SelfReportLNG['_id'] = this.lngFlavour._id);
 
       this.factoryService.editSelfReport(selfReport).subscribe(res => {
-        console.log(res[0][0]);
-        this.parResForErrors(res);
+        this.parseResForErrors(res);
         this.router.navigate(['records', 'self-reports', this.currentRecord._id, 'detail']);
       });
     }
   }
 
-  private parResForErrors(res) {
+  private parseResForErrors(res) {
+    if (!res || !res.length || !res[0] || !res[0].length || !res[0][0]) {
+      alert('Failed to save record.');
+    }
+
     if (res[0][0].status === 'failure') {
-      alert('Master record failed to save.');
+      alert('Failed to save master record.');
     }
 
     if (res[0][0].flavours) {
@@ -207,7 +204,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
         }
       });
       if (flavourFailure) {
-        alert('One or more of your flavours have failed to save.');
+        alert('Failed to save one or more flavour records');
       }
     }
   }

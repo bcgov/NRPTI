@@ -29,9 +29,9 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
   public lngPublishSubtext = 'Not published';
 
   // Pick lists
-  public permitSubtypesPicklist = Picklists.permitSubtypesPicklist;
-  public agenciesPicklist = Picklists.agenciesPicklist;
-  public authorsPicklist = Picklists.authorPicklist;
+  public permitSubtypePicklist = Picklists.permitSubtypePicklist;
+  public agencies = Picklists.agencyPicklist;
+  public authors = Picklists.authorPicklist;
 
   constructor(
     public route: ActivatedRoute,
@@ -119,11 +119,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
   togglePublish(flavour) {
     switch (flavour) {
       case 'lng':
-        if (this.lngPublishStatus === 'Unpublished') {
-          this.lngPublishStatus = 'Published';
-        } else {
-          this.lngPublishStatus = 'Unpublished';
-        }
+        this.lngPublishStatus = this.lngPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
         break;
       default:
         break;
@@ -174,7 +170,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
 
     if (!this.isEditing) {
       this.factoryService.createPermit(permit).subscribe(res => {
-        console.log(res[0][0]);
         this.parseResForErrors(res);
         this.router.navigate(['records']);
       });
@@ -184,7 +179,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       this.lngFlavour && (permit.PermitLNG['_id'] = this.lngFlavour._id);
 
       this.factoryService.editPermit(permit).subscribe(res => {
-        console.log(res[0][0]);
         this.parseResForErrors(res);
         this.router.navigate(['records', 'permits', this.currentRecord._id, 'detail']);
       });
@@ -192,8 +186,12 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
   }
 
   private parseResForErrors(res) {
+    if (!res || !res.length || !res[0] || !res[0].length || !res[0][0]) {
+      alert('Failed to save record.');
+    }
+
     if (res[0][0].status === 'failure') {
-      alert('Master record failed to save.');
+      alert('Failed to save master record.');
     }
 
     if (res[0][0].flavours) {
@@ -204,7 +202,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
         }
       });
       if (flavourFailure) {
-        alert('One or more of your flavours have failed to save.');
+        alert('Failed to save one or more flavour records');
       }
     }
   }

@@ -30,9 +30,9 @@ export class EpicProjectIds {
 }
 
 export class Picklists {
-  public static readonly orderSubtypesPicklist = ['Cease', 'Remedy', 'Stop Work', 'None', 'Other'];
-  public static readonly permitSubtypesPicklist = ['General', 'Ancillary Site', 'Water', 'Road', 'Investigative Use'];
-  public static readonly certificateSubtypesPicklist = [
+  public static readonly orderSubtypePicklist = ['Cease', 'Remedy', 'Stop Work', 'None', 'Other'];
+  public static readonly permitSubtypePicklist = ['General', 'Ancillary Site', 'Water', 'Road', 'Investigative Use'];
+  public static readonly certificateSubtypePicklist = [
     'General',
     'Amendment',
     'Project Description',
@@ -40,7 +40,7 @@ export class Picklists {
     'Other'
   ];
 
-  public static readonly agenciesPicklist = [
+  public static readonly agencyPicklist = [
     'Environmental Assessment Office',
     'BC Oil and Gas Commission',
     'Agricultural Land Commission',
