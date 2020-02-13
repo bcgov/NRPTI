@@ -8,7 +8,7 @@ const EPIC_RECORD_TYPE = Object.freeze({
       type: { name: 'Order', typeId: '5cf00c03a266b7e1877504d1' },
       milestone: { name: 'Compliance & Enforcement', milestoneId: '5cf00c03a266b7e1877504ef' },
       getUtil: (...args) => {
-        return new (require('./epic-orders'))(...args);
+        return new (require('./orders-utils'))(...args);
       }
     },
     {
@@ -16,7 +16,7 @@ const EPIC_RECORD_TYPE = Object.freeze({
       type: { name: 'Order', typeId: '5cf00c03a266b7e1877504d1' },
       milestone: { name: 'Other', milestoneId: '5d0d212c7d50161b92a80eed' },
       getUtil: (...args) => {
-        return new (require('./epic-orders-other'))(...args);
+        return new (require('./orders-other-utils'))(...args);
       }
     }
   ],
@@ -26,7 +26,7 @@ const EPIC_RECORD_TYPE = Object.freeze({
       type: { name: 'Inspection Record', typeId: '5cf00c03a266b7e1877504d9' },
       milestone: { name: 'Compliance & Enforcement', milestoneId: '5cf00c03a266b7e1877504ef' },
       getUtil: (...args) => {
-        return new (require('./epic-inspections'))(...args);
+        return new (require('./inspections-utils'))(...args);
       }
     }
   ],
@@ -36,7 +36,7 @@ const EPIC_RECORD_TYPE = Object.freeze({
       type: { name: 'Certificate Package', typeId: '5cf00c03a266b7e1877504d5' },
       milestone: { name: 'Certificate', milestoneId: '5cf00c03a266b7e1877504eb' },
       getUtil: (...args) => {
-        return new (require('./epic-certificates'))(...args);
+        return new (require('./certificates-utils'))(...args);
       }
     },
     {
@@ -44,7 +44,7 @@ const EPIC_RECORD_TYPE = Object.freeze({
       type: { name: 'Amendment Package', typeId: '5cf00c03a266b7e1877504d7' },
       milestone: { name: 'Amendment', milestoneId: '5cf00c03a266b7e1877504f2' },
       getUtil: (...args) => {
-        return new (require('./epic-certificates-amendment'))(...args);
+        return new (require('./certificates-amendment-utils'))(...args);
       }
     }
   ],
@@ -54,7 +54,7 @@ const EPIC_RECORD_TYPE = Object.freeze({
       type: { name: 'Plan', typeId: '5cf00c03a266b7e1877504ce' },
       milestone: { name: 'Post-Decision Materials', milestoneId: '5cf00c03a266b7e1877504f1' },
       getUtil: (...args) => {
-        return new (require('./epic-management-plans'))(...args);
+        return new (require('./management-plans-utils'))(...args);
       }
     },
 
@@ -63,7 +63,7 @@ const EPIC_RECORD_TYPE = Object.freeze({
       type: { name: 'Management Plan', typeId: '5df79dd77b5abbf7da6f51c2' },
       milestone: { name: 'Post-Decision Materials', milestoneId: '5df79dd77b5abbf7da6f51fa' },
       getUtil: (...args) => {
-        return new (require('./epic-management-plans'))(...args);
+        return new (require('./management-plans-utils'))(...args);
       }
     }
   ],

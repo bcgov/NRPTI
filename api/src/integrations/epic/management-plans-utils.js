@@ -1,37 +1,37 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const defaultLog = require('../../utils/logger')('epic-orders');
+const defaultLog = require('../../utils/logger')('epic-management-plans');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const EpicUtils = require('./epic-utils');
 
 /**
- * Epic Order record handler for { type: 'Order', milestone: 'Compliance and Enforcement' }.
+ * Epic ManagementPlan record handler for { type: 'ManagementPlan Package', milestone: 'ManagementPlan' }.
  *
  * Must contain the following functions:
- * - transformRecord: (object) => Order
- * - saveRecord: (Order) => any
+ * - transformRecord: (object) => ManagementPlan
+ * - saveRecord: (ManagementPlan) => any
  *
- * @class EpicOrders
+ * @class ManagementPlans
  */
-class EpicOrders {
+class ManagementPlans {
   /**
-   * Creates an instance of EpicOrders.
+   * Creates an instance of ManagementPlans.
    *
    * @param {*} auth_payload user information for auditing
-   * @memberof EpicOrders
+   * @memberof ManagementPlans
    */
   constructor(auth_payload) {
     this.auth_payload = auth_payload;
   }
 
   /**
-   * Transform an Epic order record into a NRPTI Order record.
+   * Transform an Epic management plan record into a NRPTI ManagementPlan record.
    *
-   * @param {object} epicRecord Epic order record (required)
-   * @returns {Order} NRPTI order record.
+   * @param {object} epicRecord Epic management plan record (required)
+   * @returns {ManagementPlan} NRPTI management plan record.
    * @throws {Error} if record is not provided.
-   * @memberof EpicOrders
+   * @memberof ManagementPlans
    */
   async transformRecord(epicRecord) {
     if (!epicRecord) {
@@ -41,19 +41,8 @@ class EpicOrders {
     // Apply common Epic pre-processing/transformations
     epicRecord = EpicUtils.preTransformRecord(epicRecord);
 
-    // Generate a link that will get us the document when placed in an href.
-    const attachments = [];
-    if (epicRecord._id && epicRecord.documentFileName) {
-      attachments.push({
-        url: `https://projects.eao.gov.bc.ca/api/document/${epicRecord._id}/fetch/${encodeURIComponent(
-          epicRecord.documentFileName
-        )}`,
-        fileName: epicRecord.documentFileName
-      });
-    }
-
     return {
-      _schemaName: RECORD_TYPE.Order._schemaName,
+      _schemaName: RECORD_TYPE.ManagementPlan._schemaName,
       _epicProjectId: (epicRecord.project && epicRecord.project._id) || '',
       _sourceRefId: epicRecord._id || '',
       _epicMilestoneId: epicRecord.milestone || '',
@@ -62,19 +51,14 @@ class EpicOrders {
       write: ['sysadmin'],
 
       recordName: epicRecord.displayName || '',
-      recordType: RECORD_TYPE.Order.displayName,
-      // recordSubtype: // No mapping
-      dateIssued: epicRecord.datePosted || null,
-      issuingAgency: 'Environmental Assessment Office',
+      recordType: RECORD_TYPE.ManagementPlan.displayName,
+      dateIssued: epicRecord.documentDate || null,
+      agency: 'Environmental Assessment Office',
       author: epicRecord.documentAuthor || '',
       legislation: (epicRecord.project && epicRecord.project.legislation) || '',
-      // issuedTo: // No mapping
       projectName: (epicRecord.project && epicRecord.project.name) || '',
       location: (epicRecord.project && epicRecord.project.location) || '',
       centroid: (epicRecord.project && epicRecord.project.centroid) || '',
-      // outcomeStatus: // No mapping
-      // outcomeDescription: // No mapping
-      attachments: attachments,
 
       dateAdded: new Date(),
       dateUpdated: new Date(),
@@ -86,32 +70,33 @@ class EpicOrders {
   }
 
   /**
-   * Persist a NRPTI Order record to the database.
+   * Persist a NRPTI ManagementPlan record to the database.
    *
    * @async
-   * @param {Order} orderRecord NRPTI Order record (required)
+   * @param {ManagementPlan} managementPlanRecord NRPTI ManagementPlan record (required)
    * @returns {string} status of the add/update operations.
-   * @memberof EpicOrders
+   * @memberof ManagementPlans
    */
-  async saveRecord(orderRecord) {
-    if (!orderRecord) {
+  async saveRecord(managementPlanRecord) {
+    if (!managementPlanRecord) {
       throw Error('saveRecord - required record must be non-null.');
     }
 
     try {
-      const Order = mongoose.model(RECORD_TYPE.Order._schemaName);
+      const ManagementPlan = mongoose.model(RECORD_TYPE.ManagementPlan._schemaName);
 
-      const record = await Order.findOneAndUpdate(
-        { _schemaName: RECORD_TYPE.Order._schemaName, _sourceRefId: orderRecord._sourceRefId },
-        { $set: orderRecord },
+      const record = await ManagementPlan.findOneAndUpdate(
+        { _schemaName: RECORD_TYPE.ManagementPlan._schemaName, _sourceRefId: managementPlanRecord._sourceRefId },
+        { $set: managementPlanRecord },
         { upsert: true, new: true }
       );
 
       return record;
     } catch (error) {
-      defaultLog.error(`Failed to save Epic Order record: ${error.message}`);
+      defaultLog.error(`Failed to save Epic ManagementPlan record: ${error.message}`);
+      defaultLog.debug(`Failed to save Epic ManagementPlan record - error.stack: ${error.stack}`);
     }
   }
 }
 
-module.exports = EpicOrders;
+module.exports = ManagementPlans;
