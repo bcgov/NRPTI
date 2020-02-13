@@ -54,6 +54,7 @@ export class ConstructionPlanLNGDetailComponent extends RecordComponent implemen
         takeUntil(this.ngUnsubscribe),
         catchError(error => {
           console.log('Publish error:', error);
+          alert('Failed to publish record.');
           return of(null);
         })
       )
@@ -81,6 +82,7 @@ export class ConstructionPlanLNGDetailComponent extends RecordComponent implemen
         takeUntil(this.ngUnsubscribe),
         catchError(error => {
           console.log('Unpublish error:', error);
+          alert('Failed to unpublish record.');
           return of(null);
         })
       )
