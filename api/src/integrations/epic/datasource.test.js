@@ -1,25 +1,25 @@
-const EpicDataSource = require('./epic-datasource');
+const DataSource = require('./datasource');
 
-describe('EpicDataSource', () => {
+describe('DataSource', () => {
   describe('constructor', () => {
     it('sets params', () => {
-      const epicDataSource = new EpicDataSource(null, { params: 1 });
-      expect(epicDataSource.params).toEqual({ params: 1 });
+      const dataSource = new DataSource(null, { params: 1 });
+      expect(dataSource.params).toEqual({ params: 1 });
     });
 
     it('sets default params if not provided', () => {
-      const epicDataSource = new EpicDataSource();
-      expect(epicDataSource.params).toEqual({});
+      const dataSource = new DataSource();
+      expect(dataSource.params).toEqual({});
     });
 
     it('sets auth_payload', () => {
-      const epicDataSource = new EpicDataSource({ auth_payload: 'some payload' }, { params: 1 });
-      expect(epicDataSource.auth_payload).toEqual({ auth_payload: 'some payload' });
+      const dataSource = new DataSource({ auth_payload: 'some payload' }, { params: 1 });
+      expect(dataSource.auth_payload).toEqual({ auth_payload: 'some payload' });
     });
 
     it('sets default status fields', () => {
-      const epicDataSource = new EpicDataSource();
-      expect(epicDataSource.status).toEqual({ itemsProcessed: 0, itemTotal: 0, typeStatus: [] });
+      const dataSource = new DataSource();
+      expect(dataSource.status).toEqual({ itemsProcessed: 0, itemTotal: 0, typeStatus: [] });
     });
   });
 
@@ -30,11 +30,11 @@ describe('EpicDataSource', () => {
         throw Error('unexpected error!');
       });
 
-      const epicDataSource = new EpicDataSource();
+      const dataSource = new DataSource();
 
-      epicDataSource._updateRecords = mock_updateRecords;
+      dataSource._updateRecords = mock_updateRecords;
 
-      const status = await epicDataSource.updateRecords();
+      const status = await dataSource.updateRecords();
 
       expect(status).toEqual({
         message: 'updateRecords - unexpected error',
@@ -53,13 +53,13 @@ describe('EpicDataSource', () => {
         throw Error('unexpected error!');
       });
 
-      const epicDataSource = new EpicDataSource();
+      const dataSource = new DataSource();
 
-      epicDataSource.updateRecordType = mockUpdateRecordType;
+      dataSource.updateRecordType = mockUpdateRecordType;
 
-      await epicDataSource._updateRecords([{}]);
+      await dataSource._updateRecords([{}]);
 
-      expect(epicDataSource.status).toEqual({
+      expect(dataSource.status).toEqual({
         message: '_updateRecords - unexpected error',
         error: 'unexpected error!',
         itemsProcessed: 0,
@@ -71,10 +71,10 @@ describe('EpicDataSource', () => {
 
   describe('updateRecordType', () => {
     it('catches any thrown exceptions and returns gracefully', async () => {
-      const epicDataSource = new EpicDataSource();
+      const dataSource = new DataSource();
 
       // calling updateRecordType with null parameter will cause an exception
-      const recordTypeStatus = await epicDataSource.updateRecordType();
+      const recordTypeStatus = await dataSource.updateRecordType();
 
       expect(recordTypeStatus).toEqual({
         message: 'updateRecordType - unexpected error',
@@ -91,24 +91,24 @@ describe('EpicDataSource', () => {
         return Promise.resolve([{ searchResults: [], meta: 'meta!' }]);
       });
 
-      const epicDataSource = new EpicDataSource();
+      const dataSource = new DataSource();
 
-      // mock EpicDataSource functions called by updateRecordType()
-      epicDataSource.getBaseParams = jest.fn();
-      epicDataSource.getIntegrationUrl = jest.fn(() => {
+      // mock DataSource functions called by updateRecordType()
+      dataSource.getBaseParams = jest.fn();
+      dataSource.getIntegrationUrl = jest.fn(() => {
         return { href: '' };
       });
-      epicDataSource.getHostname = jest.fn();
-      epicDataSource.getEpicSearchPathname = jest.fn();
-      epicDataSource.getEpicProjectPathname = jest.fn();
-      epicDataSource.processRecords = jest.fn();
+      dataSource.getHostname = jest.fn();
+      dataSource.getSearchPathname = jest.fn();
+      dataSource.getProjectPathname = jest.fn();
+      dataSource.processRecords = jest.fn();
 
       const recordType = { type: { typeId: '123' }, milestone: { milestoneId: '123' }, getUtil: jest.fn() };
 
-      const recordTypeStatus = await epicDataSource.updateRecordType(recordType);
+      const recordTypeStatus = await dataSource.updateRecordType(recordType);
 
       expect(recordType.getUtil).not.toHaveBeenCalled();
-      expect(epicDataSource.processRecords).not.toHaveBeenCalled();
+      expect(dataSource.processRecords).not.toHaveBeenCalled();
 
       expect(recordTypeStatus).toEqual({
         message: 'updateRecordType - no records found',
@@ -130,22 +130,22 @@ describe('EpicDataSource', () => {
         return Promise.resolve(mockResponse);
       });
 
-      const epicDataSource = new EpicDataSource(null, { param1: 1 });
+      const dataSource = new DataSource(null, { param1: 1 });
 
-      // mock EpicDataSource functions called by updateRecordType()
-      epicDataSource.getBaseParams = jest.fn(() => {
+      // mock DataSource functions called by updateRecordType()
+      dataSource.getBaseParams = jest.fn(() => {
         return { baseParams: 1 };
       });
-      epicDataSource.getIntegrationUrl = jest.fn(() => {
+      dataSource.getIntegrationUrl = jest.fn(() => {
         return { href: 'url' };
       });
-      epicDataSource.getHostname = jest.fn(() => {
+      dataSource.getHostname = jest.fn(() => {
         return 'hostname';
       });
-      epicDataSource.getEpicSearchPathname = jest.fn(() => {
+      dataSource.getSearchPathname = jest.fn(() => {
         return 'searchPathname';
       });
-      epicDataSource.processRecords = jest.fn(() => {
+      dataSource.processRecords = jest.fn(() => {
         return {
           processStatus: 'someStatus'
         };
@@ -153,18 +153,18 @@ describe('EpicDataSource', () => {
 
       const recordType = { type: { typeId: '111' }, milestone: { milestoneId: '222' }, getUtil: jest.fn(() => 'utils') };
 
-      const status = await epicDataSource.updateRecordType(recordType);
+      const status = await dataSource.updateRecordType(recordType);
 
-      expect(epicDataSource.getBaseParams).toHaveBeenCalledWith('111', '222', Number.MAX_SAFE_INTEGER, 0);
+      expect(dataSource.getBaseParams).toHaveBeenCalledWith('111', '222', Number.MAX_SAFE_INTEGER, 0);
 
-      expect(epicDataSource.getIntegrationUrl).toHaveBeenCalledWith('hostname', 'searchPathname', {
+      expect(dataSource.getIntegrationUrl).toHaveBeenCalledWith('hostname', 'searchPathname', {
         param1: 1,
         baseParams: 1
       });
 
       expect(recordType.getUtil).toHaveBeenCalledTimes(1);
 
-      expect(epicDataSource.processRecords).toHaveBeenCalledWith('utils', [
+      expect(dataSource.processRecords).toHaveBeenCalledWith('utils', [
         { _id: '123' },
         { _id: '456' },
         { _id: '789' }
@@ -182,25 +182,25 @@ describe('EpicDataSource', () => {
 
   describe('processRecords', () => {
     it('throws an error if recordTypeUtils is null', async () => {
-      const epicDataSource = new EpicDataSource();
+      const dataSource = new DataSource();
 
-      await expect(epicDataSource.processRecords(null, [])).rejects.toThrow(
+      await expect(dataSource.processRecords(null, [])).rejects.toThrow(
         new Error('processRecords - required recordTypeUtils is null.')
       );
     });
 
     it('throws an error if epicRecords is null', async () => {
-      const epicDataSource = new EpicDataSource();
+      const dataSource = new DataSource();
 
-      await expect(epicDataSource.processRecords({}, null)).rejects.toThrow(
+      await expect(dataSource.processRecords({}, null)).rejects.toThrow(
         new Error('processRecords - required epicRecords is null.')
       );
     });
 
     it('transforms, saves, and updates the status for each epic record', async () => {
-      const epicDataSource = new EpicDataSource();
+      const dataSource = new DataSource();
 
-      epicDataSource.getRecordProject = jest.fn(record => {
+      dataSource.getRecordProject = jest.fn(record => {
         return { name: record._id };
       });
 
@@ -216,10 +216,10 @@ describe('EpicDataSource', () => {
 
       const epicRecords = [{ _id: '123' }, { _id: '456' }];
 
-      const recordTypeStatus = await epicDataSource.processRecords(recordTypeUtils, epicRecords);
+      const recordTypeStatus = await dataSource.processRecords(recordTypeUtils, epicRecords);
 
-      expect(epicDataSource.getRecordProject).toHaveBeenNthCalledWith(1, { _id: '123' });
-      expect(epicDataSource.getRecordProject).toHaveBeenNthCalledWith(2, { _id: '456' });
+      expect(dataSource.getRecordProject).toHaveBeenNthCalledWith(1, { _id: '123' });
+      expect(dataSource.getRecordProject).toHaveBeenNthCalledWith(2, { _id: '456' });
 
       expect(recordTypeUtils.transformRecord).toHaveBeenNthCalledWith(1, {
         _id: '123',
@@ -245,9 +245,9 @@ describe('EpicDataSource', () => {
     });
 
     it('continues processing records even if one record fails and throws an exception', async () => {
-      const epicDataSource = new EpicDataSource();
+      const dataSource = new DataSource();
 
-      epicDataSource.getRecordProject = jest.fn(record => {
+      dataSource.getRecordProject = jest.fn(record => {
         return { name: record._id };
       });
 
@@ -266,10 +266,10 @@ describe('EpicDataSource', () => {
 
       const epicRecords = [{ _id: '123' }, { _id: '456' }];
 
-      const recordTypeStatus = await epicDataSource.processRecords(recordTypeUtils, epicRecords);
+      const recordTypeStatus = await dataSource.processRecords(recordTypeUtils, epicRecords);
 
-      expect(epicDataSource.getRecordProject).toHaveBeenNthCalledWith(1, { _id: '123' });
-      expect(epicDataSource.getRecordProject).toHaveBeenNthCalledWith(2, { _id: '456' });
+      expect(dataSource.getRecordProject).toHaveBeenNthCalledWith(1, { _id: '123' });
+      expect(dataSource.getRecordProject).toHaveBeenNthCalledWith(2, { _id: '456' });
 
       expect(recordTypeUtils.transformRecord).toHaveBeenNthCalledWith(1, { _id: '123', project: { name: '123' } });
       expect(recordTypeUtils.transformRecord).toHaveBeenNthCalledWith(2, { _id: '456', project: { name: '456' } });
@@ -288,32 +288,32 @@ describe('EpicDataSource', () => {
 
   describe('getHostname', () => {
     it('returns hostname for epic urls', () => {
-      const epicDataSource = new EpicDataSource();
-      const pathName = epicDataSource.getHostname();
+      const dataSource = new DataSource();
+      const pathName = dataSource.getHostname();
       expect(pathName).toEqual(process.env.EPIC_API_HOSTNAME || 'eagle-prod.pathfinder.gov.bc.ca');
     });
   });
 
-  describe('getEpicSearchPathname', () => {
+  describe('getSearchPathname', () => {
     it('returns epic search pathname', () => {
-      const epicDataSource = new EpicDataSource();
-      const pathName = epicDataSource.getEpicSearchPathname();
+      const dataSource = new DataSource();
+      const pathName = dataSource.getSearchPathname();
       expect(pathName).toEqual(process.env.EPIC_API_SEARCH_PATHNAME || '/api/public/search');
     });
   });
 
-  describe('getEpicProjectPathname', () => {
+  describe('getProjectPathname', () => {
     it('returns epic project pathname', () => {
-      const epicDataSource = new EpicDataSource();
-      const pathName = epicDataSource.getEpicProjectPathname('123456');
+      const dataSource = new DataSource();
+      const pathName = dataSource.getProjectPathname('123456');
       expect(pathName).toEqual(`${process.env.EPIC_API_PROJECT_PATHNAME || '/api/project'}/123456`);
     });
   });
 
   describe('getBaseParams', () => {
     it('returns base params', () => {
-      const epicDataSource = new EpicDataSource();
-      const baseParams = epicDataSource.getBaseParams('123', '456', 22, 7);
+      const dataSource = new DataSource();
+      const baseParams = dataSource.getBaseParams('123', '456', 22, 7);
       expect(baseParams).toEqual({
         dataset: 'Document',
         populate: false,
@@ -326,8 +326,8 @@ describe('EpicDataSource', () => {
 
   describe('getIntegrationUrl', () => {
     it('builds and returns an https url', () => {
-      const epicDataSource = new EpicDataSource();
-      const url = epicDataSource.getIntegrationUrl('www.google.com', '/some/path/to/stuff', {
+      const dataSource = new DataSource();
+      const url = dataSource.getIntegrationUrl('www.google.com', '/some/path/to/stuff', {
         param1: 1,
         param2: 'hello'
       });

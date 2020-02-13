@@ -7,14 +7,14 @@ const EPIC_RECORD_TYPE = require('./epic-record-type-enum');
 
 const MAX_PAGE_SIZE = Number.MAX_SAFE_INTEGER;
 
-class EpicDataSource {
+class DataSource {
   /**
-   * Creates an instance of EpicDataSource.
+   * Creates an instance of DataSource.
    *
    * @param {*} auth_payload information about the user account that started this update.
    * @param {*} [params=null] params to filter epic records (optional).
    * @param {*} [recordTypes=null] specific record types to update (optional).
-   * @memberof EpicDataSource
+   * @memberof DataSource
    */
   constructor(auth_payload, params = null, recordTypes = null) {
     this.auth_payload = auth_payload;
@@ -32,7 +32,7 @@ class EpicDataSource {
    *
    * @async
    * @returns {object} Overall status of the update + array of statuses by record type + array of any failed records.
-   * @memberof EpicDataSource
+   * @memberof DataSource
    */
   async updateRecords() {
     try {
@@ -74,7 +74,7 @@ class EpicDataSource {
    * @async
    * @param {*} recordType epic record type to update.
    * @returns {object} status of the update operation for this record type.
-   * @memberof EpicDataSource
+   * @memberof DataSource
    */
   async updateRecordType(recordType) {
     // set status defaults
@@ -90,7 +90,7 @@ class EpicDataSource {
         ...this.params,
         ...this.getBaseParams(recordType.type.typeId, recordType.milestone.milestoneId, MAX_PAGE_SIZE, 0)
       };
-      const url = this.getIntegrationUrl(this.getHostname(), this.getEpicSearchPathname(), queryParams);
+      const url = this.getIntegrationUrl(this.getHostname(), this.getSearchPathname(), queryParams);
 
       recordTypeStatus.url = url.href;
 
@@ -151,7 +151,7 @@ class EpicDataSource {
    * @param {*} recordTypeUtils record type specific utils that contain the unique transformations, etc, for this type.
    * @param {*} epicRecord epic record to process.
    * @returns {object} status of the process operation for this record.
-   * @memberof EpicDataSource
+   * @memberof DataSource
    */
   async processRecord(recordTypeUtils, epicRecord) {
     // set status defaults
@@ -202,7 +202,7 @@ class EpicDataSource {
    * Example: 'my.api.com'
    *
    * @returns {string} Epic API hostname.
-   * @memberof EpicDataSource
+   * @memberof DataSource
    */
   getHostname() {
     return process.env.EPIC_API_HOSTNAME || 'eagle-prod.pathfinder.gov.bc.ca';
@@ -216,9 +216,9 @@ class EpicDataSource {
    * Example: '/api/some/route'
    *
    * @returns {string} Epic api inspections path.
-   * @memberof EpicDataSource
+   * @memberof DataSource
    */
-  getEpicSearchPathname() {
+  getSearchPathname() {
     return process.env.EPIC_API_SEARCH_PATHNAME || '/api/public/search';
   }
 
@@ -231,10 +231,10 @@ class EpicDataSource {
    *
    * @param {*} projectId epic project _id
    * @returns
-   * @memberof EpicDataSource
+   * @memberof DataSource
    */
-  getEpicProjectPathname(projectId) {
-    return `${process.env.EPIC_API_PROJECT_PATHNAME || '/api/project'}/${projectId}`;
+  getProjectPathname(projectId) {
+    return `${process.env.EPIC_API_PROJECT_PATHNAME || '/api/public/project'}/${projectId}`;
   }
 
   /**
@@ -243,7 +243,7 @@ class EpicDataSource {
    * @param {string} typeId record type _id.
    * @param {string} milestoneId record milestone _id.
    * @returns {object} base record query params.
-   * @memberof EpicDataSource
+   * @memberof DataSource
    */
   getBaseParams(typeId, milestoneId, pageSize, pageNum) {
     return {
@@ -264,7 +264,7 @@ class EpicDataSource {
    * @param {string} pathname the url pathname. Example: '/api/some/route'
    * @param {object} queryParams the url query params. Example: { type: 'document', other: true }
    * @returns {URL} integration URL (see https://nodejs.org/api/url.html#url_url)
-   * @memberof EpicDataSource
+   * @memberof DataSource
    */
   getIntegrationUrl(hostname, pathname, queryParams) {
     const query = QS.stringify(queryParams);
@@ -280,21 +280,21 @@ class EpicDataSource {
    * @param {*} epicRecord
    * @returns epic project data
    * @throws {Error} if record project data cannot be found.
-   * @memberof EpicDataSource
+   * @memberof DataSource
    */
   async getRecordProject(epicRecord) {
-    const url = this.getIntegrationUrl(this.getHostname(), `${this.getEpicProjectPathname(epicRecord.project)}`, {
+    const url = this.getIntegrationUrl(this.getHostname(), `${this.getProjectPathname(epicRecord.project)}`, {
       fields: 'name|location|centroid|legislation'
     });
 
     const response = await integrationUtils.getRecords(url);
 
     if (!response || !response[0]) {
-      throw Error('getRecordProject - failed to fetch Project dataset.');
+      throw Error('getRecordProject - failed to fetch Project.');
     }
 
     return response[0];
   }
 }
 
-module.exports = EpicDataSource;
+module.exports = DataSource;

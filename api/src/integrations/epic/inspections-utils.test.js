@@ -1,27 +1,27 @@
-const EpicOrders = require('./epic-orders');
+const InspectionsUtils = require('./inspectionsUtils-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
-describe('EpicOrders', () => {
+describe('InspectionsUtils', () => {
   describe('transformRecord', () => {
     it('throws error if no epicRecord provided', async () => {
-      const epicOrders = new EpicOrders();
+      const inspectionsUtils = new InspectionsUtils();
 
       try {
-        await epicOrders.transformRecord();
+        await inspectionsUtils.transformRecord();
       } catch (error) {
         expect(error).toEqual(new Error('transformRecord - required record must be non-null.'));
       }
     });
 
     it('returns a default nrpti record when empty epicRecord provided', async () => {
-      const epicOrders = new EpicOrders();
+      const inspectionsUtils = new InspectionsUtils();
 
       const epicRecord = {};
 
-      const actualRecord = await epicOrders.transformRecord(epicRecord);
+      const actualRecord = await inspectionsUtils.transformRecord(epicRecord);
 
       const expectedRecord = {
-        _schemaName: RECORD_TYPE.Order._schemaName,
+        _schemaName: RECORD_TYPE.Inspection._schemaName,
 
         _epicProjectId: '',
         _sourceRefId: '',
@@ -31,7 +31,7 @@ describe('EpicOrders', () => {
         write: ['sysadmin'],
 
         recordName: '',
-        recordType: RECORD_TYPE.Order.displayName,
+        recordType: RECORD_TYPE.Inspection.displayName,
         dateIssued: null,
         issuingAgency: 'Environmental Assessment Office',
         author: '',
@@ -52,7 +52,7 @@ describe('EpicOrders', () => {
     });
 
     it('returns a nrpti record with all supported epicRecord fields populated', async () => {
-      const epicOrders = new EpicOrders();
+      const inspectionsUtils = new InspectionsUtils();
 
       const epicRecord = {
         _id: 123,
@@ -65,10 +65,10 @@ describe('EpicOrders', () => {
         milestone: 'milestone'
       };
 
-      const actualRecord = await epicOrders.transformRecord(epicRecord);
+      const actualRecord = await inspectionsUtils.transformRecord(epicRecord);
 
       const expectedRecord = {
-        _schemaName: RECORD_TYPE.Order._schemaName,
+        _schemaName: RECORD_TYPE.Inspection._schemaName,
 
         _epicProjectId: '',
         _sourceRefId: 123,
@@ -78,7 +78,7 @@ describe('EpicOrders', () => {
         write: ['sysadmin'],
 
         recordName: 'docDisplay',
-        recordType: RECORD_TYPE.Order.displayName,
+        recordType: RECORD_TYPE.Inspection.displayName,
         dateIssued: null,
         issuingAgency: 'Environmental Assessment Office',
         author: '',
@@ -100,14 +100,14 @@ describe('EpicOrders', () => {
   });
 
   describe('saveRecord', () => {
-    it('throws error if no order record provided', async () => {
-      const epicOrders = new EpicOrders();
-      await expect(epicOrders.saveRecord()).rejects.toThrow(
+    it('throws error if no inspection record provided', async () => {
+      const inspectionsUtils = new InspectionsUtils();
+      await expect(inspectionsUtils.saveRecord()).rejects.toThrow(
         new Error('saveRecord - required record must be non-null.')
       );
     });
 
-    it('catches any errors thrown when creating/saving the order record', async () => {
+    it('catches any errors thrown when creating/saving the inspection record', async () => {
       // create mock save function
       const mockFindOneAndUpdate = jest.fn(() => {
         throw Error('this should not be thrown');
@@ -119,14 +119,14 @@ describe('EpicOrders', () => {
         return { findOneAndUpdate: mockFindOneAndUpdate };
       });
 
-      const epicOrders = new EpicOrders();
+      const inspectionsUtils = new InspectionsUtils();
 
-      const orderRecord = { _id: '321' };
+      const inspectionRecord = { _id: '321' };
 
-      await expect(epicOrders.saveRecord(orderRecord)).resolves.not.toThrow();
+      await expect(inspectionsUtils.saveRecord(inspectionRecord)).resolves.not.toThrow();
     });
 
-    it('creates and saves a new order record', async () => {
+    it('creates and saves a new inspection record', async () => {
       // create mock save function
       const mockFindOneAndUpdate = jest.fn(() => Promise.resolve('saved!'));
 
@@ -136,11 +136,11 @@ describe('EpicOrders', () => {
         return { findOneAndUpdate: mockFindOneAndUpdate };
       });
 
-      const epicOrders = new EpicOrders();
+      const inspectionsUtils = new InspectionsUtils();
 
-      const orderRecord = { _id: '123' };
+      const inspectionRecord = { _id: '123' };
 
-      const dbStatus = await epicOrders.saveRecord(orderRecord);
+      const dbStatus = await inspectionsUtils.saveRecord(inspectionRecord);
 
       expect(mockFindOneAndUpdate).toHaveBeenCalledTimes(1);
       expect(dbStatus).toEqual('saved!');
