@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { takeUntil, catchError } from 'rxjs/operators';
-import { AdministrativePenaltyLNG } from '../../../../../../common/src/app/models/lng/administrativePenalty-lng';
+import { AdministrativePenaltyLNG } from '../../../../../../common/src/app/models/lng/administrative-penalty-lng';
 import { Subject, of } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecordComponent } from '../../utils/record-component';

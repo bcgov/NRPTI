@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { takeUntil, catchError } from 'rxjs/operators';
-import { RestorativeJusticeLNG } from '../../../../../../common/src/app/models/lng/restorativeJustice-lng';
+import { RestorativeJusticeLNG } from '../../../../../../common/src/app/models/lng/restorative-justice-lng';
 import { Subject, of } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecordComponent } from '../../utils/record-component';
