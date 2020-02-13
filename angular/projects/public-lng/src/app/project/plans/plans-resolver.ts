@@ -19,6 +19,27 @@ export class PlansResolver implements Resolve<Observable<object>> {
 
     const project = this._apiService.getProjectObjectId(route.parent.url[1].path);
 
+    // tslint:disable-next-line: prefer-const
+    let filterParams = {...route.params};
+
+    // Clear out all the standard table template params
+    delete filterParams.sortBy;
+    delete filterParams.currentPage;
+    delete filterParams.pageSize;
+    delete filterParams.filter;
+    delete filterParams.keywords;
+    delete filterParams.dataset;
+    delete filterParams.ms;
+
+    if (filterParams.dateRangeFromFilter) {
+      filterParams['_master.dateRangeFromFilterdateIssued'] = filterParams.dateRangeFromFilter;
+    }
+    if (filterParams.dateRangeToFilter) {
+      filterParams['_master.dateRangeToFilterdateIssued'] = filterParams.dateRangeToFilter;
+    }
+    delete filterParams.dateRangeFromFilter;
+    delete filterParams.dateRangeToFilter;
+
     return this._searchService.getSearchResults(
       this._apiService.apiPath,
       '',
@@ -30,7 +51,8 @@ export class PlansResolver implements Resolve<Observable<object>> {
       {
         '_master._epicProjectId': project
       },
-      false
+      false,
+      filterParams
     );
   }
 }
