@@ -90,7 +90,7 @@ function getDataSourceConfig(dataSourceType) {
     case 'epic':
       return {
         dataSourceLabel: 'epic',
-        dataSourceClass: require('../integrations/epic/epic-datasource')
+        dataSourceClass: require('../integrations/epic/datasource')
       };
     default:
       return null;

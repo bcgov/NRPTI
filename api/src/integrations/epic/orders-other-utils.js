@@ -1,37 +1,37 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const defaultLog = require('../../utils/logger')('epic-inspections');
+const defaultLog = require('../../utils/logger')('epic-orders');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const EpicUtils = require('./epic-utils');
 
 /**
- * Epic Inspection record handler for { type: 'Inspection Record', milestone: 'Compliance & Enforcement' }.
+ * Epic Order record handler for { type: 'Order', milestone: 'Other' }.
  *
  * Must contain the following functions:
- * - transformRecord: (object) => Inspection
- * - saveRecord: (Inspection) => any
+ * - transformRecord: (object) => Order
+ * - saveRecord: (Order) => any
  *
- * @class EpicInspections
+ * @class OrdersOther
  */
-class EpicInspections {
+class OrdersOther {
   /**
-   * Creates an instance of EpicInspections.
+   * Creates an instance of OrdersOther.
    *
    * @param {*} auth_payload user information for auditing
-   * @memberof EpicInspections
+   * @memberof OrdersOther
    */
   constructor(auth_payload) {
     this.auth_payload = auth_payload;
   }
 
   /**
-   * Transform an Epic inspection record into a NRPTI Inspection record.
+   * Transform an Epic order record into a NRPTI Order record.
    *
-   * @param {object} epicRecord Epic inspection record (required)
-   * @returns {Inspection} NRPTI inspection record.
+   * @param {object} epicRecord Epic order record (required)
+   * @returns {Order} NRPTI order record.
    * @throws {Error} if record is not provided.
-   * @memberof EpicInspections
+   * @memberof OrdersOther
    */
   async transformRecord(epicRecord) {
     if (!epicRecord) {
@@ -41,19 +41,8 @@ class EpicInspections {
     // Apply common Epic pre-processing/transformations
     epicRecord = EpicUtils.preTransformRecord(epicRecord);
 
-    // Generate a link that will get us the document when placed in an href.
-    const attachments = [];
-    if (epicRecord._id && epicRecord.documentFileName) {
-      attachments.push({
-        url: `https://projects.eao.gov.bc.ca/api/document/${epicRecord._id}/fetch/${encodeURIComponent(
-          epicRecord.documentFileName
-        )}`,
-        fileName: epicRecord.documentFileName
-      });
-    }
-
     return {
-      _schemaName: RECORD_TYPE.Inspection._schemaName,
+      _schemaName: RECORD_TYPE.Order._schemaName,
       _epicProjectId: (epicRecord.project && epicRecord.project._id) || '',
       _sourceRefId: epicRecord._id || '',
       _epicMilestoneId: epicRecord.milestone || '',
@@ -62,19 +51,14 @@ class EpicInspections {
       write: ['sysadmin'],
 
       recordName: epicRecord.displayName || '',
-      recordType: RECORD_TYPE.Inspection.displayName,
-      // recordSubtype: // No mapping
-      dateIssued: epicRecord.datePosted || null,
+      recordType: RECORD_TYPE.Order.displayName,
+      dateIssued: epicRecord.documentDate || null,
       issuingAgency: 'Environmental Assessment Office',
       author: epicRecord.documentAuthor || '',
       legislation: (epicRecord.project && epicRecord.project.legislation) || '',
-      // issuedTo: // No mapping
       projectName: (epicRecord.project && epicRecord.project.name) || '',
       location: (epicRecord.project && epicRecord.project.location) || '',
       centroid: (epicRecord.project && epicRecord.project.centroid) || '',
-      // outcomeStatus: // No mapping
-      // outcomeDescription: // No mapping
-      attachments: attachments,
 
       dateAdded: new Date(),
       dateUpdated: new Date(),
@@ -86,32 +70,33 @@ class EpicInspections {
   }
 
   /**
-   * Persist a NRPTI Inspection record to the database.
+   * Persist a NRPTI Order record to the database.
    *
    * @async
-   * @param {Inspection} inspectionRecord NRPTI Inspection record (required)
+   * @param {Order} orderRecord NRPTI Order record (required)
    * @returns {string} status of the add/update operations.
-   * @memberof EpicInspections
+   * @memberof OrdersOther
    */
-  async saveRecord(inspectionRecord) {
-    if (!inspectionRecord) {
+  async saveRecord(orderRecord) {
+    if (!orderRecord) {
       throw Error('saveRecord - required record must be non-null.');
     }
 
     try {
-      const Inspection = mongoose.model(RECORD_TYPE.Inspection._schemaName);
+      const Order = mongoose.model(RECORD_TYPE.Order._schemaName);
 
-      const record = await Inspection.findOneAndUpdate(
-        { _schemaName: RECORD_TYPE.Inspection._schemaName, _sourceRefId: inspectionRecord._sourceRefId },
-        { $set: inspectionRecord },
+      const record = await Order.findOneAndUpdate(
+        { _schemaName: RECORD_TYPE.Order._schemaName, _sourceRefId: orderRecord._sourceRefId },
+        { $set: orderRecord },
         { upsert: true, new: true }
       );
 
       return record;
     } catch (error) {
-      defaultLog.error(`Failed to save Epic Inspection record: ${error.message}`);
+      defaultLog.error(`Failed to save Epic Order record: ${error.message}`);
+      defaultLog.debug(`Failed to save Epic Order record - error.stack: ${error.stack}`);
     }
   }
 }
 
-module.exports = EpicInspections;
+module.exports = OrdersOther;
