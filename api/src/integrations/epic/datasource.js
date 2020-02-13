@@ -52,7 +52,7 @@ class DataSource {
 
       const promises = [];
 
-      // for each supported type, run the update, and add the resulting status object to the root status object
+      // for each supported type, run its update
       for (const recordType of recordTypesToUpdate) {
         promises.push(this.updateRecordType(recordType));
       }
@@ -120,13 +120,8 @@ class DataSource {
         return recordTypeStatus;
       }
 
-      const promises = [];
-
-      for (const epicRecord of epicRecords) {
-        promises.push(this.processRecord(recordTypeUtils, epicRecord));
-      }
-
-      await Promise.all(promises);
+      // update each record in batches so as not to overload the EPIC api
+      await this.batchProcessRecords(recordTypeUtils, epicRecords);
 
       // Add this types specific status object to the array of type statuses
       this.status.typeStatus.push(recordTypeStatus);
@@ -139,6 +134,29 @@ class DataSource {
     }
 
     return recordTypeStatus;
+  }
+
+  /**
+   * Runs processRecord() on each epicRecord, in batches.
+   *
+   * Batch size configured by env variable `EPIC_API_BATCH_SIZE` if it exists, or 50 by default.
+   *
+   * @param {*} recordTypeUtils record type specific utils that contain the unique transformations, etc, for this type.
+   * @param {*} epicRecords epic records to process.
+   * @memberof EpicDataSource
+   */
+  async batchProcessRecords(recordTypeUtils, epicRecords) {
+    let batchSize = process.env.EPIC_API_BATCH_SIZE || 50;
+
+    let promises = [];
+    for (let i = 0; i < epicRecords.length; i++) {
+      promises.push(this.processRecord(recordTypeUtils, epicRecords[i]));
+
+      if (i % batchSize === 0 || i === epicRecords.length - 1) {
+        await Promise.all(promises);
+        promises = [];
+      }
+    }
   }
 
   /**
@@ -234,7 +252,7 @@ class DataSource {
    * @memberof DataSource
    */
   getProjectPathname(projectId) {
-    return `${process.env.EPIC_API_PROJECT_PATHNAME || '/api/project'}/${projectId}`;
+    return `${process.env.EPIC_API_PROJECT_PATHNAME || '/api/public/project'}/${projectId}`;
   }
 
   /**
