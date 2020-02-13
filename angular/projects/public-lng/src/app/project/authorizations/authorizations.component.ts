@@ -28,6 +28,43 @@ export class AuthorizationsComponent implements OnInit {
         'fieldName': '_master.issuingAgency'
       }
     ]
+  },
+  {
+    'displayName': 'Type',
+    'textFilters': [
+      {
+        'displayName': 'General',
+        'fieldName': '_master.recordSubtype'
+      },
+      {
+        'displayName': 'Investigative Use',
+        'fieldName': '_master.recordSubtype'
+      },
+      {
+        'displayName': 'Road',
+        'fieldName': '_master.recordSubtype'
+      },
+      {
+        'displayName': 'Water',
+        'fieldName': '_master.recordSubtype'
+      },
+      {
+        'displayName': 'Ancillary Site',
+        'fieldName': '_master.recordSubtype'
+      },
+      {
+        'displayName': 'Amendment',
+        'fieldName': '_master.recordSubtype'
+      },
+      {
+        'displayName': 'Project Description',
+        'fieldName': '_master.recordSubtype'
+      },
+      {
+        'displayName': 'Table Of Conditions',
+        'fieldName': '_master.recordSubtype'
+      }
+    ]
   }];
 
   constructor(
