@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const defaultLog = require('../../utils/logger')('epic-amendments');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const EpicUtils = require('./epic-utils');
+const DocumentController = require('./../../controllers/document-controller');
 
 /**
  * Epic Amendment record handler for { type: 'Amendment Package', milestone: 'Amendment' }.
@@ -68,6 +69,7 @@ class CertificatesAmendment {
       recordSubtype: 'Amendment',
       dateIssued: epicRecord.documentDate || null,
       issuingAgency: 'Environmental Assessment Office',
+      description: epicRecord.description || '',
       legislation: (epicRecord.project && epicRecord.project.legislation) || '',
       projectName: (epicRecord.project && epicRecord.project.name) || '',
       location: (epicRecord.project && epicRecord.project.location) || '',

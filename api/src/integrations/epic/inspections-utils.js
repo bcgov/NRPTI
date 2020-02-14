@@ -66,17 +66,14 @@ class Inspections {
 
       recordName: epicRecord.displayName || '',
       recordType: RECORD_TYPE.Inspection.displayName,
-      // recordSubtype: // No mapping
       dateIssued: epicRecord.datePosted || null,
       issuingAgency: 'Environmental Assessment Office',
       author: epicRecord.documentAuthor || '',
+      description: epicRecord.description || '',
       legislation: (epicRecord.project && epicRecord.project.legislation) || '',
-      // issuedTo: // No mapping
       projectName: (epicRecord.project && epicRecord.project.name) || '',
       location: (epicRecord.project && epicRecord.project.location) || '',
       centroid: (epicRecord.project && epicRecord.project.centroid) || '',
-      // outcomeStatus: // No mapping
-      // outcomeDescription: // No mapping
       documents: documents,
 
       dateAdded: new Date(),

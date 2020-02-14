@@ -16,8 +16,9 @@ module.exports = require('../../utils/model-schema-generator')(
     dateIssued: { type: Date, default: null },
     issuingAgency: { type: String, default: '' },
     author: { type: String, default: '' },
-    legislation: { type: String, default: '' }, // section, sub section, reg, etc
-    issuedTo: { type: String, default: '' }, // first, middle, last OR company
+    description: { type: String, default: '' },
+    legislation: { type: String, default: '' },
+    issuedTo: { type: String, default: '' },
     projectName: { type: String, default: '' },
     location: { type: String, default: '' },
     centroid: [{ type: Number, default: 0.0 }],

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const defaultLog = require('../../utils/logger')('epic-certificates');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const EpicUtils = require('./epic-utils');
+const DocumentController = require('./../../controllers/document-controller');
 
 /**
  * Epic Certificate record handler for { type: 'Certificate Package', milestone: 'Certificate' }.
@@ -67,6 +68,7 @@ class Certificates {
       recordType: RECORD_TYPE.Certificate.displayName,
       dateIssued: epicRecord.documentDate || null,
       issuingAgency: 'Environmental Assessment Office',
+      description: epicRecord.description || '',
       legislation: (epicRecord.project && epicRecord.project.legislation) || '',
       projectName: (epicRecord.project && epicRecord.project.name) || '',
       location: (epicRecord.project && epicRecord.project.location) || '',
