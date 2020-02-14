@@ -1,7 +1,7 @@
 <app-header></app-header>
 
 <div class="app-body">
-  <div class="side-content" [ngClass]="{ sideContentClosed: !isOpen }">
+  <div class="side-content" [ngClass]="{ sideContentClosed: !showSideContent }">
     <app-sidebar></app-sidebar>
     <app-toggle-button class="app-toggle"></app-toggle-button>
   </div>

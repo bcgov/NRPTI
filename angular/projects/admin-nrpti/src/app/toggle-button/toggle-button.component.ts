@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { StoreService } from 'nrpti-angular-components';
 
 @Component({
@@ -7,17 +7,28 @@ import { StoreService } from 'nrpti-angular-components';
   styleUrls: ['./toggle-button.component.scss']
 })
 export class ToggleButtonComponent implements OnInit {
-  isOpen = true;
+  public showSideContent = window.innerWidth > 768 ? true : false;
+  public userClosedSideContent = false;
 
-  constructor(private storeService: StoreService) {}
+  constructor(private storeService: StoreService, private _changeDetectionRef: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.storeService.change.subscribe(isOpen => {
-      this.isOpen = isOpen;
+    this.storeService.stateChange.subscribe((state: object) => {
+      if (state && state.hasOwnProperty('showSideContent')) {
+        this.showSideContent = state['showSideContent'];
+      }
+
+      this._changeDetectionRef.detectChanges();
     });
   }
 
-  toggleSideNav() {
-    this.storeService.toggleSideNav();
+  toggleSideContent() {
+    this.userClosedSideContent = this.showSideContent;
+    this.showSideContent = !this.showSideContent;
+
+    this.storeService.setItem({ showSideContent: this.showSideContent });
+    this.storeService.setItem({ userClosedSideContent: this.userClosedSideContent });
+
+    this._changeDetectionRef.detectChanges();
   }
 }
