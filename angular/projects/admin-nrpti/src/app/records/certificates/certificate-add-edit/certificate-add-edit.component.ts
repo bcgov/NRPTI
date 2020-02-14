@@ -90,7 +90,6 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         ) || ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
-      author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
       legislation: new FormControl((this.currentRecord && this.currentRecord.legislation) || ''),
       issuedTo: new FormControl((this.currentRecord && this.currentRecord.issuedTo) || ''),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
@@ -146,7 +145,6 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       recordSubtype: this.myForm.controls.recordSubtype.value,
       dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
       issuingAgency: this.myForm.controls.issuingAgency.value,
-      author: this.myForm.controls.author.value,
       issuedTo: this.myForm.controls.issuedTo.value,
       projectName: this.myForm.controls.projectName.value,
       location: this.myForm.controls.location.value,

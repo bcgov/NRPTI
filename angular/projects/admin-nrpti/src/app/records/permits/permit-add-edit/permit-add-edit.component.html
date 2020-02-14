@@ -44,7 +44,7 @@
         <div class="label-pair">
           <label for="recordSubtype">Record Sub-Type</label>
           <select name="recordSubtype" id="recordSubtype" formControlName="recordSubtype" class="form-control">
-            <option *ngFor="let subtype of permitSubtypePicklist" [ngValue]="subtype">{{ subtype }} </option>
+            <option *ngFor="let subtype of permitSubtypes" [ngValue]="subtype">{{ subtype }} </option>
           </select>
         </div>
         <div class="label-pair">

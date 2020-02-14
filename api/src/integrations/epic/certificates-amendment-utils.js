@@ -66,7 +66,6 @@ class CertificatesAmendment {
       recordSubtype: 'Amendment',
       dateIssued: epicRecord.documentDate || null,
       issuingAgency: 'Environmental Assessment Office',
-      author: epicRecord.documentAuthor || '',
       legislation: (epicRecord.project && epicRecord.project.legislation) || '',
       projectName: (epicRecord.project && epicRecord.project.name) || '',
       location: (epicRecord.project && epicRecord.project.location) || '',
