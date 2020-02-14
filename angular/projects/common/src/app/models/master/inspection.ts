@@ -17,6 +17,7 @@ export class Inspection {
   dateIssued: Date;
   issuingAgency: string;
   author: string;
+  description: string;
   legislation: string;
   issuedTo: string; // epic value?
   projectName: string;
@@ -47,6 +48,7 @@ export class Inspection {
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || null;
     this.author = (obj && obj.author) || null;
+    this.description = (obj && obj.description) || null;
     this.legislation = (obj && obj.legislation) || null;
     this.issuedTo = (obj && obj.issuedTo) || null;
     this.projectName = (obj && obj.projectName) || null;

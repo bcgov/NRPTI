@@ -20,9 +20,11 @@ export class ManagementPlan {
   dateIssued: Date;
   agency: string;
   author: string;
+  description: string;
   projectName: string;
   location: string;
   centroid: number[];
+  documents: object[];
 
   dateAdded: Date;
   dateUpdated: Date;
@@ -50,9 +52,11 @@ export class ManagementPlan {
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.agency = (obj && obj.agency) || null;
     this.author = (obj && obj.author) || null;
+    this.description = (obj && obj.description) || null;
     this.projectName = (obj && obj.projectName) || null;
     this.location = (obj && obj.location) || null;
     this.centroid = (obj && obj.centroid) || null;
+    this.documents = (obj && obj.documents) || null;
 
     this.dateAdded = (obj && obj.dateAdded) || null;
     this.dateUpdated = (obj && obj.dateUpdated) || null;

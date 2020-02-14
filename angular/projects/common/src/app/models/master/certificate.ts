@@ -21,6 +21,7 @@ export class Certificate {
   dateIssued: Date;
   issuingAgency: string;
   author: string;
+  description: string;
   legislation: string;
   projectName: string;
   location: string;
@@ -54,6 +55,7 @@ export class Certificate {
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || null;
     this.author = (obj && obj.author) || null;
+    this.description = (obj && obj.description) || null;
     this.legislation = (obj && obj.legislation) || null;
     this.projectName = (obj && obj.projectName) || null;
     this.location = (obj && obj.location) || null;

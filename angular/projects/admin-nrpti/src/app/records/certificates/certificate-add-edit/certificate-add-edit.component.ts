@@ -110,7 +110,12 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       ),
 
       // LNG
-      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || '')
+      lngDescription: new FormControl(
+        // default to using the master description if the flavour record does not exist
+        (this.currentRecord &&
+          ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
+          ''
+      )
     });
   }
 
