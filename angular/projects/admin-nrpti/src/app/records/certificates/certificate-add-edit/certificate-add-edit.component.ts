@@ -156,7 +156,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       projectName: this.myForm.controls.projectName.value,
       location: this.myForm.controls.location.value,
       centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],
-      attachments: this.currentRecord.attachments
+      attachments: this.currentRecord && this.currentRecord.attachments
     });
 
     // Project name logic

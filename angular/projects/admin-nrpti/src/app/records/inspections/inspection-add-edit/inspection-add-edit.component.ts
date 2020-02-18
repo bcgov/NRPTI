@@ -177,7 +177,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
       centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],
       outcomeStatus: this.myForm.controls.outcomeStatus.value,
       outcomeDescription: this.myForm.controls.outcomeDescription.value,
-      attachments: this.currentRecord.attachments
+      attachments: this.currentRecord && this.currentRecord.attachments
     });
 
     // Project name logic
