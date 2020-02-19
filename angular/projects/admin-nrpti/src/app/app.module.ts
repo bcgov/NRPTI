@@ -6,6 +6,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
+import { Overlay, CloseScrollStrategy } from '@angular/cdk/overlay';
+import { MAT_AUTOCOMPLETE_SCROLL_STRATEGY } from '@angular/material';
 
 // modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -48,6 +50,10 @@ export function keycloakFactory(keycloakService: KeycloakService) {
   return () => keycloakService.init();
 }
 
+export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrategy {
+  return () => overlay.scrollStrategies.close();
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -88,6 +94,12 @@ export function keycloakFactory(keycloakService: KeycloakService) {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true
+    },
+    {
+      // Tells mat-autocomplete select box to close when the page is scrolled. Aligns with default select box behaviour.
+      provide: MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
+      useFactory: overlayScrollFactory,
+      deps: [Overlay]
     },
     ApiService,
     DocumentService,

@@ -19,7 +19,7 @@ app-header {
 }
 
 app-footer {
-  z-index: 1;
+  z-index: 1000;
 }
 
 app-toggle-button {
@@ -32,6 +32,10 @@ app-toggle-button {
   @media screen and (max-width: 768px) {
     margin-top: 3px;
   }
+}
+
+lib-breadcrumb {
+  z-index: 1000;
 }
 
 .app-body {
@@ -69,6 +73,10 @@ app-toggle-button {
   z-index: 2;
 
   .content-component {
+    @include flex-box();
+    @include flex(1 1 auto);
+    @include flex-direction(column);
+
     overflow: auto;
   }
 }

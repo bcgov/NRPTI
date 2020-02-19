@@ -94,7 +94,21 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
           ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
-      legislation: new FormControl((this.currentRecord && this.currentRecord.legislation) || ''),
+      act: new FormControl(
+        (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.act) || ''
+      ),
+      regulation: new FormControl(
+        (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.regulation) || ''
+      ),
+      section: new FormControl(
+        (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.section) || ''
+      ),
+      subSection: new FormControl(
+        (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.subSection) || ''
+      ),
+      paragraph: new FormControl(
+        (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
+      ),
       issuedTo: new FormControl((this.currentRecord && this.currentRecord.issuedTo) || ''),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
@@ -141,6 +155,13 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       recordSubtype: this.myForm.controls.recordSubtype.value,
       dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
       issuingAgency: this.myForm.controls.issuingAgency.value,
+      legislation: {
+        act: this.myForm.controls.act.value,
+        regulation: this.myForm.controls.regulation.value,
+        section: this.myForm.controls.section.value,
+        subSection: this.myForm.controls.subSection.value,
+        paragraph: this.myForm.controls.paragraph.value
+      },
       issuedTo: this.myForm.controls.issuedTo.value,
       projectName: this.myForm.controls.projectName.value,
       location: this.myForm.controls.location.value,
