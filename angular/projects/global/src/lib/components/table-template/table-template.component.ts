@@ -24,12 +24,6 @@ export class TableTemplateComponent implements OnInit, OnChanges, OnDestroy {
   @Input() messageIn: EventEmitter<ITableMessage> = new EventEmitter<ITableMessage>();
   @Output() messageOut: EventEmitter<ITableMessage> = new EventEmitter<ITableMessage>();
 
-  // @Output() pageNumUpdate: EventEmitter<any> = new EventEmitter();
-  // @Output() pageSizeUpdate: EventEmitter<any> = new EventEmitter();
-  // @Output() rowClicked: EventEmitter<any> = new EventEmitter();
-  // @Output() rowSelected: EventEmitter<any> = new EventEmitter();
-  // @Output() columnSort: EventEmitter<any> = new EventEmitter();
-
   constructor(public injector: Injector) {}
 
   ngOnInit() {}

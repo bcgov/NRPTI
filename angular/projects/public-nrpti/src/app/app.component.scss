@@ -18,24 +18,30 @@ app-header {
   @include flex(0 0 auto);
 }
 
+app-footer {
+  z-index: 1;
+}
+
 .app-body {
   @include flex-box();
   @include flex(1 1 auto);
-  @include flex-direction(column);
+  @include flex-direction(row);
 
   background: #fff;
   position: relative;
   overflow-y: auto;
   font-family: 'Noto Sans', sans-serif;
-  margin-top: 57px;
-  padding-top: 0;
-
-  @media screen and (min-width: 768px) {
-    margin-top: 138px;
-    padding-top: 1.2rem;
-  }
 }
 
-// @media screen and (max-width: 650px) {
-//   div.content {margin-left: 0;}
-// }
+.body-content {
+  @include flex-box();
+  @include flex(1 1 auto);
+  @include flex-direction(column);
+
+  background-color: $white;
+  z-index: 2;
+
+  .content-component {
+    overflow: auto;
+  }
+}

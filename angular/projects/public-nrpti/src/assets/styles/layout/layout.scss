@@ -1,3 +1,5 @@
+@import "~assets/styles/base/base.scss";
+
 html,
 body {
   min-height: 100%;
@@ -8,24 +10,15 @@ app-root {
   flex-direction: column;
 }
 
+body-content {
+  transition: 0.25s all;
+}
+
 .container-fluid-padding {
   padding: 0 1.5rem 14px;
 
   @media screen and (max-width: 768px) {
     padding: 1.2rem 1rem 14px;
-  }
-}
-
-.project-container h1 {
-  background: #00274e;
-  color: #fff;
-  font-size: 2.1rem;
-  margin: -19px -24px 30px;
-  padding: 9px 26px 14px;
-  box-sizing: content-box;
-
-  @media screen and (max-width: 768px) {
-    font-size: 1.5rem;
   }
 }
 
@@ -45,6 +38,8 @@ app-root {
 
 // Main Element
 main {
+  margin-top: 25px;
+
   h2 {
     margin-bottom: 1rem;
     line-height: 2rem;
@@ -110,46 +105,16 @@ main {
       margin-bottom: 1.75rem;
     }
   }
-
-  ul.content-external-links {
-    margin-bottom: 2rem;
-  }
-
-  // Named anchor helper
-  .pg-anchor[id]::before {
-    content: " ";
-    display: block;
-    height: 98px;
-    margin: -98px 0 0;
-  }
-
-  .main-footer {
-    padding: 1.5rem;
-    background-color: rgba(0, 51, 102, 0.8);
-    color: $white;
-
-    a {
-      color: $gold;
-    }
-  }
 }
 
 .action-container {
-  display: flex;
-  top: 57px;
   left: 0;
   right: 0;
-  padding: 0.38rem 1rem;
+  margin: 0;
   background: #e9ecef;
-  position: fixed;
+  padding: 10px 10px 12px 10px;
+  transition: height 0.25s;
   z-index: 4;
-
-  button[type='cancel'] {
-    background: none;
-    border-width: 2px;
-    color: #007bff;
-    font-weight: 600;
-  }
 
   .btn {
     padding: 0.74rem 0.75rem;
@@ -160,21 +125,16 @@ main {
     }
   }
 
-  @media screen and (min-width: 768px) {
-    display: flex;
-    top: 69px;
-    left: 0;
-    right: 0;
-    padding: 0.65rem 1.25rem;
+  @media screen and (max-width: 768px) {
+    padding: 5px 10px 7px 10px;
   }
 }
 
-.btn-container {
-  display: flex;
-
-  button.btn {
-    margin-left: 10px;
-    width: 130px;
+.flex-container {
+  @media screen and (min-width: 800px) {
+    display: flex;
+    flex: 1 auto;
+    flex-wrap: wrap;
   }
 }
 
@@ -212,25 +172,6 @@ hr {
   border-width: 2px;
 }
 
-/* class to make divs look like anchors */
-.clickable {
-  cursor: pointer !important;
-  color: $link-color !important;
-
-  &:focus,
-  &:hover {
-    text-decoration: underline !important;
-  }
-}
-
-// This should be in helper classes
-// hide the footer when a component (e.g. the map) is shown full screen
-.full-screen {
-  + app-footer {
-    display: none;
-  }
-}
-
 // Page Title Container
 .title-container {
   @include flex-box();
@@ -261,43 +202,11 @@ hr {
   }
 }
 
-.title-container__sub {
-  display: block;
-  letter-spacing: 0.01rem;
-}
-
-.top-container {
-  @include flex(0 0 auto);
-
-  position: relative;
-  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.15);
-  z-index: 999;
-
-  .container {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-  }
-}
-
-.bottom-container {
-  @include flex(1 1 auto);
-
-  overflow-y: scroll;
-  background: white;
-}
-
 ol.breadcrumb {
-  padding: 0.75rem;
   margin: 0;
 
   @media screen and (max-width: 768px) {
-    margin-bottom: 0;
     font-size: 0.85rem;
-
-    li,
-    a {
-      font-size: 0.85rem;
-    }
   }
 }
 
@@ -308,19 +217,4 @@ ol.breadcrumb {
 
 .breadcrumb-item.active {
   color: #036;
-}
-
-#comments-received-details {
-  .status-container {
-    text-align: left;
-
-    > div {
-      margin-bottom: 10px;
-
-      span {
-        vertical-align: top;
-        margin-top: 3px;
-      }
-    }
-  }
 }
