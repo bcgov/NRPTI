@@ -1,147 +1,59 @@
-.detail-page {
-  .nav-section {
-    font-weight: 600;
-    text-align: center;
+// base scss found in record-details.scss
 
-    .nav-items {
-      padding: 0;
-      list-style-type: none;
-      border-bottom: 1px solid black;
+.grid-section-1 {
+  display: grid;
+  grid-gap: 0.75rem;
+  grid-template-columns: 3fr 2fr 2fr 2fr;
+}
 
-      .nav-item {
-        margin: 0 2rem;
-        font-weight: 600;
-        cursor: pointer;
-        display: inline-block;
+.grid-section-2 {
+  display: grid;
+  grid-gap: 0.75rem;
+  grid-template-columns: 3fr 2fr 4fr;
+}
 
-        &.active {
-          border-bottom: 4px solid black;
-        }
+.grid-section-3 {
+  display: grid;
+  grid-gap: 0.75rem;
+  grid-template-columns: 3fr 2fr 4fr;
+}
 
-        .nav-item-icon {
-          display: inline;
-          vertical-align: middle;
-          font-size: 1.5rem;
-        }
+.grid-section-4 {
+  display: grid;
+  grid-gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+}
 
-        .nav-item-value {
-          display: inline;
-          vertical-align: middle;
-          font-size: 1.25rem;
-          margin-left: 0.25rem;
-        }
-      }
+.grid-section-5 {
+  display: grid;
+  grid-gap: 0.75rem;
+  grid-template-columns: auto;
+}
 
-      @media screen and (max-width: 768px) {
-        .nav-item {
-          margin: 0 0.5rem;
-        }
-      }
-    }
+@media screen and (max-width: 768px) {
+  .grid-section-1 {
+    grid-template-columns: none;
   }
 
-  .content-section {
-    margin: 0.5rem;
-    padding: 0.5rem;
+  .grid-section-2 {
+    grid-template-columns: none;
+  }
 
-    .content-grid {
-      display: grid;
-      grid-template-rows: auto;
-      grid-gap: 1.25rem;
+  .grid-section-3 {
+    grid-template-columns: none;
+  }
 
-      .grid-section-1 {
-        display: grid;
-        grid-gap: 0.75rem;
-        grid-template-columns: 3fr 2fr 2fr 2fr;
-      }
+  .grid-section-4 {
+    grid-template-columns: none;
+  }
 
-      .grid-section-2 {
-        display: grid;
-        grid-gap: 0.75rem;
-        grid-template-columns: 3fr 2fr 4fr;
-      }
+  .grid-section-5 {
+    grid-template-columns: none;
+  }
 
-      .grid-section-3 {
-        display: grid;
-        grid-gap: 0.75rem;
-        grid-template-columns: 3fr 2fr 4fr;
-      }
-
-      .grid-section-4 {
-        display: grid;
-        grid-gap: 0.75rem;
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      }
-
-      .grid-section-5 {
-        display: grid;
-        grid-gap: 0.75rem;
-        grid-template-columns: auto;
-      }
-
-      .grid-item {
-        display: grid;
-        grid-template-rows: auto;
-        grid-gap: 0.25rem;
-
-        .grid-item-name {
-          font-weight: 600;
-          font-size: 1rem;
-        }
-
-        .grid-item-value {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-          font-weight: 400;
-          font-size: 1rem;
-
-          .grid-sub-item {
-            display: grid;
-            grid-template-rows: auto;
-            grid-gap: 0.25rem;
-
-            .grid-sub-item-name {
-              display: grid;
-              font-weight: 600;
-              font-size: 0.75rem;
-            }
-
-            .grid-sub-item-value {
-              display: grid;
-              font-weight: 400;
-              font-size: 0.75rem;
-            }
-          }
-        }
-      }
-
-      @media screen and (max-width: 768px) {
-        .grid-section-1 {
-          grid-template-columns: none;
-        }
-
-        .grid-section-2 {
-          grid-template-columns: none;
-        }
-
-        .grid-section-3 {
-          grid-template-columns: none;
-        }
-
-        .grid-section-4 {
-          grid-template-columns: none;
-        }
-
-        .grid-section-5 {
-          grid-template-columns: none;
-        }
-
-        .grid-item {
-          grid-template-rows: none;
-          grid-template-columns: 1fr 2fr;
-          grid-gap: 0.625rem;
-        }
-      }
-    }
+  .grid-item__row {
+    grid-template-rows: none;
+    grid-template-columns: 1fr 2fr;
+    grid-gap: 0.625rem;
   }
 }
