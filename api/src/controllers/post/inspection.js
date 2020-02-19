@@ -34,7 +34,19 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   incomingObj.dateIssued && (inpsection.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (inpsection.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (inpsection.author = incomingObj.author);
-  incomingObj.legislation && (inpsection.legislation = incomingObj.legislation);
+  incomingObj.legislation && incomingObj.legislation.act && (inpsection.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (inpsection.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (inpsection.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (inpsection.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (inpsection.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.issuedTo && (inpsection.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (inpsection.projectName = incomingObj.projectName);
   incomingObj.location && (inpsection.location = incomingObj.location);

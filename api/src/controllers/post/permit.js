@@ -40,7 +40,19 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   incomingObj.recordSubtype && (permit.recordName = incomingObj.recordSubtype);
   incomingObj.dateIssued && (permit.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (permit.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation && (permit.legislation = incomingObj.legislation);
+  incomingObj.legislation && incomingObj.legislation.act && (permit.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (permit.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (permit.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (permit.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (permit.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.issuedTo && (permit.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (permit.projectName = incomingObj.projectName);
   incomingObj.location && (permit.location = incomingObj.location);

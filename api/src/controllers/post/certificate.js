@@ -39,7 +39,19 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   certificate.recordType = RECORD_TYPE.Certificate.displayName;
   incomingObj.dateIssued && (certificate.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (certificate.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation && (certificate.legislation = incomingObj.legislation);
+  incomingObj.legislation && incomingObj.legislation.act && (certificate.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (certificate.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (certificate.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (certificate.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (certificate.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.issuedTo && (certificate.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (certificate.projectName = incomingObj.projectName);
   incomingObj.location && (certificate.location = incomingObj.location);

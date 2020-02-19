@@ -42,7 +42,7 @@ exports.editMaster = async function(args, res, next, incomingObj) {
   let documents = [];
   if (incomingObj.documents && Array.isArray(incomingObj.documents)) {
     for (let i = 0; i < incomingObj.documents.length; i++) {
-      ObjectId.isValid(incomingObj.documents[i]) && (documents.push(incomingObj.documents[i]));
+      ObjectId.isValid(incomingObj.documents[i]) && documents.push(incomingObj.documents[i]);
     }
   }
   incomingObj.documents = documents;
