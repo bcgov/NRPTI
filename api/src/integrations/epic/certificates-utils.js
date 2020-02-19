@@ -41,15 +41,17 @@ class Certificates {
     // Apply common Epic pre-processing/transformations
     epicRecord = EpicUtils.preTransformRecord(epicRecord);
 
-    // Generate a link that will get us the document when placed in an href.
-    const attachments = [];
+    // Creating and saving a document object if we are given a link to an EPIC document.
+    const documents = [];
     if (epicRecord._id && epicRecord.documentFileName) {
-      attachments.push({
-        url: `https://projects.eao.gov.bc.ca/api/document/${epicRecord._id}/fetch/${encodeURIComponent(
+      const savedDocument = await DocumentController.createLinkDocument(
+        epicRecord.documentFileName,
+        (this.auth_payload && this.auth_payload.displayName) || '',
+        `https://projects.eao.gov.bc.ca/api/document/${epicRecord._id}/fetch/${encodeURIComponent(
           epicRecord.documentFileName
-        )}`,
-        fileName: epicRecord.documentFileName
-      });
+        )}`
+      );
+      documents.push(savedDocument);
     }
 
     return {
@@ -70,7 +72,7 @@ class Certificates {
       projectName: (epicRecord.project && epicRecord.project.name) || '',
       location: (epicRecord.project && epicRecord.project.location) || '',
       centroid: (epicRecord.project && epicRecord.project.centroid) || '',
-      attachments: attachments,
+      documents: documents,
 
       dateAdded: new Date(),
       dateUpdated: new Date(),
