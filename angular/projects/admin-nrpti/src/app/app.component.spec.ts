@@ -22,7 +22,7 @@ describe('AppComponent', () => {
     };
 
     const mockStoreService = {
-      change: of(),
+      stateChange: of(),
       toggleSideNave: () => {}
     };
 
