@@ -234,7 +234,7 @@ class EpicDataSource {
    * @memberof EpicDataSource
    */
   getEpicProjectPathname(projectId) {
-    return `${process.env.EPIC_API_PROJECT_PATHNAME || '/api/project'}/${projectId}`;
+    return `${process.env.EPIC_API_PROJECT_PATHNAME || '/api/public/project'}/${projectId}`;
   }
 
   /**

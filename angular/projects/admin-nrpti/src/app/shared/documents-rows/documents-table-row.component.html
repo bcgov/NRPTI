@@ -1,0 +1,13 @@
+<td scope="row" data-label="Issued To" class="col-2 showPointer">{{ rowData.issuedTo || '-' }}</td>
+<td scope="row" data-label="Name" class="col-4 showPointer">{{ rowData.recordName || '-' }}</td>
+<td scope="row" data-label="Type" class="col-1 showPointer">{{ rowData.recordType || '-' }}</td>
+<td scope="row" data-label="Location" class="col-2 showPointer">{{ rowData.location || '-' }}</td>
+<td scope="row" data-label="Date" class="col-1 showPointer">
+  {{ rowData.dateIssued | date: 'mediumDate' || '-' }}
+</td>
+<td scope="row" data-label="Attachments" class="col-2 showPointer">-</td>
+<td scope="row" class="col-1">
+  <button (click)="edit(); $event.stopPropagation()" class="btn btn-primary" type="button">
+    <i class="material-icons">create</i>&nbsp;Edit
+  </button>
+</td>

@@ -185,6 +185,45 @@
 
     <section>
       <h4>Documents</h4>
+      <ul id="documents" class="doc-list mb-3" *ngIf="currentRecord?.documents?.length > 0">
+        <li *ngFor="let document of currentRecord.documents">
+          <span class="cell icon">
+            <i class="material-icons">insert_drive_file</i>
+          </span>
+          <span class="cell name" [title]="document || ''">
+            <span class="cell__txt-content">{{document.fileName}}</span>
+          </span>
+          <span class="cell actions">
+            <button class="btn btn-icon" type="button" title="Delete this document" (click)="deleteDocument(doc)">
+              <i class="material-icons">delete</i>
+            </button>
+          </span>
+        </li>
+      </ul>
+      <br>
+    </section>
+
+    <section>
+      <h4>Upload Documents</h4>
+      <app-file-upload [maxFiles]="50" [maxSize]="300" [showInfo]="false" [showList]="false" [files]="recordFiles"
+        (filesChange)="addDocuments($event); recordFiles = []"></app-file-upload>
+      <br>
+      <ul class="doc-list mb-3" *ngIf="documents?.length > 0">
+        <li *ngFor="let doc of documents">
+          <span class="cell icon">
+            <i class="material-icons">insert_drive_file</i>
+          </span>
+          <span class="cell name" [title]="doc.fileName || ''">
+            <span class="cell__txt-content">{{doc.fileName}}</span>
+          </span>
+          <span class="cell actions">
+            <button class="btn btn-icon" type="button" title="Delete this document" (click)="deleteDocument(doc)">
+              <i class="material-icons">delete</i>
+            </button>
+          </span>
+        </li>
+      </ul>
+      <br>
     </section>
 
     <section>

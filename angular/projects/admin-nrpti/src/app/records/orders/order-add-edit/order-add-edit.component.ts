@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Picklists } from '../../../utils/constants/record-constants';
 import { Order } from '../../../../../../common/src/app/models/master';
+import { Document } from '../../../../../../common/src/app/models/document';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -37,6 +38,10 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
   public authorsPicklist = Picklists.authorPicklist;
   public outcomeStatusPicklist = Picklists.outcomeStatusPicklist;
 
+  // Documents
+  public recordFiles: File[] = [];
+  public documents: Document[] = [];
+
   constructor(
     public route: ActivatedRoute,
     public router: Router,
@@ -51,6 +56,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       if (this.isEditing) {
         if (res && res.record && res.record[0] && res.record[0].data) {
           this.currentRecord = res.record[0].data;
+          console.log(this.currentRecord);
           this.populateTextFields();
         } else {
           alert('Error: could not load edit order.');
@@ -159,6 +165,20 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
   }
 
   submit() {
+    // Documents
+    for (const document of this.documents) {
+      const copiedDocument = { ...document };
+      delete copiedDocument.upfile;
+      console.log('WTF');
+      this.factoryService.createDocument(copiedDocument).subscribe(res => {
+        console.log('HERES THE RES', res);
+        console.log(res.headers);
+        this.factoryService.uploadFileToS3(document.upfile, res.presignedData).then(whatever => {
+          console.log('THIS IS COMING FROM S3', whatever);
+        });
+      });
+    }
+
     // TODO
     // _epicProjectId
     // _sourceRefId
@@ -248,6 +268,39 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       if (flavourFailure) {
         alert('One or more of your flavours have failed to save.');
       }
+    }
+  }
+
+  public addDocuments(files) {
+    if (files) { // safety check
+      for (const file of files) {
+        if (file) {
+          // ensure file is not already in the list
+
+          if (this.documents.find(x => x.fileName === file.name)) {
+            // this.snackBarRef = this.snackBar.open('Can\'t add duplicate file', null, { duration: 2000 });
+            continue;
+          }
+
+          this.recordFiles.push(file);
+
+          const document = new Document();
+          document.upfile = file;
+          document.fileName = file.name;
+
+          // save document for upload to db when project is added or saved
+          this.documents.push(document);
+        }
+      }
+    }
+    this._changeDetectionRef.detectChanges();
+  }
+
+  public deleteDocument(doc: Document) {
+    if (doc && this.documents) { // safety check
+      // remove doc from current list
+      this.recordFiles = this.recordFiles.filter(item => (item.name !== doc.fileName));
+      this.documents = this.documents.filter(item => (item.fileName !== doc.fileName));
     }
   }
 

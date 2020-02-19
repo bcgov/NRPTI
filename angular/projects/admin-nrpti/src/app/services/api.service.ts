@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-
-import { Document } from '../../../../common/src/app/models/document';
-import { Utils } from 'nrpti-angular-components';
+import { throwError, Observable } from 'rxjs';
 
 /**
  * TODO: populate this documentation
@@ -49,67 +46,6 @@ export class ApiService {
     }
   }
 
-  //
-  // Documents
-  //
-
-  deleteDocument(doc: Document): Observable<Document> {
-    const queryString = `document/${doc._id}`;
-    return this.http.delete<Document>(`${this.pathAPI}/${queryString}`, {});
-  }
-
-  publishDocument(doc: Document): Observable<Document> {
-    const queryString = `document/${doc._id}/publish`;
-    return this.http.put<Document>(`${this.pathAPI}/${queryString}`, doc, {});
-  }
-
-  unPublishDocument(doc: Document): Observable<Document> {
-    const queryString = `document/${doc._id}/unpublish`;
-    return this.http.put<Document>(`${this.pathAPI}/${queryString}`, doc, {});
-  }
-
-  uploadDocument(formData: FormData): Observable<Document> {
-    const fields = ['fileName', 'displayName', 'internalURL', 'internalMime'];
-    const queryString = `document/?fields=${Utils.convertArrayIntoPipeString(fields)}`;
-    return this.http.post<Document>(`${this.pathAPI}/${queryString}`, formData, {});
-  }
-
-  private downloadResource(id: string): Promise<Blob> {
-    const queryString = `document/${id}/download`;
-    return this.http.get<Blob>(this.pathAPI + '/' + queryString, { responseType: 'blob' as 'json' }).toPromise();
-  }
-
-  public async downloadDocument(document: Document): Promise<void> {
-    const blob = await this.downloadResource(document._id);
-    const filename = document.fileName;
-
-    if (this.isMS) {
-      window.navigator.msSaveBlob(blob, filename);
-    } else {
-      const url = window.URL.createObjectURL(blob);
-      const a = window.document.createElement('a');
-      window.document.body.appendChild(a);
-      a.setAttribute('style', 'display: none');
-      a.href = url;
-      a.download = filename;
-      a.click();
-      window.URL.revokeObjectURL(url);
-      a.remove();
-    }
-  }
-
-  public async openDocument(document: Document): Promise<void> {
-    const blob = await this.downloadResource(document._id);
-    const filename = document.fileName;
-
-    if (this.isMS) {
-      window.navigator.msSaveBlob(blob, filename);
-    } else {
-      const tab = window.open();
-      const fileURL = URL.createObjectURL(blob);
-      tab.location.href = fileURL;
-    }
-  }
 
   /**
    * General error handler.  Used to transform and log error messages before throwing.
