@@ -1,3 +1,5 @@
+import { Legislation } from './common-models/legislation';
+
 /**
  * Permit data model.
  *
@@ -19,7 +21,7 @@ export class Permit {
   recordSubtype: string;
   dateIssued: Date;
   issuingAgency: string;
-  legislation: string;
+  legislation: Legislation;
   projectName: string;
   location: string;
   centroid: number[];
@@ -50,7 +52,7 @@ export class Permit {
     this.recordSubtype = (obj && obj.recordSubtype) || null;
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || null;
-    this.legislation = (obj && obj.legislation) || null;
+    this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
     this.projectName = (obj && obj.projectName) || null;
     this.location = (obj && obj.location) || null;
     this.centroid = (obj && obj.centroid) || null;
