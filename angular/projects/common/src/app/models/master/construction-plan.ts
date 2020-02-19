@@ -22,7 +22,7 @@
   projectName: string;
   location: string;
   centroid: number[];
-  attachments: object[];
+  documents: object[];
 
   dateAdded: Date;
   dateUpdated: Date;
@@ -52,7 +52,7 @@
     this.projectName = (obj && obj.projectName) || null;
     this.location = (obj && obj.location) || null;
     this.centroid = (obj && obj.centroid) || null;
-    this.attachments = (obj && obj.attachments) || null;
+    this.documents = (obj && obj.documents) || null;
 
     this.dateAdded = (obj && obj.dateAdded) || null;
     this.dateUpdated = (obj && obj.dateUpdated) || null;
