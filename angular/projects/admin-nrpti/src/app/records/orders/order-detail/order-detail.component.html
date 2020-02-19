@@ -19,7 +19,7 @@
         <div class="grid-section-sub-header">
           <span class="grid-section-sub-header-text">Basic Information</span>
         </div>
-        <div class="grid-section-1">
+        <div class="grid-section section-1">
           <div class="grid-item">
             <span class="grid-item-name">Record Name</span>
             <span class="grid-item-value">{{ (data && data._master.recordName) || '-' }}</span>
@@ -41,7 +41,7 @@
             <span class="gird-item-value">{{ (data && data._master.dateIssued | date: 'mediumDate') || '-' }}</span>
           </div>
         </div>
-        <div class="grid-section-2">
+        <div class="grid-section section-2">
           <div class="grid-item">
             <span class="grid-item-name">Issuing Agency</span>
             <span class="grid-item-value">{{ (data && data._master.issuingAgency) || '-' }}</span>
@@ -59,7 +59,7 @@
         <div class="grid-section-sub-header">
           <span class="grid-section-sub-header-text">Location Details</span>
         </div>
-        <div class="grid-section-3">
+        <div class="grid-section section-3">
           <div class="grid-item">
             <span class="grid-item-name">Site/Project</span>
             <span class="grid-item-value">{{ (data && data._master.projectName) || '-' }}</span>
@@ -77,7 +77,7 @@
         <div class="grid-section-sub-header">
           <span class="grid-section-sub-header-text">Outcome Details</span>
         </div>
-        <div class="grid-section-4">
+        <div class="grid-section section-4">
           <div class="grid-item">
             <span class="grid-item-name">Outcome Status</span>
             <span class="grid-item-value">{{ (data && data._master.outcomeStatus) || '-' }}</span>
@@ -91,7 +91,7 @@
         <div class="grid-section-sub-header">
           <span class="grid-section-sub-header-text">Attachments</span>
         </div>
-        <div class="grid-section-5">
+        <div class="grid-section section-5">
           <div class="grid-item">
             <span class="grid-item-value" *ngIf="
             data &&

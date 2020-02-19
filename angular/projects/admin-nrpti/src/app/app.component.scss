@@ -18,32 +18,57 @@ app-header {
   @include flex(0 0 auto);
 }
 
+app-footer {
+  z-index: 1;
+}
+
 app-toggle-button {
-  position: fixed;
+  position: absolute;
   z-index: 1000;
-  margin-top: -60px;
-  margin-left: 0;
+  margin-top: 10px;
+  top: 0;
+  right: -35px;
 
   @media screen and (max-width: 768px) {
-    margin-top: 10px;
+    margin-top: 3px;
   }
 }
 
 .app-body {
   @include flex-box();
   @include flex(1 1 auto);
-  @include flex-direction(column);
+  @include flex-direction(row);
 
   background: #fff;
   position: relative;
-  overflow-y: auto;
+  overflow: hidden;
   font-family: 'Noto Sans', sans-serif;
+}
 
-  @media screen and (min-width: 768px) {
-    margin-top: 139px;
+.side-content {
+  @include flex-box();
+  @include flex(0 0 $side-content-width);
+
+  position: relative;
+  transition: 0.3s;
+
+  &.sideContentClosed {
+    @include flex(0 0 0);
+
+    transition: 0.3s;
   }
 }
 
-// @media screen and (max-width: 650px) {
-//   div.content {margin-left: 0;}
-// }
+.body-content {
+  @include flex-box();
+  @include flex(1 1 auto);
+  @include flex-direction(column);
+
+  width: calc(100% - #{$side-content-width});
+  background-color: $white;
+  z-index: 2;
+
+  .content-component {
+    overflow: auto;
+  }
+}

@@ -11,7 +11,9 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Utils } from 'nrpti-angular-components';
 
 describe('AdministrativeSanctionAddEditComponent', () => {
-  const testBedHelper = new TestBedHelper<AdministrativeSanctionAddEditComponent>(AdministrativeSanctionAddEditComponent);
+  const testBedHelper = new TestBedHelper<AdministrativeSanctionAddEditComponent>(
+    AdministrativeSanctionAddEditComponent
+  );
 
   // component constructor mocks
   const mockLocation = jasmine.createSpyObj('Location', ['go']);

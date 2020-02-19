@@ -1,38 +1,52 @@
-button {
-  background: #38598a;
-  border-radius: 0 6px 6px 0;
+@import "~assets/styles/base/base.scss";
 
-  /* z-index: 17; */
-  box-shadow: 0.1rem 0.1rem 0.5rem rgba(0, 0, 0, 0.25);
+button {
+  background: $aside-toggle-button-color;
+  border-radius: 0 6px 6px 0;
   height: 48px;
   width: 35px;
   padding: 0;
-
-  @media screen and (max-width: 768px) {
-    border-radius: 6px 0 0 6px;
-  }
 }
 
 .side-arrow {
   &::after,
   &::before {
-    top: 24px;
-    border-left: 3px solid #fff;
-    content: ' ';
+    content: '';
+    border-left: 3px solid $white;
     height: 13px;
-    width: 13px;
     position: absolute;
     pointer-events: none;
-    left: 13px;
   }
 
-  &::after {
-    -webkit-transform: rotate(135deg);
-    left: 6px;
+  &.right {
+    &::before {
+      -webkit-transform: rotate(-45deg);
+      transition: all 0.3s;
+      top: 14px;
+      left: 15px;
+    }
+
+    &::after {
+      -webkit-transform: rotate(45deg);
+      transition: all 0.3s;
+      top: 22px;
+      left: 15px;
+    }
   }
 
-  &::before {
-    -webkit-transform: rotate(45deg);
-    top: 16px;
+  &.left {
+    &::before {
+      -webkit-transform: rotate(45deg);
+      transition: all 0.3s;
+      top: 14px;
+      left: 15px;
+    }
+
+    &::after {
+      -webkit-transform: rotate(-45deg);
+      transition: all 0.3s;
+      top: 22px;
+      left: 15px;
+    }
   }
 }
