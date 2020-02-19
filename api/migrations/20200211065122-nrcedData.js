@@ -16,13 +16,13 @@ const CSV_FILENAME = 'nrced-data.csv';
  * We receive the dbmigrate dependency from dbmigrate initially.
  * This enables us to not have to rely on NODE_PATH.
  */
-exports.setup = function(options, seedLink) {
+exports.setup = function (options, seedLink) {
   dbm = options.dbmigrate;
   type = dbm.dataType;
   seed = seedLink;
 };
 
-exports.up = async function(db) {
+exports.up = async function (db) {
   console.log('---------------------------------------------------------------');
   console.log(`Inserting records from csv file: '${CSV_FILENAME}'`);
 
@@ -119,7 +119,7 @@ exports.up = async function(db) {
     });
 };
 
-const createAdministrativePenalty = async function(row, nrptiCollection) {
+const createAdministrativePenalty = async function (row, nrptiCollection) {
   const masterRecord = {
     _schemaName: RECORD_TYPE.AdministrativePenalty._schemaName,
     read: ['sysadmin'],
@@ -141,7 +141,7 @@ const createAdministrativePenalty = async function(row, nrptiCollection) {
     // outcomeStatus: '',
     // outcomeDescription: '',
     penalty: row[19],
-    // attachments: null,
+    documents: [],
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -172,7 +172,7 @@ const createAdministrativePenalty = async function(row, nrptiCollection) {
   // console.log('Inserted FlavourNRCEDID:', responseflavourNRCED.insertedId.toString());
 };
 
-const createAdministrativeSanction = async function(row, nrptiCollection) {
+const createAdministrativeSanction = async function (row, nrptiCollection) {
   const masterRecord = {
     _schemaName: RECORD_TYPE.AdministrativeSanction._schemaName,
     read: ['sysadmin'],
@@ -194,7 +194,7 @@ const createAdministrativeSanction = async function(row, nrptiCollection) {
     // outcomeStatus: '',
     // outcomeDescription: '',
     penalty: row[19],
-    // attachments: null,
+    documents: [],
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -225,12 +225,12 @@ const createAdministrativeSanction = async function(row, nrptiCollection) {
   // console.log('Inserted FlavourNRCEDID:', responseflavourNRCED.insertedId.toString());
 };
 
-const createCourtConviction = async function(row, nrptiCollection) {
+const createCourtConviction = async function (row, nrptiCollection) {
   // TODO when court convictions are ready
   return;
 };
 
-const createInspection = async function(row, nrptiCollection) {
+const createInspection = async function (row, nrptiCollection) {
   const masterRecord = {
     _schemaName: RECORD_TYPE.Inspection._schemaName,
     read: ['sysadmin'],
@@ -252,7 +252,7 @@ const createInspection = async function(row, nrptiCollection) {
     // outcomeStatus: '',
     // outcomeDescription: '',
     // penalty: '',
-    // attachments: null,
+    documents: [],
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -283,7 +283,7 @@ const createInspection = async function(row, nrptiCollection) {
   // console.log('Inserted FlavourNRCEDID:', responseflavourNRCED.insertedId.toString());
 };
 
-const createOrder = async function(row, nrptiCollection) {
+const createOrder = async function (row, nrptiCollection) {
   const masterRecord = {
     _schemaName: RECORD_TYPE.Order._schemaName,
     read: ['sysadmin'],
@@ -305,7 +305,7 @@ const createOrder = async function(row, nrptiCollection) {
     // outcomeStatus: '',
     // outcomeDescription: '',
     // penalty: '',
-    // attachments: null,
+    documents: [],
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -336,7 +336,7 @@ const createOrder = async function(row, nrptiCollection) {
   // console.log('Inserted FlavourNRCEDID:', responseflavourNRCED.insertedId.toString());
 };
 
-const createRestorativeJustice = async function(row, nrptiCollection) {
+const createRestorativeJustice = async function (row, nrptiCollection) {
   const masterRecord = {
     _schemaName: RECORD_TYPE.RestorativeJustice._schemaName,
     read: ['sysadmin'],
@@ -358,7 +358,7 @@ const createRestorativeJustice = async function(row, nrptiCollection) {
     // outcomeStatus: '',
     // outcomeDescription: '',
     penalty: row[19],
-    // attachments: null,
+    documents: [],
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -389,7 +389,7 @@ const createRestorativeJustice = async function(row, nrptiCollection) {
   // console.log('Inserted FlavourNRCEDID:', responseflavourNRCED.insertedId.toString());
 };
 
-const createTicket = async function(row, nrptiCollection) {
+const createTicket = async function (row, nrptiCollection) {
   const masterRecord = {
     _schemaName: RECORD_TYPE.Ticket._schemaName,
     read: ['sysadmin'],
@@ -411,7 +411,7 @@ const createTicket = async function(row, nrptiCollection) {
     // outcomeStatus: '',
     // outcomeDescription: '',
     penalty: row[19],
-    // attachments: null,
+    documents: [],
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -442,7 +442,7 @@ const createTicket = async function(row, nrptiCollection) {
   // console.log('Inserted FlavourNRCEDID:', responseflavourNRCED.insertedId.toString());
 };
 
-const createWarning = async function(row, nrptiCollection) {
+const createWarning = async function (row, nrptiCollection) {
   const masterRecord = {
     _schemaName: RECORD_TYPE.Warning._schemaName,
     read: ['sysadmin'],
@@ -464,7 +464,7 @@ const createWarning = async function(row, nrptiCollection) {
     // centroid: '',
     // outcomeStatus: '',
     // outcomeDescription: '',
-    // attachments: null,
+    documents: [],
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -495,7 +495,7 @@ const createWarning = async function(row, nrptiCollection) {
   // console.log('Inserted FlavourNRCEDID:', responseflavourNRCED.insertedId.toString());
 };
 
-exports.down = function(db) {
+exports.down = function (db) {
   return null;
 };
 
