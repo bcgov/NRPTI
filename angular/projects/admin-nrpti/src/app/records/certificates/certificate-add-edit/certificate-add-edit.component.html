@@ -61,13 +61,13 @@
         <div class="label-pair">
           <label for="recordSubtype">Record Sub-Type</label>
           <select name="recordSubtype" id="recordSubtype" formControlName="recordSubtype" class="form-control">
-            <option *ngFor="let subtype of certificateSubtypesPicklist" [ngValue]="subtype">{{ subtype }} </option>
+            <option *ngFor="let subtype of certificateSubtypes" [ngValue]="subtype">{{ subtype }} </option>
           </select>
         </div>
         <div class="label-pair">
           <label for="issuingAgency">Issuing Agency</label>
           <select name="issuingAgency" id="issuingAgency" formControlName="issuingAgency" class="form-control">
-            <option *ngFor="let agency of agenciesPicklist" [ngValue]="agency">{{ agency }}</option>
+            <option *ngFor="let agency of agencies" [ngValue]="agency">{{ agency }}</option>
           </select>
         </div>
       </div>

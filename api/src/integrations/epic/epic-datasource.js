@@ -190,7 +190,7 @@ class EpicDataSource {
       this.status.individualRecordStatus.push(recordStatus);
 
       // Do not re-throw error, as a single failure is not cause to stop the other records from processing
-      defaultLog.error(`processRecords - unexpected error: ${error.message}`);
+      defaultLog.error(`processRecord - unexpected error: ${error.message}`);
     }
   }
 

@@ -61,7 +61,7 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
     }
     for (const flavour of this.currentRecord.flavours) {
       switch (flavour._schemaName) {
-        case ('AgreementLNG'):
+        case 'AgreementLNG':
           this.lngFlavour = flavour;
           this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
           this.lngFlavour.read.includes('public') && (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(new Date(this.lngFlavour.datePublished))}`);
@@ -81,8 +81,7 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
           this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))
-        ) ||
-        ''
+        ) || ''
       ),
       nationName: new FormControl((this.currentRecord && this.currentRecord.nationName) || ''),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
@@ -99,11 +98,7 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
   togglePublish(flavour) {
     switch (flavour) {
       case 'lng':
-        if (this.lngPublishStatus === 'Unpublished') {
-          this.lngPublishStatus = 'Published';
-        } else {
-          this.lngPublishStatus = 'Unpublished';
-        }
+        this.lngPublishStatus = this.lngPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
         break;
       default:
         break;
@@ -148,7 +143,6 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
 
     if (!this.isEditing) {
       this.factoryService.createAgreement(agreement).subscribe(res => {
-        console.log(res[0][0]);
         this.parseResForErrors(res);
         this.router.navigate(['records']);
       });
@@ -158,7 +152,6 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
       this.lngFlavour && (agreement.AgreementLNG['_id'] = this.lngFlavour._id);
 
       this.factoryService.editAgreement(agreement).subscribe(res => {
-        console.log(res[0][0]);
         this.parseResForErrors(res);
         this.router.navigate(['records', 'agreements', this.currentRecord._id, 'detail']);
       });
@@ -166,8 +159,12 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
   }
 
   private parseResForErrors(res) {
+    if (!res || !res.length || !res[0] || !res[0].length || !res[0][0]) {
+      alert('Failed to save record.');
+    }
+
     if (res[0][0].status === 'failure') {
-      alert('Master record failed to save.');
+      alert('Failed to save master record.');
     }
 
     if (res[0][0].flavours) {
@@ -178,7 +175,7 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
         }
       });
       if (flavourFailure) {
-        alert('One or more of your flavours have failed to save.');
+        alert('Failed to save one or more flavour records');
       }
     }
   }
