@@ -1,6 +1,6 @@
 const EpicDataSource = require('./epic-datasource');
 
-describe('EpicDataSource', () => {
+fdescribe('EpicDataSource', () => {
   describe('constructor', () => {
     it('sets params', () => {
       const epicDataSource = new EpicDataSource(null, { params: 1 });
@@ -19,34 +19,16 @@ describe('EpicDataSource', () => {
 
     it('sets default status fields', () => {
       const epicDataSource = new EpicDataSource();
-      expect(epicDataSource.status).toEqual({ itemsProcessed: 0, itemTotal: 0, typeStatus: [] });
+      expect(epicDataSource.status).toEqual({
+        itemsProcessed: 0,
+        itemTotal: 0,
+        typeStatus: [],
+        individualRecordStatus: []
+      });
     });
   });
 
   describe('updateRecords', () => {
-    it('catches any thrown exceptions and returns gracefully', async () => {
-      // mock function to throw an error
-      const mock_updateRecords = jest.fn(() => {
-        throw Error('unexpected error!');
-      });
-
-      const epicDataSource = new EpicDataSource();
-
-      epicDataSource._updateRecords = mock_updateRecords;
-
-      const status = await epicDataSource.updateRecords();
-
-      expect(status).toEqual({
-        message: 'updateRecords - unexpected error',
-        error: 'unexpected error!',
-        itemsProcessed: 0,
-        itemTotal: 0,
-        typeStatus: []
-      });
-    });
-  });
-
-  describe('_updateRecords', () => {
     it('catches any thrown exceptions and returns gracefully', async () => {
       // mock function to throw an error
       const mockUpdateRecordType = jest.fn(() => {
@@ -57,14 +39,15 @@ describe('EpicDataSource', () => {
 
       epicDataSource.updateRecordType = mockUpdateRecordType;
 
-      await epicDataSource._updateRecords([{}]);
+      const status = await epicDataSource.updateRecords();
 
-      expect(epicDataSource.status).toEqual({
-        message: '_updateRecords - unexpected error',
+      expect(status).toEqual({
+        message: 'updateRecords - unexpected error',
         error: 'unexpected error!',
         itemsProcessed: 0,
         itemTotal: 0,
-        typeStatus: []
+        typeStatus: [],
+        individualRecordStatus: []
       });
     });
   });
@@ -78,8 +61,8 @@ describe('EpicDataSource', () => {
 
       expect(recordTypeStatus).toEqual({
         message: 'updateRecordType - unexpected error',
-        error: "Cannot read property 'type' of undefined",
-        itemsProcessed: 0,
+        error: 'updateRecordType - required recordType is null.',
+        type: undefined,
         itemTotal: 0,
         url: ''
       });
@@ -101,18 +84,18 @@ describe('EpicDataSource', () => {
       epicDataSource.getHostname = jest.fn();
       epicDataSource.getEpicSearchPathname = jest.fn();
       epicDataSource.getEpicProjectPathname = jest.fn();
-      epicDataSource.processRecords = jest.fn();
+      epicDataSource.processRecord = jest.fn();
 
       const recordType = { type: { typeId: '123' }, milestone: { milestoneId: '123' }, getUtil: jest.fn() };
 
       const recordTypeStatus = await epicDataSource.updateRecordType(recordType);
 
       expect(recordType.getUtil).not.toHaveBeenCalled();
-      expect(epicDataSource.processRecords).not.toHaveBeenCalled();
+      expect(epicDataSource.processRecord).not.toHaveBeenCalled();
 
       expect(recordTypeStatus).toEqual({
         message: 'updateRecordType - no records found',
-        itemsProcessed: 0,
+        type: recordType,
         itemTotal: 0,
         url: ''
       });
@@ -145,13 +128,13 @@ describe('EpicDataSource', () => {
       epicDataSource.getEpicSearchPathname = jest.fn(() => {
         return 'searchPathname';
       });
-      epicDataSource.processRecords = jest.fn(() => {
-        return {
-          processStatus: 'someStatus'
-        };
-      });
+      epicDataSource.processRecord = jest.fn(() => {});
 
-      const recordType = { type: { typeId: '111' }, milestone: { milestoneId: '222' }, getUtil: jest.fn(() => 'utils') };
+      const recordType = {
+        type: { typeId: '111' },
+        milestone: { milestoneId: '222' },
+        getUtil: jest.fn(() => 'utils')
+      };
 
       const status = await epicDataSource.updateRecordType(recordType);
 
@@ -164,37 +147,42 @@ describe('EpicDataSource', () => {
 
       expect(recordType.getUtil).toHaveBeenCalledTimes(1);
 
-      expect(epicDataSource.processRecords).toHaveBeenCalledWith('utils', [
-        { _id: '123' },
-        { _id: '456' },
-        { _id: '789' }
-      ]);
+      expect(epicDataSource.processRecord).toHaveBeenNthCalledWith(1, 'utils', { _id: '123' });
+      expect(epicDataSource.processRecord).toHaveBeenNthCalledWith(2, 'utils', { _id: '456' });
+      expect(epicDataSource.processRecord).toHaveBeenNthCalledWith(3, 'utils', { _id: '789' });
 
       expect(status).toEqual({
-        itemsProcessed: 0,
+        type: recordType,
         itemTotal: 3,
         url: 'url',
-        epicMeta: 'meta!',
-        processStatus: 'someStatus'
+        epicMeta: 'meta!'
       });
     });
   });
 
-  describe('processRecords', () => {
+  describe('processRecord', () => {
     it('throws an error if recordTypeUtils is null', async () => {
       const epicDataSource = new EpicDataSource();
 
-      await expect(epicDataSource.processRecords(null, [])).rejects.toThrow(
-        new Error('processRecords - required recordTypeUtils is null.')
-      );
+      await epicDataSource.processRecord(null, { _id: '333' });
+
+      expect(epicDataSource.status.individualRecordStatus[0]).toEqual({
+        epicId: '333',
+        message: 'processRecord - unexpected error',
+        error: 'processRecord - required recordTypeUtils is null.'
+      });
     });
 
     it('throws an error if epicRecords is null', async () => {
       const epicDataSource = new EpicDataSource();
 
-      await expect(epicDataSource.processRecords({}, null)).rejects.toThrow(
-        new Error('processRecords - required epicRecords is null.')
-      );
+      await expect(epicDataSource.processRecord({}, null));
+
+      expect(epicDataSource.status.individualRecordStatus[0]).toEqual({
+        epicId: null,
+        message: 'processRecord - unexpected error',
+        error: 'processRecord - required epicRecord is null.'
+      });
     });
 
     it('transforms, saves, and updates the status for each epic record', async () => {
@@ -214,75 +202,24 @@ describe('EpicDataSource', () => {
         })
       };
 
-      const epicRecords = [{ _id: '123' }, { _id: '456' }];
+      const epicRecord = { _id: '123' };
 
-      const recordTypeStatus = await epicDataSource.processRecords(recordTypeUtils, epicRecords);
+      await epicDataSource.processRecord(recordTypeUtils, epicRecord);
 
-      expect(epicDataSource.getRecordProject).toHaveBeenNthCalledWith(1, { _id: '123' });
-      expect(epicDataSource.getRecordProject).toHaveBeenNthCalledWith(2, { _id: '456' });
+      expect(epicDataSource.getRecordProject).toHaveBeenCalledWith({ _id: '123' });
 
-      expect(recordTypeUtils.transformRecord).toHaveBeenNthCalledWith(1, {
+      expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith({
         _id: '123',
         project: { name: '123' }
       });
-      expect(recordTypeUtils.transformRecord).toHaveBeenNthCalledWith(2, {
-        _id: '456',
-        project: { name: '456' }
-      });
 
-      expect(recordTypeUtils.saveRecord).toHaveBeenNthCalledWith(1, {
+      expect(recordTypeUtils.saveRecord).toHaveBeenCalledWith({
         _id: '123',
         project: { name: '123' },
         transformed: true
       });
-      expect(recordTypeUtils.saveRecord).toHaveBeenNthCalledWith(2, {
-        _id: '456',
-        project: { name: '456' },
-        transformed: true
-      });
 
-      expect(recordTypeStatus).toEqual({ itemsProcessed: 2 });
-    });
-
-    it('continues processing records even if one record fails and throws an exception', async () => {
-      const epicDataSource = new EpicDataSource();
-
-      epicDataSource.getRecordProject = jest.fn(record => {
-        return { name: record._id };
-      });
-
-      // mock record type utils
-      const recordTypeUtils = {
-        transformRecord: jest.fn(record => {
-          // force an error if _id is '123'
-          if (record._id === '123') {
-            throw Error('an unexpected error!');
-          }
-
-          return { ...record, transformed: true };
-        }),
-        saveRecord: jest.fn(() => 'saved!')
-      };
-
-      const epicRecords = [{ _id: '123' }, { _id: '456' }];
-
-      const recordTypeStatus = await epicDataSource.processRecords(recordTypeUtils, epicRecords);
-
-      expect(epicDataSource.getRecordProject).toHaveBeenNthCalledWith(1, { _id: '123' });
-      expect(epicDataSource.getRecordProject).toHaveBeenNthCalledWith(2, { _id: '456' });
-
-      expect(recordTypeUtils.transformRecord).toHaveBeenNthCalledWith(1, { _id: '123', project: { name: '123' } });
-      expect(recordTypeUtils.transformRecord).toHaveBeenNthCalledWith(2, { _id: '456', project: { name: '456' } });
-
-      // saveRecord is not called on _id=123 because it threw an error during the transformRecord call
-      expect(recordTypeUtils.saveRecord).toHaveBeenNthCalledWith(1, {
-        _id: '456',
-        project: { name: '456' },
-        transformed: true
-      });
-
-      // itemTotal is 0 here because it is set elsewhere in the class
-      expect(recordTypeStatus).toEqual({ itemsProcessed: 1 });
+      expect(epicDataSource.status.itemsProcessed).toEqual(1);
     });
   });
 
