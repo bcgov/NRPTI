@@ -29,8 +29,8 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
   public lngPublishSubtext = 'Not published';
 
   // Pick lists
-  public certificateSubtypesPicklist = Picklists.certificateSubtypesPicklist;
-  public agenciesPicklist = Picklists.agenciesPicklist;
+  public certificateSubtypes = Picklists.certificateSubtypePicklist;
+  public agencies = Picklists.agencyPicklist;
 
   constructor(
     public route: ActivatedRoute,
@@ -66,7 +66,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
     }
     for (const flavour of this.currentRecord.flavours) {
       switch (flavour._schemaName) {
-        case ('CertificateLNG'):
+        case 'CertificateLNG':
           this.lngFlavour = flavour;
           this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
           this.lngFlavour.read.includes('public') && (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(new Date(this.lngFlavour.datePublished))}`);
@@ -87,8 +87,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
           this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))
-        ) ||
-        ''
+        ) || ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -123,11 +122,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
   togglePublish(flavour) {
     switch (flavour) {
       case 'lng':
-        if (this.lngPublishStatus === 'Unpublished') {
-          this.lngPublishStatus = 'Published';
-        } else {
-          this.lngPublishStatus = 'Unpublished';
-        }
+        this.lngPublishStatus = this.lngPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
         break;
       default:
         break;
@@ -179,7 +174,6 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
 
     if (!this.isEditing) {
       this.factoryService.createCertificate(certificate).subscribe(res => {
-        console.log(res[0][0]);
         this.parseResForErrors(res);
         this.router.navigate(['records']);
       });
@@ -189,7 +183,6 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       this.lngFlavour && (certificate.CertificateLNG['_id'] = this.lngFlavour._id);
 
       this.factoryService.editCertificate(certificate).subscribe(res => {
-        console.log(res[0][0]);
         this.parseResForErrors(res);
         this.router.navigate(['records', 'certificates', this.currentRecord._id, 'detail']);
       });
@@ -197,8 +190,12 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
   }
 
   private parseResForErrors(res) {
+    if (!res || !res.length || !res[0] || !res[0].length || !res[0][0]) {
+      alert('Failed to save record.');
+    }
+
     if (res[0][0].status === 'failure') {
-      alert('Master record failed to save.');
+      alert('Failed to save master record.');
     }
 
     if (res[0][0].flavours) {
@@ -209,7 +206,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         }
       });
       if (flavourFailure) {
-        alert('One or more of your flavours have failed to save.');
+        alert('Failed to save one or more flavour records');
       }
     }
   }

@@ -61,13 +61,13 @@
         <div class="label-pair">
           <label for="issuingAgency">Issuing Agency</label>
           <select name="issuingAgency" id="issuingAgency" formControlName="issuingAgency" class="form-control">
-            <option *ngFor="let agency of agenciesPicklist" [ngValue]="agency">{{ agency }}</option>
+            <option *ngFor="let agency of agencies" [ngValue]="agency">{{ agency }}</option>
           </select>
         </div>
         <div class="label-pair">
           <label for="author">Author</label>
           <select name="author" id="author" formControlName="author" class="form-control">
-            <option *ngFor="let auth of authorsPicklist" [ngValue]="auth">{{ auth }}</option>
+            <option *ngFor="let author of authors" [ngValue]="auth">{{ author }}</option>
           </select>
         </div>
       </div>
@@ -165,7 +165,7 @@
         <div class="label-pair xsm">
           <label for="outcomeStatus">Status</label>
           <select name="outcomeStatus" id="outcomeStatus" formControlName="outcomeStatus" class="form-control">
-            <option *ngFor="let outcomeStatus of outcomeStatusPicklist" [ngValue]="outcomeStatus">{{ outcomeStatus }}
+            <option *ngFor="let outcomeStatus of outcomeStatuses" [ngValue]="outcomeStatus">{{ outcomeStatus }}
             </option>
           </select>
         </div>
