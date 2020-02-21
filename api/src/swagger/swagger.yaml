@@ -60,6 +60,16 @@ definitions:
       - Order
       - Inspection
 
+  ### Document Type Definitions
+  DocumentRequestObject:
+    type: object
+  DocumentResponseObject:
+    type: object
+    properties:
+      signedUrl:
+        type: string
+        example: "A pre-signed URL."
+
   ### Search Definitions
   SearchObject:
     type: object
@@ -555,6 +565,51 @@ paths:
           description: 'Success'
           schema:
             $ref: '#/definitions/RecordResponseObject'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+
+  ###
+  ### Document Routes
+  ###
+  /document:
+    x-swagger-router-controller: document-controller
+    options:
+      tags:
+        - task
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated task route'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - Document
+      summary: 'Create new Document(s)'
+      operationId: protectedPut
+      description: 'Authenticated access to create a Document and get a signed put URL in return'
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+      parameters:
+        - in: body
+          name: data
+          description: 'Data to create a document'
+          required: true
+          schema:
+            $ref: '#/definitions/DocumentRequestObject'
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/DocumentResponseObject'
         '403':
           description: 'Access Denied'
           schema:

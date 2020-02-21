@@ -273,7 +273,7 @@ var generateMatchesForAggregation = async function (and, or, searchProperties, p
   let __flavour = {};
   let __master = {};
   for (item in and) {
-    if ( item.startsWith('_master.')) {
+    if (item.startsWith('_master.')) {
       __master[item] = and[item];
     } else {
       __flavour[item] = and[item];
@@ -296,7 +296,7 @@ var generateMatchesForAggregation = async function (and, or, searchProperties, p
   let __flavourOr = {};
   let __masterOr = {};
   for (item in or) {
-    if ( item.startsWith('_master.')) {
+    if (item.startsWith('_master.')) {
       __masterOr[item] = or[item];
     } else {
       __flavourOr[item] = or[item];
@@ -446,6 +446,18 @@ var executeQuery = async function (args, res, next) {
           "localField": "_id",
           "foreignField": "_master",
           "as": "flavours"
+        }
+      }
+    );
+
+    // Populate documents in a record
+    populate && QueryUtils.recordTypes.includes(args.swagger.params._schemaName.value) && aggregation.push(
+      {
+        '$lookup': {
+          "from": "nrpti",
+          "localField": "documents",
+          "foreignField": "_id",
+          "as": "documents"
         }
       }
     );
