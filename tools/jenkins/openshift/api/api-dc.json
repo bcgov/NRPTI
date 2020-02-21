@@ -160,6 +160,18 @@
                   {
                     "name": "API_HOSTNAME",
                     "value": "${APPLICATION_DOMAIN}"
+                  },
+                  {
+                    "name": "OBJECT_STORE_ENDPOINT_URL",
+                    "value": "${OBJECT_STORE_ENDPOINT_URL}"
+                  }
+                ],
+                "envFrom": [
+                  {
+                    "prefix": "OBJECT_STORE_",
+                    "secretRef": {
+                      "name": "nr-object-store-credential"
+                    }
                   }
                 ],
                 "readinessProbe": {

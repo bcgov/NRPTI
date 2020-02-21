@@ -69,7 +69,7 @@ export class ApiService {
   }
 
   uploadDocument(formData: FormData): Observable<Document> {
-    const fields = ['documentFileName', 'displayName', 'internalURL', 'internalMime'];
+    const fields = ['fileName', 'displayName', 'internalURL', 'internalMime'];
     const queryString = `document/?fields=${Utils.convertArrayIntoPipeString(fields)}`;
     return this.http.post<Document>(`${this.pathAPI}/${queryString}`, formData, {});
   }
@@ -81,7 +81,7 @@ export class ApiService {
 
   public async downloadDocument(document: Document): Promise<void> {
     const blob = await this.downloadResource(document._id);
-    const filename = document.documentFileName;
+    const filename = document.fileName;
 
     if (this.isMS) {
       window.navigator.msSaveBlob(blob, filename);
@@ -100,7 +100,7 @@ export class ApiService {
 
   public async openDocument(document: Document): Promise<void> {
     const blob = await this.downloadResource(document._id);
-    const filename = document.documentFileName;
+    const filename = document.fileName;
 
     if (this.isMS) {
       window.navigator.msSaveBlob(blob, filename);
