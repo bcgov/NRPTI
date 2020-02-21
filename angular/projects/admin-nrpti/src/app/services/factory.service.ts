@@ -7,7 +7,9 @@ import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import { Order, Inspection, Certificate, Permit, Agreement, SelfReport, RestorativeJustice, Ticket, AdministrativePenalty, AdministrativeSanction, Warning, ConstructionPlan, ManagementPlan } from '../../../../common/src/app/models/master';
+import { Document } from '../../../../common/src/app/models/document';
 import { TaskService, ITaskParams } from './task.service';
+import { DocumentService } from './document.service';
 
 /**
  * Facade service for all admin-nrpti services.
@@ -24,6 +26,7 @@ export class FactoryService {
   private _searchService: SearchService;
   private _recordService: RecordService;
   private _taskService: TaskService;
+  private _documentService: DocumentService;
 
   constructor(private injector: Injector) {
     // The following items are loaded by a file that is only present on cluster builds.
@@ -98,11 +101,18 @@ export class FactoryService {
    * @type {TaskService}
    * @memberof FactoryService
    */
-   public get taskService(): TaskService {
+  public get taskService(): TaskService {
     if (!this._taskService) {
       this._taskService = this.injector.get(TaskService);
     }
     return this._taskService;
+  }
+
+  public get documentService(): DocumentService {
+    if (!this._documentService) {
+      this._documentService = this.injector.get(DocumentService);
+    }
+    return this._documentService;
   }
 
   /**
@@ -504,4 +514,20 @@ export class FactoryService {
     return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
 
+  // Documents
+  public createDocument(document: Document): Observable<any> {
+    return this.documentService.createDocument(document)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public uploadFileToS3(file: File, presignedPostData: any): Promise<any> {
+    const formData = new FormData();
+    // Object.keys(presignedPostData.fields).forEach(key => {
+    //   formData.append(key, presignedPostData.fields[key]);
+    // });
+
+    // Actual file has to be appended last.
+    formData.append('file', file);
+    return this.documentService.uploadFileToS3(presignedPostData, formData);
+  }
 }
