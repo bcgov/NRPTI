@@ -1,37 +1,37 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const defaultLog = require('../../utils/logger')('epic-certificates');
+const defaultLog = require('../../utils/logger')('epic-inspections');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const EpicUtils = require('./epic-utils');
 
 /**
- * Epic Certificate record handler for { type: 'Certificate Package', milestone: 'Certificate' }.
+ * Epic Inspection record handler for { type: 'Inspection Record', milestone: 'Compliance & Enforcement' }.
  *
  * Must contain the following functions:
- * - transformRecord: (object) => Certificate
- * - saveRecord: (Certificate) => any
+ * - transformRecord: (object) => Inspection
+ * - saveRecord: (Inspection) => any
  *
- * @class EpicCertificates
+ * @class Inspections
  */
-class EpicCertificates {
+class Inspections {
   /**
-   * Creates an instance of EpicCertificates.
+   * Creates an instance of Inspections.
    *
    * @param {*} auth_payload user information for auditing
-   * @memberof EpicCertificates
+   * @memberof Inspections
    */
   constructor(auth_payload) {
     this.auth_payload = auth_payload;
   }
 
   /**
-   * Transform an Epic certificate record into a NRPTI Certificate record.
+   * Transform an Epic inspection record into a NRPTI Inspection record.
    *
-   * @param {object} epicRecord Epic certificate record (required)
-   * @returns {Certificate} NRPTI certificate record.
+   * @param {object} epicRecord Epic inspection record (required)
+   * @returns {Inspection} NRPTI inspection record.
    * @throws {Error} if record is not provided.
-   * @memberof EpicCertificates
+   * @memberof Inspections
    */
   async transformRecord(epicRecord) {
     if (!epicRecord) {
@@ -53,7 +53,7 @@ class EpicCertificates {
     }
 
     return {
-      _schemaName: RECORD_TYPE.Certificate._schemaName,
+      _schemaName: RECORD_TYPE.Inspection._schemaName,
       _epicProjectId: (epicRecord.project && epicRecord.project._id) || '',
       _sourceRefId: epicRecord._id || '',
       _epicMilestoneId: epicRecord.milestone || '',
@@ -62,14 +62,18 @@ class EpicCertificates {
       write: ['sysadmin'],
 
       recordName: epicRecord.displayName || '',
-      recordType: RECORD_TYPE.Certificate.displayName,
-      dateIssued: epicRecord.documentDate || null,
+      recordType: RECORD_TYPE.Inspection.displayName,
+      // recordSubtype: // No mapping
+      dateIssued: epicRecord.datePosted || null,
       issuingAgency: 'Environmental Assessment Office',
       author: epicRecord.documentAuthor || '',
       legislation: (epicRecord.project && epicRecord.project.legislation) || '',
+      // issuedTo: // No mapping
       projectName: (epicRecord.project && epicRecord.project.name) || '',
       location: (epicRecord.project && epicRecord.project.location) || '',
       centroid: (epicRecord.project && epicRecord.project.centroid) || '',
+      // outcomeStatus: // No mapping
+      // outcomeDescription: // No mapping
       attachments: attachments,
 
       dateAdded: new Date(),
@@ -82,32 +86,32 @@ class EpicCertificates {
   }
 
   /**
-   * Persist a NRPTI Certificate record to the database.
+   * Persist a NRPTI Inspection record to the database.
    *
    * @async
-   * @param {Certificate} certificateRecord NRPTI Certificate record (required)
+   * @param {Inspection} inspectionRecord NRPTI Inspection record (required)
    * @returns {string} status of the add/update operations.
-   * @memberof EpicCertificates
+   * @memberof Inspections
    */
-  async saveRecord(certificateRecord) {
-    if (!certificateRecord) {
+  async saveRecord(inspectionRecord) {
+    if (!inspectionRecord) {
       throw Error('saveRecord - required record must be non-null.');
     }
 
     try {
-      const Certificate = mongoose.model(RECORD_TYPE.Certificate._schemaName);
+      const Inspection = mongoose.model(RECORD_TYPE.Inspection._schemaName);
 
-      const record = await Certificate.findOneAndUpdate(
-        { _schemaName: RECORD_TYPE.Certificate._schemaName, _sourceRefId: certificateRecord._sourceRefId },
-        { $set: certificateRecord },
+      const record = await Inspection.findOneAndUpdate(
+        { _schemaName: RECORD_TYPE.Inspection._schemaName, _sourceRefId: inspectionRecord._sourceRefId },
+        { $set: inspectionRecord },
         { upsert: true, new: true }
       );
 
       return record;
     } catch (error) {
-      defaultLog.error(`Failed to save Epic Certificate record: ${error.message}`);
+      defaultLog.error(`Failed to save Epic Inspection record: ${error.message}`);
     }
   }
 }
 
-module.exports = EpicCertificates;
+module.exports = Inspections;
