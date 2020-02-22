@@ -14,6 +14,10 @@ describe('OrdersUtils', () => {
     });
 
     it('returns a default nrpti record when empty epicRecord provided', async () => {
+      jest.spyOn(require('./../../controllers/document-controller'), 'createLinkDocument').mockImplementation(() => {
+        return '310d2dddc9834cbab11282f3c8426fad';
+      });
+
       const ordersUtils = new OrdersUtils();
 
       const epicRecord = {};
@@ -39,9 +43,9 @@ describe('OrdersUtils', () => {
         projectName: '',
         location: '',
         centroid: '',
-
         dateAdded: expect.any(Date),
         dateUpdated: expect.any(Date),
+        documents: [],
         updatedBy: '',
         sourceDateAdded: null,
         sourceDateUpdated: null,
@@ -52,6 +56,10 @@ describe('OrdersUtils', () => {
     });
 
     it('returns a nrpti record with all supported epicRecord fields populated', async () => {
+      jest.spyOn(require('./../../controllers/document-controller'), 'createLinkDocument').mockImplementation(() => {
+        return '310d2dddc9834cbab11282f3c8426fad';
+      });
+
       const ordersUtils = new OrdersUtils();
 
       const epicRecord = {
@@ -89,6 +97,7 @@ describe('OrdersUtils', () => {
 
         dateAdded: expect.any(Date),
         dateUpdated: expect.any(Date),
+        documents: ['310d2dddc9834cbab11282f3c8426fad'],
         updatedBy: '',
         sourceDateAdded: null,
         sourceDateUpdated: null,
