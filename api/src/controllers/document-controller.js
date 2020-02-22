@@ -4,7 +4,8 @@ const queryActions = require('../utils/query-actions');
 const { uuid } = require('uuidv4');
 const AWS = require('aws-sdk');
 
-const ep = new AWS.Endpoint(process.env.OBJECT_STORE_endpoint_url);
+const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
+const ep = new AWS.Endpoint(OBJ_STORE_URL);
 const s3 = new AWS.S3(
   {
     endpoint: ep,
