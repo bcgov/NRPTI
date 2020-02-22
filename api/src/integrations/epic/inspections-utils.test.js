@@ -14,6 +14,10 @@ describe('InspectionsUtils', () => {
     });
 
     it('returns a default nrpti record when empty epicRecord provided', async () => {
+      jest.spyOn(require('./../../controllers/document-controller'), 'createLinkDocument').mockImplementation(() => {
+        return '310d2dddc9834cbab11282f3c8426fad';
+      });
+
       const inspectionsUtils = new InspectionsUtils();
 
       const epicRecord = {};
@@ -42,6 +46,7 @@ describe('InspectionsUtils', () => {
 
         dateAdded: expect.any(Date),
         dateUpdated: expect.any(Date),
+        documents: [],
         updatedBy: '',
         sourceDateAdded: null,
         sourceDateUpdated: null,
