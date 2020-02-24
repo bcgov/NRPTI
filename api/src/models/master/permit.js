@@ -20,7 +20,7 @@ module.exports = require('../../utils/model-schema-generator')(
     projectName: { type: String, default: '' },
     location: { type: String, default: '' },
     centroid: [{ type: Number, default: 0.0 }],
-    attachments: [{ type: Object, default: null }],
+    documents: [{ type: 'ObjectId', default: null, index: true }],
 
     dateAdded: { type: Date, default: Date.now() },
     dateUpdated: { type: Date, default: null },
