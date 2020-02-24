@@ -101,10 +101,14 @@
       }
 
       .section-2 {
-        grid-template-columns: 3fr 2fr 6fr;
+        grid-template-columns: auto;
       }
 
       .section-3 {
+        grid-template-columns: 3fr 2fr 6fr;
+      }
+
+      .section-4 {
         grid-template-columns: auto;
       }
     }
