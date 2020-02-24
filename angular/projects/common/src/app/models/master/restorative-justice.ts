@@ -27,7 +27,7 @@ export class RestorativeJustice {
   outcomeStatus: string; // epic value?
   outcomeDescription: string; // out of scope?
   penalty: string;
-  attachments: object[];
+  documents: object[];
 
   dateAdded: Date;
   dateUpdated: Date;
@@ -62,7 +62,7 @@ export class RestorativeJustice {
     this.outcomeStatus = (obj && obj.outcomeStatus) || null;
     this.outcomeDescription = (obj && obj.outcomeDescription) || null;
     this.penalty = (obj && obj.penalty) || null;
-    this.attachments = (obj && obj.attachments) || null;
+    this.documents = (obj && obj.documents) || null;
 
     this.dateAdded = (obj && obj.dateAdded) || null;
     this.dateUpdated = (obj && obj.dateUpdated) || null;

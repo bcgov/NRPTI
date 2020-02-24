@@ -26,7 +26,7 @@ export class Warning {
   centroid: number[];
   outcomeStatus: string; // epic value?
   outcomeDescription: string; // out of scope?
-  attachments: object[];
+  documents: object[];
 
   dateAdded: Date;
   dateUpdated: Date;
@@ -60,7 +60,7 @@ export class Warning {
     this.centroid = (obj && obj.centroid) || null;
     this.outcomeStatus = (obj && obj.outcomeStatus) || null;
     this.outcomeDescription = (obj && obj.outcomeDescription) || null;
-    this.attachments = (obj && obj.attachments) || null;
+    this.documents = (obj && obj.documents) || null;
 
     this.dateAdded = (obj && obj.dateAdded) || null;
     this.dateUpdated = (obj && obj.dateUpdated) || null;
