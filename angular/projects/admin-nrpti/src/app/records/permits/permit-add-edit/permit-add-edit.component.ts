@@ -29,9 +29,8 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
   public lngPublishSubtext = 'Not published';
 
   // Pick lists
-  public permitSubtypePicklist = Picklists.permitSubtypePicklist;
+  public permitSubtypes = Picklists.permitSubtypePicklist;
   public agencies = Picklists.agencyPicklist;
-  public authors = Picklists.authorPicklist;
 
   constructor(
     public route: ActivatedRoute,
@@ -95,7 +94,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
           ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
-      author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
       legislation: new FormControl((this.currentRecord && this.currentRecord.legislation) || ''),
       issuedTo: new FormControl((this.currentRecord && this.currentRecord.issuedTo) || ''),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
@@ -143,7 +141,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       recordSubtype: this.myForm.controls.recordSubtype.value,
       dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
       issuingAgency: this.myForm.controls.issuingAgency.value,
-      author: this.myForm.controls.author.value,
       issuedTo: this.myForm.controls.issuedTo.value,
       projectName: this.myForm.controls.projectName.value,
       location: this.myForm.controls.location.value,
