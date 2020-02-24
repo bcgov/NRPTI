@@ -195,6 +195,7 @@ exports.up = async function (db) {
 };
 
 let createActivityRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
   const activity = {
     _schemaName: 'ActivityLNG',
     _epicProjectId: new ObjectID(project),
@@ -217,6 +218,7 @@ let createActivityRecord = async function (item, project, nrptiCollection) {
 }
 
 let createAgreementRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
   // Create the master record
   const master = {
     _schemaName: 'Agreement',
@@ -228,7 +230,7 @@ let createAgreementRecord = async function (item, project, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
     nationName: item.nation,
-    attachments: [{ url: item.url }],
+    documents: documents,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
 
     dateAdded: new Date(),
@@ -263,6 +265,7 @@ let createAgreementRecord = async function (item, project, nrptiCollection) {
 }
 
 let createManagementPlanRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
   // Create the master record
   const master = {
     _schemaName: 'ManagementPlan',
@@ -274,7 +277,7 @@ let createManagementPlanRecord = async function (item, project, nrptiCollection)
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
     issuingAgency: item.agency,
-    attachments: [{ url: item.url }],
+    documents: documents,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
 
     dateAdded: new Date(),
@@ -310,6 +313,7 @@ let createManagementPlanRecord = async function (item, project, nrptiCollection)
 }
 
 let createConstructionPlanRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
   // Create the master record
   const master = {
     _schemaName: 'ConstructionPlan',
@@ -321,7 +325,7 @@ let createConstructionPlanRecord = async function (item, project, nrptiCollectio
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
     issuingAgency: item.agency,
-    attachments: [{ url: item.url }],
+    documents: documents,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
 
     dateAdded: new Date(),
@@ -357,6 +361,7 @@ let createConstructionPlanRecord = async function (item, project, nrptiCollectio
 }
 
 let createWarningRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
   // Create the master record
   const master = {
     _schemaName: 'Warning',
@@ -369,7 +374,7 @@ let createWarningRecord = async function (item, project, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
     issuingAgency: item.agency,
-    attachments: [{ url: item.url }],
+    documents: documents,
     author: item.author,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
 
@@ -405,6 +410,7 @@ let createWarningRecord = async function (item, project, nrptiCollection) {
 }
 
 let createComplianceSelfReportRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
   // Create the master record
   const master = {
     _schemaName: 'SelfReport',
@@ -416,7 +422,7 @@ let createComplianceSelfReportRecord = async function (item, project, nrptiColle
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
     issuingAgency: item.agency,
-    attachments: [{ url: item.url }],
+    documents: documents,
     author: item.author,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
 
@@ -453,6 +459,7 @@ let createComplianceSelfReportRecord = async function (item, project, nrptiColle
 }
 
 let createCertificateRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
   // Create the master record
   const certificateMaster = {
     _schemaName: 'Certificate',
@@ -465,7 +472,7 @@ let createCertificateRecord = async function (item, project, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
     issuingAgency: item.agency,
-    attachments: [{ url: item.url }],
+    documents: documents,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
 
     dateAdded: new Date(),
@@ -500,6 +507,7 @@ let createCertificateRecord = async function (item, project, nrptiCollection) {
 }
 
 let createPermitRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
   // Create the master record
   const permitMaster = {
     _schemaName: 'Permit',
@@ -512,7 +520,7 @@ let createPermitRecord = async function (item, project, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
     issuingAgency: item.agency,
-    attachments: [{ url: item.url }],
+    documents: documents,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
 
     dateAdded: new Date(),
@@ -547,6 +555,7 @@ let createPermitRecord = async function (item, project, nrptiCollection) {
 }
 
 let createOrderRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
   // Create the master record
   const master = {
     _schemaName: 'Order',
@@ -559,7 +568,7 @@ let createOrderRecord = async function (item, project, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
     issuingAgency: item.agency,
-    attachments: [{ url: item.url }],
+    documents: documents,
     author: item.author,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
 
@@ -595,6 +604,7 @@ let createOrderRecord = async function (item, project, nrptiCollection) {
 }
 
 let createInspectionRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
   // Create the master record
   const master = {
     _schemaName: 'Inspection',
@@ -606,7 +616,7 @@ let createInspectionRecord = async function (item, project, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
     issuingAgency: item.agency,
-    attachments: [{ url: item.url }],
+    documents: documents,
     author: item.author,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
 
@@ -639,6 +649,25 @@ let createInspectionRecord = async function (item, project, nrptiCollection) {
 
   const resFlavour = await nrptiCollection.insertOne(flavourLNG)
   console.log('Inserted FlavourLNGID:', resFlavour.insertedId.toString())
+}
+
+let createDocument = async function (item, nrptiCollection) {
+  var documents = [];
+  if (item.url) {
+    const document = {
+      _schemaName: 'Document',
+      fileName: item.name || '',
+      addedBy: item.author || '',
+      url: item.url,
+      key: null,
+      dateAdded: new Date(),
+      write: ['sysadmin'],
+      read: ['read']
+    }
+    const resDocument = await nrptiCollection.insertOne(document);
+    documents.push(new ObjectID(resDocument.ops[0]._id));
+  }
+  return documents;
 }
 
 exports.down = function (db) {
