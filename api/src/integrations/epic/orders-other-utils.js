@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const defaultLog = require('../../utils/logger')('epic-orders');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const EpicUtils = require('./epic-utils');
+const DocumentController = require('./../../controllers/document-controller');
 
 /**
  * Epic Order record handler for { type: 'Order', milestone: 'Other' }.
@@ -41,6 +42,19 @@ class OrdersOther {
     // Apply common Epic pre-processing/transformations
     epicRecord = EpicUtils.preTransformRecord(epicRecord);
 
+    // Creating and saving a document object if we are given a link to an EPIC document.
+    const documents = [];
+    if (epicRecord._id && epicRecord.documentFileName) {
+      const savedDocument = await DocumentController.createLinkDocument(
+        epicRecord.documentFileName,
+        (this.auth_payload && this.auth_payload.displayName) || '',
+        `https://projects.eao.gov.bc.ca/api/document/${epicRecord._id}/fetch/${encodeURIComponent(
+          epicRecord.documentFileName
+        )}`
+      );
+      documents.push(savedDocument);
+    }
+
     return {
       _schemaName: RECORD_TYPE.Order._schemaName,
       _epicProjectId: (epicRecord.project && epicRecord.project._id) || '',
@@ -55,10 +69,12 @@ class OrdersOther {
       dateIssued: epicRecord.documentDate || null,
       issuingAgency: 'Environmental Assessment Office',
       author: epicRecord.documentAuthor || '',
+      description: epicRecord.description || '',
       legislation: (epicRecord.project && epicRecord.project.legislation) || '',
       projectName: (epicRecord.project && epicRecord.project.name) || '',
       location: (epicRecord.project && epicRecord.project.location) || '',
       centroid: (epicRecord.project && epicRecord.project.centroid) || '',
+      documents: documents,
 
       dateAdded: new Date(),
       dateUpdated: new Date(),
