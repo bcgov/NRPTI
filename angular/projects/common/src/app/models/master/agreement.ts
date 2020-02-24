@@ -19,7 +19,7 @@ export class Agreement {
   dateIssued: Date;
   nationName: string;
   projectName: string;
-  attachments: object[];
+  documents: object[];
 
   dateAdded: Date;
   dateUpdated: Date;
@@ -45,7 +45,7 @@ export class Agreement {
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.nationName = (obj && obj.nationName) || null;
     this.projectName = (obj && obj.projectName) || null;
-    this.attachments = (obj && obj.attachments) || null;
+    this.documents = (obj && obj.documents) || null;
 
     this.dateAdded = (obj && obj.dateAdded) || null;
     this.dateUpdated = (obj && obj.dateUpdated) || null;
