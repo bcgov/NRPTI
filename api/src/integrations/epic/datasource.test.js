@@ -243,7 +243,7 @@ describe('DataSource', () => {
     it('returns epic project pathname', () => {
       const dataSource = new DataSource();
       const pathName = dataSource.getProjectPathname('123456');
-      expect(pathName).toEqual(`${process.env.EPIC_API_PROJECT_PATHNAME || '/api/project'}/123456`);
+      expect(pathName).toEqual(`${process.env.EPIC_API_PROJECT_PATHNAME || '/api/public/project'}/123456`);
     });
   });
 
