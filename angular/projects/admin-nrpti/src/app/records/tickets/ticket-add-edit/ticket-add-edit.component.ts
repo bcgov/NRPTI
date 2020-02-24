@@ -154,7 +154,7 @@ export class TicketAddEditComponent implements OnInit, OnDestroy {
     // _epicMilestoneId
     // legislation
     // projectName
-    // attachments
+    // documents
 
     // TODO: For editing we should create an object with only the changed fields.
     const ticket = new Ticket({

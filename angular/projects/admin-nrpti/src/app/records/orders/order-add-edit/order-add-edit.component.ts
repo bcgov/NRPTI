@@ -156,7 +156,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     // _epicMilestoneId
     // legislation
     // projectName
-    // attachments
+    // documents
 
     // TODO: For editing we should create an object with only the changed fields.
     const order = new Order({
@@ -172,7 +172,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],
       outcomeStatus: this.myForm.controls.outcomeStatus.value,
       outcomeDescription: this.myForm.controls.outcomeDescription.value,
-      attachments: this.currentRecord && this.currentRecord.attachments
+      documents: this.currentRecord && this.currentRecord.documents
     });
 
     // Project name logic
