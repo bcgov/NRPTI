@@ -1,0 +1,26 @@
+@import "../../assets/styles/base/base.scss";
+
+.addLink {
+  margin-top: 17px;
+  margin-bottom: 34px;
+}
+
+textarea,
+input[type="text"] {
+  border-radius: 2px;
+  box-shadow: none;
+  -webkit-appearance: none;
+  border: 1px solid #ababab;
+  font-size: 1rem;
+
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    border-color: #5091cd;
+  }
+}
+
+label {
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+}

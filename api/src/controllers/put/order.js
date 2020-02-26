@@ -1,6 +1,7 @@
 let mongoose = require('mongoose');
 let PutUtils = require('../../utils/put-utils');
 let OrderPost = require('../post/order');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 // Example of incomingObj
 /**
@@ -37,6 +38,14 @@ exports.editMaster = async function(args, res, next, incomingObj) {
   // Reject any changes to master perm
   delete incomingObj.read;
   delete incomingObj.write;
+
+  let documents = [];
+  if (incomingObj.documents && Array.isArray(incomingObj.documents)) {
+    for (let i = 0; i < incomingObj.documents.length; i++) {
+      ObjectId.isValid(incomingObj.documents[i]) && (documents.push(incomingObj.documents[i]));
+    }
+  }
+  incomingObj.documents = documents;
 
   let Order = mongoose.model('Order');
   try {

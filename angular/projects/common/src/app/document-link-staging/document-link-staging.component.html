@@ -1,0 +1,80 @@
+<div class="mb-3">
+  <button
+    type="button"
+    class="btn btn-outline-primary"
+    (click)="isCollapsed = !isCollapsed"
+    [attr.aria-expanded]="!isCollapsed"
+    aria-controls="collapseDocs"
+    aria-pressed="!isCollapsed"
+  >
+    Add Documents / Links
+  </button>
+  <div id="collapseDocs" [ngbCollapse]="isCollapsed">
+    <div class="card mt-3">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-6">
+            <label>Upload Document</label>
+            <app-file-upload
+              [maxFiles]="50"
+              [maxSize]="300"
+              [showInfo]="false"
+              [showList]="false"
+              [files]="recordFiles"
+              (filesChange)="addDocuments($event); recordFiles = []"
+            ></app-file-upload>
+            <br />
+            <ul class="doc-list mb-3" *ngIf="documents?.length > 0">
+              <li *ngFor="let doc of documents">
+                <span class="cell icon">
+                  <i class="material-icons">insert_drive_file</i>
+                </span>
+                <span class="cell name" [title]="doc.fileName || ''">
+                  <span class="cell__txt-content">{{ doc.fileName }}</span>
+                </span>
+                <span class="cell actions">
+                  <button class="btn btn-icon" type="button" title="Delete this document" (click)="deleteDocument(doc)">
+                    <i class="material-icons">delete</i>
+                  </button>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="col-6">
+            <label>Add Link</label>
+            <div class="flex-container addLink">
+              <div class="label-pair mr-3">
+                <input type="text" placeholder="Enter file name" [(ngModel)]="linkFileName" />
+              </div>
+              <div class="label-pair mr-2">
+                <input type="text" placeholder="Enter url" [(ngModel)]="linkUrl" />
+              </div>
+              <div class="label-pair">
+                <button class="btn btn-icon" style="margin-top: 3px" type="button" title="Add link" (click)="addLink()">
+                  <i class="material-icons">
+                    add_circle
+                  </i>
+                </button>
+              </div>
+            </div>
+            <ul class="doc-list mb-3" *ngIf="links?.length > 0">
+              <li *ngFor="let link of links">
+                <span class="cell icon">
+                  <i class="material-icons">link</i>
+                </span>
+                <span class="cell name" [title]="link.fileName || ''">
+                  <span class="cell__txt-content">{{ link.fileName }}</span>
+                </span>
+                <span class="cell actions">
+                  <button class="btn btn-icon" type="button" title="Delete this document" (click)="deleteLink(link)">
+                    <i class="material-icons">delete</i>
+                  </button>
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
