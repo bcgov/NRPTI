@@ -21,7 +21,9 @@ import {
   ConstructionPlan,
   ManagementPlan
 } from '../../../../common/src/app/models/master';
+import { Document } from '../../../../common/src/app/models/document';
 import { TaskService, ITaskParams } from './task.service';
+import { DocumentService } from './document.service';
 
 /**
  * Facade service for all admin-nrpti services.
@@ -38,6 +40,7 @@ export class FactoryService {
   private _searchService: SearchService;
   private _recordService: RecordService;
   private _taskService: TaskService;
+  private _documentService: DocumentService;
 
   constructor(private injector: Injector) {
     // The following items are loaded by a file that is only present on cluster builds.
@@ -117,6 +120,13 @@ export class FactoryService {
       this._taskService = this.injector.get(TaskService);
     }
     return this._taskService;
+  }
+
+  public get documentService(): DocumentService {
+    if (!this._documentService) {
+      this._documentService = this.injector.get(DocumentService);
+    }
+    return this._documentService;
   }
 
   /**
@@ -510,5 +520,10 @@ export class FactoryService {
       managementPlans: [managementPLan]
     };
     return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // Documents
+  public createDocuments(document: Document[]): Promise<any> {
+    return this.documentService.createDocuments(document);
   }
 }

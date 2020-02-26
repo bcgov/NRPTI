@@ -12,12 +12,47 @@ const s3 = new AWS.S3({
   signatureVersion: 'v4'
 });
 
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
 
+exports.protectedPost = async function (args, res, next) {
+  if (args.swagger.params.data && args.swagger.params.data.value) {
+    let data = args.swagger.params.data.value;
+
+    // Make sure data is in an array.
+    if (!Array.isArray(args.swagger.params.data.value)) data = [data];
+
+    // Batch post
+    let promises = [];
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].url) {
+        // If the document already has a url we can assume it's a link
+        promises.push(
+          createLinkDocument(
+            data[i].fileName,
+            (this.auth_payload && this.auth_payload.displayName) || '',
+            data[i].url
+          )
+        );
+      } else {
+        // TODO: If it doesn't then we are uploading to S3.
+      }
+    }
+    // Execute 
+    try {
+      let response = await Promise.all(promises);
+      return queryActions.sendResponse(res, 200, response);
+    } catch (e) {
+      return queryActions.sendResponse(res, 400, e);
+    }
+  } else {
+    return queryActions.sendResponse(res, 400, { error: 'You must provide data' });
+  }
+}
+
 // WIP
-exports.protectedPut = async function(args, res, next) {
+exports.protectedPut = async function (args, res, next) {
   if (args.swagger.params.data && args.swagger.params.data.value) {
     const data = args.swagger.params.data.value;
 
@@ -51,7 +86,9 @@ exports.protectedPut = async function(args, res, next) {
   }
 };
 
-exports.createLinkDocument = async function(fileName, addedBy, url) {
+exports.createLinkDocument = createLinkDocument;
+
+async function createLinkDocument(fileName, addedBy, url) {
   const Document = mongoose.model('Document');
   let document = new Document();
   document.fileName = fileName;
