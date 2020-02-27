@@ -81,9 +81,6 @@ describe('DataSource', () => {
       dataSource.getIntegrationUrl = jest.fn(() => {
         return { href: '' };
       });
-      dataSource.getHostname = jest.fn();
-      dataSource.getSearchPathname = jest.fn();
-      dataSource.getProjectPathname = jest.fn();
       dataSource.processRecord = jest.fn();
 
       const recordType = { type: { typeId: '123' }, milestone: { milestoneId: '123' }, getUtil: jest.fn() };
@@ -122,12 +119,6 @@ describe('DataSource', () => {
       dataSource.getIntegrationUrl = jest.fn(() => {
         return { href: 'url' };
       });
-      dataSource.getHostname = jest.fn(() => {
-        return 'hostname';
-      });
-      dataSource.getSearchPathname = jest.fn(() => {
-        return 'searchPathname';
-      });
       dataSource.processRecord = jest.fn(() => {});
 
       const recordType = {
@@ -140,10 +131,14 @@ describe('DataSource', () => {
 
       expect(dataSource.getBaseParams).toHaveBeenCalledWith('111', '222', Number.MAX_SAFE_INTEGER, 0);
 
-      expect(dataSource.getIntegrationUrl).toHaveBeenCalledWith('hostname', 'searchPathname', {
-        param1: 1,
-        baseParams: 1
-      });
+      expect(dataSource.getIntegrationUrl).toHaveBeenCalledWith(
+        'eagle-prod.pathfinder.gov.bc.ca',
+        '/api/public/search',
+        {
+          param1: 1,
+          baseParams: 1
+        }
+      );
 
       expect(recordType.getUtil).toHaveBeenCalledTimes(1);
 
@@ -220,30 +215,6 @@ describe('DataSource', () => {
       });
 
       expect(dataSource.status.itemsProcessed).toEqual(1);
-    });
-  });
-
-  describe('getHostname', () => {
-    it('returns hostname for epic urls', () => {
-      const dataSource = new DataSource();
-      const pathName = dataSource.getHostname();
-      expect(pathName).toEqual(process.env.EPIC_API_HOSTNAME || 'eagle-prod.pathfinder.gov.bc.ca');
-    });
-  });
-
-  describe('getSearchPathname', () => {
-    it('returns epic search pathname', () => {
-      const dataSource = new DataSource();
-      const pathName = dataSource.getSearchPathname();
-      expect(pathName).toEqual(process.env.EPIC_API_SEARCH_PATHNAME || '/api/public/search');
-    });
-  });
-
-  describe('getProjectPathname', () => {
-    it('returns epic project pathname', () => {
-      const dataSource = new DataSource();
-      const pathName = dataSource.getProjectPathname('123456');
-      expect(pathName).toEqual(`${process.env.EPIC_API_PROJECT_PATHNAME || '/api/public/project'}/123456`);
     });
   });
 
