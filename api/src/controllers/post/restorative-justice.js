@@ -1,5 +1,6 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
+let queryUtils = require('../../utils/query-utils');
 
 /**
  * Performs all operations necessary to create a master Restorative Justice record and its associated flavour records.
@@ -141,6 +142,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.dateIssued && (restorativeJustice.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (restorativeJustice.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (restorativeJustice.author = incomingObj.author);
+
   incomingObj.legislation &&
     incomingObj.legislation.act &&
     (restorativeJustice.legislation.act = incomingObj.legislation.act);
@@ -156,7 +158,32 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (restorativeJustice.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.issuedTo && (restorativeJustice.issuedTo = incomingObj.issuedTo);
+
+  restorativeJustice.issuedTo.read = ['sysadmin'];
+  restorativeJustice.issuedTo.write = ['sysadmin'];
+  incomingObj.issuedTo && incomingObj.issuedTo.type && (restorativeJustice.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
+    (restorativeJustice.issuedTo.companyName = incomingObj.issuedTo.companyName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
+    (restorativeJustice.issuedTo.firstName = incomingObj.issuedTo.firstName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
+    (restorativeJustice.issuedTo.middleName = incomingObj.issuedTo.middleName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.lastName &&
+    (restorativeJustice.issuedTo.lastName = incomingObj.issuedTo.lastName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.fullName &&
+    (restorativeJustice.issuedTo.fullName = incomingObj.issuedTo.fullName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
+    (restorativeJustice.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.anonymous &&
+    (restorativeJustice.issuedTo.anonymous = incomingObj.issuedTo.anonymous);
+
   incomingObj.projectName && (restorativeJustice.projectName = incomingObj.projectName);
   incomingObj.location && (restorativeJustice.location = incomingObj.location);
   incomingObj.centroid && (restorativeJustice.centroid = incomingObj.centroid);
@@ -226,13 +253,6 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   restorativeJusticeLNG.read = ['sysadmin'];
   restorativeJusticeLNG.write = ['sysadmin'];
 
-  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    restorativeJusticeLNG.read.push('public');
-    restorativeJusticeLNG.datePublished = new Date();
-    restorativeJusticeLNG.publishedBy = args.swagger.params.auth_payload.displayName;
-  }
-
   restorativeJusticeLNG.addedBy = args.swagger.params.auth_payload.displayName;
   restorativeJusticeLNG.dateAdded = new Date();
 
@@ -242,6 +262,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.dateIssued && (restorativeJusticeLNG.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (restorativeJusticeLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (restorativeJusticeLNG.author = incomingObj.author);
+
   incomingObj.legislation &&
     incomingObj.legislation.act &&
     (restorativeJusticeLNG.legislation.act = incomingObj.legislation.act);
@@ -257,7 +278,34 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (restorativeJusticeLNG.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.issuedTo && (restorativeJusticeLNG.issuedTo = incomingObj.issuedTo);
+
+  restorativeJusticeLNG.issuedTo.read = ['sysadmin'];
+  restorativeJusticeLNG.issuedTo.write = ['sysadmin'];
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.type &&
+    (restorativeJusticeLNG.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
+    (restorativeJusticeLNG.issuedTo.companyName = incomingObj.issuedTo.companyName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
+    (restorativeJusticeLNG.issuedTo.firstName = incomingObj.issuedTo.firstName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
+    (restorativeJusticeLNG.issuedTo.middleName = incomingObj.issuedTo.middleName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.lastName &&
+    (restorativeJusticeLNG.issuedTo.lastName = incomingObj.issuedTo.lastName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.fullName &&
+    (restorativeJusticeLNG.issuedTo.fullName = incomingObj.issuedTo.fullName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
+    (restorativeJusticeLNG.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.anonymous &&
+    (restorativeJusticeLNG.issuedTo.anonymous = incomingObj.issuedTo.anonymous);
+
   incomingObj.projectName && (restorativeJusticeLNG.projectName = incomingObj.projectName);
   incomingObj.location && (restorativeJusticeLNG.location = incomingObj.location);
   incomingObj.centroid && (restorativeJusticeLNG.centroid = incomingObj.centroid);
@@ -272,6 +320,17 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (restorativeJusticeLNG.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (restorativeJusticeLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (restorativeJusticeLNG.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    restorativeJusticeLNG.read.push('public');
+    restorativeJusticeLNG.datePublished = new Date();
+    restorativeJusticeLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+
+    if (!queryUtils.isRecordAnonymous(restorativeJusticeLNG)) {
+      restorativeJusticeLNG.issuedTo.read.push('public');
+    }
+  }
 
   return await restorativeJusticeLNG.save();
 };
@@ -326,13 +385,6 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   restorativeJusticeNRCED.read = ['sysadmin'];
   restorativeJusticeNRCED.write = ['sysadmin'];
 
-  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    restorativeJusticeNRCED.read.push('public');
-    restorativeJusticeNRCED.datePublished = new Date();
-    restorativeJusticeNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
-  }
-
   restorativeJusticeNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   restorativeJusticeNRCED.dateAdded = new Date();
 
@@ -342,6 +394,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.dateIssued && (restorativeJusticeNRCED.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (restorativeJusticeNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (restorativeJusticeNRCED.author = incomingObj.author);
+
   incomingObj.legislation &&
     incomingObj.legislation.act &&
     (restorativeJusticeNRCED.legislation.act = incomingObj.legislation.act);
@@ -357,7 +410,34 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (restorativeJusticeNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.issuedTo && (restorativeJusticeNRCED.issuedTo = incomingObj.issuedTo);
+
+  restorativeJusticeNRCED.issuedTo.read = ['sysadmin'];
+  restorativeJusticeNRCED.issuedTo.write = ['sysadmin'];
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.type &&
+    (restorativeJusticeNRCED.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
+    (restorativeJusticeNRCED.issuedTo.companyName = incomingObj.issuedTo.companyName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
+    (restorativeJusticeNRCED.issuedTo.firstName = incomingObj.issuedTo.firstName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
+    (restorativeJusticeNRCED.issuedTo.middleName = incomingObj.issuedTo.middleName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.lastName &&
+    (restorativeJusticeNRCED.issuedTo.lastName = incomingObj.issuedTo.lastName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.fullName &&
+    (restorativeJusticeNRCED.issuedTo.fullName = incomingObj.issuedTo.fullName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
+    (restorativeJusticeNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.anonymous &&
+    (restorativeJusticeNRCED.issuedTo.anonymous = incomingObj.issuedTo.anonymous);
+
   incomingObj.projectName && (restorativeJusticeNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (restorativeJusticeNRCED.location = incomingObj.location);
   incomingObj.centroid && (restorativeJusticeNRCED.centroid = incomingObj.centroid);
@@ -372,6 +452,17 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (restorativeJusticeNRCED.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (restorativeJusticeNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (restorativeJusticeNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    restorativeJusticeNRCED.read.push('public');
+    restorativeJusticeNRCED.datePublished = new Date();
+    restorativeJusticeNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+
+    if (!queryUtils.isRecordAnonymous(restorativeJusticeNRCED)) {
+      restorativeJusticeNRCED.issuedTo.read.push('public');
+    }
+  }
 
   return await restorativeJusticeNRCED.save();
 };

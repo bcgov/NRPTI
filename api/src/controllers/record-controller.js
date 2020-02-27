@@ -266,6 +266,14 @@ exports.protectedPublish = async function(args, res, next) {
 
     defaultLog.debug(`protectedPublish - record: ${JSON.stringify(record)}`);
 
+    // add entity read role
+    if (!queryActions.isPublished(record.issuedTo)) {
+      if (!queryUtils.isRecordAnonymous(record)) {
+        // make entity information public
+        queryActions.addPublicReadRole(record.issuedTo);
+      }
+    }
+
     const published = await queryActions.publish(record, true);
 
     await queryUtils.recordAction('Publish', record, args.swagger.params.auth_payload.preferred_username, record._id);
@@ -298,6 +306,11 @@ exports.protectedUnPublish = async function(args, res, next) {
     }
 
     defaultLog.debug(`protectedUnPublish - record: ${JSON.stringify(record)}`);
+
+    // remove entity read role
+    if (queryActions.isPublished(record.issuedTo)) {
+      queryActions.removePublicReadRole(record.issuedTo);
+    }
 
     const unPublished = await queryActions.unPublish(record);
 
