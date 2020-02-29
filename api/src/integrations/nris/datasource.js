@@ -183,10 +183,11 @@ class NrisDataSource {
     for(let i=0;i < record.attachment.length;i++) {
       if (record.attachment[i].fileType === 'Final Report') {
         // Grab this & break;
-        let file = await this.getFileFromNRIS(record.attachment[i].attachmentId);
+        // TODO:
+        // let file = await this.getFileFromNRIS(record.attachment[i].attachmentId);
 
         // TODO: s3File.path, create/set document object properly
-        let s3File = await this.putFileS3(record.attachment[i].attachmentId, file);
+        // let s3File = await this.putFileS3(record.attachment[i].attachmentId, file);
         // newRecord.documents.push(record.attachment[i].attachmentId);
       }
     }
