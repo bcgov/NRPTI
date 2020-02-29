@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { FactoryService } from '../services/factory.service';
 import { Subject } from 'rxjs';
 import {
@@ -143,18 +142,16 @@ export class ImportComponent implements OnInit {
 
   checkChange() {}
 
-  startJob() {
-    // tslint:disable-next-line: no-this-assignment
-    const self = this;
-    this.postToApi().subscribe(jobs => {
-      self.showAlert = true;
-      setTimeout(() => {
-        self.showAlert = false;
-      }, 5000);
-    });
+  async startJob() {
+    await this.startTask();
+    this.showAlert = true;
+    setTimeout(() => {
+      this.showAlert = false;
+    }, 4000);
   }
 
-  postToApi(): Observable<any> {
-    return this.factoryService.startTask({ dataSourceType: 'epic' });
+  async startTask(): Promise<any> {
+    await this.factoryService.startTask({ dataSourceType: 'epic' }).toPromise();
+    await this.factoryService.startTask({ dataSourceType: 'nris' }).toPromise();
   }
 }

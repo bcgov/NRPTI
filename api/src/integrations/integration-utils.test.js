@@ -10,7 +10,7 @@ describe('IntegrationUtils', () => {
       await expect(IntegrationUtils.getRecords({ href: 'url' })).rejects.toThrow(
         new Error(`getRecords - error: unexpected error!.`)
       );
-      expect(mockAxios).toHaveBeenCalledWith('url');
+      expect(mockAxios).toHaveBeenCalledWith('url', undefined);
     });
 
     it('throws error if the response is null', async () => {
@@ -21,7 +21,7 @@ describe('IntegrationUtils', () => {
       await expect(IntegrationUtils.getRecords({ href: 'url' })).rejects.toThrow(
         new Error(`getRecords - returned null response.`)
       );
-      expect(mockAxios).toHaveBeenCalledWith('url');
+      expect(mockAxios).toHaveBeenCalledWith('url', undefined);
     });
 
     it('throws error if the response status is not 200', async () => {
@@ -32,7 +32,7 @@ describe('IntegrationUtils', () => {
       await expect(IntegrationUtils.getRecords({ href: 'url' })).rejects.toThrow(
         new Error(`getRecords - returned non-200 status: 999.`)
       );
-      expect(mockAxios).toHaveBeenCalledWith('url');
+      expect(mockAxios).toHaveBeenCalledWith('url', undefined);
     });
 
     it('returns response.data', async () => {
@@ -43,7 +43,7 @@ describe('IntegrationUtils', () => {
       const data = await IntegrationUtils.getRecords({ href: 'url' });
 
       expect(data).toEqual([{ value: 1 }]);
-      expect(mockAxios).toHaveBeenCalledWith('url');
+      expect(mockAxios).toHaveBeenCalledWith('url', undefined);
     });
   });
 });
