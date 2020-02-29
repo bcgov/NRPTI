@@ -25,6 +25,12 @@ class DataSource {
     this.status = { itemsProcessed: 0, itemTotal: 0, typeStatus: [], individualRecordStatus: [] };
   }
 
+  // This requires no auth setup, so just call the local updater function.
+  async run(taskAuditRecord) {
+    defaultLog.info('Run function for epic datasource');
+    return await this.updateRecords(taskAuditRecord);
+  }
+
   /**
    * Main function that runs all necessary operations to update Epic records for supported types.
    *
@@ -34,7 +40,8 @@ class DataSource {
    * @returns {object} Overall status of the update + array of statuses by record type + array of any failed records.
    * @memberof DataSource
    */
-  async updateRecords() {
+  async updateRecords(_taskAuditRecord) {
+    // TODO: Make audit record update as it goes.
     try {
       let recordTypesToUpdate = [];
 

@@ -170,6 +170,14 @@
                     }
                   }
                 ],
+                "envFrom": [
+                  {
+                    "prefix": "NRIS_",
+                    "secretRef": {
+                      "name": "nrisws-credentials"
+                    }
+                  }
+                ],
                 "readinessProbe": {
                   "timeoutSeconds": 3000,
                   "initialDelaySeconds": 3,
