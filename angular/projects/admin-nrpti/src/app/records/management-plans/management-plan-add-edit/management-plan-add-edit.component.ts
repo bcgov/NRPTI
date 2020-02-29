@@ -100,7 +100,6 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
       ),
       agency: new FormControl((this.currentRecord && this.currentRecord.agency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
-      issuedTo: new FormControl((this.currentRecord && this.currentRecord.issuedTo) || ''),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
       latitude: new FormControl(
@@ -153,7 +152,6 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
       dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
       agency: this.myForm.controls.agency.value,
       author: this.myForm.controls.author.value,
-      issuedTo: this.myForm.controls.issuedTo.value,
       projectName: this.myForm.controls.projectName.value,
       location: this.myForm.controls.location.value,
       centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],

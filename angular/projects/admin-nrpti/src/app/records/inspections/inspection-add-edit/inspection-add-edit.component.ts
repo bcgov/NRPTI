@@ -4,7 +4,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Picklists } from '../../../utils/constants/record-constants';
-import { Inspection } from '../../../../../../common/src/app/models/master';
+import { Inspection } from '../../../../../../common/src/app/models';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -128,7 +128,36 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
       paragraph: new FormControl(
         (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
       ),
-      issuedTo: new FormControl((this.currentRecord && this.currentRecord.issuedTo) || ''),
+      issuedTo: new FormGroup({
+        type: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.type) || ''
+        ),
+        companyName: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.companyName) || ''
+        ),
+        firstName: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.firstName) || ''
+        ),
+        middleName: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.middleName) || ''
+        ),
+        lastName: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.lastName) || ''
+        ),
+        fullName: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.fullName) || ''
+        ),
+        dateOfBirth: new FormControl(
+          (this.currentRecord &&
+            this.currentRecord.issuedTo &&
+            this.currentRecord.issuedTo.dateOfBirth &&
+            this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
+            ''
+        ),
+        anonymous: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || ''
+        )
+      }),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
       latitude: new FormControl(
@@ -199,7 +228,18 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
         subSection: this.myForm.controls.subSection.value,
         paragraph: this.myForm.controls.paragraph.value
       },
-      issuedTo: this.myForm.controls.issuedTo.value,
+      issuedTo: {
+        type: this.myForm.get('issuedTo.type').value,
+        companyName: this.myForm.get('issuedTo.companyName').value,
+        firstName: this.myForm.get('issuedTo.firstName').value,
+        middleName: this.myForm.get('issuedTo.middleName').value,
+        lastName: this.myForm.get('issuedTo.lastName').value,
+        fullName: this.myForm.get('issuedTo.fullName').value,
+        dateOfBirth:
+          this.myForm.get('issuedTo.dateOfBirth').value &&
+          this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('issuedTo.dateOfBirth').value),
+        anonymous: this.myForm.get('issuedTo.anonymous').value
+      },
       projectName: this.myForm.controls.projectName.value,
       location: this.myForm.controls.location.value,
       centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],

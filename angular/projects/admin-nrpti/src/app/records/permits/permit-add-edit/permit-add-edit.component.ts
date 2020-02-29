@@ -116,7 +116,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       paragraph: new FormControl(
         (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
       ),
-      issuedTo: new FormControl((this.currentRecord && this.currentRecord.issuedTo) || ''),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
       latitude: new FormControl(
@@ -168,7 +167,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
         subSection: this.myForm.controls.subSection.value,
         paragraph: this.myForm.controls.paragraph.value
       },
-      issuedTo: this.myForm.controls.issuedTo.value,
       projectName: this.myForm.controls.projectName.value,
       location: this.myForm.controls.location.value,
       centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value]

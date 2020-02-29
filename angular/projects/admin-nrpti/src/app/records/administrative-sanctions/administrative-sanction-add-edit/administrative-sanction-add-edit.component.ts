@@ -128,7 +128,36 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
       paragraph: new FormControl(
         (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
       ),
-      issuedTo: new FormControl((this.currentRecord && this.currentRecord.issuedTo) || ''),
+      issuedTo: new FormGroup({
+        type: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.type) || ''
+        ),
+        companyName: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.companyName) || ''
+        ),
+        firstName: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.firstName) || ''
+        ),
+        middleName: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.middleName) || ''
+        ),
+        lastName: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.lastName) || ''
+        ),
+        fullName: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.fullName) || ''
+        ),
+        dateOfBirth: new FormControl(
+          (this.currentRecord &&
+            this.currentRecord.issuedTo &&
+            this.currentRecord.issuedTo.dateOfBirth &&
+            this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
+            ''
+        ),
+        anonymous: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || ''
+        )
+      }),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
       latitude: new FormControl(
@@ -189,7 +218,18 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
         subSection: this.myForm.controls.subSection.value,
         paragraph: this.myForm.controls.paragraph.value
       },
-      issuedTo: this.myForm.controls.issuedTo.value,
+      issuedTo: {
+        type: this.myForm.controls.issuedTo.get('type').value,
+        companyName: this.myForm.controls.issuedTo.get('companyName').value,
+        firstName: this.myForm.controls.issuedTo.get('firstName').value,
+        middleName: this.myForm.controls.issuedTo.get('middleName').value,
+        lastName: this.myForm.controls.issuedTo.get('lastName').value,
+        fullName: this.myForm.controls.issuedTo.get('fullName').value,
+        dateOfBirth:
+          this.myForm.get('issuedTo.dateOfBirth').value &&
+          this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('issuedTo.dateOfBirth').value),
+        anonymous: this.myForm.controls.issuedTo.get('anonymous').value
+      },
       projectName: this.myForm.controls.projectName.value,
       location: this.myForm.controls.location.value,
       centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],

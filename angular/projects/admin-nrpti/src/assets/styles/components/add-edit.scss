@@ -127,7 +127,15 @@ legend {
   }
 }
 
+// Occupies the same space as a label-pair element, but contains only 1 element.
+.label-single {
+  @extend .label-pair;
+
+  padding-top: $fc-line-height;
+}
+
 .label-pair {
+  line-height: $fc-line-height;
   margin-bottom: 1rem;
   position: relative;
 
@@ -177,6 +185,7 @@ fieldset {
     }
   }
 
+  .label-single,
   .label-pair {
     width: 100%;
   }
