@@ -124,7 +124,36 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
         (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
       ),
       offence: new FormControl((this.currentRecord && this.currentRecord.offence) || ''),
-      issuedTo: new FormControl((this.currentRecord && this.currentRecord.issuedTo) || ''),
+      issuedTo: new FormGroup({
+        type: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.type) || ''
+        ),
+        companyName: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.companyName) || ''
+        ),
+        firstName: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.firstName) || ''
+        ),
+        middleName: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.middleName) || ''
+        ),
+        lastName: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.lastName) || ''
+        ),
+        fullName: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.fullName) || ''
+        ),
+        dateOfBirth: new FormControl(
+          (this.currentRecord &&
+            this.currentRecord.issuedTo &&
+            this.currentRecord.issuedTo.dateOfBirth &&
+            this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
+            ''
+        ),
+        anonymous: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || ''
+        )
+      }),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
       latitude: new FormControl(
@@ -205,7 +234,26 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     }
 
     this.myForm.controls.offence.dirty && (administrativePenalty['offence'] = this.myForm.controls.offence.value);
-    this.myForm.controls.issuedTo.dirty && (administrativePenalty['issuedTo'] = this.myForm.controls.issuedTo.value);
+
+    if (
+      this.myForm.get('issuedTo.type').dirty ||
+      this.myForm.get('issuedTo.companyName').dirty ||
+      this.myForm.get('issuedTo.firstName').dirty ||
+      this.myForm.get('issuedTo.middleName').dirty ||
+      this.myForm.get('issuedTo.lastName').dirty ||
+      this.myForm.get('issuedTo.fullName').dirty ||
+      this.myForm.get('issuedTo.dateOfBirth').dirty
+    ) {
+      administrativePenalty['issuedTo'] = {
+        type: this.myForm.get('issuedTo.type').value,
+        companyName: this.myForm.get('issuedTo.companyName').value,
+        firstName: this.myForm.get('issuedTo.firstName').value,
+        middleName: this.myForm.get('issuedTo.middleName').value,
+        lastName: this.myForm.get('issuedTo.lastName').value,
+        fullName: this.myForm.get('issuedTo.fullName').value,
+        dateOfBirth: this.myForm.get('issuedTo.dateOfBirth').value
+      };
+    }
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs

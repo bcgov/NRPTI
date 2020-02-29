@@ -97,7 +97,6 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
       ),
       agency: new FormControl((this.currentRecord && this.currentRecord.agency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
-      issuedTo: new FormControl((this.currentRecord && this.currentRecord.issuedTo) || ''),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
       latitude: new FormControl(
@@ -152,7 +151,6 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
       (managementPlan['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
     this.myForm.controls.agency.dirty && (managementPlan['agency'] = this.myForm.controls.agency.value);
     this.myForm.controls.author.dirty && (managementPlan['author'] = this.myForm.controls.author.value);
-    this.myForm.controls.issuedTo.dirty && (managementPlan['issuedTo'] = this.myForm.controls.issuedTo.value);
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs

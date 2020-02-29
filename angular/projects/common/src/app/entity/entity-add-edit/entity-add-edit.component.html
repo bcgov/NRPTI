@@ -1,0 +1,82 @@
+<form [formGroup]="formGroup">
+  <!-- Add/Edit* -->
+  <div class="flex-container">
+    <div class="label-pair">
+      <label for="type">Entity Type</label>
+      <select name="type" id="type" formControlName="type" class="form-control">
+        <option (click)="updateUI()" *ngFor="let entityType of entityTypes" [ngValue]="entityType">
+          {{ entityType }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Individual* -->
+    <!-- TODO enable/update as part of anonymous entity/document work. -->
+    <!-- <ng-container *ngIf="UIType === ENTITY_TYPE.Individual || UIType === ENTITY_TYPE.IndividualCombined">
+      <div class="label-pair">
+        <label for="anonymous">Anonymity</label>
+        <mat-slide-toggle
+          name="anonymous"
+          id="anonymous"
+          formControlName="anonymous"
+          (change)="updateAnonymousText($event.checked)"
+        >
+          {{ anonymousText }}
+        </mat-slide-toggle>
+      </div>
+    </ng-container> -->
+  </div>
+
+  <div class="flex-container">
+    <!-- Company -->
+    <ng-container *ngIf="UIType === ENTITY_TYPE.Company">
+      <div class="label-pair">
+        <label for="companyName">Company Name</label>
+        <input name="companyName" id="companyName" formControlName="companyName" type="text" class="form-control" />
+      </div>
+    </ng-container>
+
+    <!-- Individual* -->
+    <ng-container *ngIf="UIType === ENTITY_TYPE.Individual || UIType === ENTITY_TYPE.IndividualCombined">
+      <!-- IndividualCombined -->
+      <ng-container *ngIf="UIType === ENTITY_TYPE.Individual">
+        <div class="label-pair">
+          <label for="firstName">First Name</label>
+          <input name="firstName" id="firstName" formControlName="firstName" type="text" class="form-control" />
+        </div>
+        <div class="label-pair">
+          <label for="middleName">Middle Name</label>
+          <input name="middleName" id="middleName" formControlName="middleName" type="text" class="form-control" />
+        </div>
+        <div class="label-pair">
+          <label for="lastName">Last Name</label>
+          <input name="lastName" id="lastName" formControlName="lastName" type="text" class="form-control" />
+        </div>
+      </ng-container>
+
+      <!-- Individual -->
+      <ng-container *ngIf="UIType === ENTITY_TYPE.IndividualCombined">
+        <div class="label-pair">
+          <label for="fullName">Full Name</label>
+          <input name="fullName" id="fullName" formControlName="fullName" type="text" class="form-control" />
+        </div>
+      </ng-container>
+      <div class="label-pair">
+        <label for="dateOfBirth">Date of Birth</label>
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="yyyy-mm-dd"
+            name="dp"
+            formControlName="dateOfBirth"
+            ngbDatepicker
+            #d="ngbDatepicker"
+          />
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</form>
