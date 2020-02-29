@@ -295,7 +295,7 @@ var generateMatchesForAggregation = async function (and, or, searchProperties, p
   // pipeline because of the linking of flavour to master records.
   let __flavourOr = {};
   let __masterOr = {};
-  for (item in or) {
+  for (const item in or) {
     if (item.startsWith('_master.')) {
       __masterOr[item] = or[item];
     } else {
