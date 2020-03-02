@@ -1,3 +1,5 @@
+![API tests](https://github.com/bcgov/NRPTI/workflows/NRPTI%20API%20tests/badge.svg)
+
 # NRPTI
 
 Natural Resources Public Transparency Initiative monorepo
