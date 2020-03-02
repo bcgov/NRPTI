@@ -1,4 +1,4 @@
-name: NRPTI API tests
+name: API tests
 
 on: [pull_request]
 
