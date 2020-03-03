@@ -1,4 +1,4 @@
-![API tests](https://github.com/bcgov/NRPTI/workflows/NRPTI%20API%20tests/badge.svg)
+![API tests](https://github.com/bcgov/NRPTI/workflows/API%20tests/badge.svg) ![Front-End tests](https://github.com/bcgov/NRPTI/workflows/Front-End%20tests/badge.svg)
 
 # NRPTI
 
