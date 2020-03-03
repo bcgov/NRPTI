@@ -21,7 +21,7 @@ describe('OrderDetailComponent', () => {
       providers: [
         DatePipe,
         { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute }
       ]
     }).compileComponents();
   }));

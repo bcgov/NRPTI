@@ -39,7 +39,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
     private factoryService: FactoryService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -61,7 +61,9 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
 
   private populateTextFields() {
     if (this.currentRecord.dateUpdated) {
-      this.lastEditedSubText = `Last Edited on ${this.utils.convertJSDateToString(new Date(this.currentRecord.dateUpdated))}`;
+      this.lastEditedSubText = `Last Edited on ${this.utils.convertJSDateToString(
+        new Date(this.currentRecord.dateUpdated)
+      )}`;
     } else {
       this.lastEditedSubText = `Added on ${this.utils.convertJSDateToString(new Date(this.currentRecord.dateAdded))}`;
     }
@@ -70,7 +72,10 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
         case 'SelfReportLNG':
           this.lngFlavour = flavour;
           this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
-          this.lngFlavour.read.includes('public') && (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(new Date(this.lngFlavour.datePublished))}`);
+          this.lngFlavour.read.includes('public') &&
+            (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(
+              new Date(this.lngFlavour.datePublished)
+            )}`);
           break;
         default:
           break;
@@ -83,11 +88,10 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       dateIssued: new FormControl(
-        (
-          this.currentRecord &&
+        (this.currentRecord &&
           this.currentRecord.dateIssued &&
-          this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))
-        ) || ''
+          this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
+          ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -95,18 +99,10 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
       latitude: new FormControl(
-        (
-          this.currentRecord &&
-          this.currentRecord.centroid &&
-          this.currentRecord.centroid[0]
-        ) || ''
+        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || ''
       ),
       longitude: new FormControl(
-        (
-          this.currentRecord &&
-          this.currentRecord.centroid &&
-          this.currentRecord.centroid[1]
-        ) || ''
+        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || ''
       ),
 
       // LNG

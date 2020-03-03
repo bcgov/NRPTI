@@ -35,7 +35,7 @@ describe('ExportService', () => {
     it('returns the formatted date', () => {
       const rowFunction = ExportService.getExportDateFormatter('dateCreated');
 
-      const result = rowFunction({dateCreated: '2015-11-11'});
+      const result = rowFunction({ dateCreated: '2015-11-11' });
 
       expect(result).toBe('2015-11-11');
     });

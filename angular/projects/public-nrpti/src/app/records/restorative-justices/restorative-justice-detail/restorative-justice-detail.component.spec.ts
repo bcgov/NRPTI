@@ -16,7 +16,10 @@ describe('RestorativeJusticeDetailComponent', () => {
     TestBed.configureTestingModule({
       imports: [GlobalModule],
       declarations: [RestorativeJusticeDetailComponent],
-      providers: [{ provide: ActivatedRoute, useValue: activedRouteStub }, { provide: Router, useValue: mockRouter }]
+      providers: [
+        { provide: ActivatedRoute, useValue: activedRouteStub },
+        { provide: Router, useValue: mockRouter }
+      ]
     }).compileComponents();
   }));
 

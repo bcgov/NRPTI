@@ -4,7 +4,7 @@
  * @export
  * @class ConstructionPlanLNG
  */
- export class ConstructionPlanLNG {
+export class ConstructionPlanLNG {
   _id: string;
   _schemaName: string;
   _master: string;

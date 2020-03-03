@@ -36,7 +36,7 @@ export class SidebarComponent implements OnDestroy {
         this.SetActiveSidebarItem();
       });
 
-      this.breadcrumbs = [];
+    this.breadcrumbs = [];
   }
 
   SetActiveSidebarItem() {

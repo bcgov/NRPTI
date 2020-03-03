@@ -31,9 +31,9 @@
         <a class="page-link" (click)="updatePage(-1)" [hidden]="pagination.currentPage <= 1">Prev</a>
       </li>
       <li>
-        <a class="page-link" (click)="setPage(pagination.currentPage - 1)" [hidden]="pagination.currentPage <= 1">{{
-          pagination.currentPage - 1
-        }}</a>
+        <a class="page-link" (click)="setPage(pagination.currentPage - 1)" [hidden]="pagination.currentPage <= 1">
+          {{ pagination.currentPage - 1 }}
+        </a>
       </li>
       <li>
         <a class="page-link" (click)="setPage(pagination.currentPage)">{{ pagination.currentPage }}</a>
@@ -43,8 +43,9 @@
           class="page-link"
           (click)="setPage(pagination.currentPage + 1)"
           [hidden]="pagination.currentPage >= pagination.pageCount"
-          >{{ pagination.currentPage + 1 }}</a
         >
+          {{ pagination.currentPage + 1 }}
+        </a>
       </li>
       <li>
         <a class="page-link" (click)="updatePage(1)" [hidden]="pagination.currentPage === pagination.pageCount">Next</a>
