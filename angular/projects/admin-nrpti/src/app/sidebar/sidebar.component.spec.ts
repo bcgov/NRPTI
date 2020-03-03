@@ -20,7 +20,10 @@ describe('SidebarComponent', () => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
       declarations: [SidebarComponent],
-      providers: [{ provide: 'Router', useValue: mockRouter }, { provide: StoreService, useValue: mockStoreService }]
+      providers: [
+        { provide: 'Router', useValue: mockRouter },
+        { provide: StoreService, useValue: mockStoreService }
+      ]
     }).compileComponents();
   }));
 

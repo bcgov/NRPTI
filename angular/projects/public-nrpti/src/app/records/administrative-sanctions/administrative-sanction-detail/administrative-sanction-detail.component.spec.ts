@@ -16,7 +16,10 @@ describe('AdministrativeSanctionDetailComponent', () => {
     TestBed.configureTestingModule({
       imports: [GlobalModule],
       declarations: [AdministrativeSanctionDetailComponent],
-      providers: [{ provide: ActivatedRoute, useValue: activedRouteStub }, { provide: Router, useValue: mockRouter }]
+      providers: [
+        { provide: ActivatedRoute, useValue: activedRouteStub },
+        { provide: Router, useValue: mockRouter }
+      ]
     }).compileComponents();
   }));
 

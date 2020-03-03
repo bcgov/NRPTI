@@ -82,7 +82,13 @@ exports.editMaster = async function(args, res, next, incomingObj) {
     delete incomingObj.AdministrativePenaltyLNG;
   } else if (incomingObj.AdministrativePenaltyLNG) {
     observables.push(
-      AdministrativePenaltyPost.createLNG(args, res, next, incomingObj.AdministrativePenaltyLNG, savedAdministrativePenalty._id)
+      AdministrativePenaltyPost.createLNG(
+        args,
+        res,
+        next,
+        incomingObj.AdministrativePenaltyLNG,
+        savedAdministrativePenalty._id
+      )
     );
     delete incomingObj.AdministrativePenaltyLNG;
   }

@@ -4,8 +4,10 @@
   </div>
 
   <div class="col">
-    <lib-table-template *ngIf="!loading && tableData.totalListItems != 0" [data]="tableData"
-      (messageOut)="onMessageOut($event)">
-    </lib-table-template>
+    <lib-table-template
+      *ngIf="!loading && tableData.totalListItems != 0"
+      [data]="tableData"
+      (messageOut)="onMessageOut($event)"
+    ></lib-table-template>
   </div>
 </div>

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const putUtils = require('../../utils/put-utils');
 const AgreementPost = require('../post/agreement');
-const RECORD_TYPE = require('../../utils/constants/record-type-enum')
+const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 /**
  * Edit Master Agreement record.
@@ -155,9 +155,13 @@ exports.editLNG = async function(args, res, next, incomingObj) {
   updateObj.$set['dateUpdated'] = new Date();
 
   try {
-    const editRes = await AgreementLNG.findOneAndUpdate({ _schemaName: RECORD_TYPE.Agreement.flavours.lng._schemaName, _id: _id }, updateObj, {
-      new: true
-    });
+    const editRes = await AgreementLNG.findOneAndUpdate(
+      { _schemaName: RECORD_TYPE.Agreement.flavours.lng._schemaName, _id: _id },
+      updateObj,
+      {
+        new: true
+      }
+    );
     return {
       status: 'success',
       object: editRes

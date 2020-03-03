@@ -6,7 +6,21 @@ import { ApiService } from './api.service';
 import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
-import { Order, Inspection, Certificate, Permit, Agreement, SelfReport, RestorativeJustice, Ticket, AdministrativePenalty, AdministrativeSanction, Warning, ConstructionPlan, ManagementPlan } from '../../../../common/src/app/models/master';
+import {
+  Order,
+  Inspection,
+  Certificate,
+  Permit,
+  Agreement,
+  SelfReport,
+  RestorativeJustice,
+  Ticket,
+  AdministrativePenalty,
+  AdministrativeSanction,
+  Warning,
+  ConstructionPlan,
+  ManagementPlan
+} from '../../../../common/src/app/models/master';
 import { TaskService, ITaskParams } from './task.service';
 
 /**
@@ -98,7 +112,7 @@ export class FactoryService {
    * @type {TaskService}
    * @memberof FactoryService
    */
-   public get taskService(): TaskService {
+  public get taskService(): TaskService {
     if (!this._taskService) {
       this._taskService = this.injector.get(TaskService);
     }
@@ -177,12 +191,7 @@ export class FactoryService {
     if (!recordId || !schema) {
       return of([] as SearchResults[]);
     }
-    return this.searchService.getItem(
-      this.apiService.pathAPI,
-      recordId,
-      schema,
-      true
-    );
+    return this.searchService.getItem(this.apiService.pathAPI, recordId, schema, true);
   }
 
   /**
@@ -287,7 +296,8 @@ export class FactoryService {
     const outboundObject = {
       orders: [order]
     };
-    return this.recordService.createRecord(outboundObject)
+    return this.recordService
+      .createRecord(outboundObject)
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
@@ -295,8 +305,7 @@ export class FactoryService {
     const outboundObject = {
       orders: [order]
     };
-    return this.recordService.editRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
 
   // Inspections
@@ -304,7 +313,8 @@ export class FactoryService {
     const outboundObject = {
       inspections: [inspection]
     };
-    return this.recordService.createRecord(outboundObject)
+    return this.recordService
+      .createRecord(outboundObject)
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
@@ -312,8 +322,7 @@ export class FactoryService {
     const outboundObject = {
       inspections: [inspection]
     };
-    return this.recordService.editRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
 
   // Certificates
@@ -496,12 +505,10 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-
   public editManagementPlan(managementPLan: ManagementPlan): Observable<object> {
     const outboundObject = {
       managementPlans: [managementPLan]
     };
     return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
-
 }

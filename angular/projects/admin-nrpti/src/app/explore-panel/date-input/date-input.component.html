@@ -1,4 +1,4 @@
-<div class="date-input" [ngClass]="{'is-invalid': isValidate && !isValidDate(ngbDate)}">
+<div class="date-input" [ngClass]="{ 'is-invalid': isValidate && !isValidDate(ngbDate) }">
   <input
     class="form-control"
     type="text"
@@ -11,18 +11,18 @@
     [(ngModel)]="ngbDate"
     (ngModelChange)="onDateChg($event)"
     [minDate]="minNgbDate"
-    [maxDate]="maxNgbDate" />
-  <button class="date-input__calendar-btn form-control" 
-    (click)="ngbDatepicker.toggle()" 
-    type="button" 
-    title="Select a Date">
-      <i class="material-icons md-18">date_range</i>
+    [maxDate]="maxNgbDate"
+  />
+  <button
+    class="date-input__calendar-btn form-control"
+    (click)="ngbDatepicker.toggle()"
+    type="button"
+    title="Select a Date"
+  >
+    <i class="material-icons md-18">date_range</i>
   </button>
-  <button class="date-input__clear-btn btn btn-icon" 
-    [hidden]="!ngbDate" 
-    (click)="clearDate()" 
-    title="Clear Date">
-      <i class="material-icons md-18">close</i>
+  <button class="date-input__clear-btn btn btn-icon" [hidden]="!ngbDate" (click)="clearDate()" title="Clear Date">
+    <i class="material-icons md-18">close</i>
   </button>
 </div>
 

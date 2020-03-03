@@ -27,13 +27,7 @@ import { DocumentService } from './services/document.service';
 import { FactoryService } from './services/factory.service';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    ConfirmComponent,
-    HeaderComponent,
-    FooterComponent
-  ],
+  declarations: [AppComponent, HomeComponent, ConfirmComponent, HeaderComponent, FooterComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

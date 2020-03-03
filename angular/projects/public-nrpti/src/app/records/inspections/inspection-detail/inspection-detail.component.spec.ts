@@ -16,7 +16,10 @@ describe('InspectionDetailComponent', () => {
     TestBed.configureTestingModule({
       imports: [GlobalModule],
       declarations: [InspectionDetailComponent],
-      providers: [{ provide: ActivatedRoute, useValue: activedRouteStub }, { provide: Router, useValue: mockRouter }]
+      providers: [
+        { provide: ActivatedRoute, useValue: activedRouteStub },
+        { provide: Router, useValue: mockRouter }
+      ]
     }).compileComponents();
   }));
 

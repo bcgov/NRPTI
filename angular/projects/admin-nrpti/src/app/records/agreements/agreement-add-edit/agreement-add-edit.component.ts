@@ -33,7 +33,7 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
     private factoryService: FactoryService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -55,7 +55,9 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
 
   private populateTextFields() {
     if (this.currentRecord.dateUpdated) {
-      this.lastEditedSubText = `Last Edited on ${this.utils.convertJSDateToString(new Date(this.currentRecord.dateUpdated))}`;
+      this.lastEditedSubText = `Last Edited on ${this.utils.convertJSDateToString(
+        new Date(this.currentRecord.dateUpdated)
+      )}`;
     } else {
       this.lastEditedSubText = `Added on ${this.utils.convertJSDateToString(new Date(this.currentRecord.dateAdded))}`;
     }
@@ -64,7 +66,10 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
         case 'AgreementLNG':
           this.lngFlavour = flavour;
           this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
-          this.lngFlavour.read.includes('public') && (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(new Date(this.lngFlavour.datePublished))}`);
+          this.lngFlavour.read.includes('public') &&
+            (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(
+              new Date(this.lngFlavour.datePublished)
+            )}`);
           break;
         default:
           break;
@@ -77,11 +82,10 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       dateIssued: new FormControl(
-        (
-          this.currentRecord &&
+        (this.currentRecord &&
           this.currentRecord.dateIssued &&
-          this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))
-        ) || ''
+          this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
+          ''
       ),
       nationName: new FormControl((this.currentRecord && this.currentRecord.nationName) || ''),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
@@ -120,7 +124,7 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
       recordType: 'Agreement',
       dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
       nationName: this.myForm.controls.nationName.value,
-      projectName: this.myForm.controls.projectName.value,
+      projectName: this.myForm.controls.projectName.value
     });
 
     // Project name logic

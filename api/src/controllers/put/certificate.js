@@ -81,9 +81,7 @@ exports.editMaster = async function(args, res, next, incomingObj) {
     observables.push(this.editLNG(args, res, next, incomingObj.CertificateLNG));
     delete incomingObj.CertificateLNG;
   } else if (incomingObj.CertificateLNG) {
-    observables.push(
-      CertificatePost.createLNG(args, res, next, incomingObj.CertificateLNG, savedCertificate._id)
-    );
+    observables.push(CertificatePost.createLNG(args, res, next, incomingObj.CertificateLNG, savedCertificate._id));
     delete incomingObj.CertificateLNG;
   }
 

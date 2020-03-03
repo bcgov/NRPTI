@@ -74,67 +74,69 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   ];
 
   public hidepanel = false;
-  public filters = [{
-    'displayName': 'Record Type',
-    'textFilters': [
-      {
-        'displayName': 'Order',
-        'fieldName': '_schemaName'
-      },
-      {
-        'displayName': 'Inspection',
-        'fieldName': '_schemaName'
-      },
-      {
-        'displayName': 'Certificate',
-        'fieldName': '_schemaName'
-      },
-      {
-        'displayName': 'Permit',
-        'fieldName': '_schemaName'
-      },
-      {
-        'displayName': 'SelfReport',
-        'fieldName': '_schemaName'
-      },
-      {
-        'displayName': 'Agreement',
-        'fieldName': '_schemaName'
-      },
-      {
-        'displayName': 'WarningLetter',
-        'fieldName': '_schemaName'
-      },
-      {
-        'displayName': 'RestorativeJustice',
-        'fieldName': '_schemaName'
-      },
-      {
-        'displayName': 'Ticket',
-        'fieldName': '_schemaName'
-      },
-      {
-        'displayName': 'AdministrativePenalty',
-        'fieldName': '_schemaName'
-      },
-      {
-        'displayName': 'AdministrativeSanction',
-        'fieldName': '_schemaName'
-      },
-      {
-        'displayName': 'Warning',
-        'fieldName': '_schemaName'
-      },
-      {
-        'displayName': 'ConstructionPlan',
-        'fieldName': '_schemaName'
-      },
-      {
-        'displayName': 'ManagementPlan',
-        'fieldName': '_schemaName'
-      }
-    ]
-  }];
+  public filters = [
+    {
+      displayName: 'Record Type',
+      textFilters: [
+        {
+          displayName: 'Order',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'Inspection',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'Certificate',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'Permit',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'SelfReport',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'Agreement',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'WarningLetter',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'RestorativeJustice',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'Ticket',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'AdministrativePenalty',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'AdministrativeSanction',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'Warning',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'ConstructionPlan',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'ManagementPlan',
+          fieldName: '_schemaName'
+        }
+      ]
+    }
+  ];
 
   constructor(
     public location: Location,
@@ -213,7 +215,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
     // save default set of params, tack on new ones.
     this.route.params.subscribe(params => {
-
       // Filter out the incoming params (remove them entirely)
       Object.keys(params).forEach(p => {
         if (Object.keys(event).includes(p)) {
@@ -225,19 +226,14 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       });
 
       Object.keys(event).forEach(item => {
-        if (!event || (event[item] === undefined || event[item] === null)
-                   || (event[item].length === 0)
-        ) {
+        if (!event || event[item] === undefined || event[item] === null || event[item].length === 0) {
           // console.log('skipping:', e);
         } else {
           newParams[item] = event[item];
         }
       });
 
-      this.router.navigate([
-        '/records',
-        newParams
-      ]);
+      this.router.navigate(['/records', newParams]);
     });
   }
 

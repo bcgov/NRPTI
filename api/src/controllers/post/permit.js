@@ -68,8 +68,7 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   }
 
   const observables = [];
-  incomingObj.PermitLNG &&
-    observables.push(this.createLNG(args, res, next, incomingObj.PermitLNG, savedPermit._id));
+  incomingObj.PermitLNG && observables.push(this.createLNG(args, res, next, incomingObj.PermitLNG, savedPermit._id));
 
   let flavourRes = null;
   try {

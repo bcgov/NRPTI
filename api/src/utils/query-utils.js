@@ -15,7 +15,7 @@ let DEFAULT_PAGESIZE = 100;
  * @returns array of fields that is a subset of allowedFields.
  */
 exports.getSanitizedFields = function(allowedFields, fields) {
-  return fields.filter(function (field) {
+  return fields.filter(function(field) {
     return allowedFields.indexOf(allowedFields, field) !== -1;
   });
 };

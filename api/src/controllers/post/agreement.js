@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
-const RECORD_TYPE = require('../../utils/constants/record-type-enum')
+const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 /**
  * Create Master Agreement record.

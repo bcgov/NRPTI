@@ -16,7 +16,10 @@ describe('TicketDetailComponent', () => {
     TestBed.configureTestingModule({
       imports: [GlobalModule],
       declarations: [TicketDetailComponent],
-      providers: [{ provide: ActivatedRoute, useValue: activedRouteStub }, { provide: Router, useValue: mockRouter }]
+      providers: [
+        { provide: ActivatedRoute, useValue: activedRouteStub },
+        { provide: Router, useValue: mockRouter }
+      ]
     }).compileComponents();
   }));
 

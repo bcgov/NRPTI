@@ -1,5 +1,5 @@
 <div class="files-info" *ngIf="showInfo">
-  <ng-container *ngIf="maxFiles > 0">Maximum of {{ maxFiles }} files. </ng-container>
+  <ng-container *ngIf="maxFiles > 0">Maximum of {{ maxFiles }} files.</ng-container>
   <ng-container *ngIf="maxSize > 0">File size up to {{ maxSize }}MB each.</ng-container>
   <br />
   <ng-container *ngIf="fileExt.length > 0">Acceptable file types: {{ fileExt.slice().join(', ') }}</ng-container>
@@ -33,6 +33,9 @@
 
 <div *ngIf="errors.length > 0" class="errors-list">
   <ul>
-    <li *ngFor="let err of errors"><i class="material-icons">error</i>&nbsp;{{ err }}</li>
+    <li *ngFor="let err of errors">
+      <i class="material-icons">error</i>
+      &nbsp;{{ err }}
+    </li>
   </ul>
 </div>
