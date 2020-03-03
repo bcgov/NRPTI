@@ -1,6 +1,5 @@
 describe('import-task', () => {
   describe('protectedCreateTask', () => {
-    let mockTaskAuditRecord;
     let importTask;
 
     beforeEach(() => {
@@ -12,7 +11,6 @@ describe('import-task', () => {
       queryActions.sendResponse = mockSendResponse;
 
       // mock task-audit-record class
-      mockTaskAuditRecord = require('../../utils/task-audit-record');
       jest.mock('../../utils/task-audit-record');
 
       // require this AFTER its require-mocks have been setup

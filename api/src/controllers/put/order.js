@@ -158,7 +158,7 @@ exports.editLNG = async function (args, res, next, incomingObj) {
   updateObj.$set['dateUpdated'] = new Date();
 
   try {
-    let editRes = null
+    let editRes = null;
     editRes = await OrderLNG.findOneAndUpdate(
       { _schemaName: 'OrderLNG', _id: _id },
       updateObj,
@@ -171,7 +171,7 @@ exports.editLNG = async function (args, res, next, incomingObj) {
   } catch (e) {
     return {
       status: 'failure',
-      object: orderLNG,
+      object: incomingObj,
       errorMessage: e
     }
   }
@@ -230,7 +230,7 @@ exports.editNRCED = async function (args, res, next, incomingObj) {
   updateObj.$set['dateUpdated'] = new Date();
 
   try {
-    let editRes = null
+    let editRes = null;
     editRes = await OrderNRCED.findOneAndUpdate(
       { _schemaName: 'OrderNRCED', _id: _id },
       updateObj,
@@ -243,7 +243,7 @@ exports.editNRCED = async function (args, res, next, incomingObj) {
   } catch (e) {
     return {
       status: 'failure',
-      object: orderNRCED,
+      object: incomingObj,
       errorMessage: e
     }
   }
