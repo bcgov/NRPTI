@@ -28,14 +28,14 @@ exports.protectedPut = async function (args, res, next) {
     }
 
     const Document = mongoose.model('Document');
-    var document = new Document();
+    let document = new Document();
     const key = `${uuid()}_${data.fileName}`;
 
     document.fileName = data.fileName;
     document.key = key;
     document._addedBy = args.swagger.params.auth_payload.displayName;
 
-    var savedDocument = null;
+    let savedDocument = null;
     try {
       savedDocument = await document.save();
     } catch (e) {
@@ -55,7 +55,7 @@ exports.protectedPut = async function (args, res, next) {
 
 exports.createLinkDocument = async function (fileName, addedBy, url) {
   const Document = mongoose.model('Document');
-  var document = new Document();
+  let document = new Document();
   document.fileName = fileName;
   document.addedBy = addedBy;
   document.url = url;
@@ -106,9 +106,5 @@ function redirect(method, key) {
       throw new Error(`Invalid method operation ${method}`);
   }
 
-  try {
-    return createSignedUrl(operation, key);
-  } catch (e) {
-    throw e;
-  }
+  return createSignedUrl(operation, key);
 }

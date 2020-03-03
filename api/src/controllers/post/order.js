@@ -1,5 +1,5 @@
-var mongoose = require('mongoose');
-var ObjectId = require('mongoose').Types.ObjectId;
+let mongoose = require('mongoose');
+let ObjectId = require('mongoose').Types.ObjectId;
 
 // Example of incomingObj
 /**
@@ -15,8 +15,8 @@ var ObjectId = require('mongoose').Types.ObjectId;
  *     },
  */
 exports.createMaster = async function (args, res, next, incomingObj) {
-  var Order = mongoose.model('Order');
-  var order = new Order();
+  let Order = mongoose.model('Order');
+  let order = new Order();
 
   order._schemaName = 'Order';
   incomingObj._epicProjectId && ObjectId.isValid(incomingObj._epicProjectId) && (order._epicProjectId = new ObjectId(incomingObj._epicProjectId));
@@ -58,11 +58,11 @@ exports.createMaster = async function (args, res, next, incomingObj) {
     }
   }
 
-  var observables = [];
+  let observables = [];
   incomingObj.OrderLNG && observables.push(this.createLNG(args, res, next, incomingObj.OrderLNG, savedOrder._id));
   incomingObj.OrderNRCED && observables.push(this.createNRCED(args, res, next, incomingObj.OrderNRCED, savedOrder._id));
 
-  var flavourRes = null;
+  let flavourRes = null;
   try {
     observables.length > 0 && (flavourRes = await Promise.all(observables));
   } catch (e) {
@@ -99,8 +99,8 @@ exports.createLNG = async function (args, res, next, incomingObj, masterId) {
     }
   }
 
-  var OrderLNG = mongoose.model('OrderLNG');
-  var orderLNG = new OrderLNG();
+  let OrderLNG = mongoose.model('OrderLNG');
+  let orderLNG = new OrderLNG();
 
   orderLNG._schemaName = 'OrderLNG';
   orderLNG._master = new ObjectId(masterId);
@@ -114,7 +114,7 @@ exports.createLNG = async function (args, res, next, incomingObj, masterId) {
   orderLNG.dateAdded = new Date();
 
   try {
-    var savedOrderLNG = await orderLNG.save();
+    let savedOrderLNG = await orderLNG.save();
     return {
       status: 'success',
       object: savedOrderLNG
@@ -147,8 +147,8 @@ exports.createNRCED = async function (args, res, next, incomingObj, masterId) {
     }
   }
 
-  var OrderNRCED = mongoose.model('OrderNRCED');
-  var orderNRCED = new OrderNRCED();
+  let OrderNRCED = mongoose.model('OrderNRCED');
+  let orderNRCED = new OrderNRCED();
 
   orderNRCED._schemaName = 'OrderNRCED';
   orderNRCED._master = new ObjectId(masterId);
@@ -162,7 +162,7 @@ exports.createNRCED = async function (args, res, next, incomingObj, masterId) {
   orderNRCED.dateAdded = new Date();
 
   try {
-    var savedOrderNRCED = await orderNRCED.save();
+    let savedOrderNRCED = await orderNRCED.save();
     return {
       status: 'success',
       object: savedOrderNRCED

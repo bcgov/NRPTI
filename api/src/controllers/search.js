@@ -1,10 +1,10 @@
-var defaultLog = require('winston').loggers.get('default');
-var mongoose = require('mongoose');
-var QueryActions = require('../utils/query-actions');
-var QueryUtils = require('../utils/query-utils');
-var qs = require('qs');
-var mongodb = require('../utils/mongodb');
-var moment = require('moment');
+let defaultLog = require('winston').loggers.get('default');
+let mongoose = require('mongoose');
+let QueryActions = require('../utils/query-actions');
+let QueryUtils = require('../utils/query-utils');
+let qs = require('qs');
+let mongodb = require('../utils/mongodb');
+let moment = require('moment');
 
 function isEmpty(obj) {
   for (const key in obj) {
@@ -15,18 +15,18 @@ function isEmpty(obj) {
   return true;
 }
 
-var generateExpArray = async function (field, prefix = '') {
+let generateExpArray = async function (field, prefix = '') {
   if (field && field != undefined) {
-    var queryString = qs.parse(field);
+    let queryString = qs.parse(field);
     defaultLog.info("queryString:", queryString);
     // Note that we need map and not forEach here because Promise.all uses
     // the returned array!
     return await Promise.all(Object.keys(queryString).map(async item => {
-      var entry = queryString[item];
+      let entry = queryString[item];
       defaultLog.info("item:", item, entry);
       if (Array.isArray(entry)) {
         // Arrays are a list of options so will always be ors
-        var orArray = entry.map(element => {
+        let orArray = entry.map(element => {
           return getConvertedValue(item, element);
         });
         return { $or: orArray };
@@ -56,7 +56,7 @@ var generateExpArray = async function (field, prefix = '') {
   }
 }
 
-var getConvertedValue = function (item, entry) {
+const getConvertedValue = function (item, entry) {
   if (isNaN(entry)) {
     if (mongoose.Types.ObjectId.isValid(entry)) {
       defaultLog.info("objectid", entry);
@@ -65,7 +65,7 @@ var getConvertedValue = function (item, entry) {
     } else if (entry === 'true') {
       defaultLog.info("bool");
       // Bool
-      var tempObj = {}
+      let tempObj = {}
       tempObj[item] = true;
       tempObj.active = true;
       return tempObj;
@@ -83,34 +83,34 @@ var getConvertedValue = function (item, entry) {
   }
 }
 
-var handleDateStartItem = function (field, entry) {
-  var date = new Date(entry);
+const handleDateStartItem = function (field, entry) {
+  let date = new Date(entry);
 
   // Validate: valid date?
   if (!isNaN(date)) {
-    var start = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+    let start = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
     return { [field]: { $gte: start } };
   }
 }
 
-var handleDateEndItem = function (field, entry) {
-  var date = new Date(entry);
+const handleDateEndItem = function (field, entry) {
+  let date = new Date(entry);
 
   // Validate: valid date?
   if (!isNaN(date)) {
-    var end = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + 1);
+    let end = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + 1);
     return { [field]: { $lt: end } };
   }
 }
 
-var searchCollection = async function (roles, keywords, schemaName, pageNum, pageSize, project, sortField = undefined, sortDirection = undefined, caseSensitive, populate = false, and, or) {
-  var properties = undefined;
+let searchCollection = async function (roles, keywords, schemaName, pageNum, pageSize, project, sortField = undefined, sortDirection = undefined, caseSensitive, populate = false, and, or) {
+  let properties = undefined;
   if (project) {
     properties = { project: mongoose.Types.ObjectId(project) };
   }
 
   // optional search keys
-  var searchProperties = undefined;
+  let searchProperties = undefined;
   if (keywords) {
     searchProperties = { $text: { $search: keywords, $caseSensitive: caseSensitive } };
   }
@@ -139,12 +139,12 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
     'WarningNRCED'
   ];
 
-  var matches = await generateMatchesForAggregation(and, or, searchProperties, properties, schemaName, roles);
+  let matches = await generateMatchesForAggregation(and, or, searchProperties, properties, schemaName, roles);
 
   defaultLog.info("mainMatch:", matches.mainMatch);
   defaultLog.info("masterMatch:", matches.masterMatch);
 
-  var sortingValue = {};
+  let sortingValue = {};
   sortingValue[sortField] = sortDirection;
 
   let searchResultAggregation = [];
@@ -166,7 +166,7 @@ var searchCollection = async function (roles, keywords, schemaName, pageNum, pag
   );
 
 
-  var aggregation = [
+  let aggregation = [
     {
       $match: matches.mainMatch
     }
@@ -266,7 +266,7 @@ exports.protectedGet = function (args, res, next) {
 
 // Generates the main match query, and optionally generates the master field match to be used
 // later in the pipeline.
-var generateMatchesForAggregation = async function (and, or, searchProperties, properties, schemaName, roles) {
+const generateMatchesForAggregation = async function (and, or, searchProperties, properties, schemaName, roles) {
   // query modifiers
   // Pluck the __master elements, and the flavour elements.  process them in different parts of the
   // pipeline because of the linking of flavour to master records.
@@ -312,7 +312,7 @@ var generateMatchesForAggregation = async function (and, or, searchProperties, p
   defaultLog.info("orExpArray:", orExpArray);
   defaultLog.info("orMasterExpArray:", orMasterExpArray);
 
-  var modifier = {};
+  let modifier = {};
   if (andExpArray.length > 0 && orExpArray.length > 0) {
     modifier = { $and: [{ $and: andExpArray }, { $and: orExpArray }] };
   } else if (andExpArray.length === 0 && orExpArray.length > 0) {
@@ -321,7 +321,7 @@ var generateMatchesForAggregation = async function (and, or, searchProperties, p
     modifier = { $and: andExpArray };
   }
 
-  var masterModifier = {};
+  let masterModifier = {};
   if (andMasterExpArray.length > 0 && orMasterExpArray.length > 0) {
     masterModifier = { $and: [{ $and: andMasterExpArray }, { $and: orMasterExpArray }] };
   } else if (andMasterExpArray.length === 0 && orMasterExpArray.length > 0) {
@@ -330,14 +330,14 @@ var generateMatchesForAggregation = async function (and, or, searchProperties, p
     masterModifier = { $and: andMasterExpArray };
   }
 
-  var match = {
+  let match = {
     _schemaName: Array.isArray(schemaName) ? { $in: schemaName } : schemaName,
     ...(isEmpty(modifier) ? undefined : modifier),
     ...(searchProperties ? searchProperties : undefined),
     ...(properties ? properties : undefined)
   };
 
-  var masterMatch = {
+  let masterMatch = {
     ...(isEmpty(masterModifier) ? undefined : masterModifier)
   };
 
@@ -347,18 +347,18 @@ var generateMatchesForAggregation = async function (and, or, searchProperties, p
   }
 }
 
-var executeQuery = async function (args, res, next) {
-  var _id = args.swagger.params._id ? args.swagger.params._id.value : null;
-  var keywords = args.swagger.params.keywords.value;
-  var dataset = args.swagger.params.dataset.value;
-  var project = args.swagger.params.project.value;
-  var populate = args.swagger.params.populate ? args.swagger.params.populate.value : false;
-  var pageNum = args.swagger.params.pageNum.value || 0;
-  var pageSize = args.swagger.params.pageSize.value || 25;
-  var sortBy = args.swagger.params.sortBy.value ? args.swagger.params.sortBy.value : keywords ? ['-score'] : [];
-  var caseSensitive = args.swagger.params.caseSensitive ? args.swagger.params.caseSensitive.value : false;
-  var and = args.swagger.params.and ? args.swagger.params.and.value : '';
-  var or = args.swagger.params.or ? args.swagger.params.or.value : '';
+const executeQuery = async function (args, res, next) {
+  let _id = args.swagger.params._id ? args.swagger.params._id.value : null;
+  let keywords = args.swagger.params.keywords.value;
+  let dataset = args.swagger.params.dataset.value;
+  let project = args.swagger.params.project.value;
+  let populate = args.swagger.params.populate ? args.swagger.params.populate.value : false;
+  let pageNum = args.swagger.params.pageNum.value || 0;
+  let pageSize = args.swagger.params.pageSize.value || 25;
+  let sortBy = args.swagger.params.sortBy.value ? args.swagger.params.sortBy.value : keywords ? ['-score'] : [];
+  let caseSensitive = args.swagger.params.caseSensitive ? args.swagger.params.caseSensitive.value : false;
+  let and = args.swagger.params.and ? args.swagger.params.and.value : '';
+  let or = args.swagger.params.or ? args.swagger.params.or.value : '';
   defaultLog.info("Searching keywords:", keywords);
   defaultLog.info("Searching datasets:", dataset);
   defaultLog.info("Searching project:", project);
@@ -371,7 +371,7 @@ var executeQuery = async function (args, res, next) {
   defaultLog.info("_id:", _id);
   defaultLog.info("populate:", populate);
 
-  var roles = args.swagger.params.auth_payload ? args.swagger.params.auth_payload.realm_access.roles : ['public'];
+  let roles = args.swagger.params.auth_payload ? args.swagger.params.auth_payload.realm_access.roles : ['public'];
 
   defaultLog.info("Searching Collection:", dataset);
 
@@ -381,10 +381,10 @@ var executeQuery = async function (args, res, next) {
 
   QueryUtils.recordAction('Search', keywords, args.swagger.params.auth_payload ? args.swagger.params.auth_payload.preferred_username : 'public')
 
-  var sortDirection = undefined;
-  var sortField = undefined;
+  let sortDirection = undefined;
+  let sortField = undefined;
 
-  var sortingValue = {};
+  let sortingValue = {};
   sortBy.map((value) => {
     sortDirection = value.charAt(0) == '-' ? -1 : 1;
     sortField = value.slice(1);
@@ -405,7 +405,7 @@ var executeQuery = async function (args, res, next) {
     return QueryActions.sendResponse(res, 200, itemData);
 
   } else if (dataset[0] === 'Item') {
-    var collectionObj = mongoose.model(args.swagger.params._schemaName.value);
+    let collectionObj = mongoose.model(args.swagger.params._schemaName.value);
     defaultLog.info("ITEM GET", { _id: args.swagger.params._id.value })
 
     let aggregation = [
@@ -462,7 +462,7 @@ var executeQuery = async function (args, res, next) {
       }
     );
 
-    var data = await collectionObj.aggregate(aggregation);
+    let data = await collectionObj.aggregate(aggregation);
 
     return QueryActions.sendResponse(res, 200, data);
   } else {
