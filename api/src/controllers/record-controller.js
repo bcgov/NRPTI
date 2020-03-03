@@ -104,10 +104,10 @@ exports.protectedGet = function (args, res, next) {
  * }
  */
 exports.protectedPost = async function (args, res, next) {
-  var observables = [];
+  let observables = [];
 
   if (args.swagger.params.data && args.swagger.params.data.value) {
-    var data = args.swagger.params.data.value;
+    let data = args.swagger.params.data.value;
 
     if (data.orders) {
       observables.push(processPostRequest(args, res, next, 'orders', data.orders));
@@ -149,7 +149,7 @@ exports.protectedPost = async function (args, res, next) {
       observables.push(processPostRequest(args, res, next, 'managementPlans', data.managementPlans));
     }
 
-    var response = await Promise.all(observables);
+    let response = await Promise.all(observables);
 
     return queryActions.sendResponse(res, 200, response);
   } else {
@@ -165,10 +165,10 @@ exports.protectedPost = async function (args, res, next) {
  * @param {*} next
  */
 exports.protectedPut = async function (args, res, next) {
-  var observables = [];
+  let observables = [];
 
   if (args.swagger.params.data && args.swagger.params.data.value) {
-    var data = args.swagger.params.data.value;
+    let data = args.swagger.params.data.value;
 
     if (data.orders) {
       observables.push(processPutRequest(args, res, next, 'orders', data.orders));
@@ -210,7 +210,7 @@ exports.protectedPut = async function (args, res, next) {
       observables.push(processPutRequest(args, res, next, 'managementPlans', data.managementPlans));
     }
 
-    var response = await Promise.all(observables);
+    let response = await Promise.all(observables);
 
     return queryActions.sendResponse(res, 200, response);
   } else {
@@ -317,8 +317,8 @@ let processPostRequest = async function (args, res, next, property, data) {
     };
   }
 
-  var i = data.length - 1;
-  var observables = [];
+  let i = data.length - 1;
+  let observables = [];
 
   do {
     switch (property) {
@@ -387,8 +387,8 @@ let processPutRequest = async function (args, res, next, property, data) {
     }
   }
 
-  var i = data.length - 1;
-  var observables = [];
+  let i = data.length - 1;
+  let observables = [];
 
   do {
     switch (property) {

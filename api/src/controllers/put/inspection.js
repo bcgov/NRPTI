@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
-var putUtils = require('../../utils/put-utils');
-var InspectionPost = require('../post/inspection')
+let mongoose = require('mongoose');
+let putUtils = require('../../utils/put-utils');
+let InspectionPost = require('../post/inspection')
 
 // Example of incomingObj
 /**
@@ -21,7 +21,8 @@ var InspectionPost = require('../post/inspection')
  *     },
  */
 exports.editMaster = async function (args, res, next, incomingObj) {
-  var _id = null;
+  let _id = null;
+  let sanitizedObj = {};
   if (!incomingObj._id) {
     return {
       status: 'failure',
@@ -37,9 +38,9 @@ exports.editMaster = async function (args, res, next, incomingObj) {
   delete incomingObj.read;
   delete incomingObj.write;
 
-  var Inspection = mongoose.model('Inspection');
+  let Inspection = mongoose.model('Inspection');
   try {
-    var sanitizedObj = putUtils.validateObjectAgainstModel(Inspection, incomingObj);
+    sanitizedObj = putUtils.validateObjectAgainstModel(Inspection, incomingObj);
   } catch (e) {
     return {
       status: 'failure',
@@ -48,12 +49,12 @@ exports.editMaster = async function (args, res, next, incomingObj) {
     }
   }
 
-  var finalRes = {
+  let finalRes = {
     status: 'success',
     object: sanitizedObj,
     flavours: null
   }
-  var savedInspection = null;
+  let savedInspection = null;
   // Skip if there is nothing to update for master
   if (sanitizedObj !== {}) {
     sanitizedObj['dateUpdated'] = new Date();
@@ -73,7 +74,7 @@ exports.editMaster = async function (args, res, next, incomingObj) {
 
   // Flavours:
   // When editing, we might get a request to make a brand new flavour rather than edit.
-  var observables = [];
+  let observables = [];
   if (incomingObj.InspectionLNG && incomingObj.InspectionLNG._id) {
     observables.push(this.editLNG(args, res, next, incomingObj.InspectionLNG));
     delete incomingObj.InspectionLNG;
@@ -113,7 +114,8 @@ exports.editMaster = async function (args, res, next, incomingObj) {
  *  }
  */
 exports.editLNG = async function (args, res, next, incomingObj) {
-  var _id = null;
+  let _id = null;
+  let sanitizedObj = {};
   if (!incomingObj._id) {
     return {
       status: 'failure',
@@ -133,10 +135,10 @@ exports.editLNG = async function (args, res, next, incomingObj) {
   // You cannot update _master
   delete incomingObj._master;
 
-  var InspectionLNG = mongoose.model('InspectionLNG');
+  let InspectionLNG = mongoose.model('InspectionLNG');
 
   try {
-    var sanitizedObj = putUtils.validateObjectAgainstModel(InspectionLNG, incomingObj);
+    sanitizedObj = putUtils.validateObjectAgainstModel(InspectionLNG, incomingObj);
   } catch (e) {
     return {
       status: 'failure',
@@ -156,7 +158,7 @@ exports.editLNG = async function (args, res, next, incomingObj) {
   updateObj.$set['dateUpdated'] = new Date();
 
   try {
-    var editRes = null
+    let editRes = null;
     editRes = await InspectionLNG.findOneAndUpdate(
       { _schemaName: 'InspectionLNG', _id: _id },
       updateObj,
@@ -169,7 +171,7 @@ exports.editLNG = async function (args, res, next, incomingObj) {
   } catch (e) {
     return {
       status: 'failure',
-      object: inspectionLNG,
+      object: incomingObj,
       errorMessage: e
     }
   }
@@ -185,7 +187,8 @@ exports.editLNG = async function (args, res, next, incomingObj) {
  *  }
  */
 exports.editNRCED = async function (args, res, next, incomingObj) {
-  var _id = null;
+  let _id = null;
+  let sanitizedObj = {};
   if (!incomingObj._id) {
     return {
       status: 'failure',
@@ -205,9 +208,9 @@ exports.editNRCED = async function (args, res, next, incomingObj) {
   // You cannot update _master
   delete incomingObj._master;
 
-  var InspectionNRCED = mongoose.model('InspectionNRCED');
+  let InspectionNRCED = mongoose.model('InspectionNRCED');
   try {
-    var sanitizedObj = putUtils.validateObjectAgainstModel(InspectionNRCED, incomingObj);
+    sanitizedObj = putUtils.validateObjectAgainstModel(InspectionNRCED, incomingObj);
   } catch (e) {
     return {
       status: 'failure',
@@ -227,7 +230,7 @@ exports.editNRCED = async function (args, res, next, incomingObj) {
   updateObj.$set['dateUpdated'] = new Date();
 
   try {
-    var editRes = null
+    let editRes = null;
     editRes = await InspectionNRCED.findOneAndUpdate(
       { _schemaName: 'InspectionNRCED', _id: _id },
       updateObj,
@@ -240,7 +243,7 @@ exports.editNRCED = async function (args, res, next, incomingObj) {
   } catch (e) {
     return {
       status: 'failure',
-      object: inspectionNRCED,
+      object: incomingObj,
       errorMessage: e
     }
   }
