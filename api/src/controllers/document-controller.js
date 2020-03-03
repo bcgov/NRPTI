@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 const queryActions = require('../utils/query-actions');
 const { uuid } = require('uuidv4');
@@ -6,20 +5,19 @@ const AWS = require('aws-sdk');
 
 const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
 const ep = new AWS.Endpoint(OBJ_STORE_URL);
-const s3 = new AWS.S3(
-  {
-    endpoint: ep,
-    accessKeyId: process.env.OBJECT_STORE_user_account,
-    secretAccessKey: process.env.OBJECT_STORE_password,
-    signatureVersion: 'v4'
-  });
+const s3 = new AWS.S3({
+  endpoint: ep,
+  accessKeyId: process.env.OBJECT_STORE_user_account,
+  secretAccessKey: process.env.OBJECT_STORE_password,
+  signatureVersion: 'v4'
+});
 
-exports.protectedOptions = function (args, res, next) {
+exports.protectedOptions = function(args, res, next) {
   res.status(200).send();
 };
 
 // WIP
-exports.protectedPut = async function (args, res, next) {
+exports.protectedPut = async function(args, res, next) {
   if (args.swagger.params.data && args.swagger.params.data.value) {
     const data = args.swagger.params.data.value;
 
@@ -51,9 +49,9 @@ exports.protectedPut = async function (args, res, next) {
   } else {
     return queryActions.sendResponse(res, 400, { error: 'You must provide data' });
   }
-}
+};
 
-exports.createLinkDocument = async function (fileName, addedBy, url) {
+exports.createLinkDocument = async function(fileName, addedBy, url) {
   const Document = mongoose.model('Document');
   let document = new Document();
   document.fileName = fileName;
@@ -61,8 +59,8 @@ exports.createLinkDocument = async function (fileName, addedBy, url) {
   document.url = url;
   document.read = ['public', 'sysadmin'];
   document.write = ['sysadmin'];
-  return await document.save();;
-}
+  return await document.save();
+};
 
 // WIP
 function createSignedUrl(operation, key) {
@@ -70,7 +68,7 @@ function createSignedUrl(operation, key) {
     Bucket: process.env.OBJECT_STORE_bucket_name,
     Key: key,
     Expires: 5 * 60 // Link expires in 5 minutes
-  }
+  };
 
   try {
     if (operation === 'postObject') {
@@ -94,7 +92,7 @@ function redirect(method, key) {
       operation = 'headObject';
       break;
     case 'POST':
-      operation = 'postObject'
+      operation = 'postObject';
       break;
     case 'PUT':
       operation = 'putObject';

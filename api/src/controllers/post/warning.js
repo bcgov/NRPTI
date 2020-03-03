@@ -69,12 +69,9 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   }
 
   const observables = [];
-  incomingObj.WarningLNG &&
-    observables.push(this.createLNG(args, res, next, incomingObj.WarningLNG, savedWarning._id));
+  incomingObj.WarningLNG && observables.push(this.createLNG(args, res, next, incomingObj.WarningLNG, savedWarning._id));
   incomingObj.WarningNRCED &&
-    observables.push(
-      this.createNRCED(args, res, next, incomingObj.WarningNRCED, savedWarning._id)
-    );
+    observables.push(this.createNRCED(args, res, next, incomingObj.WarningNRCED, savedWarning._id));
 
   let flavourRes = null;
   try {

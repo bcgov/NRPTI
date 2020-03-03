@@ -14,14 +14,20 @@ let ObjectId = require('mongoose').Types.ObjectId;
  *       }
  *     },
  */
-exports.createMaster = async function (args, res, next, incomingObj) {
+exports.createMaster = async function(args, res, next, incomingObj) {
   let Order = mongoose.model('Order');
   let order = new Order();
 
   order._schemaName = 'Order';
-  incomingObj._epicProjectId && ObjectId.isValid(incomingObj._epicProjectId) && (order._epicProjectId = new ObjectId(incomingObj._epicProjectId));
-  incomingObj._sourceRefId && ObjectId.isValid(incomingObj._sourceRefId) && (order._sourceRefId = new ObjectId(incomingObj._sourceRefId));
-  incomingObj._epicMilestoneId && ObjectId.isValid(incomingObj._epicMilestoneId) && (order._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (order._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (order._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (order._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   incomingObj.recordName && (order.recordName = incomingObj.recordName);
   order.recordType = 'Order';
@@ -55,7 +61,7 @@ exports.createMaster = async function (args, res, next, incomingObj) {
       status: 'failure',
       object: order,
       errorMessage: e
-    }
+    };
   }
 
   let observables = [];
@@ -70,14 +76,14 @@ exports.createMaster = async function (args, res, next, incomingObj) {
       status: 'failure',
       object: observables,
       errorMessage: e
-    }
+    };
   }
 
   return {
     status: 'success',
     object: savedOrder,
     flavours: flavourRes
-  }
+  };
 };
 
 // Example of incomingObj
@@ -89,14 +95,14 @@ exports.createMaster = async function (args, res, next, incomingObj) {
  *      addRole: 'public'
  *  }
  */
-exports.createLNG = async function (args, res, next, incomingObj, masterId) {
+exports.createLNG = async function(args, res, next, incomingObj, masterId) {
   // We must have a valid master ObjectID to continue.
   if (!masterId || !ObjectId.isValid(masterId)) {
     return {
       status: 'failure',
       object: incomingObj,
       errorMessage: 'incomingObj._master was not valid ObjectId'
-    }
+    };
   }
 
   let OrderLNG = mongoose.model('OrderLNG');
@@ -107,7 +113,10 @@ exports.createLNG = async function (args, res, next, incomingObj, masterId) {
   orderLNG.read = ['sysadmin'];
   orderLNG.write = ['sysadmin'];
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole && incomingObj.addRole === 'public' && orderLNG.read.push('public') && (orderLNG.datePublished = new Date());
+  incomingObj.addRole &&
+    incomingObj.addRole === 'public' &&
+    orderLNG.read.push('public') &&
+    (orderLNG.datePublished = new Date());
 
   incomingObj.description && (orderLNG.description = incomingObj.description);
 
@@ -118,13 +127,13 @@ exports.createLNG = async function (args, res, next, incomingObj, masterId) {
     return {
       status: 'success',
       object: savedOrderLNG
-    }
+    };
   } catch (e) {
     return {
       status: 'failure',
       object: orderLNG,
       errorMessage: e
-    }
+    };
   }
 };
 
@@ -137,14 +146,14 @@ exports.createLNG = async function (args, res, next, incomingObj, masterId) {
  *      addRole: 'public'
  *  }
  */
-exports.createNRCED = async function (args, res, next, incomingObj, masterId) {
+exports.createNRCED = async function(args, res, next, incomingObj, masterId) {
   // We must have a valid master ObjectID to continue.
   if (!masterId || !ObjectId.isValid(masterId)) {
     return {
       status: 'failure',
       object: incomingObj,
       errorMessage: 'incomingObj._master was not valid ObjectId'
-    }
+    };
   }
 
   let OrderNRCED = mongoose.model('OrderNRCED');
@@ -155,7 +164,10 @@ exports.createNRCED = async function (args, res, next, incomingObj, masterId) {
   orderNRCED.read = ['sysadmin'];
   orderNRCED.write = ['sysadmin'];
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole && incomingObj.addRole === 'public' && orderNRCED.read.push('public') && (orderNRCED.datePublished = new Date());
+  incomingObj.addRole &&
+    incomingObj.addRole === 'public' &&
+    orderNRCED.read.push('public') &&
+    (orderNRCED.datePublished = new Date());
 
   incomingObj.summary && (orderNRCED.summary = incomingObj.summary);
 
@@ -166,12 +178,12 @@ exports.createNRCED = async function (args, res, next, incomingObj, masterId) {
     return {
       status: 'success',
       object: savedOrderNRCED
-    }
+    };
   } catch (e) {
     return {
       status: 'failure',
       object: orderNRCED,
       errorMessage: e
-    }
+    };
   }
 };

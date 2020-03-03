@@ -19,7 +19,7 @@ describe('NrisDataSource', () => {
 
     it('sets default status fields', () => {
       const dataSource = new NrisDataSource();
-      expect(dataSource).toEqual({"auth_payload": undefined, "params": {}});
+      expect(dataSource).toEqual({ auth_payload: undefined, params: {} });
     });
   });
 });

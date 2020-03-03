@@ -1,4 +1,4 @@
-exports.validateObjectAgainstModel = function (mongooseModel, incomingObj) {
+exports.validateObjectAgainstModel = function(mongooseModel, incomingObj) {
   let validFields = null;
   let sanitizedObj = {};
   let incomingObjKeys = Object.keys(incomingObj);
@@ -12,4 +12,4 @@ exports.validateObjectAgainstModel = function (mongooseModel, incomingObj) {
   }
 
   return sanitizedObj;
-}
+};

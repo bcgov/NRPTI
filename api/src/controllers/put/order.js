@@ -1,6 +1,6 @@
 let mongoose = require('mongoose');
 let PutUtils = require('../../utils/put-utils');
-let OrderPost = require('../post/order')
+let OrderPost = require('../post/order');
 
 // Example of incomingObj
 /**
@@ -20,7 +20,7 @@ let OrderPost = require('../post/order')
  *       }
  *     },
  */
-exports.editMaster = async function (args, res, next, incomingObj) {
+exports.editMaster = async function(args, res, next, incomingObj) {
   let _id = null;
   let sanitizedObj = {};
   if (!incomingObj._id) {
@@ -28,7 +28,7 @@ exports.editMaster = async function (args, res, next, incomingObj) {
       status: 'failure',
       object: incomingObj,
       errorMessage: 'No _id provided'
-    }
+    };
   }
 
   _id = incomingObj._id;
@@ -46,14 +46,14 @@ exports.editMaster = async function (args, res, next, incomingObj) {
       status: 'failure',
       object: incomingObj,
       errorMessage: e
-    }
+    };
   }
 
   let finalRes = {
     status: 'success',
     object: sanitizedObj,
     flavours: null
-  }
+  };
   let savedOrder = null;
   // Skip if there is nothing to update for master
   if (sanitizedObj !== {}) {
@@ -98,7 +98,7 @@ exports.editMaster = async function (args, res, next, incomingObj) {
       status: 'failure',
       object: observables,
       errorMessage: e
-    }
+    };
   }
 
   return finalRes;
@@ -113,7 +113,7 @@ exports.editMaster = async function (args, res, next, incomingObj) {
  *      addRole: 'public'
  *  }
  */
-exports.editLNG = async function (args, res, next, incomingObj) {
+exports.editLNG = async function(args, res, next, incomingObj) {
   let _id = null;
   let sanitizedObj = {};
   if (!incomingObj._id) {
@@ -121,7 +121,7 @@ exports.editLNG = async function (args, res, next, incomingObj) {
       status: 'failure',
       object: incomingObj,
       errorMessage: 'No _id provided'
-    }
+    };
   }
 
   _id = incomingObj._id;
@@ -144,36 +144,32 @@ exports.editLNG = async function (args, res, next, incomingObj) {
       status: 'failure',
       object: incomingObj,
       errorMessage: e
-    }
+    };
   }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   let updateObj = { $set: sanitizedObj };
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    updateObj['$addToSet'] = { read: 'public' }
+    updateObj['$addToSet'] = { read: 'public' };
     updateObj.$set['datePublished'] = new Date();
   } else if (incomingObj.removeRole === 'public') {
-    updateObj['$pull'] = { read: 'public' }
+    updateObj['$pull'] = { read: 'public' };
   }
   updateObj.$set['dateUpdated'] = new Date();
 
   try {
     let editRes = null;
-    editRes = await OrderLNG.findOneAndUpdate(
-      { _schemaName: 'OrderLNG', _id: _id },
-      updateObj,
-      { new: true }
-    );
+    editRes = await OrderLNG.findOneAndUpdate({ _schemaName: 'OrderLNG', _id: _id }, updateObj, { new: true });
     return {
       status: 'success',
       object: editRes
-    }
+    };
   } catch (e) {
     return {
       status: 'failure',
       object: incomingObj,
       errorMessage: e
-    }
+    };
   }
 };
 
@@ -186,7 +182,7 @@ exports.editLNG = async function (args, res, next, incomingObj) {
  *      addRole: 'public'
  *  }
  */
-exports.editNRCED = async function (args, res, next, incomingObj) {
+exports.editNRCED = async function(args, res, next, incomingObj) {
   let _id = null;
   let sanitizedObj = {};
   if (!incomingObj._id) {
@@ -194,7 +190,7 @@ exports.editNRCED = async function (args, res, next, incomingObj) {
       status: 'failure',
       object: incomingObj,
       errorMessage: 'No _id provided'
-    }
+    };
   }
 
   _id = incomingObj._id;
@@ -216,35 +212,31 @@ exports.editNRCED = async function (args, res, next, incomingObj) {
       status: 'failure',
       object: incomingObj,
       errorMessage: e
-    }
+    };
   }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   let updateObj = { $set: sanitizedObj };
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    updateObj['$addToSet'] = { read: 'public' }
+    updateObj['$addToSet'] = { read: 'public' };
     updateObj.$set['datePublished'] = new Date();
   } else if (incomingObj.removeRole === 'public') {
-    updateObj['$pull'] = { read: 'public' }
+    updateObj['$pull'] = { read: 'public' };
   }
   updateObj.$set['dateUpdated'] = new Date();
 
   try {
     let editRes = null;
-    editRes = await OrderNRCED.findOneAndUpdate(
-      { _schemaName: 'OrderNRCED', _id: _id },
-      updateObj,
-      { new: true }
-    );
+    editRes = await OrderNRCED.findOneAndUpdate({ _schemaName: 'OrderNRCED', _id: _id }, updateObj, { new: true });
     return {
       status: 'success',
       object: editRes
-    }
+    };
   } catch (e) {
     return {
       status: 'failure',
       object: incomingObj,
       errorMessage: e
-    }
+    };
   }
 };

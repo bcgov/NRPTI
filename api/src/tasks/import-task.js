@@ -68,7 +68,9 @@ async function runTask(nrptiDataSource, auth_payload, params = null, recordTypes
     // Update task as completed (does not necessarily mean all records were successfully updated)
     await taskAuditRecord.updateTaskRecord({ status: res.status, finishDate: new Date(), ...res });
   } catch (error) {
-    defaultLog.error(`runTask - ${nrptiDataSource.dataSourceLabel} - ${error.status} - unexpected error: ${error.message}`);
+    defaultLog.error(
+      `runTask - ${nrptiDataSource.dataSourceLabel} - ${error.status} - unexpected error: ${error.message}`
+    );
 
     // Update task as encountering unexpected error
     await taskAuditRecord.updateTaskRecord({ status: 'Error', finishDate: new Date() });

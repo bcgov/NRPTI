@@ -14,14 +14,20 @@ let ObjectId = require('mongoose').Types.ObjectId;
  *       }
  *     },
  */
-exports.createMaster = async function (args, res, next, incomingObj) {
+exports.createMaster = async function(args, res, next, incomingObj) {
   let Inspection = mongoose.model('Inspection');
   let inpsection = new Inspection();
 
   inpsection._schemaName = 'Inspection';
-  incomingObj._epicProjectId && ObjectId.isValid(incomingObj._epicProjectId) && (inpsection._epicProjectId = new ObjectId(incomingObj._epicProjectId));
-  incomingObj._sourceRefId && ObjectId.isValid(incomingObj._sourceRefId) && (inpsection._sourceRefId = new ObjectId(incomingObj._sourceRefId));
-  incomingObj._epicMilestoneId && ObjectId.isValid(incomingObj._epicMilestoneId) && (inpsection._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (inpsection._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (inpsection._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (inpsection._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   incomingObj.recordName && (inpsection.recordName = incomingObj.recordName);
   inpsection.recordType = 'Inspection';
@@ -54,12 +60,14 @@ exports.createMaster = async function (args, res, next, incomingObj) {
       status: 'failure',
       object: inpsection,
       errorMessage: e
-    }
+    };
   }
 
   let observables = [];
-  incomingObj.InspectionLNG && observables.push(this.createLNG(args, res, next, incomingObj.InspectionLNG, savedInspection._id));
-  incomingObj.InspectionNRCED && observables.push(this.createNRCED(args, res, next, incomingObj.InspectionNRCED, savedInspection._id));
+  incomingObj.InspectionLNG &&
+    observables.push(this.createLNG(args, res, next, incomingObj.InspectionLNG, savedInspection._id));
+  incomingObj.InspectionNRCED &&
+    observables.push(this.createNRCED(args, res, next, incomingObj.InspectionNRCED, savedInspection._id));
 
   let flavourRes = null;
   try {
@@ -69,14 +77,14 @@ exports.createMaster = async function (args, res, next, incomingObj) {
       status: 'failure',
       object: observables,
       errorMessage: e
-    }
+    };
   }
 
   return {
     status: 'success',
     object: savedInspection,
     flavours: flavourRes
-  }
+  };
 };
 
 // Example of incomingObj
@@ -88,14 +96,14 @@ exports.createMaster = async function (args, res, next, incomingObj) {
  *      addRole: 'public'
  *  }
  */
-exports.createLNG = async function (args, res, next, incomingObj, masterId) {
+exports.createLNG = async function(args, res, next, incomingObj, masterId) {
   // We must have a valid master ObjectID to continue.
   if (!masterId || !ObjectId.isValid(masterId)) {
     return {
       status: 'failure',
       object: incomingObj,
       errorMessage: 'incomingObj._master was not valid ObjectId'
-    }
+    };
   }
 
   let InspectionLNG = mongoose.model('InspectionLNG');
@@ -106,7 +114,10 @@ exports.createLNG = async function (args, res, next, incomingObj, masterId) {
   inpsectionLNG.read = ['sysadmin'];
   inpsectionLNG.write = ['sysadmin'];
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole && incomingObj.addRole === 'public' && inpsectionLNG.read.push('public') && (inpsectionLNG.datePublished = new Date());
+  incomingObj.addRole &&
+    incomingObj.addRole === 'public' &&
+    inpsectionLNG.read.push('public') &&
+    (inpsectionLNG.datePublished = new Date());
 
   incomingObj.description && (inpsectionLNG.description = incomingObj.description);
 
@@ -117,13 +128,13 @@ exports.createLNG = async function (args, res, next, incomingObj, masterId) {
     return {
       status: 'success',
       object: savedInspectionLNG
-    }
+    };
   } catch (e) {
     return {
       status: 'failure',
       object: inpsectionLNG,
       errorMessage: e
-    }
+    };
   }
 };
 
@@ -136,14 +147,14 @@ exports.createLNG = async function (args, res, next, incomingObj, masterId) {
  *      addRole: 'public'
  *  }
  */
-exports.createNRCED = async function (args, res, next, incomingObj, masterId) {
+exports.createNRCED = async function(args, res, next, incomingObj, masterId) {
   // We must have a valid master ObjectID to continue.
   if (!masterId || !ObjectId.isValid(masterId)) {
     return {
       status: 'failure',
       object: incomingObj,
       errorMessage: 'incomingObj._master was not valid ObjectId'
-    }
+    };
   }
 
   let InspectionNRCED = mongoose.model('InspectionNRCED');
@@ -154,7 +165,10 @@ exports.createNRCED = async function (args, res, next, incomingObj, masterId) {
   inpsectionNRCED.read = ['sysadmin'];
   inpsectionNRCED.write = ['sysadmin'];
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole && incomingObj.addRole === 'public' && inpsectionNRCED.read.push('public') && (inpsectionNRCED.datePublished = new Date());
+  incomingObj.addRole &&
+    incomingObj.addRole === 'public' &&
+    inpsectionNRCED.read.push('public') &&
+    (inpsectionNRCED.datePublished = new Date());
 
   incomingObj.summary && (inpsectionNRCED.summary = incomingObj.summary);
 
@@ -165,12 +179,12 @@ exports.createNRCED = async function (args, res, next, incomingObj, masterId) {
     return {
       status: 'success',
       object: savedInspectionNRCED
-    }
+    };
   } catch (e) {
     return {
       status: 'failure',
       object: inpsectionNRCED,
       errorMessage: e
-    }
+    };
   }
 };
