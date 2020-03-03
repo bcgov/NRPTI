@@ -38,6 +38,14 @@ class Orders extends BaseRecordUtils {
       author: epicRecord.documentAuthor || '',
       legislation: {
         act: (epicRecord.project && epicRecord.project.legislation) || ''
+      },
+      issuedTo: {
+        write: ['sysadmin'],
+        read: ['sysadmin'],
+
+        // Epic doesn't support `Individual` proponents
+        type: 'Company',
+        companyName: epicRecord.project.company || ''
       }
     };
   }

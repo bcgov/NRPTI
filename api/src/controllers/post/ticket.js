@@ -1,5 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
+let queryUtils = require('../../utils/query-utils');
+let postUtils = require('../../utils/post-utils');
 
 /**
  * Performs all operations necessary to create a master Ticket record and its associated flavour records.
@@ -141,6 +143,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.dateIssued && (ticket.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (ticket.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (ticket.author = incomingObj.author);
+
   incomingObj.legislation && incomingObj.legislation.act && (ticket.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
     incomingObj.legislation.regulation &&
@@ -154,8 +157,27 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (ticket.legislation.paragraph = incomingObj.legislation.paragraph);
+
   incomingObj.offence && (ticket.offence = incomingObj.offence);
-  incomingObj.issuedTo && (ticket.issuedTo = incomingObj.issuedTo);
+
+  ticket.issuedTo.read = ['sysadmin'];
+  ticket.issuedTo.write = ['sysadmin'];
+  incomingObj.issuedTo && incomingObj.issuedTo.type && (ticket.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
+    (ticket.issuedTo.companyName = incomingObj.issuedTo.companyName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
+    (ticket.issuedTo.firstName = incomingObj.issuedTo.firstName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
+    (ticket.issuedTo.middleName = incomingObj.issuedTo.middleName);
+  incomingObj.issuedTo && incomingObj.issuedTo.lastName && (ticket.issuedTo.lastName = incomingObj.issuedTo.lastName);
+  incomingObj.issuedTo && (ticket.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
+    (ticket.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+
   incomingObj.projectName && (ticket.projectName = incomingObj.projectName);
   incomingObj.location && (ticket.location = incomingObj.location);
   incomingObj.centroid && (ticket.centroid = incomingObj.centroid);
@@ -225,13 +247,6 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   ticketLNG.read = ['sysadmin'];
   ticketLNG.write = ['sysadmin'];
 
-  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    ticketLNG.read.push('public');
-    ticketLNG.datePublished = new Date();
-    ticketLNG.publishedBy = args.swagger.params.auth_payload.displayName;
-  }
-
   ticketLNG.addedBy = args.swagger.params.auth_payload.displayName;
   ticketLNG.dateAdded = new Date();
 
@@ -241,6 +256,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.dateIssued && (ticketLNG.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (ticketLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (ticketLNG.author = incomingObj.author);
+
   incomingObj.legislation && incomingObj.legislation.act && (ticketLNG.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
     incomingObj.legislation.regulation &&
@@ -254,8 +270,29 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (ticketLNG.legislation.paragraph = incomingObj.legislation.paragraph);
+
   incomingObj.offence && (ticketLNG.offence = incomingObj.offence);
-  incomingObj.issuedTo && (ticketLNG.issuedTo = incomingObj.issuedTo);
+
+  ticketLNG.issuedTo.read = ['sysadmin'];
+  ticketLNG.issuedTo.write = ['sysadmin'];
+  incomingObj.issuedTo && incomingObj.issuedTo.type && (ticketLNG.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
+    (ticketLNG.issuedTo.companyName = incomingObj.issuedTo.companyName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
+    (ticketLNG.issuedTo.firstName = incomingObj.issuedTo.firstName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
+    (ticketLNG.issuedTo.middleName = incomingObj.issuedTo.middleName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.lastName &&
+    (ticketLNG.issuedTo.lastName = incomingObj.issuedTo.lastName);
+  incomingObj.issuedTo && (ticketLNG.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
+    (ticketLNG.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+
   incomingObj.projectName && (ticketLNG.projectName = incomingObj.projectName);
   incomingObj.location && (ticketLNG.location = incomingObj.location);
   incomingObj.centroid && (ticketLNG.centroid = incomingObj.centroid);
@@ -270,6 +307,17 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (ticketLNG.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (ticketLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (ticketLNG.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    ticketLNG.read.push('public');
+    ticketLNG.datePublished = new Date();
+    ticketLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+
+    if (!queryUtils.isRecordAnonymous(ticketLNG)) {
+      ticketLNG.issuedTo.read.push('public');
+    }
+  }
 
   return await ticketLNG.save();
 };
@@ -324,13 +372,6 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   ticketNRCED.read = ['sysadmin'];
   ticketNRCED.write = ['sysadmin'];
 
-  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    ticketNRCED.read.push('public');
-    ticketNRCED.datePublished = new Date();
-    ticketNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
-  }
-
   ticketNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   ticketNRCED.dateAdded = new Date();
 
@@ -340,6 +381,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.dateIssued && (ticketNRCED.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (ticketNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (ticketNRCED.author = incomingObj.author);
+
   incomingObj.legislation && incomingObj.legislation.act && (ticketNRCED.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
     incomingObj.legislation.regulation &&
@@ -353,8 +395,29 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (ticketNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
+
   incomingObj.offence && (ticketNRCED.offence = incomingObj.offence);
-  incomingObj.issuedTo && (ticketNRCED.issuedTo = incomingObj.issuedTo);
+
+  ticketNRCED.issuedTo.read = ['sysadmin'];
+  ticketNRCED.issuedTo.write = ['sysadmin'];
+  incomingObj.issuedTo && incomingObj.issuedTo.type && (ticketNRCED.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
+    (ticketNRCED.issuedTo.companyName = incomingObj.issuedTo.companyName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
+    (ticketNRCED.issuedTo.firstName = incomingObj.issuedTo.firstName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
+    (ticketNRCED.issuedTo.middleName = incomingObj.issuedTo.middleName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.lastName &&
+    (ticketNRCED.issuedTo.lastName = incomingObj.issuedTo.lastName);
+  incomingObj.issuedTo && (ticketNRCED.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
+    (ticketNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+
   incomingObj.projectName && (ticketNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (ticketNRCED.location = incomingObj.location);
   incomingObj.centroid && (ticketNRCED.centroid = incomingObj.centroid);
@@ -369,6 +432,17 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (ticketNRCED.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (ticketNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (ticketNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    ticketNRCED.read.push('public');
+    ticketNRCED.datePublished = new Date();
+    ticketNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+
+    if (!queryUtils.isRecordAnonymous(ticketNRCED)) {
+      ticketNRCED.issuedTo.read.push('public');
+    }
+  }
 
   return await ticketNRCED.save();
 };
