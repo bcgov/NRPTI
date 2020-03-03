@@ -1,5 +1,5 @@
-var mongoose = require('mongoose');
-var ObjectId = require('mongoose').Types.ObjectId;
+let mongoose = require('mongoose');
+let ObjectId = require('mongoose').Types.ObjectId;
 
 // Example of incomingObj
 /**
@@ -15,8 +15,8 @@ var ObjectId = require('mongoose').Types.ObjectId;
  *     },
  */
 exports.createMaster = async function (args, res, next, incomingObj) {
-  var Inspection = mongoose.model('Inspection');
-  var inpsection = new Inspection();
+  let Inspection = mongoose.model('Inspection');
+  let inpsection = new Inspection();
 
   inpsection._schemaName = 'Inspection';
   incomingObj._epicProjectId && ObjectId.isValid(incomingObj._epicProjectId) && (inpsection._epicProjectId = new ObjectId(incomingObj._epicProjectId));
@@ -57,11 +57,11 @@ exports.createMaster = async function (args, res, next, incomingObj) {
     }
   }
 
-  var observables = [];
+  let observables = [];
   incomingObj.InspectionLNG && observables.push(this.createLNG(args, res, next, incomingObj.InspectionLNG, savedInspection._id));
   incomingObj.InspectionNRCED && observables.push(this.createNRCED(args, res, next, incomingObj.InspectionNRCED, savedInspection._id));
 
-  var flavourRes = null;
+  let flavourRes = null;
   try {
     observables.length > 0 && (flavourRes = await Promise.all(observables));
   } catch (e) {
@@ -98,8 +98,8 @@ exports.createLNG = async function (args, res, next, incomingObj, masterId) {
     }
   }
 
-  var InspectionLNG = mongoose.model('InspectionLNG');
-  var inpsectionLNG = new InspectionLNG();
+  let InspectionLNG = mongoose.model('InspectionLNG');
+  let inpsectionLNG = new InspectionLNG();
 
   inpsectionLNG._schemaName = 'InspectionLNG';
   inpsectionLNG._master = new ObjectId(masterId);
@@ -113,7 +113,7 @@ exports.createLNG = async function (args, res, next, incomingObj, masterId) {
   inpsectionLNG.dateAdded = new Date();
 
   try {
-    var savedInspectionLNG = await inpsectionLNG.save();
+    let savedInspectionLNG = await inpsectionLNG.save();
     return {
       status: 'success',
       object: savedInspectionLNG
@@ -146,8 +146,8 @@ exports.createNRCED = async function (args, res, next, incomingObj, masterId) {
     }
   }
 
-  var InspectionNRCED = mongoose.model('InspectionNRCED');
-  var inpsectionNRCED = new InspectionNRCED();
+  let InspectionNRCED = mongoose.model('InspectionNRCED');
+  let inpsectionNRCED = new InspectionNRCED();
 
   inpsectionNRCED._schemaName = 'InspectionNRCED';
   inpsectionNRCED._master = new ObjectId(masterId);
@@ -161,7 +161,7 @@ exports.createNRCED = async function (args, res, next, incomingObj, masterId) {
   inpsectionNRCED.dateAdded = new Date();
 
   try {
-    var savedInspectionNRCED = await inpsectionNRCED.save();
+    let savedInspectionNRCED = await inpsectionNRCED.save();
     return {
       status: 'success',
       object: savedInspectionNRCED
