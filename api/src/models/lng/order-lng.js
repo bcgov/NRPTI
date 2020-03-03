@@ -24,7 +24,19 @@ module.exports = require('../../utils/model-schema-generator')(
       subSection: { type: String, default: '' },
       paragraph: { type: String, default: '' }
     },
-    issuedTo: { type: String, default: '' },
+    issuedTo: {
+      write: [{ type: String, trim: true, default: 'sysadmin' }],
+      read: [{ type: String, trim: true, default: 'sysadmin' }],
+
+      type: { type: String, enum: ['Company', 'Individual', 'IndividualCombined'] },
+      companyName: { type: String, default: '' },
+      firstName: { type: String, default: '' },
+      middleName: { type: String, default: '' },
+      lastName: { type: String, default: '' },
+      fullName: { type: String, default: '' },
+      dateOfBirth: { type: Date, default: null },
+      anonymous: { type: Boolean, default: false }
+    },
     projectName: { type: String, default: '' },
     location: { type: String, default: '' },
     centroid: [{ type: Number, default: 0.0 }],
