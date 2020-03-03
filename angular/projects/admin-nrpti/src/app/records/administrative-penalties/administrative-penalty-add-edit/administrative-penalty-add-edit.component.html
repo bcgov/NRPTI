@@ -8,7 +8,7 @@
       <div class="row">
         <div class="col-6">
           <h4 class="blue-header">Shared Data [Master]</h4>
-          <span *ngIf="isEditing" class="grey-subtext">{{lastEditedSubText}}</span>
+          <span *ngIf="isEditing" class="grey-subtext">{{ lastEditedSubText }}</span>
         </div>
         <div class="col-6 right-justified-action-btn">
           <div class="row mb-2">
@@ -44,8 +44,14 @@
         <div class="label-pair">
           <label for="dateIssued">Date Issued</label>
           <div class="input-group">
-            <input class="form-control" placeholder="yyyy-mm-dd" name="dp" formControlName="dateIssued" ngbDatepicker
-              #d="ngbDatepicker" />
+            <input
+              class="form-control"
+              placeholder="yyyy-mm-dd"
+              name="dp"
+              formControlName="dateIssued"
+              ngbDatepicker
+              #d="ngbDatepicker"
+            />
             <div class="input-group-append">
               <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
             </div>
@@ -54,7 +60,14 @@
         <div class="label-pair">
           <label for="recordType">Type</label>
           <span class="grey-subtext">(This value cannot be changed)</span>
-          <input readonly name="recordType" id="recordType" type="text" value="Administrative Penalty" class="form-control" />
+          <input
+            readonly
+            name="recordType"
+            id="recordType"
+            type="text"
+            value="Administrative Penalty"
+            class="form-control"
+          />
         </div>
       </div>
       <div class="flex-container">
@@ -79,12 +92,12 @@
         <!-- TODO -->
         <div class="label-pair">
           <label for="legislation">Act/Legislation</label>
-          <select disabled name="legislation" id="legislation" class="form-control"> </select>
+          <select disabled name="legislation" id="legislation" class="form-control"></select>
         </div>
         <!-- TODO -->
         <div class="label-pair">
           <label for="regulation">Regulation</label>
-          <select disabled name="regulation" id="regulation" class="form-control"> </select>
+          <select disabled name="regulation" id="regulation" class="form-control"></select>
         </div>
         <!-- TODO -->
         <div class="label-pair xsm">
@@ -118,8 +131,13 @@
               <label for="Other">Other</label>
             </div>
             <div class="radio">
-              <input type="radio" id="coastalGaslink" value="Coastal Gaslink" formControlName="projectName"
-                name="projectName" />
+              <input
+                type="radio"
+                id="coastalGaslink"
+                value="Coastal Gaslink"
+                formControlName="projectName"
+                name="projectName"
+              />
               <label for="coastalGaslink">Coastal Gaslink</label>
             </div>
             <div class="radio">
@@ -131,7 +149,7 @@
         <!-- TODO -->
         <div class="label-pair">
           <label for="entityType">Entity Type</label>
-          <select disabled name="entityType" id="entityType" class="form-control"> </select>
+          <select disabled name="entityType" id="entityType" class="form-control"></select>
         </div>
         <!-- TODO -->
         <div class="label-pair">
@@ -165,14 +183,18 @@
         <div class="label-pair xsm">
           <label for="outcomeStatus">Status</label>
           <select name="outcomeStatus" id="outcomeStatus" formControlName="outcomeStatus" class="form-control">
-            <option *ngFor="let outcomeStatus of outcomeStatuses" [ngValue]="outcomeStatus">{{ outcomeStatus }}
-            </option>
+            <option *ngFor="let outcomeStatus of outcomeStatuses" [ngValue]="outcomeStatus">{{ outcomeStatus }}</option>
           </select>
         </div>
         <div class="label-pair med">
           <label for="outcomeDescription">Outcome Description</label>
-          <textarea name="outcomeDescription" id="outcomeDescription" type="text" formControlName="outcomeDescription"
-            class="form-control"></textarea>
+          <textarea
+            name="outcomeDescription"
+            id="outcomeDescription"
+            type="text"
+            formControlName="outcomeDescription"
+            class="form-control"
+          ></textarea>
         </div>
         <div class="label-pair med">
           <label for="penalty">Penalty</label>
@@ -203,8 +225,13 @@
       <div class="flex-container">
         <div class="label-pair med">
           <label for="nrcedSummary">Summary</label>
-          <textarea name="nrcedSummary" id="nrcedSummary" type="text" formControlName="nrcedSummary"
-            class="form-control"></textarea>
+          <textarea
+            name="nrcedSummary"
+            id="nrcedSummary"
+            type="text"
+            formControlName="nrcedSummary"
+            class="form-control"
+          ></textarea>
         </div>
       </div>
     </section>
@@ -227,8 +254,13 @@
       <div class="flex-container">
         <div class="label-pair med">
           <label for="lngDescription">Description</label>
-          <textarea name="lngDescription" id="lngDescription" type="text" formControlName="lngDescription"
-            class="form-control"></textarea>
+          <textarea
+            name="lngDescription"
+            id="lngDescription"
+            type="text"
+            formControlName="lngDescription"
+            class="form-control"
+          ></textarea>
         </div>
       </div>
     </section>
@@ -253,8 +285,7 @@
         <div class="col-7"></div>
         <div class="col-5">
           <span class="grey-subtext">
-            If content is published on any site, clicking the Save/Update Record button will
-            update the public site
+            If content is published on any site, clicking the Save/Update Record button will update the public site
             immediately
           </span>
         </div>

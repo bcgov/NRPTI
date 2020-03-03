@@ -20,7 +20,10 @@ describe('HeaderComponent', () => {
     TestBed.configureTestingModule({
       imports: [BrowserAnimationsModule],
       declarations: [HeaderComponent],
-      providers: [{ provide: FactoryService, useValue: mockFactoryService }, { provide: Router, useValue: mockRouter }]
+      providers: [
+        { provide: FactoryService, useValue: mockFactoryService },
+        { provide: Router, useValue: mockRouter }
+      ]
     }).compileComponents();
   }));
 

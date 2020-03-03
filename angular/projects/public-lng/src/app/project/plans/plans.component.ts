@@ -15,38 +15,36 @@ export class PlansComponent implements OnInit {
   public text: string[];
 
   public showpanel = true;
-  public filters = [{
-    'displayName': 'Government Agency',
-    'textFilters': [
-      {
-        'displayName': 'Environmental Assessment Office',
-        'fieldName': '_master.issuingAgency'
-      },
-      {
-        'displayName': 'BC Oil and Gas Commission',
-        'fieldName': '_master.issuingAgency'
-      }
-    ]
-  },
-  {
-    'displayName': 'Document Type',
-    'textFilters': [
-      {
-        'displayName': 'Management Plan',
-        'fieldName': '_master.recordType'
-      },
-      {
-        'displayName': 'Construction Plan',
-        'fieldName': '_master.recordType'
-      }
-    ]
-  }];
+  public filters = [
+    {
+      displayName: 'Government Agency',
+      textFilters: [
+        {
+          displayName: 'Environmental Assessment Office',
+          fieldName: '_master.issuingAgency'
+        },
+        {
+          displayName: 'BC Oil and Gas Commission',
+          fieldName: '_master.issuingAgency'
+        }
+      ]
+    },
+    {
+      displayName: 'Document Type',
+      textFilters: [
+        {
+          displayName: 'Management Plan',
+          fieldName: '_master.recordType'
+        },
+        {
+          displayName: 'Construction Plan',
+          fieldName: '_master.recordType'
+        }
+      ]
+    }
+  ];
 
-  constructor(
-    private dataService: DataService,
-    private router: Router,
-    private route: ActivatedRoute
-    ) {
+  constructor(private dataService: DataService, private router: Router, private route: ActivatedRoute) {
     this.route.parent.params.subscribe(params => {
       this.id = params.id;
       this.text = this.dataService.getText(this.id, this.pageType);
@@ -54,7 +52,6 @@ export class PlansComponent implements OnInit {
   }
 
   ngOnInit() {}
-
 
   togglePanel() {
     this.showpanel = !this.showpanel;
@@ -67,7 +64,6 @@ export class PlansComponent implements OnInit {
 
     // save default set of params, tack on new ones.
     this.route.params.subscribe(params => {
-
       // Filter out the incoming params (remove them entirely)
       Object.keys(params).forEach(p => {
         if (Object.keys(event).includes(p)) {
@@ -79,21 +75,14 @@ export class PlansComponent implements OnInit {
       });
 
       Object.keys(event).forEach(item => {
-        if (!event || (event[item] === undefined || event[item] === null)
-                   || (event[item].length === 0)
-        ) {
+        if (!event || event[item] === undefined || event[item] === null || event[item].length === 0) {
           // console.log('skipping:', e);
         } else {
           newParams[item] = event[item];
         }
       });
 
-      this.router.navigate([
-        '/project',
-        this.id,
-        this.pageType,
-        newParams
-      ]);
+      this.router.navigate(['/project', this.id, this.pageType, newParams]);
     });
   }
 }

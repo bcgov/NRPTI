@@ -22,27 +22,24 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
   readonly maxDate = new Date(); // today
 
   public _dateRangeFromFilter: Date = null;
-  public _dateRangeToFilter: Date   = null;
+  public _dateRangeToFilter: Date = null;
 
   public textFilterKeys: any[];
   public filter = [];
 
-  constructor(
-    private _changeDetectionRef: ChangeDetectorRef,
-    private route: ActivatedRoute
-    ) {
-      this.textFilterKeys = [];
-    }
+  constructor(private _changeDetectionRef: ChangeDetectorRef, private route: ActivatedRoute) {
+    this.textFilterKeys = [];
+  }
 
   public ngOnInit() {
     // For each filter coming in, make the filter bucket array
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
       const keys = Object.keys(params);
-      this.filterSections.forEach((object) => {
+      this.filterSections.forEach(object => {
         // e.g.:
         // object.displayName: Header
         // object.textFilters: Array of elements in the collection
-        object.textFilters.forEach((filter) => {
+        object.textFilters.forEach(filter => {
           // e.g.:
           // filter.displayName: "EAO/BCOGC"
           // filter.fieldName: "_master.issuingAgency"
@@ -73,7 +70,7 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
       this.textFilterKeys[fieldName].push(fieldValue);
     } else {
       // Pop it
-      this.textFilterKeys[fieldName] = this.textFilterKeys[fieldName].filter((item) => {
+      this.textFilterKeys[fieldName] = this.textFilterKeys[fieldName].filter(item => {
         return item !== fieldValue;
       });
     }
@@ -101,7 +98,7 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
     this._dateRangeFromFilter = undefined;
     this._dateRangeToFilter = undefined;
 
-    Object.keys(this.textFilterKeys).forEach((key) => {
+    Object.keys(this.textFilterKeys).forEach(key => {
       this.textFilterKeys[key] = [];
     });
     this.applyAllFilters();

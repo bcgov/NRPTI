@@ -29,7 +29,7 @@ export class RecordsResolver implements Resolve<Observable<object>> {
     ];
 
     // If _schemaName was filter criteria, use that instead of the default list.
-    const filterParams = {...route.params};
+    const filterParams = { ...route.params };
 
     // Clear out all the standard table template params
     delete filterParams.sortBy;

@@ -81,9 +81,7 @@ exports.editMaster = async function(args, res, next, incomingObj) {
     observables.push(this.editLNG(args, res, next, incomingObj.SelfReportLNG));
     delete incomingObj.SelfReportLNG;
   } else if (incomingObj.SelfReportLNG) {
-    observables.push(
-      SelfReportPost.createLNG(args, res, next, incomingObj.SelfReportLNG, savedSelfReport._id)
-    );
+    observables.push(SelfReportPost.createLNG(args, res, next, incomingObj.SelfReportLNG, savedSelfReport._id));
     delete incomingObj.SelfReportLNG;
   }
 

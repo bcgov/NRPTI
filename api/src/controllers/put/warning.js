@@ -81,24 +81,14 @@ exports.editMaster = async function(args, res, next, incomingObj) {
     observables.push(this.editLNG(args, res, next, incomingObj.WarningLNG));
     delete incomingObj.WarningLNG;
   } else if (incomingObj.WarningLNG) {
-    observables.push(
-      WarningPost.createLNG(args, res, next, incomingObj.WarningLNG, savedWarning._id)
-    );
+    observables.push(WarningPost.createLNG(args, res, next, incomingObj.WarningLNG, savedWarning._id));
     delete incomingObj.WarningLNG;
   }
   if (incomingObj.WarningNRCED && incomingObj.WarningNRCED._id) {
     observables.push(this.editNRCED(args, res, next, incomingObj.WarningNRCED));
     delete incomingObj.WarningNRCED;
   } else if (incomingObj.WarningNRCED) {
-    observables.push(
-      WarningPost.createNRCED(
-        args,
-        res,
-        next,
-        incomingObj.WarningNRCED,
-        savedWarning._id
-      )
-    );
+    observables.push(WarningPost.createNRCED(args, res, next, incomingObj.WarningNRCED, savedWarning._id));
     delete incomingObj.WarningNRCED;
   }
 

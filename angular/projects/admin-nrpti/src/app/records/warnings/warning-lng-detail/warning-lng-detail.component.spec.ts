@@ -7,9 +7,7 @@ import { GlobalModule } from 'nrpti-angular-components';
 import { DatePipe } from '@angular/common';
 
 describe('WarningLNGDetailComponent', () => {
-  const testBedHelper = new TestBedHelper<WarningLNGDetailComponent>(
-    WarningLNGDetailComponent
-  );
+  const testBedHelper = new TestBedHelper<WarningLNGDetailComponent>(WarningLNGDetailComponent);
 
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);

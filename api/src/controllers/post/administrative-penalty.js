@@ -71,7 +71,9 @@ exports.createMaster = async function(args, res, next, incomingObj) {
 
   const observables = [];
   incomingObj.AdministrativePenaltyLNG &&
-    observables.push(this.createLNG(args, res, next, incomingObj.AdministrativePenaltyLNG, savedAdministrativePenalty._id));
+    observables.push(
+      this.createLNG(args, res, next, incomingObj.AdministrativePenaltyLNG, savedAdministrativePenalty._id)
+    );
   incomingObj.AdministrativePenaltyNRCED &&
     observables.push(
       this.createNRCED(args, res, next, incomingObj.AdministrativePenaltyNRCED, savedAdministrativePenalty._id)

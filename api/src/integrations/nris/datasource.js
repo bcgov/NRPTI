@@ -1,16 +1,19 @@
 'use strict';
 
-const integrationUtils    = require('../integration-utils');
-const defaultLog          = require('../../utils/logger')('nris-datasource');
-const RECORD_TYPE         = require('../../utils/constants/record-type-enum');
-const mongoose            = require('mongoose');
-const moment              = require('moment');
-const axios               = require('axios');
+const integrationUtils = require('../integration-utils');
+const defaultLog = require('../../utils/logger')('nris-datasource');
+const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+const mongoose = require('mongoose');
+const moment = require('moment');
+const axios = require('axios');
 
-const NRIS_TOKEN_ENDPOINT   = process.env.NRIS_TOKEN_ENDPOINT || "https://api.nrs.gov.bc.ca/oauth2/v1/oauth/token?disableDeveloperFilter=true&grant_type=client_credentials&scope=NRISWS.*";
-const NRIS_EPD_API_ENDPOINT = process.env.NRIS_EPD_API_ENDPOINT || "https://api.nrs.gov.bc.ca/nrisws-api/v1/epdInspections";
-const NRIS_username         = process.env.NRIS_username || null;
-const NRIS_password         = process.env.NRIS_password || null;
+const NRIS_TOKEN_ENDPOINT =
+  process.env.NRIS_TOKEN_ENDPOINT ||
+  'https://api.nrs.gov.bc.ca/oauth2/v1/oauth/token?disableDeveloperFilter=true&grant_type=client_credentials&scope=NRISWS.*';
+const NRIS_EPD_API_ENDPOINT =
+  process.env.NRIS_EPD_API_ENDPOINT || 'https://api.nrs.gov.bc.ca/nrisws-api/v1/epdInspections';
+const NRIS_username = process.env.NRIS_username || null;
+const NRIS_password = process.env.NRIS_password || null;
 
 class NrisDataSource {
   /**
@@ -35,19 +38,18 @@ class NrisDataSource {
     this.token = null;
 
     if (NRIS_username === null || NRIS_password === null) {
-      defaultLog.error('Must set environment username/password for NRIS data connection.')
+      defaultLog.error('Must set environment username/password for NRIS data connection.');
       return { status: 'Configuration Error' };
     }
 
     try {
-      const res = await axios.get(NRIS_TOKEN_ENDPOINT,
-                                  {
-                                    timeout: 2000,
-                                    auth: {
-                                      username: NRIS_username,
-                                      password: NRIS_password
-                                    }
-                                  });
+      const res = await axios.get(NRIS_TOKEN_ENDPOINT, {
+        timeout: 2000,
+        auth: {
+          username: NRIS_username,
+          password: NRIS_password
+        }
+      });
 
       const payload = res.data ? res.data : null;
 
@@ -58,7 +60,7 @@ class NrisDataSource {
 
       this.token = payload.access_token;
       defaultLog.info('NRIS API token expires:', (payload.expires_in / 60 / 60).toFixed(2), ' hours');
-  
+
       // Hardcoded to start in 2017
       let startDate = moment('2017-01-01');
       let endDate = moment(startDate).add(1, 'M');
@@ -67,21 +69,27 @@ class NrisDataSource {
         status: 'Complete',
         message: 'Job Complete',
         itemsProcessed: 0,
-        itemTotal: 0,
+        itemTotal: 0
       };
 
       // Keep going until we'd start past today's date.
-      while(startDate < moment()) {
-        defaultLog.info("dateRange:", startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
+      while (startDate < moment()) {
+        defaultLog.info('dateRange:', startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
         startDate = endDate;
-        const { status, message, itemsProcessed, itemTotal } = await this.updateRecords(startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
+        const { status, message, itemsProcessed, itemTotal } = await this.updateRecords(
+          startDate.format('YYYY-MM-DD'),
+          endDate.format('YYYY-MM-DD')
+        );
         if (status === 'Failed') {
           statusObject.status = status;
           statusObject.message += message + ':' + startDate.format('YYYY-MM-DD');
         }
         statusObject.itemsProcessed += itemsProcessed;
         statusObject.itemTotal += itemTotal;
-        await taskAuditRecord.updateTaskRecord({ itemTotal: statusObject.itemTotal, itemsProcessed: statusObject.itemsProcessed });
+        await taskAuditRecord.updateTaskRecord({
+          itemTotal: statusObject.itemTotal,
+          itemsProcessed: statusObject.itemsProcessed
+        });
         endDate = moment(startDate).add(1, 'M');
       }
 
@@ -89,7 +97,7 @@ class NrisDataSource {
 
       return statusObject;
     } catch (error) {
-      defaultLog.error("Error:", error);
+      defaultLog.error('Error:', error);
       return { status: 'General Error ' + error };
     }
   }
@@ -97,24 +105,26 @@ class NrisDataSource {
   async updateRecords(startDate, endDate) {
     let processingObject = { itemsProcessed: 0, itemTotal: 0, status: 'Running' };
     try {
-      const url = { href: NRIS_EPD_API_ENDPOINT + '?inspectionStartDate=' + startDate + '&inspectionEndDate=' + endDate };
+      const url = {
+        href: NRIS_EPD_API_ENDPOINT + '?inspectionStartDate=' + startDate + '&inspectionEndDate=' + endDate
+      };
       processingObject.url = url.href;
 
       // Get records
-      defaultLog.info("NRIS Call:", url);
+      defaultLog.info('NRIS Call:', url);
       const records = await integrationUtils.getRecords(url, { headers: { Authorization: 'Bearer ' + this.token } });
 
-      defaultLog.info("NRIS Call complete:", records.length);
+      defaultLog.info('NRIS Call complete:', records.length);
       if (!records || records.length === 0) {
         return {
           status: 'Completed',
           message: 'updateRecordType - no records found',
           itemsProcessed: 0,
           itemTotal: 0
-        }
+        };
       }
 
-      processingObject.itemTotal =  records.length;
+      processingObject.itemTotal = records.length;
 
       for (let i = 0; i < records.length; i++) {
         if (records[i].assessmentStatus === 'Complete') {
@@ -134,7 +144,7 @@ class NrisDataSource {
       processingObject.message = 'updateRecords - unexpected error: ' + error;
       defaultLog.error(`updateRecords - unexpected error: ${error.message}`);
     }
-    defaultLog.info("returning", processingObject.status);
+    defaultLog.info('returning', processingObject.status);
     return processingObject;
   }
 
@@ -144,24 +154,24 @@ class NrisDataSource {
     // We don't need this as we insert based on assessmentId
     delete newRecord._id;
 
-    newRecord.recordName        = 'TBD';
-    newRecord.recordType        = 'Inspection';
-    newRecord._sourceRefNrisId  = record.assessmentId;
-    newRecord.dateIssued        = record.assessmentDate;
-    newRecord.issuingAgency     = record.resourceAgency;
-    newRecord.author            = record.assessor;
-    newRecord.legislation       = 'Environmental Management Act, Section 109';
+    newRecord.recordName = 'TBD';
+    newRecord.recordType = 'Inspection';
+    newRecord._sourceRefNrisId = record.assessmentId;
+    newRecord.dateIssued = record.assessmentDate;
+    newRecord.issuingAgency = record.resourceAgency;
+    newRecord.author = record.assessor;
+    newRecord.legislation = 'Environmental Management Act, Section 109';
 
     // Currently not doing anything different, future logic
     if (record.client && record.client.length > 0 && record.client[0]) {
       const clientType = record.client[0].clientType;
-      switch(clientType) {
+      switch (clientType) {
         case 'C':
         case 'O':
         case 'I':
         case 'Individual':
         default:
-          defaultLog.info("clientType:", clientType)
+          defaultLog.info('clientType:', clientType);
       }
       newRecord.issuedTo = record.client[0].orgName;
     }
@@ -180,12 +190,11 @@ class NrisDataSource {
       newRecord.outcomeDescription += ' - ' + record.inspection.inspctResponse;
     }
 
-    for(let i=0;i < record.attachment.length;i++) {
+    for (let i = 0; i < record.attachment.length; i++) {
       if (record.attachment[i].fileType === 'Final Report') {
         // Grab this & break;
         // TODO:
         // let file = await this.getFileFromNRIS(record.attachment[i].attachmentId);
-
         // TODO: s3File.path, create/set document object properly
         // let s3File = await this.putFileS3(record.attachment[i].attachmentId, file);
         // newRecord.documents.push(record.attachment[i].attachmentId);
@@ -194,7 +203,7 @@ class NrisDataSource {
     newRecord.read.push('sysadmin');
     newRecord.write.push('sysadmin');
 
-    defaultLog.info("Processed:", record.assessmentId);
+    defaultLog.info('Processed:', record.assessmentId);
     return newRecord;
   }
 

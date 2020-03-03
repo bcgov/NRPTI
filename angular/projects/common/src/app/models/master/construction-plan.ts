@@ -4,7 +4,7 @@
  * @export
  * @class ConstructionPlan
  */
- export class ConstructionPlan {
+export class ConstructionPlan {
   _id: string;
   _schemaName: string;
   _epicProjectId: string;

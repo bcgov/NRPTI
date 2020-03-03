@@ -8,8 +8,7 @@
         [sizeOptions]="data.pageSizeOptions"
         (pageSizeChosen)="onUpdatePageSize($event)"
         id="table-template-page-size-picker"
-      >
-      </lib-page-size-picker>
+      ></lib-page-size-picker>
     </div>
     <div class="top-center">
       <lib-page-count-display
@@ -19,8 +18,7 @@
         [currentPageSize]="data.pageSize"
         [totalItems]="data.totalListItems"
         id="table-template-page-count-display"
-      >
-      </lib-page-count-display>
+      ></lib-page-count-display>
     </div>
     <div class="top-right">
       <pagination-controls
@@ -28,8 +26,7 @@
         (pageChange)="onUpdatePageNumber($event)"
         id="table-template-pagination"
         autoHide="true"
-      >
-      </pagination-controls>
+      ></pagination-controls>
     </div>
   </div>
   <table class="table">
@@ -70,8 +67,7 @@
         [tableData]="data"
         [messageIn]="messageIn"
         (messageOut)="onMessageOut($event)"
-      >
-      </ng-container>
+      ></ng-container>
     </tbody>
   </table>
   <div class="table-controls-bottom">
@@ -81,8 +77,7 @@
         (pageChange)="onUpdatePageNumber($event)"
         id="table-template-pagination"
         autoHide="true"
-      >
-      </pagination-controls>
+      ></pagination-controls>
     </div>
   </div>
 </div>

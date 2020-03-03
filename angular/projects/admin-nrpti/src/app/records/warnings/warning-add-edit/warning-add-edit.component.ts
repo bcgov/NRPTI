@@ -42,7 +42,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
     private factoryService: FactoryService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -64,7 +64,9 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
 
   private populateTextFields() {
     if (this.currentRecord.dateUpdated) {
-      this.lastEditedSubText = `Last Edited on ${this.utils.convertJSDateToString(new Date(this.currentRecord.dateUpdated))}`;
+      this.lastEditedSubText = `Last Edited on ${this.utils.convertJSDateToString(
+        new Date(this.currentRecord.dateUpdated)
+      )}`;
     } else {
       this.lastEditedSubText = `Added on ${this.utils.convertJSDateToString(new Date(this.currentRecord.dateAdded))}`;
     }
@@ -73,12 +75,18 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
         case 'WarningLNG':
           this.lngFlavour = flavour;
           this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
-          this.lngFlavour.read.includes('public') && (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(new Date(this.lngFlavour.datePublished))}`);
+          this.lngFlavour.read.includes('public') &&
+            (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(
+              new Date(this.lngFlavour.datePublished)
+            )}`);
           break;
         case 'WarningNRCED':
           this.nrcedFlavour = flavour;
           this.nrcedFlavour.read.includes('public') && (this.nrcedPublishStatus = 'Published');
-          this.nrcedFlavour.read.includes('public') && (this.nrcedPublishSubtext = `Published on ${this.utils.convertJSDateToString(new Date(this.nrcedFlavour.datePublished))}`);
+          this.nrcedFlavour.read.includes('public') &&
+            (this.nrcedPublishSubtext = `Published on ${this.utils.convertJSDateToString(
+              new Date(this.nrcedFlavour.datePublished)
+            )}`);
           break;
         default:
           break;
@@ -91,11 +99,10 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       dateIssued: new FormControl(
-        (
-          this.currentRecord &&
+        (this.currentRecord &&
           this.currentRecord.dateIssued &&
-          this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))
-        ) || ''
+          this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
+          ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -104,18 +111,10 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
       latitude: new FormControl(
-        (
-          this.currentRecord &&
-          this.currentRecord.centroid &&
-          this.currentRecord.centroid[0]
-        ) || ''
+        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || ''
       ),
       longitude: new FormControl(
-        (
-          this.currentRecord &&
-          this.currentRecord.centroid &&
-          this.currentRecord.centroid[1]
-        ) || ''
+        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || ''
       ),
       outcomeStatus: new FormControl((this.currentRecord && this.currentRecord.outcomeStatus) || ''),
       outcomeDescription: new FormControl((this.currentRecord && this.currentRecord.outcomeDescription) || ''),

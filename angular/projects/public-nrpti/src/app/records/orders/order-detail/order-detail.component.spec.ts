@@ -16,7 +16,10 @@ describe('OrderDetailComponent', () => {
     TestBed.configureTestingModule({
       imports: [GlobalModule],
       declarations: [OrderDetailComponent],
-      providers: [{ provide: ActivatedRoute, useValue: activedRouteStub }, { provide: Router, useValue: mockRouter }]
+      providers: [
+        { provide: ActivatedRoute, useValue: activedRouteStub },
+        { provide: Router, useValue: mockRouter }
+      ]
     }).compileComponents();
   }));
 

@@ -38,7 +38,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
     private factoryService: FactoryService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -60,7 +60,9 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
 
   private populateTextFields() {
     if (this.currentRecord.dateUpdated) {
-      this.lastEditedSubText = `Last Edited on ${this.utils.convertJSDateToString(new Date(this.currentRecord.dateUpdated))}`;
+      this.lastEditedSubText = `Last Edited on ${this.utils.convertJSDateToString(
+        new Date(this.currentRecord.dateUpdated)
+      )}`;
     } else {
       this.lastEditedSubText = `Added on ${this.utils.convertJSDateToString(new Date(this.currentRecord.dateAdded))}`;
     }
@@ -69,7 +71,10 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         case 'CertificateLNG':
           this.lngFlavour = flavour;
           this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
-          this.lngFlavour.read.includes('public') && (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(new Date(this.lngFlavour.datePublished))}`);
+          this.lngFlavour.read.includes('public') &&
+            (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(
+              new Date(this.lngFlavour.datePublished)
+            )}`);
           break;
         default:
           break;
@@ -83,11 +88,10 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       recordSubtype: new FormControl((this.currentRecord && this.currentRecord.recordSubtype) || ''),
       dateIssued: new FormControl(
-        (
-          this.currentRecord &&
+        (this.currentRecord &&
           this.currentRecord.dateIssued &&
-          this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))
-        ) || ''
+          this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
+          ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       legislation: new FormControl((this.currentRecord && this.currentRecord.legislation) || ''),
@@ -95,18 +99,10 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
       latitude: new FormControl(
-        (
-          this.currentRecord &&
-          this.currentRecord.centroid &&
-          this.currentRecord.centroid[0]
-        ) || ''
+        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || ''
       ),
       longitude: new FormControl(
-        (
-          this.currentRecord &&
-          this.currentRecord.centroid &&
-          this.currentRecord.centroid[1]
-        ) || ''
+        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || ''
       ),
 
       // LNG

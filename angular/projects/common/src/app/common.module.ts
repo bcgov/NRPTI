@@ -15,4 +15,4 @@ import { FileUploadComponent } from './file-upload/file-upload.component';
   providers: [],
   exports: [FileUploadComponent]
 })
-export class CommonModule { }
+export class CommonModule {}

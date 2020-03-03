@@ -81,9 +81,7 @@ exports.editMaster = async function(args, res, next, incomingObj) {
     observables.push(this.editLNG(args, res, next, incomingObj.PermitLNG));
     delete incomingObj.PermitLNG;
   } else if (incomingObj.PermitLNG) {
-    observables.push(
-      PermitPost.createLNG(args, res, next, incomingObj.PermitLNG, savedPermit._id)
-    );
+    observables.push(PermitPost.createLNG(args, res, next, incomingObj.PermitLNG, savedPermit._id));
     delete incomingObj.PermitLNG;
   }
 

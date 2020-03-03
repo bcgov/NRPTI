@@ -6,7 +6,7 @@ import { SearchResults } from 'nrpti-angular-components';
 
 @Injectable()
 export class ManagementPlanResolver implements Resolve<Observable<SearchResults[]>> {
-  constructor(private factoryService: FactoryService) { }
+  constructor(private factoryService: FactoryService) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<SearchResults[]> {
     const managementPlanId = route.paramMap.get('managementPlanId');
