@@ -53,6 +53,14 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   order.read = ['sysadmin'];
   order.write = ['sysadmin'];
 
+  let documents = [];
+  if (incomingObj.documents && Array.isArray(incomingObj.documents)) {
+    for (let i = 0; i < incomingObj.documents.length; i++) {
+      ObjectId.isValid(incomingObj.documents[i]) && (documents.push(incomingObj.documents[i]));
+    }
+  }
+  order.documents = documents;
+
   let savedOrder = null;
   try {
     savedOrder = await order.save();

@@ -8,7 +8,7 @@
     "test": "node_modules/.bin/jest --verbose",
     "lint": "npm-run-all -l -s -c lint:*",
     "lint:1": "eslint . --ignore-pattern 'node_modules' --ext .js",
-    "lint:2": "prettier ./**/*.js --check",
+    "lint:2": "prettier ./**/*.js --warn",
     "lint-fix": "npm-run-all -l -s -c lint-fix:*",
     "lint-fix:1": "eslint . --fix --ignore-pattern 'node_modules' --ext .js",
     "lint-fix:2": "prettier ./**/*.js --write --loglevel warn"

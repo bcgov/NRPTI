@@ -37,6 +37,10 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
   public authors = Picklists.authorPicklist;
   public outcomeStatuses = Picklists.outcomeStatusPicklist;
 
+  // Documents
+  public documents = [];
+  public links = [];
+
   constructor(
     public route: ActivatedRoute,
     public router: Router,
@@ -158,14 +162,29 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     this._changeDetectionRef.detectChanges();
   }
 
-  submit() {
+  async submit() {
+    // Documents
+    // TODO: this section of code only handles links. We need it to handle S3 docs as well.
+    const docRes = await this.factoryService.createDocuments(this.links);
+    const docsToSave = [];
+    docRes.forEach(newDoc => {
+      docsToSave.push(newDoc._id);
+    });
+
+    // Add existing documents
+    // TODO: Make sure we don't re-add the documents we deleted.
+    if (this.currentRecord && this.currentRecord.documents && this.currentRecord.documents.length > 0) {
+      this.currentRecord.documents.forEach(existingDocs => {
+        docsToSave.push(existingDocs._id);
+      });
+    }
+
     // TODO
     // _epicProjectId
     // _sourceRefId
     // _epicMilestoneId
     // legislation
     // projectName
-    // documents
 
     // TODO: For editing we should create an object with only the changed fields.
     const order = new Order({
@@ -181,7 +200,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],
       outcomeStatus: this.myForm.controls.outcomeStatus.value,
       outcomeDescription: this.myForm.controls.outcomeDescription.value,
-      documents: this.currentRecord && this.currentRecord.documents
+      documents: docsToSave
     });
 
     // Project name logic
@@ -249,6 +268,14 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         alert('Failed to save one or more flavour records');
       }
     }
+  }
+
+  updateLinks(links) {
+    this.links = links;
+  }
+
+  updateDocuments(documents) {
+    this.documents = documents;
   }
 
   cancel() {
