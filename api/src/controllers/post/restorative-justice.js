@@ -40,6 +40,21 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   incomingObj.dateIssued && (restorativeJustice.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (restorativeJustice.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (restorativeJustice.author = incomingObj.author);
+  incomingObj.legislation &&
+    incomingObj.legislation.act &&
+    (restorativeJustice.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (restorativeJustice.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (restorativeJustice.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (restorativeJustice.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (restorativeJustice.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.issuedTo && (restorativeJustice.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (restorativeJustice.projectName = incomingObj.projectName);
   incomingObj.location && (restorativeJustice.location = incomingObj.location);

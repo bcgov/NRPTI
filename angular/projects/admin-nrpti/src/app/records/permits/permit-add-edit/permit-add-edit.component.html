@@ -74,33 +74,7 @@
 
     <section>
       <h4>Legislation</h4>
-      <div class="flex-container">
-        <!-- TODO -->
-        <div class="label-pair">
-          <label for="legislation">Act/Legislation</label>
-          <select disabled name="legislation" id="legislation" class="form-control"></select>
-        </div>
-        <!-- TODO -->
-        <div class="label-pair">
-          <label for="regulation">Regulation</label>
-          <select disabled name="regulation" id="regulation" class="form-control"></select>
-        </div>
-        <!-- TODO -->
-        <div class="label-pair xsm">
-          <label for="section">Section</label>
-          <input disabled name="section" id="section" type="text" class="form-control" />
-        </div>
-        <!-- TODO -->
-        <div class="label-pair xsm">
-          <label for="subSection1">Sub-Section</label>
-          <input disabled name="subSection1" id="subSection1" type="text" class="form-control" />
-        </div>
-        <!-- TODO -->
-        <div class="label-pair xsm">
-          <label for="subSection2">Sub-Section</label>
-          <input disabled name="subSection2" id="subSection2" type="text" class="form-control" />
-        </div>
-      </div>
+      <app-legislation-add-edit [formGroup]="myForm"></app-legislation-add-edit>
     </section>
 
     <section>

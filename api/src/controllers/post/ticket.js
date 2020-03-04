@@ -40,7 +40,19 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   incomingObj.dateIssued && (ticket.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (ticket.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (ticket.author = incomingObj.author);
-  incomingObj.legislation && (ticket.legislation = incomingObj.legislation);
+  incomingObj.legislation && incomingObj.legislation.act && (ticket.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (ticket.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (ticket.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (ticket.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (ticket.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.issuedTo && (ticket.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (ticket.projectName = incomingObj.projectName);
   incomingObj.location && (ticket.location = incomingObj.location);

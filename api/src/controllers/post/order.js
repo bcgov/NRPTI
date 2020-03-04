@@ -35,7 +35,19 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   incomingObj.dateIssued && (order.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (order.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (order.author = incomingObj.author);
-  incomingObj.legislation && (order.legislation = incomingObj.legislation);
+  incomingObj.legislation && incomingObj.legislation.act && (order.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (order.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (order.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (order.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (order.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.issuedTo && (order.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (order.projectName = incomingObj.projectName);
   incomingObj.location && (order.location = incomingObj.location);
@@ -56,7 +68,7 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   let documents = [];
   if (incomingObj.documents && Array.isArray(incomingObj.documents)) {
     for (let i = 0; i < incomingObj.documents.length; i++) {
-      ObjectId.isValid(incomingObj.documents[i]) && (documents.push(incomingObj.documents[i]));
+      ObjectId.isValid(incomingObj.documents[i]) && documents.push(incomingObj.documents[i]);
     }
   }
   order.documents = documents;

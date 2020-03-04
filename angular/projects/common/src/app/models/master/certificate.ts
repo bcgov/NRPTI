@@ -1,3 +1,5 @@
+import { Legislation } from './common-models/legislation';
+
 /**
  * Certificate data model.
  *
@@ -22,7 +24,7 @@ export class Certificate {
   issuingAgency: string;
   author: string;
   description: string;
-  legislation: string;
+  legislation: Legislation;
   projectName: string;
   location: string;
   centroid: number[];
@@ -56,7 +58,7 @@ export class Certificate {
     this.issuingAgency = (obj && obj.issuingAgency) || null;
     this.author = (obj && obj.author) || null;
     this.description = (obj && obj.description) || null;
-    this.legislation = (obj && obj.legislation) || null;
+    this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
     this.projectName = (obj && obj.projectName) || null;
     this.location = (obj && obj.location) || null;
     this.centroid = (obj && obj.centroid) || null;

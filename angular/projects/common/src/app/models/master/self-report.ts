@@ -1,3 +1,5 @@
+import { Legislation } from './common-models/legislation';
+
 /**
  * SelfReport data model.
  *
@@ -19,7 +21,7 @@ export class SelfReport {
   dateIssued: Date;
   issuingAgency: string;
   author: string;
-  legislation: string;
+  legislation: Legislation;
   projectName: string;
   location: string;
   centroid: number[];
@@ -50,7 +52,7 @@ export class SelfReport {
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || null;
     this.author = (obj && obj.author) || null;
-    this.legislation = (obj && obj.legislation) || null;
+    this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
     this.projectName = (obj && obj.projectName) || null;
     this.location = (obj && obj.location) || null;
     this.centroid = (obj && obj.centroid) || null;
