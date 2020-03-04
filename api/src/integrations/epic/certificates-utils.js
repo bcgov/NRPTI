@@ -69,7 +69,9 @@ class Certificates {
       dateIssued: epicRecord.documentDate || null,
       issuingAgency: 'Environmental Assessment Office',
       description: epicRecord.description || '',
-      legislation: (epicRecord.project && epicRecord.project.legislation) || '',
+      legislation: {
+        act: (epicRecord.project && epicRecord.project.legislation) || ''
+      },
       projectName: (epicRecord.project && epicRecord.project.name) || '',
       location: (epicRecord.project && epicRecord.project.location) || '',
       centroid: (epicRecord.project && epicRecord.project.centroid) || '',

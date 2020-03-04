@@ -39,7 +39,9 @@ describe('OrdersUtils', () => {
         dateIssued: null,
         issuingAgency: 'Environmental Assessment Office',
         author: '',
-        legislation: '',
+        legislation: {
+          act: ''
+        },
         projectName: '',
         location: '',
         centroid: '',
@@ -90,7 +92,9 @@ describe('OrdersUtils', () => {
         dateIssued: null,
         issuingAgency: 'Environmental Assessment Office',
         author: '',
-        legislation: 'projectLegislation',
+        legislation: {
+          act: 'projectLegislation'
+        },
         projectName: 'projectName',
         location: '',
         centroid: '',

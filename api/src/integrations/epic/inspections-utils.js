@@ -70,7 +70,9 @@ class Inspections {
       issuingAgency: 'Environmental Assessment Office',
       author: epicRecord.documentAuthor || '',
       description: epicRecord.description || '',
-      legislation: (epicRecord.project && epicRecord.project.legislation) || '',
+      legislation: {
+        act: (epicRecord.project && epicRecord.project.legislation) || ''
+      },
       projectName: (epicRecord.project && epicRecord.project.name) || '',
       location: (epicRecord.project && epicRecord.project.location) || '',
       centroid: (epicRecord.project && epicRecord.project.centroid) || '',
