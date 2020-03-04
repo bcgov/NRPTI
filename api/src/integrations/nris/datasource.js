@@ -160,7 +160,10 @@ class NrisDataSource {
     newRecord.dateIssued = record.assessmentDate;
     newRecord.issuingAgency = record.resourceAgency;
     newRecord.author = record.assessor;
-    newRecord.legislation = 'Environmental Management Act, Section 109';
+    newRecord.legislation = {
+      act: 'Environmental Management Act',
+      section: '109'
+    };
     newRecord.sourceSystemRef = 'nris';
 
     // Currently not doing anything different, future logic
