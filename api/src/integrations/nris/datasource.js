@@ -154,13 +154,14 @@ class NrisDataSource {
     // We don't need this as we insert based on assessmentId
     delete newRecord._id;
 
-    newRecord.recordName = 'TBD';
+    newRecord.recordName = 'Inspection to verify compliance with regulatory requirement.';
     newRecord.recordType = 'Inspection';
     newRecord._sourceRefNrisId = record.assessmentId;
     newRecord.dateIssued = record.assessmentDate;
     newRecord.issuingAgency = record.resourceAgency;
     newRecord.author = record.assessor;
     newRecord.legislation = 'Environmental Management Act, Section 109';
+    newRecord.sourceSystemRef = 'nris';
 
     // Currently not doing anything different, future logic
     if (record.client && record.client.length > 0 && record.client[0]) {
