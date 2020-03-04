@@ -40,7 +40,19 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   incomingObj.dateIssued && (selfReport.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (selfReport.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (selfReport.author = incomingObj.author);
-  incomingObj.legislation && (selfReport.legislation = incomingObj.legislation);
+  incomingObj.legislation && incomingObj.legislation.act && (selfReport.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (selfReport.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (selfReport.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (selfReport.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (selfReport.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.projectName && (selfReport.projectName = incomingObj.projectName);
   incomingObj.location && (selfReport.location = incomingObj.location);
   incomingObj.centroid && (selfReport.centroid = incomingObj.centroid);

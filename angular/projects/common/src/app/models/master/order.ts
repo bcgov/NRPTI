@@ -1,3 +1,5 @@
+import { Legislation } from './common-models/legislation';
+
 /**
  * Order data model.
  *
@@ -19,7 +21,7 @@ export class Order {
   issuingAgency: string;
   author: string;
   description: string;
-  legislation: string;
+  legislation: Legislation;
   issuedTo: string; // epic value?
   projectName: string;
   location: string;
@@ -52,7 +54,7 @@ export class Order {
     this.issuingAgency = (obj && obj.issuingAgency) || null;
     this.author = (obj && obj.author) || null;
     this.description = (obj && obj.description) || null;
-    this.legislation = (obj && obj.legislation) || null;
+    this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
     this.issuedTo = (obj && obj.issuedTo) || null;
     this.projectName = (obj && obj.projectName) || null;
     this.location = (obj && obj.location) || null;

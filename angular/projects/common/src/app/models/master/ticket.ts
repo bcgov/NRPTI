@@ -1,3 +1,5 @@
+import { Legislation } from './common-models/legislation';
+
 /**
  * Ticket data model.
  *
@@ -19,7 +21,7 @@ export class Ticket {
   dateIssued: Date;
   issuingAgency: string;
   author: string;
-  legislation: string;
+  legislation: Legislation;
   issuedTo: string; // epic value?
   projectName: string;
   location: string;
@@ -54,7 +56,7 @@ export class Ticket {
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || null;
     this.author = (obj && obj.author) || null;
-    this.legislation = (obj && obj.legislation) || null;
+    this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
     this.issuedTo = (obj && obj.issuedTo) || null;
     this.projectName = (obj && obj.projectName) || null;
     this.location = (obj && obj.location) || null;

@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecordComponent } from '../../utils/record-component';
 import { RecordUtils } from '../../utils/record-utils';
+import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 
 @Component({
   selector: 'app-administrative-penalty-detail',
@@ -13,6 +14,8 @@ import { RecordUtils } from '../../utils/record-utils';
 })
 export class AdministrativePenaltyDetailComponent extends RecordComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+
+  public legislationString = '';
 
   constructor(public route: ActivatedRoute, public router: Router, public changeDetectionRef: ChangeDetectorRef) {
     super();
@@ -36,8 +39,16 @@ export class AdministrativePenaltyDetailComponent extends RecordComponent implem
           []
       };
 
+      this.populateTextFields();
+
       this.changeDetectionRef.detectChanges();
     });
+  }
+
+  populateTextFields() {
+    if (this.data && this.data._master && this.data._master.legislation) {
+      this.legislationString = CommonUtils.buildLegislationString(this.data._master.legislation);
+    }
   }
 
   navigateToEditPage() {
