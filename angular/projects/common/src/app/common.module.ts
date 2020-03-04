@@ -12,6 +12,7 @@ import { FileUploadComponent } from './file-upload/file-upload.component';
 import { DocumentEditComponent } from './document-edit/document-edit.component';
 import { DocumentReadOnlyComponent } from './document-read-only/document-read-only.component';
 import { EntityAddEditComponent } from './entity/entity-add-edit/entity-add-edit.component';
+import { EntityDetailComponent } from './entity/entity-detail/entity-detail.component';
 
 // services
 
@@ -21,7 +22,8 @@ import { EntityAddEditComponent } from './entity/entity-add-edit/entity-add-edit
     DocumentLinkStagingComponent,
     DocumentEditComponent,
     DocumentReadOnlyComponent,
-    EntityAddEditComponent
+    EntityAddEditComponent,
+    EntityDetailComponent
   ],
   imports: [NgbModule, FormsModule, ReactiveFormsModule, BrowserModule, GlobalModule],
   providers: [],
@@ -30,7 +32,8 @@ import { EntityAddEditComponent } from './entity/entity-add-edit/entity-add-edit
     DocumentLinkStagingComponent,
     DocumentEditComponent,
     DocumentReadOnlyComponent,
-    EntityAddEditComponent
+    EntityAddEditComponent,
+    EntityDetailComponent
   ]
 })
 export class CommonModule {}

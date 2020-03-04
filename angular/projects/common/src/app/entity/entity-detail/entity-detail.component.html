@@ -1,0 +1,59 @@
+<div class="grid-section section-1">
+  <div class="grid-item">
+    <span class="grid-item-name">Entity Type</span>
+    <span class="grid-item-value">{{ (data && data.type) || '-' }}</span>
+  </div>
+
+  <!--Individual* -->
+  <!-- TODO enable/update as part of anonymous entity/document work. -->
+  <!-- <div *ngIf="data && data.anonymous" class="grid-item">
+    <span class="grid-item-name">Anonymity</span>
+    <span class="grid-item-value">Personally identifiable information will not be published</span>
+  </div> -->
+</div>
+
+<!--Company -->
+<ng-container *ngIf="UIType === ENTITY_TYPE.Company">
+  <div class="grid-section section-2">
+    <div class="grid-item">
+      <span class="grid-item-name">Company Name</span>
+      <span class="grid-item-value">{{ (data && data.type) || '-' }}</span>
+    </div>
+  </div>
+</ng-container>
+
+<!-- IndividualCombined -->
+<ng-container *ngIf="UIType === ENTITY_TYPE.Individual">
+  <div class="grid-section section-3">
+    <div class="grid-item">
+      <span class="grid-item-name">First Name</span>
+      <span class="grid-item-value">{{ (data && data.firstName) || '-' }}</span>
+    </div>
+    <div class="grid-item">
+      <span class="grid-item-name">Middle Name</span>
+      <span class="grid-item-value">{{ (data && data.middleName) || '-' }}</span>
+    </div>
+    <div class="grid-item">
+      <span class="grid-item-name">Last Name</span>
+      <span class="grid-item-value">{{ (data && data.lastName) || '-' }}</span>
+    </div>
+    <div class="grid-item">
+      <span class="grid-item-name">Date of Birth</span>
+      <span class="grid-item-value">{{ (data && data.dateOfBirth | date) || '-' }}</span>
+    </div>
+  </div>
+</ng-container>
+
+<!-- Individual -->
+<ng-container *ngIf="UIType === ENTITY_TYPE.IndividualCombined">
+  <div class="grid-section section-4">
+    <div class="grid-item">
+      <span class="grid-item-name">Full Name</span>
+      <span class="grid-item-value">{{ (data && data.fullName) || '-' }}</span>
+    </div>
+    <div class="grid-item">
+      <span class="grid-item-name">Date of Birth</span>
+      <span class="grid-item-value">{{ (data && data.dateOfBirth | date) || '-' }}</span>
+    </div>
+  </div>
+</ng-container>

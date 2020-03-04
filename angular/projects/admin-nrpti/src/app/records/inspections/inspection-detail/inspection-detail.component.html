@@ -48,9 +48,14 @@
           </div>
           <div class="grid-item">
             <span class="grid-item-name">Source System</span>
-            <span class="grid-item-value">{{ (data && data._master.sourceSystemRef) || '-' }}</span>
+            <span class="grid-item-value">{{ (data && data. _master.sourceSystemRef) || '-' }}</span>
           </div>
         </div>
+        <div class="grid-section-border"></div>
+        <div class="grid-section-sub-header">
+          <span class="grid-section-sub-header-text">Entity Details</span>
+        </div>
+        <app-entity-detail class="grid-section" [data]="data && data._master.issuedTo"></app-entity-detail>
         <div class="grid-section-border"></div>
         <div class="grid-section-sub-header">
           <span class="grid-section-sub-header-text">Location Details</span>

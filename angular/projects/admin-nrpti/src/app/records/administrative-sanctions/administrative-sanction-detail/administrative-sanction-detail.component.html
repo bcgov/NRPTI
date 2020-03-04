@@ -49,6 +49,11 @@
         </div>
         <div class="grid-section-border"></div>
         <div class="grid-section-sub-header">
+          <span class="grid-section-sub-header-text">Entity Details</span>
+        </div>
+        <app-entity-detail class="grid-section" [data]="data && data._master.issuedTo"></app-entity-detail>
+        <div class="grid-section-border"></div>
+        <div class="grid-section-sub-header">
           <span class="grid-section-sub-header-text">Location Details</span>
         </div>
         <div class="grid-section section-3">
