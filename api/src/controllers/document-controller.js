@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const queryActions = require('../utils/query-actions');
 const { uuid } = require('uuidv4');
 const AWS = require('aws-sdk');
+const mongodb = require('../utils/mongodb');
+const ObjectID = require('mongodb').ObjectID;
 
 const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
 const ep = new AWS.Endpoint(OBJ_STORE_URL);
@@ -17,33 +19,47 @@ exports.protectedOptions = function(args, res, next) {
 };
 
 exports.protectedPost = async function(args, res, next) {
-  if (args.swagger.params.data && args.swagger.params.data.value) {
+
+  if (
+    args.swagger.params.data &&
+    args.swagger.params.data.value &&
+    args.swagger.params.recordId &&
+    args.swagger.params.recordId.value
+  ) {
     let data = args.swagger.params.data.value;
+    let docResponse;
 
-    // Make sure data is in an array.
-    if (!Array.isArray(args.swagger.params.data.value)) data = [data];
-
-    // Batch post
-    let promises = [];
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].url) {
-        // If the document already has a url we can assume it's a link
-        promises.push(
-          createLinkDocument(data[i].fileName, (this.auth_payload && this.auth_payload.displayName) || '', data[i].url)
-        );
-      } else {
-        // TODO: If it doesn't then we are uploading to S3.
+    if (data.url) {
+      // If the document already has a url we can assume it's a link
+      try {
+        docResponse = await createLinkDocument(
+          data.fileName,
+          (this.auth_payload && this.auth_payload.displayName) || '',
+          data.url
+        )
+      } catch (e) {
+        return queryActions.sendResponse(res, 400, e);
       }
+    } else {
+      // TODO: If it doesn't then we are uploading to S3.
     }
-    // Execute
+    // Now we must update the associated record.
     try {
-      let response = await Promise.all(promises);
-      return queryActions.sendResponse(res, 200, response);
+      const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+      const collection = db.collection('nrpti');
+
+      const recordResponse = await collection.findOneAndUpdate(
+        { _id: new ObjectID(args.swagger.params.recordId.value) },
+        { $addToSet: { documents: new ObjectID(docResponse._id) } },
+        { returnNewDocument: true }
+      );
+
+      return queryActions.sendResponse(res, 200, { document: docResponse, record: recordResponse });
     } catch (e) {
       return queryActions.sendResponse(res, 400, e);
     }
   } else {
-    return queryActions.sendResponse(res, 400, { error: 'You must provide data' });
+    return queryActions.sendResponse(res, 400, { error: 'You must provide data and recordId' });
   }
 };
 

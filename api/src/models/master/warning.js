@@ -30,7 +30,7 @@ module.exports = require('../../utils/model-schema-generator')(
     centroid: [{ type: Number, default: 0.0 }],
     outcomeStatus: { type: String, default: '' },
     outcomeDescription: { type: String, default: '' },
-    documents: [{ type: 'ObjectId', default: null, index: true }],
+    documents: [{ type: 'ObjectId', default: [], index: true }],
 
     dateAdded: { type: Date, default: Date.now() },
     dateUpdated: { type: Date, default: Date.now() },

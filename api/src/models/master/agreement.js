@@ -16,7 +16,7 @@ module.exports = require('../../utils/model-schema-generator')(
     dateIssued: { type: Date, default: null },
     nationName: { type: String, default: '' },
     projectName: { type: String, default: '' },
-    documents: [{ type: 'ObjectId', default: null, index: true }],
+    documents: [{ type: 'ObjectId', default: [], index: true }],
 
     dateAdded: { type: Date, default: Date.now() },
     dateUpdated: { type: Date, default: Date.now() },

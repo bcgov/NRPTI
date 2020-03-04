@@ -47,7 +47,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     private factoryService: FactoryService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -108,7 +108,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
+        ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -145,7 +145,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           ((this.nrcedFlavour && this.nrcedFlavour.summary) ||
             (!this.nrcedFlavour && this.currentRecord.description))) ||
-          ''
+        ''
       ),
 
       // LNG
@@ -153,7 +153,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
-          ''
+        ''
       )
     });
   }
@@ -178,22 +178,6 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
   }
 
   async submit() {
-    // Documents
-    // TODO: this section of code only handles links. We need it to handle S3 docs as well.
-    const docRes = await this.factoryService.createDocuments(this.links);
-    const docsToSave = [];
-    docRes.forEach(newDoc => {
-      docsToSave.push(newDoc._id);
-    });
-
-    // Add existing documents
-    // TODO: Make sure we don't re-add the documents we deleted.
-    if (this.currentRecord && this.currentRecord.documents && this.currentRecord.documents.length > 0) {
-      this.currentRecord.documents.forEach(existingDocs => {
-        docsToSave.push(existingDocs._id);
-      });
-    }
-
     // TODO
     // _epicProjectId
     // _sourceRefId
@@ -221,9 +205,11 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       location: this.myForm.controls.location.value,
       centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],
       outcomeStatus: this.myForm.controls.outcomeStatus.value,
-      outcomeDescription: this.myForm.controls.outcomeDescription.value,
-      documents: docsToSave
+      outcomeDescription: this.myForm.controls.outcomeDescription.value
     });
+
+    // We handle document logic when we add or remove documents not when we add/edit record
+    delete order.documents;
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
@@ -253,8 +239,11 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createOrder(order).subscribe(res => {
+      this.factoryService.createOrder(order).subscribe(async res => {
         this.parseResForErrors(res);
+        const docResponse = await this.handleDocumentChanges(res[0][0].object._id);
+        // TODO: We need to parse the response coming from updating docs.
+        console.log(docResponse);
         this.router.navigate(['records']);
       });
     } else {
@@ -263,11 +252,30 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       this.nrcedFlavour && (order.OrderNRCED['_id'] = this.nrcedFlavour._id);
       this.lngFlavour && (order.OrderLNG['_id'] = this.lngFlavour._id);
 
-      this.factoryService.editOrder(order).subscribe(res => {
+      this.factoryService.editOrder(order).subscribe(async res => {
         this.parseResForErrors(res);
+        const docResponse = await this.handleDocumentChanges(this.currentRecord._id);
+        // TODO: We need to parse the response coming from updating docs.
+        console.log(docResponse);
         this.router.navigate(['records', 'orders', this.currentRecord._id, 'detail']);
       });
     }
+  }
+
+  private async handleDocumentChanges(recordId) {
+    const promises = [];
+
+    // Handle adding links
+    this.links.forEach(async link => {
+      promises.push(this.factoryService.createDocument(link, recordId));
+    });
+
+    // TODO: Handle adding S3 Docs
+
+    // TODO: Handle deleting documents
+
+    // Execute
+    return Promise.all(promises);
   }
 
   private parseResForErrors(res) {
