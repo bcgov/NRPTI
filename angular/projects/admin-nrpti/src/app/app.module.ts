@@ -8,6 +8,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { Overlay, CloseScrollStrategy } from '@angular/cdk/overlay';
 import { MAT_AUTOCOMPLETE_SCROLL_STRATEGY } from '@angular/material';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 // modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -73,6 +74,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    ScrollingModule,
     GlobalModule,
     CommonModule,
     SharedModule,
