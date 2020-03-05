@@ -125,7 +125,7 @@ const createAdministrativePenalty = async function(row, nrptiCollection) {
     recordType: RECORD_TYPE.AdministrativePenalty.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
-      (row[5] && moment(row[5], 'DD-MM-YYYY HH:MM:SS A')) ||
+      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
       moment(row[1], 'YYYY')
         .quarter(row[2])
         .toDate(),
@@ -175,8 +175,6 @@ const createAdministrativePenalty = async function(row, nrptiCollection) {
 };
 
 const createAdministrativeSanction = async function(row, nrptiCollection) {
-  const dateIssued = row[5] && moment(row[5], 'DD-MM-YYYY HH:MM:SS A');
-
   const masterRecord = {
     _schemaName: RECORD_TYPE.AdministrativeSanction._schemaName,
     read: ['sysadmin'],
@@ -186,7 +184,7 @@ const createAdministrativeSanction = async function(row, nrptiCollection) {
     recordType: RECORD_TYPE.AdministrativeSanction.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
-      (row[5] && moment(row[5], 'DD-MM-YYYY HH:MM:SS A')) ||
+      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
       moment(row[1], 'YYYY')
         .quarter(row[2])
         .toDate(),
@@ -250,7 +248,7 @@ const createInspection = async function(row, nrptiCollection) {
     recordType: RECORD_TYPE.Inspection.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
-      (row[5] && moment(row[5], 'DD-MM-YYYY HH:MM:SS A')) ||
+      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
       moment(row[1], 'YYYY')
         .quarter(row[2])
         .toDate(),
@@ -309,7 +307,7 @@ const createOrder = async function(row, nrptiCollection) {
     recordType: RECORD_TYPE.Order.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
-      (row[5] && moment(row[5], 'DD-MM-YYYY HH:MM:SS A')) ||
+      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
       moment(row[1], 'YYYY')
         .quarter(row[2])
         .toDate(),
@@ -368,7 +366,7 @@ const createRestorativeJustice = async function(row, nrptiCollection) {
     recordType: RECORD_TYPE.RestorativeJustice.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
-      (row[5] && moment(row[5], 'DD-MM-YYYY HH:MM:SS A')) ||
+      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
       moment(row[1], 'YYYY')
         .quarter(row[2])
         .toDate(),
@@ -427,7 +425,7 @@ const createTicket = async function(row, nrptiCollection) {
     recordType: RECORD_TYPE.Ticket.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
-      (row[5] && moment(row[5], 'DD-MM-YYYY HH:MM:SS A')) ||
+      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
       moment(row[1], 'YYYY')
         .quarter(row[2])
         .toDate(),
@@ -487,7 +485,7 @@ const createWarning = async function(row, nrptiCollection) {
     // recordSubtype: '',
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
-      (row[5] && moment(row[5], 'DD-MM-YYYY HH:MM:SS A')) ||
+      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
       moment(row[1], 'YYYY')
         .quarter(row[2])
         .toDate(),
