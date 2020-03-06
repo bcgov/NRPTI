@@ -6,6 +6,8 @@ import { Subject } from 'rxjs';
 import { FactoryService } from '../../services/factory.service';
 import { RecordUtils } from '../utils/record-utils';
 import { takeUntil } from 'rxjs/operators';
+import { Entity } from '../../../../../common/src/app/models/master/common-models/entity';
+import { Utils as CommonUtils } from '../../../../../common/src/app/utils/utils';
 
 @Component({
   selector: 'tr[app-records-table-row]',
@@ -22,6 +24,8 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
   public displayDetailsComponent = false;
   public componentRef: ComponentRef<any>;
 
+  public entityString = '';
+
   constructor(public factoryService: FactoryService) {
     super();
   }
@@ -35,6 +39,14 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
         this.removeDetailsComponent();
       }
     });
+
+    this.populateTextFields();
+  }
+
+  populateTextFields() {
+    if (this.rowData && this.rowData.issuedTo) {
+      this.entityString = CommonUtils.buildEntityString(new Entity(this.rowData.issuedTo));
+    }
   }
 
   downloadDocument() {}
