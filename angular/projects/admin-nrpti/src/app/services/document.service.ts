@@ -13,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
  */
 @Injectable({ providedIn: 'root' })
 export class DocumentService {
-  constructor(public apiService: ApiService, public http: HttpClient) {}
+  constructor(public apiService: ApiService, public http: HttpClient) { }
 
   /**
    * Return all documents that match the provided filters.
@@ -37,9 +37,9 @@ export class DocumentService {
     return of(0);
   }
 
-  createDocuments(documents: Document[]): Promise<any> {
-    const queryString = 'document';
-    return this.http.post<any>(`${this.apiService.pathAPI}/${queryString}`, documents, {}).toPromise();
+  createDocument(document: Document, recordId: string): Promise<any> {
+    const queryString = `record/${recordId}/document`;
+    return this.http.post<any>(`${this.apiService.pathAPI}/${queryString}`, document, {}).toPromise();
   }
 
   private downloadResource(id: string): Promise<Blob> {
