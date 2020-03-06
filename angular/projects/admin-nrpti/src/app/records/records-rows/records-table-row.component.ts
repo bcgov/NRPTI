@@ -1,18 +1,34 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import { TableRowComponent } from 'nrpti-angular-components';
 import { Router } from '@angular/router';
+import { Utils as CommonUtils } from '../../../../../common/src/app/utils/utils';
+import { Entity } from '../../../../../common/src/app/models/master/common-models/entity';
 
 @Component({
   selector: 'tr[app-records-table-row]',
   templateUrl: './records-table-row.component.html',
   styleUrls: ['./records-table-row.component.scss']
 })
-export class RecordsTableRowComponent extends TableRowComponent {
+export class RecordsTableRowComponent extends TableRowComponent implements OnInit {
   public dropdownItems = ['Edit', 'Delete'];
 
-  constructor(private router: Router) {
+  public entityString = '';
+
+  constructor(private router: Router, public changeDetectionRef: ChangeDetectorRef) {
     super();
+  }
+
+  ngOnInit() {
+    this.populateTextFields();
+
+    this.changeDetectionRef.detectChanges();
+  }
+
+  populateTextFields() {
+    if (this.rowData && this.rowData.issuedTo) {
+      this.entityString = CommonUtils.buildEntityString(new Entity(this.rowData.issuedTo));
+    }
   }
 
   @HostListener('click') onItemClicked() {
