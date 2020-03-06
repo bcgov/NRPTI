@@ -1,126 +1,42 @@
 @import "~assets/styles/base/base.scss";
+// base record detail scss found in record-details.scss
 
-.detail-page {
-  .content-section {
-    margin: 1.5rem 2rem;
+.section-1 {
+  grid-template-columns: 3fr 2fr 2fr 2fr 2fr;
+}
 
-    .content-grid {
-      display: grid;
-      grid-template-rows: auto;
-      grid-row-gap: 1.25rem;
+.section-2 {
+  grid-template-columns: auto;
+}
 
-      .grid-section-header {
-        display: grid;
-        grid-template-columns: 1fr minmax(10rem, min-content);
-        margin-bottom: 0.5rem;
+.section-3 {
+  grid-template-columns: 3fr 2fr 6fr;
+}
 
-        .grid-section-header-title {
-          .grid-section-header-title-text {
-            font-size: 1.5rem;
-            font-weight: 600;
-          }
+.section-4 {
+  grid-template-columns: auto;
+}
 
-          .grid-section-header-title-sub-text {
-            margin-left: 1.25rem;
-            font-size: 0.75rem;
-          }
-        }
-
-        .grid-section-header-button {
-          display: grid;
-
-          button {
-            width: 100%;
-            height: 3rem;
-            border-radius: 6px;
-            font-weight: 600;
-
-            &.button-edit {
-              color: $button-edit-text-color;
-              background-color: $button-edit-bg-color;
-              border: 1px solid $button-edit-border-color;
-            }
-
-            span {
-              margin-left: 0.5rem;
-            }
-
-            i {
-              float: left;
-              margin-right: -100%;
-            }
-          }
-
-          .grid-section-header-button-sub-text {
-            justify-self: end;
-            font-size: 0.75rem;
-          }
-        }
-      }
-
-      .grid-section-sub-header {
-        .grid-section-sub-header-text {
-          margin-left: 0.25rem;
-          font-size: 1.25rem;
-          font-weight: 600;
-        }
-      }
-
-      .grid-section-border {
-        display: grid;
-        padding-bottom: 1px;
-        border-bottom: 1px solid $fc-border-color;
-      }
-
-      .grid-section {
-        display: grid;
-        grid-row-gap: 1.25rem;
-
-        .grid-item {
-          display: grid;
-          grid-template-rows: auto;
-          grid-gap: 0.25rem;
-          margin-left: 0.5rem;
-
-          .grid-item-name {
-            font-weight: 600;
-            font-size: 1rem;
-          }
-
-          .grid-item-value {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            font-weight: 400;
-            font-size: 1rem;
-          }
-        }
-      }
-
-      .section-1 {
-        grid-template-columns: 3fr 2fr 2fr 2fr 2fr;
-      }
-
-      .section-2 {
-        grid-template-columns: auto;
-      }
-
-      .section-3 {
-        grid-template-columns: 3fr 2fr 6fr;
-      }
-
-      .section-4 {
-        grid-template-columns: auto;
-      }
-    }
+@media screen and (max-width: 768px) {
+  .section-1 {
+    grid-template-columns: none;
   }
-}
 
-.blue-header {
-  display: inline-block;
-  color: $content-header-color;
-}
+  .section-2 {
+    grid-template-columns: none;
+  }
 
-.grey-sub-text {
-  color: grey;
-  font-style: italic;
+  .section-3 {
+    grid-template-columns: none;
+  }
+
+  .section-4 {
+    grid-template-columns: none;
+  }
+
+  .grid-item__row {
+    grid-template-rows: none;
+    grid-template-columns: 1fr 2fr;
+    grid-gap: 0.625rem;
+  }
 }

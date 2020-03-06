@@ -1,27 +1,3 @@
-.grid-section {
-  display: grid;
-  grid-row-gap: 1.25rem;
-
-  .grid-item {
-    display: grid;
-    grid-template-rows: auto;
-    grid-gap: 0.25rem;
-    margin-left: 0.5rem;
-
-    .grid-item-name {
-      font-weight: 600;
-      font-size: 1rem;
-    }
-
-    .grid-item-value {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      font-weight: 400;
-      font-size: 1rem;
-    }
-  }
-}
-
 .section-1 {
   grid-template-columns: 10fr 56fr;
 }
@@ -36,4 +12,28 @@
 
 .section-4 {
   grid-template-columns: 10fr 56fr;
+}
+
+@media screen and (max-width: 768px) {
+  .section-1 {
+    grid-template-columns: none;
+  }
+
+  .section-2 {
+    grid-template-columns: none;
+  }
+
+  .section-3 {
+    grid-template-columns: none;
+  }
+
+  .section-4 {
+    grid-template-columns: none;
+  }
+
+  .grid-item__row {
+    grid-template-rows: none;
+    grid-template-columns: 1fr 2fr;
+    grid-gap: 0.625rem;
+  }
 }
