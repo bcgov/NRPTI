@@ -523,7 +523,7 @@ export class FactoryService {
   }
 
   // Documents
-  public createDocuments(document: Document[]): Promise<any> {
-    return this.documentService.createDocuments(document);
+  public createDocument(document: Document, recordId: string): Promise<any> {
+    return this.documentService.createDocument(document, recordId);
   }
 }

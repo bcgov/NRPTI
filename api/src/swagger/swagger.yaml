@@ -498,10 +498,6 @@ paths:
           description: 'Access Denied'
           schema:
             $ref: '#/definitions/Error'
-
-  ###
-  ### Record Routes
-  ###
   /record:
     x-swagger-router-controller: record-controller
     options:
@@ -573,7 +569,7 @@ paths:
   ###
   ### Document Routes
   ###
-  /document:
+  /record/{recordId}/document:
     x-swagger-router-controller: document-controller
     options:
       tags:
@@ -581,6 +577,18 @@ paths:
       summary: 'Pre-flight request'
       operationId: protectedOptions
       description: 'Options on authenticated task route'
+      parameters:
+        - name: recordId
+          in: path
+          description: "_id of record to publish"
+          required: true
+          type: string
+        - name: data
+          in: body
+          description: 'Data to create a document'
+          required: true
+          schema:
+            $ref: '#/definitions/DocumentRequestObject'
       responses:
         '200':
           description: 'Success'
@@ -599,6 +607,11 @@ paths:
       x-security-scopes:
         - sysadmin
       parameters:
+        - name: recordId
+          in: path
+          description: "_id of record the document is associated with"
+          required: true
+          type: string
         - in: body
           name: data
           description: 'Data to create a document'
@@ -625,6 +638,11 @@ paths:
       x-security-scopes:
         - sysadmin
       parameters:
+        - name: recordId
+          in: path
+          description: "_id of record the document is associated with"
+          required: true
+          type: string
         - in: body
           name: data
           description: 'Data to create a document'
