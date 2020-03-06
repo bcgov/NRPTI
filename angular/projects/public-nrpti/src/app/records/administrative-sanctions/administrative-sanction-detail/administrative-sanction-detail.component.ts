@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectorRef, Input, OnDestroy } from '@angular
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
+import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
+import { Entity } from '../../../../../../common/src/app/models/master/common-models/entity';
 
 @Component({
   selector: 'app-administrative-sanction-detail',
@@ -16,10 +18,14 @@ export class AdministrativeSanctionDetailComponent implements OnInit, OnDestroy 
   public loading = true;
   public activeTab = 'detail';
 
+  public entityString = '';
+
   constructor(public route: ActivatedRoute, public router: Router, public _changeDetectionRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     if (this.data) {
+      this.populateTextFields();
+
       this.loading = false;
       this._changeDetectionRef.detectChanges();
       return;
@@ -35,9 +41,17 @@ export class AdministrativeSanctionDetailComponent implements OnInit, OnDestroy 
       // If data was passed in directly, take it over anything in the route resolver.
       this.data = (res.records[0] && res.records[0].data) || [];
 
+      this.populateTextFields();
+
       this.loading = false;
       this._changeDetectionRef.detectChanges();
     });
+  }
+
+  populateTextFields() {
+    if (this.data && this.data.issuedTo) {
+      this.entityString = CommonUtils.buildEntityString(new Entity(this.data.issuedTo));
+    }
   }
 
   activateTab(tabLabel: string): void {
