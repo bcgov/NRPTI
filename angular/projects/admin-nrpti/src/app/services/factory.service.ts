@@ -526,4 +526,8 @@ export class FactoryService {
   public createDocument(document: Document, recordId: string): Promise<any> {
     return this.documentService.createDocument(document, recordId);
   }
+
+  public deleteDocument(docId: string, recordId: string): Promise<any> {
+    return this.documentService.deleteDocument(docId, recordId);
+  }
 }
