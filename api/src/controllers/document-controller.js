@@ -14,12 +14,11 @@ const s3 = new AWS.S3({
   signatureVersion: 'v4'
 });
 
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedPost = async function(args, res, next) {
-
+exports.protectedPost = async function (args, res, next) {
   if (
     args.swagger.params.data &&
     args.swagger.params.data.value &&
@@ -64,7 +63,7 @@ exports.protectedPost = async function(args, res, next) {
 };
 
 // WIP
-exports.protectedPut = async function(args, res, next) {
+exports.protectedPut = async function (args, res, next) {
   if (args.swagger.params.data && args.swagger.params.data.value) {
     const data = args.swagger.params.data.value;
 
@@ -97,6 +96,42 @@ exports.protectedPut = async function(args, res, next) {
     return queryActions.sendResponse(res, 400, { error: 'You must provide data' });
   }
 };
+
+exports.protectedDelete = async function (args, res, next) {
+  if (
+    args.swagger.params.docId &&
+    args.swagger.params.docId.value &&
+    args.swagger.params.recordId &&
+    args.swagger.params.recordId.value
+  ) {
+    // First we want to delete the document.
+    const Document = mongoose.model('Document');
+    let docResponse;
+    try {
+      docResponse = await Document.deleteOne({ _id: new ObjectID(args.swagger.params.docId.value) });
+    } catch (e) {
+      return queryActions.sendResponse(res, 400, e);
+    }
+
+    // Then we want to remove the document's id from the record it's attached to.
+    try {
+      const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+      const collection = db.collection('nrpti');
+
+      const recordResponse = await collection.findOneAndUpdate(
+        { _id: new ObjectID(args.swagger.params.recordId.value) },
+        { $pull: { documents: new ObjectID(docResponse._id) } },
+        { returnNewDocument: true }
+      );
+
+      return queryActions.sendResponse(res, 200, { document: docResponse, record: recordResponse });
+    } catch (e) {
+      return queryActions.sendResponse(res, 400, e);
+    }
+  } else {
+    return queryActions.sendResponse(res, 400, { error: 'You must provide docId and recordId' });
+  }
+}
 
 exports.createLinkDocument = createLinkDocument;
 
