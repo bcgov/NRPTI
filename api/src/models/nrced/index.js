@@ -5,3 +5,4 @@ exports.ticketNRCED = require('./ticket-nrced');
 exports.administrativePenaltyNRCED = require('./administrativePenalty-nrced');
 exports.administrativeSanctionNRCED = require('./administrativeSanction-nrced');
 exports.warningNRCED = require('./warning-nrced');
+exports.courtConvictionNRCED = require('./courtConviction-nrced');

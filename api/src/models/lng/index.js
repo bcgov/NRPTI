@@ -12,3 +12,4 @@ exports.administrativeSanctionLNG = require('./administrativeSanction-lng');
 exports.warningLNG = require('./warning-lng');
 exports.constructionPlanLNG = require('./constructionPlan-lng');
 exports.managementPlanLNG = require('./managementPlan-lng');
+exports.courtConvictionLNG = require('./courtConviction-lng');

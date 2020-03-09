@@ -32,7 +32,7 @@ let postUtils = require('../../utils/post-utils');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function (args, res, next, incomingObj) {
+exports.createRecord = async function(args, res, next, incomingObj) {
   // save flavour records
   let observables = [];
   let savedFlavourAdministrativePenalties = [];
@@ -111,7 +111,7 @@ exports.createRecord = async function (args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master administrativePenalty record
  */
-exports.createMaster = async function (args, res, next, incomingObj, flavourIds) {
+exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
   let AdministrativePenalty = mongoose.model('AdministrativePenalty');
   let administrativePenalty = new AdministrativePenalty();
 
@@ -192,9 +192,7 @@ exports.createMaster = async function (args, res, next, incomingObj, flavourIds)
   incomingObj.projectName && (administrativePenalty.projectName = incomingObj.projectName);
   incomingObj.location && (administrativePenalty.location = incomingObj.location);
   incomingObj.centroid && (administrativePenalty.centroid = incomingObj.centroid);
-  incomingObj.outcomeStatus && (administrativePenalty.outcomeStatus = incomingObj.outcomeStatus);
-  incomingObj.outcomeDescription && (administrativePenalty.outcomeDescription = incomingObj.outcomeDescription);
-  incomingObj.penalty && (administrativePenalty.penalty = incomingObj.penalty);
+  incomingObj.penalties && (administrativePenalty.penalties = incomingObj.penalties);
   incomingObj.documents && (administrativePenalty.documents = incomingObj.documents);
 
   // set meta
@@ -238,7 +236,7 @@ exports.createMaster = async function (args, res, next, incomingObj, flavourIds)
  * @param {*} incomingObj see example
  * @returns created lng administrativePenalty record
  */
-exports.createLNG = async function (args, res, next, incomingObj) {
+exports.createLNG = async function(args, res, next, incomingObj) {
   let AdministrativePenaltyLNG = mongoose.model('AdministrativePenaltyLNG');
   let administrativePenaltyLNG = new AdministrativePenaltyLNG();
 
@@ -313,9 +311,7 @@ exports.createLNG = async function (args, res, next, incomingObj) {
   incomingObj.projectName && (administrativePenaltyLNG.projectName = incomingObj.projectName);
   incomingObj.location && (administrativePenaltyLNG.location = incomingObj.location);
   incomingObj.centroid && (administrativePenaltyLNG.centroid = incomingObj.centroid);
-  incomingObj.outcomeStatus && (administrativePenaltyLNG.outcomeStatus = incomingObj.outcomeStatus);
-  incomingObj.outcomeDescription && (administrativePenaltyLNG.outcomeDescription = incomingObj.outcomeDescription);
-  incomingObj.penalty && (administrativePenaltyLNG.penalty = incomingObj.penalty);
+  incomingObj.penalties && (administrativePenaltyLNG.penalties = incomingObj.penalties);
   incomingObj.documents && (administrativePenaltyLNG.documents = incomingObj.documents);
 
   // set flavour data
@@ -369,7 +365,7 @@ exports.createLNG = async function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced administrativePenalty record
  */
-exports.createNRCED = async function (args, res, next, incomingObj) {
+exports.createNRCED = async function(args, res, next, incomingObj) {
   let AdministrativePenaltyNRCED = mongoose.model('AdministrativePenaltyNRCED');
   let administrativePenaltyNRCED = new AdministrativePenaltyNRCED();
 
@@ -444,9 +440,7 @@ exports.createNRCED = async function (args, res, next, incomingObj) {
   incomingObj.projectName && (administrativePenaltyNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (administrativePenaltyNRCED.location = incomingObj.location);
   incomingObj.centroid && (administrativePenaltyNRCED.centroid = incomingObj.centroid);
-  incomingObj.outcomeStatus && (administrativePenaltyNRCED.outcomeStatus = incomingObj.outcomeStatus);
-  incomingObj.outcomeDescription && (administrativePenaltyNRCED.outcomeDescription = incomingObj.outcomeDescription);
-  incomingObj.penalty && (administrativePenaltyNRCED.penalty = incomingObj.penalty);
+  incomingObj.penalties && (administrativePenaltyNRCED.penalties = incomingObj.penalties);
   incomingObj.documents && (administrativePenaltyNRCED.documents = incomingObj.documents);
 
   // set flavour data
