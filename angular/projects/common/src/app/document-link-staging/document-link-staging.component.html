@@ -24,7 +24,7 @@
               (filesChange)="addDocuments($event); recordFiles = []"
             ></app-file-upload>
             <br />
-            <ul class="doc-list mb-3" *ngIf="documents?.length > 0">
+            <ul class="doc-list mb-3" *ngIf="documents && documents.length > 0">
               <li *ngFor="let doc of documents">
                 <span class="cell icon">
                   <i class="material-icons">insert_drive_file</i>
@@ -57,7 +57,7 @@
                 </button>
               </div>
             </div>
-            <ul class="doc-list mb-3" *ngIf="links?.length > 0">
+            <ul class="doc-list mb-3" *ngIf="links && links.length > 0">
               <li *ngFor="let link of links">
                 <span class="cell icon">
                   <i class="material-icons">link</i>

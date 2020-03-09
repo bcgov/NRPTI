@@ -1,0 +1,22 @@
+<ul id="documents" class="doc-list mb-3" *ngIf="documents.length > 0">
+  <li *ngFor="let document of documents">
+    <span class="cell icon">
+      <i class="material-icons">insert_drive_file</i>
+    </span>
+    <span class="cell name" [title]="document || ''">
+      <span *ngIf="!document.toDelete" class="cell__txt-content">{{ document.fileName }}</span>
+      <span *ngIf="document.toDelete" class="cell__txt-content">
+        <i>{{ document.fileName }} marked for deletion</i>
+      </span>
+    </span>
+    <span class="cell actions">
+      <button class="btn btn-icon" type="button" title="Delete this document" (click)="toggleDeleteDoc(document)">
+        <i *ngIf="!document.toDelete" class="material-icons">delete</i>
+        <div *ngIf="document.toDelete">Undo</div>
+      </button>
+    </span>
+  </li>
+</ul>
+<div class="mb-4" *ngIf="documents.length === 0">
+  This record has no documents.
+</div>

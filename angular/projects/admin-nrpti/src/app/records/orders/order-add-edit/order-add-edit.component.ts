@@ -40,6 +40,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
   // Documents
   public documents = [];
   public links = [];
+  public documentsToDelete = [];
 
   constructor(
     public route: ActivatedRoute,
@@ -273,6 +274,9 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     // TODO: Handle adding S3 Docs
 
     // TODO: Handle deleting documents
+    this.documentsToDelete.forEach(async docId => {
+      promises.push(this.factoryService.deleteDocument(docId, recordId));
+    });
 
     // Execute
     return Promise.all(promises);
@@ -298,14 +302,6 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         alert('Failed to save one or more flavour records');
       }
     }
-  }
-
-  updateLinks(links) {
-    this.links = links;
-  }
-
-  updateDocuments(documents) {
-    this.documents = documents;
   }
 
   cancel() {
