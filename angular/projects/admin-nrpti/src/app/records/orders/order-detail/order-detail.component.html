@@ -93,8 +93,11 @@
         </div>
         <div class="grid-section section-5">
           <div class="grid-item">
-            <span class="grid-item-value" *ngIf="data && data._master.documents && data._master.documents.length > 0">
-              <ul id="documents" class="doc-list mb-3" *ngIf="data?._master?.documents?.length > 0">
+            <span
+              class="grid-item-value"
+              *ngIf="data && data._master && data._master.documents && data._master.documents.length > 0"
+            >
+              <ul id="documents" class="doc-list mb-3">
                 <li *ngFor="let document of data && data._master.documents">
                   <span class="cell icon">
                     <i class="material-icons">insert_drive_file</i>

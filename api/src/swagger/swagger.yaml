@@ -68,7 +68,7 @@ definitions:
     properties:
       signedUrl:
         type: string
-        example: "A pre-signed URL."
+        example: 'A pre-signed URL.'
 
   ### Search Definitions
   SearchObject:
@@ -397,7 +397,7 @@ paths:
       parameters:
         - name: recordId
           in: path
-          description: "_id of record to publish"
+          description: '_id of record to publish'
           required: true
           type: string
         - name: record
@@ -426,7 +426,7 @@ paths:
       parameters:
         - name: recordId
           in: path
-          description: "_id of record to publish"
+          description: '_id of record to publish'
           required: true
           type: string
         - name: record
@@ -453,7 +453,7 @@ paths:
       parameters:
         - name: recordId
           in: path
-          description: "_id of record to publish"
+          description: '_id of record to publish'
           required: true
           type: string
         - name: record
@@ -482,7 +482,7 @@ paths:
       parameters:
         - name: recordId
           in: path
-          description: "_id of record to publish"
+          description: '_id of record to publish'
           required: true
           type: string
         - name: record
@@ -552,7 +552,7 @@ paths:
       parameters:
         - in: body
           name: data
-          description: "Records in an array that you would like to save"
+          description: 'Records in an array that you would like to save'
           required: true
           schema:
             $ref: '#/definitions/RecordRequestObject'
@@ -580,7 +580,7 @@ paths:
       parameters:
         - name: recordId
           in: path
-          description: "_id of record to publish"
+          description: '_id of record to publish'
           required: true
           type: string
         - name: data
@@ -609,7 +609,7 @@ paths:
       parameters:
         - name: recordId
           in: path
-          description: "_id of record the document is associated with"
+          description: '_id of record the document is associated with'
           required: true
           type: string
         - in: body
@@ -640,7 +640,7 @@ paths:
       parameters:
         - name: recordId
           in: path
-          description: "_id of record the document is associated with"
+          description: '_id of record the document is associated with'
           required: true
           type: string
         - in: body
@@ -654,6 +654,60 @@ paths:
           description: 'Success'
           schema:
             $ref: '#/definitions/DocumentResponseObject'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /record/{recordId}/document/{docId}:
+    x-swagger-router-controller: document-controller
+    options:
+      tags:
+        - task
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated task route'
+      parameters:
+        - name: recordId
+          in: path
+          description: '_id of record'
+          required: true
+          type: string
+        - name: docId
+          in: path
+          description: '_id of document'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - Document
+      summary: 'Delete Document'
+      operationId: protectedDelete
+      description: 'Authenticated access to create a Document and get a signed put URL in return'
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+      parameters:
+        - name: recordId
+          in: path
+          description: '_id of record the document is associated with'
+          required: true
+          type: string
+        - name: docId
+          in: path
+          description: '_id of document we want to delete'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
         '403':
           description: 'Access Denied'
           schema:
