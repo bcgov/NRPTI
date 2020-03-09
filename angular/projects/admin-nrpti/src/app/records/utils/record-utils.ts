@@ -230,4 +230,49 @@ export class RecordUtils {
         return null;
     }
   }
+
+  // links is an array of objects that contain documents without upfile and with url already populated.
+  // documents is an array of objects that contain documents with upfile and without url.
+  // documentsToDelete is an array of objectIds whicfh map to existing documents in the database.
+  async handleDocumentChanges(links = [], documents = [], documentsToDelete = [], recordId, factoryService) {
+    const promises = [];
+
+    // Handle adding links
+    links.forEach(async link => {
+      promises.push(factoryService.createDocument(link, recordId));
+    });
+
+    // TODO: Handle adding S3 Docs
+    console.log(documents);
+
+    // Handle deleting documents
+    documentsToDelete.forEach(async docId => {
+      promises.push(factoryService.deleteDocument(docId, recordId));
+    });
+
+    // Execute
+    return Promise.all(promises);
+  }
+
+  parseResForErrors(res) {
+    if (!res || !res.length || !res[0] || !res[0].length || !res[0][0]) {
+      alert('Failed to save record.');
+    }
+
+    if (res[0][0].status === 'failure') {
+      alert('Failed to save master record.');
+    }
+
+    if (res[0][0].flavours) {
+      let flavourFailure = false;
+      res[0][0].flavours.forEach(flavour => {
+        if (flavour.status === 'failure') {
+          flavourFailure = true;
+        }
+      });
+      if (flavourFailure) {
+        alert('Failed to save one or more flavour records');
+      }
+    }
+  }
 }

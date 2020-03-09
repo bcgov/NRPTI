@@ -7,6 +7,7 @@ import { Agreement } from '../../../../../../common/src/app/models/master';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
+import { RecordUtils } from '../../utils/record-utils';
 
 @Component({
   selector: 'app-agreement-add-edit',
@@ -27,9 +28,15 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
   public lngPublishStatus = 'Unpublished';
   public lngPublishSubtext = 'Not published';
 
+  // Documents
+  public documents = [];
+  public links = [];
+  public documentsToDelete = [];
+
   constructor(
     public route: ActivatedRoute,
     public router: Router,
+    private recordUtils: RecordUtils,
     private factoryService: FactoryService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
@@ -110,13 +117,12 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
     this._changeDetectionRef.detectChanges();
   }
 
-  submit() {
+  async submit() {
     // TODO
     // _epicProjectId
     // _sourceRefId
     // _epicMilestoneId
     // projectName
-    // documentURL
 
     // TODO: For editing we should create an object with only the changed fields.
     const agreement = new Agreement({
@@ -146,8 +152,17 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createAgreement(agreement).subscribe(res => {
-        this.parseResForErrors(res);
+      this.factoryService.createAgreement(agreement).subscribe(async res => {
+        this.recordUtils.parseResForErrors(res);
+        const docResponse = await this.recordUtils.handleDocumentChanges(
+          this.links,
+          this.documents,
+          this.documentsToDelete,
+          res[0][0].object._id,
+          this.factoryService
+        );
+        // TODO: We need to parse the response coming from updating docs.
+        console.log(docResponse);
         this.router.navigate(['records']);
       });
     } else {
@@ -155,32 +170,19 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
 
       this.lngFlavour && (agreement.AgreementLNG['_id'] = this.lngFlavour._id);
 
-      this.factoryService.editAgreement(agreement).subscribe(res => {
-        this.parseResForErrors(res);
+      this.factoryService.editAgreement(agreement).subscribe(async res => {
+        this.recordUtils.parseResForErrors(res);
+        const docResponse = await this.recordUtils.handleDocumentChanges(
+          this.links,
+          this.documents,
+          this.documentsToDelete,
+          this.currentRecord._id,
+          this.factoryService
+        );
+        // TODO: We need to parse the response coming from updating docs.
+        console.log(docResponse);
         this.router.navigate(['records', 'agreements', this.currentRecord._id, 'detail']);
       });
-    }
-  }
-
-  private parseResForErrors(res) {
-    if (!res || !res.length || !res[0] || !res[0].length || !res[0][0]) {
-      alert('Failed to save record.');
-    }
-
-    if (res[0][0].status === 'failure') {
-      alert('Failed to save master record.');
-    }
-
-    if (res[0][0].flavours) {
-      let flavourFailure = false;
-      res[0][0].flavours.forEach(flavour => {
-        if (flavour.status === 'failure') {
-          flavourFailure = true;
-        }
-      });
-      if (flavourFailure) {
-        alert('Failed to save one or more flavour records');
-      }
     }
   }
 

@@ -8,6 +8,7 @@ import { Permit } from '../../../../../../common/src/app/models/master';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
+import { RecordUtils } from '../../utils/record-utils';
 
 @Component({
   selector: 'app-permit-add-edit',
@@ -32,9 +33,15 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
   public permitSubtypes = Picklists.permitSubtypePicklist;
   public agencies = Picklists.agencyPicklist;
 
+  // Documents
+  public documents = [];
+  public links = [];
+  public documentsToDelete = [];
+
   constructor(
     public route: ActivatedRoute,
     public router: Router,
+    private recordUtils: RecordUtils,
     private factoryService: FactoryService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
@@ -139,14 +146,13 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     this._changeDetectionRef.detectChanges();
   }
 
-  submit() {
+  async submit() {
     // TODO
     // _epicProjectId
     // _sourceRefId
     // _epicMilestoneId
     // legislation
     // projectName
-    // documentURL
 
     // TODO: For editing we should create an object with only the changed fields.
     const permit = new Permit({
@@ -187,8 +193,17 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createPermit(permit).subscribe(res => {
-        this.parseResForErrors(res);
+      this.factoryService.createPermit(permit).subscribe(async res => {
+        this.recordUtils.parseResForErrors(res);
+        const docResponse = await this.recordUtils.handleDocumentChanges(
+          this.links,
+          this.documents,
+          this.documentsToDelete,
+          res[0][0].object._id,
+          this.factoryService
+        );
+        // TODO: We need to parse the response coming from updating docs.
+        console.log(docResponse);
         this.router.navigate(['records']);
       });
     } else {
@@ -196,32 +211,19 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
 
       this.lngFlavour && (permit.PermitLNG['_id'] = this.lngFlavour._id);
 
-      this.factoryService.editPermit(permit).subscribe(res => {
-        this.parseResForErrors(res);
+      this.factoryService.editPermit(permit).subscribe(async res => {
+        this.recordUtils.parseResForErrors(res);
+        const docResponse = await this.recordUtils.handleDocumentChanges(
+          this.links,
+          this.documents,
+          this.documentsToDelete,
+          this.currentRecord._id,
+          this.factoryService
+        );
+        // TODO: We need to parse the response coming from updating docs.
+        console.log(docResponse);
         this.router.navigate(['records', 'permits', this.currentRecord._id, 'detail']);
       });
-    }
-  }
-
-  private parseResForErrors(res) {
-    if (!res || !res.length || !res[0] || !res[0].length || !res[0][0]) {
-      alert('Failed to save record.');
-    }
-
-    if (res[0][0].status === 'failure') {
-      alert('Failed to save master record.');
-    }
-
-    if (res[0][0].flavours) {
-      let flavourFailure = false;
-      res[0][0].flavours.forEach(flavour => {
-        if (flavour.status === 'failure') {
-          flavourFailure = true;
-        }
-      });
-      if (flavourFailure) {
-        alert('Failed to save one or more flavour records');
-      }
     }
   }
 
