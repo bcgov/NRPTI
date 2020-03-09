@@ -89,7 +89,9 @@ export class ApiService {
 
   private downloadResource(id: string): Promise<Blob> {
     const queryString = `document/${id}/download`;
-    return this.http.get<Blob>(this.pathAPI + '/' + queryString, { responseType: 'blob' as 'json' }).toPromise();
+    return this.http
+      .get<Blob>(this.pathAPI + '/' + queryString, { responseType: 'blob' as 'json' })
+      .toPromise();
   }
 
   public async downloadDocument(document: Document): Promise<void> {

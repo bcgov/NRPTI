@@ -12,7 +12,7 @@ import { ApiService } from './api.service';
  */
 @Injectable({ providedIn: 'root' })
 export class RecordService {
-  constructor(public apiService: ApiService, public http: HttpClient) {}
+  constructor(public apiService: ApiService, public http: HttpClient) { }
 
   /**
    * Publish a record.
@@ -46,12 +46,24 @@ export class RecordService {
     return this.http.post<object>(`${this.apiService.pathAPI}/${queryString}`, record, {});
   }
 
-  createRecord(record: object): Observable<object> {
+  createRecord(record: any): Observable<object> {
+    // We handle document logic when we add or remove documents not when we add/edit record
+    for (const property of Object.keys(record)) {
+      record[property].forEach(element => {
+        delete element.documents;
+      });
+    }
     const queryString = 'record';
     return this.http.post<object>(`${this.apiService.pathAPI}/${queryString}`, record, {});
   }
 
-  editRecord(record: object): Observable<object> {
+  editRecord(record: any): Observable<object> {
+    // We handle document logic when we add or remove documents not when we add/edit record
+    for (const property of Object.keys(record)) {
+      record[property].forEach(element => {
+        delete element.documents;
+      });
+    }
     const queryString = 'record';
     return this.http.put<object>(`${this.apiService.pathAPI}/${queryString}`, record, {});
   }
