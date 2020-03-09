@@ -209,7 +209,7 @@ export class LegislationAddEditComponent implements OnInit {
       .map(keyword => keyword.toLowerCase());
 
     // filter the list of acts against the list of keywords
-    return actsToFilter.filter(act => keywords.some(keyword => act.toLowerCase().includes(keyword)));
+    return actsToFilter.filter(act => keywords.every(keyword => act.toLowerCase().includes(keyword)));
   }
 
   /**
@@ -253,7 +253,7 @@ export class LegislationAddEditComponent implements OnInit {
 
     // filter the list of acts against the list of keywords
     return regulationsToFilter.filter(regulation =>
-      keywords.some(keyword => regulation.toLowerCase().includes(keyword))
+      keywords.every(keyword => regulation.toLowerCase().includes(keyword))
     );
   }
 
@@ -278,15 +278,11 @@ export class LegislationAddEditComponent implements OnInit {
    * @memberof LegislationAddEditComponent
    */
   public onEmptyAct() {
+    this.filteredRegulations = this.allRegulations;
     // The acts control is empty, so reset the regulations picklist to show all values
     this.filteredRegulations = this.allRegulations;
     // Business Logic: if the act control is cleared, also clear the regulation control
     this.formGroup.controls.regulation.reset();
-
-    if (!this.formGroup.controls.act.value) {
-      // The act control is also empty, so reset the regulations picklist to show all values
-      this.filteredRegulations = this.allRegulations;
-    }
   }
 
   /**
@@ -295,13 +291,9 @@ export class LegislationAddEditComponent implements OnInit {
    * @memberof LegislationAddEditComponent
    */
   public onEmptyRegulation() {
+    this.filteredRegulations = this.allRegulations;
     // The regulation control is empty, so reset the acts picklist to show all values
     this.filteredActs = this.allActs;
-
-    if (!this.formGroup.controls.regulation.value) {
-      // The act control is also empty, so reset the regulations picklist to show all values
-      this.filteredRegulations = this.allRegulations;
-    }
   }
 
   /**
