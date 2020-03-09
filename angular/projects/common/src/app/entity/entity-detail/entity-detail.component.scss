@@ -37,3 +37,27 @@
 .section-4 {
   grid-template-columns: 10fr 56fr;
 }
+
+@media screen and (max-width: 768px) {
+  .section-1 {
+    grid-template-columns: none;
+  }
+
+  .section-2 {
+    grid-template-columns: none;
+  }
+
+  .section-3 {
+    grid-template-columns: none;
+  }
+
+  .section-4 {
+    grid-template-columns: none;
+  }
+
+  .grid-item__row {
+    grid-template-rows: none;
+    grid-template-columns: 1fr 2fr;
+    grid-gap: 0.625rem;
+  }
+}

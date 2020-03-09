@@ -25,8 +25,8 @@ export class HeaderComponent {
 
   constructor(public factoryService: FactoryService, public router: Router) {
     router.events.subscribe(() => {
-      this.isAuthenticated = this.factoryService.isAuthenticated();
-      this.welcomeMsg = this.factoryService.getWelcomeMessage();
+      // this.isAuthenticated = this.factoryService.isAuthenticated();
+      // this.welcomeMsg = this.factoryService.getWelcomeMessage();
     });
 
     this.environment = this.factoryService.getEnvironment();

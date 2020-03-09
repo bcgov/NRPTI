@@ -15,13 +15,13 @@
 .grid-section-3 {
   display: grid;
   grid-gap: 0.75rem;
-  grid-template-columns: 3fr 2fr 4fr;
+  grid-template-columns: auto;
 }
 
 .grid-section-4 {
   display: grid;
   grid-gap: 0.75rem;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-columns: 3fr 2fr 4fr;
 }
 
 .grid-section-5 {

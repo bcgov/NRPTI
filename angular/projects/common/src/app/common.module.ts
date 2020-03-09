@@ -16,6 +16,9 @@ import { LegislationAddEditComponent } from './legislation-add-edit/legislation-
 import { AutoCompleteMultiSelectComponent } from './autocomplete-multi-select/autocomplete-multi-select.component';
 import { EntityAddEditComponent } from './entity/entity-add-edit/entity-add-edit.component';
 import { EntityDetailComponent } from './entity/entity-detail/entity-detail.component';
+import { PenaltyAddEditComponent } from './penalty/penalty-add-edit/penalty-add-edit.component';
+import { PenaltyDetailComponent as PenaltyDetailAdminComponent } from './penalty/penalty-detail-admin/penalty-detail.component';
+import { PenaltyDetailComponent as PenaltyDetailPublicComponent } from './penalty/penalty-detail-public/penalty-detail.component';
 
 // services
 
@@ -28,7 +31,10 @@ import { EntityDetailComponent } from './entity/entity-detail/entity-detail.comp
     LegislationAddEditComponent,
     AutoCompleteMultiSelectComponent,
     EntityAddEditComponent,
-    EntityDetailComponent
+    EntityDetailComponent,
+    PenaltyAddEditComponent,
+    PenaltyDetailAdminComponent,
+    PenaltyDetailPublicComponent
   ],
   imports: [
     NgbModule,
@@ -49,7 +55,10 @@ import { EntityDetailComponent } from './entity/entity-detail/entity-detail.comp
     LegislationAddEditComponent,
     AutoCompleteMultiSelectComponent,
     EntityAddEditComponent,
-    EntityDetailComponent
+    EntityDetailComponent,
+    PenaltyAddEditComponent,
+    PenaltyDetailAdminComponent,
+    PenaltyDetailPublicComponent
   ]
 })
 export class CommonModule {}

@@ -133,6 +133,10 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         {
           displayName: 'ManagementPlan',
           fieldName: '_schemaName'
+        },
+        {
+          displayName: 'CourtConviction',
+          fieldName: '_schemaName'
         }
       ]
     }
@@ -325,6 +329,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         break;
       case 'managementPlan':
         this.router.navigate(['records', 'management-plans', 'add']);
+        break;
+      case 'courtConviction':
+        this.router.navigate(['records', 'court-convictions', 'add']);
         break;
       default:
         break;

@@ -6,6 +6,7 @@ import { AdministrativePenaltyDetailComponent } from '../administrative-penaltie
 import { AdministrativeSanctionDetailComponent } from '../administrative-sanctions/administrative-sanction-detail/administrative-sanction-detail.component';
 import { TicketDetailComponent } from '../tickets/ticket-detail/ticket-detail.component';
 import { WarningDetailComponent } from '../warnings/warning-detail/warning-detail.component';
+import { CourtConvictionDetailComponent } from '../court-convictions/court-conviction-detail/court-conviction-detail.component';
 
 export class RecordUtils {
   /**
@@ -36,6 +37,8 @@ export class RecordUtils {
         return TicketDetailComponent;
       case 'WarningNRCED':
         return WarningDetailComponent;
+      case 'CourtConvictionNRCED':
+        return CourtConvictionDetailComponent;
       default:
         return null;
     }

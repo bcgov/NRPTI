@@ -32,7 +32,6 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
   // Pick lists
   public agencies = Picklists.agencyPicklist;
   public authors = Picklists.authorPicklist;
-  public outcomeStatuses = Picklists.outcomeStatusPicklist;
 
   // Documents
   public documents = [];

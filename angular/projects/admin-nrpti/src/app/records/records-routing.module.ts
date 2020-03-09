@@ -74,6 +74,11 @@ import { ManagementPlanResolver } from './management-plans/management-plan-resol
 import { ManagementPlanDetailComponent } from './management-plans/management-plan-detail/management-plan-detail.component';
 import { ManagementPlanAddEditComponent } from './management-plans/management-plan-add-edit/management-plan-add-edit.component';
 
+// court convictions
+import { CourtConvictionResolver } from './court-convictions/court-conviction-resolver';
+import { CourtConvictionDetailComponent } from './court-convictions/court-conviction-detail/court-conviction-detail.component';
+import { CourtConvictionAddEditComponent } from './court-convictions/court-conviction-add-edit/court-conviction-add-edit.component';
+
 // other
 import { Utils } from 'nrpti-angular-components';
 
@@ -678,6 +683,51 @@ const routes: Routes = [
             }
           }
         ]
+      },
+      // court convictions
+      {
+        path: 'court-convictions/add',
+        component: CourtConvictionAddEditComponent,
+        canActivate: [CanActivateGuard],
+        data: {
+          breadcrumb: 'Add Court Conviction'
+        }
+      },
+      {
+        path: 'court-convictions/:courtConvictionId',
+        data: {
+          breadcrumb: 'Court Conviction Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: CourtConvictionDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: CourtConvictionResolver
+            }
+          },
+          {
+            path: 'edit',
+            component: CourtConvictionAddEditComponent,
+            canActivate: [CanActivateGuard],
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+              breadcrumb: 'Edit Court Conviction'
+            },
+            resolve: {
+              record: CourtConvictionResolver
+            }
+          }
+        ]
       }
     ]
   }
@@ -701,6 +751,7 @@ const routes: Routes = [
     WarningResolver,
     ConstructionPlanResolver,
     ManagementPlanResolver,
+    CourtConvictionResolver,
     Utils
   ]
 })

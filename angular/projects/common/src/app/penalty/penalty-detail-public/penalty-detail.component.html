@@ -1,0 +1,12 @@
+<div class="grid-section section-1">
+  <div class="grid-item__row">
+    <span class="grid-item-name">Penalties</span>
+    <div class="grid-item-value">
+      <div *ngIf="data && data.length" class="penalty-divider"></div>
+      <ng-container *ngFor="let penalty of data">
+        <span class="grid-item-value">{{ penalty.buildPenaltyString() || '-' }}</span>
+        <div class="penalty-divider"></div>
+      </ng-container>
+    </div>
+  </div>
+</div>

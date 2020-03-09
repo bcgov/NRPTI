@@ -32,7 +32,10 @@ import {
   ConstructionPlan,
   ConstructionPlanLNG,
   ManagementPlan,
-  ManagementPlanLNG
+  ManagementPlanLNG,
+  CourtConviction,
+  CourtConvictionLNG,
+  CourtConvictionNRCED
 } from '../../../../../common/src/app/models';
 
 // orders
@@ -75,11 +78,15 @@ import { AdministrativeSanctionLNGDetailComponent } from '../administrative-sanc
 import { WarningNRCEDDetailComponent } from '../warnings/warning-nrced-detail/warning-nrced-detail.component';
 import { WarningLNGDetailComponent } from '../warnings/warning-lng-detail/warning-lng-detail.component';
 
-// other
+// construction plans
 import { ConstructionPlanLNGDetailComponent } from '../construction-plans/construction-plan-lng-detail/construction-plan-lng-detail.component';
 
 // management plans
 import { ManagementPlanLNGDetailComponent } from '../management-plans/management-plan-lng-detail/management-plan-lng-detail.component';
+
+// court convictions
+import { CourtConvictionLNGDetailComponent } from '../court-convictions/court-conviction-lng-detail/court-conviction-lng-detail.component';
+import { CourtConvictionNRCEDDetailComponent } from '../court-convictions/court-conviction-nrced-detail/court-conviction-nrced-detail.component';
 
 // other
 import { RecordComponent } from './record-component';
@@ -166,6 +173,12 @@ export class RecordUtils {
         return new ManagementPlan(data);
       case 'ManagementPlanLNG':
         return new ManagementPlanLNG(data);
+      case 'CourtConviction':
+        return new CourtConviction(data);
+      case 'CourtConvictionLNG':
+        return new CourtConvictionLNG(data);
+      case 'CourtConvictionNRCED':
+        return new CourtConvictionNRCED(data);
       default:
         return null;
     }
@@ -226,6 +239,10 @@ export class RecordUtils {
         return ConstructionPlanLNGDetailComponent;
       case 'ManagementPlanLNG':
         return ManagementPlanLNGDetailComponent;
+      case 'CourtConvictionLNG':
+        return CourtConvictionLNGDetailComponent;
+      case 'CourtConvictionNRCED':
+        return CourtConvictionNRCEDDetailComponent;
       default:
         return null;
     }

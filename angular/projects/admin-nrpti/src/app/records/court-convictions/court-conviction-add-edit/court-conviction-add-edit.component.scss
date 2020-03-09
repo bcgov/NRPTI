@@ -1,0 +1,28 @@
+@import "assets/styles/base/base.scss";
+@import "assets/styles/components/add-edit.scss";
+
+.grey-subtext {
+  color: grey;
+  font-size: 15px;
+  font-style: italic;
+  margin-left: 20px;
+}
+
+.grey-subtext-no-margins {
+  color: grey;
+  font-size: 15px;
+  font-style: italic;
+}
+
+.blue-header {
+  display: inline-block;
+  color: $content-header-color;
+}
+
+.right-justified-action-btn {
+  text-align: right;
+}
+
+section {
+  border-bottom: 1px solid lightgrey;
+}

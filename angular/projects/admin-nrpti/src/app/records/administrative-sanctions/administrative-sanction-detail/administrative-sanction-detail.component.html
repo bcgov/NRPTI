@@ -50,10 +50,10 @@
             <span class="grid-item-name">Description</span>
             <span class="grid-item-value">{{ (data && data._master.legislationDescription) || '-' }}</span>
           </div>
-          <div class="grid-item">
-            <span class="grid-item-name">Penalty</span>
-            <span class="grid-item-value">{{ (data && data._master.penalty) || '-' }}</span>
-          </div>
+          <app-penalty-detail-admin
+            class="grid-section"
+            [data]="data && data._master.penalties"
+          ></app-penalty-detail-admin>
         </div>
         <div class="grid-section-border"></div>
         <div class="grid-section-sub-header">
@@ -80,23 +80,9 @@
         </div>
         <div class="grid-section-border"></div>
         <div class="grid-section-sub-header">
-          <span class="grid-section-sub-header-text">Outcome Details</span>
-        </div>
-        <div class="grid-section section-4">
-          <div class="grid-item">
-            <span class="grid-item-name">Outcome Status</span>
-            <span class="grid-item-value">{{ (data && data._master.outcomeStatus) || '-' }}</span>
-          </div>
-          <div class="grid-item">
-            <span class="grid-item-name">Outcome Description</span>
-            <span class="grid-item-value">{{ (data && data._master.outcomeDescription) || '-' }}</span>
-          </div>
-        </div>
-        <div class="grid-section-border"></div>
-        <div class="grid-section-sub-header">
           <span class="grid-section-sub-header-text">Documents</span>
         </div>
-        <div class="grid-section section-6">
+        <div class="grid-section section-4">
           <app-document-read-only [documents]="data && data._master && data._master.documents"></app-document-read-only>
         </div>
         <div class="grid-section-border"></div>

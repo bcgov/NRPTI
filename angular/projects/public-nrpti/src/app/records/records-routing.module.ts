@@ -25,6 +25,9 @@ import { TicketResolver } from './tickets/ticket-resolver';
 import { WarningDetailComponent } from './warnings/warning-detail/warning-detail.component';
 import { WarningResolver } from './warnings/warning-resolver';
 
+import { CourtConvictionDetailComponent } from './court-convictions/court-conviction-detail/court-conviction-detail.component';
+import { CourtConvictionResolver } from './court-convictions/court-conviction-resolver';
+
 import { Utils } from 'nrpti-angular-components';
 
 const routes: Routes = [
@@ -204,6 +207,29 @@ const routes: Routes = [
             }
           }
         ]
+      },
+      {
+        path: 'court-convictions/:courtConvictionId',
+        data: {
+          breadcrumb: 'Court Conviction Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: CourtConvictionDetailComponent,
+            resolve: {
+              records: CourtConvictionResolver
+            },
+            data: {
+              breadcrumb: null
+            }
+          }
+        ]
       }
     ]
   }
@@ -221,6 +247,7 @@ const routes: Routes = [
     AdministrativeSanctionResolver,
     WarningResolver,
     TicketResolver,
+    CourtConvictionResolver,
     Utils
   ]
 })

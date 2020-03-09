@@ -6,7 +6,8 @@
           class="nav-item"
           [ngClass]="{ active: isTabActive('detail') }"
           (click)="activateTab('detail')"
-          title="Ticket activity details">
+          title="Ticket activity details"
+        >
           <i class="nav-item-icon material-icons">info</i>
           <a class="nav-item-value">Activity Details</a>
         </li>
@@ -25,7 +26,7 @@
       <div class="content-grid">
         <div class="grid-section-1">
           <div class="grid-item__row">
-            <span class="grid-item-name">Activity Type</span>
+            <span class="grid-item-name">Activity</span>
             <span class="grid-item-value__col">{{ (data && data.recordType) || '-' }}</span>
           </div>
           <div class="grid-item__row">
@@ -74,16 +75,15 @@
               </div>
             </div>
             <div class="grid-item__row">
-              <span class="grid-item-name">Activity Type</span>
+              <span class="grid-item-name">Activity</span>
               <span class="grid-item-value__col">{{ (data && data.recordType) || '-' }}</span>
             </div>
           </div>
-          <div class="grid-item__row">
-            <span class="grid-item-name">Penalty</span>
-            <span class="grid-item-value__col">{{ (data && data.penalty) || '-' }}</span>
-          </div>
         </div>
         <div class="grid-section-3">
+          <app-penalty-detail-public [data]="data && data.penalties"></app-penalty-detail-public>
+        </div>
+        <div class="grid-section-4">
           <div class="grid-item__row">
             <span class="grid-item-name">Site/Project</span>
             <span class="grid-item-value__col">{{ (data && data.projectName) || '-' }}</span>

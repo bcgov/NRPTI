@@ -88,13 +88,11 @@
       <div class="flex-container">
         <div class="label-pair">
           <label for="offence">Offence</label>
-          <input name="offence" id="offence" type="text" formControlName="offence" class="form-control" />
-        </div>
-        <div class="label-pair">
-          <label for="penalty">Penalty</label>
-          <input name="penalty" id="penalty" formControlName="penalty" class="form-control" />
+          <input name="offence" id="offence" formControlName="offence" class="form-control" />
         </div>
       </div>
+      <h4>Penalties</h4>
+      <app-penalty-add-edit [formArray]="this.myForm.controls.penalties"></app-penalty-add-edit>
     </section>
 
     <section>
@@ -149,28 +147,6 @@
     </section>
 
     <section>
-      <h4>Outcome Details</h4>
-      <div class="flex-container">
-        <div class="label-pair xsm">
-          <label for="outcomeStatus">Status</label>
-          <select name="outcomeStatus" id="outcomeStatus" formControlName="outcomeStatus" class="form-control">
-            <option *ngFor="let outcomeStatus of outcomeStatuses" [ngValue]="outcomeStatus">{{ outcomeStatus }}</option>
-          </select>
-        </div>
-        <div class="label-pair med">
-          <label for="outcomeDescription">Outcome Description</label>
-          <textarea
-            name="outcomeDescription"
-            id="outcomeDescription"
-            type="text"
-            formControlName="outcomeDescription"
-            class="form-control"
-          ></textarea>
-        </div>
-      </div>
-    </section>
-
-    <section>
       <h4>Documents</h4>
       <app-document-edit
         [documents]="currentRecord ? currentRecord.documents : []"
@@ -213,6 +189,7 @@
             type="text"
             formControlName="nrcedSummary"
             class="form-control"
+            rows="5"
           ></textarea>
         </div>
       </div>
@@ -249,6 +226,7 @@
             type="text"
             formControlName="lngDescription"
             class="form-control"
+            rows="5"
           ></textarea>
         </div>
       </div>

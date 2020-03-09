@@ -108,8 +108,6 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
       longitude: new FormControl(
         (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || ''
       ),
-      outcomeStatus: new FormControl((this.currentRecord && this.currentRecord.outcomeStatus) || ''),
-      outcomeDescription: new FormControl((this.currentRecord && this.currentRecord.outcomeDescription) || ''),
 
       // LNG
       lngRelatedPhase: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.relatedPhase) || ''),
@@ -168,10 +166,6 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.location.dirty && (managementPlan['location'] = this.myForm.controls.location.value);
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (managementPlan['centroid'] = [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value]);
-    this.myForm.controls.outcomeStatus.dirty &&
-      (managementPlan['outcomeStatus'] = this.myForm.controls.outcomeStatus.value);
-    this.myForm.controls.outcomeDescription.dirty &&
-      (managementPlan['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
 
     // LNG flavour
     if (

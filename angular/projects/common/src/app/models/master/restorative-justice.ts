@@ -1,5 +1,6 @@
 import { Legislation } from './common-models/legislation';
 import { Entity } from './common-models/entity';
+import { Penalty } from './common-models/penalty';
 
 /**
  * RestorativeJustice data model.
@@ -27,10 +28,8 @@ export class RestorativeJustice {
   projectName: string;
   location: string;
   centroid: number[];
-  outcomeStatus: string; // epic value?
-  outcomeDescription: string; // out of scope?
   offence: string;
-  penalty: string;
+  penalties: Penalty[];
   documents: object[];
 
   dateAdded: Date;
@@ -63,10 +62,9 @@ export class RestorativeJustice {
     this.projectName = (obj && obj.projectName) || null;
     this.location = (obj && obj.location) || null;
     this.centroid = (obj && obj.centroid) || null;
-    this.outcomeStatus = (obj && obj.outcomeStatus) || null;
-    this.outcomeDescription = (obj && obj.outcomeDescription) || null;
     this.offence = (obj && obj.offence) || null;
-    this.penalty = (obj && obj.penalty) || null;
+    this.penalties =
+      (obj && obj.penalties && obj.penalties.length && obj.penalties.map(penalty => new Penalty(penalty))) || null;
     this.documents = (obj && obj.documents) || null;
 
     this.dateAdded = (obj && obj.dateAdded) || null;

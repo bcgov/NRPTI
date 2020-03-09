@@ -1,0 +1,85 @@
+@import "../../../assets/styles/base/base.scss";
+
+.delete-btn {
+  height: 100%;
+  padding: 0;
+}
+
+.penalty-divider {
+  border-top: 1px solid $fc-border-color;
+  margin-bottom: 1rem;
+}
+
+.label-pair-flex {
+  @extend .label-pair;
+
+  @media screen and (min-width: 800px) {
+    @include flex-box();
+    @include flex-direction(column);
+
+    margin-right: 1%;
+    vertical-align: top;
+
+    &.flex-xsm {
+      @include flex-box();
+      @include flex-direction(column);
+      @include flex(1 1);
+    }
+
+    &.flex-sm {
+      @include flex-box();
+      @include flex-direction(column);
+      @include flex(10 1);
+    }
+
+    &.flex-med {
+      @include flex-box();
+      @include flex-direction(column);
+      @include flex(20 1);
+    }
+
+    &.flex-lrg {
+      @include flex-box();
+      @include flex-direction(column);
+      @include flex(30 1);
+    }
+  }
+}
+
+.label-single-flex {
+  @extend .label-single;
+  @extend .label-pair-flex;
+}
+
+// from add-edit.scss
+
+.label-single {
+  @extend .label-pair;
+
+  padding-top: $fc-line-height + 0.25rem;
+}
+
+.label-pair {
+  line-height: $fc-line-height;
+  margin-bottom: 1rem;
+  position: relative;
+
+  @media screen and (min-width: 800px) {
+    width: 32%;
+    margin-right: 1%;
+    display: inline-block;
+    vertical-align: top;
+
+    &.sm {
+      width: 15.5%;
+    }
+
+    &.med {
+      width: 65%;
+    }
+
+    &.lrg {
+      width: 100%;
+    }
+  }
+}
