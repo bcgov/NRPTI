@@ -16,6 +16,8 @@ import { DatePickerComponent } from './components/date-picker/date-picker.compon
 
 // directives
 import { TableRowDirective } from './components/table-template/table-row.directive';
+import { AutoGrowTextAreaDirective } from './directives/auto-grow-textarea/auto-grow-textarea.directive';
+import { DigitOnlyDirective } from './directives/digit-only/digit-only.directive';
 
 // services
 import { ExportService } from './services/export.service';
@@ -43,7 +45,9 @@ import { LoadingScreenService } from './services/loading-screen.service';
     BreadcrumbComponent,
     PageSizePickerComponent,
     PageCountDisplayComponent,
-    DatePickerComponent
+    DatePickerComponent,
+    AutoGrowTextAreaDirective,
+    DigitOnlyDirective
   ],
   providers: [
     ExportService,
@@ -60,7 +64,9 @@ import { LoadingScreenService } from './services/loading-screen.service';
     BreadcrumbComponent,
     PageSizePickerComponent,
     PageCountDisplayComponent,
-    DatePickerComponent
+    DatePickerComponent,
+    AutoGrowTextAreaDirective,
+    DigitOnlyDirective
   ]
 })
 export class GlobalModule { }
