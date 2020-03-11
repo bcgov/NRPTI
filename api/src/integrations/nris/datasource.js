@@ -190,7 +190,14 @@ class NrisDataSource {
         default:
           defaultLog.info('clientType:', clientType);
       }
-      newRecord.issuedTo = record.client[0].orgName;
+
+      newRecord.issuedTo = {
+        write: ['sysadmin'],
+        read: ['sysadmin'],
+
+        type: 'Company',
+        companyName: record.client[0].orgName || ''
+      };
     }
 
     newRecord.location = record.location.locationDescription;
