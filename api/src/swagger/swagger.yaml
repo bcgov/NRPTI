@@ -606,18 +606,29 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
+      consumes:
+        - multipart/form-data
       parameters:
         - name: recordId
           in: path
           description: '_id of record the document is associated with'
           required: true
           type: string
-        - in: body
-          name: data
-          description: 'Data to create a document'
+        - name: upfile
+          in: formData
+          description: "The file to upload. If this is present, the file will be uploaded to S3."
+          required: false
+          type: file
+        - name: fileName
+          in: formData
+          description: "Filename for document/link (Only applies to links)"
           required: true
-          schema:
-            $ref: '#/definitions/DocumentRequestObject'
+          type: string
+        - name: url
+          in: formData
+          description: "Url for links. If this is present, a link will be created."
+          required: false
+          type: string
       responses:
         '200':
           description: 'Success'
@@ -630,7 +641,7 @@ paths:
     put:
       tags:
         - Document
-      summary: 'Create new Document(s)'
+      summary: 'Create new Document'
       operationId: protectedPut
       description: 'Authenticated access to create a Document and get a signed put URL in return'
       security:

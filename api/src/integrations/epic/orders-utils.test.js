@@ -14,7 +14,7 @@ describe('OrdersUtils', () => {
     });
 
     it('returns a default nrpti record when empty epicRecord provided', async () => {
-      jest.spyOn(require('./../../controllers/document-controller'), 'createLinkDocument').mockImplementation(() => {
+      jest.spyOn(require('./../../controllers/document-controller'), 'createDocument').mockImplementation(() => {
         return '310d2dddc9834cbab11282f3c8426fad';
       });
 
@@ -58,7 +58,7 @@ describe('OrdersUtils', () => {
     });
 
     it('returns a nrpti record with all supported epicRecord fields populated', async () => {
-      jest.spyOn(require('./../../controllers/document-controller'), 'createLinkDocument').mockImplementation(() => {
+      jest.spyOn(require('./../../controllers/document-controller'), 'createDocument').mockImplementation(() => {
         return '310d2dddc9834cbab11282f3c8426fad';
       });
 

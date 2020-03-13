@@ -7,6 +7,7 @@ const YAML = require('yamljs');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const swaggerConfig = YAML.load('./src/swagger/swagger.yaml');
+const busboy = require('connect-busboy');
 
 const defaultLog = require('./src/utils/logger')('app');
 const authUtils = require('./src/utils/auth-utils');
@@ -35,6 +36,11 @@ app.use(function(req, res, next) {
   res.setHeader('Cache-Control', 'max-age=4');
   next();
 });
+
+// Configure Busboy
+app.use(busboy({
+  highWaterMark: 2 * 1024 * 1024, // Set 2MiB buffer
+})); // Insert the busboy middle-ware
 
 // Dynamically set the hostname based on what environment we're in.
 swaggerConfig.host = HOSTNAME;
