@@ -239,11 +239,19 @@ export class RecordUtils {
 
     // Handle adding links
     links.forEach(async link => {
-      promises.push(factoryService.createDocument(link, recordId));
+      const formData = new FormData();
+      formData.append('fileName', link.fileName);
+      formData.append('url', link.url);
+      promises.push(factoryService.createDocument(formData, recordId));
     });
 
-    // TODO: Handle adding S3 Docs
-    console.log(documents);
+    // Handle adding S3 Docs
+    documents.forEach(async doc => {
+      const formData = new FormData();
+      formData.append('fileName', doc.fileName);
+      formData.append('upfile', doc.upfile);
+      promises.push(factoryService.createDocument(formData, recordId));
+    });
 
     // Handle deleting documents
     documentsToDelete.forEach(async docId => {

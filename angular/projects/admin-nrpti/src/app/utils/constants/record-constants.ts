@@ -216,10 +216,7 @@ export class Picklists {
       'Pacific Fishery Regulations',
       'Sport Fishing Regulation'
     ],
-    'Fisheries Act (Provincial)': [
-      'Aquaculture Regulation',
-      'Fisheries Act Regulations'
-    ],
+    'Fisheries Act (Provincial)': ['Aquaculture Regulation', 'Fisheries Act Regulations'],
     'Flathead Watershed Area Conservation Act': [],
     'FNCIDA Implementation Act': [],
     'Food and Agricultural Products Classification Act': [
