@@ -179,6 +179,14 @@
 
     <section>
       <h4>Documents</h4>
+      <app-document-edit
+        [documents]="currentRecord ? currentRecord.documents : []"
+        (documentsToDelete)="documentsToDelete = $event"
+      ></app-document-edit>
+      <app-document-link-staging
+        (linksChanged)="links = $event"
+        (documentsChanged)="documents = $event"
+      ></app-document-link-staging>
     </section>
 
     <section>
