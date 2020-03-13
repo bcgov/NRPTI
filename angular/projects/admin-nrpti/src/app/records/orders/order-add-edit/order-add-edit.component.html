@@ -172,10 +172,10 @@
       </div>
     </section>
 
-    <section *ngIf="currentRecord && currentRecord.documents">
+    <section>
       <h4>Documents</h4>
       <app-document-edit
-        [documents]="currentRecord.documents"
+        [documents]="currentRecord ? currentRecord.documents : []"
         (documentsToDelete)="documentsToDelete = $event"
       ></app-document-edit>
       <app-document-link-staging

@@ -52,7 +52,13 @@ export class DocumentLinkStagingComponent {
         return;
       }
       const link = new Document();
-      link.url = this.linkUrl;
+      try {
+        link.url = new URL(this.linkUrl).href;
+      } catch (e) {
+        alert('You must submit a valid url. Be sure to include http:// or https:// as part of your URL.');
+        this.linkUrl = '';
+        return;
+      }
       link.fileName = this.linkFileName;
 
       // save link for upload to db when project is added or saved

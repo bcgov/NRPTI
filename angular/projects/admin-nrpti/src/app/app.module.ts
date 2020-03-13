@@ -46,6 +46,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate-guard.service';
 
 // utils
 import { TokenInterceptor } from './utils/token-interceptor';
+import { RecordUtils } from './records/utils/record-utils';
 
 export function keycloakFactory(keycloakService: KeycloakService) {
   return () => keycloakService.init();
@@ -110,7 +111,8 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     TaskService,
     ImportListResolver,
     CanActivateGuard,
-    CanDeactivateGuard
+    CanDeactivateGuard,
+    RecordUtils
   ],
   entryComponents: [ConfirmComponent, HomeComponent, ImportComponent, ImportTableRowsComponent],
   bootstrap: [AppComponent]

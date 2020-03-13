@@ -9,6 +9,7 @@ import { GlobalModule } from 'nrpti-angular-components';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Utils } from 'nrpti-angular-components';
+import { RecordUtils } from '../../utils/record-utils';
 
 describe('AdministrativeSanctionAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<AdministrativeSanctionAddEditComponent>(
@@ -33,6 +34,7 @@ describe('AdministrativeSanctionAddEditComponent', () => {
       declarations: [AdministrativeSanctionAddEditComponent],
       providers: [
         Utils,
+        RecordUtils,
         { provide: Location, useValue: mockLocation },
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute }

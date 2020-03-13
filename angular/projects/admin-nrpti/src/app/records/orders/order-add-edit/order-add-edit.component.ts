@@ -8,6 +8,7 @@ import { Order } from '../../../../../../common/src/app/models/master';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
+import { RecordUtils } from '../../utils/record-utils';
 
 @Component({
   selector: 'app-order-add-edit',
@@ -45,10 +46,11 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
   constructor(
     public route: ActivatedRoute,
     public router: Router,
+    private recordUtils: RecordUtils,
     private factoryService: FactoryService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -109,7 +111,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-        ''
+          ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -146,7 +148,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           ((this.nrcedFlavour && this.nrcedFlavour.summary) ||
             (!this.nrcedFlavour && this.currentRecord.description))) ||
-        ''
+          ''
       ),
 
       // LNG
@@ -154,7 +156,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
-        ''
+          ''
       )
     });
   }
@@ -164,7 +166,6 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
   }
 
   togglePublish(flavour) {
-    console.log(this.myForm.controls.regulation);
     switch (flavour) {
       case 'lng':
         this.lngPublishStatus = this.lngPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
@@ -209,9 +210,6 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       outcomeDescription: this.myForm.controls.outcomeDescription.value
     });
 
-    // We handle document logic when we add or remove documents not when we add/edit record
-    delete order.documents;
-
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
     if (order.projectName === 'LNG Canada') {
@@ -241,8 +239,14 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
 
     if (!this.isEditing) {
       this.factoryService.createOrder(order).subscribe(async res => {
-        this.parseResForErrors(res);
-        const docResponse = await this.handleDocumentChanges(res[0][0].object._id);
+        this.recordUtils.parseResForErrors(res);
+        const docResponse = await this.recordUtils.handleDocumentChanges(
+          this.links,
+          this.documents,
+          this.documentsToDelete,
+          res[0][0].object._id,
+          this.factoryService
+        );
         // TODO: We need to parse the response coming from updating docs.
         console.log(docResponse);
         this.router.navigate(['records']);
@@ -254,53 +258,18 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       this.lngFlavour && (order.OrderLNG['_id'] = this.lngFlavour._id);
 
       this.factoryService.editOrder(order).subscribe(async res => {
-        this.parseResForErrors(res);
-        const docResponse = await this.handleDocumentChanges(this.currentRecord._id);
+        this.recordUtils.parseResForErrors(res);
+        const docResponse = await this.recordUtils.handleDocumentChanges(
+          this.links,
+          this.documents,
+          this.documentsToDelete,
+          this.currentRecord._id,
+          this.factoryService
+        );
         // TODO: We need to parse the response coming from updating docs.
         console.log(docResponse);
         this.router.navigate(['records', 'orders', this.currentRecord._id, 'detail']);
       });
-    }
-  }
-
-  private async handleDocumentChanges(recordId) {
-    const promises = [];
-
-    // Handle adding links
-    this.links.forEach(async link => {
-      promises.push(this.factoryService.createDocument(link, recordId));
-    });
-
-    // TODO: Handle adding S3 Docs
-
-    // TODO: Handle deleting documents
-    this.documentsToDelete.forEach(async docId => {
-      promises.push(this.factoryService.deleteDocument(docId, recordId));
-    });
-
-    // Execute
-    return Promise.all(promises);
-  }
-
-  private parseResForErrors(res) {
-    if (!res || !res.length || !res[0] || !res[0].length || !res[0][0]) {
-      alert('Failed to save record.');
-    }
-
-    if (res[0][0].status === 'failure') {
-      alert('Failed to save master record.');
-    }
-
-    if (res[0][0].flavours) {
-      let flavourFailure = false;
-      res[0][0].flavours.forEach(flavour => {
-        if (flavour.status === 'failure') {
-          flavourFailure = true;
-        }
-      });
-      if (flavourFailure) {
-        alert('Failed to save one or more flavour records');
-      }
     }
   }
 
