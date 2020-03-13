@@ -98,8 +98,10 @@ export class Picklists {
     'Boundary Act': [],
     'Canada Shipping Act': [
       'Boating Restriction Regulations',
+      'Collision Regulations',
       'Competency of Operators of Pleasure Craft Regulations',
-      'Small Vessel Regulation'
+      'Small Vessel Regulation',
+      'Vessel Operation Restriction Regulations'
     ],
     'Canadian Pacific Railway (Stone and Timber) Settlement Act': [],
     'Clean Energy Act': [
@@ -209,11 +211,15 @@ export class Picklists {
     "First Peoples' Heritage, Language and Culture Act": ["First Peoples' Heritage, Language and Culture Regulation"],
     'Fish and Seafood Act': ['Enforcement Regulation', 'Fish and Seafood Licensing Regulation'],
     'Fisheries Act (Canada)': [
+      'British Columbia Sport Fishing Regulations',
       'Fishing (General) Regulations ',
       'Pacific Fishery Regulations',
       'Sport Fishing Regulation'
     ],
-    'Fisheries Act (Provincial)': [],
+    'Fisheries Act (Provincial)': [
+      'Aquaculture Regulation',
+      'Fisheries Act Regulations'
+    ],
     'Flathead Watershed Area Conservation Act': [],
     'FNCIDA Implementation Act': [],
     'Food and Agricultural Products Classification Act': [
