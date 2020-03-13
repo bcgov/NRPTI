@@ -553,7 +553,6 @@ export class Picklists {
     'Water Protection Act': [],
     'Water Sustainability Act': [
       'Dam Safety Regulation',
-      'Ground Water Protection Regulation',
       'Groundwater Protection Regulation',
       'Water Districts Regulation',
       'Water Sustainability Fees, Rentals and Charges Tariff Regulation',
@@ -564,7 +563,6 @@ export class Picklists {
     'Weed Control Act': ['Weed Control Regulation'],
     'Wild Animal and Plant Protection Act': [],
     'Wildlife Act': [
-      'Angling & Scientific Collection Regulation',
       'Angling and Scientific Collection Regulation',
       'Closed Areas Regulation',
       'Controlled Alien Species Regulation',
