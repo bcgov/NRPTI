@@ -90,6 +90,20 @@
 
             grid-template-rows: repeat(auto-fit, minmax(0, max-content));
           }
+
+          &__flex {
+            @extend .grid-item-value;
+
+            display: flex;
+
+            &__col {
+              flex-direction: column;
+            }
+
+            &__row {
+              flex-direction: row;
+            }
+          }
         }
 
         .grid-item-value {
