@@ -27,19 +27,19 @@
         <div class="grid-section-1">
           <div class="grid-item__row">
             <span class="grid-item-name">Activity</span>
-            <span class="grid-item-value__col">{{ (data && data._master.recordName) || '-' }}</span>
+            <span class="grid-item-value__col">{{ (data && data.recordName) || '-' }}</span>
           </div>
           <div class="grid-item__row">
             <span class="grid-item-name">Issued To</span>
-            <span class="grid-item-value__col">{{ (data && data._master.issuedTo) || '-' }}</span>
+            <span class="grid-item-value__col">{{ (data && data.issuedTo) || '-' }}</span>
           </div>
           <div class="grid-item__row">
             <span class="grid-item-name">Activity Type</span>
-            <span class="grid-item-value__col">{{ (data && data._master.recordType) || '-' }}</span>
+            <span class="grid-item-value__col">{{ (data && data.recordType) || '-' }}</span>
           </div>
           <div class="grid-item__row">
             <span class="grid-item-name">Issued On</span>
-            <span class="gird-item-value">{{ (data && data._master.dateIssued | date: 'mediumDate') || '-' }}</span>
+            <span class="gird-item-value">{{ (data && data.dateIssued | date: 'mediumDate') || '-' }}</span>
           </div>
         </div>
         <div class="grid-section-2">
@@ -49,7 +49,7 @@
           </div>
           <div class="grid-item__row">
             <span class="grid-item-name">Issuing Agency</span>
-            <span class="grid-item-value__col">{{ (data && data._master.issuingAgency) || '-' }}</span>
+            <span class="grid-item-value__col">{{ (data && data.issuingAgency) || '-' }}</span>
           </div>
           <div class="grid-item__row">
             <span class="grid-item-name">Legislation</span>
@@ -57,23 +57,21 @@
               <div class="grid-item__flex">
                 <span class="grid-item-name">Act</span>
                 <span class="grid-item-value">
-                  {{ (data && data._master && data._master.legislation && data._master.legislation.act) || '-' }}
+                  {{ (data && data.legislation && data.legislation.act) || '-' }}
                 </span>
               </div>
               <div class="grid-item__flex">
                 <span class="grid-item-name">Regulation</span>
                 <span class="grid-item-value">
-                  {{ (data && data._master && data._master.legislation && data._master.legislation.regulation) || '-' }}
+                  {{ (data && data.legislation && data.legislation.regulation) || '-' }}
                 </span>
               </div>
               <div class="grid-item__row">
                 <span class="grid-item-name">Section (Sub-Section) (Paragraph)</span>
                 <span class="grid-item-value">
-                  {{ (data && data._master && data._master.legislation && data._master.legislation.section) || '-' }}
-                  ({{
-                    (data && data._master && data._master.legislation && data._master.legislation.subSection) || '-'
-                  }}) ({{
-                    (data && data._master && data._master.legislation && data._master.legislation.paragraph) || '-'
+                  {{ (data && data.legislation && data.legislation.section) || '-' }}
+                  ({{ (data && data.legislation && data.legislation.subSection) || '-' }}) ({{
+                    (data && data.legislation && data.legislation.paragraph) || '-'
                   }})
                 </span>
               </div>
@@ -83,32 +81,26 @@
         <div class="grid-section-3">
           <div class="grid-item__row">
             <span class="grid-item-name">Site/Project</span>
-            <span class="grid-item-value__col">{{ (data && data._master.projectName) || '-' }}</span>
+            <span class="grid-item-value__col">{{ (data && data.projectName) || '-' }}</span>
           </div>
           <div class="grid-item__row">
             <span class="grid-item-name">Location Description</span>
-            <span class="grid-item-value__col">{{ (data && data._master.location) || '-' }}</span>
+            <span class="grid-item-value__col">{{ (data && data.location) || '-' }}</span>
           </div>
           <div class="grid-item__row">
             <span class="grid-item-name">Lat/Long</span>
-            <span class="grid-item-value__col">{{ (data && data._master.centroid) || '-' }}</span>
+            <span class="grid-item-value__col">{{ (data && data.centroid) || '-' }}</span>
           </div>
         </div>
         <div class="grid-section-5">
           <div class="grid-item__row">
             <span class="grid-item-name">Documents</span>
-            <span
-              class="grid-item-value__col"
-              *ngIf="data && data._master.documents && data._master.documents.length > 0"
-            >
-              <span *ngFor="let document of data && data._master.documents">
+            <span class="grid-item-value__col" *ngIf="data && data.documents && data.documents.length > 0">
+              <span *ngFor="let document of data && data.documents">
                 <a href="{{ document.url }}" target=" _blank">{{ document.fileName }}</a>
               </span>
             </span>
-            <span
-              class="grid-item-value__col"
-              *ngIf="!(data && data._master.documents && data._master.documents.length > 0)"
-            >
+            <span class="grid-item-value__col" *ngIf="!(data && data.documents && data.documents.length > 0)">
               This record does not have documents
             </span>
           </div>
