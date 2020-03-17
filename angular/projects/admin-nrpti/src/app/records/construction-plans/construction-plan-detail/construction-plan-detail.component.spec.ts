@@ -6,7 +6,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { GlobalModule } from 'nrpti-angular-components';
 import { RecordDetailDirective } from '../../utils/record-detail.directive';
 import { DatePipe } from '@angular/common';
-import { CommonModule } from '../../../../../../common/src/app/common.module';
 
 describe('ConstructionPlanDetailComponent', () => {
   const testBedHelper = new TestBedHelper<ConstructionPlanDetailComponent>(ConstructionPlanDetailComponent);
@@ -17,7 +16,7 @@ describe('ConstructionPlanDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, GlobalModule, CommonModule],
+      imports: [RouterTestingModule, GlobalModule],
       declarations: [ConstructionPlanDetailComponent, RecordDetailDirective],
       providers: [
         DatePipe,
