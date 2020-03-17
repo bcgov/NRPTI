@@ -52,7 +52,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     },
     {
       name: 'Issued To',
-      value: 'documentFileName',
+      value: 'issuedTo',
       width: 'col-3'
     },
     {
