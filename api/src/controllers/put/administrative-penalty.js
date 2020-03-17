@@ -1,275 +1,321 @@
 const mongoose = require('mongoose');
-const putUtils = require('../../utils/put-utils');
+const ObjectID = require('mongodb').ObjectID;
+const PutUtils = require('../../utils/put-utils');
 const AdministrativePenaltyPost = require('../post/administrative-penalty');
-const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 /**
- * Edit Master Administrative Penalty record.
+ * Performs all operations necessary to edit a master Administrative Penalty record and its associated flavour records.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * administrativePenalties: [
- *   {
- *      _id: '85ce24e603984b02a0f8edb42a334876',
+ *  administrativePenalties: [
+ *    {
  *      recordName: 'test abc',
- *      recordType: 'whatever',
+ *      recordType: 'administrativePenalty',
  *      ...
  *      AdministrativePenaltyLNG: {
  *        description: 'lng description'
  *        addRole: 'public',
+ *        ...
+ *      },
+ *      AdministrativePenaltyNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
  *      }
- *   },
- *   ...
- * ]
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns object containing the operation's status and created records
  */
-exports.editMaster = async function(args, res, next, incomingObj) {
-  if (!incomingObj._id) {
+exports.editRecord = async function(args, res, next, incomingObj) {
+  // save flavour records
+  let observables = [];
+  let savedFlavourAdministrativePenalties = [];
+  let flavourIds = [];
+
+  try {
+    // make a copy of the incoming object for use by the flavours only
+    const flavourIncomingObj = { ...incomingObj };
+    // Remove fields that should not be inherited from the master record
+    delete flavourIncomingObj._id;
+    delete flavourIncomingObj._schemaName;
+    delete flavourIncomingObj._flavourRecords;
+    delete flavourIncomingObj.read;
+    delete flavourIncomingObj.write;
+
+    if (incomingObj.AdministrativePenaltyLNG) {
+      if (incomingObj.AdministrativePenaltyLNG._id) {
+        observables.push(
+          this.editLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.AdministrativePenaltyLNG })
+        );
+      } else {
+        observables.push(
+          AdministrativePenaltyPost.createLNG(args, res, next, {
+            ...flavourIncomingObj,
+            ...incomingObj.AdministrativePenaltyLNG
+          })
+        );
+      }
+
+      delete incomingObj.AdministrativePenaltyLNG;
+    }
+
+    if (incomingObj.AdministrativePenaltyNRCED) {
+      if (incomingObj.AdministrativePenaltyNRCED._id) {
+        observables.push(
+          this.editNRCED(args, res, next, { ...flavourIncomingObj, ...incomingObj.AdministrativePenaltyNRCED })
+        );
+      } else {
+        observables.push(
+          AdministrativePenaltyPost.createNRCED(args, res, next, {
+            ...flavourIncomingObj,
+            ...incomingObj.AdministrativePenaltyNRCED
+          })
+        );
+      }
+
+      delete incomingObj.AdministrativePenaltyNRCED;
+    }
+
+    if (observables.length > 0) {
+      savedFlavourAdministrativePenalties = await Promise.all(observables);
+
+      flavourIds = savedFlavourAdministrativePenalties.map(
+        flavourAdministrativePenalty => flavourAdministrativePenalty._id
+      );
+    }
+  } catch (e) {
     return {
       status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
+      object: savedFlavourAdministrativePenalties,
+      errorMessage: e
     };
+  }
+
+  // save administrativePenalty record
+  let savedAdministrativePenalty = null;
+
+  try {
+    savedAdministrativePenalty = await this.editMaster(args, res, next, incomingObj, flavourIds);
+
+    return {
+      status: 'success',
+      object: savedAdministrativePenalty,
+      flavours: savedFlavourAdministrativePenalties
+    };
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedAdministrativePenalty,
+      errorMessage: e
+    };
+  }
+};
+
+/**
+ * Performs all operations necessary to edit a master Administrative Penalty record.
+ *
+ * Example of incomingObj
+ *
+ *  administrativePenalties: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'administrativePenalty',
+ *      ...
+ *      AdministrativePenaltyLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      AdministrativePenaltyNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited master administrativePenalty record
+ */
+exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the master record
+    return;
   }
 
   const _id = incomingObj._id;
   delete incomingObj._id;
 
-  // Reject any changes to master perm
+  // Reject any changes to master permissions
   delete incomingObj.read;
   delete incomingObj.write;
 
-  const AdministrativePenalty = mongoose.model(RECORD_TYPE.AdministrativePenalty._schemaName);
+  const AdministrativePenalty = mongoose.model('AdministrativePenalty');
 
-  let sanitizedObj;
-  try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(AdministrativePenalty, incomingObj);
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error.message
-    };
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(AdministrativePenalty, incomingObj);
+
+  if (!sanitizedObj || sanitizedObj === {}) {
+    // skip, as there are no changes to master record
+    return;
   }
 
-  const finalRes = {
-    status: 'success',
-    object: sanitizedObj,
-    flavours: null
-  };
-  let savedAdministrativePenalty = null;
-  // Skip if there is nothing to update for master
-  if (sanitizedObj !== {}) {
-    sanitizedObj['dateUpdated'] = new Date();
-    sanitizedObj['updatedBy'] = args.swagger.params.auth_payload.displayName;
-    try {
-      savedAdministrativePenalty = await AdministrativePenalty.findOneAndUpdate(
-        { _schemaName: RECORD_TYPE.AdministrativePenalty._schemaName, _id: _id },
-        { $set: sanitizedObj },
-        { new: true }
-      );
-      finalRes.object = savedAdministrativePenalty;
-    } catch (error) {
-      finalRes.status = 'failure';
-      finalRes['errorMessage'] = error;
-    }
+  sanitizedObj.dateUpdated = new Date();
+  sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
+
+  let updateObj = { $set: sanitizedObj };
+
+  if (flavourIds && flavourIds.length) {
+    updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
   }
 
-  // Flavours:
-  // When editing, we might get a request to make a brand new flavour rather than edit.
-  const observables = [];
-  if (incomingObj.AdministrativePenaltyLNG && incomingObj.AdministrativePenaltyLNG._id) {
-    observables.push(this.editLNG(args, res, next, incomingObj.AdministrativePenaltyLNG));
-    delete incomingObj.AdministrativePenaltyLNG;
-  } else if (incomingObj.AdministrativePenaltyLNG) {
-    observables.push(
-      AdministrativePenaltyPost.createLNG(
-        args,
-        res,
-        next,
-        incomingObj.AdministrativePenaltyLNG,
-        savedAdministrativePenalty._id
-      )
-    );
-    delete incomingObj.AdministrativePenaltyLNG;
-  }
-  if (incomingObj.AdministrativePenaltyNRCED && incomingObj.AdministrativePenaltyNRCED._id) {
-    observables.push(this.editNRCED(args, res, next, incomingObj.AdministrativePenaltyNRCED));
-    delete incomingObj.AdministrativePenaltyNRCED;
-  } else if (incomingObj.AdministrativePenaltyNRCED) {
-    observables.push(
-      AdministrativePenaltyPost.createNRCED(
-        args,
-        res,
-        next,
-        incomingObj.AdministrativePenaltyNRCED,
-        savedAdministrativePenalty._id
-      )
-    );
-    delete incomingObj.AdministrativePenaltyNRCED;
-  }
-
-  // Execute edit flavours
-  try {
-    observables.length > 0 && (finalRes.flavours = await Promise.all(observables));
-  } catch (error) {
-    finalRes.flavours = {
-      status: 'failure',
-      object: observables,
-      errorMessage: error.message
-    };
-  }
-
-  return finalRes;
+  return await AdministrativePenalty.findOneAndUpdate({ _schemaName: 'AdministrativePenalty', _id: _id }, updateObj, {
+    new: true
+  });
 };
 
 /**
- * Edit LNG Administrative Penalty Record
+ * Performs all operations necessary to edit a lng Administrative Penalty record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _id: 'cd0b34a4ec1341288b5ea4164daffbf2'
- *   description: 'lng description',
- *   ...
- *   addRole: 'public'
- * }
+ *  administrativePenalties: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'administrativePenalty',
+ *      ...
+ *      AdministrativePenaltyLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      AdministrativePenaltyNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited lng administrativePenalty record
  */
 exports.editLNG = async function(args, res, next, incomingObj) {
-  if (!incomingObj._id) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
-    };
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the lng record
+    return;
   }
 
   const _id = incomingObj._id;
   delete incomingObj._id;
 
-  // Reject any changes to permissions.
+  // Reject any changes to permissions
   // Publishing must be done via addRole or removeRole
   delete incomingObj.read;
   delete incomingObj.write;
 
-  // You cannot update _master
-  delete incomingObj._master;
+  let AdministrativePenaltyLNG = mongoose.model('AdministrativePenaltyLNG');
 
-  const AdministrativePenaltyLNG = mongoose.model(RECORD_TYPE.AdministrativePenalty.flavours.lng._schemaName);
-
-  let sanitizedObj;
-  try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(AdministrativePenaltyLNG, incomingObj);
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error.message
-    };
-  }
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(AdministrativePenaltyLNG, incomingObj);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   let updateObj = { $set: sanitizedObj };
+
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj['$addToSet'] = { read: 'public' };
     updateObj.$set['datePublished'] = new Date();
-  } else if (incomingObj.removeRole === 'public') {
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj['$pull'] = { read: 'public' };
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
   }
+
   updateObj.$set['dateUpdated'] = new Date();
 
-  try {
-    const editRes = await AdministrativePenaltyLNG.findOneAndUpdate(
-      { _schemaName: RECORD_TYPE.AdministrativePenalty.flavours.lng._schemaName, _id: _id },
-      updateObj,
-      {
-        new: true
-      }
-    );
-    return {
-      status: 'success',
-      object: editRes
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: AdministrativePenaltyLNG,
-      errorMessage: error.message
-    };
-  }
+  return await AdministrativePenaltyLNG.findOneAndUpdate(
+    { _schemaName: 'AdministrativePenaltyLNG', _id: _id },
+    updateObj,
+    { new: true }
+  );
 };
 
 /**
- * Edit NRCED Administrative Penalty Record
+ * Performs all operations necessary to edit a nrced Administrative Penalty record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _id: 'cd0b34a4ec1341288b5ea4164daffbf2'
- *   summary: 'nrced description',
- *   ...
- *   addRole: 'public'
- * }
+ *  administrativePenalties: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'administrativePenalty',
+ *      ...
+ *      AdministrativePenaltyLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      AdministrativePenaltyNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited nrced administrativePenalty record
  */
 exports.editNRCED = async function(args, res, next, incomingObj) {
-  if (!incomingObj._id) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
-    };
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the NRCED record
+    return;
   }
 
   const _id = incomingObj._id;
   delete incomingObj._id;
 
-  // Reject any changes to permissions.
+  // Reject any changes to permissions
   // Publishing must be done via addRole or removeRole
   delete incomingObj.read;
   delete incomingObj.write;
 
-  // You cannot update _master
-  delete incomingObj._master;
+  let AdministrativePenaltyNRCED = mongoose.model('AdministrativePenaltyNRCED');
 
-  const AdministrativePenaltyNRCED = mongoose.model(RECORD_TYPE.AdministrativePenalty.flavours.nrced._schemaName);
-
-  let sanitizedObj;
-  try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(AdministrativePenaltyNRCED, incomingObj);
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error.message
-    };
-  }
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(AdministrativePenaltyNRCED, incomingObj);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   let updateObj = { $set: sanitizedObj };
+
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj['$addToSet'] = { read: 'public' };
     updateObj.$set['datePublished'] = new Date();
-  } else if (incomingObj.removeRole === 'public') {
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj['$pull'] = { read: 'public' };
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
   }
+
   updateObj.$set['dateUpdated'] = new Date();
 
-  try {
-    const editRes = await AdministrativePenaltyNRCED.findOneAndUpdate(
-      { _schemaName: RECORD_TYPE.AdministrativePenalty.flavours.nrced._schemaName, _id: _id },
-      updateObj,
-      {
-        new: true
-      }
-    );
-    return {
-      status: 'success',
-      object: editRes
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: AdministrativePenaltyNRCED,
-      errorMessage: error.message
-    };
-  }
+  return await AdministrativePenaltyNRCED.findOneAndUpdate(
+    { _schemaName: 'AdministrativePenaltyNRCED', _id: _id },
+    updateObj,
+    { new: true }
+  );
 };

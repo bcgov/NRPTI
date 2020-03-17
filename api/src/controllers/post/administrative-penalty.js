@@ -1,30 +1,121 @@
-const mongoose = require('mongoose');
-const ObjectId = require('mongoose').Types.ObjectId;
-const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+let mongoose = require('mongoose');
+let ObjectId = require('mongoose').Types.ObjectId;
 
 /**
- * Create Master Administrative Penalty record.
+ * Performs all operations necessary to create a master Administrative Penalty record and its associated flavour records.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * administrativePenalty: [
- *   {
- *     recordName: 'test abc',
- *     recordType: 'whatever',
- *     ...
- *     AdministrativePenaltyLNG: {
- *       description: 'lng description'
- *       addRole: 'public',
- *     }
- *   },
- *   ...
- * ]
+ *  administrativePenalties: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'administrativePenalty',
+ *      ...
+ *      AdministrativePenaltyLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      AdministrativePenaltyNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns object containing the operation's status and created records
  */
-exports.createMaster = async function(args, res, next, incomingObj) {
-  const AdministrativePenalty = mongoose.model(RECORD_TYPE.AdministrativePenalty._schemaName);
-  const administrativePenalty = new AdministrativePenalty();
+exports.createRecord = async function(args, res, next, incomingObj) {
+  // save flavour records
+  let observables = [];
+  let savedFlavourAdministrativePenalties = [];
+  let flavourIds = [];
 
-  administrativePenalty._schemaName = RECORD_TYPE.AdministrativePenalty._schemaName;
+  try {
+    incomingObj.AdministrativePenaltyLNG &&
+      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.AdministrativePenaltyLNG }));
+    incomingObj.AdministrativePenaltyNRCED &&
+      observables.push(
+        this.createNRCED(args, res, next, { ...incomingObj, ...incomingObj.AdministrativePenaltyNRCED })
+      );
+
+    if (observables.length > 0) {
+      savedFlavourAdministrativePenalties = await Promise.all(observables);
+
+      flavourIds = savedFlavourAdministrativePenalties.map(
+        flavourAdministrativePenalty => flavourAdministrativePenalty._id
+      );
+    }
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedFlavourAdministrativePenalties,
+      errorMessage: e
+    };
+  }
+
+  // save administrativePenalty record
+  let savedAdministrativePenalty = null;
+
+  try {
+    savedAdministrativePenalty = await this.createMaster(args, res, next, incomingObj, flavourIds);
+
+    return {
+      status: 'success',
+      object: savedAdministrativePenalty,
+      flavours: savedFlavourAdministrativePenalties
+    };
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedAdministrativePenalty,
+      errorMessage: e
+    };
+  }
+};
+
+/**
+ * Performs all operations necessary to create a master Administrative Penalty record.
+ *
+ * Example of incomingObj
+ *
+ *  administrativePenalties: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'administrativePenalty',
+ *      ...
+ *      AdministrativePenaltyLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      AdministrativePenaltyNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @param {*} flavourIds array of flavour record _ids
+ * @returns created master administrativePenalty record
+ */
+exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+  let AdministrativePenalty = mongoose.model('AdministrativePenalty');
+  let administrativePenalty = new AdministrativePenalty();
+
+  administrativePenalty._schemaName = 'AdministrativePenalty';
+
+  // set integration references
   incomingObj._epicProjectId &&
     ObjectId.isValid(incomingObj._epicProjectId) &&
     (administrativePenalty._epicProjectId = new ObjectId(incomingObj._epicProjectId));
@@ -35,8 +126,22 @@ exports.createMaster = async function(args, res, next, incomingObj) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (administrativePenalty._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
+  // set permissions
+  administrativePenalty.read = ['sysadmin'];
+  administrativePenalty.write = ['sysadmin'];
+
+  // set forward references
+  if (flavourIds && flavourIds.length) {
+    flavourIds.forEach(id => {
+      if (ObjectId.isValid(id)) {
+        administrativePenalty._flavourRecords.push(new ObjectId(id));
+      }
+    });
+  }
+
+  // set data
   incomingObj.recordName && (administrativePenalty.recordName = incomingObj.recordName);
-  administrativePenalty.recordType = RECORD_TYPE.AdministrativePenalty.displayName;
+  administrativePenalty.recordType = 'AdministrativePenalty';
   incomingObj.dateIssued && (administrativePenalty.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (administrativePenalty.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (administrativePenalty.author = incomingObj.author);
@@ -63,159 +168,214 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   incomingObj.outcomeDescription && (administrativePenalty.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (administrativePenalty.penalty = incomingObj.penalty);
 
+  // set meta
+  administrativePenalty.addedBy = args.swagger.params.auth_payload.displayName;
   administrativePenalty.dateAdded = new Date();
-  administrativePenalty.publishedBy = args.swagger.params.auth_payload.displayName;
 
+  // set data source references
   incomingObj.sourceDateAdded && (administrativePenalty.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (administrativePenalty.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (administrativePenalty.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  administrativePenalty.read = ['sysadmin'];
-  administrativePenalty.write = ['sysadmin'];
-
-  let savedAdministrativePenalty = null;
-  try {
-    savedAdministrativePenalty = await administrativePenalty.save();
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: administrativePenalty,
-      errorMessage: error.message
-    };
-  }
-
-  const observables = [];
-  incomingObj.AdministrativePenaltyLNG &&
-    observables.push(
-      this.createLNG(args, res, next, incomingObj.AdministrativePenaltyLNG, savedAdministrativePenalty._id)
-    );
-  incomingObj.AdministrativePenaltyNRCED &&
-    observables.push(
-      this.createNRCED(args, res, next, incomingObj.AdministrativePenaltyNRCED, savedAdministrativePenalty._id)
-    );
-
-  let flavourRes = null;
-  try {
-    observables.length > 0 && (flavourRes = await Promise.all(observables));
-  } catch (error) {
-    flavourRes = {
-      status: 'failure',
-      object: observables,
-      errorMessage: error.message
-    };
-  }
-
-  return {
-    status: 'success',
-    object: savedAdministrativePenalty,
-    flavours: flavourRes
-  };
+  return await administrativePenalty.save();
 };
 
 /**
- * Create LNG Administrative Penalty record.
+ * Performs all operations necessary to create a LNG Administrative Penalty record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _master: '5e1e7fcd20e4167bcfc3daa7'
- *   description: 'lng description',
- *   ...
- *   addRole: 'public'
- * }
+ *  administrativePenalties: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'administrativePenalty',
+ *      ...
+ *      AdministrativePenaltyLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      AdministrativePenaltyNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created lng administrativePenalty record
  */
-exports.createLNG = async function(args, res, next, incomingObj, masterId) {
-  // We must have a valid master ObjectID to continue.
-  if (!masterId || !ObjectId.isValid(masterId)) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'incomingObj._master was not valid ObjectId'
-    };
-  }
+exports.createLNG = async function(args, res, next, incomingObj) {
+  let AdministrativePenaltyLNG = mongoose.model('AdministrativePenaltyLNG');
+  let administrativePenaltyLNG = new AdministrativePenaltyLNG();
 
-  const AdministrativePenaltyLNG = mongoose.model(RECORD_TYPE.AdministrativePenalty.flavours.lng._schemaName);
-  const inpsectionLNG = new AdministrativePenaltyLNG();
+  administrativePenaltyLNG._schemaName = 'AdministrativePenaltyLNG';
 
-  inpsectionLNG._schemaName = RECORD_TYPE.AdministrativePenalty.flavours.lng._schemaName;
-  inpsectionLNG._master = new ObjectId(masterId);
-  inpsectionLNG.read = ['sysadmin'];
-  inpsectionLNG.write = ['sysadmin'];
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (administrativePenaltyLNG._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (administrativePenaltyLNG._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (administrativePenaltyLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
+  administrativePenaltyLNG.read = ['sysadmin'];
+  administrativePenaltyLNG.write = ['sysadmin'];
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole &&
-    incomingObj.addRole === 'public' &&
-    inpsectionLNG.read.push('public') &&
-    (inpsectionLNG.datePublished = new Date());
-
-  incomingObj.description && (inpsectionLNG.description = incomingObj.description);
-
-  inpsectionLNG.dateAdded = new Date();
-
-  try {
-    const savedAdministrativePenaltyLNG = await inpsectionLNG.save();
-    return {
-      status: 'success',
-      object: savedAdministrativePenaltyLNG
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: inpsectionLNG,
-      errorMessage: error.message
-    };
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    administrativePenaltyLNG.read.push('public');
+    administrativePenaltyLNG.datePublished = new Date();
+    administrativePenaltyLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
+
+  administrativePenaltyLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  administrativePenaltyLNG.dateAdded = new Date();
+
+  // set master data
+  incomingObj.recordName && (administrativePenaltyLNG.recordName = incomingObj.recordName);
+  administrativePenaltyLNG.recordType = 'AdministrativePenalty';
+  incomingObj.dateIssued && (administrativePenaltyLNG.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (administrativePenaltyLNG.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.author && (administrativePenaltyLNG.author = incomingObj.author);
+  incomingObj.legislation &&
+    incomingObj.legislation.act &&
+    (administrativePenaltyLNG.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (administrativePenaltyLNG.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (administrativePenaltyLNG.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (administrativePenaltyLNG.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (administrativePenaltyLNG.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.issuedTo && (administrativePenaltyLNG.issuedTo = incomingObj.issuedTo);
+  incomingObj.projectName && (administrativePenaltyLNG.projectName = incomingObj.projectName);
+  incomingObj.location && (administrativePenaltyLNG.location = incomingObj.location);
+  incomingObj.centroid && (administrativePenaltyLNG.centroid = incomingObj.centroid);
+  incomingObj.outcomeStatus && (administrativePenaltyLNG.outcomeStatus = incomingObj.outcomeStatus);
+  incomingObj.outcomeDescription && (administrativePenaltyLNG.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.penalty && (administrativePenaltyLNG.penalty = incomingObj.penalty);
+
+  // set flavour data
+  incomingObj.description && (administrativePenaltyLNG.description = incomingObj.description);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (administrativePenaltyLNG.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (administrativePenaltyLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (administrativePenaltyLNG.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return await administrativePenaltyLNG.save();
 };
 
 /**
- * Create NRCED Administrative Penalty record.
+ * Performs all operations necessary to create a NRCED Administrative Penalty record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _master: '5e1e7fcd20e4167bcfc3daa7'
- *   summary: 'nrced description',
- *   ...
- *   addRole: 'public'
- * }
+ *  administrativePenalties: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'administrativePenalty',
+ *      ...
+ *      AdministrativePenaltyLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      AdministrativePenaltyNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created nrced administrativePenalty record
  */
-exports.createNRCED = async function(args, res, next, incomingObj, masterId) {
-  // We must have a valid master ObjectID to continue.
-  if (!masterId || !ObjectId.isValid(masterId)) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'incomingObj._master was not valid ObjectId'
-    };
-  }
+exports.createNRCED = async function(args, res, next, incomingObj) {
+  let AdministrativePenaltyNRCED = mongoose.model('AdministrativePenaltyNRCED');
+  let administrativePenaltyNRCED = new AdministrativePenaltyNRCED();
 
-  const AdministrativePenaltyNRCED = mongoose.model(RECORD_TYPE.AdministrativePenalty.flavours.nrced._schemaName);
-  const inpsectionNRCED = new AdministrativePenaltyNRCED();
+  administrativePenaltyNRCED._schemaName = 'AdministrativePenaltyNRCED';
 
-  inpsectionNRCED._schemaName = RECORD_TYPE.AdministrativePenalty.flavours.nrced._schemaName;
-  inpsectionNRCED._master = new ObjectId(masterId);
-  inpsectionNRCED.read = ['sysadmin'];
-  inpsectionNRCED.write = ['sysadmin'];
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (administrativePenaltyNRCED._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (administrativePenaltyNRCED._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (administrativePenaltyNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
+  administrativePenaltyNRCED.read = ['sysadmin'];
+  administrativePenaltyNRCED.write = ['sysadmin'];
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole &&
-    incomingObj.addRole === 'public' &&
-    inpsectionNRCED.read.push('public') &&
-    (inpsectionNRCED.datePublished = new Date());
-
-  incomingObj.summary && (inpsectionNRCED.summary = incomingObj.summary);
-
-  inpsectionNRCED.dateAdded = new Date();
-
-  try {
-    const savedAdministrativePenaltyNRCED = await inpsectionNRCED.save();
-    return {
-      status: 'success',
-      object: savedAdministrativePenaltyNRCED
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: inpsectionNRCED,
-      errorMessage: error.message
-    };
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    administrativePenaltyNRCED.read.push('public');
+    administrativePenaltyNRCED.datePublished = new Date();
+    administrativePenaltyNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
+
+  administrativePenaltyNRCED.addedBy = args.swagger.params.auth_payload.displayName;
+  administrativePenaltyNRCED.dateAdded = new Date();
+
+  // set master data
+  incomingObj.recordName && (administrativePenaltyNRCED.recordName = incomingObj.recordName);
+  administrativePenaltyNRCED.recordType = 'AdministrativePenalty';
+  incomingObj.dateIssued && (administrativePenaltyNRCED.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (administrativePenaltyNRCED.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.author && (administrativePenaltyNRCED.author = incomingObj.author);
+  incomingObj.legislation &&
+    incomingObj.legislation.act &&
+    (administrativePenaltyNRCED.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (administrativePenaltyNRCED.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (administrativePenaltyNRCED.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (administrativePenaltyNRCED.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (administrativePenaltyNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.issuedTo && (administrativePenaltyNRCED.issuedTo = incomingObj.issuedTo);
+  incomingObj.projectName && (administrativePenaltyNRCED.projectName = incomingObj.projectName);
+  incomingObj.location && (administrativePenaltyNRCED.location = incomingObj.location);
+  incomingObj.centroid && (administrativePenaltyNRCED.centroid = incomingObj.centroid);
+  incomingObj.outcomeStatus && (administrativePenaltyNRCED.outcomeStatus = incomingObj.outcomeStatus);
+  incomingObj.outcomeDescription && (administrativePenaltyNRCED.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.penalty && (administrativePenaltyNRCED.penalty = incomingObj.penalty);
+
+  // set flavour data
+  incomingObj.summary && (administrativePenaltyNRCED.summary = incomingObj.summary);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (administrativePenaltyNRCED.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (administrativePenaltyNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (administrativePenaltyNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return await administrativePenaltyNRCED.save();
 };
