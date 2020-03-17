@@ -15,11 +15,11 @@ const s3 = new AWS.S3({
   s3ForcePathStyle: true
 });
 
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedPost = async function(args, res, next) {
+exports.protectedPost = async function (args, res, next) {
   if (
     args.swagger.params.fileName &&
     args.swagger.params.fileName.value &&
@@ -44,6 +44,7 @@ exports.protectedPost = async function(args, res, next) {
           args.swagger.params.url.value
         );
       } catch (e) {
+        defaultLog.info('Error creating document meta:', e);
         return queryActions.sendResponse(res, 400, e);
       }
     } else if (args.swagger.params.upfile && args.swagger.params.upfile.value) {
@@ -54,26 +55,25 @@ exports.protectedPost = async function(args, res, next) {
           (this.auth_payload && this.auth_payload.displayName) || ''
         );
       } catch (e) {
-        defaultLog.info(e);
+        defaultLog.info('Error creating document meta:', e);
         return queryActions.sendResponse(res, 400, e);
       }
 
       // TODO: ACL is set to public-read until we know publishing rules.
-      s3.upload(
-        {
-          Bucket: process.env.OBJECT_STORE_bucket_name,
-          Key: docResponse.key,
-          Body: args.swagger.params.upfile.value.buffer,
-          ACL: 'public-read'
-        },
-        function(err, result) {
-          if (err) {
-            defaultLog.info(err);
-            return queryActions.sendResponse(res, 400, err);
-          }
-          s3Response = result;
-        }
-      );
+      try {
+        const s3UploadResult = await s3.upload(
+          {
+            Bucket: process.env.OBJECT_STORE_bucket_name,
+            Key: docResponse.key,
+            Body: args.swagger.params.upfile.value.buffer,
+            ACL: 'public-read'
+          }).promise();
+
+        s3Response = s3UploadResult;
+      } catch (e) {
+        defaultLog.info('Error uploading to S3:', e);
+        return queryActions.sendResponse(res, 400, e);
+      }
     }
     // Now we must update the associated record.
     try {
@@ -109,14 +109,16 @@ exports.protectedPost = async function(args, res, next) {
         s3: s3Response
       });
     } catch (e) {
+      defaultLog.info('Error updating associated record:', e);
       return queryActions.sendResponse(res, 400, e);
     }
   } else {
+    defaultLog.info('Error: You must provide fileName and recordId');
     return queryActions.sendResponse(res, 400, { error: 'You must provide fileName and recordId' });
   }
 };
 
-exports.protectedDelete = async function(args, res, next) {
+exports.protectedDelete = async function (args, res, next) {
   if (
     args.swagger.params.docId &&
     args.swagger.params.docId.value &&
@@ -130,24 +132,25 @@ exports.protectedDelete = async function(args, res, next) {
     try {
       docResponse = await Document.findOneAndRemove({ _id: new ObjectID(args.swagger.params.docId.value) });
     } catch (e) {
+      defaultLog.info('Error removing document meta from database:', e);
       return queryActions.sendResponse(res, 400, e);
     }
 
     // If a key exists, then the doc is stored in S3.
     // We need to delete this document.
     if (docResponse.key) {
-      s3.deleteObject(
-        {
-          Bucket: process.env.OBJECT_STORE_bucket_name,
-          Key: docResponse.key
-        },
-        function(err, result) {
-          if (err) {
-            return queryActions.sendResponse(res, 400, err);
-          }
-          s3Response = result;
-        }
-      );
+      try {
+        const s3DeleteResult = await s3.deleteObject(
+          {
+            Bucket: process.env.OBJECT_STORE_bucket_name,
+            Key: docResponse.key
+          }).promise();
+
+        s3Response = s3DeleteResult;
+      } catch (e) {
+        defaultLog.info('Error deleting object from S3:', e);
+        return queryActions.sendResponse(res, 400, e);
+      }
     }
 
     // Then we want to remove the document's id from the record it's attached to.
@@ -184,9 +187,11 @@ exports.protectedDelete = async function(args, res, next) {
         s3: s3Response
       });
     } catch (e) {
+      defaultLog.info('Error updating associated record:', e);
       return queryActions.sendResponse(res, 400, e);
     }
   } else {
+    defaultLog.info('Error: You must provide docId and recordId');
     return queryActions.sendResponse(res, 400, { error: 'You must provide docId and recordId' });
   }
 };
