@@ -1,269 +1,317 @@
 const mongoose = require('mongoose');
-const putUtils = require('../../utils/put-utils');
+const ObjectID = require('mongodb').ObjectID;
+const PutUtils = require('../../utils/put-utils');
 const RestorativeJusticePost = require('../post/restorative-justice');
-const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 /**
- * Edit Master Restorative Justice record.
+ * Performs all operations necessary to edit a master Restorative Justice record and its associated flavour records.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * restorativeJustices: [
- *   {
- *      _id: '85ce24e603984b02a0f8edb42a334876',
+ *  restorativeJustices: [
+ *    {
  *      recordName: 'test abc',
- *      recordType: 'whatever',
+ *      recordType: 'restorativeJustice',
  *      ...
  *      RestorativeJusticeLNG: {
  *        description: 'lng description'
  *        addRole: 'public',
+ *        ...
+ *      },
+ *      RestorativeJusticeNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
  *      }
- *   },
- *   ...
- * ]
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns object containing the operation's status and created records
  */
-exports.editMaster = async function(args, res, next, incomingObj) {
-  if (!incomingObj._id) {
+exports.editRecord = async function(args, res, next, incomingObj) {
+  // save flavour records
+  let observables = [];
+  let savedFlavourRestorativeJustices = [];
+  let flavourIds = [];
+
+  try {
+    // make a copy of the incoming object for use by the flavours only
+    const flavourIncomingObj = { ...incomingObj };
+    // Remove fields that should not be inherited from the master record
+    delete flavourIncomingObj._id;
+    delete flavourIncomingObj._schemaName;
+    delete flavourIncomingObj._flavourRecords;
+    delete flavourIncomingObj.read;
+    delete flavourIncomingObj.write;
+
+    if (incomingObj.RestorativeJusticeLNG) {
+      if (incomingObj.RestorativeJusticeLNG._id) {
+        observables.push(
+          this.editLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.RestorativeJusticeLNG })
+        );
+      } else {
+        observables.push(
+          RestorativeJusticePost.createLNG(args, res, next, {
+            ...flavourIncomingObj,
+            ...incomingObj.RestorativeJusticeLNG
+          })
+        );
+      }
+
+      delete incomingObj.RestorativeJusticeLNG;
+    }
+
+    if (incomingObj.RestorativeJusticeNRCED) {
+      if (incomingObj.RestorativeJusticeNRCED._id) {
+        observables.push(
+          this.editNRCED(args, res, next, { ...flavourIncomingObj, ...incomingObj.RestorativeJusticeNRCED })
+        );
+      } else {
+        observables.push(
+          RestorativeJusticePost.createNRCED(args, res, next, {
+            ...flavourIncomingObj,
+            ...incomingObj.RestorativeJusticeNRCED
+          })
+        );
+      }
+
+      delete incomingObj.RestorativeJusticeNRCED;
+    }
+
+    if (observables.length > 0) {
+      savedFlavourRestorativeJustices = await Promise.all(observables);
+
+      flavourIds = savedFlavourRestorativeJustices.map(flavourRestorativeJustice => flavourRestorativeJustice._id);
+    }
+  } catch (e) {
     return {
       status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
+      object: savedFlavourRestorativeJustices,
+      errorMessage: e
     };
+  }
+
+  // save restorativeJustice record
+  let savedRestorativeJustice = null;
+
+  try {
+    savedRestorativeJustice = await this.editMaster(args, res, next, incomingObj, flavourIds);
+
+    return {
+      status: 'success',
+      object: savedRestorativeJustice,
+      flavours: savedFlavourRestorativeJustices
+    };
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedRestorativeJustice,
+      errorMessage: e
+    };
+  }
+};
+
+/**
+ * Performs all operations necessary to edit a master Restorative Justice record.
+ *
+ * Example of incomingObj
+ *
+ *  restorativeJustices: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'restorativeJustice',
+ *      ...
+ *      RestorativeJusticeLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      RestorativeJusticeNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited master restorativeJustice record
+ */
+exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the master record
+    return;
   }
 
   const _id = incomingObj._id;
   delete incomingObj._id;
 
-  // Reject any changes to master perm
+  // Reject any changes to master permissions
   delete incomingObj.read;
   delete incomingObj.write;
 
-  const RestorativeJustice = mongoose.model(RECORD_TYPE.RestorativeJustice._schemaName);
+  const RestorativeJustice = mongoose.model('RestorativeJustice');
 
-  let sanitizedObj;
-  try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(RestorativeJustice, incomingObj);
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error.message
-    };
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(RestorativeJustice, incomingObj);
+
+  if (!sanitizedObj || sanitizedObj === {}) {
+    // skip, as there are no changes to master record
+    return;
   }
 
-  const finalRes = {
-    status: 'success',
-    object: sanitizedObj,
-    flavours: null
-  };
-  let savedRestorativeJustice = null;
-  // Skip if there is nothing to update for master
-  if (sanitizedObj !== {}) {
-    sanitizedObj['dateUpdated'] = new Date();
-    sanitizedObj['updatedBy'] = args.swagger.params.auth_payload.displayName;
-    try {
-      savedRestorativeJustice = await RestorativeJustice.findOneAndUpdate(
-        { _schemaName: RECORD_TYPE.RestorativeJustice._schemaName, _id: _id },
-        { $set: sanitizedObj },
-        { new: true }
-      );
-      finalRes.object = savedRestorativeJustice;
-    } catch (error) {
-      finalRes.status = 'failure';
-      finalRes['errorMessage'] = error;
-    }
+  sanitizedObj.dateUpdated = new Date();
+  sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
+
+  let updateObj = { $set: sanitizedObj };
+
+  if (flavourIds && flavourIds.length) {
+    updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
   }
 
-  // Flavours:
-  // When editing, we might get a request to make a brand new flavour rather than edit.
-  const observables = [];
-  if (incomingObj.RestorativeJusticeLNG && incomingObj.RestorativeJusticeLNG._id) {
-    observables.push(this.editLNG(args, res, next, incomingObj.RestorativeJusticeLNG));
-    delete incomingObj.RestorativeJusticeLNG;
-  } else if (incomingObj.RestorativeJusticeLNG) {
-    observables.push(
-      RestorativeJusticePost.createLNG(args, res, next, incomingObj.RestorativeJusticeLNG, savedRestorativeJustice._id)
-    );
-    delete incomingObj.RestorativeJusticeLNG;
-  }
-  if (incomingObj.RestorativeJusticeNRCED && incomingObj.RestorativeJusticeNRCED._id) {
-    observables.push(this.editNRCED(args, res, next, incomingObj.RestorativeJusticeNRCED));
-    delete incomingObj.RestorativeJusticeNRCED;
-  } else if (incomingObj.RestorativeJusticeNRCED) {
-    observables.push(
-      RestorativeJusticePost.createNRCED(
-        args,
-        res,
-        next,
-        incomingObj.RestorativeJusticeNRCED,
-        savedRestorativeJustice._id
-      )
-    );
-    delete incomingObj.RestorativeJusticeNRCED;
-  }
-
-  // Execute edit flavours
-  try {
-    observables.length > 0 && (finalRes.flavours = await Promise.all(observables));
-  } catch (error) {
-    finalRes.flavours = {
-      status: 'failure',
-      object: observables,
-      errorMessage: error.message
-    };
-  }
-
-  return finalRes;
+  return await RestorativeJustice.findOneAndUpdate({ _schemaName: 'RestorativeJustice', _id: _id }, updateObj, {
+    new: true
+  });
 };
 
 /**
- * Edit LNG Restorative Justice Record
+ * Performs all operations necessary to edit a lng Restorative Justice record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _id: 'cd0b34a4ec1341288b5ea4164daffbf2'
- *   description: 'lng description',
- *   ...
- *   addRole: 'public'
- * }
+ *  restorativeJustices: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'restorativeJustice',
+ *      ...
+ *      RestorativeJusticeLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      RestorativeJusticeNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited lng restorativeJustice record
  */
 exports.editLNG = async function(args, res, next, incomingObj) {
-  if (!incomingObj._id) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
-    };
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the lng record
+    return;
   }
 
   const _id = incomingObj._id;
   delete incomingObj._id;
 
-  // Reject any changes to permissions.
+  // Reject any changes to permissions
   // Publishing must be done via addRole or removeRole
   delete incomingObj.read;
   delete incomingObj.write;
 
-  // You cannot update _master
-  delete incomingObj._master;
+  let RestorativeJusticeLNG = mongoose.model('RestorativeJusticeLNG');
 
-  const RestorativeJusticeLNG = mongoose.model(RECORD_TYPE.RestorativeJustice.flavours.lng._schemaName);
-
-  let sanitizedObj;
-  try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(RestorativeJusticeLNG, incomingObj);
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error.message
-    };
-  }
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(RestorativeJusticeLNG, incomingObj);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   let updateObj = { $set: sanitizedObj };
+
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj['$addToSet'] = { read: 'public' };
     updateObj.$set['datePublished'] = new Date();
-  } else if (incomingObj.removeRole === 'public') {
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj['$pull'] = { read: 'public' };
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
   }
+
   updateObj.$set['dateUpdated'] = new Date();
 
-  try {
-    const editRes = await RestorativeJusticeLNG.findOneAndUpdate(
-      { _schemaName: RECORD_TYPE.RestorativeJustice.flavours.lng._schemaName, _id: _id },
-      updateObj,
-      {
-        new: true
-      }
-    );
-    return {
-      status: 'success',
-      object: editRes
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: RestorativeJusticeLNG,
-      errorMessage: error.message
-    };
-  }
+  return await RestorativeJusticeLNG.findOneAndUpdate({ _schemaName: 'RestorativeJusticeLNG', _id: _id }, updateObj, {
+    new: true
+  });
 };
 
 /**
- * Edit NRCED Restorative Justice Record
+ * Performs all operations necessary to edit a nrced Restorative Justice record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _id: 'cd0b34a4ec1341288b5ea4164daffbf2'
- *   summary: 'nrced description',
- *   ...
- *   addRole: 'public'
- * }
+ *  restorativeJustices: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'restorativeJustice',
+ *      ...
+ *      RestorativeJusticeLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      RestorativeJusticeNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited nrced restorativeJustice record
  */
 exports.editNRCED = async function(args, res, next, incomingObj) {
-  if (!incomingObj._id) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
-    };
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the NRCED record
+    return;
   }
 
   const _id = incomingObj._id;
   delete incomingObj._id;
 
-  // Reject any changes to permissions.
+  // Reject any changes to permissions
   // Publishing must be done via addRole or removeRole
   delete incomingObj.read;
   delete incomingObj.write;
 
-  // You cannot update _master
-  delete incomingObj._master;
+  let RestorativeJusticeNRCED = mongoose.model('RestorativeJusticeNRCED');
 
-  const RestorativeJusticeNRCED = mongoose.model(RECORD_TYPE.RestorativeJustice.flavours.nrced._schemaName);
-
-  let sanitizedObj;
-  try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(RestorativeJusticeNRCED, incomingObj);
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error.message
-    };
-  }
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(RestorativeJusticeNRCED, incomingObj);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   let updateObj = { $set: sanitizedObj };
+
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj['$addToSet'] = { read: 'public' };
     updateObj.$set['datePublished'] = new Date();
-  } else if (incomingObj.removeRole === 'public') {
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj['$pull'] = { read: 'public' };
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
   }
+
   updateObj.$set['dateUpdated'] = new Date();
 
-  try {
-    const editRes = await RestorativeJusticeNRCED.findOneAndUpdate(
-      { _schemaName: RECORD_TYPE.RestorativeJustice.flavours.nrced._schemaName, _id: _id },
-      updateObj,
-      {
-        new: true
-      }
-    );
-    return {
-      status: 'success',
-      object: editRes
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: RestorativeJusticeNRCED,
-      errorMessage: error.message
-    };
-  }
+  return await RestorativeJusticeNRCED.findOneAndUpdate(
+    { _schemaName: 'RestorativeJusticeNRCED', _id: _id },
+    updateObj,
+    { new: true }
+  );
 };
