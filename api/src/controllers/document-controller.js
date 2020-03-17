@@ -3,6 +3,7 @@ const queryActions = require('../utils/query-actions');
 const AWS = require('aws-sdk');
 const mongodb = require('../utils/mongodb');
 const ObjectID = require('mongodb').ObjectID;
+let defaultLog = require('../utils/logger')('record');
 
 const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
 const ep = new AWS.Endpoint(OBJ_STORE_URL);
@@ -51,8 +52,9 @@ exports.protectedPost = async function (args, res, next) {
         docResponse = await createDocument(
           args.swagger.params.fileName.value,
           (this.auth_payload && this.auth_payload.displayName) || ''
-        )
+        );
       } catch (e) {
+        defaultLog.info(e);
         return queryActions.sendResponse(res, 400, e);
       }
 
@@ -66,6 +68,7 @@ exports.protectedPost = async function (args, res, next) {
         },
         function (err, result) {
           if (err) {
+            defaultLog.info(err);
             return queryActions.sendResponse(res, 400, err);
           }
           s3Response = result;
