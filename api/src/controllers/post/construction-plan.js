@@ -1,30 +1,105 @@
-const mongoose = require('mongoose');
-const ObjectId = require('mongoose').Types.ObjectId;
-const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+let mongoose = require('mongoose');
+let ObjectId = require('mongoose').Types.ObjectId;
 
 /**
- * Create Master Construction Plan record.
+ * Performs all operations necessary to create a master Construction Plan record and its associated flavour records.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * constructionPlan: [
- *   {
- *     recordName: 'test abc',
- *     recordType: 'whatever',
- *     ...
- *     ConstructionPlanLNG: {
- *       description: 'lng description'
- *       addRole: 'public',
- *     }
- *   },
- *   ...
- * ]
+ *  constructionPlans: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'constructionPlan',
+ *      ...
+ *      ConstructionPlanLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns object containing the operation's status and created records
  */
-exports.createMaster = async function(args, res, next, incomingObj) {
-  const ConstructionPlan = mongoose.model(RECORD_TYPE.ConstructionPlan._schemaName);
-  const constructionPlan = new ConstructionPlan();
+exports.createRecord = async function(args, res, next, incomingObj) {
+  // save flavour records
+  let observables = [];
+  let savedFlavourConstructionPlans = [];
+  let flavourIds = [];
 
-  constructionPlan._schemaName = RECORD_TYPE.ConstructionPlan._schemaName;
+  try {
+    incomingObj.ConstructionPlanLNG &&
+      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.ConstructionPlanLNG }));
+
+    if (observables.length > 0) {
+      savedFlavourConstructionPlans = await Promise.all(observables);
+
+      flavourIds = savedFlavourConstructionPlans.map(flavourConstructionPlan => flavourConstructionPlan._id);
+    }
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedFlavourConstructionPlans,
+      errorMessage: e
+    };
+  }
+
+  // save constructionPlan record
+  let savedConstructionPlan = null;
+
+  try {
+    savedConstructionPlan = await this.createMaster(args, res, next, incomingObj, flavourIds);
+
+    return {
+      status: 'success',
+      object: savedConstructionPlan,
+      flavours: savedFlavourConstructionPlans
+    };
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedConstructionPlan,
+      errorMessage: e
+    };
+  }
+};
+
+/**
+ * Performs all operations necessary to create a master Construction Plan record.
+ *
+ * Example of incomingObj
+ *
+ *  constructionPlans: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'constructionPlan',
+ *      ...
+ *      ConstructionPlanLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @param {*} flavourIds array of flavour record _ids
+ * @returns created master constructionPlan record
+ */
+exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+  let ConstructionPlan = mongoose.model('ConstructionPlan');
+  let constructionPlan = new ConstructionPlan();
+
+  constructionPlan._schemaName = 'ConstructionPlan';
+
+  // set integration references
   incomingObj._epicProjectId &&
     ObjectId.isValid(incomingObj._epicProjectId) &&
     (constructionPlan._epicProjectId = new ObjectId(incomingObj._epicProjectId));
@@ -35,110 +110,114 @@ exports.createMaster = async function(args, res, next, incomingObj) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (constructionPlan._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
+  // set permissions
+  constructionPlan.read = ['sysadmin'];
+  constructionPlan.write = ['sysadmin'];
+
+  // set forward references
+  if (flavourIds && flavourIds.length) {
+    flavourIds.forEach(id => {
+      if (ObjectId.isValid(id)) {
+        constructionPlan._flavourRecords.push(new ObjectId(id));
+      }
+    });
+  }
+
+  // set data
   incomingObj.recordName && (constructionPlan.recordName = incomingObj.recordName);
-  constructionPlan.recordType = RECORD_TYPE.ConstructionPlan.displayName;
+  constructionPlan.recordType = 'ConstructionPlan';
   incomingObj.dateIssued && (constructionPlan.dateIssued = incomingObj.dateIssued);
   incomingObj.agency && (constructionPlan.agency = incomingObj.agency);
   incomingObj.author && (constructionPlan.author = incomingObj.author);
-  incomingObj.issuedTo && (constructionPlan.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (constructionPlan.projectName = incomingObj.projectName);
   incomingObj.location && (constructionPlan.location = incomingObj.location);
   incomingObj.centroid && (constructionPlan.centroid = incomingObj.centroid);
 
+  // set meta
+  constructionPlan.addedBy = args.swagger.params.auth_payload.displayName;
   constructionPlan.dateAdded = new Date();
-  constructionPlan.publishedBy = args.swagger.params.auth_payload.displayName;
 
+  // set data source references
   incomingObj.sourceDateAdded && (constructionPlan.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (constructionPlan.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (constructionPlan.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  constructionPlan.read = ['sysadmin'];
-  constructionPlan.write = ['sysadmin'];
-
-  let savedConstructionPlan = null;
-  try {
-    savedConstructionPlan = await constructionPlan.save();
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: constructionPlan,
-      errorMessage: error
-    };
-  }
-
-  const observables = [];
-  incomingObj.ConstructionPlanLNG &&
-    observables.push(this.createLNG(args, res, next, incomingObj.ConstructionPlanLNG, savedConstructionPlan._id));
-
-  let flavourRes = null;
-  try {
-    observables.length > 0 && (flavourRes = await Promise.all(observables));
-  } catch (error) {
-    flavourRes = {
-      status: 'failure',
-      object: observables,
-      errorMessage: error
-    };
-  }
-
-  return {
-    status: 'success',
-    object: savedConstructionPlan,
-    flavours: flavourRes
-  };
+  return await constructionPlan.save();
 };
 
 /**
- * Create LNG Construction Plan record.
+ * Performs all operations necessary to create a LNG Construction Plan record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _master: '5e1e7fcd20e4167bcfc3daa7'
- *   description: 'lng description',
- *   ...
- *   addRole: 'public'
- * }
+ *  constructionPlans: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'constructionPlan',
+ *      ...
+ *      ConstructionPlanLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created lng constructionPlan record
  */
-exports.createLNG = async function(args, res, next, incomingObj, masterId) {
-  // We must have a valid master ObjectID to continue.
-  if (!masterId || !ObjectId.isValid(masterId)) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'incomingObj._master was not valid ObjectId'
-    };
-  }
+exports.createLNG = async function(args, res, next, incomingObj) {
+  let ConstructionPlanLNG = mongoose.model('ConstructionPlanLNG');
+  let constructionPlanLNG = new ConstructionPlanLNG();
 
-  const ConstructionPlanLNG = mongoose.model(RECORD_TYPE.ConstructionPlan.flavours.lng._schemaName);
-  const inpsectionLNG = new ConstructionPlanLNG();
+  constructionPlanLNG._schemaName = 'ConstructionPlanLNG';
 
-  inpsectionLNG._schemaName = RECORD_TYPE.ConstructionPlan.flavours.lng._schemaName;
-  inpsectionLNG._master = new ObjectId(masterId);
-  inpsectionLNG.read = ['sysadmin'];
-  inpsectionLNG.write = ['sysadmin'];
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (constructionPlanLNG._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (constructionPlanLNG._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (constructionPlanLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
+  constructionPlanLNG.read = ['sysadmin'];
+  constructionPlanLNG.write = ['sysadmin'];
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole &&
-    incomingObj.addRole === 'public' &&
-    inpsectionLNG.read.push('public') &&
-    (inpsectionLNG.datePublished = new Date());
-
-  incomingObj.relatedPhase && (inpsectionLNG.relatedPhase = incomingObj.relatedPhase);
-  incomingObj.description && (inpsectionLNG.description = incomingObj.description);
-
-  inpsectionLNG.dateAdded = new Date();
-
-  try {
-    const savedConstructionPlanLNG = await inpsectionLNG.save();
-    return {
-      status: 'success',
-      object: savedConstructionPlanLNG
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: inpsectionLNG,
-      errorMessage: error
-    };
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    constructionPlanLNG.read.push('public');
+    constructionPlanLNG.datePublished = new Date();
+    constructionPlanLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
+
+  constructionPlanLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  constructionPlanLNG.dateAdded = new Date();
+
+  // set master data
+  incomingObj.recordName && (constructionPlanLNG.recordName = incomingObj.recordName);
+  constructionPlanLNG.recordType = 'ConstructionPlan';
+  incomingObj.dateIssued && (constructionPlanLNG.dateIssued = incomingObj.dateIssued);
+  incomingObj.agency && (constructionPlanLNG.agency = incomingObj.agency);
+  incomingObj.author && (constructionPlanLNG.author = incomingObj.author);
+  incomingObj.projectName && (constructionPlanLNG.projectName = incomingObj.projectName);
+  incomingObj.location && (constructionPlanLNG.location = incomingObj.location);
+  incomingObj.centroid && (constructionPlanLNG.centroid = incomingObj.centroid);
+
+  // set flavour data
+  incomingObj.description && (constructionPlanLNG.description = incomingObj.description);
+  incomingObj.relatedPhase && (constructionPlanLNG.relatedPhase = incomingObj.relatedPhase);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (constructionPlanLNG.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (constructionPlanLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (constructionPlanLNG.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return await constructionPlanLNG.save();
 };
