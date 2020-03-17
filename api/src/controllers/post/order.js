@@ -1,24 +1,117 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
 
-// Example of incomingObj
 /**
- *    orders: [
- *     {
- *       recordName: 'test abc',
- *       recordType: 'whatever',
- *       ...
- *       OrderLNG: {
- *          description: 'lng description'
- *          addRole: 'public',
- *       }
- *     },
+ * Performs all operations necessary to create a master Order record and its associated flavour records.
+ *
+ * Example of incomingObj
+ *
+ *  orders: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'order',
+ *      ...
+ *      OrderLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      OrderNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns object containing the operation's status and created records
  */
-exports.createMaster = async function(args, res, next, incomingObj) {
+exports.createRecord = async function(args, res, next, incomingObj) {
+  // save flavour records
+  let observables = [];
+  let savedFlavourOrders = [];
+  let flavourIds = [];
+
+  try {
+    incomingObj.OrderLNG &&
+      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.OrderLNG }));
+    incomingObj.OrderNRCED &&
+      observables.push(this.createNRCED(args, res, next, { ...incomingObj, ...incomingObj.OrderNRCED }));
+
+    if (observables.length > 0) {
+      savedFlavourOrders = await Promise.all(observables);
+
+      flavourIds = savedFlavourOrders.map(flavourOrder => flavourOrder._id);
+    }
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedFlavourOrders,
+      errorMessage: e
+    };
+  }
+
+  // save order record
+  let savedOrder = null;
+
+  try {
+    savedOrder = await this.createMaster(args, res, next, incomingObj, flavourIds);
+
+    return {
+      status: 'success',
+      object: savedOrder,
+      flavours: savedFlavourOrders
+    };
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedOrder,
+      errorMessage: e
+    };
+  }
+};
+
+/**
+ * Performs all operations necessary to create a master Order record.
+ *
+ * Example of incomingObj
+ *
+ *  orders: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'order',
+ *      ...
+ *      OrderLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      OrderNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @param {*} flavourIds array of flavour record _ids
+ * @returns created master order record
+ */
+exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
   let Order = mongoose.model('Order');
   let order = new Order();
 
   order._schemaName = 'Order';
+
+  // set integration references
   incomingObj._epicProjectId &&
     ObjectId.isValid(incomingObj._epicProjectId) &&
     (order._epicProjectId = new ObjectId(incomingObj._epicProjectId));
@@ -29,6 +122,20 @@ exports.createMaster = async function(args, res, next, incomingObj) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (order._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
+  // set permissions
+  order.read = ['sysadmin'];
+  order.write = ['sysadmin'];
+
+  // set forward references
+  if (flavourIds && flavourIds.length) {
+    flavourIds.forEach(id => {
+      if (ObjectId.isValid(id)) {
+        order._flavourRecords.push(new ObjectId(id));
+      }
+    });
+  }
+
+  // set data
   incomingObj.recordName && (order.recordName = incomingObj.recordName);
   order.recordType = 'Order';
   incomingObj.recordSubtype && (order.recordSubtype = incomingObj.recordSubtype);
@@ -55,147 +162,210 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   incomingObj.outcomeStatus && (order.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (order.outcomeDescription = incomingObj.outcomeDescription);
 
+  // set meta
+  order.addedBy = args.swagger.params.auth_payload.displayName;
   order.dateAdded = new Date();
-  order.publishedBy = args.swagger.params.auth_payload.displayName;
 
+  // set data source references
   incomingObj.sourceDateAdded && (order.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (order.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (order.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  order.read = ['sysadmin'];
-  order.write = ['sysadmin'];
-
-  let savedOrder = null;
-  try {
-    savedOrder = await order.save();
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: order,
-      errorMessage: e
-    };
-  }
-
-  let observables = [];
-  incomingObj.OrderLNG && observables.push(this.createLNG(args, res, next, incomingObj.OrderLNG, savedOrder._id));
-  incomingObj.OrderNRCED && observables.push(this.createNRCED(args, res, next, incomingObj.OrderNRCED, savedOrder._id));
-
-  let flavourRes = null;
-  try {
-    observables.length > 0 && (flavourRes = await Promise.all(observables));
-  } catch (e) {
-    flavourRes = {
-      status: 'failure',
-      object: observables,
-      errorMessage: e
-    };
-  }
-
-  return {
-    status: 'success',
-    object: savedOrder,
-    flavours: flavourRes
-  };
+  return await order.save();
 };
 
-// Example of incomingObj
 /**
- *  {
- *      _master: '5e1e7fcd20e4167bcfc3daa7'
- *      description: 'lng description',
+ * Performs all operations necessary to create a LNG Order record.
+ *
+ * Example of incomingObj
+ *
+ *  orders: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'order',
  *      ...
- *      addRole: 'public'
- *  }
+ *      OrderLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      OrderNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created lng order record
  */
-exports.createLNG = async function(args, res, next, incomingObj, masterId) {
-  // We must have a valid master ObjectID to continue.
-  if (!masterId || !ObjectId.isValid(masterId)) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'incomingObj._master was not valid ObjectId'
-    };
-  }
-
+exports.createLNG = async function(args, res, next, incomingObj) {
   let OrderLNG = mongoose.model('OrderLNG');
   let orderLNG = new OrderLNG();
 
   orderLNG._schemaName = 'OrderLNG';
-  orderLNG._master = new ObjectId(masterId);
+
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (orderLNG._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (orderLNG._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (orderLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
   orderLNG.read = ['sysadmin'];
   orderLNG.write = ['sysadmin'];
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole &&
-    incomingObj.addRole === 'public' &&
-    orderLNG.read.push('public') &&
-    (orderLNG.datePublished = new Date());
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    orderLNG.read.push('public');
+    orderLNG.datePublished = new Date();
+    orderLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
 
-  incomingObj.description && (orderLNG.description = incomingObj.description);
-
+  orderLNG.addedBy = args.swagger.params.auth_payload.displayName;
   orderLNG.dateAdded = new Date();
 
-  try {
-    let savedOrderLNG = await orderLNG.save();
-    return {
-      status: 'success',
-      object: savedOrderLNG
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: orderLNG,
-      errorMessage: e
-    };
-  }
+  // set master data
+  incomingObj.recordName && (orderLNG.recordName = incomingObj.recordName);
+  orderLNG.recordType = 'Order';
+  incomingObj.recordSubtype && (orderLNG.recordSubtype = incomingObj.recordSubtype);
+  incomingObj.dateIssued && (orderLNG.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (orderLNG.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.author && (orderLNG.author = incomingObj.author);
+  incomingObj.legislation && incomingObj.legislation.act && (orderLNG.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (orderLNG.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (orderLNG.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (orderLNG.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (orderLNG.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.issuedTo && (orderLNG.issuedTo = incomingObj.issuedTo);
+  incomingObj.projectName && (orderLNG.projectName = incomingObj.projectName);
+  incomingObj.location && (orderLNG.location = incomingObj.location);
+  incomingObj.centroid && (orderLNG.centroid = incomingObj.centroid);
+  incomingObj.outcomeStatus && (orderLNG.outcomeStatus = incomingObj.outcomeStatus);
+  incomingObj.outcomeDescription && (orderLNG.outcomeDescription = incomingObj.outcomeDescription);
+
+  // set flavour data
+  incomingObj.description && (orderLNG.description = incomingObj.description);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (orderLNG.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (orderLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (orderLNG.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return await orderLNG.save();
 };
 
-// Example of incomingObj
 /**
- *  {
- *      _master: '5e1e7fcd20e4167bcfc3daa7'
- *      description: 'nrced description',
+ * Performs all operations necessary to create a NRCED Order record.
+ *
+ * Example of incomingObj
+ *
+ *  orders: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'order',
  *      ...
- *      addRole: 'public'
- *  }
+ *      OrderLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      OrderNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created nrced order record
  */
-exports.createNRCED = async function(args, res, next, incomingObj, masterId) {
-  // We must have a valid master ObjectID to continue.
-  if (!masterId || !ObjectId.isValid(masterId)) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'incomingObj._master was not valid ObjectId'
-    };
-  }
-
+exports.createNRCED = async function(args, res, next, incomingObj) {
   let OrderNRCED = mongoose.model('OrderNRCED');
   let orderNRCED = new OrderNRCED();
 
   orderNRCED._schemaName = 'OrderNRCED';
-  orderNRCED._master = new ObjectId(masterId);
+
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (orderNRCED._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (orderNRCED._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (orderNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
   orderNRCED.read = ['sysadmin'];
   orderNRCED.write = ['sysadmin'];
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole &&
-    incomingObj.addRole === 'public' &&
-    orderNRCED.read.push('public') &&
-    (orderNRCED.datePublished = new Date());
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    orderNRCED.read.push('public');
+    orderNRCED.datePublished = new Date();
+    orderNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
 
-  incomingObj.summary && (orderNRCED.summary = incomingObj.summary);
-
+  orderNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   orderNRCED.dateAdded = new Date();
 
-  try {
-    let savedOrderNRCED = await orderNRCED.save();
-    return {
-      status: 'success',
-      object: savedOrderNRCED
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: orderNRCED,
-      errorMessage: e
-    };
-  }
+  // set master data
+  incomingObj.recordName && (orderNRCED.recordName = incomingObj.recordName);
+  orderNRCED.recordType = 'Order';
+  incomingObj.recordSubtype && (orderNRCED.recordSubtype = incomingObj.recordSubtype);
+  incomingObj.dateIssued && (orderNRCED.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (orderNRCED.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.author && (orderNRCED.author = incomingObj.author);
+  incomingObj.legislation && incomingObj.legislation.act && (orderNRCED.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (orderNRCED.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (orderNRCED.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (orderNRCED.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (orderNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.issuedTo && (orderNRCED.issuedTo = incomingObj.issuedTo);
+  incomingObj.projectName && (orderNRCED.projectName = incomingObj.projectName);
+  incomingObj.location && (orderNRCED.location = incomingObj.location);
+  incomingObj.centroid && (orderNRCED.centroid = incomingObj.centroid);
+  incomingObj.outcomeStatus && (orderNRCED.outcomeStatus = incomingObj.outcomeStatus);
+  incomingObj.outcomeDescription && (orderNRCED.outcomeDescription = incomingObj.outcomeDescription);
+
+  // set flavour data
+  incomingObj.summary && (orderNRCED.summary = incomingObj.summary);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (orderNRCED.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (orderNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (orderNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return await orderNRCED.save();
 };
