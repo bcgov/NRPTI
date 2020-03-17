@@ -1,176 +1,207 @@
 const mongoose = require('mongoose');
-const putUtils = require('../../utils/put-utils');
+const ObjectID = require('mongodb').ObjectID;
+const PutUtils = require('../../utils/put-utils');
 const CertificatePost = require('../post/certificate');
-const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 /**
- * Edit Master Certificate record.
+ * Performs all operations necessary to edit a master Certificate record and its associated flavour records.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * certificates: [
- *   {
- *      _id: '85ce24e603984b02a0f8edb42a334876',
+ *  certificates: [
+ *    {
  *      recordName: 'test abc',
- *      recordType: 'whatever',
+ *      recordType: 'certificate',
  *      ...
  *      CertificateLNG: {
  *        description: 'lng description'
  *        addRole: 'public',
+ *        ...
  *      }
- *   },
- *   ...
- * ]
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns object containing the operation's status and created records
  */
-exports.editMaster = async function(args, res, next, incomingObj) {
-  if (!incomingObj._id) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
-    };
-  }
+exports.editRecord = async function(args, res, next, incomingObj) {
+  // save flavour records
+  let observables = [];
+  let savedFlavourCertificates = [];
+  let flavourIds = [];
 
-  const _id = incomingObj._id;
-  delete incomingObj._id;
-
-  // Reject any changes to master perm
-  delete incomingObj.read;
-  delete incomingObj.write;
-
-  const Certificate = mongoose.model(RECORD_TYPE.Certificate._schemaName);
-
-  let sanitizedObj;
   try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(Certificate, incomingObj);
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error.message
-    };
-  }
+    // make a copy of the incoming object for use by the flavours only
+    const flavourIncomingObj = { ...incomingObj };
+    // Remove fields that should not be inherited from the master record
+    delete flavourIncomingObj._id;
+    delete flavourIncomingObj._schemaName;
+    delete flavourIncomingObj._flavourRecords;
+    delete flavourIncomingObj.read;
+    delete flavourIncomingObj.write;
 
-  const finalRes = {
-    status: 'success',
-    object: sanitizedObj,
-    flavours: null
-  };
-  let savedCertificate = null;
-  // Skip if there is nothing to update for master
-  if (sanitizedObj !== {}) {
-    sanitizedObj['dateUpdated'] = new Date();
-    sanitizedObj['updatedBy'] = args.swagger.params.auth_payload.displayName;
-    try {
-      savedCertificate = await Certificate.findOneAndUpdate(
-        { _schemaName: RECORD_TYPE.Certificate._schemaName, _id: _id },
-        { $set: sanitizedObj },
-        { new: true }
-      );
-      finalRes.object = savedCertificate;
-    } catch (error) {
-      finalRes.status = 'failure';
-      finalRes['errorMessage'] = error;
+    if (incomingObj.CertificateLNG) {
+      if (incomingObj.CertificateLNG._id) {
+        observables.push(this.editLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.CertificateLNG }));
+      } else {
+        observables.push(
+          CertificatePost.createLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.CertificateLNG })
+        );
+      }
+
+      delete incomingObj.CertificateLNG;
     }
-  }
 
-  // Flavours:
-  // When editing, we might get a request to make a brand new flavour rather than edit.
-  const observables = [];
-  if (incomingObj.CertificateLNG && incomingObj.CertificateLNG._id) {
-    observables.push(this.editLNG(args, res, next, incomingObj.CertificateLNG));
-    delete incomingObj.CertificateLNG;
-  } else if (incomingObj.CertificateLNG) {
-    observables.push(CertificatePost.createLNG(args, res, next, incomingObj.CertificateLNG, savedCertificate._id));
-    delete incomingObj.CertificateLNG;
-  }
+    if (observables.length > 0) {
+      savedFlavourCertificates = await Promise.all(observables);
 
-  // Execute edit flavours
-  try {
-    observables.length > 0 && (finalRes.flavours = await Promise.all(observables));
-  } catch (error) {
-    finalRes.flavours = {
+      flavourIds = savedFlavourCertificates.map(flavourCertificate => flavourCertificate._id);
+    }
+  } catch (e) {
+    return {
       status: 'failure',
-      object: observables,
-      errorMessage: error.message
+      object: savedFlavourCertificates,
+      errorMessage: e
     };
   }
 
-  return finalRes;
+  // save certificate record
+  let savedCertificate = null;
+
+  try {
+    savedCertificate = await this.editMaster(args, res, next, incomingObj, flavourIds);
+
+    return {
+      status: 'success',
+      object: savedCertificate,
+      flavours: savedFlavourCertificates
+    };
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedCertificate,
+      errorMessage: e
+    };
+  }
 };
 
 /**
- * Edit LNG Certificate Record
+ * Performs all operations necessary to edit a master Certificate record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _id: 'cd0b34a4ec1341288b5ea4164daffbf2'
- *   description: 'lng description',
- *   ...
- *   addRole: 'public'
- * }
+ *  certificates: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'certificate',
+ *      ...
+ *      CertificateLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited master certificate record
  */
-exports.editLNG = async function(args, res, next, incomingObj) {
-  if (!incomingObj._id) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
-    };
+exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the master record
+    return;
   }
 
   const _id = incomingObj._id;
   delete incomingObj._id;
 
-  // Reject any changes to permissions.
+  // Reject any changes to master permissions
+  delete incomingObj.read;
+  delete incomingObj.write;
+
+  const Certificate = mongoose.model('Certificate');
+
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(Certificate, incomingObj);
+
+  if (!sanitizedObj || sanitizedObj === {}) {
+    // skip, as there are no changes to master record
+    return;
+  }
+
+  sanitizedObj.dateUpdated = new Date();
+  sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
+
+  let updateObj = { $set: sanitizedObj };
+
+  if (flavourIds && flavourIds.length) {
+    updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
+  }
+
+  return await Certificate.findOneAndUpdate({ _schemaName: 'Certificate', _id: _id }, updateObj, { new: true });
+};
+
+/**
+ * Performs all operations necessary to edit a lng Certificate record.
+ *
+ * Example of incomingObj
+ *
+ *  certificates: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'certificate',
+ *      ...
+ *      CertificateLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited lng certificate record
+ */
+exports.editLNG = async function(args, res, next, incomingObj) {
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the lng record
+    return;
+  }
+
+  const _id = incomingObj._id;
+  delete incomingObj._id;
+
+  // Reject any changes to permissions
   // Publishing must be done via addRole or removeRole
   delete incomingObj.read;
   delete incomingObj.write;
 
-  // You cannot update _master
-  delete incomingObj._master;
+  let CertificateLNG = mongoose.model('CertificateLNG');
 
-  const CertificateLNG = mongoose.model(`${RECORD_TYPE.Certificate._schemaName}LNG`);
-
-  let sanitizedObj;
-  try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(CertificateLNG, incomingObj);
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error.message
-    };
-  }
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(CertificateLNG, incomingObj);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   let updateObj = { $set: sanitizedObj };
+
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj['$addToSet'] = { read: 'public' };
     updateObj.$set['datePublished'] = new Date();
-  } else if (incomingObj.removeRole === 'public') {
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj['$pull'] = { read: 'public' };
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
   }
+
   updateObj.$set['dateUpdated'] = new Date();
 
-  try {
-    const editRes = await CertificateLNG.findOneAndUpdate(
-      { _schemaName: `${RECORD_TYPE.Certificate._schemaName}LNG`, _id: _id },
-      updateObj,
-      {
-        new: true
-      }
-    );
-    return {
-      status: 'success',
-      object: editRes
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: CertificateLNG,
-      errorMessage: error.message
-    };
-  }
+  return await CertificateLNG.findOneAndUpdate({ _schemaName: 'CertificateLNG', _id: _id }, updateObj, { new: true });
 };

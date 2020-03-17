@@ -1,202 +1,372 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
 
-// Example of incomingObj
 /**
- *    inpsections: [
- *     {
- *       recordName: 'test abc',
- *       recordType: 'whatever',
- *       ...
- *       InspectionLNG: {
- *          description: 'lng description'
- *          addRole: 'public',
- *       }
- *     },
+ * Performs all operations necessary to create a master Inspection record and its associated flavour records.
+ *
+ * Example of incomingObj
+ *
+ *  inspections: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'inspection',
+ *      ...
+ *      InspectionLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      InspectionNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns object containing the operation's status and created records
  */
-exports.createMaster = async function(args, res, next, incomingObj) {
-  let Inspection = mongoose.model('Inspection');
-  let inpsection = new Inspection();
+exports.createRecord = async function(args, res, next, incomingObj) {
+  // save flavour records
+  let observables = [];
+  let savedFlavourInspections = [];
+  let flavourIds = [];
 
-  inpsection._schemaName = 'Inspection';
+  try {
+    incomingObj.InspectionLNG &&
+      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.InspectionLNG }));
+    incomingObj.InspectionNRCED &&
+      observables.push(this.createNRCED(args, res, next, { ...incomingObj, ...incomingObj.InspectionNRCED }));
+
+    if (observables.length > 0) {
+      savedFlavourInspections = await Promise.all(observables);
+
+      flavourIds = savedFlavourInspections.map(flavourInspection => flavourInspection._id);
+    }
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedFlavourInspections,
+      errorMessage: e
+    };
+  }
+
+  // save inspection record
+  let savedInspection = null;
+
+  try {
+    savedInspection = await this.createMaster(args, res, next, incomingObj, flavourIds);
+
+    return {
+      status: 'success',
+      object: savedInspection,
+      flavours: savedFlavourInspections
+    };
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedInspection,
+      errorMessage: e
+    };
+  }
+};
+
+/**
+ * Performs all operations necessary to create a master Inspection record.
+ *
+ * Example of incomingObj
+ *
+ *  inspections: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'inspection',
+ *      ...
+ *      InspectionLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      InspectionNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @param {*} flavourIds array of flavour record _ids
+ * @returns created master inspection record
+ */
+exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+  let Inspection = mongoose.model('Inspection');
+  let inspection = new Inspection();
+
+  inspection._schemaName = 'Inspection';
+
+  // set integration references
   incomingObj._epicProjectId &&
     ObjectId.isValid(incomingObj._epicProjectId) &&
-    (inpsection._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+    (inspection._epicProjectId = new ObjectId(incomingObj._epicProjectId));
   incomingObj._sourceRefId &&
     ObjectId.isValid(incomingObj._sourceRefId) &&
-    (inpsection._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+    (inspection._sourceRefId = new ObjectId(incomingObj._sourceRefId));
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
-    (inpsection._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+    (inspection._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
-  incomingObj.recordName && (inpsection.recordName = incomingObj.recordName);
-  inpsection.recordType = 'Inspection';
-  incomingObj.dateIssued && (inpsection.dateIssued = incomingObj.dateIssued);
-  incomingObj.issuingAgency && (inpsection.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.author && (inpsection.author = incomingObj.author);
-  incomingObj.legislation && incomingObj.legislation.act && (inpsection.legislation.act = incomingObj.legislation.act);
+  // set permissions
+  inspection.read = ['sysadmin'];
+  inspection.write = ['sysadmin'];
+
+  // set forward references
+  if (flavourIds && flavourIds.length) {
+    flavourIds.forEach(id => {
+      if (ObjectId.isValid(id)) {
+        inspection._flavourRecords.push(new ObjectId(id));
+      }
+    });
+  }
+
+  // set data
+  incomingObj.recordName && (inspection.recordName = incomingObj.recordName);
+  inspection.recordType = 'Inspection';
+  incomingObj.dateIssued && (inspection.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (inspection.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.author && (inspection.author = incomingObj.author);
+  incomingObj.legislation && incomingObj.legislation.act && (inspection.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
     incomingObj.legislation.regulation &&
-    (inpsection.legislation.regulation = incomingObj.legislation.regulation);
+    (inspection.legislation.regulation = incomingObj.legislation.regulation);
   incomingObj.legislation &&
     incomingObj.legislation.section &&
-    (inpsection.legislation.section = incomingObj.legislation.section);
+    (inspection.legislation.section = incomingObj.legislation.section);
   incomingObj.legislation &&
     incomingObj.legislation.subSection &&
-    (inpsection.legislation.subSection = incomingObj.legislation.subSection);
+    (inspection.legislation.subSection = incomingObj.legislation.subSection);
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
-    (inpsection.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.issuedTo && (inpsection.issuedTo = incomingObj.issuedTo);
-  incomingObj.projectName && (inpsection.projectName = incomingObj.projectName);
-  incomingObj.location && (inpsection.location = incomingObj.location);
-  incomingObj.centroid && (inpsection.centroid = incomingObj.centroid);
-  incomingObj.outcomeStatus && (inpsection.outcomeStatus = incomingObj.outcomeStatus);
-  incomingObj.outcomeDescription && (inpsection.outcomeDescription = incomingObj.outcomeDescription);
+    (inspection.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.issuedTo && (inspection.issuedTo = incomingObj.issuedTo);
+  incomingObj.projectName && (inspection.projectName = incomingObj.projectName);
+  incomingObj.location && (inspection.location = incomingObj.location);
+  incomingObj.centroid && (inspection.centroid = incomingObj.centroid);
+  incomingObj.outcomeStatus && (inspection.outcomeStatus = incomingObj.outcomeStatus);
+  incomingObj.outcomeDescription && (inspection.outcomeDescription = incomingObj.outcomeDescription);
 
-  inpsection.dateAdded = new Date();
-  inpsection.publishedBy = args.swagger.params.auth_payload.displayName;
+  // set meta
+  inspection.addedBy = args.swagger.params.auth_payload.displayName;
+  inspection.dateAdded = new Date();
 
-  incomingObj.sourceDateAdded && (inpsection.sourceDateAdded = incomingObj.sourceDateAdded);
-  incomingObj.sourceDateUpdated && (inpsection.sourceDateUpdated = incomingObj.sourceDateUpdated);
-  incomingObj.sourceSystemRef && (inpsection.sourceSystemRef = incomingObj.sourceSystemRef);
+  // set data source references
+  incomingObj.sourceDateAdded && (inspection.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (inspection.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (inspection.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  inpsection.read = ['sysadmin'];
-  inpsection.write = ['sysadmin'];
-
-  let savedInspection = null;
-  try {
-    savedInspection = await inpsection.save();
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: inpsection,
-      errorMessage: e
-    };
-  }
-
-  let observables = [];
-  incomingObj.InspectionLNG &&
-    observables.push(this.createLNG(args, res, next, incomingObj.InspectionLNG, savedInspection._id));
-  incomingObj.InspectionNRCED &&
-    observables.push(this.createNRCED(args, res, next, incomingObj.InspectionNRCED, savedInspection._id));
-
-  let flavourRes = null;
-  try {
-    observables.length > 0 && (flavourRes = await Promise.all(observables));
-  } catch (e) {
-    flavourRes = {
-      status: 'failure',
-      object: observables,
-      errorMessage: e
-    };
-  }
-
-  return {
-    status: 'success',
-    object: savedInspection,
-    flavours: flavourRes
-  };
+  return await inspection.save();
 };
 
-// Example of incomingObj
 /**
- *  {
- *      _master: '5e1e7fcd20e4167bcfc3daa7'
- *      description: 'lng description',
+ * Performs all operations necessary to create a LNG Inspection record.
+ *
+ * Example of incomingObj
+ *
+ *  inspections: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'inspection',
  *      ...
- *      addRole: 'public'
- *  }
+ *      InspectionLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      InspectionNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created lng inspection record
  */
-exports.createLNG = async function(args, res, next, incomingObj, masterId) {
-  // We must have a valid master ObjectID to continue.
-  if (!masterId || !ObjectId.isValid(masterId)) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'incomingObj._master was not valid ObjectId'
-    };
-  }
-
+exports.createLNG = async function(args, res, next, incomingObj) {
   let InspectionLNG = mongoose.model('InspectionLNG');
-  let inpsectionLNG = new InspectionLNG();
+  let inspectionLNG = new InspectionLNG();
 
-  inpsectionLNG._schemaName = 'InspectionLNG';
-  inpsectionLNG._master = new ObjectId(masterId);
-  inpsectionLNG.read = ['sysadmin'];
-  inpsectionLNG.write = ['sysadmin'];
+  inspectionLNG._schemaName = 'InspectionLNG';
+
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (inspectionLNG._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (inspectionLNG._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (inspectionLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
+  inspectionLNG.read = ['sysadmin'];
+  inspectionLNG.write = ['sysadmin'];
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole &&
-    incomingObj.addRole === 'public' &&
-    inpsectionLNG.read.push('public') &&
-    (inpsectionLNG.datePublished = new Date());
-
-  incomingObj.description && (inpsectionLNG.description = incomingObj.description);
-
-  inpsectionLNG.dateAdded = new Date();
-
-  try {
-    let savedInspectionLNG = await inpsectionLNG.save();
-    return {
-      status: 'success',
-      object: savedInspectionLNG
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: inpsectionLNG,
-      errorMessage: e
-    };
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    inspectionLNG.read.push('public');
+    inspectionLNG.datePublished = new Date();
+    inspectionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
+
+  inspectionLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  inspectionLNG.dateAdded = new Date();
+
+  // set master data
+  incomingObj.recordName && (inspectionLNG.recordName = incomingObj.recordName);
+  inspectionLNG.recordType = 'Inspection';
+  incomingObj.dateIssued && (inspectionLNG.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (inspectionLNG.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.author && (inspectionLNG.author = incomingObj.author);
+  incomingObj.legislation &&
+    incomingObj.legislation.act &&
+    (inspectionLNG.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (inspectionLNG.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (inspectionLNG.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (inspectionLNG.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (inspectionLNG.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.issuedTo && (inspectionLNG.issuedTo = incomingObj.issuedTo);
+  incomingObj.projectName && (inspectionLNG.projectName = incomingObj.projectName);
+  incomingObj.location && (inspectionLNG.location = incomingObj.location);
+  incomingObj.centroid && (inspectionLNG.centroid = incomingObj.centroid);
+  incomingObj.outcomeStatus && (inspectionLNG.outcomeStatus = incomingObj.outcomeStatus);
+  incomingObj.outcomeDescription && (inspectionLNG.outcomeDescription = incomingObj.outcomeDescription);
+
+  // set flavour data
+  incomingObj.description && (inspectionLNG.description = incomingObj.description);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (inspectionLNG.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (inspectionLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (inspectionLNG.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return await inspectionLNG.save();
 };
 
-// Example of incomingObj
 /**
- *  {
- *      _master: '5e1e7fcd20e4167bcfc3daa7'
- *      description: 'nrced description',
+ * Performs all operations necessary to create a NRCED Inspection record.
+ *
+ * Example of incomingObj
+ *
+ *  inspections: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'inspection',
  *      ...
- *      addRole: 'public'
- *  }
+ *      InspectionLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      InspectionNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created nrced inspection record
  */
-exports.createNRCED = async function(args, res, next, incomingObj, masterId) {
-  // We must have a valid master ObjectID to continue.
-  if (!masterId || !ObjectId.isValid(masterId)) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'incomingObj._master was not valid ObjectId'
-    };
-  }
-
+exports.createNRCED = async function(args, res, next, incomingObj) {
   let InspectionNRCED = mongoose.model('InspectionNRCED');
-  let inpsectionNRCED = new InspectionNRCED();
+  let inspectionNRCED = new InspectionNRCED();
 
-  inpsectionNRCED._schemaName = 'InspectionNRCED';
-  inpsectionNRCED._master = new ObjectId(masterId);
-  inpsectionNRCED.read = ['sysadmin'];
-  inpsectionNRCED.write = ['sysadmin'];
+  inspectionNRCED._schemaName = 'InspectionNRCED';
+
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (inspectionNRCED._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (inspectionNRCED._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (inspectionNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
+  inspectionNRCED.read = ['sysadmin'];
+  inspectionNRCED.write = ['sysadmin'];
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole &&
-    incomingObj.addRole === 'public' &&
-    inpsectionNRCED.read.push('public') &&
-    (inpsectionNRCED.datePublished = new Date());
-
-  incomingObj.summary && (inpsectionNRCED.summary = incomingObj.summary);
-
-  inpsectionNRCED.dateAdded = new Date();
-
-  try {
-    let savedInspectionNRCED = await inpsectionNRCED.save();
-    return {
-      status: 'success',
-      object: savedInspectionNRCED
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: inpsectionNRCED,
-      errorMessage: e
-    };
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    inspectionNRCED.read.push('public');
+    inspectionNRCED.datePublished = new Date();
+    inspectionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
+
+  inspectionNRCED.addedBy = args.swagger.params.auth_payload.displayName;
+  inspectionNRCED.dateAdded = new Date();
+
+  // set master data
+  incomingObj.recordName && (inspectionNRCED.recordName = incomingObj.recordName);
+  inspectionNRCED.recordType = 'Inspection';
+  incomingObj.dateIssued && (inspectionNRCED.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (inspectionNRCED.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.author && (inspectionNRCED.author = incomingObj.author);
+  incomingObj.legislation &&
+    incomingObj.legislation.act &&
+    (inspectionNRCED.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (inspectionNRCED.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (inspectionNRCED.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (inspectionNRCED.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (inspectionNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.issuedTo && (inspectionNRCED.issuedTo = incomingObj.issuedTo);
+  incomingObj.projectName && (inspectionNRCED.projectName = incomingObj.projectName);
+  incomingObj.location && (inspectionNRCED.location = incomingObj.location);
+  incomingObj.centroid && (inspectionNRCED.centroid = incomingObj.centroid);
+  incomingObj.outcomeStatus && (inspectionNRCED.outcomeStatus = incomingObj.outcomeStatus);
+  incomingObj.outcomeDescription && (inspectionNRCED.outcomeDescription = incomingObj.outcomeDescription);
+
+  // set flavour data
+  incomingObj.summary && (inspectionNRCED.summary = incomingObj.summary);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (inspectionNRCED.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (inspectionNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (inspectionNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return await inspectionNRCED.save();
 };

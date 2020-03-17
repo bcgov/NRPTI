@@ -1,30 +1,117 @@
-const mongoose = require('mongoose');
-const ObjectId = require('mongoose').Types.ObjectId;
-const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+let mongoose = require('mongoose');
+let ObjectId = require('mongoose').Types.ObjectId;
 
 /**
- * Create Master Ticket record.
+ * Performs all operations necessary to create a master Ticket record and its associated flavour records.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * ticket: [
- *   {
- *     recordName: 'test abc',
- *     recordType: 'whatever',
- *     ...
- *     TicketLNG: {
- *       description: 'lng description'
- *       addRole: 'public',
- *     }
- *   },
- *   ...
- * ]
+ *  tickets: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'ticket',
+ *      ...
+ *      TicketLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      TicketNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns object containing the operation's status and created records
  */
-exports.createMaster = async function(args, res, next, incomingObj) {
-  const Ticket = mongoose.model(RECORD_TYPE.Ticket._schemaName);
-  const ticket = new Ticket();
+exports.createRecord = async function(args, res, next, incomingObj) {
+  // save flavour records
+  let observables = [];
+  let savedFlavourTickets = [];
+  let flavourIds = [];
 
-  ticket._schemaName = RECORD_TYPE.Ticket._schemaName;
+  try {
+    incomingObj.TicketLNG &&
+      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.TicketLNG }));
+    incomingObj.TicketNRCED &&
+      observables.push(this.createNRCED(args, res, next, { ...incomingObj, ...incomingObj.TicketNRCED }));
+
+    if (observables.length > 0) {
+      savedFlavourTickets = await Promise.all(observables);
+
+      flavourIds = savedFlavourTickets.map(flavourTicket => flavourTicket._id);
+    }
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedFlavourTickets,
+      errorMessage: e
+    };
+  }
+
+  // save ticket record
+  let savedTicket = null;
+
+  try {
+    savedTicket = await this.createMaster(args, res, next, incomingObj, flavourIds);
+
+    return {
+      status: 'success',
+      object: savedTicket,
+      flavours: savedFlavourTickets
+    };
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedTicket,
+      errorMessage: e
+    };
+  }
+};
+
+/**
+ * Performs all operations necessary to create a master Ticket record.
+ *
+ * Example of incomingObj
+ *
+ *  tickets: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'ticket',
+ *      ...
+ *      TicketLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      TicketNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @param {*} flavourIds array of flavour record _ids
+ * @returns created master ticket record
+ */
+exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+  let Ticket = mongoose.model('Ticket');
+  let ticket = new Ticket();
+
+  ticket._schemaName = 'Ticket';
+
+  // set integration references
   incomingObj._epicProjectId &&
     ObjectId.isValid(incomingObj._epicProjectId) &&
     (ticket._epicProjectId = new ObjectId(incomingObj._epicProjectId));
@@ -35,8 +122,22 @@ exports.createMaster = async function(args, res, next, incomingObj) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (ticket._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
+  // set permissions
+  ticket.read = ['sysadmin'];
+  ticket.write = ['sysadmin'];
+
+  // set forward references
+  if (flavourIds && flavourIds.length) {
+    flavourIds.forEach(id => {
+      if (ObjectId.isValid(id)) {
+        ticket._flavourRecords.push(new ObjectId(id));
+      }
+    });
+  }
+
+  // set data
   incomingObj.recordName && (ticket.recordName = incomingObj.recordName);
-  ticket.recordType = RECORD_TYPE.Ticket.displayName;
+  ticket.recordType = 'Ticket';
   incomingObj.dateIssued && (ticket.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (ticket.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (ticket.author = incomingObj.author);
@@ -61,157 +162,210 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   incomingObj.outcomeDescription && (ticket.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (ticket.penalty = incomingObj.penalty);
 
+  // set meta
+  ticket.addedBy = args.swagger.params.auth_payload.displayName;
   ticket.dateAdded = new Date();
-  ticket.publishedBy = args.swagger.params.auth_payload.displayName;
 
+  // set data source references
   incomingObj.sourceDateAdded && (ticket.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (ticket.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (ticket.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  ticket.read = ['sysadmin'];
-  ticket.write = ['sysadmin'];
-
-  let savedTicket = null;
-  try {
-    savedTicket = await ticket.save();
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: ticket,
-      errorMessage: error
-    };
-  }
-
-  const observables = [];
-  incomingObj.TicketLNG && observables.push(this.createLNG(args, res, next, incomingObj.TicketLNG, savedTicket._id));
-  incomingObj.TicketNRCED &&
-    observables.push(this.createNRCED(args, res, next, incomingObj.TicketNRCED, savedTicket._id));
-
-  let flavourRes = null;
-  try {
-    observables.length > 0 && (flavourRes = await Promise.all(observables));
-  } catch (error) {
-    flavourRes = {
-      status: 'failure',
-      object: observables,
-      errorMessage: error.message
-    };
-  }
-
-  return {
-    status: 'success',
-    object: savedTicket,
-    flavours: flavourRes
-  };
+  return await ticket.save();
 };
 
 /**
- * Create LNG Ticket record.
+ * Performs all operations necessary to create a LNG Ticket record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _master: '5e1e7fcd20e4167bcfc3daa7'
- *   description: 'lng description',
- *   ...
- *   addRole: 'public'
- * }
+ *  tickets: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'ticket',
+ *      ...
+ *      TicketLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      TicketNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created lng ticket record
  */
-exports.createLNG = async function(args, res, next, incomingObj, masterId) {
-  // We must have a valid master ObjectID to continue.
-  if (!masterId || !ObjectId.isValid(masterId)) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'incomingObj._master was not valid ObjectId'
-    };
-  }
+exports.createLNG = async function(args, res, next, incomingObj) {
+  let TicketLNG = mongoose.model('TicketLNG');
+  let ticketLNG = new TicketLNG();
 
-  const TicketLNG = mongoose.model(RECORD_TYPE.Ticket.flavours.lng._schemaName);
-  const ticketLNG = new TicketLNG();
+  ticketLNG._schemaName = 'TicketLNG';
 
-  ticketLNG._schemaName = RECORD_TYPE.Ticket.flavours.lng._schemaName;
-  ticketLNG._master = new ObjectId(masterId);
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (ticketLNG._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (ticketLNG._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (ticketLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
   ticketLNG.read = ['sysadmin'];
   ticketLNG.write = ['sysadmin'];
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole &&
-    incomingObj.addRole === 'public' &&
-    ticketLNG.read.push('public') &&
-    (ticketLNG.datePublished = new Date());
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    ticketLNG.read.push('public');
+    ticketLNG.datePublished = new Date();
+    ticketLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
 
-  incomingObj.description && (ticketLNG.description = incomingObj.description);
-
+  ticketLNG.addedBy = args.swagger.params.auth_payload.displayName;
   ticketLNG.dateAdded = new Date();
 
-  try {
-    const savedTicketLNG = await ticketLNG.save();
-    return {
-      status: 'success',
-      object: savedTicketLNG
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: ticketLNG,
-      errorMessage: error.message
-    };
-  }
+  // set master data
+  incomingObj.recordName && (ticketLNG.recordName = incomingObj.recordName);
+  ticketLNG.recordType = 'Ticket';
+  incomingObj.dateIssued && (ticketLNG.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (ticketLNG.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.author && (ticketLNG.author = incomingObj.author);
+  incomingObj.legislation && incomingObj.legislation.act && (ticketLNG.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (ticketLNG.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (ticketLNG.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (ticketLNG.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (ticketLNG.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.issuedTo && (ticketLNG.issuedTo = incomingObj.issuedTo);
+  incomingObj.projectName && (ticketLNG.projectName = incomingObj.projectName);
+  incomingObj.location && (ticketLNG.location = incomingObj.location);
+  incomingObj.centroid && (ticketLNG.centroid = incomingObj.centroid);
+  incomingObj.outcomeStatus && (ticketLNG.outcomeStatus = incomingObj.outcomeStatus);
+  incomingObj.outcomeDescription && (ticketLNG.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.penalty && (ticketLNG.penalty = incomingObj.penalty);
+
+  // set flavour data
+  incomingObj.description && (ticketLNG.description = incomingObj.description);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (ticketLNG.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (ticketLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (ticketLNG.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return await ticketLNG.save();
 };
 
 /**
- * Create NRCED Ticket record.
+ * Performs all operations necessary to create a NRCED Ticket record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _master: '5e1e7fcd20e4167bcfc3daa7'
- *   description: 'nrced description',
- *   ...
- *   addRole: 'public'
- * }
+ *  tickets: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'ticket',
+ *      ...
+ *      TicketLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      TicketNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created nrced ticket record
  */
-exports.createNRCED = async function(args, res, next, incomingObj, masterId) {
-  // We must have a valid master ObjectID to continue.
-  if (!masterId || !ObjectId.isValid(masterId)) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'incomingObj._master was not valid ObjectId'
-    };
-  }
+exports.createNRCED = async function(args, res, next, incomingObj) {
+  let TicketNRCED = mongoose.model('TicketNRCED');
+  let ticketNRCED = new TicketNRCED();
 
-  console.log(RECORD_TYPE.Ticket.flavours.nrced._schemaName);
-  const TicketNRCED = mongoose.model(RECORD_TYPE.Ticket.flavours.nrced._schemaName);
-  const ticketNRCED = new TicketNRCED();
+  ticketNRCED._schemaName = 'TicketNRCED';
 
-  ticketNRCED._schemaName = RECORD_TYPE.Ticket.flavours.nrced._schemaName;
-  ticketNRCED._master = new ObjectId(masterId);
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (ticketNRCED._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (ticketNRCED._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (ticketNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
   ticketNRCED.read = ['sysadmin'];
   ticketNRCED.write = ['sysadmin'];
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole &&
-    incomingObj.addRole === 'public' &&
-    ticketNRCED.read.push('public') &&
-    (ticketNRCED.datePublished = new Date());
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    ticketNRCED.read.push('public');
+    ticketNRCED.datePublished = new Date();
+    ticketNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
 
-  incomingObj.summary && (ticketNRCED.summary = incomingObj.summary);
-
+  ticketNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   ticketNRCED.dateAdded = new Date();
 
-  console.log(ticketNRCED);
-  try {
-    const savedTicketNRCED = await ticketNRCED.save();
-    console.log(savedTicketNRCED);
-    return {
-      status: 'success',
-      object: savedTicketNRCED
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: ticketNRCED,
-      errorMessage: error.message
-    };
-  }
+  // set master data
+  incomingObj.recordName && (ticketNRCED.recordName = incomingObj.recordName);
+  ticketNRCED.recordType = 'Ticket';
+  incomingObj.dateIssued && (ticketNRCED.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (ticketNRCED.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.author && (ticketNRCED.author = incomingObj.author);
+  incomingObj.legislation && incomingObj.legislation.act && (ticketNRCED.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (ticketNRCED.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (ticketNRCED.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (ticketNRCED.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (ticketNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.issuedTo && (ticketNRCED.issuedTo = incomingObj.issuedTo);
+  incomingObj.projectName && (ticketNRCED.projectName = incomingObj.projectName);
+  incomingObj.location && (ticketNRCED.location = incomingObj.location);
+  incomingObj.centroid && (ticketNRCED.centroid = incomingObj.centroid);
+  incomingObj.outcomeStatus && (ticketNRCED.outcomeStatus = incomingObj.outcomeStatus);
+  incomingObj.outcomeDescription && (ticketNRCED.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.penalty && (ticketNRCED.penalty = incomingObj.penalty);
+
+  // set flavour data
+  incomingObj.summary && (ticketNRCED.summary = incomingObj.summary);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (ticketNRCED.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (ticketNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (ticketNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return await ticketNRCED.save();
 };

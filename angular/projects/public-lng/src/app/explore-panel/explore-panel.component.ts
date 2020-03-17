@@ -42,7 +42,7 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
         object.textFilters.forEach(filter => {
           // e.g.:
           // filter.displayName: "EAO/BCOGC"
-          // filter.fieldName: "_master.issuingAgency"
+          // filter.fieldName: "issuingAgency"
           if (keys.includes(filter.fieldName)) {
             this.textFilterKeys[filter.fieldName] = params[filter.fieldName].split(',');
           } else {

@@ -116,8 +116,60 @@ exports.up = async function(db) {
 };
 
 const createAdministrativePenalty = async function(row, nrptiCollection) {
+  let flavourRecordNRCED = {
+    _schemaName: RECORD_TYPE.AdministrativePenalty.flavours.nrced._schemaName,
+
+    read: ['sysadmin', 'public'],
+    write: ['sysadmin'],
+
+    recordName: row[16],
+    recordType: RECORD_TYPE.AdministrativePenalty.displayName,
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued:
+      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
+      moment(row[1], 'YYYY')
+        .quarter(row[2])
+        .toDate(),
+    // issuingAgency: '',
+    // author: '',
+    legislation: {
+      act: row[11],
+      regulation: row[12],
+      section: row[13],
+      subSection: row[14].replace(/[()]/g, ''),
+      paragraph: row[15].replace(/[()]/g, '').replace(/[()]/g, '')
+    },
+    issuedTo: row[3],
+    // projectName: '',
+    location: row[10],
+    // centroid: '',
+    // outcomeStatus: '',
+    // outcomeDescription: '',
+    penalty: row[19],
+    // attachments: null,
+
+    summary: row[17],
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    datePublished: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+    publishedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'nrced-csv'
+  };
+
+  const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
+  const flavourId = responseflavourNRCED.insertedId.toString();
+
   const masterRecord = {
     _schemaName: RECORD_TYPE.AdministrativePenalty._schemaName,
+    _flavourRecords: [flavourId],
+
     read: ['sysadmin'],
     write: ['sysadmin'],
 
@@ -149,34 +201,73 @@ const createAdministrativePenalty = async function(row, nrptiCollection) {
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
+
+    addedBy: 'System',
     updatedBy: 'System',
-    publishedBy: 'System',
+
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced'
+    sourceSystemRef: 'nrced-csv'
   };
 
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
-  const masterId = responseMaster.insertedId.toString();
-  // console.log('Inserted MasterID:', masterId);
-
-  let flavourRecordNRCED = {
-    _schemaName: RECORD_TYPE.AdministrativePenalty.flavours.nrced._schemaName,
-    dateUpdated: new Date(),
-    datePublished: new Date(),
-    read: ['public', 'sysadmin'],
-    write: ['sysadmin'],
-    _master: new ObjectID(masterId),
-    summary: row[17]
-  };
-
-  const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
-  // console.log('Inserted FlavourNRCEDID:', responseflavourNRCED.insertedId.toString());
 };
 
 const createAdministrativeSanction = async function(row, nrptiCollection) {
+  let flavourRecordNRCED = {
+    _schemaName: RECORD_TYPE.AdministrativeSanction.flavours.nrced._schemaName,
+
+    read: ['sysadmin', 'public'],
+    write: ['sysadmin'],
+
+    recordName: row[16],
+    recordType: RECORD_TYPE.AdministrativeSanction.displayName,
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued:
+      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
+      moment(row[1], 'YYYY')
+        .quarter(row[2])
+        .toDate(),
+    // issuingAgency: '',
+    // author: '',
+    legislation: {
+      act: row[11],
+      regulation: row[12],
+      section: row[13],
+      subSection: row[14].replace(/[()]/g, ''),
+      paragraph: row[15].replace(/[()]/g, '')
+    },
+    issuedTo: row[3],
+    // projectName: '',
+    location: row[10],
+    // centroid: '',
+    // outcomeStatus: '',
+    // outcomeDescription: '',
+    penalty: row[19],
+    // attachments: null,
+
+    summary: row[17],
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    datePublished: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+    publishedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'nrced-csv'
+  };
+
+  const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
+  const flavourId = responseflavourNRCED.insertedId.toString();
+
   const masterRecord = {
     _schemaName: RECORD_TYPE.AdministrativeSanction._schemaName,
+    _flavourRecords: [flavourId],
+
     read: ['sysadmin'],
     write: ['sysadmin'],
 
@@ -208,29 +299,16 @@ const createAdministrativeSanction = async function(row, nrptiCollection) {
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
+
+    addedBy: 'System',
     updatedBy: 'System',
-    publishedBy: 'System',
+
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced'
+    sourceSystemRef: 'nrced-csv'
   };
 
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
-  const masterId = responseMaster.insertedId.toString();
-  // console.log('Inserted MasterID:', masterId);
-
-  let flavourRecordNRCED = {
-    _schemaName: RECORD_TYPE.AdministrativeSanction.flavours.nrced._schemaName,
-    dateUpdated: new Date(),
-    datePublished: new Date(),
-    read: ['public', 'sysadmin'],
-    write: ['sysadmin'],
-    _master: new ObjectID(masterId),
-    summary: row[17]
-  };
-
-  const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
-  // console.log('Inserted FlavourNRCEDID:', responseflavourNRCED.insertedId.toString());
 };
 
 const createCourtConviction = async function(row, nrptiCollection) {
@@ -239,8 +317,60 @@ const createCourtConviction = async function(row, nrptiCollection) {
 };
 
 const createInspection = async function(row, nrptiCollection) {
+  let flavourRecordNRCED = {
+    _schemaName: RECORD_TYPE.Inspection.flavours.nrced._schemaName,
+
+    read: ['sysadmin', 'public'],
+    write: ['sysadmin'],
+
+    recordName: row[16],
+    recordType: RECORD_TYPE.Inspection.displayName,
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued:
+      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
+      moment(row[1], 'YYYY')
+        .quarter(row[2])
+        .toDate(),
+    // issuingAgency: '',
+    // author: '',
+    legislation: {
+      act: row[11],
+      regulation: row[12],
+      section: row[13],
+      subSection: row[14].replace(/[()]/g, ''),
+      paragraph: row[15].replace(/[()]/g, '')
+    },
+    issuedTo: row[3],
+    // projectName: '',
+    location: row[10],
+    // centroid: '',
+    // outcomeStatus: '',
+    // outcomeDescription: '',
+    // penalty: '',
+    // attachments: null,
+
+    summary: row[17],
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    datePublished: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+    publishedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'nrced-csv'
+  };
+
+  const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
+  const flavourId = responseflavourNRCED.insertedId.toString();
+
   const masterRecord = {
     _schemaName: RECORD_TYPE.Inspection._schemaName,
+    _flavourRecords: [flavourId],
+
     read: ['sysadmin'],
     write: ['sysadmin'],
 
@@ -272,34 +402,73 @@ const createInspection = async function(row, nrptiCollection) {
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
+
+    addedBy: 'System',
     updatedBy: 'System',
-    publishedBy: 'System',
+
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced'
+    sourceSystemRef: 'nrced-csv'
   };
 
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
-  const masterId = responseMaster.insertedId.toString();
-  // console.log('Inserted MasterID:', masterId);
-
-  let flavourRecordNRCED = {
-    _schemaName: RECORD_TYPE.Inspection.flavours.nrced._schemaName,
-    dateUpdated: new Date(),
-    datePublished: new Date(),
-    read: ['public', 'sysadmin'],
-    write: ['sysadmin'],
-    _master: new ObjectID(masterId),
-    summary: row[17]
-  };
-
-  const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
-  // console.log('Inserted FlavourNRCEDID:', responseflavourNRCED.insertedId.toString());
 };
 
 const createOrder = async function(row, nrptiCollection) {
+  let flavourRecordNRCED = {
+    _schemaName: RECORD_TYPE.Order.flavours.nrced._schemaName,
+
+    read: ['sysadmin', 'public'],
+    write: ['sysadmin'],
+
+    recordName: row[16],
+    recordType: RECORD_TYPE.Order.displayName,
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued:
+      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
+      moment(row[1], 'YYYY')
+        .quarter(row[2])
+        .toDate(),
+    // issuingAgency: '',
+    // author: '',
+    legislation: {
+      act: row[11],
+      regulation: row[12],
+      section: row[13],
+      subSection: row[14].replace(/[()]/g, ''),
+      paragraph: row[15].replace(/[()]/g, '')
+    },
+    issuedTo: row[3],
+    // projectName: '',
+    location: row[10],
+    // centroid: '',
+    // outcomeStatus: '',
+    // outcomeDescription: '',
+    // penalty: '',
+    // attachments: null,
+
+    summary: row[17],
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    datePublished: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+    publishedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'nrced-csv'
+  };
+
+  const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
+  const flavourId = responseflavourNRCED.insertedId.toString();
+
   const masterRecord = {
     _schemaName: RECORD_TYPE.Order._schemaName,
+    _flavourRecords: [flavourId],
+
     read: ['sysadmin'],
     write: ['sysadmin'],
 
@@ -331,34 +500,73 @@ const createOrder = async function(row, nrptiCollection) {
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
+
+    addedBy: 'System',
     updatedBy: 'System',
-    publishedBy: 'System',
+
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced'
+    sourceSystemRef: 'nrced-csv'
   };
 
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
-  const masterId = responseMaster.insertedId.toString();
-  // console.log('Inserted MasterID:', masterId);
-
-  let flavourRecordNRCED = {
-    _schemaName: RECORD_TYPE.Order.flavours.nrced._schemaName,
-    dateUpdated: new Date(),
-    datePublished: new Date(),
-    read: ['public', 'sysadmin'],
-    write: ['sysadmin'],
-    _master: new ObjectID(masterId),
-    summary: row[17]
-  };
-
-  const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
-  // console.log('Inserted FlavourNRCEDID:', responseflavourNRCED.insertedId.toString());
 };
 
 const createRestorativeJustice = async function(row, nrptiCollection) {
+  let flavourRecordNRCED = {
+    _schemaName: RECORD_TYPE.RestorativeJustice.flavours.nrced._schemaName,
+
+    read: ['sysadmin', 'public'],
+    write: ['sysadmin'],
+
+    recordName: row[16],
+    recordType: RECORD_TYPE.RestorativeJustice.displayName,
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued:
+      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
+      moment(row[1], 'YYYY')
+        .quarter(row[2])
+        .toDate(),
+    // issuingAgency: '',
+    // author: '',
+    legislation: {
+      act: row[11],
+      regulation: row[12],
+      section: row[13],
+      subSection: row[14].replace(/[()]/g, ''),
+      paragraph: row[15].replace(/[()]/g, '')
+    },
+    issuedTo: row[3],
+    // projectName: '',
+    location: row[10],
+    // centroid: '',
+    // outcomeStatus: '',
+    // outcomeDescription: '',
+    penalty: row[19],
+    // attachments: null,
+
+    summary: row[17],
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    datePublished: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+    publishedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'nrced-csv'
+  };
+
+  const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
+  const flavourId = responseflavourNRCED.insertedId.toString();
+
   const masterRecord = {
     _schemaName: RECORD_TYPE.RestorativeJustice._schemaName,
+    _flavourRecords: [flavourId],
+
     read: ['sysadmin'],
     write: ['sysadmin'],
 
@@ -390,34 +598,73 @@ const createRestorativeJustice = async function(row, nrptiCollection) {
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
+
+    addedBy: 'System',
     updatedBy: 'System',
-    publishedBy: 'System',
+
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced'
+    sourceSystemRef: 'nrced-csv'
   };
 
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
-  const masterId = responseMaster.insertedId.toString();
-  // console.log('Inserted MasterID:', masterId);
-
-  let flavourRecordNRCED = {
-    _schemaName: RECORD_TYPE.RestorativeJustice.flavours.nrced._schemaName,
-    dateUpdated: new Date(),
-    datePublished: new Date(),
-    read: ['public', 'sysadmin'],
-    write: ['sysadmin'],
-    _master: new ObjectID(masterId),
-    summary: row[17]
-  };
-
-  const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
-  // console.log('Inserted FlavourNRCEDID:', responseflavourNRCED.insertedId.toString());
 };
 
 const createTicket = async function(row, nrptiCollection) {
+  let flavourRecordNRCED = {
+    _schemaName: RECORD_TYPE.Ticket.flavours.nrced._schemaName,
+
+    read: ['sysadmin', 'public'],
+    write: ['sysadmin'],
+
+    recordName: row[16],
+    recordType: RECORD_TYPE.Ticket.displayName,
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued:
+      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
+      moment(row[1], 'YYYY')
+        .quarter(row[2])
+        .toDate(),
+    // issuingAgency: '',
+    // author: '',
+    legislation: {
+      act: row[11],
+      regulation: row[12],
+      section: row[13],
+      subSection: row[14].replace(/[()]/g, ''),
+      paragraph: row[15].replace(/[()]/g, '')
+    },
+    issuedTo: row[3],
+    // projectName: '',
+    location: row[10],
+    // centroid: '',
+    // outcomeStatus: '',
+    // outcomeDescription: '',
+    penalty: row[19],
+    // attachments: null,
+
+    summary: row[17],
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    datePublished: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+    publishedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'nrced-csv'
+  };
+
+  const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
+  const flavourId = responseflavourNRCED.insertedId.toString();
+
   const masterRecord = {
     _schemaName: RECORD_TYPE.Ticket._schemaName,
+    _flavourRecords: [flavourId],
+
     read: ['sysadmin'],
     write: ['sysadmin'],
 
@@ -449,34 +696,73 @@ const createTicket = async function(row, nrptiCollection) {
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
+
+    addedBy: 'System',
     updatedBy: 'System',
-    publishedBy: 'System',
+
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced'
+    sourceSystemRef: 'nrced-csv'
   };
 
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
-  const masterId = responseMaster.insertedId.toString();
-  // console.log('Inserted MasterID:', masterId);
-
-  let flavourRecordNRCED = {
-    _schemaName: RECORD_TYPE.Ticket.flavours.nrced._schemaName,
-    dateUpdated: new Date(),
-    datePublished: new Date(),
-    read: ['public', 'sysadmin'],
-    write: ['sysadmin'],
-    _master: new ObjectID(masterId),
-    summary: row[17]
-  };
-
-  const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
-  // console.log('Inserted FlavourNRCEDID:', responseflavourNRCED.insertedId.toString());
 };
 
 const createWarning = async function(row, nrptiCollection) {
+  let flavourRecordNRCED = {
+    _schemaName: RECORD_TYPE.Warning.flavours.nrced._schemaName,
+
+    read: ['sysadmin', 'public'],
+    write: ['sysadmin'],
+
+    recordName: row[16],
+    recordType: RECORD_TYPE.Warning.displayName,
+    // recordSubtype: '',
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued:
+      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
+      moment(row[1], 'YYYY')
+        .quarter(row[2])
+        .toDate(),
+    // issuingAgency: '',
+    // author: '',
+    legislation: {
+      act: row[11],
+      regulation: row[12],
+      section: row[13],
+      subSection: row[14].replace(/[()]/g, ''),
+      paragraph: row[15].replace(/[()]/g, '')
+    },
+    issuedTo: row[3],
+    // projectName: '',
+    location: row[10],
+    // centroid: '',
+    // outcomeStatus: '',
+    // outcomeDescription: '',
+    // attachments: null,
+
+    summary: row[17],
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    datePublished: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+    publishedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'nrced-csv'
+  };
+
+  const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
+  const flavourId = responseflavourNRCED.insertedId.toString();
+
   const masterRecord = {
     _schemaName: RECORD_TYPE.Warning._schemaName,
+    _flavourRecords: [flavourId],
+
     read: ['sysadmin'],
     write: ['sysadmin'],
 
@@ -508,29 +794,16 @@ const createWarning = async function(row, nrptiCollection) {
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
+
+    addedBy: 'System',
     updatedBy: 'System',
-    publishedBy: 'System',
+
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced'
+    sourceSystemRef: 'nrced-csv'
   };
 
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
-  const masterId = responseMaster.insertedId.toString();
-  // console.log('Inserted MasterID:', masterId);
-
-  let flavourRecordNRCED = {
-    _schemaName: RECORD_TYPE.Warning.flavours.nrced._schemaName,
-    dateUpdated: new Date(),
-    datePublished: new Date(),
-    read: ['public', 'sysadmin'],
-    write: ['sysadmin'],
-    _master: new ObjectID(masterId),
-    summary: row[17]
-  };
-
-  const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
-  // console.log('Inserted FlavourNRCEDID:', responseflavourNRCED.insertedId.toString());
 };
 
 exports.down = function(db) {
