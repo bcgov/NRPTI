@@ -44,7 +44,7 @@ let EditManagementPlan = require('./put/management-plan');
  * @param {*} res
  * @param {*} next
  */
-exports.protectedOptions = function (args, res, next) {
+exports.protectedOptions = function(args, res, next) {
   res.status(200).send();
 };
 
@@ -56,7 +56,7 @@ exports.protectedOptions = function (args, res, next) {
  * @param {*} next
  * @returns
  */
-exports.protectedGet = function (args, res, next) {
+exports.protectedGet = function(args, res, next) {
   return queryActions.sendResponse(res, 501);
 };
 
@@ -103,7 +103,7 @@ exports.protectedGet = function (args, res, next) {
  *   ...
  * }
  */
-exports.protectedPost = async function (args, res, next) {
+exports.protectedPost = async function(args, res, next) {
   let observables = [];
 
   if (args.swagger.params.data && args.swagger.params.data.value) {
@@ -171,7 +171,7 @@ exports.protectedPost = async function (args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedPut = async function (args, res, next) {
+exports.protectedPut = async function(args, res, next) {
   let observables = [];
 
   if (args.swagger.params.data && args.swagger.params.data.value) {
@@ -239,7 +239,7 @@ exports.protectedPut = async function (args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedDelete = function (args, res, next) {
+exports.protectedDelete = function(args, res, next) {
   return queryActions.sendResponse(res, 501);
 };
 
@@ -250,7 +250,7 @@ exports.protectedDelete = function (args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedPublish = async function (args, res, next) {
+exports.protectedPublish = async function(args, res, next) {
   try {
     const recordData = args.swagger.params.record.value;
     defaultLog.info(`protectedPublish - recordId: ${recordData._id}`);
@@ -283,7 +283,7 @@ exports.protectedPublish = async function (args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedUnPublish = async function (args, res, next) {
+exports.protectedUnPublish = async function(args, res, next) {
   try {
     const recordData = args.swagger.params.record.value;
     defaultLog.info(`protectedUnPublish - recordId: ${recordData._id}`);
@@ -319,11 +319,11 @@ exports.protectedUnPublish = async function (args, res, next) {
  * @param {*} next
  * @returns
  */
-exports.publicGet = function (args, res, next) {
+exports.publicGet = function(args, res, next) {
   return queryActions.sendResponse(res, 501);
 };
 
-let processPostRequest = async function (args, res, next, property, data) {
+let processPostRequest = async function(args, res, next, property, data) {
   if (data.length === 0) {
     return {
       status: 'success',
@@ -337,43 +337,43 @@ let processPostRequest = async function (args, res, next, property, data) {
   do {
     switch (property) {
       case 'orders':
-        observables.push(AddOrder.createMaster(args, res, next, data[i]));
+        observables.push(AddOrder.createRecord(args, res, next, data[i]));
         break;
       case 'inspections':
-        observables.push(AddInspection.createMaster(args, res, next, data[i]));
+        observables.push(AddInspection.createRecord(args, res, next, data[i]));
         break;
       case 'certificates':
-        observables.push(AddCertificate.createMaster(args, res, next, data[i]));
+        observables.push(AddCertificate.createRecord(args, res, next, data[i]));
         break;
       case 'permits':
-        observables.push(AddPermit.createMaster(args, res, next, data[i]));
+        observables.push(AddPermit.createRecord(args, res, next, data[i]));
         break;
       case 'agreements':
-        observables.push(AddAgreement.createMaster(args, res, next, data[i]));
+        observables.push(AddAgreement.createRecord(args, res, next, data[i]));
         break;
       case 'selfReports':
-        observables.push(AddSelfReport.createMaster(args, res, next, data[i]));
+        observables.push(AddSelfReport.createRecord(args, res, next, data[i]));
         break;
       case 'restorativeJustices':
-        observables.push(AddRestorativeJustice.createMaster(args, res, next, data[i]));
+        observables.push(AddRestorativeJustice.createRecord(args, res, next, data[i]));
         break;
       case 'tickets':
-        observables.push(AddTicket.createMaster(args, res, next, data[i]));
+        observables.push(AddTicket.createRecord(args, res, next, data[i]));
         break;
       case 'administrativePenalties':
-        observables.push(AddAdministrativePenalty.createMaster(args, res, next, data[i]));
+        observables.push(AddAdministrativePenalty.createRecord(args, res, next, data[i]));
         break;
       case 'administrativeSanctions':
-        observables.push(AddAdministrativeSanction.createMaster(args, res, next, data[i]));
+        observables.push(AddAdministrativeSanction.createRecord(args, res, next, data[i]));
         break;
       case 'warnings':
-        observables.push(AddWarning.createMaster(args, res, next, data[i]));
+        observables.push(AddWarning.createRecord(args, res, next, data[i]));
         break;
       case 'constructionPlans':
-        observables.push(AddConstructionPlan.createMaster(args, res, next, data[i]));
+        observables.push(AddConstructionPlan.createRecord(args, res, next, data[i]));
         break;
       case 'managementPlans':
-        observables.push(AddManagementPlan.createMaster(args, res, next, data[i]));
+        observables.push(AddManagementPlan.createRecord(args, res, next, data[i]));
         break;
       default:
         return {
@@ -393,7 +393,7 @@ let processPostRequest = async function (args, res, next, property, data) {
   }
 };
 
-let processPutRequest = async function (args, res, next, property, data) {
+let processPutRequest = async function(args, res, next, property, data) {
   if (data.length === 0) {
     return {
       status: 'success',
@@ -407,43 +407,43 @@ let processPutRequest = async function (args, res, next, property, data) {
   do {
     switch (property) {
       case 'orders':
-        observables.push(EditOrder.editMaster(args, res, next, data[i]));
+        observables.push(EditOrder.editRecord(args, res, next, data[i]));
         break;
       case 'inspections':
-        observables.push(EditInspection.editMaster(args, res, next, data[i]));
+        observables.push(EditInspection.editRecord(args, res, next, data[i]));
         break;
       case 'certificates':
-        observables.push(EditCertificate.editMaster(args, res, next, data[i]));
+        observables.push(EditCertificate.editRecord(args, res, next, data[i]));
         break;
       case 'permits':
-        observables.push(EditPermit.editMaster(args, res, next, data[i]));
+        observables.push(EditPermit.editRecord(args, res, next, data[i]));
         break;
       case 'agreements':
-        observables.push(EditAgreement.editMaster(args, res, next, data[i]));
+        observables.push(EditAgreement.editRecord(args, res, next, data[i]));
         break;
       case 'selfReports':
-        observables.push(EditSelfReport.editMaster(args, res, next, data[i]));
+        observables.push(EditSelfReport.editRecord(args, res, next, data[i]));
         break;
       case 'restorativeJustices':
-        observables.push(EditRestorativeJustice.editMaster(args, res, next, data[i]));
+        observables.push(EditRestorativeJustice.editRecord(args, res, next, data[i]));
         break;
       case 'tickets':
-        observables.push(EditTicket.editMaster(args, res, next, data[i]));
+        observables.push(EditTicket.editRecord(args, res, next, data[i]));
         break;
       case 'administrativePenalties':
-        observables.push(EditAdministrativePenalty.editMaster(args, res, next, data[i]));
+        observables.push(EditAdministrativePenalty.editRecord(args, res, next, data[i]));
         break;
       case 'administrativeSanctions':
-        observables.push(EditAdministrativeSanction.editMaster(args, res, next, data[i]));
+        observables.push(EditAdministrativeSanction.editRecord(args, res, next, data[i]));
         break;
       case 'warnings':
-        observables.push(EditWarning.editMaster(args, res, next, data[i]));
+        observables.push(EditWarning.editRecord(args, res, next, data[i]));
         break;
       case 'constructionPlans':
-        observables.push(EditConstructionPlan.editMaster(args, res, next, data[i]));
+        observables.push(EditConstructionPlan.editRecord(args, res, next, data[i]));
         break;
       case 'managementPlans':
-        observables.push(EditManagementPlan.editMaster(args, res, next, data[i]));
+        observables.push(EditManagementPlan.editRecord(args, res, next, data[i]));
         break;
       default:
         return {
