@@ -21,7 +21,6 @@ import {
   ConstructionPlan,
   ManagementPlan
 } from '../../../../common/src/app/models/master';
-import { Document } from '../../../../common/src/app/models/document';
 import { TaskService, ITaskParams } from './task.service';
 import { DocumentService } from './document.service';
 
@@ -523,7 +522,7 @@ export class FactoryService {
   }
 
   // Documents
-  public createDocument(document: Document, recordId: string): Promise<any> {
+  public createDocument(document: FormData, recordId: string): Promise<any> {
     return this.documentService.createDocument(document, recordId);
   }
 

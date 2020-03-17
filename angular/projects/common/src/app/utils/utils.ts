@@ -37,4 +37,26 @@ export class Utils {
 
     return legistrationStrings.join(' ');
   }
+
+  public static setDocumentForm(newDocuments) {
+    const docForms = [];
+    newDocuments.map(doc => {
+      const formData = new FormData();
+      formData.append('upfile', doc.upfile);
+      formData.append('fileName', doc.fileName);
+      docForms.push(formData);
+    });
+    return docForms;
+  }
+
+  public static setLinkForm(newLinks) {
+    const docForms = [];
+    newLinks.map(doc => {
+      const formData = new FormData();
+      formData.append('fileName', doc.fileName);
+      formData.append('url', doc.url);
+      docForms.push(formData);
+    });
+    return docForms;
+  }
 }
