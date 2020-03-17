@@ -6,6 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { GlobalModule } from 'nrpti-angular-components';
 import { RecordDetailDirective } from '../../utils/record-detail.directive';
 import { DatePipe } from '@angular/common';
+import { CommonModule } from '../../../../../../common/src/app/common.module';
 
 describe('AdministrativeSanctionDetailComponent', () => {
   const testBedHelper = new TestBedHelper<AdministrativeSanctionDetailComponent>(AdministrativeSanctionDetailComponent);
@@ -16,7 +17,7 @@ describe('AdministrativeSanctionDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, GlobalModule],
+      imports: [RouterTestingModule, GlobalModule, CommonModule],
       declarations: [AdministrativeSanctionDetailComponent, RecordDetailDirective],
       providers: [
         DatePipe,

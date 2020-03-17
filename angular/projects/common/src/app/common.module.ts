@@ -10,13 +10,14 @@ import { GlobalModule } from 'nrpti-angular-components';
 import { DocumentLinkStagingComponent } from './document-link-staging/document-link-staging.component';
 import { FileUploadComponent } from './file-upload/file-upload.component';
 import { DocumentEditComponent } from './document-edit/document-edit.component';
+import { DocumentReadOnlyComponent } from './document-read-only/document-read-only.component';
 
 // services
 
 @NgModule({
-  declarations: [FileUploadComponent, DocumentLinkStagingComponent, DocumentEditComponent],
+  declarations: [FileUploadComponent, DocumentLinkStagingComponent, DocumentEditComponent, DocumentReadOnlyComponent],
   imports: [NgbModule, FormsModule, BrowserModule, GlobalModule],
   providers: [],
-  exports: [FileUploadComponent, DocumentLinkStagingComponent, DocumentEditComponent]
+  exports: [FileUploadComponent, DocumentLinkStagingComponent, DocumentEditComponent, DocumentReadOnlyComponent]
 })
 export class CommonModule {}
