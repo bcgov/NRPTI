@@ -7,7 +7,7 @@
             {{ tableData.columns[0].name }}
           </div>
           <div class="card-col-data">
-            {{ rowData._master.recordName || '-' }}
+            {{ rowData.recordName || '-' }}
           </div>
         </div>
         <div class="card-col">
@@ -15,7 +15,7 @@
             {{ tableData.columns[1].name }}
           </div>
           <div class="card-col-data">
-            {{ rowData._master.issuedTo || '-' }}
+            {{ rowData.issuedTo || '-' }}
           </div>
         </div>
         <div class="card-col">
@@ -23,7 +23,7 @@
             {{ tableData.columns[2].name }}
           </div>
           <div class="card-col-data">
-            {{ rowData._master.recordType || '-' }}
+            {{ rowData.recordType || '-' }}
           </div>
         </div>
         <div class="card-col">
@@ -31,7 +31,7 @@
             {{ tableData.columns[3].name }}
           </div>
           <div class="card-col-data">
-            {{ rowData._master.location || '-' }}
+            {{ rowData.location || '-' }}
           </div>
         </div>
         <div class="card-col">
@@ -39,7 +39,7 @@
             {{ tableData.columns[4].name }}
           </div>
           <div class="card-col-data">
-            {{ (rowData._master.dateIssued | date: 'mediumDate') || '-' }}
+            {{ (rowData.dateIssued | date: 'mediumDate') || '-' }}
           </div>
         </div>
         <!-- TODO enable this when documents are available -->
