@@ -37,7 +37,7 @@ export class DocumentService {
     return of(0);
   }
 
-  public createDocument(document: Document, recordId: string): Promise<any> {
+  public createDocument(document: FormData, recordId: string): Promise<any> {
     const queryString = `record/${recordId}/document`;
     return this.http.post<any>(`${this.apiService.pathAPI}/${queryString}`, document, {}).toPromise();
   }

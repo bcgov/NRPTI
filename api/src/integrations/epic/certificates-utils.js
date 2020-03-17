@@ -45,7 +45,7 @@ class Certificates {
     // Creating and saving a document object if we are given a link to an EPIC document.
     const documents = [];
     if (epicRecord._id && epicRecord.documentFileName) {
-      const savedDocument = await DocumentController.createLinkDocument(
+      const savedDocument = await DocumentController.createDocument(
         epicRecord.documentFileName,
         (this.auth_payload && this.auth_payload.displayName) || '',
         `https://projects.eao.gov.bc.ca/api/document/${epicRecord._id}/fetch/${encodeURIComponent(
