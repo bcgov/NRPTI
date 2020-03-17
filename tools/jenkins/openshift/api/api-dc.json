@@ -164,17 +164,15 @@
                 ],
                 "envFrom": [
                   {
-                    "prefix": "OBJECT_STORE_",
-                    "secretRef": {
-                      "name": "nr-object-store-credential"
-                    }
-                  }
-                ],
-                "envFrom": [
-                  {
                     "prefix": "NRIS_",
                     "secretRef": {
                       "name": "nrisws-credentials"
+                    }
+                  },
+                  {
+                    "prefix": "OBJECT_STORE_",
+                    "secretRef": {
+                      "name": "nr-object-store-credential"
                     }
                   }
                 ],
