@@ -1,246 +1,299 @@
-let mongoose = require('mongoose');
-let putUtils = require('../../utils/put-utils');
-let InspectionPost = require('../post/inspection');
+const mongoose = require('mongoose');
+const ObjectID = require('mongodb').ObjectID;
+const PutUtils = require('../../utils/put-utils');
+const InspectionPost = require('../post/inspection');
 
-// Example of incomingObj
 /**
- *    inspections: [
- *     {
- *       _id: '85ce24e603984b02a0f8edb42a334876',
- *       recordName: 'test abc',
- *       recordType: 'whatever',
- *       ...
- *       InspectionLNG: {
- *          description: 'lng description'
- *          addRole: 'public',
- *       }
- *       InspectionNRCED: {
- *          summary: 'nrced summary'
- *          removeRole: 'public',
- *       }
- *     },
+ * Performs all operations necessary to edit a master Inspection record and its associated flavour records.
+ *
+ * Example of incomingObj
+ *
+ *  inspections: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'inspection',
+ *      ...
+ *      InspectionLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      InspectionNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns object containing the operation's status and created records
  */
-exports.editMaster = async function(args, res, next, incomingObj) {
-  let _id = null;
-  let sanitizedObj = {};
-  if (!incomingObj._id) {
+exports.editRecord = async function(args, res, next, incomingObj) {
+  // save flavour records
+  let observables = [];
+  let savedFlavourInspections = [];
+  let flavourIds = [];
+
+  try {
+    // make a copy of the incoming object for use by the flavours only
+    const flavourIncomingObj = { ...incomingObj };
+    // Remove fields that should not be inherited from the master record
+    delete flavourIncomingObj._id;
+    delete flavourIncomingObj._schemaName;
+    delete flavourIncomingObj._flavourRecords;
+    delete flavourIncomingObj.read;
+    delete flavourIncomingObj.write;
+
+    if (incomingObj.InspectionLNG) {
+      if (incomingObj.InspectionLNG._id) {
+        observables.push(this.editLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.InspectionLNG }));
+      } else {
+        observables.push(
+          InspectionPost.createLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.InspectionLNG })
+        );
+      }
+
+      delete incomingObj.InspectionLNG;
+    }
+
+    if (incomingObj.InspectionNRCED) {
+      if (incomingObj.InspectionNRCED._id) {
+        observables.push(this.editNRCED(args, res, next, { ...flavourIncomingObj, ...incomingObj.InspectionNRCED }));
+      } else {
+        observables.push(
+          InspectionPost.createNRCED(args, res, next, { ...flavourIncomingObj, ...incomingObj.InspectionNRCED })
+        );
+      }
+
+      delete incomingObj.InspectionNRCED;
+    }
+
+    if (observables.length > 0) {
+      savedFlavourInspections = await Promise.all(observables);
+
+      flavourIds = savedFlavourInspections.map(flavourInspection => flavourInspection._id);
+    }
+  } catch (e) {
     return {
       status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
+      object: savedFlavourInspections,
+      errorMessage: e
     };
   }
 
-  _id = incomingObj._id;
+  // save inspection record
+  let savedInspection = null;
+
+  try {
+    savedInspection = await this.editMaster(args, res, next, incomingObj, flavourIds);
+
+    return {
+      status: 'success',
+      object: savedInspection,
+      flavours: savedFlavourInspections
+    };
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedInspection,
+      errorMessage: e
+    };
+  }
+};
+
+/**
+ * Performs all operations necessary to edit a master Inspection record.
+ *
+ * Example of incomingObj
+ *
+ *  inspections: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'inspection',
+ *      ...
+ *      InspectionLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      InspectionNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited master inspection record
+ */
+exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the master record
+    return;
+  }
+
+  const _id = incomingObj._id;
   delete incomingObj._id;
 
-  // Reject any changes to master perm
+  // Reject any changes to master permissions
   delete incomingObj.read;
   delete incomingObj.write;
 
-  let Inspection = mongoose.model('Inspection');
-  try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(Inspection, incomingObj);
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: e
-    };
+  const Inspection = mongoose.model('Inspection');
+
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(Inspection, incomingObj);
+
+  if (!sanitizedObj || sanitizedObj === {}) {
+    // skip, as there are no changes to master record
+    return;
   }
 
-  let finalRes = {
-    status: 'success',
-    object: sanitizedObj,
-    flavours: null
-  };
-  let savedInspection = null;
-  // Skip if there is nothing to update for master
-  if (sanitizedObj !== {}) {
-    sanitizedObj['dateUpdated'] = new Date();
-    sanitizedObj['updatedBy'] = args.swagger.params.auth_payload.displayName;
-    try {
-      savedInspection = await Inspection.findOneAndUpdate(
-        { _schemaName: 'Inspection', _id: _id },
-        { $set: sanitizedObj },
-        { new: true }
-      );
-      finalRes.object = savedInspection;
-    } catch (e) {
-      finalRes.status = 'failure';
-      finalRes['errorMessage'] = e;
-    }
+  sanitizedObj.dateUpdated = new Date();
+  sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
+
+  let updateObj = { $set: sanitizedObj };
+
+  if (flavourIds && flavourIds.length) {
+    updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
   }
 
-  // Flavours:
-  // When editing, we might get a request to make a brand new flavour rather than edit.
-  let observables = [];
-  if (incomingObj.InspectionLNG && incomingObj.InspectionLNG._id) {
-    observables.push(this.editLNG(args, res, next, incomingObj.InspectionLNG));
-    delete incomingObj.InspectionLNG;
-  } else if (incomingObj.InspectionLNG) {
-    observables.push(InspectionPost.createLNG(args, res, next, incomingObj.InspectionLNG, savedInspection._id));
-    delete incomingObj.InspectionLNG;
-  }
-  if (incomingObj.InspectionNRCED && incomingObj.InspectionNRCED._id) {
-    observables.push(this.editNRCED(args, res, next, incomingObj.InspectionNRCED));
-    delete incomingObj.InspectionNRCED;
-  } else if (incomingObj.InspectionNRCED) {
-    observables.push(InspectionPost.createNRCED(args, res, next, incomingObj.InspectionNRCED, savedInspection._id));
-    delete incomingObj.InspectionNRCED;
-  }
-
-  // Execute edit flavours
-  try {
-    observables.length > 0 && (finalRes.flavours = await Promise.all(observables));
-  } catch (e) {
-    finalRes.flavours = {
-      status: 'failure',
-      object: observables,
-      errorMessage: e
-    };
-  }
-
-  return finalRes;
+  return await Inspection.findOneAndUpdate({ _schemaName: 'Inspection', _id: _id }, updateObj, { new: true });
 };
 
-// Example of incomingObj
 /**
- *  {
- *      _id: 'cd0b34a4ec1341288b5ea4164daffbf2'
- *      description: 'lng description',
+ * Performs all operations necessary to edit a lng Inspection record.
+ *
+ * Example of incomingObj
+ *
+ *  inspections: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'inspection',
  *      ...
- *      addRole: 'public'
- *  }
+ *      InspectionLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      InspectionNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited lng inspection record
  */
 exports.editLNG = async function(args, res, next, incomingObj) {
-  let _id = null;
-  let sanitizedObj = {};
-  if (!incomingObj._id) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
-    };
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the lng record
+    return;
   }
 
-  _id = incomingObj._id;
+  const _id = incomingObj._id;
   delete incomingObj._id;
 
-  // Reject any changes to permissions.
+  // Reject any changes to permissions
   // Publishing must be done via addRole or removeRole
   delete incomingObj.read;
   delete incomingObj.write;
-
-  // You cannot update _master
-  delete incomingObj._master;
 
   let InspectionLNG = mongoose.model('InspectionLNG');
 
-  try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(InspectionLNG, incomingObj);
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: e
-    };
-  }
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(InspectionLNG, incomingObj);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   let updateObj = { $set: sanitizedObj };
+
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj['$addToSet'] = { read: 'public' };
     updateObj.$set['datePublished'] = new Date();
-  } else if (incomingObj.removeRole === 'public') {
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj['$pull'] = { read: 'public' };
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
   }
+
   updateObj.$set['dateUpdated'] = new Date();
 
-  try {
-    let editRes = null;
-    editRes = await InspectionLNG.findOneAndUpdate({ _schemaName: 'InspectionLNG', _id: _id }, updateObj, {
-      new: true
-    });
-    return {
-      status: 'success',
-      object: editRes
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: e
-    };
-  }
+  return await InspectionLNG.findOneAndUpdate({ _schemaName: 'InspectionLNG', _id: _id }, updateObj, { new: true });
 };
 
-// Example of incomingObj
 /**
- *  {
- *      _id: 'd95e28e3576247049d797f87e852fec6',
- *      summary: 'nrced summary',
+ * Performs all operations necessary to edit a nrced Inspection record.
+ *
+ * Example of incomingObj
+ *
+ *  inspections: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'inspection',
  *      ...
- *      addRole: 'public'
- *  }
+ *      InspectionLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      InspectionNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited nrced inspection record
  */
 exports.editNRCED = async function(args, res, next, incomingObj) {
-  let _id = null;
-  let sanitizedObj = {};
-  if (!incomingObj._id) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
-    };
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the NRCED record
+    return;
   }
 
-  _id = incomingObj._id;
+  const _id = incomingObj._id;
   delete incomingObj._id;
 
-  // Reject any changes to permissions.
+  // Reject any changes to permissions
   // Publishing must be done via addRole or removeRole
   delete incomingObj.read;
   delete incomingObj.write;
 
-  // You cannot update _master
-  delete incomingObj._master;
-
   let InspectionNRCED = mongoose.model('InspectionNRCED');
-  try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(InspectionNRCED, incomingObj);
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: e
-    };
-  }
+
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(InspectionNRCED, incomingObj);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   let updateObj = { $set: sanitizedObj };
+
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj['$addToSet'] = { read: 'public' };
     updateObj.$set['datePublished'] = new Date();
-  } else if (incomingObj.removeRole === 'public') {
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj['$pull'] = { read: 'public' };
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
   }
+
   updateObj.$set['dateUpdated'] = new Date();
 
-  try {
-    let editRes = null;
-    editRes = await InspectionNRCED.findOneAndUpdate({ _schemaName: 'InspectionNRCED', _id: _id }, updateObj, {
-      new: true
-    });
-    return {
-      status: 'success',
-      object: editRes
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: e
-    };
-  }
+  return await InspectionNRCED.findOneAndUpdate({ _schemaName: 'InspectionNRCED', _id: _id }, updateObj, { new: true });
 };
