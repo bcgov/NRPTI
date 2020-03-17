@@ -125,7 +125,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
 
   // set data
   incomingObj.recordName && (selfReport.recordName = incomingObj.recordName);
-  selfReport.recordType = 'SelfReport';
+  selfReport.recordType = 'Compliance Self-Report';
   incomingObj.dateIssued && (selfReport.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (selfReport.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (selfReport.author = incomingObj.author);
@@ -215,7 +215,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
 
   // set master data
   incomingObj.recordName && (selfReportLNG.recordName = incomingObj.recordName);
-  selfReportLNG.recordType = 'SelfReport';
+  selfReportLNG.recordType = 'Compliance Self-Report';
   incomingObj.dateIssued && (selfReportLNG.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (selfReportLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (selfReportLNG.author = incomingObj.author);

@@ -141,7 +141,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
 
   // set data
   incomingObj.recordName && (administrativePenalty.recordName = incomingObj.recordName);
-  administrativePenalty.recordType = 'AdministrativePenalty';
+  administrativePenalty.recordType = 'Administrative Penalty';
   incomingObj.dateIssued && (administrativePenalty.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (administrativePenalty.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (administrativePenalty.author = incomingObj.author);
@@ -242,7 +242,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
 
   // set master data
   incomingObj.recordName && (administrativePenaltyLNG.recordName = incomingObj.recordName);
-  administrativePenaltyLNG.recordType = 'AdministrativePenalty';
+  administrativePenaltyLNG.recordType = 'Administrative Penalty';
   incomingObj.dateIssued && (administrativePenaltyLNG.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (administrativePenaltyLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (administrativePenaltyLNG.author = incomingObj.author);
@@ -342,7 +342,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
 
   // set master data
   incomingObj.recordName && (administrativePenaltyNRCED.recordName = incomingObj.recordName);
-  administrativePenaltyNRCED.recordType = 'AdministrativePenalty';
+  administrativePenaltyNRCED.recordType = 'Administrative Penalty';
   incomingObj.dateIssued && (administrativePenaltyNRCED.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (administrativePenaltyNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (administrativePenaltyNRCED.author = incomingObj.author);
