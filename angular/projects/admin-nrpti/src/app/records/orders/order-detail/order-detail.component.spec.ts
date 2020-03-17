@@ -6,6 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { GlobalModule } from 'nrpti-angular-components';
 import { RecordDetailDirective } from '../../utils/record-detail.directive';
 import { DatePipe } from '@angular/common';
+import { CommonModule } from '../../../../../../common/src/app/common.module';
 
 describe('OrderDetailComponent', () => {
   const testBedHelper = new TestBedHelper<OrderDetailComponent>(OrderDetailComponent);
@@ -16,7 +17,7 @@ describe('OrderDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, GlobalModule],
+      imports: [RouterTestingModule, GlobalModule, CommonModule],
       declarations: [OrderDetailComponent, RecordDetailDirective],
       providers: [
         DatePipe,
