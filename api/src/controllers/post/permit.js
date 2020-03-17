@@ -1,30 +1,105 @@
-const mongoose = require('mongoose');
-const ObjectId = require('mongoose').Types.ObjectId;
-const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+let mongoose = require('mongoose');
+let ObjectId = require('mongoose').Types.ObjectId;
 
 /**
- * Create Master Permit record.
+ * Performs all operations necessary to create a master Permit record and its associated flavour records.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * permit: [
- *   {
- *     recordName: 'test abc',
- *     recordType: 'whatever',
- *     ...
- *     PermitLNG: {
- *       description: 'lng description'
- *       addRole: 'public',
- *     }
- *   },
- *   ...
- * ]
+ *  permits: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'permit',
+ *      ...
+ *      PermitLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns object containing the operation's status and created records
  */
-exports.createMaster = async function(args, res, next, incomingObj) {
-  const Permit = mongoose.model(RECORD_TYPE.Permit._schemaName);
-  const permit = new Permit();
+exports.createRecord = async function(args, res, next, incomingObj) {
+  // save flavour records
+  let observables = [];
+  let savedFlavourPermits = [];
+  let flavourIds = [];
 
-  permit._schemaName = RECORD_TYPE.Permit._schemaName;
+  try {
+    incomingObj.PermitLNG &&
+      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.PermitLNG }));
+
+    if (observables.length > 0) {
+      savedFlavourPermits = await Promise.all(observables);
+
+      flavourIds = savedFlavourPermits.map(flavourPermit => flavourPermit._id);
+    }
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedFlavourPermits,
+      errorMessage: e
+    };
+  }
+
+  // save permit record
+  let savedPermit = null;
+
+  try {
+    savedPermit = await this.createMaster(args, res, next, incomingObj, flavourIds);
+
+    return {
+      status: 'success',
+      object: savedPermit,
+      flavours: savedFlavourPermits
+    };
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedPermit,
+      errorMessage: e
+    };
+  }
+};
+
+/**
+ * Performs all operations necessary to create a master Permit record.
+ *
+ * Example of incomingObj
+ *
+ *  permits: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'permit',
+ *      ...
+ *      PermitLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @param {*} flavourIds array of flavour record _ids
+ * @returns created master permit record
+ */
+exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+  let Permit = mongoose.model('Permit');
+  let permit = new Permit();
+
+  permit._schemaName = 'Permit';
+
+  // set integration references
   incomingObj._epicProjectId &&
     ObjectId.isValid(incomingObj._epicProjectId) &&
     (permit._epicProjectId = new ObjectId(incomingObj._epicProjectId));
@@ -35,9 +110,23 @@ exports.createMaster = async function(args, res, next, incomingObj) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (permit._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
+  // set permissions
+  permit.read = ['sysadmin'];
+  permit.write = ['sysadmin'];
+
+  // set forward references
+  if (flavourIds && flavourIds.length) {
+    flavourIds.forEach(id => {
+      if (ObjectId.isValid(id)) {
+        permit._flavourRecords.push(new ObjectId(id));
+      }
+    });
+  }
+
+  // set data
   incomingObj.recordName && (permit.recordName = incomingObj.recordName);
-  permit.recordType = RECORD_TYPE.Permit.displayName;
-  incomingObj.recordSubtype && (permit.recordName = incomingObj.recordSubtype);
+  permit.recordType = 'Permit';
+  incomingObj.recordSubtype && (permit.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (permit.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (permit.issuingAgency = incomingObj.issuingAgency);
   incomingObj.legislation && incomingObj.legislation.act && (permit.legislation.act = incomingObj.legislation.act);
@@ -53,103 +142,107 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (permit.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.issuedTo && (permit.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (permit.projectName = incomingObj.projectName);
   incomingObj.location && (permit.location = incomingObj.location);
   incomingObj.centroid && (permit.centroid = incomingObj.centroid);
 
+  // set meta
+  permit.addedBy = args.swagger.params.auth_payload.displayName;
   permit.dateAdded = new Date();
-  permit.publishedBy = args.swagger.params.auth_payload.displayName;
 
+  // set data source references
   incomingObj.sourceDateAdded && (permit.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (permit.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (permit.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  permit.read = ['sysadmin'];
-  permit.write = ['sysadmin'];
-
-  let savedPermit = null;
-  try {
-    savedPermit = await permit.save();
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: permit,
-      errorMessage: error
-    };
-  }
-
-  const observables = [];
-  incomingObj.PermitLNG && observables.push(this.createLNG(args, res, next, incomingObj.PermitLNG, savedPermit._id));
-
-  let flavourRes = null;
-  try {
-    observables.length > 0 && (flavourRes = await Promise.all(observables));
-  } catch (error) {
-    flavourRes = {
-      status: 'failure',
-      object: observables,
-      errorMessage: error
-    };
-  }
-
-  return {
-    status: 'success',
-    object: savedPermit,
-    flavours: flavourRes
-  };
+  return await permit.save();
 };
 
 /**
- * Create LNG Permit record.
+ * Performs all operations necessary to create a LNG Permit record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _master: '5e1e7fcd20e4167bcfc3daa7'
- *   description: 'lng description',
- *   ...
- *   addRole: 'public'
- * }
+ *  permits: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'permit',
+ *      ...
+ *      PermitLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created lng permit record
  */
-exports.createLNG = async function(args, res, next, incomingObj, masterId) {
-  // We must have a valid master ObjectID to continue.
-  if (!masterId || !ObjectId.isValid(masterId)) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'incomingObj._master was not valid ObjectId'
-    };
-  }
+exports.createLNG = async function(args, res, next, incomingObj) {
+  let PermitLNG = mongoose.model('PermitLNG');
+  let permitLNG = new PermitLNG();
 
-  const PermitLNG = mongoose.model(`${RECORD_TYPE.Permit._schemaName}LNG`);
-  const inpsectionLNG = new PermitLNG();
+  permitLNG._schemaName = 'PermitLNG';
 
-  inpsectionLNG._schemaName = `${RECORD_TYPE.Permit._schemaName}LNG`;
-  inpsectionLNG._master = new ObjectId(masterId);
-  inpsectionLNG.read = ['sysadmin'];
-  inpsectionLNG.write = ['sysadmin'];
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (permitLNG._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (permitLNG._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (permitLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
+  permitLNG.read = ['sysadmin'];
+  permitLNG.write = ['sysadmin'];
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole &&
-    incomingObj.addRole === 'public' &&
-    inpsectionLNG.read.push('public') &&
-    (inpsectionLNG.datePublished = new Date());
-
-  incomingObj.description && (inpsectionLNG.description = incomingObj.description);
-
-  inpsectionLNG.dateAdded = new Date();
-
-  try {
-    const savedPermitLNG = await inpsectionLNG.save();
-    return {
-      status: 'success',
-      object: savedPermitLNG
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: inpsectionLNG,
-      errorMessage: error
-    };
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    permitLNG.read.push('public');
+    permitLNG.datePublished = new Date();
+    permitLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
+
+  permitLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  permitLNG.dateAdded = new Date();
+
+  // set master data
+  incomingObj.recordName && (permitLNG.recordName = incomingObj.recordName);
+  permitLNG.recordType = 'Permit';
+  incomingObj.recordSubtype && (permitLNG.recordSubtype = incomingObj.recordSubtype);
+  incomingObj.dateIssued && (permitLNG.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (permitLNG.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.legislation && incomingObj.legislation.act && (permitLNG.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (permitLNG.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (permitLNG.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (permitLNG.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (permitLNG.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.projectName && (permitLNG.projectName = incomingObj.projectName);
+  incomingObj.location && (permitLNG.location = incomingObj.location);
+  incomingObj.centroid && (permitLNG.centroid = incomingObj.centroid);
+
+  // set flavour data
+  incomingObj.description && (permitLNG.description = incomingObj.description);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (permitLNG.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (permitLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (permitLNG.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return await permitLNG.save();
 };
