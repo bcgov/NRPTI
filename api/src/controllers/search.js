@@ -136,16 +136,16 @@ let searchCollection = async function(
 
   defaultLog.info('match:', match);
 
-  let sortingValue = {};
-  sortingValue[sortField] = sortDirection;
-
+  // aggregations that run against the results of the initial match/filter aggregation
   let searchResultAggregation = [];
-  // We don't want to have sort in the aggregation if the front end doesn't need sort.
+
+  // sort
   if (sortField && sortDirection) {
     searchResultAggregation.push({
-      $sort: sortingValue
+      $sort: { [sortField]: sortDirection }
     });
   }
+  // pagination
   searchResultAggregation.push(
     {
       $skip: pageNum * pageSize
@@ -154,19 +154,34 @@ let searchCollection = async function(
       $limit: pageSize
     }
   );
+  // populate refs
+  if (populate) {
+    // populate flavours
+    searchResultAggregation.push({
+      $lookup: {
+        from: 'nrpti',
+        localField: '_flavourRecords',
+        foreignField: '_id',
+        as: 'flavours'
+      }
+    });
+
+    // populate documents
+    searchResultAggregation.push({
+      $lookup: {
+        from: 'nrpti',
+        localField: 'documents',
+        foreignField: '_id',
+        as: 'documents'
+      }
+    });
+  }
 
   let aggregation = [
     {
       $match: match
     }
   ];
-
-  let collation = {
-    locale: 'en',
-    strength: 2
-  };
-
-  defaultLog.info('collation:', collation);
 
   aggregation.push({
     $redact: {
@@ -193,28 +208,6 @@ let searchCollection = async function(
       }
     }
   });
-
-  if (populate) {
-    // populate flavours
-    aggregation.push({
-      $lookup: {
-        from: 'nrpti',
-        localField: '_flavourRecords',
-        foreignField: '_id',
-        as: 'flavours'
-      }
-    });
-
-    // populate documents
-    aggregation.push({
-      $lookup: {
-        from: 'nrpti',
-        localField: 'documents',
-        foreignField: '_id',
-        as: 'documents'
-      }
-    });
-  }
 
   aggregation.push({
     $addFields: {
