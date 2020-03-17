@@ -11,12 +11,13 @@ module.exports = require('../../utils/model-schema-generator')(
     read: [{ type: String, trim: true, default: 'sysadmin' }],
     write: [{ type: String, trim: true, default: 'sysadmin' }],
 
+    _flavourRecords: [{ type: 'ObjectId', default: [], index: true }],
+
     recordName: { type: String, default: '' },
     recordType: { type: String, default: '' },
     recordSubtype: { type: String, default: '' },
-    dateIssued: { type: Date, default: Date.now() },
+    dateIssued: { type: Date, default: null },
     issuingAgency: { type: String, default: '' },
-    description: { type: String, default: '' },
     legislation: {
       act: { type: String, default: '' },
       regulation: { type: String, default: '' },
@@ -29,14 +30,17 @@ module.exports = require('../../utils/model-schema-generator')(
     centroid: [{ type: Number, default: 0.0 }],
     documents: [{ type: 'ObjectId', default: [], index: true }],
 
+    description: { type: String, default: '' },
+
     dateAdded: { type: Date, default: Date.now() },
-    dateUpdated: { type: Date, default: Date.now() },
+    dateUpdated: { type: Date, default: null },
+
+    addedBy: { type: String, default: '' },
     updatedBy: { type: String, default: '' },
-    publishedBy: { type: String, default: '' },
 
     sourceDateAdded: { type: Date, default: null },
     sourceDateUpdated: { type: Date, default: null },
-    sourceSystemRef: { type: String, default: '' }
+    sourceSystemRef: { type: String, default: 'nrpti' }
   },
   'nrpti'
 );

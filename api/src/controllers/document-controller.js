@@ -15,11 +15,11 @@ const s3 = new AWS.S3({
   s3ForcePathStyle: true
 });
 
-exports.protectedOptions = function (args, res, next) {
+exports.protectedOptions = function(args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedPost = async function (args, res, next) {
+exports.protectedPost = async function(args, res, next) {
   if (
     args.swagger.params.fileName &&
     args.swagger.params.fileName.value &&
@@ -42,7 +42,7 @@ exports.protectedPost = async function (args, res, next) {
           args.swagger.params.fileName.value,
           (this.auth_payload && this.auth_payload.displayName) || '',
           args.swagger.params.url.value
-        )
+        );
       } catch (e) {
         return queryActions.sendResponse(res, 400, e);
       }
@@ -66,7 +66,7 @@ exports.protectedPost = async function (args, res, next) {
           Body: args.swagger.params.upfile.value.buffer,
           ACL: 'public-read'
         },
-        function (err, result) {
+        function(err, result) {
           if (err) {
             defaultLog.info(err);
             return queryActions.sendResponse(res, 400, err);
@@ -80,13 +80,34 @@ exports.protectedPost = async function (args, res, next) {
       const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
       const collection = db.collection('nrpti');
 
+      // add to master record
       const recordResponse = await collection.findOneAndUpdate(
         { _id: new ObjectID(args.swagger.params.recordId.value) },
         { $addToSet: { documents: new ObjectID(docResponse._id) } },
         { returnNewDocument: true }
       );
 
-      return queryActions.sendResponse(res, 200, { document: docResponse, record: recordResponse, s3: s3Response });
+      // add to flavour records
+      let observables = [];
+      if (recordResponse && recordResponse.value && recordResponse.value._flavourRecords) {
+        recordResponse.value._flavourRecords.forEach(id => {
+          observables.push(
+            collection.findOneAndUpdate(
+              { _id: new ObjectID(id) },
+              { $addToSet: { documents: new ObjectID(docResponse._id) } },
+              { returnNewDocument: true }
+            )
+          );
+        });
+      }
+      const flavourRecordResponses = await Promise.all(observables);
+
+      return queryActions.sendResponse(res, 200, {
+        document: docResponse,
+        record: recordResponse,
+        flavours: flavourRecordResponses,
+        s3: s3Response
+      });
     } catch (e) {
       return queryActions.sendResponse(res, 400, e);
     }
@@ -95,7 +116,7 @@ exports.protectedPost = async function (args, res, next) {
   }
 };
 
-exports.protectedDelete = async function (args, res, next) {
+exports.protectedDelete = async function(args, res, next) {
   if (
     args.swagger.params.docId &&
     args.swagger.params.docId.value &&
@@ -118,9 +139,9 @@ exports.protectedDelete = async function (args, res, next) {
       s3.deleteObject(
         {
           Bucket: process.env.OBJECT_STORE_bucket_name,
-          Key: docResponse.key,
+          Key: docResponse.key
         },
-        function (err, result) {
+        function(err, result) {
           if (err) {
             return queryActions.sendResponse(res, 400, err);
           }
@@ -134,20 +155,41 @@ exports.protectedDelete = async function (args, res, next) {
       const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
       const collection = db.collection('nrpti');
 
+      // remove from master record
       const recordResponse = await collection.findOneAndUpdate(
         { _id: new ObjectID(args.swagger.params.recordId.value) },
         { $pull: { documents: new ObjectID(docResponse._id) } },
         { returnNewDocument: true }
       );
 
-      return queryActions.sendResponse(res, 200, { document: docResponse, record: recordResponse, s3: s3Response });
+      // remove from flavour records
+      let observables = [];
+      if (recordResponse && recordResponse.value && recordResponse.value._flavourRecords) {
+        recordResponse.value._flavourRecords.forEach(id => {
+          observables.push(
+            collection.findOneAndUpdate(
+              { _id: new ObjectID(id) },
+              { $pull: { documents: new ObjectID(docResponse._id) } },
+              { returnNewDocument: true }
+            )
+          );
+        });
+      }
+      const flavourRecordResponses = await Promise.all(observables);
+
+      return queryActions.sendResponse(res, 200, {
+        document: docResponse,
+        record: recordResponse,
+        flavours: flavourRecordResponses,
+        s3: s3Response
+      });
     } catch (e) {
       return queryActions.sendResponse(res, 400, e);
     }
   } else {
     return queryActions.sendResponse(res, 400, { error: 'You must provide docId and recordId' });
   }
-}
+};
 
 exports.createDocument = createDocument;
 

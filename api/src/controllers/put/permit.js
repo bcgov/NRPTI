@@ -1,176 +1,205 @@
 const mongoose = require('mongoose');
-const putUtils = require('../../utils/put-utils');
+const ObjectID = require('mongodb').ObjectID;
+const PutUtils = require('../../utils/put-utils');
 const PermitPost = require('../post/permit');
-const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 /**
- * Edit Master Permit record.
+ * Performs all operations necessary to edit a master Permit record and its associated flavour records.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * permits: [
- *   {
- *      _id: '85ce24e603984b02a0f8edb42a334876',
+ *  permits: [
+ *    {
  *      recordName: 'test abc',
- *      recordType: 'whatever',
+ *      recordType: 'permit',
  *      ...
  *      PermitLNG: {
  *        description: 'lng description'
  *        addRole: 'public',
+ *        ...
  *      }
- *   },
- *   ...
- * ]
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns object containing the operation's status and created records
  */
-exports.editMaster = async function(args, res, next, incomingObj) {
-  if (!incomingObj._id) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
-    };
-  }
+exports.editRecord = async function(args, res, next, incomingObj) {
+  // save flavour records
+  let observables = [];
+  let savedFlavourPermits = [];
+  let flavourIds = [];
 
-  const _id = incomingObj._id;
-  delete incomingObj._id;
-
-  // Reject any changes to master perm
-  delete incomingObj.read;
-  delete incomingObj.write;
-
-  const Permit = mongoose.model(RECORD_TYPE.Permit._schemaName);
-
-  let sanitizedObj;
   try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(Permit, incomingObj);
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error
-    };
-  }
+    // make a copy of the incoming object for use by the flavours only
+    const flavourIncomingObj = { ...incomingObj };
+    // Remove fields that should not be inherited from the master record
+    delete flavourIncomingObj._id;
+    delete flavourIncomingObj._schemaName;
+    delete flavourIncomingObj._flavourRecords;
+    delete flavourIncomingObj.read;
+    delete flavourIncomingObj.write;
 
-  const finalRes = {
-    status: 'success',
-    object: sanitizedObj,
-    flavours: null
-  };
-  let savedPermit = null;
-  // Skip if there is nothing to update for master
-  if (sanitizedObj !== {}) {
-    sanitizedObj['dateUpdated'] = new Date();
-    sanitizedObj['updatedBy'] = args.swagger.params.auth_payload.displayName;
-    try {
-      savedPermit = await Permit.findOneAndUpdate(
-        { _schemaName: RECORD_TYPE.Permit._schemaName, _id: _id },
-        { $set: sanitizedObj },
-        { new: true }
-      );
-      finalRes.object = savedPermit;
-    } catch (error) {
-      finalRes.status = 'failure';
-      finalRes['errorMessage'] = error;
+    if (incomingObj.PermitLNG) {
+      if (incomingObj.PermitLNG._id) {
+        observables.push(this.editLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.PermitLNG }));
+      } else {
+        observables.push(PermitPost.createLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.PermitLNG }));
+      }
+
+      delete incomingObj.PermitLNG;
     }
-  }
 
-  // Flavours:
-  // When editing, we might get a request to make a brand new flavour rather than edit.
-  const observables = [];
-  if (incomingObj.PermitLNG && incomingObj.PermitLNG._id) {
-    observables.push(this.editLNG(args, res, next, incomingObj.PermitLNG));
-    delete incomingObj.PermitLNG;
-  } else if (incomingObj.PermitLNG) {
-    observables.push(PermitPost.createLNG(args, res, next, incomingObj.PermitLNG, savedPermit._id));
-    delete incomingObj.PermitLNG;
-  }
+    if (observables.length > 0) {
+      savedFlavourPermits = await Promise.all(observables);
 
-  // Execute edit flavours
-  try {
-    observables.length > 0 && (finalRes.flavours = await Promise.all(observables));
-  } catch (error) {
-    finalRes.flavours = {
+      flavourIds = savedFlavourPermits.map(flavourPermit => flavourPermit._id);
+    }
+  } catch (e) {
+    return {
       status: 'failure',
-      object: observables,
-      errorMessage: error
+      object: savedFlavourPermits,
+      errorMessage: e
     };
   }
 
-  return finalRes;
+  // save permit record
+  let savedPermit = null;
+
+  try {
+    savedPermit = await this.editMaster(args, res, next, incomingObj, flavourIds);
+
+    return {
+      status: 'success',
+      object: savedPermit,
+      flavours: savedFlavourPermits
+    };
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedPermit,
+      errorMessage: e
+    };
+  }
 };
 
 /**
- * Edit LNG Permit Record
+ * Performs all operations necessary to edit a master Permit record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _id: 'cd0b34a4ec1341288b5ea4164daffbf2'
- *   description: 'lng description',
- *   ...
- *   addRole: 'public'
- * }
+ *  permits: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'permit',
+ *      ...
+ *      PermitLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited master permit record
  */
-exports.editLNG = async function(args, res, next, incomingObj) {
-  if (!incomingObj._id) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
-    };
+exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the master record
+    return;
   }
 
   const _id = incomingObj._id;
   delete incomingObj._id;
 
-  // Reject any changes to permissions.
+  // Reject any changes to master permissions
+  delete incomingObj.read;
+  delete incomingObj.write;
+
+  const Permit = mongoose.model('Permit');
+
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(Permit, incomingObj);
+
+  if (!sanitizedObj || sanitizedObj === {}) {
+    // skip, as there are no changes to master record
+    return;
+  }
+
+  sanitizedObj.dateUpdated = new Date();
+  sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
+
+  let updateObj = { $set: sanitizedObj };
+
+  if (flavourIds && flavourIds.length) {
+    updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
+  }
+
+  return await Permit.findOneAndUpdate({ _schemaName: 'Permit', _id: _id }, updateObj, { new: true });
+};
+
+/**
+ * Performs all operations necessary to edit a lng Permit record.
+ *
+ * Example of incomingObj
+ *
+ *  permits: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'permit',
+ *      ...
+ *      PermitLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited lng permit record
+ */
+exports.editLNG = async function(args, res, next, incomingObj) {
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the lng record
+    return;
+  }
+
+  const _id = incomingObj._id;
+  delete incomingObj._id;
+
+  // Reject any changes to permissions
   // Publishing must be done via addRole or removeRole
   delete incomingObj.read;
   delete incomingObj.write;
 
-  // You cannot update _master
-  delete incomingObj._master;
+  let PermitLNG = mongoose.model('PermitLNG');
 
-  const PermitLNG = mongoose.model(`${RECORD_TYPE.Permit._schemaName}LNG`);
-
-  let sanitizedObj;
-  try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(PermitLNG, incomingObj);
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error
-    };
-  }
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(PermitLNG, incomingObj);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   let updateObj = { $set: sanitizedObj };
+
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj['$addToSet'] = { read: 'public' };
     updateObj.$set['datePublished'] = new Date();
-  } else if (incomingObj.removeRole === 'public') {
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj['$pull'] = { read: 'public' };
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
   }
+
   updateObj.$set['dateUpdated'] = new Date();
 
-  try {
-    const editRes = await PermitLNG.findOneAndUpdate(
-      { _schemaName: `${RECORD_TYPE.Permit._schemaName}LNG`, _id: _id },
-      updateObj,
-      {
-        new: true
-      }
-    );
-    return {
-      status: 'success',
-      object: editRes
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: PermitLNG,
-      errorMessage: error
-    };
-  }
+  return await PermitLNG.findOneAndUpdate({ _schemaName: 'PermitLNG', _id: _id }, updateObj, { new: true });
 };

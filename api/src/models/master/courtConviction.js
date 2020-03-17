@@ -11,15 +11,19 @@ module.exports = require('../../utils/model-schema-generator')(
     read: [{ type: String, trim: true, default: 'sysadmin' }],
     write: [{ type: String, trim: true, default: 'sysadmin' }],
 
+    _flavourRecords: [{ type: 'ObjectId', default: [], index: true }],
+
     // No model defined TBD
 
     dateAdded: { type: Date, default: Date.now() },
-    dateUpdated: { type: Date, default: Date.now() },
+    dateUpdated: { type: Date, default: null },
+
+    addedBy: { type: String, default: '' },
     updatedBy: { type: String, default: '' },
-    publishedBy: { type: String, default: '' },
+
     sourceDateAdded: { type: Date, default: null },
     sourceDateUpdated: { type: Date, default: null },
-    sourceSystemRef: { type: String, default: '' }
+    sourceSystemRef: { type: String, default: 'nrpti' }
   },
   'nrpti'
 );

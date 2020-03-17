@@ -21,11 +21,11 @@ export class PlansComponent implements OnInit {
       textFilters: [
         {
           displayName: 'Environmental Assessment Office',
-          fieldName: '_master.issuingAgency'
+          fieldName: 'issuingAgency'
         },
         {
           displayName: 'BC Oil and Gas Commission',
-          fieldName: '_master.issuingAgency'
+          fieldName: 'issuingAgency'
         }
       ]
     },
@@ -34,11 +34,11 @@ export class PlansComponent implements OnInit {
       textFilters: [
         {
           displayName: 'Management Plan',
-          fieldName: '_master.recordType'
+          fieldName: 'recordType'
         },
         {
           displayName: 'Construction Plan',
-          fieldName: '_master.recordType'
+          fieldName: 'recordType'
         }
       ]
     }

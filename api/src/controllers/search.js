@@ -132,34 +132,9 @@ let searchCollection = async function(
     searchProperties = { $text: { $search: keywords, $caseSensitive: caseSensitive } };
   }
 
-  // Pluck the _epicProjectId from the array if a flavour record query is coming in.
-  const flavourRecords = [
-    'InspectionLNG',
-    'OrderLNG',
-    'Certificate',
-    'PermitLNG',
-    'SelfReportLNG',
-    'TicketLNG',
-    'CourtConvictionLNG',
-    'AdministrativePenaltyLNG',
-    'AdministrativeSanctionLNG',
-    'RestorativeJusticeLNG',
-    'ConstructionPlanLNG',
-    'ManagementPlanLNG',
-    'AgreementLNG',
-    'OrderNRCED',
-    'InspectionNRCED',
-    'RestorativeJusticeNRCED',
-    'TicketNRCED',
-    'AdministrativePenaltyNRCED',
-    'AdministrativeSanctionNRCED',
-    'WarningNRCED'
-  ];
+  let match = await generateMatchesForAggregation(and, or, searchProperties, properties, schemaName, roles);
 
-  let matches = await generateMatchesForAggregation(and, or, searchProperties, properties, schemaName, roles);
-
-  defaultLog.info('mainMatch:', matches.mainMatch);
-  defaultLog.info('masterMatch:', matches.masterMatch);
+  defaultLog.info('match:', match);
 
   let sortingValue = {};
   sortingValue[sortField] = sortDirection;
@@ -182,7 +157,7 @@ let searchCollection = async function(
 
   let aggregation = [
     {
-      $match: matches.mainMatch
+      $match: match
     }
   ];
 
@@ -192,33 +167,6 @@ let searchCollection = async function(
   };
 
   defaultLog.info('collation:', collation);
-
-  // This only happens when we are getting queried from the LNG flavour perspective.
-  if (schemaName.some(item => flavourRecords.includes(item))) {
-    // Grab the master record that's backreferenced to these ones.
-    aggregation.push({
-      $lookup: {
-        from: 'nrpti',
-        localField: '_master',
-        foreignField: '_id',
-        as: '_master'
-      }
-    });
-
-    // Master matching - optional
-    if (!isEmpty(matches.masterMatch)) {
-      aggregation.push({
-        $match: matches.masterMatch
-      });
-    }
-
-    aggregation.push({
-      $unwind: {
-        path: '$_master',
-        preserveNullAndEmptyArrays: true
-      }
-    });
-  }
 
   aggregation.push({
     $redact: {
@@ -245,6 +193,28 @@ let searchCollection = async function(
       }
     }
   });
+
+  if (populate) {
+    // populate flavours
+    aggregation.push({
+      $lookup: {
+        from: 'nrpti',
+        localField: '_flavourRecords',
+        foreignField: '_id',
+        as: 'flavours'
+      }
+    });
+
+    // populate documents
+    aggregation.push({
+      $lookup: {
+        from: 'nrpti',
+        localField: 'documents',
+        foreignField: '_id',
+        as: 'documents'
+      }
+    });
+  }
 
   aggregation.push({
     $addFields: {
@@ -281,50 +251,11 @@ exports.protectedGet = function(args, res, next) {
 // Generates the main match query, and optionally generates the master field match to be used
 // later in the pipeline.
 const generateMatchesForAggregation = async function(and, or, searchProperties, properties, schemaName, roles) {
-  // query modifiers
-  // Pluck the __master elements, and the flavour elements.  process them in different parts of the
-  // pipeline because of the linking of flavour to master records.
-  let __flavour = {};
-  let __master = {};
-  for (const item in and) {
-    if (item.startsWith('_master.')) {
-      __master[item] = and[item];
-    } else {
-      __flavour[item] = and[item];
-    }
-  }
-
-  defaultLog.info('__master:', __master);
-  defaultLog.info('__flavour:', __flavour);
-
-  const andExpArray = (await generateExpArray(__flavour)) || [];
-  const andMasterExpArray = (await generateExpArray(__master, '_master.')) || [];
-
+  const andExpArray = (await generateExpArray(and)) || [];
   defaultLog.info('andExpArray:', andExpArray);
-  defaultLog.info('andMasterExpArray:', andMasterExpArray);
 
-  // filters
-  // query modifiers
-  // Pluck the __master elements, and the flavour elements.  process them in different parts of the
-  // pipeline because of the linking of flavour to master records.
-  let __flavourOr = {};
-  let __masterOr = {};
-  for (const item in or) {
-    if (item.startsWith('_master.')) {
-      __masterOr[item] = or[item];
-    } else {
-      __flavourOr[item] = or[item];
-    }
-  }
-
-  defaultLog.info('__masterOr:', __masterOr);
-  defaultLog.info('__flavourOr:', __flavourOr);
-
-  const orExpArray = (await generateExpArray(__flavourOr)) || [];
-  const orMasterExpArray = (await generateExpArray(__masterOr, '_master.')) || [];
-
+  const orExpArray = (await generateExpArray(or)) || [];
   defaultLog.info('orExpArray:', orExpArray);
-  defaultLog.info('orMasterExpArray:', orMasterExpArray);
 
   let modifier = {};
   if (andExpArray.length > 0 && orExpArray.length > 0) {
@@ -335,15 +266,6 @@ const generateMatchesForAggregation = async function(and, or, searchProperties, 
     modifier = { $and: andExpArray };
   }
 
-  let masterModifier = {};
-  if (andMasterExpArray.length > 0 && orMasterExpArray.length > 0) {
-    masterModifier = { $and: [{ $and: andMasterExpArray }, { $and: orMasterExpArray }] };
-  } else if (andMasterExpArray.length === 0 && orMasterExpArray.length > 0) {
-    masterModifier = { $and: orMasterExpArray };
-  } else if (andMasterExpArray.length > 0 && orMasterExpArray.length === 0) {
-    masterModifier = { $and: andMasterExpArray };
-  }
-
   let match = {
     _schemaName: Array.isArray(schemaName) ? { $in: schemaName } : schemaName,
     ...(isEmpty(modifier) ? undefined : modifier),
@@ -351,14 +273,7 @@ const generateMatchesForAggregation = async function(and, or, searchProperties, 
     ...(properties ? properties : undefined)
   };
 
-  let masterMatch = {
-    ...(isEmpty(masterModifier) ? undefined : masterModifier)
-  };
-
-  return {
-    mainMatch: match,
-    masterMatch: masterMatch
-  };
+  return match;
 };
 
 const executeQuery = async function(args, res, next) {
@@ -468,13 +383,14 @@ const executeQuery = async function(args, res, next) {
       }
     ];
 
+    // populate flavours
     populate &&
       QueryUtils.recordTypes.includes(args.swagger.params._schemaName.value) &&
       aggregation.push({
         $lookup: {
           from: 'nrpti',
-          localField: '_id',
-          foreignField: '_master',
+          localField: '_flavourRecords',
+          foreignField: '_id',
           as: 'flavours'
         }
       });

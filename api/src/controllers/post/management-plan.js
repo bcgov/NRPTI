@@ -1,30 +1,105 @@
-const mongoose = require('mongoose');
-const ObjectId = require('mongoose').Types.ObjectId;
-const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+let mongoose = require('mongoose');
+let ObjectId = require('mongoose').Types.ObjectId;
 
 /**
- * Create Master Management Plan record.
+ * Performs all operations necessary to create a master Management Plan record and its associated flavour records.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * managementPlan: [
- *   {
- *     recordName: 'test abc',
- *     recordType: 'whatever',
- *     ...
- *     ManagementPlanLNG: {
- *       description: 'lng description'
- *       addRole: 'public',
- *     }
- *   },
- *   ...
- * ]
+ *  managementPlans: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'managementPlan',
+ *      ...
+ *      ManagementPlanLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns object containing the operation's status and created records
  */
-exports.createMaster = async function(args, res, next, incomingObj) {
-  const ManagementPlan = mongoose.model(RECORD_TYPE.ManagementPlan._schemaName);
-  const managementPlan = new ManagementPlan();
+exports.createRecord = async function(args, res, next, incomingObj) {
+  // save flavour records
+  let observables = [];
+  let savedFlavourManagementPlans = [];
+  let flavourIds = [];
 
-  managementPlan._schemaName = RECORD_TYPE.ManagementPlan._schemaName;
+  try {
+    incomingObj.ManagementPlanLNG &&
+      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.ManagementPlanLNG }));
+
+    if (observables.length > 0) {
+      savedFlavourManagementPlans = await Promise.all(observables);
+
+      flavourIds = savedFlavourManagementPlans.map(flavourManagementPlan => flavourManagementPlan._id);
+    }
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedFlavourManagementPlans,
+      errorMessage: e
+    };
+  }
+
+  // save managementPlan record
+  let savedManagementPlan = null;
+
+  try {
+    savedManagementPlan = await this.createMaster(args, res, next, incomingObj, flavourIds);
+
+    return {
+      status: 'success',
+      object: savedManagementPlan,
+      flavours: savedFlavourManagementPlans
+    };
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedManagementPlan,
+      errorMessage: e
+    };
+  }
+};
+
+/**
+ * Performs all operations necessary to create a master Management Plan record.
+ *
+ * Example of incomingObj
+ *
+ *  managementPlans: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'managementPlan',
+ *      ...
+ *      ManagementPlanLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @param {*} flavourIds array of flavour record _ids
+ * @returns created master managementPlan record
+ */
+exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+  let ManagementPlan = mongoose.model('ManagementPlan');
+  let managementPlan = new ManagementPlan();
+
+  managementPlan._schemaName = 'ManagementPlan';
+
+  // set integration references
   incomingObj._epicProjectId &&
     ObjectId.isValid(incomingObj._epicProjectId) &&
     (managementPlan._epicProjectId = new ObjectId(incomingObj._epicProjectId));
@@ -35,110 +110,114 @@ exports.createMaster = async function(args, res, next, incomingObj) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (managementPlan._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
+  // set permissions
+  managementPlan.read = ['sysadmin'];
+  managementPlan.write = ['sysadmin'];
+
+  // set forward references
+  if (flavourIds && flavourIds.length) {
+    flavourIds.forEach(id => {
+      if (ObjectId.isValid(id)) {
+        managementPlan._flavourRecords.push(new ObjectId(id));
+      }
+    });
+  }
+
+  // set data
   incomingObj.recordName && (managementPlan.recordName = incomingObj.recordName);
-  managementPlan.recordType = RECORD_TYPE.ManagementPlan.displayName;
+  managementPlan.recordType = 'ManagementPlan';
   incomingObj.dateIssued && (managementPlan.dateIssued = incomingObj.dateIssued);
   incomingObj.agency && (managementPlan.agency = incomingObj.agency);
   incomingObj.author && (managementPlan.author = incomingObj.author);
-  incomingObj.issuedTo && (managementPlan.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (managementPlan.projectName = incomingObj.projectName);
   incomingObj.location && (managementPlan.location = incomingObj.location);
   incomingObj.centroid && (managementPlan.centroid = incomingObj.centroid);
 
+  // set meta
+  managementPlan.addedBy = args.swagger.params.auth_payload.displayName;
   managementPlan.dateAdded = new Date();
-  managementPlan.publishedBy = args.swagger.params.auth_payload.displayName;
 
+  // set data source references
   incomingObj.sourceDateAdded && (managementPlan.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (managementPlan.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (managementPlan.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  managementPlan.read = ['sysadmin'];
-  managementPlan.write = ['sysadmin'];
-
-  let savedManagementPlan = null;
-  try {
-    savedManagementPlan = await managementPlan.save();
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: managementPlan,
-      errorMessage: error
-    };
-  }
-
-  const observables = [];
-  incomingObj.ManagementPlanLNG &&
-    observables.push(this.createLNG(args, res, next, incomingObj.ManagementPlanLNG, savedManagementPlan._id));
-
-  let flavourRes = null;
-  try {
-    observables.length > 0 && (flavourRes = await Promise.all(observables));
-  } catch (error) {
-    flavourRes = {
-      status: 'failure',
-      object: observables,
-      errorMessage: error
-    };
-  }
-
-  return {
-    status: 'success',
-    object: savedManagementPlan,
-    flavours: flavourRes
-  };
+  return await managementPlan.save();
 };
 
 /**
- * Create LNG Management Plan record.
+ * Performs all operations necessary to create a LNG Management Plan record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _master: '5e1e7fcd20e4167bcfc3daa7'
- *   description: 'lng description',
- *   ...
- *   addRole: 'public'
- * }
+ *  managementPlans: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'managementPlan',
+ *      ...
+ *      ManagementPlanLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created lng managementPlan record
  */
-exports.createLNG = async function(args, res, next, incomingObj, masterId) {
-  // We must have a valid master ObjectID to continue.
-  if (!masterId || !ObjectId.isValid(masterId)) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'incomingObj._master was not valid ObjectId'
-    };
-  }
+exports.createLNG = async function(args, res, next, incomingObj) {
+  let ManagementPlanLNG = mongoose.model('ManagementPlanLNG');
+  let managementPlanLNG = new ManagementPlanLNG();
 
-  const ManagementPlanLNG = mongoose.model(RECORD_TYPE.ManagementPlan.flavours.lng._schemaName);
-  const inpsectionLNG = new ManagementPlanLNG();
+  managementPlanLNG._schemaName = 'ManagementPlanLNG';
 
-  inpsectionLNG._schemaName = RECORD_TYPE.ManagementPlan.flavours.lng._schemaName;
-  inpsectionLNG._master = new ObjectId(masterId);
-  inpsectionLNG.read = ['sysadmin'];
-  inpsectionLNG.write = ['sysadmin'];
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (managementPlanLNG._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (managementPlanLNG._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (managementPlanLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
+  managementPlanLNG.read = ['sysadmin'];
+  managementPlanLNG.write = ['sysadmin'];
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole &&
-    incomingObj.addRole === 'public' &&
-    inpsectionLNG.read.push('public') &&
-    (inpsectionLNG.datePublished = new Date());
-
-  incomingObj.relatedPhase && (inpsectionLNG.relatedPhase = incomingObj.relatedPhase);
-  incomingObj.description && (inpsectionLNG.description = incomingObj.description);
-
-  inpsectionLNG.dateAdded = new Date();
-
-  try {
-    const savedManagementPlanLNG = await inpsectionLNG.save();
-    return {
-      status: 'success',
-      object: savedManagementPlanLNG
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: inpsectionLNG,
-      errorMessage: error
-    };
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    managementPlanLNG.read.push('public');
+    managementPlanLNG.datePublished = new Date();
+    managementPlanLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
+
+  managementPlanLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  managementPlanLNG.dateAdded = new Date();
+
+  // set master data
+  incomingObj.recordName && (managementPlanLNG.recordName = incomingObj.recordName);
+  managementPlanLNG.recordType = 'ManagementPlan';
+  incomingObj.dateIssued && (managementPlanLNG.dateIssued = incomingObj.dateIssued);
+  incomingObj.agency && (managementPlanLNG.agency = incomingObj.agency);
+  incomingObj.author && (managementPlanLNG.author = incomingObj.author);
+  incomingObj.projectName && (managementPlanLNG.projectName = incomingObj.projectName);
+  incomingObj.location && (managementPlanLNG.location = incomingObj.location);
+  incomingObj.centroid && (managementPlanLNG.centroid = incomingObj.centroid);
+
+  // set flavour data
+  incomingObj.description && (managementPlanLNG.description = incomingObj.description);
+  incomingObj.relatedPhase && (managementPlanLNG.relatedPhase = incomingObj.relatedPhase);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (managementPlanLNG.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (managementPlanLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (managementPlanLNG.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return await managementPlanLNG.save();
 };

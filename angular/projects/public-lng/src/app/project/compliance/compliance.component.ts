@@ -21,11 +21,11 @@ export class ComplianceComponent implements OnInit {
       textFilters: [
         {
           displayName: 'Environmental Assessment Office',
-          fieldName: '_master.issuingAgency'
+          fieldName: 'issuingAgency'
         },
         {
           displayName: 'BC Oil and Gas Commission',
-          fieldName: '_master.issuingAgency'
+          fieldName: 'issuingAgency'
         }
       ]
     },
@@ -34,15 +34,15 @@ export class ComplianceComponent implements OnInit {
       textFilters: [
         {
           displayName: 'Environmental Assessment Office',
-          fieldName: '_master.author'
+          fieldName: 'author'
         },
         {
           displayName: 'LNG Canada',
-          fieldName: '_master.author'
+          fieldName: 'author'
         },
         {
           displayName: 'BC Oil and Gas commission',
-          fieldName: '_master.author'
+          fieldName: 'author'
         }
       ]
     },
@@ -51,19 +51,19 @@ export class ComplianceComponent implements OnInit {
       textFilters: [
         {
           displayName: 'Inspection',
-          fieldName: '_master.recordType'
+          fieldName: 'recordType'
         },
         {
           displayName: 'Order',
-          fieldName: '_master.recordType'
+          fieldName: 'recordType'
         },
         {
           displayName: 'Warning',
-          fieldName: '_master.recordType'
+          fieldName: 'recordType'
         },
         {
           displayName: 'Compliance Self-Report',
-          fieldName: '_master.recordType'
+          fieldName: 'recordType'
         }
       ]
     }

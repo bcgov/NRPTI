@@ -1,259 +1,297 @@
 const mongoose = require('mongoose');
-const putUtils = require('../../utils/put-utils');
+const ObjectID = require('mongodb').ObjectID;
+const PutUtils = require('../../utils/put-utils');
 const TicketPost = require('../post/ticket');
-const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 /**
- * Edit Master Ticket record.
+ * Performs all operations necessary to edit a master Ticket record and its associated flavour records.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * tickets: [
- *   {
- *      _id: '85ce24e603984b02a0f8edb42a334876',
+ *  tickets: [
+ *    {
  *      recordName: 'test abc',
- *      recordType: 'whatever',
+ *      recordType: 'ticket',
  *      ...
  *      TicketLNG: {
  *        description: 'lng description'
  *        addRole: 'public',
+ *        ...
+ *      },
+ *      TicketNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
  *      }
- *   },
- *   ...
- * ]
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns object containing the operation's status and created records
  */
-exports.editMaster = async function(args, res, next, incomingObj) {
-  if (!incomingObj._id) {
+exports.editRecord = async function(args, res, next, incomingObj) {
+  // save flavour records
+  let observables = [];
+  let savedFlavourTickets = [];
+  let flavourIds = [];
+
+  try {
+    // make a copy of the incoming object for use by the flavours only
+    const flavourIncomingObj = { ...incomingObj };
+    // Remove fields that should not be inherited from the master record
+    delete flavourIncomingObj._id;
+    delete flavourIncomingObj._schemaName;
+    delete flavourIncomingObj._flavourRecords;
+    delete flavourIncomingObj.read;
+    delete flavourIncomingObj.write;
+
+    if (incomingObj.TicketLNG) {
+      if (incomingObj.TicketLNG._id) {
+        observables.push(this.editLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.TicketLNG }));
+      } else {
+        observables.push(TicketPost.createLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.TicketLNG }));
+      }
+
+      delete incomingObj.TicketLNG;
+    }
+
+    if (incomingObj.TicketNRCED) {
+      if (incomingObj.TicketNRCED._id) {
+        observables.push(this.editNRCED(args, res, next, { ...flavourIncomingObj, ...incomingObj.TicketNRCED }));
+      } else {
+        observables.push(
+          TicketPost.createNRCED(args, res, next, { ...flavourIncomingObj, ...incomingObj.TicketNRCED })
+        );
+      }
+
+      delete incomingObj.TicketNRCED;
+    }
+
+    if (observables.length > 0) {
+      savedFlavourTickets = await Promise.all(observables);
+
+      flavourIds = savedFlavourTickets.map(flavourTicket => flavourTicket._id);
+    }
+  } catch (e) {
     return {
       status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
+      object: savedFlavourTickets,
+      errorMessage: e
     };
+  }
+
+  // save ticket record
+  let savedTicket = null;
+
+  try {
+    savedTicket = await this.editMaster(args, res, next, incomingObj, flavourIds);
+
+    return {
+      status: 'success',
+      object: savedTicket,
+      flavours: savedFlavourTickets
+    };
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedTicket,
+      errorMessage: e
+    };
+  }
+};
+
+/**
+ * Performs all operations necessary to edit a master Ticket record.
+ *
+ * Example of incomingObj
+ *
+ *  tickets: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'ticket',
+ *      ...
+ *      TicketLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      TicketNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited master ticket record
+ */
+exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the master record
+    return;
   }
 
   const _id = incomingObj._id;
   delete incomingObj._id;
 
-  // Reject any changes to master perm
+  // Reject any changes to master permissions
   delete incomingObj.read;
   delete incomingObj.write;
 
-  const Ticket = mongoose.model(RECORD_TYPE.Ticket._schemaName);
+  const Ticket = mongoose.model('Ticket');
 
-  let sanitizedObj;
-  try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(Ticket, incomingObj);
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error.message
-    };
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(Ticket, incomingObj);
+
+  if (!sanitizedObj || sanitizedObj === {}) {
+    // skip, as there are no changes to master record
+    return;
   }
 
-  const finalRes = {
-    status: 'success',
-    object: sanitizedObj,
-    flavours: null
-  };
-  let savedTicket = null;
-  // Skip if there is nothing to update for master
-  if (sanitizedObj !== {}) {
-    sanitizedObj['dateUpdated'] = new Date();
-    sanitizedObj['updatedBy'] = args.swagger.params.auth_payload.displayName;
-    try {
-      savedTicket = await Ticket.findOneAndUpdate(
-        { _schemaName: RECORD_TYPE.Ticket._schemaName, _id: _id },
-        { $set: sanitizedObj },
-        { new: true }
-      );
-      finalRes.object = savedTicket;
-    } catch (error) {
-      finalRes.status = 'failure';
-      finalRes['errorMessage'] = error;
-    }
+  sanitizedObj.dateUpdated = new Date();
+  sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
+
+  let updateObj = { $set: sanitizedObj };
+
+  if (flavourIds && flavourIds.length) {
+    updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
   }
 
-  // Flavours:
-  // When editing, we might get a request to make a brand new flavour rather than edit.
-  const observables = [];
-  if (incomingObj.TicketLNG && incomingObj.TicketLNG._id) {
-    observables.push(this.editLNG(args, res, next, incomingObj.TicketLNG));
-    delete incomingObj.TicketLNG;
-  } else if (incomingObj.TicketLNG) {
-    observables.push(TicketPost.createLNG(args, res, next, incomingObj.TicketLNG, savedTicket._id));
-    delete incomingObj.TicketLNG;
-  }
-  if (incomingObj.TicketNRCED && incomingObj.TicketNRCED._id) {
-    observables.push(this.editNRCED(args, res, next, incomingObj.TicketNRCED));
-    delete incomingObj.TicketNRCED;
-  } else if (incomingObj.TicketNRCED) {
-    observables.push(TicketPost.createNRCED(args, res, next, incomingObj.TicketNRCED, savedTicket._id));
-    delete incomingObj.TicketNRCED;
-  }
-
-  // Execute edit flavours
-  try {
-    observables.length > 0 && (finalRes.flavours = await Promise.all(observables));
-  } catch (error) {
-    finalRes.flavours = {
-      status: 'failure',
-      object: observables,
-      errorMessage: error.message
-    };
-  }
-
-  return finalRes;
+  return await Ticket.findOneAndUpdate({ _schemaName: 'Ticket', _id: _id }, updateObj, { new: true });
 };
 
 /**
- * Edit LNG Ticket Record
+ * Performs all operations necessary to edit a lng Ticket record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _id: 'cd0b34a4ec1341288b5ea4164daffbf2'
- *   description: 'lng description',
- *   ...
- *   addRole: 'public'
- * }
+ *  tickets: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'ticket',
+ *      ...
+ *      TicketLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      TicketNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited lng ticket record
  */
 exports.editLNG = async function(args, res, next, incomingObj) {
-  if (!incomingObj._id) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
-    };
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the lng record
+    return;
   }
 
   const _id = incomingObj._id;
   delete incomingObj._id;
 
-  // Reject any changes to permissions.
+  // Reject any changes to permissions
   // Publishing must be done via addRole or removeRole
   delete incomingObj.read;
   delete incomingObj.write;
 
-  // You cannot update _master
-  delete incomingObj._master;
+  let TicketLNG = mongoose.model('TicketLNG');
 
-  const TicketLNG = mongoose.model(RECORD_TYPE.Ticket.flavours.lng._schemaName);
-
-  let sanitizedObj;
-  try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(TicketLNG, incomingObj);
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error.message
-    };
-  }
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(TicketLNG, incomingObj);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   let updateObj = { $set: sanitizedObj };
+
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj['$addToSet'] = { read: 'public' };
     updateObj.$set['datePublished'] = new Date();
-  } else if (incomingObj.removeRole === 'public') {
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj['$pull'] = { read: 'public' };
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
   }
+
   updateObj.$set['dateUpdated'] = new Date();
 
-  try {
-    const editRes = await TicketLNG.findOneAndUpdate(
-      { _schemaName: RECORD_TYPE.Ticket.flavours.lng._schemaName, _id: _id },
-      updateObj,
-      {
-        new: true
-      }
-    );
-    return {
-      status: 'success',
-      object: editRes
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error.message
-    };
-  }
+  return await TicketLNG.findOneAndUpdate({ _schemaName: 'TicketLNG', _id: _id }, updateObj, { new: true });
 };
 
 /**
- * Edit NRCED Ticket Record
+ * Performs all operations necessary to edit a nrced Ticket record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _id: 'cd0b34a4ec1341288b5ea4164daffbf2'
- *   description: 'nrced description',
- *   ...
- *   addRole: 'public'
- * }
+ *  tickets: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'ticket',
+ *      ...
+ *      TicketLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      TicketNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited nrced ticket record
  */
 exports.editNRCED = async function(args, res, next, incomingObj) {
-  if (!incomingObj._id) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
-    };
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the NRCED record
+    return;
   }
 
   const _id = incomingObj._id;
   delete incomingObj._id;
 
-  // Reject any changes to permissions.
+  // Reject any changes to permissions
   // Publishing must be done via addRole or removeRole
   delete incomingObj.read;
   delete incomingObj.write;
 
-  // You cannot update _master
-  delete incomingObj._master;
+  let TicketNRCED = mongoose.model('TicketNRCED');
 
-  const TicketNRCED = mongoose.model(RECORD_TYPE.Ticket.flavours.nrced._schemaName);
-
-  let sanitizedObj;
-  try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(TicketNRCED, incomingObj);
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error.message
-    };
-  }
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(TicketNRCED, incomingObj);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   let updateObj = { $set: sanitizedObj };
+
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj['$addToSet'] = { read: 'public' };
     updateObj.$set['datePublished'] = new Date();
-  } else if (incomingObj.removeRole === 'public') {
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj['$pull'] = { read: 'public' };
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
   }
+
   updateObj.$set['dateUpdated'] = new Date();
 
-  try {
-    const editRes = await TicketNRCED.findOneAndUpdate(
-      { _schemaName: RECORD_TYPE.Ticket.flavours.nrced._schemaName, _id: _id },
-      updateObj,
-      {
-        new: true
-      }
-    );
-    return {
-      status: 'success',
-      object: editRes
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error.message
-    };
-  }
+  return await TicketNRCED.findOneAndUpdate({ _schemaName: 'TicketNRCED', _id: _id }, updateObj, { new: true });
 };
