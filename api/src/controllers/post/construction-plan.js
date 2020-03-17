@@ -125,7 +125,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
 
   // set data
   incomingObj.recordName && (constructionPlan.recordName = incomingObj.recordName);
-  constructionPlan.recordType = 'ConstructionPlan';
+  constructionPlan.recordType = 'Construction Plan';
   incomingObj.dateIssued && (constructionPlan.dateIssued = incomingObj.dateIssued);
   incomingObj.agency && (constructionPlan.agency = incomingObj.agency);
   incomingObj.author && (constructionPlan.author = incomingObj.author);
@@ -202,7 +202,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
 
   // set master data
   incomingObj.recordName && (constructionPlanLNG.recordName = incomingObj.recordName);
-  constructionPlanLNG.recordType = 'ConstructionPlan';
+  constructionPlanLNG.recordType = 'Construction Plan';
   incomingObj.dateIssued && (constructionPlanLNG.dateIssued = incomingObj.dateIssued);
   incomingObj.agency && (constructionPlanLNG.agency = incomingObj.agency);
   incomingObj.author && (constructionPlanLNG.author = incomingObj.author);
