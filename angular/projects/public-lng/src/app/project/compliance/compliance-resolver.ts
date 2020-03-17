@@ -32,10 +32,10 @@ export class ComplianceResolver implements Resolve<Observable<object>> {
     delete filterParams.ms;
 
     if (filterParams.dateRangeFromFilter) {
-      filterParams['_master.dateRangeFromFilterdateIssued'] = filterParams.dateRangeFromFilter;
+      filterParams['dateRangeFromFilterdateIssued'] = filterParams.dateRangeFromFilter;
     }
     if (filterParams.dateRangeToFilter) {
-      filterParams['_master.dateRangeToFilterdateIssued'] = filterParams.dateRangeToFilter;
+      filterParams['dateRangeToFilterdateIssued'] = filterParams.dateRangeToFilter;
     }
     delete filterParams.dateRangeFromFilter;
     delete filterParams.dateRangeToFilter;
@@ -57,9 +57,9 @@ export class ComplianceResolver implements Resolve<Observable<object>> {
       [],
       tableObject.currentPage,
       tableObject.pageSize,
-      tableObject.sortBy || '-_master.dateIssued', // This needs to be common between both datasets to work properly
+      tableObject.sortBy || '-dateIssued', // This needs to be common between both datasets to work properly
       {
-        '_master._epicProjectId': project
+        _epicProjectId: project
       },
       false,
       filterParams
