@@ -195,7 +195,6 @@ exports.up = async function (db) {
 };
 
 let createActivityRecord = async function (item, project, nrptiCollection) {
-  var documents = await createDocument(item, nrptiCollection);
   const activity = {
     _schemaName: 'ActivityLNG',
     _epicProjectId: new ObjectID(project),
@@ -219,107 +218,204 @@ let createActivityRecord = async function (item, project, nrptiCollection) {
 
 let createAgreementRecord = async function (item, project, nrptiCollection) {
   var documents = await createDocument(item, nrptiCollection);
-  // Create the master record
-  const master = {
-    _schemaName: 'Agreement',
+
+  // Create the flavour record
+  let flavourLNG = {
+    _schemaName: 'AgreementLNG',
     _epicProjectId: new ObjectID(project),
-    read: ['sysadmin'],
+
+    read: [
+      'public',
+      'sysadmin'
+    ],
     write: ['sysadmin'],
+
     recordName: item.name,
     recordType: 'Agreement',
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
     nationName: item.nation,
-    documents: documents,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    documents: documents,
+
+    description: item.description,
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
+    datePublished: new Date(),
+
+    addeddBy: 'System',
     updatedBy: 'System',
     publishedBy: 'System',
-    sourceDateAdded: new Date,
-    sourceDateUpdated: new Date,
-    sourceSystemRef: ''
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
+  }
+
+  const resFlavour = await nrptiCollection.insertOne(flavourLNG)
+  const flavorID = resFlavour.insertedId.toString()
+  console.log('Inserted FlavourLNGID:', flavorID)
+
+  // Create the master record
+  const master = {
+    _schemaName: 'Agreement',
+    _epicProjectId: new ObjectID(project),
+    _flavourRecords: [flavorID],
+
+    read: ['sysadmin'],
+    write: ['sysadmin'],
+
+    recordName: item.name,
+    recordType: 'Agreement',
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    nationName: item.nation,
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    documents: documents,
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+    publishedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
   }
 
   const resMaster = await nrptiCollection.insertOne(master)
-  let masterID = resMaster.insertedId.toString()
-  console.log('Inserted MasterID:', masterID)
+  console.log('Inserted MasterID:', resMaster.insertedId.toString())
+}
 
-  // Create the related flavour record
+let createManagementPlanRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
+
+  // Create the flavour record
   let flavourLNG = {
-    _schemaName: 'AgreementLNG',
-    dateUpdated: new Date(),
-    datePublished: new Date(),
+    _schemaName: 'ManagementPlanLNG',
+    _epicProjectId: new ObjectID(project),
+
     read: [
       'public',
       'sysadmin'
     ],
     write: ['sysadmin'],
-    _master: new ObjectID(masterID),
-    description: item.description,
-  }
 
-  const resFlavour = await nrptiCollection.insertOne(flavourLNG)
-  console.log('Inserted FlavourLNGID:', resFlavour.insertedId.toString())
-}
-
-let createManagementPlanRecord = async function (item, project, nrptiCollection) {
-  var documents = await createDocument(item, nrptiCollection);
-  // Create the master record
-  const master = {
-    _schemaName: 'ManagementPlan',
-    _epicProjectId: new ObjectID(project),
-    read: ['sysadmin'],
-    write: ['sysadmin'],
     recordName: item.name,
     recordType: 'Management Plan',
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
     issuingAgency: item.agency,
-    documents: documents,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    documents: documents,
+
+    relatedPhase: item.phase || item.complianceDocumentSubtype,
+    description: item.description,
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
+    datePublished: new Date(),
+
+    addedBy: 'System',
     updatedBy: 'System',
     publishedBy: 'System',
-    sourceDateAdded: new Date,
-    sourceDateUpdated: new Date,
-    sourceSystemRef: ''
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
+  }
+
+  const resFlavour = await nrptiCollection.insertOne(flavourLNG)
+  const flavorID = resFlavour.insertedId.toString()
+  console.log('Inserted FlavourLNGID:', flavorID)
+
+  // Create the master record
+  const master = {
+    _schemaName: 'ManagementPlan',
+    _epicProjectId: new ObjectID(project),
+    _flavourRecords: [flavorID],
+
+    read: ['sysadmin'],
+    write: ['sysadmin'],
+
+    recordName: item.name,
+    recordType: 'Management Plan',
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    issuingAgency: item.agency,
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    documents: documents,
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+    publishedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
   }
 
   const resMaster = await nrptiCollection.insertOne(master)
-  let masterID = resMaster.insertedId.toString()
-  console.log('Inserted MasterID:', masterID)
+  console.log('Inserted MasterID:', resMaster.insertedId.toString())
+}
 
-  // Create the related flavour record
+let createConstructionPlanRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
+
+  // Create the flavour record
   let flavourLNG = {
-    _schemaName: 'ManagementPlanLNG',
-    dateUpdated: new Date(),
-    datePublished: new Date(),
+    _schemaName: 'ConstructionPlanLNG',
+    _epicProjectId: new ObjectID(project),
+
     read: [
       'public',
       'sysadmin'
     ],
     write: ['sysadmin'],
-    _master: new ObjectID(masterID),
+
+    recordName: item.name,
+    recordType: 'Construction Plan',
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    issuingAgency: item.agency,
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    documents: documents,
+
     relatedPhase: item.phase || item.complianceDocumentSubtype,
     description: item.description,
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    datePublished: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+    publishedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
   }
 
   const resFlavour = await nrptiCollection.insertOne(flavourLNG)
-  console.log('Inserted FlavourLNGID:', resFlavour.insertedId.toString())
-}
+  const flavorID = resFlavour.insertedId.toString()
+  console.log('Inserted FlavourLNGID:', flavorID)
 
-let createConstructionPlanRecord = async function (item, project, nrptiCollection) {
-  var documents = await createDocument(item, nrptiCollection);
   // Create the master record
   const master = {
     _schemaName: 'ConstructionPlan',
     _epicProjectId: new ObjectID(project),
+    _flavourRecords: [flavorID],
+
     read: ['sysadmin'],
     write: ['sysadmin'],
+
     recordName: item.name,
     recordType: 'Construction Plan',
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -330,44 +426,71 @@ let createConstructionPlanRecord = async function (item, project, nrptiCollectio
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
+
     updatedBy: 'System',
     publishedBy: 'System',
-    sourceDateAdded: new Date,
-    sourceDateUpdated: new Date,
-    sourceSystemRef: ''
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
   }
 
   const resMaster = await nrptiCollection.insertOne(master)
-  let masterID = resMaster.insertedId.toString()
-  console.log('Inserted MasterID:', masterID)
+  console.log('Inserted MasterID:', resMaster.insertedId.toString())
+}
 
-  // Create the related flavour record
+let createWarningRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
+
+  // Create the flavour record
   let flavourLNG = {
-    _schemaName: 'ConstructionPlanLNG',
-    dateUpdated: new Date(),
-    datePublished: new Date(),
+    _schemaName: 'WarningLNG',
+    _epicProjectId: new ObjectID(project),
+
     read: [
       'public',
       'sysadmin'
     ],
     write: ['sysadmin'],
-    _master: new ObjectID(masterID),
-    relatedPhase: item.phase || item.complianceDocumentSubtype,
+
+    recordName: item.name,
+    recordType: 'Warning',
+    recordSubtype: item.complianceDocumentSubtype,
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    issuingAgency: item.agency,
+    author: item.author,
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    documents: documents,
+
     description: item.description,
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    datePublished: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+    publishedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
   }
 
   const resFlavour = await nrptiCollection.insertOne(flavourLNG)
-  console.log('Inserted FlavourLNGID:', resFlavour.insertedId.toString())
-}
+  const flavorID = resFlavour.insertedId.toString()
+  console.log('Inserted FlavourLNGID:', flavorID)
 
-let createWarningRecord = async function (item, project, nrptiCollection) {
-  var documents = await createDocument(item, nrptiCollection);
   // Create the master record
   const master = {
     _schemaName: 'Warning',
     _epicProjectId: new ObjectID(project),
+    _flavourRecords: [flavorID],
+
     read: ['sysadmin'],
     write: ['sysadmin'],
+
     recordName: item.name,
     recordType: 'Warning',
     recordSubtype: item.complianceDocumentSubtype,
@@ -380,43 +503,72 @@ let createWarningRecord = async function (item, project, nrptiCollection) {
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
+
+    addedBy: 'System',
     updatedBy: 'System',
     publishedBy: 'System',
-    sourceDateAdded: new Date,
-    sourceDateUpdated: new Date,
-    sourceSystemRef: ''
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
   }
 
   const resMaster = await nrptiCollection.insertOne(master)
-  let masterID = resMaster.insertedId.toString()
-  console.log('Inserted MasterID:', masterID)
+  console.log('Inserted MasterID:', resMaster.insertedId.toString())
+}
 
-  // Create the related flavour record
+let createComplianceSelfReportRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
+
+  // Create the flavour record
   let flavourLNG = {
-    _schemaName: 'WarningLNG',
-    dateUpdated: new Date(),
-    datePublished: new Date(),
+    _schemaName: 'SelfReportLNG',
+    _epicProjectId: new ObjectID(project),
+
     read: [
       'public',
       'sysadmin'
     ],
     write: ['sysadmin'],
-    _master: new ObjectID(masterID),
+
+    recordName: item.name,
+    recordType: 'Compliance Self-Report',
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    issuingAgency: item.agency,
+    author: item.author,
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    documents: documents,
+
+    relatedPhase: item.phase,
     description: item.description,
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    datePublished: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+    publishedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
   }
 
   const resFlavour = await nrptiCollection.insertOne(flavourLNG)
-  console.log('Inserted FlavourLNGID:', resFlavour.insertedId.toString())
-}
+  const flavorID = resFlavour.insertedId.toString()
+  console.log('Inserted FlavourLNGID:', flavorID)
 
-let createComplianceSelfReportRecord = async function (item, project, nrptiCollection) {
-  var documents = await createDocument(item, nrptiCollection);
   // Create the master record
   const master = {
     _schemaName: 'SelfReport',
     _epicProjectId: new ObjectID(project),
+    _flavourRecords: [flavorID],
+
     read: ['sysadmin'],
     write: ['sysadmin'],
+
     recordName: item.name,
     recordType: 'Compliance Self-Report',
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -428,44 +580,71 @@ let createComplianceSelfReportRecord = async function (item, project, nrptiColle
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
+
+    addedBy: 'System',
     updatedBy: 'System',
     publishedBy: 'System',
-    sourceDateAdded: new Date,
-    sourceDateUpdated: new Date,
-    sourceSystemRef: ''
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
   }
 
   const resMaster = await nrptiCollection.insertOne(master)
-  let masterID = resMaster.insertedId.toString()
-  console.log('Inserted MasterID:', masterID)
+  console.log('Inserted MasterID:', resMaster.insertedId.toString())
+}
 
-  // Create the related flavour record
+let createCertificateRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
+
+  // Create the flavour record
   let flavourLNG = {
-    _schemaName: 'SelfReportLNG',
-    dateUpdated: new Date(),
-    datePublished: new Date(),
+    _schemaName: 'CertificateLNG',
+    _epicProjectId: new ObjectID(project),
+
     read: [
       'public',
       'sysadmin'
     ],
     write: ['sysadmin'],
-    _master: new ObjectID(masterID),
-    relatedPhase: item.phase,
+
+    recordName: item.name,
+    recordType: 'Certificate',
+    recordSubtype: item.complianceDocumentSubtype,
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    issuingAgency: item.agency,
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    documents: documents,
+
     description: item.description,
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    datePublished: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+    publishedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
   }
 
   const resFlavour = await nrptiCollection.insertOne(flavourLNG)
-  console.log('Inserted FlavourLNGID:', resFlavour.insertedId.toString())
-}
+  const flavorID = resFlavour.insertedId.toString()
+  console.log('Inserted FlavourLNGID:', flavorID)
 
-let createCertificateRecord = async function (item, project, nrptiCollection) {
-  var documents = await createDocument(item, nrptiCollection);
   // Create the master record
-  const certificateMaster = {
+  const master = {
     _schemaName: 'Certificate',
     _epicProjectId: new ObjectID(project),
+    _flavourRecords: [flavorID],
+
     read: ['sysadmin'],
     write: ['sysadmin'],
+
     recordName: item.name,
     recordType: 'Certificate',
     recordSubtype: item.complianceDocumentSubtype,
@@ -477,43 +656,71 @@ let createCertificateRecord = async function (item, project, nrptiCollection) {
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
+
+    addedBy: 'System',
     updatedBy: 'System',
     publishedBy: 'System',
-    sourceDateAdded: new Date,
-    sourceDateUpdated: new Date,
-    sourceSystemRef: ''
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
   }
 
-  const resMaster = await nrptiCollection.insertOne(certificateMaster)
-  let certificateLNGId = resMaster.insertedId.toString()
-  console.log('Inserted MasterCertificateID:', certificateLNGId)
+  const resMaster = await nrptiCollection.insertOne(master)
+  console.log('Inserted MasterID:', resMaster.insertedId.toString())
+}
 
-  // Create the related flavour record
-  let certificateLNG = {
-    _schemaName: 'CertificateLNG',
-    dateUpdated: new Date(),
-    datePublished: new Date(),
+let createPermitRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
+
+  // Create the flavour record
+  let flavourLNG = {
+    _schemaName: 'PermitLNG',
+    _epicProjectId: new ObjectID(project),
+
     read: [
       'public',
       'sysadmin'
     ],
     write: ['sysadmin'],
-    _master: new ObjectID(certificateLNGId),
+
+    recordName: item.name,
+    recordType: 'Permit',
+    recordSubtype: item.complianceDocumentSubtype,
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    issuingAgency: item.agency,
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    documents: documents,
+
     description: item.description,
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    datePublished: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+    publishedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
   }
 
-  const resFlavour = await nrptiCollection.insertOne(certificateLNG)
-  console.log('Inserted AuthLNGID:', resFlavour.insertedId.toString())
-}
+  const resFlavour = await nrptiCollection.insertOne(flavourLNG)
+  const flavorID = resFlavour.insertedId.toString()
+  console.log('Inserted FlavourLNGID:', flavorID)
 
-let createPermitRecord = async function (item, project, nrptiCollection) {
-  var documents = await createDocument(item, nrptiCollection);
   // Create the master record
-  const permitMaster = {
+  const master = {
     _schemaName: 'Permit',
     _epicProjectId: new ObjectID(project),
+    _flavourRecords: [flavorID],
+
     read: ['sysadmin'],
     write: ['sysadmin'],
+
     recordName: item.name,
     recordType: 'Permit',
     recordSubtype: item.complianceDocumentSubtype,
@@ -525,43 +732,72 @@ let createPermitRecord = async function (item, project, nrptiCollection) {
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
+
+    addedBy: 'System',
     updatedBy: 'System',
     publishedBy: 'System',
-    sourceDateAdded: new Date,
-    sourceDateUpdated: new Date,
-    sourceSystemRef: ''
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
   }
 
-  const resMaster = await nrptiCollection.insertOne(permitMaster)
-  let permitLNGId = resMaster.insertedId.toString()
-  console.log('Inserted MasterPermitID:', permitLNGId)
+  const resMaster = await nrptiCollection.insertOne(master)
+  console.log('Inserted MasterID:', resMaster.insertedId.toString())
+}
 
-  // Create the related flavour record
-  let permitLNG = {
-    _schemaName: 'PermitLNG',
-    dateUpdated: new Date(),
-    datePublished: new Date(),
+let createOrderRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
+
+  // Create the flavour record
+  let flavourLNG = {
+    _schemaName: 'OrderLNG',
+    _epicProjectId: new ObjectID(project),
+
     read: [
       'public',
       'sysadmin'
     ],
     write: ['sysadmin'],
-    _master: new ObjectID(permitLNGId),
+
+    recordName: item.name,
+    recordType: 'Order',
+    recordSubtype: item.complianceDocumentSubtype,
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    issuingAgency: item.agency,
+    author: item.author,
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    documents: documents,
+
     description: item.description,
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    datePublished: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+    publishedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
   }
 
-  const resFlavour = await nrptiCollection.insertOne(permitLNG)
-  console.log('Inserted AuthLNGID:', resFlavour.insertedId.toString())
-}
+  const resFlavour = await nrptiCollection.insertOne(flavourLNG)
+  const flavorID = resFlavour.insertedId.toString()
+  console.log('Inserted FlavourLNGID:', flavorID)
 
-let createOrderRecord = async function (item, project, nrptiCollection) {
-  var documents = await createDocument(item, nrptiCollection);
   // Create the master record
   const master = {
     _schemaName: 'Order',
     _epicProjectId: new ObjectID(project),
+    _flavourRecords: [flavorID],
+
     read: ['sysadmin'],
     write: ['sysadmin'],
+
     recordName: item.name,
     recordType: 'Order',
     recordSubtype: item.complianceDocumentSubtype,
@@ -574,43 +810,70 @@ let createOrderRecord = async function (item, project, nrptiCollection) {
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
+
+    addedBy: 'System',
     updatedBy: 'System',
-    publishedBy: 'System',
-    sourceDateAdded: new Date,
-    sourceDateUpdated: new Date,
-    sourceSystemRef: ''
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
   }
 
   const resMaster = await nrptiCollection.insertOne(master)
-  let masterID = resMaster.insertedId.toString()
-  console.log('Inserted MasterID:', masterID)
+  console.log('Inserted MasterID:', resMaster.insertedId.toString())
+}
 
-  // Create the related flavour record
+let createInspectionRecord = async function (item, project, nrptiCollection) {
+  var documents = await createDocument(item, nrptiCollection);
+
+  // Create the flavour record
   let flavourLNG = {
-    _schemaName: 'OrderLNG',
-    dateUpdated: new Date(),
-    datePublished: new Date(),
+    _schemaName: 'InspectionLNG',
+    _epicProjectId: new ObjectID(project),
+
     read: [
       'public',
       'sysadmin'
     ],
     write: ['sysadmin'],
-    _master: new ObjectID(masterID),
+
+    recordName: item.name,
+    recordType: 'Inspection',
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    issuingAgency: item.agency,
+    author: item.author,
+    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    documents: documents,
+
     description: item.description,
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    datePublished: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+    publishedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
   }
 
   const resFlavour = await nrptiCollection.insertOne(flavourLNG)
-  console.log('Inserted FlavourLNGID:', resFlavour.insertedId.toString())
-}
+  const flavorID = resFlavour.insertedId.toString()
+  console.log('Inserted FlavourLNGID:', flavorID)
 
-let createInspectionRecord = async function (item, project, nrptiCollection) {
-  var documents = await createDocument(item, nrptiCollection);
   // Create the master record
   const master = {
     _schemaName: 'Inspection',
     _epicProjectId: new ObjectID(project),
+    _flavourRecords: [flavorID],
+
     read: ['sysadmin'],
     write: ['sysadmin'],
+
     recordName: item.name,
     recordType: 'Inspection',
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -622,33 +885,17 @@ let createInspectionRecord = async function (item, project, nrptiCollection) {
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
+
+    addedBy: 'System',
     updatedBy: 'System',
-    publishedBy: 'System',
-    sourceDateAdded: new Date,
-    sourceDateUpdated: new Date,
-    sourceSystemRef: ''
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'lng-csv'
   }
 
   const resMaster = await nrptiCollection.insertOne(master)
-  let masterID = resMaster.insertedId.toString()
-  console.log('Inserted MasterID:', masterID)
-
-  // Create the related flavour record
-  let flavourLNG = {
-    _schemaName: 'InspectionLNG',
-    dateUpdated: new Date(),
-    datePublished: new Date(),
-    read: [
-      'public',
-      'sysadmin'
-    ],
-    write: ['sysadmin'],
-    _master: new ObjectID(masterID),
-    description: item.description,
-  }
-
-  const resFlavour = await nrptiCollection.insertOne(flavourLNG)
-  console.log('Inserted FlavourLNGID:', resFlavour.insertedId.toString())
+  console.log('Inserted MasterID:', resMaster.insertedId.toString())
 }
 
 let createDocument = async function (item, nrptiCollection) {
