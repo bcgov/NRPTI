@@ -6,7 +6,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { GlobalModule } from 'nrpti-angular-components';
 import { RecordDetailDirective } from '../../utils/record-detail.directive';
 import { DatePipe } from '@angular/common';
-import { CommonModule } from '../../../../../../common/src/app/common.module';
 
 describe('RestorativeJusticeDetailComponent', () => {
   const testBedHelper = new TestBedHelper<RestorativeJusticeDetailComponent>(RestorativeJusticeDetailComponent);
@@ -17,7 +16,7 @@ describe('RestorativeJusticeDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, GlobalModule, CommonModule],
+      imports: [RouterTestingModule, GlobalModule],
       declarations: [RestorativeJusticeDetailComponent, RecordDetailDirective],
       providers: [
         DatePipe,
