@@ -1,30 +1,121 @@
-const mongoose = require('mongoose');
-const ObjectId = require('mongoose').Types.ObjectId;
-const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+let mongoose = require('mongoose');
+let ObjectId = require('mongoose').Types.ObjectId;
 
 /**
- * Create Master Administrative Sanction record.
+ * Performs all operations necessary to create a master Administrative Sanction record and its associated flavour records.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * administrativeSanction: [
- *   {
- *     recordName: 'test abc',
- *     recordType: 'whatever',
- *     ...
- *     AdministrativeSanctionLNG: {
- *       description: 'lng description'
- *       addRole: 'public',
- *     }
- *   },
- *   ...
- * ]
+ *  administrativeSanctions: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'administrativeSanction',
+ *      ...
+ *      AdministrativeSanctionLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      AdministrativeSanctionNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns object containing the operation's status and created records
  */
-exports.createMaster = async function(args, res, next, incomingObj) {
-  const AdministrativeSanction = mongoose.model(RECORD_TYPE.AdministrativeSanction._schemaName);
-  const administrativeSanction = new AdministrativeSanction();
+exports.createRecord = async function(args, res, next, incomingObj) {
+  // save flavour records
+  let observables = [];
+  let savedFlavourAdministrativeSanctions = [];
+  let flavourIds = [];
 
-  administrativeSanction._schemaName = RECORD_TYPE.AdministrativeSanction._schemaName;
+  try {
+    incomingObj.AdministrativeSanctionLNG &&
+      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.AdministrativeSanctionLNG }));
+    incomingObj.AdministrativeSanctionNRCED &&
+      observables.push(
+        this.createNRCED(args, res, next, { ...incomingObj, ...incomingObj.AdministrativeSanctionNRCED })
+      );
+
+    if (observables.length > 0) {
+      savedFlavourAdministrativeSanctions = await Promise.all(observables);
+
+      flavourIds = savedFlavourAdministrativeSanctions.map(
+        flavourAdministrativeSanction => flavourAdministrativeSanction._id
+      );
+    }
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedFlavourAdministrativeSanctions,
+      errorMessage: e
+    };
+  }
+
+  // save administrativeSanction record
+  let savedAdministrativeSanction = null;
+
+  try {
+    savedAdministrativeSanction = await this.createMaster(args, res, next, incomingObj, flavourIds);
+
+    return {
+      status: 'success',
+      object: savedAdministrativeSanction,
+      flavours: savedFlavourAdministrativeSanctions
+    };
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedAdministrativeSanction,
+      errorMessage: e
+    };
+  }
+};
+
+/**
+ * Performs all operations necessary to create a master Administrative Sanction record.
+ *
+ * Example of incomingObj
+ *
+ *  administrativeSanctions: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'administrativeSanction',
+ *      ...
+ *      AdministrativeSanctionLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      AdministrativeSanctionNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @param {*} flavourIds array of flavour record _ids
+ * @returns created master administrativeSanction record
+ */
+exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+  let AdministrativeSanction = mongoose.model('AdministrativeSanction');
+  let administrativeSanction = new AdministrativeSanction();
+
+  administrativeSanction._schemaName = 'AdministrativeSanction';
+
+  // set integration references
   incomingObj._epicProjectId &&
     ObjectId.isValid(incomingObj._epicProjectId) &&
     (administrativeSanction._epicProjectId = new ObjectId(incomingObj._epicProjectId));
@@ -35,8 +126,22 @@ exports.createMaster = async function(args, res, next, incomingObj) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (administrativeSanction._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
+  // set permissions
+  administrativeSanction.read = ['sysadmin'];
+  administrativeSanction.write = ['sysadmin'];
+
+  // set forward references
+  if (flavourIds && flavourIds.length) {
+    flavourIds.forEach(id => {
+      if (ObjectId.isValid(id)) {
+        administrativeSanction._flavourRecords.push(new ObjectId(id));
+      }
+    });
+  }
+
+  // set data
   incomingObj.recordName && (administrativeSanction.recordName = incomingObj.recordName);
-  administrativeSanction.recordType = RECORD_TYPE.AdministrativeSanction.displayName;
+  administrativeSanction.recordType = 'AdministrativeSanction';
   incomingObj.dateIssued && (administrativeSanction.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (administrativeSanction.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (administrativeSanction.author = incomingObj.author);
@@ -63,159 +168,214 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   incomingObj.outcomeDescription && (administrativeSanction.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (administrativeSanction.penalty = incomingObj.penalty);
 
+  // set meta
+  administrativeSanction.addedBy = args.swagger.params.auth_payload.displayName;
   administrativeSanction.dateAdded = new Date();
-  administrativeSanction.publishedBy = args.swagger.params.auth_payload.displayName;
 
+  // set data source references
   incomingObj.sourceDateAdded && (administrativeSanction.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (administrativeSanction.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (administrativeSanction.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  administrativeSanction.read = ['sysadmin'];
-  administrativeSanction.write = ['sysadmin'];
-
-  let savedAdministrativeSanction = null;
-  try {
-    savedAdministrativeSanction = await administrativeSanction.save();
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: administrativeSanction,
-      errorMessage: error.message
-    };
-  }
-
-  const observables = [];
-  incomingObj.AdministrativeSanctionLNG &&
-    observables.push(
-      this.createLNG(args, res, next, incomingObj.AdministrativeSanctionLNG, savedAdministrativeSanction._id)
-    );
-  incomingObj.AdministrativeSanctionNRCED &&
-    observables.push(
-      this.createNRCED(args, res, next, incomingObj.AdministrativeSanctionNRCED, savedAdministrativeSanction._id)
-    );
-
-  let flavourRes = null;
-  try {
-    observables.length > 0 && (flavourRes = await Promise.all(observables));
-  } catch (error) {
-    flavourRes = {
-      status: 'failure',
-      object: observables,
-      errorMessage: error.message
-    };
-  }
-
-  return {
-    status: 'success',
-    object: savedAdministrativeSanction,
-    flavours: flavourRes
-  };
+  return await administrativeSanction.save();
 };
 
 /**
- * Create LNG Administrative Sanction record.
+ * Performs all operations necessary to create a LNG Administrative Sanction record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _master: '5e1e7fcd20e4167bcfc3daa7'
- *   description: 'lng description',
- *   ...
- *   addRole: 'public'
- * }
+ *  administrativeSanctions: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'administrativeSanction',
+ *      ...
+ *      AdministrativeSanctionLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      AdministrativeSanctionNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created lng administrativeSanction record
  */
-exports.createLNG = async function(args, res, next, incomingObj, masterId) {
-  // We must have a valid master ObjectID to continue.
-  if (!masterId || !ObjectId.isValid(masterId)) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'incomingObj._master was not valid ObjectId'
-    };
-  }
+exports.createLNG = async function(args, res, next, incomingObj) {
+  let AdministrativeSanctionLNG = mongoose.model('AdministrativeSanctionLNG');
+  let administrativeSanctionLNG = new AdministrativeSanctionLNG();
 
-  const AdministrativeSanctionLNG = mongoose.model(RECORD_TYPE.AdministrativeSanction.flavours.lng._schemaName);
-  const inpsectionLNG = new AdministrativeSanctionLNG();
+  administrativeSanctionLNG._schemaName = 'AdministrativeSanctionLNG';
 
-  inpsectionLNG._schemaName = RECORD_TYPE.AdministrativeSanction.flavours.lng._schemaName;
-  inpsectionLNG._master = new ObjectId(masterId);
-  inpsectionLNG.read = ['sysadmin'];
-  inpsectionLNG.write = ['sysadmin'];
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (administrativeSanctionLNG._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (administrativeSanctionLNG._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (administrativeSanctionLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
+  administrativeSanctionLNG.read = ['sysadmin'];
+  administrativeSanctionLNG.write = ['sysadmin'];
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole &&
-    incomingObj.addRole === 'public' &&
-    inpsectionLNG.read.push('public') &&
-    (inpsectionLNG.datePublished = new Date());
-
-  incomingObj.description && (inpsectionLNG.description = incomingObj.description);
-
-  inpsectionLNG.dateAdded = new Date();
-
-  try {
-    const savedAdministrativeSanctionLNG = await inpsectionLNG.save();
-    return {
-      status: 'success',
-      object: savedAdministrativeSanctionLNG
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: inpsectionLNG,
-      errorMessage: error.message
-    };
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    administrativeSanctionLNG.read.push('public');
+    administrativeSanctionLNG.datePublished = new Date();
+    administrativeSanctionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
+
+  administrativeSanctionLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  administrativeSanctionLNG.dateAdded = new Date();
+
+  // set master data
+  incomingObj.recordName && (administrativeSanctionLNG.recordName = incomingObj.recordName);
+  administrativeSanctionLNG.recordType = 'AdministrativeSanction';
+  incomingObj.dateIssued && (administrativeSanctionLNG.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (administrativeSanctionLNG.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.author && (administrativeSanctionLNG.author = incomingObj.author);
+  incomingObj.legislation &&
+    incomingObj.legislation.act &&
+    (administrativeSanctionLNG.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (administrativeSanctionLNG.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (administrativeSanctionLNG.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (administrativeSanctionLNG.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (administrativeSanctionLNG.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.issuedTo && (administrativeSanctionLNG.issuedTo = incomingObj.issuedTo);
+  incomingObj.projectName && (administrativeSanctionLNG.projectName = incomingObj.projectName);
+  incomingObj.location && (administrativeSanctionLNG.location = incomingObj.location);
+  incomingObj.centroid && (administrativeSanctionLNG.centroid = incomingObj.centroid);
+  incomingObj.outcomeStatus && (administrativeSanctionLNG.outcomeStatus = incomingObj.outcomeStatus);
+  incomingObj.outcomeDescription && (administrativeSanctionLNG.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.penalty && (administrativeSanctionLNG.penalty = incomingObj.penalty);
+
+  // set flavour data
+  incomingObj.description && (administrativeSanctionLNG.description = incomingObj.description);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (administrativeSanctionLNG.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (administrativeSanctionLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (administrativeSanctionLNG.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return await administrativeSanctionLNG.save();
 };
 
 /**
- * Create NRCED Administrative Sanction record.
+ * Performs all operations necessary to create a NRCED Administrative Sanction record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _master: '5e1e7fcd20e4167bcfc3daa7'
- *   summary: 'nrced description',
- *   ...
- *   addRole: 'public'
- * }
+ *  administrativeSanctions: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'administrativeSanction',
+ *      ...
+ *      AdministrativeSanctionLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      AdministrativeSanctionNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created nrced administrativeSanction record
  */
-exports.createNRCED = async function(args, res, next, incomingObj, masterId) {
-  // We must have a valid master ObjectID to continue.
-  if (!masterId || !ObjectId.isValid(masterId)) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'incomingObj._master was not valid ObjectId'
-    };
-  }
+exports.createNRCED = async function(args, res, next, incomingObj) {
+  let AdministrativeSanctionNRCED = mongoose.model('AdministrativeSanctionNRCED');
+  let administrativeSanctionNRCED = new AdministrativeSanctionNRCED();
 
-  const AdministrativeSanctionNRCED = mongoose.model(RECORD_TYPE.AdministrativeSanction.flavours.nrced._schemaName);
-  const inpsectionNRCED = new AdministrativeSanctionNRCED();
+  administrativeSanctionNRCED._schemaName = 'AdministrativeSanctionNRCED';
 
-  inpsectionNRCED._schemaName = RECORD_TYPE.AdministrativeSanction.flavours.nrced._schemaName;
-  inpsectionNRCED._master = new ObjectId(masterId);
-  inpsectionNRCED.read = ['sysadmin'];
-  inpsectionNRCED.write = ['sysadmin'];
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (administrativeSanctionNRCED._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (administrativeSanctionNRCED._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (administrativeSanctionNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
+  administrativeSanctionNRCED.read = ['sysadmin'];
+  administrativeSanctionNRCED.write = ['sysadmin'];
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole &&
-    incomingObj.addRole === 'public' &&
-    inpsectionNRCED.read.push('public') &&
-    (inpsectionNRCED.datePublished = new Date());
-
-  incomingObj.summary && (inpsectionNRCED.summary = incomingObj.summary);
-
-  inpsectionNRCED.dateAdded = new Date();
-
-  try {
-    const savedAdministrativeSanctionNRCED = await inpsectionNRCED.save();
-    return {
-      status: 'success',
-      object: savedAdministrativeSanctionNRCED
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: inpsectionNRCED,
-      errorMessage: error.message
-    };
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    administrativeSanctionNRCED.read.push('public');
+    administrativeSanctionNRCED.datePublished = new Date();
+    administrativeSanctionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
+
+  administrativeSanctionNRCED.addedBy = args.swagger.params.auth_payload.displayName;
+  administrativeSanctionNRCED.dateAdded = new Date();
+
+  // set master data
+  incomingObj.recordName && (administrativeSanctionNRCED.recordName = incomingObj.recordName);
+  administrativeSanctionNRCED.recordType = 'AdministrativeSanction';
+  incomingObj.dateIssued && (administrativeSanctionNRCED.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (administrativeSanctionNRCED.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.author && (administrativeSanctionNRCED.author = incomingObj.author);
+  incomingObj.legislation &&
+    incomingObj.legislation.act &&
+    (administrativeSanctionNRCED.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (administrativeSanctionNRCED.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (administrativeSanctionNRCED.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (administrativeSanctionNRCED.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (administrativeSanctionNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.issuedTo && (administrativeSanctionNRCED.issuedTo = incomingObj.issuedTo);
+  incomingObj.projectName && (administrativeSanctionNRCED.projectName = incomingObj.projectName);
+  incomingObj.location && (administrativeSanctionNRCED.location = incomingObj.location);
+  incomingObj.centroid && (administrativeSanctionNRCED.centroid = incomingObj.centroid);
+  incomingObj.outcomeStatus && (administrativeSanctionNRCED.outcomeStatus = incomingObj.outcomeStatus);
+  incomingObj.outcomeDescription && (administrativeSanctionNRCED.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.penalty && (administrativeSanctionNRCED.penalty = incomingObj.penalty);
+
+  // set flavour data
+  incomingObj.summary && (administrativeSanctionNRCED.summary = incomingObj.summary);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (administrativeSanctionNRCED.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (administrativeSanctionNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (administrativeSanctionNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return await administrativeSanctionNRCED.save();
 };
