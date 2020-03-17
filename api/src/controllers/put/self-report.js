@@ -1,176 +1,210 @@
 const mongoose = require('mongoose');
-const putUtils = require('../../utils/put-utils');
+const ObjectID = require('mongodb').ObjectID;
+const PutUtils = require('../../utils/put-utils');
 const SelfReportPost = require('../post/self-report');
-const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 /**
- * Edit Master SelfReport record.
+ * Performs all operations necessary to edit a master Self Report record and its associated flavour records.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * selfReports: [
- *   {
- *      _id: '85ce24e603984b02a0f8edb42a334876',
+ *  selfReports: [
+ *    {
  *      recordName: 'test abc',
- *      recordType: 'whatever',
+ *      recordType: 'selfReport',
  *      ...
  *      SelfReportLNG: {
  *        description: 'lng description'
  *        addRole: 'public',
+ *        ...
  *      }
- *   },
- *   ...
- * ]
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns object containing the operation's status and created records
  */
-exports.editMaster = async function(args, res, next, incomingObj) {
-  if (!incomingObj._id) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
-    };
-  }
+exports.editRecord = async function(args, res, next, incomingObj) {
+  // save flavour records
+  let observables = [];
+  let savedFlavourSelfReports = [];
+  let flavourIds = [];
 
-  const _id = incomingObj._id;
-  delete incomingObj._id;
-
-  // Reject any changes to master perm
-  delete incomingObj.read;
-  delete incomingObj.write;
-
-  const SelfReport = mongoose.model(RECORD_TYPE.SelfReport._schemaName);
-
-  let sanitizedObj;
   try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(SelfReport, incomingObj);
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error
-    };
-  }
+    // make a copy of the incoming object for use by the flavours only
+    const flavourIncomingObj = { ...incomingObj };
+    // Remove fields that should not be inherited from the master record
+    delete flavourIncomingObj._id;
+    delete flavourIncomingObj._schemaName;
+    delete flavourIncomingObj._flavourRecords;
+    delete flavourIncomingObj.read;
+    delete flavourIncomingObj.write;
 
-  const finalRes = {
-    status: 'success',
-    object: sanitizedObj,
-    flavours: null
-  };
-  let savedSelfReport = null;
-  // Skip if there is nothing to update for master
-  if (sanitizedObj !== {}) {
-    sanitizedObj['dateUpdated'] = new Date();
-    sanitizedObj['updatedBy'] = args.swagger.params.auth_payload.displayName;
-    try {
-      savedSelfReport = await SelfReport.findOneAndUpdate(
-        { _schemaName: RECORD_TYPE.SelfReport._schemaName, _id: _id },
-        { $set: sanitizedObj },
-        { new: true }
-      );
-      finalRes.object = savedSelfReport;
-    } catch (error) {
-      finalRes.status = 'failure';
-      finalRes['errorMessage'] = error;
+    if (incomingObj.SelfReportLNG) {
+      if (incomingObj.SelfReportLNG._id) {
+        observables.push(this.editLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.SelfReportLNG }));
+      } else {
+        observables.push(
+          SelfReportPost.createLNG(args, res, next, {
+            ...flavourIncomingObj,
+            ...incomingObj.SelfReportLNG
+          })
+        );
+      }
+
+      delete incomingObj.SelfReportLNG;
     }
-  }
 
-  // Flavours:
-  // When editing, we might get a request to make a brand new flavour rather than edit.
-  const observables = [];
-  if (incomingObj.SelfReportLNG && incomingObj.SelfReportLNG._id) {
-    observables.push(this.editLNG(args, res, next, incomingObj.SelfReportLNG));
-    delete incomingObj.SelfReportLNG;
-  } else if (incomingObj.SelfReportLNG) {
-    observables.push(SelfReportPost.createLNG(args, res, next, incomingObj.SelfReportLNG, savedSelfReport._id));
-    delete incomingObj.SelfReportLNG;
-  }
+    if (observables.length > 0) {
+      savedFlavourSelfReports = await Promise.all(observables);
 
-  // Execute edit flavours
-  try {
-    observables.length > 0 && (finalRes.flavours = await Promise.all(observables));
-  } catch (error) {
-    finalRes.flavours = {
+      flavourIds = savedFlavourSelfReports.map(flavourSelfReport => flavourSelfReport._id);
+    }
+  } catch (e) {
+    return {
       status: 'failure',
-      object: observables,
-      errorMessage: error
+      object: savedFlavourSelfReports,
+      errorMessage: e
     };
   }
 
-  return finalRes;
+  // save selfReport record
+  let savedSelfReport = null;
+
+  try {
+    savedSelfReport = await this.editMaster(args, res, next, incomingObj, flavourIds);
+
+    return {
+      status: 'success',
+      object: savedSelfReport,
+      flavours: savedFlavourSelfReports
+    };
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedSelfReport,
+      errorMessage: e
+    };
+  }
 };
 
 /**
- * Edit LNG SelfReport Record
+ * Performs all operations necessary to edit a master Self Report record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _id: 'cd0b34a4ec1341288b5ea4164daffbf2'
- *   description: 'lng description',
- *   ...
- *   addRole: 'public'
- * }
+ *  selfReports: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'selfReport',
+ *      ...
+ *      SelfReportLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited master selfReport record
  */
-exports.editLNG = async function(args, res, next, incomingObj) {
-  if (!incomingObj._id) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
-    };
+exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the master record
+    return;
   }
 
   const _id = incomingObj._id;
   delete incomingObj._id;
 
-  // Reject any changes to permissions.
+  // Reject any changes to master permissions
+  delete incomingObj.read;
+  delete incomingObj.write;
+
+  const SelfReport = mongoose.model('SelfReport');
+
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(SelfReport, incomingObj);
+
+  if (!sanitizedObj || sanitizedObj === {}) {
+    // skip, as there are no changes to master record
+    return;
+  }
+
+  sanitizedObj.dateUpdated = new Date();
+  sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
+
+  let updateObj = { $set: sanitizedObj };
+
+  if (flavourIds && flavourIds.length) {
+    updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
+  }
+
+  return await SelfReport.findOneAndUpdate({ _schemaName: 'SelfReport', _id: _id }, updateObj, { new: true });
+};
+
+/**
+ * Performs all operations necessary to edit a lng Self Report record.
+ *
+ * Example of incomingObj
+ *
+ *  selfReports: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'selfReport',
+ *      ...
+ *      SelfReportLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited lng selfReport record
+ */
+exports.editLNG = async function(args, res, next, incomingObj) {
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the lng record
+    return;
+  }
+
+  const _id = incomingObj._id;
+  delete incomingObj._id;
+
+  // Reject any changes to permissions
   // Publishing must be done via addRole or removeRole
   delete incomingObj.read;
   delete incomingObj.write;
 
-  // You cannot update _master
-  delete incomingObj._master;
+  let SelfReportLNG = mongoose.model('SelfReportLNG');
 
-  const SelfReportLNG = mongoose.model(RECORD_TYPE.SelfReport.flavours.lng._schemaName);
-
-  let sanitizedObj;
-  try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(SelfReportLNG, incomingObj);
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error
-    };
-  }
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(SelfReportLNG, incomingObj);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   let updateObj = { $set: sanitizedObj };
+
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj['$addToSet'] = { read: 'public' };
     updateObj.$set['datePublished'] = new Date();
-  } else if (incomingObj.removeRole === 'public') {
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj['$pull'] = { read: 'public' };
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
   }
+
   updateObj.$set['dateUpdated'] = new Date();
 
-  try {
-    const editRes = await SelfReportLNG.findOneAndUpdate(
-      { _schemaName: RECORD_TYPE.SelfReport.flavours.lng._schemaName, _id: _id },
-      updateObj,
-      {
-        new: true
-      }
-    );
-    return {
-      status: 'success',
-      object: editRes
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: SelfReportLNG,
-      errorMessage: error
-    };
-  }
+  return await SelfReportLNG.findOneAndUpdate({ _schemaName: 'SelfReportLNG', _id: _id }, updateObj, { new: true });
 };
