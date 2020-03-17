@@ -22,11 +22,11 @@ export class AuthorizationsComponent implements OnInit {
       textFilters: [
         {
           displayName: 'Environmental Assessment Office',
-          fieldName: '_master.issuingAgency'
+          fieldName: 'issuingAgency'
         },
         {
           displayName: 'BC Oil and Gas Commission',
-          fieldName: '_master.issuingAgency'
+          fieldName: 'issuingAgency'
         }
       ]
     },
@@ -35,35 +35,35 @@ export class AuthorizationsComponent implements OnInit {
       textFilters: [
         {
           displayName: 'General',
-          fieldName: '_master.recordSubtype'
+          fieldName: 'recordSubtype'
         },
         {
           displayName: 'Investigative Use',
-          fieldName: '_master.recordSubtype'
+          fieldName: 'recordSubtype'
         },
         {
           displayName: 'Road',
-          fieldName: '_master.recordSubtype'
+          fieldName: 'recordSubtype'
         },
         {
           displayName: 'Water',
-          fieldName: '_master.recordSubtype'
+          fieldName: 'recordSubtype'
         },
         {
           displayName: 'Ancillary Site',
-          fieldName: '_master.recordSubtype'
+          fieldName: 'recordSubtype'
         },
         {
           displayName: 'Amendment',
-          fieldName: '_master.recordSubtype'
+          fieldName: 'recordSubtype'
         },
         {
           displayName: 'Project Description',
-          fieldName: '_master.recordSubtype'
+          fieldName: 'recordSubtype'
         },
         {
           displayName: 'Table Of Conditions',
-          fieldName: '_master.recordSubtype'
+          fieldName: 'recordSubtype'
         }
       ]
     }
