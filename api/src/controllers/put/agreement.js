@@ -1,176 +1,207 @@
 const mongoose = require('mongoose');
-const putUtils = require('../../utils/put-utils');
+const ObjectID = require('mongodb').ObjectID;
+const PutUtils = require('../../utils/put-utils');
 const AgreementPost = require('../post/agreement');
-const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 /**
- * Edit Master Agreement record.
+ * Performs all operations necessary to edit a master Agreement record and its associated flavour records.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * agreements: [
- *   {
- *      _id: '85ce24e603984b02a0f8edb42a334876',
+ *  agreements: [
+ *    {
  *      recordName: 'test abc',
- *      recordType: 'whatever',
+ *      recordType: 'agreement',
  *      ...
  *      AgreementLNG: {
  *        description: 'lng description'
  *        addRole: 'public',
+ *        ...
  *      }
- *   },
- *   ...
- * ]
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns object containing the operation's status and created records
  */
-exports.editMaster = async function(args, res, next, incomingObj) {
-  if (!incomingObj._id) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
-    };
-  }
+exports.editRecord = async function(args, res, next, incomingObj) {
+  // save flavour records
+  let observables = [];
+  let savedFlavourAgreements = [];
+  let flavourIds = [];
 
-  const _id = incomingObj._id;
-  delete incomingObj._id;
-
-  // Reject any changes to master perm
-  delete incomingObj.read;
-  delete incomingObj.write;
-
-  const Agreement = mongoose.model(RECORD_TYPE.Agreement._schemaName);
-
-  let sanitizedObj;
   try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(Agreement, incomingObj);
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error.message
-    };
-  }
+    // make a copy of the incoming object for use by the flavours only
+    const flavourIncomingObj = { ...incomingObj };
+    // Remove fields that should not be inherited from the master record
+    delete flavourIncomingObj._id;
+    delete flavourIncomingObj._schemaName;
+    delete flavourIncomingObj._flavourRecords;
+    delete flavourIncomingObj.read;
+    delete flavourIncomingObj.write;
 
-  const finalRes = {
-    status: 'success',
-    object: sanitizedObj,
-    flavours: null
-  };
-  let savedAgreement = null;
-  // Skip if there is nothing to update for master
-  if (sanitizedObj !== {}) {
-    sanitizedObj['dateUpdated'] = new Date();
-    sanitizedObj['updatedBy'] = args.swagger.params.auth_payload.displayName;
-    try {
-      savedAgreement = await Agreement.findOneAndUpdate(
-        { _schemaName: RECORD_TYPE.Agreement._schemaName, _id: _id },
-        { $set: sanitizedObj },
-        { new: true }
-      );
-      finalRes.object = savedAgreement;
-    } catch (error) {
-      finalRes.status = 'failure';
-      finalRes['errorMessage'] = error;
+    if (incomingObj.AgreementLNG) {
+      if (incomingObj.AgreementLNG._id) {
+        observables.push(this.editLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.AgreementLNG }));
+      } else {
+        observables.push(
+          AgreementPost.createLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.AgreementLNG })
+        );
+      }
+
+      delete incomingObj.AgreementLNG;
     }
-  }
 
-  // Flavours:
-  // When editing, we might get a request to make a brand new flavour rather than edit.
-  const observables = [];
-  if (incomingObj.AgreementLNG && incomingObj.AgreementLNG._id) {
-    observables.push(this.editLNG(args, res, next, incomingObj.AgreementLNG));
-    delete incomingObj.AgreementLNG;
-  } else if (incomingObj.AgreementLNG) {
-    observables.push(AgreementPost.createLNG(args, res, next, incomingObj.AgreementLNG, savedAgreement._id));
-    delete incomingObj.AgreementLNG;
-  }
+    if (observables.length > 0) {
+      savedFlavourAgreements = await Promise.all(observables);
 
-  // Execute edit flavours
-  try {
-    observables.length > 0 && (finalRes.flavours = await Promise.all(observables));
-  } catch (error) {
-    finalRes.flavours = {
+      flavourIds = savedFlavourAgreements.map(flavourAgreement => flavourAgreement._id);
+    }
+  } catch (e) {
+    return {
       status: 'failure',
-      object: observables,
-      errorMessage: error.message
+      object: savedFlavourAgreements,
+      errorMessage: e
     };
   }
 
-  return finalRes;
+  // save agreement record
+  let savedAgreement = null;
+
+  try {
+    savedAgreement = await this.editMaster(args, res, next, incomingObj, flavourIds);
+
+    return {
+      status: 'success',
+      object: savedAgreement,
+      flavours: savedFlavourAgreements
+    };
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedAgreement,
+      errorMessage: e
+    };
+  }
 };
 
 /**
- * Edit LNG Agreement Record
+ * Performs all operations necessary to edit a master Agreement record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _id: 'cd0b34a4ec1341288b5ea4164daffbf2'
- *   description: 'lng description',
- *   ...
- *   addRole: 'public'
- * }
+ *  agreements: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'agreement',
+ *      ...
+ *      AgreementLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited master agreement record
  */
-exports.editLNG = async function(args, res, next, incomingObj) {
-  if (!incomingObj._id) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'No _id provided'
-    };
+exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the master record
+    return;
   }
 
   const _id = incomingObj._id;
   delete incomingObj._id;
 
-  // Reject any changes to permissions.
+  // Reject any changes to master permissions
+  delete incomingObj.read;
+  delete incomingObj.write;
+
+  const Agreement = mongoose.model('Agreement');
+
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(Agreement, incomingObj);
+
+  if (!sanitizedObj || sanitizedObj === {}) {
+    // skip, as there are no changes to master record
+    return;
+  }
+
+  sanitizedObj.dateUpdated = new Date();
+  sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
+
+  let updateObj = { $set: sanitizedObj };
+
+  if (flavourIds && flavourIds.length) {
+    updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
+  }
+
+  return await Agreement.findOneAndUpdate({ _schemaName: 'Agreement', _id: _id }, updateObj, { new: true });
+};
+
+/**
+ * Performs all operations necessary to edit a lng Agreement record.
+ *
+ * Example of incomingObj
+ *
+ *  agreements: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'agreement',
+ *      ...
+ *      AgreementLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited lng agreement record
+ */
+exports.editLNG = async function(args, res, next, incomingObj) {
+  if (!incomingObj || !incomingObj._id) {
+    // skip, as there is no way to update the lng record
+    return;
+  }
+
+  const _id = incomingObj._id;
+  delete incomingObj._id;
+
+  // Reject any changes to permissions
   // Publishing must be done via addRole or removeRole
   delete incomingObj.read;
   delete incomingObj.write;
 
-  // You cannot update _master
-  delete incomingObj._master;
+  let AgreementLNG = mongoose.model('AgreementLNG');
 
-  const AgreementLNG = mongoose.model(RECORD_TYPE.Agreement.flavours.lng._schemaName);
-
-  let sanitizedObj;
-  try {
-    sanitizedObj = putUtils.validateObjectAgainstModel(AgreementLNG, incomingObj);
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error.message
-    };
-  }
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(AgreementLNG, incomingObj);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   let updateObj = { $set: sanitizedObj };
+
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj['$addToSet'] = { read: 'public' };
     updateObj.$set['datePublished'] = new Date();
-  } else if (incomingObj.removeRole === 'public') {
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj['$pull'] = { read: 'public' };
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
   }
+
   updateObj.$set['dateUpdated'] = new Date();
 
-  try {
-    const editRes = await AgreementLNG.findOneAndUpdate(
-      { _schemaName: RECORD_TYPE.Agreement.flavours.lng._schemaName, _id: _id },
-      updateObj,
-      {
-        new: true
-      }
-    );
-    return {
-      status: 'success',
-      object: editRes
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: error.message
-    };
-  }
+  return await AgreementLNG.findOneAndUpdate({ _schemaName: 'AgreementLNG', _id: _id }, updateObj, { new: true });
 };

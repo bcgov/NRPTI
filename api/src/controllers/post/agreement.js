@@ -1,30 +1,105 @@
-const mongoose = require('mongoose');
-const ObjectId = require('mongoose').Types.ObjectId;
-const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+let mongoose = require('mongoose');
+let ObjectId = require('mongoose').Types.ObjectId;
 
 /**
- * Create Master Agreement record.
+ * Performs all operations necessary to create a master Agreement record and its associated flavour records.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * agreement: [
- *   {
- *     recordName: 'test abc',
- *     recordType: 'whatever',
- *     ...
- *     AgreementLNG: {
- *       description: 'lng description'
- *       addRole: 'public',
- *     }
- *   },
- *   ...
- * ]
+ *  agreements: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'agreement',
+ *      ...
+ *      AgreementLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns object containing the operation's status and created records
  */
-exports.createMaster = async function(args, res, next, incomingObj) {
-  const Agreement = mongoose.model(RECORD_TYPE.Agreement._schemaName);
-  const agreement = new Agreement();
+exports.createRecord = async function(args, res, next, incomingObj) {
+  // save flavour records
+  let observables = [];
+  let savedFlavourAgreements = [];
+  let flavourIds = [];
 
-  agreement._schemaName = RECORD_TYPE.Agreement._schemaName;
+  try {
+    incomingObj.AgreementLNG &&
+      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.AgreementLNG }));
+
+    if (observables.length > 0) {
+      savedFlavourAgreements = await Promise.all(observables);
+
+      flavourIds = savedFlavourAgreements.map(flavourAgreement => flavourAgreement._id);
+    }
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedFlavourAgreements,
+      errorMessage: e
+    };
+  }
+
+  // save agreement record
+  let savedAgreement = null;
+
+  try {
+    savedAgreement = await this.createMaster(args, res, next, incomingObj, flavourIds);
+
+    return {
+      status: 'success',
+      object: savedAgreement,
+      flavours: savedFlavourAgreements
+    };
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedAgreement,
+      errorMessage: e
+    };
+  }
+};
+
+/**
+ * Performs all operations necessary to create a master Agreement record.
+ *
+ * Example of incomingObj
+ *
+ *  agreements: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'agreement',
+ *      ...
+ *      AgreementLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @param {*} flavourIds array of flavour record _ids
+ * @returns created master agreement record
+ */
+exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+  let Agreement = mongoose.model('Agreement');
+  let agreement = new Agreement();
+
+  agreement._schemaName = 'Agreement';
+
+  // set integration references
   incomingObj._epicProjectId &&
     ObjectId.isValid(incomingObj._epicProjectId) &&
     (agreement._epicProjectId = new ObjectId(incomingObj._epicProjectId));
@@ -35,105 +110,107 @@ exports.createMaster = async function(args, res, next, incomingObj) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (agreement._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
+  // set permissions
+  agreement.read = ['sysadmin'];
+  agreement.write = ['sysadmin'];
+
+  // set forward references
+  if (flavourIds && flavourIds.length) {
+    flavourIds.forEach(id => {
+      if (ObjectId.isValid(id)) {
+        agreement._flavourRecords.push(new ObjectId(id));
+      }
+    });
+  }
+
+  // set data
   incomingObj.recordName && (agreement.recordName = incomingObj.recordName);
-  agreement.recordType = RECORD_TYPE.Agreement.displayName;
+  agreement.recordType = 'Agreement';
   incomingObj.dateIssued && (agreement.dateIssued = incomingObj.dateIssued);
   incomingObj.nationName && (agreement.nationName = incomingObj.nationName);
   incomingObj.projectName && (agreement.projectName = incomingObj.projectName);
 
+  // set meta
+  agreement.addedBy = args.swagger.params.auth_payload.displayName;
   agreement.dateAdded = new Date();
-  agreement.publishedBy = args.swagger.params.auth_payload.displayName;
 
+  // set data source references
   incomingObj.sourceDateAdded && (agreement.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (agreement.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (agreement.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  agreement.read = ['sysadmin'];
-  agreement.write = ['sysadmin'];
-
-  let savedAgreement = null;
-  try {
-    savedAgreement = await agreement.save();
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: agreement,
-      errorMessage: error.message
-    };
-  }
-
-  const observables = [];
-  incomingObj.AgreementLNG &&
-    observables.push(this.createLNG(args, res, next, incomingObj.AgreementLNG, savedAgreement._id));
-
-  let flavourRes = null;
-  try {
-    observables.length > 0 && (flavourRes = await Promise.all(observables));
-  } catch (error) {
-    flavourRes = {
-      status: 'failure',
-      object: observables,
-      errorMessage: error.message
-    };
-  }
-
-  return {
-    status: 'success',
-    object: savedAgreement,
-    flavours: flavourRes
-  };
+  return await agreement.save();
 };
 
 /**
- * Create LNG Agreement record.
+ * Performs all operations necessary to create a LNG Agreement record.
  *
- * Example of incomingObj:
+ * Example of incomingObj
  *
- * {
- *   _master: '5e1e7fcd20e4167bcfc3daa7'
- *   description: 'lng description',
- *   ...
- *   addRole: 'public'
- * }
+ *  agreements: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'agreement',
+ *      ...
+ *      AgreementLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created lng agreement record
  */
-exports.createLNG = async function(args, res, next, incomingObj, masterId) {
-  // We must have a valid master ObjectID to continue.
-  if (!masterId || !ObjectId.isValid(masterId)) {
-    return {
-      status: 'failure',
-      object: incomingObj,
-      errorMessage: 'incomingObj._master was not valid ObjectId'
-    };
-  }
+exports.createLNG = async function(args, res, next, incomingObj) {
+  let AgreementLNG = mongoose.model('AgreementLNG');
+  let agreementLNG = new AgreementLNG();
 
-  const AgreementLNG = mongoose.model(RECORD_TYPE.Agreement.flavours.lng._schemaName);
-  const agreementLNG = new AgreementLNG();
+  agreementLNG._schemaName = 'AgreementLNG';
 
-  agreementLNG._schemaName = RECORD_TYPE.Agreement.flavours.lng._schemaName;
-  agreementLNG._master = new ObjectId(masterId);
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (agreementLNG._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (agreementLNG._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (agreementLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
   agreementLNG.read = ['sysadmin'];
   agreementLNG.write = ['sysadmin'];
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  incomingObj.addRole &&
-    incomingObj.addRole === 'public' &&
-    agreementLNG.read.push('public') &&
-    (agreementLNG.datePublished = new Date());
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    agreementLNG.read.push('public');
+    agreementLNG.datePublished = new Date();
+    agreementLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
 
-  incomingObj.description && (agreementLNG.description = incomingObj.description);
-
+  agreementLNG.addedBy = args.swagger.params.auth_payload.displayName;
   agreementLNG.dateAdded = new Date();
 
-  try {
-    const savedAgreementLNG = await agreementLNG.save();
-    return {
-      status: 'success',
-      object: savedAgreementLNG
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: agreementLNG,
-      errorMessage: error.message
-    };
-  }
+  // set master data
+  incomingObj.recordName && (agreementLNG.recordName = incomingObj.recordName);
+  agreementLNG.recordType = 'Agreement';
+  incomingObj.dateIssued && (agreementLNG.dateIssued = incomingObj.dateIssued);
+  incomingObj.nationName && (agreementLNG.nationName = incomingObj.nationName);
+  incomingObj.projectName && (agreementLNG.projectName = incomingObj.projectName);
+
+  // set flavour data
+  incomingObj.description && (agreementLNG.description = incomingObj.description);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (agreementLNG.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (agreementLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (agreementLNG.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return await agreementLNG.save();
 };
