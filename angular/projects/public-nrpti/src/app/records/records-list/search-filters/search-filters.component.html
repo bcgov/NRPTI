@@ -1,0 +1,97 @@
+<div class="my-3">
+  <section>
+    <div class="filter-header justify-content-between">
+      <h3>Filter</h3>
+      <button class="filter-header__button btn btn-primary align-self-start ml-3" (click)="closeButton.emit()">
+        Minimize Advanced Filters
+      </button>
+    </div>
+    <div>
+      <p>
+        The results list below will update instantly as you select criteria to filter, the URL will also update with
+        your unique criteria. If you want to return to your exact criteria, you can bookmark the page once you have
+        filtered (note that results may not be identical as content is updated).
+      </p>
+    </div>
+  </section>
+  <section>
+    <form *ngIf="!loading" [formGroup]="formGroup" novalidate>
+      <div class="flex-container date-container no-wrap">
+        <div class="label-pair">
+          <label for="recordType">Issued Date</label>
+          <lib-date-picker [control]="formGroup.get('dateIssuedStart')" [reset]="resetControls"></lib-date-picker>
+        </div>
+        <span class="date-separator align-self-center">To</span>
+        <div class="label-single">
+          <lib-date-picker [control]="formGroup.get('dateIssuedEnd')" [reset]="resetControls"></lib-date-picker>
+        </div>
+      </div>
+      <div class="flex-container issuedTo-container no-wrap">
+        <div class="label-pair">
+          <label for="issuedTo">Issued To</label>
+          <mat-checkbox name="issuedTo" id="company" formControlName="issuedToCompany" class="form-control">
+            Company
+          </mat-checkbox>
+        </div>
+        <div class="label-single">
+          <mat-checkbox name="issuedTo" id="individual" formControlName="issuedToIndividual" class="form-control">
+            Individual
+          </mat-checkbox>
+        </div>
+      </div>
+      <div class="flex-container">
+        <div class="label-pair">
+          <label for="activityType">Activity Type</label>
+          <span *ngIf="activityTypeCount" class="grey-subtext ml-2">({{ activityTypeCount }} selected)</span>
+          <app-autocomplete-multi-select
+            [control]="formGroup.get('activityType')"
+            [options]="activityTypeOptions"
+            [reset]="resetControls"
+            (numSelected)="activityTypeCount = $event"
+          ></app-autocomplete-multi-select>
+        </div>
+      </div>
+      <div>
+        <div class="label-pair">
+          <label for="agency">Responsible Agency</label>
+          <span *ngIf="agencyCount" class="grey-subtext">({{ agencyCount }} selected)</span>
+          <app-autocomplete-multi-select
+            [control]="formGroup.get('agency')"
+            [options]="agencyOptions"
+            [reset]="resetControls"
+            (numSelected)="agencyCount = $event"
+          ></app-autocomplete-multi-select>
+        </div>
+      </div>
+      <div>
+        <div class="label-pair">
+          <label for="act">Act</label>
+          <span *ngIf="actCount" class="grey-subtext">({{ actCount }} selected)</span>
+          <app-autocomplete-multi-select
+            [control]="formGroup.get('act')"
+            [options]="actOptions"
+            [reset]="resetControls"
+            (numSelected)="actCount = $event"
+          ></app-autocomplete-multi-select>
+        </div>
+      </div>
+      <div>
+        <div class="label-pair">
+          <label for="regulation">Regulation</label>
+          <span *ngIf="regulationCount" class="grey-subtext">({{ regulationCount }} selected)</span>
+          <app-autocomplete-multi-select
+            [control]="formGroup.get('regulation')"
+            [options]="regulationOptions"
+            [reset]="resetControls"
+            (numSelected)="regulationCount = $event"
+          ></app-autocomplete-multi-select>
+        </div>
+      </div>
+    </form>
+    <div class="filter-footer">
+      <button class="filter-footer__button btn btn-secondary align-self-end" (click)="clearSearchFilters()">
+        Clear Filters
+      </button>
+    </div>
+  </section>
+</div>

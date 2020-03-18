@@ -1,12 +1,13 @@
-import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, ChangeDetectorRef, EventEmitter } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Params } from '@angular/router';
+import { FormGroup, FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
   TableObject,
   IColumnObject,
   IPageSizePickerOption,
+  Utils,
   TableTemplateUtils,
   ITableMessage
 } from 'nrpti-angular-components';
@@ -31,8 +32,11 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   public messageIn: EventEmitter<ITableMessage> = new EventEmitter<ITableMessage>();
 
   public loading = true;
-  public typeFilters = [];
-  public navigationObject;
+  public showAdvancedFilters = true;
+  public queryParams: Params;
+  public searchFiltersForm: FormGroup;
+
+  public keywordSearchWords: string;
 
   public sortingDisplay = {
     '-dateIssued': 'Date Issued (newest at top)',
@@ -82,9 +86,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    public location: Location,
     public router: Router,
     public route: ActivatedRoute,
+    public utils: Utils,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
   ) {}
@@ -95,7 +99,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * @memberof RecordsListComponent
    */
   ngOnInit(): void {
-    this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
+    this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params: Params) => {
+      this.queryParams = { ...params };
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
       this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, this.tableData);
 
@@ -128,11 +133,44 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         0;
 
       this.tableData.columns = this.tableColumns;
+
+      this.buildSearchFiltersForm();
+      this.subscribeToSearchFilterChanges();
+
       this.loading = false;
       this._changeDetectionRef.detectChanges();
     });
   }
 
+  public buildSearchFiltersForm() {
+    this.searchFiltersForm = new FormGroup({
+      dateIssuedStart: new FormControl(
+        (this.queryParams &&
+          this.queryParams.dateRangeFromFilter &&
+          this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeFromFilter))) ||
+          null
+      ),
+      dateIssuedEnd: new FormControl(
+        (this.queryParams &&
+          this.queryParams.dateRangeToFilter &&
+          this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeToFilter))) ||
+          null
+      ),
+      issuedToCompany: new FormControl((this.queryParams && this.queryParams.issuedToCompany) || null),
+      issuedToIndividual: new FormControl((this.queryParams && this.queryParams.issuedToIndividual) || null),
+      activityType: new FormControl((this.queryParams && this.queryParams.activityType) || ''),
+      agency: new FormControl((this.queryParams && this.queryParams.agency) || ''),
+      act: new FormControl((this.queryParams && this.queryParams.act) || ''),
+      regulation: new FormControl((this.queryParams && this.queryParams.regulation) || '')
+    });
+  }
+
+  /**
+   * Generic handler for all messages received by this component from the table template component.
+   *
+   * @param {ITableMessage} msg
+   * @memberof RecordsListComponent
+   */
   onMessageOut(msg: ITableMessage) {
     switch (msg.label) {
       case 'rowClicked':
@@ -215,6 +253,78 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     this.submit();
   }
 
+  keywordSearch() {
+    if (this.keywordSearchWords) {
+      this.utils.addKeyValueToObject(this.queryParams, 'keywords', this.keywordSearchWords);
+    } else {
+      this.utils.removeKeyFromObject(this.queryParams, 'keywords');
+    }
+
+    this.router.navigate(['/records', this.queryParams]);
+  }
+
+  subscribeToSearchFilterChanges() {
+    this.searchFiltersForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe)).subscribe(changes => {
+      if (changes.dateIssuedStart) {
+        this.utils.addKeyValueToObject(
+          this.queryParams,
+          'dateRangeFromFilter',
+          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedStart).toISOString()
+        );
+      } else {
+        this.utils.removeKeyFromObject(this.queryParams, 'dateRangeFromFilter');
+      }
+
+      if (changes.dateIssuedEnd) {
+        this.utils.addKeyValueToObject(
+          this.queryParams,
+          'dateRangeToFilter',
+          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedEnd).toISOString()
+        );
+      } else {
+        this.utils.removeKeyFromObject(this.queryParams, 'dateRangeToFilter');
+      }
+
+      if (changes.issuedToCompany) {
+        this.utils.addKeyValueToObject(this.queryParams, 'issuedToCompany', changes.issuedToCompany);
+      } else {
+        this.utils.removeKeyFromObject(this.queryParams, 'issuedToCompany');
+      }
+
+      if (changes.issuedToIndividual) {
+        this.utils.addKeyValueToObject(this.queryParams, 'issuedToIndividual', changes.issuedToIndividual);
+      } else {
+        this.utils.removeKeyFromObject(this.queryParams, 'issuedToIndividual');
+      }
+
+      if (changes.activityType && changes.activityType.length) {
+        this.utils.addKeyValueToObject(this.queryParams, 'activityType', changes.activityType);
+      } else {
+        this.utils.removeKeyFromObject(this.queryParams, 'activityType');
+      }
+
+      if (changes.agency && changes.agency.length) {
+        this.utils.addKeyValueToObject(this.queryParams, 'agency', changes.agency);
+      } else {
+        this.utils.removeKeyFromObject(this.queryParams, 'agency');
+      }
+
+      if (changes.act && changes.act.length) {
+        this.utils.addKeyValueToObject(this.queryParams, 'act', changes.act);
+      } else {
+        this.utils.removeKeyFromObject(this.queryParams, 'act');
+      }
+
+      if (changes.regulation && changes.regulation.length) {
+        this.utils.addKeyValueToObject(this.queryParams, 'regulation', changes.regulation);
+      } else {
+        this.utils.removeKeyFromObject(this.queryParams, 'regulation');
+      }
+
+      this.router.navigate(['/records', this.queryParams]);
+    });
+  }
+
   /**
    * Update record table with latest values (whatever is set in this.tableData).
    *
@@ -224,7 +334,23 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     this.tableTemplateUtils.navigateUsingParams(this.tableData, ['records']);
   }
 
-  checkboxChange() {}
+  /**
+   * Open advanced filters panel.
+   *
+   * @memberof RecordsListComponent
+   */
+  openAdvancedFilters(): void {
+    this.showAdvancedFilters = true;
+  }
+
+  /**
+   * Close advanced filters panel.
+   *
+   * @memberof RecordsListComponent
+   */
+  closeAdvancedFilters(): void {
+    this.showAdvancedFilters = false;
+  }
 
   /**
    * Cleanup on component destroy.

@@ -1,0 +1,75 @@
+@import "~assets/styles/base/base.scss";
+@import "assets/styles/components/add-edit.scss";
+
+.filter-header {
+  @include flex-box();
+  @include flex-direction(row);
+
+  &__button {
+    background-color: $primary;
+  }
+}
+
+.filter-footer {
+  @include flex-box();
+  @include flex-direction(row-reverse);
+
+  &__button {
+    background-color: $primary;
+  }
+}
+
+.label-pair {
+  width: 100%;
+}
+
+.no-wrap {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.date-container {
+  .label-single,
+  .label-pair {
+    max-width: 46.5%;
+  }
+
+  .date-separator {
+    @include flex-box();
+
+    margin-right: 1%;
+  }
+
+  @media screen and (max-width: 768px) {
+    .label-single,
+    .label-pair {
+      width: 100%;
+    }
+
+    .date-separator {
+      display: none;
+    }
+  }
+}
+
+.issuedTo-container {
+  mat-checkbox {
+    border: none;
+  }
+
+  .label-single,
+  .label-pair {
+    max-width: 50%;
+  }
+
+  @media screen and (max-width: 768px) {
+    .label-single,
+    .label-pair {
+      width: 100%;
+    }
+  }
+}
+
+.grey-subtext {
+  color: $gray6;
+}

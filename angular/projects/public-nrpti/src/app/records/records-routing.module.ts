@@ -25,6 +25,8 @@ import { TicketResolver } from './tickets/ticket-resolver';
 import { WarningDetailComponent } from './warnings/warning-detail/warning-detail.component';
 import { WarningResolver } from './warnings/warning-resolver';
 
+import { Utils } from 'nrpti-angular-components';
+
 const routes: Routes = [
   {
     path: 'records',
@@ -218,7 +220,8 @@ const routes: Routes = [
     AdministrativePenaltyResolver,
     AdministrativeSanctionResolver,
     WarningResolver,
-    TicketResolver
+    TicketResolver,
+    Utils
   ]
 })
 export class RecordsRoutingModule {}

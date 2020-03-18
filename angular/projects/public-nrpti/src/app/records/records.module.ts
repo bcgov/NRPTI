@@ -1,6 +1,6 @@
 // modules
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -14,6 +14,7 @@ import { RecordsRoutingModule } from './records-routing.module';
 
 // components
 import { RecordsListComponent } from './records-list/records-list.component';
+import { SearchFiltersComponent } from './records-list/search-filters/search-filters.component';
 import { RecordsTableRowComponent } from './records-row/records-table-row.component';
 import { OrderDetailComponent } from './orders/order-detail/order-detail.component';
 import { InspectionDetailComponent } from './inspections/inspection-detail/inspection-detail.component';
@@ -29,6 +30,7 @@ import { RecordsListResolver } from './records-list/records-list-resolver';
 @NgModule({
   imports: [
     FormsModule,
+    ReactiveFormsModule,
     CommonModule,
     GlobalModule,
     NrptiCommonModule,
@@ -40,6 +42,7 @@ import { RecordsListResolver } from './records-list/records-list-resolver';
   ],
   declarations: [
     RecordsListComponent,
+    SearchFiltersComponent,
     RecordsTableRowComponent,
     OrderDetailComponent,
     InspectionDetailComponent,
