@@ -197,7 +197,8 @@ class NrisDataSource {
         read: ['sysadmin'],
 
         type: 'Company',
-        companyName: record.client[0].orgName || ''
+        companyName: record.client[0].orgName || '',
+        fullName: record.client[0].orgName || ''
       };
     }
 
