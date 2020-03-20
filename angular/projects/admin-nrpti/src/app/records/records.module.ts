@@ -18,9 +18,6 @@ import { RecordsListComponent } from './records-list/records-list.component';
 import { RecordsTableRowComponent } from './records-rows/records-table-row.component';
 import { RecordDetailDirective } from './utils/record-detail.directive';
 
-// records common components
-import { LegislationAddEditComponent } from './common-components/legislation-add-edit/legislation-add-edit.component';
-
 // Orders
 import { OrderAddEditComponent } from './orders/order-add-edit/order-add-edit.component';
 import { OrderDetailComponent } from './orders/order-detail/order-detail.component';
@@ -119,8 +116,6 @@ import { DateInputComponent } from '../explore-panel/date-input/date-input.compo
     RecordsListComponent,
     RecordsTableRowComponent,
     RecordDetailDirective,
-    // records common components
-    LegislationAddEditComponent,
     // orders
     OrderAddEditComponent,
     OrderDetailComponent,
