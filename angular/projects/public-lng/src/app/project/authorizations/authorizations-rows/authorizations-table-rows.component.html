@@ -1,6 +1,13 @@
 <td scope="row" data-label="Name" class="col-2">{{ rowData.recordName }}</td>
 <td scope="row" data-label="Government Agency" class="col-2">{{ rowData.issuingAgency }}</td>
 <td scope="row" data-label="Type" class="col-2">{{ rowData.recordType }}</td>
-<td scope="row" data-label="Subtype" class="col-2">{{ rowData.recordSubtype }}</td>
+<td scope="row" data-label="Subtype" class="col-1">{{ rowData.recordSubtype }}</td>
 <td scope="row" data-label="Date" class="col-2">{{ rowData.dateIssued | date: 'LLLL d, y' }}</td>
 <td scope="row" data-label="Description" class="col-2">{{ rowData.description }}</td>
+<td scope="row" data-label="Download" style="text-align: center;" class="col-1">
+  <a class="btn btn-primary" type="button" href="{{ rowData.documents[0].url }}" target="_blank">
+    <span style="color: white;" class="material-icons">
+      cloud_download
+    </span>
+  </a>
+</td>

@@ -70,7 +70,7 @@ export class DocumentsComponent implements OnInit {
             {
               name: 'Type',
               value: 'recordType',
-              width: 'col-2'
+              width: 'col-1'
             },
             {
               name: 'Date',
@@ -81,6 +81,12 @@ export class DocumentsComponent implements OnInit {
               name: 'Description',
               value: 'description',
               width: 'col-2'
+            },
+            {
+              name: '',
+              value: '',
+              width: 'col-1',
+              nosort: true
             }
           ];
           this.tableData = new TableObject({ component: ComplianceTableRowsComponent });
@@ -107,7 +113,7 @@ export class DocumentsComponent implements OnInit {
             {
               name: 'Subtype',
               value: 'recordSubtype',
-              width: 'col-2'
+              width: 'col-1'
             },
             {
               name: 'Date',
@@ -118,6 +124,12 @@ export class DocumentsComponent implements OnInit {
               name: 'Description',
               value: 'description',
               width: 'col-2'
+            },
+            {
+              name: '',
+              value: '',
+              width: 'col-1',
+              nosort: true
             }
           ];
           this.tableData = new TableObject({ component: AuthorizationsTableRowsComponent });
@@ -149,7 +161,13 @@ export class DocumentsComponent implements OnInit {
             {
               name: 'Date',
               value: 'dateIssued',
-              width: 'col-2'
+              width: 'col-3'
+            },
+            {
+              name: '',
+              value: '',
+              width: 'col-1',
+              nosort: true
             }
           ];
           this.tableData = new TableObject({ component: PlansTableRowsComponent });
@@ -171,7 +189,13 @@ export class DocumentsComponent implements OnInit {
             {
               name: 'Date',
               value: 'dateIssued',
-              width: 'col-2'
+              width: 'col-7'
+            },
+            {
+              name: '',
+              value: '',
+              width: 'col-1',
+              nosort: true
             }
           ];
           this.tableData = new TableObject({ component: NationsTableRowsComponent });
