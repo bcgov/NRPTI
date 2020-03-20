@@ -220,11 +220,7 @@ class NrisDataSource {
         if (tempFileData) {
           defaultLog.info('Uploading attachmentId:', record.attachment[i].attachmentId, 'to S3');
           const fileContent = fs.readFileSync(tempFileData.tempFilePath);
-          await this.putFileS3(
-            fileContent,
-            tempFileData.fileName,
-            newRecord
-          );
+          await this.putFileS3(fileContent, tempFileData.fileName, newRecord);
           fs.unlinkSync(tempFileData.tempFilePath);
         }
       }
@@ -239,16 +235,17 @@ class NrisDataSource {
   // Grabs a file from NRIS datasource
   async getFileFromNRIS(inspectionId, attachmentId) {
     let nrisAttachmentEndpoint = NRIS_EPD_API_ENDPOINT;
-    const url = nrisAttachmentEndpoint.replace("epdInspections", `attachments/${inspectionId}/attachment/${attachmentId}`);
+    const url = nrisAttachmentEndpoint.replace(
+      'epdInspections',
+      `attachments/${inspectionId}/attachment/${attachmentId}`
+    );
     try {
       const res = await axios.get(url, { headers: { Authorization: 'Bearer ' + this.token }, responseType: 'stream' });
-      const uploadDir = process.env.UPLOAD_DIRECTORY || "/tmp/";
+      const uploadDir = process.env.UPLOAD_DIRECTORY || '/tmp/';
       const tempFilePath = uploadDir + res.headers['content-disposition'].split('= ').pop();
       // Attempt to save locally and prepare for upload to S3.
       await new Promise(resolve => {
-        res.data
-          .pipe(fs.createWriteStream(tempFilePath))
-          .on('finish', resolve);
+        res.data.pipe(fs.createWriteStream(tempFilePath)).on('finish', resolve);
       });
       return { tempFilePath: tempFilePath, fileName: res.headers['content-disposition'].split('= ').pop() };
     } catch (e) {
@@ -270,13 +267,14 @@ class NrisDataSource {
     }
 
     try {
-      const s3UploadResult = await s3.upload(
-        {
+      const s3UploadResult = await s3
+        .upload({
           Bucket: process.env.OBJECT_STORE_bucket_name,
           Key: docResponse.key,
           Body: file,
           ACL: 'public-read'
-        }).promise();
+        })
+        .promise();
 
       s3Response = s3UploadResult;
       if (docResponse && docResponse._id) {
