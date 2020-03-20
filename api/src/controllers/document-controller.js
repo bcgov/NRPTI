@@ -15,11 +15,11 @@ const s3 = new AWS.S3({
   s3ForcePathStyle: true
 });
 
-exports.protectedOptions = function (args, res, next) {
+exports.protectedOptions = function(args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedPost = async function (args, res, next) {
+exports.protectedPost = async function(args, res, next) {
   if (
     args.swagger.params.fileName &&
     args.swagger.params.fileName.value &&
@@ -61,13 +61,14 @@ exports.protectedPost = async function (args, res, next) {
 
       // TODO: ACL is set to public-read until we know publishing rules.
       try {
-        const s3UploadResult = await s3.upload(
-          {
+        const s3UploadResult = await s3
+          .upload({
             Bucket: process.env.OBJECT_STORE_bucket_name,
             Key: docResponse.key,
             Body: args.swagger.params.upfile.value.buffer,
             ACL: 'public-read'
-          }).promise();
+          })
+          .promise();
 
         s3Response = s3UploadResult;
       } catch (e) {
@@ -118,7 +119,7 @@ exports.protectedPost = async function (args, res, next) {
   }
 };
 
-exports.protectedDelete = async function (args, res, next) {
+exports.protectedDelete = async function(args, res, next) {
   if (
     args.swagger.params.docId &&
     args.swagger.params.docId.value &&
@@ -140,11 +141,12 @@ exports.protectedDelete = async function (args, res, next) {
     // We need to delete this document.
     if (docResponse.key) {
       try {
-        const s3DeleteResult = await s3.deleteObject(
-          {
+        const s3DeleteResult = await s3
+          .deleteObject({
             Bucket: process.env.OBJECT_STORE_bucket_name,
             Key: docResponse.key
-          }).promise();
+          })
+          .promise();
 
         s3Response = s3DeleteResult;
       } catch (e) {
@@ -216,4 +218,3 @@ async function createDocument(fileName, addedBy, url = null) {
   document.write = ['sysadmin'];
   return await document.save();
 }
-
