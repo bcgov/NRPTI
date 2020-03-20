@@ -127,9 +127,12 @@ const createAdministrativePenalty = async function(row, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
       (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      moment(row[1], 'YYYY')
-        .quarter(row[2])
-        .toDate(),
+      (row[1] &&
+        row[2] &&
+        moment(row[1], 'YYYY')
+          .quarter(row[2])
+          .toDate()) ||
+      null,
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -139,7 +142,7 @@ const createAdministrativePenalty = async function(row, nrptiCollection) {
       subSection: row[14].replace(/[()]/g, ''),
       paragraph: row[15].replace(/[()]/g, '').replace(/[()]/g, '')
     },
-    issuedTo: row[3],
+    issuedTo: getIssuedToObject(row),
     // projectName: '',
     location: row[10],
     // centroid: '',
@@ -178,9 +181,12 @@ const createAdministrativePenalty = async function(row, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
       (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      moment(row[1], 'YYYY')
-        .quarter(row[2])
-        .toDate(),
+      (row[1] &&
+        row[2] &&
+        moment(row[1], 'YYYY')
+          .quarter(row[2])
+          .toDate()) ||
+      null,
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -190,7 +196,7 @@ const createAdministrativePenalty = async function(row, nrptiCollection) {
       subSection: row[14].replace(/[()]/g, ''),
       paragraph: row[15].replace(/[()]/g, '').replace(/[()]/g, '')
     },
-    issuedTo: row[3],
+    issuedTo: getIssuedToObject(row),
     // projectName: '',
     location: row[10],
     // centroid: '',
@@ -225,9 +231,12 @@ const createAdministrativeSanction = async function(row, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
       (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      moment(row[1], 'YYYY')
-        .quarter(row[2])
-        .toDate(),
+      (row[1] &&
+        row[2] &&
+        moment(row[1], 'YYYY')
+          .quarter(row[2])
+          .toDate()) ||
+      null,
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -237,7 +246,7 @@ const createAdministrativeSanction = async function(row, nrptiCollection) {
       subSection: row[14].replace(/[()]/g, ''),
       paragraph: row[15].replace(/[()]/g, '')
     },
-    issuedTo: row[3],
+    issuedTo: getIssuedToObject(row),
     // projectName: '',
     location: row[10],
     // centroid: '',
@@ -276,9 +285,12 @@ const createAdministrativeSanction = async function(row, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
       (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      moment(row[1], 'YYYY')
-        .quarter(row[2])
-        .toDate(),
+      (row[1] &&
+        row[2] &&
+        moment(row[1], 'YYYY')
+          .quarter(row[2])
+          .toDate()) ||
+      null,
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -288,7 +300,7 @@ const createAdministrativeSanction = async function(row, nrptiCollection) {
       subSection: row[14].replace(/[()]/g, ''),
       paragraph: row[15].replace(/[()]/g, '')
     },
-    issuedTo: row[3],
+    issuedTo: getIssuedToObject(row),
     // projectName: '',
     location: row[10],
     // centroid: '',
@@ -328,9 +340,12 @@ const createInspection = async function(row, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
       (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      moment(row[1], 'YYYY')
-        .quarter(row[2])
-        .toDate(),
+      (row[1] &&
+        row[2] &&
+        moment(row[1], 'YYYY')
+          .quarter(row[2])
+          .toDate()) ||
+      null,
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -340,7 +355,7 @@ const createInspection = async function(row, nrptiCollection) {
       subSection: row[14].replace(/[()]/g, ''),
       paragraph: row[15].replace(/[()]/g, '')
     },
-    issuedTo: row[3],
+    issuedTo: getIssuedToObject(row),
     // projectName: '',
     location: row[10],
     // centroid: '',
@@ -379,9 +394,12 @@ const createInspection = async function(row, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
       (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      moment(row[1], 'YYYY')
-        .quarter(row[2])
-        .toDate(),
+      (row[1] &&
+        row[2] &&
+        moment(row[1], 'YYYY')
+          .quarter(row[2])
+          .toDate()) ||
+      null,
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -391,7 +409,7 @@ const createInspection = async function(row, nrptiCollection) {
       subSection: row[14].replace(/[()]/g, ''),
       paragraph: row[15].replace(/[()]/g, '')
     },
-    issuedTo: row[3],
+    issuedTo: getIssuedToObject(row),
     // projectName: '',
     location: row[10],
     // centroid: '',
@@ -426,9 +444,12 @@ const createOrder = async function(row, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
       (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      moment(row[1], 'YYYY')
-        .quarter(row[2])
-        .toDate(),
+      (row[1] &&
+        row[2] &&
+        moment(row[1], 'YYYY')
+          .quarter(row[2])
+          .toDate()) ||
+      null,
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -438,7 +459,7 @@ const createOrder = async function(row, nrptiCollection) {
       subSection: row[14].replace(/[()]/g, ''),
       paragraph: row[15].replace(/[()]/g, '')
     },
-    issuedTo: row[3],
+    issuedTo: getIssuedToObject(row),
     // projectName: '',
     location: row[10],
     // centroid: '',
@@ -477,9 +498,12 @@ const createOrder = async function(row, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
       (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      moment(row[1], 'YYYY')
-        .quarter(row[2])
-        .toDate(),
+      (row[1] &&
+        row[2] &&
+        moment(row[1], 'YYYY')
+          .quarter(row[2])
+          .toDate()) ||
+      null,
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -489,7 +513,7 @@ const createOrder = async function(row, nrptiCollection) {
       subSection: row[14].replace(/[()]/g, ''),
       paragraph: row[15].replace(/[()]/g, '')
     },
-    issuedTo: row[3],
+    issuedTo: getIssuedToObject(row),
     // projectName: '',
     location: row[10],
     // centroid: '',
@@ -524,9 +548,12 @@ const createRestorativeJustice = async function(row, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
       (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      moment(row[1], 'YYYY')
-        .quarter(row[2])
-        .toDate(),
+      (row[1] &&
+        row[2] &&
+        moment(row[1], 'YYYY')
+          .quarter(row[2])
+          .toDate()) ||
+      null,
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -536,7 +563,7 @@ const createRestorativeJustice = async function(row, nrptiCollection) {
       subSection: row[14].replace(/[()]/g, ''),
       paragraph: row[15].replace(/[()]/g, '')
     },
-    issuedTo: row[3],
+    issuedTo: getIssuedToObject(row),
     // projectName: '',
     location: row[10],
     // centroid: '',
@@ -575,9 +602,12 @@ const createRestorativeJustice = async function(row, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
       (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      moment(row[1], 'YYYY')
-        .quarter(row[2])
-        .toDate(),
+      (row[1] &&
+        row[2] &&
+        moment(row[1], 'YYYY')
+          .quarter(row[2])
+          .toDate()) ||
+      null,
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -587,7 +617,7 @@ const createRestorativeJustice = async function(row, nrptiCollection) {
       subSection: row[14].replace(/[()]/g, ''),
       paragraph: row[15].replace(/[()]/g, '')
     },
-    issuedTo: row[3],
+    issuedTo: getIssuedToObject(row),
     // projectName: '',
     location: row[10],
     // centroid: '',
@@ -622,9 +652,12 @@ const createTicket = async function(row, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
       (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      moment(row[1], 'YYYY')
-        .quarter(row[2])
-        .toDate(),
+      (row[1] &&
+        row[2] &&
+        moment(row[1], 'YYYY')
+          .quarter(row[2])
+          .toDate()) ||
+      null,
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -634,7 +667,7 @@ const createTicket = async function(row, nrptiCollection) {
       subSection: row[14].replace(/[()]/g, ''),
       paragraph: row[15].replace(/[()]/g, '')
     },
-    issuedTo: row[3],
+    issuedTo: getIssuedToObject(row),
     // projectName: '',
     location: row[10],
     // centroid: '',
@@ -673,9 +706,12 @@ const createTicket = async function(row, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
       (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      moment(row[1], 'YYYY')
-        .quarter(row[2])
-        .toDate(),
+      (row[1] &&
+        row[2] &&
+        moment(row[1], 'YYYY')
+          .quarter(row[2])
+          .toDate()) ||
+      null,
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -685,7 +721,7 @@ const createTicket = async function(row, nrptiCollection) {
       subSection: row[14].replace(/[()]/g, ''),
       paragraph: row[15].replace(/[()]/g, '')
     },
-    issuedTo: row[3],
+    issuedTo: getIssuedToObject(row),
     // projectName: '',
     location: row[10],
     // centroid: '',
@@ -721,9 +757,12 @@ const createWarning = async function(row, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
       (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      moment(row[1], 'YYYY')
-        .quarter(row[2])
-        .toDate(),
+      (row[1] &&
+        row[2] &&
+        moment(row[1], 'YYYY')
+          .quarter(row[2])
+          .toDate()) ||
+      null,
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -733,7 +772,7 @@ const createWarning = async function(row, nrptiCollection) {
       subSection: row[14].replace(/[()]/g, ''),
       paragraph: row[15].replace(/[()]/g, '')
     },
-    issuedTo: row[3],
+    issuedTo: getIssuedToObject(row),
     // projectName: '',
     location: row[10],
     // centroid: '',
@@ -772,9 +811,12 @@ const createWarning = async function(row, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued:
       (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      moment(row[1], 'YYYY')
-        .quarter(row[2])
-        .toDate(),
+      (row[1] &&
+        row[2] &&
+        moment(row[1], 'YYYY')
+          .quarter(row[2])
+          .toDate()) ||
+      null,
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -784,7 +826,7 @@ const createWarning = async function(row, nrptiCollection) {
       subSection: row[14].replace(/[()]/g, ''),
       paragraph: row[15].replace(/[()]/g, '')
     },
-    issuedTo: row[3],
+    issuedTo: getIssuedToObject(row),
     // projectName: '',
     location: row[10],
     // centroid: '',
@@ -804,6 +846,38 @@ const createWarning = async function(row, nrptiCollection) {
   };
 
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
+};
+
+const getIssuedToObject = function(row) {
+  const issuedToObject = {
+    read: ['sysadmin', 'public'],
+    write: ['sysadmin']
+  };
+
+  if (!row) {
+    return issuedToObject;
+  }
+
+  if (row[5] === 'Company') {
+    issuedToObject.type = 'Company';
+    issuedToObject.companyName = row[3] || row[9];
+  }
+
+  if (row[5] === 'Person') {
+    issuedToObject.type = 'Individual';
+    issuedToObject.firstName = row[6];
+    issuedToObject.middleName = row[7];
+    issuedToObject.lastName = row[8];
+    issuedToObject.dateOfBirth = (row[18] && moment(row[18], 'DD/MM/YYYY').toDate()) || null;
+  }
+
+  if (row[5] === 'Individual') {
+    issuedToObject.type = 'IndividualCombined';
+    issuedToObject.fullName = row[3];
+    issuedToObject.dateOfBirth = (row[18] && moment(row[18], 'DD/MM/YYYY').toDate()) || null;
+  }
+
+  return issuedToObject;
 };
 
 exports.down = function(db) {
