@@ -1,3 +1,5 @@
+const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+
 /**
  * Supported EPIC record types.
  */
@@ -7,16 +9,16 @@ const EPIC_RECORD_TYPE = Object.freeze({
       // type and milestone from legislation 2002
       type: { name: 'Order', typeId: '5cf00c03a266b7e1877504d1' },
       milestone: { name: 'Compliance & Enforcement', milestoneId: '5cf00c03a266b7e1877504ef' },
-      getUtil: (...args) => {
-        return new (require('./orders-utils'))(...args);
+      getUtil: auth_payload => {
+        return new (require('./orders-utils'))(auth_payload, RECORD_TYPE.Order);
       }
     },
     {
       // type and milestone from legislation 2002
       type: { name: 'Order', typeId: '5cf00c03a266b7e1877504d1' },
       milestone: { name: 'Other', milestoneId: '5d0d212c7d50161b92a80eed' },
-      getUtil: (...args) => {
-        return new (require('./orders-other-utils'))(...args);
+      getUtil: auth_payload => {
+        return new (require('./orders-other-utils'))(auth_payload, RECORD_TYPE.Order);
       }
     }
   ],
@@ -25,8 +27,8 @@ const EPIC_RECORD_TYPE = Object.freeze({
       // type and milestone from legislation 2002
       type: { name: 'Inspection Record', typeId: '5cf00c03a266b7e1877504d9' },
       milestone: { name: 'Compliance & Enforcement', milestoneId: '5cf00c03a266b7e1877504ef' },
-      getUtil: (...args) => {
-        return new (require('./inspections-utils'))(...args);
+      getUtil: auth_payload => {
+        return new (require('./inspections-utils'))(auth_payload, RECORD_TYPE.Inspection);
       }
     }
   ],
@@ -35,16 +37,16 @@ const EPIC_RECORD_TYPE = Object.freeze({
       // type and milestone from legislation 2002
       type: { name: 'Certificate Package', typeId: '5cf00c03a266b7e1877504d5' },
       milestone: { name: 'Certificate', milestoneId: '5cf00c03a266b7e1877504eb' },
-      getUtil: (...args) => {
-        return new (require('./certificates-utils'))(...args);
+      getUtil: auth_payload => {
+        return new (require('./certificates-utils'))(auth_payload, RECORD_TYPE.Certificate);
       }
     },
     {
       // type and milestone from legislation 2002
       type: { name: 'Amendment Package', typeId: '5cf00c03a266b7e1877504d7' },
       milestone: { name: 'Amendment', milestoneId: '5cf00c03a266b7e1877504f2' },
-      getUtil: (...args) => {
-        return new (require('./certificates-amendment-utils'))(...args);
+      getUtil: auth_payload => {
+        return new (require('./certificates-amendment-utils'))(auth_payload, RECORD_TYPE.Certificate);
       }
     }
   ],
@@ -53,8 +55,8 @@ const EPIC_RECORD_TYPE = Object.freeze({
       // type and milestone from legislation 2002
       type: { name: 'Plan', typeId: '5cf00c03a266b7e1877504ce' },
       milestone: { name: 'Post-Decision Materials', milestoneId: '5cf00c03a266b7e1877504f1' },
-      getUtil: (...args) => {
-        return new (require('./management-plans-utils'))(...args);
+      getUtil: auth_payload => {
+        return new (require('./management-plans-utils'))(auth_payload, RECORD_TYPE.ManagementPlan);
       }
     },
 
@@ -62,8 +64,8 @@ const EPIC_RECORD_TYPE = Object.freeze({
       // type and milestone from legislation 2018 ('Management Plan' doesn't exist in Legislation 2002)
       type: { name: 'Management Plan', typeId: '5df79dd77b5abbf7da6f51c2' },
       milestone: { name: 'Post-Decision Materials', milestoneId: '5df79dd77b5abbf7da6f51fa' },
-      getUtil: (...args) => {
-        return new (require('./management-plans-utils'))(...args);
+      getUtil: auth_payload => {
+        return new (require('./management-plans-utils'))(auth_payload, RECORD_TYPE.ManagementPlan);
       }
     }
   ],

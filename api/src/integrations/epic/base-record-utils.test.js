@@ -1,31 +1,37 @@
-const InspectionsUtils = require('./inspections-utils');
+const BaseRecordUtils = require('./base-record-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
-describe('InspectionsUtils', () => {
+describe('BaseRecordUtils', () => {
+  describe('constructor', () => {
+    it('throws an error if no recordType provided', () => {
+      try {
+        new BaseRecordUtils(null, null);
+      } catch (error) {
+        expect(error).toEqual(new Error('BaseRecordUtils - required recordType must be non-null.'));
+      }
+    });
+  });
+
   describe('transformRecord', () => {
     it('throws error if no epicRecord provided', async () => {
-      const inspectionsUtils = new InspectionsUtils();
+      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Order);
 
       try {
-        await inspectionsUtils.transformRecord();
+        await baseRecordUtils.transformRecord();
       } catch (error) {
-        expect(error).toEqual(new Error('transformRecord - required record must be non-null.'));
+        expect(error).toEqual(new Error('transformRecord - required epicRecord must be non-null.'));
       }
     });
 
     it('returns a default nrpti record when empty epicRecord provided', async () => {
-      jest.spyOn(require('./../../controllers/document-controller'), 'createDocument').mockImplementation(() => {
-        return '310d2dddc9834cbab11282f3c8426fad';
-      });
-
-      const inspectionsUtils = new InspectionsUtils();
+      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Order);
 
       const epicRecord = {};
 
-      const actualRecord = await inspectionsUtils.transformRecord(epicRecord);
+      const actualRecord = await baseRecordUtils.transformRecord(epicRecord);
 
       const expectedRecord = {
-        _schemaName: RECORD_TYPE.Inspection._schemaName,
+        _schemaName: RECORD_TYPE.Order._schemaName,
 
         _epicProjectId: '',
         _sourceRefId: '',
@@ -35,17 +41,11 @@ describe('InspectionsUtils', () => {
         write: ['sysadmin'],
 
         recordName: '',
-        recordType: RECORD_TYPE.Inspection.displayName,
+        recordType: RECORD_TYPE.Order.displayName,
         dateIssued: null,
-        issuingAgency: 'Environmental Assessment Office',
-        author: '',
-        legislation: {
-          act: ''
-        },
         projectName: '',
         location: '',
         centroid: '',
-
         dateAdded: expect.any(Date),
         dateUpdated: expect.any(Date),
         documents: [],
@@ -59,7 +59,11 @@ describe('InspectionsUtils', () => {
     });
 
     it('returns a nrpti record with all supported epicRecord fields populated', async () => {
-      const inspectionsUtils = new InspectionsUtils();
+      jest.spyOn(require('../../controllers/document-controller'), 'createDocument').mockImplementation(() => {
+        return { _id: '310d2dddc9834cbab11282f3c8426fad' };
+      });
+
+      const baseRecordUtils = new BaseRecordUtils({ displayName: 'userName' }, RECORD_TYPE.Order);
 
       const epicRecord = {
         _id: 123,
@@ -67,15 +71,17 @@ describe('InspectionsUtils', () => {
         documentFileName: 'docFileName',
         project: {
           name: 'projectName',
-          legislation: 'projectLegislation'
+          centroid: '123',
+          location: 'someLocation'
         },
-        milestone: 'milestone'
+        milestone: 'milestone',
+        documentDate: 'someDate'
       };
 
-      const actualRecord = await inspectionsUtils.transformRecord(epicRecord);
+      const actualRecord = await baseRecordUtils.transformRecord(epicRecord);
 
       const expectedRecord = {
-        _schemaName: RECORD_TYPE.Inspection._schemaName,
+        _schemaName: RECORD_TYPE.Order._schemaName,
 
         _epicProjectId: '',
         _sourceRefId: 123,
@@ -85,20 +91,16 @@ describe('InspectionsUtils', () => {
         write: ['sysadmin'],
 
         recordName: 'docDisplay',
-        recordType: RECORD_TYPE.Inspection.displayName,
-        dateIssued: null,
-        issuingAgency: 'Environmental Assessment Office',
-        author: '',
-        legislation: {
-          act: 'projectLegislation'
-        },
+        recordType: RECORD_TYPE.Order.displayName,
+        dateIssued: 'someDate',
         projectName: 'projectName',
-        location: '',
-        centroid: '',
+        location: 'someLocation',
+        centroid: '123',
 
         dateAdded: expect.any(Date),
         dateUpdated: expect.any(Date),
-        updatedBy: '',
+        documents: ['310d2dddc9834cbab11282f3c8426fad'],
+        updatedBy: 'userName',
         sourceDateAdded: null,
         sourceDateUpdated: null,
         sourceSystemRef: 'epic'
@@ -109,14 +111,14 @@ describe('InspectionsUtils', () => {
   });
 
   describe('saveRecord', () => {
-    it('throws error if no inspection record provided', async () => {
-      const inspectionsUtils = new InspectionsUtils();
-      await expect(inspectionsUtils.saveRecord()).rejects.toThrow(
-        new Error('saveRecord - required record must be non-null.')
+    it('throws error if no record provided', async () => {
+      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Order);
+      await expect(baseRecordUtils.saveRecord()).rejects.toThrow(
+        new Error('saveRecord - required nrptiRecord must be non-null.')
       );
     });
 
-    it('catches any errors thrown when creating/saving the inspection record', async () => {
+    it('catches any errors thrown when creating/saving the record', async () => {
       // create mock save function
       const mockFindOneAndUpdate = jest.fn(() => {
         throw Error('this should not be thrown');
@@ -128,14 +130,14 @@ describe('InspectionsUtils', () => {
         return { findOneAndUpdate: mockFindOneAndUpdate };
       });
 
-      const inspectionsUtils = new InspectionsUtils();
+      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Order);
 
-      const inspectionRecord = { _id: '321' };
+      const orderRecord = { _id: '321' };
 
-      await expect(inspectionsUtils.saveRecord(inspectionRecord)).resolves.not.toThrow();
+      await expect(baseRecordUtils.saveRecord(orderRecord)).resolves.not.toThrow();
     });
 
-    it('creates and saves a new inspection record', async () => {
+    it('creates and saves a new record', async () => {
       // create mock save function
       const mockFindOneAndUpdate = jest.fn(() => Promise.resolve('saved!'));
 
@@ -145,11 +147,11 @@ describe('InspectionsUtils', () => {
         return { findOneAndUpdate: mockFindOneAndUpdate };
       });
 
-      const inspectionsUtils = new InspectionsUtils();
+      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Order);
 
-      const inspectionRecord = { _id: '123' };
+      const orderRecord = { _id: '123' };
 
-      const dbStatus = await inspectionsUtils.saveRecord(inspectionRecord);
+      const dbStatus = await baseRecordUtils.saveRecord(orderRecord);
 
       expect(mockFindOneAndUpdate).toHaveBeenCalledTimes(1);
       expect(dbStatus).toEqual('saved!');

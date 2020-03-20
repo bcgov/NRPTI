@@ -7,6 +7,10 @@ const EPIC_RECORD_TYPE = require('./epic-record-type-enum');
 
 const MAX_PAGE_SIZE = Number.MAX_SAFE_INTEGER;
 
+const EPIC_API_HOSTNAME = process.env.EPIC_API_HOSTNAME || 'eagle-prod.pathfinder.gov.bc.ca';
+const EPIC_API_SEARCH_PATHNAME = process.env.EPIC_API_SEARCH_PATHNAME || '/api/public/search';
+const EPIC_API_PROJECT_PATHNAME = process.env.EPIC_API_PROJECT_PATHNAME || '/api/public/project';
+
 class DataSource {
   /**
    * Creates an instance of DataSource.
@@ -97,7 +101,7 @@ class DataSource {
         ...this.params,
         ...this.getBaseParams(recordType.type.typeId, recordType.milestone.milestoneId, MAX_PAGE_SIZE, 0)
       };
-      const url = this.getIntegrationUrl(this.getHostname(), this.getSearchPathname(), queryParams);
+      const url = this.getIntegrationUrl(EPIC_API_HOSTNAME, EPIC_API_SEARCH_PATHNAME, queryParams);
 
       recordTypeStatus.url = url.href;
 
@@ -220,34 +224,6 @@ class DataSource {
   }
 
   /**
-   * Get the Epic API hostname.
-   *
-   * Will return the env variable `EPIC_API_HOSTNAME` if it exists.
-   *
-   * Example: 'my.api.com'
-   *
-   * @returns {string} Epic API hostname.
-   * @memberof DataSource
-   */
-  getHostname() {
-    return process.env.EPIC_API_HOSTNAME || 'eagle-prod.pathfinder.gov.bc.ca';
-  }
-
-  /**
-   * Get the Epic API Search pathname.
-   *
-   * Will return the env variable `EPIC_API_SEARCH_PATHNAME` if it exists.
-   *
-   * Example: '/api/some/route'
-   *
-   * @returns {string} Epic api inspections path.
-   * @memberof DataSource
-   */
-  getSearchPathname() {
-    return process.env.EPIC_API_SEARCH_PATHNAME || '/api/public/search';
-  }
-
-  /**
    * Get the Epic API Project pathname.
    *
    * Will return the env variable `EPIC_API_PROJECT_PATHNAME` if it exists.
@@ -258,12 +234,12 @@ class DataSource {
    * @returns
    * @memberof DataSource
    */
-  getProjectPathname(projectId) {
-    return `${process.env.EPIC_API_PROJECT_PATHNAME || '/api/public/project'}/${projectId}`;
+  buildProjectPathname(projectId) {
+    return `${EPIC_API_PROJECT_PATHNAME}/${projectId}`;
   }
 
   /**
-   * Get base record query params.
+   * Build the Epic API Project pathname.
    *
    * @param {string} typeId record type _id.
    * @param {string} milestoneId record milestone _id.
@@ -308,7 +284,7 @@ class DataSource {
    * @memberof DataSource
    */
   async getRecordProject(epicRecord) {
-    const url = this.getIntegrationUrl(this.getHostname(), `${this.getProjectPathname(epicRecord.project)}`, {
+    const url = this.getIntegrationUrl(EPIC_API_HOSTNAME, `${this.buildProjectPathname(epicRecord.project)}`, {
       fields: 'name|location|centroid|legislation'
     });
 
