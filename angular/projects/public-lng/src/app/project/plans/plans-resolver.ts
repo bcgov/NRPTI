@@ -51,7 +51,7 @@ export class PlansResolver implements Resolve<Observable<object>> {
       {
         _epicProjectId: project
       },
-      false,
+      true,
       filterParams
     );
   }

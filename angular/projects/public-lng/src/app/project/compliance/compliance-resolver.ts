@@ -61,7 +61,7 @@ export class ComplianceResolver implements Resolve<Observable<object>> {
       {
         _epicProjectId: project
       },
-      false,
+      true,
       filterParams
     );
   }

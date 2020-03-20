@@ -30,7 +30,7 @@ export class NationsResolver implements Resolve<Observable<object>> {
       {
         _epicProjectId: project
       },
-      false
+      true
     );
   }
 }
