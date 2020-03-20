@@ -6,6 +6,19 @@ const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const mongoose = require('mongoose');
 const moment = require('moment');
 const axios = require('axios');
+const documentController = require('../../controllers/document-controller');
+const fs = require('fs');
+
+const AWS = require('aws-sdk');
+const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
+const ep = new AWS.Endpoint(OBJ_STORE_URL);
+const s3 = new AWS.S3({
+  endpoint: ep,
+  accessKeyId: process.env.OBJECT_STORE_user_account,
+  secretAccessKey: process.env.OBJECT_STORE_password,
+  signatureVersion: 'v4',
+  s3ForcePathStyle: true
+});
 
 const NRIS_TOKEN_ENDPOINT =
   process.env.NRIS_TOKEN_ENDPOINT ||
@@ -196,12 +209,17 @@ class NrisDataSource {
 
     for (let i = 0; i < record.attachment.length; i++) {
       if (record.attachment[i].fileType === 'Final Report') {
-        // Grab this & break;
-        // TODO:
-        // let file = await this.getFileFromNRIS(record.attachment[i].attachmentId);
-        // TODO: s3File.path, create/set document object properly
-        // let s3File = await this.putFileS3(record.attachment[i].attachmentId, file);
-        // newRecord.documents.push(record.attachment[i].attachmentId);
+        const tempFileData = await this.getFileFromNRIS(record.assessmentId, record.attachment[i].attachmentId);
+        if (tempFileData) {
+          defaultLog.info('Uploading attachmentId:', record.attachment[i].attachmentId, 'to S3');
+          const fileContent = fs.readFileSync(tempFileData.tempFilePath);
+          await this.putFileS3(
+            fileContent,
+            tempFileData.fileName,
+            newRecord
+          );
+          fs.unlinkSync(tempFileData.tempFilePath);
+        }
       }
     }
     newRecord.read.push('sysadmin');
@@ -212,15 +230,57 @@ class NrisDataSource {
   }
 
   // Grabs a file from NRIS datasource
-  async getFileFromNRIS(attachmentId) {
-    defaultLog.info('Getting file from nris:', attachmentId);
-    return Promise.resolve();
+  async getFileFromNRIS(inspectionId, attachmentId) {
+    let nrisAttachmentEndpoint = NRIS_EPD_API_ENDPOINT;
+    const url = nrisAttachmentEndpoint.replace("epdInspections", `attachments/${inspectionId}/attachment/${attachmentId}`);
+    try {
+      const res = await axios.get(url, { headers: { Authorization: 'Bearer ' + this.token }, responseType: 'stream' });
+      const uploadDir = process.env.UPLOAD_DIRECTORY || "/tmp/";
+      const tempFilePath = uploadDir + res.headers['content-disposition'].split('= ').pop();
+      // Attempt to save locally and prepare for upload to S3.
+      await new Promise(resolve => {
+        res.data
+          .pipe(fs.createWriteStream(tempFilePath))
+          .on('finish', resolve);
+      });
+      return { tempFilePath: tempFilePath, fileName: res.headers['content-disposition'].split('= ').pop() };
+    } catch (e) {
+      defaultLog.info(`Error gettting attachment ${attachmentId}:`, e);
+      return null;
+    }
   }
 
   // Puts a file into s3 and return the meta associated with it.
-  async putFileS3(attachmentId, file) {
-    defaultLog.info('Uploading attachmentId:', attachmentId, 'to S3');
-    return Promise.resolve();
+  async putFileS3(file, fileName, newRecord) {
+    let docResponse = null;
+    let s3Response = null;
+
+    try {
+      docResponse = await documentController.createDocument(fileName);
+    } catch (e) {
+      defaultLog.info('Error saving document meta:', e);
+      return null;
+    }
+
+    try {
+      const s3UploadResult = await s3.upload(
+        {
+          Bucket: process.env.OBJECT_STORE_bucket_name,
+          Key: docResponse.key,
+          Body: file,
+          ACL: 'public-read'
+        }).promise();
+
+      s3Response = s3UploadResult;
+      if (docResponse && docResponse._id) {
+        newRecord.documents.push(docResponse._id);
+      }
+    } catch (e) {
+      defaultLog.info('Error uploading file to S3:', e);
+      return null;
+    }
+
+    return { docResponse: docResponse, s3Response: s3Response };
   }
 
   // Save record into the database.
