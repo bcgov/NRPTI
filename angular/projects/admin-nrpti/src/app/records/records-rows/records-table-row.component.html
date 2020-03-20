@@ -5,7 +5,12 @@
 <td scope="row" data-label="Date" class="col-1 showPointer">
   {{ rowData.dateIssued | date: 'mediumDate' || '-' }}
 </td>
-<td scope="row" data-label="Documents" class="col-2 showPointer">-</td>
+<td scope="row" data-label="Documents" class="col-2 showPointer">
+  <i class="material-icons">
+    attach_file
+  </i>
+  {{ rowData.documents.length || '0' }}
+</td>
 <td scope="row" class="col-1">
   <button (click)="edit(); $event.stopPropagation()" class="btn btn-primary" type="button">
     <i class="material-icons">create</i>
