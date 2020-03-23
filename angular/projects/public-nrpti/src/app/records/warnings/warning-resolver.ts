@@ -9,6 +9,6 @@ export class WarningResolver implements Resolve<Observable<object>> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const warningId = route.paramMap.get('warningId');
-    return this.factoryService.getRecord(warningId, 'WarningNRCED');
+    return this.factoryService.getRecord(warningId, 'WarningNRCED', true);
   }
 }

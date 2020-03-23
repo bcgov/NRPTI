@@ -9,6 +9,6 @@ export class OrderResolver implements Resolve<Observable<object>> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const orderId = route.paramMap.get('orderId');
-    return this.factoryService.getRecord(orderId, 'OrderNRCED');
+    return this.factoryService.getRecord(orderId, 'OrderNRCED', true);
   }
 }
