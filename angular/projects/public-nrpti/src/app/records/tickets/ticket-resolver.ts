@@ -9,6 +9,6 @@ export class TicketResolver implements Resolve<Observable<object>> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const ticketId = route.paramMap.get('ticketId');
-    return this.factoryService.getRecord(ticketId, 'TicketNRCED');
+    return this.factoryService.getRecord(ticketId, 'TicketNRCED', true);
   }
 }

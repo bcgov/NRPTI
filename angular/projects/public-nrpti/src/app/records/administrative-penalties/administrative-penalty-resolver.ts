@@ -9,6 +9,6 @@ export class AdministrativePenaltyResolver implements Resolve<Observable<object>
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const administrativePenaltyId = route.paramMap.get('administrativePenaltyId');
-    return this.factoryService.getRecord(administrativePenaltyId, 'AdministrativePenaltyNRCED');
+    return this.factoryService.getRecord(administrativePenaltyId, 'AdministrativePenaltyNRCED', true);
   }
 }
