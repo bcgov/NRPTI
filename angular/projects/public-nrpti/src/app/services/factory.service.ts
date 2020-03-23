@@ -76,11 +76,11 @@ export class FactoryService {
    * @returns {Observable<SearchResults[]>} An observable that emits the matching record or null if none found.
    * @memberof FactoryService
    */
-  public getRecord(recordId: string, schema: string): Observable<SearchResults[]> {
+  public getRecord(recordId: string, schema: string, populate = false): Observable<SearchResults[]> {
     if (!recordId || !schema) {
       return of([] as SearchResults[]);
     }
-    return this.searchService.getItem(this.apiService.pathAPI, recordId, schema);
+    return this.searchService.getItem(this.apiService.pathAPI, recordId, schema, populate);
   }
 
   /**
