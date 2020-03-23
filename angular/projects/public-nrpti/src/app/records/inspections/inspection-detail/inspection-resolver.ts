@@ -10,6 +10,6 @@ export class InspectionResolver implements Resolve<Observable<object>> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const inspectionId = route.paramMap.get('inspectionId');
-    return this.factoryService.getRecord(inspectionId, 'InspectionNRCED');
+    return this.factoryService.getRecord(inspectionId, 'InspectionNRCED', true);
   }
 }

@@ -9,6 +9,6 @@ export class RestorativeJusticeResolver implements Resolve<Observable<object>> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const restorativeJusticeId = route.paramMap.get('restorativeJusticeId');
-    return this.factoryService.getRecord(restorativeJusticeId, 'RestorativeJusticeNRCED');
+    return this.factoryService.getRecord(restorativeJusticeId, 'RestorativeJusticeNRCED', true);
   }
 }
