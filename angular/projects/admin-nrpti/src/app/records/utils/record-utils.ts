@@ -259,7 +259,9 @@ export class RecordUtils {
     });
 
     // Execute
-    return Promise.all(promises);
+    return Promise.all(promises).catch(e => {
+      alert('Server Error: ' + e.error);
+    });
   }
 
   parseResForErrors(res) {
