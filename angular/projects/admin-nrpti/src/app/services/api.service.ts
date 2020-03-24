@@ -41,7 +41,7 @@ export class ApiService {
 
       default:
         // Prod
-        this.pathAPI = 'https://nrpti.nrs.gov.bc.ca/api';
+        this.pathAPI = 'https://nrpti-prod.pathfinder.gov.bc.ca/api';
         this.env = 'prod';
     }
   }
