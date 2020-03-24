@@ -39,8 +39,8 @@ export class ApiService {
 
       default:
         // Prod
-        // this.apiPath = 'https://TODO.gov.bc.ca/api/public';
-        // this.adminUrl = 'https://TODO.gov.bc.ca/';
+        this.apiPath = 'https://nrpti-prod.pathfinder.gov.bc.ca/api/public';
+        this.adminUrl = 'https://nrpti-prod.pathfinder.gov.bc.ca/api/';
         this.env = 'prod';
     }
   }
