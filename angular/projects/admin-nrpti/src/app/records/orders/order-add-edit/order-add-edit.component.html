@@ -192,8 +192,16 @@
           <span class="grey-subtext-no-margins">{{ nrcedPublishSubtext }}</span>
         </div>
         <div class="col-4">
-          <mat-slide-toggle (toggleChange)="togglePublish('nrced')" [checked]="nrcedPublishStatus === 'Published'">
-            {{ nrcedPublishStatus }}
+          <mat-slide-toggle
+            name="publishNrced"
+            id="publishNrced"
+            class="form-control"
+            formControlName="publishNrced"
+            (change)="togglePublish($event, nrced)"
+            [checked]="myForm.controls.publishNrced.value"
+            ngDefaultControl
+          >
+            {{ myForm.controls.publishNrced.value ? 'Published' : 'Unpublished' }}
           </mat-slide-toggle>
           <br />
           <span class="grey-subtext-no-margins">*Changes made will take effect once you click "Update Record"</span>
@@ -218,11 +226,20 @@
         <div class="col-2">
           <h4 class="blue-header mb-0">LNG Site Content</h4>
           <br />
-          <span class="grey-subtext-no-margins">{{ lngPublishSubtext }}</span>
+          <span class="grey-subtext-no-margins">
+            {{ lngPublishSubtext }}
+          </span>
         </div>
         <div class="col-4">
-          <mat-slide-toggle (toggleChange)="togglePublish('lng')" [checked]="lngPublishStatus === 'Published'">
-            {{ lngPublishStatus }}
+          <mat-slide-toggle
+            name="publishLng"
+            id="publishLng"
+            formControlName="publishLng"
+            (change)="togglePublish($event, lng)"
+            [checked]="myForm.controls.publishLng.value"
+            ngDefaultControl
+          >
+            {{ myForm.controls.publishLng.value ? 'Published' : 'Unpublished' }}
           </mat-slide-toggle>
           <br />
           <span class="grey-subtext-no-margins">*Changes made will take effect once you click "Update Record"</span>
