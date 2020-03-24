@@ -191,7 +191,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
           res[0][0].object._id,
           this.factoryService
         );
-        // TODO: We need to parse the response coming from updating docs.
+
         console.log(docResponse);
         this.router.navigate(['records']);
       });
@@ -209,7 +209,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
           this.currentRecord._id,
           this.factoryService
         );
-        // TODO: We need to parse the response coming from updating docs.
+
         console.log(docResponse);
         this.router.navigate(['records', 'management-plans', this.currentRecord._id, 'detail']);
       });

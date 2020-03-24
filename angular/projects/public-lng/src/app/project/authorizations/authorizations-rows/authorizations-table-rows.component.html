@@ -5,7 +5,24 @@
 <td scope="row" data-label="Date" class="col-2">{{ rowData.dateIssued | date: 'LLLL d, y' }}</td>
 <td scope="row" data-label="Description" class="col-2">{{ rowData.description }}</td>
 <td scope="row" data-label="Download" style="text-align: center;" class="col-1">
-  <a class="btn btn-primary" type="button" href="{{ rowData.documents[0].url }}" target="_blank">
+  <button
+    *ngIf="!rowData.documents || rowData.documents.length === 0"
+    class="btn btn-primary"
+    type="button"
+    disabled
+    target="_blank"
+  >
+    <span style="color: white;" class="material-icons">
+      cloud_download
+    </span>
+  </button>
+  <a
+    *ngIf="rowData.documents && rowData.documents.length > 0"
+    class="btn btn-primary"
+    type="button"
+    href="{{ rowData.documents[0].url }}"
+    target="_blank"
+  >
     <span style="color: white;" class="material-icons">
       cloud_download
     </span>
