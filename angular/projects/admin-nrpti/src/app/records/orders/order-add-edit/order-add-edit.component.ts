@@ -4,7 +4,6 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Picklists } from '../../../utils/constants/record-constants';
-import { Order } from '../../../../../../common/src/app/models/master';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -27,8 +26,6 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
   // Flavour data
   public nrcedFlavour = null;
   public lngFlavour = null;
-  public lngPublishStatus = 'Unpublished';
-  public nrcedPublishStatus = 'Unpublished';
   public lngPublishSubtext = 'Not published';
   public nrcedPublishSubtext = 'Not published';
 
@@ -82,7 +79,6 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       switch (flavour._schemaName) {
         case 'OrderLNG':
           this.lngFlavour = flavour;
-          this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
           this.lngFlavour.read.includes('public') &&
             (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(
               new Date(this.lngFlavour.datePublished)
@@ -90,7 +86,6 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
           break;
         case 'OrderNRCED':
           this.nrcedFlavour = flavour;
-          this.nrcedFlavour.read.includes('public') && (this.nrcedPublishStatus = 'Published');
           this.nrcedFlavour.read.includes('public') &&
             (this.nrcedPublishSubtext = `Published on ${this.utils.convertJSDateToString(
               new Date(this.nrcedFlavour.datePublished)
@@ -150,6 +145,9 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
             (!this.nrcedFlavour && this.currentRecord.description))) ||
           ''
       ),
+      publishNrced: new FormControl(
+        (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false
+      ),
 
       // LNG
       lngDescription: new FormControl(
@@ -157,6 +155,9 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
           ''
+      ),
+      publishLng: new FormControl(
+        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
       )
     });
   }
@@ -165,13 +166,13 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     this.router.navigate(['records', 'orders', this.currentRecord._id, 'detail']);
   }
 
-  togglePublish(flavour) {
+  togglePublish(event, flavour) {
     switch (flavour) {
       case 'lng':
-        this.lngPublishStatus = this.lngPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
+        this.myForm.controls.publishLng.setValue(event);
         break;
       case 'nrced':
-        this.nrcedPublishStatus = this.nrcedPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
+        this.myForm.controls.publishNrced.setValue(event);
         break;
       default:
         break;
@@ -187,54 +188,68 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     // legislation
     // projectName
 
-    // TODO: For editing we should create an object with only the changed fields.
-    const order = new Order({
-      recordName: this.myForm.controls.recordName.value,
-      recordType: 'Order',
-      recordSubtype: this.myForm.controls.recordSubtype.value,
-      dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
-      issuingAgency: this.myForm.controls.issuingAgency.value,
-      author: this.myForm.controls.author.value,
-      legislation: {
+    const order = {};
+    this.myForm.controls.recordName.dirty && (order['recordName'] = this.myForm.controls.recordName.value);
+    this.myForm.controls.recordSubtype.dirty && (order['recordSubtype'] = this.myForm.controls.recordSubtype.value);
+    this.myForm.controls.dateIssued.dirty &&
+      (order['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
+    this.myForm.controls.issuingAgency.dirty && (order['issuingAgency'] = this.myForm.controls.issuingAgency.value);
+    this.myForm.controls.author.dirty && (order['author'] = this.myForm.controls.author.value);
+
+    if (
+      this.myForm.controls.act.dirty ||
+      this.myForm.controls.regulation.dirty ||
+      this.myForm.controls.section.dirty ||
+      this.myForm.controls.subSection.dirty ||
+      this.myForm.controls.paragraph.dirty
+    ) {
+      order['legislation'] = {
         act: this.myForm.controls.act.value,
         regulation: this.myForm.controls.regulation.value,
         section: this.myForm.controls.section.value,
         subSection: this.myForm.controls.subSection.value,
         paragraph: this.myForm.controls.paragraph.value
-      },
-      issuedTo: this.myForm.controls.issuedTo.value,
-      projectName: this.myForm.controls.projectName.value,
-      location: this.myForm.controls.location.value,
-      centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],
-      outcomeStatus: this.myForm.controls.outcomeStatus.value,
-      outcomeDescription: this.myForm.controls.outcomeDescription.value
-    });
+      };
+    }
+
+    this.myForm.controls.issuedTo.dirty && (order['issuedTo'] = this.myForm.controls.issuedTo.value);
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    if (order.projectName === 'LNG Canada') {
-      order._epicProjectId = EpicProjectIds.lngCanadaId;
-    } else if (order.projectName === 'Coastal Gaslink') {
-      order._epicProjectId = EpicProjectIds.coastalGaslinkId;
+    this.myForm.controls.projectName.dirty && (order['projectName'] = this.myForm.controls.projectName.value);
+    if (order['projectName'] === 'LNG Canada') {
+      order['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+    } else if (order['projectName'] === 'Coastal Gaslink') {
+      order['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
     }
 
-    // Publishing logic
-    order.OrderNRCED = {
-      summary: this.myForm.controls.nrcedSummary.value
-    };
-    if (this.nrcedPublishStatus === 'Published') {
-      order.OrderNRCED['addRole'] = 'public';
-    } else if (this.isEditing && this.nrcedPublishStatus === 'Unpublished') {
-      order.OrderNRCED['removeRole'] = 'public';
+    this.myForm.controls.location.dirty && (order['location'] = this.myForm.controls.location.value);
+    (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
+      (order['centroid'] = [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value]);
+    this.myForm.controls.outcomeStatus.dirty && (order['outcomeStatus'] = this.myForm.controls.outcomeStatus.value);
+    this.myForm.controls.outcomeDescription.dirty &&
+      (order['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
+
+    // NRCED flavour
+    this.myForm.controls.nrcedSummary.dirty &&
+      (order['OrderNRCED'] = {
+        summary: this.myForm.controls.nrcedSummary.value
+      });
+    if (this.myForm.controls.publishNrced.dirty && this.myForm.controls.publishNrced.value) {
+      order['OrderNRCED']['addRole'] = 'public';
+    } else if (this.myForm.controls.publishNrced.dirty && !this.myForm.controls.publishNrced.value) {
+      order['OrderNRCED']['removeRole'] = 'public';
     }
 
-    order.OrderLNG = {
-      description: this.myForm.controls.lngDescription.value
-    };
-    if (this.lngPublishStatus === 'Published') {
-      order.OrderLNG['addRole'] = 'public';
-    } else if (this.isEditing && this.lngPublishStatus === 'Unpublished') {
-      order.OrderLNG['removeRole'] = 'public';
+    // LNG flavour
+    this.myForm.controls.lngDescription.dirty &&
+      (order['OrderLNG'] = {
+        description: this.myForm.controls.lngDescription.value
+      });
+    if (this.myForm.controls.publishLng.dirty && this.myForm.controls.publishLng.value) {
+      order['OrderLNG']['addRole'] = 'public';
+    } else if (this.myForm.controls.publishLng.dirty && !this.myForm.controls.publishLng.value) {
+      order['OrderLNG']['removeRole'] = 'public';
     }
 
     if (!this.isEditing) {
@@ -252,10 +267,10 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         this.router.navigate(['records']);
       });
     } else {
-      order._id = this.currentRecord._id;
+      order['_id'] = this.currentRecord._id;
 
-      this.nrcedFlavour && (order.OrderNRCED['_id'] = this.nrcedFlavour._id);
-      this.lngFlavour && (order.OrderLNG['_id'] = this.lngFlavour._id);
+      this.nrcedFlavour && order['OrderNRCED'] && (order['OrderNRCED']['_id'] = this.nrcedFlavour._id);
+      this.lngFlavour && order['OrderLNG'] && (order['OrderLNG']['_id'] = this.lngFlavour._id);
 
       this.factoryService.editOrder(order).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);

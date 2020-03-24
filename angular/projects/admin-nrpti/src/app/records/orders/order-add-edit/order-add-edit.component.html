@@ -189,11 +189,17 @@
         <div class="col-2">
           <h4 class="blue-header mb-0">NRCED Site Content</h4>
           <br />
-          <span class="grey-subtext-no-margins">{{ nrcedPublishSubtext }}</span>
+          <span class="grey-subtext-no-margins">
+            {{ this.nrcedFlavour && this.nrcedFlavour.read.includes('public') ? 'Published' : 'Not Published' }}
+          </span>
         </div>
         <div class="col-4">
-          <mat-slide-toggle (toggleChange)="togglePublish('nrced')" [checked]="nrcedPublishStatus === 'Published'">
-            {{ nrcedPublishStatus }}
+          <mat-slide-toggle
+            formControlName="publishNrced"
+            (change)="togglePublish($event, nrced)"
+            [checked]="myForm.controls.publishNrced.value"
+          >
+            {{ nrcedPublishSubtext }}
           </mat-slide-toggle>
           <br />
           <span class="grey-subtext-no-margins">*Changes made will take effect once you click "Update Record"</span>
@@ -218,11 +224,17 @@
         <div class="col-2">
           <h4 class="blue-header mb-0">LNG Site Content</h4>
           <br />
-          <span class="grey-subtext-no-margins">{{ lngPublishSubtext }}</span>
+          <span class="grey-subtext-no-margins">
+            {{ lngPublishSubtext }}
+          </span>
         </div>
         <div class="col-4">
-          <mat-slide-toggle (toggleChange)="togglePublish('lng')" [checked]="lngPublishStatus === 'Published'">
-            {{ lngPublishStatus }}
+          <mat-slide-toggle
+            formControlName="publishLng"
+            (change)="togglePublish($event, lng)"
+            [checked]="myForm.controls.publishLng.value"
+          >
+            {{ myForm.controls.publishLng.value ? 'Published' : 'Unpublished' }}
           </mat-slide-toggle>
           <br />
           <span class="grey-subtext-no-margins">*Changes made will take effect once you click "Update Record"</span>
