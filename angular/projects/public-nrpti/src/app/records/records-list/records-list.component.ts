@@ -34,6 +34,13 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   public typeFilters = [];
   public navigationObject;
 
+  public sortingDisplay = {
+    '-dateIssued': 'Date Issued (newest at top)',
+    '+recordType': 'Activity Type (a-z)',
+    '+issuedTo.fullName': 'Issued To (a-z)',
+    '+location': 'Location (a-z)'
+  };
+
   public tableData: TableObject = new TableObject({
     options: {
       showHeader: false,
@@ -92,7 +99,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
       this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, this.tableData);
 
-      // Make api call with tableData params.
+      if (!this.tableData.sortBy) {
+        this.tableData.sortBy = '-dateIssued';
+      }
 
       this._changeDetectionRef.detectChanges();
     });
@@ -144,6 +153,11 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       default:
         break;
     }
+  }
+
+  changeSort(sortBy) {
+    this.tableData.sortBy = sortBy;
+    this.submit();
   }
 
   /**
