@@ -48,8 +48,8 @@ module.exports = require('../../utils/model-schema-generator')(
 
     indexes__: [
       {
-        fields: { summary: 'text', location: 'text', issuedTo: 'text' },
-        options: { weights: { location: 3, issuedTo: 2, summary: 1 } }
+        fields: { summary: 'text', location: 'text', issuedTo: 'text', recordName: 'text' },
+        options: { weights: { issuedTo: 4, recordName: 3, location: 2, summary: 1 } }
       }
     ]
   },
