@@ -16,7 +16,6 @@ import {
   AdministrativeSanction,
   Warning,
   ConstructionPlan,
-  ManagementPlan
 } from '../../../../common/src/app/models/master';
 import { TaskService, ITaskParams } from './task.service';
 import { DocumentService } from './document.service';
@@ -502,7 +501,7 @@ export class FactoryService {
   }
 
   // Management Plans
-  public createManagementPlan(managementPLan: ManagementPlan): Observable<object> {
+  public createManagementPlan(managementPLan: any): Observable<object> {
     const outboundObject = {
       managementPlans: [managementPLan]
     };
@@ -511,7 +510,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editManagementPlan(managementPLan: ManagementPlan): Observable<object> {
+  public editManagementPlan(managementPLan: any): Observable<object> {
     const outboundObject = {
       managementPlans: [managementPLan]
     };
