@@ -8,7 +8,6 @@ import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import {
   Inspection,
-  Certificate,
   Permit,
   SelfReport,
   RestorativeJustice,
@@ -331,7 +330,7 @@ export class FactoryService {
   }
 
   // Certificates
-  public createCertificate(certificate: Certificate): Observable<object> {
+  public createCertificate(certificate: any): Observable<object> {
     const outboundObject = {
       certificates: [certificate]
     };
@@ -340,7 +339,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editCertificate(certificate: Certificate): Observable<object> {
+  public editCertificate(certificate: any): Observable<object> {
     const outboundObject = {
       certificates: [certificate]
     };
