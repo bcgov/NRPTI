@@ -13,7 +13,6 @@ import {
   SelfReport,
   RestorativeJustice,
   Ticket,
-  AdministrativeSanction,
   Warning,
   ConstructionPlan,
   ManagementPlan
@@ -451,7 +450,7 @@ export class FactoryService {
   }
 
   // Administrative Sanctions
-  public createAdministrativeSanction(administrativeSanction: AdministrativeSanction): Observable<object> {
+  public createAdministrativeSanction(administrativeSanction: any): Observable<object> {
     const outboundObject = {
       administrativeSanctions: [administrativeSanction]
     };
@@ -460,7 +459,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editAdministrativeSanction(administrativeSanction: AdministrativeSanction): Observable<object> {
+  public editAdministrativeSanction(administrativeSanction: any): Observable<object> {
     const outboundObject = {
       administrativeSanctions: [administrativeSanction]
     };
