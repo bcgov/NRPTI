@@ -161,17 +161,19 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.location.dirty && (constructionPlan['location'] = this.myForm.controls.location.value);
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (constructionPlan['centroid'] = [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value]);
-    this.myForm.controls.outcomeStatus.dirty &&
-      (constructionPlan['outcomeStatus'] = this.myForm.controls.outcomeStatus.value);
-    this.myForm.controls.outcomeDescription.dirty &&
-      (constructionPlan['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
 
     // LNG flavour
-    if (this.myForm.controls.lngDescription.dirty || this.myForm.controls.publishLng.dirty) {
+    if (
+      this.myForm.controls.lngDescription.dirty ||
+      this.myForm.controls.lngRelatedPhase.dirty ||
+      this.myForm.controls.publishLng.dirty
+    ) {
       constructionPlan['ConstructionPlanLNG'] = {};
     }
     this.myForm.controls.lngDescription.dirty &&
       (constructionPlan['ConstructionPlanLNG']['description'] = this.myForm.controls.lngDescription.value);
+    this.myForm.controls.lngRelatedPhase.dirty &&
+      (constructionPlan['ConstructionPlanLNG']['relatedPhase'] = this.myForm.controls.lngRelatedPhase.value);
     if (this.myForm.controls.publishLng.dirty && this.myForm.controls.publishLng.value) {
       constructionPlan['ConstructionPlanLNG']['addRole'] = 'public';
     } else if (this.myForm.controls.publishLng.dirty && !this.myForm.controls.publishLng.value) {
