@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Agreement } from '../../../../../../common/src/app/models/master';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -25,7 +24,6 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
 
   // Flavour data
   public lngFlavour = null;
-  public lngPublishStatus = 'Unpublished';
   public lngPublishSubtext = 'Not published';
 
   // Documents
@@ -72,7 +70,6 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
       switch (flavour._schemaName) {
         case 'AgreementLNG':
           this.lngFlavour = flavour;
-          this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
           this.lngFlavour.read.includes('public') &&
             (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(
               new Date(this.lngFlavour.datePublished)
@@ -98,7 +95,10 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
 
       // LNG
-      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || '')
+      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
+      publishLng: new FormControl(
+        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
+      )
     });
   }
 
@@ -106,17 +106,16 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
     this.router.navigate(['records', 'agreements', this.currentRecord._id, 'detail']);
   }
 
-  togglePublish(flavour) {
+  togglePublish(event, flavour) {
     switch (flavour) {
       case 'lng':
-        this.lngPublishStatus = this.lngPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
+        this.myForm.controls.publishLng.setValue(event);
         break;
       default:
         break;
     }
     this._changeDetectionRef.detectChanges();
   }
-
   async submit() {
     // TODO
     // _epicProjectId
@@ -124,31 +123,31 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
     // _epicMilestoneId
     // projectName
 
-    // TODO: For editing we should create an object with only the changed fields.
-    const agreement = new Agreement({
-      recordName: this.myForm.controls.recordName.value,
-      recordType: 'Agreement',
-      dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
-      nationName: this.myForm.controls.nationName.value,
-      projectName: this.myForm.controls.projectName.value
-    });
+    const agreement = {};
+    this.myForm.controls.recordName.dirty && (agreement['recordName'] = this.myForm.controls.recordName.value);
+    this.myForm.controls.dateIssued.dirty &&
+      (agreement['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
+    this.myForm.controls.nationName.dirty && (agreement['nationName'] = this.myForm.controls.nationName.value);
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    if (agreement.projectName === 'LNG Canada') {
-      agreement._epicProjectId = EpicProjectIds.lngCanadaId;
-    } else if (agreement.projectName === 'Coastal Gaslink') {
-      agreement._epicProjectId = EpicProjectIds.coastalGaslinkId;
+    this.myForm.controls.projectName.dirty && (agreement['projectName'] = this.myForm.controls.projectName.value);
+    if (agreement['projectName'] === 'LNG Canada') {
+      agreement['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+    } else if (agreement['projectName'] === 'Coastal Gaslink') {
+      agreement['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
     }
 
-    // Publishing logic
-    agreement.AgreementLNG = {
-      description: this.myForm.controls.lngDescription.value
-    };
-    if (this.lngPublishStatus === 'Published') {
-      agreement.AgreementLNG['addRole'] = 'public';
-    } else if (this.isEditing && this.lngPublishStatus === 'Unpublished') {
-      agreement.AgreementLNG['removeRole'] = 'public';
+    // LNG flavour
+    if (this.myForm.controls.lngDescription.dirty || this.myForm.controls.publishLng.dirty) {
+      agreement['AgreementLNG'] = {};
+    }
+    this.myForm.controls.lngDescription.dirty &&
+      (agreement['AgreementLNG']['description'] = this.myForm.controls.lngDescription.value);
+    if (this.myForm.controls.publishLng.dirty && this.myForm.controls.publishLng.value) {
+      agreement['AgreementLNG']['addRole'] = 'public';
+    } else if (this.myForm.controls.publishLng.dirty && !this.myForm.controls.publishLng.value) {
+      agreement['AgreementLNG']['removeRole'] = 'public';
     }
 
     if (!this.isEditing) {
@@ -166,9 +165,9 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
         this.router.navigate(['records']);
       });
     } else {
-      agreement._id = this.currentRecord._id;
+      agreement['_id'] = this.currentRecord._id;
 
-      this.lngFlavour && (agreement.AgreementLNG['_id'] = this.lngFlavour._id);
+      this.lngFlavour && agreement['AgreementLNG'] && (agreement['AgreementLNG']['_id'] = this.lngFlavour._id);
 
       this.factoryService.editAgreement(agreement).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
