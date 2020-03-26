@@ -134,6 +134,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
       this.tableData.columns = this.tableColumns;
 
+      this.keywordSearchWords = (this.queryParams && this.queryParams.keywords) || '';
       this.buildSearchFiltersForm();
       this.subscribeToSearchFilterChanges();
 
@@ -331,7 +332,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * @memberof RecordsListComponent
    */
   submit() {
-    this.tableTemplateUtils.navigateUsingParams(this.tableData, ['records']);
+    this.tableTemplateUtils.navigateUsingParams(this.tableData, ['records'], this.queryParams);
   }
 
   /**

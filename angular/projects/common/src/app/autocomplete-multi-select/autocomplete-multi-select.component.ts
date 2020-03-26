@@ -135,6 +135,10 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
    */
   public handleEnter(event) {
     if (event.keyCode === 13) {
+      // Default behaviour is to click the first button in the form, which is not applicable as we don't have a 'submit'
+      // button to target.  Searches happen automatically as filters are selected.
+      event.preventDefault();
+
       // Can't seem to assign the IMultiSelectOption object as the mat-option value, so reconstruct it here to pass on.
       // This is only a problem when selecting an option using the keyboard (enter).
       const option: IMutliSelectOption = {

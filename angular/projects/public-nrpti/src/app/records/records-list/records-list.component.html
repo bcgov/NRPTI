@@ -85,7 +85,7 @@
                       </i>
                     </button>
                     <button ngbDropdownItem (click)="changeSort('+issuedTo.fullName')">
-                      I{{ sortingDisplay['+issuedTo.fullName'] }}
+                      {{ sortingDisplay['+issuedTo.fullName'] }}
                       <i *ngIf="tableData.sortBy === '+issuedTo.fullName'" class="align-middle material-icons">
                         check_circle
                       </i>
