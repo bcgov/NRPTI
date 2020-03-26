@@ -13,7 +13,6 @@ import {
   RestorativeJustice,
   Ticket,
   Warning,
-  ConstructionPlan,
   ManagementPlan
 } from '../../../../common/src/app/models/master';
 import { TaskService, ITaskParams } from './task.service';
@@ -483,7 +482,7 @@ export class FactoryService {
   }
 
   // Construction Plans
-  public createConstructionPlan(constructionPlan: ConstructionPlan): Observable<object> {
+  public createConstructionPlan(constructionPlan: any): Observable<object> {
     const outboundObject = {
       constructionPlans: [constructionPlan]
     };
@@ -492,7 +491,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editConstructionPlan(constructionPlan: ConstructionPlan): Observable<object> {
+  public editConstructionPlan(constructionPlan: any): Observable<object> {
     const outboundObject = {
       constructionPlans: [constructionPlan]
     };

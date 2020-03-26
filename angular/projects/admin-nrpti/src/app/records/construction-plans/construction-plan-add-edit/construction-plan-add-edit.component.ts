@@ -4,7 +4,6 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Picklists } from '../../../utils/constants/record-constants';
-import { ConstructionPlan } from '../../../../../../common/src/app/models/master';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -26,7 +25,6 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
 
   // Flavour data
   public lngFlavour = null;
-  public lngPublishStatus = 'Unpublished';
   public lngPublishSubtext = 'Not published';
 
   // Pick lists
@@ -44,7 +42,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
     private factoryService: FactoryService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -76,7 +74,6 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
       switch (flavour._schemaName) {
         case 'ConstructionPlanLNG':
           this.lngFlavour = flavour;
-          this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
           this.lngFlavour.read.includes('public') &&
             (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(
               new Date(this.lngFlavour.datePublished)
@@ -96,7 +93,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
+        ''
       ),
       agency: new FormControl((this.currentRecord && this.currentRecord.agency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -112,7 +109,10 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
 
       // LNG
       lngRelatedPhase: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.relatedPhase) || ''),
-      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || '')
+      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
+      publishLng: new FormControl(
+        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
+      )
     });
   }
 
@@ -120,10 +120,10 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
     this.router.navigate(['records', 'construction-plans', this.currentRecord._id, 'detail']);
   }
 
-  togglePublish(flavour) {
+  togglePublish(event, flavour) {
     switch (flavour) {
       case 'lng':
-        this.lngPublishStatus = this.lngPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
+        this.myForm.controls.publishLng.setValue(event);
         break;
       default:
         break;
@@ -138,36 +138,46 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
     // _epicMilestoneId
     // projectName
 
-    // TODO: For editing we should create an object with only the changed fields.
-    const constructionPlan = new ConstructionPlan({
-      recordName: this.myForm.controls.recordName.value,
-      recordType: 'Construction Plan',
-      dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
-      agency: this.myForm.controls.agency.value,
-      author: this.myForm.controls.author.value,
-      issuedTo: this.myForm.controls.issuedTo.value,
-      projectName: this.myForm.controls.projectName.value,
-      location: this.myForm.controls.location.value,
-      centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value]
-    });
+    const constructionPlan = {};
+    this.myForm.controls.recordName.dirty && (constructionPlan['recordName'] = this.myForm.controls.recordName.value);
+    this.myForm.controls.dateIssued.dirty &&
+      (constructionPlan['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(
+        this.myForm.get('dateIssued').value)
+      );
+    this.myForm.controls.agency.dirty && (constructionPlan['agency'] = this.myForm.controls.agency.value);
+    this.myForm.controls.author.dirty && (constructionPlan['author'] = this.myForm.controls.author.value);
+    this.myForm.controls.issuedTo.dirty && (constructionPlan['issuedTo'] = this.myForm.controls.issuedTo.value);
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    if (constructionPlan.projectName === 'LNG Canada') {
-      constructionPlan._epicProjectId = EpicProjectIds.lngCanadaId;
-    } else if (constructionPlan.projectName === 'Coastal Gaslink') {
-      constructionPlan._epicProjectId = EpicProjectIds.coastalGaslinkId;
+    this.myForm.controls.projectName.dirty &&
+      (constructionPlan['projectName'] = this.myForm.controls.projectName.value);
+    if (constructionPlan['projectName'] === 'LNG Canada') {
+      constructionPlan['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+    } else if (constructionPlan['projectName'] === 'Coastal Gaslink') {
+      constructionPlan['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
     }
 
-    // Publishing logic
-    constructionPlan.ConstructionPlanLNG = {
-      relatedPhase: this.myForm.controls.lngRelatedPhase.value,
-      description: this.myForm.controls.lngDescription.value
-    };
-    if (this.lngPublishStatus === 'Published') {
-      constructionPlan.ConstructionPlanLNG['addRole'] = 'public';
-    } else if (this.isEditing && this.lngPublishStatus === 'Unpublished') {
-      constructionPlan.ConstructionPlanLNG['removeRole'] = 'public';
+    this.myForm.controls.location.dirty && (constructionPlan['location'] = this.myForm.controls.location.value);
+    (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
+      (constructionPlan['centroid'] = [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value]);
+
+    // LNG flavour
+    if (
+      this.myForm.controls.lngDescription.dirty ||
+      this.myForm.controls.lngRelatedPhase.dirty ||
+      this.myForm.controls.publishLng.dirty
+    ) {
+      constructionPlan['ConstructionPlanLNG'] = {};
+    }
+    this.myForm.controls.lngDescription.dirty &&
+      (constructionPlan['ConstructionPlanLNG']['description'] = this.myForm.controls.lngDescription.value);
+    this.myForm.controls.lngRelatedPhase.dirty &&
+      (constructionPlan['ConstructionPlanLNG']['relatedPhase'] = this.myForm.controls.lngRelatedPhase.value);
+    if (this.myForm.controls.publishLng.dirty && this.myForm.controls.publishLng.value) {
+      constructionPlan['ConstructionPlanLNG']['addRole'] = 'public';
+    } else if (this.myForm.controls.publishLng.dirty && !this.myForm.controls.publishLng.value) {
+      constructionPlan['ConstructionPlanLNG']['removeRole'] = 'public';
     }
 
     if (!this.isEditing) {
@@ -185,9 +195,10 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
         this.router.navigate(['records']);
       });
     } else {
-      constructionPlan._id = this.currentRecord._id;
+      constructionPlan['_id'] = this.currentRecord._id;
 
-      this.lngFlavour && (constructionPlan.ConstructionPlanLNG['_id'] = this.lngFlavour._id);
+      this.lngFlavour && constructionPlan['ConstructionPlanLNG'] &&
+        (constructionPlan['ConstructionPlanLNG']['_id'] = this.lngFlavour._id);
 
       this.factoryService.editConstructionPlan(constructionPlan).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
