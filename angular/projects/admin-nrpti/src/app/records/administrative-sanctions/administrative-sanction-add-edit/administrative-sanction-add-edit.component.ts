@@ -4,7 +4,6 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Picklists } from '../../../utils/constants/record-constants';
-import { AdministrativeSanction } from '../../../../../../common/src/app/models/master';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -27,8 +26,6 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
   // Flavour data
   public nrcedFlavour = null;
   public lngFlavour = null;
-  public lngPublishStatus = 'Unpublished';
-  public nrcedPublishStatus = 'Unpublished';
   public lngPublishSubtext = 'Not published';
   public nrcedPublishSubtext = 'Not published';
 
@@ -81,7 +78,6 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
       switch (flavour._schemaName) {
         case 'AdministrativeSanctionLNG':
           this.lngFlavour = flavour;
-          this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
           this.lngFlavour.read.includes('public') &&
             (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(
               new Date(this.lngFlavour.datePublished)
@@ -89,7 +85,6 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
           break;
         case 'AdministrativeSanctionNRCED':
           this.nrcedFlavour = flavour;
-          this.nrcedFlavour.read.includes('public') && (this.nrcedPublishStatus = 'Published');
           this.nrcedFlavour.read.includes('public') &&
             (this.nrcedPublishSubtext = `Published on ${this.utils.convertJSDateToString(
               new Date(this.nrcedFlavour.datePublished)
@@ -143,9 +138,15 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
 
       // NRCED
       nrcedSummary: new FormControl((this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.summary) || ''),
+      publishNrced: new FormControl(
+        (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false
+      ),
 
       // LNG
-      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || '')
+      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
+      publishLng: new FormControl(
+        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
+      )
     });
   }
 
@@ -153,13 +154,13 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
     this.router.navigate(['records', 'administrative-sanctions', this.currentRecord._id, 'detail']);
   }
 
-  togglePublish(flavour) {
+  togglePublish(event, flavour) {
     switch (flavour) {
       case 'lng':
-        this.lngPublishStatus = this.lngPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
+        this.myForm.controls.publishLng.setValue(event);
         break;
       case 'nrced':
-        this.nrcedPublishStatus = this.nrcedPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
+        this.myForm.controls.publishNrced.setValue(event);
         break;
       default:
         break;
@@ -175,54 +176,80 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
     // legislation
     // projectName
 
-    // TODO: For editing we should create an object with only the changed fields.
-    const administrativeSanction = new AdministrativeSanction({
-      recordName: this.myForm.controls.recordName.value,
-      recordType: 'AdministrativeSanction',
-      dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
-      issuingAgency: this.myForm.controls.issuingAgency.value,
-      author: this.myForm.controls.author.value,
-      legislation: {
+    const administrativeSanction = {};
+    this.myForm.controls.recordName.dirty &&
+      (administrativeSanction['recordName'] = this.myForm.controls.recordName.value);
+    this.myForm.controls.dateIssued.dirty &&
+      (administrativeSanction['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(
+        this.myForm.get('dateIssued').value
+      ));
+    this.myForm.controls.issuingAgency.dirty &&
+      (administrativeSanction['issuingAgency'] = this.myForm.controls.issuingAgency.value);
+    this.myForm.controls.author.dirty && (administrativeSanction['author'] = this.myForm.controls.author.value);
+
+    if (
+      this.myForm.controls.act.dirty ||
+      this.myForm.controls.regulation.dirty ||
+      this.myForm.controls.section.dirty ||
+      this.myForm.controls.subSection.dirty ||
+      this.myForm.controls.paragraph.dirty
+    ) {
+      administrativeSanction['legislation'] = {
         act: this.myForm.controls.act.value,
         regulation: this.myForm.controls.regulation.value,
         section: this.myForm.controls.section.value,
         subSection: this.myForm.controls.subSection.value,
         paragraph: this.myForm.controls.paragraph.value
-      },
-      issuedTo: this.myForm.controls.issuedTo.value,
-      projectName: this.myForm.controls.projectName.value,
-      location: this.myForm.controls.location.value,
-      centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],
-      outcomeStatus: this.myForm.controls.outcomeStatus.value,
-      outcomeDescription: this.myForm.controls.outcomeDescription.value,
-      penalty: this.myForm.controls.penalty.value
-    });
+      };
+    }
+
+    this.myForm.controls.issuedTo.dirty && (administrativeSanction['issuedTo'] = this.myForm.controls.issuedTo.value);
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    if (administrativeSanction.projectName === 'LNG Canada') {
-      administrativeSanction._epicProjectId = EpicProjectIds.lngCanadaId;
-    } else if (administrativeSanction.projectName === 'Coastal Gaslink') {
-      administrativeSanction._epicProjectId = EpicProjectIds.coastalGaslinkId;
+    this.myForm.controls.projectName.dirty &&
+      (administrativeSanction['projectName'] = this.myForm.controls.projectName.value);
+    if (administrativeSanction['projectName'] === 'LNG Canada') {
+      administrativeSanction['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+    } else if (administrativeSanction['projectName'] === 'Coastal Gaslink') {
+      administrativeSanction['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
     }
 
-    // Publishing logic
-    administrativeSanction.AdministrativeSanctionNRCED = {
-      summary: this.myForm.controls.nrcedSummary.value
-    };
-    if (this.nrcedPublishStatus === 'Published') {
-      administrativeSanction.AdministrativeSanctionNRCED['addRole'] = 'public';
-    } else if (this.isEditing && this.nrcedPublishStatus === 'Unpublished') {
-      administrativeSanction.AdministrativeSanctionNRCED['removeRole'] = 'public';
+    this.myForm.controls.location.dirty && (administrativeSanction['location'] = this.myForm.controls.location.value);
+    (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
+      (administrativeSanction['centroid'] = [
+        this.myForm.controls.latitude.value,
+        this.myForm.controls.longitude.value
+      ]);
+    this.myForm.controls.outcomeStatus.dirty &&
+      (administrativeSanction['outcomeStatus'] = this.myForm.controls.outcomeStatus.value);
+    this.myForm.controls.outcomeDescription.dirty &&
+      (administrativeSanction['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
+
+    this.myForm.controls.penalty.dirty && (administrativeSanction['penalty'] = this.myForm.controls.penalty.value);
+
+    // NRCED flavour
+    if (this.myForm.controls.nrcedSummary.dirty || this.myForm.controls.publishNrced.dirty) {
+      administrativeSanction['AdministrativeSanctionNRCED'] = {};
+    }
+    this.myForm.controls.nrcedSummary.dirty &&
+      (administrativeSanction['AdministrativeSanctionNRCED']['summary'] = this.myForm.controls.nrcedSummary.value);
+    if (this.myForm.controls.publishNrced.dirty && this.myForm.controls.publishNrced.value) {
+      administrativeSanction['AdministrativeSanctionNRCED']['addRole'] = 'public';
+    } else if (this.myForm.controls.publishNrced.dirty && !this.myForm.controls.publishNrced.value) {
+      administrativeSanction['AdministrativeSanctionNRCED']['removeRole'] = 'public';
     }
 
-    administrativeSanction.AdministrativeSanctionLNG = {
-      description: this.myForm.controls.lngDescription.value
-    };
-    if (this.lngPublishStatus === 'Published') {
-      administrativeSanction.AdministrativeSanctionLNG['addRole'] = 'public';
-    } else if (this.isEditing && this.lngPublishStatus === 'Unpublished') {
-      administrativeSanction.AdministrativeSanctionLNG['removeRole'] = 'public';
+    // LNG flavour
+    if (this.myForm.controls.lngDescription.dirty || this.myForm.controls.publishLng.dirty) {
+      administrativeSanction['AdministrativeSanctionLNG'] = {};
+    }
+    this.myForm.controls.lngDescription.dirty &&
+      (administrativeSanction['AdministrativeSanctionLNG']['description'] = this.myForm.controls.lngDescription.value);
+    if (this.myForm.controls.publishLng.dirty && this.myForm.controls.publishLng.value) {
+      administrativeSanction['AdministrativeSanctionLNG']['addRole'] = 'public';
+    } else if (this.myForm.controls.publishLng.dirty && !this.myForm.controls.publishLng.value) {
+      administrativeSanction['AdministrativeSanctionLNG']['removeRole'] = 'public';
     }
 
     if (!this.isEditing) {
@@ -240,10 +267,14 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
         this.router.navigate(['records']);
       });
     } else {
-      administrativeSanction._id = this.currentRecord._id;
+      administrativeSanction['_id'] = this.currentRecord._id;
 
-      this.nrcedFlavour && (administrativeSanction.AdministrativeSanctionNRCED['_id'] = this.nrcedFlavour._id);
-      this.lngFlavour && (administrativeSanction.AdministrativeSanctionLNG['_id'] = this.lngFlavour._id);
+      this.nrcedFlavour &&
+        administrativeSanction['AdministrativeSanctionNRCED'] &&
+        (administrativeSanction['AdministrativeSanctionNRCED']['_id'] = this.nrcedFlavour._id);
+      this.lngFlavour &&
+        administrativeSanction['AdministrativeSanctionLNG'] &&
+        (administrativeSanction['AdministrativeSanctionLNG']['_id'] = this.lngFlavour._id);
 
       this.factoryService.editAdministrativeSanction(administrativeSanction).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
