@@ -10,7 +10,6 @@ import {
   Inspection,
   Certificate,
   Permit,
-  Agreement,
   SelfReport,
   RestorativeJustice,
   Ticket,
@@ -368,7 +367,7 @@ export class FactoryService {
   }
 
   // Agreements
-  public createAgreement(agreement: Agreement): Observable<object> {
+  public createAgreement(agreement: any): Observable<object> {
     const outboundObject = {
       agreements: [agreement]
     };
@@ -377,7 +376,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editAgreement(agreement: Agreement): Observable<object> {
+  public editAgreement(agreement: any): Observable<object> {
     const outboundObject = {
       agreements: [agreement]
     };
