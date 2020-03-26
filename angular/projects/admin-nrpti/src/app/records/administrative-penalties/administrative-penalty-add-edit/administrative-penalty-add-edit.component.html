@@ -201,7 +201,7 @@
             name="publishNrced"
             id="publishNrced"
             formControlName="publishNrced"
-            (change)="togglePublish($event, nrced)"
+            (change)="togglePublish($event, 'nrced')"
             [checked]="myForm.controls.publishNrced.value"
             ngDefaultControl
           >
@@ -237,7 +237,7 @@
             name="publishLng"
             id="publishLng"
             formControlName="publishLng"
-            (change)="togglePublish($event, lng)"
+            (change)="togglePublish($event, 'lng')"
             [checked]="myForm.controls.publishLng.value"
             ngDefaultControl
           >
