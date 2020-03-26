@@ -9,31 +9,43 @@
         <span class="mr-2 align-middle">Sort List By:</span>
         <div ngbDropdown class="d-inline-block">
           <button class="btn btn-primary" ngbDropdownToggle>
-            {{sortingDisplay[tableData.sortBy]}}
+            {{ sortingDisplay[tableData.sortBy] }}
           </button>
           <div ngbDropdownMenu>
-            <button ngbDropdownItem (click)="changeSort('-dateIssued')">{{sortingDisplay['-dateIssued']}}
+            <button ngbDropdownItem (click)="changeSort('-dateIssued')">
+              {{ sortingDisplay['-dateIssued'] }}
               <i *ngIf="tableData.sortBy === '-dateIssued'" class="align-middle material-icons">
                 check_circle
-              </i></button>
-            <button ngbDropdownItem (click)="changeSort('+recordType')">{{sortingDisplay['+recordType']}}
+              </i>
+            </button>
+            <button ngbDropdownItem (click)="changeSort('+recordType')">
+              {{ sortingDisplay['+recordType'] }}
               <i *ngIf="tableData.sortBy === '+recordType'" class="align-middle material-icons">
                 check_circle
-              </i></button>
-            <button ngbDropdownItem (click)="changeSort('+issuedTo.fullName')">I{{sortingDisplay['+issuedTo.fullName']}}
+              </i>
+            </button>
+            <button ngbDropdownItem (click)="changeSort('+issuedTo.fullName')">
+              I{{ sortingDisplay['+issuedTo.fullName'] }}
               <i *ngIf="tableData.sortBy === '+issuedTo.fullName'" class="align-middle material-icons">
                 check_circle
-              </i></button>
-            <button ngbDropdownItem (click)="changeSort('+location')">{{sortingDisplay['+location']}}
+              </i>
+            </button>
+            <button ngbDropdownItem (click)="changeSort('+location')">
+              {{ sortingDisplay['+location'] }}
               <i *ngIf="tableData.sortBy === '+location'" class="align-middle material-icons">
                 check_circle
-              </i></button>
+              </i>
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <lib-table-template *ngIf="!loading && tableData.totalListItems > 0" [data]="tableData" [messageIn]="messageIn"
-    (messageOut)="onMessageOut($event)"></lib-table-template>
+  <lib-table-template
+    *ngIf="!loading && tableData.totalListItems > 0"
+    [data]="tableData"
+    [messageIn]="messageIn"
+    (messageOut)="onMessageOut($event)"
+  ></lib-table-template>
 </main>
