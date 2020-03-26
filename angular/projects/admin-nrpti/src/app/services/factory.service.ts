@@ -8,14 +8,10 @@ import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import {
   Inspection,
-  Certificate,
   Permit,
-  Agreement,
   SelfReport,
   RestorativeJustice,
   Ticket,
-  AdministrativePenalty,
-  AdministrativeSanction,
   Warning,
   ManagementPlan
 } from '../../../../common/src/app/models/master';
@@ -333,7 +329,7 @@ export class FactoryService {
   }
 
   // Certificates
-  public createCertificate(certificate: Certificate): Observable<object> {
+  public createCertificate(certificate: any): Observable<object> {
     const outboundObject = {
       certificates: [certificate]
     };
@@ -342,7 +338,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editCertificate(certificate: Certificate): Observable<object> {
+  public editCertificate(certificate: any): Observable<object> {
     const outboundObject = {
       certificates: [certificate]
     };
@@ -367,7 +363,7 @@ export class FactoryService {
   }
 
   // Agreements
-  public createAgreement(agreement: Agreement): Observable<object> {
+  public createAgreement(agreement: any): Observable<object> {
     const outboundObject = {
       agreements: [agreement]
     };
@@ -376,7 +372,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editAgreement(agreement: Agreement): Observable<object> {
+  public editAgreement(agreement: any): Observable<object> {
     const outboundObject = {
       agreements: [agreement]
     };
@@ -435,7 +431,7 @@ export class FactoryService {
   }
 
   // Administrative Penalties
-  public createAdministrativePenalty(administrativePenalty: AdministrativePenalty): Observable<object> {
+  public createAdministrativePenalty(administrativePenalty: any): Observable<object> {
     const outboundObject = {
       administrativePenalties: [administrativePenalty]
     };
@@ -444,7 +440,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editAdministrativePenalty(administrativePenalty: AdministrativePenalty): Observable<object> {
+  public editAdministrativePenalty(administrativePenalty: any): Observable<object> {
     const outboundObject = {
       administrativePenalties: [administrativePenalty]
     };
@@ -452,7 +448,7 @@ export class FactoryService {
   }
 
   // Administrative Sanctions
-  public createAdministrativeSanction(administrativeSanction: AdministrativeSanction): Observable<object> {
+  public createAdministrativeSanction(administrativeSanction: any): Observable<object> {
     const outboundObject = {
       administrativeSanctions: [administrativeSanction]
     };
@@ -461,7 +457,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editAdministrativeSanction(administrativeSanction: AdministrativeSanction): Observable<object> {
+  public editAdministrativeSanction(administrativeSanction: any): Observable<object> {
     const outboundObject = {
       administrativeSanctions: [administrativeSanction]
     };
