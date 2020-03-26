@@ -7,7 +7,6 @@ import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import {
-  Order,
   Inspection,
   Certificate,
   Permit,
@@ -301,7 +300,7 @@ export class FactoryService {
   }
 
   // Orders
-  public createOrder(order: Order): Observable<object> {
+  public createOrder(order: any): Observable<object> {
     const outboundObject = {
       orders: [order]
     };
@@ -310,7 +309,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editOrder(order: Order): Observable<object> {
+  public editOrder(order: any): Observable<object> {
     const outboundObject = {
       orders: [order]
     };
