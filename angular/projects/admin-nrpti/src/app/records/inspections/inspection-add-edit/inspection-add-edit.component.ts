@@ -4,7 +4,6 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Picklists } from '../../../utils/constants/record-constants';
-import { Inspection } from '../../../../../../common/src/app/models/master';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -27,8 +26,6 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
   // Flavour data
   public nrcedFlavour = null;
   public lngFlavour = null;
-  public lngPublishStatus = 'Unpublished';
-  public nrcedPublishStatus = 'Unpublished';
   public lngPublishSubtext = 'Not published';
   public nrcedPublishSubtext = 'Not published';
 
@@ -49,7 +46,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
     private factoryService: FactoryService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -81,7 +78,6 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
       switch (flavour._schemaName) {
         case 'InspectionLNG':
           this.lngFlavour = flavour;
-          this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
           this.lngFlavour.read.includes('public') &&
             (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(
               new Date(this.lngFlavour.datePublished)
@@ -89,7 +85,6 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
           break;
         case 'InspectionNRCED':
           this.nrcedFlavour = flavour;
-          this.nrcedFlavour.read.includes('public') && (this.nrcedPublishStatus = 'Published');
           this.nrcedFlavour.read.includes('public') &&
             (this.nrcedPublishSubtext = `Published on ${this.utils.convertJSDateToString(
               new Date(this.nrcedFlavour.datePublished)
@@ -109,7 +104,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
+        ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -146,7 +141,10 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           ((this.nrcedFlavour && this.nrcedFlavour.summary) ||
             (!this.nrcedFlavour && this.currentRecord.description))) ||
-          ''
+        ''
+      ),
+      publishNrced: new FormControl(
+        (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false
       ),
 
       // LNG
@@ -154,7 +152,10 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
-          ''
+        ''
+      ),
+      publishLng: new FormControl(
+        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
       )
     });
   }
@@ -163,13 +164,13 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
     this.router.navigate(['records', 'inspections', this.currentRecord._id, 'detail']);
   }
 
-  togglePublish(flavour) {
+  togglePublish(event, flavour) {
     switch (flavour) {
       case 'lng':
-        this.lngPublishStatus = this.lngPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
+        this.myForm.controls.publishLng.setValue(event);
         break;
       case 'nrced':
-        this.nrcedPublishStatus = this.nrcedPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
+        this.myForm.controls.publishNrced.setValue(event);
         break;
       default:
         break;
@@ -185,54 +186,71 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
     // legislation
     // projectName
 
-    // TODO: For editing we should create an object with only the changed fields.
-    const inspection = new Inspection({
-      recordName: this.myForm.controls.recordName.value,
-      recordType: 'Inspection',
-      dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
-      issuingAgency: this.myForm.controls.issuingAgency.value,
-      author: this.myForm.controls.author.value,
-      legislation: {
+    const inspection = {};
+    this.myForm.controls.recordName.dirty && (inspection['recordName'] = this.myForm.controls.recordName.value);
+    this.myForm.controls.dateIssued.dirty &&
+      (inspection['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
+    this.myForm.controls.issuingAgency.dirty &&
+      (inspection['issuingAgency'] = this.myForm.controls.issuingAgency.value);
+    this.myForm.controls.author.dirty && (inspection['author'] = this.myForm.controls.author.value);
+
+    if (
+      this.myForm.controls.act.dirty ||
+      this.myForm.controls.regulation.dirty ||
+      this.myForm.controls.section.dirty ||
+      this.myForm.controls.subSection.dirty ||
+      this.myForm.controls.paragraph.dirty
+    ) {
+      inspection['legislation'] = {
         act: this.myForm.controls.act.value,
         regulation: this.myForm.controls.regulation.value,
         section: this.myForm.controls.section.value,
         subSection: this.myForm.controls.subSection.value,
         paragraph: this.myForm.controls.paragraph.value
-      },
-      issuedTo: this.myForm.controls.issuedTo.value,
-      projectName: this.myForm.controls.projectName.value,
-      location: this.myForm.controls.location.value,
-      centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],
-      outcomeStatus: this.myForm.controls.outcomeStatus.value,
-      outcomeDescription: this.myForm.controls.outcomeDescription.value,
-      documents: this.currentRecord && this.currentRecord.documents
-    });
+      };
+    }
+
+    this.myForm.controls.issuedTo.dirty && (inspection['issuedTo'] = this.myForm.controls.issuedTo.value);
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    if (inspection.projectName === 'LNG Canada') {
-      inspection._epicProjectId = EpicProjectIds.lngCanadaId;
-    } else if (inspection.projectName === 'Coastal Gaslink') {
-      inspection._epicProjectId = EpicProjectIds.coastalGaslinkId;
+    this.myForm.controls.projectName.dirty && (inspection['projectName'] = this.myForm.controls.projectName.value);
+    if (inspection['projectName'] === 'LNG Canada') {
+      inspection['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+    } else if (inspection['projectName'] === 'Coastal Gaslink') {
+      inspection['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
     }
 
-    // Publishing logic
-    inspection.InspectionNRCED = {
-      summary: this.myForm.controls.nrcedSummary.value
-    };
-    if (this.nrcedPublishStatus === 'Published') {
-      inspection.InspectionNRCED['addRole'] = 'public';
-    } else if (this.isEditing && this.nrcedPublishStatus === 'Unpublished') {
-      inspection.InspectionNRCED['removeRole'] = 'public';
+    this.myForm.controls.location.dirty && (inspection['location'] = this.myForm.controls.location.value);
+    (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
+      (inspection['centroid'] = [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value]);
+    this.myForm.controls.outcomeStatus.dirty &&
+      (inspection['outcomeStatus'] = this.myForm.controls.outcomeStatus.value);
+    this.myForm.controls.outcomeDescription.dirty &&
+      (inspection['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
+
+    // NRCED flavour
+    if (this.myForm.controls.nrcedSummary.dirty || this.myForm.controls.publishNrced.dirty) {
+      inspection['InspectionNRCED'] = {};
+    }
+    this.myForm.controls.nrcedSummary.dirty &&
+      (inspection['InspectionNRCED']['summary'] = this.myForm.controls.nrcedSummary.value);
+    if (this.myForm.controls.publishNrced.dirty && this.myForm.controls.publishNrced.value) {
+      inspection['InspectionNRCED']['addRole'] = 'public';
+    } else if (this.myForm.controls.publishNrced.dirty && !this.myForm.controls.publishNrced.value) {
+      inspection['InspectionNRCED']['removeRole'] = 'public';
     }
 
-    inspection.InspectionLNG = {
-      description: this.myForm.controls.lngDescription.value
-    };
-    if (this.lngPublishStatus === 'Published') {
-      inspection.InspectionLNG['addRole'] = 'public';
-    } else if (this.isEditing && this.lngPublishStatus === 'Unpublished') {
-      inspection.InspectionLNG['removeRole'] = 'public';
+    // LNG flavour
+    if (this.myForm.controls.lngDescription.dirty || this.myForm.controls.publishLng.dirty) {
+      inspection['InspectionLNG'] = {};
+    }
+    this.myForm.controls.lngDescription.dirty &&
+      (inspection['InspectionLNG']['description'] = this.myForm.controls.lngDescription.value);
+    if (this.myForm.controls.publishLng.dirty && this.myForm.controls.publishLng.value) {
+      inspection['InspectionLNG']['addRole'] = 'public';
+    } else if (this.myForm.controls.publishLng.dirty && !this.myForm.controls.publishLng.value) {
+      inspection['InspectionLNG']['removeRole'] = 'public';
     }
 
     if (!this.isEditing) {
@@ -250,10 +268,11 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
         this.router.navigate(['records']);
       });
     } else {
-      inspection._id = this.currentRecord._id;
+      inspection['_id'] = this.currentRecord._id;
 
-      this.nrcedFlavour && (inspection.InspectionNRCED['_id'] = this.nrcedFlavour._id);
-      this.lngFlavour && (inspection.InspectionLNG['_id'] = this.lngFlavour._id);
+      this.nrcedFlavour && inspection['InspectionNRCED'] &&
+        (inspection['InspectionNRCED']['_id'] = this.nrcedFlavour._id);
+      this.lngFlavour && inspection['InspectionLNG'] && (inspection['InspectionLNG']['_id'] = this.lngFlavour._id);
 
       this.factoryService.editInspection(inspection).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
