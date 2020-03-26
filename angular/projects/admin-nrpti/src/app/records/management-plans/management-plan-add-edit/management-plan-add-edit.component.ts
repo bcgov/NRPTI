@@ -172,11 +172,16 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
       (managementPlan['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
 
     // LNG flavour
-    if (this.myForm.controls.lngDescription.dirty || this.myForm.controls.publishLng.dirty) {
+    if (this.myForm.controls.lngDescription.dirty ||
+      this.myForm.controls.lngRelatedPhase.dirty
+      || this.myForm.controls.publishLng.dirty
+    ) {
       managementPlan['ManagementPlanLNG'] = {};
     }
     this.myForm.controls.lngDescription.dirty &&
       (managementPlan['ManagementPlanLNG']['description'] = this.myForm.controls.lngDescription.value);
+    this.myForm.controls.lngRelatedPhase.dirty &&
+      (managementPlan['ManagementPlanLNG']['relatedPhase'] = this.myForm.controls.lngRelatedPhase.value);
     if (this.myForm.controls.publishLng.dirty && this.myForm.controls.publishLng.value) {
       managementPlan['ManagementPlanLNG']['addRole'] = 'public';
     } else if (this.myForm.controls.publishLng.dirty && !this.myForm.controls.publishLng.value) {
