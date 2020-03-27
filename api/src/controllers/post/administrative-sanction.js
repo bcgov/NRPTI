@@ -193,6 +193,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.outcomeStatus && (administrativeSanction.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (administrativeSanction.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (administrativeSanction.penalty = incomingObj.penalty);
+  incomingObj.documents && (administrativeSanction.documents = incomingObj.documents);
 
   // set meta
   administrativeSanction.addedBy = args.swagger.params.auth_payload.displayName;
@@ -311,6 +312,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.outcomeStatus && (administrativeSanctionLNG.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (administrativeSanctionLNG.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (administrativeSanctionLNG.penalty = incomingObj.penalty);
+  incomingObj.documents && (administrativeSanctionLNG.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.description && (administrativeSanctionLNG.description = incomingObj.description);
@@ -439,6 +441,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.outcomeStatus && (administrativeSanctionNRCED.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (administrativeSanctionNRCED.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (administrativeSanctionNRCED.penalty = incomingObj.penalty);
+  incomingObj.documents && (administrativeSanctionNRCED.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.summary && (administrativeSanctionNRCED.summary = incomingObj.summary);

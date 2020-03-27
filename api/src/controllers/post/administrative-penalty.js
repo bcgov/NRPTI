@@ -195,6 +195,7 @@ exports.createMaster = async function (args, res, next, incomingObj, flavourIds)
   incomingObj.outcomeStatus && (administrativePenalty.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (administrativePenalty.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (administrativePenalty.penalty = incomingObj.penalty);
+  incomingObj.documents && (administrativePenalty.documents = incomingObj.documents);
 
   // set meta
   administrativePenalty.addedBy = args.swagger.params.auth_payload.displayName;
@@ -315,6 +316,7 @@ exports.createLNG = async function (args, res, next, incomingObj) {
   incomingObj.outcomeStatus && (administrativePenaltyLNG.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (administrativePenaltyLNG.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (administrativePenaltyLNG.penalty = incomingObj.penalty);
+  incomingObj.documents && (administrativePenaltyLNG.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.description && (administrativePenaltyLNG.description = incomingObj.description);
@@ -445,6 +447,7 @@ exports.createNRCED = async function (args, res, next, incomingObj) {
   incomingObj.outcomeStatus && (administrativePenaltyNRCED.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (administrativePenaltyNRCED.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (administrativePenaltyNRCED.penalty = incomingObj.penalty);
+  incomingObj.documents && (administrativePenaltyNRCED.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.summary && (administrativePenaltyNRCED.summary = incomingObj.summary);

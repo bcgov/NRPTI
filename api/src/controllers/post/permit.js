@@ -145,6 +145,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.projectName && (permit.projectName = incomingObj.projectName);
   incomingObj.location && (permit.location = incomingObj.location);
   incomingObj.centroid && (permit.centroid = incomingObj.centroid);
+  incomingObj.documents && (permit.documents = incomingObj.documents);
 
   // set meta
   permit.addedBy = args.swagger.params.auth_payload.displayName;
@@ -235,6 +236,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.projectName && (permitLNG.projectName = incomingObj.projectName);
   incomingObj.location && (permitLNG.location = incomingObj.location);
   incomingObj.centroid && (permitLNG.centroid = incomingObj.centroid);
+  incomingObj.documents && (permitLNG.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.description && (permitLNG.description = incomingObj.description);

@@ -180,6 +180,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.centroid && (order.centroid = incomingObj.centroid);
   incomingObj.outcomeStatus && (order.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (order.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.documents && (order.documents = incomingObj.documents);
 
   // set meta
   order.addedBy = args.swagger.params.auth_payload.displayName;
@@ -291,6 +292,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.centroid && (orderLNG.centroid = incomingObj.centroid);
   incomingObj.outcomeStatus && (orderLNG.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (orderLNG.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.documents && (orderLNG.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.description && (orderLNG.description = incomingObj.description);
@@ -414,6 +416,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.centroid && (orderNRCED.centroid = incomingObj.centroid);
   incomingObj.outcomeStatus && (orderNRCED.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (orderNRCED.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.documents && (orderNRCED.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.summary && (orderNRCED.summary = incomingObj.summary);

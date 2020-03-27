@@ -182,6 +182,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.centroid && (warning.centroid = incomingObj.centroid);
   incomingObj.outcomeStatus && (warning.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (warning.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.documents && (warning.documents = incomingObj.documents);
 
   // set meta
   warning.addedBy = args.swagger.params.auth_payload.displayName;
@@ -295,6 +296,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.centroid && (warningLNG.centroid = incomingObj.centroid);
   incomingObj.outcomeStatus && (warningLNG.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (warningLNG.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.documents && (warningLNG.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.description && (warningLNG.description = incomingObj.description);
@@ -420,6 +422,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.centroid && (warningNRCED.centroid = incomingObj.centroid);
   incomingObj.outcomeStatus && (warningNRCED.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (warningNRCED.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.documents && (warningNRCED.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.summary && (warningNRCED.summary = incomingObj.summary);

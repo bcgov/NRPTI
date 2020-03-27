@@ -47,7 +47,11 @@ exports.editRecord = async function(args, res, next, incomingObj) {
       if (incomingObj.PermitLNG._id) {
         observables.push(this.editLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.PermitLNG }));
       } else {
-        observables.push(PermitPost.createLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.PermitLNG }));
+        const masterRecord = await PutUtils.fetchMasterForCreateFlavour('Permit', incomingObj._id);
+
+        observables.push(
+          PermitPost.createLNG(args, res, next, { ...masterRecord, ...flavourIncomingObj, ...incomingObj.PermitLNG })
+        );
       }
 
       delete incomingObj.PermitLNG;
@@ -190,11 +194,11 @@ exports.editLNG = async function(args, res, next, incomingObj) {
   let updateObj = { $set: sanitizedObj };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    updateObj['$addToSet'] = { read: 'public' };
+    updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
-    updateObj['$pull'] = { read: 'public' };
+    updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
   }

@@ -183,6 +183,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.centroid && (inspection.centroid = incomingObj.centroid);
   incomingObj.outcomeStatus && (inspection.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (inspection.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.documents && (inspection.documents = incomingObj.documents);
 
   // set meta
   inspection.addedBy = args.swagger.params.auth_payload.displayName;
@@ -297,6 +298,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.centroid && (inspectionLNG.centroid = incomingObj.centroid);
   incomingObj.outcomeStatus && (inspectionLNG.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (inspectionLNG.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.documents && (inspectionLNG.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.description && (inspectionLNG.description = incomingObj.description);
@@ -430,6 +432,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (inspectionNRCED.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (inspectionNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (inspectionNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
+  incomingObj.documents && (inspectionNRCED.documents = incomingObj.documents);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {

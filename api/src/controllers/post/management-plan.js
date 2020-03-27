@@ -132,6 +132,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.projectName && (managementPlan.projectName = incomingObj.projectName);
   incomingObj.location && (managementPlan.location = incomingObj.location);
   incomingObj.centroid && (managementPlan.centroid = incomingObj.centroid);
+  incomingObj.documents && (managementPlan.documents = incomingObj.documents);
 
   // set meta
   managementPlan.addedBy = args.swagger.params.auth_payload.displayName;
@@ -209,6 +210,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.projectName && (managementPlanLNG.projectName = incomingObj.projectName);
   incomingObj.location && (managementPlanLNG.location = incomingObj.location);
   incomingObj.centroid && (managementPlanLNG.centroid = incomingObj.centroid);
+  incomingObj.documents && (managementPlanLNG.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.description && (managementPlanLNG.description = incomingObj.description);

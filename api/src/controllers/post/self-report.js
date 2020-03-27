@@ -145,6 +145,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.projectName && (selfReport.projectName = incomingObj.projectName);
   incomingObj.location && (selfReport.location = incomingObj.location);
   incomingObj.centroid && (selfReport.centroid = incomingObj.centroid);
+  incomingObj.documents && (selfReportNRCED.documents = incomingObj.documents);
 
   // set meta
   selfReport.addedBy = args.swagger.params.auth_payload.displayName;
@@ -237,6 +238,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.projectName && (selfReportLNG.projectName = incomingObj.projectName);
   incomingObj.location && (selfReportLNG.location = incomingObj.location);
   incomingObj.centroid && (selfReportLNG.centroid = incomingObj.centroid);
+  incomingObj.documents && (selfReportLNG.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.description && (selfReportLNG.description = incomingObj.description);

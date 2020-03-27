@@ -47,8 +47,11 @@ exports.editRecord = async function(args, res, next, incomingObj) {
       if (incomingObj.ConstructionPlanLNG._id) {
         observables.push(this.editLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.ConstructionPlanLNG }));
       } else {
+        const masterRecord = await PutUtils.fetchMasterForCreateFlavour('ConstructionPlan', incomingObj._id);
+
         observables.push(
           ConstructionPlanPost.createLNG(args, res, next, {
+            ...masterRecord,
             ...flavourIncomingObj,
             ...incomingObj.ConstructionPlanLNG
           })
@@ -197,11 +200,11 @@ exports.editLNG = async function(args, res, next, incomingObj) {
   let updateObj = { $set: sanitizedObj };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    updateObj['$addToSet'] = { read: 'public' };
+    updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
-    updateObj['$pull'] = { read: 'public' };
+    updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
   }

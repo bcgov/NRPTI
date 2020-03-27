@@ -184,6 +184,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.outcomeStatus && (ticket.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (ticket.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (ticket.penalty = incomingObj.penalty);
+  incomingObj.documents && (ticket.documents = incomingObj.documents);
 
   // set meta
   ticket.addedBy = args.swagger.params.auth_payload.displayName;
@@ -299,6 +300,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.outcomeStatus && (ticketLNG.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (ticketLNG.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (ticketLNG.penalty = incomingObj.penalty);
+  incomingObj.documents && (ticketLNG.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.description && (ticketLNG.description = incomingObj.description);
@@ -424,6 +426,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.outcomeStatus && (ticketNRCED.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (ticketNRCED.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (ticketNRCED.penalty = incomingObj.penalty);
+  incomingObj.documents && (ticketNRCED.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.summary && (ticketNRCED.summary = incomingObj.summary);

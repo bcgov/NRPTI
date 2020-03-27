@@ -189,6 +189,7 @@ exports.createMaster = async function (args, res, next, incomingObj, flavourIds)
   incomingObj.outcomeStatus && (restorativeJustice.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (restorativeJustice.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (restorativeJustice.penalty = incomingObj.penalty);
+  incomingObj.documents && (restorativeJustice.documents = incomingObj.documents);
 
   // set meta
   restorativeJustice.addedBy = args.swagger.params.auth_payload.displayName;
@@ -309,6 +310,7 @@ exports.createLNG = async function (args, res, next, incomingObj) {
   incomingObj.outcomeStatus && (restorativeJusticeLNG.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (restorativeJusticeLNG.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (restorativeJusticeLNG.penalty = incomingObj.penalty);
+  incomingObj.documents && (restorativeJusticeLNG.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.description && (restorativeJusticeLNG.description = incomingObj.description);
@@ -439,6 +441,7 @@ exports.createNRCED = async function (args, res, next, incomingObj) {
   incomingObj.outcomeStatus && (restorativeJusticeNRCED.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (restorativeJusticeNRCED.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (restorativeJusticeNRCED.penalty = incomingObj.penalty);
+  incomingObj.documents && (restorativeJusticeNRCED.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.summary && (restorativeJusticeNRCED.summary = incomingObj.summary);

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 const PutUtils = require('../../utils/put-utils');
 const PostUtils = require('../../utils/post-utils');
-// const QueryUtils = require('../../utils/query-utils');
+const QueryUtils = require('../../utils/query-utils');
 const AdministrativeSanctionPost = require('../post/administrative-sanction');
 
 /**
@@ -56,8 +56,11 @@ exports.editRecord = async function(args, res, next, incomingObj) {
           this.editLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.AdministrativeSanctionLNG })
         );
       } else {
+        const masterRecord = await PutUtils.fetchMasterForCreateFlavour('AdministrativeSanction', incomingObj._id);
+
         observables.push(
           AdministrativeSanctionPost.createLNG(args, res, next, {
+            ...masterRecord,
             ...flavourIncomingObj,
             ...incomingObj.AdministrativeSanctionLNG
           })
@@ -73,8 +76,11 @@ exports.editRecord = async function(args, res, next, incomingObj) {
           this.editNRCED(args, res, next, { ...flavourIncomingObj, ...incomingObj.AdministrativeSanctionNRCED })
         );
       } else {
+        const masterRecord = await PutUtils.fetchMasterForCreateFlavour('AdministrativeSanction', incomingObj._id);
+
         observables.push(
           AdministrativeSanctionPost.createNRCED(args, res, next, {
+            ...masterRecord,
             ...flavourIncomingObj,
             ...incomingObj.AdministrativeSanctionNRCED
           })
@@ -239,25 +245,25 @@ exports.editLNG = async function(args, res, next, incomingObj) {
   let updateObj = { $set: sanitizedObj };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    updateObj['$addToSet'] = { read: 'public' };
+    updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
 
     // TODO this currently fails because dirty fields (PTI-341) sets the read/write fields to null when it should always be an array, and mongo fails to save as a result.  Enable when fixed.
-    // if (!QueryUtils.isRecordAnonymous(incomingObj)) {
-    //   updateObj['$addToSet'] = { 'issuedTo.read': 'public' };
-    // }
+    if (!QueryUtils.isRecordAnonymous(incomingObj)) {
+      updateObj.$addToSet['issuedTo.read'] = 'public';
+    }
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
-    updateObj['$pull'] = { read: 'public' };
+    updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
   }
 
   // TODO this currently fails because dirty fields (PTI-341) sets the read/write fields to null when it should always be an array, and mongo fails to save as a result.  Enable when fixed.
-  // // check if a condition changed that would cause the entity information to no longer be public (anonymous)
-  // if (QueryUtils.isRecordAnonymous(incomingObj)) {
-  //   updateObj['$pull'] = { 'issuedTo.read': 'public' };
-  // }
+  // check if a condition changed that would cause the entity information to no longer be public (anonymous)
+  if (QueryUtils.isRecordAnonymous(incomingObj)) {
+    updateObj.$pull['issuedTo.read'] = 'public';
+  }
 
   updateObj.$set['dateUpdated'] = new Date();
 
@@ -321,25 +327,25 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
   let updateObj = { $set: sanitizedObj };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    updateObj['$addToSet'] = { read: 'public' };
+    updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
 
     // TODO this currently fails because dirty fields (PTI-341) sets the read/write fields to null when it should always be an array, and mongo fails to save as a result.  Enable when fixed.
-    // if (!QueryUtils.isRecordAnonymous(incomingObj)) {
-    //   updateObj['$addToSet'] = { 'issuedTo.read': 'public' };
-    // }
+    if (!QueryUtils.isRecordAnonymous(incomingObj)) {
+      updateObj.$addToSet['issuedTo.read'] = 'public';
+    }
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
-    updateObj['$pull'] = { read: 'public' };
+    updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
   }
 
   // TODO this currently fails because dirty fields (PTI-341) sets the read/write fields to null when it should always be an array, and mongo fails to save as a result.  Enable when fixed.
-  // // check if a condition changed that would cause the entity information to no longer be public (anonymous)
-  // if (QueryUtils.isRecordAnonymous(incomingObj)) {
-  //   updateObj['$pull'] = { 'issuedTo.read': 'public' };
-  // }
+  // check if a condition changed that would cause the entity information to no longer be public (anonymous)
+  if (QueryUtils.isRecordAnonymous(incomingObj)) {
+    updateObj.$pull['issuedTo.read'] = 'public';
+  }
 
   updateObj.$set['dateUpdated'] = new Date();
 
