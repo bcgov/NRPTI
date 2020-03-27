@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ChangeDetectorRef, SimpleChanges, OnChanges } from '@angular/core';
 import { Entity } from '../../models/master/common-models/entity';
-import { ENTITY_TYPE } from '../../utils/entity-type-enum';
+import { ENTITY_TYPE } from '../../models/master/common-models/entity';
 
 @Component({
   selector: 'app-entity-detail',
