@@ -1,6 +1,4 @@
 import { Legislation } from '../models/master/common-models/legislation';
-import { Entity } from '../models/master/common-models/entity';
-import { ENTITY_TYPE } from './entity-type-enum';
 
 export class Utils {
   /**
@@ -38,36 +36,6 @@ export class Utils {
     }
 
     return legistrationStrings.join(' ');
-  }
-
-  /**
-   * Given an Entity object, return a formatted entity name string.
-   *
-   * @static
-   * @param {Entity} obj
-   * @returns {string} formatted entity string, or empty string if no entity values are set.
-   * @memberof Utils
-   */
-  public static buildEntityString(obj: Entity): string {
-    if (!obj) {
-      return '';
-    }
-
-    if (obj.type === ENTITY_TYPE.Company) {
-      return obj.companyName;
-    }
-
-    if (obj.type === ENTITY_TYPE.IndividualCombined) {
-      return obj.fullName;
-    }
-
-    if (!obj.firstName && !obj.middleName && !obj.lastName) {
-      return '';
-    }
-
-    if (obj.type === ENTITY_TYPE.Individual) {
-      return [[obj.lastName || '-', obj.firstName || '-'].join(', '), obj.middleName || '-'].join(' ');
-    }
   }
 
   public static setDocumentForm(newDocuments) {

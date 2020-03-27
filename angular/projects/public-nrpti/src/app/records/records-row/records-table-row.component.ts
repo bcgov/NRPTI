@@ -7,7 +7,6 @@ import { FactoryService } from '../../services/factory.service';
 import { RecordUtils } from '../utils/record-utils';
 import { takeUntil } from 'rxjs/operators';
 import { Entity } from '../../../../../common/src/app/models/master/common-models/entity';
-import { Utils as CommonUtils } from '../../../../../common/src/app/utils/utils';
 
 @Component({
   selector: 'tr[app-records-table-row]',
@@ -45,7 +44,7 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
 
   populateTextFields() {
     if (this.rowData && this.rowData.issuedTo) {
-      this.entityString = CommonUtils.buildEntityString(new Entity(this.rowData.issuedTo));
+      this.entityString = new Entity(this.rowData.issuedTo).getEntityNameString();
     }
   }
 

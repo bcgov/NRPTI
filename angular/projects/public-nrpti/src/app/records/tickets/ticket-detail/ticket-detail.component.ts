@@ -2,8 +2,8 @@ import { Component, OnInit, ChangeDetectorRef, Input, OnDestroy } from '@angular
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
-import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { Entity } from '../../../../../../common/src/app/models/master/common-models/entity';
+import { TicketNRCED } from '../../../../../../common/src/app/models';
 
 @Component({
   selector: 'app-ticket-detail',
@@ -24,6 +24,8 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.data) {
+      this.data = new TicketNRCED(this.data);
+
       this.populateTextFields();
 
       this.loading = false;
@@ -39,7 +41,7 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
       }
 
       // If data was passed in directly, take it over anything in the route resolver.
-      this.data = (res.records[0] && res.records[0].data) || [];
+      this.data = (res.records[0] && res.records[0].data && new TicketNRCED(res.records[0].data)) || null;
 
       this.populateTextFields();
 
@@ -50,7 +52,7 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
 
   populateTextFields() {
     if (this.data && this.data.issuedTo) {
-      this.entityString = CommonUtils.buildEntityString(new Entity(this.data.issuedTo));
+      this.entityString = new Entity(this.data.issuedTo).getEntityNameString();
     }
   }
 
