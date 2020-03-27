@@ -6,10 +6,7 @@ import { ApiService } from './api.service';
 import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
-import {
-  Ticket,
-  Warning
-} from '../../../../common/src/app/models/master';
+import { Warning } from '../../../../common/src/app/models/master';
 import { TaskService, ITaskParams } from './task.service';
 import { DocumentService } from './document.service';
 
@@ -409,7 +406,7 @@ export class FactoryService {
   }
 
   // Tickets
-  public createTicket(ticket: Ticket): Observable<object> {
+  public createTicket(ticket: any): Observable<object> {
     const outboundObject = {
       tickets: [ticket]
     };
@@ -418,7 +415,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editTicket(ticket: Ticket): Observable<object> {
+  public editTicket(ticket: any): Observable<object> {
     const outboundObject = {
       tickets: [ticket]
     };
