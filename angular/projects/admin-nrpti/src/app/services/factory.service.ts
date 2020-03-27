@@ -7,7 +7,6 @@ import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import {
-  Permit,
   SelfReport,
   RestorativeJustice,
   Ticket,
@@ -344,7 +343,7 @@ export class FactoryService {
   }
 
   // Permits
-  public createPermit(permit: Permit): Observable<object> {
+  public createPermit(permit: any): Observable<object> {
     const outboundObject = {
       permits: [permit]
     };
@@ -353,7 +352,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editPermit(permit: Permit): Observable<object> {
+  public editPermit(permit: any): Observable<object> {
     const outboundObject = {
       permits: [permit]
     };
