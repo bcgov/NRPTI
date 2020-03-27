@@ -6,14 +6,7 @@ import { ApiService } from './api.service';
 import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
-import {
-  Permit,
-  SelfReport,
-  RestorativeJustice,
-  Ticket,
-  Warning,
-  ManagementPlan
-} from '../../../../common/src/app/models/master';
+import { Permit, RestorativeJustice, Ticket, Warning, ManagementPlan } from '../../../../common/src/app/models/master';
 import { TaskService, ITaskParams } from './task.service';
 import { DocumentService } from './document.service';
 
@@ -379,7 +372,7 @@ export class FactoryService {
   }
 
   // SelfReports
-  public createSelfReport(selfReport: SelfReport): Observable<object> {
+  public createSelfReport(selfReport: any): Observable<object> {
     const outboundObject = {
       selfReports: [selfReport]
     };
@@ -388,7 +381,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editSelfReport(selfReport: SelfReport): Observable<object> {
+  public editSelfReport(selfReport: any): Observable<object> {
     const outboundObject = {
       selfReports: [selfReport]
     };
