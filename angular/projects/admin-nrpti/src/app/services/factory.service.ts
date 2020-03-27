@@ -8,7 +8,6 @@ import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import {
   Inspection,
-  Permit,
   SelfReport,
   RestorativeJustice,
   Ticket,
