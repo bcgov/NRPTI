@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectorRef, Input, OnDestroy } from '@angular
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
-import { Entity } from '../../../../../../common/src/app/models/master/common-models/entity';
 import { OrderNRCED } from '../../../../../../common/src/app/models';
 
 @Component({
@@ -18,15 +17,11 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
   public loading = true;
   public activeTab = 'detail';
 
-  public entityString = '';
-
   constructor(public route: ActivatedRoute, public router: Router, public _changeDetectionRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     if (this.data) {
       this.data = new OrderNRCED(this.data);
-
-      this.populateTextFields();
 
       this.loading = false;
       this._changeDetectionRef.detectChanges();
@@ -43,17 +38,9 @@ export class OrderDetailComponent implements OnInit, OnDestroy {
       // If data was passed in directly, take it over anything in the route resolver.
       this.data = (res.records[0] && res.records[0].data && new OrderNRCED(res.records[0].data)) || null;
 
-      this.populateTextFields();
-
       this.loading = false;
       this._changeDetectionRef.detectChanges();
     });
-  }
-
-  populateTextFields() {
-    if (this.data && this.data.issuedTo) {
-      this.entityString = new Entity(this.data.issuedTo).getEntityNameString();
-    }
   }
 
   activateTab(tabLabel: string): void {
