@@ -241,7 +241,6 @@ exports.editLNG = async function(args, res, next, incomingObj) {
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
 
-    // TODO this currently fails because dirty fields (PTI-341) sets the read/write fields to null when it should always be an array, and mongo fails to save as a result.  Enable when fixed.
     if (!QueryUtils.isRecordAnonymous(incomingObj)) {
       updateObj.$addToSet['issuedTo.read'] = 'public';
     }
@@ -251,7 +250,6 @@ exports.editLNG = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  // TODO this currently fails because dirty fields (PTI-341) sets the read/write fields to null when it should always be an array, and mongo fails to save as a result.  Enable when fixed.
   // check if a condition changed that would cause the entity information to no longer be public (anonymous)
   if (QueryUtils.isRecordAnonymous(incomingObj)) {
     updateObj.$pull['issuedTo.read'] = 'public';
@@ -319,7 +317,6 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
 
-    // TODO this currently fails because dirty fields (PTI-341) sets the read/write fields to null when it should always be an array, and mongo fails to save as a result.  Enable when fixed.
     if (!QueryUtils.isRecordAnonymous(incomingObj)) {
       updateObj.$addToSet['issuedTo.read'] = 'public';
     }
@@ -329,7 +326,6 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  // TODO this currently fails because dirty fields (PTI-341) sets the read/write fields to null when it should always be an array, and mongo fails to save as a result.  Enable when fixed.
   // check if a condition changed that would cause the entity information to no longer be public (anonymous)
   if (QueryUtils.isRecordAnonymous(incomingObj)) {
     updateObj.$pull['issuedTo.read'] = 'public';
