@@ -4,7 +4,6 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Picklists } from '../../../utils/constants/record-constants';
-import { ManagementPlan } from '../../../../../../common/src/app/models/master';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -26,7 +25,6 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
 
   // Flavour data
   public lngFlavour = null;
-  public lngPublishStatus = 'Unpublished';
   public lngPublishSubtext = 'Not published';
 
   // Pick lists
@@ -44,7 +42,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
     private factoryService: FactoryService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -76,7 +74,6 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
       switch (flavour._schemaName) {
         case 'ManagementPlanLNG':
           this.lngFlavour = flavour;
-          this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
           this.lngFlavour.read.includes('public') &&
             (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(
               new Date(this.lngFlavour.datePublished)
@@ -96,7 +93,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
+        ''
       ),
       agency: new FormControl((this.currentRecord && this.currentRecord.agency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -118,7 +115,10 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
-          ''
+        ''
+      ),
+      publishLng: new FormControl(
+        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
       )
     });
   }
@@ -127,10 +127,10 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
     this.router.navigate(['records', 'management-plans', this.currentRecord._id, 'detail']);
   }
 
-  togglePublish(flavour) {
+  togglePublish(event, flavour) {
     switch (flavour) {
       case 'lng':
-        this.lngPublishStatus = this.lngPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
+        this.myForm.controls.publishLng.setValue(event);
         break;
       default:
         break;
@@ -146,39 +146,46 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
     // projectName
     // documentURL
 
-    // TODO: For editing we should create an object with only the changed fields.
-    const managementPlan = new ManagementPlan({
-      recordName: this.myForm.controls.recordName.value,
-      recordType: 'Management Plan',
-      dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
-      agency: this.myForm.controls.agency.value,
-      author: this.myForm.controls.author.value,
-      issuedTo: this.myForm.controls.issuedTo.value,
-      projectName: this.myForm.controls.projectName.value,
-      location: this.myForm.controls.location.value,
-      centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],
-      outcomeStatus: this.myForm.controls.outcomeStatus.value,
-      outcomeDescription: this.myForm.controls.outcomeDescription.value,
-      documents: this.currentRecord && this.currentRecord.documents
-    });
+    const managementPlan = {};
+    this.myForm.controls.recordName.dirty && (managementPlan['recordName'] = this.myForm.controls.recordName.value);
+    this.myForm.controls.dateIssued.dirty &&
+      (managementPlan['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
+    this.myForm.controls.agency.dirty && (managementPlan['agency'] = this.myForm.controls.agency.value);
+    this.myForm.controls.author.dirty && (managementPlan['author'] = this.myForm.controls.author.value);
+    this.myForm.controls.issuedTo.dirty && (managementPlan['issuedTo'] = this.myForm.controls.issuedTo.value);
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    if (managementPlan.projectName === 'LNG Canada') {
-      managementPlan._epicProjectId = EpicProjectIds.lngCanadaId;
-    } else if (managementPlan.projectName === 'Coastal Gaslink') {
-      managementPlan._epicProjectId = EpicProjectIds.coastalGaslinkId;
+    this.myForm.controls.projectName.dirty && (managementPlan['projectName'] = this.myForm.controls.projectName.value);
+    if (managementPlan['projectName'] === 'LNG Canada') {
+      managementPlan['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+    } else if (managementPlan['projectName'] === 'Coastal Gaslink') {
+      managementPlan['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
     }
 
-    // Publishing logic
-    managementPlan.ManagementPlanLNG = {
-      relatedPhase: this.myForm.controls.lngRelatedPhase.value,
-      description: this.myForm.controls.lngDescription.value
-    };
-    if (this.lngPublishStatus === 'Published') {
-      managementPlan.ManagementPlanLNG['addRole'] = 'public';
-    } else if (this.isEditing && this.lngPublishStatus === 'Unpublished') {
-      managementPlan.ManagementPlanLNG['removeRole'] = 'public';
+    this.myForm.controls.location.dirty && (managementPlan['location'] = this.myForm.controls.location.value);
+    (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
+      (managementPlan['centroid'] = [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value]);
+    this.myForm.controls.outcomeStatus.dirty &&
+      (managementPlan['outcomeStatus'] = this.myForm.controls.outcomeStatus.value);
+    this.myForm.controls.outcomeDescription.dirty &&
+      (managementPlan['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
+
+    // LNG flavour
+    if (this.myForm.controls.lngDescription.dirty ||
+      this.myForm.controls.lngRelatedPhase.dirty
+      || this.myForm.controls.publishLng.dirty
+    ) {
+      managementPlan['ManagementPlanLNG'] = {};
+    }
+    this.myForm.controls.lngDescription.dirty &&
+      (managementPlan['ManagementPlanLNG']['description'] = this.myForm.controls.lngDescription.value);
+    this.myForm.controls.lngRelatedPhase.dirty &&
+      (managementPlan['ManagementPlanLNG']['relatedPhase'] = this.myForm.controls.lngRelatedPhase.value);
+    if (this.myForm.controls.publishLng.dirty && this.myForm.controls.publishLng.value) {
+      managementPlan['ManagementPlanLNG']['addRole'] = 'public';
+    } else if (this.myForm.controls.publishLng.dirty && !this.myForm.controls.publishLng.value) {
+      managementPlan['ManagementPlanLNG']['removeRole'] = 'public';
     }
 
     if (!this.isEditing) {
@@ -196,9 +203,10 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
         this.router.navigate(['records']);
       });
     } else {
-      managementPlan._id = this.currentRecord._id;
+      managementPlan['_id'] = this.currentRecord._id;
 
-      this.lngFlavour && (managementPlan.ManagementPlanLNG['_id'] = this.lngFlavour._id);
+      this.lngFlavour && managementPlan['ManagementPlanLNG'] &&
+        (managementPlan['ManagementPlanLNG']['_id'] = this.lngFlavour._id);
 
       this.factoryService.editManagementPlan(managementPlan).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
