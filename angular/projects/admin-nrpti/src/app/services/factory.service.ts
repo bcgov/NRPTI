@@ -7,7 +7,6 @@ import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import {
-  SelfReport,
   Ticket,
   Warning
 } from '../../../../common/src/app/models/master';
@@ -376,7 +375,7 @@ export class FactoryService {
   }
 
   // SelfReports
-  public createSelfReport(selfReport: SelfReport): Observable<object> {
+  public createSelfReport(selfReport: any): Observable<object> {
     const outboundObject = {
       selfReports: [selfReport]
     };
@@ -385,7 +384,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editSelfReport(selfReport: SelfReport): Observable<object> {
+  public editSelfReport(selfReport: any): Observable<object> {
     const outboundObject = {
       selfReports: [selfReport]
     };
