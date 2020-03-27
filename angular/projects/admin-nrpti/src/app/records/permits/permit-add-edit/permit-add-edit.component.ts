@@ -4,7 +4,6 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Picklists } from '../../../utils/constants/record-constants';
-import { Permit } from '../../../../../../common/src/app/models/master';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -26,7 +25,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
 
   // Flavour data
   public lngFlavour = null;
-  public lngPublishStatus = 'Unpublished';
   public lngPublishSubtext = 'Not published';
 
   // Pick lists
@@ -77,7 +75,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       switch (flavour._schemaName) {
         case 'PermitLNG':
           this.lngFlavour = flavour;
-          this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
           this.lngFlavour.read.includes('public') &&
             (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(
               new Date(this.lngFlavour.datePublished)
@@ -127,7 +124,10 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       ),
 
       // LNG
-      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || '')
+      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
+      publishLng: new FormControl(
+        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
+      )
     });
   }
 
@@ -135,10 +135,10 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     this.router.navigate(['records', 'permits', this.currentRecord._id, 'detail']);
   }
 
-  togglePublish(flavour) {
+  togglePublish(event, flavour) {
     switch (flavour) {
       case 'lng':
-        this.lngPublishStatus = this.lngPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
+        this.myForm.controls.publishLng.setValue(event);
         break;
       default:
         break;
@@ -154,42 +154,54 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     // legislation
     // projectName
 
-    // TODO: For editing we should create an object with only the changed fields.
-    const permit = new Permit({
-      recordName: this.myForm.controls.recordName.value,
-      recordType: 'Permit',
-      recordSubtype: this.myForm.controls.recordSubtype.value,
-      dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
-      issuingAgency: this.myForm.controls.issuingAgency.value,
-      legislation: {
+    const permit = {};
+    this.myForm.controls.recordName.dirty && (permit['recordName'] = this.myForm.controls.recordName.value);
+    this.myForm.controls.recordSubtype.dirty && (permit['recordSubtype'] = this.myForm.controls.recordSubtype.value);
+    this.myForm.controls.dateIssued.dirty &&
+      (permit['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
+    this.myForm.controls.issuingAgency.dirty && (permit['issuingAgency'] = this.myForm.controls.issuingAgency.value);
+
+    if (
+      this.myForm.controls.act.dirty ||
+      this.myForm.controls.regulation.dirty ||
+      this.myForm.controls.section.dirty ||
+      this.myForm.controls.subSection.dirty ||
+      this.myForm.controls.paragraph.dirty
+    ) {
+      permit['legislation'] = {
         act: this.myForm.controls.act.value,
         regulation: this.myForm.controls.regulation.value,
         section: this.myForm.controls.section.value,
         subSection: this.myForm.controls.subSection.value,
         paragraph: this.myForm.controls.paragraph.value
-      },
-      issuedTo: this.myForm.controls.issuedTo.value,
-      projectName: this.myForm.controls.projectName.value,
-      location: this.myForm.controls.location.value,
-      centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value]
-    });
+      };
+    }
+
+    this.myForm.controls.issuedTo.dirty && (permit['issuedTo'] = this.myForm.controls.issuedTo.value);
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    if (permit.projectName === 'LNG Canada') {
-      permit._epicProjectId = EpicProjectIds.lngCanadaId;
-    } else if (permit.projectName === 'Coastal Gaslink') {
-      permit._epicProjectId = EpicProjectIds.coastalGaslinkId;
+    this.myForm.controls.projectName.dirty && (permit['projectName'] = this.myForm.controls.projectName.value);
+    if (permit['projectName'] === 'LNG Canada') {
+      permit['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+    } else if (permit['projectName'] === 'Coastal Gaslink') {
+      permit['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
     }
 
-    // Publishing logic
-    permit.PermitLNG = {
-      description: this.myForm.controls.lngDescription.value
-    };
-    if (this.lngPublishStatus === 'Published') {
-      permit.PermitLNG['addRole'] = 'public';
-    } else if (this.isEditing && this.lngPublishStatus === 'Unpublished') {
-      permit.PermitLNG['removeRole'] = 'public';
+    this.myForm.controls.location.dirty && (permit['location'] = this.myForm.controls.location.value);
+    (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
+      (permit['centroid'] = [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value]);
+
+    // LNG flavour
+    if (this.myForm.controls.lngDescription.dirty || this.myForm.controls.publishLng.dirty) {
+      permit['PermitLNG'] = {};
+    }
+    this.myForm.controls.lngDescription.dirty &&
+      (permit['PermitLNG']['description'] = this.myForm.controls.lngDescription.value);
+    if (this.myForm.controls.publishLng.dirty && this.myForm.controls.publishLng.value) {
+      permit['PermitLNG']['addRole'] = 'public';
+    } else if (this.myForm.controls.publishLng.dirty && !this.myForm.controls.publishLng.value) {
+      permit['PermitLNG']['removeRole'] = 'public';
     }
 
     if (!this.isEditing) {
@@ -207,9 +219,9 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
         this.router.navigate(['records']);
       });
     } else {
-      permit._id = this.currentRecord._id;
+      permit['_id'] = this.currentRecord._id;
 
-      this.lngFlavour && (permit.PermitLNG['_id'] = this.lngFlavour._id);
+      this.lngFlavour && permit['PermitLNG'] && (permit['PermitLNG']['_id'] = this.lngFlavour._id);
 
       this.factoryService.editPermit(permit).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
