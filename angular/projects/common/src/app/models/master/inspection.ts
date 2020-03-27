@@ -21,18 +21,20 @@ export class Inspection {
   author: string;
   description: string;
   legislation: Legislation;
-  issuedTo: string; // epic value?
+  issuedTo: string;
   projectName: string;
   location: string;
   centroid: number[];
   outcomeStatus: string; // epic value?
   outcomeDescription: string; // out of scope?
+  documents: object[];
+
   dateAdded: Date;
   dateUpdated: Date;
+
   sourceDateAdded: Date;
   sourceDateUpdated: Date;
   sourceSystemRef: string;
-  documents: object[];
 
   InspectionNRCED: object;
   InspectionLNG: object;
@@ -52,7 +54,7 @@ export class Inspection {
     this.author = (obj && obj.author) || null;
     this.description = (obj && obj.description) || null;
     this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
-    this.issuedTo = (obj && obj.issuedTo) || null;
+    this.issuedTo = (obj && obj.issuedTo) || '';
     this.projectName = (obj && obj.projectName) || null;
     this.location = (obj && obj.location) || null;
     this.centroid = (obj && obj.centroid) || null;

@@ -4,7 +4,6 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Picklists } from '../../../utils/constants/record-constants';
-import { RestorativeJustice } from '../../../../../../common/src/app/models/master';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -27,8 +26,6 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
   // Flavour data
   public nrcedFlavour = null;
   public lngFlavour = null;
-  public lngPublishStatus = 'Unpublished';
-  public nrcedPublishStatus = 'Unpublished';
   public lngPublishSubtext = 'Not published';
   public nrcedPublishSubtext = 'Not published';
 
@@ -81,7 +78,6 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
       switch (flavour._schemaName) {
         case 'RestorativeJusticeLNG':
           this.lngFlavour = flavour;
-          this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
           this.lngFlavour.read.includes('public') &&
             (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(
               new Date(this.lngFlavour.datePublished)
@@ -89,7 +85,6 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
           break;
         case 'RestorativeJusticeNRCED':
           this.nrcedFlavour = flavour;
-          this.nrcedFlavour.read.includes('public') && (this.nrcedPublishStatus = 'Published');
           this.nrcedFlavour.read.includes('public') &&
             (this.nrcedPublishSubtext = `Published on ${this.utils.convertJSDateToString(
               new Date(this.nrcedFlavour.datePublished)
@@ -143,9 +138,15 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
 
       // NRCED
       nrcedSummary: new FormControl((this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.summary) || ''),
+      publishNrced: new FormControl(
+        (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false
+      ),
 
       // LNG
-      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || '')
+      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
+      publishLng: new FormControl(
+        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
+      )
     });
   }
 
@@ -153,13 +154,13 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
     this.router.navigate(['records', 'restorative-justices', this.currentRecord._id, 'detail']);
   }
 
-  togglePublish(flavour) {
+  togglePublish(event, flavour) {
     switch (flavour) {
       case 'lng':
-        this.lngPublishStatus = this.lngPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
+        this.myForm.controls.publishLng.setValue(event);
         break;
       case 'nrced':
-        this.nrcedPublishStatus = this.nrcedPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
+        this.myForm.controls.publishNrced.setValue(event);
         break;
       default:
         break;
@@ -175,54 +176,75 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
     // legislation
     // projectName
 
-    // TODO: For editing we should create an object with only the changed fields.
-    const restorativeJustice = new RestorativeJustice({
-      recordName: this.myForm.controls.recordName.value,
-      recordType: 'RestorativeJustice',
-      dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
-      issuingAgency: this.myForm.controls.issuingAgency.value,
-      author: this.myForm.controls.author.value,
-      legislation: {
+    const restorativeJustice = {};
+    this.myForm.controls.recordName.dirty && (restorativeJustice['recordName'] = this.myForm.controls.recordName.value);
+    this.myForm.controls.dateIssued.dirty &&
+      (restorativeJustice['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(
+        this.myForm.get('dateIssued').value
+      ));
+    this.myForm.controls.issuingAgency.dirty &&
+      (restorativeJustice['issuingAgency'] = this.myForm.controls.issuingAgency.value);
+    this.myForm.controls.author.dirty && (restorativeJustice['author'] = this.myForm.controls.author.value);
+
+    if (
+      this.myForm.controls.act.dirty ||
+      this.myForm.controls.regulation.dirty ||
+      this.myForm.controls.section.dirty ||
+      this.myForm.controls.subSection.dirty ||
+      this.myForm.controls.paragraph.dirty
+    ) {
+      restorativeJustice['legislation'] = {
         act: this.myForm.controls.act.value,
         regulation: this.myForm.controls.regulation.value,
         section: this.myForm.controls.section.value,
         subSection: this.myForm.controls.subSection.value,
         paragraph: this.myForm.controls.paragraph.value
-      },
-      issuedTo: this.myForm.controls.issuedTo.value,
-      projectName: this.myForm.controls.projectName.value,
-      location: this.myForm.controls.location.value,
-      centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],
-      outcomeStatus: this.myForm.controls.outcomeStatus.value,
-      outcomeDescription: this.myForm.controls.outcomeDescription.value,
-      penalty: this.myForm.controls.penalty.value
-    });
+      };
+    }
+
+    this.myForm.controls.issuedTo.dirty && (restorativeJustice['issuedTo'] = this.myForm.controls.issuedTo.value);
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    if (restorativeJustice.projectName === 'LNG Canada') {
-      restorativeJustice._epicProjectId = EpicProjectIds.lngCanadaId;
-    } else if (restorativeJustice.projectName === 'Coastal Gaslink') {
-      restorativeJustice._epicProjectId = EpicProjectIds.coastalGaslinkId;
+    this.myForm.controls.projectName.dirty &&
+      (restorativeJustice['projectName'] = this.myForm.controls.projectName.value);
+    if (restorativeJustice['projectName'] === 'LNG Canada') {
+      restorativeJustice['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+    } else if (restorativeJustice['projectName'] === 'Coastal Gaslink') {
+      restorativeJustice['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
     }
 
-    // Publishing logic
-    restorativeJustice.RestorativeJusticeNRCED = {
-      summary: this.myForm.controls.nrcedSummary.value
-    };
-    if (this.nrcedPublishStatus === 'Published') {
-      restorativeJustice.RestorativeJusticeNRCED['addRole'] = 'public';
-    } else if (this.isEditing && this.nrcedPublishStatus === 'Unpublished') {
-      restorativeJustice.RestorativeJusticeNRCED['removeRole'] = 'public';
+    this.myForm.controls.location.dirty && (restorativeJustice['location'] = this.myForm.controls.location.value);
+    (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
+      (restorativeJustice['centroid'] = [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value]);
+    this.myForm.controls.outcomeStatus.dirty &&
+      (restorativeJustice['outcomeStatus'] = this.myForm.controls.outcomeStatus.value);
+    this.myForm.controls.outcomeDescription.dirty &&
+      (restorativeJustice['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
+    this.myForm.controls.penalty.dirty && (restorativeJustice['penalty'] = this.myForm.controls.penalty.value);
+
+    // NRCED flavour
+    if (this.myForm.controls.nrcedSummary.dirty || this.myForm.controls.publishNrced.dirty) {
+      restorativeJustice['RestorativeJusticeNRCED'] = {};
+    }
+    this.myForm.controls.nrcedSummary.dirty &&
+      (restorativeJustice['RestorativeJusticeNRCED']['summary'] = this.myForm.controls.nrcedSummary.value);
+    if (this.myForm.controls.publishNrced.dirty && this.myForm.controls.publishNrced.value) {
+      restorativeJustice['RestorativeJusticeNRCED']['addRole'] = 'public';
+    } else if (this.myForm.controls.publishNrced.dirty && !this.myForm.controls.publishNrced.value) {
+      restorativeJustice['RestorativeJusticeNRCED']['removeRole'] = 'public';
     }
 
-    restorativeJustice.RestorativeJusticeLNG = {
-      description: this.myForm.controls.lngDescription.value
-    };
-    if (this.lngPublishStatus === 'Published') {
-      restorativeJustice.RestorativeJusticeLNG['addRole'] = 'public';
-    } else if (this.isEditing && this.lngPublishStatus === 'Unpublished') {
-      restorativeJustice.RestorativeJusticeLNG['removeRole'] = 'public';
+    // LNG flavour
+    if (this.myForm.controls.lngDescription.dirty || this.myForm.controls.publishLng.dirty) {
+      restorativeJustice['RestorativeJusticeLNG'] = {};
+    }
+    this.myForm.controls.lngDescription.dirty &&
+      (restorativeJustice['RestorativeJusticeLNG']['description'] = this.myForm.controls.lngDescription.value);
+    if (this.myForm.controls.publishLng.dirty && this.myForm.controls.publishLng.value) {
+      restorativeJustice['RestorativeJusticeLNG']['addRole'] = 'public';
+    } else if (this.myForm.controls.publishLng.dirty && !this.myForm.controls.publishLng.value) {
+      restorativeJustice['RestorativeJusticeLNG']['removeRole'] = 'public';
     }
 
     if (!this.isEditing) {
@@ -240,10 +262,14 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
         this.router.navigate(['records']);
       });
     } else {
-      restorativeJustice._id = this.currentRecord._id;
+      restorativeJustice['_id'] = this.currentRecord._id;
 
-      this.nrcedFlavour && (restorativeJustice.RestorativeJusticeNRCED['_id'] = this.nrcedFlavour._id);
-      this.lngFlavour && (restorativeJustice.RestorativeJusticeLNG['_id'] = this.lngFlavour._id);
+      this.nrcedFlavour &&
+        restorativeJustice['RestorativeJusticeNRCED'] &&
+        (restorativeJustice['RestorativeJusticeNRCED']['_id'] = this.nrcedFlavour._id);
+      this.lngFlavour &&
+        restorativeJustice['RestorativeJusticeLNG'] &&
+        (restorativeJustice['RestorativeJusticeLNG']['_id'] = this.lngFlavour._id);
 
       this.factoryService.editRestorativeJustice(restorativeJustice).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
