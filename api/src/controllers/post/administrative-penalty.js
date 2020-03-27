@@ -160,6 +160,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (administrativePenalty.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.offence && (administrativePenalty.offence = incomingObj.offence);
   incomingObj.issuedTo && (administrativePenalty.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (administrativePenalty.projectName = incomingObj.projectName);
   incomingObj.location && (administrativePenalty.location = incomingObj.location);
