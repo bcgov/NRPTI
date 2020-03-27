@@ -145,7 +145,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.projectName && (selfReport.projectName = incomingObj.projectName);
   incomingObj.location && (selfReport.location = incomingObj.location);
   incomingObj.centroid && (selfReport.centroid = incomingObj.centroid);
-  incomingObj.documents && (selfReportNRCED.documents = incomingObj.documents);
+  incomingObj.documents && (selfReport.documents = incomingObj.documents);
 
   // set meta
   selfReport.addedBy = args.swagger.params.auth_payload.displayName;

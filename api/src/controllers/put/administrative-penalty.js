@@ -3,7 +3,6 @@ const ObjectID = require('mongodb').ObjectID;
 const PutUtils = require('../../utils/put-utils');
 const PostUtils = require('../../utils/post-utils');
 const QueryUtils = require('../../utils/query-utils');
-const DocumentController = require('../document-controller');
 const AdministrativePenaltyPost = require('../post/administrative-penalty');
 
 /**
