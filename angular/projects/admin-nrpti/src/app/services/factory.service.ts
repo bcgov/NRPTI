@@ -7,13 +7,9 @@ import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import {
-  Inspection,
-  Permit,
   SelfReport,
   Ticket,
-  Warning,
-  ConstructionPlan,
-  ManagementPlan
+  Warning
 } from '../../../../common/src/app/models/master';
 import { TaskService, ITaskParams } from './task.service';
 import { DocumentService } from './document.service';
@@ -312,7 +308,7 @@ export class FactoryService {
   }
 
   // Inspections
-  public createInspection(inspection: Inspection): Observable<object> {
+  public createInspection(inspection: any): Observable<object> {
     const outboundObject = {
       inspections: [inspection]
     };
@@ -321,7 +317,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editInspection(inspection: Inspection): Observable<object> {
+  public editInspection(inspection: any): Observable<object> {
     const outboundObject = {
       inspections: [inspection]
     };
@@ -346,7 +342,7 @@ export class FactoryService {
   }
 
   // Permits
-  public createPermit(permit: Permit): Observable<object> {
+  public createPermit(permit: any): Observable<object> {
     const outboundObject = {
       permits: [permit]
     };
@@ -355,7 +351,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editPermit(permit: Permit): Observable<object> {
+  public editPermit(permit: any): Observable<object> {
     const outboundObject = {
       permits: [permit]
     };
@@ -482,7 +478,7 @@ export class FactoryService {
   }
 
   // Construction Plans
-  public createConstructionPlan(constructionPlan: ConstructionPlan): Observable<object> {
+  public createConstructionPlan(constructionPlan: any): Observable<object> {
     const outboundObject = {
       constructionPlans: [constructionPlan]
     };
@@ -491,7 +487,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editConstructionPlan(constructionPlan: ConstructionPlan): Observable<object> {
+  public editConstructionPlan(constructionPlan: any): Observable<object> {
     const outboundObject = {
       constructionPlans: [constructionPlan]
     };
@@ -499,7 +495,7 @@ export class FactoryService {
   }
 
   // Management Plans
-  public createManagementPlan(managementPLan: ManagementPlan): Observable<object> {
+  public createManagementPlan(managementPLan: any): Observable<object> {
     const outboundObject = {
       managementPlans: [managementPLan]
     };
@@ -508,7 +504,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editManagementPlan(managementPLan: ManagementPlan): Observable<object> {
+  public editManagementPlan(managementPLan: any): Observable<object> {
     const outboundObject = {
       managementPlans: [managementPLan]
     };
