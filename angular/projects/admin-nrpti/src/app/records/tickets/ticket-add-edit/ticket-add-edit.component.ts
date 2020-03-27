@@ -240,7 +240,7 @@ export class TicketAddEditComponent implements OnInit, OnDestroy {
       this.myForm.get('issuedTo.fullName').dirty ||
       this.myForm.get('issuedTo.dateOfBirth').dirty
     ) {
-      restorativeJustice['issuedTo'] = {
+      ticket['issuedTo'] = {
         type: this.myForm.get('issuedTo.type').value,
         companyName: this.myForm.get('issuedTo.companyName').value,
         firstName: this.myForm.get('issuedTo.firstName').value,
