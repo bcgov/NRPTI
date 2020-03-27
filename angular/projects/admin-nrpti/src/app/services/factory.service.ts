@@ -6,12 +6,7 @@ import { ApiService } from './api.service';
 import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
-import {
-  SelfReport,
-  RestorativeJustice,
-  Ticket,
-  Warning
-} from '../../../../common/src/app/models/master';
+import { SelfReport, RestorativeJustice, Ticket } from '../../../../common/src/app/models/master';
 import { TaskService, ITaskParams } from './task.service';
 import { DocumentService } from './document.service';
 
@@ -462,7 +457,7 @@ export class FactoryService {
   }
 
   // Warnings
-  public createWarning(warning: Warning): Observable<object> {
+  public createWarning(warning: any): Observable<object> {
     const outboundObject = {
       warnings: [warning]
     };
@@ -471,7 +466,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editWarning(warning: Warning): Observable<object> {
+  public editWarning(warning: any): Observable<object> {
     const outboundObject = {
       warnings: [warning]
     };

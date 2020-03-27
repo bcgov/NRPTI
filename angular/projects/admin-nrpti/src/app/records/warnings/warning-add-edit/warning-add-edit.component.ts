@@ -4,7 +4,6 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Picklists } from '../../../utils/constants/record-constants';
-import { Warning } from '../../../../../../common/src/app/models/master';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -27,8 +26,6 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
   // Flavour data
   public nrcedFlavour = null;
   public lngFlavour = null;
-  public lngPublishStatus = 'Unpublished';
-  public nrcedPublishStatus = 'Unpublished';
   public lngPublishSubtext = 'Not published';
   public nrcedPublishSubtext = 'Not published';
 
@@ -81,7 +78,6 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
       switch (flavour._schemaName) {
         case 'WarningLNG':
           this.lngFlavour = flavour;
-          this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
           this.lngFlavour.read.includes('public') &&
             (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(
               new Date(this.lngFlavour.datePublished)
@@ -89,7 +85,6 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
           break;
         case 'WarningNRCED':
           this.nrcedFlavour = flavour;
-          this.nrcedFlavour.read.includes('public') && (this.nrcedPublishStatus = 'Published');
           this.nrcedFlavour.read.includes('public') &&
             (this.nrcedPublishSubtext = `Published on ${this.utils.convertJSDateToString(
               new Date(this.nrcedFlavour.datePublished)
@@ -142,9 +137,15 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
 
       // NRCED
       nrcedSummary: new FormControl((this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.summary) || ''),
+      publishNrced: new FormControl(
+        (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false
+      ),
 
       // LNG
-      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || '')
+      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
+      publishLng: new FormControl(
+        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
+      )
     });
   }
 
@@ -152,13 +153,13 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
     this.router.navigate(['records', 'warnings', this.currentRecord._id, 'detail']);
   }
 
-  togglePublish(flavour) {
+  togglePublish(event, flavour) {
     switch (flavour) {
       case 'lng':
-        this.lngPublishStatus = this.lngPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
+        this.myForm.controls.publishLng.setValue(event);
         break;
       case 'nrced':
-        this.nrcedPublishStatus = this.nrcedPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
+        this.myForm.controls.publishNrced.setValue(event);
         break;
       default:
         break;
@@ -173,55 +174,70 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
     // _epicMilestoneId
     // legislation
     // projectName
-    // documents
 
-    // TODO: For editing we should create an object with only the changed fields.
-    const warning = new Warning({
-      recordName: this.myForm.controls.recordName.value,
-      recordType: 'Warning',
-      dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
-      issuingAgency: this.myForm.controls.issuingAgency.value,
-      author: this.myForm.controls.author.value,
-      legislation: {
+    const warning = {};
+    this.myForm.controls.recordName.dirty && (warning['recordName'] = this.myForm.controls.recordName.value);
+    this.myForm.controls.dateIssued.dirty &&
+      (warning['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
+    this.myForm.controls.issuingAgency.dirty && (warning['issuingAgency'] = this.myForm.controls.issuingAgency.value);
+    this.myForm.controls.author.dirty && (warning['author'] = this.myForm.controls.author.value);
+
+    if (
+      this.myForm.controls.act.dirty ||
+      this.myForm.controls.regulation.dirty ||
+      this.myForm.controls.section.dirty ||
+      this.myForm.controls.subSection.dirty ||
+      this.myForm.controls.paragraph.dirty
+    ) {
+      warning['legislation'] = {
         act: this.myForm.controls.act.value,
         regulation: this.myForm.controls.regulation.value,
         section: this.myForm.controls.section.value,
         subSection: this.myForm.controls.subSection.value,
         paragraph: this.myForm.controls.paragraph.value
-      },
-      issuedTo: this.myForm.controls.issuedTo.value,
-      projectName: this.myForm.controls.projectName.value,
-      location: this.myForm.controls.location.value,
-      centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],
-      outcomeStatus: this.myForm.controls.outcomeStatus.value,
-      outcomeDescription: this.myForm.controls.outcomeDescription.value
-    });
+      };
+    }
+
+    this.myForm.controls.issuedTo.dirty && (warning['issuedTo'] = this.myForm.controls.issuedTo.value);
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    if (warning.projectName === 'LNG Canada') {
-      warning._epicProjectId = EpicProjectIds.lngCanadaId;
-    } else if (warning.projectName === 'Coastal Gaslink') {
-      warning._epicProjectId = EpicProjectIds.coastalGaslinkId;
+    this.myForm.controls.projectName.dirty && (warning['projectName'] = this.myForm.controls.projectName.value);
+    if (warning['projectName'] === 'LNG Canada') {
+      warning['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+    } else if (warning['projectName'] === 'Coastal Gaslink') {
+      warning['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
     }
 
-    // Publishing logic
-    warning.WarningNRCED = {
-      summary: this.myForm.controls.nrcedSummary.value
-    };
-    if (this.nrcedPublishStatus === 'Published') {
-      warning.WarningNRCED['addRole'] = 'public';
-    } else if (this.isEditing && this.nrcedPublishStatus === 'Unpublished') {
-      warning.WarningNRCED['removeRole'] = 'public';
+    this.myForm.controls.location.dirty && (warning['location'] = this.myForm.controls.location.value);
+    (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
+      (warning['centroid'] = [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value]);
+    this.myForm.controls.outcomeStatus.dirty && (warning['outcomeStatus'] = this.myForm.controls.outcomeStatus.value);
+    this.myForm.controls.outcomeDescription.dirty &&
+      (warning['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
+
+    // NRCED flavour
+    if (this.myForm.controls.nrcedSummary.dirty || this.myForm.controls.publishNrced.dirty) {
+      warning['WarningNRCED'] = {};
+    }
+    this.myForm.controls.nrcedSummary.dirty &&
+      (warning['WarningNRCED']['summary'] = this.myForm.controls.nrcedSummary.value);
+    if (this.myForm.controls.publishNrced.dirty && this.myForm.controls.publishNrced.value) {
+      warning['WarningNRCED']['addRole'] = 'public';
+    } else if (this.myForm.controls.publishNrced.dirty && !this.myForm.controls.publishNrced.value) {
+      warning['WarningNRCED']['removeRole'] = 'public';
     }
 
-    warning.WarningLNG = {
-      description: this.myForm.controls.lngDescription.value
-    };
-    if (this.lngPublishStatus === 'Published') {
-      warning.WarningLNG['addRole'] = 'public';
-    } else if (this.isEditing && this.lngPublishStatus === 'Unpublished') {
-      warning.WarningLNG['removeRole'] = 'public';
+    // LNG flavour
+    if (this.myForm.controls.lngDescription.dirty || this.myForm.controls.publishLng.dirty) {
+      warning['WarningLNG'] = {};
+    }
+    this.myForm.controls.lngDescription.dirty &&
+      (warning['WarningLNG']['description'] = this.myForm.controls.lngDescription.value);
+    if (this.myForm.controls.publishLng.dirty && this.myForm.controls.publishLng.value) {
+      warning['WarningLNG']['addRole'] = 'public';
+    } else if (this.myForm.controls.publishLng.dirty && !this.myForm.controls.publishLng.value) {
+      warning['WarningLNG']['removeRole'] = 'public';
     }
 
     if (!this.isEditing) {
@@ -239,10 +255,10 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
         this.router.navigate(['records']);
       });
     } else {
-      warning._id = this.currentRecord._id;
+      warning['_id'] = this.currentRecord._id;
 
-      this.nrcedFlavour && (warning.WarningNRCED['_id'] = this.nrcedFlavour._id);
-      this.lngFlavour && (warning.WarningLNG['_id'] = this.lngFlavour._id);
+      this.nrcedFlavour && warning['WarningNRCED'] && (warning['WarningNRCED']['_id'] = this.nrcedFlavour._id);
+      this.lngFlavour && warning['WarningLNG'] && (warning['WarningLNG']['_id'] = this.lngFlavour._id);
 
       this.factoryService.editWarning(warning).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
