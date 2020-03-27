@@ -4,7 +4,6 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Picklists } from '../../../utils/constants/record-constants';
-import { Certificate } from '../../../../../../common/src/app/models/master';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -26,7 +25,6 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
 
   // Flavour data
   public lngFlavour = null;
-  public lngPublishStatus = 'Unpublished';
   public lngPublishSubtext = 'Not published';
 
   // Pick lists
@@ -76,7 +74,6 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       switch (flavour._schemaName) {
         case 'CertificateLNG':
           this.lngFlavour = flavour;
-          this.lngFlavour.read.includes('public') && (this.lngPublishStatus = 'Published');
           this.lngFlavour.read.includes('public') &&
             (this.lngPublishSubtext = `Published on ${this.utils.convertJSDateToString(
               new Date(this.lngFlavour.datePublished)
@@ -131,6 +128,9 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
           ''
+      ),
+      publishLng: new FormControl(
+        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
       )
     });
   }
@@ -139,10 +139,10 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
     this.router.navigate(['records', 'certificates', this.currentRecord._id, 'detail']);
   }
 
-  togglePublish(flavour) {
+  togglePublish(event, flavour) {
     switch (flavour) {
       case 'lng':
-        this.lngPublishStatus = this.lngPublishStatus === 'Unpublished' ? 'Published' : 'Unpublished';
+        this.myForm.controls.publishLng.setValue(event);
         break;
       default:
         break;
@@ -158,43 +158,56 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
     // legislation
     // projectName
 
-    // TODO: For editing we should create an object with only the changed fields.
-    const certificate = new Certificate({
-      recordName: this.myForm.controls.recordName.value,
-      recordType: 'Certificate',
-      recordSubtype: this.myForm.controls.recordSubtype.value,
-      dateIssued: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value),
-      issuingAgency: this.myForm.controls.issuingAgency.value,
-      legislation: {
+    const certificate = {};
+    this.myForm.controls.recordName.dirty && (certificate['recordName'] = this.myForm.controls.recordName.value);
+    this.myForm.controls.recordSubtype.dirty &&
+      (certificate['recordSubtype'] = this.myForm.controls.recordSubtype.value);
+    this.myForm.controls.dateIssued.dirty &&
+      (certificate['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
+    this.myForm.controls.issuingAgency.dirty &&
+      (certificate['issuingAgency'] = this.myForm.controls.issuingAgency.value);
+
+    if (
+      this.myForm.controls.act.dirty ||
+      this.myForm.controls.regulation.dirty ||
+      this.myForm.controls.section.dirty ||
+      this.myForm.controls.subSection.dirty ||
+      this.myForm.controls.paragraph.dirty
+    ) {
+      certificate['legislation'] = {
         act: this.myForm.controls.act.value,
         regulation: this.myForm.controls.regulation.value,
         section: this.myForm.controls.section.value,
         subSection: this.myForm.controls.subSection.value,
         paragraph: this.myForm.controls.paragraph.value
-      },
-      issuedTo: this.myForm.controls.issuedTo.value,
-      projectName: this.myForm.controls.projectName.value,
-      location: this.myForm.controls.location.value,
-      centroid: [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value],
-      documents: this.currentRecord && this.currentRecord.documents
-    });
+      };
+    }
+
+    this.myForm.controls.issuedTo.dirty && (certificate['issuedTo'] = this.myForm.controls.issuedTo.value);
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    if (certificate.projectName === 'LNG Canada') {
-      certificate._epicProjectId = EpicProjectIds.lngCanadaId;
-    } else if (certificate.projectName === 'Coastal Gaslink') {
-      certificate._epicProjectId = EpicProjectIds.coastalGaslinkId;
+    this.myForm.controls.projectName.dirty && (certificate['projectName'] = this.myForm.controls.projectName.value);
+    if (certificate['projectName'] === 'LNG Canada') {
+      certificate['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+    } else if (certificate['projectName'] === 'Coastal Gaslink') {
+      certificate['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
     }
 
-    // Publishing logic
-    certificate.CertificateLNG = {
-      description: this.myForm.controls.lngDescription.value
-    };
-    if (this.lngPublishStatus === 'Published') {
-      certificate.CertificateLNG['addRole'] = 'public';
-    } else if (this.isEditing && this.lngPublishStatus === 'Unpublished') {
-      certificate.CertificateLNG['removeRole'] = 'public';
+    this.myForm.controls.location.dirty && (certificate['location'] = this.myForm.controls.location.value);
+    (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
+      (certificate['centroid'] = [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value]);
+
+    // LNG flavour
+    if (this.myForm.controls.lngDescription.dirty || this.myForm.controls.publishLng.dirty) {
+      certificate['CertificateLNG'] = {};
+    }
+    this.myForm.controls.lngDescription.dirty &&
+      (certificate['CertificateLNG']['description'] = this.myForm.controls.lngDescription.value);
+    if (this.myForm.controls.publishLng.dirty && this.myForm.controls.publishLng.value) {
+      certificate['CertificateLNG']['addRole'] = 'public';
+    } else if (this.myForm.controls.publishLng.dirty && !this.myForm.controls.publishLng.value) {
+      certificate['CertificateLNG']['removeRole'] = 'public';
     }
 
     if (!this.isEditing) {
@@ -212,9 +225,9 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         this.router.navigate(['records']);
       });
     } else {
-      certificate._id = this.currentRecord._id;
+      certificate['_id'] = this.currentRecord._id;
 
-      this.lngFlavour && (certificate.CertificateLNG['_id'] = this.lngFlavour._id);
+      this.lngFlavour && certificate['CertificateLNG'] && (certificate['CertificateLNG']['_id'] = this.lngFlavour._id);
 
       this.factoryService.editCertificate(certificate).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
