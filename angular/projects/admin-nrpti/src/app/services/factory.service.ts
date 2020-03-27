@@ -7,7 +7,6 @@ import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import {
-  Inspection,
   Permit,
   SelfReport,
   RestorativeJustice,
@@ -312,7 +311,7 @@ export class FactoryService {
   }
 
   // Inspections
-  public createInspection(inspection: Inspection): Observable<object> {
+  public createInspection(inspection: any): Observable<object> {
     const outboundObject = {
       inspections: [inspection]
     };
@@ -321,7 +320,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editInspection(inspection: Inspection): Observable<object> {
+  public editInspection(inspection: any): Observable<object> {
     const outboundObject = {
       inspections: [inspection]
     };
