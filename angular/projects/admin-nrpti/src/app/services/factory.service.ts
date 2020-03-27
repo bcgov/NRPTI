@@ -8,7 +8,6 @@ import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import {
   SelfReport,
-  RestorativeJustice,
   Ticket,
   Warning
 } from '../../../../common/src/app/models/master';
@@ -394,7 +393,7 @@ export class FactoryService {
   }
 
   // Restorative Justices
-  public createRestorativeJustice(restorativeJustice: RestorativeJustice): Observable<object> {
+  public createRestorativeJustice(restorativeJustice: any): Observable<object> {
     const outboundObject = {
       restorativeJustices: [restorativeJustice]
     };
@@ -403,7 +402,7 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public editRestorativeJustice(restorativeJustice: RestorativeJustice): Observable<object> {
+  public editRestorativeJustice(restorativeJustice: any): Observable<object> {
     const outboundObject = {
       restorativeJustices: [restorativeJustice]
     };
