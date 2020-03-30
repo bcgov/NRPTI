@@ -154,6 +154,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (ticket.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.offence && (ticket.offence = incomingObj.offence);
   incomingObj.issuedTo && (ticket.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (ticket.projectName = incomingObj.projectName);
   incomingObj.location && (ticket.location = incomingObj.location);
@@ -253,6 +254,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (ticketLNG.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.offence && (ticketLNG.offence = incomingObj.offence);
   incomingObj.issuedTo && (ticketLNG.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (ticketLNG.projectName = incomingObj.projectName);
   incomingObj.location && (ticketLNG.location = incomingObj.location);
@@ -351,6 +353,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (ticketNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.offence && (ticketNRCED.offence = incomingObj.offence);
   incomingObj.issuedTo && (ticketNRCED.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (ticketNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (ticketNRCED.location = incomingObj.location);
