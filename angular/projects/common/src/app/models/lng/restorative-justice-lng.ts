@@ -23,6 +23,7 @@ export class RestorativeJusticeLNG {
   issuingAgency: string;
   author: string;
   legislation: Legislation;
+  offence: Legislation;
   issuedTo: string;
   projectName: string;
   location: string;

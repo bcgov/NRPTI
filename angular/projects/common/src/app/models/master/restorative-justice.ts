@@ -28,6 +28,7 @@ export class RestorativeJustice {
   centroid: number[];
   outcomeStatus: string; // epic value?
   outcomeDescription: string; // out of scope?
+  offence: string;
   penalty: string;
   documents: object[];
 
@@ -63,6 +64,7 @@ export class RestorativeJustice {
     this.centroid = (obj && obj.centroid) || null;
     this.outcomeStatus = (obj && obj.outcomeStatus) || null;
     this.outcomeDescription = (obj && obj.outcomeDescription) || null;
+    this.offence = (obj && obj.offence) || null;
     this.penalty = (obj && obj.penalty) || null;
     this.documents = (obj && obj.documents) || null;
 
