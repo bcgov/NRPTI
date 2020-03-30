@@ -3,10 +3,7 @@
 
 .search-filter {
   &__header {
-    @include flex(0 0 auto);
-    @include flex-direction(column);
-
-    &__help {
+    .keyword-help {
       font-size: 1.25rem;
     }
 
@@ -46,39 +43,4 @@
 
 .grey-subtext {
   color: $gray6;
-}
-
-.content-section {
-  .content-grid {
-    display: grid;
-    grid-gap: 1rem;
-    grid-template-rows: repeat(auto-fit, minmax(0, min-content));
-    grid-template-columns: 1fr 3fr;
-
-    &.show-advanced-filters {
-      grid-template-areas:
-        "Search  ListHeader"
-        "Search  ListContent";
-    }
-
-    &:not(.show-advanced-filters) {
-      grid-template-areas:
-        "Search       ListHeader"
-        "ListContent  ListContent";
-    }
-
-    .left-column {
-      grid-area: Search;
-    }
-
-    .right-column {
-      &__header {
-        grid-area: ListHeader;
-      }
-
-      &__content {
-        grid-area: ListContent;
-      }
-    }
-  }
 }
