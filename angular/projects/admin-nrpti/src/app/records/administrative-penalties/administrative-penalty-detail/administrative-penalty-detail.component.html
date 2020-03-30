@@ -46,10 +46,6 @@
             <span class="grid-item-name">Legislation</span>
             <span class="grid-item-value">{{ legislationString || '-' }}</span>
           </div>
-          <div class="grid-item">
-            <span class="grid-item-name">Offence</span>
-            <span class="grid-item-value">{{ (data && data._master.offence) || '-' }}</span>
-          </div>
         </div>
         <div class="grid-section-border"></div>
         <div class="grid-section-sub-header">
@@ -84,6 +80,10 @@
           </div>
         </div>
         <div class="grid-section section-5">
+          <div class="grid-item">
+            <span class="grid-item-name">Offence</span>
+            <span class="grid-item-value">{{ (data && data._master.offence) || '-' }}</span>
+          </div>
           <div class="grid-item">
             <span class="grid-item-name">Penalty</span>
             <span class="grid-item-value">{{ (data && data._master.penalty) || '-' }}</span>
