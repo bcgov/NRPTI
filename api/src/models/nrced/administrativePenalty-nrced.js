@@ -46,7 +46,7 @@ module.exports = require('../../utils/model-schema-generator')(
     indexes__: [
       {
         fields: { summary: 'text', location: 'text', issuedTo: 'text', recordName: 'text' },
-        options: { weights: { issuedTo: 4, recordName: 3, location: 2, summary: 1 } }
+        options: { name: 'keyword-search-text-index' }
       }
     ]
   },
