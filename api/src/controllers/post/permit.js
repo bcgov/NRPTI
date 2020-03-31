@@ -44,7 +44,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedFlavourPermits,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 
@@ -63,7 +63,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedPermit,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 };

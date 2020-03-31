@@ -401,7 +401,7 @@ let processPostRequest = async function(args, res, next, property, data) {
     return {
       status: 'failure',
       object: observables,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 };
@@ -471,7 +471,7 @@ let processPutRequest = async function(args, res, next, property, data) {
     return {
       status: 'failure',
       object: observables,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 };

@@ -101,7 +101,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedFlavourAdministrativeSanctions,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 
@@ -120,7 +120,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedAdministrativeSanction,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 };
@@ -181,7 +181,9 @@ exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
   sanitizedObj.dateUpdated = new Date();
   sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
 
-  let updateObj = { $set: sanitizedObj };
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
+  const updateObj = { $set: dotNotatedObj };
 
   if (flavourIds && flavourIds.length) {
     updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
@@ -241,29 +243,31 @@ exports.editLNG = async function(args, res, next, incomingObj) {
 
   sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
 
+  sanitizedObj.dateUpdated = new Date();
+
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  let updateObj = { $set: sanitizedObj };
+  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
-
-    if (!QueryUtils.isRecordAnonymous(incomingObj)) {
-      updateObj.$addToSet['issuedTo.read'] = 'public';
-    }
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
   }
 
-  // check if a condition changed that would cause the entity information to no longer be public (anonymous)
-  if (QueryUtils.isRecordAnonymous(incomingObj)) {
-    updateObj.$pull['issuedTo.read'] = 'public';
+  if (sanitizedObj.issuedTo) {
+    // check if a condition changed that would cause the entity details to be anonymous, or not.
+    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
+      updateObj.$pull['issuedTo.read'] = 'public';
+    } else {
+      updateObj.$addToSet['issuedTo.read'] = 'public';
+    }
   }
-
-  updateObj.$set['dateUpdated'] = new Date();
 
   return await AdministrativeSanctionLNG.findOneAndUpdate(
     { _schemaName: 'AdministrativeSanctionLNG', _id: _id },
@@ -321,29 +325,31 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
 
   sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
 
+  sanitizedObj.dateUpdated = new Date();
+
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  let updateObj = { $set: sanitizedObj };
+  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
-
-    if (!QueryUtils.isRecordAnonymous(incomingObj)) {
-      updateObj.$addToSet['issuedTo.read'] = 'public';
-    }
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
   }
 
-  // check if a condition changed that would cause the entity information to no longer be public (anonymous)
-  if (QueryUtils.isRecordAnonymous(incomingObj)) {
-    updateObj.$pull['issuedTo.read'] = 'public';
+  if (sanitizedObj.issuedTo) {
+    // check if a condition changed that would cause the entity details to be anonymous, or not.
+    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
+      updateObj.$pull['issuedTo.read'] = 'public';
+    } else {
+      updateObj.$addToSet['issuedTo.read'] = 'public';
+    }
   }
-
-  updateObj.$set['dateUpdated'] = new Date();
 
   return await AdministrativeSanctionNRCED.findOneAndUpdate(
     { _schemaName: 'AdministrativeSanctionNRCED', _id: _id },

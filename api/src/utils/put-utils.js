@@ -72,3 +72,43 @@ exports.fetchMasterForCreateFlavour = async function(schema, id) {
 
   return masterObj;
 };
+
+/**
+ * Converts the obj into a flattened object who's keys are the paths of the original object.
+ *
+ * Example:
+ *  inputObj = {
+ *    a: {
+ *      b: 123
+ *    }
+ *  }
+ *
+ *  getDotNotation(inputObj, {}, '')
+ *
+ *  outputObj = {
+ *    'a.b': 123
+ *  }
+ *
+ * @param {*} obj object to flatten
+ * @param {*} target obj to assign flattened object to (default: {})
+ * @param {*} prefix prefix to add to the start of the flattened path (default: '')
+ * @returns a flattened copy of the original obj
+ */
+exports.getDotNotation = function(obj, target, prefix) {
+  if (!obj) {
+    return obj;
+  }
+
+  target = target || {};
+  prefix = prefix || '';
+
+  Object.keys(obj).forEach(key => {
+    if (isObject(obj[key])) {
+      this.getDotNotation(obj[key], target, prefix + key + '.');
+    } else {
+      return (target[prefix + key] = obj[key]);
+    }
+  });
+
+  return target;
+};

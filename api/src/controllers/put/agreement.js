@@ -70,7 +70,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedFlavourAgreements,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 
@@ -89,7 +89,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedAgreement,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 };
@@ -143,7 +143,9 @@ exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
   sanitizedObj.dateUpdated = new Date();
   sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
 
-  let updateObj = { $set: sanitizedObj };
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
+  const updateObj = { $set: dotNotatedObj };
 
   if (flavourIds && flavourIds.length) {
     updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
@@ -194,8 +196,12 @@ exports.editLNG = async function(args, res, next, incomingObj) {
 
   const sanitizedObj = PutUtils.validateObjectAgainstModel(AgreementLNG, incomingObj);
 
+  sanitizedObj.dateUpdated = new Date();
+
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  let updateObj = { $set: sanitizedObj };
+  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj.$addToSet['read'] = 'public';
@@ -206,8 +212,6 @@ exports.editLNG = async function(args, res, next, incomingObj) {
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
   }
-
-  updateObj.$set['dateUpdated'] = new Date();
 
   return await AgreementLNG.findOneAndUpdate({ _schemaName: 'AgreementLNG', _id: _id }, updateObj, { new: true });
 };

@@ -7,6 +7,7 @@ import { Picklists } from '../../../utils/constants/record-constants';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
+import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
 
 @Component({
@@ -248,7 +249,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
         middleName: this.myForm.get('issuedTo.middleName').value,
         lastName: this.myForm.get('issuedTo.lastName').value,
         fullName: this.myForm.get('issuedTo.fullName').value,
-        dateOfBirth: this.myForm.get('issuedTo.dateOfBirth').value
+        dateOfBirth: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('issuedTo.dateOfBirth').value)
       };
     }
 
@@ -316,12 +317,23 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
     } else {
       administrativeSanction['_id'] = this.currentRecord._id;
 
-      this.nrcedFlavour &&
-        administrativeSanction['AdministrativeSanctionNRCED'] &&
-        (administrativeSanction['AdministrativeSanctionNRCED']['_id'] = this.nrcedFlavour._id);
-      this.lngFlavour &&
-        administrativeSanction['AdministrativeSanctionLNG'] &&
-        (administrativeSanction['AdministrativeSanctionLNG']['_id'] = this.lngFlavour._id);
+      if (this.nrcedFlavour) {
+        if (!CommonUtils.isObject(administrativeSanction['AdministrativeSanctionNRCED'])) {
+          administrativeSanction['AdministrativeSanctionNRCED'] = {};
+        }
+
+        // always update if flavour exists, regardless of flavour field changes, as fields in master might have changed
+        administrativeSanction['AdministrativeSanctionNRCED']['_id'] = this.nrcedFlavour._id;
+      }
+
+      if (this.lngFlavour) {
+        if (!CommonUtils.isObject(administrativeSanction['AdministrativeSanctionLNG'])) {
+          administrativeSanction['AdministrativeSanctionLNG'] = {};
+        }
+
+        // always update if flavour exists, regardless of flavour field changes, as fields in master might have changed
+        administrativeSanction['AdministrativeSanctionLNG']['_id'] = this.lngFlavour._id;
+      }
 
       this.factoryService.editAdministrativeSanction(administrativeSanction).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);

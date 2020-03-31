@@ -104,13 +104,15 @@ exports.recordTypes = [
 /**
  * Determine if the obj (record.issuedTo) meets the requirements to not be anonymous.
  *
+ * Note: If insufficient information is provided, must assume anonymous.
+ *
  * @param {*} obj
- * @returns true if the object must be anonymous, false if it is not anonymous, null if not enough information provided.
+ * @returns true if the object is anonymous, false if it is not anonymous.
  */
 exports.isRecordAnonymous = function(record) {
   if (!record || !record.issuedTo) {
-    // can't determine anonymity
-    return null;
+    // can't determine anonymity, must assume anonymous
+    return true;
   }
 
   if (record.issuedTo.type === 'Company') {

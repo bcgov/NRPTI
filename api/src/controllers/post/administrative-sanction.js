@@ -57,7 +57,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedFlavourAdministrativeSanctions,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 
@@ -76,7 +76,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedAdministrativeSanction,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 };
