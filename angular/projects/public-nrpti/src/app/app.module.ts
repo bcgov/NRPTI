@@ -1,11 +1,14 @@
 import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
+import { Overlay, CloseScrollStrategy } from '@angular/cdk/overlay';
+import { MAT_AUTOCOMPLETE_SCROLL_STRATEGY } from '@angular/material';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 // modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -26,13 +29,19 @@ import { ApiService } from './services/api.service';
 import { DocumentService } from './services/document.service';
 import { FactoryService } from './services/factory.service';
 
+export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrategy {
+  return () => overlay.scrollStrategies.close();
+}
+
 @NgModule({
   declarations: [AppComponent, HomeComponent, ConfirmComponent, HeaderComponent, FooterComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
+    ScrollingModule,
     GlobalModule,
     CommonModule,
     SharedModule,
@@ -42,7 +51,17 @@ import { FactoryService } from './services/factory.service';
     NgxPaginationModule,
     BootstrapModalModule.forRoot({ container: document.body })
   ],
-  providers: [ApiService, DocumentService, FactoryService],
+  providers: [
+    {
+      // Tells mat-autocomplete select box to close when the page is scrolled. Aligns with default select box behaviour.
+      provide: MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
+      useFactory: overlayScrollFactory,
+      deps: [Overlay]
+    },
+    ApiService,
+    DocumentService,
+    FactoryService
+  ],
   entryComponents: [ConfirmComponent, HomeComponent],
   bootstrap: [AppComponent]
 })

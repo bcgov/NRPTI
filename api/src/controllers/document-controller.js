@@ -15,11 +15,11 @@ const s3 = new AWS.S3({
   s3ForcePathStyle: true
 });
 
-exports.protectedOptions = function (args, res, next) {
+exports.protectedOptions = function(args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedPost = async function (args, res, next) {
+exports.protectedPost = async function(args, res, next) {
   if (
     args.swagger.params.fileName &&
     args.swagger.params.fileName.value &&
@@ -45,7 +45,11 @@ exports.protectedPost = async function (args, res, next) {
         );
       } catch (e) {
         defaultLog.info(`Error creating document meta for ${args.swagger.params.fileName.value}: ${e}`);
-        return queryActions.sendResponse(res, 400, `Error creating document meta for ${args.swagger.params.fileName.value}.`);
+        return queryActions.sendResponse(
+          res,
+          400,
+          `Error creating document meta for ${args.swagger.params.fileName.value}.`
+        );
       }
     } else if (args.swagger.params.upfile && args.swagger.params.upfile.value) {
       // Upload to S3
@@ -56,7 +60,11 @@ exports.protectedPost = async function (args, res, next) {
         );
       } catch (e) {
         defaultLog.info(`Error creating document meta for ${args.swagger.params.fileName.value}: ${e}`);
-        return queryActions.sendResponse(res, 400, `Error creating document meta for ${args.swagger.params.fileName.value}.`);
+        return queryActions.sendResponse(
+          res,
+          400,
+          `Error creating document meta for ${args.swagger.params.fileName.value}.`
+        );
       }
 
       // TODO: ACL is set to public-read until we know publishing rules.
@@ -90,8 +98,14 @@ exports.protectedPost = async function (args, res, next) {
         { returnNewDocument: true }
       );
     } catch (e) {
-      defaultLog.info(`Error adding ${args.swagger.params.fileName.value} to record ${args.swagger.params.recordId.value}: ${e}`);
-      return queryActions.sendResponse(res, 400, `Error adding ${args.swagger.params.fileName.value} to record ${args.swagger.params.recordId.value}.`);
+      defaultLog.info(
+        `Error adding ${args.swagger.params.fileName.value} to record ${args.swagger.params.recordId.value}: ${e}`
+      );
+      return queryActions.sendResponse(
+        res,
+        400,
+        `Error adding ${args.swagger.params.fileName.value} to record ${args.swagger.params.recordId.value}.`
+      );
     }
 
     // Add to flavour records
@@ -109,7 +123,11 @@ exports.protectedPost = async function (args, res, next) {
     }
     const flavourRecordResponses = await Promise.all(observables).catch(e => {
       defaultLog.info(`Error adding ${args.swagger.params.fileName.value} to flavour record: ${e}`);
-      return queryActions.sendResponse(res, 400, `Error adding ${args.swagger.params.fileName.value} to flavour record.`);
+      return queryActions.sendResponse(
+        res,
+        400,
+        `Error adding ${args.swagger.params.fileName.value} to flavour record.`
+      );
     });
 
     return queryActions.sendResponse(res, 200, {
@@ -118,14 +136,13 @@ exports.protectedPost = async function (args, res, next) {
       flavours: flavourRecordResponses,
       s3: s3Response
     });
-
   } else {
     defaultLog.info('Error: You must provide fileName and recordId.');
     return queryActions.sendResponse(res, 400, 'You must provide fileName and recordId.');
   }
 };
 
-exports.protectedDelete = async function (args, res, next) {
+exports.protectedDelete = async function(args, res, next) {
   if (
     args.swagger.params.docId &&
     args.swagger.params.docId.value &&
@@ -140,7 +157,11 @@ exports.protectedDelete = async function (args, res, next) {
       docResponse = await Document.findOneAndRemove({ _id: new ObjectID(args.swagger.params.docId.value) });
     } catch (e) {
       defaultLog.info(`Error removing document meta ${args.swagger.params.docId.value} from the database: ${e}`);
-      return queryActions.sendResponse(res, 400, `Error removing document meta ${args.swagger.params.docId.value} from the database.`);
+      return queryActions.sendResponse(
+        res,
+        400,
+        `Error removing document meta ${args.swagger.params.docId.value} from the database.`
+      );
     }
 
     // If a key exists, then the doc is stored in S3.
@@ -157,7 +178,11 @@ exports.protectedDelete = async function (args, res, next) {
         s3Response = s3DeleteResult;
       } catch (e) {
         defaultLog.info(`Error deleting document ${args.swagger.params.docId.value} from S3: ${e}`);
-        return queryActions.sendResponse(res, 400, `Error deleting document ${args.swagger.params.docId.value} from S3.`);
+        return queryActions.sendResponse(
+          res,
+          400,
+          `Error deleting document ${args.swagger.params.docId.value} from S3.`
+        );
       }
     }
 
@@ -165,7 +190,7 @@ exports.protectedDelete = async function (args, res, next) {
     const collection = db.collection('nrpti');
 
     // Then we want to remove the document's id from the record it's attached to.
-    let recordResponse = null
+    let recordResponse = null;
     try {
       // remove from master record
       recordResponse = await collection.findOneAndUpdate(
@@ -174,8 +199,14 @@ exports.protectedDelete = async function (args, res, next) {
         { returnNewDocument: true }
       );
     } catch (e) {
-      defaultLog.info(`Error removing ${args.swagger.params.docId.value} from record ${args.swagger.params.recordId.value}: ${e}`);
-      return queryActions.sendResponse(res, 400, `Error removing ${args.swagger.params.docId.value} from record ${args.swagger.params.recordId.value}.f`);
+      defaultLog.info(
+        `Error removing ${args.swagger.params.docId.value} from record ${args.swagger.params.recordId.value}: ${e}`
+      );
+      return queryActions.sendResponse(
+        res,
+        400,
+        `Error removing ${args.swagger.params.docId.value} from record ${args.swagger.params.recordId.value}.f`
+      );
     }
 
     // remove from flavour records
@@ -193,7 +224,11 @@ exports.protectedDelete = async function (args, res, next) {
     }
     const flavourRecordResponses = await Promise.all(observables).catch(e => {
       defaultLog.info(`Error removing ${args.swagger.params.docId.value} from flavour record: ${e}`);
-      return queryActions.sendResponse(res, 400, `Error removing ${args.swagger.params.docId.value} from flavour record.`);
+      return queryActions.sendResponse(
+        res,
+        400,
+        `Error removing ${args.swagger.params.docId.value} from flavour record.`
+      );
     });
 
     return queryActions.sendResponse(res, 200, {
@@ -202,7 +237,6 @@ exports.protectedDelete = async function (args, res, next) {
       flavours: flavourRecordResponses,
       s3: s3Response
     });
-
   } else {
     defaultLog.info('Error: You must provide docId and recordId');
     return queryActions.sendResponse(res, 400, { error: 'You must provide docId and recordId' });

@@ -1,177 +1,46 @@
-.input-group-prepend {
-  flex-wrap: wrap;
+@import "~assets/styles/base/base.scss";
+@import "assets/styles/components/add-edit.scss";
 
-  button {
-    margin: 0 10px 10px 0;
-  }
-}
+.search-filter {
+  &__header {
+    .keyword-help {
+      font-size: 1.25rem;
+    }
 
-textarea,
-input[type="text"] {
-  border-radius: 2px;
-  box-shadow: none;
-  -webkit-appearance: none;
-  border: 1px solid #ababab;
-  font-size: 1rem;
+    .keyword-search {
+      @include flex-box();
+      @include flex(0 0 auto);
+      @include flex-direction(row);
 
-  &:focus {
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-    border-color: #5091cd;
-  }
-}
+      height: 2.35rem;
+      border: 2px solid $primary;
 
-.btn-search-help {
-  padding: 6px 12px;
-  margin-bottom: 0.5rem;
-  margin-right: 0.5rem;
-  transition: all ease-out 0.2s;
-  cursor: pointer;
+      &__input {
+        @include flex(1 1 auto);
+      }
 
-  .material-icons {
-    font-size: 20px;
-    margin-top: -3px;
-    margin-right: 2px;
-  }
-}
+      &__button {
+        @include flex(0 0 auto);
 
-.btn-num-items {
-  margin-left: 0.5rem;
-}
+        background-color: $primary;
 
-.btn-outline-secondary {
-  color: #007bff;
-  border-color: #007bff;
+        i {
+          color: white;
+        }
+      }
+    }
 
-  i {
-    margin-right: 4px;
-    font-size: 20px;
-  }
-
-  &:disabled {
-    border-color: #6c757d;
-    color: #6c757d;
-  }
-}
-
-.search-area {
-  background-color: white;
-  border: 1px solid lightgray;
-}
-
-.main-search-field {
-  margin-left: 0;
-  padding: 8px;
-}
-
-.show-advanced-search-button .btn {
-  float: right;
-  margin-right: 8px !important;
-  width: 200px;
-}
-
-.advanced-search {
-  position: relative;
-
-  .project-filter {
-    margin-left: 15px;
-    margin-top: 10px;
-    margin-right: 93px;
-    margin-bottom: 10px;
-  }
-
-  .filter-border {
-    border: solid 1px lightgray;
-    padding: 15px;
-    min-width: 155px;
-  }
-
-  .milestone-filters {
-    margin-left: 8px;
-  }
-
-  .date-filters {
-    margin-left: 147px;
-  }
-
-  .author-filters {
-    margin-left: 331px;
-
-    .filter-border {
-      min-width: 230px;
+    .open-advanced-filters {
+      background-color: $primary;
     }
   }
 
-  .type-filters {
-    margin-left: 528px;
-  }
-
-  .sub-filter {
-    margin-left: 0;
-    margin-bottom: -15px;
-  }
-
-  .btn {
-    margin: 8px 0 8px 8px;
-  }
-
-  .milestone-btn {
-    width: 130px;
-  }
-
-  .date-btn {
-    width: 175px;
-  }
-
-  .author-btn {
-    width: 190px;
-  }
-
-  .calendar {
-    margin: 0;
-  }
-
-  .date-range {
-    margin-left: -15px;
-
-    .form-control {
-      z-index: 0 !important;
-    }
-  }
-
-  .form-check label {
-    padding-left: 0.25rem;
-    font-size: 1rem;
-  }
-
-  .search-button {
-    position: absolute;
-    right: 8px;
-    bottom: -8px;
+  &__content {
+    border: 1px solid #036;
+    border-radius: 6px;
   }
 }
 
-.results {
-  color: black;
-  margin-bottom: 15px;
-}
-
-.upload-docs {
-  margin: 0 0 0 auto;
-}
-
-.btn-group-toggle > .btn {
-  margin-bottom: 0;
-  background: none;
-  color: #13477b;
-  border: 1px solid #858b99;
-  font-weight: 600;
-
-  &:hover {
-    background: #fcb118;
-  }
-
-  &.active {
-    background: #235383;
-    color: #fff;
-  }
+.grey-subtext {
+  color: $gray6;
 }

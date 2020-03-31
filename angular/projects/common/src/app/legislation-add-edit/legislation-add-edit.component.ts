@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Picklists } from '../../../utils/constants/record-constants';
+import { Picklists } from '../../../../admin-nrpti/src/app/utils/constants/record-constants';
 
 @Component({
   selector: 'app-legislation-add-edit',
@@ -9,6 +9,11 @@ import { Picklists } from '../../../utils/constants/record-constants';
 })
 export class LegislationAddEditComponent implements OnInit {
   @Input() formGroup: FormGroup;
+
+  @Input() hideSection = false;
+  @Input() hideSubSection = false;
+  @Input() hideParagraph = false;
+  @Input() renderColumns = false;
 
   // cache acts
   public readonly actsMappedToRegulations: { [key: string]: string[] } = Picklists.legislationActsMappedToRegulations;

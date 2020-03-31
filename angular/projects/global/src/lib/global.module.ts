@@ -3,6 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 
 // modules
 import { NgxPaginationModule } from 'ngx-pagination';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // components
 import { ButtonSpinnerComponent } from './components/buttons/button-spinner/button-spinner.component';
@@ -10,6 +12,7 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 import { PageSizePickerComponent } from './components/page-size-picker/page-size-picker.component';
 import { PageCountDisplayComponent } from './components/page-count-display/page-count-display.component';
 import { TableTemplateComponent } from './components/table-template/table-template.component';
+import { DatePickerComponent } from './components/date-picker/date-picker.component';
 
 // directives
 import { TableRowDirective } from './components/table-template/table-row.directive';
@@ -31,14 +34,15 @@ import { TableTemplateUtils } from './components/table-template/table-template-u
  * @class GlobalModule
  */
 @NgModule({
-  imports: [BrowserModule, NgxPaginationModule],
+  imports: [BrowserModule, FormsModule, ReactiveFormsModule, NgbModule.forRoot(), NgxPaginationModule],
   declarations: [
     ButtonSpinnerComponent,
     TableRowDirective,
     TableTemplateComponent,
     BreadcrumbComponent,
     PageSizePickerComponent,
-    PageCountDisplayComponent
+    PageCountDisplayComponent,
+    DatePickerComponent
   ],
   providers: [ExportService, StoreService, SearchService, TableTemplateUtils, InjectComponentService],
   exports: [
@@ -47,7 +51,8 @@ import { TableTemplateUtils } from './components/table-template/table-template-u
     TableTemplateComponent,
     BreadcrumbComponent,
     PageSizePickerComponent,
-    PageCountDisplayComponent
+    PageCountDisplayComponent,
+    DatePickerComponent
   ]
 })
 export class GlobalModule {}
