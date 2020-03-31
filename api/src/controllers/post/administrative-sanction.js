@@ -160,6 +160,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (administrativeSanction.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.legislationDescription && (administrativeSanction.legislationDescription = incomingObj.legislationDescription);
   incomingObj.issuedTo && (administrativeSanction.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (administrativeSanction.projectName = incomingObj.projectName);
   incomingObj.location && (administrativeSanction.location = incomingObj.location);
@@ -261,6 +262,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (administrativeSanctionLNG.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.legislationDescription && (administrativeSanctionLNG.legislationDescription = incomingObj.legislationDescription);
   incomingObj.issuedTo && (administrativeSanctionLNG.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (administrativeSanctionLNG.projectName = incomingObj.projectName);
   incomingObj.location && (administrativeSanctionLNG.location = incomingObj.location);
@@ -361,6 +363,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (administrativeSanctionNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.legislationDescription && (administrativeSanctionNRCED.legislationDescription = incomingObj.legislationDescription);
   incomingObj.issuedTo && (administrativeSanctionNRCED.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (administrativeSanctionNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (administrativeSanctionNRCED.location = incomingObj.location);

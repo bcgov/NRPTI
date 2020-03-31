@@ -25,6 +25,7 @@ module.exports = require('../../utils/model-schema-generator')(
       subSection: { type: String, default: '' },
       paragraph: { type: String, default: '' }
     },
+    legislationDescription: { type: String, default: '' },
     issuedTo: { type: String, default: '' },
     projectName: { type: String, default: '' },
     location: { type: String, default: '' },
