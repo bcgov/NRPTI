@@ -1,0 +1,70 @@
+@import "../../assets/styles/base/base.scss";
+
+.flex-container {
+  &__row {
+    // default
+    @extend .flex-container;
+  }
+
+  &__col {
+    @extend .flex-container;
+
+    // don't flex, stack in columns
+    display: block;
+    flex: none;
+  }
+
+  .label-pair {
+    &__row {
+      // default
+      @extend .label-pair;
+    }
+
+    &__col {
+      @extend .label-pair;
+
+      // don't flex, stack in columns
+      display: block;
+      width: 100%;
+    }
+  }
+}
+
+// from add-edit.scss
+
+label {
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+section {
+  + section {
+    margin-top: 2rem;
+  }
+}
+
+.label-pair {
+  line-height: $fc-line-height;
+  margin-bottom: 1rem;
+  position: relative;
+
+  @media screen and (min-width: 800px) {
+    width: 32%;
+    margin-right: 1%;
+    display: inline-block;
+    vertical-align: top;
+
+    &.sm {
+      width: 15.5%;
+    }
+
+    &.med {
+      width: 65%;
+    }
+
+    &.lrg {
+      width: 100%;
+    }
+  }
+}

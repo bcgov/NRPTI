@@ -1,6 +1,6 @@
 <form [formGroup]="formGroup">
-  <div class="flex-container">
-    <div class="label-pair">
+  <div [ngClass]="renderColumns ? 'flex-container__col' : 'flex-container__row'">
+    <div [ngClass]="renderColumns ? 'label-pair__col' : 'label-pair__row'">
       <label for="act">Act</label>
       <input
         name="act"
@@ -21,7 +21,7 @@
         </mat-option>
       </mat-autocomplete>
     </div>
-    <div class="label-pair">
+    <div [ngClass]="renderColumns ? 'label-pair__col' : 'label-pair__row'">
       <label for="regulation">Regulation</label>
       <input
         name="regulation"
@@ -47,15 +47,15 @@
         </mat-option>
       </mat-autocomplete>
     </div>
-    <div class="label-pair xsm">
+    <div *ngIf="!hideSection" [ngClass]="renderColumns ? 'label-pair__col' : 'label-pair__row xsm'">
       <label for="section">Section</label>
       <input name="section" id="section" formControlName="section" type="text" class="form-control" />
     </div>
-    <div class="label-pair xsm">
+    <div *ngIf="!hideSubSection" [ngClass]="renderColumns ? 'label-pair__col' : 'label-pair__row xsm'">
       <label for="subSection">Sub-Section</label>
       <input name="subSection" id="subSection" formControlName="subSection" type="text" class="form-control" />
     </div>
-    <div class="label-pair xsm">
+    <div *ngIf="!hideParagraph" [ngClass]="renderColumns ? 'label-pair__col' : 'label-pair__row xsm'">
       <label for="paragraph">Paragraph</label>
       <input name="paragraph" id="paragraph" formControlName="paragraph" type="text" class="form-control" />
     </div>

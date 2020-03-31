@@ -14,7 +14,7 @@ let genSchema = function(name, definition) {
   //
   // let m = definition.methods__;
   let virtuals = definition.virtuals__;
-  // let i = definition.indexes__;
+  let indexes = definition.indexes__;
   // let s = definition.statics__;
   let pre = definition.presave__;
   let post = definition.postsave__;
@@ -100,10 +100,11 @@ let genSchema = function(name, definition) {
   }
   // if (s) _.extend(schema.statics, s); // TODO replace lodash
   // if (m) _.extend(schema.methods, m); // TODO replace lodash
-  // if (i)
-  //   _.each(i, function(d) {
-  //     schema.index(d);
-  //   });
+  if (indexes && indexes.length) {
+    indexes.forEach(function(index) {
+      schema.index(index.fields, index.options);
+    });
+  }
   if (virtuals) {
     // http://mongoosejs.com/docs/2.7.x/docs/virtuals.html
     virtuals.forEach(function(virtual) {

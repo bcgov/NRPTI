@@ -90,7 +90,18 @@ export class TableTemplateUtils {
     return tableObject;
   }
 
-  public navigateUsingParams(tableObject: TableObject, path: any[]) {
+  /**
+   * Navigates using the current tableObject params and any optional additional params.
+   *
+   * Note: If duplicate parameters are found, the ones from tableOject will take precedence.
+   *
+   * @param {TableObject} tableObject table object where standard table template query parameters will be take from.
+   * @param {any[]} path url path to navigate to.
+   * @param {object} [additionalParams={}] additional query parameters to include. If duplicate parameters are found,
+   *   the ones from tableOject will take precedence. (optional)
+   * @memberof TableTemplateUtils
+   */
+  public navigateUsingParams(tableObject: TableObject, path: any[], additionalParams: object = {}) {
     if (!tableObject) {
       throw Error('Navigation Object cannot be null.');
     }
@@ -99,13 +110,22 @@ export class TableTemplateUtils {
       path = ['/'];
     }
 
-    const params = this.getNavParamsObj(tableObject);
+    const params = this.getNavParamsObj(tableObject, additionalParams);
     path.push(params);
     this.router.navigate(path);
   }
 
-  public getNavParamsObj(tableObject: TableObject) {
-    const params = {};
+  /**
+   * Builds a query param object from the known table object params, and any optional additional params.
+   *
+   * @param {TableObject} tableObject table object where standard table template query parameters will be take from.
+   * @param {object} [additionalParams={}] additional query parameters to include. If duplicate parameters are found,
+   *   the ones from tableOject will take precedence. (optional)
+   * @returns
+   * @memberof TableTemplateUtils
+   */
+  public getNavParamsObj(tableObject: TableObject, additionalParams: object = {}) {
+    const params = { ...additionalParams };
     params['ms'] = new Date().getMilliseconds();
     params['dataset'] = tableObject.dataset;
     params['keywords'] = tableObject.keywords;
