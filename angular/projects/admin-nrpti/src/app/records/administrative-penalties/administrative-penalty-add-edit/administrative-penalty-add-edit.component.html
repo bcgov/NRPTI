@@ -87,8 +87,18 @@
     </section>
 
     <section>
-      <h4>Legislation</h4>
+      <h4>Contravention</h4>
       <app-legislation-add-edit [formGroup]="myForm"></app-legislation-add-edit>
+      <div class="flex-container">
+        <div class="label-pair">
+          <label for="offence">Offence</label>
+          <input name="offence" id="offence" type="text" formControlName="offence" class="form-control" />
+        </div>
+        <div class="label-pair">
+          <label for="penalty">Penalty</label>
+          <input name="penalty" id="penalty" formControlName="penalty" class="form-control" />
+        </div>
+      </div>
     </section>
 
     <section>
@@ -169,10 +179,6 @@
             formControlName="outcomeDescription"
             class="form-control"
           ></textarea>
-        </div>
-        <div class="label-pair med">
-          <label for="penalty">Penalty</label>
-          <input name="penalty" id="penalty" formControlName="penalty" class="form-control" />
         </div>
       </div>
     </section>

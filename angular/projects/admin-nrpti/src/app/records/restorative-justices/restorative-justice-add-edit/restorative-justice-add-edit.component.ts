@@ -123,6 +123,7 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
       paragraph: new FormControl(
         (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
       ),
+      offence: new FormControl((this.currentRecord && this.currentRecord.offence) || ''),
       issuedTo: new FormControl((this.currentRecord && this.currentRecord.issuedTo) || ''),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
@@ -202,6 +203,7 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
       };
     }
 
+    this.myForm.controls.offence.dirty && (restorativeJustice['offence'] = this.myForm.controls.offence.value);
     this.myForm.controls.issuedTo.dirty && (restorativeJustice['issuedTo'] = this.myForm.controls.issuedTo.value);
 
     // Project name logic

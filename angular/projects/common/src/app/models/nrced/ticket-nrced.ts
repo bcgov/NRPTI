@@ -23,6 +23,7 @@ export class TicketNRCED {
   issuingAgency: string;
   author: string;
   legislation: Legislation;
+  offence: string;
   issuedTo: string;
   projectName: string;
   location: string;
@@ -63,6 +64,7 @@ export class TicketNRCED {
     this.issuingAgency = (obj && obj.issuingAgency) || '';
     this.author = (obj && obj.author) || '';
     this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
+    this.offence = (obj && obj.offence) || '';
     this.issuedTo = (obj && obj.issuedTo) || '';
     this.projectName = (obj && obj.projectName) || '';
     this.location = (obj && obj.location) || '';

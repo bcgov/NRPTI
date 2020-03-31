@@ -30,7 +30,7 @@ let ObjectId = require('mongoose').Types.ObjectId;
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function(args, res, next, incomingObj) {
+exports.createRecord = async function (args, res, next, incomingObj) {
   // save flavour records
   let observables = [];
   let savedFlavourAdministrativePenalties = [];
@@ -109,7 +109,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master administrativePenalty record
  */
-exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = async function (args, res, next, incomingObj, flavourIds) {
   let AdministrativePenalty = mongoose.model('AdministrativePenalty');
   let administrativePenalty = new AdministrativePenalty();
 
@@ -160,6 +160,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (administrativePenalty.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.offence && (administrativePenalty.offence = incomingObj.offence);
   incomingObj.issuedTo && (administrativePenalty.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (administrativePenalty.projectName = incomingObj.projectName);
   incomingObj.location && (administrativePenalty.location = incomingObj.location);
@@ -209,7 +210,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
  * @param {*} incomingObj see example
  * @returns created lng administrativePenalty record
  */
-exports.createLNG = async function(args, res, next, incomingObj) {
+exports.createLNG = async function (args, res, next, incomingObj) {
   let AdministrativePenaltyLNG = mongoose.model('AdministrativePenaltyLNG');
   let administrativePenaltyLNG = new AdministrativePenaltyLNG();
 
@@ -261,6 +262,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (administrativePenaltyLNG.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.offence && (administrativePenaltyLNG.offence = incomingObj.offence);
   incomingObj.issuedTo && (administrativePenaltyLNG.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (administrativePenaltyLNG.projectName = incomingObj.projectName);
   incomingObj.location && (administrativePenaltyLNG.location = incomingObj.location);
@@ -309,7 +311,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced administrativePenalty record
  */
-exports.createNRCED = async function(args, res, next, incomingObj) {
+exports.createNRCED = async function (args, res, next, incomingObj) {
   let AdministrativePenaltyNRCED = mongoose.model('AdministrativePenaltyNRCED');
   let administrativePenaltyNRCED = new AdministrativePenaltyNRCED();
 
@@ -361,6 +363,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (administrativePenaltyNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.offence && (administrativePenaltyNRCED.offence = incomingObj.offence);
   incomingObj.issuedTo && (administrativePenaltyNRCED.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (administrativePenaltyNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (administrativePenaltyNRCED.location = incomingObj.location);

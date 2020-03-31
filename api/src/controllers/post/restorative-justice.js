@@ -30,7 +30,7 @@ let ObjectId = require('mongoose').Types.ObjectId;
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function(args, res, next, incomingObj) {
+exports.createRecord = async function (args, res, next, incomingObj) {
   // save flavour records
   let observables = [];
   let savedFlavourRestorativeJustices = [];
@@ -105,7 +105,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master restorativeJustice record
  */
-exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = async function (args, res, next, incomingObj, flavourIds) {
   let RestorativeJustice = mongoose.model('RestorativeJustice');
   let restorativeJustice = new RestorativeJustice();
 
@@ -205,7 +205,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
  * @param {*} incomingObj see example
  * @returns created lng restorativeJustice record
  */
-exports.createLNG = async function(args, res, next, incomingObj) {
+exports.createLNG = async function (args, res, next, incomingObj) {
   let RestorativeJusticeLNG = mongoose.model('RestorativeJusticeLNG');
   let restorativeJusticeLNG = new RestorativeJusticeLNG();
 
@@ -257,6 +257,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (restorativeJusticeLNG.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.offence && (restorativeJusticeLNG.offence = incomingObj.offence);
   incomingObj.issuedTo && (restorativeJusticeLNG.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (restorativeJusticeLNG.projectName = incomingObj.projectName);
   incomingObj.location && (restorativeJusticeLNG.location = incomingObj.location);
@@ -305,7 +306,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced restorativeJustice record
  */
-exports.createNRCED = async function(args, res, next, incomingObj) {
+exports.createNRCED = async function (args, res, next, incomingObj) {
   let RestorativeJusticeNRCED = mongoose.model('RestorativeJusticeNRCED');
   let restorativeJusticeNRCED = new RestorativeJusticeNRCED();
 
@@ -357,6 +358,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (restorativeJusticeNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.offence && (restorativeJusticeNRCED.offence = incomingObj.offence);
   incomingObj.issuedTo && (restorativeJusticeNRCED.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (restorativeJusticeNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (restorativeJusticeNRCED.location = incomingObj.location);
