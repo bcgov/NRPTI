@@ -1,13 +1,13 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Picklists } from '../../../utils/constants/record-constants';
-import { EpicProjectIds } from '../../../utils/constants/record-constants';
-import { FactoryService } from '../../../services/factory.service';
-import { Utils } from 'nrpti-angular-components';
-import { RecordUtils } from '../../utils/record-utils';
+import {Component, OnInit, ChangeDetectorRef, OnDestroy} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {FormGroup, FormControl} from '@angular/forms';
+import {Picklists} from '../../../utils/constants/record-constants';
+import {EpicProjectIds} from '../../../utils/constants/record-constants';
+import {FactoryService} from '../../../services/factory.service';
+import {Utils} from 'nrpti-angular-components';
+import {RecordUtils} from '../../utils/record-utils';
 
 @Component({
   selector: 'app-administrative-sanction-add-edit',
@@ -104,7 +104,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
+        ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -204,7 +204,8 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
       };
     }
 
-    this.myForm.controls.legislationDescription.dirty && (administrativeSanction['legislationDescription'] = this.myForm.controls.legislationDescription.value);
+    this.myForm.controls.legislationDescription.dirty &&
+      (administrativeSanction['legislationDescription'] = this.myForm.controls.legislationDescription.value);
     this.myForm.controls.issuedTo.dirty && (administrativeSanction['issuedTo'] = this.myForm.controls.issuedTo.value);
 
     // Project name logic
