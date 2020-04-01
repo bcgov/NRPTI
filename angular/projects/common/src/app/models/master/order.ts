@@ -25,6 +25,7 @@ export class Order {
   author: string;
   description: string;
   legislation: Legislation;
+  legislationDescription: string;
   issuedTo: Entity;
   projectName: string;
   location: string;
@@ -62,6 +63,7 @@ export class Order {
     this.author = (obj && obj.author) || null;
     this.description = (obj && obj.description) || null;
     this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
+    this.legislationDescription = (obj && obj.legislationDescription) || '';
     this.issuedTo = (obj && obj.issuedTo && new Entity(obj.issuedTo)) || null;
     this.projectName = (obj && obj.projectName) || null;
     this.location = (obj && obj.location) || null;

@@ -157,7 +157,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (inspection.legislation.paragraph = incomingObj.legislation.paragraph);
-
+  incomingObj.legislationDescription && (inspection.legislationDescription = incomingObj.legislationDescription);
   inspection.issuedTo.read = ['sysadmin'];
   inspection.issuedTo.write = ['sysadmin'];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspection.issuedTo.type = incomingObj.issuedTo.type);
@@ -177,7 +177,6 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (inspection.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
-
   incomingObj.projectName && (inspection.projectName = incomingObj.projectName);
   incomingObj.location && (inspection.location = incomingObj.location);
   incomingObj.centroid && (inspection.centroid = incomingObj.centroid);
@@ -272,7 +271,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (inspectionLNG.legislation.paragraph = incomingObj.legislation.paragraph);
-
+  incomingObj.legislationDescription && (inspectionLNG.legislationDescription = incomingObj.legislationDescription);
   inspectionLNG.issuedTo.read = ['sysadmin'];
   inspectionLNG.issuedTo.write = ['sysadmin'];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionLNG.issuedTo.type = incomingObj.issuedTo.type);
@@ -292,7 +291,6 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (inspectionLNG.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
-
   incomingObj.projectName && (inspectionLNG.projectName = incomingObj.projectName);
   incomingObj.location && (inspectionLNG.location = incomingObj.location);
   incomingObj.centroid && (inspectionLNG.centroid = incomingObj.centroid);
@@ -397,7 +395,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (inspectionNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
-
+  incomingObj.legislationDescription && (inspectionNRCED.legislationDescription = incomingObj.legislationDescription);
   inspectionNRCED.issuedTo.read = ['sysadmin'];
   inspectionNRCED.issuedTo.write = ['sysadmin'];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionNRCED.issuedTo.type = incomingObj.issuedTo.type);
@@ -418,7 +416,6 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (inspectionNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
-
   incomingObj.projectName && (inspectionNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (inspectionNRCED.location = incomingObj.location);
   incomingObj.centroid && (inspectionNRCED.centroid = incomingObj.centroid);
