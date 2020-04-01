@@ -7,6 +7,7 @@ import { Picklists } from '../../../utils/constants/record-constants';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
+import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
 
 @Component({
@@ -227,7 +228,14 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
     } else {
       selfReport['_id'] = this.currentRecord._id;
 
-      this.lngFlavour && selfReport['SelfReportLNG'] && (selfReport['SelfReportLNG']['_id'] = this.lngFlavour._id);
+      if (this.lngFlavour) {
+        if (!CommonUtils.isObject(selfReport['SelfReportLNG'])) {
+          selfReport['SelfReportLNG'] = {};
+        }
+
+        // always update if flavour exists, regardless of flavour field changes, as fields in master might have changed
+        selfReport['SelfReportLNG']['_id'] = this.lngFlavour._id;
+      }
 
       this.factoryService.editSelfReport(selfReport).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);

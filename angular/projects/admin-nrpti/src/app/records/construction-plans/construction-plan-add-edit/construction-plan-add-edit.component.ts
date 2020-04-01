@@ -7,6 +7,7 @@ import { Picklists } from '../../../utils/constants/record-constants';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
+import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
 
 @Component({
@@ -97,7 +98,6 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
       ),
       agency: new FormControl((this.currentRecord && this.currentRecord.agency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
-      issuedTo: new FormControl((this.currentRecord && this.currentRecord.issuedTo) || ''),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
       latitude: new FormControl(
@@ -146,7 +146,6 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
       );
     this.myForm.controls.agency.dirty && (constructionPlan['agency'] = this.myForm.controls.agency.value);
     this.myForm.controls.author.dirty && (constructionPlan['author'] = this.myForm.controls.author.value);
-    this.myForm.controls.issuedTo.dirty && (constructionPlan['issuedTo'] = this.myForm.controls.issuedTo.value);
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
@@ -197,8 +196,14 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
     } else {
       constructionPlan['_id'] = this.currentRecord._id;
 
-      this.lngFlavour && constructionPlan['ConstructionPlanLNG'] &&
-        (constructionPlan['ConstructionPlanLNG']['_id'] = this.lngFlavour._id);
+      if (this.lngFlavour) {
+        if (!CommonUtils.isObject(constructionPlan['ConstructionPlanLNG'])) {
+          constructionPlan['ConstructionPlanLNG'] = {};
+        }
+
+        // always update if flavour exists, regardless of flavour field changes, as fields in master might have changed
+        constructionPlan['ConstructionPlanLNG']['_id'] = this.lngFlavour._id;
+      }
 
       this.factoryService.editConstructionPlan(constructionPlan).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);

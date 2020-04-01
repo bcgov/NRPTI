@@ -10,6 +10,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Utils } from 'nrpti-angular-components';
 import { RecordUtils } from '../../utils/record-utils';
+import { EntityAddEditComponent } from '../../../../../../common/src/app/entity/entity-add-edit/entity-add-edit.component';
+import { MatSlideToggleModule } from '@angular/material';
 
 describe('InspectionAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<InspectionAddEditComponent>(InspectionAddEditComponent);
@@ -26,10 +28,11 @@ describe('InspectionAddEditComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         GlobalModule,
+        MatSlideToggleModule,
         NgxPaginationModule,
         NgbModule.forRoot()
       ],
-      declarations: [InspectionAddEditComponent],
+      declarations: [InspectionAddEditComponent, EntityAddEditComponent],
       providers: [
         Utils,
         RecordUtils,

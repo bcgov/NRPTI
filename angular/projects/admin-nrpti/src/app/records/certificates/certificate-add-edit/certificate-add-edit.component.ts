@@ -7,6 +7,7 @@ import { Picklists } from '../../../utils/constants/record-constants';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
+import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
 
 @Component({
@@ -42,7 +43,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
     private factoryService: FactoryService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -94,7 +95,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
+        ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       act: new FormControl(
@@ -112,7 +113,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       paragraph: new FormControl(
         (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
       ),
-      issuedTo: new FormControl((this.currentRecord && this.currentRecord.issuedTo) || ''),
+      legislationDescription: new FormControl((this.currentRecord && this.currentRecord.legislationDescription) || ''),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
       latitude: new FormControl(
@@ -127,7 +128,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
-          ''
+        ''
       ),
       publishLng: new FormControl(
         (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
@@ -183,7 +184,8 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       };
     }
 
-    this.myForm.controls.issuedTo.dirty && (certificate['issuedTo'] = this.myForm.controls.issuedTo.value);
+    this.myForm.controls.legislationDescription.dirty &&
+      (certificate['legislationDescription'] = this.myForm.controls.legislationDescription.value);
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
@@ -227,7 +229,14 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
     } else {
       certificate['_id'] = this.currentRecord._id;
 
-      this.lngFlavour && certificate['CertificateLNG'] && (certificate['CertificateLNG']['_id'] = this.lngFlavour._id);
+      if (this.lngFlavour) {
+        if (!CommonUtils.isObject(certificate['CertificateLNG'])) {
+          certificate['CertificateLNG'] = {};
+        }
+
+        // always update if flavour exists, regardless of flavour field changes, as fields in master might have changed
+        certificate['CertificateLNG']['_id'] = this.lngFlavour._id;
+      }
 
       this.factoryService.editCertificate(certificate).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
