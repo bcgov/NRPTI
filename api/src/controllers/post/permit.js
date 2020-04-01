@@ -234,7 +234,7 @@ exports.createLNG = async function (args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (permitLNG.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (permit.legislationDescription = incomingObj.legislationDescription);
+  incomingObj.legislationDescription && (permitLNG.legislationDescription = incomingObj.legislationDescription);
   incomingObj.projectName && (permitLNG.projectName = incomingObj.projectName);
   incomingObj.location && (permitLNG.location = incomingObj.location);
   incomingObj.centroid && (permitLNG.centroid = incomingObj.centroid);
