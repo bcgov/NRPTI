@@ -1,4 +1,5 @@
 import { Legislation } from './common-models/legislation';
+import { Entity } from './common-models/entity';
 
 /**
  * Warning data model.
@@ -22,7 +23,7 @@ export class Warning {
   issuingAgency: string;
   author: string;
   legislation: Legislation;
-  issuedTo: string;
+  issuedTo: Entity;
   projectName: string;
   location: string;
   centroid: number[];
@@ -56,7 +57,7 @@ export class Warning {
     this.issuingAgency = (obj && obj.issuingAgency) || null;
     this.author = (obj && obj.author) || null;
     this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
-    this.issuedTo = (obj && obj.issuedTo) || '';
+    this.issuedTo = (obj && obj.issuedTo && new Entity(obj.issuedTo)) || null;
     this.projectName = (obj && obj.projectName) || null;
     this.location = (obj && obj.location) || null;
     this.centroid = (obj && obj.centroid) || null;

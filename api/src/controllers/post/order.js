@@ -1,5 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
+let queryUtils = require('../../utils/query-utils');
+let postUtils = require('../../utils/post-utils');
 
 /**
  * Performs all operations necessary to create a master Order record and its associated flavour records.
@@ -51,7 +53,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedFlavourOrders,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 
@@ -70,7 +72,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedOrder,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 };
@@ -142,6 +144,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.dateIssued && (order.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (order.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (order.author = incomingObj.author);
+
   incomingObj.legislation && incomingObj.legislation.act && (order.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
     incomingObj.legislation.regulation &&
@@ -155,12 +158,29 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (order.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.issuedTo && (order.issuedTo = incomingObj.issuedTo);
+
+  order.issuedTo.read = ['sysadmin'];
+  order.issuedTo.write = ['sysadmin'];
+  incomingObj.issuedTo && incomingObj.issuedTo.type && (order.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
+    (order.issuedTo.companyName = incomingObj.issuedTo.companyName);
+  incomingObj.issuedTo && incomingObj.issuedTo.firstName && (order.issuedTo.firstName = incomingObj.issuedTo.firstName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
+    (order.issuedTo.middleName = incomingObj.issuedTo.middleName);
+  incomingObj.issuedTo && incomingObj.issuedTo.lastName && (order.issuedTo.lastName = incomingObj.issuedTo.lastName);
+  incomingObj.issuedTo && (order.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
+    (order.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+
   incomingObj.projectName && (order.projectName = incomingObj.projectName);
   incomingObj.location && (order.location = incomingObj.location);
   incomingObj.centroid && (order.centroid = incomingObj.centroid);
   incomingObj.outcomeStatus && (order.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (order.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.documents && (order.documents = incomingObj.documents);
 
   // set meta
   order.addedBy = args.swagger.params.auth_payload.displayName;
@@ -224,13 +244,6 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   orderLNG.read = ['sysadmin'];
   orderLNG.write = ['sysadmin'];
 
-  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    orderLNG.read.push('public');
-    orderLNG.datePublished = new Date();
-    orderLNG.publishedBy = args.swagger.params.auth_payload.displayName;
-  }
-
   orderLNG.addedBy = args.swagger.params.auth_payload.displayName;
   orderLNG.dateAdded = new Date();
 
@@ -241,6 +254,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.dateIssued && (orderLNG.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (orderLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (orderLNG.author = incomingObj.author);
+
   incomingObj.legislation && incomingObj.legislation.act && (orderLNG.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
     incomingObj.legislation.regulation &&
@@ -254,12 +268,31 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (orderLNG.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.issuedTo && (orderLNG.issuedTo = incomingObj.issuedTo);
+
+  orderLNG.issuedTo.read = ['sysadmin'];
+  orderLNG.issuedTo.write = ['sysadmin'];
+  incomingObj.issuedTo && incomingObj.issuedTo.type && (orderLNG.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
+    (orderLNG.issuedTo.companyName = incomingObj.issuedTo.companyName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
+    (orderLNG.issuedTo.firstName = incomingObj.issuedTo.firstName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
+    (orderLNG.issuedTo.middleName = incomingObj.issuedTo.middleName);
+  incomingObj.issuedTo && incomingObj.issuedTo.lastName && (orderLNG.issuedTo.lastName = incomingObj.issuedTo.lastName);
+  incomingObj.issuedTo && (orderLNG.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
+    (orderLNG.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+
   incomingObj.projectName && (orderLNG.projectName = incomingObj.projectName);
   incomingObj.location && (orderLNG.location = incomingObj.location);
   incomingObj.centroid && (orderLNG.centroid = incomingObj.centroid);
   incomingObj.outcomeStatus && (orderLNG.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (orderLNG.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.documents && (orderLNG.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.description && (orderLNG.description = incomingObj.description);
@@ -268,6 +301,17 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (orderLNG.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (orderLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (orderLNG.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    orderLNG.read.push('public');
+    orderLNG.datePublished = new Date();
+    orderLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+
+    if (!queryUtils.isRecordAnonymous(orderLNG)) {
+      orderLNG.issuedTo.read.push('public');
+    }
+  }
 
   return await orderLNG.save();
 };
@@ -322,13 +366,6 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   orderNRCED.read = ['sysadmin'];
   orderNRCED.write = ['sysadmin'];
 
-  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    orderNRCED.read.push('public');
-    orderNRCED.datePublished = new Date();
-    orderNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
-  }
-
   orderNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   orderNRCED.dateAdded = new Date();
 
@@ -339,6 +376,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.dateIssued && (orderNRCED.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (orderNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (orderNRCED.author = incomingObj.author);
+
   incomingObj.legislation && incomingObj.legislation.act && (orderNRCED.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
     incomingObj.legislation.regulation &&
@@ -352,12 +390,33 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (orderNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.issuedTo && (orderNRCED.issuedTo = incomingObj.issuedTo);
+
+  orderNRCED.issuedTo.read = ['sysadmin'];
+  orderNRCED.issuedTo.write = ['sysadmin'];
+  incomingObj.issuedTo && incomingObj.issuedTo.type && (orderNRCED.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
+    (orderNRCED.issuedTo.companyName = incomingObj.issuedTo.companyName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
+    (orderNRCED.issuedTo.firstName = incomingObj.issuedTo.firstName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
+    (orderNRCED.issuedTo.middleName = incomingObj.issuedTo.middleName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.lastName &&
+    (orderNRCED.issuedTo.lastName = incomingObj.issuedTo.lastName);
+  incomingObj.issuedTo && (orderNRCED.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
+    (orderNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+
   incomingObj.projectName && (orderNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (orderNRCED.location = incomingObj.location);
   incomingObj.centroid && (orderNRCED.centroid = incomingObj.centroid);
   incomingObj.outcomeStatus && (orderNRCED.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (orderNRCED.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.documents && (orderNRCED.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.summary && (orderNRCED.summary = incomingObj.summary);
@@ -366,6 +425,17 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (orderNRCED.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (orderNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (orderNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    orderNRCED.read.push('public');
+    orderNRCED.datePublished = new Date();
+    orderNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+
+    if (!queryUtils.isRecordAnonymous(orderNRCED)) {
+      orderNRCED.issuedTo.read.push('public');
+    }
+  }
 
   return await orderNRCED.save();
 };

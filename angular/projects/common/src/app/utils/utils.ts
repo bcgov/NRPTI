@@ -59,4 +59,14 @@ export class Utils {
     });
     return docForms;
   }
+
+  /**
+   * Check if a value is an object.
+   *
+   * @param {*} obj
+   * @returns True if the value is an object, false otherwise.
+   */
+  public static isObject(obj) {
+    return obj && typeof obj === 'object' && obj.constructor.name === 'Object';
+  }
 }
