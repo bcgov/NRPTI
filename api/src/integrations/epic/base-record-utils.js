@@ -132,7 +132,7 @@ class BaseRecordUtils {
 
       return record;
     } catch (error) {
-      defaultLog.error(`Failed to save Epic ${this.recordType._schemaName} record: ${error.message}`);
+      defaultLog.error(`Failed to save ${this.recordType._schemaName} record: ${error.message}`);
     }
   }
 }

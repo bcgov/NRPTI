@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 const PutUtils = require('../../utils/put-utils');
+const PostUtils = require('../../utils/post-utils');
+const QueryUtils = require('../../utils/query-utils');
 const AdministrativePenaltyPost = require('../post/administrative-penalty');
 
 /**
@@ -54,8 +56,11 @@ exports.editRecord = async function(args, res, next, incomingObj) {
           this.editLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.AdministrativePenaltyLNG })
         );
       } else {
+        const masterRecord = await PutUtils.fetchMasterForCreateFlavour('AdministrativePenalty', incomingObj._id);
+
         observables.push(
           AdministrativePenaltyPost.createLNG(args, res, next, {
+            ...masterRecord,
             ...flavourIncomingObj,
             ...incomingObj.AdministrativePenaltyLNG
           })
@@ -71,8 +76,11 @@ exports.editRecord = async function(args, res, next, incomingObj) {
           this.editNRCED(args, res, next, { ...flavourIncomingObj, ...incomingObj.AdministrativePenaltyNRCED })
         );
       } else {
+        const masterRecord = await PutUtils.fetchMasterForCreateFlavour('AdministrativePenalty', incomingObj._id);
+
         observables.push(
           AdministrativePenaltyPost.createNRCED(args, res, next, {
+            ...masterRecord,
             ...flavourIncomingObj,
             ...incomingObj.AdministrativePenaltyNRCED
           })
@@ -93,7 +101,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedFlavourAdministrativePenalties,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 
@@ -112,7 +120,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedAdministrativePenalty,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 };
@@ -168,10 +176,14 @@ exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
     return;
   }
 
+  sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+
   sanitizedObj.dateUpdated = new Date();
   sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
 
-  let updateObj = { $set: sanitizedObj };
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
+  const updateObj = { $set: dotNotatedObj };
 
   if (flavourIds && flavourIds.length) {
     updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
@@ -229,20 +241,33 @@ exports.editLNG = async function(args, res, next, incomingObj) {
 
   const sanitizedObj = PutUtils.validateObjectAgainstModel(AdministrativePenaltyLNG, incomingObj);
 
+  sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+
+  sanitizedObj.dateUpdated = new Date();
+
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  let updateObj = { $set: sanitizedObj };
+  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    updateObj['$addToSet'] = { read: 'public' };
+    updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
-    updateObj['$pull'] = { read: 'public' };
+    updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj.$set['dateUpdated'] = new Date();
+  if (sanitizedObj.issuedTo) {
+    // check if a condition changed that would cause the entity details to be anonymous, or not.
+    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
+      updateObj.$pull['issuedTo.read'] = 'public';
+    } else {
+      updateObj.$addToSet['issuedTo.read'] = 'public';
+    }
+  }
 
   return await AdministrativePenaltyLNG.findOneAndUpdate(
     { _schemaName: 'AdministrativePenaltyLNG', _id: _id },
@@ -298,20 +323,33 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
 
   const sanitizedObj = PutUtils.validateObjectAgainstModel(AdministrativePenaltyNRCED, incomingObj);
 
+  sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+
+  sanitizedObj.dateUpdated = new Date();
+
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  let updateObj = { $set: sanitizedObj };
+  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    updateObj['$addToSet'] = { read: 'public' };
+    updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
-    updateObj['$pull'] = { read: 'public' };
+    updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj.$set['dateUpdated'] = new Date();
+  if (sanitizedObj.issuedTo) {
+    // check if a condition changed that would cause the entity details to be anonymous, or not.
+    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
+      updateObj.$pull['issuedTo.read'] = 'public';
+    } else {
+      updateObj.$addToSet['issuedTo.read'] = 'public';
+    }
+  }
 
   return await AdministrativePenaltyNRCED.findOneAndUpdate(
     { _schemaName: 'AdministrativePenaltyNRCED', _id: _id },

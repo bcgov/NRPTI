@@ -21,8 +21,7 @@ exports.publish = async function(obj) {
       });
     } else {
       // publish
-      obj.read.push('public');
-      obj.markModified('read');
+      self.addPublicReadRole(obj);
 
       const date = new Date();
 
@@ -48,6 +47,23 @@ exports.publish = async function(obj) {
 };
 
 /**
+ * Adds the read role to the objects read array, if it exists.
+ *
+ * @param {*} obj
+ * @returns
+ */
+exports.addPublicReadRole = function(obj) {
+  if (!obj || !obj.read || !Array.isArray(obj.read)) {
+    return obj;
+  }
+
+  obj.read.push('public');
+  obj.markModified('read');
+
+  return obj;
+};
+
+/**
  * Unpublish the obj: remove 'public' from the 'read' field.
  *
  * @param {*} obj
@@ -66,8 +82,7 @@ exports.unPublish = async function(obj) {
       });
     } else {
       // unpublish
-      obj.read = obj.read.filter(role => role !== 'public');
-      obj.markModified('read');
+      self.removePublicReadRole(obj);
 
       obj.datePublished = null;
       obj.markModified('datePublished');
@@ -91,12 +106,33 @@ exports.unPublish = async function(obj) {
 };
 
 /**
- * Return true if the obj is published, false otherwise.
+ * Removes the read role to the objects read array, if it exists.
+ *
+ * @param {*} obj
+ * @returns
+ */
+exports.removePublicReadRole = function(obj) {
+  if (!obj || !obj.read || !Array.isArray(obj.read)) {
+    return obj;
+  }
+
+  obj.read = obj.read.filter(role => role !== 'public');
+  obj.markModified('read');
+
+  return obj;
+};
+
+/**
+ * Return true if the obj is published, false if not publish, and null if invalid obj provided.
  *
  * @param {*} obj
  * @returns
  */
 exports.isPublished = function(obj) {
+  if (!obj || !obj.read || !Array.isArray(obj.read)) {
+    return null;
+  }
+
   return obj.read.includes('public');
 };
 

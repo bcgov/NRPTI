@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 const PutUtils = require('../../utils/put-utils');
+const PostUtils = require('../../utils/post-utils');
+const QueryUtils = require('../../utils/query-utils');
 const TicketPost = require('../post/ticket');
 
 /**
@@ -52,7 +54,11 @@ exports.editRecord = async function(args, res, next, incomingObj) {
       if (incomingObj.TicketLNG._id) {
         observables.push(this.editLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.TicketLNG }));
       } else {
-        observables.push(TicketPost.createLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.TicketLNG }));
+        const masterRecord = await PutUtils.fetchMasterForCreateFlavour('Ticket', incomingObj._id);
+
+        observables.push(
+          TicketPost.createLNG(args, res, next, { ...masterRecord, ...flavourIncomingObj, ...incomingObj.TicketLNG })
+        );
       }
 
       delete incomingObj.TicketLNG;
@@ -62,8 +68,14 @@ exports.editRecord = async function(args, res, next, incomingObj) {
       if (incomingObj.TicketNRCED._id) {
         observables.push(this.editNRCED(args, res, next, { ...flavourIncomingObj, ...incomingObj.TicketNRCED }));
       } else {
+        const masterRecord = await PutUtils.fetchMasterForCreateFlavour('Ticket', incomingObj._id);
+
         observables.push(
-          TicketPost.createNRCED(args, res, next, { ...flavourIncomingObj, ...incomingObj.TicketNRCED })
+          TicketPost.createNRCED(args, res, next, {
+            ...masterRecord,
+            ...flavourIncomingObj,
+            ...incomingObj.TicketNRCED
+          })
         );
       }
 
@@ -79,7 +91,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedFlavourTickets,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 
@@ -98,7 +110,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedTicket,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 };
@@ -154,10 +166,14 @@ exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
     return;
   }
 
+  sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+
   sanitizedObj.dateUpdated = new Date();
   sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
 
-  let updateObj = { $set: sanitizedObj };
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
+  const updateObj = { $set: dotNotatedObj };
 
   if (flavourIds && flavourIds.length) {
     updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
@@ -213,20 +229,33 @@ exports.editLNG = async function(args, res, next, incomingObj) {
 
   const sanitizedObj = PutUtils.validateObjectAgainstModel(TicketLNG, incomingObj);
 
+  sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+
+  sanitizedObj.dateUpdated = new Date();
+
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  let updateObj = { $set: sanitizedObj };
+  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    updateObj['$addToSet'] = { read: 'public' };
+    updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
-    updateObj['$pull'] = { read: 'public' };
+    updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj.$set['dateUpdated'] = new Date();
+  if (sanitizedObj.issuedTo) {
+    // check if a condition changed that would cause the entity details to be anonymous, or not.
+    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
+      updateObj.$pull['issuedTo.read'] = 'public';
+    } else {
+      updateObj.$addToSet['issuedTo.read'] = 'public';
+    }
+  }
 
   return await TicketLNG.findOneAndUpdate({ _schemaName: 'TicketLNG', _id: _id }, updateObj, { new: true });
 };
@@ -278,20 +307,33 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
 
   const sanitizedObj = PutUtils.validateObjectAgainstModel(TicketNRCED, incomingObj);
 
+  sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+
+  sanitizedObj.dateUpdated = new Date();
+
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  let updateObj = { $set: sanitizedObj };
+  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    updateObj['$addToSet'] = { read: 'public' };
+    updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
-    updateObj['$pull'] = { read: 'public' };
+    updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj.$set['dateUpdated'] = new Date();
+  if (sanitizedObj.issuedTo) {
+    // check if a condition changed that would cause the entity details to be anonymous, or not.
+    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
+      updateObj.$pull['issuedTo.read'] = 'public';
+    } else {
+      updateObj.$addToSet['issuedTo.read'] = 'public';
+    }
+  }
 
   return await TicketNRCED.findOneAndUpdate({ _schemaName: 'TicketNRCED', _id: _id }, updateObj, { new: true });
 };

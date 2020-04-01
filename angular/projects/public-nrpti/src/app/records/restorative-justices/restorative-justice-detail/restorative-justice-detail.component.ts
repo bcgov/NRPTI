@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, Input, OnDestroy } from '@angular
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
+import { RestorativeJusticeNRCED } from '../../../../../../common/src/app/models';
 
 @Component({
   selector: 'app-restorative-justice-detail',
@@ -20,6 +21,8 @@ export class RestorativeJusticeDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.data) {
+      this.data = new RestorativeJusticeNRCED(this.data);
+
       this.loading = false;
       this._changeDetectionRef.detectChanges();
       return;
@@ -33,7 +36,7 @@ export class RestorativeJusticeDetailComponent implements OnInit, OnDestroy {
       }
 
       // If data was passed in directly, take it over anything in the route resolver.
-      this.data = (res.records[0] && res.records[0].data) || [];
+      this.data = (res.records[0] && res.records[0].data && new RestorativeJusticeNRCED(res.records[0].data)) || null;
 
       this.loading = false;
       this._changeDetectionRef.detectChanges();
