@@ -25,6 +25,7 @@ export class Certificate {
   author: string;
   description: string;
   legislation: Legislation;
+  legislationDescription: string;
   projectName: string;
   location: string;
   centroid: number[];
@@ -59,6 +60,7 @@ export class Certificate {
     this.author = (obj && obj.author) || null;
     this.description = (obj && obj.description) || null;
     this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
+    this.legislationDescription = (obj && obj.legislationDescription) || null;
     this.projectName = (obj && obj.projectName) || null;
     this.location = (obj && obj.location) || null;
     this.centroid = (obj && obj.centroid) || null;

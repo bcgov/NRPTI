@@ -187,10 +187,9 @@ let searchCollection = async function(
     $redact: {
       $cond: {
         if: {
-          // This way, if read isn't present, we assume public no roles array.
-          $and: [
-            { $cond: { if: '$read', then: true, else: false } },
-            {
+          $cond: {
+            if: '$read',
+            then: {
               $anyElementTrue: {
                 $map: {
                   input: '$read',
@@ -198,13 +197,12 @@ let searchCollection = async function(
                   in: { $setIsSubset: [['$$fieldTag'], roles] }
                 }
               }
-            }
-          ]
+            },
+            else: true
+          }
         },
-        then: '$$KEEP',
-        else: {
-          $cond: { if: '$read', then: '$$PRUNE', else: '$$DESCEND' }
-        }
+        then: '$$DESCEND',
+        else: '$$PRUNE'
       }
     }
   });
@@ -353,10 +351,9 @@ const executeQuery = async function(args, res, next) {
         $redact: {
           $cond: {
             if: {
-              // This way, if read isn't present, we assume public no roles array.
-              $and: [
-                { $cond: { if: '$read', then: true, else: false } },
-                {
+              $cond: {
+                if: '$read',
+                then: {
                   $anyElementTrue: {
                     $map: {
                       input: '$read',
@@ -364,13 +361,12 @@ const executeQuery = async function(args, res, next) {
                       in: { $setIsSubset: [['$$fieldTag'], roles] }
                     }
                   }
-                }
-              ]
+                },
+                else: true
+              }
             },
-            then: '$$KEEP',
-            else: {
-              $cond: { if: '$read', then: '$$PRUNE', else: '$$DESCEND' }
-            }
+            then: '$$DESCEND',
+            else: '$$PRUNE'
           }
         }
       }

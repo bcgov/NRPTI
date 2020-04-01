@@ -14,6 +14,8 @@ import { DocumentEditComponent } from './document-edit/document-edit.component';
 import { DocumentReadOnlyComponent } from './document-read-only/document-read-only.component';
 import { LegislationAddEditComponent } from './legislation-add-edit/legislation-add-edit.component';
 import { AutoCompleteMultiSelectComponent } from './autocomplete-multi-select/autocomplete-multi-select.component';
+import { EntityAddEditComponent } from './entity/entity-add-edit/entity-add-edit.component';
+import { EntityDetailComponent } from './entity/entity-detail/entity-detail.component';
 
 // services
 
@@ -24,7 +26,9 @@ import { AutoCompleteMultiSelectComponent } from './autocomplete-multi-select/au
     DocumentEditComponent,
     DocumentReadOnlyComponent,
     LegislationAddEditComponent,
-    AutoCompleteMultiSelectComponent
+    AutoCompleteMultiSelectComponent,
+    EntityAddEditComponent,
+    EntityDetailComponent
   ],
   imports: [
     NgbModule,
@@ -43,7 +47,9 @@ import { AutoCompleteMultiSelectComponent } from './autocomplete-multi-select/au
     DocumentEditComponent,
     DocumentReadOnlyComponent,
     LegislationAddEditComponent,
-    AutoCompleteMultiSelectComponent
+    AutoCompleteMultiSelectComponent,
+    EntityAddEditComponent,
+    EntityDetailComponent
   ]
 })
 export class CommonModule {}

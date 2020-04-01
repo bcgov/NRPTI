@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 exports.validateObjectAgainstModel = function(mongooseModel, incomingObj) {
   if (!incomingObj) {
     return;
@@ -44,3 +46,69 @@ const sanitizeObject = function(objToTest, validObj) {
 function isObject(item) {
   return item && typeof item === 'object' && item.constructor.name === 'Object';
 }
+
+/**
+ * Fetches a master record for the purposes of creating a new flavour record, during an edit (put) request.
+ *
+ * @param {string} schema master _schemaName
+ * @param {string} id master _id
+ * @returns {object} master object with certain master-specific fields removed (like _id).
+ */
+exports.fetchMasterForCreateFlavour = async function(schema, id) {
+  const Model = mongoose.model(schema);
+  const masterRecord = await Model.findOne({ _schemaName: schema, _id: id });
+
+  if (!masterRecord) {
+    return {};
+  }
+
+  const masterObj = masterRecord.toObject();
+
+  delete masterObj._id;
+  delete masterObj._schemaName;
+  delete masterObj._flavourRecords;
+  delete masterObj.read;
+  delete masterObj.write;
+
+  return masterObj;
+};
+
+/**
+ * Converts the obj into a flattened object who's keys are the paths of the original object.
+ *
+ * Example:
+ *  inputObj = {
+ *    a: {
+ *      b: 123
+ *    }
+ *  }
+ *
+ *  getDotNotation(inputObj, {}, '')
+ *
+ *  outputObj = {
+ *    'a.b': 123
+ *  }
+ *
+ * @param {*} obj object to flatten
+ * @param {*} target obj to assign flattened object to (default: {})
+ * @param {*} prefix prefix to add to the start of the flattened path (default: '')
+ * @returns a flattened copy of the original obj
+ */
+exports.getDotNotation = function(obj, target, prefix) {
+  if (!obj) {
+    return obj;
+  }
+
+  target = target || {};
+  prefix = prefix || '';
+
+  Object.keys(obj).forEach(key => {
+    if (isObject(obj[key])) {
+      this.getDotNotation(obj[key], target, prefix + key + '.');
+    } else {
+      return (target[prefix + key] = obj[key]);
+    }
+  });
+
+  return target;
+};

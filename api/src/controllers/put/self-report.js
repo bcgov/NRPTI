@@ -47,8 +47,11 @@ exports.editRecord = async function(args, res, next, incomingObj) {
       if (incomingObj.SelfReportLNG._id) {
         observables.push(this.editLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.SelfReportLNG }));
       } else {
+        const masterRecord = await PutUtils.fetchMasterForCreateFlavour('SelfReport', incomingObj._id);
+
         observables.push(
           SelfReportPost.createLNG(args, res, next, {
+            ...masterRecord,
             ...flavourIncomingObj,
             ...incomingObj.SelfReportLNG
           })
@@ -67,7 +70,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedFlavourSelfReports,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 
@@ -86,7 +89,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedSelfReport,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 };
@@ -140,7 +143,9 @@ exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
   sanitizedObj.dateUpdated = new Date();
   sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
 
-  let updateObj = { $set: sanitizedObj };
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
+  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (flavourIds && flavourIds.length) {
     updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
@@ -191,20 +196,22 @@ exports.editLNG = async function(args, res, next, incomingObj) {
 
   const sanitizedObj = PutUtils.validateObjectAgainstModel(SelfReportLNG, incomingObj);
 
+  sanitizedObj.dateUpdated = new Date();
+
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  let updateObj = { $set: sanitizedObj };
+  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    updateObj['$addToSet'] = { read: 'public' };
+    updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
-    updateObj['$pull'] = { read: 'public' };
+    updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
   }
-
-  updateObj.$set['dateUpdated'] = new Date();
 
   return await SelfReportLNG.findOneAndUpdate({ _schemaName: 'SelfReportLNG', _id: _id }, updateObj, { new: true });
 };
