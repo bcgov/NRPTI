@@ -25,7 +25,7 @@ let ObjectId = require('mongoose').Types.ObjectId;
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function(args, res, next, incomingObj) {
+exports.createRecord = async function (args, res, next, incomingObj) {
   // save flavour records
   let observables = [];
   let savedFlavourPermits = [];
@@ -93,7 +93,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master permit record
  */
-exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = async function (args, res, next, incomingObj, flavourIds) {
   let Permit = mongoose.model('Permit');
   let permit = new Permit();
 
@@ -142,6 +142,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (permit.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.legislationDescription && (permit.legislationDescription = incomingObj.legislationDescription);
   incomingObj.projectName && (permit.projectName = incomingObj.projectName);
   incomingObj.location && (permit.location = incomingObj.location);
   incomingObj.centroid && (permit.centroid = incomingObj.centroid);
@@ -183,7 +184,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
  * @param {*} incomingObj see example
  * @returns created lng permit record
  */
-exports.createLNG = async function(args, res, next, incomingObj) {
+exports.createLNG = async function (args, res, next, incomingObj) {
   let PermitLNG = mongoose.model('PermitLNG');
   let permitLNG = new PermitLNG();
 
@@ -233,6 +234,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (permitLNG.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.legislationDescription && (permit.legislationDescription = incomingObj.legislationDescription);
   incomingObj.projectName && (permitLNG.projectName = incomingObj.projectName);
   incomingObj.location && (permitLNG.location = incomingObj.location);
   incomingObj.centroid && (permitLNG.centroid = incomingObj.centroid);
