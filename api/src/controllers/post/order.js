@@ -158,6 +158,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (order.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.legislationDescription && (order.legislationDescription = incomingObj.legislationDescription);
 
   order.issuedTo.read = ['sysadmin'];
   order.issuedTo.write = ['sysadmin'];
@@ -268,6 +269,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (orderLNG.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.legislationDescription && (orderLNG.legislationDescription = incomingObj.legislationDescription);
 
   orderLNG.issuedTo.read = ['sysadmin'];
   orderLNG.issuedTo.write = ['sysadmin'];
@@ -390,6 +392,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (orderNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.legislationDescription && (orderNRCED.legislationDescription = incomingObj.legislationDescription);
 
   orderNRCED.issuedTo.read = ['sysadmin'];
   orderNRCED.issuedTo.write = ['sysadmin'];
