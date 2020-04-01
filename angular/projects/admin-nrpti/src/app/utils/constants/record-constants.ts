@@ -63,6 +63,8 @@ export class Picklists {
     'Natural Resource Officers (NRO)'
   ];
 
+  public static readonly entityTypePicklist = ['Company', 'Individual'];
+
   public static readonly authorPicklist = ['BC Government', 'Proponent', 'Other'];
 
   public static readonly outcomeStatusPicklist = ['Closed', 'Open'];

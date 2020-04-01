@@ -1,5 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
+let queryUtils = require('../../utils/query-utils');
+let postUtils = require('../../utils/post-utils');
 
 /**
  * Performs all operations necessary to create a master Administrative Sanction record and its associated flavour records.
@@ -55,7 +57,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedFlavourAdministrativeSanctions,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 
@@ -74,7 +76,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedAdministrativeSanction,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 };
@@ -145,6 +147,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.dateIssued && (administrativeSanction.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (administrativeSanction.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (administrativeSanction.author = incomingObj.author);
+
   incomingObj.legislation &&
     incomingObj.legislation.act &&
     (administrativeSanction.legislation.act = incomingObj.legislation.act);
@@ -160,13 +163,36 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (administrativeSanction.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.issuedTo && (administrativeSanction.issuedTo = incomingObj.issuedTo);
+  incomingObj.legislationDescription && (administrativeSanction.legislationDescription = incomingObj.legislationDescription);
+  administrativeSanction.issuedTo.read = ['sysadmin'];
+  administrativeSanction.issuedTo.write = ['sysadmin'];
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.type &&
+    (administrativeSanction.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
+    (administrativeSanction.issuedTo.companyName = incomingObj.issuedTo.companyName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
+    (administrativeSanction.issuedTo.firstName = incomingObj.issuedTo.firstName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
+    (administrativeSanction.issuedTo.middleName = incomingObj.issuedTo.middleName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.lastName &&
+    (administrativeSanction.issuedTo.lastName = incomingObj.issuedTo.lastName);
+  incomingObj.issuedTo &&
+    (administrativeSanction.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
+    (administrativeSanction.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.projectName && (administrativeSanction.projectName = incomingObj.projectName);
   incomingObj.location && (administrativeSanction.location = incomingObj.location);
   incomingObj.centroid && (administrativeSanction.centroid = incomingObj.centroid);
   incomingObj.outcomeStatus && (administrativeSanction.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (administrativeSanction.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (administrativeSanction.penalty = incomingObj.penalty);
+  incomingObj.documents && (administrativeSanction.documents = incomingObj.documents);
 
   // set meta
   administrativeSanction.addedBy = args.swagger.params.auth_payload.displayName;
@@ -230,13 +256,6 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   administrativeSanctionLNG.read = ['sysadmin'];
   administrativeSanctionLNG.write = ['sysadmin'];
 
-  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    administrativeSanctionLNG.read.push('public');
-    administrativeSanctionLNG.datePublished = new Date();
-    administrativeSanctionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
-  }
-
   administrativeSanctionLNG.addedBy = args.swagger.params.auth_payload.displayName;
   administrativeSanctionLNG.dateAdded = new Date();
 
@@ -246,6 +265,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.dateIssued && (administrativeSanctionLNG.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (administrativeSanctionLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (administrativeSanctionLNG.author = incomingObj.author);
+
   incomingObj.legislation &&
     incomingObj.legislation.act &&
     (administrativeSanctionLNG.legislation.act = incomingObj.legislation.act);
@@ -261,13 +281,36 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (administrativeSanctionLNG.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.issuedTo && (administrativeSanctionLNG.issuedTo = incomingObj.issuedTo);
+  incomingObj.legislationDescription && (administrativeSanctionLNG.legislationDescription = incomingObj.legislationDescription);
+  administrativeSanctionLNG.issuedTo.read = ['sysadmin'];
+  administrativeSanctionLNG.issuedTo.write = ['sysadmin'];
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.type &&
+    (administrativeSanctionLNG.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
+    (administrativeSanctionLNG.issuedTo.companyName = incomingObj.issuedTo.companyName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
+    (administrativeSanctionLNG.issuedTo.firstName = incomingObj.issuedTo.firstName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
+    (administrativeSanctionLNG.issuedTo.middleName = incomingObj.issuedTo.middleName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.lastName &&
+    (administrativeSanctionLNG.issuedTo.lastName = incomingObj.issuedTo.lastName);
+  incomingObj.issuedTo &&
+    (administrativeSanctionLNG.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
+    (administrativeSanctionLNG.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.projectName && (administrativeSanctionLNG.projectName = incomingObj.projectName);
   incomingObj.location && (administrativeSanctionLNG.location = incomingObj.location);
   incomingObj.centroid && (administrativeSanctionLNG.centroid = incomingObj.centroid);
   incomingObj.outcomeStatus && (administrativeSanctionLNG.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (administrativeSanctionLNG.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (administrativeSanctionLNG.penalty = incomingObj.penalty);
+  incomingObj.documents && (administrativeSanctionLNG.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.description && (administrativeSanctionLNG.description = incomingObj.description);
@@ -276,6 +319,17 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (administrativeSanctionLNG.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (administrativeSanctionLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (administrativeSanctionLNG.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    administrativeSanctionLNG.read.push('public');
+    administrativeSanctionLNG.datePublished = new Date();
+    administrativeSanctionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+
+    if (!queryUtils.isRecordAnonymous(administrativeSanctionLNG)) {
+      administrativeSanctionLNG.issuedTo.read.push('public');
+    }
+  }
 
   return await administrativeSanctionLNG.save();
 };
@@ -330,13 +384,6 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   administrativeSanctionNRCED.read = ['sysadmin'];
   administrativeSanctionNRCED.write = ['sysadmin'];
 
-  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    administrativeSanctionNRCED.read.push('public');
-    administrativeSanctionNRCED.datePublished = new Date();
-    administrativeSanctionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
-  }
-
   administrativeSanctionNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   administrativeSanctionNRCED.dateAdded = new Date();
 
@@ -346,6 +393,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.dateIssued && (administrativeSanctionNRCED.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (administrativeSanctionNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (administrativeSanctionNRCED.author = incomingObj.author);
+
   incomingObj.legislation &&
     incomingObj.legislation.act &&
     (administrativeSanctionNRCED.legislation.act = incomingObj.legislation.act);
@@ -361,13 +409,36 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (administrativeSanctionNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.issuedTo && (administrativeSanctionNRCED.issuedTo = incomingObj.issuedTo);
+  incomingObj.legislationDescription && (administrativeSanctionNRCED.legislationDescription = incomingObj.legislationDescription);
+  administrativeSanctionNRCED.issuedTo.read = ['sysadmin'];
+  administrativeSanctionNRCED.issuedTo.write = ['sysadmin'];
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.type &&
+    (administrativeSanctionNRCED.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
+    (administrativeSanctionNRCED.issuedTo.companyName = incomingObj.issuedTo.companyName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
+    (administrativeSanctionNRCED.issuedTo.firstName = incomingObj.issuedTo.firstName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
+    (administrativeSanctionNRCED.issuedTo.middleName = incomingObj.issuedTo.middleName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.lastName &&
+    (administrativeSanctionNRCED.issuedTo.lastName = incomingObj.issuedTo.lastName);
+  incomingObj.issuedTo &&
+    (administrativeSanctionNRCED.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
+    (administrativeSanctionNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.projectName && (administrativeSanctionNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (administrativeSanctionNRCED.location = incomingObj.location);
   incomingObj.centroid && (administrativeSanctionNRCED.centroid = incomingObj.centroid);
   incomingObj.outcomeStatus && (administrativeSanctionNRCED.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (administrativeSanctionNRCED.outcomeDescription = incomingObj.outcomeDescription);
   incomingObj.penalty && (administrativeSanctionNRCED.penalty = incomingObj.penalty);
+  incomingObj.documents && (administrativeSanctionNRCED.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.summary && (administrativeSanctionNRCED.summary = incomingObj.summary);
@@ -376,6 +447,17 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (administrativeSanctionNRCED.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (administrativeSanctionNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (administrativeSanctionNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    administrativeSanctionNRCED.read.push('public');
+    administrativeSanctionNRCED.datePublished = new Date();
+    administrativeSanctionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+
+    if (!queryUtils.isRecordAnonymous(administrativeSanctionNRCED)) {
+      administrativeSanctionNRCED.issuedTo.read.push('public');
+    }
+  }
 
   return await administrativeSanctionNRCED.save();
 };

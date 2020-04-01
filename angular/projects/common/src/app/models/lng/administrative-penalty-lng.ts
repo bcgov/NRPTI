@@ -1,4 +1,5 @@
 import { Legislation } from '../master/common-models/legislation';
+import { Entity } from '../master/common-models/entity';
 
 /**
  * AdministrativePenalty LNG data model.
@@ -24,7 +25,7 @@ export class AdministrativePenaltyLNG {
   author: string;
   legislation: Legislation;
   offence: string;
-  issuedTo: string;
+  issuedTo: Entity;
   projectName: string;
   location: string;
   centroid: number[];
@@ -65,7 +66,7 @@ export class AdministrativePenaltyLNG {
     this.author = (obj && obj.author) || '';
     this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
     this.offence = (obj && obj.offence) || '';
-    this.issuedTo = (obj && obj.issuedTo) || '';
+    this.issuedTo = (obj && obj.issuedTo && new Entity(obj.issuedTo)) || null;
     this.projectName = (obj && obj.projectName) || '';
     this.location = (obj && obj.location) || '';
     this.centroid = (obj && obj.centroid) || [];
