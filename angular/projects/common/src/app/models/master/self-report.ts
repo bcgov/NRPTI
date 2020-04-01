@@ -22,6 +22,7 @@ export class SelfReport {
   issuingAgency: string;
   author: string;
   legislation: Legislation;
+  legislationDescription: string;
   projectName: string;
   location: string;
   centroid: number[];
@@ -53,6 +54,7 @@ export class SelfReport {
     this.issuingAgency = (obj && obj.issuingAgency) || null;
     this.author = (obj && obj.author) || null;
     this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
+    this.legislationDescription = (obj && obj.legislationDescription) || null;
     this.projectName = (obj && obj.projectName) || null;
     this.location = (obj && obj.location) || null;
     this.centroid = (obj && obj.centroid) || null;

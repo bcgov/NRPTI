@@ -142,6 +142,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (selfReport.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.legislationDescription && (selfReport.legislationDescription = incomingObj.legislationDescription);
   incomingObj.projectName && (selfReport.projectName = incomingObj.projectName);
   incomingObj.location && (selfReport.location = incomingObj.location);
   incomingObj.centroid && (selfReport.centroid = incomingObj.centroid);
@@ -235,6 +236,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (selfReportLNG.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.legislationDescription && (selfReportLNG.legislationDescription = incomingObj.legislationDescription);
   incomingObj.projectName && (selfReportLNG.projectName = incomingObj.projectName);
   incomingObj.location && (selfReportLNG.location = incomingObj.location);
   incomingObj.centroid && (selfReportLNG.centroid = incomingObj.centroid);
