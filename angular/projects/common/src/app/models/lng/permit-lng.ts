@@ -23,6 +23,7 @@ export class PermitLNG {
   dateIssued: Date;
   issuingAgency: string;
   legislation: Legislation;
+  legislationDescription: string;
   projectName: string;
   location: string;
   centroid: number[];
@@ -59,6 +60,7 @@ export class PermitLNG {
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || '';
     this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
+    this.legislationDescription = (obj && obj.legislationDescription) || '';
     this.projectName = (obj && obj.projectName) || '';
     this.location = (obj && obj.location) || '';
     this.centroid = (obj && obj.centroid) || [];
