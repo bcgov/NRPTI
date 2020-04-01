@@ -105,7 +105,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
+        ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -124,6 +124,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
       paragraph: new FormControl(
         (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
       ),
+      legislationDescription: new FormControl((this.currentRecord && this.currentRecord.legislationDescription) || ''),
       issuedTo: new FormGroup({
         type: new FormControl(
           (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.type) || ''
@@ -233,6 +234,8 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
       };
     }
 
+    this.myForm.controls.legislationDescription.dirty &&
+      (administrativeSanction['legislationDescription'] = this.myForm.controls.legislationDescription.value);
     if (
       this.myForm.get('issuedTo.type').dirty ||
       this.myForm.get('issuedTo.companyName').dirty ||
