@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 const PutUtils = require('../../utils/put-utils');
+const PostUtils = require('../../utils/post-utils');
+const QueryUtils = require('../../utils/query-utils');
 const WarningPost = require('../post/warning');
 
 /**
@@ -52,7 +54,11 @@ exports.editRecord = async function(args, res, next, incomingObj) {
       if (incomingObj.WarningLNG._id) {
         observables.push(this.editLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.WarningLNG }));
       } else {
-        observables.push(WarningPost.createLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.WarningLNG }));
+        const masterRecord = await PutUtils.fetchMasterForCreateFlavour('Warning', incomingObj._id);
+
+        observables.push(
+          WarningPost.createLNG(args, res, next, { ...masterRecord, ...flavourIncomingObj, ...incomingObj.WarningLNG })
+        );
       }
 
       delete incomingObj.WarningLNG;
@@ -62,8 +68,14 @@ exports.editRecord = async function(args, res, next, incomingObj) {
       if (incomingObj.WarningNRCED._id) {
         observables.push(this.editNRCED(args, res, next, { ...flavourIncomingObj, ...incomingObj.WarningNRCED }));
       } else {
+        const masterRecord = await PutUtils.fetchMasterForCreateFlavour('Warning', incomingObj._id);
+
         observables.push(
-          WarningPost.createNRCED(args, res, next, { ...flavourIncomingObj, ...incomingObj.WarningNRCED })
+          WarningPost.createNRCED(args, res, next, {
+            ...masterRecord,
+            ...flavourIncomingObj,
+            ...incomingObj.WarningNRCED
+          })
         );
       }
 
@@ -72,14 +84,13 @@ exports.editRecord = async function(args, res, next, incomingObj) {
 
     if (observables.length > 0) {
       savedFlavourWarnings = await Promise.all(observables);
-
       flavourIds = savedFlavourWarnings.map(flavourWarning => flavourWarning._id);
     }
   } catch (e) {
     return {
       status: 'failure',
       object: savedFlavourWarnings,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 
@@ -98,7 +109,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedWarning,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 };
@@ -154,10 +165,14 @@ exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
     return;
   }
 
+  sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+
   sanitizedObj.dateUpdated = new Date();
   sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
 
-  let updateObj = { $set: sanitizedObj };
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
+  const updateObj = { $set: dotNotatedObj };
 
   if (flavourIds && flavourIds.length) {
     updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
@@ -213,20 +228,33 @@ exports.editLNG = async function(args, res, next, incomingObj) {
 
   const sanitizedObj = PutUtils.validateObjectAgainstModel(WarningLNG, incomingObj);
 
+  sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+
+  sanitizedObj.dateUpdated = new Date();
+
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  let updateObj = { $set: sanitizedObj };
+  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    updateObj['$addToSet'] = { read: 'public' };
+    updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
-    updateObj['$pull'] = { read: 'public' };
+    updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj.$set['dateUpdated'] = new Date();
+  if (sanitizedObj.issuedTo) {
+    // check if a condition changed that would cause the entity details to be anonymous, or not.
+    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
+      updateObj.$pull['issuedTo.read'] = 'public';
+    } else {
+      updateObj.$addToSet['issuedTo.read'] = 'public';
+    }
+  }
 
   return await WarningLNG.findOneAndUpdate({ _schemaName: 'WarningLNG', _id: _id }, updateObj, { new: true });
 };
@@ -278,20 +306,33 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
 
   const sanitizedObj = PutUtils.validateObjectAgainstModel(WarningNRCED, incomingObj);
 
+  sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+
+  sanitizedObj.dateUpdated = new Date();
+
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  let updateObj = { $set: sanitizedObj };
+  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    updateObj['$addToSet'] = { read: 'public' };
+    updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
-    updateObj['$pull'] = { read: 'public' };
+    updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj.$set['dateUpdated'] = new Date();
+  if (sanitizedObj.issuedTo) {
+    // check if a condition changed that would cause the entity details to be anonymous, or not.
+    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
+      updateObj.$pull['issuedTo.read'] = 'public';
+    } else {
+      updateObj.$addToSet['issuedTo.read'] = 'public';
+    }
+  }
 
   return await WarningNRCED.findOneAndUpdate({ _schemaName: 'WarningNRCED', _id: _id }, updateObj, { new: true });
 };

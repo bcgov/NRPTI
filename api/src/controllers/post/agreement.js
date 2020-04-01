@@ -44,7 +44,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedFlavourAgreements,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 
@@ -63,7 +63,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedAgreement,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 };
@@ -129,6 +129,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.dateIssued && (agreement.dateIssued = incomingObj.dateIssued);
   incomingObj.nationName && (agreement.nationName = incomingObj.nationName);
   incomingObj.projectName && (agreement.projectName = incomingObj.projectName);
+  incomingObj.documents && (agreement.documents = incomingObj.documents);
 
   // set meta
   agreement.addedBy = args.swagger.params.auth_payload.displayName;
@@ -203,6 +204,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.dateIssued && (agreementLNG.dateIssued = incomingObj.dateIssued);
   incomingObj.nationName && (agreementLNG.nationName = incomingObj.nationName);
   incomingObj.projectName && (agreementLNG.projectName = incomingObj.projectName);
+  incomingObj.documents && (agreementLNG.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.description && (agreementLNG.description = incomingObj.description);

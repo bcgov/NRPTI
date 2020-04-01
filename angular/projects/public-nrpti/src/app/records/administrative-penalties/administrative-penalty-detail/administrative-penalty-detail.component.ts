@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, Input, OnDestroy } from '@angular
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
+import { AdministrativePenaltyNRCED } from '../../../../../../common/src/app/models';
 
 @Component({
   selector: 'app-administrative-penalty-detail',
@@ -20,6 +21,8 @@ export class AdministrativePenaltyDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.data) {
+      this.data = new AdministrativePenaltyNRCED(this.data);
+
       this.loading = false;
       this._changeDetectionRef.detectChanges();
       return;
@@ -33,7 +36,8 @@ export class AdministrativePenaltyDetailComponent implements OnInit, OnDestroy {
       }
 
       // If data was passed in directly, take it over anything in the route resolver.
-      this.data = (res.records[0] && res.records[0].data) || [];
+      this.data =
+        (res.records[0] && res.records[0].data && new AdministrativePenaltyNRCED(res.records[0].data)) || null;
 
       this.loading = false;
       this._changeDetectionRef.detectChanges();
