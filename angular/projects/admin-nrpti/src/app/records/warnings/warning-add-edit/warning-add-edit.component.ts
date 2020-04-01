@@ -47,7 +47,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
     private factoryService: FactoryService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -105,7 +105,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
+        ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -124,6 +124,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
       paragraph: new FormControl(
         (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
       ),
+      legislationDescription: new FormControl((this.currentRecord && this.currentRecord.legislationDescription) || ''),
       issuedTo: new FormGroup({
         type: new FormControl(
           (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.type) || ''
@@ -148,7 +149,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
             this.currentRecord.issuedTo &&
             this.currentRecord.issuedTo.dateOfBirth &&
             this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
-            ''
+          ''
         ),
         anonymous: new FormControl(
           (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || ''
@@ -227,6 +228,9 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
         paragraph: this.myForm.controls.paragraph.value
       };
     }
+
+    this.myForm.controls.legislationDescription.dirty &&
+      (warning['legislationDescription'] = this.myForm.controls.legislationDescription.value);
 
     if (
       this.myForm.get('issuedTo.type').dirty ||
