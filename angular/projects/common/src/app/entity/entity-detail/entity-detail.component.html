@@ -1,0 +1,52 @@
+<div class="grid-section section-1">
+  <div class="grid-item">
+    <label class="grid-item-name">Entity Type</label>
+    <span class="grid-item-value">{{ (data && data.type) || '-' }}</span>
+  </div>
+</div>
+
+<!--Company -->
+<ng-container *ngIf="UIType === ENTITY_TYPE.Company">
+  <div class="grid-section section-2">
+    <div class="grid-item">
+      <label class="grid-item-name">Company Name</label>
+      <span class="grid-item-value">{{ (data && data.type) || '-' }}</span>
+    </div>
+  </div>
+</ng-container>
+
+<!-- IndividualCombined -->
+<ng-container *ngIf="UIType === ENTITY_TYPE.Individual">
+  <div class="grid-section section-3">
+    <div class="grid-item">
+      <label class="grid-item-name">First Name</label>
+      <span class="grid-item-value">{{ (data && data.firstName) || '-' }}</span>
+    </div>
+    <div class="grid-item">
+      <label class="grid-item-name">Middle Name</label>
+      <span class="grid-item-value">{{ (data && data.middleName) || '-' }}</span>
+    </div>
+    <div class="grid-item">
+      <label class="grid-item-name">Last Name</label>
+      <span class="grid-item-value">{{ (data && data.lastName) || '-' }}</span>
+    </div>
+    <div class="grid-item">
+      <label class="grid-item-name">Date of Birth</label>
+      <span class="grid-item-value">{{ (data && data.dateOfBirth | date) || '-' }}</span>
+    </div>
+  </div>
+</ng-container>
+
+<!-- Individual -->
+<ng-container *ngIf="UIType === ENTITY_TYPE.IndividualCombined">
+  <div class="grid-section section-4">
+    <div class="grid-item">
+      <label class="grid-item-name">Full Name</label>
+      <span class="grid-item-value">{{ (data && data.fullName) || '-' }}</span>
+    </div>
+    <div class="grid-item">
+      <label class="grid-item-name">Date of Birth</label>
+      <span class="grid-item-value">{{ (data && data.dateOfBirth | date) || '-' }}</span>
+    </div>
+  </div>
+</ng-container>
