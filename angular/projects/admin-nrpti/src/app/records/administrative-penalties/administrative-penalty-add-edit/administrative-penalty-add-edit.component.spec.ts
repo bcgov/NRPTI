@@ -10,6 +10,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Utils } from 'nrpti-angular-components';
 import { RecordUtils } from '../../utils/record-utils';
+import { EntityAddEditComponent } from '../../../../../../common/src/app/entity/entity-add-edit/entity-add-edit.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 describe('AdministrativePenaltyAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<AdministrativePenaltyAddEditComponent>(AdministrativePenaltyAddEditComponent);
@@ -26,10 +28,11 @@ describe('AdministrativePenaltyAddEditComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         GlobalModule,
+        MatSlideToggleModule,
         NgxPaginationModule,
         NgbModule.forRoot()
       ],
-      declarations: [AdministrativePenaltyAddEditComponent],
+      declarations: [AdministrativePenaltyAddEditComponent, EntityAddEditComponent],
       providers: [
         Utils,
         RecordUtils,
