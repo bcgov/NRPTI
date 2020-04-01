@@ -180,7 +180,8 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
         paragraph: this.myForm.controls.paragraph.value
       };
     }
-    this.myForm.controls.legislationDescription.dirty && (selfReport['legislationDescription'] = this.myForm.controls.legislationDescription.value);
+    this.myForm.controls.legislationDescription.dirty &&
+      (selfReport['legislationDescription'] = this.myForm.controls.legislationDescription.value);
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
