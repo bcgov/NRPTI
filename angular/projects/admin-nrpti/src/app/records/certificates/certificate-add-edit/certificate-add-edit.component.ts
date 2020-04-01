@@ -42,7 +42,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
     private factoryService: FactoryService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -94,7 +94,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
+        ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       act: new FormControl(
@@ -113,6 +113,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
       ),
       issuedTo: new FormControl((this.currentRecord && this.currentRecord.issuedTo) || ''),
+      legislationDescription: new FormControl((this.currentRecord && this.currentRecord.legislationDescription) || ''),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
       latitude: new FormControl(
@@ -127,7 +128,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
-          ''
+        ''
       ),
       publishLng: new FormControl(
         (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
@@ -183,6 +184,8 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       };
     }
 
+    this.myForm.controls.legislationDescription.dirty &&
+      (certificate['legislationDescription'] = this.myForm.controls.legislationDescription.value);
     this.myForm.controls.issuedTo.dirty && (certificate['issuedTo'] = this.myForm.controls.issuedTo.value);
 
     // Project name logic
