@@ -51,6 +51,10 @@
             <span class="grid-item-value">{{ legislationString || '-' }}</span>
           </div>
           <div class="grid-item">
+            <span class="grid-item-name">Order Type</span>
+            <span class="grid-item-value">{{ (data && data._master.legislationDescription) || '-' }}</span>
+          </div>
+          <div class="grid-item">
             <span class="grid-item-name">Source System</span>
             <span class="grid-item-value">{{ (data && data._master.sourceSystemRef) || '-' }}</span>
           </div>

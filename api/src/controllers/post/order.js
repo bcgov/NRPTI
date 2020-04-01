@@ -155,6 +155,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (order.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.legislationDescription && (order.legislationDescription = incomingObj.legislationDescription);
   incomingObj.issuedTo && (order.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (order.projectName = incomingObj.projectName);
   incomingObj.location && (order.location = incomingObj.location);
@@ -254,6 +255,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (orderLNG.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.legislationDescription && (orderLNG.legislationDescription = incomingObj.legislationDescription);
   incomingObj.issuedTo && (orderLNG.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (orderLNG.projectName = incomingObj.projectName);
   incomingObj.location && (orderLNG.location = incomingObj.location);
@@ -352,6 +354,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (orderNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.legislationDescription && (orderNRCED.legislationDescription = incomingObj.legislationDescription);
   incomingObj.issuedTo && (orderNRCED.issuedTo = incomingObj.issuedTo);
   incomingObj.projectName && (orderNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (orderNRCED.location = incomingObj.location);

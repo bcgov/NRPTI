@@ -47,7 +47,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     private factoryService: FactoryService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -106,7 +106,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
+        ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -125,6 +125,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       paragraph: new FormControl(
         (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
       ),
+      legislationDescription: new FormControl((this.currentRecord && this.currentRecord.legislationDescription) || ''),
       issuedTo: new FormControl((this.currentRecord && this.currentRecord.issuedTo) || ''),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
@@ -143,7 +144,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           ((this.nrcedFlavour && this.nrcedFlavour.summary) ||
             (!this.nrcedFlavour && this.currentRecord.description))) ||
-          ''
+        ''
       ),
       publishNrced: new FormControl(
         (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false
@@ -154,7 +155,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
-          ''
+        ''
       ),
       publishLng: new FormControl(
         (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
@@ -212,6 +213,8 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       };
     }
 
+    this.myForm.controls.legislationDescription.dirty &&
+      (order['legislationDescription'] = this.myForm.controls.legislationDescription.value);
     this.myForm.controls.issuedTo.dirty && (order['issuedTo'] = this.myForm.controls.issuedTo.value);
 
     // Project name logic
