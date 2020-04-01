@@ -123,6 +123,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
       paragraph: new FormControl(
         (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
       ),
+      legislationDescription: new FormControl((this.currentRecord && this.currentRecord.legislationDescription) || ''),
       issuedTo: new FormControl((this.currentRecord && this.currentRecord.issuedTo) || ''),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
@@ -210,6 +211,8 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
       };
     }
 
+    this.myForm.controls.legislationDescription.dirty &&
+      (inspection['legislationDescription'] = this.myForm.controls.legislationDescription.value);
     this.myForm.controls.issuedTo.dirty && (inspection['issuedTo'] = this.myForm.controls.issuedTo.value);
 
     // Project name logic
