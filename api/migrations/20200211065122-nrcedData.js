@@ -167,11 +167,11 @@ const createAdministrativePenalty = async function(row, nrptiCollection) {
   };
 
   const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
-  const flavourId = responseflavourNRCED.insertedId.toString();
+  const flavourId = responseflavourNRCED.insertedId;
 
   const masterRecord = {
     _schemaName: RECORD_TYPE.AdministrativePenalty._schemaName,
-    _flavourRecords: [flavourId],
+    _flavourRecords: [new ObjectID(flavourId)],
 
     read: ['sysadmin'],
     write: ['sysadmin'],
@@ -275,7 +275,7 @@ const createAdministrativeSanction = async function(row, nrptiCollection) {
 
   const masterRecord = {
     _schemaName: RECORD_TYPE.AdministrativeSanction._schemaName,
-    _flavourRecords: [flavourId],
+    _flavourRecords: [new ObjectID(flavourId)],
 
     read: ['sysadmin'],
     write: ['sysadmin'],
@@ -384,7 +384,7 @@ const createInspection = async function(row, nrptiCollection) {
 
   const masterRecord = {
     _schemaName: RECORD_TYPE.Inspection._schemaName,
-    _flavourRecords: [flavourId],
+    _flavourRecords: [new ObjectID(flavourId)],
 
     read: ['sysadmin'],
     write: ['sysadmin'],
@@ -488,7 +488,7 @@ const createOrder = async function(row, nrptiCollection) {
 
   const masterRecord = {
     _schemaName: RECORD_TYPE.Order._schemaName,
-    _flavourRecords: [flavourId],
+    _flavourRecords: [new ObjectID(flavourId)],
 
     read: ['sysadmin'],
     write: ['sysadmin'],
@@ -592,7 +592,7 @@ const createRestorativeJustice = async function(row, nrptiCollection) {
 
   const masterRecord = {
     _schemaName: RECORD_TYPE.RestorativeJustice._schemaName,
-    _flavourRecords: [flavourId],
+    _flavourRecords: [new ObjectID(flavourId)],
 
     read: ['sysadmin'],
     write: ['sysadmin'],
@@ -696,7 +696,7 @@ const createTicket = async function(row, nrptiCollection) {
 
   const masterRecord = {
     _schemaName: RECORD_TYPE.Ticket._schemaName,
-    _flavourRecords: [flavourId],
+    _flavourRecords: [new ObjectID(flavourId)],
 
     read: ['sysadmin'],
     write: ['sysadmin'],
@@ -800,7 +800,7 @@ const createWarning = async function(row, nrptiCollection) {
 
   const masterRecord = {
     _schemaName: RECORD_TYPE.Warning._schemaName,
-    _flavourRecords: [flavourId],
+    _flavourRecords: [new ObjectID(flavourId)],
 
     read: ['sysadmin'],
     write: ['sysadmin'],

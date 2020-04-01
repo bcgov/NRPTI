@@ -22,7 +22,6 @@ exports.publish = async function(obj) {
     } else {
       // publish
       self.addPublicReadRole(obj);
-      obj.markModified('read');
 
       const date = new Date();
 
@@ -59,6 +58,7 @@ exports.addPublicReadRole = function(obj) {
   }
 
   obj.read.push('public');
+  obj.markModified('read');
 
   return obj;
 };
@@ -83,7 +83,6 @@ exports.unPublish = async function(obj) {
     } else {
       // unpublish
       self.removePublicReadRole(obj);
-      obj.markModified('read');
 
       obj.datePublished = null;
       obj.markModified('datePublished');
@@ -118,6 +117,7 @@ exports.removePublicReadRole = function(obj) {
   }
 
   obj.read = obj.read.filter(role => role !== 'public');
+  obj.markModified('read');
 
   return obj;
 };
