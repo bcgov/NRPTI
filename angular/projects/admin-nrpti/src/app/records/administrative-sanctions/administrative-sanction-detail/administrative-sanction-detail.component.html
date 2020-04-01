@@ -46,7 +46,20 @@
             <span class="grid-item-name">Legislation</span>
             <span class="grid-item-value">{{ legislationString || '-' }}</span>
           </div>
+          <div class="grid-item">
+            <span class="grid-item-name">Description</span>
+            <span class="grid-item-value">{{ (data && data._master.legislationDescription) || '-' }}</span>
+          </div>
+          <div class="grid-item">
+            <span class="grid-item-name">Penalty</span>
+            <span class="grid-item-value">{{ (data && data._master.penalty) || '-' }}</span>
+          </div>
         </div>
+        <div class="grid-section-border"></div>
+        <div class="grid-section-sub-header">
+          <span class="grid-section-sub-header-text">Entity Details</span>
+        </div>
+        <app-entity-detail class="grid-section" [data]="data && data._master.issuedTo"></app-entity-detail>
         <div class="grid-section-border"></div>
         <div class="grid-section-sub-header">
           <span class="grid-section-sub-header-text">Location Details</span>
@@ -77,12 +90,6 @@
           <div class="grid-item">
             <span class="grid-item-name">Outcome Description</span>
             <span class="grid-item-value">{{ (data && data._master.outcomeDescription) || '-' }}</span>
-          </div>
-        </div>
-        <div class="grid-section section-5">
-          <div class="grid-item">
-            <span class="grid-item-name">Penalty</span>
-            <span class="grid-item-value">{{ (data && data._master.penalty) || '-' }}</span>
           </div>
         </div>
         <div class="grid-section-border"></div>

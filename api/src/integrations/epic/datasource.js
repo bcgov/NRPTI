@@ -278,6 +278,8 @@ class DataSource {
   /**
    * Get the epic project data for the given epic records projectId.
    *
+   * Note: `populate: true` is set to fetch proponent information.
+   *
    * @param {*} epicRecord
    * @returns epic project data
    * @throws {Error} if record project data cannot be found.
@@ -285,7 +287,8 @@ class DataSource {
    */
   async getRecordProject(epicRecord) {
     const url = this.getIntegrationUrl(EPIC_API_HOSTNAME, `${this.buildProjectPathname(epicRecord.project)}`, {
-      fields: 'name|location|centroid|legislation'
+      populate: true,
+      fields: 'name|location|centroid|legislation|proponent'
     });
 
     const response = await integrationUtils.getRecords(url);
