@@ -24,6 +24,7 @@ export class OrderLNG {
   issuingAgency: string;
   author: string;
   legislation: Legislation;
+  legislationDescription: string;
   issuedTo: string;
   projectName: string;
   location: string;
@@ -64,6 +65,7 @@ export class OrderLNG {
     this.issuingAgency = (obj && obj.issuingAgency) || '';
     this.author = (obj && obj.author) || '';
     this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
+    this.legislationDescription = (obj && obj.legislationDescription) || '';
     this.issuedTo = (obj && obj.issuedTo) || '';
     this.projectName = (obj && obj.projectName) || '';
     this.location = (obj && obj.location) || '';
