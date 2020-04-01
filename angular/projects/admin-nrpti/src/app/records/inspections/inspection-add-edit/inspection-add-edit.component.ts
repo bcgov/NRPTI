@@ -124,6 +124,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
       paragraph: new FormControl(
         (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
       ),
+      legislationDescription: new FormControl((this.currentRecord && this.currentRecord.legislationDescription) || ''),
       issuedTo: new FormGroup({
         type: new FormControl(
           (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.type) || ''
@@ -240,6 +241,8 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
       };
     }
 
+    this.myForm.controls.legislationDescription.dirty &&
+      (inspection['legislationDescription'] = this.myForm.controls.legislationDescription.value);
     if (
       this.myForm.get('issuedTo.type').dirty ||
       this.myForm.get('issuedTo.companyName').dirty ||
