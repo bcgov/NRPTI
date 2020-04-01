@@ -151,7 +151,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
             this.currentRecord.issuedTo &&
             this.currentRecord.issuedTo.dateOfBirth &&
             this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
-            ''
+          ''
         ),
         anonymous: new FormControl(
           (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || ''
@@ -245,7 +245,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
 
     this.myForm.controls.legislationDescription.dirty &&
       (order['legislationDescription'] = this.myForm.controls.legislationDescription.value);
-    
+
     if (
       this.myForm.get('issuedTo.type').dirty ||
       this.myForm.get('issuedTo.companyName').dirty ||
