@@ -46,6 +46,10 @@
             <span class="grid-item-name">Legislation</span>
             <span class="grid-item-value">{{ legislationString || '-' }}</span>
           </div>
+          <div class="grid-item">
+            <span class="grid-item-name">Description</span>
+            <span class="grid-item-value">{{ (data && data._master.legislationDescription) || '-' }}</span>
+          </div>
         </div>
         <div class="grid-section-border"></div>
         <div class="grid-section-sub-header">
@@ -70,7 +74,8 @@
           <span class="grid-section-sub-header-text">Documents</span>
         </div>
         <div class="grid-section-4">
-          <app-document-read-only [documents]="data && data._master && data._master.documents"></app-document-read-only>
+          <app-document-read-only [documents]="data && data._master && data._master.documents">
+          </app-document-read-only>
         </div>
         <div class="grid-section-border"></div>
       </div>
