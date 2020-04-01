@@ -50,8 +50,7 @@
               name="dp"
               formControlName="dateIssued"
               ngbDatepicker
-              #d="ngbDatepicker"
-            />
+              #d="ngbDatepicker" />
             <div class="input-group-append">
               <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
             </div>
@@ -66,8 +65,7 @@
             id="recordType"
             type="text"
             value="Compliance Self-Report"
-            class="form-control"
-          />
+            class="form-control" />
         </div>
       </div>
       <div class="flex-container">
@@ -89,6 +87,11 @@
     <section>
       <h4>Legislation</h4>
       <app-legislation-add-edit [formGroup]="myForm"></app-legislation-add-edit>
+      <div class="label-pair">
+        <label for="legislationDescription">Description</label>
+        <input name="legislationDescription" id="legislationDescription" type="text"
+          formControlName="legislationDescription" class="form-control" />
+      </div>
     </section>
 
     <section>
@@ -110,8 +113,7 @@
                 id="coastalGaslink"
                 value="Coastal Gaslink"
                 formControlName="projectName"
-                name="projectName"
-              />
+                name="projectName" />
               <label for="coastalGaslink">Coastal Gaslink</label>
             </div>
             <div class="radio">
@@ -145,12 +147,10 @@
       <h4>Documents</h4>
       <app-document-edit
         [documents]="currentRecord ? currentRecord.documents : []"
-        (documentsToDelete)="documentsToDelete = $event"
-      ></app-document-edit>
+        (documentsToDelete)="documentsToDelete = $event"></app-document-edit>
       <app-document-link-staging
         (linksChanged)="links = $event"
-        (documentsChanged)="documents = $event"
-      ></app-document-link-staging>
+        (documentsChanged)="documents = $event"></app-document-link-staging>
     </section>
 
     <section>
@@ -167,8 +167,7 @@
             formControlName="publishLng"
             (change)="togglePublish($event, 'lng')"
             [checked]="myForm.controls.publishLng.value"
-            ngDefaultControl
-          >
+            ngDefaultControl>
             {{ myForm.controls.publishLng.value ? 'Published' : 'Unpublished' }}
           </mat-slide-toggle>
           <br />
@@ -183,8 +182,7 @@
             id="lngRelatedPhase"
             type="text"
             formControlName="lngRelatedPhase"
-            class="form-control"
-          />
+            class="form-control" />
         </div>
         <div class="label-pair med">
           <label for="lngDescription">Description</label>
@@ -193,8 +191,7 @@
             id="lngDescription"
             type="text"
             formControlName="lngDescription"
-            class="form-control"
-          ></textarea>
+            class="form-control"></textarea>
         </div>
       </div>
     </section>
