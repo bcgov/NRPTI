@@ -254,14 +254,14 @@ let createAgreementRecord = async function (item, project, nrptiCollection) {
   }
 
   const resFlavour = await nrptiCollection.insertOne(flavourLNG)
-  const flavorID = resFlavour.insertedId.toString()
+  const flavorID = resFlavour.insertedId
   console.log('Inserted FlavourLNGID:', flavorID)
 
   // Create the master record
   const master = {
     _schemaName: 'Agreement',
     _epicProjectId: new ObjectID(project),
-    _flavourRecords: [flavorID],
+    _flavourRecords: [new ObjectID(flavorID)],
 
     read: ['sysadmin'],
     write: ['sysadmin'],
@@ -329,14 +329,14 @@ let createManagementPlanRecord = async function (item, project, nrptiCollection)
   }
 
   const resFlavour = await nrptiCollection.insertOne(flavourLNG)
-  const flavorID = resFlavour.insertedId.toString()
+  const flavorID = resFlavour.insertedId
   console.log('Inserted FlavourLNGID:', flavorID)
 
   // Create the master record
   const master = {
     _schemaName: 'ManagementPlan',
     _epicProjectId: new ObjectID(project),
-    _flavourRecords: [flavorID],
+    _flavourRecords: [new ObjectID(flavorID)],
 
     read: ['sysadmin'],
     write: ['sysadmin'],
@@ -404,14 +404,14 @@ let createConstructionPlanRecord = async function (item, project, nrptiCollectio
   }
 
   const resFlavour = await nrptiCollection.insertOne(flavourLNG)
-  const flavorID = resFlavour.insertedId.toString()
+  const flavorID = resFlavour.insertedId
   console.log('Inserted FlavourLNGID:', flavorID)
 
   // Create the master record
   const master = {
     _schemaName: 'ConstructionPlan',
     _epicProjectId: new ObjectID(project),
-    _flavourRecords: [flavorID],
+    _flavourRecords: [new ObjectID(flavorID)],
 
     read: ['sysadmin'],
     write: ['sysadmin'],
@@ -479,14 +479,14 @@ let createWarningRecord = async function (item, project, nrptiCollection) {
   }
 
   const resFlavour = await nrptiCollection.insertOne(flavourLNG)
-  const flavorID = resFlavour.insertedId.toString()
+  const flavorID = resFlavour.insertedId
   console.log('Inserted FlavourLNGID:', flavorID)
 
   // Create the master record
   const master = {
     _schemaName: 'Warning',
     _epicProjectId: new ObjectID(project),
-    _flavourRecords: [flavorID],
+    _flavourRecords: [new ObjectID(flavorID)],
 
     read: ['sysadmin'],
     write: ['sysadmin'],
@@ -557,14 +557,14 @@ let createComplianceSelfReportRecord = async function (item, project, nrptiColle
   }
 
   const resFlavour = await nrptiCollection.insertOne(flavourLNG)
-  const flavorID = resFlavour.insertedId.toString()
+  const flavorID = resFlavour.insertedId
   console.log('Inserted FlavourLNGID:', flavorID)
 
   // Create the master record
   const master = {
     _schemaName: 'SelfReport',
     _epicProjectId: new ObjectID(project),
-    _flavourRecords: [flavorID],
+    _flavourRecords: [new ObjectID(flavorID)],
 
     read: ['sysadmin'],
     write: ['sysadmin'],
@@ -633,14 +633,14 @@ let createCertificateRecord = async function (item, project, nrptiCollection) {
   }
 
   const resFlavour = await nrptiCollection.insertOne(flavourLNG)
-  const flavorID = resFlavour.insertedId.toString()
+  const flavorID = resFlavour.insertedId
   console.log('Inserted FlavourLNGID:', flavorID)
 
   // Create the master record
   const master = {
     _schemaName: 'Certificate',
     _epicProjectId: new ObjectID(project),
-    _flavourRecords: [flavorID],
+    _flavourRecords: [new ObjectID(flavorID)],
 
     read: ['sysadmin'],
     write: ['sysadmin'],
@@ -709,14 +709,14 @@ let createPermitRecord = async function (item, project, nrptiCollection) {
   }
 
   const resFlavour = await nrptiCollection.insertOne(flavourLNG)
-  const flavorID = resFlavour.insertedId.toString()
+  const flavorID = resFlavour.insertedId
   console.log('Inserted FlavourLNGID:', flavorID)
 
   // Create the master record
   const master = {
     _schemaName: 'Permit',
     _epicProjectId: new ObjectID(project),
-    _flavourRecords: [flavorID],
+    _flavourRecords: [new ObjectID(flavorID)],
 
     read: ['sysadmin'],
     write: ['sysadmin'],
@@ -786,14 +786,14 @@ let createOrderRecord = async function (item, project, nrptiCollection) {
   }
 
   const resFlavour = await nrptiCollection.insertOne(flavourLNG)
-  const flavorID = resFlavour.insertedId.toString()
+  const flavorID = resFlavour.insertedId
   console.log('Inserted FlavourLNGID:', flavorID)
 
   // Create the master record
   const master = {
     _schemaName: 'Order',
     _epicProjectId: new ObjectID(project),
-    _flavourRecords: [flavorID],
+    _flavourRecords: [new ObjectID(flavorID)],
 
     read: ['sysadmin'],
     write: ['sysadmin'],
@@ -862,14 +862,14 @@ let createInspectionRecord = async function (item, project, nrptiCollection) {
   }
 
   const resFlavour = await nrptiCollection.insertOne(flavourLNG)
-  const flavorID = resFlavour.insertedId.toString()
+  const flavorID = resFlavour.insertedId
   console.log('Inserted FlavourLNGID:', flavorID)
 
   // Create the master record
   const master = {
     _schemaName: 'Inspection',
     _epicProjectId: new ObjectID(project),
-    _flavourRecords: [flavorID],
+    _flavourRecords: [new ObjectID(flavorID)],
 
     read: ['sysadmin'],
     write: ['sysadmin'],

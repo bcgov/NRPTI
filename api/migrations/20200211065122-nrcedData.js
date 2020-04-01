@@ -271,7 +271,7 @@ const createAdministrativeSanction = async function(row, nrptiCollection) {
   };
 
   const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
-  const flavourId = responseflavourNRCED.insertedId.toString();
+  const flavourId = responseflavourNRCED.insertedId;
 
   const masterRecord = {
     _schemaName: RECORD_TYPE.AdministrativeSanction._schemaName,
@@ -380,7 +380,7 @@ const createInspection = async function(row, nrptiCollection) {
   };
 
   const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
-  const flavourId = responseflavourNRCED.insertedId.toString();
+  const flavourId = responseflavourNRCED.insertedId;
 
   const masterRecord = {
     _schemaName: RECORD_TYPE.Inspection._schemaName,
@@ -484,7 +484,7 @@ const createOrder = async function(row, nrptiCollection) {
   };
 
   const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
-  const flavourId = responseflavourNRCED.insertedId.toString();
+  const flavourId = responseflavourNRCED.insertedId;
 
   const masterRecord = {
     _schemaName: RECORD_TYPE.Order._schemaName,
@@ -588,7 +588,7 @@ const createRestorativeJustice = async function(row, nrptiCollection) {
   };
 
   const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
-  const flavourId = responseflavourNRCED.insertedId.toString();
+  const flavourId = responseflavourNRCED.insertedId;
 
   const masterRecord = {
     _schemaName: RECORD_TYPE.RestorativeJustice._schemaName,
@@ -692,7 +692,7 @@ const createTicket = async function(row, nrptiCollection) {
   };
 
   const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
-  const flavourId = responseflavourNRCED.insertedId.toString();
+  const flavourId = responseflavourNRCED.insertedId;
 
   const masterRecord = {
     _schemaName: RECORD_TYPE.Ticket._schemaName,
@@ -796,7 +796,7 @@ const createWarning = async function(row, nrptiCollection) {
   };
 
   const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
-  const flavourId = responseflavourNRCED.insertedId.toString();
+  const flavourId = responseflavourNRCED.insertedId;
 
   const masterRecord = {
     _schemaName: RECORD_TYPE.Warning._schemaName,
