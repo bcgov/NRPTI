@@ -44,7 +44,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedFlavourCertificates,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 
@@ -63,7 +63,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedCertificate,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 };
@@ -145,6 +145,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.projectName && (certificate.projectName = incomingObj.projectName);
   incomingObj.location && (certificate.location = incomingObj.location);
   incomingObj.centroid && (certificate.centroid = incomingObj.centroid);
+  incomingObj.documents && (certificate.documents = incomingObj.documents);
 
   // set meta
   certificate.addedBy = args.swagger.params.auth_payload.displayName;
@@ -237,6 +238,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.projectName && (certificateLNG.projectName = incomingObj.projectName);
   incomingObj.location && (certificateLNG.location = incomingObj.location);
   incomingObj.centroid && (certificateLNG.centroid = incomingObj.centroid);
+  incomingObj.documents && (certificateLNG.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.description && (certificateLNG.description = incomingObj.description);

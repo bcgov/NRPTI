@@ -44,7 +44,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedFlavourConstructionPlans,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 
@@ -63,7 +63,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
     return {
       status: 'failure',
       object: savedConstructionPlan,
-      errorMessage: e
+      errorMessage: e.message
     };
   }
 };
@@ -132,6 +132,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.projectName && (constructionPlan.projectName = incomingObj.projectName);
   incomingObj.location && (constructionPlan.location = incomingObj.location);
   incomingObj.centroid && (constructionPlan.centroid = incomingObj.centroid);
+  incomingObj.documents && (constructionPlan.documents = incomingObj.documents);
 
   // set meta
   constructionPlan.addedBy = args.swagger.params.auth_payload.displayName;
@@ -209,6 +210,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.projectName && (constructionPlanLNG.projectName = incomingObj.projectName);
   incomingObj.location && (constructionPlanLNG.location = incomingObj.location);
   incomingObj.centroid && (constructionPlanLNG.centroid = incomingObj.centroid);
+  incomingObj.documents && (constructionPlanLNG.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.description && (constructionPlanLNG.description = incomingObj.description);
