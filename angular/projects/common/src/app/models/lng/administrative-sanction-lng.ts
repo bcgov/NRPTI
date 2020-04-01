@@ -24,6 +24,7 @@ export class AdministrativeSanctionLNG {
   issuingAgency: string;
   author: string;
   legislation: Legislation;
+  legislationDescription: string;
   issuedTo: Entity;
   projectName: string;
   location: string;
@@ -64,6 +65,7 @@ export class AdministrativeSanctionLNG {
     this.issuingAgency = (obj && obj.issuingAgency) || '';
     this.author = (obj && obj.author) || '';
     this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
+    this.legislationDescription = (obj && obj.legislationDescription) || '';
     this.issuedTo = (obj && obj.issuedTo && new Entity(obj.issuedTo)) || null;
     this.projectName = (obj && obj.projectName) || '';
     this.location = (obj && obj.location) || '';

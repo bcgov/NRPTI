@@ -25,6 +25,7 @@ module.exports = require('../../utils/model-schema-generator')(
       subSection: { type: String, default: '' },
       paragraph: { type: String, default: '' }
     },
+    legislationDescription: { type: String, default: '' },
     issuedTo: {
       write: [{ type: String, trim: true, default: 'sysadmin' }],
       read: [{ type: String, trim: true, default: 'sysadmin' }],
