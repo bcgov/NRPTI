@@ -154,7 +154,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
   }
 
   async submit() {
-    this.loadingScreenService.setLoadingToTrue();
+    this.loadingScreenService.setLoadingState(true);
     // TODO
     // _epicProjectId
     // _sourceRefId
@@ -227,7 +227,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         );
 
         console.log(docResponse);
-        this.loadingScreenService.setLoadingToFalse();
+        this.loadingScreenService.setLoadingState(false);
         this.router.navigate(['records']);
       });
     } else {
@@ -253,7 +253,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         );
 
         console.log(docResponse);
-        this.loadingScreenService.setLoadingToFalse();
+        this.loadingScreenService.setLoadingState(false);
         this.router.navigate(['records', 'certificates', this.currentRecord._id, 'detail']);
       });
     }

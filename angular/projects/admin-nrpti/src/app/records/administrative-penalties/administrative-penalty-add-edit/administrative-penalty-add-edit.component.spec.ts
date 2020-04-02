@@ -12,6 +12,7 @@ import { Utils } from 'nrpti-angular-components';
 import { RecordUtils } from '../../utils/record-utils';
 import { EntityAddEditComponent } from '../../../../../../common/src/app/entity/entity-add-edit/entity-add-edit.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { LoadingScreenService } from 'nrpti-angular-components';
 
 describe('AdministrativePenaltyAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<AdministrativePenaltyAddEditComponent>(AdministrativePenaltyAddEditComponent);
@@ -20,6 +21,11 @@ describe('AdministrativePenaltyAddEditComponent', () => {
   const mockLocation = jasmine.createSpyObj('Location', ['go']);
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
+
+  const mockLoadingScreenService = {
+    isLoading: false,
+    setLoadingState: () => { return false }
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -36,6 +42,7 @@ describe('AdministrativePenaltyAddEditComponent', () => {
       providers: [
         Utils,
         RecordUtils,
+        { provide: LoadingScreenService, useValue: mockLoadingScreenService },
         { provide: Location, useValue: mockLocation },
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute }

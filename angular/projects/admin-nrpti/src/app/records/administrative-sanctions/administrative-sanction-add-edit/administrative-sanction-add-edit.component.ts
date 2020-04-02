@@ -202,7 +202,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
   }
 
   async submit() {
-    this.loadingScreenService.setLoadingToTrue();
+    this.loadingScreenService.setLoadingState(true);
     // TODO
     // _epicProjectId
     // _sourceRefId
@@ -318,7 +318,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
         );
 
         console.log(docResponse);
-        this.loadingScreenService.setLoadingToFalse();
+        this.loadingScreenService.setLoadingState(false);
         this.router.navigate(['records']);
       });
     } else {
@@ -353,7 +353,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
         );
 
         console.log(docResponse);
-        this.loadingScreenService.setLoadingToFalse();
+        this.loadingScreenService.setLoadingState(false);
         this.router.navigate(['records', 'administrative-sanctions', this.currentRecord._id, 'detail']);
       });
     }

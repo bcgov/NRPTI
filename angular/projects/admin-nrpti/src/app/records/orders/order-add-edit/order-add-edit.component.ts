@@ -214,7 +214,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
   }
 
   async submit() {
-    this.loadingScreenService.setLoadingToTrue();
+    this.loadingScreenService.setLoadingState(true);
     // TODO
     // _epicProjectId
     // _sourceRefId
@@ -321,7 +321,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         );
 
         console.log(docResponse);
-        this.loadingScreenService.setLoadingToFalse();
+        this.loadingScreenService.setLoadingState(false);
         this.router.navigate(['records']);
       });
     } else {
@@ -356,7 +356,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         );
 
         console.log(docResponse);
-        this.loadingScreenService.setLoadingToFalse();
+        this.loadingScreenService.setLoadingState(false);
         this.router.navigate(['records', 'orders', this.currentRecord._id, 'detail']);
       });
     }

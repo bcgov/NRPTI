@@ -6,18 +6,8 @@ export class LoadingScreenService {
 
   constructor() { }
 
-  toggleLoadingState() {
-    this.isLoading = !this.isLoading;
-    this.stateChange.emit(this.isLoading);
-  }
-
-  setLoadingToTrue() {
-    this.isLoading = true;
-    this.stateChange.emit(this.isLoading);
-  }
-
-  setLoadingToFalse() {
-    this.isLoading = false;
+  setLoadingState(state: boolean) {
+    this.isLoading = state;
     this.stateChange.emit(this.isLoading);
   }
 }
