@@ -12,6 +12,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
 import { BreadcrumbComponent, StoreService } from 'nrpti-angular-components';
 import { of } from 'rxjs';
+import { LoadingScreenService } from 'nrpti-angular-components';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -26,6 +27,13 @@ describe('AppComponent', () => {
       toggleSideNave: () => {}
     };
 
+    const mockLoadingScreenService = {
+      isLoading: false,
+      setLoadingState: () => {
+      return false;
+    }
+    };
+
     TestBed.configureTestingModule({
       declarations: [
         AppComponent,
@@ -38,6 +46,7 @@ describe('AppComponent', () => {
       imports: [RouterTestingModule, HttpClientTestingModule, BrowserAnimationsModule],
       providers: [
         ApiService,
+        { provide: LoadingScreenService, useValue: mockLoadingScreenService },
         { provide: KeycloakService, useValue: mockKeycloakService },
         { provide: StoreService, useValue: mockStoreService }
       ]
