@@ -10,6 +10,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Utils } from 'nrpti-angular-components';
 import { RecordUtils } from '../../utils/record-utils';
+import { LoadingScreenService } from 'nrpti-angular-components';
 
 describe('ManagementPlanAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<ManagementPlanAddEditComponent>(ManagementPlanAddEditComponent);
@@ -18,6 +19,13 @@ describe('ManagementPlanAddEditComponent', () => {
   const mockLocation = jasmine.createSpyObj('Location', ['go']);
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
+
+  const mockLoadingScreenService = {
+    isLoading: false,
+    setLoadingState: () => {
+      return false;
+    }
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -33,6 +41,7 @@ describe('ManagementPlanAddEditComponent', () => {
       providers: [
         Utils,
         RecordUtils,
+        { provide: LoadingScreenService, useValue: mockLoadingScreenService },
         { provide: Location, useValue: mockLocation },
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute }

@@ -9,6 +9,7 @@ import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
+import { LoadingScreenService } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-permit-add-edit',
@@ -42,6 +43,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     public router: Router,
     private recordUtils: RecordUtils,
     private factoryService: FactoryService,
+    private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
   ) { }
@@ -139,7 +141,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
   togglePublish(event, flavour) {
     switch (flavour) {
       case 'lng':
-        this.myForm.controls.publishLng.setValue(event);
+        this.myForm.controls.publishLng.setValue(event.checked);
         break;
       default:
         break;
@@ -148,6 +150,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
   }
 
   async submit() {
+    this.loadingScreenService.setLoadingState(true);
     // TODO
     // _epicProjectId
     // _sourceRefId
@@ -217,6 +220,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
         );
 
         console.log(docResponse);
+        this.loadingScreenService.setLoadingState(false);
         this.router.navigate(['records']);
       });
     } else {
@@ -242,6 +246,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
         );
 
         console.log(docResponse);
+        this.loadingScreenService.setLoadingState(false);
         this.router.navigate(['records', 'permits', this.currentRecord._id, 'detail']);
       });
     }

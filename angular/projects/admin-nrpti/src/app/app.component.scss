@@ -19,12 +19,12 @@ app-header {
 }
 
 app-footer {
-  z-index: 1000;
+  z-index: 3;
 }
 
 app-toggle-button {
   position: absolute;
-  z-index: 1000;
+  z-index: 3;
   margin-top: 10px;
   top: 0;
   right: -35px;

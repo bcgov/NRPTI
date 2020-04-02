@@ -24,6 +24,7 @@ export * from './lib/components/table-template/table-row.directive';
 
 // services
 export * from './lib/services/export.service';
+export * from './lib/services/loading-screen.service';
 export * from './lib/services/store.service';
 export * from './lib/services/search.service';
 export * from './lib/services/inject-component.service';

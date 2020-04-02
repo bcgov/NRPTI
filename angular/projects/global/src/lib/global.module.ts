@@ -25,6 +25,7 @@ import { InjectComponentService } from './services/inject-component.service';
 
 // utils
 import { TableTemplateUtils } from './components/table-template/table-template-utils';
+import { LoadingScreenService } from './services/loading-screen.service';
 
 /**
  * Primary module for the library.
@@ -44,7 +45,14 @@ import { TableTemplateUtils } from './components/table-template/table-template-u
     PageCountDisplayComponent,
     DatePickerComponent
   ],
-  providers: [ExportService, StoreService, SearchService, TableTemplateUtils, InjectComponentService],
+  providers: [
+    ExportService,
+    StoreService,
+    SearchService,
+    TableTemplateUtils,
+    InjectComponentService,
+    LoadingScreenService
+  ],
   exports: [
     ButtonSpinnerComponent,
     TableRowDirective,
@@ -55,4 +63,4 @@ import { TableTemplateUtils } from './components/table-template/table-template-u
     DatePickerComponent
   ]
 })
-export class GlobalModule {}
+export class GlobalModule { }
