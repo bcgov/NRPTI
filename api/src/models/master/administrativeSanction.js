@@ -46,7 +46,7 @@ module.exports = require('../../utils/model-schema-generator')(
     penalties: [
       {
         type: { type: String, default: '' },
-        penalty: { type: mongoose.Mixed, default: {} },
+        penalty: { type: mongoose.SchemaTypes.Mixed, default: {} },
         description: { type: String, default: '' }
       }
     ],
