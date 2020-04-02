@@ -29,7 +29,9 @@ describe('AppComponent', () => {
 
     const mockLoadingScreenService = {
       isLoading: false,
-      setLoadingState: () => { return false }
+      setLoadingState: () => {
+      return false;
+    }
     };
 
     TestBed.configureTestingModule({
