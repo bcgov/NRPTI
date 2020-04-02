@@ -120,7 +120,7 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
     this._changeDetectionRef.detectChanges();
   }
   async submit() {
-    this.loadingScreenService.setLoadingToTrue();
+    this.loadingScreenService.setLoadingState(true);
     // TODO
     // _epicProjectId
     // _sourceRefId
@@ -166,7 +166,7 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
         );
 
         console.log(docResponse);
-        this.loadingScreenService.setLoadingToFalse();
+        this.loadingScreenService.setLoadingState(false);
         this.router.navigate(['records']);
       });
     } else {
@@ -192,7 +192,7 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
         );
 
         console.log(docResponse);
-        this.loadingScreenService.setLoadingToFalse();
+        this.loadingScreenService.setLoadingState(false);
         this.router.navigate(['records', 'agreements', this.currentRecord._id, 'detail']);
       });
     }

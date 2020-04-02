@@ -201,7 +201,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
   }
 
   async submit() {
-    this.loadingScreenService.setLoadingToTrue();
+    this.loadingScreenService.setLoadingState(true);
     // TODO
     // _epicProjectId
     // _sourceRefId
@@ -307,7 +307,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
         );
 
         console.log(docResponse);
-        this.loadingScreenService.setLoadingToFalse();
+        this.loadingScreenService.setLoadingState(false);
         this.router.navigate(['records']);
       });
     } else {
@@ -342,7 +342,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
         );
 
         console.log(docResponse);
-        this.loadingScreenService.setLoadingToFalse();
+        this.loadingScreenService.setLoadingState(false);
         this.router.navigate(['records', 'warnings', this.currentRecord._id, 'detail']);
       });
     }
