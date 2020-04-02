@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { IBreadcrumb, StoreService } from 'nrpti-angular-components';
+import { IBreadcrumb, StoreService, LoadingScreenService } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-root',
@@ -15,8 +15,11 @@ export class AppComponent implements OnInit {
   public breadcrumbs: IBreadcrumb[];
   public activeBreadcrumb: IBreadcrumb;
 
+  public loading = false;
+
   constructor(
     private router: Router,
+    private loadingScreenService: LoadingScreenService,
     private storeService: StoreService,
     private _changeDetectionRef: ChangeDetectorRef
   ) {
@@ -33,6 +36,10 @@ export class AppComponent implements OnInit {
         this.showSideContent = state['showSideContent'];
       }
 
+      this._changeDetectionRef.detectChanges();
+    });
+    this.loadingScreenService.stateChange.subscribe((state: boolean) => {
+      this.loading = state;
       this._changeDetectionRef.detectChanges();
     });
   }

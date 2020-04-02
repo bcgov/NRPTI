@@ -704,4 +704,4 @@ const routes: Routes = [
     Utils
   ]
 })
-export class RecordsRoutingModule {}
+export class RecordsRoutingModule { }

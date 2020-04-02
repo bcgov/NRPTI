@@ -9,6 +9,7 @@ import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
+import { LoadingScreenService } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-administrative-penalty-add-edit',
@@ -45,6 +46,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     public router: Router,
     private recordUtils: RecordUtils,
     private factoryService: FactoryService,
+    private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
   ) {}
@@ -188,10 +190,10 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
   togglePublish(event, flavour) {
     switch (flavour) {
       case 'lng':
-        this.myForm.controls.publishLng.setValue(event);
+        this.myForm.controls.publishLng.setValue(event.checked);
         break;
       case 'nrced':
-        this.myForm.controls.publishNrced.setValue(event);
+        this.myForm.controls.publishNrced.setValue(event.checked);
         break;
       default:
         break;
@@ -200,6 +202,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
   }
 
   async submit() {
+    this.loadingScreenService.setLoadingToTrue();
     // TODO
     // _epicProjectId
     // _sourceRefId
@@ -311,6 +314,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
         );
 
         console.log(docResponse);
+        this.loadingScreenService.setLoadingToFalse();
         this.router.navigate(['records']);
       });
     } else {
@@ -345,6 +349,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
         );
 
         console.log(docResponse);
+        this.loadingScreenService.setLoadingToFalse();
         this.router.navigate(['records', 'administrative-penalties', this.currentRecord._id, 'detail']);
       });
     }
