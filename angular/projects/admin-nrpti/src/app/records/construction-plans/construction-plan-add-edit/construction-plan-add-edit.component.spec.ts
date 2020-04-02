@@ -22,7 +22,9 @@ describe('ConstructionPlanAddEditComponent', () => {
 
   const mockLoadingScreenService = {
     isLoading: false,
-    setLoadingState: () => { return false }
+    setLoadingState: () => {
+      return false;
+    }
   };
 
   beforeEach(async(() => {
