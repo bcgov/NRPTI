@@ -47,6 +47,7 @@
             [control]="formGroup.get('activityType')"
             [options]="activityTypeOptions"
             [reset]="resetControls"
+            [placeholderText]="'Begin typing to filter activities...'"
             (numSelected)="activityTypeCount = $event"
           ></app-autocomplete-multi-select>
         </div>
@@ -59,6 +60,7 @@
             [control]="formGroup.get('agency')"
             [options]="agencyOptions"
             [reset]="resetControls"
+            [placeholderText]="'Begin typing to filter agencies...'"
             (numSelected)="agencyCount = $event"
           ></app-autocomplete-multi-select>
         </div>
@@ -71,6 +73,7 @@
             [control]="formGroup.get('act')"
             [options]="actOptions"
             [reset]="resetControls"
+            [placeholderText]="'Begin typing to filter acts...'"
             (numSelected)="actCount = $event"
           ></app-autocomplete-multi-select>
         </div>
@@ -83,6 +86,7 @@
             [control]="formGroup.get('regulation')"
             [options]="regulationOptions"
             [reset]="resetControls"
+            [placeholderText]="'Begin typing to filter regulations...'"
             (numSelected)="regulationCount = $event"
           ></app-autocomplete-multi-select>
         </div>
