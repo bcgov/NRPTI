@@ -21,7 +21,7 @@ const RECORD_TYPE = Object.freeze({
   Certificate: {
     _schemaName: 'Certificate',
     displayName: 'Certificate',
-    recordControllerName: 'agreements',
+    recordControllerName: 'certificates',
     flavours: { lng: { _schemaName: 'CertificateLNG' } }
   },
   ConstructionPlan: {

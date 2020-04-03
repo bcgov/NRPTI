@@ -171,7 +171,7 @@ class BaseRecordUtils {
 
     try {
       // build update Obj, which needs to include the flavour record ids
-      const updateObj = { ...nrptiRecord };
+      const updateObj = { ...nrptiRecord, _id: existingRecord._id };
       existingRecord._flavourRecords.forEach(flavourRecord => {
         updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
       });
