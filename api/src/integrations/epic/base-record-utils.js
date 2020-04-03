@@ -76,6 +76,16 @@ class BaseRecordUtils {
 
     const documentIds = nrptiRecord.documents.map(id => new ObjectID(id));
 
+    // Check if any documents uploaded to S3, and delete if any
+    for (let idx = 0; idx < documentIds.length; idx++) {
+      const document = await DocumentModel.findOne({ _id: documentIds[idx] });
+
+      if (document && document.key) {
+        await DocumentController.deleteS3Document(document.key);
+      }
+    }
+
+    // Delete local document record/meta
     await DocumentModel.deleteMany({ _id: { $in: documentIds } });
   }
 
