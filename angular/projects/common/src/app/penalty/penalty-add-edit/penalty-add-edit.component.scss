@@ -29,19 +29,25 @@
     &.flex-sm {
       @include flex-box();
       @include flex-direction(column);
-      @include flex(10 1);
+      @include flex(10 2);
+
+      min-width: 10rem;
     }
 
     &.flex-med {
       @include flex-box();
       @include flex-direction(column);
-      @include flex(20 1);
+      @include flex(20 3);
+
+      min-width: 10rem;
     }
 
     &.flex-lrg {
       @include flex-box();
       @include flex-direction(column);
-      @include flex(30 1);
+      @include flex(30 4);
+
+      min-width: 10rem;
     }
   }
 }
