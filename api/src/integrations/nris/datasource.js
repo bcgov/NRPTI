@@ -167,7 +167,8 @@ class NrisDataSource {
     // We don't need this as we insert based on assessmentId
     delete newRecord._id;
 
-    newRecord.recordName = 'Inspection to verify compliance with regulatory requirement.';
+    newRecord.recordName = `Inspection - ${record.requirementSource} - ${record.assessmentId}`;
+    newRecord.legislationDescription = 'Inspection to verify compliance with regulatory requirement.';
     newRecord.recordType = 'Inspection';
     newRecord._sourceRefNrisId = record.assessmentId;
     newRecord.dateIssued = record.assessmentDate;

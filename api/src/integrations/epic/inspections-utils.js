@@ -32,13 +32,29 @@ class Inspections extends BaseRecordUtils {
       throw Error('transformRecord - required record must be non-null.');
     }
 
+    let legislation = {};
+    switch (epicRecord.legislation) {
+      case 2002:
+        legislation['act'] = 'Environmental Assesment Act';
+        legislation['section'] = '33';
+        legislation['subSection'] = '1';
+        break;
+      case 2018:
+        legislation['act'] = 'Environmental Assesment Act';
+        legislation['section'] = '49';
+        legislation['subSection'] = '3';
+        break;
+      default:
+        legislation['act'] = (epicRecord.project && epicRecord.project.legislation) || '';
+        break;
+    }
+
     return {
       ...(await super.transformRecord(epicRecord)),
       issuingAgency: 'Environmental Assessment Office',
       author: epicRecord.documentAuthor || '',
-      legislation: {
-        act: (epicRecord.project && epicRecord.project.legislation) || ''
-      },
+      legislation: legislation,
+      legislationDescription: 'Inspection to verify compliance with regulatory requirement',
       issuedTo: {
         write: ['sysadmin'],
         read: ['sysadmin'],
