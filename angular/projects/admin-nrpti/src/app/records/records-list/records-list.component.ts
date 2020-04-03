@@ -37,7 +37,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   public tableColumns: IColumnObject[] = [
     {
       name: 'Issued To',
-      value: 'issuedTo',
+      value: 'issuedTo.fullName', // sort on issuedTo.fullName
       width: 'col-2'
     },
     {
