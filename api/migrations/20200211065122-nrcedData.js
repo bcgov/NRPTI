@@ -10,7 +10,7 @@ const fs = require('fs');
 const moment = require('moment');
 const RECORD_TYPE = require('../src/utils/constants/record-type-enum');
 
-const CSV_FILENAME = 'nrced-data.csv';
+const CSV_FILENAME = 'ocers-data.csv';
 
 /**
  * We receive the dbmigrate dependency from dbmigrate initially.
@@ -40,26 +40,21 @@ exports.up = async function(db) {
           .on('data', row => {
             /*
               0: type
-              1: year
-              2: quarter
-              3: issued to
-              4: date recorded
-              5: offender type
-              6: first name
-              7: middle name
-              8: last name
-              9: business name
-              10: location
-              11: act
-              12: abbreviation
-              13: section number
-              14: sub section
-              15: paragraph
-              16: description
-              17: summary
-              18: birth date
-              19: penalty amount
-              20: penalty text
+              1: date recorded
+              2: business name
+              3: first name
+              4: last name
+              5: middle name
+              6: location
+              7: act
+              8: regulation
+              9: section
+              10: subsection
+              11: paragraph
+              12: description
+              13: summary
+              14: penalty
+              15: penalty text
             */
             total++;
             switch (row[0]) {
@@ -70,7 +65,6 @@ exports.up = async function(db) {
                 promises.push(createAdministrativeSanction(row, nrptiCollection));
                 break;
               case 'Court Conviction':
-                // TODO when court convictions are ready
                 promises.push(createCourtConviction(row, nrptiCollection));
                 break;
               case 'Compliance Inspection':
@@ -122,36 +116,30 @@ const createAdministrativePenalty = async function(row, nrptiCollection) {
     read: ['sysadmin', 'public'],
     write: ['sysadmin'],
 
-    recordName: row[16],
+    recordName: row[12],
+    offence: row[12],
     recordType: RECORD_TYPE.AdministrativePenalty.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued:
-      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      (row[1] &&
-        row[2] &&
-        moment(row[1], 'YYYY')
-          .quarter(row[2])
-          .toDate()) ||
-      null,
+    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
     // issuingAgency: '',
     // author: '',
     legislation: {
-      act: row[11],
-      regulation: row[12],
-      section: row[13],
-      subSection: row[14].replace(/[()]/g, ''),
-      paragraph: row[15].replace(/[()]/g, '').replace(/[()]/g, '')
+      act: row[7],
+      regulation: row[8],
+      section: row[9],
+      subSection: row[10].replace(/[()]/g, ''),
+      paragraph: row[11].replace(/[()]/g, '').replace(/[()]/g, '')
     },
-    issuedTo: getIssuedToObject(row),
+    issuedTo: getIssuedToObject(row, true),
     // projectName: '',
-    location: row[10],
+    location: row[6],
     // centroid: '',
     // outcomeStatus: '',
     // outcomeDescription: '',
-    penalty: row[19],
+    penalties: getPenaltyObject(row),
     // attachments: null,
 
-    summary: row[17],
+    summary: row[13],
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -163,7 +151,7 @@ const createAdministrativePenalty = async function(row, nrptiCollection) {
 
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced-csv'
+    sourceSystemRef: 'ocers-csv'
   };
 
   const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
@@ -176,33 +164,27 @@ const createAdministrativePenalty = async function(row, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: row[16],
+    recordName: row[12],
+    offence: row[12],
     recordType: RECORD_TYPE.AdministrativePenalty.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued:
-      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      (row[1] &&
-        row[2] &&
-        moment(row[1], 'YYYY')
-          .quarter(row[2])
-          .toDate()) ||
-      null,
+    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
     // issuingAgency: '',
     // author: '',
     legislation: {
-      act: row[11],
-      regulation: row[12],
-      section: row[13],
-      subSection: row[14].replace(/[()]/g, ''),
-      paragraph: row[15].replace(/[()]/g, '').replace(/[()]/g, '')
+      act: row[7],
+      regulation: row[8],
+      section: row[9],
+      subSection: row[10].replace(/[()]/g, ''),
+      paragraph: row[11].replace(/[()]/g, '').replace(/[()]/g, '')
     },
     issuedTo: getIssuedToObject(row),
     // projectName: '',
-    location: row[10],
+    location: row[6],
     // centroid: '',
     // outcomeStatus: '',
     // outcomeDescription: '',
-    penalty: row[19],
+    penalties: getPenaltyObject(row),
     // attachments: null,
 
     dateAdded: new Date(),
@@ -213,7 +195,7 @@ const createAdministrativePenalty = async function(row, nrptiCollection) {
 
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced-csv'
+    sourceSystemRef: 'ocers-csv'
   };
 
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
@@ -226,36 +208,30 @@ const createAdministrativeSanction = async function(row, nrptiCollection) {
     read: ['sysadmin', 'public'],
     write: ['sysadmin'],
 
-    recordName: row[16],
+    recordName: row[12],
+    legislationDescription: row[12],
     recordType: RECORD_TYPE.AdministrativeSanction.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued:
-      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      (row[1] &&
-        row[2] &&
-        moment(row[1], 'YYYY')
-          .quarter(row[2])
-          .toDate()) ||
-      null,
+    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
     // issuingAgency: '',
     // author: '',
     legislation: {
-      act: row[11],
-      regulation: row[12],
-      section: row[13],
-      subSection: row[14].replace(/[()]/g, ''),
-      paragraph: row[15].replace(/[()]/g, '')
+      act: row[7],
+      regulation: row[8],
+      section: row[9],
+      subSection: row[10].replace(/[()]/g, ''),
+      paragraph: row[11].replace(/[()]/g, '')
     },
-    issuedTo: getIssuedToObject(row),
+    issuedTo: getIssuedToObject(row, true),
     // projectName: '',
-    location: row[10],
+    location: row[6],
     // centroid: '',
     // outcomeStatus: '',
     // outcomeDescription: '',
-    penalty: row[19],
+    penalties: getPenaltyObject(row),
     // attachments: null,
 
-    summary: row[17],
+    summary: row[13],
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -267,7 +243,7 @@ const createAdministrativeSanction = async function(row, nrptiCollection) {
 
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced-csv'
+    sourceSystemRef: 'ocers-csv'
   };
 
   const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
@@ -280,33 +256,27 @@ const createAdministrativeSanction = async function(row, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: row[16],
+    recordName: row[12],
+    legislationDescription: row[12],
     recordType: RECORD_TYPE.AdministrativeSanction.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued:
-      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      (row[1] &&
-        row[2] &&
-        moment(row[1], 'YYYY')
-          .quarter(row[2])
-          .toDate()) ||
-      null,
+    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
     // issuingAgency: '',
     // author: '',
     legislation: {
-      act: row[11],
-      regulation: row[12],
-      section: row[13],
-      subSection: row[14].replace(/[()]/g, ''),
-      paragraph: row[15].replace(/[()]/g, '')
+      act: row[7],
+      regulation: row[8],
+      section: row[9],
+      subSection: row[10].replace(/[()]/g, ''),
+      paragraph: row[11].replace(/[()]/g, '')
     },
     issuedTo: getIssuedToObject(row),
     // projectName: '',
-    location: row[10],
+    location: row[6],
     // centroid: '',
     // outcomeStatus: '',
     // outcomeDescription: '',
-    penalty: row[19],
+    penalties: getPenaltyObject(row),
     // attachments: null,
 
     dateAdded: new Date(),
@@ -317,54 +287,43 @@ const createAdministrativeSanction = async function(row, nrptiCollection) {
 
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced-csv'
+    sourceSystemRef: 'ocers-csv'
   };
 
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
 };
 
 const createCourtConviction = async function(row, nrptiCollection) {
-  // TODO when court convictions are ready
-  return;
-};
-
-const createInspection = async function(row, nrptiCollection) {
   let flavourRecordNRCED = {
-    _schemaName: RECORD_TYPE.Inspection.flavours.nrced._schemaName,
+    _schemaName: RECORD_TYPE.CourtConviction.flavours.nrced._schemaName,
 
     read: ['sysadmin', 'public'],
     write: ['sysadmin'],
 
-    recordName: row[16],
-    recordType: RECORD_TYPE.Inspection.displayName,
+    recordName: row[12],
+    // recordSubtype: '',
+    recordType: RECORD_TYPE.CourtConviction.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued:
-      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      (row[1] &&
-        row[2] &&
-        moment(row[1], 'YYYY')
-          .quarter(row[2])
-          .toDate()) ||
-      null,
+    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
     // issuingAgency: '',
     // author: '',
     legislation: {
-      act: row[11],
-      regulation: row[12],
-      section: row[13],
-      subSection: row[14].replace(/[()]/g, ''),
-      paragraph: row[15].replace(/[()]/g, '')
+      act: row[7],
+      regulation: row[8],
+      section: row[9],
+      subSection: row[10].replace(/[()]/g, ''),
+      paragraph: row[11].replace(/[()]/g, '').replace(/[()]/g, '')
     },
-    issuedTo: getIssuedToObject(row),
+    issuedTo: getIssuedToObject(row, true),
     // projectName: '',
-    location: row[10],
+    location: row[6],
     // centroid: '',
     // outcomeStatus: '',
     // outcomeDescription: '',
-    // penalty: '',
+    penalties: getPenaltyObject(row),
     // attachments: null,
 
-    summary: row[17],
+    summary: row[13],
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -376,7 +335,98 @@ const createInspection = async function(row, nrptiCollection) {
 
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced-csv'
+    sourceSystemRef: 'ocers-csv'
+  };
+
+  const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
+  const flavourId = responseflavourNRCED.insertedId;
+
+  const masterRecord = {
+    _schemaName: RECORD_TYPE.CourtConviction._schemaName,
+    _flavourRecords: [new ObjectID(flavourId)],
+
+    read: ['sysadmin'],
+    write: ['sysadmin'],
+
+    recordName: row[12],
+    recordType: RECORD_TYPE.CourtConviction.displayName,
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    // issuingAgency: '',
+    // author: '',
+    legislation: {
+      act: row[7],
+      regulation: row[8],
+      section: row[9],
+      subSection: row[10].replace(/[()]/g, ''),
+      paragraph: row[11].replace(/[()]/g, '').replace(/[()]/g, '')
+    },
+    issuedTo: getIssuedToObject(row),
+    // projectName: '',
+    location: row[6],
+    // centroid: '',
+    // outcomeStatus: '',
+    // outcomeDescription: '',
+    penalties: getPenaltyObject(row),
+    // attachments: null,
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'ocers-csv'
+  };
+
+  const responseMaster = await nrptiCollection.insertOne(masterRecord);
+};
+
+const createInspection = async function(row, nrptiCollection) {
+  let flavourRecordNRCED = {
+    _schemaName: RECORD_TYPE.Inspection.flavours.nrced._schemaName,
+
+    read: ['sysadmin', 'public'],
+    write: ['sysadmin'],
+
+    recordName: row[12],
+    legislationDescription: row[12],
+    recordType: RECORD_TYPE.Inspection.displayName,
+    // Prefer to store dates in the DB as ISO, not some random format.
+    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    // issuingAgency: '',
+    // author: '',
+    legislation: {
+      act: row[7],
+      regulation: row[8],
+      section: row[9],
+      subSection: row[10].replace(/[()]/g, ''),
+      paragraph: row[11].replace(/[()]/g, '')
+    },
+    issuedTo: getIssuedToObject(row, true),
+    // projectName: '',
+    location: row[6],
+    // centroid: '',
+    // outcomeStatus: '',
+    // outcomeDescription: '',
+    // penalty: '',
+    // attachments: null,
+
+    summary: row[13],
+
+    dateAdded: new Date(),
+    dateUpdated: new Date(),
+    datePublished: new Date(),
+
+    addedBy: 'System',
+    updatedBy: 'System',
+    publishedBy: 'System',
+
+    sourceDateAdded: new Date(),
+    sourceDateUpdated: new Date(),
+    sourceSystemRef: 'ocers-csv'
   };
 
   const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
@@ -389,29 +439,23 @@ const createInspection = async function(row, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: row[16],
+    recordName: row[12],
+    legislationDescription: row[12],
     recordType: RECORD_TYPE.Inspection.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued:
-      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      (row[1] &&
-        row[2] &&
-        moment(row[1], 'YYYY')
-          .quarter(row[2])
-          .toDate()) ||
-      null,
+    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
     // issuingAgency: '',
     // author: '',
     legislation: {
-      act: row[11],
-      regulation: row[12],
-      section: row[13],
-      subSection: row[14].replace(/[()]/g, ''),
-      paragraph: row[15].replace(/[()]/g, '')
+      act: row[7],
+      regulation: row[8],
+      section: row[9],
+      subSection: row[10].replace(/[()]/g, ''),
+      paragraph: row[11].replace(/[()]/g, '')
     },
     issuedTo: getIssuedToObject(row),
     // projectName: '',
-    location: row[10],
+    location: row[6],
     // centroid: '',
     // outcomeStatus: '',
     // outcomeDescription: '',
@@ -426,7 +470,7 @@ const createInspection = async function(row, nrptiCollection) {
 
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced-csv'
+    sourceSystemRef: 'ocers-csv'
   };
 
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
@@ -439,36 +483,30 @@ const createOrder = async function(row, nrptiCollection) {
     read: ['sysadmin', 'public'],
     write: ['sysadmin'],
 
-    recordName: row[16],
+    recordName: row[12],
+    legislationDescription: row[12],
     recordType: RECORD_TYPE.Order.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued:
-      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      (row[1] &&
-        row[2] &&
-        moment(row[1], 'YYYY')
-          .quarter(row[2])
-          .toDate()) ||
-      null,
+    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
     // issuingAgency: '',
     // author: '',
     legislation: {
-      act: row[11],
-      regulation: row[12],
-      section: row[13],
-      subSection: row[14].replace(/[()]/g, ''),
-      paragraph: row[15].replace(/[()]/g, '')
+      act: row[7],
+      regulation: row[8],
+      section: row[9],
+      subSection: row[10].replace(/[()]/g, ''),
+      paragraph: row[11].replace(/[()]/g, '')
     },
-    issuedTo: getIssuedToObject(row),
+    issuedTo: getIssuedToObject(row, true),
     // projectName: '',
-    location: row[10],
+    location: row[6],
     // centroid: '',
     // outcomeStatus: '',
     // outcomeDescription: '',
     // penalty: '',
     // attachments: null,
 
-    summary: row[17],
+    summary: row[13],
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -480,7 +518,7 @@ const createOrder = async function(row, nrptiCollection) {
 
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced-csv'
+    sourceSystemRef: 'ocers-csv'
   };
 
   const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
@@ -493,29 +531,23 @@ const createOrder = async function(row, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: row[16],
+    recordName: row[12],
+    legislationDescription: row[12],
     recordType: RECORD_TYPE.Order.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued:
-      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      (row[1] &&
-        row[2] &&
-        moment(row[1], 'YYYY')
-          .quarter(row[2])
-          .toDate()) ||
-      null,
+    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
     // issuingAgency: '',
     // author: '',
     legislation: {
-      act: row[11],
-      regulation: row[12],
-      section: row[13],
-      subSection: row[14].replace(/[()]/g, ''),
-      paragraph: row[15].replace(/[()]/g, '')
+      act: row[7],
+      regulation: row[8],
+      section: row[9],
+      subSection: row[10].replace(/[()]/g, ''),
+      paragraph: row[11].replace(/[()]/g, '')
     },
     issuedTo: getIssuedToObject(row),
     // projectName: '',
-    location: row[10],
+    location: row[6],
     // centroid: '',
     // outcomeStatus: '',
     // outcomeDescription: '',
@@ -530,7 +562,7 @@ const createOrder = async function(row, nrptiCollection) {
 
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced-csv'
+    sourceSystemRef: 'ocers-csv'
   };
 
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
@@ -543,36 +575,30 @@ const createRestorativeJustice = async function(row, nrptiCollection) {
     read: ['sysadmin', 'public'],
     write: ['sysadmin'],
 
-    recordName: row[16],
+    recordName: row[12],
+    offence: row[12],
     recordType: RECORD_TYPE.RestorativeJustice.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued:
-      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      (row[1] &&
-        row[2] &&
-        moment(row[1], 'YYYY')
-          .quarter(row[2])
-          .toDate()) ||
-      null,
+    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
     // issuingAgency: '',
     // author: '',
     legislation: {
-      act: row[11],
-      regulation: row[12],
-      section: row[13],
-      subSection: row[14].replace(/[()]/g, ''),
-      paragraph: row[15].replace(/[()]/g, '')
+      act: row[7],
+      regulation: row[8],
+      section: row[9],
+      subSection: row[10].replace(/[()]/g, ''),
+      paragraph: row[11].replace(/[()]/g, '')
     },
-    issuedTo: getIssuedToObject(row),
+    issuedTo: getIssuedToObject(row, true),
     // projectName: '',
-    location: row[10],
+    location: row[6],
     // centroid: '',
     // outcomeStatus: '',
     // outcomeDescription: '',
-    penalty: row[19],
+    penalties: getPenaltyObject(row),
     // attachments: null,
 
-    summary: row[17],
+    summary: row[13],
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -584,7 +610,7 @@ const createRestorativeJustice = async function(row, nrptiCollection) {
 
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced-csv'
+    sourceSystemRef: 'ocers-csv'
   };
 
   const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
@@ -597,33 +623,27 @@ const createRestorativeJustice = async function(row, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: row[16],
+    recordName: row[12],
+    offence: row[12],
     recordType: RECORD_TYPE.RestorativeJustice.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued:
-      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      (row[1] &&
-        row[2] &&
-        moment(row[1], 'YYYY')
-          .quarter(row[2])
-          .toDate()) ||
-      null,
+    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
     // issuingAgency: '',
     // author: '',
     legislation: {
-      act: row[11],
-      regulation: row[12],
-      section: row[13],
-      subSection: row[14].replace(/[()]/g, ''),
-      paragraph: row[15].replace(/[()]/g, '')
+      act: row[7],
+      regulation: row[8],
+      section: row[9],
+      subSection: row[10].replace(/[()]/g, ''),
+      paragraph: row[11].replace(/[()]/g, '')
     },
     issuedTo: getIssuedToObject(row),
     // projectName: '',
-    location: row[10],
+    location: row[6],
     // centroid: '',
     // outcomeStatus: '',
     // outcomeDescription: '',
-    penalty: row[19],
+    penalties: getPenaltyObject(row),
     // attachments: null,
 
     dateAdded: new Date(),
@@ -634,7 +654,7 @@ const createRestorativeJustice = async function(row, nrptiCollection) {
 
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced-csv'
+    sourceSystemRef: 'ocers-csv'
   };
 
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
@@ -647,36 +667,30 @@ const createTicket = async function(row, nrptiCollection) {
     read: ['sysadmin', 'public'],
     write: ['sysadmin'],
 
-    recordName: row[16],
+    recordName: row[12],
+    offence: row[12],
     recordType: RECORD_TYPE.Ticket.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued:
-      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      (row[1] &&
-        row[2] &&
-        moment(row[1], 'YYYY')
-          .quarter(row[2])
-          .toDate()) ||
-      null,
+    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
     // issuingAgency: '',
     // author: '',
     legislation: {
-      act: row[11],
-      regulation: row[12],
-      section: row[13],
-      subSection: row[14].replace(/[()]/g, ''),
-      paragraph: row[15].replace(/[()]/g, '')
+      act: row[7],
+      regulation: row[8],
+      section: row[9],
+      subSection: row[10].replace(/[()]/g, ''),
+      paragraph: row[11].replace(/[()]/g, '')
     },
-    issuedTo: getIssuedToObject(row),
+    issuedTo: getIssuedToObject(row, true),
     // projectName: '',
-    location: row[10],
+    location: row[6],
     // centroid: '',
     // outcomeStatus: '',
     // outcomeDescription: '',
-    penalty: row[19],
+    penalties: getPenaltyObject(row),
     // attachments: null,
 
-    summary: row[17],
+    summary: row[13],
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -688,7 +702,7 @@ const createTicket = async function(row, nrptiCollection) {
 
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced-csv'
+    sourceSystemRef: 'ocers-csv'
   };
 
   const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
@@ -701,33 +715,27 @@ const createTicket = async function(row, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: row[16],
+    recordName: row[12],
+    offence: row[12],
     recordType: RECORD_TYPE.Ticket.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued:
-      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      (row[1] &&
-        row[2] &&
-        moment(row[1], 'YYYY')
-          .quarter(row[2])
-          .toDate()) ||
-      null,
+    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
     // issuingAgency: '',
     // author: '',
     legislation: {
-      act: row[11],
-      regulation: row[12],
-      section: row[13],
-      subSection: row[14].replace(/[()]/g, ''),
-      paragraph: row[15].replace(/[()]/g, '')
+      act: row[7],
+      regulation: row[8],
+      section: row[9],
+      subSection: row[10].replace(/[()]/g, ''),
+      paragraph: row[11].replace(/[()]/g, '')
     },
     issuedTo: getIssuedToObject(row),
     // projectName: '',
-    location: row[10],
+    location: row[6],
     // centroid: '',
     // outcomeStatus: '',
     // outcomeDescription: '',
-    penalty: row[19],
+    penalties: getPenaltyObject(row),
     // attachments: null,
 
     dateAdded: new Date(),
@@ -738,7 +746,7 @@ const createTicket = async function(row, nrptiCollection) {
 
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced-csv'
+    sourceSystemRef: 'ocers-csv'
   };
 
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
@@ -751,36 +759,30 @@ const createWarning = async function(row, nrptiCollection) {
     read: ['sysadmin', 'public'],
     write: ['sysadmin'],
 
-    recordName: row[16],
+    recordName: row[12],
+    legislationDescription: row[12],
     recordType: RECORD_TYPE.Warning.displayName,
     // recordSubtype: '',
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued:
-      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      (row[1] &&
-        row[2] &&
-        moment(row[1], 'YYYY')
-          .quarter(row[2])
-          .toDate()) ||
-      null,
+    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
     // issuingAgency: '',
     // author: '',
     legislation: {
-      act: row[11],
-      regulation: row[12],
-      section: row[13],
-      subSection: row[14].replace(/[()]/g, ''),
-      paragraph: row[15].replace(/[()]/g, '')
+      act: row[7],
+      regulation: row[8],
+      section: row[9],
+      subSection: row[10].replace(/[()]/g, ''),
+      paragraph: row[11].replace(/[()]/g, '')
     },
-    issuedTo: getIssuedToObject(row),
+    issuedTo: getIssuedToObject(row, true),
     // projectName: '',
-    location: row[10],
+    location: row[6],
     // centroid: '',
     // outcomeStatus: '',
     // outcomeDescription: '',
     // attachments: null,
 
-    summary: row[17],
+    summary: row[13],
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -792,7 +794,7 @@ const createWarning = async function(row, nrptiCollection) {
 
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced-csv'
+    sourceSystemRef: 'ocers-csv'
   };
 
   const responseflavourNRCED = await nrptiCollection.insertOne(flavourRecordNRCED);
@@ -805,30 +807,24 @@ const createWarning = async function(row, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: row[16],
+    recordName: row[12],
+    legislationDescription: row[12],
     recordType: RECORD_TYPE.Warning.displayName,
     // recordSubtype: '',
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued:
-      (row[4] && moment(row[4], 'DD/MM/YYYY 0:00').toDate()) ||
-      (row[1] &&
-        row[2] &&
-        moment(row[1], 'YYYY')
-          .quarter(row[2])
-          .toDate()) ||
-      null,
+    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
     // issuingAgency: '',
     // author: '',
     legislation: {
-      act: row[11],
-      regulation: row[12],
-      section: row[13],
-      subSection: row[14].replace(/[()]/g, ''),
-      paragraph: row[15].replace(/[()]/g, '')
+      act: row[7],
+      regulation: row[8],
+      section: row[9],
+      subSection: row[10].replace(/[()]/g, ''),
+      paragraph: row[11].replace(/[()]/g, '')
     },
     issuedTo: getIssuedToObject(row),
     // projectName: '',
-    location: row[10],
+    location: row[6],
     // centroid: '',
     // outcomeStatus: '',
     // outcomeDescription: '',
@@ -842,42 +838,102 @@ const createWarning = async function(row, nrptiCollection) {
 
     sourceDateAdded: new Date(),
     sourceDateUpdated: new Date(),
-    sourceSystemRef: 'nrced-csv'
+    sourceSystemRef: 'ocers-csv'
   };
 
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
 };
 
-const getIssuedToObject = function(row) {
-  const issuedToObject = {
-    read: ['sysadmin', 'public'],
+const getIssuedToObject = function(row, addPublicRole) {
+  let issuedToObject = {
+    read: ['sysadmin'],
     write: ['sysadmin']
   };
+
+  if (addPublicRole) {
+    issuedToObject.read.push('public');
+  }
 
   if (!row) {
     return issuedToObject;
   }
 
-  if (row[5] === 'Company') {
+  if (row[2]) {
     issuedToObject.type = 'Company';
-    issuedToObject.companyName = row[3] || row[9];
-  }
+    issuedToObject.companyName = row[2];
 
-  if (row[5] === 'Person') {
+    issuedToObject.fullName = setIssuedToFullNameValue(issuedToObject);
+  } else if (row[3] || row[4] || row[5]) {
     issuedToObject.type = 'Individual';
-    issuedToObject.firstName = row[6];
-    issuedToObject.middleName = row[7];
-    issuedToObject.lastName = row[8];
-    issuedToObject.dateOfBirth = (row[18] && moment(row[18], 'DD/MM/YYYY').toDate()) || null;
-  }
+    issuedToObject.firstName = row[3];
+    issuedToObject.middleName = row[5];
+    issuedToObject.lastName = row[4];
+    issuedToObject.dateOfBirth = null;
 
-  if (row[5] === 'Individual') {
-    issuedToObject.type = 'IndividualCombined';
-    issuedToObject.fullName = row[3];
-    issuedToObject.dateOfBirth = (row[18] && moment(row[18], 'DD/MM/YYYY').toDate()) || null;
+    issuedToObject.fullName = setIssuedToFullNameValue(issuedToObject);
+  } else {
+    issuedToObject.type = 'Individual';
+    issuedToObject.firstName = '';
+    issuedToObject.middleName = '';
+    issuedToObject.lastName = '';
+    issuedToObject.dateOfBirth = null;
+
+    issuedToObject.fullName = '';
   }
 
   return issuedToObject;
+};
+
+const setIssuedToFullNameValue = function(issuedToObj) {
+  if (!issuedToObj || !issuedToObj.type) {
+    return '';
+  }
+
+  if (issuedToObj.type === 'IndividualCombined') {
+    return issuedToObj.fullName;
+  }
+
+  if (issuedToObj.type === 'Company') {
+    return issuedToObj.companyName;
+  }
+
+  if (!issuedToObj.firstName && !issuedToObj.middleName && !issuedToObj.lastName) {
+    return '';
+  }
+
+  if (issuedToObj.type === 'Individual') {
+    return [[issuedToObj.lastName || '-', issuedToObj.firstName || '-'].join(', '), issuedToObj.middleName || '-'].join(
+      ' '
+    );
+  }
+};
+
+const getPenaltyObject = function(row) {
+  const penaltyObject = {
+    type: '',
+    penalty: {
+      type: '',
+      value: null
+    },
+    description: ''
+  };
+
+  if (!row) {
+    return penaltyObject;
+  }
+
+  if (row[[14]]) {
+    penaltyObject.type = 'Fined';
+    penaltyObject.penalty.type = 'Dollars';
+    penaltyObject.penalty.value = Number(row[14]);
+  } else {
+    penaltyObject.type = 'Other';
+    penaltyObject.penalty.type = 'Other';
+  }
+
+  penaltyObject.description = row[15] || '';
+
+  return [penaltyObject];
 };
 
 exports.down = function(db) {
