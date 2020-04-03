@@ -23,7 +23,7 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
   public displayDetailsComponent = false;
   public componentRef: ComponentRef<any>;
 
-  public entityString = '';
+  public entityString = 'Unpublished'; // if the issuedTo object is completely missing (redacted) show 'Unpublished'
 
   constructor(public factoryService: FactoryService) {
     super();

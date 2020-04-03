@@ -22,8 +22,23 @@ exports.getIssuedToFullNameValue = function(issuedToObj) {
   }
 
   if (issuedToObj.type === 'Individual') {
-    return [[issuedToObj.lastName || '-', issuedToObj.firstName || '-'].join(', '), issuedToObj.middleName || '-'].join(
-      ' '
-    );
+    let entityString = '';
+
+    const entityNameParts = [];
+    if (issuedToObj.lastName) {
+      entityNameParts.push(issuedToObj.lastName);
+    }
+
+    if (issuedToObj.firstName) {
+      entityNameParts.push(issuedToObj.firstName);
+    }
+
+    entityString = entityNameParts.join(', ');
+
+    if (issuedToObj.middleName) {
+      entityString += ` ${issuedToObj.middleName}`;
+    }
+
+    return entityString;
   }
 };
