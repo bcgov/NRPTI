@@ -6,65 +6,59 @@
           class="nav-item"
           [ngClass]="{ active: isTabActive('detail') }"
           (click)="activateTab('detail')"
-          title="Warning activity details">
+          title="Warning activity details"
+        >
           <i class="nav-item-icon material-icons">info</i>
           <a class="nav-item-value">Activity Details</a>
         </li>
-        <!-- <li
-          class="nav-item"
-          [ngClass]="{ active: isTabActive('location') }"
-          (click)="activateTab('location')"
-          title="Warning Location details"
-        >
-          <i class="nav-item-icon material-icons">room</i>
-          <a class="nav-item-value">Location</a>
-        </li> -->
       </ul>
     </section>
     <section class="content-section" *ngIf="isTabActive('detail')">
       <div class="content-grid">
-        <div class="grid-section-1">
+        <div class="grid-section section-1">
           <div class="grid-item__row">
-            <span class="grid-item-name">Activity Type</span>
+            <label class="grid-item-name">Activity Type</label>
             <span class="grid-item-value__col">{{ (data && data.recordType) || '-' }}</span>
           </div>
           <div class="grid-item__row">
-            <span class="grid-item-name">Issued To</span>
+            <label class="grid-item-name">Issued To</label>
             <span class="grid-item-value__col">
               {{ (data && data.issuedTo && data.issuedTo.getEntityNameString()) || '-' }}
             </span>
           </div>
           <div class="grid-item__row">
-            <span class="grid-item-name">Issued On</span>
+            <label class="grid-item-name">Issued On</label>
             <span class="gird-item-value">{{ (data && data.dateIssued | date: 'mediumDate') || '-' }}</span>
           </div>
         </div>
-        <div class="grid-section-2">
+        <div class="grid-section section-2">
           <div class="grid-item__row">
-            <span class="grid-item-name">Summary</span>
+            <label class="grid-item-name">Summary</label>
             <span class="grid-item-value__col">{{ (data && data.summary) || '-' }}</span>
           </div>
           <div class="grid-item__row">
-            <span class="grid-item-name">Issuing Agency</span>
+            <label class="grid-item-name">Issuing Agency</label>
             <span class="grid-item-value__col">{{ (data && data.issuingAgency) || '-' }}</span>
           </div>
           <div class="grid-item__row">
-            <span class="grid-item-name">Legislation</span>
+            <label class="grid-item-name">Legislation</label>
             <div class="grid-item-value__flex__row">
               <div class="grid-item__flex">
-                <span class="grid-item-name">Act</span>
+                <label class="grid-item-name">Act</label>
                 <span class="grid-item-value">
+                  &nbsp;
                   {{ (data && data.legislation && data.legislation.act) || '-' }}
                 </span>
               </div>
               <div class="grid-item__flex">
-                <span class="grid-item-name">Regulation</span>
+                <label class="grid-item-name">Regulation</label>
                 <span class="grid-item-value">
+                  &nbsp;
                   {{ (data && data.legislation && data.legislation.regulation) || '-' }}
                 </span>
               </div>
               <div class="grid-item__row">
-                <span class="grid-item-name">Section (Sub-Section) (Paragraph)</span>
+                <label class="grid-item-name">Section (Sub-Section) (Paragraph)</label>
                 <span class="grid-item-value">
                   {{ (data && data.legislation && data.legislation.section) || '-' }}
                   ({{ (data && data.legislation && data.legislation.subSection) || '-' }}) ({{
@@ -75,27 +69,27 @@
             </div>
           </div>
           <div class="grid-item__row">
-            <span class="grid-item-name">Description</span>
+            <label class="grid-item-name">Description</label>
             <span class="grid-item-value__col">{{ (data && data.legislationDescription) || '-' }}</span>
           </div>
         </div>
-        <div class="grid-section-3">
+        <div class="grid-section section-3">
           <div class="grid-item__row">
-            <span class="grid-item-name">Site/Project</span>
+            <label class="grid-item-name">Site/Project</label>
             <span class="grid-item-value__col">{{ (data && data.projectName) || '-' }}</span>
           </div>
           <div class="grid-item__row">
-            <span class="grid-item-name">Location Description</span>
+            <label class="grid-item-name">Location Description</label>
             <span class="grid-item-value__col">{{ (data && data.location) || '-' }}</span>
           </div>
           <div class="grid-item__row">
-            <span class="grid-item-name">Lat/Long</span>
+            <label class="grid-item-name">Lat/Long</label>
             <span class="grid-item-value__col">{{ (data && data.centroid) || '-' }}</span>
           </div>
         </div>
-        <div class="grid-section-5">
+        <div class="grid-section section-4">
           <div class="grid-item__row">
-            <span class="grid-item-name">Documents</span>
+            <label class="grid-item-name">Documents</label>
             <span class="grid-item-value__col" *ngIf="data && data.documents && data.documents.length > 0">
               <span *ngFor="let document of data && data.documents">
                 <a href="{{ document.url }}" target=" _blank">{{ document.fileName }}</a>

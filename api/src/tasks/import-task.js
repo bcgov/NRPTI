@@ -54,7 +54,7 @@ async function runTask(nrptiDataSource, auth_payload, params = null, recordTypes
 
     await taskAuditRecord.updateTaskRecord({ dataSourceLabel: nrptiDataSource.dataSourceLabel, startDate: new Date() });
 
-    const dataSource = new nrptiDataSource.dataSourceClass(auth_payload, params, recordTypes);
+    const dataSource = new nrptiDataSource.dataSourceClass(taskAuditRecord, auth_payload, params, recordTypes);
 
     if (!dataSource) {
       throw Error(`runTask - ${nrptiDataSource.dataSourceLabel} - failed - could not create instance of dataSource`);
@@ -63,10 +63,10 @@ async function runTask(nrptiDataSource, auth_payload, params = null, recordTypes
     // Run the datasource loop, passing in the audit object.
     const res = await dataSource.run(taskAuditRecord);
 
-    defaultLog.info(`runTask - ${nrptiDataSource.dataSourceLabel} - ${res.status}`);
+    defaultLog.info(`runTask - ${nrptiDataSource.dataSourceLabel} - completed`);
 
     // Update task as completed (does not necessarily mean all records were successfully updated)
-    await taskAuditRecord.updateTaskRecord({ status: res.status, finishDate: new Date(), ...res });
+    await taskAuditRecord.updateTaskRecord({ status: 'completed', finishDate: new Date(), ...res });
   } catch (error) {
     defaultLog.error(
       `runTask - ${nrptiDataSource.dataSourceLabel} - ${error.status} - unexpected error: ${error.message}`

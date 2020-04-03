@@ -10,7 +10,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Utils } from 'nrpti-angular-components';
 import { RecordUtils } from '../../utils/record-utils';
-import { EntityAddEditComponent } from '../../../../../../common/src/app/entity/entity-add-edit/entity-add-edit.component';
+import { CommonModule } from '../../../../../../common/src/app/common.module';
 import { MatSlideToggleModule } from '@angular/material';
 import { LoadingScreenService } from 'nrpti-angular-components';
 
@@ -36,11 +36,12 @@ describe('WarningAddEditComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         GlobalModule,
+        CommonModule,
         MatSlideToggleModule,
         NgxPaginationModule,
         NgbModule.forRoot()
       ],
-      declarations: [WarningAddEditComponent, EntityAddEditComponent],
+      declarations: [WarningAddEditComponent],
       providers: [
         Utils,
         RecordUtils,

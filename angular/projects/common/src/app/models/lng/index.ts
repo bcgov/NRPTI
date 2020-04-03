@@ -11,3 +11,4 @@ export * from './administrative-sanction-lng';
 export * from './warning-lng';
 export * from './construction-plan-lng';
 export * from './management-plan-lng';
+export * from './court-conviction-lng';

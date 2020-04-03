@@ -55,6 +55,7 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
   @Input() control: FormControl;
   @Input() options: IMutliSelectOption[];
   @Input() reset: EventEmitter<any>;
+  @Input() placeholderText = 'Begin typing to filter...';
 
   @Output() numSelected: EventEmitter<number> = new EventEmitter<number>();
 
@@ -166,22 +167,6 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
       if (agency.value === option.value) {
         agency.selected = !agency.selected;
       }
-      return agency;
-    });
-
-    this.setFormControlValue();
-
-    this._changeDetectionRef.detectChanges();
-  }
-
-  /**
-   * Selects all options
-   *
-   * @memberof AutoCompleteMultiSelectComponent
-   */
-  public selectAll() {
-    this.options = this.options.map(agency => {
-      agency.selected = true;
       return agency;
     });
 

@@ -5,7 +5,7 @@
         <div class="grid-section-header">
           <div class="grid-section-header-title">
             <h4 class="grid-section-header-title-text blue-header">Shared Data [Master]</h4>
-            <span *ngIf="data && data._master.dateUpdated" class="grid-section-header-title-sub-text grey-sub-text">
+            <span *ngIf="data && data._master.dateUpdated" class="grey-subtext ml-2">
               Last Edited {{ (data && data._master.dateUpdated | date: 'mediumDate') || '-' }}
             </span>
           </div>
@@ -20,20 +20,20 @@
           <span class="grid-section-sub-header-text">Basic Information</span>
         </div>
         <div class="grid-section section-1">
-          <div class="grid-item">
-            <span class="grid-item-name">Record Name</span>
+          <div class="grid-item__row">
+            <label class="grid-item-name">Record Name</label>
             <span class="grid-item-value">{{ (data && data._master.recordName) || '-' }}</span>
           </div>
-          <div class="grid-item">
-            <span class="grid-item-name">Record Type</span>
+          <div class="grid-item__row">
+            <label class="grid-item-name">Record Type</label>
             <span class="grid-item-value">{{ (data && data._master.recordType) || '-' }}</span>
           </div>
-          <div class="grid-item">
-            <span class="grid-item-name">Date Issued</span>
+          <div class="grid-item__row">
+            <label class="grid-item-name">Date Issued</label>
             <span class="gird-item-value">{{ (data && data._master.dateIssued | date: 'mediumDate') || '-' }}</span>
           </div>
-          <div class="grid-item">
-            <span class="grid-item-name">Nation</span>
+          <div class="grid-item__row">
+            <label class="grid-item-name">Nation</label>
             <span class="gird-item-value">{{ (data && data._master.nationName) || '-' }}</span>
           </div>
         </div>
@@ -42,8 +42,8 @@
           <span class="grid-section-sub-header-text">Location Details</span>
         </div>
         <div class="grid-section section-2">
-          <div class="grid-item">
-            <span class="grid-item-name">Site/Project</span>
+          <div class="grid-item__row">
+            <label class="grid-item-name">Site/Project</label>
             <span class="grid-item-value">{{ (data && data._master.projectName) || '-' }}</span>
           </div>
         </div>
@@ -51,7 +51,7 @@
         <div class="grid-section-sub-header">
           <span class="grid-section-sub-header-text">Documents</span>
         </div>
-        <div class="grid-section-3">
+        <div class="grid-section section-3">
           <app-document-read-only [documents]="data && data._master && data._master.documents"></app-document-read-only>
         </div>
         <div class="grid-section-border"></div>

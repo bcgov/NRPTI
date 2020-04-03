@@ -15,11 +15,11 @@ const s3 = new AWS.S3({
   s3ForcePathStyle: true
 });
 
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedPost = async function(args, res, next) {
+exports.protectedPost = async function (args, res, next) {
   if (
     args.swagger.params.fileName &&
     args.swagger.params.fileName.value &&
@@ -40,7 +40,7 @@ exports.protectedPost = async function(args, res, next) {
       try {
         docResponse = await createDocument(
           args.swagger.params.fileName.value,
-          (this.auth_payload && this.auth_payload.displayName) || '',
+          (args.swagger.params.auth_payload && args.swagger.params.auth_payload.preferred_username) || '',
           args.swagger.params.url.value
         );
       } catch (e) {
@@ -56,7 +56,7 @@ exports.protectedPost = async function(args, res, next) {
       try {
         docResponse = await createDocument(
           args.swagger.params.fileName.value,
-          (this.auth_payload && this.auth_payload.displayName) || ''
+          (args.swagger.params.auth_payload && args.swagger.params.auth_payload.preferred_username) || ''
         );
       } catch (e) {
         defaultLog.info(`Error creating document meta for ${args.swagger.params.fileName.value}: ${e}`);
@@ -95,7 +95,7 @@ exports.protectedPost = async function(args, res, next) {
       recordResponse = await collection.findOneAndUpdate(
         { _id: new ObjectID(args.swagger.params.recordId.value) },
         { $addToSet: { documents: new ObjectID(docResponse._id) } },
-        { returnNewDocument: true }
+        { new: true }
       );
     } catch (e) {
       defaultLog.info(
@@ -116,7 +116,7 @@ exports.protectedPost = async function(args, res, next) {
           collection.findOneAndUpdate(
             { _id: new ObjectID(id) },
             { $addToSet: { documents: new ObjectID(docResponse._id) } },
-            { returnNewDocument: true }
+            { new: true }
           )
         );
       });
@@ -142,7 +142,7 @@ exports.protectedPost = async function(args, res, next) {
   }
 };
 
-exports.protectedDelete = async function(args, res, next) {
+exports.protectedDelete = async function (args, res, next) {
   if (
     args.swagger.params.docId &&
     args.swagger.params.docId.value &&
@@ -168,12 +168,7 @@ exports.protectedDelete = async function(args, res, next) {
     // We need to delete this document.
     if (docResponse.key) {
       try {
-        const s3DeleteResult = await s3
-          .deleteObject({
-            Bucket: process.env.OBJECT_STORE_bucket_name,
-            Key: docResponse.key
-          })
-          .promise();
+        const s3DeleteResult = await deleteS3Document(docResponse.key);
 
         s3Response = s3DeleteResult;
       } catch (e) {
@@ -196,7 +191,7 @@ exports.protectedDelete = async function(args, res, next) {
       recordResponse = await collection.findOneAndUpdate(
         { _id: new ObjectID(args.swagger.params.recordId.value) },
         { $pull: { documents: new ObjectID(docResponse._id) } },
-        { returnNewDocument: true }
+        { new: true }
       );
     } catch (e) {
       defaultLog.info(
@@ -217,7 +212,7 @@ exports.protectedDelete = async function(args, res, next) {
           collection.findOneAndUpdate(
             { _id: new ObjectID(id) },
             { $pull: { documents: new ObjectID(docResponse._id) } },
-            { returnNewDocument: true }
+            { new: true }
           )
         );
       });
@@ -263,3 +258,9 @@ async function createDocument(fileName, addedBy, url = null) {
   document.write = ['sysadmin'];
   return await document.save();
 }
+
+exports.deleteS3Document = deleteS3Document;
+
+async function deleteS3Document(docKey) {
+  return await s3.deleteObject({ Bucket: process.env.OBJECT_STORE_bucket_name, Key: docKey }).promise();
+};

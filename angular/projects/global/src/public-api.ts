@@ -21,6 +21,8 @@ export * from './lib/components/date-picker/date-picker.component';
 
 // directives
 export * from './lib/components/table-template/table-row.directive';
+export * from './lib/directives/auto-grow-textarea/auto-grow-textarea.directive';
+export * from './lib/directives/digit-only/digit-only.directive';
 
 // services
 export * from './lib/services/export.service';

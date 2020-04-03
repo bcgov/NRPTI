@@ -98,7 +98,8 @@ exports.recordTypes = [
   'AdministrativeSanction',
   'Warning',
   'ConstructionPlan',
-  'ManagementPlan'
+  'ManagementPlan',
+  'CourtConviction'
 ];
 
 /**

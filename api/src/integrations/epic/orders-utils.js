@@ -55,12 +55,10 @@ class Orders extends BaseRecordUtils {
       legislation: legislation,
       legislationDescription: 'Order to cease or remedy.',
       issuedTo: {
-        write: ['sysadmin'],
-        read: ['sysadmin'],
-
         // Epic doesn't support `Individual` proponents
         type: 'Company',
-        companyName: epicRecord.project.company || ''
+        companyName: epicRecord.project.company || '',
+        fullName: epicRecord.project.company || ''
       }
     };
   }

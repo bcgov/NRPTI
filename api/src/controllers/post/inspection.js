@@ -421,6 +421,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.centroid && (inspectionNRCED.centroid = incomingObj.centroid);
   incomingObj.outcomeStatus && (inspectionNRCED.outcomeStatus = incomingObj.outcomeStatus);
   incomingObj.outcomeDescription && (inspectionNRCED.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.documents && (inspectionNRCED.documents = incomingObj.documents);
 
   // set flavour data
   incomingObj.summary && (inspectionNRCED.summary = incomingObj.summary);
@@ -429,7 +430,6 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (inspectionNRCED.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (inspectionNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (inspectionNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
-  incomingObj.documents && (inspectionNRCED.documents = incomingObj.documents);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {

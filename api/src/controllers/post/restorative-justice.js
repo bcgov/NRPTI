@@ -32,7 +32,7 @@ let postUtils = require('../../utils/post-utils');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function (args, res, next, incomingObj) {
+exports.createRecord = async function(args, res, next, incomingObj) {
   // save flavour records
   let observables = [];
   let savedFlavourRestorativeJustices = [];
@@ -107,7 +107,7 @@ exports.createRecord = async function (args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master restorativeJustice record
  */
-exports.createMaster = async function (args, res, next, incomingObj, flavourIds) {
+exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
   let RestorativeJustice = mongoose.model('RestorativeJustice');
   let restorativeJustice = new RestorativeJustice();
 
@@ -186,9 +186,7 @@ exports.createMaster = async function (args, res, next, incomingObj, flavourIds)
   incomingObj.projectName && (restorativeJustice.projectName = incomingObj.projectName);
   incomingObj.location && (restorativeJustice.location = incomingObj.location);
   incomingObj.centroid && (restorativeJustice.centroid = incomingObj.centroid);
-  incomingObj.outcomeStatus && (restorativeJustice.outcomeStatus = incomingObj.outcomeStatus);
-  incomingObj.outcomeDescription && (restorativeJustice.outcomeDescription = incomingObj.outcomeDescription);
-  incomingObj.penalty && (restorativeJustice.penalty = incomingObj.penalty);
+  incomingObj.penalties && (restorativeJustice.penalties = incomingObj.penalties);
   incomingObj.documents && (restorativeJustice.documents = incomingObj.documents);
 
   // set meta
@@ -232,7 +230,7 @@ exports.createMaster = async function (args, res, next, incomingObj, flavourIds)
  * @param {*} incomingObj see example
  * @returns created lng restorativeJustice record
  */
-exports.createLNG = async function (args, res, next, incomingObj) {
+exports.createLNG = async function(args, res, next, incomingObj) {
   let RestorativeJusticeLNG = mongoose.model('RestorativeJusticeLNG');
   let restorativeJusticeLNG = new RestorativeJusticeLNG();
 
@@ -307,9 +305,7 @@ exports.createLNG = async function (args, res, next, incomingObj) {
   incomingObj.projectName && (restorativeJusticeLNG.projectName = incomingObj.projectName);
   incomingObj.location && (restorativeJusticeLNG.location = incomingObj.location);
   incomingObj.centroid && (restorativeJusticeLNG.centroid = incomingObj.centroid);
-  incomingObj.outcomeStatus && (restorativeJusticeLNG.outcomeStatus = incomingObj.outcomeStatus);
-  incomingObj.outcomeDescription && (restorativeJusticeLNG.outcomeDescription = incomingObj.outcomeDescription);
-  incomingObj.penalty && (restorativeJusticeLNG.penalty = incomingObj.penalty);
+  incomingObj.penalties && (restorativeJusticeLNG.penalties = incomingObj.penalties);
   incomingObj.documents && (restorativeJusticeLNG.documents = incomingObj.documents);
 
   // set flavour data
@@ -363,7 +359,7 @@ exports.createLNG = async function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced restorativeJustice record
  */
-exports.createNRCED = async function (args, res, next, incomingObj) {
+exports.createNRCED = async function(args, res, next, incomingObj) {
   let RestorativeJusticeNRCED = mongoose.model('RestorativeJusticeNRCED');
   let restorativeJusticeNRCED = new RestorativeJusticeNRCED();
 
@@ -438,9 +434,7 @@ exports.createNRCED = async function (args, res, next, incomingObj) {
   incomingObj.projectName && (restorativeJusticeNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (restorativeJusticeNRCED.location = incomingObj.location);
   incomingObj.centroid && (restorativeJusticeNRCED.centroid = incomingObj.centroid);
-  incomingObj.outcomeStatus && (restorativeJusticeNRCED.outcomeStatus = incomingObj.outcomeStatus);
-  incomingObj.outcomeDescription && (restorativeJusticeNRCED.outcomeDescription = incomingObj.outcomeDescription);
-  incomingObj.penalty && (restorativeJusticeNRCED.penalty = incomingObj.penalty);
+  incomingObj.penalties && (restorativeJusticeNRCED.penalties = incomingObj.penalties);
   incomingObj.documents && (restorativeJusticeNRCED.documents = incomingObj.documents);
 
   // set flavour data

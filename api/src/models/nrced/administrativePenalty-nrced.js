@@ -1,5 +1,7 @@
 'use strict';
 
+const mongoose = require('mongoose');
+
 module.exports = require('../../utils/model-schema-generator')(
   'AdministrativePenaltyNRCED',
   {
@@ -36,9 +38,13 @@ module.exports = require('../../utils/model-schema-generator')(
     projectName: { type: String, default: '' },
     location: { type: String, default: '' },
     centroid: [{ type: Number, default: 0.0 }],
-    outcomeStatus: { type: String, default: '' },
-    outcomeDescription: { type: String, default: '' },
-    penalty: { type: String, default: '' },
+    penalties: [
+      {
+        type: { type: String, default: '' },
+        penalty: { type: mongoose.SchemaTypes.Mixed, default: {} },
+        description: { type: String, default: '' }
+      }
+    ],
     documents: [{ type: 'ObjectId', default: [], index: true }],
 
     summary: { type: String, default: '' },
@@ -54,13 +60,6 @@ module.exports = require('../../utils/model-schema-generator')(
     sourceDateAdded: { type: Date, default: null },
     sourceDateUpdated: { type: Date, default: null },
     sourceSystemRef: { type: String, default: 'nrpti' },
-
-    indexes__: [
-      {
-        fields: { summary: 'text', location: 'text', issuedTo: 'text', recordName: 'text' },
-        options: { name: 'keyword-search-text-index' }
-      }
-    ]
   },
   'nrpti'
 );

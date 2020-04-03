@@ -4,6 +4,7 @@ import { AdministrativeSanctionDetailComponent } from './administrative-sanction
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivatedRouteStub } from '../../../../../../common/src/app/spec/spec-utils';
 import { GlobalModule } from 'nrpti-angular-components';
+import { CommonModule } from '../../../../../../common/src/app/common.module';
 
 describe('AdministrativeSanctionDetailComponent', () => {
   let component: AdministrativeSanctionDetailComponent;
@@ -14,7 +15,7 @@ describe('AdministrativeSanctionDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [GlobalModule],
+      imports: [GlobalModule, CommonModule],
       declarations: [AdministrativeSanctionDetailComponent],
       providers: [
         { provide: ActivatedRoute, useValue: activedRouteStub },

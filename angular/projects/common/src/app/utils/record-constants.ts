@@ -20,6 +20,21 @@ export class Picklists {
     'Project Description',
     'Other'
   ];
+  public static readonly courtConvictionSubtypePicklist = [
+    'Community Service',
+    'Court Order',
+    'Creative Sentencing',
+    'Fined',
+    'Forfeiture',
+    'Injunction',
+    'Jailed',
+    'Probation',
+    'Restitution',
+    'Restorative Justice',
+    'Suspended Sentence',
+    'Other'
+  ];
+  public static readonly penaltyTypePicklist = ['Days', 'Dollars', 'Hours', 'Other'];
 
   public static readonly agencyPicklist = [
     'Agricultural Land Commission',
@@ -48,8 +63,7 @@ export class Picklists {
     Inspection: { displayName: 'Inspection', _schemaName: 'InspectionNRCED' },
     Order: { displayName: 'Order', _schemaName: 'OrderNRCED' },
     RestorativeJustice: { displayName: 'Restorative Justice', _schemaName: 'RestorativeJusticeNRCED' },
-    Ticket: { displayName: 'Ticket', _schemaName: 'TicketNRCED' },
-    Warning: { displayName: 'Warning', _schemaName: 'WarningNRCED' }
+    Ticket: { displayName: 'Ticket', _schemaName: 'TicketNRCED' }
   };
 
   /**

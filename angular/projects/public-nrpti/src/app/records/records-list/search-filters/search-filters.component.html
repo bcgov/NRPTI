@@ -8,9 +8,11 @@
     </div>
     <div>
       <p>
-        The results list below will update instantly as you select criteria to filter, the URL will also update with
-        your unique criteria. If you want to return to your exact criteria, you can bookmark the page once you have
-        filtered (note that results may not be identical as content is updated).
+        Results shown on the list will update immediately as yo u select criteria to filter.
+      </p>
+      <p>
+        If you want to return to your exact criteria, you can bookmark the page once you have filtered (note that
+        results may not be identical as content is updated).
       </p>
     </div>
   </section>
@@ -22,7 +24,8 @@
           <lib-date-picker [control]="formGroup.get('dateIssuedStart')" [reset]="resetControls"></lib-date-picker>
         </div>
         <span class="date-separator align-self-center">To</span>
-        <div class="label-single">
+        <div class="label-pair">
+          <label for="recordType">Issued Date</label>
           <lib-date-picker [control]="formGroup.get('dateIssuedEnd')" [reset]="resetControls"></lib-date-picker>
         </div>
       </div>
@@ -41,12 +44,13 @@
       </div>
       <div class="flex-container">
         <div class="label-pair">
-          <label for="activityType">Activity Type</label>
+          <label for="activityType">Activity</label>
           <span *ngIf="activityTypeCount" class="grey-subtext ml-2">({{ activityTypeCount }} selected)</span>
           <app-autocomplete-multi-select
             [control]="formGroup.get('activityType')"
             [options]="activityTypeOptions"
             [reset]="resetControls"
+            [placeholderText]="'Begin typing to filter activities...'"
             (numSelected)="activityTypeCount = $event"
           ></app-autocomplete-multi-select>
         </div>
@@ -54,11 +58,12 @@
       <div>
         <div class="label-pair">
           <label for="agency">Responsible Agency</label>
-          <span *ngIf="agencyCount" class="grey-subtext">({{ agencyCount }} selected)</span>
+          <span *ngIf="agencyCount" class="grey-subtext ml-2">({{ agencyCount }} selected)</span>
           <app-autocomplete-multi-select
             [control]="formGroup.get('agency')"
             [options]="agencyOptions"
             [reset]="resetControls"
+            [placeholderText]="'Begin typing to filter agencies...'"
             (numSelected)="agencyCount = $event"
           ></app-autocomplete-multi-select>
         </div>
@@ -66,11 +71,12 @@
       <div>
         <div class="label-pair">
           <label for="act">Act</label>
-          <span *ngIf="actCount" class="grey-subtext">({{ actCount }} selected)</span>
+          <span *ngIf="actCount" class="grey-subtext ml-2">({{ actCount }} selected)</span>
           <app-autocomplete-multi-select
             [control]="formGroup.get('act')"
             [options]="actOptions"
             [reset]="resetControls"
+            [placeholderText]="'Begin typing to filter acts...'"
             (numSelected)="actCount = $event"
           ></app-autocomplete-multi-select>
         </div>
@@ -78,11 +84,12 @@
       <div>
         <div class="label-pair">
           <label for="regulation">Regulation</label>
-          <span *ngIf="regulationCount" class="grey-subtext">({{ regulationCount }} selected)</span>
+          <span *ngIf="regulationCount" class="grey-subtext ml-2">({{ regulationCount }} selected)</span>
           <app-autocomplete-multi-select
             [control]="formGroup.get('regulation')"
             [options]="regulationOptions"
             [reset]="resetControls"
+            [placeholderText]="'Begin typing to filter regulations...'"
             (numSelected)="regulationCount = $event"
           ></app-autocomplete-multi-select>
         </div>

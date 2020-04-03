@@ -1,5 +1,7 @@
 'use strict';
 
+const mongoose = require('mongoose');
+
 module.exports = require('../../utils/model-schema-generator')(
   'AdministrativePenalty',
   {
@@ -41,9 +43,13 @@ module.exports = require('../../utils/model-schema-generator')(
     projectName: { type: String, default: '' },
     location: { type: String, default: '' },
     centroid: [{ type: Number, default: 0.0 }],
-    outcomeStatus: { type: String, default: '' },
-    outcomeDescription: { type: String, default: '' },
-    penalty: { type: String, default: '' },
+    penalties: [
+      {
+        type: { type: String, default: '' },
+        penalty: { type: mongoose.SchemaTypes.Mixed, default: {} },
+        description: { type: String, default: '' }
+      }
+    ],
     documents: [{ type: 'ObjectId', default: [], index: true }],
 
     dateAdded: { type: Date, default: Date.now() },

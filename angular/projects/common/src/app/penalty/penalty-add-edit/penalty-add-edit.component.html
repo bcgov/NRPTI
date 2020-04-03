@@ -1,0 +1,59 @@
+<div class="label-pair">
+  <button type="button" class="btn btn-outline-primary" (click)="addPenalty()">
+    Add New Penalty
+  </button>
+</div>
+<ng-container *ngFor="let formGroup of formArray.controls; let idx = index">
+  <div class="penalty-divider"></div>
+  <form [formGroup]="formGroup">
+    <div class="flex-container">
+      <div class="label-pair-flex flex-sm">
+        <label for="penalty">Penalty</label>
+        <div class="input-group flex-nowrap" formGroupName="penalty">
+          <input
+            name="value"
+            id="value"
+            formControlName="value"
+            class="form-control"
+            [type]="formGroup.get('penalty.type').value === 'Other' ? 'text' : 'number'"
+            [libDigitOnly]="formGroup.get('penalty.type').value !== 'Other'"
+          />
+          <div class="input-group-append">
+            <select name="type" id="type" formControlName="type" class="form-control">
+              <option *ngFor="let penaltyType of penaltyTypes" [ngValue]="penaltyType">
+                {{ penaltyType }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="label-pair-flex flex-sm">
+        <label for="type">Type</label>
+        <select name="type" id="type" formControlName="type" class="form-control">
+          <option *ngFor="let type of courtConvictionSubtypes" [ngValue]="type">
+            {{ type }}
+          </option>
+        </select>
+      </div>
+      <div class="label-pair-flex flex-lrg">
+        <label for="description">Penalty Comments</label>
+        <textarea
+          name="description"
+          id="description"
+          formControlName="description"
+          type="text"
+          class="form-control"
+          libAutoGrowTextArea
+          minRows="2"
+          maxRows="5"
+          rows="2"
+        ></textarea>
+      </div>
+      <div class="label-single-flex flex-xsm">
+        <button class="btn btn-icon delete-btn" type="button" title="Delete this document" (click)="removePenalty(idx)">
+          <i class="material-icons">delete</i>
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-container>

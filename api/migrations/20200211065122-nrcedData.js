@@ -301,6 +301,7 @@ const createCourtConviction = async function(row, nrptiCollection) {
     write: ['sysadmin'],
 
     recordName: row[12],
+    offence: row[12],
     // recordSubtype: '',
     recordType: RECORD_TYPE.CourtConviction.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -349,6 +350,7 @@ const createCourtConviction = async function(row, nrptiCollection) {
     write: ['sysadmin'],
 
     recordName: row[12],
+    offence: row[12],
     recordType: RECORD_TYPE.CourtConviction.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
@@ -850,10 +852,6 @@ const getIssuedToObject = function(row, addPublicRole) {
     write: ['sysadmin']
   };
 
-  if (addPublicRole) {
-    issuedToObject.read.push('public');
-  }
-
   if (!row) {
     return issuedToObject;
   }
@@ -863,6 +861,10 @@ const getIssuedToObject = function(row, addPublicRole) {
     issuedToObject.companyName = row[2];
 
     issuedToObject.fullName = setIssuedToFullNameValue(issuedToObject);
+
+    if (addPublicRole) {
+      issuedToObject.read.push('public');
+    }
   } else if (row[3] || row[4] || row[5]) {
     issuedToObject.type = 'Individual';
     issuedToObject.firstName = row[3];
@@ -871,7 +873,12 @@ const getIssuedToObject = function(row, addPublicRole) {
     issuedToObject.dateOfBirth = null;
 
     issuedToObject.fullName = setIssuedToFullNameValue(issuedToObject);
+
+    if (addPublicRole) {
+      issuedToObject.read.push('public');
+    }
   } else {
+    // Individual is anonymous, so don't set read role
     issuedToObject.type = 'Individual';
     issuedToObject.firstName = '';
     issuedToObject.middleName = '';
@@ -902,9 +909,24 @@ const setIssuedToFullNameValue = function(issuedToObj) {
   }
 
   if (issuedToObj.type === 'Individual') {
-    return [[issuedToObj.lastName || '-', issuedToObj.firstName || '-'].join(', '), issuedToObj.middleName || '-'].join(
-      ' '
-    );
+    let entityString = '';
+
+    const entityNameParts = [];
+    if (issuedToObj.lastName) {
+      entityNameParts.push(issuedToObj.lastName);
+    }
+
+    if (issuedToObj.firstName) {
+      entityNameParts.push(issuedToObj.firstName);
+    }
+
+    entityString = entityNameParts.join(', ');
+
+    if (issuedToObj.middleName) {
+      entityString += ` ${issuedToObj.middleName}`;
+    }
+
+    return entityString;
   }
 };
 

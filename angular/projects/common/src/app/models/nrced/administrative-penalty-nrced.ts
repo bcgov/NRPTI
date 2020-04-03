@@ -1,5 +1,6 @@
 import { Legislation } from '../master/common-models/legislation';
 import { Entity } from '../master/common-models/entity';
+import { Penalty } from '../master/common-models/penalty';
 
 /**
  * AdministrativePenalty NRCED data model.
@@ -29,9 +30,7 @@ export class AdministrativePenaltyNRCED {
   projectName: string;
   location: string;
   centroid: number[];
-  outcomeStatus: string;
-  outcomeDescription: string;
-  penalty: string;
+  penalties: Penalty;
   documents: object[];
 
   summary: string;
@@ -70,9 +69,8 @@ export class AdministrativePenaltyNRCED {
     this.projectName = (obj && obj.projectName) || '';
     this.location = (obj && obj.location) || '';
     this.centroid = (obj && obj.centroid) || [];
-    this.outcomeStatus = (obj && obj.outcomeStatus) || '';
-    this.outcomeDescription = (obj && obj.outcomeDescription) || '';
-    this.penalty = (obj && obj.penalty) || '';
+    this.penalties =
+      (obj && obj.penalties && obj.penalties.length && obj.penalties.map(penalty => new Penalty(penalty))) || null;
     this.documents = (obj && obj.documents) || [];
 
     this.summary = (obj && obj.summary) || null;

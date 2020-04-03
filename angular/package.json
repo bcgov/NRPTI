@@ -34,6 +34,7 @@
     "test:admin-nrpti": "ng test admin-nrpti",
     "test:public-nrced": "ng test public-nrced",
     "test:public-lng": "ng test public-lng",
+    "test:common": "ng test common",
     "test:global": "ng test global",
     "test-ci:admin-nrpti": "ng run admin-nrpti:test-ci",
     "test-ci:public-nrced": "ng run public-nrced:test-ci",

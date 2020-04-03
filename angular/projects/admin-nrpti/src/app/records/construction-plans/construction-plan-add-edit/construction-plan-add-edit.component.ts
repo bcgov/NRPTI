@@ -45,7 +45,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -96,7 +96,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-        ''
+          ''
       ),
       agency: new FormControl((this.currentRecord && this.currentRecord.agency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -145,8 +145,8 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.recordName.dirty && (constructionPlan['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.dateIssued.dirty &&
       (constructionPlan['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(
-        this.myForm.get('dateIssued').value)
-      );
+        this.myForm.get('dateIssued').value
+      ));
     this.myForm.controls.agency.dirty && (constructionPlan['agency'] = this.myForm.controls.agency.value);
     this.myForm.controls.author.dirty && (constructionPlan['author'] = this.myForm.controls.author.value);
 

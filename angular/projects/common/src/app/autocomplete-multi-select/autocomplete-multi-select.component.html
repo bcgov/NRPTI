@@ -3,15 +3,14 @@
   name="multiAutocompleteFilter"
   type="text"
   class="form-control"
-  placeholder="Begin typing to filter agencies..."
+  placeholder="{{ placeholderText }}"
   matInput
   (keyup)="filterPicklist($event)"
   (keydown)="handleEnter($event)"
   [matAutocomplete]="multiAutocomplete"
 />
 <mat-autocomplete #multiAutocomplete="matAutocomplete">
-  <mat-option (click)="selectNone()" title="Select none">None</mat-option>
-  <mat-option (click)="selectAll()" title="Select all">All</mat-option>
+  <mat-option (click)="selectNone()" title="Select none">Clear Selected</mat-option>
   <ng-container *ngFor="let option of options">
     <mat-option
       *ngIf="option.display"

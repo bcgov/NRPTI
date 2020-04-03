@@ -50,6 +50,11 @@
       grid-gap: 1.25rem;
       font-size: 1.25rem; // Child items use 0.8em, allowing <grid-item> to be nested inside <grid-item-value> and having the font-size scale automatically.
 
+      .grid-section {
+        display: grid;
+        grid-gap: 0.75rem;
+      }
+
       // Can also be nested inside <grid-item-value> - font-size scales automatically (re: 0.8em).
       .grid-item {
         display: grid;
@@ -125,4 +130,16 @@
       }
     }
   }
+}
+
+.grey-subtext {
+  color: $gray6;
+  font-size: 15px;
+  font-style: italic;
+}
+
+label {
+  display: inline-block;
+  font-size: inherit;
+  margin: 0;
 }

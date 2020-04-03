@@ -10,7 +10,7 @@
           <div>
             <h5 class="d-inline-block">Keyword Search</h5>
             <i
-              class="keyword-help material-icons grey-subtext d-inline-block align-text-bottom ml-2"
+              class="keyword-help material-icons grey-subtext_no-italics d-inline-block align-text-bottom ml-2"
               matTooltip="summary, description, location, and issued to name fields"
               aria-label="Icon that displays a tooltip when focused or hovered over"
             >
@@ -39,9 +39,9 @@
       </div>
 
       <div class="col-xl-9 col-lg-8 order-lg-2 order-1 mt-0">
-        <h3>
+        <h1>
           Natural Resources Compliance and Enforcement Database
-        </h3>
+        </h1>
 
         <p>
           This site can be used to search for compliance and enforcement actions issued by the natural resource
@@ -53,7 +53,7 @@
     </div>
 
     <div class="row">
-      <div class="col-xl-3 col-lg-4 mb-lg-0 mb-3" [ngClass]="{ 'show-advanced-filters': showAdvancedFilters }">
+      <div class="mb-lg-0 mb-3" [ngClass]="{ 'col-xl-3 col-lg-4 show-advanced-filters': showAdvancedFilters }">
         <div class="px-3 search-filter__content" [hidden]="!showAdvancedFilters">
           <app-search-filters
             [formGroup]="searchFiltersForm"
@@ -62,41 +62,44 @@
         </div>
       </div>
 
-      <div class="col-xl-9 col-lg-8">
+      <div [ngClass]="showAdvancedFilters ? 'col-xl-9 col-lg-8' : 'col-xl col-lg'">
         <div class="row mb-3">
+          <div class="col text-left">
+            <span class="mr-2 align-middle font-weight-bold">
+              Click on a row in the list below to view more details about the item.
+            </span>
+          </div>
+
           <div class="col text-right">
-            <div>
-              <span class="mr-2 align-middle">Sort List By:</span>
-              <div ngbDropdown class="d-inline-block">
-                <button class="btn btn-primary" ngbDropdownToggle>
-                  {{ sortingDisplay[tableData.sortBy] }}
+            <div ngbDropdown class="d-inline-block">
+              <button class="btn btn-primary sort-button" ngbDropdownToggle>
+                Sort List By: {{ sortingDisplay[tableData.sortBy] }}
+              </button>
+              <div ngbDropdownMenu>
+                <button ngbDropdownItem (click)="changeSort('-dateIssued')">
+                  {{ sortingDisplay['-dateIssued'] }}
+                  <i *ngIf="tableData.sortBy === '-dateIssued'" class="align-middle material-icons">
+                    check_circle
+                  </i>
                 </button>
-                <div ngbDropdownMenu>
-                  <button ngbDropdownItem (click)="changeSort('-dateIssued')">
-                    {{ sortingDisplay['-dateIssued'] }}
-                    <i *ngIf="tableData.sortBy === '-dateIssued'" class="align-middle material-icons">
-                      check_circle
-                    </i>
-                  </button>
-                  <button ngbDropdownItem (click)="changeSort('+recordType')">
-                    {{ sortingDisplay['+recordType'] }}
-                    <i *ngIf="tableData.sortBy === '+recordType'" class="align-middle material-icons">
-                      check_circle
-                    </i>
-                  </button>
-                  <button ngbDropdownItem (click)="changeSort('+issuedTo.fullName')">
-                    {{ sortingDisplay['+issuedTo.fullName'] }}
-                    <i *ngIf="tableData.sortBy === '+issuedTo.fullName'" class="align-middle material-icons">
-                      check_circle
-                    </i>
-                  </button>
-                  <button ngbDropdownItem (click)="changeSort('+location')">
-                    {{ sortingDisplay['+location'] }}
-                    <i *ngIf="tableData.sortBy === '+location'" class="align-middle material-icons">
-                      check_circle
-                    </i>
-                  </button>
-                </div>
+                <button ngbDropdownItem (click)="changeSort('+recordType')">
+                  {{ sortingDisplay['+recordType'] }}
+                  <i *ngIf="tableData.sortBy === '+recordType'" class="align-middle material-icons">
+                    check_circle
+                  </i>
+                </button>
+                <button ngbDropdownItem (click)="changeSort('+issuedTo.fullName')">
+                  {{ sortingDisplay['+issuedTo.fullName'] }}
+                  <i *ngIf="tableData.sortBy === '+issuedTo.fullName'" class="align-middle material-icons">
+                    check_circle
+                  </i>
+                </button>
+                <button ngbDropdownItem (click)="changeSort('+location')">
+                  {{ sortingDisplay['+location'] }}
+                  <i *ngIf="tableData.sortBy === '+location'" class="align-middle material-icons">
+                    check_circle
+                  </i>
+                </button>
               </div>
             </div>
           </div>
