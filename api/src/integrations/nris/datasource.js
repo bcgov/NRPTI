@@ -172,7 +172,8 @@ class NrisDataSource {
     newRecord.recordType = 'Inspection';
     newRecord._sourceRefNrisId = record.assessmentId;
     newRecord.dateIssued = record.assessmentDate;
-    newRecord.issuingAgency = record.resourceAgency;
+    // Re-write the issuing agency from Environmental Protection Office => Environmental Protection Division
+    newRecord.issuingAgency = record.resourceAgency === 'Environmental Protection Office' ? 'Environmental Protection Division' : record.resourceAgency;
     newRecord.author = record.assessor;
     newRecord.legislation = {
       act: 'Environmental Management Act',
