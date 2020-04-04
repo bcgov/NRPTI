@@ -53,7 +53,7 @@
     </div>
 
     <div class="row">
-      <div class="col-xl-3 col-lg-4 mb-lg-0 mb-3" [ngClass]="{ 'show-advanced-filters': showAdvancedFilters }">
+      <div class="mb-lg-0 mb-3" [ngClass]="{ 'col-xl-3 col-lg-4 show-advanced-filters': showAdvancedFilters }">
         <div class="px-3 search-filter__content" [hidden]="!showAdvancedFilters">
           <app-search-filters
             [formGroup]="searchFiltersForm"
@@ -62,7 +62,7 @@
         </div>
       </div>
 
-      <div class="col-xl-9 col-lg-8">
+      <div [ngClass]="showAdvancedFilters ? 'col-xl-9 col-lg-8' : 'col-xl col-lg'">
         <div class="row mb-3">
           <div class="col text-right">
             <div>
