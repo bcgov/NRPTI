@@ -55,6 +55,7 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
   @Input() control: FormControl;
   @Input() options: IMutliSelectOption[];
   @Input() reset: EventEmitter<any>;
+  @Input() placeholderText = 'Begin typing to filter...';
 
   @Output() numSelected: EventEmitter<number> = new EventEmitter<number>();
 

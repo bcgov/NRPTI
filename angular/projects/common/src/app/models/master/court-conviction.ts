@@ -25,6 +25,7 @@ export class CourtConviction {
   issuingAgency: string;
   author: string;
   legislation: Legislation;
+  offence: string;
   issuedTo: Entity;
   projectName: string;
   location: string;
@@ -59,6 +60,7 @@ export class CourtConviction {
     this.issuingAgency = (obj && obj.issuingAgency) || null;
     this.author = (obj && obj.author) || null;
     this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
+    this.offence = (obj && obj.offence) || null;
     this.issuedTo = (obj && obj.issuedTo && new Entity(obj.issuedTo)) || null;
     this.projectName = (obj && obj.projectName) || null;
     this.location = (obj && obj.location) || null;

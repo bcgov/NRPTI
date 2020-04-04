@@ -66,6 +66,10 @@
               </div>
             </div>
           </div>
+          <div class="grid-item__row">
+            <span class="grid-item-name">Offence</span>
+            <span class="grid-item-value__col">{{ (data && data.offence) || '-' }}</span>
+          </div>
         </div>
         <div class="grid-section-3">
           <app-penalty-detail-public [data]="data && data.penalties"></app-penalty-detail-public>

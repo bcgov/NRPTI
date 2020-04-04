@@ -167,11 +167,13 @@ class NrisDataSource {
     // We don't need this as we insert based on assessmentId
     delete newRecord._id;
 
-    newRecord.recordName = 'Inspection to verify compliance with regulatory requirement.';
+    newRecord.recordName = `Inspection - ${record.requirementSource} - ${record.assessmentId}`;
+    newRecord.legislationDescription = 'Inspection to verify compliance with regulatory requirement.';
     newRecord.recordType = 'Inspection';
     newRecord._sourceRefNrisId = record.assessmentId;
     newRecord.dateIssued = record.assessmentDate;
-    newRecord.issuingAgency = record.resourceAgency;
+    // Re-write the issuing agency from Environmental Protection Office => Environmental Protection Division
+    newRecord.issuingAgency = record.resourceAgency === 'Environmental Protection Office' ? 'Environmental Protection Division' : record.resourceAgency;
     newRecord.author = record.assessor;
     newRecord.legislation = {
       act: 'Environmental Management Act',
