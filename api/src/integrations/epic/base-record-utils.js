@@ -1,9 +1,11 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const ObjectID = require('mongodb').ObjectID;
 const defaultLog = require('../../utils/logger')('epic-base-record-utils');
 const EpicUtils = require('./epic-utils');
 const DocumentController = require('./../../controllers/document-controller');
+const RecordController = require('./../../controllers/record-controller');
 
 const EPIC_PUBLIC_HOSTNAME = process.env.EPIC_PUBLIC_HOSTNAME || 'https://projects.eao.gov.bc.ca';
 
@@ -34,13 +36,13 @@ class BaseRecordUtils {
   }
 
   /**
-   * Persist an epic record to the database, and return an array of ObjectIds.
+   * Create a new document, and return an array of _ids.
    *
    * @param {*} epicRecord Epic record
    * @returns {Array<string>} array of ObjectIds
    * @memberof BaseRecordUtils
    */
-  async saveDocument(epicRecord) {
+  async createDocument(epicRecord) {
     const documents = [];
 
     if (epicRecord && epicRecord._id && epicRecord.documentFileName) {
@@ -56,6 +58,35 @@ class BaseRecordUtils {
     }
 
     return documents;
+  }
+
+  /**
+   * Deletes any document records linked to by the provided NRPTI record.
+   *
+   * @param {object} nrptiRecord NRPTI record.
+   * @returns
+   * @memberof BaseRecordUtils
+   */
+  async removeDocuments(nrptiRecord) {
+    if (!nrptiRecord || !nrptiRecord.documents || !nrptiRecord.documents.length) {
+      return;
+    }
+
+    const DocumentModel = mongoose.model('Document');
+
+    const documentIds = nrptiRecord.documents.map(id => new ObjectID(id));
+
+    // Check if any documents uploaded to S3, and delete if any
+    for (let idx = 0; idx < documentIds.length; idx++) {
+      const document = await DocumentModel.findOne({ _id: documentIds[idx] });
+
+      if (document && document.key) {
+        await DocumentController.deleteS3Document(document.key);
+      }
+    }
+
+    // Delete local document record/meta
+    await DocumentModel.deleteMany({ _id: { $in: documentIds } });
   }
 
   /**
@@ -77,17 +108,11 @@ class BaseRecordUtils {
     // Apply common Epic pre-processing/transformations
     epicRecord = EpicUtils.preTransformRecord(epicRecord, this.recordType);
 
-    // Creating and saving a document object if we are given a link to an EPIC document.
-    const documents = await this.saveDocument(epicRecord);
-
     return {
       _schemaName: this.recordType._schemaName,
       _epicProjectId: (epicRecord.project && epicRecord.project._id) || '',
-      _sourceRefId: epicRecord._id || '',
+      _sourceRefId: new ObjectID(epicRecord._id) || '',
       _epicMilestoneId: epicRecord.milestone || '',
-
-      read: ['sysadmin'],
-      write: ['sysadmin'],
 
       recordName: epicRecord.displayName || '',
       recordType: this.recordType.displayName,
@@ -96,10 +121,11 @@ class BaseRecordUtils {
       projectName: (epicRecord.project && epicRecord.project.name) || '',
       location: (epicRecord.project && epicRecord.project.location) || '',
       centroid: (epicRecord.project && epicRecord.project.centroid) || '',
-      documents: documents,
 
       dateAdded: new Date(),
       dateUpdated: new Date(),
+
+      addedBy: (this.auth_payload && this.auth_payload.displayName) || '',
       updatedBy: (this.auth_payload && this.auth_payload.displayName) || '',
 
       sourceDateAdded: epicRecord.dateAdded || epicRecord._createdDate || null,
@@ -109,28 +135,97 @@ class BaseRecordUtils {
   }
 
   /**
-   * Persist a NRPTI record to the database.
+   * Searches for an existing master record, and returns it if found.
+   *
+   * @param {*} nrptiRecord
+   * @returns {object} existing NRPTI master record or null if none found
+   * @memberof BaseRecordUtils
+   */
+  async findExistingRecord(nrptiRecord) {
+    const masterRecordModel = mongoose.model(this.recordType._schemaName);
+
+    return await masterRecordModel
+      .findOne({
+        _schemaName: this.recordType._schemaName,
+        _sourceRefId: nrptiRecord._sourceRefId
+      })
+      .populate('_flavourRecords');
+  }
+
+  /**
+   * Update an existing NRPTI master record and its flavour records (if any).
+   *
+   * @param {*} nrptiRecord
+   * @param {*} existingRecord
+   * @returns {object} object containing the update master and flavour records (if any)
+   * @memberof BaseRecordUtils
+   */
+  async updateRecord(nrptiRecord, existingRecord) {
+    if (!nrptiRecord) {
+      throw Error('updateRecord - required nrptiRecord must be non-null.');
+    }
+
+    if (!existingRecord) {
+      throw Error('updateRecord - required existingRecord must be non-null.');
+    }
+
+    try {
+      // build update Obj, which needs to include the flavour record ids
+      const updateObj = { ...nrptiRecord, _id: existingRecord._id };
+      existingRecord._flavourRecords.forEach(flavourRecord => {
+        updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
+      });
+
+      return await RecordController.processPutRequest(
+        { swagger: { params: { auth_payload: this.auth_payload } } },
+        null,
+        null,
+        this.recordType.recordControllerName,
+        [updateObj]
+      );
+    } catch (error) {
+      defaultLog.error(`Failed to save ${this.recordType._schemaName} record: ${error.message}`);
+    }
+  }
+
+  /**
+   * Create a new NRPTI master record.
    *
    * @async
    * @param {object} nrptiRecord NRPTI record (required)
-   * @returns {string} status of the add/update operations.
+   * @returns {object} object containing the newly inserted master and flavour records
    * @memberof BaseRecordUtils
    */
-  async saveRecord(nrptiRecord) {
+  async createRecord(nrptiRecord) {
     if (!nrptiRecord) {
       throw Error('saveRecord - required nrptiRecord must be non-null.');
     }
 
     try {
-      const nrptiRecordModel = mongoose.model(this.recordType._schemaName);
+      // build create Obj, which should include the flavour record details
+      const createObj = { ...nrptiRecord };
 
-      const record = await nrptiRecordModel.findOneAndUpdate(
-        { _schemaName: this.recordType._schemaName, _sourceRefId: nrptiRecord._sourceRefId },
-        { $set: nrptiRecord },
-        { upsert: true, new: true }
+      if (this.recordType.flavours.lng) {
+        createObj[this.recordType.flavours.lng._schemaName] = {
+          description: nrptiRecord.description || '',
+          addRole: 'public'
+        };
+      }
+
+      if (this.recordType.flavours.nrced) {
+        createObj[this.recordType.flavours.nrced._schemaName] = {
+          summary: nrptiRecord.description || '',
+          addRole: 'public'
+        };
+      }
+
+      return await RecordController.processPostRequest(
+        { swagger: { params: { auth_payload: this.auth_payload } } },
+        null,
+        null,
+        this.recordType.recordControllerName,
+        [createObj]
       );
-
-      return record;
     } catch (error) {
       defaultLog.error(`Failed to save ${this.recordType._schemaName} record: ${error.message}`);
     }

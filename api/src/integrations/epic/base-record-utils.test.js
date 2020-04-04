@@ -34,22 +34,23 @@ describe('BaseRecordUtils', () => {
         _schemaName: RECORD_TYPE.Order._schemaName,
 
         _epicProjectId: '',
-        _sourceRefId: '',
+        _sourceRefId: expect.any(Object),
         _epicMilestoneId: '',
-
-        read: ['sysadmin'],
-        write: ['sysadmin'],
 
         recordName: '',
         recordType: RECORD_TYPE.Order.displayName,
         dateIssued: null,
+        description: '',
         projectName: '',
         location: '',
         centroid: '',
+
         dateAdded: expect.any(Date),
         dateUpdated: expect.any(Date),
-        documents: [],
+
+        addedBy: '',
         updatedBy: '',
+
         sourceDateAdded: null,
         sourceDateUpdated: null,
         sourceSystemRef: 'epic'
@@ -59,16 +60,13 @@ describe('BaseRecordUtils', () => {
     });
 
     it('returns a nrpti record with all supported epicRecord fields populated', async () => {
-      jest.spyOn(require('../../controllers/document-controller'), 'createDocument').mockImplementation(() => {
-        return { _id: '310d2dddc9834cbab11282f3c8426fad' };
-      });
-
       const baseRecordUtils = new BaseRecordUtils({ displayName: 'userName' }, RECORD_TYPE.Order);
 
       const epicRecord = {
         _id: 123,
         displayName: 'docDisplay',
         documentFileName: 'docFileName',
+        description: 'someDescription',
         project: {
           name: 'projectName',
           centroid: '123',
@@ -84,23 +82,23 @@ describe('BaseRecordUtils', () => {
         _schemaName: RECORD_TYPE.Order._schemaName,
 
         _epicProjectId: '',
-        _sourceRefId: 123,
+        _sourceRefId: expect.any(Object),
         _epicMilestoneId: 'milestone',
-
-        read: ['sysadmin'],
-        write: ['sysadmin'],
 
         recordName: 'docDisplay',
         recordType: RECORD_TYPE.Order.displayName,
         dateIssued: 'someDate',
+        description: 'someDescription',
         projectName: 'projectName',
         location: 'someLocation',
         centroid: '123',
 
         dateAdded: expect.any(Date),
         dateUpdated: expect.any(Date),
-        documents: ['310d2dddc9834cbab11282f3c8426fad'],
+
+        addedBy: 'userName',
         updatedBy: 'userName',
+
         sourceDateAdded: null,
         sourceDateUpdated: null,
         sourceSystemRef: 'epic'
@@ -110,51 +108,38 @@ describe('BaseRecordUtils', () => {
     });
   });
 
-  describe('saveRecord', () => {
+  describe('createRecord', () => {
     it('throws error if no record provided', async () => {
       const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Order);
-      await expect(baseRecordUtils.saveRecord()).rejects.toThrow(
+      await expect(baseRecordUtils.createRecord()).rejects.toThrow(
         new Error('saveRecord - required nrptiRecord must be non-null.')
       );
     });
 
     it('catches any errors thrown when creating/saving the record', async () => {
-      // create mock save function
-      const mockFindOneAndUpdate = jest.fn(() => {
-        throw Error('this should not be thrown');
-      });
-
-      // mock mongoose to call mock save function
-      const mongoose = require('mongoose');
-      mongoose.model = jest.fn(() => {
-        return { findOneAndUpdate: mockFindOneAndUpdate };
+      jest.spyOn(require('../../controllers/record-controller'), 'processPostRequest').mockImplementation(() => {
+        throw Error('should be caught');
       });
 
       const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Order);
 
       const orderRecord = { _id: '321' };
 
-      await expect(baseRecordUtils.saveRecord(orderRecord)).resolves.not.toThrow();
+      await expect(baseRecordUtils.createRecord(orderRecord)).resolves.not.toThrow();
     });
 
     it('creates and saves a new record', async () => {
-      // create mock save function
-      const mockFindOneAndUpdate = jest.fn(() => Promise.resolve('saved!'));
-
-      // mock mongoose to call mock save function
-      const mongoose = require('mongoose');
-      mongoose.model = jest.fn(() => {
-        return { findOneAndUpdate: mockFindOneAndUpdate };
+      jest.spyOn(require('../../controllers/record-controller'), 'processPostRequest').mockImplementation(() => {
+        return [{ status: 'success' }];
       });
 
       const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Order);
 
       const orderRecord = { _id: '123' };
 
-      const dbStatus = await baseRecordUtils.saveRecord(orderRecord);
+      const status = await baseRecordUtils.createRecord(orderRecord);
 
-      expect(mockFindOneAndUpdate).toHaveBeenCalledTimes(1);
-      expect(dbStatus).toEqual('saved!');
+      expect(status).toEqual([{ status: 'success' }]);
     });
   });
 });

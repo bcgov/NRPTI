@@ -3,7 +3,7 @@ const DataSource = require('./datasource');
 describe('DataSource', () => {
   describe('constructor', () => {
     it('sets params', () => {
-      const dataSource = new DataSource(null, { params: 1 });
+      const dataSource = new DataSource(null, null, { params: 1 });
       expect(dataSource.params).toEqual({ params: 1 });
     });
 
@@ -13,7 +13,7 @@ describe('DataSource', () => {
     });
 
     it('sets auth_payload', () => {
-      const dataSource = new DataSource({ auth_payload: 'some payload' }, { params: 1 });
+      const dataSource = new DataSource(null, { auth_payload: 'some payload' }, { params: 1 });
       expect(dataSource.auth_payload).toEqual({ auth_payload: 'some payload' });
     });
 
@@ -110,7 +110,7 @@ describe('DataSource', () => {
         return Promise.resolve(mockResponse);
       });
 
-      const dataSource = new DataSource(null, { param1: 1 });
+      const dataSource = new DataSource({ updateTaskRecord: jest.fn() }, null, { param1: 1 });
 
       // mock DataSource functions called by updateRecordType()
       dataSource.getBaseParams = jest.fn(() => {
@@ -129,7 +129,7 @@ describe('DataSource', () => {
 
       const status = await dataSource.updateRecordType(recordType);
 
-      expect(dataSource.getBaseParams).toHaveBeenCalledWith('111', '222', Number.MAX_SAFE_INTEGER, 0);
+      expect(dataSource.getBaseParams).toHaveBeenCalledWith(recordType, Number.MAX_SAFE_INTEGER, 0);
 
       expect(dataSource.getIntegrationUrl).toHaveBeenCalledWith(
         'eagle-prod.pathfinder.gov.bc.ca',
@@ -192,8 +192,10 @@ describe('DataSource', () => {
         transformRecord: jest.fn(record => {
           return { ...record, transformed: true };
         }),
-        saveRecord: jest.fn(record => {
-          return 'saved!';
+        findExistingRecord: jest.fn(() => null),
+        createDocument: jest.fn(() => []),
+        createRecord: jest.fn(record => {
+          return [{ status: 'success' }];
         })
       };
 
@@ -208,8 +210,21 @@ describe('DataSource', () => {
         project: { name: '123' }
       });
 
-      expect(recordTypeUtils.saveRecord).toHaveBeenCalledWith({
+      expect(recordTypeUtils.findExistingRecord).toHaveBeenCalledWith({
         _id: '123',
+        documents: [],
+        project: { name: '123' },
+        transformed: true
+      });
+
+      expect(recordTypeUtils.createDocument).toHaveBeenCalledWith({
+        _id: '123',
+        project: { name: '123' }
+      });
+
+      expect(recordTypeUtils.createRecord).toHaveBeenCalledWith({
+        _id: '123',
+        documents: [],
         project: { name: '123' },
         transformed: true
       });
@@ -221,7 +236,11 @@ describe('DataSource', () => {
   describe('getBaseParams', () => {
     it('returns base params', () => {
       const dataSource = new DataSource();
-      const baseParams = dataSource.getBaseParams('123', '456', 22, 7);
+      const baseParams = dataSource.getBaseParams(
+        { type: { typeId: '123' }, milestone: { milestoneId: '456' } },
+        22,
+        7
+      );
       expect(baseParams).toEqual({
         dataset: 'Document',
         populate: false,

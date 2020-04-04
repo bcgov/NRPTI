@@ -117,43 +117,47 @@ exports.protectedPost = async function(args, res, next) {
     }
 
     if (data.orders) {
-      observables.push(processPostRequest(args, res, next, 'orders', data.orders));
+      observables.push(this.processPostRequest(args, res, next, 'orders', data.orders));
     }
     if (data.inspections) {
-      observables.push(processPostRequest(args, res, next, 'inspections', data.inspections));
+      observables.push(this.processPostRequest(args, res, next, 'inspections', data.inspections));
     }
     if (data.certificates) {
-      observables.push(processPostRequest(args, res, next, 'certificates', data.certificates));
+      observables.push(this.processPostRequest(args, res, next, 'certificates', data.certificates));
     }
     if (data.permits) {
-      observables.push(processPostRequest(args, res, next, 'permits', data.permits));
+      observables.push(this.processPostRequest(args, res, next, 'permits', data.permits));
     }
     if (data.agreements) {
-      observables.push(processPostRequest(args, res, next, 'agreements', data.agreements));
+      observables.push(this.processPostRequest(args, res, next, 'agreements', data.agreements));
     }
     if (data.selfReports) {
-      observables.push(processPostRequest(args, res, next, 'selfReports', data.selfReports));
+      observables.push(this.processPostRequest(args, res, next, 'selfReports', data.selfReports));
     }
     if (data.restorativeJustices) {
-      observables.push(processPostRequest(args, res, next, 'restorativeJustices', data.restorativeJustices));
+      observables.push(this.processPostRequest(args, res, next, 'restorativeJustices', data.restorativeJustices));
     }
     if (data.tickets) {
-      observables.push(processPostRequest(args, res, next, 'tickets', data.tickets));
+      observables.push(this.processPostRequest(args, res, next, 'tickets', data.tickets));
     }
     if (data.administrativePenalties) {
-      observables.push(processPostRequest(args, res, next, 'administrativePenalties', data.administrativePenalties));
+      observables.push(
+        this.processPostRequest(args, res, next, 'administrativePenalties', data.administrativePenalties)
+      );
     }
     if (data.administrativeSanctions) {
-      observables.push(processPostRequest(args, res, next, 'administrativeSanctions', data.administrativeSanctions));
+      observables.push(
+        this.processPostRequest(args, res, next, 'administrativeSanctions', data.administrativeSanctions)
+      );
     }
     if (data.warnings) {
-      observables.push(processPostRequest(args, res, next, 'warnings', data.warnings));
+      observables.push(this.processPostRequest(args, res, next, 'warnings', data.warnings));
     }
     if (data.constructionPlans) {
-      observables.push(processPostRequest(args, res, next, 'constructionPlans', data.constructionPlans));
+      observables.push(this.processPostRequest(args, res, next, 'constructionPlans', data.constructionPlans));
     }
     if (data.managementPlans) {
-      observables.push(processPostRequest(args, res, next, 'managementPlans', data.managementPlans));
+      observables.push(this.processPostRequest(args, res, next, 'managementPlans', data.managementPlans));
     }
 
     let response = await Promise.all(observables);
@@ -185,43 +189,47 @@ exports.protectedPut = async function(args, res, next) {
     }
 
     if (data.orders) {
-      observables.push(processPutRequest(args, res, next, 'orders', data.orders));
+      observables.push(this.processPutRequest(args, res, next, 'orders', data.orders));
     }
     if (data.inspections) {
-      observables.push(processPutRequest(args, res, next, 'inspections', data.inspections));
+      observables.push(this.processPutRequest(args, res, next, 'inspections', data.inspections));
     }
     if (data.certificates) {
-      observables.push(processPutRequest(args, res, next, 'certificates', data.certificates));
+      observables.push(this.processPutRequest(args, res, next, 'certificates', data.certificates));
     }
     if (data.permits) {
-      observables.push(processPutRequest(args, res, next, 'permits', data.permits));
+      observables.push(this.processPutRequest(args, res, next, 'permits', data.permits));
     }
     if (data.agreements) {
-      observables.push(processPutRequest(args, res, next, 'agreements', data.agreements));
+      observables.push(this.processPutRequest(args, res, next, 'agreements', data.agreements));
     }
     if (data.selfReports) {
-      observables.push(processPutRequest(args, res, next, 'selfReports', data.selfReports));
+      observables.push(this.processPutRequest(args, res, next, 'selfReports', data.selfReports));
     }
     if (data.restorativeJustices) {
-      observables.push(processPutRequest(args, res, next, 'restorativeJustices', data.restorativeJustices));
+      observables.push(this.processPutRequest(args, res, next, 'restorativeJustices', data.restorativeJustices));
     }
     if (data.tickets) {
-      observables.push(processPutRequest(args, res, next, 'tickets', data.tickets));
+      observables.push(this.processPutRequest(args, res, next, 'tickets', data.tickets));
     }
     if (data.administrativePenalties) {
-      observables.push(processPutRequest(args, res, next, 'administrativePenalties', data.administrativePenalties));
+      observables.push(
+        this.processPutRequest(args, res, next, 'administrativePenalties', data.administrativePenalties)
+      );
     }
     if (data.administrativeSanctions) {
-      observables.push(processPutRequest(args, res, next, 'administrativeSanctions', data.administrativeSanctions));
+      observables.push(
+        this.processPutRequest(args, res, next, 'administrativeSanctions', data.administrativeSanctions)
+      );
     }
     if (data.warnings) {
-      observables.push(processPutRequest(args, res, next, 'warnings', data.warnings));
+      observables.push(this.processPutRequest(args, res, next, 'warnings', data.warnings));
     }
     if (data.constructionPlans) {
-      observables.push(processPutRequest(args, res, next, 'constructionPlans', data.constructionPlans));
+      observables.push(this.processPutRequest(args, res, next, 'constructionPlans', data.constructionPlans));
     }
     if (data.managementPlans) {
-      observables.push(processPutRequest(args, res, next, 'managementPlans', data.managementPlans));
+      observables.push(this.processPutRequest(args, res, next, 'managementPlans', data.managementPlans));
     }
 
     let response = await Promise.all(observables);
@@ -336,7 +344,7 @@ exports.publicGet = function(args, res, next) {
   return queryActions.sendResponse(res, 501);
 };
 
-let processPostRequest = async function(args, res, next, property, data) {
+exports.processPostRequest = async function(args, res, next, property, data) {
   if (data.length === 0) {
     return {
       status: 'success',
@@ -406,7 +414,7 @@ let processPostRequest = async function(args, res, next, property, data) {
   }
 };
 
-let processPutRequest = async function(args, res, next, property, data) {
+exports.processPutRequest = async function(args, res, next, property, data) {
   if (data.length === 0) {
     return {
       status: 'success',

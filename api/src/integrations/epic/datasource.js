@@ -15,12 +15,14 @@ class DataSource {
   /**
    * Creates an instance of DataSource.
    *
+   * @param {*} taskAuditRecord audit record hook for this import instance
    * @param {*} auth_payload information about the user account that started this update.
    * @param {*} [params=null] params to filter epic records (optional).
    * @param {*} [recordTypes=null] specific record types to update (optional).
    * @memberof DataSource
    */
-  constructor(auth_payload, params = null, recordTypes = null) {
+  constructor(taskAuditRecord, auth_payload, params = null, recordTypes = null) {
+    this.taskAuditRecord = taskAuditRecord;
     this.auth_payload = auth_payload;
     this.params = params || {};
     this.recordTypes = recordTypes || null;
@@ -30,9 +32,11 @@ class DataSource {
   }
 
   // This requires no auth setup, so just call the local updater function.
-  async run(taskAuditRecord) {
-    defaultLog.info('Run function for epic datasource');
-    return await this.updateRecords(taskAuditRecord);
+  async run() {
+    defaultLog.info('run - update epic datasource');
+    await this.taskAuditRecord.updateTaskRecord({ status: 'Running', itemTotal: 0 });
+
+    return await this.updateRecords();
   }
 
   /**
@@ -44,8 +48,7 @@ class DataSource {
    * @returns {object} Overall status of the update + array of statuses by record type + array of any failed records.
    * @memberof DataSource
    */
-  async updateRecords(_taskAuditRecord) {
-    // TODO: Make audit record update as it goes.
+  async updateRecords() {
     try {
       let recordTypesToUpdate = [];
 
@@ -99,7 +102,7 @@ class DataSource {
       // Build request url
       const queryParams = {
         ...this.params,
-        ...this.getBaseParams(recordType.type.typeId, recordType.milestone.milestoneId, MAX_PAGE_SIZE, 0)
+        ...this.getBaseParams(recordType, MAX_PAGE_SIZE, 0)
       };
       const url = this.getIntegrationUrl(EPIC_API_HOSTNAME, EPIC_API_SEARCH_PATHNAME, queryParams);
 
@@ -119,6 +122,8 @@ class DataSource {
 
       recordTypeStatus.itemTotal = epicRecords.length;
       this.status.itemTotal += epicRecords.length;
+
+      await this.taskAuditRecord.updateTaskRecord({ itemTotal: this.status.itemTotal });
 
       // Add epic meta (whatever it contains) to the status
       recordTypeStatus.epicMeta = data && data[0] && data[0].meta;
@@ -202,11 +207,30 @@ class DataSource {
       // Perform any data transformations necessary to convert Epic record to NRPTI record
       const nrptiRecord = await recordTypeUtils.transformRecord(epicRecord);
 
-      // Persist NRPTI record
-      const savedRecord = await recordTypeUtils.saveRecord(nrptiRecord);
+      // Check if this record already exists
+      const existingRecord = await recordTypeUtils.findExistingRecord(nrptiRecord);
 
-      if (savedRecord) {
+      let savedRecords = null;
+      if (existingRecord) {
+        // Delete old documents (if any)
+        await recordTypeUtils.removeDocuments(existingRecord);
+
+        // Create new documents (if any) and add reference to record
+        nrptiRecord.documents = await recordTypeUtils.createDocument(epicRecord);
+
+        savedRecords = await recordTypeUtils.updateRecord(nrptiRecord, existingRecord);
+      } else {
+        // Create new documents (if any) and add reference to record
+        nrptiRecord.documents = await recordTypeUtils.createDocument(epicRecord);
+
+        // Create NRPTI master record OR update existing NRPTI master record and its flavours (if any)
+        savedRecords = await recordTypeUtils.createRecord(nrptiRecord);
+      }
+
+      if (savedRecords && savedRecords.length > 0 && savedRecords[0].status === 'success') {
         this.status.itemsProcessed++;
+
+        await this.taskAuditRecord.updateTaskRecord({ itemsProcessed: this.status.itemsProcessed });
       } else {
         throw Error('processRecord - savedRecord is null.');
       }
@@ -224,11 +248,7 @@ class DataSource {
   }
 
   /**
-   * Get the Epic API Project pathname.
-   *
-   * Will return the env variable `EPIC_API_PROJECT_PATHNAME` if it exists.
-   *
-   * Example: '/api/some/route'
+   * Build the Epic API Project pathname.
    *
    * @param {*} projectId epic project _id
    * @returns
@@ -241,19 +261,46 @@ class DataSource {
   /**
    * Build the Epic API Project pathname.
    *
-   * @param {string} typeId record type _id.
-   * @param {string} milestoneId record milestone _id.
+   * @param {*} recordType
    * @returns {object} base record query params.
    * @memberof DataSource
    */
-  getBaseParams(typeId, milestoneId, pageSize, pageNum) {
+  getBaseParams(recordType, pageSize, pageNum) {
     return {
       dataset: 'Document',
       populate: false,
       pageSize: pageSize,
       pageNum: pageNum,
-      and: { type: typeId, milestone: milestoneId }
+      and: {
+        type: recordType.type.typeId,
+        milestone: recordType.milestone.milestoneId,
+        ...this.getProjectFilterParams(recordType)
+      }
     };
+  }
+
+  /**
+   * Build query parameters to filter results based on one or more project ids.
+   *
+   * @param {*} recordType
+   * @returns project filter query params
+   * @memberof DataSource
+   */
+  getProjectFilterParams(recordType) {
+    if (!recordType) {
+      return null;
+    }
+
+    if (!recordType.projects || !recordType.projects.length) {
+      return null;
+    }
+
+    const projectFilterParams = { project: [] };
+    recordType.projects.forEach(project => {
+      projectFilterParams.project.push(project.projectId);
+    });
+
+    return projectFilterParams;
   }
 
   /**
