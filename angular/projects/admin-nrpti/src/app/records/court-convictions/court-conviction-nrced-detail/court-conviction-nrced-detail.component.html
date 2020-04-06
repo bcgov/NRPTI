@@ -5,7 +5,7 @@
         <div class="grid-section-header">
           <div class="grid-section-header-title">
             <span class="grid-section-header-title-text">NRCED Data</span>
-            <span *ngIf="data && data.dateUpdated" class="grid-section-header-title-sub-text grey-subtext">
+            <span *ngIf="data && data.dateUpdated" class="grey-subtext ml-2">
               Last Edited {{ (data && data.dateUpdated | date: 'mediumDate') || '-' }}
             </span>
           </div>

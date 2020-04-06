@@ -48,7 +48,7 @@ describe('OrderAddEditComponent', () => {
         { provide: LoadingScreenService, useValue: mockLoadingScreenService },
         { provide: Location, useValue: mockLocation },
         { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();

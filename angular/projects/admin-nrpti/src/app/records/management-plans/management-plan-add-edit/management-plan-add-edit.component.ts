@@ -45,7 +45,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -96,7 +96,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-        ''
+          ''
       ),
       agency: new FormControl((this.currentRecord && this.currentRecord.agency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -115,7 +115,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
-        ''
+          ''
       ),
       publishLng: new FormControl(
         (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false

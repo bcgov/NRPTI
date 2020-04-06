@@ -46,7 +46,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -97,7 +97,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-        ''
+          ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),

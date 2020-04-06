@@ -5,7 +5,7 @@
         <div class="grid-section-header">
           <div class="grid-section-header-title">
             <h4 class="grid-section-header-title-text blue-header">Shared Data [Master]</h4>
-            <span *ngIf="data && data._master.dateUpdated" class="grid-section-header-title-sub-text grey-subtext">
+            <span *ngIf="data && data._master.dateUpdated" class="grey-subtext ml-2">
               Last Edited {{ (data && data._master.dateUpdated | date: 'mediumDate') || '-' }}
             </span>
           </div>
@@ -69,7 +69,10 @@
         <div class="grid-section-sub-header">
           <span class="grid-section-sub-header-text">Outcome Details</span>
         </div>
-        <app-penalty-detail-admin class="grid-section" [data]="data && data._master.penalties"></app-penalty-detail-admin>
+        <app-penalty-detail-admin
+          class="grid-section"
+          [data]="data && data._master.penalties"
+        ></app-penalty-detail-admin>
         <div class="grid-section-border"></div>
         <div class="grid-section-sub-header">
           <span class="grid-section-sub-header-text">Documents</span>

@@ -69,4 +69,4 @@ import { LoadingScreenService } from './services/loading-screen.service';
     DigitOnlyDirective
   ]
 })
-export class GlobalModule { }
+export class GlobalModule {}
