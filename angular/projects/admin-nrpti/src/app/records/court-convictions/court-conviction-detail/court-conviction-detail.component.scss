@@ -10,27 +10,23 @@
 }
 
 .section-3 {
-  grid-template-columns: 3fr 2fr 6fr;
+  grid-template-columns: auto;
 }
 
 .section-4 {
+  grid-template-columns: 3fr 2fr 6fr;
+}
+
+.section-5 {
   grid-template-columns: auto;
 }
 
 @media screen and (max-width: 768px) {
-  .section-1 {
-    grid-template-columns: none;
-  }
-
-  .section-2 {
-    grid-template-columns: none;
-  }
-
-  .section-3 {
-    grid-template-columns: none;
-  }
-
-  .section-4 {
+  .section-1,
+  .section-2,
+  .section-3,
+  .section-4,
+  .section-5 {
     grid-template-columns: none;
   }
 

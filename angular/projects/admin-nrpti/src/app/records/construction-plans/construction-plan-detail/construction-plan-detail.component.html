@@ -20,25 +20,25 @@
           <span class="grid-section-sub-header-text">Basic Information</span>
         </div>
         <div class="grid-section section-1">
-          <div class="grid-item">
+          <div class="grid-item__row">
             <label class="grid-item-name">Record Name</label>
             <span class="grid-item-value">{{ (data && data._master.recordName) || '-' }}</span>
           </div>
-          <div class="grid-item">
+          <div class="grid-item__row">
             <label class="grid-item-name">Record Type</label>
             <span class="grid-item-value">{{ (data && data._master.recordType) || '-' }}</span>
           </div>
-          <div class="grid-item">
+          <div class="grid-item__row">
             <label class="grid-item-name">Author</label>
             <span class="gird-item-value">{{ (data && data._master.author) || '-' }}</span>
           </div>
-          <div class="grid-item">
+          <div class="grid-item__row">
             <label class="grid-item-name">Date</label>
             <span class="gird-item-value">{{ (data && data._master.dateIssued | date: 'mediumDate') || '-' }}</span>
           </div>
         </div>
         <div class="grid-section section-2">
-          <div class="grid-item">
+          <div class="grid-item__row">
             <label class="grid-item-name">Agency</label>
             <span class="grid-item-value">{{ (data && data._master.agency) || '-' }}</span>
           </div>
@@ -48,15 +48,15 @@
           <span class="grid-section-sub-header-text">Location Details</span>
         </div>
         <div class="grid-section section-3">
-          <div class="grid-item">
+          <div class="grid-item__row">
             <label class="grid-item-name">Site/Project</label>
             <span class="grid-item-value">{{ (data && data._master.projectName) || '-' }}</span>
           </div>
-          <div class="grid-item">
+          <div class="grid-item__row">
             <label class="grid-item-name">Lat/Long</label>
             <span class="grid-item-value">{{ (data && data._master.centroid) || '-' }}</span>
           </div>
-          <div class="grid-item">
+          <div class="grid-item__row">
             <label class="grid-item-name">Location</label>
             <span class="grid-item-value">{{ (data && data._master.location) || '-' }}</span>
           </div>

@@ -46,6 +46,20 @@
             <label class="grid-item-name">Legislation</label>
             <span class="grid-item-value__col">{{ legislationString || '-' }}</span>
           </div>
+          <div class="grid-item__row">
+            <label class="grid-item-name">Offence</label>
+            <span class="grid-item-value">{{ (data && data._master.offence) || '-' }}</span>
+          </div>
+        </div>
+        <div class="grid-section-border"></div>
+        <div class="grid-section-sub-header">
+          <span class="grid-section-sub-header-text">Penalties</span>
+        </div>
+        <div class="grid-section section-3">
+          <app-penalty-detail-admin
+            class="grid-section"
+            [data]="data && data._master.penalties"
+          ></app-penalty-detail-admin>
         </div>
         <div class="grid-section-border"></div>
         <div class="grid-section-sub-header">
@@ -67,18 +81,10 @@
         </div>
         <div class="grid-section-border"></div>
         <div class="grid-section-sub-header">
-          <span class="grid-section-sub-header-text">Outcome Details</span>
-        </div>
-        <app-penalty-detail-admin
-          class="grid-section"
-          [data]="data && data._master.penalties"
-        ></app-penalty-detail-admin>
-        <div class="grid-section-border"></div>
-        <div class="grid-section-sub-header">
           <span class="grid-section-sub-header-text">Documents</span>
         </div>
         <div class="grid-section section-4">
-          <div class="grid-item">
+          <div class="grid-item__row">
             <span class="grid-item-value" *ngIf="data && data._master.documents && data._master.documents.length > 0">
               <span *ngFor="let document of data && data._master.documents">
                 <a href="{{ document.url }}" target=" _blank">{{ document.fileName }}</a>
