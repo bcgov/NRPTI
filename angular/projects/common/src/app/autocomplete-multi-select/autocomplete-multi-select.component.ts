@@ -176,22 +176,6 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
   }
 
   /**
-   * Selects all options
-   *
-   * @memberof AutoCompleteMultiSelectComponent
-   */
-  public selectAll() {
-    this.options = this.options.map(agency => {
-      agency.selected = true;
-      return agency;
-    });
-
-    this.setFormControlValue();
-
-    this._changeDetectionRef.detectChanges();
-  }
-
-  /**
    * Un-selects all options.
    *
    * @memberof AutoCompleteMultiSelectComponent
