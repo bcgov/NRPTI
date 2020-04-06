@@ -301,6 +301,7 @@ const createCourtConviction = async function(row, nrptiCollection) {
     write: ['sysadmin'],
 
     recordName: row[12],
+    offence: row[12],
     // recordSubtype: '',
     recordType: RECORD_TYPE.CourtConviction.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -349,6 +350,7 @@ const createCourtConviction = async function(row, nrptiCollection) {
     write: ['sysadmin'],
 
     recordName: row[12],
+    offence: row[12],
     recordType: RECORD_TYPE.CourtConviction.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
