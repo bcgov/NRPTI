@@ -13,8 +13,7 @@ export const DEFAULT_TABLE_PAGE_SIZE_OPTIONS: IPageSizePickerOption[] = [
   { displayText: '10', value: 10 },
   { displayText: '25', value: 25 },
   { displayText: '50', value: 50 },
-  { displayText: '100', value: 100 },
-  { displayText: 'All', value: Number.MAX_SAFE_INTEGER }
+  { displayText: '100', value: 100 }
 ];
 export const DEFAULT_TABLE_CURRENT_PAGE = 1;
 export const DEFAULT_TABLE_SORT_BY = '';

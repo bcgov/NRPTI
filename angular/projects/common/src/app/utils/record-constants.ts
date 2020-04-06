@@ -63,8 +63,7 @@ export class Picklists {
     Inspection: { displayName: 'Inspection', _schemaName: 'InspectionNRCED' },
     Order: { displayName: 'Order', _schemaName: 'OrderNRCED' },
     RestorativeJustice: { displayName: 'Restorative Justice', _schemaName: 'RestorativeJusticeNRCED' },
-    Ticket: { displayName: 'Ticket', _schemaName: 'TicketNRCED' },
-    Warning: { displayName: 'Warning', _schemaName: 'WarningNRCED' }
+    Ticket: { displayName: 'Ticket', _schemaName: 'TicketNRCED' }
   };
 
   /**

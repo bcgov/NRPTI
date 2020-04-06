@@ -65,7 +65,24 @@ export class Entity {
     }
 
     if (this.type === ENTITY_TYPE.Individual) {
-      return [[this.lastName || '-', this.firstName || '-'].join(', '), this.middleName || '-'].join(' ');
+      let entityString = '';
+
+      const entityNameParts = [];
+      if (this.lastName) {
+        entityNameParts.push(this.lastName);
+      }
+
+      if (this.firstName) {
+        entityNameParts.push(this.firstName);
+      }
+
+      entityString = entityNameParts.join(', ');
+
+      if (this.middleName) {
+        entityString += ` ${this.middleName}`;
+      }
+
+      return entityString;
     }
   }
 }
