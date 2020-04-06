@@ -160,3 +160,9 @@
   font-size: 15px;
   font-style: italic;
 }
+
+label {
+  display: inline-block;
+  font-size: inherit;
+  margin: 0;
+}

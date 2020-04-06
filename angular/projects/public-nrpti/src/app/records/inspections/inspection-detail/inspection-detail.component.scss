@@ -1,53 +1,26 @@
 // base scss found in record-details.scss
 
-.grid-section-1 {
-  display: grid;
-  grid-gap: 0.75rem;
+.section-1 {
   grid-template-columns: 3fr 2fr 2fr 2fr;
 }
 
-.grid-section-2 {
-  display: grid;
-  grid-gap: 0.75rem;
+.section-2 {
   grid-template-columns: 3fr 2fr 4fr;
 }
 
-.grid-section-3 {
-  display: grid;
-  grid-gap: 0.75rem;
+.section-3 {
   grid-template-columns: 3fr 2fr 4fr;
 }
 
-.grid-section-4 {
-  display: grid;
-  grid-gap: 0.75rem;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-}
-
-.grid-section-5 {
-  display: grid;
-  grid-gap: 0.75rem;
+.section-4 {
   grid-template-columns: auto;
 }
 
 @media screen and (max-width: 768px) {
-  .grid-section-1 {
-    grid-template-columns: none;
-  }
-
-  .grid-section-2 {
-    grid-template-columns: none;
-  }
-
-  .grid-section-3 {
-    grid-template-columns: none;
-  }
-
-  .grid-section-4 {
-    grid-template-columns: none;
-  }
-
-  .grid-section-5 {
+  .section-1,
+  .section-2,
+  .section-3,
+  .section-4 {
     grid-template-columns: none;
   }
 

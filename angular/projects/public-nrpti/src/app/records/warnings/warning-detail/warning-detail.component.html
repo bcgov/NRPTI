@@ -15,7 +15,7 @@
     </section>
     <section class="content-section" *ngIf="isTabActive('detail')">
       <div class="content-grid">
-        <div class="grid-section-1">
+        <div class="grid-section section-1">
           <div class="grid-item__row">
             <label class="grid-item-name">Activity Type</label>
             <span class="grid-item-value__col">{{ (data && data.recordType) || '-' }}</span>
@@ -31,7 +31,7 @@
             <span class="gird-item-value">{{ (data && data.dateIssued | date: 'mediumDate') || '-' }}</span>
           </div>
         </div>
-        <div class="grid-section-2">
+        <div class="grid-section section-2">
           <div class="grid-item__row">
             <label class="grid-item-name">Summary</label>
             <span class="grid-item-value__col">{{ (data && data.summary) || '-' }}</span>
@@ -73,7 +73,7 @@
             <span class="grid-item-value__col">{{ (data && data.legislationDescription) || '-' }}</span>
           </div>
         </div>
-        <div class="grid-section-3">
+        <div class="grid-section section-3">
           <div class="grid-item__row">
             <label class="grid-item-name">Site/Project</label>
             <span class="grid-item-value__col">{{ (data && data.projectName) || '-' }}</span>
@@ -87,7 +87,7 @@
             <span class="grid-item-value__col">{{ (data && data.centroid) || '-' }}</span>
           </div>
         </div>
-        <div class="grid-section-5">
+        <div class="grid-section section-4">
           <div class="grid-item__row">
             <label class="grid-item-name">Documents</label>
             <span class="grid-item-value__col" *ngIf="data && data.documents && data.documents.length > 0">
