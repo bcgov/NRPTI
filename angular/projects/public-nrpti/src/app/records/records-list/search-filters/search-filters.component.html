@@ -8,9 +8,11 @@
     </div>
     <div>
       <p>
-        The results list below will update instantly as you select criteria to filter, the URL will also update with
-        your unique criteria. If you want to return to your exact criteria, you can bookmark the page once you have
-        filtered (note that results may not be identical as content is updated).
+        Results shown on the list will update immediately as yo u select criteria to filter.
+      </p>
+      <p>
+        If you want to return to your exact criteria, you can bookmark the page once you have filtered (note that
+        results may not be identical as content is updated).
       </p>
     </div>
   </section>
@@ -22,7 +24,8 @@
           <lib-date-picker [control]="formGroup.get('dateIssuedStart')" [reset]="resetControls"></lib-date-picker>
         </div>
         <span class="date-separator align-self-center">To</span>
-        <div class="label-single">
+        <div class="label-pair">
+          <label for="recordType">Issued Date</label>
           <lib-date-picker [control]="formGroup.get('dateIssuedEnd')" [reset]="resetControls"></lib-date-picker>
         </div>
       </div>
