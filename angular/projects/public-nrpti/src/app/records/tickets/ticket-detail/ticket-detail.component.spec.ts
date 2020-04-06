@@ -4,6 +4,7 @@ import { TicketDetailComponent } from './ticket-detail.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivatedRouteStub } from '../../../../../../common/src/app/spec/spec-utils';
 import { GlobalModule } from 'nrpti-angular-components';
+import { CommonModule } from '../../../../../../common/src/app/common.module';
 
 describe('TicketDetailComponent', () => {
   let component: TicketDetailComponent;
@@ -14,7 +15,7 @@ describe('TicketDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [GlobalModule],
+      imports: [GlobalModule, CommonModule],
       declarations: [TicketDetailComponent],
       providers: [
         { provide: ActivatedRoute, useValue: activedRouteStub },

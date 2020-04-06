@@ -79,42 +79,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       displayName: 'Record Type',
       textFilters: [
         {
-          displayName: 'Order',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Inspection',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Certificate',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Permit',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'SelfReport',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Agreement',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'WarningLetter',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'RestorativeJustice',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Ticket',
-          fieldName: '_schemaName'
-        },
-        {
           displayName: 'AdministrativePenalty',
           fieldName: '_schemaName'
         },
@@ -123,7 +87,11 @@ export class RecordsListComponent implements OnInit, OnDestroy {
           fieldName: '_schemaName'
         },
         {
-          displayName: 'Warning',
+          displayName: 'Agreement',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'Certificate',
           fieldName: '_schemaName'
         },
         {
@@ -131,7 +99,39 @@ export class RecordsListComponent implements OnInit, OnDestroy {
           fieldName: '_schemaName'
         },
         {
+          displayName: 'CourtConviction',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'Inspection',
+          fieldName: '_schemaName'
+        },
+        {
           displayName: 'ManagementPlan',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'Order',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'Permit',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'RestorativeJustice',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'SelfReport',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'Ticket',
+          fieldName: '_schemaName'
+        },
+        {
+          displayName: 'Warning',
           fieldName: '_schemaName'
         }
       ]
@@ -287,44 +287,47 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
   add(item) {
     switch (item) {
-      case 'order':
-        this.router.navigate(['records', 'orders', 'add']);
-        break;
-      case 'inspection':
-        this.router.navigate(['records', 'inspections', 'add']);
-        break;
-      case 'certificate':
-        this.router.navigate(['records', 'certificates', 'add']);
-        break;
-      case 'permit':
-        this.router.navigate(['records', 'permits', 'add']);
-        break;
-      case 'agreement':
-        this.router.navigate(['records', 'agreements', 'add']);
-        break;
-      case 'selfReport':
-        this.router.navigate(['records', 'self-reports', 'add']);
-        break;
-      case 'restorativeJustice':
-        this.router.navigate(['records', 'restorative-justices', 'add']);
-        break;
-      case 'ticket':
-        this.router.navigate(['records', 'tickets', 'add']);
-        break;
       case 'administrativePenalty':
         this.router.navigate(['records', 'administrative-penalties', 'add']);
         break;
       case 'administrativeSanction':
         this.router.navigate(['records', 'administrative-sanctions', 'add']);
         break;
-      case 'warning':
-        this.router.navigate(['records', 'warnings', 'add']);
+      case 'agreement':
+        this.router.navigate(['records', 'agreements', 'add']);
+        break;
+      case 'certificate':
+        this.router.navigate(['records', 'certificates', 'add']);
         break;
       case 'constructionPlan':
         this.router.navigate(['records', 'construction-plans', 'add']);
         break;
+      case 'courtConviction':
+        this.router.navigate(['records', 'court-convictions', 'add']);
+        break;
+      case 'inspection':
+        this.router.navigate(['records', 'inspections', 'add']);
+        break;
       case 'managementPlan':
         this.router.navigate(['records', 'management-plans', 'add']);
+        break;
+      case 'order':
+        this.router.navigate(['records', 'orders', 'add']);
+        break;
+      case 'permit':
+        this.router.navigate(['records', 'permits', 'add']);
+        break;
+      case 'restorativeJustice':
+        this.router.navigate(['records', 'restorative-justices', 'add']);
+        break;
+      case 'selfReport':
+        this.router.navigate(['records', 'self-reports', 'add']);
+        break;
+      case 'ticket':
+        this.router.navigate(['records', 'tickets', 'add']);
+        break;
+      case 'warning':
+        this.router.navigate(['records', 'warnings', 'add']);
         break;
       default:
         break;

@@ -163,7 +163,8 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (administrativeSanction.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (administrativeSanction.legislationDescription = incomingObj.legislationDescription);
+  incomingObj.legislationDescription &&
+    (administrativeSanction.legislationDescription = incomingObj.legislationDescription);
   administrativeSanction.issuedTo.read = ['sysadmin'];
   administrativeSanction.issuedTo.write = ['sysadmin'];
   incomingObj.issuedTo &&
@@ -189,9 +190,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.projectName && (administrativeSanction.projectName = incomingObj.projectName);
   incomingObj.location && (administrativeSanction.location = incomingObj.location);
   incomingObj.centroid && (administrativeSanction.centroid = incomingObj.centroid);
-  incomingObj.outcomeStatus && (administrativeSanction.outcomeStatus = incomingObj.outcomeStatus);
-  incomingObj.outcomeDescription && (administrativeSanction.outcomeDescription = incomingObj.outcomeDescription);
-  incomingObj.penalty && (administrativeSanction.penalty = incomingObj.penalty);
+  incomingObj.penalties && (administrativeSanction.penalties = incomingObj.penalties);
   incomingObj.documents && (administrativeSanction.documents = incomingObj.documents);
 
   // set meta
@@ -281,7 +280,8 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (administrativeSanctionLNG.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (administrativeSanctionLNG.legislationDescription = incomingObj.legislationDescription);
+  incomingObj.legislationDescription &&
+    (administrativeSanctionLNG.legislationDescription = incomingObj.legislationDescription);
   administrativeSanctionLNG.issuedTo.read = ['sysadmin'];
   administrativeSanctionLNG.issuedTo.write = ['sysadmin'];
   incomingObj.issuedTo &&
@@ -307,9 +307,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.projectName && (administrativeSanctionLNG.projectName = incomingObj.projectName);
   incomingObj.location && (administrativeSanctionLNG.location = incomingObj.location);
   incomingObj.centroid && (administrativeSanctionLNG.centroid = incomingObj.centroid);
-  incomingObj.outcomeStatus && (administrativeSanctionLNG.outcomeStatus = incomingObj.outcomeStatus);
-  incomingObj.outcomeDescription && (administrativeSanctionLNG.outcomeDescription = incomingObj.outcomeDescription);
-  incomingObj.penalty && (administrativeSanctionLNG.penalty = incomingObj.penalty);
+  incomingObj.penalties && (administrativeSanctionLNG.penalties = incomingObj.penalties);
   incomingObj.documents && (administrativeSanctionLNG.documents = incomingObj.documents);
 
   // set flavour data
@@ -409,7 +407,8 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.legislation &&
     incomingObj.legislation.paragraph &&
     (administrativeSanctionNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (administrativeSanctionNRCED.legislationDescription = incomingObj.legislationDescription);
+  incomingObj.legislationDescription &&
+    (administrativeSanctionNRCED.legislationDescription = incomingObj.legislationDescription);
   administrativeSanctionNRCED.issuedTo.read = ['sysadmin'];
   administrativeSanctionNRCED.issuedTo.write = ['sysadmin'];
   incomingObj.issuedTo &&
@@ -435,9 +434,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.projectName && (administrativeSanctionNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (administrativeSanctionNRCED.location = incomingObj.location);
   incomingObj.centroid && (administrativeSanctionNRCED.centroid = incomingObj.centroid);
-  incomingObj.outcomeStatus && (administrativeSanctionNRCED.outcomeStatus = incomingObj.outcomeStatus);
-  incomingObj.outcomeDescription && (administrativeSanctionNRCED.outcomeDescription = incomingObj.outcomeDescription);
-  incomingObj.penalty && (administrativeSanctionNRCED.penalty = incomingObj.penalty);
+  incomingObj.penalties && (administrativeSanctionNRCED.penalties = incomingObj.penalties);
   incomingObj.documents && (administrativeSanctionNRCED.documents = incomingObj.documents);
 
   // set flavour data

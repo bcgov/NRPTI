@@ -71,6 +71,9 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
       case 'ManagementPlan':
         this.router.navigate(['records', 'management-plans', this.rowData._id, 'detail']);
         break;
+      case 'CourtConviction':
+        this.router.navigate(['records', 'court-convictions', this.rowData._id, 'detail']);
+        break;
       default:
       // TODO
     }
@@ -116,6 +119,9 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
         break;
       case 'ManagementPlan':
         this.router.navigate(['records', 'management-plans', this.rowData._id, 'edit']);
+        break;
+      case 'CourtConviction':
+        this.router.navigate(['records', 'court-convictions', this.rowData._id, 'edit']);
         break;
       default:
         break;

@@ -32,7 +32,7 @@ let postUtils = require('../../utils/post-utils');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function (args, res, next, incomingObj) {
+exports.createRecord = async function(args, res, next, incomingObj) {
   // save flavour records
   let observables = [];
   let savedFlavourWarnings = [];
@@ -107,7 +107,7 @@ exports.createRecord = async function (args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master warning record
  */
-exports.createMaster = async function (args, res, next, incomingObj, flavourIds) {
+exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
   let Warning = mongoose.model('Warning');
   let warning = new Warning();
 
@@ -227,7 +227,7 @@ exports.createMaster = async function (args, res, next, incomingObj, flavourIds)
  * @param {*} incomingObj see example
  * @returns created lng warning record
  */
-exports.createLNG = async function (args, res, next, incomingObj) {
+exports.createLNG = async function(args, res, next, incomingObj) {
   let WarningLNG = mongoose.model('WarningLNG');
   let warningLNG = new WarningLNG();
 
@@ -353,7 +353,7 @@ exports.createLNG = async function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced warning record
  */
-exports.createNRCED = async function (args, res, next, incomingObj) {
+exports.createNRCED = async function(args, res, next, incomingObj) {
   let WarningNRCED = mongoose.model('WarningNRCED');
   let warningNRCED = new WarningNRCED();
 

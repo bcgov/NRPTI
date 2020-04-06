@@ -1,0 +1,23 @@
+@import "../../../assets/styles/base/base.scss";
+
+.section-1 {
+  grid-template-columns: 2fr 2fr 7fr;
+}
+
+@media screen and (max-width: 768px) {
+  .section-1 {
+    grid-template-columns: none;
+  }
+
+  .grid-item__row {
+    grid-template-rows: none;
+    grid-template-columns: 1fr 2fr;
+    grid-gap: 0.625rem;
+  }
+}
+
+.penalty-divider:not(:first-of-type) {
+  border-top: 1px solid $fc-border-color;
+  margin-left: 0.75rem;
+  margin-bottom: 1rem;
+}

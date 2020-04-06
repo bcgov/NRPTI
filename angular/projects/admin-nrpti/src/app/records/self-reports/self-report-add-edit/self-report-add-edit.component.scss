@@ -2,14 +2,7 @@
 @import "assets/styles/components/add-edit.scss";
 
 .grey-subtext {
-  color: grey;
-  font-size: 15px;
-  font-style: italic;
-  margin-left: 20px;
-}
-
-.grey-subtext-no-margins {
-  color: grey;
+  color: $gray6;
   font-size: 15px;
   font-style: italic;
 }

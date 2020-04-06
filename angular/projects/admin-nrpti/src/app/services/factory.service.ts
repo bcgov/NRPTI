@@ -506,6 +506,23 @@ export class FactoryService {
     return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
 
+  // Court Convictions
+  public createCourtConviction(courtConviction: any): Observable<object> {
+    const outboundObject = {
+      courtConvictions: [courtConviction]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editCourtConviction(courtConviction: any): Observable<object> {
+    const outboundObject = {
+      courtConvictions: [courtConviction]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
   // Documents
   public createDocument(document: FormData, recordId: string): Promise<any> {
     return this.documentService.createDocument(document, recordId);

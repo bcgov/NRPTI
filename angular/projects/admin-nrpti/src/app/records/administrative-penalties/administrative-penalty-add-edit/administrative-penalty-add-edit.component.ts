@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { Picklists } from '../../../utils/constants/record-constants';
 import { EpicProjectIds } from '../../../utils/constants/record-constants';
 import { FactoryService } from '../../../services/factory.service';
@@ -34,7 +34,6 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
   // Pick lists
   public agencies = Picklists.agencyPicklist;
   public authors = Picklists.authorPicklist;
-  public outcomeStatuses = Picklists.outcomeStatusPicklist;
 
   // Documents
   public documents = [];
@@ -165,9 +164,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
       longitude: new FormControl(
         (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || ''
       ),
-      outcomeStatus: new FormControl((this.currentRecord && this.currentRecord.outcomeStatus) || ''),
-      outcomeDescription: new FormControl((this.currentRecord && this.currentRecord.outcomeDescription) || ''),
-      penalty: new FormControl((this.currentRecord && this.currentRecord.penalty) || ''),
+      penalties: new FormArray(this.getPenaltiesFormGroups()),
 
       // NRCED
       nrcedSummary: new FormControl((this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.summary) || ''),
@@ -181,6 +178,70 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
         (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
       )
     });
+  }
+
+  /**
+   * Builds an array of penalties FormGroups, each with its own set of FormControls.
+   *
+   * @returns {FormGroup[]} array of penalties FormGroup elements
+   * @memberof AdministrativePenaltyAddEditComponent
+   */
+  getPenaltiesFormGroups(): FormGroup[] {
+    if (!this.currentRecord || !this.currentRecord.penalties || !this.currentRecord.penalties.length) {
+      return [];
+    }
+
+    const penalties: FormGroup[] = [];
+
+    this.currentRecord.penalties.forEach(penalty => {
+      penalties.push(
+        new FormGroup({
+          type: new FormControl(penalty.type || ''),
+          penalty: new FormGroup({
+            type: new FormControl(penalty.penalty.type || ''),
+            value: new FormControl(penalty.penalty.value || '')
+          }),
+          description: new FormControl(penalty.description || '')
+        })
+      );
+    });
+
+    return penalties;
+  }
+
+  /**
+   * Parses an array of penalties FormGroups into objects expected by the API.
+   *
+   * @returns {object[]} array of penalties objects
+   * @memberof CourtConvictionAddEditComponent
+   */
+  parsePenaltiesFormGroups(): object[] {
+    const penaltiesFormArray = this.myForm.get('penalties');
+
+    if (!penaltiesFormArray || !penaltiesFormArray.value || !penaltiesFormArray.value.length) {
+      return [];
+    }
+
+    const penalties: object[] = [];
+
+    penaltiesFormArray.value.forEach(penaltyFormGroup => {
+      let penaltyValue = penaltyFormGroup.penalty.value;
+      // If the penalty type indicates a number, save the value as a number.
+      if (penaltyFormGroup.penalty.type !== 'Other' && !isNaN(penaltyFormGroup.penalty.value)) {
+        penaltyValue = Number(penaltyFormGroup.penalty.value);
+      }
+
+      penalties.push({
+        type: penaltyFormGroup.type,
+        penalty: {
+          type: penaltyFormGroup.penalty.type,
+          value: penaltyValue
+        },
+        description: penaltyFormGroup.description
+      });
+    });
+
+    return penalties;
   }
 
   navigateToDetails() {
@@ -272,11 +333,8 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     this.myForm.controls.location.dirty && (administrativePenalty['location'] = this.myForm.controls.location.value);
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (administrativePenalty['centroid'] = [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value]);
-    this.myForm.controls.outcomeStatus.dirty &&
-      (administrativePenalty['outcomeStatus'] = this.myForm.controls.outcomeStatus.value);
-    this.myForm.controls.outcomeDescription.dirty &&
-      (administrativePenalty['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
-    this.myForm.controls.penalty.dirty && (administrativePenalty['penalty'] = this.myForm.controls.penalty.value);
+
+    this.myForm.get('penalties').dirty && (administrativePenalty['penalties'] = this.parsePenaltiesFormGroups());
 
     // NRCED flavour
     if (this.myForm.controls.nrcedSummary.dirty || this.myForm.controls.publishNrced.dirty) {

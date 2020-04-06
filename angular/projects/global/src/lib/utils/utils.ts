@@ -89,4 +89,55 @@ export class Utils {
     }
     return obj;
   }
+
+  /**
+   * Wraps a function in a debounce function, which prevents it from being called until a delay period has elapsed.
+   * Repeated calls within the delay period will reset the delay.
+   *
+   * @static
+   * @param {*} delay delay in milliseconds between calls that must elapse before the function will be executed
+   * @param {*} fn function to debounce
+   * @returns {() => any}
+   * @memberof Utils
+   */
+  public debounced(delay, fn): () => any {
+    let timerId;
+
+    return (...args) => {
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+
+      timerId = setTimeout(() => {
+        fn(...args);
+        timerId = null;
+      }, delay);
+    };
+  }
+
+  /**
+   * Wraps a function in a throttle function, which prevents it from being called again until a delay period has
+   * elapsed. Repeated calls within the delay period will be ignored.
+   *
+   * @static
+   * @param {*} delay delay in milliseconds between calls that must elapse before the function will be executed again
+   * @param {*} fn function to throttle
+   * @returns {() => any}
+   * @memberof Utils
+   */
+  public throttled(delay, fn): () => any {
+    let lastCall = 0;
+
+    return (...args) => {
+      const now = new Date().getTime();
+
+      if (now - lastCall < delay) {
+        return;
+      }
+
+      lastCall = now;
+
+      return fn(...args);
+    };
+  }
 }

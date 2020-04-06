@@ -4,7 +4,7 @@ export class LoadingScreenService {
   @Output() stateChange: EventEmitter<boolean> = new EventEmitter();
   public isLoading = false;
 
-  constructor() { }
+  constructor() {}
 
   setLoadingState(state: boolean) {
     this.isLoading = state;

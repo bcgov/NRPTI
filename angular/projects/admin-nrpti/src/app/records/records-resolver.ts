@@ -25,7 +25,8 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       'AdministrativeSanction',
       'Warning',
       'ConstructionPlan',
-      'ManagementPlan'
+      'ManagementPlan',
+      'CourtConviction'
     ];
 
     // If _schemaName was filter criteria, use that instead of the default list.

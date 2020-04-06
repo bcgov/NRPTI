@@ -5,13 +5,13 @@
         <div class="grid-section-header">
           <div class="grid-section-header-title">
             <span class="grid-section-header-title-text">LNG Data</span>
-            <span *ngIf="data && data.dateUpdated" class="grid-section-header-title-sub-text grey-sub-text">
+            <span *ngIf="data && data.dateUpdated" class="grey-subtext ml-2">
               Last Edited {{ (data && data.dateUpdated | date: 'mediumDate') || '-' }}
             </span>
           </div>
           <div class="grid-section-header-button">
-            <span *ngIf="!isPublished" class="grid-section-header-button-sub-text grey-sub-text">Not Published</span>
-            <span *ngIf="isPublished" class="grid-section-header-button-sub-text grey-sub-text">
+            <span *ngIf="!isPublished" class="grid-section-header-button-sub-text grey-subtext">Not Published</span>
+            <span *ngIf="isPublished" class="grid-section-header-button-sub-text grey-subtext">
               Published on {{ (data && data.datePublished | date: 'mediumDate') || '-' }}
             </span>
             <button *ngIf="!isPublished" class="button-publish" (click)="publish()">
@@ -26,11 +26,11 @@
         </div>
         <div class="grid-section section-1">
           <div class="grid-item">
-            <span class="grid-item-name">Related Phase</span>
+            <label class="grid-item-name">Related Phase</label>
             <span class="grid-item-value">{{ (data && data.relatedPhase) || '-' }}</span>
           </div>
           <div class="grid-item">
-            <span class="grid-item-name">Description</span>
+            <label class="grid-item-name">Description</label>
             <span class="grid-item-value">{{ (data && data.description) || '-' }}</span>
           </div>
         </div>

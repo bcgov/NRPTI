@@ -5,7 +5,7 @@
         <div class="grid-section-header">
           <div class="grid-section-header-title">
             <h4 class="grid-section-header-title-text blue-header">Shared Data [Master]</h4>
-            <span *ngIf="data && data._master.dateUpdated" class="grid-section-header-title-sub-text grey-sub-text">
+            <span *ngIf="data && data._master.dateUpdated" class="grey-subtext ml-2">
               Last Edited {{ (data && data._master.dateUpdated | date: 'mediumDate') || '-' }}
             </span>
           </div>
@@ -21,41 +21,41 @@
         </div>
         <div class="grid-section section-1">
           <div class="grid-item">
-            <span class="grid-item-name">Record Name</span>
+            <label class="grid-item-name">Record Name</label>
             <span class="grid-item-value">{{ (data && data._master.recordName) || '-' }}</span>
           </div>
           <div class="grid-item">
-            <span class="grid-item-name">Record Type</span>
+            <label class="grid-item-name">Record Type</label>
             <span class="grid-item-value">{{ (data && data._master.recordType) || '-' }}</span>
           </div>
           <div class="grid-item">
-            <span class="grid-item-name">Record Sub-Type</span>
+            <label class="grid-item-name">Record Sub-Type</label>
             <span class="grid-item-value">{{ (data && data._master.recordSubtype) || '-' }}</span>
           </div>
           <div class="grid-item">
-            <span class="grid-item-name">Author</span>
+            <label class="grid-item-name">Author</label>
             <span class="gird-item-value">{{ (data && data._master.author) || '-' }}</span>
           </div>
           <div class="grid-item">
-            <span class="grid-item-name">Date Issued</span>
+            <label class="grid-item-name">Date Issued</label>
             <span class="gird-item-value">{{ (data && data._master.dateIssued | date: 'mediumDate') || '-' }}</span>
           </div>
         </div>
         <div class="grid-section section-2">
           <div class="grid-item">
-            <span class="grid-item-name">Issuing Agency</span>
+            <label class="grid-item-name">Issuing Agency</label>
             <span class="grid-item-value">{{ (data && data._master.issuingAgency) || '-' }}</span>
           </div>
           <div class="grid-item">
-            <span class="grid-item-name">Legislation</span>
+            <label class="grid-item-name">Legislation</label>
             <span class="grid-item-value">{{ legislationString || '-' }}</span>
           </div>
           <div class="grid-item">
-            <span class="grid-item-name">Order Type</span>
+            <label class="grid-item-name">Order Type</label>
             <span class="grid-item-value">{{ (data && data._master.legislationDescription) || '-' }}</span>
           </div>
           <div class="grid-item">
-            <span class="grid-item-name">Source System</span>
+            <label class="grid-item-name">Source System</label>
             <span class="grid-item-value">{{ (data && data._master.sourceSystemRef) || '-' }}</span>
           </div>
         </div>
@@ -70,15 +70,15 @@
         </div>
         <div class="grid-section section-3">
           <div class="grid-item">
-            <span class="grid-item-name">Site/Project</span>
+            <label class="grid-item-name">Site/Project</label>
             <span class="grid-item-value">{{ (data && data._master.projectName) || '-' }}</span>
           </div>
           <div class="grid-item">
-            <span class="grid-item-name">Lat/Long</span>
+            <label class="grid-item-name">Lat/Long</label>
             <span class="grid-item-value">{{ (data && data._master.centroid) || '-' }}</span>
           </div>
           <div class="grid-item">
-            <span class="grid-item-name">Location</span>
+            <label class="grid-item-name">Location</label>
             <span class="grid-item-value">{{ (data && data._master.location) || '-' }}</span>
           </div>
         </div>
@@ -88,11 +88,11 @@
         </div>
         <div class="grid-section section-4">
           <div class="grid-item">
-            <span class="grid-item-name">Outcome Status</span>
+            <label class="grid-item-name">Outcome Status</label>
             <span class="grid-item-value">{{ (data && data._master.outcomeStatus) || '-' }}</span>
           </div>
           <div class="grid-item">
-            <span class="grid-item-name">Outcome Description</span>
+            <label class="grid-item-name">Outcome Description</label>
             <span class="grid-item-value">{{ (data && data._master.outcomeDescription) || '-' }}</span>
           </div>
         </div>

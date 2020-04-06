@@ -19,11 +19,6 @@
             font-size: 1.5rem;
             font-weight: 600;
           }
-
-          .grid-section-header-title-sub-text {
-            margin-left: 1.25rem;
-            font-size: 0.75rem;
-          }
         }
 
         .grid-section-header-button {
@@ -129,7 +124,8 @@
   color: $content-header-color;
 }
 
-.grey-sub-text {
-  color: grey;
+.grey-subtext {
+  color: $gray6;
+  font-size: 15px;
   font-style: italic;
 }

@@ -45,7 +45,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -96,7 +96,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-        ''
+          ''
       ),
       agency: new FormControl((this.currentRecord && this.currentRecord.agency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -108,8 +108,6 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
       longitude: new FormControl(
         (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || ''
       ),
-      outcomeStatus: new FormControl((this.currentRecord && this.currentRecord.outcomeStatus) || ''),
-      outcomeDescription: new FormControl((this.currentRecord && this.currentRecord.outcomeDescription) || ''),
 
       // LNG
       lngRelatedPhase: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.relatedPhase) || ''),
@@ -117,7 +115,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
-        ''
+          ''
       ),
       publishLng: new FormControl(
         (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
@@ -168,10 +166,6 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.location.dirty && (managementPlan['location'] = this.myForm.controls.location.value);
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (managementPlan['centroid'] = [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value]);
-    this.myForm.controls.outcomeStatus.dirty &&
-      (managementPlan['outcomeStatus'] = this.myForm.controls.outcomeStatus.value);
-    this.myForm.controls.outcomeDescription.dirty &&
-      (managementPlan['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
 
     // LNG flavour
     if (

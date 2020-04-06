@@ -90,6 +90,13 @@ import { ManagementPlanAddEditComponent } from './management-plans/management-pl
 import { ManagementPlanDetailComponent } from './management-plans/management-plan-detail/management-plan-detail.component';
 import { ManagementPlanLNGDetailComponent } from './management-plans/management-plan-lng-detail/management-plan-lng-detail.component';
 
+// court convictions
+import { CourtConvictionAddEditComponent } from './court-convictions/court-conviction-add-edit/court-conviction-add-edit.component';
+import { CourtConvictionDetailComponent } from './court-convictions/court-conviction-detail/court-conviction-detail.component';
+import { CourtConvictionNRCEDDetailComponent } from './court-convictions/court-conviction-nrced-detail/court-conviction-nrced-detail.component';
+import { CourtConvictionLNGDetailComponent } from './court-convictions/court-conviction-lng-detail/court-conviction-lng-detail.component';
+
+// other
 import { ExplorePanelComponent } from '../explore-panel/explore-panel.component';
 import { DateInputComponent } from '../explore-panel/date-input/date-input.component';
 
@@ -174,7 +181,12 @@ import { DateInputComponent } from '../explore-panel/date-input/date-input.compo
     // management plans
     ManagementPlanAddEditComponent,
     ManagementPlanDetailComponent,
-    ManagementPlanLNGDetailComponent
+    ManagementPlanLNGDetailComponent,
+    // court convictions
+    CourtConvictionAddEditComponent,
+    CourtConvictionDetailComponent,
+    CourtConvictionNRCEDDetailComponent,
+    CourtConvictionLNGDetailComponent
   ],
   providers: [],
   entryComponents: [
@@ -236,7 +248,12 @@ import { DateInputComponent } from '../explore-panel/date-input/date-input.compo
     // management plans
     ManagementPlanAddEditComponent,
     ManagementPlanDetailComponent,
-    ManagementPlanLNGDetailComponent
+    ManagementPlanLNGDetailComponent,
+    // court convictions
+    CourtConvictionAddEditComponent,
+    CourtConvictionDetailComponent,
+    CourtConvictionNRCEDDetailComponent,
+    CourtConvictionLNGDetailComponent
   ],
   exports: []
 })

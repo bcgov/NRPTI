@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-6">
           <h4 class="blue-header">Shared Data [Master]</h4>
-          <span *ngIf="isEditing" class="grey-subtext">{{ lastEditedSubText }}</span>
+          <span *ngIf="isEditing" class="grey-subtext ml-2">{{ lastEditedSubText }}</span>
         </div>
         <div class="col-6 right-justified-action-btn">
           <div class="row mb-2">
@@ -52,7 +52,8 @@
               name="dp"
               formControlName="dateIssued"
               ngbDatepicker
-              #d="ngbDatepicker" />
+              #d="ngbDatepicker"
+            />
             <div class="input-group-append">
               <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
             </div>
@@ -72,8 +73,13 @@
       <app-legislation-add-edit [formGroup]="myForm"></app-legislation-add-edit>
       <div class="label-pair">
         <label for="legislationDescription">Description</label>
-        <input name="legislationDescription" id="legislationDescription" type="text"
-          formControlName="legislationDescription" class="form-control" />
+        <input
+          name="legislationDescription"
+          id="legislationDescription"
+          type="text"
+          formControlName="legislationDescription"
+          class="form-control"
+        />
       </div>
     </section>
 
@@ -82,9 +88,7 @@
       <div class="flex-container">
         <div class="label-pair">
           <label for="projectName">Project</label>
-          <span class="grey-subtext-no-margins">
-            (If Applicable)
-          </span>
+          <span class="grey-subtext ml-2">(If Applicable)</span>
           <div name="projectName" class="radio-group">
             <div class="radio">
               <input default type="radio" id="Other" value="" formControlName="projectName" name="projectName" />
@@ -96,7 +100,8 @@
                 id="coastalGaslink"
                 value="Coastal Gaslink"
                 formControlName="projectName"
-                name="projectName" />
+                name="projectName"
+              />
               <label for="coastalGaslink">Coastal Gaslink</label>
             </div>
             <div class="radio">
@@ -130,18 +135,19 @@
       <h4>Documents</h4>
       <app-document-edit
         [documents]="currentRecord ? currentRecord.documents : []"
-        (documentsToDelete)="documentsToDelete = $event"></app-document-edit>
+        (documentsToDelete)="documentsToDelete = $event"
+      ></app-document-edit>
       <app-document-link-staging
         (linksChanged)="links = $event"
-        (documentsChanged)="documents = $event"></app-document-link-staging>
+        (documentsChanged)="documents = $event"
+      ></app-document-link-staging>
     </section>
 
     <section>
       <div class="row mb-4">
         <div class="col-2">
           <h4 class="blue-header mb-0">LNG Site Content</h4>
-          <br />
-          <span class="grey-subtext-no-margins">{{ lngPublishSubtext }}</span>
+          <span class="grey-subtext d-block">{{ lngPublishSubtext }}</span>
         </div>
         <div class="col-4">
           <mat-slide-toggle
@@ -150,11 +156,11 @@
             formControlName="publishLng"
             (change)="togglePublish($event, 'lng')"
             [checked]="myForm.controls.publishLng.value"
-            ngDefaultControl>
+            ngDefaultControl
+          >
             {{ myForm.controls.publishLng.value ? 'Published' : 'Unpublished' }}
           </mat-slide-toggle>
-          <br />
-          <span class="grey-subtext-no-margins">*Changes made will take effect once you click "Update Record"</span>
+          <span class="grey-subtext d-block">*Changes made will take effect once you click "Update Record"</span>
         </div>
       </div>
       <div class="flex-container">
@@ -165,7 +171,9 @@
             id="lngDescription"
             type="text"
             formControlName="lngDescription"
-            class="form-control"></textarea>
+            class="form-control"
+            rows="5"
+          ></textarea>
         </div>
       </div>
     </section>

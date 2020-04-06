@@ -181,9 +181,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.projectName && (ticket.projectName = incomingObj.projectName);
   incomingObj.location && (ticket.location = incomingObj.location);
   incomingObj.centroid && (ticket.centroid = incomingObj.centroid);
-  incomingObj.outcomeStatus && (ticket.outcomeStatus = incomingObj.outcomeStatus);
-  incomingObj.outcomeDescription && (ticket.outcomeDescription = incomingObj.outcomeDescription);
-  incomingObj.penalty && (ticket.penalty = incomingObj.penalty);
+  incomingObj.penalties && (ticket.penalties = incomingObj.penalties);
   incomingObj.documents && (ticket.documents = incomingObj.documents);
 
   // set meta
@@ -297,9 +295,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.projectName && (ticketLNG.projectName = incomingObj.projectName);
   incomingObj.location && (ticketLNG.location = incomingObj.location);
   incomingObj.centroid && (ticketLNG.centroid = incomingObj.centroid);
-  incomingObj.outcomeStatus && (ticketLNG.outcomeStatus = incomingObj.outcomeStatus);
-  incomingObj.outcomeDescription && (ticketLNG.outcomeDescription = incomingObj.outcomeDescription);
-  incomingObj.penalty && (ticketLNG.penalty = incomingObj.penalty);
+  incomingObj.penalties && (ticketLNG.penalties = incomingObj.penalties);
   incomingObj.documents && (ticketLNG.documents = incomingObj.documents);
 
   // set flavour data
@@ -423,9 +419,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.projectName && (ticketNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (ticketNRCED.location = incomingObj.location);
   incomingObj.centroid && (ticketNRCED.centroid = incomingObj.centroid);
-  incomingObj.outcomeStatus && (ticketNRCED.outcomeStatus = incomingObj.outcomeStatus);
-  incomingObj.outcomeDescription && (ticketNRCED.outcomeDescription = incomingObj.outcomeDescription);
-  incomingObj.penalty && (ticketNRCED.penalty = incomingObj.penalty);
+  incomingObj.penalties && (ticketNRCED.penalties = incomingObj.penalties);
   incomingObj.documents && (ticketNRCED.documents = incomingObj.documents);
 
   // set flavour data

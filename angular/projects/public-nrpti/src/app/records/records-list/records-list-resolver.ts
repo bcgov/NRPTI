@@ -30,7 +30,8 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
       'AdministrativePenaltyNRCED',
       'AdministrativeSanctionNRCED',
       'TicketNRCED',
-      'WarningNRCED'
+      'WarningNRCED',
+      'CourtConvictionNRCED'
     ];
 
     if (params.activityType) {
