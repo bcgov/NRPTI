@@ -162,7 +162,7 @@ exports.protectedPost = async function(args, res, next) {
       observables.push(this.processPostRequest(args, res, next, 'managementPlans', data.managementPlans));
     }
     if (data.courtConvictions) {
-      observables.push(processPostRequest(args, res, next, 'courtConvictions', data.courtConvictions));
+      observables.push(this.processPostRequest(args, res, next, 'courtConvictions', data.courtConvictions));
     }
 
     let response = await Promise.all(observables);
@@ -237,7 +237,7 @@ exports.protectedPut = async function(args, res, next) {
       observables.push(this.processPutRequest(args, res, next, 'managementPlans', data.managementPlans));
     }
     if (data.courtConvictions) {
-      observables.push(processPutRequest(args, res, next, 'courtConvictions', data.courtConvictions));
+      observables.push(this.processPutRequest(args, res, next, 'courtConvictions', data.courtConvictions));
     }
 
     let response = await Promise.all(observables);
