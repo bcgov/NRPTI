@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-6">
           <h4 class="blue-header">Shared Data [Master]</h4>
-          <span *ngIf="isEditing" class="grey-subtext">{{ lastEditedSubText }}</span>
+          <span *ngIf="isEditing" class="grey-subtext ml-2">{{ lastEditedSubText }}</span>
         </div>
         <div class="col-6 right-justified-action-btn">
           <div class="row mb-2">
@@ -55,7 +55,7 @@
         </div>
         <div class="label-pair">
           <label for="recordType">Type</label>
-          <span class="grey-subtext">(This value cannot be changed)</span>
+          <span class="grey-subtext ml-2">(This value cannot be changed)</span>
           <input readonly name="recordType" id="recordType" type="text" value="Court Conviction" class="form-control" />
         </div>
       </div>
@@ -101,9 +101,7 @@
       <div class="flex-container">
         <div class="label-pair">
           <label for="projectName">Project</label>
-          <span class="grey-subtext-no-margins">
-            (If Applicable)
-          </span>
+          <span class="grey-subtext ml-2">(If Applicable)</span>
           <div name="projectName" class="radio-group">
             <div class="radio">
               <input default type="radio" id="Other" value="" formControlName="projectName" name="projectName" />
@@ -163,8 +161,7 @@
       <div class="row mb-4">
         <div class="col-2">
           <h4 class="blue-header mb-0">NRCED Site Content</h4>
-          <br />
-          <span class="grey-subtext-no-margins">{{ nrcedPublishSubtext }}</span>
+          <span class="grey-subtext d-block">{{ nrcedPublishSubtext }}</span>
         </div>
         <div class="col-4">
           <mat-slide-toggle
@@ -177,8 +174,7 @@
           >
             {{ myForm.controls.publishNrced.value ? 'Published' : 'Unpublished' }}
           </mat-slide-toggle>
-          <br />
-          <span class="grey-subtext-no-margins">*Changes made will take effect once you click "Update Record"</span>
+          <span class="grey-subtext d-block">*Changes made will take effect once you click "Update Record"</span>
         </div>
       </div>
       <div class="flex-container">
@@ -200,8 +196,7 @@
       <div class="row mb-4">
         <div class="col-2">
           <h4 class="blue-header mb-0">LNG Site Content</h4>
-          <br />
-          <span class="grey-subtext-no-margins">{{ lngPublishSubtext }}</span>
+          <span class="grey-subtext d-block">{{ lngPublishSubtext }}</span>
         </div>
         <div class="col-4">
           <mat-slide-toggle
@@ -214,8 +209,7 @@
           >
             {{ myForm.controls.publishLng.value ? 'Published' : 'Unpublished' }}
           </mat-slide-toggle>
-          <br />
-          <span class="grey-subtext-no-margins">*Changes made will take effect once you click "Update Record"</span>
+          <span class="grey-subtext d-block">*Changes made will take effect once you click "Update Record"</span>
         </div>
       </div>
       <div class="flex-container">

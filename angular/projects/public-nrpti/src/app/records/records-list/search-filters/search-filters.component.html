@@ -55,7 +55,7 @@
       <div>
         <div class="label-pair">
           <label for="agency">Responsible Agency</label>
-          <span *ngIf="agencyCount" class="grey-subtext">({{ agencyCount }} selected)</span>
+          <span *ngIf="agencyCount" class="grey-subtext ml-2">({{ agencyCount }} selected)</span>
           <app-autocomplete-multi-select
             [control]="formGroup.get('agency')"
             [options]="agencyOptions"
@@ -68,7 +68,7 @@
       <div>
         <div class="label-pair">
           <label for="act">Act</label>
-          <span *ngIf="actCount" class="grey-subtext">({{ actCount }} selected)</span>
+          <span *ngIf="actCount" class="grey-subtext ml-2">({{ actCount }} selected)</span>
           <app-autocomplete-multi-select
             [control]="formGroup.get('act')"
             [options]="actOptions"
@@ -81,7 +81,7 @@
       <div>
         <div class="label-pair">
           <label for="regulation">Regulation</label>
-          <span *ngIf="regulationCount" class="grey-subtext">({{ regulationCount }} selected)</span>
+          <span *ngIf="regulationCount" class="grey-subtext ml-2">({{ regulationCount }} selected)</span>
           <app-autocomplete-multi-select
             [control]="formGroup.get('regulation')"
             [options]="regulationOptions"

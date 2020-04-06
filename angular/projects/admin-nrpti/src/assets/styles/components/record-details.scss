@@ -160,7 +160,8 @@
   color: $content-header-color;
 }
 
-.grey-sub-text {
-  color: grey;
+.grey-subtext {
+  color: $gray6;
+  font-size: 15px;
   font-style: italic;
 }

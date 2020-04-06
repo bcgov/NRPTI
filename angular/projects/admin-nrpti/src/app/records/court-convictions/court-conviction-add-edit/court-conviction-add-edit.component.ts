@@ -41,8 +41,8 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
   public documentsToDelete = [];
 
   constructor(
-    public route: ActivatedRoute,
-    public router: Router,
+    private route: ActivatedRoute,
+    private router: Router,
     private recordUtils: RecordUtils,
     private factoryService: FactoryService,
     private utils: Utils,
@@ -244,10 +244,6 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     return penalties;
   }
 
-  navigateToDetails() {
-    this.router.navigate(['records', 'court-convictions', this.currentRecord._id, 'detail']);
-  }
-
   togglePublish(event, flavour) {
     switch (flavour) {
       case 'lng':
@@ -263,13 +259,6 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
   }
 
   async submit() {
-    // TODO
-    // _epicProjectId
-    // _sourceRefId
-    // _epicMilestoneId
-    // legislation
-    // projectName
-
     const courtConviction = {};
     this.myForm.controls.recordName.dirty && (courtConviction['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.recordSubtype.dirty &&
@@ -360,7 +349,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     if (!this.isEditing) {
       this.factoryService.createCourtConviction(courtConviction).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -368,7 +357,6 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
         this.router.navigate(['records']);
       });
     } else {
@@ -394,7 +382,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
 
       this.factoryService.editCourtConviction(courtConviction).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -402,7 +390,6 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
         this.router.navigate(['records', 'court-convictions', this.currentRecord._id, 'detail']);
       });
     }
