@@ -15,11 +15,11 @@ const s3 = new AWS.S3({
   s3ForcePathStyle: true
 });
 
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedPost = async function(args, res, next) {
+exports.protectedPost = async function (args, res, next) {
   if (
     args.swagger.params.fileName &&
     args.swagger.params.fileName.value &&
@@ -142,7 +142,7 @@ exports.protectedPost = async function(args, res, next) {
   }
 };
 
-exports.protectedDelete = async function(args, res, next) {
+exports.protectedDelete = async function (args, res, next) {
   if (
     args.swagger.params.docId &&
     args.swagger.params.docId.value &&
@@ -168,7 +168,7 @@ exports.protectedDelete = async function(args, res, next) {
     // We need to delete this document.
     if (docResponse.key) {
       try {
-        const s3DeleteResult = await this.deleteS3Document(docResponse.key);
+        const s3DeleteResult = await deleteS3Document(docResponse.key);
 
         s3Response = s3DeleteResult;
       } catch (e) {
@@ -259,6 +259,8 @@ async function createDocument(fileName, addedBy, url = null) {
   return await document.save();
 }
 
-exports.deleteS3Document = async function(docKey) {
+exports.deleteS3Document = deleteS3Document;
+
+async function deleteS3Document(docKey) {
   return await s3.deleteObject({ Bucket: process.env.OBJECT_STORE_bucket_name, Key: docKey }).promise();
 };
