@@ -57,13 +57,6 @@ module.exports = require('../../utils/model-schema-generator')(
     sourceDateAdded: { type: Date, default: null },
     sourceDateUpdated: { type: Date, default: null },
     sourceSystemRef: { type: String, default: 'nrpti' },
-
-    indexes__: [
-      {
-        fields: { summary: 'text', location: 'text', issuedTo: 'text', recordName: 'text' },
-        options: { name: 'keyword-search-text-index' }
-      }
-    ]
   },
   'nrpti'
 );

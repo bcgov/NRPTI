@@ -101,8 +101,16 @@ class DataSource {
 
       // Build request url
       const queryParams = {
-        ...this.params,
-        ...this.getBaseParams(recordType, MAX_PAGE_SIZE, 0)
+        dataset: 'Document',
+        populate: false,
+        pageSize: MAX_PAGE_SIZE,
+        pageNum: 0,
+        and: {
+          type: recordType.type.typeId,
+          milestone: recordType.milestone.milestoneId,
+          ...this.getProjectFilterParams(recordType),
+          ...this.params
+        }
       };
       const url = this.getIntegrationUrl(EPIC_API_HOSTNAME, EPIC_API_SEARCH_PATHNAME, queryParams);
 
@@ -256,27 +264,6 @@ class DataSource {
    */
   buildProjectPathname(projectId) {
     return `${EPIC_API_PROJECT_PATHNAME}/${projectId}`;
-  }
-
-  /**
-   * Build the Epic API Project pathname.
-   *
-   * @param {*} recordType
-   * @returns {object} base record query params.
-   * @memberof DataSource
-   */
-  getBaseParams(recordType, pageSize, pageNum) {
-    return {
-      dataset: 'Document',
-      populate: false,
-      pageSize: pageSize,
-      pageNum: pageNum,
-      and: {
-        type: recordType.type.typeId,
-        milestone: recordType.milestone.milestoneId,
-        ...this.getProjectFilterParams(recordType)
-      }
-    };
   }
 
   /**
