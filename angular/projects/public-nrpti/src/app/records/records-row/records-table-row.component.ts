@@ -40,7 +40,6 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
       }
     });
 
-    console.log(this.rowData._schemaName);
     if (
       this.rowData._schemaName === 'AdministrativePenaltyNRCED' ||
       this.rowData._schemaName === 'CourtConvictionNRCED' ||
