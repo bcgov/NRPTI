@@ -134,7 +134,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
   }
 
   async submit() {
-    this.loadingScreenService.setLoadingState(true);
+    this.loadingScreenService.setLoadingState(true, 'main');
     // TODO
     // _epicProjectId
     // _sourceRefId
@@ -194,7 +194,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
         );
 
         console.log(docResponse);
-        this.loadingScreenService.setLoadingState(false);
+        this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records']);
       });
     } else {
@@ -220,7 +220,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
         );
 
         console.log(docResponse);
-        this.loadingScreenService.setLoadingState(false);
+        this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records', 'construction-plans', this.currentRecord._id, 'detail']);
       });
     }

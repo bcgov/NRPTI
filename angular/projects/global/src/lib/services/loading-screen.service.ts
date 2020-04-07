@@ -1,13 +1,11 @@
 import { Output, EventEmitter } from '@angular/core';
 
 export class LoadingScreenService {
-  @Output() stateChange: EventEmitter<boolean> = new EventEmitter();
-  public isLoading = false;
+  @Output() stateChange: EventEmitter<any> = new EventEmitter();
 
-  constructor() {}
+  constructor() { }
 
-  setLoadingState(state: boolean) {
-    this.isLoading = state;
-    this.stateChange.emit(this.isLoading);
+  setLoadingState(state: boolean, location?: string) {
+    this.stateChange.emit({ state: state, location: location });
   }
 }

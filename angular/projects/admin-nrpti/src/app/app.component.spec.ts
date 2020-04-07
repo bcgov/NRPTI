@@ -10,9 +10,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
-import { BreadcrumbComponent, StoreService } from 'nrpti-angular-components';
+import {
+  BreadcrumbComponent,
+  StoreService,
+  LoadingScreenService
+} from 'nrpti-angular-components';
 import { of } from 'rxjs';
-import { LoadingScreenService } from 'nrpti-angular-components';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -24,14 +27,11 @@ describe('AppComponent', () => {
 
     const mockStoreService = {
       stateChange: of(),
-      toggleSideNave: () => {}
+      toggleSideNave: () => { }
     };
 
     const mockLoadingScreenService = {
-      isLoading: false,
-      setLoadingState: () => {
-        return false;
-      }
+      setLoadingState: () => { }
     };
 
     TestBed.configureTestingModule({

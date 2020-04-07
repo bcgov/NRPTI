@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { IBreadcrumb } from 'nrpti-angular-components';
+import { IBreadcrumb, LoadingScreenService } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +10,15 @@ import { IBreadcrumb } from 'nrpti-angular-components';
 export class AppComponent implements OnInit {
   public breadcrumbs: IBreadcrumb[];
   public activeBreadcrumb: IBreadcrumb;
-  constructor(private router: Router) {
+
+  public mainLoading = false;
+  public bodyLoading = false;
+
+  constructor(
+    private router: Router,
+    private loadingScreenService: LoadingScreenService,
+    private _changeDetectionRef: ChangeDetectorRef
+  ) {
     this.breadcrumbs = [];
   }
 
@@ -18,5 +26,19 @@ export class AppComponent implements OnInit {
     this.router.navigate([breadcrumbData.url]);
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.loadingScreenService.stateChange.subscribe(loadingObj => {
+      switch (loadingObj.location) {
+        case 'main':
+          this.mainLoading = loadingObj.state;
+          break;
+        case 'body':
+          this.bodyLoading = loadingObj.state;
+          break;
+        default:
+          break;
+      }
+      this._changeDetectionRef.detectChanges();
+    });
+  }
 }

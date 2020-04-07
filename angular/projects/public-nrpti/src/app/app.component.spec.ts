@@ -7,20 +7,32 @@ import { FooterComponent } from './footer/footer.component';
 import { ApiService } from './services/api.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { BreadcrumbComponent, StoreService } from 'nrpti-angular-components';
+import {
+  BreadcrumbComponent,
+  StoreService,
+  LoadingScreenService
+} from 'nrpti-angular-components';
 import { of } from 'rxjs';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     const mockStoreService = {
       change: of(),
-      toggleSideNave: () => {}
+      toggleSideNave: () => { }
+    };
+
+    const mockLoadingScreenService = {
+      setLoadingState: () => { }
     };
 
     TestBed.configureTestingModule({
       declarations: [AppComponent, HeaderComponent, FooterComponent, BreadcrumbComponent],
       imports: [RouterTestingModule, HttpClientTestingModule, BrowserAnimationsModule],
-      providers: [ApiService, { provide: StoreService, useValue: mockStoreService }]
+      providers: [
+        ApiService,
+        { provide: StoreService, useValue: mockStoreService },
+        { provide: LoadingScreenService, useValue: mockLoadingScreenService }
+      ]
     }).compileComponents();
   }));
 
