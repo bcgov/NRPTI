@@ -78,7 +78,7 @@ class NrisDataSource {
       // Hardcoded to start in 2017
       let startDate = moment('2017-01-01'); // start nth batch
       let endDate = moment(startDate).add(1, 'M'); // end nth batch
-      let stopDate = moment('2019-03-31'); // end all updating
+      let stopDate = moment('2019-12-31'); // end all updating
 
       let statusObject = {
         status: 'Complete',
