@@ -64,7 +64,7 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       tableObject.pageSize,
       tableObject.sortBy || '-dateAdded', // This needs to be common between all datasets to work properly
       {},
-      true,
+      false,
       filterParams
     );
   }
