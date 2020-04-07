@@ -26,7 +26,11 @@ exports.up = function(db) {
         {
           summary: 'text',
           location: 'text',
-          issuedTo: 'text',
+          'issuedTo.companyName': 'text',
+          'issuedTo.firstName': 'text',
+          'issuedTo.middleName': 'text',
+          'issuedTo.lastName': 'text',
+          'issuedTo.fullName': 'text',
           recordName: 'text'
         },
         {
