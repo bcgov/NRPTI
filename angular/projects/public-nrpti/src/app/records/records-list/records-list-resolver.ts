@@ -51,7 +51,9 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
       filterParams['dateRangeToFilterdateIssued'] = filterParams.dateRangeToFilter;
     }
 
-    if (filterParams.issuedToCompany) {
+    if (filterParams.issuedToCompany && filterParams.issuedToIndividual) {
+      filterParams['issuedTo.type'] = 'Company,Individual,IndividualCombined';
+    } else if (filterParams.issuedToCompany) {
       filterParams['issuedTo.type'] = 'Company';
     } else if (filterParams.issuedToIndividual) {
       filterParams['issuedTo.type'] = 'Individual,IndividualCombined';
