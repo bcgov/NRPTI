@@ -35,12 +35,12 @@ class Inspections extends BaseRecordUtils {
     let legislation = {};
     switch (epicRecord.legislation) {
       case 2002:
-        legislation['act'] = 'Environmental Assesment Act';
+        legislation['act'] = 'Environmental Assessment Act';
         legislation['section'] = '33';
         legislation['subSection'] = '1';
         break;
       case 2018:
-        legislation['act'] = 'Environmental Assesment Act';
+        legislation['act'] = 'Environmental Assessment Act';
         legislation['section'] = '49';
         legislation['subSection'] = '3';
         break;
@@ -58,8 +58,8 @@ class Inspections extends BaseRecordUtils {
       issuedTo: {
         // Epic doesn't support `Individual` proponents
         type: 'Company',
-        companyName: epicRecord.project.company || '',
-        fullName: epicRecord.project.company || ''
+        companyName: epicRecord.project.proponent.company || '',
+        fullName: epicRecord.project.proponent.company || ''
       }
     };
   }

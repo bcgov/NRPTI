@@ -23,7 +23,8 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
   public displayDetailsComponent = false;
   public componentRef: ComponentRef<any>;
 
-  public entityString = 'Unpublished'; // if the issuedTo object is completely missing (redacted) show 'Unpublished'
+  public entityString = '';
+  public description = '';
 
   constructor(public factoryService: FactoryService) {
     super();
@@ -39,16 +40,29 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
       }
     });
 
+    if (
+      this.rowData._schemaName === 'AdministrativePenaltyNRCED' ||
+      this.rowData._schemaName === 'CourtConvictionNRCED' ||
+      this.rowData._schemaName === 'RestorativeJusticeNRCED' ||
+      this.rowData._schemaName === 'TicketNRCED'
+    ) {
+      this.description = this.rowData.offence || '-';
+    } else {
+      this.description = this.rowData.legislationDescription || '-';
+    }
+
     this.populateTextFields();
   }
 
   populateTextFields() {
     if (this.rowData && this.rowData.issuedTo) {
       this.entityString = new Entity(this.rowData.issuedTo).getEntityNameString();
+    } else {
+      this.entityString = 'Unpublished'; // if the issuedTo object is completely missing (redacted) show 'Unpublished'
     }
   }
 
-  downloadDocument() {}
+  downloadDocument() { }
 
   rowClicked() {
     this.messageOut.emit({ label: 'rowClicked', data: this.rowData });

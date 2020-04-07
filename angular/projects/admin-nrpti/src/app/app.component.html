@@ -1,4 +1,4 @@
-<div class="spinner-container" *ngIf="loading">
+<div class="spinner-container" *ngIf="mainLoading">
   <div class="spinner-new rotating"></div>
 </div>
 
@@ -10,8 +10,13 @@
     <app-toggle-button class="app-toggle"></app-toggle-button>
   </div>
   <div class="body-content" id="scrollTop">
-    <lib-breadcrumb (navigateBreadcrumb)="navigateBreadcrumb($event)"></lib-breadcrumb>
+    <span class="breadcrumb-section">
+      <lib-breadcrumb (navigateBreadcrumb)="navigateBreadcrumb($event)"></lib-breadcrumb>
+    </span>
     <div class="content-component" cdkScrollable>
+      <div class="spinner-container body-spinner" *ngIf="bodyLoading">
+        <div class="spinner-new rotating"></div>
+      </div>
       <router-outlet></router-outlet>
     </div>
   </div>

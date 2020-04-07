@@ -1,8 +1,4 @@
 <main class="container-fluid-padding">
-  <div class="spinner-container" *ngIf="loading">
-    <div class="spinner-new rotating"></div>
-  </div>
-
   <div *ngIf="!loading">
     <div class="row">
       <div class="col-xl-3 col-lg-4 order-lg-1 order-2 mb-3">
@@ -12,8 +8,7 @@
             <i
               class="keyword-help material-icons grey-subtext_no-italics d-inline-block align-text-bottom ml-2"
               matTooltip="summary, description, location, and issued to name fields"
-              aria-label="Icon that displays a tooltip when focused or hovered over"
-            >
+              aria-label="Icon that displays a tooltip when focused or hovered over">
               help_outline
             </i>
           </div>
@@ -22,8 +17,7 @@
               class="keyword-search__input py-0 px-2 border-0"
               (keyup.enter)="keywordSearch()"
               placeholder="Type keyword search words..."
-              [(ngModel)]="keywordSearchWords"
-            />
+              [(ngModel)]="keywordSearchWords" />
             <button (click)="keywordSearch()" class="keyword-search__button border-0">
               <i class="material-icons align-middle">search</i>
             </button>
@@ -31,8 +25,7 @@
           <button
             [hidden]="showAdvancedFilters"
             class="open-advanced-filters btn btn-primary float-right"
-            (click)="openAdvancedFilters()"
-          >
+            (click)="openAdvancedFilters()">
             Open Advanced Filters
           </button>
         </div>
@@ -57,8 +50,7 @@
         <div class="px-3 search-filter__content" [hidden]="!showAdvancedFilters">
           <app-search-filters
             [formGroup]="searchFiltersForm"
-            (closeButton)="closeAdvancedFilters()"
-          ></app-search-filters>
+            (closeButton)="closeAdvancedFilters()"></app-search-filters>
         </div>
       </div>
 
@@ -113,8 +105,7 @@
           *ngIf="!loading && tableData.totalListItems > 0"
           [data]="tableData"
           [messageIn]="messageIn"
-          (messageOut)="onMessageOut($event)"
-        ></lib-table-template>
+          (messageOut)="onMessageOut($event)"></lib-table-template>
       </div>
     </div>
   </div>

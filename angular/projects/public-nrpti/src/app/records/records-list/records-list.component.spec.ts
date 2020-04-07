@@ -8,7 +8,12 @@ import { TestBedHelper, ActivatedRouteStub } from '../../../../../common/src/app
 import { SharedModule } from '../../shared.module';
 import { CommonModule } from '../../../../../common/src/app/common.module';
 import { SearchFiltersComponent } from './search-filters/search-filters.component';
-import { GlobalModule, TableTemplateUtils, Utils } from 'nrpti-angular-components';
+import {
+  GlobalModule,
+  TableTemplateUtils,
+  Utils,
+  LoadingScreenService
+} from 'nrpti-angular-components';
 
 describe('RecordsListComponent', () => {
   const testBedHelper = new TestBedHelper<RecordsListComponent>(RecordsListComponent);
@@ -17,6 +22,10 @@ describe('RecordsListComponent', () => {
   const mockLocation = jasmine.createSpyObj('Location', ['go']);
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
+
+  const mockLoadingScreenService = {
+    setLoadingState: () => { }
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -31,6 +40,7 @@ describe('RecordsListComponent', () => {
       ],
       declarations: [RecordsListComponent, SearchFiltersComponent],
       providers: [
+        { provide: LoadingScreenService, useValue: mockLoadingScreenService },
         { provide: Location, useValue: mockLocation },
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
