@@ -7,7 +7,7 @@
             {{ tableData.columns[0].name }}
           </div>
           <div class="card-col-data">
-            {{ rowData.recordName || '-' }}
+            {{ entityString || '-' }}
           </div>
         </div>
         <div class="card-col">
@@ -15,20 +15,12 @@
             {{ tableData.columns[1].name }}
           </div>
           <div class="card-col-data">
-            {{ entityString || '-' }}
-          </div>
-        </div>
-        <div class="card-col">
-          <div class="card-col-label">
-            {{ tableData.columns[2].name }}
-          </div>
-          <div class="card-col-data">
             {{ rowData.recordType || '-' }}
           </div>
         </div>
         <div class="card-col">
           <div class="card-col-label">
-            {{ tableData.columns[3].name }}
+            {{ tableData.columns[2].name }}
           </div>
           <div class="card-col-data">
             {{ rowData.location || '-' }}
@@ -37,6 +29,14 @@
         <div class="card-col">
           <div class="card-col-label">
             {{ tableData.columns[4].name }}
+          </div>
+          <div class="card-col-truncate">
+            {{ rowData.summary || '-' }}
+          </div>
+        </div>
+        <div class="card-col">
+          <div class="card-col-label">
+            {{ tableData.columns[3].name }}
           </div>
           <div class="card-col-data">
             {{ (rowData.dateIssued | date: 'mediumDate') || '-' }}

@@ -57,11 +57,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
   public tableColumns: IColumnObject[] = [
     {
-      name: 'Activity',
-      value: 'activity',
-      width: 'col-2'
-    },
-    {
       name: 'Issued To',
       value: 'issuedTo',
       width: 'col-3'
@@ -79,6 +74,11 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     {
       name: 'Issued On',
       value: 'dateIssued'
+    },
+    {
+      name: 'Description',
+      value: 'description',
+      width: 'col-2'
     },
     {
       width: 'col-1'
