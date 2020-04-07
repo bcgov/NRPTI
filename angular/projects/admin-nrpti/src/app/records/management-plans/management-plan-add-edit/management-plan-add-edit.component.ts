@@ -139,7 +139,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
   }
 
   async submit() {
-    this.loadingScreenService.setLoadingState(true);
+    this.loadingScreenService.setLoadingState(true, 'main');
     // TODO
     // _epicProjectId
     // _sourceRefId
@@ -197,7 +197,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
         );
 
         console.log(docResponse);
-        this.loadingScreenService.setLoadingState(false);
+        this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records']);
       });
     } else {
@@ -223,7 +223,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
         );
 
         console.log(docResponse);
-        this.loadingScreenService.setLoadingState(false);
+        this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records', 'management-plans', this.currentRecord._id, 'detail']);
       });
     }

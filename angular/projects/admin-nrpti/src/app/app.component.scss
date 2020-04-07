@@ -61,6 +61,8 @@ lib-breadcrumb {
 
     transition: 0.3s;
   }
+  
+  z-index: 3;
 }
 
 .body-content {
@@ -79,4 +81,8 @@ lib-breadcrumb {
 
     overflow: auto;
   }
+}
+
+.body-spinner {
+  z-index: 2
 }
