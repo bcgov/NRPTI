@@ -11,6 +11,12 @@ a {
   text-decoration: underline;
 }
 
+.headerText {
+  font-weight: bold;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 18pt;
+}
+
 .watermark {
   display: inline-block;
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(/assets/images/homepage.jpeg);
