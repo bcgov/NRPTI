@@ -12,6 +12,7 @@ import {
   ITableMessage
 } from 'nrpti-angular-components';
 import { RecordsTableRowComponent } from '../records-row/records-table-row.component';
+import { LoadingScreenService } from 'nrpti-angular-components';
 
 /**
  * List page component.
@@ -88,10 +89,11 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   constructor(
     public router: Router,
     public route: ActivatedRoute,
+    private loadingScreenService: LoadingScreenService,
     public utils: Utils,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   /**
    * Component init.
@@ -99,6 +101,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * @memberof RecordsListComponent
    */
   ngOnInit(): void {
+    this.loadingScreenService.setLoadingState(true, 'body');
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params: Params) => {
       this.queryParams = { ...params };
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
@@ -138,6 +141,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       this.buildSearchFiltersForm();
       this.subscribeToSearchFilterChanges();
 
+      this.loadingScreenService.setLoadingState(false, 'body');
       this.loading = false;
       this._changeDetectionRef.detectChanges();
     });
@@ -149,13 +153,13 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         (this.queryParams &&
           this.queryParams.dateRangeFromFilter &&
           this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeFromFilter))) ||
-          null
+        null
       ),
       dateIssuedEnd: new FormControl(
         (this.queryParams &&
           this.queryParams.dateRangeToFilter &&
           this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeToFilter))) ||
-          null
+        null
       ),
       issuedToCompany: new FormControl((this.queryParams && this.queryParams.issuedToCompany) || null),
       issuedToIndividual: new FormControl((this.queryParams && this.queryParams.issuedToIndividual) || null),
@@ -215,7 +219,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * @param {ITableMessage} msg
    * @memberof RecordsListComponent
    */
-  rowSelected(msg: ITableMessage) {}
+  rowSelected(msg: ITableMessage) { }
 
   /**
    * Column sorting handler.
@@ -332,6 +336,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * @memberof RecordsListComponent
    */
   submit() {
+    this.loadingScreenService.setLoadingState(true, 'body');
     this.tableTemplateUtils.navigateUsingParams(this.tableData, ['records'], this.queryParams);
   }
 

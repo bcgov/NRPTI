@@ -11,6 +11,7 @@ import {
   ITableMessage
 } from 'nrpti-angular-components';
 import { RecordsTableRowComponent } from '../records-rows/records-table-row.component';
+import { LoadingScreenService } from 'nrpti-angular-components';
 
 /**
  * List page component.
@@ -143,9 +144,10 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     public location: Location,
     public router: Router,
     public route: ActivatedRoute,
+    private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   /**
    * Component init.
@@ -153,12 +155,13 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * @memberof SearchComponent
    */
   ngOnInit(): void {
+    this.loadingScreenService.setLoadingState(true, 'body');
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
       this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, this.tableData);
 
       // Make api call with tableData params.
-
+      this.loadingScreenService.setLoadingState(false, 'body');
       this._changeDetectionRef.detectChanges();
     });
 
@@ -281,10 +284,11 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * @memberof SearchComponent
    */
   submit() {
+    this.loadingScreenService.setLoadingState(true, 'body');
     this.tableTemplateUtils.navigateUsingParams(this.tableData, ['records']);
   }
 
-  checkChange() {}
+  checkChange() { }
 
   add(item) {
     switch (item) {

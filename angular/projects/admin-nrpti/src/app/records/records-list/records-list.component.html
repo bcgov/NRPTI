@@ -3,8 +3,7 @@
     <app-explore-panel
       #explorePanel
       [filterSections]="filters"
-      (updateFilters)="filterChange($event)"
-    ></app-explore-panel>
+      (updateFilters)="filterChange($event)"></app-explore-panel>
   </div>
   <div class="row mb-3">
     <div class="col-6"></div>
@@ -40,6 +39,5 @@
   <lib-table-template
     *ngIf="!loading && tableData.totalListItems != 0"
     [data]="tableData"
-    (messageOut)="onMessageOut($event)"
-  ></lib-table-template>
+    (messageOut)="onMessageOut($event)"></lib-table-template>
 </main>
