@@ -228,7 +228,12 @@ let searchCollection = async function(
 
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const collection = db.collection('nrpti');
-  return collection.aggregate(aggregation).toArray();
+
+  const collation = {
+    locale: 'en',
+    strength: 2
+  };
+  return collection.aggregate(aggregation).collation(collation).toArray();
 };
 
 exports.publicGet = async function(args, res, next) {
@@ -396,7 +401,13 @@ const executeQuery = async function(args, res, next) {
         }
       });
 
-    let data = await collectionObj.aggregate(aggregation);
+
+    const collation = {
+      locale: 'en',
+      strength: 2
+    };
+
+    const data = await collectionObj.aggregate(aggregation).collation(collation);
 
     return QueryActions.sendResponse(res, 200, data);
   } else {

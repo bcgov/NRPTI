@@ -16,13 +16,13 @@ const CSV_FILENAME = 'ocers-data.csv';
  * We receive the dbmigrate dependency from dbmigrate initially.
  * This enables us to not have to rely on NODE_PATH.
  */
-exports.setup = function(options, seedLink) {
+exports.setup = function (options, seedLink) {
   dbm = options.dbmigrate;
   type = dbm.dataType;
   seed = seedLink;
 };
 
-exports.up = async function(db) {
+exports.up = async function (db) {
   console.log('---------------------------------------------------------------');
   console.log(`Inserting records from csv file: '${CSV_FILENAME}'`);
 
@@ -109,7 +109,7 @@ exports.up = async function(db) {
     });
 };
 
-const createAdministrativePenalty = async function(row, nrptiCollection) {
+const createAdministrativePenalty = async function (row, nrptiCollection) {
   let flavourRecordNRCED = {
     _schemaName: RECORD_TYPE.AdministrativePenalty.flavours.nrced._schemaName,
 
@@ -120,7 +120,7 @@ const createAdministrativePenalty = async function(row, nrptiCollection) {
     offence: row[12],
     recordType: RECORD_TYPE.AdministrativePenalty.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    dateIssued: calculateDateFormat(row),
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -168,7 +168,7 @@ const createAdministrativePenalty = async function(row, nrptiCollection) {
     offence: row[12],
     recordType: RECORD_TYPE.AdministrativePenalty.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    dateIssued: calculateDateFormat(row),
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -201,7 +201,7 @@ const createAdministrativePenalty = async function(row, nrptiCollection) {
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
 };
 
-const createAdministrativeSanction = async function(row, nrptiCollection) {
+const createAdministrativeSanction = async function (row, nrptiCollection) {
   let flavourRecordNRCED = {
     _schemaName: RECORD_TYPE.AdministrativeSanction.flavours.nrced._schemaName,
 
@@ -212,7 +212,7 @@ const createAdministrativeSanction = async function(row, nrptiCollection) {
     legislationDescription: row[12],
     recordType: RECORD_TYPE.AdministrativeSanction.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    dateIssued: calculateDateFormat(row),
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -260,7 +260,7 @@ const createAdministrativeSanction = async function(row, nrptiCollection) {
     legislationDescription: row[12],
     recordType: RECORD_TYPE.AdministrativeSanction.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    dateIssued: calculateDateFormat(row),
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -293,7 +293,7 @@ const createAdministrativeSanction = async function(row, nrptiCollection) {
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
 };
 
-const createCourtConviction = async function(row, nrptiCollection) {
+const createCourtConviction = async function (row, nrptiCollection) {
   let flavourRecordNRCED = {
     _schemaName: RECORD_TYPE.CourtConviction.flavours.nrced._schemaName,
 
@@ -305,7 +305,7 @@ const createCourtConviction = async function(row, nrptiCollection) {
     // recordSubtype: '',
     recordType: RECORD_TYPE.CourtConviction.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    dateIssued: calculateDateFormat(row),
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -353,7 +353,7 @@ const createCourtConviction = async function(row, nrptiCollection) {
     offence: row[12],
     recordType: RECORD_TYPE.CourtConviction.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    dateIssued: calculateDateFormat(row),
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -386,7 +386,7 @@ const createCourtConviction = async function(row, nrptiCollection) {
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
 };
 
-const createInspection = async function(row, nrptiCollection) {
+const createInspection = async function (row, nrptiCollection) {
   let flavourRecordNRCED = {
     _schemaName: RECORD_TYPE.Inspection.flavours.nrced._schemaName,
 
@@ -397,7 +397,7 @@ const createInspection = async function(row, nrptiCollection) {
     legislationDescription: row[12],
     recordType: RECORD_TYPE.Inspection.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    dateIssued: calculateDateFormat(row),
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -445,7 +445,7 @@ const createInspection = async function(row, nrptiCollection) {
     legislationDescription: row[12],
     recordType: RECORD_TYPE.Inspection.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    dateIssued: calculateDateFormat(row),
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -478,7 +478,7 @@ const createInspection = async function(row, nrptiCollection) {
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
 };
 
-const createOrder = async function(row, nrptiCollection) {
+const createOrder = async function (row, nrptiCollection) {
   let flavourRecordNRCED = {
     _schemaName: RECORD_TYPE.Order.flavours.nrced._schemaName,
 
@@ -489,7 +489,7 @@ const createOrder = async function(row, nrptiCollection) {
     legislationDescription: row[12],
     recordType: RECORD_TYPE.Order.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    dateIssued: calculateDateFormat(row),
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -537,7 +537,7 @@ const createOrder = async function(row, nrptiCollection) {
     legislationDescription: row[12],
     recordType: RECORD_TYPE.Order.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    dateIssued: calculateDateFormat(row),
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -570,7 +570,7 @@ const createOrder = async function(row, nrptiCollection) {
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
 };
 
-const createRestorativeJustice = async function(row, nrptiCollection) {
+const createRestorativeJustice = async function (row, nrptiCollection) {
   let flavourRecordNRCED = {
     _schemaName: RECORD_TYPE.RestorativeJustice.flavours.nrced._schemaName,
 
@@ -581,7 +581,7 @@ const createRestorativeJustice = async function(row, nrptiCollection) {
     offence: row[12],
     recordType: RECORD_TYPE.RestorativeJustice.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    dateIssued: calculateDateFormat(row),
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -629,7 +629,7 @@ const createRestorativeJustice = async function(row, nrptiCollection) {
     offence: row[12],
     recordType: RECORD_TYPE.RestorativeJustice.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    dateIssued: calculateDateFormat(row),
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -662,7 +662,7 @@ const createRestorativeJustice = async function(row, nrptiCollection) {
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
 };
 
-const createTicket = async function(row, nrptiCollection) {
+const createTicket = async function (row, nrptiCollection) {
   let flavourRecordNRCED = {
     _schemaName: RECORD_TYPE.Ticket.flavours.nrced._schemaName,
 
@@ -673,7 +673,7 @@ const createTicket = async function(row, nrptiCollection) {
     offence: row[12],
     recordType: RECORD_TYPE.Ticket.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    dateIssued: calculateDateFormat(row),
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -721,7 +721,7 @@ const createTicket = async function(row, nrptiCollection) {
     offence: row[12],
     recordType: RECORD_TYPE.Ticket.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    dateIssued: calculateDateFormat(row),
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -754,7 +754,7 @@ const createTicket = async function(row, nrptiCollection) {
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
 };
 
-const createWarning = async function(row, nrptiCollection) {
+const createWarning = async function (row, nrptiCollection) {
   let flavourRecordNRCED = {
     _schemaName: RECORD_TYPE.Warning.flavours.nrced._schemaName,
 
@@ -766,7 +766,7 @@ const createWarning = async function(row, nrptiCollection) {
     recordType: RECORD_TYPE.Warning.displayName,
     // recordSubtype: '',
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    dateIssued: calculateDateFormat(row),
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -814,7 +814,7 @@ const createWarning = async function(row, nrptiCollection) {
     recordType: RECORD_TYPE.Warning.displayName,
     // recordSubtype: '',
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: (row[1] && moment(row[1], 'DD/MM/YYYY').toDate()) || null,
+    dateIssued: calculateDateFormat(row),
     // issuingAgency: '',
     // author: '',
     legislation: {
@@ -846,7 +846,7 @@ const createWarning = async function(row, nrptiCollection) {
   const responseMaster = await nrptiCollection.insertOne(masterRecord);
 };
 
-const getIssuedToObject = function(row, addPublicRole) {
+const getIssuedToObject = function (row, addPublicRole) {
   let issuedToObject = {
     read: ['sysadmin'],
     write: ['sysadmin']
@@ -891,7 +891,7 @@ const getIssuedToObject = function(row, addPublicRole) {
   return issuedToObject;
 };
 
-const setIssuedToFullNameValue = function(issuedToObj) {
+const setIssuedToFullNameValue = function (issuedToObj) {
   if (!issuedToObj || !issuedToObj.type) {
     return '';
   }
@@ -930,7 +930,7 @@ const setIssuedToFullNameValue = function(issuedToObj) {
   }
 };
 
-const getPenaltyObject = function(row) {
+const getPenaltyObject = function (row) {
   const penaltyObject = {
     type: '',
     penalty: {
@@ -958,7 +958,19 @@ const getPenaltyObject = function(row) {
   return [penaltyObject];
 };
 
-exports.down = function(db) {
+const calculateDateFormat = function (row) {
+  let dateIssued = null;
+  if (row[1]) {
+    if (moment(row[1], 'MM/DD/YYYY', true).isValid()) {
+      dateIssued = moment(row[1], 'DD/MM/YYYY').toDate();
+    } else if (moment(row[1], 'D/M/YY', true).isValid()) {
+      dateIssued = moment(row[1], 'D/M/YY').toDate();
+    }
+  }
+  return dateIssued;
+}
+
+exports.down = function (db) {
   return null;
 };
 

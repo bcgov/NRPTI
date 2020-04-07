@@ -205,6 +205,7 @@ let createActivityRecord = async function (item, project, nrptiCollection) {
     write: ['sysadmin'],
     type: item.type,
     title: item.title,
+    url: item.url,
     description: item.description,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
     // Prefer to store dates in the DB as ISO, not some random format.

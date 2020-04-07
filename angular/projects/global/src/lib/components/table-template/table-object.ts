@@ -19,7 +19,6 @@ export const DEFAULT_TABLE_CURRENT_PAGE = 1;
 export const DEFAULT_TABLE_SORT_BY = '';
 export const DEFAULT_TABLE_KEYWORDS = '';
 export const DEFAULT_TABLE_DATASET = '';
-export const DEFAULT_TABLE_FILTER = {};
 
 /**
  * Miscellaneous table options.
@@ -170,14 +169,6 @@ export interface ITableObjectParams {
    * @memberof ITableObjectParams
    */
   currentPage?: number;
-  // TODO populate filter doc
-  /**
-   *
-   *
-   * @type {*}
-   * @memberof ITableObjectParams
-   */
-  filter?: any;
   // TODO populate keywords doc
   /**
    *
@@ -228,7 +219,6 @@ export class TableObject {
   public items: IRowObject[];
   public dataset: string;
   public currentPage: number;
-  public filter: any;
   public keywords: string;
   public pageSizeOptions: IPageSizePickerOption[];
   public pageSize: number;
@@ -241,7 +231,6 @@ export class TableObject {
     this.items = (params && params.items) || [];
     this.dataset = (params && params.dataset) || DEFAULT_TABLE_DATASET;
     this.currentPage = (params && params.currentPage) || DEFAULT_TABLE_CURRENT_PAGE;
-    this.filter = (params && params.filter) || DEFAULT_TABLE_FILTER;
     this.keywords = (params && params.keywords) || DEFAULT_TABLE_KEYWORDS;
     this.pageSizeOptions = (params && params.pageSizeOptions) || DEFAULT_TABLE_PAGE_SIZE_OPTIONS;
     this.pageSize = (params && params.pageSize) || DEFAULT_TABLE_PAGE_SIZE;

@@ -9,7 +9,7 @@
   <i class="material-icons">
     attach_file
   </i>
-  {{ rowData.documents.length || '0' }}
+  {{ (rowData.documents && rowData.documents.length) || '0' }}
 </td>
 <td scope="row" class="col-1">
   <button (click)="edit(); $event.stopPropagation()" class="btn btn-primary" type="button">
