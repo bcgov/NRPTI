@@ -77,7 +77,6 @@ describe('DataSource', () => {
       const dataSource = new DataSource();
 
       // mock DataSource functions called by updateRecordType()
-      dataSource.getBaseParams = jest.fn();
       dataSource.getIntegrationUrl = jest.fn(() => {
         return { href: '' };
       });
@@ -113,9 +112,6 @@ describe('DataSource', () => {
       const dataSource = new DataSource({ updateTaskRecord: jest.fn() }, null, { param1: 1 });
 
       // mock DataSource functions called by updateRecordType()
-      dataSource.getBaseParams = jest.fn(() => {
-        return { baseParams: 1 };
-      });
       dataSource.getIntegrationUrl = jest.fn(() => {
         return { href: 'url' };
       });
@@ -129,14 +125,15 @@ describe('DataSource', () => {
 
       const status = await dataSource.updateRecordType(recordType);
 
-      expect(dataSource.getBaseParams).toHaveBeenCalledWith(recordType, Number.MAX_SAFE_INTEGER, 0);
-
       expect(dataSource.getIntegrationUrl).toHaveBeenCalledWith(
         'eagle-prod.pathfinder.gov.bc.ca',
         '/api/public/search',
         {
-          param1: 1,
-          baseParams: 1
+          and: { milestone: '222', param1: 1, type: '111' },
+          dataset: 'Document',
+          pageNum: 0,
+          pageSize: Number.MAX_SAFE_INTEGER,
+          populate: false
         }
       );
 
@@ -230,24 +227,6 @@ describe('DataSource', () => {
       });
 
       expect(dataSource.status.itemsProcessed).toEqual(1);
-    });
-  });
-
-  describe('getBaseParams', () => {
-    it('returns base params', () => {
-      const dataSource = new DataSource();
-      const baseParams = dataSource.getBaseParams(
-        { type: { typeId: '123' }, milestone: { milestoneId: '456' } },
-        22,
-        7
-      );
-      expect(baseParams).toEqual({
-        dataset: 'Document',
-        populate: false,
-        pageSize: 22,
-        pageNum: 7,
-        and: { type: '123', milestone: '456' }
-      });
     });
   });
 

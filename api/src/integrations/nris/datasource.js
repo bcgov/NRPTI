@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const axios = require('axios');
 const documentController = require('../../controllers/document-controller');
+const RecordController = require('./../../controllers/record-controller');
 const fs = require('fs');
 
 const AWS = require('aws-sdk');
@@ -75,8 +76,9 @@ class NrisDataSource {
       defaultLog.info('NRIS API token expires:', (payload.expires_in / 60 / 60).toFixed(2), ' hours');
 
       // Hardcoded to start in 2017
-      let startDate = moment('2017-01-01');
-      let endDate = moment(startDate).add(1, 'M');
+      let startDate = moment('2017-01-01'); // start nth batch
+      let endDate = moment(startDate).add(1, 'M'); // end nth batch
+      let stopDate = moment('2019-03-31'); // end all updating
 
       let statusObject = {
         status: 'Complete',
@@ -86,9 +88,8 @@ class NrisDataSource {
       };
 
       // Keep going until we'd start past today's date.
-      while (startDate < moment()) {
+      while (startDate < stopDate) {
         defaultLog.info('dateRange:', startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
-        startDate = endDate;
         const { status, message, itemsProcessed, itemTotal } = await this.updateRecords(
           startDate.format('YYYY-MM-DD'),
           endDate.format('YYYY-MM-DD')
@@ -103,6 +104,7 @@ class NrisDataSource {
           itemTotal: statusObject.itemTotal,
           itemsProcessed: statusObject.itemsProcessed
         });
+        startDate = endDate;
         endDate = moment(startDate).add(1, 'M');
       }
 
@@ -142,7 +144,7 @@ class NrisDataSource {
       for (let i = 0; i < records.length; i++) {
         if (records[i].assessmentStatus === 'Complete') {
           const newRecord = await this.transformRecord(records[i]);
-          await this.saveRecord(newRecord);
+          await this.createRecord(newRecord);
           // Assuming we didn't get thrown an error, update the items successfully processed.
           processingObject.itemsProcessed++;
         } else {
@@ -182,6 +184,13 @@ class NrisDataSource {
       act: 'Environmental Management Act',
       section: '109'
     };
+
+    newRecord.dateAdded = new Date();
+    newRecord.dateUpdated = new Date();
+
+    newRecord.addedBy = (this.auth_payload && this.auth_payload.displayName) || '';
+    newRecord.updatedBy = (this.auth_payload && this.auth_payload.displayName) || '';
+
     newRecord.sourceSystemRef = 'nris';
 
     // Currently not doing anything different, future logic
@@ -294,23 +303,42 @@ class NrisDataSource {
     return { docResponse: docResponse, s3Response: s3Response };
   }
 
-  // Save record into the database.
-  async saveRecord(record) {
+  /**
+   * Create a new NRPTI master and flavour records.
+   *
+   * @async
+   * @param {object} record NRPTI record (required)
+   * @returns {object} object containing the newly inserted master and flavour records
+   * @memberof NrisDataSource
+   */
+  async createRecord(record) {
     if (!record) {
-      throw Error('saveRecord - required record must be non-null.');
+      throw Error('createRecord - required record must be non-null.');
     }
 
     try {
-      const Inspection = mongoose.model(RECORD_TYPE.Inspection._schemaName);
+      // build create Obj, which should include the flavour record details
+      const createObj = { ...record };
 
-      const newObject = await Inspection.findOneAndUpdate(
-        { _schemaName: RECORD_TYPE.Inspection._schemaName, _sourceRefNrisId: record._sourceRefNrisId },
-        { $set: record },
-        { upsert: true, new: true }
+      createObj[RECORD_TYPE.Inspection.flavours.lng._schemaName] = {
+        description: record.description || '',
+        addRole: 'public'
+      };
+
+      createObj[RECORD_TYPE.Inspection.flavours.nrced._schemaName] = {
+        summary: record.description || '',
+        addRole: 'public'
+      };
+
+      return await RecordController.processPostRequest(
+        { swagger: { params: { auth_payload: this.auth_payload } } },
+        null,
+        null,
+        RECORD_TYPE.Inspection.recordControllerName,
+        [createObj]
       );
-      return newObject;
     } catch (error) {
-      defaultLog.error(`Failed to save NRIS Inspection record: ${error.message}`);
+      defaultLog.error(`Failed to create Inspection record: ${error.message}`);
     }
   }
 }
