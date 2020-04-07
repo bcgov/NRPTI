@@ -2,6 +2,9 @@
 
 <div class="app-body" cdkScrollable>
   <div class="body-content" id="scrollTop">
+    <div class="spinner-container body-spinner" *ngIf="bodyLoading">
+      <div class="spinner-new rotating"></div>
+    </div>
     <div>
       <router-outlet></router-outlet>
     </div>
