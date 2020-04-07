@@ -9,37 +9,31 @@
 
   "dev": {
     "driver": "mongodb",
-    "database": { "ENV": "MONGODB_DATABASE" },
-    "user": { "ENV": "MONGODB_USERNAME" },
-    "password": { "ENV": "MONGODB_PASSWORD" },
+    "database": "nrpti",
+    "user": "admin",
+    "password": "HpFjvdx3k2QebbO6",
     "authSource": "admin",
-    "host": "MONGODB_SERVICE_HOST"
-  },
-
-  "master": {
-    "driver": "mongodb",
-    "database": { "ENV": "MONGODB_DATABASE" },
-    "user": { "ENV": "MONGODB_USERNAME" },
-    "password": { "ENV": "MONGODB_PASSWORD" },
-    "authSource": "admin",
-    "host": "MONGODB_MASTER_SERVICE_HOST"
+    "host": "localhost",
+    "port": "5555"
   },
 
   "test": {
     "driver": "mongodb",
-    "database": { "ENV": "MONGODB_DATABASE" },
-    "user": { "ENV": "MONGODB_USERNAME" },
-    "password": { "ENV": "MONGODB_PASSWORD" },
+    "database": "nrpti",
+    "user": "admin",
+    "password": "phxua4y3l7PTrUBu",
     "authSource": "admin",
-    "host": "MONGODB_SERVICE_HOST"
+    "host": "localhost",
+    "port": "5555"
   },
 
   "prod": {
     "driver": "mongodb",
-    "database": { "ENV": "MONGODB_DATABASE" },
-    "user": { "ENV": "MONGODB_USERNAME" },
-    "password": { "ENV": "MONGODB_PASSWORD" },
+    "database": "nrpti",
+    "user": "admin",
+    "password": "PiiQYr7yyYgMPiNi",
     "authSource": "admin",
-    "host": "MONGODB_SERVICE_HOST"
+    "host": "localhost",
+    "port": "5555"
   }
 }
