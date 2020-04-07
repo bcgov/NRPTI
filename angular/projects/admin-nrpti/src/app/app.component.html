@@ -10,7 +10,9 @@
     <app-toggle-button class="app-toggle"></app-toggle-button>
   </div>
   <div class="body-content" id="scrollTop">
-    <lib-breadcrumb style="z-index: 3;" (navigateBreadcrumb)="navigateBreadcrumb($event)"></lib-breadcrumb>
+    <span class="breadcrumb-section">
+      <lib-breadcrumb (navigateBreadcrumb)="navigateBreadcrumb($event)"></lib-breadcrumb>
+    </span>
     <div class="content-component" cdkScrollable>
       <div class="spinner-container body-spinner" *ngIf="bodyLoading">
         <div class="spinner-new rotating"></div>
