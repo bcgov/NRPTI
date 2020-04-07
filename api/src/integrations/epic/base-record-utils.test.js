@@ -112,7 +112,7 @@ describe('BaseRecordUtils', () => {
     it('throws error if no record provided', async () => {
       const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Order);
       await expect(baseRecordUtils.createRecord()).rejects.toThrow(
-        new Error('saveRecord - required nrptiRecord must be non-null.')
+        new Error('createRecord - required nrptiRecord must be non-null.')
       );
     });
 

@@ -189,7 +189,7 @@ class BaseRecordUtils {
   }
 
   /**
-   * Create a new NRPTI master record.
+   * Create a new NRPTI master and flavour records.
    *
    * @async
    * @param {object} nrptiRecord NRPTI record (required)
@@ -198,7 +198,7 @@ class BaseRecordUtils {
    */
   async createRecord(nrptiRecord) {
     if (!nrptiRecord) {
-      throw Error('saveRecord - required nrptiRecord must be non-null.');
+      throw Error('createRecord - required nrptiRecord must be non-null.');
     }
 
     try {
@@ -227,7 +227,7 @@ class BaseRecordUtils {
         [createObj]
       );
     } catch (error) {
-      defaultLog.error(`Failed to save ${this.recordType._schemaName} record: ${error.message}`);
+      defaultLog.error(`Failed to create ${this.recordType._schemaName} record: ${error.message}`);
     }
   }
 }
