@@ -15,7 +15,8 @@ export class AppComponent implements OnInit {
   public breadcrumbs: IBreadcrumb[];
   public activeBreadcrumb: IBreadcrumb;
 
-  public loading = false;
+  public mainLoading = false;
+  public bodyLoading = false;
 
   constructor(
     private router: Router,
@@ -38,8 +39,17 @@ export class AppComponent implements OnInit {
 
       this._changeDetectionRef.detectChanges();
     });
-    this.loadingScreenService.stateChange.subscribe((state: boolean) => {
-      this.loading = state;
+    this.loadingScreenService.stateChange.subscribe(loadingObj => {
+      switch (loadingObj.location) {
+        case 'main':
+          this.mainLoading = loadingObj.state;
+          break;
+        case 'body':
+          this.bodyLoading = loadingObj.state;
+          break;
+        default:
+          break;
+      }
       this._changeDetectionRef.detectChanges();
     });
   }
