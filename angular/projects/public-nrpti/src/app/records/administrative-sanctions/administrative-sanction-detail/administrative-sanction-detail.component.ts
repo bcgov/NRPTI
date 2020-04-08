@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { AdministrativeSanctionNRCED, Document } from '../../../../../../common/src/app/models';
 import { FactoryService } from '../../../services/factory.service';
+import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 
 @Component({
   selector: 'app-administrative-sanction-detail',
@@ -57,12 +58,17 @@ export class AdministrativeSanctionDetailComponent implements OnInit, OnDestroy 
   }
 
   getDocuments() {
-    if (!this.data || !this.data.documents || !this.data.documents.length) {
+    if (
+      !this.data ||
+      !this.data.documents ||
+      !this.data.documents.length ||
+      CommonUtils.isObject(this.data.documents[0])
+    ) {
       return;
     }
 
     this.factoryService
-      .getDocuments(this.data.documents.join(','))
+      .getDocuments(this.data.documents)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((res: any) => {
         if (!res || !res.length) {

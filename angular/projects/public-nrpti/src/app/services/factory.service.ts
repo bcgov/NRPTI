@@ -136,7 +136,7 @@ export class FactoryService {
     }
 
     return this.getRecords(null, ['Document'], null, null, null, null, null, null, {
-      _id: documentIds
+      _id: documentIds.join(',')
     });
   }
 
