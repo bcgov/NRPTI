@@ -212,7 +212,7 @@ const createAdministrativeSanction = async function (row, nrptiCollection) {
     legislationDescription: row[12],
     recordType: RECORD_TYPE.AdministrativeSanction.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: calculateDateFormat(row[1]),
+    dateIssued: calculateDateFormat(row),
     // issuingAgency: '',
     // author: '',
     legislation: {
