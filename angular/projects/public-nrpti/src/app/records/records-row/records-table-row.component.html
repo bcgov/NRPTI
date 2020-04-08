@@ -6,7 +6,7 @@
           <div class="card-col-label">
             {{ tableData.columns[0].name }}
           </div>
-          <div class="card-col-data">
+          <div>
             {{ entityString || '-' }}
           </div>
         </div>
@@ -14,7 +14,7 @@
           <div class="card-col-label">
             {{ tableData.columns[1].name }}
           </div>
-          <div class="card-col-data">
+          <div>
             {{ rowData.recordType || '-' }}
           </div>
         </div>
@@ -22,37 +22,26 @@
           <div class="card-col-label">
             {{ tableData.columns[2].name }}
           </div>
-          <div class="card-col-data">
+          <div>
             {{ rowData.location || '-' }}
-          </div>
-        </div>
-        <div class="card-col">
-          <div class="card-col-label">
-            {{ tableData.columns[4].name }}
-          </div>
-          <div class="card-col-truncate">
-            {{ description || '-' }}
           </div>
         </div>
         <div class="card-col">
           <div class="card-col-label">
             {{ tableData.columns[3].name }}
           </div>
-          <div class="card-col-data">
+          <div class="truncate">
+            {{ description || '-' }}
+          </div>
+        </div>
+        <div class="card-col">
+          <div class="card-col-label">
+            {{ tableData.columns[4].name }}
+          </div>
+          <div>
             {{ (rowData.dateIssued | date: 'mediumDate') || '-' }}
           </div>
         </div>
-        <!-- TODO enable this when documents are available -->
-        <!-- <div class="card-col">
-          <button
-            (click)="downloadDocument(); $event.stopPropagation()"
-            class="btn btn-primary download-btn"
-            type="button"
-          >
-            <i class="material-icons">cloud_download</i>
-            <div>Download Document</div>
-          </button>
-        </div> -->
       </div>
     </div>
   </div>

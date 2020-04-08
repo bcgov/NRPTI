@@ -2,7 +2,8 @@ import { Component, OnInit, ChangeDetectorRef, Input, OnDestroy } from '@angular
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
-import { RestorativeJusticeNRCED } from '../../../../../../common/src/app/models';
+import { RestorativeJusticeNRCED, Document } from '../../../../../../common/src/app/models';
+import { FactoryService } from '../../../services/factory.service';
 
 @Component({
   selector: 'app-restorative-justice-detail',
@@ -17,11 +18,19 @@ export class RestorativeJusticeDetailComponent implements OnInit, OnDestroy {
   public loading = true;
   public activeTab = 'detail';
 
-  constructor(public route: ActivatedRoute, public router: Router, public _changeDetectionRef: ChangeDetectorRef) {}
+  constructor(
+    public route: ActivatedRoute,
+    public router: Router,
+    public factoryService: FactoryService,
+    public _changeDetectionRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     if (this.data) {
       this.data = new RestorativeJusticeNRCED(this.data);
+
+      // populate documents
+      this.getDocuments();
 
       this.loading = false;
       this._changeDetectionRef.detectChanges();
@@ -38,9 +47,33 @@ export class RestorativeJusticeDetailComponent implements OnInit, OnDestroy {
       // If data was passed in directly, take it over anything in the route resolver.
       this.data = (res.records[0] && res.records[0].data && new RestorativeJusticeNRCED(res.records[0].data)) || null;
 
+      // populate documents
+      this.getDocuments();
+
       this.loading = false;
       this._changeDetectionRef.detectChanges();
     });
+  }
+
+  getDocuments() {
+    if (!this.data || !this.data.documents || !this.data.documents.length) {
+      return;
+    }
+
+    this.factoryService
+      .getDocuments(this.data.documents.join(','))
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((res: any) => {
+        if (!res || !res.length) {
+          return;
+        }
+
+        const documents = (res[0] && res[0].data && res[0].data.searchResults) || [];
+
+        this.data.documents = documents.map(document => {
+          return new Document(document);
+        });
+      });
   }
 
   activateTab(tabLabel: string): void {

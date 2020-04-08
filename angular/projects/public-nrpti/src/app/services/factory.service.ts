@@ -123,6 +123,23 @@ export class FactoryService {
     );
   }
 
+  /**
+   * Get documents for the given Document _ids
+   *
+   * @param {string[]} documentIds array of document _ids
+   * @returns {Observable<any[]>}
+   * @memberof FactoryService
+   */
+  public getDocuments(documentIds: string[]): Observable<any[]> {
+    if (!documentIds || !documentIds.length) {
+      return of([]);
+    }
+
+    return this.getRecords(null, ['Document'], null, null, null, null, null, null, {
+      _id: documentIds
+    });
+  }
+
   // public getFullList(schema: string): Observable<Record[]> {
   //   return this.searchService.getFullList(schema);
   // }
