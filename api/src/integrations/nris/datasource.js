@@ -142,7 +142,11 @@ class NrisDataSource {
       processingObject.itemTotal = records.length;
 
       for (let i = 0; i < records.length; i++) {
-        if (records[i].assessmentStatus === 'Complete') {
+
+        // Make sure these are completed, and >= 7 days before we bring in the record.
+        if (records[i].assessmentStatus === 'Complete'
+            && (moment().diff(moment(records[i].assessmentDate), 'days') >= 7)
+        ) {
           const newRecord = await this.transformRecord(records[i]);
           await this.createRecord(newRecord);
           // Assuming we didn't get thrown an error, update the items successfully processed.
