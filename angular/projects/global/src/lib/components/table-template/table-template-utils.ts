@@ -13,14 +13,34 @@ export class TableTemplateUtils {
   constructor(private router: Router) { }
 
   public updateTableObjectWithUrlParams(routeParams: Params, tableObject: TableObject) {
-    tableObject.pageSize = +routeParams.pageSize || DEFAULT_TABLE_PAGE_SIZE;
+    Object.keys(routeParams).forEach(item => {
+      if (
+        !routeParams ||
+        routeParams[item] === undefined ||
+        routeParams[item] === null ||
+        routeParams[item].length === 0
+      ) {
+        // console.log('skipping:', item);
+      } else {
+        switch (item) {
+          case 'currentPage':
+            tableObject[item] = +routeParams[item];
+            break;
+          case 'pageSize':
+            tableObject[item] = +routeParams[item];
+            break;
+          default:
+            tableObject[item] = routeParams[item];
+            break;
+        }
+      }
+    });
+
+    !tableObject.pageSize && DEFAULT_TABLE_PAGE_SIZE;
     // tslint:disable-next-line: max-line-length
-    tableObject.currentPage = +routeParams.currentPage || DEFAULT_TABLE_CURRENT_PAGE;
-    tableObject.sortBy = routeParams.sortBy || DEFAULT_TABLE_SORT_BY;
-    tableObject.keywords = routeParams.keywords || DEFAULT_TABLE_KEYWORDS;
-
-    // TODO: Get fields from URL.
-
+    !tableObject.currentPage && DEFAULT_TABLE_CURRENT_PAGE;
+    !tableObject.sortBy && DEFAULT_TABLE_SORT_BY;
+    !tableObject.keywords && DEFAULT_TABLE_KEYWORDS;
     return tableObject;
   }
 
