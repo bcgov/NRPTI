@@ -19,7 +19,6 @@ export const DEFAULT_TABLE_CURRENT_PAGE = 1;
 export const DEFAULT_TABLE_SORT_BY = '';
 export const DEFAULT_TABLE_KEYWORDS = '';
 export const DEFAULT_TABLE_DATASET = '';
-export const DEFAULT_TABLE_FILTER = {};
 
 /**
  * Miscellaneous table options.
