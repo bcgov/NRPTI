@@ -19,6 +19,8 @@ export class AdministrativePenaltyDetailComponent implements OnInit, OnDestroy {
   public loading = true;
   public activeTab = 'detail';
 
+  public bookmarkURLString = '';
+
   constructor(
     public route: ActivatedRoute,
     public router: Router,
@@ -32,6 +34,8 @@ export class AdministrativePenaltyDetailComponent implements OnInit, OnDestroy {
 
       // populate documents
       this.getDocuments();
+
+      this.bookmarkURLString = this.getBookmarkURLString();
 
       this.loading = false;
       this._changeDetectionRef.detectChanges();
@@ -51,6 +55,8 @@ export class AdministrativePenaltyDetailComponent implements OnInit, OnDestroy {
 
       // populate documents
       this.getDocuments();
+
+      this.bookmarkURLString = this.getBookmarkURLString();
 
       this.loading = false;
       this._changeDetectionRef.detectChanges();
@@ -81,6 +87,10 @@ export class AdministrativePenaltyDetailComponent implements OnInit, OnDestroy {
           return new Document(document);
         });
       });
+  }
+
+  getBookmarkURLString() {
+    return `${window.location.href}/administrative-penalties/${this.data._id}`;
   }
 
   activateTab(tabLabel: string): void {

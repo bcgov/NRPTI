@@ -1,3 +1,4 @@
+@import "~assets/styles/base/base.scss";
 // base scss found in record-details.scss
 
 .section-1 {
@@ -13,7 +14,7 @@
 }
 
 .section-4 {
-  grid-template-columns: auto;
+  grid-template-columns: 1fr max-content;
 }
 
 @media screen and (max-width: 768px) {
@@ -29,4 +30,8 @@
     grid-template-columns: 1fr 2fr;
     grid-gap: 0.625rem;
   }
+}
+
+.copy-link-button {
+  background-color: $primary;
 }

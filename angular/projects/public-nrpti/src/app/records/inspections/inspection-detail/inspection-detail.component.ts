@@ -19,6 +19,8 @@ export class InspectionDetailComponent implements OnInit, OnDestroy {
   public loading = true;
   public activeTab = 'detail';
 
+  public bookmarkURLString = '';
+
   constructor(
     public route: ActivatedRoute,
     public router: Router,
@@ -32,6 +34,8 @@ export class InspectionDetailComponent implements OnInit, OnDestroy {
 
       // populate documents
       this.getDocuments();
+
+      this.bookmarkURLString = this.getBookmarkURLString();
 
       this.loading = false;
       this._changeDetectionRef.detectChanges();
@@ -50,6 +54,8 @@ export class InspectionDetailComponent implements OnInit, OnDestroy {
 
       // populate documents
       this.getDocuments();
+
+      this.bookmarkURLString = this.getBookmarkURLString();
 
       this.loading = false;
       this._changeDetectionRef.detectChanges();
@@ -80,6 +86,10 @@ export class InspectionDetailComponent implements OnInit, OnDestroy {
           return new Document(document);
         });
       });
+  }
+
+  getBookmarkURLString() {
+    return `${window.location.href}/inspections/${this.data._id}`;
   }
 
   activateTab(tabLabel: string): void {
