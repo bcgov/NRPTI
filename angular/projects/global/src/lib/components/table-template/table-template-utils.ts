@@ -36,11 +36,10 @@ export class TableTemplateUtils {
       }
     });
 
-    !tableObject.pageSize && DEFAULT_TABLE_PAGE_SIZE;
-    // tslint:disable-next-line: max-line-length
-    !tableObject.currentPage && DEFAULT_TABLE_CURRENT_PAGE;
-    !tableObject.sortBy && DEFAULT_TABLE_SORT_BY;
-    !tableObject.keywords && DEFAULT_TABLE_KEYWORDS;
+    !tableObject.pageSize && (tableObject.pageSize = DEFAULT_TABLE_PAGE_SIZE);
+    !tableObject.currentPage && (tableObject.currentPage = DEFAULT_TABLE_CURRENT_PAGE);
+    !tableObject.sortBy && (tableObject.sortBy = DEFAULT_TABLE_SORT_BY);
+    !tableObject.keywords && (tableObject.keywords = DEFAULT_TABLE_KEYWORDS);
     return tableObject;
   }
 
