@@ -213,32 +213,16 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   }
 
   filterChange(event) {
-    // Generate new route keeping old params
-    // tslint:disable-next-line: prefer-const
-    let newParams = {};
-
-    // save default set of params, tack on new ones.
-    this.route.params.subscribe(params => {
-      // Filter out the incoming params (remove them entirely)
-      Object.keys(params).forEach(p => {
-        if (Object.keys(event).includes(p)) {
-          // We will be overriding this param later.
-        } else {
-          // Existing param we should save.
-          newParams[p] = params[p];
+    Object.keys(event).forEach(item => {
+      if (!event || event[item] === undefined || event[item] === null || event[item].length === 0) {
+        if (this.tableData[item]) {
+          delete this.tableData[item];
         }
-      });
-
-      Object.keys(event).forEach(item => {
-        if (!event || event[item] === undefined || event[item] === null || event[item].length === 0) {
-          // console.log('skipping:', e);
-        } else {
-          newParams[item] = event[item];
-        }
-      });
-
-      this.router.navigate(['/records', newParams]);
+      } else {
+        this.tableData[item] = event[item];
+      }
     });
+    this.submit();
   }
 
   /**

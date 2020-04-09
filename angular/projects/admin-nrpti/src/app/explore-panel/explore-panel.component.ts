@@ -94,6 +94,16 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
     this.updateFilters.emit(filterQuery);
   }
 
+  public handleDateChangeFrom(event) {
+    this._dateRangeFromFilter = event;
+    this.applyAllFilters();
+  }
+
+  public handleDateChangeTo(event) {
+    this._dateRangeToFilter = event;
+    this.applyAllFilters();
+  }
+
   public clearAllFilters() {
     this._dateRangeFromFilter = undefined;
     this._dateRangeToFilter = undefined;
