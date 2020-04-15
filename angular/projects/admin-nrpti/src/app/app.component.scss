@@ -61,8 +61,6 @@ lib-breadcrumb {
 
     transition: 0.3s;
   }
-
-  z-index: 3;
 }
 
 .body-content {
@@ -79,14 +77,11 @@ lib-breadcrumb {
     @include flex(1 1 auto);
     @include flex-direction(column);
 
+    position: relative;
     overflow: auto;
   }
 }
 
 .breadcrumb-section {
   z-index: 3;
-}
-
-.body-spinner {
-  z-index: 2;
 }

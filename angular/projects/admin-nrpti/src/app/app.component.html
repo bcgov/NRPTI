@@ -14,7 +14,7 @@
       <lib-breadcrumb (navigateBreadcrumb)="navigateBreadcrumb($event)"></lib-breadcrumb>
     </span>
     <div class="content-component" cdkScrollable>
-      <div class="spinner-container body-spinner" *ngIf="bodyLoading">
+      <div class="spinner-container translucent" *ngIf="bodyLoading">
         <div class="spinner-new rotating"></div>
       </div>
       <router-outlet></router-outlet>
