@@ -59,6 +59,12 @@
 
 // from add-edit.scss
 
+label {
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
 .label-single {
   @extend .label-pair;
 
