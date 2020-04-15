@@ -145,7 +145,7 @@ class NrisDataSource {
 
         // Make sure these are completed, and >= 7 days before we bring in the record.
         if (records[i].assessmentStatus === 'Complete'
-            && (moment().diff(moment(records[i].completionDate), 'days') >= 7)
+            && (moment().diff(moment(records[i].completionDate), 'days') > 7)
         ) {
           const newRecord = await this.transformRecord(records[i]);
           await this.createRecord(newRecord);
