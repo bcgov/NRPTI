@@ -11,12 +11,6 @@
   }
 }
 
-.card-col-truncate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .table-card-outer {
   position: relative;
 
@@ -30,18 +24,20 @@
       display: grid;
       grid-gap: 0.25rem;
       // TODO enable this extra column when documents are available
-      grid-template-columns: minmax(100px, 3fr) minmax(100px, 1fr) minmax(100px, 1fr) minmax(100px, 3fr) minmax(100px, 1fr); // minmax(100px, 1fr);
+      grid-template-columns: minmax(100px, 2fr) minmax(100px, 1fr) minmax(100px, 2fr) minmax(100px, 3fr) minmax(100px, 1fr);
 
       .card-col {
         display: grid;
+        grid-template-rows: min-content;
 
         .card-col-label {
-          display: grid;
           font-weight: 600;
         }
 
-        .download-btn {
-          display: grid;
+        .truncate {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }

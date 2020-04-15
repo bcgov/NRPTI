@@ -55,7 +55,17 @@ import { RecordsListResolver } from './records-list/records-list-resolver';
     CourtConvictionDetailComponent
   ],
   providers: [RecordsListResolver],
-  entryComponents: [RecordsTableRowComponent],
+  entryComponents: [
+    AdministrativePenaltyDetailComponent,
+    AdministrativeSanctionDetailComponent,
+    CourtConvictionDetailComponent,
+    InspectionDetailComponent,
+    OrderDetailComponent,
+    RecordsTableRowComponent,
+    RestorativeJusticeDetailComponent,
+    TicketDetailComponent,
+    WarningDetailComponent
+  ],
   exports: []
 })
 export class RecordsModule {}
