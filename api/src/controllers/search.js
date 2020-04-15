@@ -401,11 +401,7 @@ const executeQuery = async function(args, res, next) {
         }
       });
 
-    const data = await collectionObj.aggregate(aggregation, { collation : {
-      locale: "en_US",
-      alternate: "shifted",
-      numericOrdering: true
-    }});
+    const data = await collectionObj.aggregate(aggregation);
 
     return QueryActions.sendResponse(res, 200, data);
   } else {
