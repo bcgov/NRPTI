@@ -9,6 +9,8 @@ import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
+import { LoadingScreenService } from 'nrpti-angular-components';
+import { Document } from '../../../../../../common/src/app/models/document';
 
 @Component({
   selector: 'app-court-conviction-add-edit',
@@ -45,6 +47,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     private router: Router,
     private recordUtils: RecordUtils,
     private factoryService: FactoryService,
+    private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
   ) {}
@@ -152,8 +155,12 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
             this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
             ''
         ),
-        anonymous: new FormControl(
-          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || ''
+        markRecordAsAnonymous: new FormControl(
+          // set to true if this is an edit and the record's issuedTo read array does not contain `public`
+          this.isEditing &&
+            this.currentRecord &&
+            this.currentRecord.issuedTo &&
+            !this.currentRecord.issuedTo.read.includes('public')
         )
       }),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
@@ -259,6 +266,8 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
   }
 
   async submit() {
+    this.loadingScreenService.setLoadingState(true, 'main');
+
     const courtConviction = {};
     this.myForm.controls.recordName.dirty && (courtConviction['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.recordSubtype.dirty &&
@@ -294,7 +303,8 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
       this.myForm.get('issuedTo.middleName').dirty ||
       this.myForm.get('issuedTo.lastName').dirty ||
       this.myForm.get('issuedTo.fullName').dirty ||
-      this.myForm.get('issuedTo.dateOfBirth').dirty
+      this.myForm.get('issuedTo.dateOfBirth').dirty ||
+      this.myForm.get('issuedTo.markRecordAsAnonymous').dirty
     ) {
       courtConviction['issuedTo'] = {
         type: this.myForm.get('issuedTo.type').value,
@@ -305,6 +315,12 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
         fullName: this.myForm.get('issuedTo.fullName').value,
         dateOfBirth: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('issuedTo.dateOfBirth').value)
       };
+
+      if (this.myForm.get('issuedTo.markRecordAsAnonymous').value) {
+        courtConviction['issuedTo']['removeRole'] = 'public';
+      } else {
+        courtConviction['issuedTo']['addRole'] = 'public';
+      }
     }
 
     // Project name logic
@@ -349,6 +365,10 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     if (!this.isEditing) {
       this.factoryService.createCourtConviction(courtConviction).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
+
+        this.links = this.setNewDocumentRoles(this.links);
+        this.documents = this.setNewDocumentRoles(this.documents);
+
         await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
@@ -357,6 +377,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
+        this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records']);
       });
     } else {
@@ -382,6 +403,10 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
 
       this.factoryService.editCourtConviction(courtConviction).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
+
+        this.links = this.setNewDocumentRoles(this.links);
+        this.documents = this.setNewDocumentRoles(this.documents);
+
         await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
@@ -390,9 +415,72 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
+        await this.updateExistingDocumentRoles(
+          this.currentRecord.documents.filter(doc => !this.documentsToDelete.includes(doc._id))
+        );
+
+        this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records', 'court-convictions', this.currentRecord._id, 'detail']);
       });
     }
+  }
+
+  /**
+   * Conditionally sets the `public` read role for new documents.
+   *
+   * @param {object[]} documents
+   * @returns {object[]}
+   * @memberof CourtConvictionAddEditComponent
+   */
+  setNewDocumentRoles(documents: object[]): object[] {
+    if (!documents || !documents.length) {
+      return;
+    }
+
+    if (!this.myForm.get('issuedTo.markRecordAsAnonymous').value) {
+      // not marked anonymous - add `public` roles to documents
+      documents = documents.map((document: object) => {
+        document['addRole'] = 'public';
+        return document;
+      });
+    }
+
+    return documents;
+  }
+
+  /**
+   * Conditionally updates the `public` read role for the provided document ids.
+   *
+   * @param {object[]} documents
+   * @returns
+   * @memberof CourtConvictionAddEditComponent
+   */
+  async updateExistingDocumentRoles(documents: Document[]) {
+    if (!documents || !documents.length) {
+      return;
+    }
+
+    const documentPromises = [];
+
+    if (this.myForm.get('issuedTo.markRecordAsAnonymous').value) {
+      // marked anonymous - remove public roles from documents
+      for (const document of documents) {
+        if (document.read.includes('public')) {
+          // Don't unpublish documents that are already not public
+          documentPromises.push(this.factoryService.unpublishDocument(document._id));
+        }
+      }
+    } else {
+      // not marked anonymous - add public roles to documents
+      for (const document of documents) {
+        if (!document.read.includes('public')) {
+          // Don't publish documents that are already public
+          documentPromises.push(this.factoryService.publishDocument(document._id));
+        }
+      }
+    }
+
+    await Promise.all(documentPromises);
   }
 
   cancel() {

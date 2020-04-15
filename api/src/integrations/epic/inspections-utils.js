@@ -56,8 +56,9 @@ class Inspections extends BaseRecordUtils {
       legislation: legislation,
       legislationDescription: 'Inspection to verify compliance with regulatory requirement',
       issuedTo: {
-        // Epic doesn't support `Individual` proponents
-        type: 'Company',
+        write: ['sysadmin'],
+        read: ['sysadmin', 'public'],
+        type: 'Company', // Epic doesn't support `Individual` proponents
         companyName: epicRecord.project.proponent.company || '',
         fullName: epicRecord.project.proponent.company || ''
       }

@@ -3,21 +3,25 @@
     <label class="grid-item-name">Entity Type</label>
     <span class="grid-item-value">{{ (data && data.type) || '-' }}</span>
   </div>
-</div>
 
-<!--Company -->
-<ng-container *ngIf="UIType === ENTITY_TYPE.Company">
-  <div class="grid-section section-2">
+  <!--Company -->
+  <ng-container *ngIf="UIType === ENTITY_TYPE.Company">
     <div class="grid-item__row">
       <label class="grid-item-name">Company Name</label>
       <span class="grid-item-value">{{ (data && data.companyName) || '-' }}</span>
     </div>
+  </ng-container>
+
+  <!-- Individual* -->
+  <div *ngIf="markRecordAsAnonymous" class="grid-item">
+    <span class="grid-item-name">Anonymous</span>
+    <span class="grid-item-value">Name and documents are not published</span>
   </div>
-</ng-container>
+</div>
 
 <!-- IndividualCombined -->
 <ng-container *ngIf="UIType === ENTITY_TYPE.Individual">
-  <div class="grid-section section-3">
+  <div class="grid-section section-2">
     <div class="grid-item__row">
       <label class="grid-item-name">First Name</label>
       <span class="grid-item-value">{{ (data && data.firstName) || '-' }}</span>
@@ -39,7 +43,7 @@
 
 <!-- Individual -->
 <ng-container *ngIf="UIType === ENTITY_TYPE.IndividualCombined">
-  <div class="grid-section section-4">
+  <div class="grid-section section-3">
     <div class="grid-item__row">
       <label class="grid-item-name">Full Name</label>
       <span class="grid-item-value">{{ (data && data.fullName) || '-' }}</span>

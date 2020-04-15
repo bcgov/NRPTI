@@ -6,6 +6,10 @@
  */
 export class Document {
   _id: string;
+
+  write: string[];
+  read: string[];
+
   _addedBy: string;
   fileName: string;
   key: string;

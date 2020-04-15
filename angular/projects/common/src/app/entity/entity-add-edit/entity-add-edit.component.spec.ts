@@ -26,7 +26,7 @@ describe('EntityAddEditComponent', () => {
       lastName: new FormControl({}),
       fullName: new FormControl({}),
       dateOfBirth: new FormControl({}),
-      anonymous: new FormControl({})
+      markRecordAsAnonymous: new FormControl({})
     });
 
     fixture.detectChanges();

@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 const PutUtils = require('../../utils/put-utils');
 const PostUtils = require('../../utils/post-utils');
-const QueryUtils = require('../../utils/query-utils');
 const RestorativeJusticePost = require('../post/restorative-justice');
 
 /**
@@ -258,13 +257,10 @@ exports.editLNG = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  if (sanitizedObj.issuedTo) {
-    // check if a condition changed that would cause the entity details to be anonymous, or not.
-    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
-      updateObj.$pull['issuedTo.read'] = 'public';
-    } else {
-      updateObj.$addToSet['issuedTo.read'] = 'public';
-    }
+  if (incomingObj.issuedTo && incomingObj.issuedTo.removeRole === 'public') {
+    updateObj.$pull['issuedTo.read'] = 'public';
+  } else if (incomingObj.issuedTo && incomingObj.issuedTo.addRole === 'public') {
+    updateObj.$addToSet['issuedTo.read'] = 'public';
   }
 
   return await RestorativeJusticeLNG.findOneAndUpdate({ _schemaName: 'RestorativeJusticeLNG', _id: _id }, updateObj, {
@@ -338,13 +334,10 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  if (sanitizedObj.issuedTo) {
-    // check if a condition changed that would cause the entity details to be anonymous, or not.
-    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
-      updateObj.$pull['issuedTo.read'] = 'public';
-    } else {
-      updateObj.$addToSet['issuedTo.read'] = 'public';
-    }
+  if (incomingObj.issuedTo && incomingObj.issuedTo.removeRole === 'public') {
+    updateObj.$pull['issuedTo.read'] = 'public';
+  } else if (incomingObj.issuedTo && incomingObj.issuedTo.addRole === 'public') {
+    updateObj.$addToSet['issuedTo.read'] = 'public';
   }
 
   return await RestorativeJusticeNRCED.findOneAndUpdate(

@@ -1,6 +1,5 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
-let queryUtils = require('../../utils/query-utils');
 let postUtils = require('../../utils/post-utils');
 
 /**
@@ -321,10 +320,11 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     courtConvictionLNG.read.push('public');
     courtConvictionLNG.datePublished = new Date();
     courtConvictionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
 
-    if (!queryUtils.isRecordAnonymous(courtConvictionLNG)) {
-      courtConvictionLNG.issuedTo.read.push('public');
-    }
+  // set issuedTo sub-object read roles
+  if (incomingObj.issuedTo && incomingObj.issuedTo.addRole === 'public') {
+    courtConvictionLNG.issuedTo.read.push('public');
   }
 
   return await courtConvictionLNG.save();
@@ -449,10 +449,11 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     courtConvictionNRCED.read.push('public');
     courtConvictionNRCED.datePublished = new Date();
     courtConvictionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
 
-    if (!queryUtils.isRecordAnonymous(courtConvictionNRCED)) {
-      courtConvictionNRCED.issuedTo.read.push('public');
-    }
+  // set issuedTo sub-object read roles
+  if (incomingObj.issuedTo && incomingObj.issuedTo.addRole === 'public') {
+    courtConvictionNRCED.issuedTo.read.push('public');
   }
 
   return await courtConvictionNRCED.save();

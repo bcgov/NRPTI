@@ -1,6 +1,5 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
-let queryUtils = require('../../utils/query-utils');
 let postUtils = require('../../utils/post-utils');
 
 /**
@@ -311,10 +310,11 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     ticketLNG.read.push('public');
     ticketLNG.datePublished = new Date();
     ticketLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
 
-    if (!queryUtils.isRecordAnonymous(ticketLNG)) {
-      ticketLNG.issuedTo.read.push('public');
-    }
+  // set issuedTo sub-object read roles
+  if (incomingObj.issuedTo && incomingObj.issuedTo.addRole === 'public') {
+    ticketLNG.issuedTo.read.push('public');
   }
 
   return await ticketLNG.save();
@@ -435,10 +435,11 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     ticketNRCED.read.push('public');
     ticketNRCED.datePublished = new Date();
     ticketNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
 
-    if (!queryUtils.isRecordAnonymous(ticketNRCED)) {
-      ticketNRCED.issuedTo.read.push('public');
-    }
+  // set issuedTo sub-object read roles
+  if (incomingObj.issuedTo && incomingObj.issuedTo.addRole === 'public') {
+    ticketNRCED.issuedTo.read.push('public');
   }
 
   return await ticketNRCED.save();

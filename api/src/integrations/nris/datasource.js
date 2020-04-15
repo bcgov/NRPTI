@@ -147,8 +147,8 @@ class NrisDataSource {
           records[i].assessmentStatus === 'Complete' &&
           moment().diff(moment(records[i].completionDate), 'days') > 7
         ) {
-          const newRecord = await this.transformRecord(records[i]);
-          await this.createRecord(newRecord);
+          const { newRecord, isAnIndividual } = await this.transformRecord(records[i]);
+          await this.createRecord(newRecord, isAnIndividual);
           // Assuming we didn't get thrown an error, update the items successfully processed.
           processingObject.itemsProcessed++;
         } else {
@@ -197,6 +197,7 @@ class NrisDataSource {
 
     newRecord.sourceSystemRef = 'nris';
 
+    let isAnIndividual = false;
     if (record.client && record.client.length > 0 && record.client[0]) {
       const clientType = record.client[0].clientType;
       switch (clientType) {
@@ -222,6 +223,7 @@ class NrisDataSource {
             type: 'IndividualCombined',
             fullName: record.client[0].orgName || ''
           };
+          isAnIndividual = true;
           break;
         default:
           defaultLog.info(
@@ -250,7 +252,7 @@ class NrisDataSource {
         if (tempFileData) {
           defaultLog.info('Uploading attachmentId:', record.attachment[i].attachmentId, 'to S3');
           const fileContent = fs.readFileSync(tempFileData.tempFilePath);
-          await this.putFileS3(fileContent, tempFileData.fileName, newRecord);
+          await this.putFileS3(fileContent, tempFileData.fileName, newRecord, isAnIndividual);
           fs.unlinkSync(tempFileData.tempFilePath);
         }
       }
@@ -259,7 +261,7 @@ class NrisDataSource {
     newRecord.write.push('sysadmin');
 
     defaultLog.info('Processed:', record.assessmentId);
-    return newRecord;
+    return { newRecord, isAnIndividual };
   }
 
   // Grabs a file from NRIS datasource
@@ -285,33 +287,31 @@ class NrisDataSource {
   }
 
   // Puts a file into s3 and return the meta associated with it.
-  async putFileS3(file, fileName, newRecord) {
+  async putFileS3(file, fileName, newRecord, isAnIndividual = false) {
     let docResponse = null;
     let s3Response = null;
 
     try {
-      docResponse = await documentController.createDocument(fileName);
+      [docResponse, s3Response] = await documentController.createS3Document(
+        fileName,
+        file,
+        (this.auth_payload && this.auth_payload.displayName) || '',
+        (!isAnIndividual && ['public']) || null,
+        (!isAnIndividual && 'public-read') || 'authenticated-read'
+      );
     } catch (e) {
-      defaultLog.info('Error saving document meta:', e);
+      defaultLog.info(`Error creating S3 document - fileName: ${fileName}, Error ${e}`);
       return null;
     }
 
     try {
-      const s3UploadResult = await s3
-        .upload({
-          Bucket: process.env.OBJECT_STORE_bucket_name,
-          Key: docResponse.key,
-          Body: file,
-          ACL: 'public-read'
-        })
-        .promise();
-
-      s3Response = s3UploadResult;
       if (docResponse && docResponse._id) {
         newRecord.documents.push(docResponse._id);
       }
     } catch (e) {
-      defaultLog.info('Error uploading file to S3:', e);
+      defaultLog.info(
+        `Error adding document _id to record - recordId: ${newRecord._id}, docId: ${docResponse._id}, Error: ${e}`
+      );
       return null;
     }
 
@@ -323,10 +323,11 @@ class NrisDataSource {
    *
    * @async
    * @param {object} record NRPTI record (required)
+   * @param {boolean} isAnIndividual true if the record contains information about an individual, false otherwise
    * @returns {object} object containing the newly inserted master and flavour records
    * @memberof NrisDataSource
    */
-  async createRecord(record) {
+  async createRecord(record, isAnIndividual) {
     if (!record) {
       throw Error('createRecord - required record must be non-null.');
     }
@@ -336,14 +337,18 @@ class NrisDataSource {
       const createObj = { ...record };
 
       createObj[RECORD_TYPE.Inspection.flavours.lng._schemaName] = {
-        description: record.description || '',
-        addRole: 'public'
+        description: record.description || ''
       };
 
       createObj[RECORD_TYPE.Inspection.flavours.nrced._schemaName] = {
-        summary: record.description || '',
-        addRole: 'public'
+        summary: record.description || ''
       };
+
+      // add `public` read role if record does not contain information about an individual
+      if (!isAnIndividual) {
+        createObj[RECORD_TYPE.Inspection.flavours.lng._schemaName].addRole = 'public';
+        createObj[RECORD_TYPE.Inspection.flavours.nrced._schemaName].addRole = 'public';
+      }
 
       return await RecordController.processPostRequest(
         { swagger: { params: { auth_payload: this.auth_payload } } },

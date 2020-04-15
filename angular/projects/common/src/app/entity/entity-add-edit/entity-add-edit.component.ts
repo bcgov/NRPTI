@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ChangeDetectorRef, SimpleChanges, OnChanges }
 import { FormGroup } from '@angular/forms';
 import { Picklists } from '../../../../../admin-nrpti/src/app/utils/constants/record-constants';
 import { ENTITY_TYPE } from '../../models/master/common-models/entity';
+import moment from 'moment';
 
 @Component({
   selector: 'app-entity-add-edit',
@@ -18,7 +19,8 @@ export class EntityAddEditComponent implements OnInit, OnChanges {
   public ENTITY_TYPE = ENTITY_TYPE; // make available in template
   public UIType: ENTITY_TYPE = null;
 
-  public anonymousText = '';
+  public markedAnonymousHeader = 'Not Anonymous';
+  public markedAnonymousText = 'Name and documents will be published';
 
   constructor(public _changeDetectionRef: ChangeDetectorRef) {}
 
@@ -29,7 +31,7 @@ export class EntityAddEditComponent implements OnInit, OnChanges {
   updateUI() {
     this.updateUIType();
     this.resetHiddenFormFields();
-    this.updateAnonymousText(this.formGroup.get('anonymous').value);
+    this.updateMarkRecordAsAnonymous();
 
     this._changeDetectionRef.detectChanges();
   }
@@ -86,7 +88,7 @@ export class EntityAddEditComponent implements OnInit, OnChanges {
       this.formGroup.get('lastName').reset();
       this.formGroup.get('fullName').reset();
       this.formGroup.get('dateOfBirth').reset();
-      this.formGroup.get('anonymous').reset();
+      this.formGroup.get('markRecordAsAnonymous').reset();
       return;
     }
 
@@ -111,22 +113,44 @@ export class EntityAddEditComponent implements OnInit, OnChanges {
       this.formGroup.get('lastName').reset();
       this.formGroup.get('fullName').reset();
       this.formGroup.get('dateOfBirth').reset();
-      this.formGroup.get('anonymous').reset();
+      this.formGroup.get('markRecordAsAnonymous').reset();
       return;
     }
   }
 
   /**
-   * Updates the anonymous text.
+   * Update the `markRecordAsAnonymous` control.
    *
-   * @param {boolean} bool True if the record is anonymous, false otherwise.
    * @memberof EntityAddEditComponent
    */
-  updateAnonymousText(bool: boolean): void {
-    if (bool) {
-      this.anonymousText = 'Personally identifiable information will not be published';
-    } else {
-      this.anonymousText = 'Personally identifiable information may be published';
+  updateMarkRecordAsAnonymous() {
+    this.formGroup.get('markRecordAsAnonymous').setValue(this.isRecordConsideredAnonymous());
+  }
+
+  /**
+   * Check if the entity information marks the record as anonymous.
+   *
+   * @returns {boolean} true if the record is marked as anonymous, false otherwise.
+   * @memberof EntityAddEditComponent
+   */
+  isRecordConsideredAnonymous(): boolean {
+    if (this.UIType !== ENTITY_TYPE.Individual && this.UIType !== ENTITY_TYPE.IndividualCombined) {
+      // only individuals are compared against anonymous business logic
+      return false;
     }
+
+    const dateOfBirthControl = this.formGroup.get('dateOfBirth');
+
+    if (!dateOfBirthControl.value) {
+      // if no date of birth set, must be anonymous
+      return true;
+    }
+
+    if (moment().diff(moment(dateOfBirthControl.value), 'years') < 19) {
+      // if date of birth indicates a minor, must be anonymous
+      return true;
+    }
+
+    return false;
   }
 }

@@ -1,11 +1,11 @@
 import { Injectable, Injector } from '@angular/core';
 import { KeycloakService } from './keycloak.service';
 import { JwtUtil } from '../utils/jwt-utils';
-import { Observable, of } from 'rxjs';
+import { Observable, of, forkJoin, OperatorFunction } from 'rxjs';
 import { ApiService } from './api.service';
 import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
-import { catchError } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { TaskService, ITaskParams } from './task.service';
 import { DocumentService } from './document.service';
 
@@ -185,7 +185,54 @@ export class FactoryService {
     if (!recordId || !schema) {
       return of([] as SearchResults[]);
     }
-    return this.searchService.getItem(this.apiService.pathAPI, recordId, schema, true);
+
+    return this.searchService
+      .getItem(this.apiService.pathAPI, recordId, schema, true)
+      .pipe(this.updateResponseDocumentsWithSignedUrls());
+  }
+
+  /**
+   * Pipe-able rxjs operator to fetch signed s3 urls for documents, as needed.
+   *
+   * @private
+   * @returns {OperatorFunction<any, any>}
+   * @memberof FactoryService
+   */
+  private updateResponseDocumentsWithSignedUrls(): OperatorFunction<any, any> {
+    return switchMap((res: any) => {
+      if (!res || !res[0] || !res[0].data) {
+        // let subscriber handle null data
+        return of(res);
+      }
+
+      // for each document, fetch a signed url as needed
+      const documentObservables = [];
+      res[0].data.documents.forEach(document => {
+        if (document.read.includes('public') || !document.key) {
+          // don't fetch signed urls for documents that are already public or that don't have an s3 key
+          documentObservables.push(of(document));
+          return;
+        }
+
+        // fetch signed url for non-public s3 documents
+        documentObservables.push(
+          this.getS3SignedUrl(document._id).pipe(
+            map(signedUrl => {
+              document.signedUrl = signedUrl;
+              return document;
+            })
+          )
+        );
+      });
+
+      // wait for all requests to finish and update the original response object
+      return forkJoin(documentObservables).pipe(
+        map(updatedDocuments => {
+          res[0].data.documents = updatedDocuments;
+          return res;
+        })
+      );
+    });
   }
 
   /**
@@ -530,5 +577,17 @@ export class FactoryService {
 
   public deleteDocument(docId: string, recordId: string): Promise<any> {
     return this.documentService.deleteDocument(docId, recordId);
+  }
+
+  public publishDocument(docId: string): Promise<any> {
+    return this.documentService.publishDocument(docId);
+  }
+
+  public unpublishDocument(docId: string): Promise<any> {
+    return this.documentService.unpublishDocument(docId);
+  }
+
+  public getS3SignedUrl(docId: string): Observable<any> {
+    return this.documentService.getS3SignedUrl(docId);
   }
 }

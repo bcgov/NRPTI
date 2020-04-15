@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, ChangeDetectorRef, SimpleChanges, OnChanges } from '@angular/core';
 import { Entity, ENTITY_TYPE } from '../../models/master/common-models/entity';
+import moment from 'moment';
 
 @Component({
   selector: 'app-entity-detail',
@@ -12,6 +13,8 @@ export class EntityDetailComponent implements OnInit, OnChanges {
   public ENTITY_TYPE = ENTITY_TYPE; // make available in template
   public UIType: ENTITY_TYPE = null;
 
+  public markRecordAsAnonymous = false;
+
   constructor(public _changeDetectionRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
@@ -20,6 +23,7 @@ export class EntityDetailComponent implements OnInit, OnChanges {
 
   updateUI() {
     this.updateUIType();
+    this.markRecordAsAnonymous = this.isRecordConsideredAnonymous();
 
     this._changeDetectionRef.detectChanges();
   }
@@ -61,5 +65,34 @@ export class EntityDetailComponent implements OnInit, OnChanges {
     }
 
     this.UIType = ENTITY_TYPE.NotSet;
+  }
+
+  /**
+   * Check if the entity information marks the record as anonymous.
+   *
+   * @returns {boolean} true if the record is marked as anonymous, false otherwise.
+   * @memberof EntityDetailComponent
+   */
+  isRecordConsideredAnonymous(): boolean {
+    if (!this.data) {
+      return false;
+    }
+
+    if (this.data.type !== ENTITY_TYPE.Individual && this.data.type !== ENTITY_TYPE.IndividualCombined) {
+      // only individuals are compared against anonymous business logic
+      return false;
+    }
+
+    if (!this.data.dateOfBirth) {
+      // if no date of birth set, must be anonymous
+      return true;
+    }
+
+    if (moment().diff(moment(this.data.dateOfBirth), 'years') < 19) {
+      // if date of birth indicates a minor, must be anonymous
+      return true;
+    }
+
+    return false;
   }
 }

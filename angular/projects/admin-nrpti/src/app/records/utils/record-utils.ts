@@ -259,6 +259,7 @@ export class RecordUtils {
       const formData = new FormData();
       formData.append('fileName', link.fileName);
       formData.append('url', link.url);
+      formData.append('addRole', link.addRole);
       promises.push(factoryService.createDocument(formData, recordId));
     });
 
@@ -267,6 +268,7 @@ export class RecordUtils {
       const formData = new FormData();
       formData.append('fileName', doc.fileName);
       formData.append('upfile', doc.upfile);
+      formData.append('addRole', doc.addRole);
       promises.push(factoryService.createDocument(formData, recordId));
     });
 

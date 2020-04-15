@@ -616,50 +616,24 @@ paths:
           type: string
         - name: upfile
           in: formData
-          description: "The file to upload. If this is present, the file will be uploaded to S3."
+          description: 'The file to upload. If this is present, the file will be uploaded to S3.'
           required: false
           type: file
         - name: fileName
           in: formData
-          description: "Filename for document/link (Only applies to links)"
+          description: 'Filename for document/link (Only applies to links)'
           required: true
           type: string
         - name: url
           in: formData
-          description: "Url for links. If this is present, a link will be created."
+          description: 'Url for links. If this is present, a link will be created.'
           required: false
           type: string
-      responses:
-        '200':
-          description: 'Success'
-          schema:
-            $ref: '#/definitions/DocumentResponseObject'
-        '403':
-          description: 'Access Denied'
-          schema:
-            $ref: '#/definitions/Error'
-    put:
-      tags:
-        - Document
-      summary: 'Create new Document'
-      operationId: protectedPut
-      description: 'Authenticated access to create a Document and get a signed put URL in return'
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-      parameters:
-        - name: recordId
-          in: path
-          description: '_id of record the document is associated with'
-          required: true
+        - name: addRole
+          in: formData
+          description: 'Read role to add to the document'
+          required: false
           type: string
-        - in: body
-          name: data
-          description: 'Data to create a document'
-          required: true
-          schema:
-            $ref: '#/definitions/DocumentRequestObject'
       responses:
         '200':
           description: 'Success'
@@ -714,6 +688,138 @@ paths:
         - name: docId
           in: path
           description: '_id of document we want to delete'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /document/{docId}/publish:
+    x-swagger-router-controller: document-controller
+    options:
+      tags:
+        - document
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated document route'
+      parameters:
+        - name: docId
+          in: path
+          description: '_id of document to publish'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - document
+      summary: 'Publish a document'
+      operationId: protectedPublish
+      description: "Adds the singular instance of the 'public' role to a document."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+      parameters:
+        - name: docId
+          in: path
+          description: '_id of document to publish'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /document/{docId}/unpublish:
+    x-swagger-router-controller: document-controller
+    options:
+      tags:
+        - document
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated document route'
+      parameters:
+        - name: docId
+          in: path
+          description: '_id of document to unpublish'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - document
+      summary: 'Unpublish a document'
+      operationId: protectedUnpublish
+      description: "Adds the singular instance of the 'public' role to a document."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+      parameters:
+        - name: docId
+          in: path
+          description: '_id of document to publish'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /document/{docId}/signedurl:
+    x-swagger-router-controller: document-controller
+    options:
+      tags:
+        - document
+      summary: 'Pre-flight request'
+      operationId: protectedGetS3SignedURL
+      description: 'Options on authenticated document route'
+      parameters:
+        - name: docId
+          in: path
+          description: '_id of document to get an s3 signed url for'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - document
+      summary: 'Get a signed s3 url for an uploaded document'
+      operationId: protectedGetS3SignedURL
+      description: 'Gets an s3 signed url for a document uploaded to s3.'
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+      parameters:
+        - name: docId
+          in: path
+          description: '_id of document to get an s3 signed url for'
           required: true
           type: string
       responses:

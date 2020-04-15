@@ -5,7 +5,6 @@
  */
 
 let mongoose = require('mongoose');
-const moment = require('moment');
 let DEFAULT_PAGESIZE = 100;
 
 /**
@@ -101,36 +100,3 @@ exports.recordTypes = [
   'ManagementPlan',
   'CourtConviction'
 ];
-
-/**
- * Determine if the obj (record.issuedTo) meets the requirements to not be anonymous.
- *
- * Note: If insufficient information is provided, must assume anonymous.
- *
- * @param {*} obj
- * @returns true if the object is anonymous, false if it is not anonymous.
- */
-exports.isRecordAnonymous = function(record) {
-  if (!record || !record.issuedTo) {
-    // can't determine anonymity, must assume anonymous
-    return true;
-  }
-
-  if (record.issuedTo.type === 'Company') {
-    // companies are not anonymous
-    return false;
-  }
-
-  if (!record.issuedTo.dateOfBirth) {
-    // all types other than Company must have a birth date to have a chance at being not anonymous
-    return true;
-  }
-
-  if (moment().diff(moment(record.issuedTo.dateOfBirth), 'years') >= 19) {
-    // adults are not anonymous
-    return false;
-  }
-
-  // if no contradicting evidence, must assume anonymous
-  return true;
-};

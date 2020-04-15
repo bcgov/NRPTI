@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const queryActions = require('../utils/query-actions');
+const queryUtils = require('../utils/query-utils');
 const AWS = require('aws-sdk');
 const mongodb = require('../utils/mongodb');
 const ObjectID = require('mongodb').ObjectID;
@@ -15,73 +16,61 @@ const s3 = new AWS.S3({
   s3ForcePathStyle: true
 });
 
-exports.protectedOptions = function (args, res, next) {
+exports.protectedOptions = function(args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedPost = async function (args, res, next) {
+exports.protectedPost = async function(args, res, next) {
   if (
     args.swagger.params.fileName &&
     args.swagger.params.fileName.value &&
     args.swagger.params.recordId &&
     args.swagger.params.recordId.value
   ) {
+    // Set mongo document and s3 document roles based on `addRole` param, if present
+    let s3ACLRole = null;
+    const documentReadRoles = [];
+    if (args.swagger.params.addRole && args.swagger.params.addRole.value === 'public') {
+      documentReadRoles.push('public');
+      s3ACLRole = 'public-read';
+    }
+
     let docResponse = null;
     let s3Response = null;
     if (args.swagger.params.url && args.swagger.params.url.value) {
       // If the document already has a url we can assume it's a link
-
-      // TODO: For now all documents are public.
-      // Once we have rules implemented for publishing documents, this code will have to account for that.
-
-      // An unpublished document will not have url in it's meta.
-      // A published document will have a direct url to the S3 object store.
-      // Unpublished documents will require a presigned get to the S3 object store.
       try {
-        docResponse = await createDocument(
+        docResponse = await createURLDocument(
           args.swagger.params.fileName.value,
           (args.swagger.params.auth_payload && args.swagger.params.auth_payload.preferred_username) || '',
-          args.swagger.params.url.value
+          args.swagger.params.url.value,
+          documentReadRoles
         );
       } catch (e) {
-        defaultLog.info(`Error creating document meta for ${args.swagger.params.fileName.value}: ${e}`);
+        defaultLog.info(`Error creating URL document - fileName: ${args.swagger.params.fileName.value}, Error: ${e}`);
         return queryActions.sendResponse(
           res,
           400,
-          `Error creating document meta for ${args.swagger.params.fileName.value}.`
+          `Error creating document for ${args.swagger.params.fileName.value}.`
         );
       }
     } else if (args.swagger.params.upfile && args.swagger.params.upfile.value) {
-      // Upload to S3
+      // Create document meta and upload file to S3
       try {
-        docResponse = await createDocument(
+        ({ docResponse, s3Response } = await createS3Document(
           args.swagger.params.fileName.value,
-          (args.swagger.params.auth_payload && args.swagger.params.auth_payload.preferred_username) || ''
-        );
+          args.swagger.params.upfile.value.buffer,
+          (args.swagger.params.auth_payload && args.swagger.params.auth_payload.preferred_username) || '',
+          documentReadRoles,
+          s3ACLRole
+        ));
       } catch (e) {
-        defaultLog.info(`Error creating document meta for ${args.swagger.params.fileName.value}: ${e}`);
+        defaultLog.info(`Error creating S3 document - fileName: ${args.swagger.params.fileName.value}, Error ${e}`);
         return queryActions.sendResponse(
           res,
           400,
-          `Error creating document meta for ${args.swagger.params.fileName.value}.`
+          `Error creating document for ${args.swagger.params.fileName.value}.`
         );
-      }
-
-      // TODO: ACL is set to public-read until we know publishing rules.
-      try {
-        const s3UploadResult = await s3
-          .upload({
-            Bucket: process.env.OBJECT_STORE_bucket_name,
-            Key: docResponse.key,
-            Body: args.swagger.params.upfile.value.buffer,
-            ACL: 'public-read'
-          })
-          .promise();
-
-        s3Response = s3UploadResult;
-      } catch (e) {
-        defaultLog.info(`Error uploading ${args.swagger.params.fileName.value} to S3: ${e}`);
-        return queryActions.sendResponse(res, 400, `Error uploading ${args.swagger.params.fileName.value} to S3.`);
       }
     }
 
@@ -142,7 +131,7 @@ exports.protectedPost = async function (args, res, next) {
   }
 };
 
-exports.protectedDelete = async function (args, res, next) {
+exports.protectedDelete = async function(args, res, next) {
   if (
     args.swagger.params.docId &&
     args.swagger.params.docId.value &&
@@ -238,29 +227,305 @@ exports.protectedDelete = async function (args, res, next) {
   }
 };
 
-exports.createDocument = createDocument;
-
-async function createDocument(fileName, addedBy, url = null) {
+/**
+ * Create a new Document mongo record.
+ *
+ * @param {*} fileName document file name
+ * @param {*} addedBy name of the user that added the document
+ * @param {*} [url=null] url of the document
+ * @param {*} [readRoles=[]] read roles to add to the document. (optional)
+ */
+async function createURLDocument(fileName, addedBy, url, readRoles = []) {
   const Document = mongoose.model('Document');
   let document = new Document();
-
-  // TODO: url is automatically populated making all docs public.
-  // We will need to change this once publish rules are in.
-  if (!url) {
-    url = `https://${process.env.OBJECT_STORE_endpoint_url}/${process.env.OBJECT_STORE_bucket_name}/${document._id}/${fileName}`;
-  }
 
   document.fileName = fileName;
   document.addedBy = addedBy;
   document.url = url;
-  document.key = `${document._id}/${fileName}`;
-  document.read = ['public', 'sysadmin'];
+  document.read = ['sysadmin', ...readRoles];
   document.write = ['sysadmin'];
+
   return await document.save();
+}
+
+exports.createURLDocument = createURLDocument;
+
+/**
+ * Create a new Document mongo record AND upload the associated file to S3, adding the S3 key to the mongo record.
+ *
+ * @param {*} fileName document file name
+ * @param {*} fileContent document data
+ * @param {*} addedBy name of the user that added the document
+ * @param {*} [readRoles=[]] read roles to add to the document. (optional)
+ * @param {*} [aclRole=null] the ACL role to set.  Defaults to `authenticated-read` if not set. (optional)
+ * @returns
+ */
+async function createS3Document(fileName, fileContent, addedBy, readRoles = [], aclRole = null) {
+  const Document = mongoose.model('Document');
+  let document = new Document();
+
+  document.fileName = fileName;
+  document.addedBy = addedBy;
+  document.url = `https://${process.env.OBJECT_STORE_endpoint_url}/${process.env.OBJECT_STORE_bucket_name}/${document._id}/${fileName}`;
+  document.key = `${document._id}/${fileName}`;
+  document.read = ['sysadmin', ...readRoles];
+  document.write = ['sysadmin'];
+
+  const s3Response = await uploadS3Document(`${document._id}/${fileName}`, fileContent, aclRole);
+
+  const docResponse = await document.save();
+
+  return { docResponse, s3Response };
+}
+
+exports.createS3Document = createS3Document;
+
+/**
+ * Delete a document from S3
+ *
+ * @param {*} docKey
+ * @returns
+ */
+async function deleteS3Document(docKey) {
+  if (!process.env.OBJECT_STORE_bucket_name) {
+    throw new Error('Missing required OBJECT_STORE_bucket_name env variable');
+  }
+
+  if (!docKey) {
+    throw new Error('Missing required docKey param');
+  }
+
+  return await s3.deleteObject({ Bucket: process.env.OBJECT_STORE_bucket_name, Key: docKey }).promise();
 }
 
 exports.deleteS3Document = deleteS3Document;
 
-async function deleteS3Document(docKey) {
-  return await s3.deleteObject({ Bucket: process.env.OBJECT_STORE_bucket_name, Key: docKey }).promise();
+/**
+ * Upload a document to s3.
+ *
+ * @param {*} docKey s3 document key
+ * @param {*} docBody document data
+ * @param {*} [aclRole=null] the ACL role to set.  Defaults to `authenticated-read` if not set. (optional)
+ * @returns
+ */
+async function uploadS3Document(docKey, docBody, aclRole = null) {
+  if (!process.env.OBJECT_STORE_bucket_name) {
+    throw new Error('Missing required OBJECT_STORE_bucket_name env variable');
+  }
+
+  if (!docKey) {
+    throw new Error('Missing required docKey param');
+  }
+
+  if (!docBody) {
+    throw new Error('Missing required docKey param');
+  }
+
+  return await s3
+    .upload({
+      Bucket: process.env.OBJECT_STORE_bucket_name,
+      Key: docKey,
+      Body: docBody,
+      ACL: aclRole || 'authenticated-read'
+    })
+    .promise();
+}
+
+exports.uploadS3Document = uploadS3Document;
+
+/**
+ * Set the s3 document ACL to `public-read`
+ *
+ * @param {*} docKey s3 document key
+ * @returns
+ */
+async function publishS3Document(docKey) {
+  return await s3
+    .putObjectAcl({
+      Bucket: process.env.OBJECT_STORE_bucket_name,
+      Key: docKey,
+      ACL: 'public-read'
+    })
+    .promise();
+}
+
+exports.publishS3Document = publishS3Document;
+
+/**
+ * Set the s3 document ACL to `authenticated-read`
+ *
+ * @param {*} docKey s3 document key
+ * @returns
+ */
+async function unpublishS3Document(docKey) {
+  return await s3
+    .putObjectAcl({
+      Bucket: process.env.OBJECT_STORE_bucket_name,
+      Key: docKey,
+      ACL: 'authenticated-read'
+    })
+    .promise();
+}
+
+exports.unpublishS3Document = unpublishS3Document;
+
+/**
+ * Swagger route handler for publish a document.
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ */
+exports.protectedPublish = async function(args, res, next) {
+  try {
+    if (!args.swagger.params.docId || !args.swagger.params.docId.value) {
+      return queryActions.sendResponse(res, 400, 'Missing required docId param');
+    }
+
+    defaultLog.info(`protectedPublish - docId: ${args.swagger.params.docId.value}`);
+
+    const Document = require('mongoose').model('Document');
+    const document = await Document.findOne({ _id: new ObjectID(args.swagger.params.docId.value) });
+
+    if (!document) {
+      defaultLog.info(`protectedPublish - couldn't find document for docId: ${args.swagger.params.docId.value}`);
+      return queryActions.sendResponse(res, 404, {});
+    }
+
+    // publish mongo document
+    const published = await publishDocument(document, args.swagger.params.auth_payload);
+
+    let publishedS3 = null;
+    try {
+      if (document.key) {
+        // publish s3 document, if it exists
+        publishedS3 = await publishS3Document(document.key);
+      }
+    } catch (error) {
+      // don't fail if we try to unpublish a key that doesn't exist
+      if (error.code !== 'NoSuchKey') {
+        throw error;
+      }
+    }
+
+    return queryActions.sendResponse(res, 200, { localDocument: published, s3Document: publishedS3 });
+  } catch (error) {
+    return queryActions.sendResponse(res, 500, error);
+  }
+};
+
+/**
+ * Publish a document. Adds the `public` role to the documents root read array.
+ *
+ * @param {*} document
+ * @param {*} auth_payload
+ * @returns the published document
+ */
+async function publishDocument(document, auth_payload) {
+  if (!document) {
+    defaultLog.info('publishDocument - Missing required document param');
+    return null;
+  }
+
+  let published = await queryActions.publish(document);
+
+  await queryUtils.recordAction('Publish', document, auth_payload && auth_payload.displayName, document._id);
+
+  return published;
+}
+
+exports.publishDocument = publishDocument;
+
+/**
+ * Swagger route handler for unpublish a document.
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ */
+exports.protectedUnpublish = async function(args, res, next) {
+  try {
+    if (!args.swagger.params.docId || !args.swagger.params.docId.value) {
+      return queryActions.sendResponse(res, 400, 'Missing required docId param');
+    }
+
+    defaultLog.info(`unpublishDocument - docId: ${args.swagger.params.docId.value}`);
+
+    const Document = require('mongoose').model('Document');
+    const document = await Document.findOne({ _id: new ObjectID(args.swagger.params.docId.value) });
+
+    if (!document) {
+      defaultLog.info(`protectedUnpublish - couldn't find document for docId: ${args.swagger.params.docId.value}`);
+      return queryActions.sendResponse(res, 404, {});
+    }
+
+    // unpublish mongo document
+    const unpublished = unpublishDocument(document, args.swagger.params.auth_payload);
+
+    let unpublishedS3 = null;
+    try {
+      if (document.key) {
+        // unpublish s3 document, if it exists
+        unpublishedS3 = await unpublishS3Document(document.key);
+      }
+    } catch (error) {
+      // don't fail if we try to unpublish a key that doesn't exist
+      if (error.code !== 'NoSuchKey') {
+        throw error;
+      }
+    }
+
+    return queryActions.sendResponse(res, 200, { localDocument: unpublished, s3Document: unpublishedS3 });
+  } catch (error) {
+    return queryActions.sendResponse(res, 500, error);
+  }
+};
+
+/**
+ * Unpublish a document. Removes the `public` role to the documents root read array.
+ *
+ * @param {*} document
+ * @param {*} auth_payload
+ * @returns the unpublished document
+ */
+async function unpublishDocument(document, auth_payload) {
+  if (!document) {
+    defaultLog.info('unpublishDocument - Missing required document param');
+    return null;
+  }
+
+  const unpublished = await queryActions.unPublish(document);
+
+  await queryUtils.recordAction('Unpublish', document, auth_payload && auth_payload.displayName, document._id);
+
+  return unpublished;
+}
+
+exports.unpublishDocument = unpublishDocument;
+
+exports.protectedGetS3SignedURL = async function(args, res, next) {
+  if (!args.swagger.params.docId || !args.swagger.params.docId.value) {
+    defaultLog.warn('protectedGet - missing required docId param');
+    return queryActions.sendResponse(res, 400, 'Missing required docId param');
+  }
+
+  const Document = mongoose.model('Document');
+  const document = await Document.findOne({ _id: new ObjectID(args.swagger.params.docId.value) });
+
+  if (!document) {
+    defaultLog.info(`protectedGetS3SignedURL - couldn't find document for docId: ${args.swagger.params.docId.value}`);
+    return queryActions.sendResponse(res, 404, {});
+  }
+
+  if (!document.key) {
+    defaultLog.info(`protectedGetS3SignedURL - not an S3 document: ${args.swagger.params.docId.value}`);
+    return queryActions.sendResponse(res, 404, {});
+  }
+
+  const signedUrl = await s3.getSignedUrl('getObject', {
+    Bucket: process.env.OBJECT_STORE_bucket_name,
+    Key: document.key
+  });
+
+  return queryActions.sendResponse(res, 200, signedUrl);
 };

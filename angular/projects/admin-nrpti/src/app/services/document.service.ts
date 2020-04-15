@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-
 import { ApiService } from './api.service';
 import { Document } from '../../../../common/src/app/models/document';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 /**
  * Provides methods for retrieving and working with documents.
@@ -15,28 +14,6 @@ import { HttpClient } from '@angular/common/http';
 export class DocumentService {
   constructor(public apiService: ApiService, public http: HttpClient) {}
 
-  /**
-   * Return all documents that match the provided filters.
-   *
-   * @param {IRecordQueryParamSet[]} queryParamSet array of query parameter sets.
-   * @returns {Observable<Document[]>} total results from all query param sets. Not guaranteed to be unique.
-   * @memberof DocumentService
-   */
-  public getAll(/* queryParamSets: IDocumentQueryParamSet[] */): Observable<Document[]> {
-    return of([] as Document[]);
-  }
-
-  /**
-   * Get a count of all documents that match the provided filters.
-   *
-   * @param {IRecordQueryParamSet[]} queryParamSet array of query parameter sets.
-   * @returns {Observable<number>} total results from all query param sets. Not guaranteed to be unique.
-   * @memberof DocumentService
-   */
-  public getCount(/* queryParamSets: IDocumentQueryParamSet[] */): Observable<number> {
-    return of(0);
-  }
-
   public createDocument(document: FormData, recordId: string): Promise<any> {
     const queryString = `record/${recordId}/document`;
     return this.http.post<any>(`${this.apiService.pathAPI}/${queryString}`, document, {}).toPromise();
@@ -45,6 +22,33 @@ export class DocumentService {
   public deleteDocument(docId: string, recordId: string): Promise<any> {
     const queryString = `record/${recordId}/document/${docId}`;
     return this.http.delete<any>(`${this.apiService.pathAPI}/${queryString}`).toPromise();
+  }
+
+  public publishDocument(docId: string): Promise<any> {
+    if (!document) {
+      throw Error('DocumentService - publishDocument - missing required docId param');
+    }
+
+    const queryString = `document/${docId}/publish`;
+    return this.http.post<any>(`${this.apiService.pathAPI}/${queryString}`, null).toPromise();
+  }
+
+  public unpublishDocument(docId: string): Promise<any> {
+    if (!document) {
+      throw Error('DocumentService - unpublishDocument - missing required docId param');
+    }
+
+    const queryString = `document/${docId}/unpublish`;
+    return this.http.post<any>(`${this.apiService.pathAPI}/${queryString}`, null).toPromise();
+  }
+
+  public getS3SignedUrl(docId: string): Observable<any> {
+    if (!document) {
+      throw Error('DocumentService - getS3SignedUrl - missing required docId param');
+    }
+
+    const queryString = `document/${docId}/signedurl`;
+    return this.http.get<any>(`${this.apiService.pathAPI}/${queryString}`);
   }
 
   private downloadResource(id: string): Promise<Blob> {
