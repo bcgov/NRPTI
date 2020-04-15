@@ -35,7 +35,8 @@ module.exports = require('../../utils/model-schema-generator')(
       middleName: { type: String, default: '' },
       lastName: { type: String, default: '' },
       fullName: { type: String, default: '' },
-      dateOfBirth: { type: Date, default: null }
+      dateOfBirth: { type: Date, default: null },
+      forceAnonymous: { type: Boolean, default: false }
     },
     projectName: { type: String, default: '' },
     location: { type: String, default: '' },
@@ -56,7 +57,7 @@ module.exports = require('../../utils/model-schema-generator')(
 
     sourceDateAdded: { type: Date, default: null },
     sourceDateUpdated: { type: Date, default: null },
-    sourceSystemRef: { type: String, default: 'nrpti' },
+    sourceSystemRef: { type: String, default: 'nrpti' }
   },
   'nrpti'
 );

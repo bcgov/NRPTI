@@ -279,7 +279,10 @@ class NrisDataSource {
     let s3Response = null;
 
     try {
-      docResponse = await documentController.createDocument(fileName);
+      docResponse = await documentController.createDocument(
+        fileName,
+        (this.auth_payload && this.auth_payload.displayName) || ''
+      );
     } catch (e) {
       defaultLog.info('Error saving document meta:', e);
       return null;

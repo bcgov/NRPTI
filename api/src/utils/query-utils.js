@@ -121,6 +121,15 @@ exports.isRecordAnonymous = function(record) {
     return false;
   }
 
+  if (record.issuedTo.forceAnonymous) {
+    // record manually set to anonymous
+
+    // Note: this value only indicates that the user has toggled this record to be anonymous.  If it is set to null or
+    //   false, that only tells us the user hasn't toggled this value, and does not necessarily mean this record is
+    //   public (not anonymous).
+    return true;
+  }
+
   if (!record.issuedTo.dateOfBirth) {
     // all types other than Company must have a birth date to have a chance at being not anonymous
     return true;

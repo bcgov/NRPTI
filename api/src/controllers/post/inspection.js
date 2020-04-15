@@ -177,6 +177,9 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (inspection.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.forceAnonymous &&
+    (inspection.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
   incomingObj.projectName && (inspection.projectName = incomingObj.projectName);
   incomingObj.location && (inspection.location = incomingObj.location);
   incomingObj.centroid && (inspection.centroid = incomingObj.centroid);
@@ -291,6 +294,9 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (inspectionLNG.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.forceAnonymous &&
+    (inspectionLNG.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
   incomingObj.projectName && (inspectionLNG.projectName = incomingObj.projectName);
   incomingObj.location && (inspectionLNG.location = incomingObj.location);
   incomingObj.centroid && (inspectionLNG.centroid = incomingObj.centroid);
@@ -416,6 +422,9 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (inspectionNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.forceAnonymous &&
+    (inspectionNRCED.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
   incomingObj.projectName && (inspectionNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (inspectionNRCED.location = incomingObj.location);
   incomingObj.centroid && (inspectionNRCED.centroid = incomingObj.centroid);

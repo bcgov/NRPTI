@@ -183,6 +183,9 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (courtConviction.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.forceAnonymous &&
+    (courtConviction.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
 
   incomingObj.projectName && (courtConviction.projectName = incomingObj.projectName);
   incomingObj.location && (courtConviction.location = incomingObj.location);
@@ -301,6 +304,9 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (courtConvictionLNG.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.forceAnonymous &&
+    (courtConvictionLNG.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
 
   incomingObj.projectName && (courtConvictionLNG.projectName = incomingObj.projectName);
   incomingObj.location && (courtConvictionLNG.location = incomingObj.location);
@@ -429,6 +435,9 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (courtConvictionNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.forceAnonymous &&
+    (courtConvictionNRCED.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
 
   incomingObj.projectName && (courtConvictionNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (courtConvictionNRCED.location = incomingObj.location);

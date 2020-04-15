@@ -187,6 +187,9 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (administrativeSanction.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.forceAnonymous &&
+    (administrativeSanction.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
   incomingObj.projectName && (administrativeSanction.projectName = incomingObj.projectName);
   incomingObj.location && (administrativeSanction.location = incomingObj.location);
   incomingObj.centroid && (administrativeSanction.centroid = incomingObj.centroid);
@@ -304,6 +307,9 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (administrativeSanctionLNG.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.forceAnonymous &&
+    (administrativeSanctionLNG.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
   incomingObj.projectName && (administrativeSanctionLNG.projectName = incomingObj.projectName);
   incomingObj.location && (administrativeSanctionLNG.location = incomingObj.location);
   incomingObj.centroid && (administrativeSanctionLNG.centroid = incomingObj.centroid);
@@ -431,6 +437,9 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (administrativeSanctionNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.forceAnonymous &&
+    (administrativeSanctionNRCED.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
   incomingObj.projectName && (administrativeSanctionNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (administrativeSanctionNRCED.location = incomingObj.location);
   incomingObj.centroid && (administrativeSanctionNRCED.centroid = incomingObj.centroid);

@@ -51,7 +51,8 @@ class BaseRecordUtils {
         (this.auth_payload && this.auth_payload.displayName) || '',
         `${EPIC_PUBLIC_HOSTNAME}/api/document/${epicRecord._id}/fetch/${encodeURIComponent(
           epicRecord.documentFileName
-        )}`
+        )}`,
+        false //  Epic only has companies, which are never anonymous
       );
 
       documents.push(savedDocument._id);

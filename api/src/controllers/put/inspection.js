@@ -4,6 +4,7 @@ const PutUtils = require('../../utils/put-utils');
 const PostUtils = require('../../utils/post-utils');
 const QueryUtils = require('../../utils/query-utils');
 const InspectionPost = require('../post/inspection');
+const DocumentController = require('../document-controller');
 
 /**
  * Performs all operations necessary to edit a master Inspection record and its associated flavour records.
@@ -104,12 +105,6 @@ exports.editRecord = async function(args, res, next, incomingObj) {
 
   try {
     savedInspection = await this.editMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedInspection,
-      flavours: savedFlavourInspections
-    };
   } catch (e) {
     return {
       status: 'failure',
@@ -117,6 +112,41 @@ exports.editRecord = async function(args, res, next, incomingObj) {
       errorMessage: e.message
     };
   }
+
+  // update document roles
+  let documentPromises = [];
+  let savedDocuments = [];
+
+  try {
+    const isAnonymous = QueryUtils.isRecordAnonymous(savedInspection);
+
+    if (isAnonymous) {
+      savedInspection.documents.forEach(docId => {
+        documentPromises.push(DocumentController.unpublishDocument(docId, args.swagger.params.auth_payload));
+      });
+    } else if (savedInspection) {
+      savedInspection.documents.forEach(docId => {
+        DocumentController.publishDocument(savedInspection._id, docId, args.swagger.params.auth_payload);
+      });
+    }
+
+    if (documentPromises.length > 0) {
+      savedDocuments = await Promise.all(documentPromises);
+    }
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedDocuments,
+      errorMessage: e.message
+    };
+  }
+
+  return {
+    status: 'success',
+    object: savedInspection,
+    flavours: savedFlavourInspections,
+    documents: savedDocuments
+  };
 };
 
 /**
@@ -252,7 +282,7 @@ exports.editLNG = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  if (sanitizedObj.issuedTo) {
+  if (sanitizedObj.issuedTo && incomingObj.issuedTo) {
     // check if a condition changed that would cause the entity details to be anonymous, or not.
     if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
       updateObj.$pull['issuedTo.read'] = 'public';
@@ -330,7 +360,7 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  if (sanitizedObj.issuedTo) {
+  if (sanitizedObj.issuedTo && incomingObj.issuedTo) {
     // check if a condition changed that would cause the entity details to be anonymous, or not.
     if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
       updateObj.$pull['issuedTo.read'] = 'public';

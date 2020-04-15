@@ -4,6 +4,7 @@ const PutUtils = require('../../utils/put-utils');
 const PostUtils = require('../../utils/post-utils');
 const QueryUtils = require('../../utils/query-utils');
 const AdministrativeSanctionPost = require('../post/administrative-sanction');
+const DocumentController = require('../document-controller');
 
 /**
  * Performs all operations necessary to edit a master Administrative Sanction record and its associated flavour records.
@@ -35,6 +36,7 @@ const AdministrativeSanctionPost = require('../post/administrative-sanction');
  * @returns object containing the operation's status and created records
  */
 exports.editRecord = async function(args, res, next, incomingObj) {
+  console.log('1', incomingObj);
   // save flavour records
   let observables = [];
   let savedFlavourAdministrativeSanctions = [];
@@ -110,12 +112,6 @@ exports.editRecord = async function(args, res, next, incomingObj) {
 
   try {
     savedAdministrativeSanction = await this.editMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedAdministrativeSanction,
-      flavours: savedFlavourAdministrativeSanctions
-    };
   } catch (e) {
     return {
       status: 'failure',
@@ -123,6 +119,41 @@ exports.editRecord = async function(args, res, next, incomingObj) {
       errorMessage: e.message
     };
   }
+
+  // update document roles
+  let documentPromises = [];
+  let savedDocuments = [];
+
+  try {
+    const isAnonymous = QueryUtils.isRecordAnonymous(savedAdministrativeSanction);
+
+    if (isAnonymous) {
+      savedAdministrativeSanction.documents.forEach(docId => {
+        documentPromises.push(DocumentController.unpublishDocument(docId, args.swagger.params.auth_payload));
+      });
+    } else if (savedAdministrativeSanction) {
+      savedAdministrativeSanction.documents.forEach(docId => {
+        DocumentController.publishDocument(savedAdministrativeSanction._id, docId, args.swagger.params.auth_payload);
+      });
+    }
+
+    if (documentPromises.length > 0) {
+      savedDocuments = await Promise.all(documentPromises);
+    }
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedDocuments,
+      errorMessage: e.message
+    };
+  }
+
+  return {
+    status: 'success',
+    object: savedAdministrativeSanction,
+    flavours: savedFlavourAdministrativeSanctions,
+    documents: savedDocuments
+  };
 };
 
 /**
@@ -260,7 +291,7 @@ exports.editLNG = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  if (sanitizedObj.issuedTo) {
+  if (sanitizedObj.issuedTo && incomingObj.issuedTo) {
     // check if a condition changed that would cause the entity details to be anonymous, or not.
     if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
       updateObj.$pull['issuedTo.read'] = 'public';
@@ -306,6 +337,7 @@ exports.editLNG = async function(args, res, next, incomingObj) {
  * @returns edited nrced administrativeSanction record
  */
 exports.editNRCED = async function(args, res, next, incomingObj) {
+  console.log('2', incomingObj);
   if (!incomingObj || !incomingObj._id) {
     // skip, as there is no way to update the NRCED record
     return;
@@ -342,7 +374,7 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  if (sanitizedObj.issuedTo) {
+  if (sanitizedObj.issuedTo && incomingObj.issuedTo) {
     // check if a condition changed that would cause the entity details to be anonymous, or not.
     if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
       updateObj.$pull['issuedTo.read'] = 'public';

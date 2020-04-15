@@ -8,7 +8,7 @@ const defaultLog = require('./logger')('queryActions');
  * @param {*} obj
  * @returns
  */
-exports.publish = async function(obj) {
+exports.publish = async function(obj, auth_payload) {
   let self = this;
   return new Promise(async function(resolve, reject) {
     // Object was already published?
@@ -28,8 +28,8 @@ exports.publish = async function(obj) {
       obj.datePublished = date;
       obj.markModified('datePublished');
 
-      obj.dateUpdated = date;
-      obj.markModified('dateUpdated');
+      obj.publishedBy = auth_payload && auth_payload.displayName;
+      obj.markModified('publishedBy');
 
       // save and return
       let savedObj = await obj.save();
@@ -69,7 +69,7 @@ exports.addPublicReadRole = function(obj) {
  * @param {*} obj
  * @returns
  */
-exports.unPublish = async function(obj) {
+exports.unPublish = async function(obj, auth_payload) {
   let self = this;
   return new Promise(async function(resolve, reject) {
     // Object wasn't already published?
@@ -87,8 +87,8 @@ exports.unPublish = async function(obj) {
       obj.datePublished = null;
       obj.markModified('datePublished');
 
-      obj.dateUpdated = new Date();
-      obj.markModified('dateUpdated');
+      obj.publishedBy = null;
+      obj.markModified('publishedBy');
 
       // save and return
       let savedObj = await obj.save();

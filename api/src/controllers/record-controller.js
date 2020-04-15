@@ -263,7 +263,9 @@ exports.protectedPublish = async function(args, res, next) {
     const recordData = args.swagger.params.record.value;
     defaultLog.info(`protectedPublish - recordId: ${recordData._id}`);
 
-    const model = require('mongoose').model(recordData._schemaName);
+    const mongoose = require('mongoose');
+
+    const model = mongoose.model(recordData._schemaName);
 
     const record = await model.findOne({ _id: recordData._id });
 
@@ -274,11 +276,14 @@ exports.protectedPublish = async function(args, res, next) {
 
     defaultLog.debug(`protectedPublish - record: ${JSON.stringify(record)}`);
 
-    // add entity read role
+    // add entity and document read roles
     if (!queryActions.isPublished(record.issuedTo)) {
       if (!queryUtils.isRecordAnonymous(record)) {
         // make entity information public
         queryActions.addPublicReadRole(record.issuedTo);
+
+        // make documents public
+        mongoose.model('Document').updateMany({ _id: { $in: record.documents } }, { $addToSet: { read: 'public' } });
       }
     }
 
@@ -304,7 +309,9 @@ exports.protectedUnPublish = async function(args, res, next) {
     const recordData = args.swagger.params.record.value;
     defaultLog.info(`protectedUnPublish - recordId: ${recordData._id}`);
 
-    const model = require('mongoose').model(recordData._schemaName);
+    const mongoose = require('mongoose');
+
+    const model = mongoose.model(recordData._schemaName);
 
     const record = await model.findOne({ _id: recordData._id });
 
