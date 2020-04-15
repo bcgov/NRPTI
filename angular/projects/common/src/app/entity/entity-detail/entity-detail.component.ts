@@ -12,14 +12,18 @@ export class EntityDetailComponent implements OnInit, OnChanges {
   public ENTITY_TYPE = ENTITY_TYPE; // make available in template
   public UIType: ENTITY_TYPE = null;
 
+  public isAnonymous = false;
+
   constructor(public _changeDetectionRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.updateUI();
+    this.setIsAnonymous();
   }
 
   updateUI() {
     this.updateUIType();
+    this.setIsAnonymous();
 
     this._changeDetectionRef.detectChanges();
   }
@@ -61,5 +65,15 @@ export class EntityDetailComponent implements OnInit, OnChanges {
     }
 
     this.UIType = ENTITY_TYPE.NotSet;
+  }
+
+  /**
+   * Sets the isAnonymous flag to true if the entity is not a company and is anonymous (read role array does not
+   * contain 'public' role), false otherwise.
+   *
+   * @memberof EntityDetailComponent
+   */
+  setIsAnonymous(): void {
+    this.isAnonymous = this.data && this.data.type !== ENTITY_TYPE.Company && !this.data.read.includes('public');
   }
 }

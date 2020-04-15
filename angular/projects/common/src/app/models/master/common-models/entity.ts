@@ -31,6 +31,7 @@ export class Entity {
   lastName: string;
   fullName: string;
   dateOfBirth: Date;
+  forceAnonymous: boolean;
 
   constructor(obj?: any) {
     this.read = (obj && obj.read) || null;
@@ -43,6 +44,7 @@ export class Entity {
     this.lastName = (obj && obj.lastName) || null;
     this.fullName = (obj && obj.fullName) || null;
     this.dateOfBirth = (obj && obj.dateOfBirth) || null;
+    this.forceAnonymous = (obj && obj.forceAnonymous) || false;
   }
 
   /**

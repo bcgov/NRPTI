@@ -9,9 +9,7 @@
         </option>
       </select>
     </div>
-  </div>
 
-  <div class="flex-container">
     <!-- Company -->
     <ng-container *ngIf="UIType === ENTITY_TYPE.Company">
       <div class="label-pair">
@@ -22,45 +20,61 @@
 
     <!-- Individual* -->
     <ng-container *ngIf="UIType === ENTITY_TYPE.Individual || UIType === ENTITY_TYPE.IndividualCombined">
-      <!-- IndividualCombined -->
-      <ng-container *ngIf="UIType === ENTITY_TYPE.Individual">
-        <div class="label-pair">
-          <label for="firstName">First Name</label>
-          <input name="firstName" id="firstName" formControlName="firstName" type="text" class="form-control" />
-        </div>
-        <div class="label-pair">
-          <label for="middleName">Middle Name</label>
-          <input name="middleName" id="middleName" formControlName="middleName" type="text" class="form-control" />
-        </div>
-        <div class="label-pair">
-          <label for="lastName">Last Name</label>
-          <input name="lastName" id="lastName" formControlName="lastName" type="text" class="form-control" />
-        </div>
-      </ng-container>
-
-      <!-- Individual -->
-      <ng-container *ngIf="UIType === ENTITY_TYPE.IndividualCombined">
-        <div class="label-pair">
-          <label for="fullName">Full Name</label>
-          <input name="fullName" id="fullName" formControlName="fullName" type="text" class="form-control" />
-        </div>
-      </ng-container>
-      <div class="label-pair">
-        <label for="dateOfBirth">Date of Birth</label>
-        <div class="input-group">
-          <input
-            class="form-control"
-            placeholder="yyyy-mm-dd"
-            name="dp"
-            formControlName="dateOfBirth"
-            ngbDatepicker
-            #d="ngbDatepicker"
-          />
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
-          </div>
-        </div>
+      <div class="label-single">
+        <mat-slide-toggle
+          name="forceAnonymous"
+          id="forceAnonymous"
+          formControlName="forceAnonymous"
+          (change)="updateAnonymity($event.checked)"
+          title="{{ anonymousText }}"
+        >
+          {{ (formGroup.get('forceAnonymous').value && 'Anonymous') || 'Not Anonymous' }}
+        </mat-slide-toggle>
+        <span class="grey-subtext d-block">{{ anonymousText }}</span>
       </div>
     </ng-container>
+  </div>
+
+  <div class="flex-container" *ngIf="UIType === ENTITY_TYPE.Individual || UIType === ENTITY_TYPE.IndividualCombined">
+    <!-- IndividualCombined -->
+    <ng-container *ngIf="UIType === ENTITY_TYPE.Individual">
+      <div class="label-pair">
+        <label for="firstName">First Name</label>
+        <input name="firstName" id="firstName" formControlName="firstName" type="text" class="form-control" />
+      </div>
+      <div class="label-pair">
+        <label for="middleName">Middle Name</label>
+        <input name="middleName" id="middleName" formControlName="middleName" type="text" class="form-control" />
+      </div>
+      <div class="label-pair">
+        <label for="lastName">Last Name</label>
+        <input name="lastName" id="lastName" formControlName="lastName" type="text" class="form-control" />
+      </div>
+    </ng-container>
+
+    <!-- Individual -->
+    <ng-container *ngIf="UIType === ENTITY_TYPE.IndividualCombined">
+      <div class="label-pair">
+        <label for="fullName">Full Name</label>
+        <input name="fullName" id="fullName" formControlName="fullName" type="text" class="form-control" />
+      </div>
+    </ng-container>
+    <div class="label-pair">
+      <label for="dateOfBirth">Date of Birth</label>
+      <div class="input-group">
+        <input
+          class="form-control"
+          placeholder="yyyy-mm-dd"
+          name="dp"
+          formControlName="dateOfBirth"
+          (ngModelChange)="updateAnonymity()"
+          ngbDatepicker
+          #d="ngbDatepicker"
+        />
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+        </div>
+      </div>
+    </div>
   </div>
 </form>

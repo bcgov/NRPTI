@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule, MatCheckboxModule } from '@angular/material';
+import { MatAutocompleteModule, MatCheckboxModule, MatSlideToggleModule } from '@angular/material';
 
 // modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -44,7 +44,8 @@ import { PenaltyDetailComponent as PenaltyDetailPublicComponent } from './penalt
     FormsModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSlideToggleModule
   ],
   providers: [],
   exports: [
