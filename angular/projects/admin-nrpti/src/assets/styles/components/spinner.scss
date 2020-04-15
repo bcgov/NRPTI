@@ -66,6 +66,10 @@
     background: $spinner-invert-bg;
   }
 
+  &.translucent {
+    background: rgba(255, 255, 255, 0.5);
+  }
+
   &.transparent {
     background: transparent;
   }
