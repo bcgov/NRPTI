@@ -9,6 +9,7 @@ import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
+import { ENTITY_TYPE } from '../../../../../../common/src/app/models/master/common-models/entity';
 
 @Component({
   selector: 'app-court-conviction-add-edit',
@@ -152,8 +153,8 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
             this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
             ''
         ),
-        anonymous: new FormControl(
-          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || ''
+        forceAnonymous: new FormControl(
+          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.forceAnonymous) || ''
         )
       }),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
@@ -294,7 +295,8 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
       this.myForm.get('issuedTo.middleName').dirty ||
       this.myForm.get('issuedTo.lastName').dirty ||
       this.myForm.get('issuedTo.fullName').dirty ||
-      this.myForm.get('issuedTo.dateOfBirth').dirty
+      this.myForm.get('issuedTo.dateOfBirth').dirty ||
+      this.myForm.get('issuedTo.forceAnonymous').dirty
     ) {
       courtConviction['issuedTo'] = {
         type: this.myForm.get('issuedTo.type').value,
@@ -305,6 +307,16 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
         fullName: this.myForm.get('issuedTo.fullName').value,
         dateOfBirth: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('issuedTo.dateOfBirth').value)
       };
+
+      if (this.myForm.get('issuedTo.forceAnonymous').touched) {
+        // anonymity may be enforced (via roles, below) automatically by the business logic, but in that case, don't
+        // update this value, which should only be set when the user manually toggles the anonymity.
+        courtConviction['issuedTo']['forceAnonymous'] = this.myForm.get('issuedTo.forceAnonymous').value;
+      }
+
+      if (this.myForm.get('issuedTo.type').value === ENTITY_TYPE.Company) {
+        courtConviction['issuedTo']['forceAnonymous'] = null;
+      }
     }
 
     // Project name logic
