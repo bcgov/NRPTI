@@ -910,7 +910,7 @@ let createDocument = async function (item, nrptiCollection) {
       key: null,
       dateAdded: new Date(),
       write: ['sysadmin'],
-      read: ['read']
+      read: ['sysadmin', 'public']
     }
     const resDocument = await nrptiCollection.insertOne(document);
     documents.push(new ObjectID(resDocument.ops[0]._id));
