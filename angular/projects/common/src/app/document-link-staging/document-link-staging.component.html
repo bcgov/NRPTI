@@ -21,7 +21,7 @@
               [showInfo]="false"
               [showList]="false"
               [files]="recordFiles"
-              (filesChange)="addDocuments($event); recordFiles = []"
+              (filesChange)="addDocuments($event)"
             ></app-file-upload>
             <br />
             <ul class="doc-list mb-3" *ngIf="documents && documents.length > 0">

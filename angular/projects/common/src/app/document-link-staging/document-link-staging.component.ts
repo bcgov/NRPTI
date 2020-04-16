@@ -17,22 +17,13 @@ export class DocumentLinkStagingComponent {
   @Output() linksChanged = new EventEmitter();
   @Output() documentsChanged = new EventEmitter();
 
-  constructor(private _changeDetectionRef: ChangeDetectorRef) {}
+  constructor(private _changeDetectionRef: ChangeDetectorRef) { }
 
   public addDocuments(files) {
     if (files) {
       // safety check
       for (const file of files) {
         if (file) {
-          // ensure file is not already in the list
-
-          if (this.documents.find(x => x.fileName === file.name)) {
-            // this.snackBarRef = this.snackBar.open('Can\'t add duplicate file', null, { duration: 2000 });
-            continue;
-          }
-
-          this.recordFiles.push(file);
-
           const document = new Document();
           document.upfile = file;
           document.fileName = file.name;

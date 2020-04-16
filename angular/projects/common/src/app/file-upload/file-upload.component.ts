@@ -20,7 +20,7 @@ export class FileUploadComponent {
   @ViewChild('file') fileInput: ElementRef;
   public errors: string[] = [];
 
-  constructor() {}
+  constructor() { }
 
   @HostListener('dragover', ['$event']) onDragOver(event) {
     this.dragDropClass = 'droparea';
@@ -79,6 +79,18 @@ export class FileUploadComponent {
     this.filesChange.emit(this.files);
   }
 
+  public checkIfDuplicate(fileList: FileList): boolean {
+    const fileArray = Array.from(fileList);
+    for (let i = fileArray.length - 1; i >= 0; i--) {
+      if (this.files.find(x => x.name === fileArray[i].name)) {
+        this.errors.push('Cannot upload duplicate files');
+        setTimeout(() => (this.errors = []), 5000);
+        return false;
+      }
+    }
+    return true;
+  }
+
   private isValidFiles(files: FileList): boolean {
     if (this.maxFiles > 0) {
       this.validateMaxFiles(files);
@@ -89,12 +101,13 @@ export class FileUploadComponent {
     if (this.maxSize > 0) {
       this.validateFileSizes(files);
     }
+    this.checkIfDuplicate(files);
     return this.errors.length === 0;
   }
 
   private validateMaxFiles(files: FileList): boolean {
     if (files.length + this.files.length > this.maxFiles) {
-      this.errors.push('Too many files');
+      this.errors.push(`Max number of files is ${this.maxFiles}`);
       setTimeout(() => (this.errors = []), 5000);
       return false;
     }
