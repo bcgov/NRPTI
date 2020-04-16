@@ -80,12 +80,12 @@ export class FileUploadComponent {
   }
 
   public checkIfDuplicate(fileList: FileList): boolean {
-    const fileArray = Array.from(fileList)
-    for (var i = fileArray.length - 1; i >= 0; i--) {
+    const fileArray = Array.from(fileList);
+    for (let i = fileArray.length - 1; i >= 0; i--) {
       if (this.files.find(x => x.name === fileArray[i].name)) {
         this.errors.push('Cannot upload duplicate files');
         setTimeout(() => (this.errors = []), 5000);
-        return false
+        return false;
       }
     }
     return true;
