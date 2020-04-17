@@ -84,19 +84,6 @@
     </section>
 
     <section>
-      <h4>Contravention</h4>
-      <app-legislation-add-edit [formGroup]="myForm"></app-legislation-add-edit>
-      <div class="flex-container">
-        <div class="label-pair">
-          <label for="offence">Offence</label>
-          <input name="offence" id="offence" formControlName="offence" class="form-control" />
-        </div>
-      </div>
-      <h4>Penalties</h4>
-      <app-penalty-add-edit [formArray]="this.myForm.controls.penalties"></app-penalty-add-edit>
-    </section>
-
-    <section>
       <h4>Issued To</h4>
       <div class="flex-container">
         <div class="label-pair">
@@ -125,6 +112,19 @@
         </div>
       </div>
       <app-entity-add-edit [formGroup]="this.myForm.controls.issuedTo"></app-entity-add-edit>
+    </section>
+
+    <section>
+      <h4>Contravention</h4>
+      <app-legislation-add-edit [formGroup]="myForm"></app-legislation-add-edit>
+      <div class="flex-container">
+        <div class="label-pair">
+          <label for="offence">Offence</label>
+          <input name="offence" id="offence" formControlName="offence" class="form-control" />
+        </div>
+      </div>
+      <h4>Penalties</h4>
+      <app-penalty-add-edit [formArray]="this.myForm.controls.penalties"></app-penalty-add-edit>
     </section>
 
     <section>
