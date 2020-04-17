@@ -209,7 +209,7 @@ let createActivityRecord = async function (item, project, nrptiCollection) {
     description: item.description,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
     // Prefer to store dates in the DB as ISO, not some random format.
-    date: moment(item.date, 'DD-MM-YYYY').toDate()
+    date: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null
   }
 
   const res = await nrptiCollection.insertOne(activity)
@@ -234,7 +234,7 @@ let createAgreementRecord = async function (item, project, nrptiCollection) {
     recordName: item.name,
     recordType: 'Agreement',
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     nationName: item.nation,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
     documents: documents,
@@ -270,7 +270,7 @@ let createAgreementRecord = async function (item, project, nrptiCollection) {
     recordName: item.name,
     recordType: 'Agreement',
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     nationName: item.nation,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
     documents: documents,
@@ -308,7 +308,7 @@ let createManagementPlanRecord = async function (item, project, nrptiCollection)
     recordName: item.name,
     recordType: 'Management Plan',
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
     documents: documents,
@@ -345,7 +345,7 @@ let createManagementPlanRecord = async function (item, project, nrptiCollection)
     recordName: item.name,
     recordType: 'Management Plan',
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
     documents: documents,
@@ -383,7 +383,7 @@ let createConstructionPlanRecord = async function (item, project, nrptiCollectio
     recordName: item.name,
     recordType: 'Construction Plan',
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
     documents: documents,
@@ -420,7 +420,7 @@ let createConstructionPlanRecord = async function (item, project, nrptiCollectio
     recordName: item.name,
     recordType: 'Construction Plan',
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     documents: documents,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
@@ -458,7 +458,7 @@ let createWarningRecord = async function (item, project, nrptiCollection) {
     recordType: 'Warning',
     recordSubtype: item.complianceDocumentSubtype,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     author: item.author,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
@@ -496,7 +496,7 @@ let createWarningRecord = async function (item, project, nrptiCollection) {
     recordType: 'Warning',
     recordSubtype: item.complianceDocumentSubtype,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     documents: documents,
     author: item.author,
@@ -535,7 +535,7 @@ let createComplianceSelfReportRecord = async function (item, project, nrptiColle
     recordName: item.name,
     recordType: 'Compliance Self-Report',
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     author: item.author,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
@@ -573,7 +573,7 @@ let createComplianceSelfReportRecord = async function (item, project, nrptiColle
     recordName: item.name,
     recordType: 'Compliance Self-Report',
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     documents: documents,
     author: item.author,
@@ -613,7 +613,7 @@ let createCertificateRecord = async function (item, project, nrptiCollection) {
     recordType: 'Certificate',
     recordSubtype: item.complianceDocumentSubtype,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
     documents: documents,
@@ -650,7 +650,7 @@ let createCertificateRecord = async function (item, project, nrptiCollection) {
     recordType: 'Certificate',
     recordSubtype: item.complianceDocumentSubtype,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     documents: documents,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
@@ -689,7 +689,7 @@ let createPermitRecord = async function (item, project, nrptiCollection) {
     recordType: 'Permit',
     recordSubtype: item.complianceDocumentSubtype,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
     documents: documents,
@@ -726,7 +726,7 @@ let createPermitRecord = async function (item, project, nrptiCollection) {
     recordType: 'Permit',
     recordSubtype: item.complianceDocumentSubtype,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     documents: documents,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
@@ -765,7 +765,7 @@ let createOrderRecord = async function (item, project, nrptiCollection) {
     recordType: 'Order',
     recordSubtype: item.complianceDocumentSubtype,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     author: item.author,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
@@ -803,7 +803,7 @@ let createOrderRecord = async function (item, project, nrptiCollection) {
     recordType: 'Order',
     recordSubtype: item.complianceDocumentSubtype,
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     documents: documents,
     author: item.author,
@@ -841,7 +841,7 @@ let createInspectionRecord = async function (item, project, nrptiCollection) {
     recordName: item.name,
     recordType: 'Inspection',
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     author: item.author,
     projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
@@ -878,7 +878,7 @@ let createInspectionRecord = async function (item, project, nrptiCollection) {
     recordName: item.name,
     recordType: 'Inspection',
     // Prefer to store dates in the DB as ISO, not some random format.
-    dateIssued: moment(item.date, 'DD-MM-YYYY').toDate(),
+    dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     documents: documents,
     author: item.author,
