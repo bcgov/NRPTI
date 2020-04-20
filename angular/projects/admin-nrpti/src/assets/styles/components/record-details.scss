@@ -31,9 +31,9 @@
             font-weight: 600;
 
             &.button-edit {
-              color: $button-edit-text-color;
-              background-color: $button-edit-bg-color;
-              border: 1px solid $button-edit-border-color;
+              color: $white;
+              background-color: $primary;
+              border: 1px solid $primary;
             }
 
             &.button-publish {
