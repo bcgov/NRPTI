@@ -34,17 +34,32 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" title="Authorizations" (click)="navToAuthorizations()">
+          <a
+            class="nav-link"
+            title="Authorizations"
+            routerLinkActive="active-link"
+            [routerLink]="['/project', id, 'authorizations', { sortBy: '-dateIssued' }]"
+          >
             <span>Authorizations</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" title="Compliance" (click)="navToCompliance()">
+          <a
+            class="nav-link"
+            title="Compliance"
+            routerLinkActive="active-link"
+            [routerLink]="['/project', id, 'compliance', { sortBy: '-dateIssued' }]"
+          >
             <span>Compliance</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" title="Plans" (click)="navToPlans()">
+          <a
+            class="nav-link"
+            title="Plans"
+            routerLinkActive="active-link"
+            [routerLink]="['/project', id, 'plans', { sortBy: '-dateIssued' }]"
+          >
             <span>Plans</span>
           </a>
         </li>
@@ -53,7 +68,7 @@
             class="nav-link"
             title="Indigenous Nations"
             routerLinkActive="active-link"
-            (click)="navToIndigenousNations()"
+            [routerLink]="['/project', id, 'nations', { sortBy: '-dateIssued' }]"
           >
             <span>Indigenous Nations</span>
           </a>
