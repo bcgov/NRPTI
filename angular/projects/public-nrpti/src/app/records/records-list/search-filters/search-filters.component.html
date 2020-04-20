@@ -20,7 +20,7 @@
     <form *ngIf="!loading" [formGroup]="formGroup" novalidate>
       <div class="flex-container">
         <div class="label-pair">
-          <label for="recordType">Issued Date</label>
+          <label>Issued Date</label>
           <span class="grey-subtext ml-2">(YYYY-MM-DD)</span>
           <div class="date-container">
             <lib-date-picker [control]="formGroup.get('dateIssuedStart')" [reset]="resetControls"></lib-date-picker>
@@ -28,28 +28,23 @@
             <lib-date-picker [control]="formGroup.get('dateIssuedEnd')" [reset]="resetControls"></lib-date-picker>
           </div>
         </div>
-        <!-- <div class="label-pair">
-          <label for="recordType">Issued Date</label>
-          <span class="grey-subtext-sm ml-2 ">(YYYY-MM-DD)</span>
-          <lib-date-picker [control]="formGroup.get('dateIssuedEnd')" [reset]="resetControls"></lib-date-picker>
-        </div> -->
       </div>
       <div class="flex-container issuedTo-container no-wrap">
         <div class="label-pair">
-          <label for="issuedTo">Issued To</label>
-          <mat-checkbox name="issuedTo" id="company" formControlName="issuedToCompany" class="form-control">
+          <label>Issued To</label>
+          <mat-checkbox formControlName="issuedToCompany" class="form-control">
             Company
           </mat-checkbox>
         </div>
         <div class="label-single">
-          <mat-checkbox name="issuedTo" id="individual" formControlName="issuedToIndividual" class="form-control">
+          <mat-checkbox formControlName="issuedToIndividual" class="form-control">
             Individual
           </mat-checkbox>
         </div>
       </div>
       <div class="flex-container">
         <div class="label-pair">
-          <label for="activityType">Activity</label>
+          <label>Activity</label>
           <span *ngIf="activityTypeCount" class="grey-subtext ml-2">({{ activityTypeCount }} selected)</span>
           <app-autocomplete-multi-select
             [control]="formGroup.get('activityType')"
@@ -62,7 +57,7 @@
       </div>
       <div hidden>
         <div class="label-pair">
-          <label for="agency">Responsible Agency</label>
+          <label>Responsible Agency</label>
           <span *ngIf="agencyCount" class="grey-subtext ml-2">({{ agencyCount }} selected)</span>
           <app-autocomplete-multi-select
             [control]="formGroup.get('agency')"
@@ -75,7 +70,7 @@
       </div>
       <div>
         <div class="label-pair">
-          <label for="act">Act</label>
+          <label>Act</label>
           <span *ngIf="actCount" class="grey-subtext ml-2">({{ actCount }} selected)</span>
           <app-autocomplete-multi-select
             [control]="formGroup.get('act')"
@@ -88,7 +83,7 @@
       </div>
       <div>
         <div class="label-pair">
-          <label for="regulation">Regulation</label>
+          <label>Regulation</label>
           <span *ngIf="regulationCount" class="grey-subtext ml-2">({{ regulationCount }} selected)</span>
           <app-autocomplete-multi-select
             [control]="formGroup.get('regulation')"
