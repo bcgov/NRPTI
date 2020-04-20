@@ -18,16 +18,21 @@
   </section>
   <section>
     <form *ngIf="!loading" [formGroup]="formGroup" novalidate>
-      <div class="flex-container date-container no-wrap">
+      <div class="flex-container">
         <div class="label-pair">
           <label for="recordType">Issued Date</label>
-          <lib-date-picker [control]="formGroup.get('dateIssuedStart')" [reset]="resetControls"></lib-date-picker>
+          <span class="grey-subtext ml-2">(YYYY-MM-DD)</span>
+          <div class="date-container">
+            <lib-date-picker [control]="formGroup.get('dateIssuedStart')" [reset]="resetControls"></lib-date-picker>
+            <span class="date-separator align-self-center">To</span>
+            <lib-date-picker [control]="formGroup.get('dateIssuedEnd')" [reset]="resetControls"></lib-date-picker>
+          </div>
         </div>
-        <span class="date-separator align-self-center">To</span>
-        <div class="label-pair">
+        <!-- <div class="label-pair">
           <label for="recordType">Issued Date</label>
+          <span class="grey-subtext-sm ml-2 ">(YYYY-MM-DD)</span>
           <lib-date-picker [control]="formGroup.get('dateIssuedEnd')" [reset]="resetControls"></lib-date-picker>
-        </div>
+        </div> -->
       </div>
       <div class="flex-container issuedTo-container no-wrap">
         <div class="label-pair">
