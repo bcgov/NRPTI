@@ -27,20 +27,4 @@ export class ProjectComponent implements OnInit {
       })(this.id);
     });
   }
-
-  navToAuthorizations() {
-    this.router.navigate(['/project', this.id, 'authorizations', { sortBy: '-dateIssued' }]);
-  }
-
-  navToCompliance() {
-    this.router.navigate(['/project', this.id, 'compliance', { sortBy: '-dateIssued' }]);
-  }
-
-  navToPlans() {
-    this.router.navigate(['/project', this.id, 'plans', { sortBy: '-dateIssued' }]);
-  }
-
-  navToIndigenousNations() {
-    this.router.navigate(['/project', this.id, 'nations', { sortBy: '-dateIssued' }]);
-  }
 }
