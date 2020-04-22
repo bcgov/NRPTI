@@ -4,6 +4,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Picklists, EpicProjectIds } from '../../../../../../common/src/app/utils/record-constants';
+import { Legislation } from '../../../../../../common/src/app/models/master/common-models/legislation';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
@@ -60,6 +61,9 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
         }
       }
       this.buildForm();
+
+      this.subscribeToFormControlChanges();
+
       this.loading = false;
       this._changeDetectionRef.detectChanges();
     });
@@ -88,6 +92,30 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  private subscribeToFormControlChanges() {
+    // listen to legislation control changes
+    const debouncedUpdateLegislationDescription = this.utils.debounced(500, () => this.updateLegislationDescription());
+    this.myForm
+      .get('legislation')
+      .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(() => {
+        debouncedUpdateLegislationDescription();
+      });
+  }
+
+  private updateLegislationDescription() {
+    const legislation = new Legislation({
+      act: this.myForm.get('legislation.act').value,
+      regulation: this.myForm.get('legislation.regulation').value,
+      section: this.myForm.get('legislation.section').value,
+      subSection: this.myForm.get('legislation.subSection').value,
+      paragraph: this.myForm.get('legislation.paragraph').value
+    });
+
+    this.myForm.get('legislationDescription').setValue(Picklists.getLegislationDescription('SelfReport', legislation));
+    this.myForm.get('legislationDescription').markAsDirty();
+  }
+
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
@@ -100,21 +128,23 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
-      act: new FormControl(
-        (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.act) || ''
-      ),
-      regulation: new FormControl(
-        (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.regulation) || ''
-      ),
-      section: new FormControl(
-        (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.section) || ''
-      ),
-      subSection: new FormControl(
-        (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.subSection) || ''
-      ),
-      paragraph: new FormControl(
-        (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
-      ),
+      legislation: new FormGroup({
+        act: new FormControl(
+          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.act) || ''
+        ),
+        regulation: new FormControl(
+          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.regulation) || ''
+        ),
+        section: new FormControl(
+          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.section) || ''
+        ),
+        subSection: new FormControl(
+          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.subSection) || ''
+        ),
+        paragraph: new FormControl(
+          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
+        )
+      }),
       legislationDescription: new FormControl((this.currentRecord && this.currentRecord.legislationDescription) || ''),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
@@ -167,18 +197,18 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.author.dirty && (selfReport['author'] = this.myForm.controls.author.value);
 
     if (
-      this.myForm.controls.act.dirty ||
-      this.myForm.controls.regulation.dirty ||
-      this.myForm.controls.section.dirty ||
-      this.myForm.controls.subSection.dirty ||
-      this.myForm.controls.paragraph.dirty
+      this.myForm.get('legislation.act').dirty ||
+      this.myForm.get('legislation.regulation').dirty ||
+      this.myForm.get('legislation.section').dirty ||
+      this.myForm.get('legislation.subSection').dirty ||
+      this.myForm.get('legislation.paragraph').dirty
     ) {
       selfReport['legislation'] = {
-        act: this.myForm.controls.act.value,
-        regulation: this.myForm.controls.regulation.value,
-        section: this.myForm.controls.section.value,
-        subSection: this.myForm.controls.subSection.value,
-        paragraph: this.myForm.controls.paragraph.value
+        act: this.myForm.get('legislation.act').value,
+        regulation: this.myForm.get('legislation.regulation').value,
+        section: this.myForm.get('legislation.section').value,
+        subSection: this.myForm.get('legislation.subSection').value,
+        paragraph: this.myForm.get('legislation.paragraph').value
       };
     }
     this.myForm.controls.legislationDescription.dirty &&
