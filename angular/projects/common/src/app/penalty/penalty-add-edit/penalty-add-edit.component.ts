@@ -26,9 +26,13 @@ export class PenaltyAddEditComponent implements OnInit {
         description: new FormControl()
       })
     );
+
+    this.formArray.markAsDirty();
   }
 
   removePenalty(idx: number) {
     this.formArray.removeAt(idx);
+
+    this.formArray.markAsDirty();
   }
 }

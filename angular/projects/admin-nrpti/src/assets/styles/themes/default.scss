@@ -62,7 +62,7 @@ $link-color:                    #1a5a96;
 
 // Header
 $header-font-color:             $white;
-$header-bg:                     #38598a;
+$header-bg:                     #036;
 
 // Footer
 $footer-bg:                     $primary;
@@ -90,15 +90,15 @@ $aside-toggle-button-color:     #38598a;
 
 // Cards
 $card-header-color:             $white;
-$card-header-bg:                #003367;
+$card-header-bg:                #38598a;
 
 // Buttons
 $button-text-color:             $white;
 
 // Edit Button
-$button-edit-text-color:        $black;
-$button-edit-bg-color:          #ebbe0c;
-$button-edit-border-color:      #5f79a2;
+$button-edit-text-color:        $white;
+$button-edit-bg-color:          $primary;
+$button-edit-border-color:      $primary;
 
 // Publish Button
 $button-publish-text-color:     $black;
@@ -112,7 +112,7 @@ $button-unpublish-border-color:   #4c6182;
 
 // Feature Blocks
 $feature-block-color:           $white;
-$feature-block-bg:              #244278;
+$feature-block-bg:              #38598a;
 $feature-block-light-bg:        $white;
 $feature-block-light-color:     #666;
 $feature-block-primary:         $primary;

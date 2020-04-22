@@ -34,10 +34,6 @@
       <h4>Basic Information</h4>
       <div class="flex-container">
         <div class="label-pair">
-          <label for="recordName">Record Name</label>
-          <input name="recordName" id="recordName" type="text" formControlName="recordName" class="form-control" />
-        </div>
-        <div class="label-pair">
           <label for="dateIssued">Date Issued</label>
           <div class="input-group">
             <input
@@ -46,8 +42,7 @@
               name="dp"
               formControlName="dateIssued"
               ngbDatepicker
-              #d="ngbDatepicker"
-            />
+              #d="ngbDatepicker" />
             <div class="input-group-append">
               <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
             </div>
@@ -62,11 +57,8 @@
             id="recordType"
             type="text"
             value="Administrative Penalty"
-            class="form-control"
-          />
+            class="form-control" />
         </div>
-      </div>
-      <div class="flex-container">
         <div class="label-pair">
           <label for="issuingAgency">Issuing Agency</label>
           <select name="issuingAgency" id="issuingAgency" formControlName="issuingAgency" class="form-control">
@@ -112,8 +104,7 @@
                 id="coastalGaslink"
                 value="Coastal Gaslink"
                 formControlName="projectName"
-                name="projectName"
-              />
+                name="projectName" />
               <label for="coastalGaslink">Coastal Gaslink</label>
             </div>
             <div class="radio">
@@ -148,12 +139,10 @@
       <h4>Documents</h4>
       <app-document-edit
         [documents]="currentRecord ? currentRecord.documents : []"
-        (documentsToDelete)="documentsToDelete = $event"
-      ></app-document-edit>
+        (documentsToDelete)="documentsToDelete = $event"></app-document-edit>
       <app-document-link-staging
         (linksChanged)="links = $event"
-        (documentsChanged)="documents = $event"
-      ></app-document-link-staging>
+        (documentsChanged)="documents = $event"></app-document-link-staging>
     </section>
 
     <section>
@@ -169,8 +158,7 @@
             formControlName="publishNrced"
             (change)="togglePublish($event, 'nrced')"
             [checked]="myForm.controls.publishNrced.value"
-            ngDefaultControl
-          >
+            ngDefaultControl>
             {{ myForm.controls.publishNrced.value ? 'Published' : 'Unpublished' }}
           </mat-slide-toggle>
           <span class="grey-subtext d-block">*Changes made will take effect once you click "Update Record"</span>
@@ -185,8 +173,7 @@
             type="text"
             formControlName="nrcedSummary"
             class="form-control"
-            rows="5"
-          ></textarea>
+            rows="5"></textarea>
         </div>
       </div>
     </section>
@@ -204,11 +191,16 @@
             formControlName="publishLng"
             (change)="togglePublish($event, 'lng')"
             [checked]="myForm.controls.publishLng.value"
-            ngDefaultControl
-          >
+            ngDefaultControl>
             {{ myForm.controls.publishLng.value ? 'Published' : 'Unpublished' }}
           </mat-slide-toggle>
           <span class="grey-subtext d-block">*Changes made will take effect once you click "Update Record"</span>
+        </div>
+      </div>
+      <div class="flex-container">
+        <div class="label-pair">
+          <label for="recordName">Record Name</label>
+          <input name="recordName" id="recordName" type="text" formControlName="recordName" class="form-control" />
         </div>
       </div>
       <div class="flex-container">
@@ -220,8 +212,7 @@
             type="text"
             formControlName="lngDescription"
             class="form-control"
-            rows="5"
-          ></textarea>
+            rows="5"></textarea>
         </div>
       </div>
     </section>

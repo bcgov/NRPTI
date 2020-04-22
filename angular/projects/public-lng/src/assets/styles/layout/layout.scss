@@ -43,6 +43,15 @@
   }
 }
 
+.btn-primary {
+  background: $primary;
+  border: 0;
+
+  &:hover {
+    background: $primary;
+  }
+}
+
 // Main Element
 main {
   section {
