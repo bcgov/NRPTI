@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Picklists } from '../../../../admin-nrpti/src/app/utils/constants/record-constants';
+import { Picklists } from '../utils/record-constants';
 
 @Component({
   selector: 'app-legislation-add-edit',
