@@ -73,7 +73,7 @@ describe('BaseRecordUtils', () => {
           location: 'someLocation'
         },
         milestone: 'milestone',
-        documentDate: 'someDate'
+        datePosted: 'someDate'
       };
 
       const actualRecord = await baseRecordUtils.transformRecord(epicRecord);
