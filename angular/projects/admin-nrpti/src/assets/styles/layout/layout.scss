@@ -22,6 +22,43 @@ body-content {
   }
 }
 
+.bg-primary {
+  background: $primary !important;
+}
+
+.btn-primary {
+  background: $primary !important;
+  border: 0;
+
+  &:hover {
+    background: $primary !important;
+  }
+
+  &:active {
+    background: $primary !important;
+  }
+}
+
+.btn-outline-primary {
+  background: $primary !important;
+  border: 0;
+  color: #fff;
+
+  &:hover {
+    background: $primary !important;
+  }
+
+  &:active {
+    background: $primary !important;
+  }
+}
+
+.dropdown-item {
+  &:active {
+    background: $primary !important;
+  }
+}
+
 // Container
 .container {
   margin: 0 auto;

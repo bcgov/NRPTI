@@ -179,17 +179,17 @@ export class DocumentsComponent implements OnInit {
             {
               name: 'Name',
               value: 'recordName',
-              width: 'col-2'
+              width: 'col-4'
             },
             {
               name: 'Indigenous Nation',
               value: 'nationName',
-              width: 'col-2'
+              width: 'col-4'
             },
             {
               name: 'Date',
               value: 'dateIssued',
-              width: 'col-7'
+              width: 'col-3'
             },
             {
               name: '',

@@ -965,6 +965,8 @@ const calculateDateFormat = function (row) {
       dateIssued = moment(row[1], 'DD/MM/YYYY').toDate();
     } else if (moment(row[1], 'D/M/YY', true).isValid()) {
       dateIssued = moment(row[1], 'D/M/YY').toDate();
+    } else if (moment(row[1], 'YYYY-MM-DD', true).isValid()) {
+      dateIssued = moment(row[1], 'YYYY-MM-DD').toDate();
     }
   }
   return dateIssued;

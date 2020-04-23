@@ -117,7 +117,7 @@ class BaseRecordUtils {
 
       recordName: epicRecord.displayName || '',
       recordType: this.recordType.displayName,
-      dateIssued: epicRecord.documentDate || null,
+      dateIssued: epicRecord.datePosted || null,
       description: epicRecord.description || '',
       projectName: (epicRecord.project && epicRecord.project.name) || '',
       location: (epicRecord.project && epicRecord.project.location) || '',

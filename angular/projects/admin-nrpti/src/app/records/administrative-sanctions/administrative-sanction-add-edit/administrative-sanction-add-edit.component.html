@@ -34,10 +34,6 @@
       <h4>Basic Information</h4>
       <div class="flex-container">
         <div class="label-pair">
-          <label for="recordName">Record Name</label>
-          <input name="recordName" id="recordName" type="text" formControlName="recordName" class="form-control" />
-        </div>
-        <div class="label-pair">
           <label for="dateIssued">Date Issued</label>
           <div class="input-group">
             <input
@@ -65,8 +61,6 @@
             class="form-control"
           />
         </div>
-      </div>
-      <div class="flex-container">
         <div class="label-pair">
           <label for="issuingAgency">Issuing Agency</label>
           <select name="issuingAgency" id="issuingAgency" formControlName="issuingAgency" class="form-control">
@@ -214,6 +208,12 @@
             {{ myForm.controls.publishLng.value ? 'Published' : 'Unpublished' }}
           </mat-slide-toggle>
           <span class="grey-subtext d-block">*Changes made will take effect once you click "Update Record"</span>
+        </div>
+      </div>
+      <div class="flex-container">
+        <div class="label-pair">
+          <label for="recordName">Record Name</label>
+          <input name="recordName" id="recordName" type="text" formControlName="recordName" class="form-control" />
         </div>
       </div>
       <div class="flex-container">

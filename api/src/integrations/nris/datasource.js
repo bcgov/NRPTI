@@ -142,10 +142,10 @@ class NrisDataSource {
       processingObject.itemTotal = records.length;
 
       for (let i = 0; i < records.length; i++) {
-
         // Make sure these are completed, and >= 7 days before we bring in the record.
-        if (records[i].assessmentStatus === 'Complete'
-            && (moment().diff(moment(records[i].completionDate), 'days') >= 7)
+        if (
+          records[i].assessmentStatus === 'Complete' &&
+          moment().diff(moment(records[i].completionDate), 'days') > 7
         ) {
           const newRecord = await this.transformRecord(records[i]);
           await this.createRecord(newRecord);
@@ -197,26 +197,37 @@ class NrisDataSource {
 
     newRecord.sourceSystemRef = 'nris';
 
-    // Currently not doing anything different, future logic
     if (record.client && record.client.length > 0 && record.client[0]) {
       const clientType = record.client[0].clientType;
       switch (clientType) {
-        case 'C':
         case 'O':
+        case 'C':
+        case 'Corporation':
+          newRecord.issuedTo = {
+            write: ['sysadmin'],
+            read: ['sysadmin'],
+
+            type: 'Company',
+            companyName: record.client[0].orgName || '',
+            fullName: record.client[0].orgName || ''
+          };
+          break;
+        case 'P':
         case 'I':
         case 'Individual':
+          newRecord.issuedTo = {
+            write: ['sysadmin'],
+            read: ['sysadmin'],
+
+            type: 'IndividualCombined',
+            fullName: record.client[0].orgName || ''
+          };
+          break;
         default:
-          defaultLog.info('clientType:', clientType);
+          defaultLog.info(
+            `Could not create issuedTo for unexpected clientType: ${clientType} - assessmentId: ${record.assessmentId}`
+          );
       }
-
-      newRecord.issuedTo = {
-        write: ['sysadmin'],
-        read: ['sysadmin'],
-
-        type: 'Company',
-        companyName: record.client[0].orgName || '',
-        fullName: record.client[0].orgName || ''
-      };
     }
 
     newRecord.location = record.location.locationDescription;
@@ -268,7 +279,7 @@ class NrisDataSource {
       });
       return { tempFilePath: tempFilePath, fileName: res.headers['content-disposition'].split('= ').pop() };
     } catch (e) {
-      defaultLog.info(`Error gettting attachment ${attachmentId}:`, e);
+      defaultLog.info(`Error getting attachment ${attachmentId}:`, e);
       return null;
     }
   }
