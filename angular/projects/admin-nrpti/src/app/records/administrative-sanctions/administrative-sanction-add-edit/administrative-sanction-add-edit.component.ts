@@ -379,7 +379,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
     if (!this.isEditing) {
       this.factoryService.createAdministrativeSanction(administrativeSanction).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -413,7 +413,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
 
       this.factoryService.editAdministrativeSanction(administrativeSanction).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,

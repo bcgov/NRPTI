@@ -324,7 +324,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     if (!this.isEditing) {
       this.factoryService.createOrder(order).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -358,7 +358,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
 
       this.factoryService.editOrder(order).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,

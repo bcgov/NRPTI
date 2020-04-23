@@ -370,7 +370,7 @@ export class TicketAddEditComponent implements OnInit, OnDestroy {
     if (!this.isEditing) {
       this.factoryService.createTicket(ticket).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -404,7 +404,7 @@ export class TicketAddEditComponent implements OnInit, OnDestroy {
 
       this.factoryService.editTicket(ticket).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,

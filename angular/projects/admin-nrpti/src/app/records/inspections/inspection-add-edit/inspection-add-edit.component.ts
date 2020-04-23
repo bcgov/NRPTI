@@ -322,7 +322,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
     if (!this.isEditing) {
       this.factoryService.createInspection(inspection).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -356,7 +356,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
 
       this.factoryService.editInspection(inspection).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,

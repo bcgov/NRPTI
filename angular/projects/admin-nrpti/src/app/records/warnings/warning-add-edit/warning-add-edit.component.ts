@@ -310,7 +310,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
     if (!this.isEditing) {
       this.factoryService.createWarning(warning).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -344,7 +344,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
 
       this.factoryService.editWarning(warning).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,

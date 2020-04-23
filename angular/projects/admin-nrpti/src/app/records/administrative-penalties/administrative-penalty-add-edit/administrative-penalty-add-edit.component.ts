@@ -375,7 +375,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     if (!this.isEditing) {
       this.factoryService.createAdministrativePenalty(administrativePenalty).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -409,7 +409,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
 
       this.factoryService.editAdministrativePenalty(administrativePenalty).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,

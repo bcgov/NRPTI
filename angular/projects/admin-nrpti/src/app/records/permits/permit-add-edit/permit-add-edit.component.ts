@@ -211,7 +211,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     if (!this.isEditing) {
       this.factoryService.createPermit(permit).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -236,7 +236,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
 
       this.factoryService.editPermit(permit).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,

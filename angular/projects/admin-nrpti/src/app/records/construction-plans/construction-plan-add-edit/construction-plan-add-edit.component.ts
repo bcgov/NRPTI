@@ -185,7 +185,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
     if (!this.isEditing) {
       this.factoryService.createConstructionPlan(constructionPlan).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -210,7 +210,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
 
       this.factoryService.editConstructionPlan(constructionPlan).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
