@@ -154,7 +154,9 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
             ''
         ),
         forceAnonymous: new FormControl(
-          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.forceAnonymous) || ''
+          // Set forceAnonymous to true if the issuedTo sub-object read array does not contain `public`
+          (this.currentRecord && this.currentRecord.issuedTo && !this.currentRecord.issuedTo.read.includes('public')) ||
+            false
         )
       }),
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
@@ -322,14 +324,12 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
         dateOfBirth: this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('issuedTo.dateOfBirth').value)
       };
 
-      if (this.myForm.get('issuedTo.forceAnonymous').touched) {
-        // anonymity may be enforced (via roles, below) automatically by the business logic, but in that case, don't
-        // update this value, which should only be set when the user manually toggles the anonymity.
-        administrativeSanction['issuedTo']['forceAnonymous'] = this.myForm.get('issuedTo.forceAnonymous').value;
-      }
-
-      if (this.myForm.get('issuedTo.type').value === ENTITY_TYPE.Company) {
-        administrativeSanction['issuedTo']['forceAnonymous'] = null;
+      if (
+        this.myForm.get('issuedTo.forceAnonymous').value &&
+        this.myForm.get('issuedTo.type').value !== ENTITY_TYPE.Company
+      ) {
+        // If type indicates a person, and the forceAnonymous toggle was set, then unpublish the issuedTo sub-object
+        administrativeSanction['issuedTo']['removeRole'] = 'public';
       }
     }
 
@@ -387,7 +387,6 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
           this.factoryService
         );
 
-        console.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records']);
       });
@@ -422,7 +421,6 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
           this.factoryService
         );
 
-        console.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records', 'administrative-sanctions', this.currentRecord._id, 'detail']);
       });

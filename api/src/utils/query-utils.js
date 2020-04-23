@@ -110,7 +110,7 @@ exports.recordTypes = [
  * @param {*} obj
  * @returns true if the object is anonymous, false if it is not anonymous.
  */
-exports.isRecordAnonymous = function(record) {
+exports.isRecordConsideredAnonymous = function(record) {
   if (!record || !record.issuedTo) {
     // can't determine anonymity, must assume anonymous
     return true;
@@ -119,15 +119,6 @@ exports.isRecordAnonymous = function(record) {
   if (record.issuedTo.type === 'Company') {
     // companies are not anonymous
     return false;
-  }
-
-  if (record.issuedTo.forceAnonymous) {
-    // record manually set to anonymous
-
-    // Note: this value only indicates that the user has toggled this record to be anonymous.  If it is set to null or
-    //   false, that only tells us the user hasn't toggled this value, and does not necessarily mean this record is
-    //   public (not anonymous).
-    return true;
   }
 
   if (!record.issuedTo.dateOfBirth) {
@@ -142,4 +133,47 @@ exports.isRecordAnonymous = function(record) {
 
   // if no contradicting evidence, must assume anonymous
   return true;
+};
+
+/**
+ * Checks if the `obj` contains a field named `property`.
+ *
+ * Note: only checks root level properties
+ *
+ * @param {object} obj
+ * @param {string} property
+ * @returns True if the object contains the property, false otherwise. Returns null if either parameter is null.
+ */
+const objectHasProperty = function(obj, property) {
+  if (!obj || !property) {
+    return null;
+  }
+
+  return Object.prototype.hasOwnProperty.call(obj, property);
+};
+
+exports.objectHasProperty = objectHasProperty;
+
+/**
+ * Checks if the mongoose model `modelName` contains a field named `property`.
+ *
+ * Note: only checks root level model properties.
+ *
+ * @param {*} modelName
+ * @param {*} property
+ * @returns True if the model contains the property, false otherwise.  Returns null if either parameter is null, or the
+ * mongoose model is not found.
+ */
+exports.mongooseModelHasProperty = function(modelName, property) {
+  if (!modelName || !property) {
+    return null;
+  }
+
+  const model = mongoose.model(modelName);
+
+  if (!model || !model.schema || !model.schema.obj) {
+    return null;
+  }
+
+  return objectHasProperty(model.schema.obj, property);
 };

@@ -145,7 +145,7 @@ exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
 
   const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
 
-  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
+  const updateObj = { $set: dotNotatedObj };
 
   if (flavourIds && flavourIds.length) {
     updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };

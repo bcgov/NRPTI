@@ -1,5 +1,5 @@
 /**
- * Builds the issuedTO.fullName string, based on the issuedTo.type field.
+ * Builds the issuedTo.fullName string, based on the issuedTo.type field.
  *
  * @param {*} issuedToObj
  * @returns

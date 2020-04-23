@@ -252,7 +252,7 @@ exports.protectedDelete = function(args, res, next) {
 };
 
 /**
- * Publish a record.
+ * Publish a record.  Adds the `public` role to the records root read array.
  *
  * @param {*} args
  * @param {*} res
@@ -274,19 +274,6 @@ exports.protectedPublish = async function(args, res, next) {
       return queryActions.sendResponse(res, 404, {});
     }
 
-    defaultLog.debug(`protectedPublish - record: ${JSON.stringify(record)}`);
-
-    // add entity and document read roles
-    if (!queryActions.isPublished(record.issuedTo)) {
-      if (!queryUtils.isRecordAnonymous(record)) {
-        // make entity information public
-        queryActions.addPublicReadRole(record.issuedTo);
-
-        // make documents public
-        mongoose.model('Document').updateMany({ _id: { $in: record.documents } }, { $addToSet: { read: 'public' } });
-      }
-    }
-
     const published = await queryActions.publish(record, true);
 
     await queryUtils.recordAction('Publish', record, args.swagger.params.auth_payload.preferred_username, record._id);
@@ -298,7 +285,7 @@ exports.protectedPublish = async function(args, res, next) {
 };
 
 /**
- * Unpublish a record.
+ * Unpublish a record. Removes the `public` role from the records root read array.
  *
  * @param {*} args
  * @param {*} res
@@ -318,13 +305,6 @@ exports.protectedUnPublish = async function(args, res, next) {
     if (!record) {
       defaultLog.info(`protectedUnPublish - couldn't find record for recordId: ${record._id}`);
       return queryActions.sendResponse(res, 404, {});
-    }
-
-    defaultLog.debug(`protectedUnPublish - record: ${JSON.stringify(record)}`);
-
-    // remove entity read role
-    if (queryActions.isPublished(record.issuedTo)) {
-      queryActions.removePublicReadRole(record.issuedTo);
     }
 
     const unPublished = await queryActions.unPublish(record);

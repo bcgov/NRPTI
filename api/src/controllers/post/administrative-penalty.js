@@ -188,9 +188,6 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (administrativePenalty.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.forceAnonymous &&
-    (administrativePenalty.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
 
   incomingObj.projectName && (administrativePenalty.projectName = incomingObj.projectName);
   incomingObj.location && (administrativePenalty.location = incomingObj.location);
@@ -206,6 +203,11 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateAdded && (administrativePenalty.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (administrativePenalty.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (administrativePenalty.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // set issuedTo sub-object read roles
+  if (!queryUtils.isRecordConsideredAnonymous(administrativePenalty)) {
+    administrativePenalty.issuedTo.read.push('public');
+  }
 
   return await administrativePenalty.save();
 };
@@ -310,9 +312,6 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (administrativePenaltyLNG.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.forceAnonymous &&
-    (administrativePenaltyLNG.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
 
   incomingObj.projectName && (administrativePenaltyLNG.projectName = incomingObj.projectName);
   incomingObj.location && (administrativePenaltyLNG.location = incomingObj.location);
@@ -333,10 +332,11 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     administrativePenaltyLNG.read.push('public');
     administrativePenaltyLNG.datePublished = new Date();
     administrativePenaltyLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
 
-    if (!queryUtils.isRecordAnonymous(administrativePenaltyLNG)) {
-      administrativePenaltyLNG.issuedTo.read.push('public');
-    }
+  // set issuedTo sub-object read roles
+  if (!queryUtils.isRecordConsideredAnonymous(administrativePenaltyLNG)) {
+    administrativePenaltyLNG.issuedTo.read.push('public');
   }
 
   return await administrativePenaltyLNG.save();
@@ -442,9 +442,6 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (administrativePenaltyNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.forceAnonymous &&
-    (administrativePenaltyNRCED.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
 
   incomingObj.projectName && (administrativePenaltyNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (administrativePenaltyNRCED.location = incomingObj.location);
@@ -465,10 +462,11 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     administrativePenaltyNRCED.read.push('public');
     administrativePenaltyNRCED.datePublished = new Date();
     administrativePenaltyNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
 
-    if (!queryUtils.isRecordAnonymous(administrativePenaltyNRCED)) {
-      administrativePenaltyNRCED.issuedTo.read.push('public');
-    }
+  // set issuedTo sub-object read roles
+  if (!queryUtils.isRecordConsideredAnonymous(administrativePenaltyNRCED)) {
+    administrativePenaltyNRCED.issuedTo.read.push('public');
   }
 
   return await administrativePenaltyNRCED.save();

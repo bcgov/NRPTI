@@ -52,7 +52,7 @@ class BaseRecordUtils {
         `${EPIC_PUBLIC_HOSTNAME}/api/document/${epicRecord._id}/fetch/${encodeURIComponent(
           epicRecord.documentFileName
         )}`,
-        false //  Epic only has companies, which are never anonymous
+        ['public']
       );
 
       documents.push(savedDocument._id);

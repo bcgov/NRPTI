@@ -187,9 +187,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (administrativeSanction.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.forceAnonymous &&
-    (administrativeSanction.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
+
   incomingObj.projectName && (administrativeSanction.projectName = incomingObj.projectName);
   incomingObj.location && (administrativeSanction.location = incomingObj.location);
   incomingObj.centroid && (administrativeSanction.centroid = incomingObj.centroid);
@@ -204,6 +202,11 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateAdded && (administrativeSanction.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (administrativeSanction.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (administrativeSanction.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // set issuedTo sub-object read roles
+  if (!queryUtils.isRecordConsideredAnonymous(administrativeSanction)) {
+    administrativeSanction.issuedTo.read.push('public');
+  }
 
   return await administrativeSanction.save();
 };
@@ -307,9 +310,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (administrativeSanctionLNG.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.forceAnonymous &&
-    (administrativeSanctionLNG.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
+
   incomingObj.projectName && (administrativeSanctionLNG.projectName = incomingObj.projectName);
   incomingObj.location && (administrativeSanctionLNG.location = incomingObj.location);
   incomingObj.centroid && (administrativeSanctionLNG.centroid = incomingObj.centroid);
@@ -329,10 +330,11 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     administrativeSanctionLNG.read.push('public');
     administrativeSanctionLNG.datePublished = new Date();
     administrativeSanctionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
 
-    if (!queryUtils.isRecordAnonymous(administrativeSanctionLNG)) {
-      administrativeSanctionLNG.issuedTo.read.push('public');
-    }
+  // set issuedTo sub-object read roles
+  if (!queryUtils.isRecordConsideredAnonymous(administrativeSanctionLNG)) {
+    administrativeSanctionLNG.issuedTo.read.push('public');
   }
 
   return await administrativeSanctionLNG.save();
@@ -437,9 +439,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (administrativeSanctionNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.forceAnonymous &&
-    (administrativeSanctionNRCED.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
+
   incomingObj.projectName && (administrativeSanctionNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (administrativeSanctionNRCED.location = incomingObj.location);
   incomingObj.centroid && (administrativeSanctionNRCED.centroid = incomingObj.centroid);
@@ -459,10 +459,11 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     administrativeSanctionNRCED.read.push('public');
     administrativeSanctionNRCED.datePublished = new Date();
     administrativeSanctionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
 
-    if (!queryUtils.isRecordAnonymous(administrativeSanctionNRCED)) {
-      administrativeSanctionNRCED.issuedTo.read.push('public');
-    }
+  // set issuedTo sub-object read roles
+  if (!queryUtils.isRecordConsideredAnonymous(administrativeSanctionNRCED)) {
+    administrativeSanctionNRCED.issuedTo.read.push('public');
   }
 
   return await administrativeSanctionNRCED.save();

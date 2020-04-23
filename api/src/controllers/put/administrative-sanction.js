@@ -36,7 +36,6 @@ const DocumentController = require('../document-controller');
  * @returns object containing the operation's status and created records
  */
 exports.editRecord = async function(args, res, next, incomingObj) {
-  console.log('1', incomingObj);
   // save flavour records
   let observables = [];
   let savedFlavourAdministrativeSanctions = [];
@@ -125,15 +124,15 @@ exports.editRecord = async function(args, res, next, incomingObj) {
   let savedDocuments = [];
 
   try {
-    const isAnonymous = QueryUtils.isRecordAnonymous(savedAdministrativeSanction);
-
-    if (isAnonymous) {
+    if (await DocumentController.canDocumentBePublished(savedAdministrativeSanction)) {
+      // publish the document
+      savedAdministrativeSanction.documents.forEach(docId => {
+        documentPromises.push(DocumentController.publishDocument(docId, args.swagger.params.auth_payload));
+      });
+    } else {
+      // unpublish the document
       savedAdministrativeSanction.documents.forEach(docId => {
         documentPromises.push(DocumentController.unpublishDocument(docId, args.swagger.params.auth_payload));
-      });
-    } else if (savedAdministrativeSanction) {
-      savedAdministrativeSanction.documents.forEach(docId => {
-        DocumentController.publishDocument(savedAdministrativeSanction._id, docId, args.swagger.params.auth_payload);
       });
     }
 
@@ -214,10 +213,22 @@ exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
 
   const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
 
-  const updateObj = { $set: dotNotatedObj };
+  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (flavourIds && flavourIds.length) {
     updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
+  }
+
+  if (sanitizedObj.issuedTo && incomingObj.issuedTo) {
+    // check if a condition changed that would cause the entity details to be anonymous, or not.
+    const isConsideredAnonymous = QueryUtils.isRecordConsideredAnonymous(sanitizedObj);
+    if (isConsideredAnonymous || incomingObj.issuedTo.removeRole === 'public') {
+      // the record is considered anonymous OR the user wants to manually set it to anonymous
+      updateObj.$pull['issuedTo.read'] = 'public';
+    } else if (!isConsideredAnonymous) {
+      // the record is not considered anonymous
+      updateObj.$addToSet['issuedTo.read'] = 'public';
+    }
   }
 
   return await AdministrativeSanction.findOneAndUpdate({ _schemaName: 'AdministrativeSanction', _id: _id }, updateObj, {
@@ -293,9 +304,12 @@ exports.editLNG = async function(args, res, next, incomingObj) {
 
   if (sanitizedObj.issuedTo && incomingObj.issuedTo) {
     // check if a condition changed that would cause the entity details to be anonymous, or not.
-    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
+    const isConsideredAnonymous = QueryUtils.isRecordConsideredAnonymous(sanitizedObj);
+    if (isConsideredAnonymous || incomingObj.issuedTo.removeRole === 'public') {
+      // the record is considered anonymous OR the user wants to manually set it to anonymous
       updateObj.$pull['issuedTo.read'] = 'public';
-    } else {
+    } else if (!isConsideredAnonymous) {
+      // the record is not considered anonymous
       updateObj.$addToSet['issuedTo.read'] = 'public';
     }
   }
@@ -337,7 +351,6 @@ exports.editLNG = async function(args, res, next, incomingObj) {
  * @returns edited nrced administrativeSanction record
  */
 exports.editNRCED = async function(args, res, next, incomingObj) {
-  console.log('2', incomingObj);
   if (!incomingObj || !incomingObj._id) {
     // skip, as there is no way to update the NRCED record
     return;
@@ -376,9 +389,12 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
 
   if (sanitizedObj.issuedTo && incomingObj.issuedTo) {
     // check if a condition changed that would cause the entity details to be anonymous, or not.
-    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
+    const isConsideredAnonymous = QueryUtils.isRecordConsideredAnonymous(sanitizedObj);
+    if (isConsideredAnonymous || incomingObj.issuedTo.removeRole === 'public') {
+      // the record is considered anonymous OR the user wants to manually set it to anonymous
       updateObj.$pull['issuedTo.read'] = 'public';
-    } else {
+    } else if (!isConsideredAnonymous) {
+      // the record is not considered anonymous
       updateObj.$addToSet['issuedTo.read'] = 'public';
     }
   }

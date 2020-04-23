@@ -178,9 +178,6 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (warning.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.forceAnonymous &&
-    (warning.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
 
   incomingObj.projectName && (warning.projectName = incomingObj.projectName);
   incomingObj.location && (warning.location = incomingObj.location);
@@ -197,6 +194,11 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateAdded && (warning.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (warning.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (warning.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // set issuedTo sub-object read roles
+  if (!queryUtils.isRecordConsideredAnonymous(warning)) {
+    warning.issuedTo.read.push('public');
+  }
 
   return await warning.save();
 };
@@ -297,9 +299,6 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (warningLNG.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.forceAnonymous &&
-    (warningLNG.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
 
   incomingObj.projectName && (warningLNG.projectName = incomingObj.projectName);
   incomingObj.location && (warningLNG.location = incomingObj.location);
@@ -321,10 +320,11 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     warningLNG.read.push('public');
     warningLNG.datePublished = new Date();
     warningLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
 
-    if (!queryUtils.isRecordAnonymous(warningLNG)) {
-      warningLNG.issuedTo.read.push('public');
-    }
+  // set issuedTo sub-object read roles
+  if (!queryUtils.isRecordConsideredAnonymous(warningLNG)) {
+    warningLNG.issuedTo.read.push('public');
   }
 
   return await warningLNG.save();
@@ -428,9 +428,6 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (warningNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.forceAnonymous &&
-    (warningNRCED.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
 
   incomingObj.projectName && (warningNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (warningNRCED.location = incomingObj.location);
@@ -452,10 +449,11 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     warningNRCED.read.push('public');
     warningNRCED.datePublished = new Date();
     warningNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
 
-    if (!queryUtils.isRecordAnonymous(warningNRCED)) {
-      warningNRCED.issuedTo.read.push('public');
-    }
+  // set issuedTo sub-object read roles
+  if (!queryUtils.isRecordConsideredAnonymous(warningNRCED)) {
+    warningNRCED.issuedTo.read.push('public');
   }
 
   return await warningNRCED.save();

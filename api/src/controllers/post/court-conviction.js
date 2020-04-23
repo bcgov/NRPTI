@@ -183,9 +183,6 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (courtConviction.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.forceAnonymous &&
-    (courtConviction.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
 
   incomingObj.projectName && (courtConviction.projectName = incomingObj.projectName);
   incomingObj.location && (courtConviction.location = incomingObj.location);
@@ -201,6 +198,11 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateAdded && (courtConviction.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (courtConviction.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (courtConviction.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // set issuedTo sub-object read roles
+  if (!queryUtils.isRecordConsideredAnonymous(courtConviction)) {
+    courtConviction.issuedTo.read.push('public');
+  }
 
   return await courtConviction.save();
 };
@@ -304,9 +306,6 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (courtConvictionLNG.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.forceAnonymous &&
-    (courtConvictionLNG.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
 
   incomingObj.projectName && (courtConvictionLNG.projectName = incomingObj.projectName);
   incomingObj.location && (courtConvictionLNG.location = incomingObj.location);
@@ -327,10 +326,11 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     courtConvictionLNG.read.push('public');
     courtConvictionLNG.datePublished = new Date();
     courtConvictionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
 
-    if (!queryUtils.isRecordAnonymous(courtConvictionLNG)) {
-      courtConvictionLNG.issuedTo.read.push('public');
-    }
+  // set issuedTo sub-object read roles
+  if (!queryUtils.isRecordConsideredAnonymous(courtConvictionLNG)) {
+    courtConvictionLNG.issuedTo.read.push('public');
   }
 
   return await courtConvictionLNG.save();
@@ -435,9 +435,6 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (courtConvictionNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.forceAnonymous &&
-    (courtConvictionNRCED.issuedTo.forceAnonymous = incomingObj.issuedTo.forceAnonymous);
 
   incomingObj.projectName && (courtConvictionNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (courtConvictionNRCED.location = incomingObj.location);
@@ -458,10 +455,11 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     courtConvictionNRCED.read.push('public');
     courtConvictionNRCED.datePublished = new Date();
     courtConvictionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
 
-    if (!queryUtils.isRecordAnonymous(courtConvictionNRCED)) {
-      courtConvictionNRCED.issuedTo.read.push('public');
-    }
+  // set issuedTo sub-object read roles
+  if (!queryUtils.isRecordConsideredAnonymous(courtConvictionNRCED)) {
+    courtConvictionNRCED.issuedTo.read.push('public');
   }
 
   return await courtConvictionNRCED.save();

@@ -120,15 +120,15 @@ exports.editRecord = async function(args, res, next, incomingObj) {
   let savedDocuments = [];
 
   try {
-    const isAnonymous = QueryUtils.isRecordAnonymous(savedCourtConviction);
-
-    if (isAnonymous) {
+    if (await DocumentController.canDocumentBePublished(savedCourtConviction)) {
+      // publish the document
+      savedCourtConviction.documents.forEach(docId => {
+        documentPromises.push(DocumentController.publishDocument(docId, args.swagger.params.auth_payload));
+      });
+    } else {
+      // unpublish the document
       savedCourtConviction.documents.forEach(docId => {
         documentPromises.push(DocumentController.unpublishDocument(docId, args.swagger.params.auth_payload));
-      });
-    } else if (savedCourtConviction) {
-      savedCourtConviction.documents.forEach(docId => {
-        DocumentController.publishDocument(savedCourtConviction._id, docId, args.swagger.params.auth_payload);
       });
     }
 
@@ -209,10 +209,22 @@ exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
 
   const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
 
-  const updateObj = { $set: dotNotatedObj };
+  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (flavourIds && flavourIds.length) {
     updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
+  }
+
+  if (sanitizedObj.issuedTo && incomingObj.issuedTo) {
+    // check if a condition changed that would cause the entity details to be anonymous, or not.
+    const isConsideredAnonymous = QueryUtils.isRecordConsideredAnonymous(sanitizedObj);
+    if (isConsideredAnonymous || incomingObj.issuedTo.removeRole === 'public') {
+      // the record is considered anonymous OR the user wants to manually set it to anonymous
+      updateObj.$pull['issuedTo.read'] = 'public';
+    } else if (!isConsideredAnonymous) {
+      // the record is not considered anonymous
+      updateObj.$addToSet['issuedTo.read'] = 'public';
+    }
   }
 
   return await CourtConviction.findOneAndUpdate({ _schemaName: 'CourtConviction', _id: _id }, updateObj, {
@@ -288,9 +300,12 @@ exports.editLNG = async function(args, res, next, incomingObj) {
 
   if (sanitizedObj.issuedTo && incomingObj.issuedTo) {
     // check if a condition changed that would cause the entity details to be anonymous, or not.
-    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
+    const isConsideredAnonymous = QueryUtils.isRecordConsideredAnonymous(sanitizedObj);
+    if (isConsideredAnonymous || incomingObj.issuedTo.removeRole === 'public') {
+      // the record is considered anonymous OR the user wants to manually set it to anonymous
       updateObj.$pull['issuedTo.read'] = 'public';
-    } else {
+    } else if (!isConsideredAnonymous) {
+      // the record is not considered anonymous
       updateObj.$addToSet['issuedTo.read'] = 'public';
     }
   }
@@ -368,9 +383,12 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
 
   if (sanitizedObj.issuedTo && incomingObj.issuedTo) {
     // check if a condition changed that would cause the entity details to be anonymous, or not.
-    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
+    const isConsideredAnonymous = QueryUtils.isRecordConsideredAnonymous(sanitizedObj);
+    if (isConsideredAnonymous || incomingObj.issuedTo.removeRole === 'public') {
+      // the record is considered anonymous OR the user wants to manually set it to anonymous
       updateObj.$pull['issuedTo.read'] = 'public';
-    } else {
+    } else if (!isConsideredAnonymous) {
+      // the record is not considered anonymous
       updateObj.$addToSet['issuedTo.read'] = 'public';
     }
   }
