@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
@@ -8,7 +8,8 @@ import {
   TableObject,
   IColumnObject,
   IPageSizePickerOption,
-  ITableMessage
+  ITableMessage,
+  Utils
 } from 'nrpti-angular-components';
 import { RecordsTableRowComponent } from '../records-rows/records-table-row.component';
 import { LoadingScreenService } from 'nrpti-angular-components';
@@ -75,7 +76,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     }
   ];
 
-  public hidepanel = false;
   public filters = [
     {
       displayName: 'Record Type',
@@ -140,10 +140,16 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     }
   ];
 
+  // Search
+  public keywordSearchWords: string;
+  public queryParams: Params;
+  public showAdvancedFilters = false;
+
   constructor(
     public location: Location,
     public router: Router,
     public route: ActivatedRoute,
+    public utils: Utils,
     private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
@@ -157,6 +163,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadingScreenService.setLoadingState(true, 'body');
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
+      this.queryParams = { ...params };
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
       this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, this.tableData);
 
@@ -187,6 +194,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         0;
 
       this.tableData.columns = this.tableColumns;
+      this.keywordSearchWords = (this.queryParams && this.queryParams.keywords) || '';
       this.loading = false;
       this._changeDetectionRef.detectChanges();
     });
@@ -272,7 +280,16 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     this.tableTemplateUtils.navigateUsingParams(this.tableData, ['records']);
   }
 
-  checkChange() { }
+  keywordSearch() {
+    this.loadingScreenService.setLoadingState(true, 'body');
+    if (this.keywordSearchWords) {
+      this.utils.addKeyValueToObject(this.queryParams, 'keywords', this.keywordSearchWords);
+    } else {
+      this.utils.removeKeyFromObject(this.queryParams, 'keywords');
+    }
+
+    this.router.navigate(['/records', this.queryParams]);
+  }
 
   add(item) {
     switch (item) {
@@ -321,6 +338,10 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       default:
         break;
     }
+  }
+
+  toggleAdvancedFilters(): void {
+    this.showAdvancedFilters = !this.showAdvancedFilters;
   }
 
   /**
