@@ -57,7 +57,7 @@ export class RecordsResolver implements Resolve<Observable<object>> {
 
     // force-reload so we always have latest data
     return this.factoryService.getRecords(
-      '',
+      tableObject.keywords,
       schemaList,
       [],
       tableObject.currentPage,
