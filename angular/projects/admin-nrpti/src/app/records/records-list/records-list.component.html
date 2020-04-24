@@ -1,38 +1,48 @@
 <main class="container-fluid-padding">
-
-  <div class="row border-bottom pb-3">
-    <div class="search-filter__header col-12">
-      <div>
-        <h5 class="d-inline-block">Keyword Search</h5>
+  <div class="border-bottom">
+    <div class="row mb-3">
+      <div class="col">
+        <span style="font-size: 1.25rem;">Keyword Search</span>
         <i
-          class="keyword-help material-icons grey-subtext_no-italics d-inline-block align-text-bottom ml-2"
+          class="material-icons align-text-bottom ml-2"
           matTooltip="Summary, description, location, and issued to name fields"
+          matTooltipPosition="after"
           aria-label="Icon that displays a tooltip when focused or hovered over">
           help_outline
         </i>
       </div>
-      <div class="keyword-search mb-3">
-        <input
-          class="keyword-search__input py-0 px-2 border-0"
-          (keyup.enter)="keywordSearch()"
-          placeholder="Type keyword search words..."
-          [(ngModel)]="keywordSearchWords" />
-        <button (click)="keywordSearch()" class="keyword-search__button border-0">
-          <i class="material-icons align-middle">search</i>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" (keyup.enter)="keywordSearch()" [(ngModel)]="keywordSearchWords"
+            placeholder="Type keyword search words"
+            aria-label="Type keyword search words" aria-describedby="basic-addon2">
+          <div class="input-group-append">
+            <button class="btn btn-outline-primary" type="button" (click)="keywordSearch()">
+              <i class="material-icons align-middle">search</i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col">
+        <button
+          [hidden]="showAdvancedFilters"
+          class="btn btn-primary float-right"
+          (click)="toggleAdvancedFilters()">
+          Open Advanced Filters
+        </button>
+        <button
+          [hidden]="!showAdvancedFilters"
+          class="btn btn-primary float-right"
+          (click)="toggleAdvancedFilters()">
+          Close Advanced Filters
         </button>
       </div>
-      <button
-        [hidden]="showAdvancedFilters"
-        class="advanced-filters-btn btn btn-primary float-right"
-        (click)="toggleAdvancedFilters()">
-        Open Advanced Filters
-      </button>
-      <button
-        [hidden]="!showAdvancedFilters"
-        class="advanced-filters-btn btn btn-primary float-right"
-        (click)="toggleAdvancedFilters()">
-        Close Advanced Filters
-      </button>
     </div>
   </div>
 

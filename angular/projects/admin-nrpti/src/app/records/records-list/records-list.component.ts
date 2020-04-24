@@ -287,7 +287,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     } else {
       this.utils.removeKeyFromObject(this.queryParams, 'keywords');
     }
-
+    this.utils.addKeyValueToObject(this.queryParams, 'ms', new Date().getMilliseconds().toString());
     this.router.navigate(['/records', this.queryParams]);
   }
 
