@@ -229,11 +229,15 @@ let searchCollection = async function(
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const collection = db.collection('nrpti');
 
-  return await collection.aggregate(aggregation, { collation : {
-    locale: "en_US",
-    alternate: "shifted",
-    numericOrdering: true
-  }}).toArray();
+  return await collection
+    .aggregate(aggregation, {
+      collation: {
+        locale: 'en_US',
+        alternate: 'shifted',
+        numericOrdering: true
+      }
+    })
+    .toArray();
 };
 
 exports.publicGet = async function(args, res, next) {

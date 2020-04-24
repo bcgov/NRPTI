@@ -10,17 +10,6 @@ const documentController = require('../../controllers/document-controller');
 const RecordController = require('./../../controllers/record-controller');
 const fs = require('fs');
 
-const AWS = require('aws-sdk');
-const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
-const ep = new AWS.Endpoint(OBJ_STORE_URL);
-const s3 = new AWS.S3({
-  endpoint: ep,
-  accessKeyId: process.env.OBJECT_STORE_user_account,
-  secretAccessKey: process.env.OBJECT_STORE_password,
-  signatureVersion: 'v4',
-  s3ForcePathStyle: true
-});
-
 const NRIS_TOKEN_ENDPOINT =
   process.env.NRIS_TOKEN_ENDPOINT ||
   'https://api.nrs.gov.bc.ca/oauth2/v1/oauth/token?disableDeveloperFilter=true&grant_type=client_credentials&scope=NRISWS.*';
@@ -292,13 +281,13 @@ class NrisDataSource {
     let s3Response = null;
 
     try {
-      [docResponse, s3Response] = await documentController.createS3Document(
+      ({ docResponse, s3Response } = await documentController.createS3Document(
         fileName,
         file,
         (this.auth_payload && this.auth_payload.displayName) || '',
         (!isAnIndividual && ['public']) || null,
         (!isAnIndividual && 'public-read') || 'authenticated-read'
-      );
+      ));
     } catch (e) {
       defaultLog.info(`Error creating S3 document - fileName: ${fileName}, Error ${e}`);
       return null;
