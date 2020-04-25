@@ -285,6 +285,27 @@ export class FactoryService {
     return this.recordService.unPublishRecord(record).pipe(catchError(error => this.apiService.handleError(error)));
   }
 
+  // News
+  public createNews(news: any): Observable<object> {
+    const outboundObject = {
+      newsItems: [news]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editNews(news: any): Observable<object> {
+    const outboundObject = {
+      newsItems: [news]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public deleteNewsItem(recordId: string, model: string): Promise<any> {
+    return this.recordService.deleteRecord(recordId, model);
+  }
+
   // Orders
   public createOrder(order: any): Observable<object> {
     const outboundObject = {

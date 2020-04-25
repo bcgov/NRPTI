@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { ActivityTypes } from '../utils/activity-types.enum';
+import { ActivityTypes } from '../../../../global/src/lib/utils/activity-types.enum';
 
 export class Activity {
   type: string;
