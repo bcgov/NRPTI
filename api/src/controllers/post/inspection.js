@@ -138,7 +138,6 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   }
 
   // set data
-  incomingObj.recordName && (inspection.recordName = incomingObj.recordName);
   inspection.recordType = 'Inspection';
   incomingObj.dateIssued && (inspection.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (inspection.issuingAgency = incomingObj.issuingAgency);
@@ -374,7 +373,6 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   inspectionNRCED.dateAdded = new Date();
 
   // set master data
-  incomingObj.recordName && (inspectionNRCED.recordName = incomingObj.recordName);
   inspectionNRCED.recordType = 'Inspection';
   incomingObj.dateIssued && (inspectionNRCED.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (inspectionNRCED.issuingAgency = incomingObj.issuingAgency);

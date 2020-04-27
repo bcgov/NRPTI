@@ -100,7 +100,6 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       recordSubtype: new FormControl((this.currentRecord && this.currentRecord.recordSubtype) || ''),
       dateIssued: new FormControl(
         (this.currentRecord &&
@@ -173,6 +172,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
       ),
 
       // LNG
+      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
       publishLng: new FormControl(
         (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
@@ -260,7 +260,6 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
 
   async submit() {
     const courtConviction = {};
-    this.myForm.controls.recordName.dirty && (courtConviction['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.recordSubtype.dirty &&
       (courtConviction['recordSubtype'] = this.myForm.controls.recordSubtype.value);
     this.myForm.controls.dateIssued.dirty &&
@@ -335,9 +334,15 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     }
 
     // LNG flavour
-    if (this.myForm.controls.lngDescription.dirty || this.myForm.controls.publishLng.dirty) {
+    if (
+      this.myForm.controls.recordName.dirty ||
+      this.myForm.controls.lngDescription.dirty ||
+      this.myForm.controls.publishLng.dirty
+    ) {
       courtConviction['CourtConvictionLNG'] = {};
     }
+    this.myForm.controls.recordName.dirty &&
+      (courtConviction['CourtConvictionLNG']['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.lngDescription.dirty &&
       (courtConviction['CourtConvictionLNG']['description'] = this.myForm.controls.lngDescription.value);
     if (this.myForm.controls.publishLng.dirty && this.myForm.controls.publishLng.value) {

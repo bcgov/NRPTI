@@ -138,7 +138,6 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   }
 
   // set data
-  incomingObj.recordName && (warning.recordName = incomingObj.recordName);
   warning.recordType = 'Warning';
   incomingObj.recordSubtype && (warning.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (warning.dateIssued = incomingObj.dateIssued);
@@ -378,7 +377,6 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   warningNRCED.dateAdded = new Date();
 
   // set master data
-  incomingObj.recordName && (warningNRCED.recordName = incomingObj.recordName);
   warningNRCED.recordType = 'Warning';
   incomingObj.recordSubtype && (warningNRCED.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (warningNRCED.dateIssued = incomingObj.dateIssued);

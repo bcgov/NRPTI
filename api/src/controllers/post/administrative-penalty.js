@@ -142,7 +142,6 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   }
 
   // set data
-  incomingObj.recordName && (administrativePenalty.recordName = incomingObj.recordName);
   administrativePenalty.recordType = 'Administrative Penalty';
   incomingObj.dateIssued && (administrativePenalty.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (administrativePenalty.issuingAgency = incomingObj.issuingAgency);
@@ -390,7 +389,6 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   administrativePenaltyNRCED.dateAdded = new Date();
 
   // set master data
-  incomingObj.recordName && (administrativePenaltyNRCED.recordName = incomingObj.recordName);
   administrativePenaltyNRCED.recordType = 'Administrative Penalty';
   incomingObj.dateIssued && (administrativePenaltyNRCED.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (administrativePenaltyNRCED.issuingAgency = incomingObj.issuingAgency);

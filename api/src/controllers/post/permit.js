@@ -124,7 +124,6 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   }
 
   // set data
-  incomingObj.recordName && (permit.recordName = incomingObj.recordName);
   permit.recordType = 'Permit';
   incomingObj.recordSubtype && (permit.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (permit.dateIssued = incomingObj.dateIssued);

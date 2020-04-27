@@ -101,7 +101,6 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       dateIssued: new FormControl(
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
@@ -173,6 +172,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
       ),
 
       // LNG
+      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
       publishLng: new FormControl(
         (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
@@ -272,8 +272,6 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
     // projectName
 
     const administrativeSanction = {};
-    this.myForm.controls.recordName.dirty &&
-      (administrativeSanction['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.dateIssued.dirty &&
       (administrativeSanction['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(
         this.myForm.get('dateIssued').value
@@ -352,9 +350,15 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
     }
 
     // LNG flavour
-    if (this.myForm.controls.lngDescription.dirty || this.myForm.controls.publishLng.dirty) {
+    if (
+      this.myForm.controls.recordName.dirty ||
+      this.myForm.controls.lngDescription.dirty ||
+      this.myForm.controls.publishLng.dirty
+    ) {
       administrativeSanction['AdministrativeSanctionLNG'] = {};
     }
+    this.myForm.controls.recordName.dirty &&
+      (administrativeSanction['AdministrativeSanctionLNG']['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.lngDescription.dirty &&
       (administrativeSanction['AdministrativeSanctionLNG']['description'] = this.myForm.controls.lngDescription.value);
     if (this.myForm.controls.publishLng.dirty && this.myForm.controls.publishLng.value) {

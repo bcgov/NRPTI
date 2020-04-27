@@ -91,8 +91,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.myForm = new FormGroup({
-      // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
+      // Maste
       dateIssued: new FormControl(
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
@@ -127,6 +126,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
       ),
 
       // LNG
+      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       lngRelatedPhase: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.relatedPhase) || ''),
       lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
       publishLng: new FormControl(
@@ -160,7 +160,6 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
     // projectName
 
     const selfReport = {};
-    this.myForm.controls.recordName.dirty && (selfReport['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.dateIssued.dirty &&
       (selfReport['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
     this.myForm.controls.issuingAgency.dirty &&
@@ -200,12 +199,15 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
 
     // LNG flavour
     if (
+      this.myForm.controls.recordName.dirty ||
       this.myForm.controls.lngDescription.dirty ||
       this.myForm.controls.lngRelatedPhase.dirty ||
       this.myForm.controls.publishLng.dirty
     ) {
       selfReport['SelfReportLNG'] = {};
     }
+    this.myForm.controls.recordName.dirty &&
+      (selfReport['SelfReportLNG']['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.lngDescription.dirty &&
       (selfReport['SelfReportLNG']['description'] = this.myForm.controls.lngDescription.value);
     this.myForm.controls.lngRelatedPhase.dirty &&

@@ -138,7 +138,6 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   }
 
   // set data
-  incomingObj.recordName && (ticket.recordName = incomingObj.recordName);
   ticket.recordType = 'Ticket';
   incomingObj.dateIssued && (ticket.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (ticket.issuingAgency = incomingObj.issuingAgency);
@@ -374,7 +373,6 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   ticketNRCED.dateAdded = new Date();
 
   // set master data
-  incomingObj.recordName && (ticketNRCED.recordName = incomingObj.recordName);
   ticketNRCED.recordType = 'Ticket';
   incomingObj.dateIssued && (ticketNRCED.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (ticketNRCED.issuingAgency = incomingObj.issuingAgency);

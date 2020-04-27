@@ -267,7 +267,6 @@ let createAgreementRecord = async function (item, project, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: item.name,
     recordType: 'Agreement',
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
@@ -342,7 +341,6 @@ let createManagementPlanRecord = async function (item, project, nrptiCollection)
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: item.name,
     recordType: 'Management Plan',
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
@@ -417,7 +415,6 @@ let createConstructionPlanRecord = async function (item, project, nrptiCollectio
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: item.name,
     recordType: 'Construction Plan',
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
@@ -492,7 +489,6 @@ let createWarningRecord = async function (item, project, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: item.name,
     recordType: 'Warning',
     recordSubtype: item.complianceDocumentSubtype,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -570,7 +566,6 @@ let createComplianceSelfReportRecord = async function (item, project, nrptiColle
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: item.name,
     recordType: 'Compliance Self-Report',
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
@@ -646,7 +641,6 @@ let createCertificateRecord = async function (item, project, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: item.name,
     recordType: 'Certificate',
     recordSubtype: item.complianceDocumentSubtype,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -722,7 +716,6 @@ let createPermitRecord = async function (item, project, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: item.name,
     recordType: 'Permit',
     recordSubtype: item.complianceDocumentSubtype,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -799,7 +792,6 @@ let createOrderRecord = async function (item, project, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: item.name,
     recordType: 'Order',
     recordSubtype: item.complianceDocumentSubtype,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -875,7 +867,6 @@ let createInspectionRecord = async function (item, project, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: item.name,
     recordType: 'Inspection',
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,

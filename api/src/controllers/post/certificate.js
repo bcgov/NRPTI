@@ -124,7 +124,6 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   }
 
   // set data
-  incomingObj.recordName && (certificate.recordName = incomingObj.recordName);
   certificate.recordType = 'Certificate';
   incomingObj.recordSubtype && (certificate.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (certificate.dateIssued = incomingObj.dateIssued);

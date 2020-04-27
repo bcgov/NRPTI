@@ -19,7 +19,6 @@ export class RestorativeJusticeNRCED {
   read: string[];
   write: string[];
 
-  recordName: string;
   recordType: string;
   dateIssued: Date;
   issuingAgency: string;
@@ -58,7 +57,6 @@ export class RestorativeJusticeNRCED {
     this.read = (obj && obj.read) || null;
     this.write = (obj && obj.write) || null;
 
-    this.recordName = (obj && obj.recordName) || '';
     this.recordType = (obj && obj.recordType) || '';
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || '';

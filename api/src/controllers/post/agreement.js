@@ -124,7 +124,6 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   }
 
   // set data
-  incomingObj.recordName && (agreement.recordName = incomingObj.recordName);
   agreement.recordType = 'Agreement';
   incomingObj.dateIssued && (agreement.dateIssued = incomingObj.dateIssued);
   incomingObj.nationName && (agreement.nationName = incomingObj.nationName);

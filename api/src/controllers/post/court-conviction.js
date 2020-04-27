@@ -138,7 +138,6 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   }
 
   // set data
-  incomingObj.recordName && (courtConviction.recordName = incomingObj.recordName);
   courtConviction.recordType = 'Court Conviction';
   courtConviction.recordSubtype && (courtConviction.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (courtConviction.dateIssued = incomingObj.dateIssued);
@@ -384,7 +383,6 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   courtConvictionNRCED.dateAdded = new Date();
 
   // set master data
-  incomingObj.recordName && (courtConvictionNRCED.recordName = incomingObj.recordName);
   courtConvictionNRCED.recordType = 'Court Conviction';
   incomingObj.recordSubtype && (courtConvictionNRCED.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (courtConvictionNRCED.dateIssued = incomingObj.dateIssued);

@@ -10,7 +10,6 @@ module.exports = require('../../utils/model-schema-generator')(
     read: [{ type: String, trim: true, default: 'sysadmin' }],
     write: [{ type: String, trim: true, default: 'sysadmin' }],
 
-    recordName: { type: String, default: '' },
     recordType: { type: String, default: '' },
     dateIssued: { type: Date, default: null },
     issuingAgency: { type: String, default: '' },

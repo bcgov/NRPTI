@@ -91,7 +91,6 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       dateIssued: new FormControl(
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
@@ -110,6 +109,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
       ),
 
       // LNG
+      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       lngRelatedPhase: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.relatedPhase) || ''),
       lngDescription: new FormControl(
         // default to using the master description if the flavour record does not exist
@@ -148,7 +148,6 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
     // documentURL
 
     const managementPlan = {};
-    this.myForm.controls.recordName.dirty && (managementPlan['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.dateIssued.dirty &&
       (managementPlan['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
     this.myForm.controls.agency.dirty && (managementPlan['agency'] = this.myForm.controls.agency.value);
@@ -169,12 +168,15 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
 
     // LNG flavour
     if (
+      this.myForm.controls.recordName.dirty ||
       this.myForm.controls.lngDescription.dirty ||
       this.myForm.controls.lngRelatedPhase.dirty ||
       this.myForm.controls.publishLng.dirty
     ) {
       managementPlan['ManagementPlanLNG'] = {};
     }
+    this.myForm.controls.recordName.dirty &&
+      (managementPlan['ManagementPlanLNG']['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.lngDescription.dirty &&
       (managementPlan['ManagementPlanLNG']['description'] = this.myForm.controls.lngDescription.value);
     this.myForm.controls.lngRelatedPhase.dirty &&

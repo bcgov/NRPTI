@@ -15,7 +15,6 @@ module.exports = require('../../utils/model-schema-generator')(
 
     _flavourRecords: [{ type: 'ObjectId', default: [], index: true }],
 
-    recordName: { type: String, default: '' },
     recordType: { type: String, default: '' },
     dateIssued: { type: Date, default: null },
     issuingAgency: { type: String, default: '' },

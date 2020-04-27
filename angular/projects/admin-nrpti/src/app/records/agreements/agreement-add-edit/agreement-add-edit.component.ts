@@ -87,7 +87,6 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       dateIssued: new FormControl(
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
@@ -98,6 +97,7 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
 
       // LNG
+      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
       publishLng: new FormControl(
         (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
@@ -128,7 +128,6 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
     // projectName
 
     const agreement = {};
-    this.myForm.controls.recordName.dirty && (agreement['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.dateIssued.dirty &&
       (agreement['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
     this.myForm.controls.nationName.dirty && (agreement['nationName'] = this.myForm.controls.nationName.value);
@@ -143,9 +142,15 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
     }
 
     // LNG flavour
-    if (this.myForm.controls.lngDescription.dirty || this.myForm.controls.publishLng.dirty) {
+    if (
+      this.myForm.controls.recordName.dirty ||
+      this.myForm.controls.lngDescription.dirty ||
+      this.myForm.controls.publishLng.dirty
+    ) {
       agreement['AgreementLNG'] = {};
     }
+    this.myForm.controls.recordName.dirty &&
+      (agreement['AgreementLNG']['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.lngDescription.dirty &&
       (agreement['AgreementLNG']['description'] = this.myForm.controls.lngDescription.value);
     if (this.myForm.controls.publishLng.dirty && this.myForm.controls.publishLng.value) {

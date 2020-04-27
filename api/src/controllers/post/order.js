@@ -138,7 +138,6 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   }
 
   // set data
-  incomingObj.recordName && (order.recordName = incomingObj.recordName);
   order.recordType = 'Order';
   incomingObj.recordSubtype && (order.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (order.dateIssued = incomingObj.dateIssued);
@@ -372,7 +371,6 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   orderNRCED.dateAdded = new Date();
 
   // set master data
-  incomingObj.recordName && (orderNRCED.recordName = incomingObj.recordName);
   orderNRCED.recordType = 'Order';
   incomingObj.recordSubtype && (orderNRCED.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (orderNRCED.dateIssued = incomingObj.dateIssued);

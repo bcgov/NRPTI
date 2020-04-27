@@ -102,7 +102,6 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       dateIssued: new FormControl(
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
@@ -181,6 +180,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
       ),
 
       // LNG
+      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       lngDescription: new FormControl(
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
@@ -221,7 +221,6 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
     // projectName
 
     const inspection = {};
-    this.myForm.controls.recordName.dirty && (inspection['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.dateIssued.dirty &&
       (inspection['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
     this.myForm.controls.issuingAgency.dirty &&
@@ -296,9 +295,15 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
     }
 
     // LNG flavour
-    if (this.myForm.controls.lngDescription.dirty || this.myForm.controls.publishLng.dirty) {
+    if (
+      this.myForm.controls.recordName.dirty ||
+      this.myForm.controls.lngDescription.dirty ||
+      this.myForm.controls.publishLng.dirty
+    ) {
       inspection['InspectionLNG'] = {};
     }
+    this.myForm.controls.recordName.dirty &&
+      (inspection['InspectionLNG']['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.lngDescription.dirty &&
       (inspection['InspectionLNG']['description'] = this.myForm.controls.lngDescription.value);
     if (this.myForm.controls.publishLng.dirty && this.myForm.controls.publishLng.value) {

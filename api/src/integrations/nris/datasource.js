@@ -173,7 +173,6 @@ class NrisDataSource {
     // We don't need this as we insert based on assessmentId
     delete newRecord._id;
 
-    newRecord.recordName = `Inspection - ${record.requirementSource} - ${record.assessmentId}`;
     newRecord.legislationDescription = 'Inspection to verify compliance with regulatory requirement.';
     newRecord.recordType = 'Inspection';
     newRecord._sourceRefNrisId = record.assessmentId;
@@ -258,6 +257,15 @@ class NrisDataSource {
     newRecord.read.push('sysadmin');
     newRecord.write.push('sysadmin');
 
+    newRecord[RECORD_TYPE.Inspection.flavours.lng._schemaName] = {
+      recordName: `Inspection - ${record.requirementSource} - ${record.assessmentId}`,
+      addRole: 'public'
+    };
+
+    newRecord[RECORD_TYPE.Inspection.flavours.nrced._schemaName] = {
+      addRole: 'public'
+    };
+
     defaultLog.info('Processed:', record.assessmentId);
     return newRecord;
   }
@@ -332,25 +340,12 @@ class NrisDataSource {
     }
 
     try {
-      // build create Obj, which should include the flavour record details
-      const createObj = { ...record };
-
-      createObj[RECORD_TYPE.Inspection.flavours.lng._schemaName] = {
-        description: record.description || '',
-        addRole: 'public'
-      };
-
-      createObj[RECORD_TYPE.Inspection.flavours.nrced._schemaName] = {
-        summary: record.description || '',
-        addRole: 'public'
-      };
-
       return await RecordController.processPostRequest(
         { swagger: { params: { auth_payload: this.auth_payload } } },
         null,
         null,
         RECORD_TYPE.Inspection.recordControllerName,
-        [createObj]
+        [record]
       );
     } catch (error) {
       defaultLog.error(`Failed to create Inspection record: ${error.message}`);

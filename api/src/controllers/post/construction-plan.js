@@ -124,7 +124,6 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   }
 
   // set data
-  incomingObj.recordName && (constructionPlan.recordName = incomingObj.recordName);
   constructionPlan.recordType = 'Construction Plan';
   incomingObj.dateIssued && (constructionPlan.dateIssued = incomingObj.dateIssued);
   incomingObj.agency && (constructionPlan.agency = incomingObj.agency);

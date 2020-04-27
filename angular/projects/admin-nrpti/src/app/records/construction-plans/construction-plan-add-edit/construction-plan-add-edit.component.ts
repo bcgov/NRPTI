@@ -91,7 +91,6 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       dateIssued: new FormControl(
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
@@ -110,6 +109,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
       ),
 
       // LNG
+      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       lngRelatedPhase: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.relatedPhase) || ''),
       lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
       publishLng: new FormControl(
@@ -142,7 +142,6 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
     // projectName
 
     const constructionPlan = {};
-    this.myForm.controls.recordName.dirty && (constructionPlan['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.dateIssued.dirty &&
       (constructionPlan['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(
         this.myForm.get('dateIssued').value
@@ -166,12 +165,15 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
 
     // LNG flavour
     if (
+      this.myForm.controls.recordName.dirty ||
       this.myForm.controls.lngDescription.dirty ||
       this.myForm.controls.lngRelatedPhase.dirty ||
       this.myForm.controls.publishLng.dirty
     ) {
       constructionPlan['ConstructionPlanLNG'] = {};
     }
+    this.myForm.controls.recordName.dirty &&
+      (constructionPlan['ConstructionPlanLNG']['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.lngDescription.dirty &&
       (constructionPlan['ConstructionPlanLNG']['description'] = this.myForm.controls.lngDescription.value);
     this.myForm.controls.lngRelatedPhase.dirty &&

@@ -116,7 +116,6 @@ const createAdministrativePenalty = async function (row, nrptiCollection) {
     read: ['sysadmin', 'public'],
     write: ['sysadmin'],
 
-    recordName: row[12],
     offence: row[12],
     recordType: RECORD_TYPE.AdministrativePenalty.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -164,7 +163,6 @@ const createAdministrativePenalty = async function (row, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: row[12],
     offence: row[12],
     recordType: RECORD_TYPE.AdministrativePenalty.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -208,7 +206,6 @@ const createAdministrativeSanction = async function (row, nrptiCollection) {
     read: ['sysadmin', 'public'],
     write: ['sysadmin'],
 
-    recordName: row[12],
     legislationDescription: row[12],
     recordType: RECORD_TYPE.AdministrativeSanction.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -256,7 +253,6 @@ const createAdministrativeSanction = async function (row, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: row[12],
     legislationDescription: row[12],
     recordType: RECORD_TYPE.AdministrativeSanction.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -300,7 +296,6 @@ const createCourtConviction = async function (row, nrptiCollection) {
     read: ['sysadmin', 'public'],
     write: ['sysadmin'],
 
-    recordName: row[12],
     offence: row[12],
     // recordSubtype: '',
     recordType: RECORD_TYPE.CourtConviction.displayName,
@@ -349,7 +344,6 @@ const createCourtConviction = async function (row, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: row[12],
     offence: row[12],
     recordType: RECORD_TYPE.CourtConviction.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -393,7 +387,6 @@ const createInspection = async function (row, nrptiCollection) {
     read: ['sysadmin', 'public'],
     write: ['sysadmin'],
 
-    recordName: row[12],
     legislationDescription: row[12],
     recordType: RECORD_TYPE.Inspection.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -441,7 +434,6 @@ const createInspection = async function (row, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: row[12],
     legislationDescription: row[12],
     recordType: RECORD_TYPE.Inspection.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -485,7 +477,6 @@ const createOrder = async function (row, nrptiCollection) {
     read: ['sysadmin', 'public'],
     write: ['sysadmin'],
 
-    recordName: row[12],
     legislationDescription: row[12],
     recordType: RECORD_TYPE.Order.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -533,7 +524,6 @@ const createOrder = async function (row, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: row[12],
     legislationDescription: row[12],
     recordType: RECORD_TYPE.Order.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -577,7 +567,6 @@ const createRestorativeJustice = async function (row, nrptiCollection) {
     read: ['sysadmin', 'public'],
     write: ['sysadmin'],
 
-    recordName: row[12],
     offence: row[12],
     recordType: RECORD_TYPE.RestorativeJustice.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -625,7 +614,6 @@ const createRestorativeJustice = async function (row, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: row[12],
     offence: row[12],
     recordType: RECORD_TYPE.RestorativeJustice.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -669,7 +657,6 @@ const createTicket = async function (row, nrptiCollection) {
     read: ['sysadmin', 'public'],
     write: ['sysadmin'],
 
-    recordName: row[12],
     offence: row[12],
     recordType: RECORD_TYPE.Ticket.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -717,7 +704,6 @@ const createTicket = async function (row, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: row[12],
     offence: row[12],
     recordType: RECORD_TYPE.Ticket.displayName,
     // Prefer to store dates in the DB as ISO, not some random format.
@@ -761,7 +747,6 @@ const createWarning = async function (row, nrptiCollection) {
     read: ['sysadmin', 'public'],
     write: ['sysadmin'],
 
-    recordName: row[12],
     legislationDescription: row[12],
     recordType: RECORD_TYPE.Warning.displayName,
     // recordSubtype: '',
@@ -809,7 +794,6 @@ const createWarning = async function (row, nrptiCollection) {
     read: ['sysadmin'],
     write: ['sysadmin'],
 
-    recordName: row[12],
     legislationDescription: row[12],
     recordType: RECORD_TYPE.Warning.displayName,
     // recordSubtype: '',

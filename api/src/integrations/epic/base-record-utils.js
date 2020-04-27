@@ -108,13 +108,12 @@ class BaseRecordUtils {
     // Apply common Epic pre-processing/transformations
     epicRecord = EpicUtils.preTransformRecord(epicRecord, this.recordType);
 
-    return {
+    const nrptiRecord = {
       _schemaName: this.recordType._schemaName,
       _epicProjectId: (epicRecord.project && epicRecord.project._id) || '',
       _sourceRefId: new ObjectID(epicRecord._id) || '',
       _epicMilestoneId: epicRecord.milestone || '',
 
-      recordName: epicRecord.displayName || '',
       recordType: this.recordType.displayName,
       dateIssued: epicRecord.datePosted || null,
       description: epicRecord.description || '',
@@ -132,6 +131,23 @@ class BaseRecordUtils {
       sourceDateUpdated: epicRecord.dateUpdated || epicRecord._updatedDate || null,
       sourceSystemRef: 'epic'
     };
+
+    if (this.recordType.flavours.lng) {
+      nrptiRecord[this.recordType.flavours.lng._schemaName] = {
+        recordName: epicRecord.displayName || '',
+        description: epicRecord.description || '',
+        addRole: 'public'
+      };
+    }
+
+    if (this.recordType.flavours.nrced) {
+      nrptiRecord[this.recordType.flavours.nrced._schemaName] = {
+        summary: epicRecord.description || '',
+        addRole: 'public'
+      };
+    }
+
+    return nrptiRecord;
   }
 
   /**
@@ -173,7 +189,7 @@ class BaseRecordUtils {
       // build update Obj, which needs to include the flavour record ids
       const updateObj = { ...nrptiRecord, _id: existingRecord._id };
       existingRecord._flavourRecords.forEach(flavourRecord => {
-        updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
+        updateObj[flavourRecord._schemaName] = { ...updateObj[flavourRecord._schemaName], _id: flavourRecord._id };
       });
 
       return await RecordController.processPutRequest(
@@ -202,29 +218,12 @@ class BaseRecordUtils {
     }
 
     try {
-      // build create Obj, which should include the flavour record details
-      const createObj = { ...nrptiRecord };
-
-      if (this.recordType.flavours.lng) {
-        createObj[this.recordType.flavours.lng._schemaName] = {
-          description: nrptiRecord.description || '',
-          addRole: 'public'
-        };
-      }
-
-      if (this.recordType.flavours.nrced) {
-        createObj[this.recordType.flavours.nrced._schemaName] = {
-          summary: nrptiRecord.description || '',
-          addRole: 'public'
-        };
-      }
-
       return await RecordController.processPostRequest(
         { swagger: { params: { auth_payload: this.auth_payload } } },
         null,
         null,
         this.recordType.recordControllerName,
-        [createObj]
+        [nrptiRecord]
       );
     } catch (error) {
       defaultLog.error(`Failed to create ${this.recordType._schemaName} record: ${error.message}`);

@@ -103,7 +103,6 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       recordSubtype: new FormControl((this.currentRecord && this.currentRecord.recordSubtype) || ''),
       dateIssued: new FormControl(
         (this.currentRecord &&
@@ -183,6 +182,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       ),
 
       // LNG
+      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       lngDescription: new FormControl(
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
@@ -223,7 +223,6 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     // projectName
 
     const order = {};
-    this.myForm.controls.recordName.dirty && (order['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.recordSubtype.dirty && (order['recordSubtype'] = this.myForm.controls.recordSubtype.value);
     this.myForm.controls.dateIssued.dirty &&
       (order['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
@@ -286,9 +285,15 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       (order['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
 
     // NRCED flavour
-    if (this.myForm.controls.nrcedSummary.dirty || this.myForm.controls.publishNrced.dirty) {
+    if (
+      this.myForm.controls.recordName.dirty ||
+      this.myForm.controls.nrcedSummary.dirty ||
+      this.myForm.controls.publishNrced.dirty
+    ) {
       order['OrderNRCED'] = {};
     }
+    this.myForm.controls.recordName.dirty &&
+      (order['OrderNRCED']['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.nrcedSummary.dirty &&
       (order['OrderNRCED']['summary'] = this.myForm.controls.nrcedSummary.value);
     if (this.myForm.controls.publishNrced.dirty && this.myForm.controls.publishNrced.value) {

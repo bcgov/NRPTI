@@ -142,7 +142,6 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   }
 
   // set data
-  incomingObj.recordName && (administrativeSanction.recordName = incomingObj.recordName);
   administrativeSanction.recordType = 'Administrative Sanction';
   incomingObj.dateIssued && (administrativeSanction.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (administrativeSanction.issuingAgency = incomingObj.issuingAgency);
@@ -386,7 +385,6 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   administrativeSanctionNRCED.dateAdded = new Date();
 
   // set master data
-  incomingObj.recordName && (administrativeSanctionNRCED.recordName = incomingObj.recordName);
   administrativeSanctionNRCED.recordType = 'Administrative Sanction';
   incomingObj.dateIssued && (administrativeSanctionNRCED.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (administrativeSanctionNRCED.issuingAgency = incomingObj.issuingAgency);

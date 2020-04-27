@@ -101,7 +101,6 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       dateIssued: new FormControl(
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
@@ -173,6 +172,7 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
       ),
 
       // LNG
+      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
       publishLng: new FormControl(
         (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
@@ -272,7 +272,6 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
     // projectName
 
     const restorativeJustice = {};
-    this.myForm.controls.recordName.dirty && (restorativeJustice['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.dateIssued.dirty &&
       (restorativeJustice['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(
         this.myForm.get('dateIssued').value
@@ -336,9 +335,15 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
     this.myForm.get('penalties').dirty && (restorativeJustice['penalties'] = this.parsePenaltiesFormGroups());
 
     // NRCED flavour
-    if (this.myForm.controls.nrcedSummary.dirty || this.myForm.controls.publishNrced.dirty) {
+    if (
+      this.myForm.controls.recordName.dirty ||
+      this.myForm.controls.nrcedSummary.dirty ||
+      this.myForm.controls.publishNrced.dirty
+    ) {
       restorativeJustice['RestorativeJusticeNRCED'] = {};
     }
+    this.myForm.controls.recordName.dirty &&
+      (restorativeJustice['RestorativeJusticeNRCED']['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.nrcedSummary.dirty &&
       (restorativeJustice['RestorativeJusticeNRCED']['summary'] = this.myForm.controls.nrcedSummary.value);
     if (this.myForm.controls.publishNrced.dirty && this.myForm.controls.publishNrced.value) {

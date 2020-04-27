@@ -138,7 +138,6 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   }
 
   // set data
-  incomingObj.recordName && (restorativeJustice.recordName = incomingObj.recordName);
   restorativeJustice.recordType = 'Restorative Justice';
   incomingObj.dateIssued && (restorativeJustice.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (restorativeJustice.issuingAgency = incomingObj.issuingAgency);
@@ -384,7 +383,6 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   restorativeJusticeNRCED.dateAdded = new Date();
 
   // set master data
-  incomingObj.recordName && (restorativeJusticeNRCED.recordName = incomingObj.recordName);
   restorativeJusticeNRCED.recordType = 'Restorative Justice';
   incomingObj.dateIssued && (restorativeJusticeNRCED.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (restorativeJusticeNRCED.issuingAgency = incomingObj.issuingAgency);

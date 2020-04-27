@@ -37,7 +37,6 @@ describe('BaseRecordUtils', () => {
         _sourceRefId: expect.any(Object),
         _epicMilestoneId: '',
 
-        recordName: '',
         recordType: RECORD_TYPE.Order.displayName,
         dateIssued: null,
         description: '',
@@ -85,7 +84,6 @@ describe('BaseRecordUtils', () => {
         _sourceRefId: expect.any(Object),
         _epicMilestoneId: 'milestone',
 
-        recordName: 'docDisplay',
         recordType: RECORD_TYPE.Order.displayName,
         dateIssued: 'someDate',
         description: 'someDescription',

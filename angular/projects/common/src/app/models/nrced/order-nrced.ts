@@ -18,7 +18,6 @@ export class OrderNRCED {
   read: string[];
   write: string[];
 
-  recordName: string;
   recordType: string;
   recordSubtype: string;
   dateIssued: Date;
@@ -59,7 +58,6 @@ export class OrderNRCED {
     this.read = (obj && obj.read) || null;
     this.write = (obj && obj.write) || null;
 
-    this.recordName = (obj && obj.recordName) || '';
     this.recordType = (obj && obj.recordType) || '';
     this.recordSubtype = (obj && obj.recordSubtype) || '';
     this.dateIssued = (obj && obj.dateIssued) || null;

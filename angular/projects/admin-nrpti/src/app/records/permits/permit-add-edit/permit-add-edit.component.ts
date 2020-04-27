@@ -92,7 +92,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       recordSubtype: new FormControl((this.currentRecord && this.currentRecord.recordSubtype) || ''),
       dateIssued: new FormControl(
         (this.currentRecord &&
@@ -127,6 +126,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       ),
 
       // LNG
+      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
       lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
       publishLng: new FormControl(
         (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
@@ -159,7 +159,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     // projectName
 
     const permit = {};
-    this.myForm.controls.recordName.dirty && (permit['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.recordSubtype.dirty && (permit['recordSubtype'] = this.myForm.controls.recordSubtype.value);
     this.myForm.controls.dateIssued.dirty &&
       (permit['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
@@ -197,9 +196,15 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       (permit['centroid'] = [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value]);
 
     // LNG flavour
-    if (this.myForm.controls.lngDescription.dirty || this.myForm.controls.publishLng.dirty) {
+    if (
+      this.myForm.controls.recordName.dirty ||
+      this.myForm.controls.lngDescription.dirty ||
+      this.myForm.controls.publishLng.dirty
+    ) {
       permit['PermitLNG'] = {};
     }
+    this.myForm.controls.recordName.dirty &&
+      (permit['PermitLNG']['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.lngDescription.dirty &&
       (permit['PermitLNG']['description'] = this.myForm.controls.lngDescription.value);
     if (this.myForm.controls.publishLng.dirty && this.myForm.controls.publishLng.value) {

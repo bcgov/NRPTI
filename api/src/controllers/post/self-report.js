@@ -124,7 +124,6 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   }
 
   // set data
-  incomingObj.recordName && (selfReport.recordName = incomingObj.recordName);
   selfReport.recordType = 'Compliance Self-Report';
   incomingObj.dateIssued && (selfReport.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (selfReport.issuingAgency = incomingObj.issuingAgency);

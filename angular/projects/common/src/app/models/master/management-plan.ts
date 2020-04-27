@@ -15,7 +15,6 @@ export class ManagementPlan {
   read: string[];
   write: string[];
 
-  recordName: string;
   recordType: string;
   dateIssued: Date;
   agency: string;
@@ -47,7 +46,6 @@ export class ManagementPlan {
     this.read = (obj && obj.read) || null;
     this.write = (obj && obj.write) || null;
 
-    this.recordName = (obj && obj.recordName) || null;
     this.recordType = (obj && obj.recordType) || null;
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.agency = (obj && obj.agency) || null;
