@@ -66,6 +66,9 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
   // Example of entries: [['OrderLNG', createLNG()], ['OrderNRCED', createNRCED()]]
   for (let i = 0; i < entries.length; i++) {
     const entry = entries[i];
+    if (!incomingObj[entry[0]]) {
+      continue;
+    }
 
     // This is to determine how we should populate the fields in master that know
     // the publish state of its flavours.

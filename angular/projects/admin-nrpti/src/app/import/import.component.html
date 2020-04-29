@@ -1,22 +1,47 @@
 <main class="container-fluid-padding">
   <section class="mb-3">
     <h4>Import from Source System</h4>
-    <div class="mb-4">
-      <div class="label-pair">
-        <label>Import from EPIC</label>
-        <div>
-          <button type="button" [disabled]="showAlert" class="btn btn-primary" (click)="startJob('epic')">
-            Start Job
-          </button>
-        </div>
+
+    <div class="label-pair mb-3">
+      <label>Import from EPIC</label>
+      <div>
+        <button
+          type="button"
+          [disabled]="showAlert"
+          class="btn btn-primary"
+          (click)="startJob('epic')"
+          title="Start EPIC import job"
+        >
+          Start Job
+        </button>
       </div>
-      <div class="label-pair">
-        <label>Import from NRIS</label>
-        <div>
-          <button type="button" [disabled]="showAlert" class="btn btn-primary" (click)="startJob('nris-epd')">
-            Start Job
-          </button>
-        </div>
+    </div>
+    <div class="label-pair mb-3">
+      <label>Import from NRIS</label>
+      <div>
+        <button
+          type="button"
+          [disabled]="showAlert"
+          class="btn btn-primary"
+          (click)="startJob('nris-epd')"
+          title="Start NRIS import job"
+        >
+          Start Job
+        </button>
+      </div>
+    </div>
+    <div class="label-pair mb-3">
+      <label>Import from CORE</label>
+      <div>
+        <button
+          type="button"
+          [disabled]="showAlert"
+          class="btn btn-primary"
+          (click)="startJob('core')"
+          title="Start CORE import job"
+        >
+          Start Job
+        </button>
       </div>
     </div>
     <div *ngIf="showAlert" class="input-group mb-3">
@@ -25,6 +50,10 @@
         <span>Please refresh the page to see the updated status.</span>
       </div>
     </div>
+  </section>
+
+  <section class="mt-4.5 mb-3">
+    <app-import-csv></app-import-csv>
   </section>
 
   <section>

@@ -53,6 +53,7 @@ definitions:
     enum: &dataSourceType
       - epic
       - nris-epd
+      - cors-csv
   recordType:
     type: string
     description: 'Supported record types'
@@ -425,6 +426,58 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/TaskObject'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /task/csv:
+    x-swagger-router-controller: import-csv-task
+    options:
+      tags:
+        - csv, task
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated csv task route'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - csv, task
+      summary: 'Create a new csv Task'
+      operationId: protectedCreateTask
+      description: 'Authenticated access to create a csv Task Worker'
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: dataSourceType
+          in: formData
+          type: string
+          enum: *dataSourceType
+          required: true
+          description: 'The datasource to update'
+        - name: recordType
+          in: formData
+          type: string
+          enum: *recordType
+          required: true
+          description: 'Specific record type to update'
+        - name: upfile
+          in: formData
+          type: file
+          required: true
+          description: "The csv file to import"
       responses:
         '200':
           description: 'Success'
