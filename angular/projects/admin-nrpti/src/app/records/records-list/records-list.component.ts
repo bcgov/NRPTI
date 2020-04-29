@@ -289,6 +289,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       this.utils.removeKeyFromObject(this.queryParams, 'keywords');
       delete this.tableData.keywords
     }
+    this.queryParams.currentPage = 1;
     this.utils.addKeyValueToObject(this.queryParams, 'ms', new Date().getMilliseconds().toString());
     this.router.navigate(['/records', this.queryParams]);
   }

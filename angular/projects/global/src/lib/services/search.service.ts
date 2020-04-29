@@ -62,7 +62,7 @@ export class SearchService {
     if (keys) {
       queryString += `&keywords=${keys}`;
       // Subset does not apply if there are no keywords
-      if (subset) {
+      if (subset && subset.length > 0) {
         queryString += `&subset=${subset}`;
       }
     }
