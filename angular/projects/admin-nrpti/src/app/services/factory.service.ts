@@ -212,7 +212,8 @@ export class FactoryService {
     sortBy: string = null,
     queryModifier: object = {},
     populate: boolean = false,
-    filter: object = {}
+    filter: object = {},
+    subset: string[]
   ): Observable<any[]> {
     return this.searchService.getSearchResults(
       this.getApiPath(),
@@ -224,7 +225,8 @@ export class FactoryService {
       sortBy,
       queryModifier,
       populate,
-      filter
+      filter,
+      subset
     );
   }
 

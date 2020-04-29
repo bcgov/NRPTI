@@ -15,7 +15,7 @@ import { Utils } from '../utils/utils';
 // @dynamic
 @Injectable()
 export class SearchService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /**
    * Fetches a record based on its _id.  May return multiple items.
@@ -50,7 +50,8 @@ export class SearchService {
     sortBy: string = null,
     queryModifier: object = {},
     populate: boolean = false,
-    filter: object = {}
+    filter: object = {},
+    subset: string[] = [],
   ): Observable<SearchResults[]> {
     let queryString = `search?dataset=${dataset}`;
     if (fields && fields.length > 0) {
@@ -60,6 +61,10 @@ export class SearchService {
     }
     if (keys) {
       queryString += `&keywords=${keys}`;
+      // Subset does not apply if there are no keywords
+      if (subset) {
+        queryString += `&subset=${subset}`;
+      }
     }
     if (pageNum && pageNum > 0) {
       queryString += `&pageNum=${pageNum - 1}`;

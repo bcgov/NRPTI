@@ -205,6 +205,7 @@ export interface ITableObjectParams {
    * @memberof ITableObjectParams
    */
   totalListItems?: number;
+  subset?: string[];
 }
 /**
  * Main class that should contain all information needed to render a table, and handle pagination, sorting, etc.
@@ -224,6 +225,7 @@ export class TableObject {
   public pageSize: number;
   public sortBy: string;
   public totalListItems: number;
+  public subset: string[];
   constructor(params?: ITableObjectParams) {
     this.options = (params && params.options) || DEFAULT_TABLE_OPTIONS;
     this.component = (params && params.component) || null;
@@ -236,5 +238,6 @@ export class TableObject {
     this.pageSize = (params && params.pageSize) || DEFAULT_TABLE_PAGE_SIZE;
     this.sortBy = (params && params.sortBy) || DEFAULT_TABLE_SORT_BY;
     this.totalListItems = (params && params.totalListItems) || 0;
+    this.subset = (params && params.subset) || [];
   }
 }
