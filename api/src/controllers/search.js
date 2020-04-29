@@ -136,6 +136,8 @@ let searchCollection = async function (
     if (subset) {
       // We must overwrite searchProperties to use regex instead
       searchProperties = { $or: [] };
+      const keywordArray = keywords.split(' ');
+
       for (let i = 0; i < subset.length; i++) {
         if (
           subset[i] === 'firstName' ||
@@ -143,7 +145,6 @@ let searchCollection = async function (
           subset[i] === 'lastName' ||
           subset[i] === 'companyName'
         ) {
-          keywordArray = keywords.split(' ');
           for (let i = 0; i < keywordArray.length; i++) {
             let tempSubsetObj = {};
             tempSubsetObj['issuedTo.' + subset[i]] = { $regex: `.*${keywordArray[i]}.*`, '$options': 'i' };
