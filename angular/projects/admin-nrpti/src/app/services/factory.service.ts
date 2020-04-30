@@ -213,7 +213,7 @@ export class FactoryService {
     queryModifier: object = {},
     populate: boolean = false,
     filter: object = {},
-    subset: string[]
+    subset: string[] = []
   ): Observable<any[]> {
     return this.searchService.getSearchResults(
       this.getApiPath(),
