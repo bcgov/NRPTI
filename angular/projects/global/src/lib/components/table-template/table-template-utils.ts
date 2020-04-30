@@ -29,6 +29,9 @@ export class TableTemplateUtils {
           case 'pageSize':
             tableObject[item] = +routeParams[item];
             break;
+          case 'subset':
+            tableObject[item] = routeParams[item].split(',');
+            break;
           default:
             tableObject[item] = routeParams[item];
             break;
