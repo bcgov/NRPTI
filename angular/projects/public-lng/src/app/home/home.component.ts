@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         [],
         1, // tableObject.currentPage,
         100000, // tableObject.pageSize,
-        null, // tableObject.sortBy,
+        '-date', // tableObject.sortBy,
         {},
         false
       )
