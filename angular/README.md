@@ -144,13 +144,11 @@ Recommend installing the [VSCode Prettier extension](https://github.com/prettier
 
 ### Technolgies used
 
-[TSLint](https://palantir.github.io/tslint/), [Prettier](https://prettier.io/), [Stylelint](https://stylelint.io/)
-
+[TSLint](https://palantir.github.io/tslint/), [Prettier](https://prettier.io/)
 ### Configuration files
 
 - TSlint: tslint.json
 - Prettier: .prettierrc .prettierignore
-- Stylelint: .styleintrc
 - lint-staged: .lintstagedrc
 
 ## Run Linters + Formatters + Auto Fix
@@ -167,12 +165,6 @@ _Note: Not all linting/formatting errors can be automatically fixed, and will re
 
   ```
   npm run lint:ts
-  ```
-
-- Lint and fix the `*.scss` files using `Stylelint`.
-
-  ```
-  npm run lint:scss
   ```
 
 # Testing
