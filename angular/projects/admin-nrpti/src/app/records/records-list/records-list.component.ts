@@ -196,6 +196,16 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
       this.tableData.columns = this.tableColumns;
       this.keywordSearchWords = (this.queryParams && this.queryParams.keywords) || '';
+
+      // If an advanced filter setting is active, open advanced filter section on page load.
+      if (
+        this.tableData._schemaName ||
+        this.tableData.dateRangeFromFilter ||
+        this.tableData.dateRangeToFilter
+      ) {
+        this.showAdvancedFilters = true;
+      }
+
       this.loading = false;
       this._changeDetectionRef.detectChanges();
     });
@@ -348,12 +358,13 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   }
 
   changeSubset(filterText): void {
-    this.loadingScreenService.setLoadingState(true, 'body');
     switch (filterText) {
       case 'All':
+        this.selectedSubset = 'All';
         delete this.tableData.subset;
         break;
       case 'Description & Summary':
+        this.selectedSubset = 'Description & Summary';
         this.tableData.subset = ['description'];
         break;
       case 'Issued To':
@@ -367,7 +378,10 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       default:
         break;
     }
-    this.submit();
+    if (this.keywordSearchWords !== '') {
+      this.tableData.keywords = this.keywordSearchWords;
+      this.submit();
+    }
   }
 
   initSubset() {

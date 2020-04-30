@@ -145,9 +145,9 @@ let searchCollection = async function (
           subset[i] === 'lastName' ||
           subset[i] === 'companyName'
         ) {
-          for (let i = 0; i < keywordArray.length; i++) {
+          for (let j = 0; j < keywordArray.length; j++) {
             let tempSubsetObj = {};
-            tempSubsetObj['issuedTo.' + subset[i]] = { $regex: `.*${keywordArray[i]}.*`, '$options': 'i' };
+            tempSubsetObj['issuedTo.' + subset[i]] = { $regex: `.*${keywordArray[j]}.*`, '$options': 'i' };
             searchProperties['$or'].push(tempSubsetObj);
           }
         } else {
