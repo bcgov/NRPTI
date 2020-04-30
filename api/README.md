@@ -49,7 +49,7 @@ These 2 linters (tslint, Prettier) do have overlapping rules.  To avoid weird ru
 
 ### Technolgies used
 
-[TSLint](https://palantir.github.io/tslint/), [Prettier](https://prettier.io/), [Stylelint](https://stylelint.io/)
+[TSLint](https://palantir.github.io/tslint/), [Prettier](https://prettier.io/)
 
 ### Configuration files
 
