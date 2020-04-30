@@ -199,9 +199,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
       // If an advanced filter setting is active, open advanced filter section on page load.
       if (
-        this.tableData._schemaName ||
-        this.tableData.dateRangeFromFilter ||
-        this.tableData.dateRangeToFilter
+        this.tableData['_schemaName'] ||
+        this.tableData['dateRangeFromFilter'] ||
+        this.tableData['dateRangeToFilter']
       ) {
         this.showAdvancedFilters = true;
       }
