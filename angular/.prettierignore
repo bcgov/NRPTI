@@ -2,6 +2,3 @@ node_modules
 
 dist
 coverage
-
-# use stylelint for scss linting/formatting
-*.scss
