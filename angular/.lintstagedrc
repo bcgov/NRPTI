@@ -4,10 +4,6 @@
       "ng lint nrpti-admin --fix --format=stylish",
       "prettier --write --loglevel warn",
       "git add"
-    ],
-    "*.scss": [
-      "stylelint --fix",
-      "git add"
     ]
   }
 }
