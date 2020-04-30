@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const QueryUtils = require('./query-utils');
+const DocumentController = require('../controllers/document-controller');
 
 exports.validateObjectAgainstModel = function(mongooseModel, incomingObj) {
   if (!incomingObj) {
@@ -111,4 +113,72 @@ exports.getDotNotation = function(obj, target, prefix) {
   });
 
   return target;
+};
+
+/**
+ * Updates the read roles for all documents associated with the master record.
+ *
+ * @param {*} masterRecord
+ * @param {*} auth_payload
+ * @returns savedDocuments
+ */
+exports.updateDocumentRoles = async function(masterRecord, auth_payload) {
+  if (!masterRecord) {
+    return null;
+  }
+
+  let savedDocuments = [];
+  const documentPromises = [];
+
+  if (await QueryUtils.isDocumentConsideredAnonymous(masterRecord)) {
+    // unpublish the mongo document AND s3 document if one exists
+    masterRecord.documents.forEach(docId => {
+      documentPromises.push(
+        DocumentController.unpublishDocument(docId, auth_payload).then(document => {
+          if (document.key) {
+            return DocumentController.unpublishS3Document(document.key);
+          }
+        })
+      );
+    });
+  } else {
+    // publish the mongo document AND s3 document if one exists
+    masterRecord.documents.forEach(docId => {
+      documentPromises.push(
+        DocumentController.publishDocument(docId, auth_payload).then(document => {
+          if (document.key) {
+            return DocumentController.publishS3Document(document.key);
+          }
+        })
+      );
+    });
+  }
+
+  if (documentPromises.length > 0) {
+    savedDocuments = await Promise.all(documentPromises);
+  }
+
+  return savedDocuments;
+};
+
+/**
+ * Apply business logic changes to a record. Updates the provided updateObj, and returns it.
+ *
+ * @param {*} updateObj
+ * @param {*} sanitizedObj
+ * @returns updateObj
+ */
+exports.applyBusinessLogic = function(updateObj, sanitizedObj) {
+  if (!sanitizedObj) {
+    return updateObj;
+  }
+
+  // apply anonymous business logic
+  if (QueryUtils.isRecordConsideredAnonymous(sanitizedObj)) {
+    updateObj.$pull['issuedTo.read'] = 'public';
+  } else {
+    updateObj.$addToSet['issuedTo.read'] = 'public';
+  }
+
+  return updateObj;
 };

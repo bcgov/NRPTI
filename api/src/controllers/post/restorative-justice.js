@@ -1,6 +1,5 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
-let queryUtils = require('../../utils/query-utils');
 let postUtils = require('../../utils/post-utils');
 
 /**
@@ -321,11 +320,9 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     restorativeJusticeLNG.read.push('public');
     restorativeJusticeLNG.datePublished = new Date();
     restorativeJusticeLNG.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(restorativeJusticeLNG)) {
-      restorativeJusticeLNG.issuedTo.read.push('public');
-    }
   }
+
+  restorativeJusticeLNG = postUtils.applyBusinessLogic(restorativeJusticeLNG);
 
   return await restorativeJusticeLNG.save();
 };
@@ -450,11 +447,9 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     restorativeJusticeNRCED.read.push('public');
     restorativeJusticeNRCED.datePublished = new Date();
     restorativeJusticeNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(restorativeJusticeNRCED)) {
-      restorativeJusticeNRCED.issuedTo.read.push('public');
-    }
   }
+
+  restorativeJusticeNRCED = postUtils.applyBusinessLogic(restorativeJusticeNRCED);
 
   return await restorativeJusticeNRCED.save();
 };

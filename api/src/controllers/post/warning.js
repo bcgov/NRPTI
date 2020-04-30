@@ -1,6 +1,5 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
-let queryUtils = require('../../utils/query-utils');
 let postUtils = require('../../utils/post-utils');
 
 /**
@@ -315,11 +314,9 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     warningLNG.read.push('public');
     warningLNG.datePublished = new Date();
     warningLNG.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(warningLNG)) {
-      warningLNG.issuedTo.read.push('public');
-    }
   }
+
+  warningLNG = postUtils.applyBusinessLogic(warningLNG);
 
   return await warningLNG.save();
 };
@@ -443,11 +440,9 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     warningNRCED.read.push('public');
     warningNRCED.datePublished = new Date();
     warningNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(warningNRCED)) {
-      warningNRCED.issuedTo.read.push('public');
-    }
   }
+
+  warningNRCED = postUtils.applyBusinessLogic(warningNRCED);
 
   return await warningNRCED.save();
 };

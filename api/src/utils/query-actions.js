@@ -8,7 +8,7 @@ const defaultLog = require('./logger')('queryActions');
  * @param {*} obj
  * @returns
  */
-exports.publish = async function(obj) {
+exports.publish = async function(obj, auth_payload) {
   let self = this;
   return new Promise(async function(resolve, reject) {
     // Object was already published?
@@ -22,14 +22,21 @@ exports.publish = async function(obj) {
     } else {
       // publish
       self.addPublicReadRole(obj);
+      obj.markModified('read');
 
       const date = new Date();
 
       obj.datePublished = date;
       obj.markModified('datePublished');
 
+      obj.publishedBy = auth_payload && auth_payload.idir_userid;
+      obj.markModified('publishedBy');
+
       obj.dateUpdated = date;
       obj.markModified('dateUpdated');
+
+      obj.updatedBy = auth_payload && auth_payload.idir_userid;
+      obj.markModified('updatedBy');
 
       // save and return
       let savedObj = await obj.save();
@@ -49,16 +56,19 @@ exports.publish = async function(obj) {
 /**
  * Adds the read role to the objects read array, if it exists.
  *
+ * Note: will not add duplicate `public` roles to the array.
+ *
  * @param {*} obj
- * @returns
+ * @returns obj
  */
 exports.addPublicReadRole = function(obj) {
   if (!obj || !obj.read || !Array.isArray(obj.read)) {
     return obj;
   }
 
-  obj.read.push('public');
-  obj.markModified('read');
+  if (!obj.read.includes('public')) {
+    obj.read.push('public');
+  }
 
   return obj;
 };
@@ -69,7 +79,7 @@ exports.addPublicReadRole = function(obj) {
  * @param {*} obj
  * @returns
  */
-exports.unPublish = async function(obj) {
+exports.unPublish = async function(obj, auth_payload) {
   let self = this;
   return new Promise(async function(resolve, reject) {
     // Object wasn't already published?
@@ -83,12 +93,19 @@ exports.unPublish = async function(obj) {
     } else {
       // unpublish
       self.removePublicReadRole(obj);
+      obj.markModified('read');
 
       obj.datePublished = null;
       obj.markModified('datePublished');
 
+      obj.publishedBy = null;
+      obj.markModified('publishedBy');
+
       obj.dateUpdated = new Date();
       obj.markModified('dateUpdated');
+
+      obj.updatedBy = auth_payload && auth_payload.idir_userid;
+      obj.markModified('updatedBy');
 
       // save and return
       let savedObj = await obj.save();
@@ -106,10 +123,10 @@ exports.unPublish = async function(obj) {
 };
 
 /**
- * Removes the read role to the objects read array, if it exists.
+ * Removes the read role from the objects read array, if it exists.
  *
  * @param {*} obj
- * @returns
+ * @returns obj
  */
 exports.removePublicReadRole = function(obj) {
   if (!obj || !obj.read || !Array.isArray(obj.read)) {
@@ -117,7 +134,6 @@ exports.removePublicReadRole = function(obj) {
   }
 
   obj.read = obj.read.filter(role => role !== 'public');
-  obj.markModified('read');
 
   return obj;
 };

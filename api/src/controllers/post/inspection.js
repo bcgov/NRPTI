@@ -1,6 +1,5 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
-let queryUtils = require('../../utils/query-utils');
 let postUtils = require('../../utils/post-utils');
 
 /**
@@ -177,6 +176,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (inspection.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+
   incomingObj.projectName && (inspection.projectName = incomingObj.projectName);
   incomingObj.location && (inspection.location = incomingObj.location);
   incomingObj.centroid && (inspection.centroid = incomingObj.centroid);
@@ -291,6 +291,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (inspectionLNG.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+
   incomingObj.projectName && (inspectionLNG.projectName = incomingObj.projectName);
   incomingObj.location && (inspectionLNG.location = incomingObj.location);
   incomingObj.centroid && (inspectionLNG.centroid = incomingObj.centroid);
@@ -311,11 +312,9 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     inspectionLNG.read.push('public');
     inspectionLNG.datePublished = new Date();
     inspectionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(inspectionLNG)) {
-      inspectionLNG.issuedTo.read.push('public');
-    }
   }
+
+  inspectionLNG = postUtils.applyBusinessLogic(inspectionLNG);
 
   return await inspectionLNG.save();
 };
@@ -416,6 +415,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (inspectionNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+
   incomingObj.projectName && (inspectionNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (inspectionNRCED.location = incomingObj.location);
   incomingObj.centroid && (inspectionNRCED.centroid = incomingObj.centroid);
@@ -436,11 +436,9 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     inspectionNRCED.read.push('public');
     inspectionNRCED.datePublished = new Date();
     inspectionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(inspectionNRCED)) {
-      inspectionNRCED.issuedTo.read.push('public');
-    }
   }
+
+  inspectionNRCED = postUtils.applyBusinessLogic(inspectionNRCED);
 
   return await inspectionNRCED.save();
 };

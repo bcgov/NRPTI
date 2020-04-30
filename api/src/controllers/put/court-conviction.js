@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 const PutUtils = require('../../utils/put-utils');
 const PostUtils = require('../../utils/post-utils');
-const QueryUtils = require('../../utils/query-utils');
 const CourtConvictionPost = require('../post/court-conviction');
 
 /**
@@ -101,17 +100,11 @@ exports.editRecord = async function(args, res, next, incomingObj) {
     };
   }
 
-  // save courtConviction record
+  // save master courtConviction record
   let savedCourtConviction = null;
 
   try {
     savedCourtConviction = await this.editMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedCourtConviction,
-      flavours: savedFlavourCourtConvictions
-    };
   } catch (e) {
     return {
       status: 'failure',
@@ -119,6 +112,26 @@ exports.editRecord = async function(args, res, next, incomingObj) {
       errorMessage: e.message
     };
   }
+
+  // update document roles
+  let savedDocuments = [];
+
+  try {
+    savedDocuments = PutUtils.updateDocumentRoles(savedCourtConviction, args.swagger.params.auth_payload);
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedDocuments,
+      errorMessage: e.message
+    };
+  }
+
+  return {
+    status: 'success',
+    object: savedCourtConviction,
+    flavours: savedFlavourCourtConvictions,
+    documents: savedDocuments
+  };
 };
 
 /**
@@ -244,7 +257,7 @@ exports.editLNG = async function(args, res, next, incomingObj) {
   const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
+  let updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj.$addToSet['read'] = 'public';
@@ -256,14 +269,7 @@ exports.editLNG = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  if (sanitizedObj.issuedTo) {
-    // check if a condition changed that would cause the entity details to be anonymous, or not.
-    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
-      updateObj.$pull['issuedTo.read'] = 'public';
-    } else {
-      updateObj.$addToSet['issuedTo.read'] = 'public';
-    }
-  }
+  updateObj = PutUtils.applyBusinessLogic(updateObj, sanitizedObj);
 
   return await CourtConvictionLNG.findOneAndUpdate({ _schemaName: 'CourtConvictionLNG', _id: _id }, updateObj, {
     new: true
@@ -324,7 +330,7 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
   const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
+  let updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj.$addToSet['read'] = 'public';
@@ -336,14 +342,7 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  if (sanitizedObj.issuedTo) {
-    // check if a condition changed that would cause the entity details to be anonymous, or not.
-    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
-      updateObj.$pull['issuedTo.read'] = 'public';
-    } else {
-      updateObj.$addToSet['issuedTo.read'] = 'public';
-    }
-  }
+  updateObj = PutUtils.applyBusinessLogic(updateObj, sanitizedObj);
 
   return await CourtConvictionNRCED.findOneAndUpdate({ _schemaName: 'CourtConvictionNRCED', _id: _id }, updateObj, {
     new: true

@@ -1,6 +1,5 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
-let queryUtils = require('../../utils/query-utils');
 let postUtils = require('../../utils/post-utils');
 
 /**
@@ -327,11 +326,9 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     administrativePenaltyLNG.read.push('public');
     administrativePenaltyLNG.datePublished = new Date();
     administrativePenaltyLNG.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(administrativePenaltyLNG)) {
-      administrativePenaltyLNG.issuedTo.read.push('public');
-    }
   }
+
+  administrativePenaltyLNG = postUtils.applyBusinessLogic(administrativePenaltyLNG);
 
   return await administrativePenaltyLNG.save();
 };
@@ -456,11 +453,9 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     administrativePenaltyNRCED.read.push('public');
     administrativePenaltyNRCED.datePublished = new Date();
     administrativePenaltyNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(administrativePenaltyNRCED)) {
-      administrativePenaltyNRCED.issuedTo.read.push('public');
-    }
   }
+
+  administrativePenaltyNRCED = postUtils.applyBusinessLogic(administrativePenaltyNRCED);
 
   return await administrativePenaltyNRCED.save();
 };
