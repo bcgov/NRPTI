@@ -498,6 +498,50 @@ paths:
           description: 'Access Denied'
           schema:
             $ref: '#/definitions/Error'
+  /record/news/{recordId}:
+    x-swagger-router-controller: record-controller
+    options:
+      tags:
+        - record
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated record route'
+      parameters:
+        - name: recordId
+          in: path
+          description: '_id of record to delete'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - record
+      summary: 'Delete Record'
+      operationId: protectedNewsDelete
+      description: 'Authenticated access to delete a News Record'
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+      parameters:
+        - name: recordId
+          in: path
+          description: '_id of record'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
   /record:
     x-swagger-router-controller: record-controller
     options:

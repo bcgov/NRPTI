@@ -5,6 +5,8 @@ import { NotAuthorizedComponent } from './not-authorized/not-authorized.componen
 import { HomeComponent } from './home/home.component';
 import { ImportComponent } from './import/import.component';
 import { ImportListResolver } from './import/import-list-resolver';
+import { NewsResolver } from './news/news-resolver';
+import { NewsListComponent } from './news/news-list.component';
 
 const routes: Routes = [
   {
@@ -26,6 +28,17 @@ const routes: Routes = [
     },
     data: {
       breadcrumb: 'Imports'
+    }
+  },
+  {
+    path: 'news',
+    pathMatch: 'full',
+    component: NewsListComponent,
+    resolve: {
+      records: NewsResolver
+    },
+    data: {
+      breadcrumb: 'News'
     }
   },
   {

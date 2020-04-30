@@ -1,5 +1,4 @@
-import moment from 'moment';
-import { ActivityTypes } from '../utils/activity-types.enum';
+import { ActivityTypes } from '../../../../global/src/lib/utils/activity-types.enum';
 
 export class Activity {
   type: string;
@@ -13,6 +12,6 @@ export class Activity {
     this.title = (obj && obj.title) || null;
     this.url = (obj && obj.url) || null;
     this.description = (obj && obj.description) || null;
-    this.date = (obj && obj.date && moment(obj.date, 'DD-MM-YYYY').toDate()) || null;
+    this.date = (obj && obj.date && new Date(obj.date)) || null;
   }
 }
