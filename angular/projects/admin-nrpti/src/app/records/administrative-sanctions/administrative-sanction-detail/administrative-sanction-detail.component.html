@@ -46,8 +46,12 @@
             <label class="grid-item-name">Description</label>
             <span class="grid-item-value">{{ (data && data._master.legislationDescription) || '-' }}</span>
           </div>
+          <div class="grid-item__row">
+            <label class="grid-item-name">Source System</label>
+            <span class="grid-item-value">{{ (data && data._master.sourceSystemRef) || '-' }}</span>
+          </div>
         </div>
-        <div class="grid-section-border"></div>
+      <div class="grid-section-border"></div>
         <div class="grid-section-sub-header">
           <span class="grid-section-sub-header-text">Penalties</span>
         </div>

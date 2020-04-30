@@ -144,6 +144,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   public keywordSearchWords: string;
   public queryParams: Params;
   public showAdvancedFilters = false;
+  public selectedSubset = 'All';
 
   constructor(
     public location: Location,
@@ -166,7 +167,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       this.queryParams = { ...params };
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
       this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, this.tableData);
-
+      this.initSubset();
       // Make api call with tableData params.
       this.loadingScreenService.setLoadingState(false, 'body');
       this._changeDetectionRef.detectChanges();
@@ -195,6 +196,16 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
       this.tableData.columns = this.tableColumns;
       this.keywordSearchWords = (this.queryParams && this.queryParams.keywords) || '';
+
+      // If an advanced filter setting is active, open advanced filter section on page load.
+      if (
+        this.tableData['_schemaName'] ||
+        this.tableData['dateRangeFromFilter'] ||
+        this.tableData['dateRangeToFilter']
+      ) {
+        this.showAdvancedFilters = true;
+      }
+
       this.loading = false;
       this._changeDetectionRef.detectChanges();
     });
@@ -286,7 +297,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       this.utils.addKeyValueToObject(this.queryParams, 'keywords', this.keywordSearchWords);
     } else {
       this.utils.removeKeyFromObject(this.queryParams, 'keywords');
+      delete this.tableData.keywords;
     }
+    this.queryParams.currentPage = 1;
     this.utils.addKeyValueToObject(this.queryParams, 'ms', new Date().getMilliseconds().toString());
     this.router.navigate(['/records', this.queryParams]);
   }
@@ -342,6 +355,45 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
   toggleAdvancedFilters(): void {
     this.showAdvancedFilters = !this.showAdvancedFilters;
+  }
+
+  changeSubset(filterText): void {
+    switch (filterText) {
+      case 'All':
+        this.selectedSubset = 'All';
+        delete this.tableData.subset;
+        break;
+      case 'Description & Summary':
+        this.selectedSubset = 'Description & Summary';
+        this.tableData.subset = ['description'];
+        break;
+      case 'Issued To':
+        this.selectedSubset = 'Issued To';
+        this.tableData.subset = ['firstName', 'middleName', 'lastName', 'companyName'];
+        break;
+      case 'Location':
+        this.selectedSubset = 'Location';
+        this.tableData.subset = ['location'];
+        break;
+      default:
+        break;
+    }
+    if (this.keywordSearchWords !== '') {
+      this.tableData.keywords = this.keywordSearchWords;
+      this.submit();
+    }
+  }
+
+  initSubset() {
+    if (!this.tableData.subset) {
+      this.selectedSubset = 'All';
+    } else if (this.tableData.subset.includes('companyName')) {
+      this.selectedSubset = 'Issued To';
+    } else if (this.tableData.subset.includes('location')) {
+      this.selectedSubset = 'Location';
+    } else if (this.tableData.subset.includes('description')) {
+      this.selectedSubset = 'Description & Summary';
+    }
   }
 
   /**

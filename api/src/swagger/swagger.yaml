@@ -84,6 +84,19 @@ definitions:
     enum: &searchDataSetParams
       - Order
       - Inspection
+  SearchSubsetParams:
+    type: string
+    description: 'Optional datasets to search on in the DB'
+    example: ['description']
+    enum: &SearchSubsetParams
+      - description
+      - dateIssued
+      - location
+      - recordName
+      - companyName
+      - firstName
+      - middleName
+      - lastName
   SearchSortByFields:
     type: string
     description: 'Optional fields to sort by (prefixed with + or - for order)'
@@ -231,6 +244,14 @@ paths:
           required: false
           description: 'Query: multiple parameter instances are supported using OR.'
           type: string
+        - in: query
+          name: subset
+          description: 'Fields that you want to filter your keyword search on.'
+          type: array
+          items:
+            type: string
+            enum: *SearchSubsetParams
+          required: false
       responses:
         '200':
           description: 'Success'
@@ -491,6 +512,50 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RecordRequestObject'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /record/news/{recordId}:
+    x-swagger-router-controller: record-controller
+    options:
+      tags:
+        - record
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated record route'
+      parameters:
+        - name: recordId
+          in: path
+          description: '_id of record to delete'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - record
+      summary: 'Delete Record'
+      operationId: protectedNewsDelete
+      description: 'Authenticated access to delete a News Record'
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+      parameters:
+        - name: recordId
+          in: path
+          description: '_id of record'
+          required: true
+          type: string
       responses:
         '200':
           description: 'Success'

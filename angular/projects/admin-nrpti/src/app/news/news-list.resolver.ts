@@ -5,28 +5,15 @@ import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
 import { FactoryService } from '../services/factory.service';
 
 @Injectable()
-export class RecordsResolver implements Resolve<Observable<object>> {
-  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) { }
+export class NewsListResolver implements Resolve<Observable<object>> {
+  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
     const tableObject = this.tableTemplateUtils.updateTableObjectWithUrlParams(route.params, new TableObject());
 
     let schemaList = [
-      'Order',
-      'Inspection',
-      'Certificate',
-      'Permit',
-      'SelfReport',
-      'Agreement',
-      'RestorativeJustice',
-      'Ticket',
-      'AdministrativePenalty',
-      'AdministrativeSanction',
-      'Warning',
-      'ConstructionPlan',
-      'ManagementPlan',
-      'CourtConviction'
+      'ActivityLNG'
     ];
 
     // If _schemaName was filter criteria, use that instead of the default list.
@@ -40,7 +27,6 @@ export class RecordsResolver implements Resolve<Observable<object>> {
     delete filterParams.keywords;
     delete filterParams.dataset;
     delete filterParams.ms;
-    delete filterParams.subset;
 
     if (filterParams._schemaName) {
       schemaList = filterParams._schemaName;
@@ -58,7 +44,7 @@ export class RecordsResolver implements Resolve<Observable<object>> {
 
     // force-reload so we always have latest data
     return this.factoryService.getRecords(
-      tableObject.keywords,
+      '',
       schemaList,
       [],
       tableObject.currentPage,
@@ -66,8 +52,7 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       tableObject.sortBy || '-dateAdded', // This needs to be common between all datasets to work properly
       {},
       false,
-      filterParams,
-      tableObject.subset
+      filterParams
     );
   }
 }

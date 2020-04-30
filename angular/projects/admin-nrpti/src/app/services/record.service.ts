@@ -55,4 +55,9 @@ export class RecordService {
     const queryString = 'record';
     return this.http.put<object>(`${this.apiService.pathAPI}/${queryString}`, record, {});
   }
+
+  public deleteRecord(recordId: string, model: string): Promise<any> {
+    const queryString = `record/${model}/${recordId}`;
+    return this.http.delete<any>(`${this.apiService.pathAPI}/${queryString}`).toPromise();
+  }
 }
