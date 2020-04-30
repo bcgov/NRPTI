@@ -19,6 +19,7 @@ let AddWarning = require('./post/warning');
 let AddConstructionPlan = require('./post/construction-plan');
 let AddManagementPlan = require('./post/management-plan');
 let AddCourtConviction = require('./post/court-conviction');
+let AddNewsItem = require('./post/news-item');
 
 let EditOrder = require('./put/order');
 let EditInspection = require('./put/inspection');
@@ -34,6 +35,7 @@ let EditWarning = require('./put/warning');
 let EditConstructionPlan = require('./put/construction-plan');
 let EditManagementPlan = require('./put/management-plan');
 let EditCourtConviction = require('./put/court-conviction');
+let EditNewsItem = require('./put/news-item');
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 
@@ -160,6 +162,9 @@ exports.protectedPost = async function(args, res, next) {
     if (data.courtConvictions) {
       observables.push(processPostRequest(args, res, next, 'courtConvictions', data.courtConvictions));
     }
+    if (data.newsItems) {
+      observables.push(processPostRequest(args, res, next, 'newsItems', data.newsItems));
+    }
 
     let response = await Promise.all(observables);
 
@@ -231,6 +236,9 @@ exports.protectedPut = async function(args, res, next) {
     if (data.courtConvictions) {
       observables.push(processPutRequest(args, res, next, 'courtConvictions', data.courtConvictions));
     }
+    if (data.newsItems) {
+      observables.push(processPutRequest(args, res, next, 'newsItems', data.newsItems));
+    }
 
     let response = await Promise.all(observables);
 
@@ -240,15 +248,25 @@ exports.protectedPut = async function(args, res, next) {
   }
 };
 
-/**
- * TODO: populate this documentation
- *
- * @param {*} args
- * @param {*} res
- * @param {*} next
- */
-exports.protectedDelete = function(args, res, next) {
-  return queryActions.sendResponse(res, 501);
+exports.protectedNewsDelete = async function(args, res, next) {
+  try {
+    const recordId = args.swagger.params.recordId.value;
+    defaultLog.info(`protectedNewsDelete - recordId: ${recordId}`);
+
+    const model = require('mongoose').model('ActivityLNG');
+
+    try {
+      await model.deleteOne({ _id: recordId });
+    } catch (e) {
+      defaultLog.info(`protectedNewsDelete - couldn't find record for recordId: ${recordId}`);
+      return queryActions.sendResponse(res, 404, {});
+    }
+
+    await queryUtils.recordAction('Delete', 'ActivityLNG', args.swagger.params.auth_payload.preferred_username, recordId);
+    return queryActions.sendResponse(res, 200, {});
+  } catch (error) {
+    return queryActions.sendResponse(res, 500, error);
+  }
 };
 
 /**
@@ -399,6 +417,9 @@ const processPostRequest = async function(args, res, next, property, data) {
       case 'courtConvictions':
         observables.push(AddCourtConviction.createRecord(args, res, next, data[i]));
         break;
+      case 'newsItems':
+        observables.push(AddNewsItem.createRecord(args, res, next, data[i]));
+        break;
       default:
         return {
           errorMessage: `Property ${property} does not exist.`
@@ -473,6 +494,9 @@ const processPutRequest = async function(args, res, next, property, data) {
         break;
       case 'courtConvictions':
         observables.push(EditCourtConviction.editRecord(args, res, next, data[i]));
+        break;
+      case 'newsItems':
+        observables.push(EditNewsItem.editRecord(args, res, next, data[i]));
         break;
       default:
         return {
