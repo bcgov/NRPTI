@@ -7,6 +7,8 @@ import { GlobalModule } from 'nrpti-angular-components';
 import { RecordDetailDirective } from '../../utils/record-detail.directive';
 import { DatePipe } from '@angular/common';
 import { CommonModule } from '../../../../../../common/src/app/common.module';
+import { DocumentAuthenticatedReadOnlyComponent } from '../../../documents/document-authenticated-read-only/document-authenticated-read-only.component';
+import { S3SignedUrlAnchorComponent } from '../../../documents/s3-signed-url-anchor/s3-signed-url-anchor.component';
 
 describe('OrderDetailComponent', () => {
   const testBedHelper = new TestBedHelper<OrderDetailComponent>(OrderDetailComponent);
@@ -18,7 +20,12 @@ describe('OrderDetailComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, GlobalModule, CommonModule],
-      declarations: [OrderDetailComponent, RecordDetailDirective],
+      declarations: [
+        OrderDetailComponent,
+        RecordDetailDirective,
+        DocumentAuthenticatedReadOnlyComponent,
+        S3SignedUrlAnchorComponent
+      ],
       providers: [
         DatePipe,
         { provide: Router, useValue: mockRouter },
