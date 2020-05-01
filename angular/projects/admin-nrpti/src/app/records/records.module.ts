@@ -100,6 +100,8 @@ import { CourtConvictionLNGDetailComponent } from './court-convictions/court-con
 // other
 import { ExplorePanelComponent } from '../explore-panel/explore-panel.component';
 import { DateInputComponent } from '../explore-panel/date-input/date-input.component';
+import { DocumentAuthenticatedReadOnlyComponent } from '../documents/document-authenticated-read-only/document-authenticated-read-only.component';
+import { S3SignedUrlAnchorComponent } from '../documents/s3-signed-url-anchor/s3-signed-url-anchor.component';
 
 @NgModule({
   imports: [
@@ -122,6 +124,8 @@ import { DateInputComponent } from '../explore-panel/date-input/date-input.compo
   declarations: [
     DateInputComponent,
     ExplorePanelComponent,
+    DocumentAuthenticatedReadOnlyComponent,
+    S3SignedUrlAnchorComponent,
     // records
     RecordsListComponent,
     RecordsTableRowComponent,
