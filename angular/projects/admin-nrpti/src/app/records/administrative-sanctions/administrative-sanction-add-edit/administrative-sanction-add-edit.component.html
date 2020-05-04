@@ -78,16 +78,27 @@
 
     <section>
       <h4>Legislation</h4>
-      <app-legislation-add-edit [formGroup]="myForm"></app-legislation-add-edit>
+      <app-legislation-add-edit [formGroup]="this.myForm.get('legislation')"></app-legislation-add-edit>
       <div class="flex-container">
         <div class="label-pair">
           <label for="legislationDescription">Description</label>
           <input
+            readonly
             name="legislationDescription"
             id="legislationDescription"
             formControlName="legislationDescription"
             class="form-control"
           />
+          <span
+            *ngIf="this.myForm.get('legislation.act').value && !this.myForm.get('legislationDescription').value"
+            class="grey-subtext"
+          >
+            No description available for the selected combination of act, regulation, section, subsection and paragraph.
+            Please double-check that you have filled out those fields correctly; if they are correct, please contact the
+            system administrator at
+            <a href="mailto:nrced@gov.bc.ca">nrced@gov.bc.ca</a>
+            to request a new description be added to the system.
+          </span>
         </div>
       </div>
       <h4>Penalties</h4>

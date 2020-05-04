@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ChangeDetectorRef, SimpleChanges, OnChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Picklists } from '../../../../../admin-nrpti/src/app/utils/constants/record-constants';
+import { Picklists } from '../../utils/record-constants';
 import { ENTITY_TYPE } from '../../models/master/common-models/entity';
 
 @Component({
