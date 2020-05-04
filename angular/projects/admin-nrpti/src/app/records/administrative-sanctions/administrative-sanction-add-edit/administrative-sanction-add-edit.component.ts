@@ -107,7 +107,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
     this.myForm
       .get('legislation')
       .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(c => {
+      .subscribe(() => {
         debouncedUpdateLegislationDescription();
       });
   }
