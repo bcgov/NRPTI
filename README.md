@@ -17,7 +17,6 @@ A list of recommended/helpful VS Code extensions.
 - TSLint
 - ESLint
 - Prettier - Code formatter
-- stylelint
 - EditorConfig for VS Code
 
 ## Languages

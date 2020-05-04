@@ -6,7 +6,7 @@ import { FactoryService } from '../services/factory.service';
 
 @Injectable()
 export class RecordsResolver implements Resolve<Observable<object>> {
-  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) {}
+  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) { }
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
@@ -40,6 +40,7 @@ export class RecordsResolver implements Resolve<Observable<object>> {
     delete filterParams.keywords;
     delete filterParams.dataset;
     delete filterParams.ms;
+    delete filterParams.subset;
 
     if (filterParams._schemaName) {
       schemaList = filterParams._schemaName;
@@ -65,7 +66,8 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       tableObject.sortBy || '-dateAdded', // This needs to be common between all datasets to work properly
       {},
       false,
-      filterParams
+      filterParams,
+      tableObject.subset
     );
   }
 }

@@ -212,7 +212,8 @@ export class FactoryService {
     sortBy: string = null,
     queryModifier: object = {},
     populate: boolean = false,
-    filter: object = {}
+    filter: object = {},
+    subset: string[] = []
   ): Observable<any[]> {
     return this.searchService.getSearchResults(
       this.getApiPath(),
@@ -224,7 +225,8 @@ export class FactoryService {
       sortBy,
       queryModifier,
       populate,
-      filter
+      filter,
+      subset
     );
   }
 
@@ -283,6 +285,27 @@ export class FactoryService {
    */
   public unPublishRecord(record: any): Observable<object> {
     return this.recordService.unPublishRecord(record).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // News
+  public createNews(news: any): Observable<object> {
+    const outboundObject = {
+      newsItems: [news]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editNews(news: any): Observable<object> {
+    const outboundObject = {
+      newsItems: [news]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public deleteNewsItem(recordId: string, model: string): Promise<any> {
+    return this.recordService.deleteRecord(recordId, model);
   }
 
   // Orders

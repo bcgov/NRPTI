@@ -16,6 +16,40 @@
     <div class="row">
       <div class="col">
         <div class="input-group mb-3">
+          <div ngbDropdown class="input-group-prepend">
+            <button class="btn btn-outline-secondary" id="dropdown" ngbDropdownToggle>{{selectedSubset}}</button>
+            <div ngbDropdownMenu aria-labelledby="dropdown">
+              <button ngbDropdownItem [disabled]="selectedSubset === 'All'" (click)="changeSubset('All')">
+                All
+                <i *ngIf="selectedSubset === 'All'" class="material-icons material-icons align-text-bottom">
+                  check_circle
+                </i>
+              </button>
+              <button ngbDropdownItem [disabled]="selectedSubset === 'Description & Summary'"
+                (click)="changeSubset('Description & Summary')">
+                Description & Summary
+                <i *ngIf="selectedSubset === 'Description & Summary'"
+                  class="material-icons material-icons align-text-bottom">
+                  check_circle
+                </i>
+              </button>
+              <button ngbDropdownItem [disabled]="selectedSubset === 'Issued To'"
+                (click)="changeSubset('Issued To')">
+                Issued To
+                <i *ngIf="selectedSubset === 'Issued To'"
+                  class="material-icons material-icons align-text-bottom">
+                  check_circle
+                </i>
+              </button>
+              <button ngbDropdownItem [disabled]="selectedSubset === 'Location'"
+                (click)="changeSubset('Location')">
+                Location
+                <i *ngIf="selectedSubset === 'Location'" class="material-icons material-icons align-text-bottom">
+                  check_circle
+                </i>
+              </button>
+            </div>
+          </div>
           <input type="text" class="form-control" (keyup.enter)="keywordSearch()" [(ngModel)]="keywordSearchWords"
             placeholder="Type keyword search words"
             aria-label="Type keyword search words" aria-describedby="basic-addon2">

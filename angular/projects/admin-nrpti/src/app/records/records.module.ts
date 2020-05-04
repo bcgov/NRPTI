@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -116,7 +116,8 @@ import { DateInputComponent } from '../explore-panel/date-input/date-input.compo
     NgbModule.forRoot(),
     InlineSVGModule.forRoot(),
     RecordsRoutingModule,
-    MatTooltipModule
+    MatTooltipModule,
+    NgbDropdownModule
   ],
   declarations: [
     DateInputComponent,
