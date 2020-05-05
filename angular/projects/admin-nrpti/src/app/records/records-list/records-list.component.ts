@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Router, Params } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
@@ -142,7 +142,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
   // Search
   public keywordSearchWords: string;
-  public queryParams: Params;
   public showAdvancedFilters = false;
   public selectedSubset = 'All';
 
@@ -164,7 +163,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadingScreenService.setLoadingState(true, 'body');
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
-      this.queryParams = { ...params };
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
       this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, this.tableData);
       this.initSubset();
@@ -195,7 +193,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         0;
 
       this.tableData.columns = this.tableColumns;
-      this.keywordSearchWords = (this.queryParams && this.queryParams.keywords) || '';
+      this.keywordSearchWords = this.tableData.keywords;
 
       // If an advanced filter setting is active, open advanced filter section on page load.
       if (
@@ -294,14 +292,19 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   keywordSearch() {
     this.loadingScreenService.setLoadingState(true, 'body');
     if (this.keywordSearchWords) {
-      this.utils.addKeyValueToObject(this.queryParams, 'keywords', this.keywordSearchWords);
+      this.tableData.keywords = this.keywordSearchWords;
+      if (!this.tableData.sortBy) {
+        this.tableData.sortBy = '-score';
+      }
     } else {
-      this.utils.removeKeyFromObject(this.queryParams, 'keywords');
-      delete this.tableData.keywords;
+      this.selectedSubset = 'All';
+      delete this.tableData.subset;
+      this.tableData.keywords = '';
+      this.tableData.sortBy = '';
     }
-    this.queryParams.currentPage = 1;
-    this.utils.addKeyValueToObject(this.queryParams, 'ms', new Date().getMilliseconds().toString());
-    this.router.navigate(['/records', this.queryParams]);
+    this.tableData.currentPage = 1;
+    this.utils.addKeyValueToObject(this.tableData, 'ms', new Date().getMilliseconds().toString());
+    this.submit();
   }
 
   add(item) {
@@ -369,7 +372,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         break;
       case 'Issued To':
         this.selectedSubset = 'Issued To';
-        this.tableData.subset = ['firstName', 'middleName', 'lastName', 'companyName'];
+        this.tableData.subset = ['issuedTo'];
         break;
       case 'Location':
         this.selectedSubset = 'Location';
@@ -380,6 +383,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     }
     if (this.keywordSearchWords !== '') {
       this.tableData.keywords = this.keywordSearchWords;
+      if (!this.tableData.sortBy) {
+        this.tableData.sortBy = '-score';
+      }
       this.submit();
     }
   }
