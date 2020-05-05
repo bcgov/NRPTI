@@ -58,13 +58,17 @@ export class FileUploadComponent {
   }
 
   private addFiles(files: FileList) {
-    this.errors = []; // clear previous errors
 
+    console.log('FILE LIST', files)
+    console.log('EXISTING FILES', this.files)
+    this.errors = []; // clear previous errors
+    
     if (this.isValidFiles(files)) {
       // tslint:disable-next-line:prefer-for-of
       for (let i = 0; i < files.length; i++) {
         this.files.push(files[i]);
       }
+      console.log('Files After', this.files)
       this.filesChange.emit(this.files);
     }
   }
