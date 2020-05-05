@@ -58,8 +58,8 @@ class Inspections extends BaseRecordUtils {
       issuedTo: {
         // Epic doesn't support `Individual` proponents
         type: 'Company',
-        companyName: epicRecord.project.proponent.company || '',
-        fullName: epicRecord.project.proponent.company || ''
+        companyName: epicRecord.project.proponent && epicRecord.project.proponent.company || '',
+        fullName: epicRecord.project.proponent && epicRecord.project.proponent.company || ''
       }
     };
   }
