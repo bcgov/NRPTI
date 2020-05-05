@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ReplaySubject, of } from 'rxjs';
 import { TestBedHelper } from '../../../../common/src/app/spec/spec-utils';
 import { SidebarComponent } from './sidebar.component';
-import { StoreService } from 'nrpti-angular-components';
+import { StoreService, LoadingScreenService } from 'nrpti-angular-components';
 
 describe('SidebarComponent', () => {
   const testBedHelper = new TestBedHelper<SidebarComponent>(SidebarComponent);
@@ -13,7 +13,14 @@ describe('SidebarComponent', () => {
 
   const mockStoreService = {
     change: of(),
-    toggleSideNave: () => {}
+    toggleSideNave: () => { }
+  };
+
+  const mockLoadingScreenService = {
+    isLoading: false,
+    setLoadingState: () => {
+      return false;
+    }
   };
 
   beforeEach(async(() => {
@@ -22,7 +29,8 @@ describe('SidebarComponent', () => {
       declarations: [SidebarComponent],
       providers: [
         { provide: 'Router', useValue: mockRouter },
-        { provide: StoreService, useValue: mockStoreService }
+        { provide: StoreService, useValue: mockStoreService },
+        { provide: LoadingScreenService, useValue: mockLoadingScreenService }
       ]
     }).compileComponents();
   }));

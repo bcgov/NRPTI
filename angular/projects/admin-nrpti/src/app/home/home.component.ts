@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { LoadingScreenService } from 'nrpti-angular-components';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -6,7 +8,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  constructor() {}
+  constructor(
+    private router: Router,
+    private loadingScreenService: LoadingScreenService
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
+
+  activateLoading(path) {
+    this.loadingScreenService.setLoadingState(true, 'body');
+    this.router.navigate(path);
+  }
 }
