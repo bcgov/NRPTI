@@ -18,35 +18,44 @@
   </section>
   <section>
     <form *ngIf="!loading" [formGroup]="formGroup" novalidate>
-      <div class="flex-container date-container no-wrap">
+      <div class="flex-container">
         <div class="label-pair">
-          <label for="recordType">Issued Date</label>
-          <lib-date-picker [control]="formGroup.get('dateIssuedStart')" [reset]="resetControls"></lib-date-picker>
-        </div>
-        <span class="date-separator align-self-center">To</span>
-        <div class="label-pair">
-          <label for="recordType">Issued Date</label>
-          <lib-date-picker [control]="formGroup.get('dateIssuedEnd')" [reset]="resetControls"></lib-date-picker>
+          <label for="dateIssuedStartFilter dateIssuedEndFilter">Issued Date</label>
+          <span class="grey-subtext ml-2">(YYYY-MM-DD)</span>
+          <div class="date-container">
+            <lib-date-picker
+              id="dateIssuedStartFilter"
+              [control]="formGroup.get('dateIssuedStart')"
+              [reset]="resetControls"
+            ></lib-date-picker>
+            <span class="date-separator align-self-center">To</span>
+            <lib-date-picker
+              id="dateIssuedEndFilter"
+              [control]="formGroup.get('dateIssuedEnd')"
+              [reset]="resetControls"
+            ></lib-date-picker>
+          </div>
         </div>
       </div>
       <div class="flex-container issuedTo-container no-wrap">
         <div class="label-pair">
-          <label for="issuedTo">Issued To</label>
-          <mat-checkbox name="issuedTo" id="company" formControlName="issuedToCompany" class="form-control">
+          <label for="issuedToCompanyFilter issuedToIndividualFilter">Issued To</label>
+          <mat-checkbox id="issuedToCompanyFilter" formControlName="issuedToCompany" class="form-control">
             Company
           </mat-checkbox>
         </div>
         <div class="label-single">
-          <mat-checkbox name="issuedTo" id="individual" formControlName="issuedToIndividual" class="form-control">
+          <mat-checkbox id="issuedToIndividualFilter" formControlName="issuedToIndividual" class="form-control">
             Individual
           </mat-checkbox>
         </div>
       </div>
       <div class="flex-container">
         <div class="label-pair">
-          <label for="activityType">Activity</label>
+          <label for="activityTypeFilter">Activity</label>
           <span *ngIf="activityTypeCount" class="grey-subtext ml-2">({{ activityTypeCount }} selected)</span>
           <app-autocomplete-multi-select
+            id="activityTypeFilter"
             [control]="formGroup.get('activityType')"
             [options]="activityTypeOptions"
             [reset]="resetControls"
@@ -57,9 +66,10 @@
       </div>
       <div>
         <div class="label-pair">
-          <label for="agency">Responsible Agency</label>
+          <label for="agencyFilter">Responsible Agency</label>
           <span *ngIf="agencyCount" class="grey-subtext ml-2">({{ agencyCount }} selected)</span>
           <app-autocomplete-multi-select
+            id="agencyFilter"
             [control]="formGroup.get('agency')"
             [options]="agencyOptions"
             [reset]="resetControls"
@@ -70,9 +80,10 @@
       </div>
       <div>
         <div class="label-pair">
-          <label for="act">Act</label>
+          <label for="actFilter">Act</label>
           <span *ngIf="actCount" class="grey-subtext ml-2">({{ actCount }} selected)</span>
           <app-autocomplete-multi-select
+            id="actFilter"
             [control]="formGroup.get('act')"
             [options]="actOptions"
             [reset]="resetControls"
@@ -83,9 +94,10 @@
       </div>
       <div>
         <div class="label-pair">
-          <label for="regulation">Regulation</label>
+          <label for="regulationFilter">Regulation</label>
           <span *ngIf="regulationCount" class="grey-subtext ml-2">({{ regulationCount }} selected)</span>
           <app-autocomplete-multi-select
+            id="regulationFilter"
             [control]="formGroup.get('regulation')"
             [options]="regulationOptions"
             [reset]="resetControls"
