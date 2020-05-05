@@ -1,6 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
 let postUtils = require('../../utils/post-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
  * Performs all operations necessary to create a master Restorative Justice record and its associated flavour records.
@@ -322,7 +323,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     restorativeJusticeLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  restorativeJusticeLNG = postUtils.applyBusinessLogic(restorativeJusticeLNG);
+  restorativeJusticeLNG = BusinessLogicManager.applyBusinessLogicOnPost(restorativeJusticeLNG);
 
   return await restorativeJusticeLNG.save();
 };
@@ -449,7 +450,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     restorativeJusticeNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  restorativeJusticeNRCED = postUtils.applyBusinessLogic(restorativeJusticeNRCED);
+  restorativeJusticeNRCED = BusinessLogicManager.applyBusinessLogicOnPost(restorativeJusticeNRCED);
 
   return await restorativeJusticeNRCED.save();
 };

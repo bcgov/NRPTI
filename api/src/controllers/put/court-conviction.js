@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 const PutUtils = require('../../utils/put-utils');
 const PostUtils = require('../../utils/post-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 const CourtConvictionPost = require('../post/court-conviction');
 
 /**
@@ -117,7 +118,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
   let savedDocuments = [];
 
   try {
-    savedDocuments = PutUtils.updateDocumentRoles(savedCourtConviction, args.swagger.params.auth_payload);
+    savedDocuments = BusinessLogicManager.updateDocumentRoles(savedCourtConviction, args.swagger.params.auth_payload);
   } catch (e) {
     return {
       status: 'failure',
@@ -269,7 +270,7 @@ exports.editLNG = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = PutUtils.applyBusinessLogic(updateObj, sanitizedObj);
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
 
   return await CourtConvictionLNG.findOneAndUpdate({ _schemaName: 'CourtConvictionLNG', _id: _id }, updateObj, {
     new: true
@@ -342,7 +343,7 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = PutUtils.applyBusinessLogic(updateObj, sanitizedObj);
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
 
   return await CourtConvictionNRCED.findOneAndUpdate({ _schemaName: 'CourtConvictionNRCED', _id: _id }, updateObj, {
     new: true

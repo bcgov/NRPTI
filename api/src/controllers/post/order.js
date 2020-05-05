@@ -1,6 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
 let postUtils = require('../../utils/post-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
  * Performs all operations necessary to create a master Order record and its associated flavour records.
@@ -310,7 +311,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     orderLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  orderLNG = postUtils.applyBusinessLogic(orderLNG);
+  orderLNG = BusinessLogicManager.applyBusinessLogicOnPost(orderLNG);
 
   return await orderLNG.save();
 };
@@ -433,7 +434,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     orderNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  orderNRCED = postUtils.applyBusinessLogic(orderNRCED);
+  orderNRCED = BusinessLogicManager.applyBusinessLogicOnPost(orderNRCED);
 
   return await orderNRCED.save();
 };

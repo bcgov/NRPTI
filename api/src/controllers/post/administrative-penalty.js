@@ -1,6 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
 let postUtils = require('../../utils/post-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
  * Performs all operations necessary to create a master Administrative Penalty record and its associated flavour records.
@@ -328,7 +329,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     administrativePenaltyLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  administrativePenaltyLNG = postUtils.applyBusinessLogic(administrativePenaltyLNG);
+  administrativePenaltyLNG = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyLNG);
 
   return await administrativePenaltyLNG.save();
 };
@@ -455,7 +456,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     administrativePenaltyNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  administrativePenaltyNRCED = postUtils.applyBusinessLogic(administrativePenaltyNRCED);
+  administrativePenaltyNRCED = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyNRCED);
 
   return await administrativePenaltyNRCED.save();
 };

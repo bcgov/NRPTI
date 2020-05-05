@@ -1,6 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
 let postUtils = require('../../utils/post-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
  * Performs all operations necessary to create a master Administrative Sanction record and its associated flavour records.
@@ -326,7 +327,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     administrativeSanctionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  administrativeSanctionLNG = postUtils.applyBusinessLogic(administrativeSanctionLNG);
+  administrativeSanctionLNG = BusinessLogicManager.applyBusinessLogicOnPost(administrativeSanctionLNG);
 
   return await administrativeSanctionLNG.save();
 };
@@ -452,7 +453,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     administrativeSanctionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  administrativeSanctionNRCED = postUtils.applyBusinessLogic(administrativeSanctionNRCED);
+  administrativeSanctionNRCED = BusinessLogicManager.applyBusinessLogicOnPost(administrativeSanctionNRCED);
 
   return await administrativeSanctionNRCED.save();
 };

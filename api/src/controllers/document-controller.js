@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const queryActions = require('../utils/query-actions');
 const queryUtils = require('../utils/query-utils');
+const businessLogicManager = require('../utils/business-logic-manager');
 const AWS = require('aws-sdk');
 const mongodb = require('../utils/mongodb');
 const ObjectID = require('mongodb').ObjectID;
@@ -36,7 +37,7 @@ exports.protectedPost = async function(args, res, next) {
     // Set mongo document and s3 document roles
     const readRoles = [];
     let s3ACLRole = null;
-    if (!queryUtils.isDocumentConsideredAnonymous(masterRecord)) {
+    if (!businessLogicManager.isDocumentConsideredAnonymous(masterRecord)) {
       readRoles.push('public');
       s3ACLRole = 'public-read';
     }

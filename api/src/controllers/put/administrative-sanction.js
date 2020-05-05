@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 const PutUtils = require('../../utils/put-utils');
 const PostUtils = require('../../utils/post-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 const AdministrativeSanctionPost = require('../post/administrative-sanction');
 
 /**
@@ -121,7 +122,10 @@ exports.editRecord = async function(args, res, next, incomingObj) {
   let savedDocuments = [];
 
   try {
-    savedDocuments = PutUtils.updateDocumentRoles(savedAdministrativeSanction, args.swagger.params.auth_payload);
+    savedDocuments = BusinessLogicManager.updateDocumentRoles(
+      savedAdministrativeSanction,
+      args.swagger.params.auth_payload
+    );
   } catch (e) {
     return {
       status: 'failure',
@@ -273,7 +277,7 @@ exports.editLNG = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = PutUtils.applyBusinessLogic(updateObj, sanitizedObj);
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
 
   return await AdministrativeSanctionLNG.findOneAndUpdate(
     { _schemaName: 'AdministrativeSanctionLNG', _id: _id },
@@ -348,7 +352,7 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = PutUtils.applyBusinessLogic(updateObj, sanitizedObj);
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
 
   return await AdministrativeSanctionNRCED.findOneAndUpdate(
     { _schemaName: 'AdministrativeSanctionNRCED', _id: _id },

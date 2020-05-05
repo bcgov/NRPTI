@@ -1,6 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
 let postUtils = require('../../utils/post-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
  * Performs all operations necessary to create a master Inspection record and its associated flavour records.
@@ -314,7 +315,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     inspectionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  inspectionLNG = postUtils.applyBusinessLogic(inspectionLNG);
+  inspectionLNG = BusinessLogicManager.applyBusinessLogicOnPost(inspectionLNG);
 
   return await inspectionLNG.save();
 };
@@ -438,7 +439,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     inspectionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  inspectionNRCED = postUtils.applyBusinessLogic(inspectionNRCED);
+  inspectionNRCED = BusinessLogicManager.applyBusinessLogicOnPost(inspectionNRCED);
 
   return await inspectionNRCED.save();
 };

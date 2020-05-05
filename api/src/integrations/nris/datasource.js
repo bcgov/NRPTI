@@ -8,7 +8,7 @@ const moment = require('moment');
 const axios = require('axios');
 const documentController = require('../../controllers/document-controller');
 const RecordController = require('./../../controllers/record-controller');
-const QueryUtils = require('../../utils/query-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 const fs = require('fs');
 
 const NRIS_TOKEN_ENDPOINT =
@@ -274,7 +274,7 @@ class NrisDataSource {
     // Set mongo document and s3 document roles
     const readRoles = [];
     let s3ACLRole = null;
-    if (!QueryUtils.isDocumentConsideredAnonymous(newRecord)) {
+    if (!BusinessLogicManager.isDocumentConsideredAnonymous(newRecord)) {
       readRoles.push('public');
       s3ACLRole = 'public-read';
     }

@@ -1,6 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
 let postUtils = require('../../utils/post-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
  * Performs all operations necessary to create a master Court Conviction record and its associated flavour records.
@@ -322,7 +323,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     courtConvictionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  courtConvictionLNG = postUtils.applyBusinessLogic(courtConvictionLNG);
+  courtConvictionLNG = BusinessLogicManager.applyBusinessLogicOnPost(courtConvictionLNG);
 
   return await courtConvictionLNG.save();
 };
@@ -448,7 +449,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     courtConvictionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  courtConvictionNRCED = postUtils.applyBusinessLogic(courtConvictionNRCED);
+  courtConvictionNRCED = BusinessLogicManager.applyBusinessLogicOnPost(courtConvictionNRCED);
 
   return await courtConvictionNRCED.save();
 };

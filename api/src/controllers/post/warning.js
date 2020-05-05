@@ -1,6 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
 let postUtils = require('../../utils/post-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
  * Performs all operations necessary to create a master Warning record and its associated flavour records.
@@ -316,7 +317,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     warningLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  warningLNG = postUtils.applyBusinessLogic(warningLNG);
+  warningLNG = BusinessLogicManager.applyBusinessLogicOnPost(warningLNG);
 
   return await warningLNG.save();
 };
@@ -442,7 +443,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     warningNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  warningNRCED = postUtils.applyBusinessLogic(warningNRCED);
+  warningNRCED = BusinessLogicManager.applyBusinessLogicOnPost(warningNRCED);
 
   return await warningNRCED.save();
 };

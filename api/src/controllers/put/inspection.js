@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 const PutUtils = require('../../utils/put-utils');
 const PostUtils = require('../../utils/post-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 const InspectionPost = require('../post/inspection');
 
 /**
@@ -115,7 +116,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
   let savedDocuments = [];
 
   try {
-    savedDocuments = PutUtils.updateDocumentRoles(savedInspection, args.swagger.params.auth_payload);
+    savedDocuments = BusinessLogicManager.updateDocumentRoles(savedInspection, args.swagger.params.auth_payload);
   } catch (e) {
     return {
       status: 'failure',
@@ -265,7 +266,7 @@ exports.editLNG = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = PutUtils.applyBusinessLogic(updateObj, sanitizedObj);
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
 
   return await InspectionLNG.findOneAndUpdate({ _schemaName: 'InspectionLNG', _id: _id }, updateObj, { new: true });
 };
@@ -336,7 +337,7 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = PutUtils.applyBusinessLogic(updateObj, sanitizedObj);
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
 
   return await InspectionNRCED.findOneAndUpdate({ _schemaName: 'InspectionNRCED', _id: _id }, updateObj, { new: true });
 };

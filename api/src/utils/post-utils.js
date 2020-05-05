@@ -1,6 +1,3 @@
-const QueryUtils = require('./query-utils');
-const QueryActions = require('./query-actions');
-
 /**
  * Builds the issuedTo.fullName string, based on the issuedTo.type field.
  *
@@ -46,23 +43,3 @@ exports.getIssuedToFullNameValue = function(issuedToObj) {
   }
 };
 
-/**
- * Apply business logic changes to a record. Updates the provided record, and returns it.
- *
- * @param {*} record
- * @returns record
- */
-exports.applyBusinessLogic = function(record) {
-  if (!record) {
-    return record;
-  }
-
-  // apply anonymous business logic
-  if (QueryUtils.isRecordConsideredAnonymous(record)) {
-    record.issuedTo && (record.issuedTo = QueryActions.removePublicReadRole(record.issuedTo));
-  } else {
-    record.issuedTo && (record.issuedTo = QueryActions.addPublicReadRole(record.issuedTo));
-  }
-
-  return record;
-};

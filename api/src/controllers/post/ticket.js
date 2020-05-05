@@ -1,6 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
 let postUtils = require('../../utils/post-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
  * Performs all operations necessary to create a master Ticket record and its associated flavour records.
@@ -312,7 +313,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     ticketLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  ticketLNG = postUtils.applyBusinessLogic(ticketLNG);
+  ticketLNG = BusinessLogicManager.applyBusinessLogicOnPost(ticketLNG);
 
   return await ticketLNG.save();
 };
@@ -434,7 +435,7 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     ticketNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  ticketNRCED = postUtils.applyBusinessLogic(ticketNRCED);
+  ticketNRCED = BusinessLogicManager.applyBusinessLogicOnPost(ticketNRCED);
 
   return await ticketNRCED.save();
 };
