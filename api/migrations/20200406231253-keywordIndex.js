@@ -8,18 +8,15 @@ var seed;
   * We receive the dbmigrate dependency from dbmigrate initially.
   * This enables us to not have to rely on NODE_PATH.
   */
-exports.setup = function(options, seedLink) {
+exports.setup = function (options, seedLink) {
   dbm = options.dbmigrate;
   type = dbm.dataType;
   seed = seedLink;
 };
 
-exports.up = function(db) {
-  let mClient;
+exports.up = function (db) {
   return db.connection.connect(db.connectionString, { native_parser: true })
-    .then(async (mClientInst) => {
-      // mClientInst is an instance of MongoClient
-      mClient = mClientInst
+    .then(async (mClient) => {
       var nrptiCollection = mClient.collection('nrpti')
 
       nrptiCollection.createIndex(
@@ -40,13 +37,13 @@ exports.up = function(db) {
 
       mClient.close();
     })
-    .catch( (err) => {
+    .catch((err) => {
       console.log("Error on index creation: ", err);
       mClient.close();
     });
 };
 
-exports.down = function(db) {
+exports.down = function (db) {
   return null;
 };
 

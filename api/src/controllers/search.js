@@ -131,32 +131,6 @@ let searchCollection = async function (
   let searchProperties = undefined;
   if (keywords) {
     searchProperties = { $text: { $search: keywords, $caseSensitive: caseSensitive } };
-
-    // Filter search via field name
-    if (subset) {
-      // We must overwrite searchProperties to use regex instead
-      searchProperties = { $or: [] };
-      const keywordArray = keywords.split(' ');
-
-      for (let i = 0; i < subset.length; i++) {
-        if (
-          subset[i] === 'firstName' ||
-          subset[i] === 'middleName' ||
-          subset[i] === 'lastName' ||
-          subset[i] === 'companyName'
-        ) {
-          for (let j = 0; j < keywordArray.length; j++) {
-            let tempSubsetObj = {};
-            tempSubsetObj['issuedTo.' + subset[i]] = { $regex: `.*${keywordArray[j]}.*`, '$options': 'i' };
-            searchProperties['$or'].push(tempSubsetObj);
-          }
-        } else {
-          let tempSubsetObj = {};
-          tempSubsetObj[subset[i]] = { $regex: `.*${keywords}.*`, '$options': 'i' }
-          searchProperties['$or'].push(tempSubsetObj);
-        }
-      }
-    }
   }
 
   let match = await generateMatchesForAggregation(and, or, searchProperties, properties, schemaName, roles);
@@ -254,7 +228,17 @@ let searchCollection = async function (
   defaultLog.info('Executing searching on schema(s):', schemaName);
 
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
-  const collection = db.collection('nrpti');
+
+  // If we have a subset filter on, we must change to the appropriate collection.
+  let collectionName = 'nrpti'
+  if (subset) {
+    if (subset.includes('issuedTo')) {
+      collectionName = 'issued_to_subset';
+    } else if (subset.includes('location')) {
+      collectionName = 'location_subset';
+    }
+  }
+  const collection = db.collection(collectionName);
 
   return await collection.aggregate(aggregation, {
     collation: {

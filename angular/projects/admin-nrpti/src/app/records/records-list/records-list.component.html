@@ -25,14 +25,6 @@
                   check_circle
                 </i>
               </button>
-              <button ngbDropdownItem [disabled]="selectedSubset === 'Description & Summary'"
-                (click)="changeSubset('Description & Summary')">
-                Description & Summary
-                <i *ngIf="selectedSubset === 'Description & Summary'"
-                  class="material-icons material-icons align-text-bottom">
-                  check_circle
-                </i>
-              </button>
               <button ngbDropdownItem [disabled]="selectedSubset === 'Issued To'"
                 (click)="changeSubset('Issued To')">
                 Issued To

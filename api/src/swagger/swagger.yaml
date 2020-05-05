@@ -93,10 +93,7 @@ definitions:
       - dateIssued
       - location
       - recordName
-      - companyName
-      - firstName
-      - middleName
-      - lastName
+      - issuedTo
   SearchSortByFields:
     type: string
     description: 'Optional fields to sort by (prefixed with + or - for order)'
