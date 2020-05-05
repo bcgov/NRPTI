@@ -22,6 +22,7 @@ export class DocumentLinkStagingComponent {
   public addDocuments(files) {
     if (files) {
       // safety check
+      this.documents = [];
       for (const file of files) {
         if (file) {
           const document = new Document();
