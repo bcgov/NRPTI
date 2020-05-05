@@ -3,8 +3,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { InlineSVGModule } from 'ng-inline-svg';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -114,7 +115,9 @@ import { DateInputComponent } from '../explore-panel/date-input/date-input.compo
     NgxPaginationModule,
     NgbModule.forRoot(),
     InlineSVGModule.forRoot(),
-    RecordsRoutingModule
+    RecordsRoutingModule,
+    MatTooltipModule,
+    NgbDropdownModule
   ],
   declarations: [
     DateInputComponent,
@@ -257,4 +260,4 @@ import { DateInputComponent } from '../explore-panel/date-input/date-input.compo
   ],
   exports: []
 })
-export class RecordsModule {}
+export class RecordsModule { }

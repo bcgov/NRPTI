@@ -34,10 +34,6 @@
       <h4>Basic Information</h4>
       <div class="flex-container">
         <div class="label-pair">
-          <label for="recordName">Record Name</label>
-          <input name="recordName" id="recordName" type="text" formControlName="recordName" class="form-control" />
-        </div>
-        <div class="label-pair">
           <label for="dateIssued">Date Issued</label>
           <div class="input-group">
             <input
@@ -46,8 +42,7 @@
               name="dp"
               formControlName="dateIssued"
               ngbDatepicker
-              #d="ngbDatepicker"
-            />
+              #d="ngbDatepicker" />
             <div class="input-group-append">
               <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
             </div>
@@ -58,8 +53,6 @@
           <span class="grey-subtext ml-2">(This value cannot be changed)</span>
           <input readonly name="recordType" id="recordType" type="text" value="Order" class="form-control" />
         </div>
-      </div>
-      <div class="flex-container">
         <div class="label-pair">
           <label for="recordSubtype">Record Sub-Type</label>
           <select name="recordSubtype" id="recordSubtype" formControlName="recordSubtype" class="form-control">
@@ -83,16 +76,27 @@
 
     <section>
       <h4>Legislation</h4>
-      <app-legislation-add-edit [formGroup]="myForm"></app-legislation-add-edit>
+      <app-legislation-add-edit [formGroup]="this.myForm.get('legislation')"></app-legislation-add-edit>
       <div class="label-pair">
         <label for="legislationDescription">Order Type</label>
         <input
+          readonly
           name="legislationDescription"
           id="legislationDescription"
           type="text"
           formControlName="legislationDescription"
           class="form-control"
         />
+        <span
+          *ngIf="this.myForm.get('legislation.act').value && !this.myForm.get('legislationDescription').value"
+          class="grey-subtext"
+        >
+          No description available for the selected combination of act, regulation, section, subsection and paragraph.
+          Please double-check that you have filled out those fields correctly; if they are correct, please contact the
+          system administrator at
+          <a href="mailto:nrced@gov.bc.ca">nrced@gov.bc.ca</a>
+          to request a new description be added to the system.
+        </span>
       </div>
     </section>
 
@@ -113,8 +117,7 @@
                 id="coastalGaslink"
                 value="Coastal Gaslink"
                 formControlName="projectName"
-                name="projectName"
-              />
+                name="projectName" />
               <label for="coastalGaslink">Coastal Gaslink</label>
             </div>
             <div class="radio">
@@ -165,8 +168,7 @@
             libAutoGrowTextArea
             minRows="2"
             maxRows="5"
-            rows="2"
-          ></textarea>
+            rows="2"></textarea>
         </div>
       </div>
     </section>
@@ -175,12 +177,10 @@
       <h4>Documents</h4>
       <app-document-edit
         [documents]="currentRecord ? currentRecord.documents : []"
-        (documentsToDelete)="documentsToDelete = $event"
-      ></app-document-edit>
+        (documentsToDelete)="documentsToDelete = $event"></app-document-edit>
       <app-document-link-staging
         (linksChanged)="links = $event"
-        (documentsChanged)="documents = $event"
-      ></app-document-link-staging>
+        (documentsChanged)="documents = $event"></app-document-link-staging>
     </section>
 
     <section>
@@ -196,8 +196,7 @@
             formControlName="publishNrced"
             (change)="togglePublish($event, 'nrced')"
             [checked]="myForm.controls.publishNrced.value"
-            ngDefaultControl
-          >
+            ngDefaultControl>
             {{ myForm.controls.publishNrced.value ? 'Published' : 'Unpublished' }}
           </mat-slide-toggle>
           <span class="grey-subtext d-block">*Changes made will take effect once you click "Update Record"</span>
@@ -212,8 +211,7 @@
             type="text"
             formControlName="nrcedSummary"
             class="form-control"
-            rows="5"
-          ></textarea>
+            rows="5"></textarea>
         </div>
       </div>
     </section>
@@ -232,11 +230,16 @@
             formControlName="publishLng"
             (change)="togglePublish($event, 'lng')"
             [checked]="myForm.controls.publishLng.value"
-            ngDefaultControl
-          >
+            ngDefaultControl>
             {{ myForm.controls.publishLng.value ? 'Published' : 'Unpublished' }}
           </mat-slide-toggle>
           <span class="grey-subtext d-block">*Changes made will take effect once you click "Update Record"</span>
+        </div>
+      </div>
+      <div class="flex-container">
+        <div class="label-pair">
+          <label for="recordName">Record Name</label>
+          <input name="recordName" id="recordName" type="text" formControlName="recordName" class="form-control" />
         </div>
       </div>
       <div class="flex-container">
@@ -248,8 +251,7 @@
             type="text"
             formControlName="lngDescription"
             class="form-control"
-            rows="5"
-          ></textarea>
+            rows="5"></textarea>
         </div>
       </div>
     </section>

@@ -15,7 +15,7 @@ function isEmpty(obj) {
   return true;
 }
 
-let generateExpArray = async function(field, prefix = '') {
+let generateExpArray = async function (field, prefix = '') {
   if (field && field != undefined) {
     let queryString = qs.parse(field);
     defaultLog.info('queryString:', queryString);
@@ -60,7 +60,7 @@ let generateExpArray = async function(field, prefix = '') {
   }
 };
 
-const getConvertedValue = function(item, entry) {
+const getConvertedValue = function (item, entry) {
   if (isNaN(entry)) {
     if (mongoose.Types.ObjectId.isValid(entry)) {
       defaultLog.info('objectid', entry);
@@ -87,7 +87,7 @@ const getConvertedValue = function(item, entry) {
   }
 };
 
-const handleDateStartItem = function(field, entry) {
+const handleDateStartItem = function (field, entry) {
   let date = new Date(entry);
 
   // Validate: valid date?
@@ -97,7 +97,7 @@ const handleDateStartItem = function(field, entry) {
   }
 };
 
-const handleDateEndItem = function(field, entry) {
+const handleDateEndItem = function (field, entry) {
   let date = new Date(entry);
 
   // Validate: valid date?
@@ -107,7 +107,7 @@ const handleDateEndItem = function(field, entry) {
   }
 };
 
-let searchCollection = async function(
+let searchCollection = async function (
   roles,
   keywords,
   schemaName,
@@ -119,7 +119,8 @@ let searchCollection = async function(
   caseSensitive,
   populate = false,
   and,
-  or
+  or,
+  subset
 ) {
   let properties = undefined;
   if (project) {
@@ -227,26 +228,38 @@ let searchCollection = async function(
   defaultLog.info('Executing searching on schema(s):', schemaName);
 
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
-  const collection = db.collection('nrpti');
 
-  return await collection.aggregate(aggregation, { collation : {
-    locale: "en_US",
-    alternate: "shifted",
-    numericOrdering: true
-  }}).toArray();
+  // If we have a subset filter on, we must change to the appropriate collection.
+  let collectionName = 'nrpti'
+  if (subset) {
+    if (subset.includes('issuedTo')) {
+      collectionName = 'issued_to_subset';
+    } else if (subset.includes('location')) {
+      collectionName = 'location_subset';
+    }
+  }
+  const collection = db.collection(collectionName);
+
+  return await collection.aggregate(aggregation, {
+    collation: {
+      locale: "en_US",
+      alternate: "shifted",
+      numericOrdering: true
+    }
+  }).toArray();
 };
 
-exports.publicGet = async function(args, res, next) {
+exports.publicGet = async function (args, res, next) {
   executeQuery(args, res, next);
 };
 
-exports.protectedGet = function(args, res, next) {
+exports.protectedGet = function (args, res, next) {
   executeQuery(args, res, next);
 };
 
 // Generates the main match query, and optionally generates the master field match to be used
 // later in the pipeline.
-const generateMatchesForAggregation = async function(and, or, searchProperties, properties, schemaName, roles) {
+const generateMatchesForAggregation = async function (and, or, searchProperties, properties, schemaName, roles) {
   const andExpArray = (await generateExpArray(and)) || [];
   defaultLog.info('andExpArray:', andExpArray);
 
@@ -272,7 +285,7 @@ const generateMatchesForAggregation = async function(and, or, searchProperties, 
   return match;
 };
 
-const executeQuery = async function(args, res, next) {
+const executeQuery = async function (args, res, next) {
   let _id = args.swagger.params._id ? args.swagger.params._id.value : null;
   let keywords = args.swagger.params.keywords.value;
   let dataset = args.swagger.params.dataset.value;
@@ -284,6 +297,7 @@ const executeQuery = async function(args, res, next) {
   let caseSensitive = args.swagger.params.caseSensitive ? args.swagger.params.caseSensitive.value : false;
   let and = args.swagger.params.and ? args.swagger.params.and.value : '';
   let or = args.swagger.params.or ? args.swagger.params.or.value : '';
+  let subset = args.swagger.params.subset ? args.swagger.params.subset.value : null;
   defaultLog.info('Searching keywords:', keywords);
   defaultLog.info('Searching datasets:', dataset);
   defaultLog.info('Searching project:', project);
@@ -295,6 +309,7 @@ const executeQuery = async function(args, res, next) {
   defaultLog.info('or:', or);
   defaultLog.info('_id:', _id);
   defaultLog.info('populate:', populate);
+  defaultLog.info('subset:', subset);
 
   let roles = args.swagger.params.auth_payload ? args.swagger.params.auth_payload.realm_access.roles : ['public'];
 
@@ -340,7 +355,8 @@ const executeQuery = async function(args, res, next) {
       caseSensitive,
       populate,
       and,
-      or
+      or,
+      subset
     );
 
     return QueryActions.sendResponse(res, 200, itemData);
@@ -410,6 +426,6 @@ const executeQuery = async function(args, res, next) {
   }
 };
 
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };

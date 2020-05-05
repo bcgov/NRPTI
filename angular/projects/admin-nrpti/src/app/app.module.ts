@@ -16,6 +16,7 @@ import { CommonModule } from '../../../common/src/app/common.module';
 import { SharedModule } from './shared/shared.module';
 import { AppRoutingModule } from './app-routing.module';
 import { RecordsModule } from './records/records.module';
+import { NewsModule } from './news/news.module';
 
 // components
 import { AppComponent } from './app.component';
@@ -39,6 +40,8 @@ import { TaskService } from './services/task.service';
 
 // resolvers
 import { ImportListResolver } from './import/import-list-resolver';
+import { NewsResolver } from './news/news-resolver';
+import { NewsListResolver } from './news/news-list.resolver';
 
 // guards
 import { CanActivateGuard } from './guards/can-activate-guard.service';
@@ -80,6 +83,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     CommonModule,
     SharedModule,
     RecordsModule,
+    NewsModule,
     AppRoutingModule, // <-- module import order matters - https://angular.io/guide/router#module-import-order-matters
     NgbModule.forRoot(),
     NgxPaginationModule,
@@ -110,6 +114,8 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     RecordService,
     TaskService,
     ImportListResolver,
+    NewsResolver,
+    NewsListResolver,
     CanActivateGuard,
     CanDeactivateGuard,
     RecordUtils

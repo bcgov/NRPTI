@@ -8,7 +8,8 @@ import {
   TableObject,
   IColumnObject,
   IPageSizePickerOption,
-  ITableMessage
+  ITableMessage,
+  Utils
 } from 'nrpti-angular-components';
 import { RecordsTableRowComponent } from '../records-rows/records-table-row.component';
 import { LoadingScreenService } from 'nrpti-angular-components';
@@ -75,7 +76,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     }
   ];
 
-  public hidepanel = false;
   public filters = [
     {
       displayName: 'Record Type',
@@ -140,10 +140,16 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     }
   ];
 
+  // Search
+  public keywordSearchWords: string;
+  public showAdvancedFilters = false;
+  public selectedSubset = 'All';
+
   constructor(
     public location: Location,
     public router: Router,
     public route: ActivatedRoute,
+    public utils: Utils,
     private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
@@ -159,7 +165,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
       this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, this.tableData);
-
+      this.initSubset();
       // Make api call with tableData params.
       this.loadingScreenService.setLoadingState(false, 'body');
       this._changeDetectionRef.detectChanges();
@@ -187,6 +193,17 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         0;
 
       this.tableData.columns = this.tableColumns;
+      this.keywordSearchWords = this.tableData.keywords;
+
+      // If an advanced filter setting is active, open advanced filter section on page load.
+      if (
+        this.tableData['_schemaName'] ||
+        this.tableData['dateRangeFromFilter'] ||
+        this.tableData['dateRangeToFilter']
+      ) {
+        this.showAdvancedFilters = true;
+      }
+
       this.loading = false;
       this._changeDetectionRef.detectChanges();
     });
@@ -272,7 +289,23 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     this.tableTemplateUtils.navigateUsingParams(this.tableData, ['records']);
   }
 
-  checkChange() { }
+  keywordSearch() {
+    this.loadingScreenService.setLoadingState(true, 'body');
+    if (this.keywordSearchWords) {
+      this.tableData.keywords = this.keywordSearchWords;
+      if (!this.tableData.sortBy) {
+        this.tableData.sortBy = '-score';
+      }
+    } else {
+      this.selectedSubset = 'All';
+      delete this.tableData.subset;
+      this.tableData.keywords = '';
+      this.tableData.sortBy = '';
+    }
+    this.tableData.currentPage = 1;
+    this.utils.addKeyValueToObject(this.tableData, 'ms', new Date().getMilliseconds().toString());
+    this.submit();
+  }
 
   add(item) {
     switch (item) {
@@ -320,6 +353,52 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         break;
       default:
         break;
+    }
+  }
+
+  toggleAdvancedFilters(): void {
+    this.showAdvancedFilters = !this.showAdvancedFilters;
+  }
+
+  changeSubset(filterText): void {
+    switch (filterText) {
+      case 'All':
+        this.selectedSubset = 'All';
+        delete this.tableData.subset;
+        break;
+      case 'Description & Summary':
+        this.selectedSubset = 'Description & Summary';
+        this.tableData.subset = ['description'];
+        break;
+      case 'Issued To':
+        this.selectedSubset = 'Issued To';
+        this.tableData.subset = ['issuedTo'];
+        break;
+      case 'Location':
+        this.selectedSubset = 'Location';
+        this.tableData.subset = ['location'];
+        break;
+      default:
+        break;
+    }
+    if (this.keywordSearchWords !== '') {
+      this.tableData.keywords = this.keywordSearchWords;
+      if (!this.tableData.sortBy) {
+        this.tableData.sortBy = '-score';
+      }
+      this.submit();
+    }
+  }
+
+  initSubset() {
+    if (!this.tableData.subset) {
+      this.selectedSubset = 'All';
+    } else if (this.tableData.subset.includes('companyName')) {
+      this.selectedSubset = 'Issued To';
+    } else if (this.tableData.subset.includes('location')) {
+      this.selectedSubset = 'Location';
+    } else if (this.tableData.subset.includes('description')) {
+      this.selectedSubset = 'Description & Summary';
     }
   }
 

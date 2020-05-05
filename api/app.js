@@ -1,6 +1,7 @@
 'use strict';
 
 const app = require('express')();
+const cron = require('node-cron');
 const fs = require('fs');
 const swaggerTools = require('swagger-tools');
 const YAML = require('yamljs');
@@ -10,6 +11,8 @@ const swaggerConfig = YAML.load('./src/swagger/swagger.yaml');
 
 const defaultLog = require('./src/utils/logger')('app');
 const authUtils = require('./src/utils/auth-utils');
+
+const { updateAllMaterializedViews } = require('./materialized_views/updateViews')
 
 const UPLOAD_DIR = process.env.UPLOAD_DIRECTORY || './uploads/';
 const HOSTNAME = process.env.API_HOSTNAME || 'localhost:3000';
@@ -21,12 +24,15 @@ const DB_CONNECTION =
 const DB_USERNAME = process.env.MONGODB_USERNAME || '';
 const DB_PASSWORD = process.env.MONGODB_PASSWORD || '';
 
+// Cron pattern - seconds[0-59] minutes[0-59] hours[0-23] day_of_month[1-31] months[0-11] day_of_week[0-6]
+const MATERIALIZED_VIEWS_CRON_PATTERN = '*/1 * * * *';
+
 // Increase post body sizing
 app.use(bodyParser.json({ limit: '10mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
 // Enable CORS
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   defaultLog.info(req.method, req.url);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE, HEAD');
@@ -44,7 +50,7 @@ if (HOSTNAME !== 'localhost:3000') {
   swaggerConfig.schemes = ['https'];
 }
 
-swaggerTools.initializeMiddleware(swaggerConfig, function(middleware) {
+swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
   app.use(middleware.swaggerMetadata());
 
   // This prevents +/- params, such as sortBy
@@ -86,6 +92,7 @@ swaggerTools.initializeMiddleware(swaggerConfig, function(middleware) {
     poolSize: 10, // Maintain up to 10 socket connections
     // If not connected, return errors immediately rather than waiting for reconnect
     bufferMaxEntries: 0,
+    keepAlive: 1,
     connectTimeoutMS: 10000, // Give up initial connection after 10 seconds
     socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
     useNewUrlParser: true,
@@ -106,9 +113,11 @@ swaggerTools.initializeMiddleware(swaggerConfig, function(middleware) {
       require('./src/models');
 
       // Start application
-      app.listen(3000, '0.0.0.0', function() {
+      app.listen(3000, '0.0.0.0', function () {
         defaultLog.info('Started server on port 3000');
       });
+
+      startCron(defaultLog);
     },
     error => {
       defaultLog.info('Mongoose connect error:', error);
@@ -116,3 +125,9 @@ swaggerTools.initializeMiddleware(swaggerConfig, function(middleware) {
     }
   );
 });
+
+async function startCron(defaultLog) {
+  // Scheduling material view updates.
+  defaultLog.info('Started cron for updating materialized views');
+  cron.schedule(MATERIALIZED_VIEWS_CRON_PATTERN, () => updateAllMaterializedViews(defaultLog));
+}
