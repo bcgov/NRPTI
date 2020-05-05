@@ -1,6 +1,7 @@
 <div class="sidebar">
   <section class="full-nav">
-    <a [ngClass]="{ active: currentMenu === 'records' }" id="records" [routerLink]="['/records']">
+    <a [routerLink]="" [ngClass]="{ active: currentMenu === 'records' }" id="records"
+      (click)="activateLoading(['/records'])">
       <i class="material-icons mr-3 ">view_list</i>
       All Records
     </a>

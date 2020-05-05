@@ -4,7 +4,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
-import { IBreadcrumb } from 'nrpti-angular-components';
+import { LoadingScreenService } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-sidebar',
@@ -22,10 +22,10 @@ export class SidebarComponent implements OnDestroy {
   public currentProjectId = '';
   public currentMenu = '';
 
-  public breadcrumbs: IBreadcrumb[];
-  public activeBreadcrumb: IBreadcrumb;
-
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private loadingScreenService: LoadingScreenService
+  ) {
     this.router.events
       .pipe(
         takeUntil(this.ngUnsubscribe),
@@ -35,8 +35,6 @@ export class SidebarComponent implements OnDestroy {
         this.routerSnapshot = event;
         this.SetActiveSidebarItem();
       });
-
-    this.breadcrumbs = [];
   }
 
   SetActiveSidebarItem() {
@@ -56,6 +54,13 @@ export class SidebarComponent implements OnDestroy {
 
   closeNav() {
     this.isNavMenuOpen = false;
+  }
+
+  activateLoading(path) {
+    if (this.currentMenu !== 'records') {
+      this.loadingScreenService.setLoadingState(true, 'body');
+    }
+    this.router.navigate(path);
   }
 
   ngOnDestroy() {
