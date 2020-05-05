@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Router, Params } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
@@ -142,7 +142,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
   // Search
   public keywordSearchWords: string;
-  // public queryParams: Params;
   public showAdvancedFilters = false;
   public selectedSubset = 'All';
 
