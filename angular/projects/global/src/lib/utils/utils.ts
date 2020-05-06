@@ -97,10 +97,10 @@ export class Utils {
    * @static
    * @param {*} delay delay in milliseconds between calls that must elapse before the function will be executed
    * @param {*} fn function to debounce
-   * @returns {() => any}
+   * @returns {(...args) => any}
    * @memberof Utils
    */
-  public debounced(delay, fn): () => any {
+  public debounced(delay, fn): (...args) => any {
     let timerId;
 
     return (...args) => {
@@ -122,10 +122,10 @@ export class Utils {
    * @static
    * @param {*} delay delay in milliseconds between calls that must elapse before the function will be executed again
    * @param {*} fn function to throttle
-   * @returns {() => any}
+   * @returns {(...args) => any}
    * @memberof Utils
    */
-  public throttled(delay, fn): () => any {
+  public throttled(delay, fn): (...args) => any {
     let lastCall = 0;
 
     return (...args) => {
