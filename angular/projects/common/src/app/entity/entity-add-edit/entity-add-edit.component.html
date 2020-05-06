@@ -3,8 +3,8 @@
   <div class="flex-container">
     <div class="label-pair">
       <label for="type">Entity Type</label>
-      <select name="type" id="type" formControlName="type" class="form-control">
-        <option (click)="updateUI()" *ngFor="let entityType of entityTypes" [ngValue]="entityType">
+      <select name="type" id="type" formControlName="type" class="form-control" (change)="updateUI()">
+        <option *ngFor="let entityType of entityTypes" [ngValue]="entityType">
           {{ entityType }}
         </option>
       </select>
