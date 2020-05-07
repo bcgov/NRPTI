@@ -4,7 +4,7 @@ const QS = require('qs');
 const integrationUtils = require('../integration-utils');
 const defaultLog = require('../../utils/logger')('epic-datasource');
 const EPIC_RECORD_TYPE = require('./epic-record-type-enum');
-
+const moment = require('moment');
 const MAX_PAGE_SIZE = Number.MAX_SAFE_INTEGER;
 
 const EPIC_API_HOSTNAME = process.env.EPIC_API_HOSTNAME || 'eagle-prod.pathfinder.gov.bc.ca';
@@ -128,14 +128,6 @@ class DataSource {
         return recordTypeStatus;
       }
 
-      recordTypeStatus.itemTotal = epicRecords.length;
-      this.status.itemTotal += epicRecords.length;
-
-      await this.taskAuditRecord.updateTaskRecord({ itemTotal: this.status.itemTotal });
-
-      // Add epic meta (whatever it contains) to the status
-      recordTypeStatus.epicMeta = data && data[0] && data[0].meta;
-
       // Get the record type specific utils, that contain the unique transformations, etc, for this record type.
       const recordTypeUtils = recordType.getUtil(this.auth_payload);
 
@@ -144,8 +136,42 @@ class DataSource {
         return recordTypeStatus;
       }
 
+      const processRecords = [];
+      // Prior to April 1, 2020 we import Inspection and Orders except from LNG Canada and Coastal Gaslink
+      // After April 1, 2020, we import everything regardless of project.
+      for (let z = 0; z < epicRecords.length; z++) {
+        const theRecord = epicRecords[z];
+
+        if (moment(theRecord.datePosted).isBefore(moment('2020-04-01').toISOString())) {
+          // Check if it's an Order or an Inspection and not part of LNG Canada or Coastal Gas Link
+
+          // Check if !CGL/LNG
+          if (theRecord.project === ('588511c4aaecd9001b825604' || '588510cdaaecd9001b815f84')) {
+            // Skip
+            console.log("Skipping LNG Canada/Coastal Gas Link Record > 2020-04-01", theRecord.displayName)
+            continue;
+          }
+
+          // Check if Order/Inspection
+          const rec = await recordTypeUtils.transformRecord(theRecord);
+          if ((rec._schemaName === "Order") || (rec._schemaName === "Inspection")) {
+            processRecords.push(theRecord);
+          }
+          // Skip everything else
+        } else {
+          processRecords.push(theRecord);
+        }
+      }
+
+      recordTypeStatus.itemTotal = processRecords.length;
+      this.status.itemTotal += processRecords.length;
+      await this.taskAuditRecord.updateTaskRecord({ itemTotal: this.status.itemTotal });
+
+      // Add epic meta (whatever it contains) to the status
+      recordTypeStatus.epicMeta = data && data[0] && data[0].meta;
+
       // update each record in batches so as not to overload the EPIC api
-      await this.batchProcessRecords(recordTypeUtils, epicRecords);
+      await this.batchProcessRecords(recordTypeUtils, processRecords);
 
       // Add this types specific status object to the array of type statuses
       this.status.typeStatus.push(recordTypeStatus);
