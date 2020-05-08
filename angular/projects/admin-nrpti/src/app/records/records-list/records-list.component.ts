@@ -320,7 +320,12 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
   filterChange(event) {
     Object.keys(event).forEach(item => {
-      if (!event || event[item] === undefined || event[item] === null || event[item].length === 0 || event[item] === false) {
+      if (!event ||
+        event[item] === undefined ||
+        event[item] === null ||
+        event[item].length === 0 ||
+        event[item] === false
+      ) {
         if (this.tableData[item]) {
           delete this.tableData[item];
         }
