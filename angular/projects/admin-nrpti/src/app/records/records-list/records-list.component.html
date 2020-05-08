@@ -72,19 +72,20 @@
     </div>
   </div>
 
-  <div class="row mt-3">
-    <div class="col-12 mb-3" [hidden]="!showAdvancedFilters">
-      <app-explore-panel
+  <div class="row mt-3" [hidden]="!showAdvancedFilters">
+    <div class="col-12 mb-3">
+      <app-explore-panel *ngIf="searchFiltersForm"
         #explorePanel
+        [formGroup]="searchFiltersForm"
         [filterSections]="filters"
-        (updateFilters)="filterChange($event)"></app-explore-panel>
+        (updateFilters)="filterChange($event)">
+      </app-explore-panel>
     </div>
   </div>
 
   <div class="row mt-3 mb-3">
-    <div class="col-6"></div>
-    <div class="col-6 text-right">
-      <div ngbDropdown class="">
+    <div class="col-12 text-right">
+      <div ngbDropdown>
         <button class="btn btn-primary" ngbDropdownToggle>
           Add Record
         </button>

@@ -100,6 +100,7 @@ import { CourtConvictionLNGDetailComponent } from './court-convictions/court-con
 // other
 import { ExplorePanelComponent } from '../explore-panel/explore-panel.component';
 import { DateInputComponent } from '../explore-panel/date-input/date-input.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   imports: [
@@ -117,7 +118,8 @@ import { DateInputComponent } from '../explore-panel/date-input/date-input.compo
     InlineSVGModule.forRoot(),
     RecordsRoutingModule,
     MatTooltipModule,
-    NgbDropdownModule
+    MatCheckboxModule,
+    NgbDropdownModule,
   ],
   declarations: [
     DateInputComponent,

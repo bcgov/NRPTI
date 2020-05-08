@@ -4,6 +4,9 @@ import { FilterSection } from '../../../../common/src/app/models/document-filter
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { IMutliSelectOption } from '../../../../common/src/app/autocomplete-multi-select/autocomplete-multi-select.component';
+import { Picklists } from '../../../../common/src/app/utils/record-constants';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-explore-panel',
@@ -12,20 +15,32 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class ExplorePanelComponent implements OnInit, OnDestroy {
   @Input() filterSections: FilterSection[] = []; // document filter sections // used in template
+  @Input() formGroup: FormGroup;
 
   @Output() updateFilters = new EventEmitter();
-  @Output() hideSidePanel = new EventEmitter();
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+
+  public resetControls: EventEmitter<void> = new EventEmitter<void>();
 
   readonly minDate = new Date('01-01-1900'); // first app created
   readonly maxDate = new Date(); // today
 
-  public _dateRangeFromFilter: Date = null;
-  public _dateRangeToFilter: Date = null;
-
   public textFilterKeys: any[];
-  public filter = [];
+
+  public agencyOptions: IMutliSelectOption[] = Picklists.agencyPicklist.map(value => {
+    return { value: value, displayValue: value, selected: false, display: true };
+  });
+  public actOptions: IMutliSelectOption[] = Picklists.getAllActs().map(value => {
+    return { value: value, displayValue: value, selected: false, display: true };
+  });
+  public regulationOptions: IMutliSelectOption[] = Picklists.getAllRegulations().map(value => {
+    return { value: value, displayValue: value, selected: false, display: true };
+  });
+
+  public agencyCount = 0;
+  public actCount = 0;
+  public regulationCount = 0;
 
   constructor(private _changeDetectionRef: ChangeDetectorRef, private route: ActivatedRoute) {
     this.textFilterKeys = [];
@@ -51,12 +66,6 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
           }
         });
       });
-      if (keys.includes('dateRangeToFilter')) {
-        this._dateRangeToFilter = params['dateRangeToFilter'];
-      }
-      if (keys.includes('dateRangeFromFilter')) {
-        this._dateRangeFromFilter = params['dateRangeFromFilter'];
-      }
       this._changeDetectionRef.detectChanges();
     });
   }
@@ -74,46 +83,7 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
         return item !== fieldValue;
       });
     }
-    this.applyAllFilters();
-  }
-
-  togglePanel() {
-    this.hideSidePanel.emit();
-  }
-
-  public applyAllFilters() {
-    // Only add dateRange* conditionally.
-    // tslint:disable-next-line: prefer-const
-    let filterQuery = this.textFilterKeys;
-    delete filterQuery['dateRangeFromFilter'];
-    delete filterQuery['dateRangeToFilter'];
-
-    filterQuery['dateRangeFromFilter'] = this._dateRangeFromFilter ? this._dateRangeFromFilter : undefined;
-    filterQuery['dateRangeToFilter'] = this._dateRangeToFilter ? this._dateRangeToFilter : undefined;
-
-    this.updateFilters.emit(filterQuery);
-  }
-
-  public handleDateChangeFrom(event) {
-    this._dateRangeFromFilter = event;
-    this.applyAllFilters();
-  }
-
-  public handleDateChangeTo(event) {
-    this._dateRangeToFilter = event;
-    this.applyAllFilters();
-  }
-
-  public clearAllFilters() {
-    this._dateRangeFromFilter = undefined;
-    this._dateRangeToFilter = undefined;
-
-    Object.keys(this.textFilterKeys).forEach(key => {
-      this.textFilterKeys[key] = [];
-    });
-    this.applyAllFilters();
-    this.togglePanel();
-    this._changeDetectionRef.detectChanges();
+    this.updateFilters.emit(this.textFilterKeys);
   }
 
   ngOnDestroy() {
