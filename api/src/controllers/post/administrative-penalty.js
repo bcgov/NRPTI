@@ -1,7 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
-let queryUtils = require('../../utils/query-utils');
 let postUtils = require('../../utils/post-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
  * Performs all operations necessary to create a master Administrative Penalty record and its associated flavour records.
@@ -327,11 +327,9 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     administrativePenaltyLNG.read.push('public');
     administrativePenaltyLNG.datePublished = new Date();
     administrativePenaltyLNG.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(administrativePenaltyLNG)) {
-      administrativePenaltyLNG.issuedTo.read.push('public');
-    }
   }
+
+  administrativePenaltyLNG = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyLNG);
 
   return await administrativePenaltyLNG.save();
 };
@@ -456,11 +454,9 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     administrativePenaltyNRCED.read.push('public');
     administrativePenaltyNRCED.datePublished = new Date();
     administrativePenaltyNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(administrativePenaltyNRCED)) {
-      administrativePenaltyNRCED.issuedTo.read.push('public');
-    }
   }
+
+  administrativePenaltyNRCED = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyNRCED);
 
   return await administrativePenaltyNRCED.save();
 };

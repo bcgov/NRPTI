@@ -1,7 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
-let queryUtils = require('../../utils/query-utils');
 let postUtils = require('../../utils/post-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
  * Performs all operations necessary to create a master Court Conviction record and its associated flavour records.
@@ -321,11 +321,9 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     courtConvictionLNG.read.push('public');
     courtConvictionLNG.datePublished = new Date();
     courtConvictionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(courtConvictionLNG)) {
-      courtConvictionLNG.issuedTo.read.push('public');
-    }
   }
+
+  courtConvictionLNG = BusinessLogicManager.applyBusinessLogicOnPost(courtConvictionLNG);
 
   return await courtConvictionLNG.save();
 };
@@ -449,11 +447,9 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     courtConvictionNRCED.read.push('public');
     courtConvictionNRCED.datePublished = new Date();
     courtConvictionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(courtConvictionNRCED)) {
-      courtConvictionNRCED.issuedTo.read.push('public');
-    }
   }
+
+  courtConvictionNRCED = BusinessLogicManager.applyBusinessLogicOnPost(courtConvictionNRCED);
 
   return await courtConvictionNRCED.save();
 };

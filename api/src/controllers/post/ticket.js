@@ -1,7 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
-let queryUtils = require('../../utils/query-utils');
 let postUtils = require('../../utils/post-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
  * Performs all operations necessary to create a master Ticket record and its associated flavour records.
@@ -311,11 +311,9 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     ticketLNG.read.push('public');
     ticketLNG.datePublished = new Date();
     ticketLNG.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(ticketLNG)) {
-      ticketLNG.issuedTo.read.push('public');
-    }
   }
+
+  ticketLNG = BusinessLogicManager.applyBusinessLogicOnPost(ticketLNG);
 
   return await ticketLNG.save();
 };
@@ -435,11 +433,9 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     ticketNRCED.read.push('public');
     ticketNRCED.datePublished = new Date();
     ticketNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(ticketNRCED)) {
-      ticketNRCED.issuedTo.read.push('public');
-    }
   }
+
+  ticketNRCED = BusinessLogicManager.applyBusinessLogicOnPost(ticketNRCED);
 
   return await ticketNRCED.save();
 };

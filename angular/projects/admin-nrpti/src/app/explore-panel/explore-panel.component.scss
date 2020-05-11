@@ -1,50 +1,5 @@
 @import "~assets/styles/base/base.scss";
 
-.form-group {
-  margin-bottom: 2rem;
-}
-
-.form-btns {
-  .btn-primary {
-    font-weight: 700;
-  }
-
-  .btn-light {
-    font-weight: 400;
-  }
-}
-
-// Date Range Inputs
-.date-range {
-  @include flex-box();
-  @include flex-direction(row);
-}
-
-.date-range__input {
-  @include flex(1 1 auto);
-}
-
-.date-range__spacer {
-  margin: 0.35rem 0.5rem;
-}
-
-// TODO: We shouldn't be encapsulating these controls in a single component
-// Prevents us from utilizing properties for placement of the dropmenu
-// Have to hack the position of the drop menu for the end date considering the above
-.date-range__input.end-date {
-  ::ng-deep {
-    ngb-datepicker {
-      right: 0 !important;
-      left: auto !important;
-    }
-  }
-}
-
-.select-badge-group {
-  margin: -0.2rem -0.15rem;
-  overflow: hidden;
-}
-
 .select-badge {
   position: relative;
   margin: 0.2rem 0.15rem;
@@ -107,4 +62,8 @@
       background-color: $select-badge-active-bg;
     }
   }
+}
+
+.custom-row-height {
+  height: 200px;
 }
