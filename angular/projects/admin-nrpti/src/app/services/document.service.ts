@@ -47,6 +47,22 @@ export class DocumentService {
     return this.http.delete<any>(`${this.apiService.pathAPI}/${queryString}`).toPromise();
   }
 
+  /**
+   * Get an S3 signed url for the document.
+   *
+   * @param {string} docId
+   * @returns {Observable<any>}
+   * @memberof DocumentService
+   */
+  public getS3SignedUrl(docId: string): Observable<any> {
+    if (!docId) {
+      throw Error('DocumentService - getS3SignedUrl - missing required docId param');
+    }
+
+    const queryString = `document/${docId}/signedurl`;
+    return this.http.get<any>(`${this.apiService.pathAPI}/${queryString}`);
+  }
+
   private downloadResource(id: string): Promise<Blob> {
     const queryString = `document/${id}/download`;
     return this.http

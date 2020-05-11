@@ -3,7 +3,6 @@
 const defaultLog = require('../utils/logger')('import-task');
 const queryActions = require('../utils/query-actions');
 const TaskAuditRecord = require('../utils/task-audit-record');
-const moment = require('moment');
 
 exports.protectedOptions = async function(args, res, next) {
   res.status(200).send();
@@ -58,7 +57,7 @@ async function runTask(nrptiDataSource, auth_payload, params = null, recordTypes
     const dataSource = new nrptiDataSource.dataSourceClass(
       taskAuditRecord,
       auth_payload,
-      params || { datePostedStart: moment('2020-04-01').toISOString() },
+      params,
       recordTypes
     );
 
@@ -100,9 +99,9 @@ function getDataSourceConfig(dataSourceType) {
         dataSourceLabel: 'epic',
         dataSourceClass: require('../integrations/epic/datasource')
       };
-    case 'nris':
+    case 'nris-epd':
       return {
-        dataSourceLabel: 'nris',
+        dataSourceLabel: 'nris-epd',
         dataSourceClass: require('../integrations/nris/datasource')
       };
     default:

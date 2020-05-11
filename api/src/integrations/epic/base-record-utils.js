@@ -46,12 +46,13 @@ class BaseRecordUtils {
     const documents = [];
 
     if (epicRecord && epicRecord._id && epicRecord.documentFileName) {
-      const savedDocument = await DocumentController.createDocument(
+      const savedDocument = await DocumentController.createURLDocument(
         epicRecord.documentFileName,
         (this.auth_payload && this.auth_payload.displayName) || '',
         `${EPIC_PUBLIC_HOSTNAME}/api/document/${epicRecord._id}/fetch/${encodeURIComponent(
           epicRecord.documentFileName
-        )}`
+        )}`,
+        ['public']
       );
 
       documents.push(savedDocument._id);

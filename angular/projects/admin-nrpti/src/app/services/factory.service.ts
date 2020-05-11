@@ -554,4 +554,8 @@ export class FactoryService {
   public deleteDocument(docId: string, recordId: string): Promise<any> {
     return this.documentService.deleteDocument(docId, recordId);
   }
+
+  public getS3SignedUrl(docId: string): Observable<any> {
+    return this.documentService.getS3SignedUrl(docId);
+  }
 }
