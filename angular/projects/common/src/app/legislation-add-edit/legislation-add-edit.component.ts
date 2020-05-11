@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Picklists } from '../../../../admin-nrpti/src/app/utils/constants/record-constants';
+import { Picklists } from '../utils/record-constants';
 
 @Component({
   selector: 'app-legislation-add-edit',
@@ -38,7 +38,7 @@ export class LegislationAddEditComponent implements OnInit {
    *
    * @param {*} event
    * @returns
-   * @memberof InspectionAddEditComponent
+   * @memberof LegislationAddEditComponent
    */
   filterActsPicklist(event) {
     if (!event.target.value) {
@@ -74,7 +74,7 @@ export class LegislationAddEditComponent implements OnInit {
    *
    * @param {string} act
    * @returns
-   * @memberof InspectionAddEditComponent
+   * @memberof LegislationAddEditComponent
    */
   onSelectAct(act: string = null) {
     if (!act) {
@@ -89,7 +89,7 @@ export class LegislationAddEditComponent implements OnInit {
   /**
    * Clears the act control if the value is not a known (allowed) act.
    *
-   * @memberof InspectionAddEditComponent
+   * @memberof LegislationAddEditComponent
    */
   verifyKnownActValue(event) {
     if (event && event.relatedTarget && event.relatedTarget.localName === 'mat-option') {
@@ -115,7 +115,7 @@ export class LegislationAddEditComponent implements OnInit {
    *
    * @param {*} event
    * @returns
-   * @memberof InspectionAddEditComponent
+   * @memberof LegislationAddEditComponent
    */
   filterRegulationsPicklist(event) {
     if (!event.target.value) {
@@ -147,7 +147,7 @@ export class LegislationAddEditComponent implements OnInit {
    *
    * @param {string} regulation
    * @returns
-   * @memberof InspectionAddEditComponent
+   * @memberof LegislationAddEditComponent
    */
   onSelectRegulation(regulation: string = null) {
     if (!regulation) {
@@ -168,7 +168,7 @@ export class LegislationAddEditComponent implements OnInit {
   /**
    * Clears the regulation control if the value is not a known (allowed) regulation.
    *
-   * @memberof InspectionAddEditComponent
+   * @memberof LegislationAddEditComponent
    */
   verifyKnownRegulationValue(event) {
     if (event && event.relatedTarget && event.relatedTarget.localName === 'mat-option') {

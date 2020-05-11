@@ -72,6 +72,10 @@ export class NewsAddEditComponent implements OnInit, OnDestroy {
   }
 
   private buildForm() {
+    // Default today's date
+    if (this.record.date === null) {
+      this.record.date = new Date();
+    }
     this.myForm = new FormGroup({
       description: new FormControl((this.record && this.record.description) || ''),
       _epicProjectId: new FormControl({

@@ -1,35 +1,97 @@
-<div class="flex-panel border-bottom">
-  <div class="flex-panel__scroll">
-    <label class="control-label text-uppercase font-weight-bold">Filters</label>
-    <div class="form-group">
-      <div class="date-range">
-        <div class="date-range__input">
-          <label class="control-label">Start Date</label>
-          <app-date-input
-            (dateChange)="handleDateChangeFrom($event)"
-            class="gtm-filter-published-from"
-            [date]="_dateRangeFromFilter"
-            [minDate]="minDate"
-            [maxDate]="_dateRangeToFilter ? _dateRangeToFilter : maxDate"></app-date-input>
+<form *ngIf="formGroup" [formGroup]="formGroup" novalidate>
+  <section>
+    <div class="row">
+      <div class="col-4">
+        <div class="row">
+          <div class="col-6">
+            <label for="dateIssuedStartFilter" class="control-label font-weight-bold">Start Issued Date</label>
+            <lib-date-picker
+              id="dateIssuedStartFilter"
+              [control]="formGroup.get('dateIssuedStart')"
+              [reset]="resetControls"
+              [minDate]="minDate"
+              [maxDate]="maxDate"></lib-date-picker>
+          </div>
+          <div class="col-6">
+            <label for="dateIssuedEndFilter" class="control-label font-weight-bold">End Issued Date</label>
+            <lib-date-picker
+              id="dateIssuedEndFilter"
+              [control]="formGroup.get('dateIssuedEnd')"
+              [reset]="resetControls"
+              [minDate]="minDate"
+              [maxDate]="maxDate"></lib-date-picker>
+          </div>
         </div>
-        <div class="date-range__spacer"></div>
-        <div class="date-range__input end-date">
-          <label class="control-label">End Date</label>
-          <app-date-input
-            (dateChange)="handleDateChangeTo($event)"
-            class="gtm-filter-published-to"
-            [date]="_dateRangeToFilter"
-            [maxDate]="maxDate"
-            [minDate]="_dateRangeFromFilter ? _dateRangeFromFilter : minDate"></app-date-input>
+      </div>
+      <div class="col-4">
+        <label class="control-label font-weight-bold">Entity Type</label>
+        <div class="row">
+          <div class="col-6">
+            <mat-checkbox id="issuedToCompany" formControlName="issuedToCompany">
+              Company
+            </mat-checkbox>
+          </div>
+          <div class="col-6">
+            <mat-checkbox id="issuedToIndividual" formControlName="issuedToIndividual">
+              Individual
+            </mat-checkbox>
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="row">
+      <div class="col-4">
+        <label for="agencyFilter">Responsible Agency</label>
+        <span *ngIf="agencyCount" class="grey-subtext ml-2">({{ agencyCount }} selected)</span>
+        <app-autocomplete-multi-select
+          id="agencyFilter"
+          [control]="formGroup.get('agency')"
+          [options]="agencyOptions"
+          [reset]="resetControls"
+          [placeholderText]="'Begin typing to filter agencies...'"
+          (numSelected)="agencyCount = $event"></app-autocomplete-multi-select>
+      </div>
+      <div class="col-4">
+        <div class="label-pair">
+          <label for="actFilter">Act</label>
+          <span *ngIf="actCount" class="grey-subtext ml-2">({{ actCount }} selected)</span>
+          <app-autocomplete-multi-select
+            id="actFilter"
+            [control]="formGroup.get('act')"
+            [options]="actOptions"
+            [reset]="resetControls"
+            [placeholderText]="'Begin typing to filter acts...'"
+            (numSelected)="actCount = $event"></app-autocomplete-multi-select>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="label-pair">
+          <label for="regulationFilter">Regulation</label>
+          <span *ngIf="regulationCount" class="grey-subtext ml-2">({{ regulationCount }} selected)</span>
+          <app-autocomplete-multi-select
+            id="regulationFilter"
+            [control]="formGroup.get('regulation')"
+            [options]="regulationOptions"
+            [reset]="resetControls"
+            [placeholderText]="'Begin typing to filter regulations...'"
+            (numSelected)="regulationCount = $event"></app-autocomplete-multi-select>
         </div>
       </div>
     </div>
+  </section>
+</form>
 
-    <ng-container *ngFor="let section of filterSections">
-      <div class="form-group">
-        <label class="control-label">{{ section.displayName }}</label>
+<section class="mt-4">
+  <div class="row">
+    <div class="col-12">
+      <span *ngFor="let section of filterSections">
+        <label class="control-label font-weight-bold">{{ section.displayName }}</label>
         <div class="select-badge-group">
-          <ng-container *ngFor="let filter of section.textFilters">
+          <span *ngFor="let filter of section.textFilters">
             <div class="select-badge">
               <input
                 type="checkbox"
@@ -39,9 +101,9 @@
                 [ngModel]="isEnabled(filter.fieldName, filter.displayName)" />
               <label for="_{{ filter.displayName }}">{{ filter.displayName }}</label>
             </div>
-          </ng-container>
+          </span>
         </div>
-      </div>
-    </ng-container>
+      </span>
+    </div>
   </div>
-</div>
+</section>

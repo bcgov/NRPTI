@@ -6,6 +6,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgbModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 // modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -119,7 +120,8 @@ import { S3SignedUrlAnchorComponent } from '../documents/s3-signed-url-anchor/s3
     InlineSVGModule.forRoot(),
     RecordsRoutingModule,
     MatTooltipModule,
-    NgbDropdownModule
+    MatCheckboxModule,
+    NgbDropdownModule,
   ],
   declarations: [
     DateInputComponent,

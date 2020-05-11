@@ -9,8 +9,19 @@ export class RecordsResolver implements Resolve<Observable<object>> {
   constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) { }
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
+    const params = { ...route.params };
     // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
     const tableObject = this.tableTemplateUtils.updateTableObjectWithUrlParams(route.params, new TableObject());
+
+    delete params.sortBy;
+    delete params.currentPage;
+    delete params.pageSize;
+    delete params.filter;
+    delete params.keywords;
+    delete params.dataset;
+    delete params.ms;
+    delete params.subset;
+
 
     let schemaList = [
       'Order',
@@ -29,18 +40,14 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       'CourtConviction'
     ];
 
-    // If _schemaName was filter criteria, use that instead of the default list.
-    const filterParams = { ...route.params };
 
-    // Clear out all the standard table template params
-    delete filterParams.sortBy;
-    delete filterParams.currentPage;
-    delete filterParams.pageSize;
-    delete filterParams.filter;
-    delete filterParams.keywords;
-    delete filterParams.dataset;
-    delete filterParams.ms;
-    delete filterParams.subset;
+    if (params.activityType) {
+      schemaList = params.activityType;
+    }
+
+    delete params.activityType;
+
+    const filterParams = { ...params };
 
     if (filterParams._schemaName) {
       schemaList = filterParams._schemaName;
@@ -49,12 +56,38 @@ export class RecordsResolver implements Resolve<Observable<object>> {
     if (filterParams.dateRangeFromFilter) {
       filterParams['dateRangeFromFilterdateIssued'] = filterParams.dateRangeFromFilter;
     }
+
     if (filterParams.dateRangeToFilter) {
       filterParams['dateRangeToFilterdateIssued'] = filterParams.dateRangeToFilter;
     }
-    delete filterParams.dateRangeFromFilter;
+
+    if (filterParams.issuedToCompany && filterParams.issuedToIndividual) {
+      filterParams['issuedTo.type'] = 'Company,Individual,IndividualCombined';
+    } else if (filterParams.issuedToCompany) {
+      filterParams['issuedTo.type'] = 'Company';
+    } else if (filterParams.issuedToIndividual) {
+      filterParams['issuedTo.type'] = 'Individual,IndividualCombined';
+    }
+
+    if (filterParams.agency) {
+      filterParams['issuingAgency'] = filterParams.agency;
+    }
+
+    if (filterParams.act) {
+      filterParams['legislation.act'] = filterParams.act;
+    }
+
+    if (filterParams.regulation) {
+      filterParams['legislation.regulation'] = filterParams.regulation;
+    }
+
     delete filterParams.dateRangeToFilter;
-    delete filterParams._schemaName;
+    delete filterParams.dateRangeFromFilter;
+    delete filterParams.issuedToCompany;
+    delete filterParams.issuedToIndividual;
+    delete filterParams.agency;
+    delete filterParams.act;
+    delete filterParams.regulation;
 
     // force-reload so we always have latest data
     return this.factoryService.getRecords(
