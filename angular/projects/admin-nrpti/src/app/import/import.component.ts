@@ -152,6 +152,6 @@ export class ImportComponent implements OnInit {
 
   async startTask(): Promise<any> {
     await this.factoryService.startTask({ dataSourceType: 'epic' }).toPromise();
-    await this.factoryService.startTask({ dataSourceType: 'nris' }).toPromise();
+    await this.factoryService.startTask({ dataSourceType: 'nris-epd' }).toPromise();
   }
 }

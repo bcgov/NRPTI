@@ -99,9 +99,9 @@ function getDataSourceConfig(dataSourceType) {
         dataSourceLabel: 'epic',
         dataSourceClass: require('../integrations/epic/datasource')
       };
-    case 'nris':
+    case 'nris-epd':
       return {
-        dataSourceLabel: 'nris',
+        dataSourceLabel: 'nris-epd',
         dataSourceClass: require('../integrations/nris/datasource')
       };
     default:

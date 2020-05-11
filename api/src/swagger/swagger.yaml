@@ -52,13 +52,26 @@ definitions:
     example: 'epic'
     enum: &dataSourceType
       - epic
+      - nris-epd
   recordType:
     type: string
     description: 'Supported record types'
-    example: 'order'
+    example: 'Order'
     enum: &recordType
-      - Order
+      - AdministrativePenalty
+      - AdministrativeSanction
+      - Agreement
+      - Certificate
+      - ConstructionPlan
+      - CourtConviction
       - Inspection
+      - ManagementPlan
+      - Order
+      - Permit
+      - RestorativeJustice
+      - SelfReport
+      - Ticket
+      - Warning
 
   ### Document Type Definitions
   DocumentRequestObject:
@@ -82,8 +95,20 @@ definitions:
     description: 'Optional datasets to search on in the DB'
     example: ['Order']
     enum: &searchDataSetParams
-      - Order
+      - AdministrativePenalty
+      - AdministrativeSanction
+      - Agreement
+      - Certificate
+      - ConstructionPlan
+      - CourtConviction
       - Inspection
+      - ManagementPlan
+      - Order
+      - Permit
+      - RestorativeJustice
+      - SelfReport
+      - Ticket
+      - Warning
   SearchSubsetParams:
     type: string
     description: 'Optional datasets to search on in the DB'
@@ -776,6 +801,50 @@ paths:
         - name: docId
           in: path
           description: '_id of document we want to delete'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /document/{docId}/signedurl:
+    x-swagger-router-controller: document-controller
+    options:
+      tags:
+        - document
+      summary: 'Pre-flight request'
+      operationId: protectedGetS3SignedURL
+      description: 'Options on authenticated document route'
+      parameters:
+        - name: docId
+          in: path
+          description: '_id of document to get an s3 signed url for'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - document
+      summary: 'Get a signed s3 url for an uploaded document'
+      operationId: protectedGetS3SignedURL
+      description: 'Gets an s3 signed url for a document uploaded to s3.'
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+      parameters:
+        - name: docId
+          in: path
+          description: '_id of document to get an s3 signed url for'
           required: true
           type: string
       responses:

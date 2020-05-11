@@ -6,6 +6,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgbModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 // modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -100,7 +101,8 @@ import { CourtConvictionLNGDetailComponent } from './court-convictions/court-con
 // other
 import { ExplorePanelComponent } from '../explore-panel/explore-panel.component';
 import { DateInputComponent } from '../explore-panel/date-input/date-input.component';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { DocumentAuthenticatedReadOnlyComponent } from '../documents/document-authenticated-read-only/document-authenticated-read-only.component';
+import { S3SignedUrlAnchorComponent } from '../documents/s3-signed-url-anchor/s3-signed-url-anchor.component';
 
 @NgModule({
   imports: [
@@ -124,6 +126,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
   declarations: [
     DateInputComponent,
     ExplorePanelComponent,
+    DocumentAuthenticatedReadOnlyComponent,
+    S3SignedUrlAnchorComponent,
     // records
     RecordsListComponent,
     RecordsTableRowComponent,

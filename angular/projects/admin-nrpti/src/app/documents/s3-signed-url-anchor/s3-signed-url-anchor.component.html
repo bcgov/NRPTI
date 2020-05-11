@@ -1,0 +1,6 @@
+<a *ngIf="isS3Document" #signedUrlAnchor (click)="getS3SignedUrl()" target="_blank">
+  {{ (document && document.fileName) || '-' }}
+</a>
+<a *ngIf="!isS3Document" href="{{ document.url }}" target="_blank">
+  {{ (document && document.fileName) || '-' }}
+</a>
