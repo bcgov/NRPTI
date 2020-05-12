@@ -1,6 +1,76 @@
 {
   "activities": [
     {
+      "type": "INSPECTION_COMPLETE",
+      "title": "Inspection Completed",
+      "description": "The BC Environmental Assessment Office’s inspection record for a site visit (Coastal GasLink) on January 15th & 16th, 2020.",
+      "date": "10-03-20",
+      "url": "/project/2/compliance"
+    },
+    {
+      "type": "INSPECTION_COMPLETE",
+      "title": "Inspection Completed",
+      "description": "The BC Environmental Assessment Office’s inspection record for a site visit (Coastal GasLink) on January 22, 2020.",
+      "date": "09-03-20",
+      "url": "/project/2/compliance"
+    },
+    {
+      "type": "DOCUMENT_ADDED",
+      "title": "Management Plan Filed",
+      "description": "LNG Canada’s Workforce Air Quality Health Plan.",
+      "date": "25-02-2020",
+      "url": "/project/1/plans"
+    },
+    {
+      "type": "INSPECTION_COMPLETE",
+      "title": "Inspection Completed",
+      "description": "The BC Environmental Assessment Office's inspection record for a site visit (Coastal GasLink) from September 24 to 26, 2019.",
+      "date": "07-02-20",
+      "url": "/project/2/compliance"
+    },
+    {
+      "type": "INSPECTION_COMPLETE",
+      "title": "Compliance Self-Reported",
+      "description": "LNG Canada’s self-report providing a status of compliance with the conditions outlined in the project’s environmental assessment certificate.",
+      "date": "30-01-2020",
+      "url": "/project/1/compliance"
+    },
+    {
+      "type": "INSPECTION_COMPLETE",
+      "title": "Inspection Completed",
+      "description": "The BC Environmental Assessment Office's inspection record for a site visit (Coastal GasLink) on December 10, 2019.",
+      "date": "29-01-20",
+      "url": "/project/2/compliance"
+    },
+    {
+      "type": "INSPECTION_COMPLETE",
+      "title": "Inspection Completed",
+      "description": "The BC Environmental Assessment Office’s inspection record for a site visit (Coastal GasLink) on October 15, 16 and 21, 2019.",
+      "date": "16-01-20",
+      "url": "/project/2/compliance"
+    },
+    {
+      "type": "INSPECTION_COMPLETE",
+      "title": "Inspection Completed",
+      "description": "The BC Environmental Assessment Office’s inspection record for a site visit (LNG Canada) on November 26 & 27, 2019",
+      "date": "30-12-2019",
+      "url": "/project/1/compliance"
+    },
+    {
+      "type": "INSPECTION_COMPLETE",
+      "title": "Inspection Completed",
+      "description": "The BC Environmental Assessment Office’s inspection record for a site visit (Coastal GasLink) on October 7, 2019.",
+      "date": "17-12-19",
+      "url": "/project/2/compliance"
+    },
+    {
+      "type": "REPORT_ADDED",
+      "title": "Report Filed",
+      "description": "Report evaluating the potential human health risks to workers housed at LNG Canada's Cedar Valley Lodge.",
+      "date": "06-12-2019",
+      "url": "/project/1/compliance"
+    },
+    {
       "type": "REPORT_ADDED",
       "title": "Report Submitted",
       "description": "Coastal GasLink’s field data in the Morice River Technical Boundary area.",
