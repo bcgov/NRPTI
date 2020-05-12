@@ -23,11 +23,11 @@ export class TableTemplateUtils {
       } else {
         switch (item) {
           case 'currentPage':
-            tableObject[item] = +routeParams[item];
-            break;
           case 'pageSize':
             tableObject[item] = +routeParams[item];
             break;
+          case 'sortBy':
+            tableObject[item] = routeParams[item];
           default:
             break;
         }
