@@ -56,41 +56,6 @@ export class Utils {
   }
 
   /**
-   * Add a key:value to an object.
-   *
-   * Only works for root level properties.
-   *
-   * @param {object} obj
-   * @param {string} key
-   * @param {string} value
-   * @returns the modified object.
-   * @memberof Utils
-   */
-  public addKeyValueToObject(obj: object, key: string, value: string) {
-    if (obj && key) {
-      obj[key] = value;
-    }
-    return obj;
-  }
-
-  /**
-   * Remove a key from an object.
-   *
-   * Only works for root level properties.
-   *
-   * @param {object} obj
-   * @param {string} key
-   * @returns the modified object.
-   * @memberof Utils
-   */
-  public removeKeyFromObject(obj: object, key: string) {
-    if (obj && key) {
-      delete obj[key];
-    }
-    return obj;
-  }
-
-  /**
    * Wraps a function in a debounce function, which prevents it from being called until a delay period has elapsed.
    * Repeated calls within the delay period will reset the delay.
    *
