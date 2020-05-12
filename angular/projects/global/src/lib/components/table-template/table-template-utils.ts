@@ -28,6 +28,7 @@ export class TableTemplateUtils {
             break;
           case 'sortBy':
             tableObject[item] = routeParams[item];
+            break;
           default:
             break;
         }
