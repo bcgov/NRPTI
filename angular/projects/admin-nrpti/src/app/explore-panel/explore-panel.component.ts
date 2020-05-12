@@ -73,7 +73,7 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
 
   clearSearchFilters() {
     this.resetControls.emit();
-    // this.formGroup.reset();
+    this.formGroup.reset();
   }
 
   ngOnDestroy() {

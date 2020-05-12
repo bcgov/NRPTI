@@ -261,7 +261,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     } else {
       delete this.queryParams['keywords'];
     }
-    this.router.navigate(['/records', this.queryParams]);
+    this.submit();
   }
 
   subscribeToSearchFilterChanges() {
@@ -327,7 +327,17 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    */
   submit() {
     this.loadingScreenService.setLoadingState(true, 'body');
-    this.tableTemplateUtils.navigateUsingParams(this.tableData, ['records'], this.queryParams);
+
+    // These are params that should be handled by tableData
+    delete this.queryParams.sortBy;
+    delete this.queryParams.currentPage;
+    delete this.queryParams.pageNumber;
+    delete this.queryParams.pageSize;
+
+    this.router.navigate([
+      '/records',
+      { ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }
+    ]);
   }
 
   /**

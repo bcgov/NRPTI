@@ -138,6 +138,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
           this.queryParams['dateRangeToFilter'] ||
           this.queryParams['issuedToCompany'] ||
           this.queryParams['issuedToIndividual'] ||
+          this.queryParams['activityType'] ||
           this.queryParams['agency'] ||
           this.queryParams['act'] ||
           this.queryParams['regulation']
@@ -295,9 +296,14 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * @memberof SearchComponent
    */
   submit() {
-    this.queryParams['ms'] = new Date().getMilliseconds();
     this.loadingScreenService.setLoadingState(true, 'body');
-    console.log({ ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) });
+
+    // These are params that should be handled by tableData
+    delete this.queryParams.sortBy;
+    delete this.queryParams.currentPage;
+    delete this.queryParams.pageNumber;
+    delete this.queryParams.pageSize;
+
     this.router.navigate([
       '/records',
       { ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }
@@ -307,12 +313,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   keywordSearch() {
     if (this.keywordSearchWords) {
       this.queryParams['keywords'] = this.keywordSearchWords;
-      if (!this.tableData.sortBy) {
-        this.tableData.sortBy = '-score';
-      }
     } else {
       this.selectedSubset = 'All';
-      this.tableData.sortBy = '';
       delete this.queryParams['keywords'];
       delete this.queryParams['subset'];
     }
@@ -406,7 +408,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   initSubset() {
     if (!this.queryParams.subset) {
       this.selectedSubset = 'All';
-    } else if (this.queryParams.subset.includes('companyName')) {
+    } else if (this.queryParams.subset.includes('issuedTo')) {
       this.selectedSubset = 'Issued To';
     } else if (this.queryParams.subset.includes('location')) {
       this.selectedSubset = 'Location';
