@@ -90,7 +90,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     public utils: Utils,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   /**
    * Component init.
@@ -150,13 +150,13 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         (this.queryParams &&
           this.queryParams.dateRangeFromFilter &&
           this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeFromFilter))) ||
-          null
+        null
       ),
       dateIssuedEnd: new FormControl(
         (this.queryParams &&
           this.queryParams.dateRangeToFilter &&
           this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeToFilter))) ||
-          null
+        null
       ),
       issuedToCompany: new FormControl((this.queryParams && this.queryParams.issuedToCompany) || null),
       issuedToIndividual: new FormControl((this.queryParams && this.queryParams.issuedToIndividual) || null),
@@ -216,7 +216,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * @param {ITableMessage} msg
    * @memberof RecordsListComponent
    */
-  rowSelected(msg: ITableMessage) {}
+  rowSelected(msg: ITableMessage) { }
 
   /**
    * Column sorting handler.
@@ -257,70 +257,63 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
   keywordSearch() {
     if (this.keywordSearchWords) {
-      this.utils.addKeyValueToObject(this.queryParams, 'keywords', this.keywordSearchWords);
+      this.queryParams['keywords'] = this.keywordSearchWords;
     } else {
-      this.utils.removeKeyFromObject(this.queryParams, 'keywords');
+      delete this.queryParams['keywords'];
     }
-
     this.router.navigate(['/records', this.queryParams]);
   }
 
   subscribeToSearchFilterChanges() {
     this.searchFiltersForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe)).subscribe(changes => {
       if (changes.dateIssuedStart) {
-        this.utils.addKeyValueToObject(
-          this.queryParams,
-          'dateRangeFromFilter',
-          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedStart).toISOString()
-        );
+        this.queryParams['dateRangeFromFilter'] =
+          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedStart).toISOString();
       } else {
-        this.utils.removeKeyFromObject(this.queryParams, 'dateRangeFromFilter');
+        delete this.queryParams['dateRangeFromFilter'];
       }
 
       if (changes.dateIssuedEnd) {
-        this.utils.addKeyValueToObject(
-          this.queryParams,
-          'dateRangeToFilter',
-          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedEnd).toISOString()
-        );
+        this.queryParams['dateRangeToFilter'] =
+          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedEnd).toISOString();
       } else {
-        this.utils.removeKeyFromObject(this.queryParams, 'dateRangeToFilter');
+        delete this.queryParams['dateRangeToFilter'];
       }
 
       if (changes.issuedToCompany) {
-        this.utils.addKeyValueToObject(this.queryParams, 'issuedToCompany', changes.issuedToCompany);
+        this.queryParams['issuedToCompany'] = changes.issuedToCompany;
       } else {
-        this.utils.removeKeyFromObject(this.queryParams, 'issuedToCompany');
+        delete this.queryParams['issuedToCompany'];
       }
 
       if (changes.issuedToIndividual) {
-        this.utils.addKeyValueToObject(this.queryParams, 'issuedToIndividual', changes.issuedToIndividual);
+        this.queryParams['issuedToIndividual'] = changes.issuedToIndividual;
       } else {
-        this.utils.removeKeyFromObject(this.queryParams, 'issuedToIndividual');
+        delete this.queryParams['issuedToIndividual'];
       }
 
       if (changes.activityType && changes.activityType.length) {
-        this.utils.addKeyValueToObject(this.queryParams, 'activityType', changes.activityType);
+        this.queryParams['activityType'] = changes.activityType;
       } else {
-        this.utils.removeKeyFromObject(this.queryParams, 'activityType');
+        delete this.queryParams['activityType'];
       }
 
       if (changes.agency && changes.agency.length) {
-        this.utils.addKeyValueToObject(this.queryParams, 'agency', changes.agency);
+        this.queryParams['agency'] = changes.agency;
       } else {
-        this.utils.removeKeyFromObject(this.queryParams, 'agency');
+        delete this.queryParams['agency'];
       }
 
       if (changes.act && changes.act.length) {
-        this.utils.addKeyValueToObject(this.queryParams, 'act', changes.act);
+        this.queryParams['act'] = changes.act;
       } else {
-        this.utils.removeKeyFromObject(this.queryParams, 'act');
+        delete this.queryParams['act'];
       }
 
       if (changes.regulation && changes.regulation.length) {
-        this.utils.addKeyValueToObject(this.queryParams, 'regulation', changes.regulation);
+        this.queryParams['regulation'] = changes.regulation;
       } else {
-        this.utils.removeKeyFromObject(this.queryParams, 'regulation');
+        delete this.queryParams['regulation'];
       }
 
       this.router.navigate(['/records', this.queryParams]);

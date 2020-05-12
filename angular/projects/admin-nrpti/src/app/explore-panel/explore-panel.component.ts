@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
 
 import { FilterSection } from '../../../../common/src/app/models/document-filter';
 import { ActivatedRoute } from '@angular/router';
@@ -16,12 +16,9 @@ import { FormGroup } from '@angular/forms';
 export class ExplorePanelComponent implements OnInit, OnDestroy {
   @Input() filterSections: FilterSection[] = []; // document filter sections // used in template
   @Input() formGroup: FormGroup;
-
-  @Output() updateFilters = new EventEmitter();
+  public resetControls: EventEmitter<void> = new EventEmitter<void>();
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
-
-  public resetControls: EventEmitter<void> = new EventEmitter<void>();
 
   readonly minDate = new Date('01-01-1900'); // first app created
   readonly maxDate = new Date(); // today
@@ -31,6 +28,9 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
   public agencyOptions: IMutliSelectOption[] = Picklists.agencyPicklist.map(value => {
     return { value: value, displayValue: value, selected: false, display: true };
   });
+  public activityTypeOptions: IMutliSelectOption[] = Object.values(Picklists.activityTypePicklist).map(item => {
+    return { value: item._schemaName, displayValue: item.displayName, selected: false, display: true };
+  });
   public actOptions: IMutliSelectOption[] = Picklists.getAllActs().map(value => {
     return { value: value, displayValue: value, selected: false, display: true };
   });
@@ -39,6 +39,7 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
   });
 
   public agencyCount = 0;
+  public activityTypeCount = 0;
   public actCount = 0;
   public regulationCount = 0;
 
@@ -70,20 +71,9 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
     });
   }
 
-  isEnabled(name, value) {
-    return this.textFilterKeys[name].includes(value);
-  }
-
-  dataChanged(enabled, fieldName, fieldValue) {
-    if (enabled) {
-      this.textFilterKeys[fieldName].push(fieldValue);
-    } else {
-      // Pop it
-      this.textFilterKeys[fieldName] = this.textFilterKeys[fieldName].filter(item => {
-        return item !== fieldValue;
-      });
-    }
-    this.updateFilters.emit(this.textFilterKeys);
+  clearSearchFilters() {
+    this.resetControls.emit();
+    // this.formGroup.reset();
   }
 
   ngOnDestroy() {

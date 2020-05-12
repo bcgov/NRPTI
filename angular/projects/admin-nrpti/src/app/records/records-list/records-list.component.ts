@@ -78,70 +78,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     }
   ];
 
-  public filters = [
-    {
-      displayName: 'Record Type',
-      textFilters: [
-        {
-          displayName: 'AdministrativePenalty',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'AdministrativeSanction',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Agreement',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Certificate',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'ConstructionPlan',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'CourtConviction',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Inspection',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'ManagementPlan',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Order',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Permit',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'RestorativeJustice',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'SelfReport',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Ticket',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Warning',
-          fieldName: '_schemaName'
-        }
-      ]
-    }
-  ];
-
   // Search
   public keywordSearchWords: string;
   public showAdvancedFilters = false;
@@ -169,56 +105,54 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       this.queryParams = { ...params };
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
       this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, this.tableData);
-      this.initSubset();
-      // Make api call with tableData params.
-      this.loadingScreenService.setLoadingState(false, 'body');
-      this._changeDetectionRef.detectChanges();
-    });
 
-    this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
-      if (!res || !res.records) {
-        alert("Uh-oh, couldn't load NRPTI records");
-        // project not found --> navigate back to home
-        this.router.navigate(['/']);
-        return;
-      }
+      this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
+        if (!res || !res.records) {
+          alert("Uh-oh, couldn't load NRPTI records");
+          // project not found --> navigate back to home
+          this.router.navigate(['/']);
+          return;
+        }
 
-      const records = (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || [];
-      this.tableData.items = records.map(record => {
-        return { rowData: record };
+        const records = (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || [];
+        this.tableData.items = records.map(record => {
+          return { rowData: record };
+        });
+
+        this.tableData.totalListItems =
+          (res.records[0] &&
+            res.records[0].data &&
+            res.records[0].data.meta &&
+            res.records[0].data.meta[0] &&
+            res.records[0].data.meta[0].searchResultsTotal) ||
+          0;
+
+        this.tableData.columns = this.tableColumns;
+
+        this.keywordSearchWords = this.queryParams.keywords;
+
+        // If an advanced filter setting is active, open advanced filter section on page load.
+        if (
+          this.queryParams['activityType'] ||
+          this.queryParams['dateRangeFromFilter'] ||
+          this.queryParams['dateRangeToFilter'] ||
+          this.queryParams['issuedToCompany'] ||
+          this.queryParams['issuedToIndividual'] ||
+          this.queryParams['agency'] ||
+          this.queryParams['act'] ||
+          this.queryParams['regulation']
+        ) {
+          this.showAdvancedFilters = true;
+        }
+        this.initSubset();
+        this.buildSearchFiltersForm();
+        this.subscribeToSearchFilterChanges();
+        this.loadingScreenService.setLoadingState(false, 'body');
+        this._changeDetectionRef.detectChanges();
       });
-
-      this.tableData.totalListItems =
-        (res.records[0] &&
-          res.records[0].data &&
-          res.records[0].data.meta &&
-          res.records[0].data.meta[0] &&
-          res.records[0].data.meta[0].searchResultsTotal) ||
-        0;
-
-      this.tableData.columns = this.tableColumns;
-      this.keywordSearchWords = this.tableData.keywords;
-
-      // If an advanced filter setting is active, open advanced filter section on page load.
-      if (
-        this.queryParams['_schemaName'] ||
-        this.queryParams['dateRangeFromFilter'] ||
-        this.queryParams['dateRangeToFilter'] ||
-        this.queryParams['issuedToCompany'] ||
-        this.queryParams['issuedToIndividual'] ||
-        this.queryParams['agency'] ||
-        this.queryParams['act'] ||
-        this.queryParams['regulation']
-      ) {
-        this.showAdvancedFilters = true;
-      }
-
-      this.buildSearchFiltersForm();
-      this.subscribeToSearchFilterChanges();
-      this.loading = false;
-      this._changeDetectionRef.detectChanges();
     });
   }
+
 
   public buildSearchFiltersForm() {
     this.searchFiltersForm = new FormGroup({
@@ -236,65 +170,65 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       ),
       issuedToCompany: new FormControl((this.queryParams && this.queryParams.issuedToCompany) || null),
       issuedToIndividual: new FormControl((this.queryParams && this.queryParams.issuedToIndividual) || null),
-      agency: new FormControl((this.queryParams && this.queryParams.agency) || ''),
-      act: new FormControl((this.queryParams && this.queryParams.act) || ''),
-      regulation: new FormControl((this.queryParams && this.queryParams.regulation) || '')
+      agency: new FormControl((this.queryParams && this.queryParams.agency) || null),
+      act: new FormControl((this.queryParams && this.queryParams.act) || null),
+      regulation: new FormControl((this.queryParams && this.queryParams.regulation) || null),
+      activityType: new FormControl((this.queryParams && this.queryParams.activityType) || null)
     });
   }
 
   subscribeToSearchFilterChanges() {
     this.searchFiltersForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe)).subscribe(changes => {
-      if (changes.dateIssuedStart) {
-        this.utils.addKeyValueToObject(
-          this.queryParams,
-          'dateRangeFromFilter',
-          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedStart).toISOString()
-        );
+      if (changes.activityType) {
+        this.queryParams['activityType'] = changes.activityType;
       } else {
-        this.utils.removeKeyFromObject(this.queryParams, 'dateRangeFromFilter');
+        delete this.queryParams['activityType'];
+      }
+
+      if (changes.dateIssuedStart) {
+        this.queryParams['dateRangeFromFilter'] =
+          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedStart).toISOString();
+      } else {
+        delete this.queryParams['dateRangeFromFilter'];
       }
 
       if (changes.dateIssuedEnd) {
-        this.utils.addKeyValueToObject(
-          this.queryParams,
-          'dateRangeToFilter',
-          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedEnd).toISOString()
-        );
+        this.queryParams['dateRangeToFilter'] =
+          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedEnd).toISOString();
       } else {
-        this.utils.removeKeyFromObject(this.queryParams, 'dateRangeToFilter');
+        delete this.queryParams['dateRangeToFilter'];
       }
 
       if (changes.issuedToCompany) {
-        this.utils.addKeyValueToObject(this.queryParams, 'issuedToCompany', changes.issuedToCompany);
+        this.queryParams['issuedToCompany'] = changes.issuedToCompany;
       } else {
-        this.utils.removeKeyFromObject(this.queryParams, 'issuedToCompany');
+        delete this.queryParams['issuedToCompany'];
       }
 
       if (changes.issuedToIndividual) {
-        this.utils.addKeyValueToObject(this.queryParams, 'issuedToIndividual', changes.issuedToIndividual);
+        this.queryParams['issuedToIndividual'] = changes.issuedToIndividual;
       } else {
-        this.utils.removeKeyFromObject(this.queryParams, 'issuedToIndividual');
+        delete this.queryParams['issuedToIndividual'];
       }
 
       if (changes.agency && changes.agency.length) {
-        this.utils.addKeyValueToObject(this.queryParams, 'agency', changes.agency);
+        this.queryParams['agency'] = changes.agency;
       } else {
-        this.utils.removeKeyFromObject(this.queryParams, 'agency');
+        delete this.queryParams['agency'];
       }
 
       if (changes.act && changes.act.length) {
-        this.utils.addKeyValueToObject(this.queryParams, 'act', changes.act);
+        this.queryParams['act'] = changes.act;
       } else {
-        this.utils.removeKeyFromObject(this.queryParams, 'act');
+        delete this.queryParams['act'];
       }
 
       if (changes.regulation && changes.regulation.length) {
-        this.utils.addKeyValueToObject(this.queryParams, 'regulation', changes.regulation);
+        this.queryParams['regulation'] = changes.regulation;
       } else {
-        this.utils.removeKeyFromObject(this.queryParams, 'regulation');
+        delete this.queryParams['regulation'];
       }
-
-      this.router.navigate(['/records', this.queryParams]);
+      this.submit();
     });
   }
 
@@ -316,24 +250,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       default:
         break;
     }
-  }
-
-  filterChange(event) {
-    Object.keys(event).forEach(item => {
-      if (!event ||
-        event[item] === undefined ||
-        event[item] === null ||
-        event[item].length === 0 ||
-        event[item] === false
-      ) {
-        if (this.tableData[item]) {
-          delete this.tableData[item];
-        }
-      } else {
-        this.tableData[item] = event[item];
-      }
-    });
-    this.submit();
   }
 
   /**
@@ -379,25 +295,28 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * @memberof SearchComponent
    */
   submit() {
+    this.queryParams['ms'] = new Date().getMilliseconds();
     this.loadingScreenService.setLoadingState(true, 'body');
-    this.tableTemplateUtils.navigateUsingParams(this.tableData, ['records']);
+    console.log({ ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) });
+    this.router.navigate([
+      '/records',
+      { ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }
+    ]);
   }
 
   keywordSearch() {
-    this.loadingScreenService.setLoadingState(true, 'body');
     if (this.keywordSearchWords) {
-      this.tableData.keywords = this.keywordSearchWords;
+      this.queryParams['keywords'] = this.keywordSearchWords;
       if (!this.tableData.sortBy) {
         this.tableData.sortBy = '-score';
       }
     } else {
       this.selectedSubset = 'All';
-      delete this.tableData.subset;
-      this.tableData.keywords = '';
       this.tableData.sortBy = '';
+      delete this.queryParams['keywords'];
+      delete this.queryParams['subset'];
     }
     this.tableData.currentPage = 1;
-    this.utils.addKeyValueToObject(this.tableData, 'ms', new Date().getMilliseconds().toString());
     this.submit();
   }
 
@@ -458,25 +377,25 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     switch (filterText) {
       case 'All':
         this.selectedSubset = 'All';
-        delete this.tableData.subset;
+        delete this.queryParams['subset'];
         break;
       case 'Description & Summary':
         this.selectedSubset = 'Description & Summary';
-        this.tableData.subset = ['description'];
+        this.queryParams['subset'] = ['description'];
         break;
       case 'Issued To':
         this.selectedSubset = 'Issued To';
-        this.tableData.subset = ['issuedTo'];
+        this.queryParams['subset'] = ['issuedTo'];
         break;
       case 'Location':
         this.selectedSubset = 'Location';
-        this.tableData.subset = ['location'];
+        this.queryParams['subset'] = ['location'];
         break;
       default:
         break;
     }
-    if (this.keywordSearchWords !== '') {
-      this.tableData.keywords = this.keywordSearchWords;
+    if (this.keywordSearchWords) {
+      this.queryParams.keywords = this.keywordSearchWords;
       if (!this.tableData.sortBy) {
         this.tableData.sortBy = '-score';
       }
@@ -485,24 +404,15 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   }
 
   initSubset() {
-    if (!this.tableData.subset) {
+    if (!this.queryParams.subset) {
       this.selectedSubset = 'All';
-    } else if (this.tableData.subset.includes('companyName')) {
+    } else if (this.queryParams.subset.includes('companyName')) {
       this.selectedSubset = 'Issued To';
-    } else if (this.tableData.subset.includes('location')) {
+    } else if (this.queryParams.subset.includes('location')) {
       this.selectedSubset = 'Location';
-    } else if (this.tableData.subset.includes('description')) {
+    } else if (this.queryParams.subset.includes('description')) {
       this.selectedSubset = 'Description & Summary';
     }
-  }
-
-  resetFilters() {
-    this.keywordSearchWords = '';
-    this.tableData.keywords = '';
-    delete this.tableData['_schemaName'];
-    this.searchFiltersForm.reset();
-    this.tableData['ms'] = new Date().getMilliseconds();
-    this.submit();
   }
 
   /**
