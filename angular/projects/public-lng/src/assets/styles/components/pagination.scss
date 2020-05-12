@@ -28,11 +28,11 @@
     border-radius: 6px !important;
 
     &:not(.current) a {
-      transition: all linear 0.2s !important;
+      transition: all 0.2s linear !important;
 
       &:hover {
         border-radius: 6px !important;
-        transition: all linear 0.2s !important;
+        transition: all 0s linear !important;
       }
     }
 
