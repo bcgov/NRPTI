@@ -19,6 +19,48 @@
   },
   "activities": [
     {
+      "type": "INSPECTION_COMPLETE",
+      "title": "Inspection Completed",
+      "description": "The BC Environmental Assessment Office’s inspection record for a site visit (Coastal GasLink) on January 15th & 16th, 2020.",
+      "date": "10-03-20",
+      "url": "/project/2/compliance"
+    },
+    {
+      "type": "INSPECTION_COMPLETE",
+      "title": "Inspection Completed",
+      "description": "The BC Environmental Assessment Office’s inspection record for a site visit (Coastal GasLink) on January 22, 2020.",
+      "date": "09-03-20",
+      "url": "/project/2/compliance"
+    },
+    {
+      "type": "INSPECTION_COMPLETE",
+      "title": "Inspection Completed",
+      "description": "The BC Environmental Assessment Office's inspection record for a site visit (Coastal GasLink) from September 24 to 26, 2019.",
+      "date": "07-02-20",
+      "url": "/project/2/compliance"
+    },
+    {
+      "type": "INSPECTION_COMPLETE",
+      "title": "Inspection Completed",
+      "description": "The BC Environmental Assessment Office's inspection record for a site visit (Coastal GasLink) on December 10, 2019.",
+      "date": "29-01-20",
+      "url": "/project/2/compliance"
+    },
+    {
+      "type": "INSPECTION_COMPLETE",
+      "title": "Inspection Completed",
+      "description": "The BC Environmental Assessment Office’s inspection record for a site visit (Coastal GasLink) on October 15, 16 and 21, 2019.",
+      "date": "16-01-20",
+      "url": "/project/2/compliance"
+    },
+    {
+      "type": "INSPECTION_COMPLETE",
+      "title": "Inspection Completed",
+      "description": "The BC Environmental Assessment Office’s inspection record for a site visit (Coastal GasLink) on October 7, 2019.",
+      "date": "17-12-19",
+      "url": "/project/2/compliance"
+    },
+    {
       "type": "REPORT_ADDED",
       "title": "Report Submitted",
       "description": "Coastal GasLink’s field data in the Morice River Technical Boundary area.",
