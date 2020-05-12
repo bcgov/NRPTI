@@ -54,6 +54,18 @@
         "authorization id": "",
         "authorization url": "",
         "condition number": 1,
+        "name": "Workforce Air Quality Health Plan",
+        "description": "",
+        "type": "Management",
+        "phase": "Construction",
+        "date": "25-02-2020",
+        "url": "https://projects.eao.gov.bc.ca/api/document/5e580a90a0087300223bc9eb/fetch/COD19%20-%20Human%20Health%20-%20Workforce%20Air%20Quality%20Health%20Plan%20Rev0%2020200225.pdf"
+      },
+      {
+        "agency": "Environmental Assessment Office",
+        "authorization id": "",
+        "authorization url": "",
+        "condition number": 1,
         "name": "Marine Monitoring Plan and Dredge Environmental Management Plan - EAO approval letter",
         "description": "",
         "type": "Management",
@@ -346,7 +358,7 @@
         "description": "",
         "type": "Management",
         "phase": "Construction",
-        "date": "",
+        "date": " ",
         "url": ""
       },
       {

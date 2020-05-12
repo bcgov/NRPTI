@@ -65,10 +65,13 @@ class NrisDataSource {
       this.token = payload.access_token;
       defaultLog.info('NRIS API token expires:', (payload.expires_in / 60 / 60).toFixed(2), ' hours');
 
-      // Hardcoded to start in 2017
-      let startDate = moment('2017-01-01'); // start nth batch
-      let endDate = moment(startDate).add(1, 'M'); // end nth batch
-      let stopDate = moment('2019-12-31'); // end all updating
+      // Hardcoded to start in October 1, 2017.
+      // Set a startDate and temporary endDate, which defines the first query.  This is because NRIS will 500/timeout
+      // if we set a range larger than a few months.  After which, increment both the startDate and endDate to get the
+      // next month, until we reach the final stop date of December 31, 2019
+      let startDate = moment('2017-10-01');
+      let endDate = moment(startDate).add(1, 'M');
+      let stopDate = moment('2019-12-31');
 
       let statusObject = {
         status: 'Complete',
@@ -157,6 +160,11 @@ class NrisDataSource {
     return processingObject;
   }
 
+  // Re-write the issuing agency from Environmental Protection Office => Environmental Protection Division
+  stringTransformEPOtoEPD(agency) {
+    return agency === 'Environmental Protection Office' ? 'Environmental Protection Division' : agency;
+  }
+
   async transformRecord(record) {
     const Inspection = mongoose.model(RECORD_TYPE.Inspection._schemaName);
     let newRecord = new Inspection().toObject();
@@ -168,17 +176,12 @@ class NrisDataSource {
     newRecord.recordType = 'Inspection';
     newRecord._sourceRefNrisId = record.assessmentId;
     newRecord.dateIssued = record.assessmentDate;
-    // Re-write the issuing agency from Environmental Protection Office => Environmental Protection Division
-    newRecord.issuingAgency =
-      record.resourceAgency === 'Environmental Protection Office'
-        ? 'Environmental Protection Division'
-        : record.resourceAgency;
-    newRecord.author = record.assessor;
+    newRecord.issuingAgency = this.stringTransformEPOtoEPD(record.issuingAgency);
+    newRecord.author = 'Environmental Protection Division';
     newRecord.legislation = {
       act: 'Environmental Management Act',
       section: '109'
     };
-
     newRecord.dateAdded = new Date();
     newRecord.dateUpdated = new Date();
 
