@@ -63,13 +63,8 @@ function isRecordConsideredAnonymous(record) {
     isAnonymous = false;
   }
 
-  if (
-    record.sourceSystemRef &&
-    record.sourceSystemRef.toLowerCase() === 'nris-epd' &&
-    record.dateIssued &&
-    moment(record.dateIssued).isBefore('2020-01-01', 'YYYY-MM-DD')
-  ) {
-    // records imported from NRIS-EPD before January 1st 2020 are not anonymous
+  if (record.sourceSystemRef && record.sourceSystemRef.toLowerCase() === 'nris-epd') {
+    // records imported from NRIS-EPD are not anonymous
     isAnonymous = false;
   }
 

@@ -4,7 +4,7 @@
     "The facility is a joint-venture between multiple companies – Shell, PETRONAS, PetroChina, Mitsubishi Corporation and KOGAS.",
     "Natural gas supply will come primarily from the Montney basin in northeast British Columbia. The Coastal GasLink pipeline will transport natural gas from the Dawson Creek area to the export facility in Kitimat.",
     "After natural gas is converted into a liquid form at the export facility it will be shipped to Asia and other markets.",
-    "Initial site construction is underway in Kitimat. LNG Canada is scheduled to be in service before mid-next decade."
+    "Initial site construction is underway in Kitimat. LNG Canada is scheduled to be in service before mid-decade."
   ],
   "details": {
     "type": "Liquefied natural gas export facility",
@@ -20,6 +20,34 @@
     }
   },
   "activities": [
+    {
+      "type": "DOCUMENT_ADDED",
+      "title": "Management Plan Filed",
+      "description": "LNG Canada’s Workforce Air Quality Health Plan.",
+      "date": "25-02-2020",
+      "url": "/project/1/plans"
+    },
+    {
+      "type": "INSPECTION_COMPLETE",
+      "title": "Compliance Self-Reported",
+      "description": "LNG Canada’s self-report providing a status of compliance with the conditions outlined in the project’s environmental assessment certificate.",
+      "date": "30-01-2020",
+      "url": "/project/1/compliance"
+    },
+    {
+      "type": "REPORT_ADDED",
+      "title": "Report Filed",
+      "description": "Report evaluating the potential human health risks to workers housed at LNG Canada's Cedar Valley Lodge.",
+      "date": "06-12-2019",
+      "url": "/project/1/compliance"
+    },
+    {
+      "type": "INSPECTION_COMPLETE",
+      "title": "Inspection Completed",
+      "description": "The BC Environmental Assessment Office’s inspection record for a site visit (LNG Canada) on November 26 & 27, 2019",
+      "date": "30-12-2019",
+      "url": "/project/1/compliance"
+    },
     {
       "type": "INSPECTION_COMPLETE",
       "title": "Inspection Completed",
