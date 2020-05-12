@@ -45,6 +45,17 @@
   <section>
     <div class="row">
       <div class="col-4">
+        <label for="activityTypeFilter">Activity</label>
+        <span *ngIf="activityTypeCount" class="grey-subtext ml-2">({{ activityTypeCount }} selected)</span>
+        <app-autocomplete-multi-select
+          id="activityTypeFilter"
+          [control]="formGroup.get('activityType')"
+          [options]="activityTypeOptions"
+          [reset]="resetControls"
+          [placeholderText]="'Begin typing to filter activities...'"
+          (numSelected)="activityTypeCount = $event"></app-autocomplete-multi-select>
+      </div>
+      <div class="col-4">
         <label for="agencyFilter">Responsible Agency</label>
         <span *ngIf="agencyCount" class="grey-subtext ml-2">({{ agencyCount }} selected)</span>
         <app-autocomplete-multi-select
@@ -68,6 +79,10 @@
             (numSelected)="actCount = $event"></app-autocomplete-multi-select>
         </div>
       </div>
+    </div>
+  </section>
+  <section>
+    <div class="row">
       <div class="col-4">
         <div class="label-pair">
           <label for="regulationFilter">Regulation</label>
@@ -85,25 +100,8 @@
   </section>
 </form>
 
-<section class="mt-4">
-  <div class="row">
-    <div class="col-12">
-      <span *ngFor="let section of filterSections">
-        <label class="control-label font-weight-bold">{{ section.displayName }}</label>
-        <div class="select-badge-group">
-          <span *ngFor="let filter of section.textFilters">
-            <div class="select-badge">
-              <input
-                type="checkbox"
-                name="{{ filter.displayName }}"
-                id="_{{ filter.displayName }}"
-                (ngModelChange)="dataChanged($event, filter.fieldName, filter.displayName)"
-                [ngModel]="isEnabled(filter.fieldName, filter.displayName)" />
-              <label for="_{{ filter.displayName }}">{{ filter.displayName }}</label>
-            </div>
-          </span>
-        </div>
-      </span>
-    </div>
-  </div>
-</section>
+<button
+  class="btn btn-primary float-right"
+  (click)="clearSearchFilters()">
+  Reset Filters
+</button>
