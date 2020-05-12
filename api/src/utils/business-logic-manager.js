@@ -15,7 +15,7 @@ exports.applyBusinessLogicOnPut = function(updateObj, sanitizedObj) {
   }
 
   // apply anonymous business logic
-  if (isRecordConsideredAnonymous(sanitizedObj)) {
+  if (isRecordConsideredAnonymous(sanitizedObj) === true) {
     updateObj.$pull['issuedTo.read'] = 'public';
   } else {
     updateObj.$addToSet['issuedTo.read'] = 'public';
@@ -36,7 +36,8 @@ exports.applyBusinessLogicOnPost = function(record) {
   }
 
   // apply anonymous business logic
-  if (isRecordConsideredAnonymous(record)) {
+  const isAnonymous = isRecordConsideredAnonymous(record);
+  if (isAnonymous === null || isAnonymous === true) {
     record.issuedTo && (record.issuedTo = QueryActions.removePublicReadRole(record.issuedTo));
   } else {
     record.issuedTo && (record.issuedTo = QueryActions.addPublicReadRole(record.issuedTo));
@@ -87,12 +88,13 @@ exports.isRecordConsideredAnonymous = isRecordConsideredAnonymous;
  * Note: If insufficient information is provided, must assume anonymous.
  *
  * @param {*} record
- * @returns true if the record.issuedTo is considered anonymous, false otherwise.
+ * @returns true if the record.issuedTo is considered anonymous, false if the record is not considered anonymous, and
+ * null if the record is missing the issuedTo sub-object and therefore anonymity can't be fully determined.
  */
 function isIssuedToConsideredAnonymous(record) {
   if (!record || !record.issuedTo) {
-    // can't determine if issuedTo is anonymous or not, must assume anonymous
-    return true;
+    // can't determine if issuedTo is anonymous or not
+    return null;
   }
 
   if (record.issuedTo.type !== 'Individual' && record.issuedTo.type !== 'IndividualCombined') {
