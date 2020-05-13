@@ -127,8 +127,8 @@ const createAdministrativePenalty = async function (row, nrptiCollection) {
       act: row[7],
       regulation: row[8],
       section: row[9],
-      subSection: row[10].replace(/[()]/g, ''),
-      paragraph: row[11].replace(/[()]/g, '').replace(/[()]/g, '')
+      subSection: cleanSubSectionOrParagraph(row[10]),
+      paragraph: cleanSubSectionOrParagraph(row[11])
     },
     issuedTo: getIssuedToObject(row, true),
     // projectName: '',
@@ -175,8 +175,8 @@ const createAdministrativePenalty = async function (row, nrptiCollection) {
       act: row[7],
       regulation: row[8],
       section: row[9],
-      subSection: row[10].replace(/[()]/g, ''),
-      paragraph: row[11].replace(/[()]/g, '').replace(/[()]/g, '')
+      subSection: cleanSubSectionOrParagraph(row[10]),
+      paragraph: cleanSubSectionOrParagraph(row[11])
     },
     issuedTo: getIssuedToObject(row),
     // projectName: '',
@@ -219,8 +219,8 @@ const createAdministrativeSanction = async function (row, nrptiCollection) {
       act: row[7],
       regulation: row[8],
       section: row[9],
-      subSection: row[10].replace(/[()]/g, ''),
-      paragraph: row[11].replace(/[()]/g, '')
+      subSection: cleanSubSectionOrParagraph(row[10]),
+      paragraph: cleanSubSectionOrParagraph(row[11])
     },
     issuedTo: getIssuedToObject(row, true),
     // projectName: '',
@@ -267,8 +267,8 @@ const createAdministrativeSanction = async function (row, nrptiCollection) {
       act: row[7],
       regulation: row[8],
       section: row[9],
-      subSection: row[10].replace(/[()]/g, ''),
-      paragraph: row[11].replace(/[()]/g, '')
+      subSection: cleanSubSectionOrParagraph(row[10]),
+      paragraph: cleanSubSectionOrParagraph(row[11])
     },
     issuedTo: getIssuedToObject(row),
     // projectName: '',
@@ -312,8 +312,8 @@ const createCourtConviction = async function (row, nrptiCollection) {
       act: row[7],
       regulation: row[8],
       section: row[9],
-      subSection: row[10].replace(/[()]/g, ''),
-      paragraph: row[11].replace(/[()]/g, '').replace(/[()]/g, '')
+      subSection: cleanSubSectionOrParagraph(row[10]),
+      paragraph: cleanSubSectionOrParagraph(row[11])
     },
     issuedTo: getIssuedToObject(row, true),
     // projectName: '',
@@ -360,8 +360,8 @@ const createCourtConviction = async function (row, nrptiCollection) {
       act: row[7],
       regulation: row[8],
       section: row[9],
-      subSection: row[10].replace(/[()]/g, ''),
-      paragraph: row[11].replace(/[()]/g, '').replace(/[()]/g, '')
+      subSection: cleanSubSectionOrParagraph(row[10]),
+      paragraph: cleanSubSectionOrParagraph(row[11])
     },
     issuedTo: getIssuedToObject(row),
     // projectName: '',
@@ -404,8 +404,8 @@ const createInspection = async function (row, nrptiCollection) {
       act: row[7],
       regulation: row[8],
       section: row[9],
-      subSection: row[10].replace(/[()]/g, ''),
-      paragraph: row[11].replace(/[()]/g, '')
+      subSection: cleanSubSectionOrParagraph(row[10]),
+      paragraph: cleanSubSectionOrParagraph(row[11])
     },
     issuedTo: getIssuedToObject(row, true),
     // projectName: '',
@@ -452,8 +452,8 @@ const createInspection = async function (row, nrptiCollection) {
       act: row[7],
       regulation: row[8],
       section: row[9],
-      subSection: row[10].replace(/[()]/g, ''),
-      paragraph: row[11].replace(/[()]/g, '')
+      subSection: cleanSubSectionOrParagraph(row[10]),
+      paragraph: cleanSubSectionOrParagraph(row[11])
     },
     issuedTo: getIssuedToObject(row),
     // projectName: '',
@@ -496,8 +496,8 @@ const createOrder = async function (row, nrptiCollection) {
       act: row[7],
       regulation: row[8],
       section: row[9],
-      subSection: row[10].replace(/[()]/g, ''),
-      paragraph: row[11].replace(/[()]/g, '')
+      subSection: cleanSubSectionOrParagraph(row[10]),
+      paragraph: cleanSubSectionOrParagraph(row[11])
     },
     issuedTo: getIssuedToObject(row, true),
     // projectName: '',
@@ -544,8 +544,8 @@ const createOrder = async function (row, nrptiCollection) {
       act: row[7],
       regulation: row[8],
       section: row[9],
-      subSection: row[10].replace(/[()]/g, ''),
-      paragraph: row[11].replace(/[()]/g, '')
+      subSection: cleanSubSectionOrParagraph(row[10]),
+      paragraph: cleanSubSectionOrParagraph(row[11])
     },
     issuedTo: getIssuedToObject(row),
     // projectName: '',
@@ -588,8 +588,8 @@ const createRestorativeJustice = async function (row, nrptiCollection) {
       act: row[7],
       regulation: row[8],
       section: row[9],
-      subSection: row[10].replace(/[()]/g, ''),
-      paragraph: row[11].replace(/[()]/g, '')
+      subSection: cleanSubSectionOrParagraph(row[10]),
+      paragraph: cleanSubSectionOrParagraph(row[11])
     },
     issuedTo: getIssuedToObject(row, true),
     // projectName: '',
@@ -636,8 +636,8 @@ const createRestorativeJustice = async function (row, nrptiCollection) {
       act: row[7],
       regulation: row[8],
       section: row[9],
-      subSection: row[10].replace(/[()]/g, ''),
-      paragraph: row[11].replace(/[()]/g, '')
+      subSection: cleanSubSectionOrParagraph(row[10]),
+      paragraph: cleanSubSectionOrParagraph(row[11])
     },
     issuedTo: getIssuedToObject(row),
     // projectName: '',
@@ -680,8 +680,8 @@ const createTicket = async function (row, nrptiCollection) {
       act: row[7],
       regulation: row[8],
       section: row[9],
-      subSection: row[10].replace(/[()]/g, ''),
-      paragraph: row[11].replace(/[()]/g, '')
+      subSection: cleanSubSectionOrParagraph(row[10]),
+      paragraph: cleanSubSectionOrParagraph(row[11])
     },
     issuedTo: getIssuedToObject(row, true),
     // projectName: '',
@@ -728,8 +728,8 @@ const createTicket = async function (row, nrptiCollection) {
       act: row[7],
       regulation: row[8],
       section: row[9],
-      subSection: row[10].replace(/[()]/g, ''),
-      paragraph: row[11].replace(/[()]/g, '')
+      subSection: cleanSubSectionOrParagraph(row[10]),
+      paragraph: cleanSubSectionOrParagraph(row[11])
     },
     issuedTo: getIssuedToObject(row),
     // projectName: '',
@@ -773,8 +773,8 @@ const createWarning = async function (row, nrptiCollection) {
       act: row[7],
       regulation: row[8],
       section: row[9],
-      subSection: row[10].replace(/[()]/g, ''),
-      paragraph: row[11].replace(/[()]/g, '')
+      subSection: cleanSubSectionOrParagraph(row[10]),
+      paragraph: cleanSubSectionOrParagraph(row[11])
     },
     issuedTo: getIssuedToObject(row, true),
     // projectName: '',
@@ -821,8 +821,8 @@ const createWarning = async function (row, nrptiCollection) {
       act: row[7],
       regulation: row[8],
       section: row[9],
-      subSection: row[10].replace(/[()]/g, ''),
-      paragraph: row[11].replace(/[()]/g, '')
+      subSection: cleanSubSectionOrParagraph(row[10]),
+      paragraph: cleanSubSectionOrParagraph(row[11])
     },
     issuedTo: getIssuedToObject(row),
     // projectName: '',
@@ -970,6 +970,21 @@ const calculateDateFormat = function (row) {
     }
   }
   return dateIssued;
+}
+
+const cleanSubSectionOrParagraph = function(value) {
+  if (!value) {
+    return null;
+  }
+
+  // remove a `-` or `(` at the start, and a `)` at the end, if present.
+
+  // Why remove brackets? SubSections and Paragraphs are visually displayed inside brackets (ie: (a) ) but are currently
+  // stored in mongo without them. The brackets are then added back in the frontend UI.
+
+  // Why remove leading dashes?  Excel likes to display `(1)` but then secretly export `-1`.  Admin users are unlikely
+  // to be aware of this, so handling it here is safest.
+  return value.replace(/^[-(]/, '').replace(/[)]$/,'');
 }
 
 exports.down = function (db) {

@@ -64,7 +64,7 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
-  constructor(public _changeDetectionRef: ChangeDetectorRef) {}
+  constructor(public _changeDetectionRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.initializeFormControlValue();
@@ -93,7 +93,10 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
   public initializeFormControlValue() {
     if (!this.control.value) {
       // no initial state to set
-      this.selectNone();
+      this.options = this.options.map(agency => {
+        agency.selected = false;
+        return agency;
+      });
       return;
     }
 

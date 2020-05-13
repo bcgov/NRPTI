@@ -6,20 +6,12 @@ import { FactoryService } from '../../services/factory.service';
 
 @Injectable()
 export class RecordsListResolver implements Resolve<Observable<object>> {
-  constructor(public factoryService: FactoryService, public tableTemplateUtils: TableTemplateUtils) {}
+  constructor(public factoryService: FactoryService, public tableTemplateUtils: TableTemplateUtils) { }
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const params = { ...route.params };
     // set filters handled by table template
     const tableObject = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, new TableObject());
-
-    delete params.sortBy;
-    delete params.currentPage;
-    delete params.pageSize;
-    delete params.filter;
-    delete params.keywords;
-    delete params.dataset;
-    delete params.ms;
 
     // set schema filters
     let schemaList = [
@@ -33,63 +25,53 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
       'WarningNRCED',
       'CourtConvictionNRCED'
     ];
-
     if (params.activityType) {
-      schemaList = params.activityType;
+      schemaList = params.activityType.split(',');
     }
 
-    delete params.activityType;
-
-    // set remaining filters
-    const filterParams = { ...params };
-
-    if (filterParams.dateRangeFromFilter) {
-      filterParams['dateRangeFromFilterdateIssued'] = filterParams.dateRangeFromFilter;
+    let keywords = '';
+    if (params.keywords) {
+      keywords = params.keywords;
     }
 
-    if (filterParams.dateRangeToFilter) {
-      filterParams['dateRangeToFilterdateIssued'] = filterParams.dateRangeToFilter;
+    const filterParams = {};
+
+    if (params.dateRangeFromFilter) {
+      filterParams['dateRangeFromFilterdateIssued'] = params.dateRangeFromFilter;
     }
 
-    if (filterParams.issuedToCompany && filterParams.issuedToIndividual) {
+    if (params.dateRangeToFilter) {
+      filterParams['dateRangeToFilterdateIssued'] = params.dateRangeToFilter;
+    }
+
+    if (params.issuedToCompany && params.issuedToIndividual) {
       filterParams['issuedTo.type'] = 'Company,Individual,IndividualCombined';
-    } else if (filterParams.issuedToCompany) {
+    } else if (params.issuedToCompany) {
       filterParams['issuedTo.type'] = 'Company';
-    } else if (filterParams.issuedToIndividual) {
+    } else if (params.issuedToIndividual) {
       filterParams['issuedTo.type'] = 'Individual,IndividualCombined';
     }
 
-    if (filterParams.agency) {
-      filterParams['issuingAgency'] = filterParams.agency;
+    if (params.agency) {
+      filterParams['issuingAgency'] = params.agency;
     }
 
-    if (filterParams.act) {
-      filterParams['legislation.act'] = filterParams.act;
+    if (params.act) {
+      filterParams['legislation.act'] = params.act;
     }
 
-    if (filterParams.regulation) {
-      filterParams['legislation.regulation'] = filterParams.regulation;
+    if (params.regulation) {
+      filterParams['legislation.regulation'] = params.regulation;
     }
 
-    delete filterParams.dateRangeToFilter;
-    delete filterParams.dateRangeFromFilter;
-    delete filterParams.issuedToCompany;
-    delete filterParams.issuedToIndividual;
-    delete filterParams.agency;
-    delete filterParams.act;
-    delete filterParams.regulation;
-
-    // also delete any other non-standard filters
-    delete filterParams.filter;
-    delete filterParams.queryModifier;
-
+    // force-reload so we always have latest data
     return this.factoryService.getRecords(
-      tableObject.keywords,
+      keywords,
       schemaList,
       [],
       tableObject.currentPage,
       tableObject.pageSize,
-      tableObject.sortBy || '-dateIssued', // This needs to be common between all datasets to work properly
+      tableObject.sortBy || '-dateAdded', // This needs to be common between all datasets to work properly
       {},
       false,
       filterParams

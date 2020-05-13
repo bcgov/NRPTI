@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { PageTypes } from '../../utils/page-types.enum';
 import { DataService } from '../../services/data.service';
 import { ActivatedRoute } from '@angular/router';
@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.scss']
 })
-export class OverviewComponent implements OnInit {
+export class OverviewComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
   public pageType: PageTypes = PageTypes.OVERVIEW;
 
@@ -24,6 +24,7 @@ export class OverviewComponent implements OnInit {
 
   constructor(
     private dataService: DataService,
+    private _changeDetectionRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private _searchService: SearchService,
     private _apiService: ApiService
@@ -40,26 +41,36 @@ export class OverviewComponent implements OnInit {
   ngOnInit() {
     this.activities = [];
 
-    this._searchService
-      .getSearchResults(
-        this._apiService.apiPath,
-        '',
-        ['ActivityLNG'],
-        [],
-        1, // tableObject.currentPage,
-        100000, // tableObject.pageSize,
-        '-date', // tableObject.sortBy,
-        {
-          // Select either LNG Canada or Coastal Gaslink based on route.
-          _epicProjectId: this.id === '1' ? '588511c4aaecd9001b825604' : '588510cdaaecd9001b815f84'
-        },
-        false
-      )
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((res: any) => {
-        if (res && res[0] && res[0].data.meta.length > 0) {
-          this.activities = res[0].data.searchResults;
-        }
+    // Subscribe to project changes
+    this.route.parent.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+      () => {
+        this._searchService
+        .getSearchResults(
+          this._apiService.apiPath,
+          '',
+          ['ActivityLNG'],
+          [],
+          1, // tableObject.currentPage,
+          100000, // tableObject.pageSize,
+          '-date', // tableObject.sortBy,
+          {
+            // Select either LNG Canada or Coastal Gaslink based on route.
+            _epicProjectId: this.id === '1' ? '588511c4aaecd9001b825604' : '588510cdaaecd9001b815f84'
+          },
+          false
+        )
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe((res: any) => {
+          if (res && res[0] && res[0].data.meta.length > 0) {
+            this.activities = res[0].data.searchResults;
+            this._changeDetectionRef.detectChanges();
+          }
+        });
       });
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }

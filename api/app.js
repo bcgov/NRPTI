@@ -25,7 +25,7 @@ const DB_USERNAME = process.env.MONGODB_USERNAME || '';
 const DB_PASSWORD = process.env.MONGODB_PASSWORD || '';
 
 // Cron pattern - seconds[0-59] minutes[0-59] hours[0-23] day_of_month[1-31] months[0-11] day_of_week[0-6]
-const MATERIALIZED_VIEWS_CRON_PATTERN = '*/1 * * * *';
+const MATERIALIZED_VIEWS_CRON_PATTERN = '*/5 * * * *';
 
 // Increase post body sizing
 app.use(bodyParser.json({ limit: '10mb', extended: true }));
