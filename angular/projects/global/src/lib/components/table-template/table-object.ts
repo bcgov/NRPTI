@@ -176,13 +176,6 @@ export interface ITableObjectParams {
    * @type {string}
    * @memberof ITableObjectParams
    */
-  keywords?: string;
-  /**
-   * The page size options for the page size picker.
-   *
-   * @type {IPageSizePickerOption[]}
-   * @memberof ITableObjectParams
-   */
   pageSizeOptions?: IPageSizePickerOption[];
   /**
    * The number of items (rows) to render.  Used for pagination.
@@ -205,7 +198,6 @@ export interface ITableObjectParams {
    * @memberof ITableObjectParams
    */
   totalListItems?: number;
-  subset?: string[];
 }
 /**
  * Main class that should contain all information needed to render a table, and handle pagination, sorting, etc.
@@ -220,12 +212,10 @@ export class TableObject {
   public items: IRowObject[];
   public dataset: string;
   public currentPage: number;
-  public keywords: string;
   public pageSizeOptions: IPageSizePickerOption[];
   public pageSize: number;
   public sortBy: string;
   public totalListItems: number;
-  public subset: string[];
   constructor(params?: ITableObjectParams) {
     this.options = (params && params.options) || DEFAULT_TABLE_OPTIONS;
     this.component = (params && params.component) || null;
@@ -233,11 +223,9 @@ export class TableObject {
     this.items = (params && params.items) || [];
     this.dataset = (params && params.dataset) || DEFAULT_TABLE_DATASET;
     this.currentPage = (params && params.currentPage) || DEFAULT_TABLE_CURRENT_PAGE;
-    this.keywords = (params && params.keywords) || DEFAULT_TABLE_KEYWORDS;
     this.pageSizeOptions = (params && params.pageSizeOptions) || DEFAULT_TABLE_PAGE_SIZE_OPTIONS;
     this.pageSize = (params && params.pageSize) || DEFAULT_TABLE_PAGE_SIZE;
     this.sortBy = (params && params.sortBy) || DEFAULT_TABLE_SORT_BY;
     this.totalListItems = (params && params.totalListItems) || 0;
-    this.subset = (params && params.subset) || [];
   }
 }

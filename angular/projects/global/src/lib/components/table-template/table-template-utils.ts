@@ -5,7 +5,6 @@ import {
   DEFAULT_TABLE_PAGE_SIZE,
   DEFAULT_TABLE_CURRENT_PAGE,
   DEFAULT_TABLE_SORT_BY,
-  DEFAULT_TABLE_KEYWORDS
 } from './table-object';
 
 @Injectable()
@@ -24,16 +23,13 @@ export class TableTemplateUtils {
       } else {
         switch (item) {
           case 'currentPage':
-            tableObject[item] = +routeParams[item];
-            break;
           case 'pageSize':
             tableObject[item] = +routeParams[item];
             break;
-          case 'subset':
-            tableObject[item] = routeParams[item].split(',');
+          case 'sortBy':
+            tableObject[item] = routeParams[item];
             break;
           default:
-            tableObject[item] = routeParams[item];
             break;
         }
       }
@@ -42,7 +38,6 @@ export class TableTemplateUtils {
     !tableObject.pageSize && (tableObject.pageSize = DEFAULT_TABLE_PAGE_SIZE);
     !tableObject.currentPage && (tableObject.currentPage = DEFAULT_TABLE_CURRENT_PAGE);
     !tableObject.sortBy && (tableObject.sortBy = DEFAULT_TABLE_SORT_BY);
-    !tableObject.keywords && (tableObject.keywords = DEFAULT_TABLE_KEYWORDS);
     return tableObject;
   }
 
