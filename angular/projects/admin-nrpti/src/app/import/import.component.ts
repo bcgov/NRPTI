@@ -141,7 +141,7 @@ export class ImportComponent implements OnInit {
   }
 
   async startJob(dataSourceType: string) {
-    this.factoryService.startTask({ dataSourceType }).toPromise();
+    await this.factoryService.startTask({ dataSourceType }).toPromise();
 
     this.showAlert = true;
     setTimeout(() => {
