@@ -56,17 +56,6 @@
           (numSelected)="activityTypeCount = $event"></app-autocomplete-multi-select>
       </div>
       <div class="col-4">
-        <label for="agencyFilter">Responsible Agency</label>
-        <span *ngIf="agencyCount" class="grey-subtext ml-2">({{ agencyCount }} selected)</span>
-        <app-autocomplete-multi-select
-          id="agencyFilter"
-          [control]="formGroup.get('agency')"
-          [options]="agencyOptions"
-          [reset]="resetControls"
-          [placeholderText]="'Begin typing to filter agencies...'"
-          (numSelected)="agencyCount = $event"></app-autocomplete-multi-select>
-      </div>
-      <div class="col-4">
         <div class="label-pair">
           <label for="actFilter">Act</label>
           <span *ngIf="actCount" class="grey-subtext ml-2">({{ actCount }} selected)</span>
@@ -84,6 +73,17 @@
   <section>
     <div class="row">
       <div class="col-4">
+        <label for="agencyFilter">Responsible Agency</label>
+        <span *ngIf="agencyCount" class="grey-subtext ml-2">({{ agencyCount }} selected)</span>
+        <app-autocomplete-multi-select
+          id="agencyFilter"
+          [control]="formGroup.get('agency')"
+          [options]="agencyOptions"
+          [reset]="resetControls"
+          [placeholderText]="'Begin typing to filter agencies...'"
+          (numSelected)="agencyCount = $event"></app-autocomplete-multi-select>
+      </div>
+      <div class="col-4">
         <div class="label-pair">
           <label for="regulationFilter">Regulation</label>
           <span *ngIf="regulationCount" class="grey-subtext ml-2">({{ regulationCount }} selected)</span>
@@ -96,12 +96,25 @@
             (numSelected)="regulationCount = $event"></app-autocomplete-multi-select>
         </div>
       </div>
+      <div class="col-4">
+        <label for="sourceSystemFilter">Source System</label>
+        <select name="sourceSystemFilter" id="sourceSystemFilter" formControlName="sourceSystemRef"
+          class="form-control">
+          <option [selected]="!selectedSystemRef" value="">None</option>
+          <option [selected]="selectedSystemRef === 'nrpti'" value="nrpti">NRPTI</option>
+          <option [selected]="selectedSystemRef === 'ocers-csv'" value="ocers-csv">OCERS</option>
+          <option [selected]="selectedSystemRef === 'nris-epd'" value="nris-epd">NRIS</option>
+          <option [selected]="selectedSystemRef === 'epic'" value="epic">EPIC</option>
+        </select>
+      </div>
     </div>
   </section>
 </form>
 
-<button
-  class="btn btn-primary float-right"
-  (click)="clearSearchFilters()">
-  Reset Filters
-</button>
+<section class="mt-4">
+  <button
+    class="btn btn-primary float-right"
+    (click)="clearSearchFilters()">
+    Reset Filters
+  </button>
+</section>

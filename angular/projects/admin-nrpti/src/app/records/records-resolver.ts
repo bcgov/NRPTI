@@ -74,6 +74,10 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       filterParams['legislation.regulation'] = params.regulation;
     }
 
+    if (params.sourceSystemRef) {
+      filterParams['sourceSystemRef'] = params.sourceSystemRef;
+    }
+
     // force-reload so we always have latest data
     return this.factoryService.getRecords(
       keywords,
