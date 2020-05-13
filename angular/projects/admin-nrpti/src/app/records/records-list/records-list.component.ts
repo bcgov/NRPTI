@@ -232,7 +232,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         delete this.queryParams['regulation'];
       }
 
-      console.log(changes.sourceSystemRef)
       if (changes.sourceSystemRef && changes.sourceSystemRef.length) {
         this.queryParams['sourceSystemRef'] = changes.sourceSystemRef;
       } else {
