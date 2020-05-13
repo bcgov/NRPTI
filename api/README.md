@@ -225,3 +225,13 @@ External http calls (such as GETs to BCGW) are mocked with a tool called [nock](
 ### Keycloak
 
 This project uses [Keycloak](https://www.keycloak.org/) to handle authentication and manage user roles.
+
+# Records
+
+## sourceSystemRef
+Each record has an attribute called sourceSystemRef. We currently have the following source systems:
+
+- nrpti
+- nris-epd
+- ocers-csv
+- epic

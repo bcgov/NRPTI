@@ -141,7 +141,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
           this.queryParams['activityType'] ||
           this.queryParams['agency'] ||
           this.queryParams['act'] ||
-          this.queryParams['regulation']
+          this.queryParams['regulation'] ||
+          this.queryParams['sourceSystemRef']
         ) {
           this.showAdvancedFilters = true;
         }
@@ -174,7 +175,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       agency: new FormControl((this.queryParams && this.queryParams.agency) || null),
       act: new FormControl((this.queryParams && this.queryParams.act) || null),
       regulation: new FormControl((this.queryParams && this.queryParams.regulation) || null),
-      activityType: new FormControl((this.queryParams && this.queryParams.activityType) || null)
+      activityType: new FormControl((this.queryParams && this.queryParams.activityType) || null),
+      sourceSystemRef: new FormControl((this.queryParams && this.queryParams.sourceSystemRef) || null)
     });
   }
 
@@ -228,6 +230,12 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         this.queryParams['regulation'] = changes.regulation;
       } else {
         delete this.queryParams['regulation'];
+      }
+
+      if (changes.sourceSystemRef && changes.sourceSystemRef.length) {
+        this.queryParams['sourceSystemRef'] = changes.sourceSystemRef;
+      } else {
+        delete this.queryParams['sourceSystemRef'];
       }
       this.submit();
     });
