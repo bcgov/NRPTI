@@ -55,12 +55,15 @@ exports.applyBusinessLogicOnPost = function(record) {
  * A record that is considered to be anonymous must not make public any data that might contain an individuals name
  * (and related personally identifiable information). This includes record meta and associated documents.
  *
+ * Note: If insufficient information is provided, must assume anonymous.
+ *
  * @param {*} record
  * @returns boolean true if the record is considered anonymous, false otherwise.
  */
 function isRecordConsideredAnonymous(record) {
   if (!record) {
-    return null;
+    // can't determine if record is anonymous or not, must assume anonymous
+    return true;
   }
 
   let isAnonymous = isIssuedToConsideredAnonymous(record.issuedTo);
