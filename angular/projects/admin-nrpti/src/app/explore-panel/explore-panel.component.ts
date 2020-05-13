@@ -1,9 +1,7 @@
 import { Component, OnInit, EventEmitter, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
 
 import { FilterSection } from '../../../../common/src/app/models/document-filter';
-import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { IMutliSelectOption } from '../../../../common/src/app/autocomplete-multi-select/autocomplete-multi-select.component';
 import { Picklists } from '../../../../common/src/app/utils/record-constants';
 import { FormGroup } from '@angular/forms';
