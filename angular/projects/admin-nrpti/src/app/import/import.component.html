@@ -1,21 +1,41 @@
-<div class="container-fluid-padding">
-  <div class="input-group m-3">
-    <button type="button" [disabled]="showAlert" class="btn btn-primary" (click)="startJob()">Start Job</button>
-  </div>
-  <div class="input-group m-3">
-    <div *ngIf="showAlert" class="alert alert-success" role="alert">
-      <h4 class="alert-heading">Job Started!</h4>
-      <p>Please refresh the page to see the updated status.</p>
+<main class="container-fluid-padding">
+  <section class="mb-3">
+    <h4>Import from Source System</h4>
+    <div class="mb-4">
+      <div class="label-pair">
+        <label>Import from EPIC</label>
+        <div>
+          <button type="button" [disabled]="showAlert" class="btn btn-primary" (click)="startJob('epic')">
+            Start Job
+          </button>
+        </div>
+      </div>
+      <div class="label-pair">
+        <label>Import from NRIS</label>
+        <div>
+          <button type="button" [disabled]="showAlert" class="btn btn-primary" (click)="startJob('nris')">
+            Start Job
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
+    <div *ngIf="showAlert" class="input-group mb-3">
+      <div class="alert alert-success" role="alert">
+        <h5 class="alert-heading">Job Started!</h5>
+        <span>Please refresh the page to see the updated status.</span>
+      </div>
+    </div>
+  </section>
 
-  <div *ngIf="!loading && tableData.totalListItems === 0">
-    No Records found.
-  </div>
+  <section>
+    <div *ngIf="!loading && tableData.totalListItems === 0">
+      No Records found.
+    </div>
 
-  <lib-table-template
-    *ngIf="!loading && tableData.totalListItems != 0"
-    [data]="tableData"
-    (messageOut)="onMessageOut($event)"
-  ></lib-table-template>
-</div>
+    <lib-table-template
+      *ngIf="!loading && tableData.totalListItems != 0"
+      [data]="tableData"
+      (messageOut)="onMessageOut($event)"
+    ></lib-table-template>
+  </section>
+</main>
