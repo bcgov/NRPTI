@@ -162,7 +162,7 @@ class NrisDataSource {
 
   // Re-write the issuing agency from Environmental Protection Office => Environmental Protection Division
   stringTransformEPOtoEPD(agency) {
-    return agency === 'Environmental Protection Office' ? 'Environmental Protection Division' : agency;
+    return agency === 'Environmental Protection Division' ? 'Environmental Protection Office' : agency;
   }
 
   async transformRecord(record) {
@@ -176,7 +176,7 @@ class NrisDataSource {
     newRecord.recordType = 'Inspection';
     newRecord._sourceRefNrisId = record.assessmentId;
     newRecord.dateIssued = record.assessmentDate;
-    newRecord.issuingAgency = this.stringTransformEPOtoEPD(record.issuingAgency);
+    newRecord.issuingAgency = this.stringTransformEPOtoEPD(record.resourceAgency);
     newRecord.author = 'Environmental Protection Division';
     newRecord.legislation = {
       act: 'Environmental Management Act',
