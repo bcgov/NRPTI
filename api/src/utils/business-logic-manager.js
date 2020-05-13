@@ -15,10 +15,14 @@ exports.applyBusinessLogicOnPut = function(updateObj, sanitizedObj) {
   }
 
   // apply anonymous business logic
-  if (isRecordConsideredAnonymous(sanitizedObj) === true) {
-    updateObj.$pull['issuedTo.read'] = 'public';
-  } else {
-    updateObj.$addToSet['issuedTo.read'] = 'public';
+  if (sanitizedObj.issuedTo) {
+    // do not update the issuedTo roles if no issuedTo fields were changed (and therefore the issuedTo object is not
+    // present in sanitizedObj)
+    if (isRecordConsideredAnonymous(sanitizedObj)) {
+      updateObj.$pull['issuedTo.read'] = 'public';
+    } else {
+      updateObj.$addToSet['issuedTo.read'] = 'public';
+    }
   }
 
   return updateObj;
@@ -36,8 +40,7 @@ exports.applyBusinessLogicOnPost = function(record) {
   }
 
   // apply anonymous business logic
-  const isAnonymous = isRecordConsideredAnonymous(record);
-  if (isAnonymous === null || isAnonymous === true) {
+  if (isRecordConsideredAnonymous(record)) {
     record.issuedTo && (record.issuedTo = QueryActions.removePublicReadRole(record.issuedTo));
   } else {
     record.issuedTo && (record.issuedTo = QueryActions.addPublicReadRole(record.issuedTo));
@@ -56,7 +59,11 @@ exports.applyBusinessLogicOnPost = function(record) {
  * @returns boolean true if the record is considered anonymous, false otherwise.
  */
 function isRecordConsideredAnonymous(record) {
-  let isAnonymous = isIssuedToConsideredAnonymous(record);
+  if (!record) {
+    return null;
+  }
+
+  let isAnonymous = isIssuedToConsideredAnonymous(record.issuedTo);
 
   if (record.sourceSystemRef && record.sourceSystemRef.toLowerCase() === 'ocers-csv') {
     // records imported from OCERS are not anonymous
@@ -79,35 +86,34 @@ function isRecordConsideredAnonymous(record) {
 exports.isRecordConsideredAnonymous = isRecordConsideredAnonymous;
 
 /**
- * Determine if a record.issuedTo sub-object is considered anonymous or not.
+ * Determine if a records issuedTo sub-object is considered anonymous or not.
  *
- * A record.issuedTo sub-object is considered anonymous if the following are true:
+ * A records issuedTo sub-object is considered anonymous if the following are true:
  * - The issuedTo.type indicates a person (Individual, IndividualCombined) AND
  * - The issuedTo.dateOfBirth is null OR the issuedTo.dateOfBirth indicates the person is less than 19 years of age.
  *
  * Note: If insufficient information is provided, must assume anonymous.
  *
- * @param {*} record
- * @returns true if the record.issuedTo is considered anonymous, false if the record is not considered anonymous, and
- * null if the record is missing the issuedTo sub-object and therefore anonymity can't be fully determined.
+ * @param {*} issuedTo
+ * @returns true if the issuedTo is considered anonymous, false otherwise.
  */
-function isIssuedToConsideredAnonymous(record) {
-  if (!record || !record.issuedTo) {
-    // can't determine if issuedTo is anonymous or not
-    return null;
+function isIssuedToConsideredAnonymous(issuedTo) {
+  if (!issuedTo) {
+    // can't determine if issuedTo is anonymous or not, must assume anonymous
+    return true;
   }
 
-  if (record.issuedTo.type !== 'Individual' && record.issuedTo.type !== 'IndividualCombined') {
+  if (issuedTo.type !== 'Individual' && issuedTo.type !== 'IndividualCombined') {
     // only individuals can be anonymous
     return false;
   }
 
-  if (!record.issuedTo.dateOfBirth) {
+  if (!issuedTo.dateOfBirth) {
     // individuals without birth dates are anonymous
     return true;
   }
 
-  if (moment().diff(moment(record.issuedTo.dateOfBirth), 'years') < 19) {
+  if (moment().diff(moment(issuedTo.dateOfBirth), 'years') < 19) {
     // individuals with birth dates and are under the age of 19 are anonymous
     return true;
   }
