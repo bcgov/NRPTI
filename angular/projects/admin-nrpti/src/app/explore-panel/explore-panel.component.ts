@@ -46,7 +46,7 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.formGroup.get(['sourceSystemRef']).value &&
-      (this.selectedSystemRef = this.formGroup.get(['sourceSystemRef']).value)
+      (this.selectedSystemRef = this.formGroup.get(['sourceSystemRef']).value);
     this._changeDetectionRef.detectChanges();
   }
 
