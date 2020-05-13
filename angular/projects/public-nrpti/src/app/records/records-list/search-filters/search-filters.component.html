@@ -62,8 +62,7 @@
           ></app-autocomplete-multi-select>
         </div>
       </div>
-      <!-- temporarily hidden as per https://bcmines.atlassian.net/browse/PTI-513 -->
-      <div [hidden]="true">
+      <div>
         <div class="label-pair">
           <label for="agencyFilter">Responsible Agency</label>
           <span *ngIf="agencyCount" class="grey-subtext ml-2">({{ agencyCount }} selected)</span>
