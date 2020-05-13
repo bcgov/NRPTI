@@ -8,11 +8,9 @@
     </div>
     <div>
       <p>
-        Results shown on the list will update immediately as you select criteria to filter.
-      </p>
-      <p>
-        If you want to return to your exact criteria, you can bookmark the page once you have filtered (note that
-        results may not be identical as content is updated).
+        The results list below will update instantly as you select criteria to filter. The URL will also update with
+        your unique criteria. If you want to return to your exact criteria, you can bookmark this page after you have
+        filtered (note that results may not be identical as content is updated).
       </p>
     </div>
   </section>
@@ -52,19 +50,20 @@
       </div>
       <div class="flex-container">
         <div class="label-pair">
-          <label for="activityTypeFilter">Activity</label>
+          <label for="activityTypeFilter">Activity Type</label>
           <span *ngIf="activityTypeCount" class="grey-subtext ml-2">({{ activityTypeCount }} selected)</span>
           <app-autocomplete-multi-select
             id="activityTypeFilter"
             [control]="formGroup.get('activityType')"
             [options]="activityTypeOptions"
             [reset]="resetControls"
-            [placeholderText]="'Begin typing to filter activities...'"
+            [placeholderText]="'Pick one or more'"
             (numSelected)="activityTypeCount = $event"
           ></app-autocomplete-multi-select>
         </div>
       </div>
-      <div>
+      <!-- temporarily hidden as per https://bcmines.atlassian.net/browse/PTI-513 -->
+      <div [hidden]="true">
         <div class="label-pair">
           <label for="agencyFilter">Responsible Agency</label>
           <span *ngIf="agencyCount" class="grey-subtext ml-2">({{ agencyCount }} selected)</span>
@@ -73,35 +72,35 @@
             [control]="formGroup.get('agency')"
             [options]="agencyOptions"
             [reset]="resetControls"
-            [placeholderText]="'Begin typing to filter agencies...'"
+            [placeholderText]="'Pick one or more'"
             (numSelected)="agencyCount = $event"
           ></app-autocomplete-multi-select>
         </div>
       </div>
       <div>
         <div class="label-pair">
-          <label for="actFilter">Act</label>
+          <label for="actFilter">Issued under which Act</label>
           <span *ngIf="actCount" class="grey-subtext ml-2">({{ actCount }} selected)</span>
           <app-autocomplete-multi-select
             id="actFilter"
             [control]="formGroup.get('act')"
             [options]="actOptions"
             [reset]="resetControls"
-            [placeholderText]="'Begin typing to filter acts...'"
+            [placeholderText]="'Pick one or more'"
             (numSelected)="actCount = $event"
           ></app-autocomplete-multi-select>
         </div>
       </div>
       <div>
         <div class="label-pair">
-          <label for="regulationFilter">Regulation</label>
+          <label for="regulationFilter">Issued under which Regulation</label>
           <span *ngIf="regulationCount" class="grey-subtext ml-2">({{ regulationCount }} selected)</span>
           <app-autocomplete-multi-select
             id="regulationFilter"
             [control]="formGroup.get('regulation')"
             [options]="regulationOptions"
             [reset]="resetControls"
-            [placeholderText]="'Begin typing to filter regulations...'"
+            [placeholderText]="'Pick one or more'"
             (numSelected)="regulationCount = $event"
           ></app-autocomplete-multi-select>
         </div>

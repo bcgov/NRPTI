@@ -13,6 +13,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
               projectName: incomingObj.projectName,
               description: incomingObj.description,
               url: incomingObj.url,
+              title: incomingObj.title,
               _epicProjectId: new ObjectId(incomingObj._epicProjectId),
               type: incomingObj.type,
               date: new Date(incomingObj.date)
