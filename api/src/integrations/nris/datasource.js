@@ -162,7 +162,7 @@ class NrisDataSource {
 
   // Re-write the issuing agency from Environmental Protection Office => Environmental Protection Division
   stringTransformEPOtoEPD(agency) {
-    return agency === 'Environmental Protection Division' ? 'Environmental Protection Office' : agency;
+    return agency === 'Environmental Protection Office' ? 'Environmental Protection Division' : agency;
   }
 
   async transformRecord(record) {
