@@ -71,7 +71,7 @@ class NrisDataSource {
       // next month, until we reach the final stop date of December 31, 2019
       let startDate = moment('2017-10-01');
       let endDate = moment(startDate).add(1, 'M');
-      let stopDate = moment('2019-12-31');
+      let stopDate = moment('2020-12-31');
 
       let statusObject = {
         status: 'Complete',
