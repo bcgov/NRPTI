@@ -52,6 +52,13 @@ let generateExpArray = async function (field, prefix = '') {
             // Invalid. return empty {}
             return {};
           }
+        } else if (item === 'hasDocuments') {
+          // We're checking if there are docs in the record or not.
+          if (entry === 'true') {
+            return { documents: { $not: { $size: 0 } } };
+          } else if (entry === 'false') {
+            return { documents: { $size: 0 } };
+          }
         } else {
           return getConvertedValue(item, entry);
         }
