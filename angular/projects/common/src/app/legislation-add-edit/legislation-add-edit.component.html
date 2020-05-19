@@ -15,7 +15,7 @@
         [matAutocomplete]="actAutocomplete"
       />
       <mat-autocomplete #actAutocomplete="matAutocomplete">
-        <mat-option (click)="onSelectAct()">Clear Selected</mat-option>
+        <mat-option (click)="onEmptyAct()">Clear Selected</mat-option>
         <mat-option *ngFor="let act of filteredActs" [value]="act" (click)="onSelectAct(act)" title="{{ act }}">
           {{ act }}
         </mat-option>
@@ -36,7 +36,7 @@
         [matAutocomplete]="regulationAutocomplete"
       />
       <mat-autocomplete #regulationAutocomplete="matAutocomplete">
-        <mat-option (click)="onSelectRegulation()">Clear Selected</mat-option>
+        <mat-option (click)="onEmptyRegulation()">Clear Selected</mat-option>
         <mat-option
           *ngFor="let regulation of filteredRegulations"
           [value]="regulation"

@@ -75,6 +75,11 @@ export class LegislationAddEditComponent implements OnInit {
     }
 
     if (event.keyCode === 13) {
+      if (!this.isKnownAct(event.target.value)) {
+        // Enter key pressed, but not on a recognized act row
+        return;
+      }
+
       // ENTER key pressed to select option, treat this the same as clicking an option
       this.onSelectAct(event.target.value);
       return;
@@ -86,10 +91,6 @@ export class LegislationAddEditComponent implements OnInit {
     }
 
     this.filteredActs = this.getActsFromKeywords(event.target.value);
-
-    if (!this.filteredActs || !this.filteredActs.length) {
-      this.onEmptyAct();
-    }
   }
 
   /**
@@ -126,15 +127,26 @@ export class LegislationAddEditComponent implements OnInit {
     }
 
     if (!event || !event.target || !event.target.value) {
-      this.formGroup.controls.act.reset();
+      // Treat this as if the user chose to clear the value
+      this.onEmptyAct();
       return;
     }
 
-    if (!this.allActs.includes(event.target.value)) {
-      this.formGroup.controls.act.reset();
+    if (!this.isKnownAct(event.target.value)) {
       // Treat this as if the user chose to clear the value
-      this.onSelectAct(null);
+      this.onEmptyAct();
     }
+  }
+
+  /**
+   * Return true if the act is known, false otherwise.
+   *
+   * @param {*} act
+   * @returns {boolean}
+   * @memberof LegislationAddEditComponent
+   */
+  isKnownAct(act): boolean {
+    return this.allActs.includes(act);
   }
 
   /**
@@ -156,6 +168,11 @@ export class LegislationAddEditComponent implements OnInit {
     }
 
     if (event.keyCode === 13) {
+      if (!this.isKnownRegulation(event.target.value)) {
+        // Enter key pressed, but not on a recognized regulation row
+        return;
+      }
+
       // ENTER key pressed to select option, treat this the same as clicking an option
       this.onSelectRegulation(event.target.value);
       return;
@@ -209,15 +226,26 @@ export class LegislationAddEditComponent implements OnInit {
     }
 
     if (!event || !event.target || !event.target.value) {
-      this.formGroup.controls.regulation.reset();
+      // Treat this as if the user chose to clear the value
+      this.onEmptyRegulation();
       return;
     }
 
-    if (!this.allRegulations.includes(event.target.value)) {
-      this.formGroup.controls.regulation.reset();
+    if (!this.isKnownRegulation(event.target.value)) {
       // Treat this as if the user chose to clear the value
-      this.onSelectRegulation(null);
+      this.onEmptyRegulation();
     }
+  }
+
+  /**
+   * Return true if the regulation is known, false otherwise.
+   *
+   * @param {*} regulation
+   * @returns {boolean}
+   * @memberof LegislationAddEditComponent
+   */
+  isKnownRegulation(regulation): boolean {
+    return this.allRegulations.includes(regulation);
   }
 
   /**
@@ -326,11 +354,13 @@ export class LegislationAddEditComponent implements OnInit {
    * @memberof LegislationAddEditComponent
    */
   public onEmptyAct() {
+    this.formGroup.controls.act.setValue(null);
+
     this.filteredActs = this.allActs;
     // The acts control is empty, so reset the regulations picklist to show all values
     this.filteredRegulations = this.allRegulations;
     // Business Logic: if the act control is cleared, also clear the regulation control
-    this.formGroup.controls.regulation.reset();
+    this.formGroup.controls.regulation.setValue(null);
   }
 
   /**
@@ -339,6 +369,8 @@ export class LegislationAddEditComponent implements OnInit {
    * @memberof LegislationAddEditComponent
    */
   public onEmptyRegulation() {
+    this.formGroup.controls.regulation.setValue(null);
+
     if (this.formGroup.controls.act.value) {
       // if an act has already been selected, then when the regulation is cleared, restrict its select options to child
       // regulations of the act.
