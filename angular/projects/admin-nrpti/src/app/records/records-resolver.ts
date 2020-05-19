@@ -9,6 +9,7 @@ export class RecordsResolver implements Resolve<Observable<object>> {
   constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) { }
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
+    const params = { ...route.params };
     // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
     const tableObject = this.tableTemplateUtils.updateTableObjectWithUrlParams(route.params, new TableObject());
 
@@ -29,36 +30,61 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       'CourtConviction'
     ];
 
-    // If _schemaName was filter criteria, use that instead of the default list.
-    const filterParams = { ...route.params };
-
-    // Clear out all the standard table template params
-    delete filterParams.sortBy;
-    delete filterParams.currentPage;
-    delete filterParams.pageSize;
-    delete filterParams.filter;
-    delete filterParams.keywords;
-    delete filterParams.dataset;
-    delete filterParams.ms;
-    delete filterParams.subset;
-
-    if (filterParams._schemaName) {
-      schemaList = filterParams._schemaName;
+    if (params.activityType) {
+      schemaList = params.activityType.split(',');
     }
 
-    if (filterParams.dateRangeFromFilter) {
-      filterParams['dateRangeFromFilterdateIssued'] = filterParams.dateRangeFromFilter;
+    let keywords = '';
+    if (params.keywords) {
+      keywords = params.keywords;
     }
-    if (filterParams.dateRangeToFilter) {
-      filterParams['dateRangeToFilterdateIssued'] = filterParams.dateRangeToFilter;
+    let subset = [];
+    if (params.subset) {
+      subset = params.subset.split(',');
     }
-    delete filterParams.dateRangeFromFilter;
-    delete filterParams.dateRangeToFilter;
-    delete filterParams._schemaName;
+
+
+    const filterParams = {};
+
+    if (params.dateRangeFromFilter) {
+      filterParams['dateRangeFromFilterdateIssued'] = params.dateRangeFromFilter;
+    }
+
+    if (params.dateRangeToFilter) {
+      filterParams['dateRangeToFilterdateIssued'] = params.dateRangeToFilter;
+    }
+
+    if (params.issuedToCompany && params.issuedToIndividual) {
+      filterParams['issuedTo.type'] = 'Company,Individual,IndividualCombined';
+    } else if (params.issuedToCompany) {
+      filterParams['issuedTo.type'] = 'Company';
+    } else if (params.issuedToIndividual) {
+      filterParams['issuedTo.type'] = 'Individual,IndividualCombined';
+    }
+
+    if (params.agency) {
+      filterParams['issuingAgency'] = params.agency;
+    }
+
+    if (params.act) {
+      filterParams['legislation.act'] = params.act;
+    }
+
+    if (params.regulation) {
+      filterParams['legislation.regulation'] = params.regulation;
+    }
+
+    if (params.sourceSystemRef) {
+      filterParams['sourceSystemRef'] = params.sourceSystemRef;
+    }
+
+    if (params.hasDocuments) {
+      filterParams['hasDocuments'] = params.hasDocuments;
+    }
 
     // force-reload so we always have latest data
     return this.factoryService.getRecords(
-      tableObject.keywords,
+      keywords,
       schemaList,
       [],
       tableObject.currentPage,
@@ -67,7 +93,7 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       {},
       false,
       filterParams,
-      tableObject.subset
+      subset
     );
   }
 }

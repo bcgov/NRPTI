@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
@@ -13,6 +13,7 @@ import {
 } from 'nrpti-angular-components';
 import { RecordsTableRowComponent } from '../records-rows/records-table-row.component';
 import { LoadingScreenService } from 'nrpti-angular-components';
+import { FormGroup, FormControl } from '@angular/forms';
 
 /**
  * List page component.
@@ -34,6 +35,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   // public terms = new SearchTerms();
   public typeFilters = [];
   public navigationObject;
+  public searchFiltersForm: FormGroup;
 
   public tableData: TableObject = new TableObject({ component: RecordsTableRowComponent });
   public tableColumns: IColumnObject[] = [
@@ -76,74 +78,11 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     }
   ];
 
-  public filters = [
-    {
-      displayName: 'Record Type',
-      textFilters: [
-        {
-          displayName: 'AdministrativePenalty',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'AdministrativeSanction',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Agreement',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Certificate',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'ConstructionPlan',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'CourtConviction',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Inspection',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'ManagementPlan',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Order',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Permit',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'RestorativeJustice',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'SelfReport',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Ticket',
-          fieldName: '_schemaName'
-        },
-        {
-          displayName: 'Warning',
-          fieldName: '_schemaName'
-        }
-      ]
-    }
-  ];
-
   // Search
   public keywordSearchWords: string;
   public showAdvancedFilters = false;
   public selectedSubset = 'All';
+  public queryParams: Params;
 
   constructor(
     public location: Location,
@@ -163,49 +102,150 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadingScreenService.setLoadingState(true, 'body');
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
+      this.queryParams = { ...params };
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
       this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, this.tableData);
-      this.initSubset();
-      // Make api call with tableData params.
-      this.loadingScreenService.setLoadingState(false, 'body');
-      this._changeDetectionRef.detectChanges();
-    });
 
-    this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
-      if (!res || !res.records) {
-        alert("Uh-oh, couldn't load NRPTI records");
-        // project not found --> navigate back to home
-        this.router.navigate(['/']);
-        return;
-      }
+      this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
+        if (!res || !res.records) {
+          alert("Uh-oh, couldn't load NRPTI records");
+          // project not found --> navigate back to home
+          this.router.navigate(['/']);
+          return;
+        }
 
-      const records = (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || [];
-      this.tableData.items = records.map(record => {
-        return { rowData: record };
+        const records = (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || [];
+        this.tableData.items = records.map(record => {
+          return { rowData: record };
+        });
+
+        this.tableData.totalListItems =
+          (res.records[0] &&
+            res.records[0].data &&
+            res.records[0].data.meta &&
+            res.records[0].data.meta[0] &&
+            res.records[0].data.meta[0].searchResultsTotal) ||
+          0;
+
+        this.tableData.columns = this.tableColumns;
+
+        this.keywordSearchWords = this.queryParams.keywords;
+
+        // If an advanced filter setting is active, open advanced filter section on page load.
+        if (
+          this.queryParams['activityType'] ||
+          this.queryParams['dateRangeFromFilter'] ||
+          this.queryParams['dateRangeToFilter'] ||
+          this.queryParams['issuedToCompany'] ||
+          this.queryParams['issuedToIndividual'] ||
+          this.queryParams['activityType'] ||
+          this.queryParams['agency'] ||
+          this.queryParams['act'] ||
+          this.queryParams['regulation'] ||
+          this.queryParams['sourceSystemRef'] ||
+          this.queryParams['hasDocuments']
+        ) {
+          this.showAdvancedFilters = true;
+        }
+        this.initSubset();
+        this.buildSearchFiltersForm();
+        this.subscribeToSearchFilterChanges();
+        this.loadingScreenService.setLoadingState(false, 'body');
+        this._changeDetectionRef.detectChanges();
       });
+    });
+  }
 
-      this.tableData.totalListItems =
-        (res.records[0] &&
-          res.records[0].data &&
-          res.records[0].data.meta &&
-          res.records[0].data.meta[0] &&
-          res.records[0].data.meta[0].searchResultsTotal) ||
-        0;
 
-      this.tableData.columns = this.tableColumns;
-      this.keywordSearchWords = this.tableData.keywords;
+  public buildSearchFiltersForm() {
+    this.searchFiltersForm = new FormGroup({
+      dateIssuedStart: new FormControl(
+        (this.queryParams &&
+          this.queryParams.dateRangeFromFilter &&
+          this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeFromFilter))) ||
+        null
+      ),
+      dateIssuedEnd: new FormControl(
+        (this.queryParams &&
+          this.queryParams.dateRangeToFilter &&
+          this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeToFilter))) ||
+        null
+      ),
+      issuedToCompany: new FormControl((this.queryParams && this.queryParams.issuedToCompany) || false),
+      issuedToIndividual: new FormControl((this.queryParams && this.queryParams.issuedToIndividual) || false),
+      agency: new FormControl((this.queryParams && this.queryParams.agency) || null),
+      act: new FormControl((this.queryParams && this.queryParams.act) || null),
+      regulation: new FormControl((this.queryParams && this.queryParams.regulation) || null),
+      activityType: new FormControl((this.queryParams && this.queryParams.activityType) || null),
+      sourceSystemRef: new FormControl((this.queryParams && this.queryParams.sourceSystemRef) || null),
+      hasDocuments: new FormControl((this.queryParams && this.queryParams.hasDocuments) || false)
+    });
+  }
 
-      // If an advanced filter setting is active, open advanced filter section on page load.
-      if (
-        this.tableData['_schemaName'] ||
-        this.tableData['dateRangeFromFilter'] ||
-        this.tableData['dateRangeToFilter']
-      ) {
-        this.showAdvancedFilters = true;
+  subscribeToSearchFilterChanges() {
+    this.searchFiltersForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe)).subscribe(changes => {
+      if (changes.activityType) {
+        this.queryParams['activityType'] = changes.activityType;
+      } else {
+        delete this.queryParams['activityType'];
       }
 
-      this.loading = false;
-      this._changeDetectionRef.detectChanges();
+      if (changes.dateIssuedStart) {
+        this.queryParams['dateRangeFromFilter'] =
+          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedStart).toISOString();
+      } else {
+        delete this.queryParams['dateRangeFromFilter'];
+      }
+
+      if (changes.dateIssuedEnd) {
+        this.queryParams['dateRangeToFilter'] =
+          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedEnd).toISOString();
+      } else {
+        delete this.queryParams['dateRangeToFilter'];
+      }
+
+      if (changes.issuedToCompany) {
+        this.queryParams['issuedToCompany'] = changes.issuedToCompany;
+      } else {
+        delete this.queryParams['issuedToCompany'];
+      }
+
+      if (changes.issuedToIndividual) {
+        this.queryParams['issuedToIndividual'] = changes.issuedToIndividual;
+      } else {
+        delete this.queryParams['issuedToIndividual'];
+      }
+
+      if (changes.agency && changes.agency.length) {
+        this.queryParams['agency'] = changes.agency;
+      } else {
+        delete this.queryParams['agency'];
+      }
+
+      if (changes.act && changes.act.length) {
+        this.queryParams['act'] = changes.act;
+      } else {
+        delete this.queryParams['act'];
+      }
+
+      if (changes.regulation && changes.regulation.length) {
+        this.queryParams['regulation'] = changes.regulation;
+      } else {
+        delete this.queryParams['regulation'];
+      }
+
+      if (changes.sourceSystemRef && changes.sourceSystemRef.length) {
+        this.queryParams['sourceSystemRef'] = changes.sourceSystemRef;
+      } else {
+        delete this.queryParams['sourceSystemRef'];
+      }
+
+      if (changes.hasDocuments) {
+        this.queryParams['hasDocuments'] = changes.hasDocuments;
+      } else {
+        delete this.queryParams['hasDocuments'];
+      }
+      this.submit();
     });
   }
 
@@ -227,19 +267,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       default:
         break;
     }
-  }
-
-  filterChange(event) {
-    Object.keys(event).forEach(item => {
-      if (!event || event[item] === undefined || event[item] === null || event[item].length === 0) {
-        if (this.tableData[item]) {
-          delete this.tableData[item];
-        }
-      } else {
-        this.tableData[item] = event[item];
-      }
-    });
-    this.submit();
   }
 
   /**
@@ -286,24 +313,28 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    */
   submit() {
     this.loadingScreenService.setLoadingState(true, 'body');
-    this.tableTemplateUtils.navigateUsingParams(this.tableData, ['records']);
+
+    // These are params that should be handled by tableData
+    delete this.queryParams.sortBy;
+    delete this.queryParams.currentPage;
+    delete this.queryParams.pageNumber;
+    delete this.queryParams.pageSize;
+
+    this.router.navigate([
+      '/records',
+      { ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }
+    ]);
   }
 
   keywordSearch() {
-    this.loadingScreenService.setLoadingState(true, 'body');
     if (this.keywordSearchWords) {
-      this.tableData.keywords = this.keywordSearchWords;
-      if (!this.tableData.sortBy) {
-        this.tableData.sortBy = '-score';
-      }
+      this.queryParams['keywords'] = this.keywordSearchWords;
     } else {
       this.selectedSubset = 'All';
-      delete this.tableData.subset;
-      this.tableData.keywords = '';
-      this.tableData.sortBy = '';
+      delete this.queryParams['keywords'];
+      delete this.queryParams['subset'];
     }
     this.tableData.currentPage = 1;
-    this.utils.addKeyValueToObject(this.tableData, 'ms', new Date().getMilliseconds().toString());
     this.submit();
   }
 
@@ -364,25 +395,25 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     switch (filterText) {
       case 'All':
         this.selectedSubset = 'All';
-        delete this.tableData.subset;
+        delete this.queryParams['subset'];
         break;
       case 'Description & Summary':
         this.selectedSubset = 'Description & Summary';
-        this.tableData.subset = ['description'];
+        this.queryParams['subset'] = ['description'];
         break;
       case 'Issued To':
         this.selectedSubset = 'Issued To';
-        this.tableData.subset = ['issuedTo'];
+        this.queryParams['subset'] = ['issuedTo'];
         break;
       case 'Location':
         this.selectedSubset = 'Location';
-        this.tableData.subset = ['location'];
+        this.queryParams['subset'] = ['location'];
         break;
       default:
         break;
     }
-    if (this.keywordSearchWords !== '') {
-      this.tableData.keywords = this.keywordSearchWords;
+    if (this.keywordSearchWords) {
+      this.queryParams.keywords = this.keywordSearchWords;
       if (!this.tableData.sortBy) {
         this.tableData.sortBy = '-score';
       }
@@ -391,13 +422,13 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   }
 
   initSubset() {
-    if (!this.tableData.subset) {
+    if (!this.queryParams.subset) {
       this.selectedSubset = 'All';
-    } else if (this.tableData.subset.includes('companyName')) {
+    } else if (this.queryParams.subset.includes('issuedTo')) {
       this.selectedSubset = 'Issued To';
-    } else if (this.tableData.subset.includes('location')) {
+    } else if (this.queryParams.subset.includes('location')) {
       this.selectedSubset = 'Location';
-    } else if (this.tableData.subset.includes('description')) {
+    } else if (this.queryParams.subset.includes('description')) {
       this.selectedSubset = 'Description & Summary';
     }
   }

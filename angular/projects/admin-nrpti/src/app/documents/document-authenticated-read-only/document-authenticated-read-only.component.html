@@ -1,0 +1,21 @@
+<div class="grid-item">
+  <span class="grid-item-value" *ngIf="documents && documents.length > 0">
+    <ul id="documents" class="doc-list mb-3">
+      <li *ngFor="let document of documents">
+        <span class="cell icon">
+          <i class="material-icons">insert_drive_file</i>
+        </span>
+        <span class="cell name" [title]="document.fileName || ''">
+          <span class="cell__txt-content">
+            <app-s3-signed-url-anchor [document]="document" target="_blank">
+              {{ document.fileName }}
+            </app-s3-signed-url-anchor>
+          </span>
+        </span>
+      </li>
+    </ul>
+  </span>
+  <span class="grid-item-value" *ngIf="!(documents && documents.length > 0)">
+    This record does not have documents
+  </span>
+</div>

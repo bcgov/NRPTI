@@ -1,7 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
-let queryUtils = require('../../utils/query-utils');
 let postUtils = require('../../utils/post-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
  * Performs all operations necessary to create a master Order record and its associated flavour records.
@@ -309,11 +309,9 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     orderLNG.read.push('public');
     orderLNG.datePublished = new Date();
     orderLNG.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(orderLNG)) {
-      orderLNG.issuedTo.read.push('public');
-    }
   }
+
+  orderLNG = BusinessLogicManager.applyBusinessLogicOnPost(orderLNG);
 
   return await orderLNG.save();
 };
@@ -434,11 +432,9 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     orderNRCED.read.push('public');
     orderNRCED.datePublished = new Date();
     orderNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(orderNRCED)) {
-      orderNRCED.issuedTo.read.push('public');
-    }
   }
+
+  orderNRCED = BusinessLogicManager.applyBusinessLogicOnPost(orderNRCED);
 
   return await orderNRCED.save();
 };

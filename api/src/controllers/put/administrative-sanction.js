@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 const PutUtils = require('../../utils/put-utils');
 const PostUtils = require('../../utils/post-utils');
-const QueryUtils = require('../../utils/query-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 const AdministrativeSanctionPost = require('../post/administrative-sanction');
 
 /**
@@ -105,17 +105,11 @@ exports.editRecord = async function(args, res, next, incomingObj) {
     };
   }
 
-  // save administrativeSanction record
+  // save master administrativeSanction record
   let savedAdministrativeSanction = null;
 
   try {
     savedAdministrativeSanction = await this.editMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedAdministrativeSanction,
-      flavours: savedFlavourAdministrativeSanctions
-    };
   } catch (e) {
     return {
       status: 'failure',
@@ -123,6 +117,29 @@ exports.editRecord = async function(args, res, next, incomingObj) {
       errorMessage: e.message
     };
   }
+
+  // update document roles
+  let savedDocuments = [];
+
+  try {
+    savedDocuments = BusinessLogicManager.updateDocumentRoles(
+      savedAdministrativeSanction,
+      args.swagger.params.auth_payload
+    );
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedDocuments,
+      errorMessage: e.message
+    };
+  }
+
+  return {
+    status: 'success',
+    object: savedAdministrativeSanction,
+    flavours: savedFlavourAdministrativeSanctions,
+    documents: savedDocuments
+  };
 };
 
 /**
@@ -248,7 +265,7 @@ exports.editLNG = async function(args, res, next, incomingObj) {
   const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
+  let updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj.$addToSet['read'] = 'public';
@@ -260,14 +277,7 @@ exports.editLNG = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  if (sanitizedObj.issuedTo) {
-    // check if a condition changed that would cause the entity details to be anonymous, or not.
-    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
-      updateObj.$pull['issuedTo.read'] = 'public';
-    } else {
-      updateObj.$addToSet['issuedTo.read'] = 'public';
-    }
-  }
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
 
   return await AdministrativeSanctionLNG.findOneAndUpdate(
     { _schemaName: 'AdministrativeSanctionLNG', _id: _id },
@@ -330,7 +340,7 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
   const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
+  let updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj.$addToSet['read'] = 'public';
@@ -342,14 +352,7 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  if (sanitizedObj.issuedTo) {
-    // check if a condition changed that would cause the entity details to be anonymous, or not.
-    if (QueryUtils.isRecordAnonymous(sanitizedObj)) {
-      updateObj.$pull['issuedTo.read'] = 'public';
-    } else {
-      updateObj.$addToSet['issuedTo.read'] = 'public';
-    }
-  }
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
 
   return await AdministrativeSanctionNRCED.findOneAndUpdate(
     { _schemaName: 'AdministrativeSanctionNRCED', _id: _id },

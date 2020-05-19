@@ -8,18 +8,8 @@ const moment = require('moment');
 const axios = require('axios');
 const documentController = require('../../controllers/document-controller');
 const RecordController = require('./../../controllers/record-controller');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 const fs = require('fs');
-
-const AWS = require('aws-sdk');
-const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
-const ep = new AWS.Endpoint(OBJ_STORE_URL);
-const s3 = new AWS.S3({
-  endpoint: ep,
-  accessKeyId: process.env.OBJECT_STORE_user_account,
-  secretAccessKey: process.env.OBJECT_STORE_password,
-  signatureVersion: 'v4',
-  s3ForcePathStyle: true
-});
 
 const NRIS_TOKEN_ENDPOINT =
   process.env.NRIS_TOKEN_ENDPOINT ||
@@ -75,10 +65,13 @@ class NrisDataSource {
       this.token = payload.access_token;
       defaultLog.info('NRIS API token expires:', (payload.expires_in / 60 / 60).toFixed(2), ' hours');
 
-      // Hardcoded to start in 2017
-      let startDate = moment('2017-01-01'); // start nth batch
-      let endDate = moment(startDate).add(1, 'M'); // end nth batch
-      let stopDate = moment('2019-12-31'); // end all updating
+      // Hardcoded to start in October 1, 2017.
+      // Set a startDate and temporary endDate, which defines the first query.  This is because NRIS will 500/timeout
+      // if we set a range larger than a few months.  After which, increment both the startDate and endDate to get the
+      // next month, until we reach the final stop date of December 31, 2019
+      let startDate = moment('2017-10-01');
+      let endDate = moment(startDate).add(1, 'M');
+      let stopDate = moment('2020-12-31');
 
       let statusObject = {
         status: 'Complete',
@@ -167,6 +160,11 @@ class NrisDataSource {
     return processingObject;
   }
 
+  // Re-write the issuing agency from Environmental Protection Office => Environmental Protection Division
+  stringTransformEPOtoEPD(agency) {
+    return agency === 'Environmental Protection Office' ? 'Environmental Protection Division' : agency;
+  }
+
   async transformRecord(record) {
     const Inspection = mongoose.model(RECORD_TYPE.Inspection._schemaName);
     let newRecord = new Inspection().toObject();
@@ -178,24 +176,19 @@ class NrisDataSource {
     newRecord.recordType = 'Inspection';
     newRecord._sourceRefNrisId = record.assessmentId;
     newRecord.dateIssued = record.assessmentDate;
-    // Re-write the issuing agency from Environmental Protection Office => Environmental Protection Division
-    newRecord.issuingAgency =
-      record.resourceAgency === 'Environmental Protection Office'
-        ? 'Environmental Protection Division'
-        : record.resourceAgency;
-    newRecord.author = record.assessor;
+    newRecord.issuingAgency = this.stringTransformEPOtoEPD(record.resourceAgency);
+    newRecord.author = 'Environmental Protection Division';
     newRecord.legislation = {
       act: 'Environmental Management Act',
       section: '109'
     };
-
     newRecord.dateAdded = new Date();
     newRecord.dateUpdated = new Date();
 
     newRecord.addedBy = (this.auth_payload && this.auth_payload.displayName) || '';
     newRecord.updatedBy = (this.auth_payload && this.auth_payload.displayName) || '';
 
-    newRecord.sourceSystemRef = 'nris';
+    newRecord.sourceSystemRef = 'nris-epd';
 
     if (record.client && record.client.length > 0 && record.client[0]) {
       const clientType = record.client[0].clientType;
@@ -204,9 +197,6 @@ class NrisDataSource {
         case 'C':
         case 'Corporation':
           newRecord.issuedTo = {
-            write: ['sysadmin'],
-            read: ['sysadmin'],
-
             type: 'Company',
             companyName: record.client[0].orgName || '',
             fullName: record.client[0].orgName || ''
@@ -216,9 +206,6 @@ class NrisDataSource {
         case 'I':
         case 'Individual':
           newRecord.issuedTo = {
-            write: ['sysadmin'],
-            read: ['sysadmin'],
-
             type: 'IndividualCombined',
             fullName: record.client[0].orgName || ''
           };
@@ -255,8 +242,6 @@ class NrisDataSource {
         }
       }
     }
-    newRecord.read.push('sysadmin');
-    newRecord.write.push('sysadmin');
 
     defaultLog.info('Processed:', record.assessmentId);
     return newRecord;
@@ -289,33 +274,39 @@ class NrisDataSource {
     let docResponse = null;
     let s3Response = null;
 
+    // Set mongo document and s3 document roles
+    const readRoles = [];
+    let s3ACLRole = null;
+    if (!BusinessLogicManager.isDocumentConsideredAnonymous(newRecord)) {
+      readRoles.push('public');
+      s3ACLRole = 'public-read';
+    }
+
     try {
-      docResponse = await documentController.createDocument(fileName);
+      ({ docResponse, s3Response } = await documentController.createS3Document(
+        fileName,
+        file,
+        (this.auth_payload && this.auth_payload.displayName) || '',
+        readRoles,
+        s3ACLRole
+      ));
     } catch (e) {
-      defaultLog.info('Error saving document meta:', e);
+      defaultLog.info(`Error creating S3 document - fileName: ${fileName}, Error ${e}`);
       return null;
     }
 
     try {
-      const s3UploadResult = await s3
-        .upload({
-          Bucket: process.env.OBJECT_STORE_bucket_name,
-          Key: docResponse.key,
-          Body: file,
-          ACL: 'public-read'
-        })
-        .promise();
-
-      s3Response = s3UploadResult;
       if (docResponse && docResponse._id) {
         newRecord.documents.push(docResponse._id);
       }
     } catch (e) {
-      defaultLog.info('Error uploading file to S3:', e);
+      defaultLog.info(
+        `Error adding document _id to record - recordId: ${newRecord._id}, docId: ${docResponse._id}, Error: ${e}`
+      );
       return null;
     }
 
-    return { docResponse: docResponse, s3Response: s3Response };
+    return { docResponse, s3Response };
   }
 
   /**

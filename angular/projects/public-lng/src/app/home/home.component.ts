@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { PageTypes } from '../utils/page-types.enum';
 import { SearchService } from 'nrpti-angular-components';
 import { ApiService } from '../services/api';
 
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -17,28 +18,38 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   public activities: object[] = [];
 
-  constructor(private _searchService: SearchService, private _apiService: ApiService) {}
+  constructor(
+    private _searchService: SearchService,
+    private route: ActivatedRoute,
+    private _changeDetectionRef: ChangeDetectorRef,
+    private _apiService: ApiService) {}
 
   ngOnInit() {
+
     this.activities = [];
 
-    this._searchService
-      .getSearchResults(
-        this._apiService.apiPath,
-        '',
-        ['ActivityLNG'],
-        [],
-        1, // tableObject.currentPage,
-        100000, // tableObject.pageSize,
-        '-date', // tableObject.sortBy,
-        {},
-        false
-      )
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((res: any) => {
-        if (res && res[0] && res[0].data.meta.length > 0) {
-          this.activities = res[0].data.searchResults;
-        }
+    // Subscribe to project changes
+    this.route.parent.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(
+      () => {
+        this._searchService
+        .getSearchResults(
+          this._apiService.apiPath,
+          '',
+          ['ActivityLNG'],
+          [],
+          1, // tableObject.currentPage,
+          100000, // tableObject.pageSize,
+          '-date', // tableObject.sortBy,
+          {},
+          false
+        )
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe((res: any) => {
+          if (res && res[0] && res[0].data.meta.length > 0) {
+            this.activities = res[0].data.searchResults;
+            this._changeDetectionRef.detectChanges();
+          }
+        });
       });
   }
 

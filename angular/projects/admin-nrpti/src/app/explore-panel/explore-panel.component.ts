@@ -1,9 +1,10 @@
-import { Component, OnInit, Output, EventEmitter, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
 
 import { FilterSection } from '../../../../common/src/app/models/document-filter';
-import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { IMutliSelectOption } from '../../../../common/src/app/autocomplete-multi-select/autocomplete-multi-select.component';
+import { Picklists } from '../../../../common/src/app/utils/record-constants';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-explore-panel',
@@ -12,107 +13,50 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class ExplorePanelComponent implements OnInit, OnDestroy {
   @Input() filterSections: FilterSection[] = []; // document filter sections // used in template
-
-  @Output() updateFilters = new EventEmitter();
-  @Output() hideSidePanel = new EventEmitter();
+  @Input() formGroup: FormGroup;
+  public resetControls: EventEmitter<void> = new EventEmitter<void>();
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   readonly minDate = new Date('01-01-1900'); // first app created
   readonly maxDate = new Date(); // today
 
-  public _dateRangeFromFilter: Date = null;
-  public _dateRangeToFilter: Date = null;
 
-  public textFilterKeys: any[];
-  public filter = [];
+  public agencyOptions: IMutliSelectOption[] = Picklists.agencyPicklist.map(value => {
+    return { value: value, displayValue: value, selected: false, display: true };
+  });
+  public activityTypeOptions: IMutliSelectOption[] = Object.values(Picklists.activityTypePicklist).map(item => {
+    return { value: item._schemaName, displayValue: item.displayName, selected: false, display: true };
+  });
+  public actOptions: IMutliSelectOption[] = Picklists.getAllActs().map(value => {
+    return { value: value, displayValue: value, selected: false, display: true };
+  });
+  public regulationOptions: IMutliSelectOption[] = Picklists.getAllRegulations().map(value => {
+    return { value: value, displayValue: value, selected: false, display: true };
+  });
 
-  constructor(private _changeDetectionRef: ChangeDetectorRef, private route: ActivatedRoute) {
-    this.textFilterKeys = [];
-  }
+  public agencyCount = 0;
+  public activityTypeCount = 0;
+  public actCount = 0;
+  public regulationCount = 0;
+
+  public selectedSystemRef = null;
+
+  constructor(private _changeDetectionRef: ChangeDetectorRef) { }
 
   public ngOnInit() {
-    // For each filter coming in, make the filter bucket array
-    this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
-      const keys = Object.keys(params);
-      this.filterSections.forEach(object => {
-        // e.g.:
-        // object.displayName: Header
-        // object.textFilters: Array of elements in the collection
-        object.textFilters.forEach(filter => {
-          // e.g.:
-          // filter.displayName: "EAO/BCOGC"
-          // filter.fieldName: "_master.issuingAgency"
-          if (keys.includes(filter.fieldName)) {
-            this.textFilterKeys[filter.fieldName] = params[filter.fieldName].split(',');
-          } else {
-            // Not in the param list, make empty array.
-            this.textFilterKeys[filter.fieldName] = [];
-          }
-        });
-      });
-      if (keys.includes('dateRangeToFilter')) {
-        this._dateRangeToFilter = params['dateRangeToFilter'];
-      }
-      if (keys.includes('dateRangeFromFilter')) {
-        this._dateRangeFromFilter = params['dateRangeFromFilter'];
-      }
-      this._changeDetectionRef.detectChanges();
-    });
+    this.formGroup.get(['sourceSystemRef']).value &&
+      (this.selectedSystemRef = this.formGroup.get(['sourceSystemRef']).value);
+    this._changeDetectionRef.detectChanges();
   }
 
-  isEnabled(name, value) {
-    return this.textFilterKeys[name].includes(value);
+  clearSearchFilters() {
+    this.resetControls.emit();
+    this.formGroup.reset();
   }
 
-  dataChanged(enabled, fieldName, fieldValue) {
-    if (enabled) {
-      this.textFilterKeys[fieldName].push(fieldValue);
-    } else {
-      // Pop it
-      this.textFilterKeys[fieldName] = this.textFilterKeys[fieldName].filter(item => {
-        return item !== fieldValue;
-      });
-    }
-    this.applyAllFilters();
-  }
-
-  togglePanel() {
-    this.hideSidePanel.emit();
-  }
-
-  public applyAllFilters() {
-    // Only add dateRange* conditionally.
-    // tslint:disable-next-line: prefer-const
-    let filterQuery = this.textFilterKeys;
-    delete filterQuery['dateRangeFromFilter'];
-    delete filterQuery['dateRangeToFilter'];
-
-    filterQuery['dateRangeFromFilter'] = this._dateRangeFromFilter ? this._dateRangeFromFilter : undefined;
-    filterQuery['dateRangeToFilter'] = this._dateRangeToFilter ? this._dateRangeToFilter : undefined;
-
-    this.updateFilters.emit(filterQuery);
-  }
-
-  public handleDateChangeFrom(event) {
-    this._dateRangeFromFilter = event;
-    this.applyAllFilters();
-  }
-
-  public handleDateChangeTo(event) {
-    this._dateRangeToFilter = event;
-    this.applyAllFilters();
-  }
-
-  public clearAllFilters() {
-    this._dateRangeFromFilter = undefined;
-    this._dateRangeToFilter = undefined;
-
-    Object.keys(this.textFilterKeys).forEach(key => {
-      this.textFilterKeys[key] = [];
-    });
-    this.applyAllFilters();
-    this.togglePanel();
+  resetDocFilter() {
+    this.formGroup.get(['hasDocuments']).setValue(null);
     this._changeDetectionRef.detectChanges();
   }
 

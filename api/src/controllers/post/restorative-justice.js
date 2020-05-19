@@ -1,7 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
-let queryUtils = require('../../utils/query-utils');
 let postUtils = require('../../utils/post-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
  * Performs all operations necessary to create a master Restorative Justice record and its associated flavour records.
@@ -321,11 +321,9 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     restorativeJusticeLNG.read.push('public');
     restorativeJusticeLNG.datePublished = new Date();
     restorativeJusticeLNG.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(restorativeJusticeLNG)) {
-      restorativeJusticeLNG.issuedTo.read.push('public');
-    }
   }
+
+  restorativeJusticeLNG = BusinessLogicManager.applyBusinessLogicOnPost(restorativeJusticeLNG);
 
   return await restorativeJusticeLNG.save();
 };
@@ -450,11 +448,9 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     restorativeJusticeNRCED.read.push('public');
     restorativeJusticeNRCED.datePublished = new Date();
     restorativeJusticeNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(restorativeJusticeNRCED)) {
-      restorativeJusticeNRCED.issuedTo.read.push('public');
-    }
   }
+
+  restorativeJusticeNRCED = BusinessLogicManager.applyBusinessLogicOnPost(restorativeJusticeNRCED);
 
   return await restorativeJusticeNRCED.save();
 };

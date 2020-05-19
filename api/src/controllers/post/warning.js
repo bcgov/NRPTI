@@ -1,7 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
-let queryUtils = require('../../utils/query-utils');
 let postUtils = require('../../utils/post-utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
  * Performs all operations necessary to create a master Warning record and its associated flavour records.
@@ -315,11 +315,9 @@ exports.createLNG = async function(args, res, next, incomingObj) {
     warningLNG.read.push('public');
     warningLNG.datePublished = new Date();
     warningLNG.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(warningLNG)) {
-      warningLNG.issuedTo.read.push('public');
-    }
   }
+
+  warningLNG = BusinessLogicManager.applyBusinessLogicOnPost(warningLNG);
 
   return await warningLNG.save();
 };
@@ -443,11 +441,9 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
     warningNRCED.read.push('public');
     warningNRCED.datePublished = new Date();
     warningNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
-
-    if (!queryUtils.isRecordAnonymous(warningNRCED)) {
-      warningNRCED.issuedTo.read.push('public');
-    }
   }
+
+  warningNRCED = BusinessLogicManager.applyBusinessLogicOnPost(warningNRCED);
 
   return await warningNRCED.save();
 };

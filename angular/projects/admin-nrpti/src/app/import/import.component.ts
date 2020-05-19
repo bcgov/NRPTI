@@ -140,18 +140,12 @@ export class ImportComponent implements OnInit {
     this.tableTemplateUtils.navigateUsingParams(this.tableData, ['imports']);
   }
 
-  checkChange() {}
+  async startJob(dataSourceType: string) {
+    await this.factoryService.startTask({ dataSourceType }).toPromise();
 
-  async startJob() {
-    await this.startTask();
     this.showAlert = true;
     setTimeout(() => {
       this.showAlert = false;
     }, 4000);
-  }
-
-  async startTask(): Promise<any> {
-    await this.factoryService.startTask({ dataSourceType: 'epic' }).toPromise();
-    await this.factoryService.startTask({ dataSourceType: 'nris' }).toPromise();
   }
 }
