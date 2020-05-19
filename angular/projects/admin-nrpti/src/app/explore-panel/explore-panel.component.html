@@ -109,6 +109,38 @@
       </div>
     </div>
   </section>
+  <section>
+    <div class="row">
+      <div class="col-4">
+      </div>
+      <div class="col-4">
+        <label class="control-label font-weight-bold">Documents</label>
+        <div class="row radio-group" name="hasDocuments">
+          <div class="col-4">
+            <div class="radio">
+              <input class="mr-2" type="radio" id="hasDocs" value="true" formControlName="hasDocuments"
+                name="hasDocuments" />
+              <label for="hasDocs">Yes</label>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="radio">
+              <input class="mr-2" type="radio" id="doesNothaveDocs" value="false" formControlName="hasDocuments"
+                name="hasDocuments" />
+              <label for="doesNothaveDocs">No</label>
+            </div>
+          </div>
+          <div class="col-4">
+            <button
+              class="btn btn-secondary"
+              (click)="resetDocFilter()">
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </form>
 
 <section class="mt-4">
