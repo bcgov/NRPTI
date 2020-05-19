@@ -35,8 +35,30 @@ export class LegislationAddEditComponent implements OnInit {
   constructor(public utils: Utils) {}
 
   ngOnInit(): void {
-    this.filteredActs = this.getActsFromKeywords(this.formGroup.controls.act.value);
-    this.filteredRegulations = this.getRegulationsFromKeywords(this.formGroup.controls.regulation.value);
+    if (this.formGroup.controls.act.value && this.formGroup.controls.regulation.value) {
+      // existing act and regulation
+      this.filteredActs = this.getActsFromKeywords(this.formGroup.controls.act.value);
+      this.filteredRegulations = this.getRegulationsFromKeywords(this.formGroup.controls.regulation.value);
+      return;
+    }
+
+    if (this.formGroup.controls.act.value) {
+      // existing act
+      this.filteredActs = this.getActsFromKeywords(this.formGroup.controls.act.value);
+      this.filteredRegulations = this.getRegulationsForAct(this.formGroup.controls.act.value);
+      return;
+    }
+
+    if (this.formGroup.controls.regulation.value) {
+      // existing regulation
+      this.filteredActs = this.getActsForRegulation(this.formGroup.controls.regulation.value);
+      this.filteredRegulations = this.getRegulationsFromKeywords(this.formGroup.controls.regulation.value);
+      return;
+    }
+
+    // no existing act or regulation, default to all acts and regulations
+    this.filteredActs = this.allActs;
+    this.filteredRegulations = this.allRegulations;
   }
 
   /**
@@ -103,8 +125,9 @@ export class LegislationAddEditComponent implements OnInit {
       return;
     }
 
-    if (!event) {
+    if (!event || !event.target || !event.target.value) {
       this.formGroup.controls.act.reset();
+      return;
     }
 
     if (!this.allActs.includes(event.target.value)) {
@@ -185,8 +208,9 @@ export class LegislationAddEditComponent implements OnInit {
       return;
     }
 
-    if (!event) {
+    if (!event || !event.target || !event.target.value) {
       this.formGroup.controls.regulation.reset();
+      return;
     }
 
     if (!this.allRegulations.includes(event.target.value)) {
