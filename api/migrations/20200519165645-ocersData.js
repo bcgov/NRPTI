@@ -961,7 +961,7 @@ const getPenaltyObject = function (row) {
 const calculateDateFormat = function (row) {
   let dateIssued = null;
   if (row[1]) {
-    if (moment(row[1], 'MM/DD/YYYY', true).isValid()) {
+    if (moment(row[1], 'DD/MM/YYYY', true).isValid()) {
       dateIssued = moment(row[1], 'DD/MM/YYYY').toDate();
     } else if (moment(row[1], 'D/M/YY', true).isValid()) {
       dateIssued = moment(row[1], 'D/M/YY').toDate();
