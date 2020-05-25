@@ -92,7 +92,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   /**
    * Component init.
@@ -144,7 +144,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
           this.queryParams['regulation'] ||
           this.queryParams['sourceSystemRef'] ||
           this.queryParams['hasDocuments'] ||
-          this.queryParams['projects']
+          this.queryParams['projects'] ||
+          this.queryParams['isNrcedPublished'] ||
+          this.queryParams['isLngPublished']
         ) {
           this.showAdvancedFilters = true;
         }
@@ -163,13 +165,13 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         (this.queryParams &&
           this.queryParams.dateRangeFromFilter &&
           this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeFromFilter))) ||
-          null
+        null
       ),
       dateIssuedEnd: new FormControl(
         (this.queryParams &&
           this.queryParams.dateRangeToFilter &&
           this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeToFilter))) ||
-          null
+        null
       ),
       issuedToCompany: new FormControl((this.queryParams && this.queryParams.issuedToCompany) || false),
       issuedToIndividual: new FormControl((this.queryParams && this.queryParams.issuedToIndividual) || false),
@@ -185,13 +187,15 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         ),
         coastalGaslink: new FormControl(
           (this.queryParams && this.queryParams.projects && this.queryParams.projects.includes('coastalGaslink')) ||
-            false
+          false
         ),
         otherProjects: new FormControl(
           (this.queryParams && this.queryParams.projects && this.queryParams.projects.includes('otherProjects')) ||
-            false
+          false
         )
-      })
+      }),
+      isNrcedPublished: new FormControl((this.queryParams && this.queryParams.isNrcedPublished) || false),
+      isLngPublished: new FormControl((this.queryParams && this.queryParams.isLngPublished) || false)
     });
   }
 
@@ -265,6 +269,16 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         this.queryParams['projects'] = this.getProjectsFilterArray(changes.projects);
       } else {
         delete this.queryParams['projects'];
+      }
+      if (changes.isNrcedPublished) {
+        this.queryParams['isNrcedPublished'] = changes.isNrcedPublished;
+      } else {
+        delete this.queryParams['isNrcedPublished'];
+      }
+      if (changes.isLngPublished) {
+        this.queryParams['isLngPublished'] = changes.isLngPublished;
+      } else {
+        delete this.queryParams['isLngPublished'];
       }
       this.submit();
     });
