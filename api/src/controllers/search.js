@@ -26,10 +26,23 @@ let generateExpArray = async function (field, prefix = '') {
         let entry = queryString[item];
         defaultLog.info('item:', item, entry);
         if (Array.isArray(entry)) {
-          // Arrays are a list of options so will always be ors
+          // handle nor filter
+          const norFilterString = '(nor)';
+          if (item.startsWith(norFilterString)) {
+            const propertyName = item.substr(item.indexOf(norFilterString) + norFilterString.length);
+
+            let orArray = entry.map(element => {
+              return getConvertedValue(propertyName, element);
+            });
+
+            return { $nor: orArray };
+          }
+
+          // handle or filter
           let orArray = entry.map(element => {
             return getConvertedValue(item, element);
           });
+
           return { $or: orArray };
         } else if (moment(entry, moment.ISO_8601).isValid()) {
           // Pluck the variable off the string because this is a date object.  It should
@@ -86,6 +99,16 @@ const getConvertedValue = function (item, entry) {
       return { [item]: false };
     } else {
       defaultLog.info('string');
+
+      // handle not equal filter
+      const neFilterString = '(ne)';
+      if (entry.startsWith(neFilterString)) {
+        const entryValue = entry.substr(entry.indexOf(neFilterString) + neFilterString.length);
+
+        return { [item]: { $ne: entryValue } };
+      }
+
+      // handle equal filter
       return { [item]: entry };
     }
   } else {

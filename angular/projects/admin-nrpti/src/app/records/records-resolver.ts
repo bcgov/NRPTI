@@ -43,7 +43,7 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       subset = params.subset.split(',');
     }
 
-
+    const queryModifier = {};
     const filterParams = {};
 
     if (params.dateRangeFromFilter) {
@@ -82,6 +82,35 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       filterParams['hasDocuments'] = params.hasDocuments;
     }
 
+    if (params.projects) {
+      const projectNames = [];
+
+      if (params.projects.includes('lngCanada')) {
+        projectNames.push('LNG Canada');
+      }
+
+      if (params.projects.includes('coastalGaslink')) {
+        projectNames.push('Coastal Gaslink');
+      }
+
+      if (params.projects.includes('otherProjects')) {
+        if (projectNames.length === 0) {
+          // Selecting only Other should return all projects EXCEPT for LNG Canada and Coastal Gaslink
+          queryModifier['(nor)projectName'] = 'LNG Canada,Coastal Gaslink';
+        } else if (projectNames.length === 1) {
+          if (projectNames[0] === 'LNG Canada') {
+            // Other + LNG Canada is equivalent to NOT Coastal Gaslink
+            queryModifier['projectName'] = '(ne)Coastal Gaslink';
+          } else {
+            // Other + Coastal Gaslink is equivalent to NOT LNG Canada
+            queryModifier['projectName'] = '(ne)LNG Canada';
+          }
+        }
+      } else if (projectNames.length) {
+        filterParams['projectName'] = projectNames.join(',');
+      }
+    }
+
     // force-reload so we always have latest data
     return this.factoryService.getRecords(
       keywords,
@@ -90,7 +119,7 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       tableObject.currentPage,
       tableObject.pageSize,
       tableObject.sortBy || '-dateAdded', // This needs to be common between all datasets to work properly
-      {},
+      queryModifier,
       false,
       filterParams,
       subset

@@ -143,7 +143,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
           this.queryParams['act'] ||
           this.queryParams['regulation'] ||
           this.queryParams['sourceSystemRef'] ||
-          this.queryParams['hasDocuments']
+          this.queryParams['hasDocuments'] ||
+          this.queryParams['projects']
         ) {
           this.showAdvancedFilters = true;
         }
@@ -178,7 +179,20 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       regulation: new FormControl((this.queryParams && this.queryParams.regulation) || null),
       activityType: new FormControl((this.queryParams && this.queryParams.activityType) || null),
       sourceSystemRef: new FormControl((this.queryParams && this.queryParams.sourceSystemRef) || null),
-      hasDocuments: new FormControl((this.queryParams && this.queryParams.hasDocuments) || false)
+      hasDocuments: new FormControl((this.queryParams && this.queryParams.hasDocuments) || false),
+      projects: new FormGroup({
+        lngCanada: new FormControl(
+          (this.queryParams && this.queryParams.projects && this.queryParams.projects.includes('lngCanada')) || false
+        ),
+        coastalGaslink: new FormControl(
+          (this.queryParams && this.queryParams.projects && this.queryParams.projects.includes('coastalGaslink')) ||
+            false
+        ),
+        otherProjects: new FormControl(
+          (this.queryParams && this.queryParams.projects && this.queryParams.projects.includes('otherProjects')) ||
+            false
+        )
+      })
     });
   }
 
@@ -244,6 +258,12 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         this.queryParams['hasDocuments'] = changes.hasDocuments;
       } else {
         delete this.queryParams['hasDocuments'];
+      }
+
+      if (changes.projects && this.getProjectsFilterArray(changes.projects).length) {
+        this.queryParams['projects'] = this.getProjectsFilterArray(changes.projects);
+      } else {
+        delete this.queryParams['projects'];
       }
       this.submit();
     });
@@ -431,6 +451,29 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     } else if (this.queryParams.subset.includes('description')) {
       this.selectedSubset = 'Description & Summary';
     }
+  }
+
+  /**
+   * Builds an array of project names, for project filters that are enabled/selected.
+   *
+   * @param {object} projects changes.projects object
+   * @returns {string[]} array of project names
+   * @memberof RecordsListComponent
+   */
+  getProjectsFilterArray(projects: object): string[] {
+    if (!projects) {
+      return [];
+    }
+
+    const projectsQueryParam: string[] = [];
+
+    for (const projectName of Object.keys(projects)) {
+      if (projects[projectName]) {
+        projectsQueryParam.push(projectName);
+      }
+    }
+
+    return projectsQueryParam;
   }
 
   /**

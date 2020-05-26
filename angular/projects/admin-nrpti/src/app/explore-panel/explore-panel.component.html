@@ -111,7 +111,40 @@
   </section>
   <section>
     <div class="row">
-      <div class="col-4">
+      <div class="col-4" [formGroup]="formGroup.get('projects')">
+        <label class="control-label font-weight-bold">Project</label>
+        <div class="row checkbox-group" name="projectFilter">
+          <div class="col-4">
+            <div class="checkbox">
+              <input class="mr-2" type="checkbox" id="lngCanada" formControlName="lngCanada" name="lngCanada" />
+              <label for="lngCanada">LNG Canada</label>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="checkbox">
+              <input
+                class="mr-2"
+                type="checkbox"
+                id="coastalGaslink"
+                formControlName="coastalGaslink"
+                name="coastalGaslink"
+              />
+              <label for="coastalGaslink">Coastal Gaslink</label>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="checkbox">
+              <input
+                class="mr-2"
+                type="checkbox"
+                id="otherProjects"
+                formControlName="otherProjects"
+                name="otherProjects"
+              />
+              <label for="otherProjects">Other</label>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="col-4">
         <label class="control-label font-weight-bold">Documents</label>
