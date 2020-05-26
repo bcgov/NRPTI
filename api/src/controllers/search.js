@@ -15,7 +15,7 @@ function isEmpty(obj) {
   return true;
 }
 
-let generateExpArray = async function (field, prefix = '') {
+let generateExpArray = async function(field, prefix = '') {
   if (field && field != undefined) {
     let queryString = qs.parse(field);
     defaultLog.info('queryString:', queryString);
@@ -81,7 +81,7 @@ let generateExpArray = async function (field, prefix = '') {
 };
 exports.generateExpArray = generateExpArray;
 
-const getConvertedValue = function (item, entry) {
+const getConvertedValue = function(item, entry) {
   if (isNaN(entry)) {
     if (mongoose.Types.ObjectId.isValid(entry)) {
       defaultLog.info('objectid', entry);
@@ -119,7 +119,7 @@ const getConvertedValue = function (item, entry) {
 };
 exports.getConvertedValue = getConvertedValue;
 
-const handleDateStartItem = function (field, entry) {
+const handleDateStartItem = function(field, entry) {
   let date = new Date(entry);
 
   // Validate: valid date?
@@ -129,7 +129,7 @@ const handleDateStartItem = function (field, entry) {
   }
 };
 
-const handleDateEndItem = function (field, entry) {
+const handleDateEndItem = function(field, entry) {
   let date = new Date(entry);
 
   // Validate: valid date?
@@ -139,7 +139,7 @@ const handleDateEndItem = function (field, entry) {
   }
 };
 
-let searchCollection = async function (
+let searchCollection = async function(
   roles,
   keywords,
   schemaName,
@@ -262,7 +262,7 @@ let searchCollection = async function (
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
 
   // If we have a subset filter on, we must change to the appropriate collection.
-  let collectionName = 'nrpti'
+  let collectionName = 'nrpti';
   if (subset) {
     if (subset.includes('issuedTo')) {
       collectionName = 'issued_to_subset';
@@ -272,26 +272,28 @@ let searchCollection = async function (
   }
   const collection = db.collection(collectionName);
 
-  return await collection.aggregate(aggregation, {
-    collation: {
-      locale: "en_US",
-      alternate: "shifted",
-      numericOrdering: true
-    }
-  }).toArray();
+  return await collection
+    .aggregate(aggregation, {
+      collation: {
+        locale: 'en_US',
+        alternate: 'shifted',
+        numericOrdering: true
+      }
+    })
+    .toArray();
 };
 
-exports.publicGet = async function (args, res, next) {
+exports.publicGet = async function(args, res, next) {
   executeQuery(args, res, next);
 };
 
-exports.protectedGet = function (args, res, next) {
+exports.protectedGet = function(args, res, next) {
   executeQuery(args, res, next);
 };
 
 // Generates the main match query, and optionally generates the master field match to be used
 // later in the pipeline.
-const generateMatchesForAggregation = async function (and, or, searchProperties, properties, schemaName, roles) {
+const generateMatchesForAggregation = async function(and, or, searchProperties, properties, schemaName, roles) {
   const andExpArray = (await generateExpArray(and)) || [];
   defaultLog.info('andExpArray:', andExpArray);
 
@@ -317,7 +319,7 @@ const generateMatchesForAggregation = async function (and, or, searchProperties,
   return match;
 };
 
-const executeQuery = async function (args, res, next) {
+const executeQuery = async function(args, res, next) {
   let _id = args.swagger.params._id ? args.swagger.params._id.value : null;
   let keywords = args.swagger.params.keywords.value;
   let dataset = args.swagger.params.dataset.value;
@@ -458,6 +460,6 @@ const executeQuery = async function (args, res, next) {
   }
 };
 
-exports.protectedOptions = function (args, res, next) {
+exports.protectedOptions = function(args, res, next) {
   res.status(200).send();
 };

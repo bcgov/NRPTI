@@ -92,7 +92,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   /**
    * Component init.
@@ -157,20 +157,19 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     });
   }
 
-
   public buildSearchFiltersForm() {
     this.searchFiltersForm = new FormGroup({
       dateIssuedStart: new FormControl(
         (this.queryParams &&
           this.queryParams.dateRangeFromFilter &&
           this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeFromFilter))) ||
-        null
+          null
       ),
       dateIssuedEnd: new FormControl(
         (this.queryParams &&
           this.queryParams.dateRangeToFilter &&
           this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeToFilter))) ||
-        null
+          null
       ),
       issuedToCompany: new FormControl((this.queryParams && this.queryParams.issuedToCompany) || false),
       issuedToIndividual: new FormControl((this.queryParams && this.queryParams.issuedToIndividual) || false),
@@ -205,15 +204,17 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       }
 
       if (changes.dateIssuedStart) {
-        this.queryParams['dateRangeFromFilter'] =
-          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedStart).toISOString();
+        this.queryParams['dateRangeFromFilter'] = this.utils
+          .convertFormGroupNGBDateToJSDate(changes.dateIssuedStart)
+          .toISOString();
       } else {
         delete this.queryParams['dateRangeFromFilter'];
       }
 
       if (changes.dateIssuedEnd) {
-        this.queryParams['dateRangeToFilter'] =
-          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedEnd).toISOString();
+        this.queryParams['dateRangeToFilter'] = this.utils
+          .convertFormGroupNGBDateToJSDate(changes.dateIssuedEnd)
+          .toISOString();
       } else {
         delete this.queryParams['dateRangeToFilter'];
       }
