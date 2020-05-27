@@ -79,6 +79,7 @@ let generateExpArray = async function (field, prefix = '') {
     );
   }
 };
+exports.generateExpArray = generateExpArray;
 
 const getConvertedValue = function (item, entry) {
   if (isNaN(entry)) {
@@ -116,6 +117,7 @@ const getConvertedValue = function (item, entry) {
     return { [item]: parseInt(entry) };
   }
 };
+exports.getConvertedValue = getConvertedValue;
 
 const handleDateStartItem = function (field, entry) {
   let date = new Date(entry);
