@@ -4,9 +4,9 @@ let Mixed = mongoose.Schema.Types.Mixed;
 module.exports = require('../utils/model-schema-generator')(
   'Mine',
   {
-    _schemaName: { type: String, default: 'Mine' },
+    _schemaName: { type: String, default: 'Mine', index: true },
     name: { type: String, default: '' },
-    permitNumber: { type: Number, default: null },
+    permitNumber: { type: String, default: '' },
     status: { type: String, default: '' },
     type: { type: String, default: '' },
     commodities: { type: String, default: '' },
