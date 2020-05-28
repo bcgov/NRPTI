@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Picklists } from '../utils/record-constants';
+import { Utils } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-legislation-add-edit',
@@ -28,9 +29,36 @@ export class LegislationAddEditComponent implements OnInit {
   public filteredActs: string[] = [];
   public filteredRegulations: string[] = [];
 
+  public debouncedFilterActsPicklist = this.utils.debounced(200, args => this.filterActsPicklist(args));
+  public debouncedFilterRegulationsPicklist = this.utils.debounced(200, args => this.filterRegulationsPicklist(args));
+
+  constructor(public utils: Utils) {}
+
   ngOnInit(): void {
-    this.onSelectAct(this.formGroup.controls.act.value);
-    this.onSelectRegulation(this.formGroup.controls.regulation.value);
+    if (this.formGroup.controls.act.value && this.formGroup.controls.regulation.value) {
+      // existing act and regulation
+      this.filteredActs = this.getActsFromKeywords(this.formGroup.controls.act.value);
+      this.filteredRegulations = this.getRegulationsFromKeywords(this.formGroup.controls.regulation.value);
+      return;
+    }
+
+    if (this.formGroup.controls.act.value) {
+      // existing act
+      this.filteredActs = this.getActsFromKeywords(this.formGroup.controls.act.value);
+      this.filteredRegulations = this.getRegulationsForAct(this.formGroup.controls.act.value);
+      return;
+    }
+
+    if (this.formGroup.controls.regulation.value) {
+      // existing regulation
+      this.filteredActs = this.getActsForRegulation(this.formGroup.controls.regulation.value);
+      this.filteredRegulations = this.getRegulationsFromKeywords(this.formGroup.controls.regulation.value);
+      return;
+    }
+
+    // no existing act or regulation, default to all acts and regulations
+    this.filteredActs = this.allActs;
+    this.filteredRegulations = this.allRegulations;
   }
 
   /**
@@ -42,16 +70,16 @@ export class LegislationAddEditComponent implements OnInit {
    */
   filterActsPicklist(event) {
     if (!event.target.value) {
-      // Field is empty, reset to full list (or partial list if regulation is set)
-      if (this.formGroup.controls.regulation.value) {
-        this.filteredActs = this.getActsForRegulation(this.formGroup.controls.regulation.value);
-      } else {
-        this.filteredActs = this.allActs;
-      }
+      this.onEmptyAct();
       return;
     }
 
     if (event.keyCode === 13) {
+      if (!this.isKnownAct(event.target.value)) {
+        // Enter key pressed, but not on a recognized act row
+        return;
+      }
+
       // ENTER key pressed to select option, treat this the same as clicking an option
       this.onSelectAct(event.target.value);
       return;
@@ -63,10 +91,6 @@ export class LegislationAddEditComponent implements OnInit {
     }
 
     this.filteredActs = this.getActsFromKeywords(event.target.value);
-
-    if (!this.filteredActs || !this.filteredActs.length) {
-      this.onEmptyAct();
-    }
   }
 
   /**
@@ -84,6 +108,9 @@ export class LegislationAddEditComponent implements OnInit {
 
     // An act was selected, limit the regulations picklist
     this.filteredRegulations = this.getRegulationsForAct(act);
+
+    // Limit the acts picklist to the act as it is an exact match
+    this.filteredActs = [act];
   }
 
   /**
@@ -99,15 +126,27 @@ export class LegislationAddEditComponent implements OnInit {
       return;
     }
 
-    if (!event) {
-      this.formGroup.controls.act.reset();
+    if (!event || !event.target || !event.target.value) {
+      // Treat this as if the user chose to clear the value
+      this.onEmptyAct();
+      return;
     }
 
-    if (!this.allActs.includes(event.target.value)) {
-      this.formGroup.controls.act.reset();
+    if (!this.isKnownAct(event.target.value)) {
       // Treat this as if the user chose to clear the value
-      this.onSelectAct(null);
+      this.onEmptyAct();
     }
+  }
+
+  /**
+   * Return true if the act is known, false otherwise.
+   *
+   * @param {*} act
+   * @returns {boolean}
+   * @memberof LegislationAddEditComponent
+   */
+  isKnownAct(act): boolean {
+    return this.allActs.includes(act);
   }
 
   /**
@@ -129,6 +168,11 @@ export class LegislationAddEditComponent implements OnInit {
     }
 
     if (event.keyCode === 13) {
+      if (!this.isKnownRegulation(event.target.value)) {
+        // Enter key pressed, but not on a recognized regulation row
+        return;
+      }
+
       // ENTER key pressed to select option, treat this the same as clicking an option
       this.onSelectRegulation(event.target.value);
       return;
@@ -163,6 +207,9 @@ export class LegislationAddEditComponent implements OnInit {
       this.formGroup.controls.act.setValue(this.filteredActs[0]);
       this.onSelectAct(this.filteredActs[0]);
     }
+
+    // Limit the regulations picklist to the regulation as it is an exact match
+    this.filteredRegulations = [regulation];
   }
 
   /**
@@ -178,15 +225,27 @@ export class LegislationAddEditComponent implements OnInit {
       return;
     }
 
-    if (!event) {
-      this.formGroup.controls.regulation.reset();
+    if (!event || !event.target || !event.target.value) {
+      // Treat this as if the user chose to clear the value
+      this.onEmptyRegulation();
+      return;
     }
 
-    if (!this.allRegulations.includes(event.target.value)) {
-      this.formGroup.controls.regulation.reset();
+    if (!this.isKnownRegulation(event.target.value)) {
       // Treat this as if the user chose to clear the value
-      this.onSelectRegulation(null);
+      this.onEmptyRegulation();
     }
+  }
+
+  /**
+   * Return true if the regulation is known, false otherwise.
+   *
+   * @param {*} regulation
+   * @returns {boolean}
+   * @memberof LegislationAddEditComponent
+   */
+  isKnownRegulation(regulation): boolean {
+    return this.allRegulations.includes(regulation);
   }
 
   /**
@@ -205,7 +264,13 @@ export class LegislationAddEditComponent implements OnInit {
       return this.filteredActs;
     }
 
-    const actsToFilter = this.filteredActs || this.allActs;
+    // by default, search all acts
+    let actsToFilter = this.allActs;
+    if (this.filteredActs.length && this.formGroup.controls.regulation.value) {
+      // if a regulation has already been selected and it has at least 1 parent act, then restrict act keyword filtering
+      // to the parent acts.
+      actsToFilter = this.filteredActs;
+    }
 
     // tokenize keyword string (spaces, commas, semi-colons) and remove any empty tokens
     const keywords = keywordString
@@ -248,7 +313,13 @@ export class LegislationAddEditComponent implements OnInit {
       return this.filteredRegulations;
     }
 
-    const regulationsToFilter = this.filteredRegulations || this.allRegulations;
+    // by default, search all regulations
+    let regulationsToFilter = this.allRegulations;
+    if (this.filteredRegulations.length && this.formGroup.controls.act.value) {
+      // if an act has already been selected and it has at least 1 child regulation, then restrict regulation keyword
+      // filtering to the child regulations.
+      regulationsToFilter = this.filteredRegulations;
+    }
 
     // tokenize keyword string (split on spaces, commas, semi-colons) and remove any empty tokens
     const keywords = keywordString
@@ -283,11 +354,13 @@ export class LegislationAddEditComponent implements OnInit {
    * @memberof LegislationAddEditComponent
    */
   public onEmptyAct() {
-    this.filteredRegulations = this.allRegulations;
+    this.formGroup.controls.act.setValue(null);
+
+    this.filteredActs = this.allActs;
     // The acts control is empty, so reset the regulations picklist to show all values
     this.filteredRegulations = this.allRegulations;
     // Business Logic: if the act control is cleared, also clear the regulation control
-    this.formGroup.controls.regulation.reset();
+    this.formGroup.controls.regulation.setValue(null);
   }
 
   /**
@@ -296,9 +369,16 @@ export class LegislationAddEditComponent implements OnInit {
    * @memberof LegislationAddEditComponent
    */
   public onEmptyRegulation() {
+    this.formGroup.controls.regulation.setValue(null);
+
+    if (this.formGroup.controls.act.value) {
+      // if an act has already been selected, then when the regulation is cleared, restrict its select options to child
+      // regulations of the act.
+      this.filteredRegulations = this.getRegulationsForAct(this.formGroup.controls.act.value);
+      return;
+    }
+
     this.filteredRegulations = this.allRegulations;
-    // The regulation control is empty, so reset the acts picklist to show all values
-    this.filteredActs = this.allActs;
   }
 
   /**
