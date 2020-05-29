@@ -1,6 +1,6 @@
-let mongoose = require('mongoose');
-let ObjectId = require('mongoose').Types.ObjectId;
-let mongodb = require('../../utils/mongodb');
+const mongoose = require('mongoose');
+const ObjectId = require('mongoose').Types.ObjectId;
+const mongodb = require('../../utils/mongodb');
 
 /**
  * Performs all operations necessary to create a master Certificate record and its associated flavour records.

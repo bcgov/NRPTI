@@ -1,7 +1,7 @@
-let mongoose = require('mongoose');
-let ObjectId = require('mongoose').Types.ObjectId;
-let postUtils = require('../../utils/post-utils');
-let mongodb = require('../../utils/mongodb');
+const mongoose = require('mongoose');
+const ObjectId = require('mongoose').Types.ObjectId;
+const postUtils = require('../../utils/post-utils');
+const mongodb = require('../../utils/mongodb');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
