@@ -1,5 +1,19 @@
 let mongoose = require('mongoose');
-let Mixed = mongoose.Schema.Types.Mixed;
+
+let GeoJSON = new mongoose.Schema(
+  {
+      type:
+      {
+        type: String,
+        enum: ['Point'],
+        required: true
+      },
+      coordinates:
+      {
+        type: [Number],
+        required: true
+      }
+  });
 
 module.exports = require('../utils/model-schema-generator')(
   'Mine',
@@ -13,7 +27,7 @@ module.exports = require('../utils/model-schema-generator')(
     // number of tailings impoundments
     tailingsImpoundments: { type: Number, default: 0 },
     region: { type: String, default: '' },
-    centroid : [{ type: Mixed, default: 0.00}],
+    location : { type: GeoJSON, default: { type: "Point", coordinates: [ 0.00, 0.00 ] } },
     operator: { type: String, default: '' },
     owner: { type: String, default: '' },
     summary: { type: String, default: '' },
