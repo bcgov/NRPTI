@@ -1,5 +1,6 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
+let mongodb = require('../../utils/mongodb');
 
 /**
  * Performs all operations necessary to create a master Permit record and its associated flavour records.
@@ -25,47 +26,63 @@ let ObjectId = require('mongoose').Types.ObjectId;
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function(args, res, next, incomingObj) {
-  // save flavour records
-  let observables = [];
-  let savedFlavourPermits = [];
+exports.createRecord = async function (args, res, next, incomingObj) {
+  let flavours = [];
   let flavourIds = [];
+  let observables = [];
+  // We have this in case there's error and we need to clean up.
+  let idsToDelete = [];
 
+  // Prepare flavours
+  incomingObj.PermitLNG &&
+    flavours.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.PermitLNG }));
+
+  // Get flavour ids for master
+  if (flavours.length > 0) {
+    flavourIds = flavours.map(
+      flavour => flavour._id
+    );
+    idsToDelete = [...flavourIds];
+  }
+
+  // Prepare master
+  let masterRecord = this.createMaster(args, res, next, incomingObj, flavourIds);
+  idsToDelete.push(masterRecord._id);
+
+  // Set master back ref to flavours get ready to save
+  for (let i = 0; i < flavours.length; i++) {
+    flavours[i]._master = new ObjectId(masterRecord._id);
+    observables.push(flavours[i].save());
+  }
+  observables.push(masterRecord.save());
+
+  // Attempt to save everything.
+
+  let result = null;
   try {
-    incomingObj.PermitLNG &&
-      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.PermitLNG }));
-
-    if (observables.length > 0) {
-      savedFlavourPermits = await Promise.all(observables);
-
-      flavourIds = savedFlavourPermits.map(flavourPermit => flavourPermit._id);
+    result = await Promise.all(observables);
+  } catch (e) {
+    // Something went wrong. Attempt to clean up
+    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const collection = db.collection('nrpti');
+    let orArray = [];
+    for (let i = 0; i < idsToDelete.length; i++) {
+      orArray.push({ _id: new ObjectId(idsToDelete[i]) });
     }
-  } catch (e) {
+    await collection.deleteMany({
+      $or: orArray
+    });
+
     return {
       status: 'failure',
-      object: savedFlavourPermits,
+      object: result,
       errorMessage: e.message
     };
   }
-
-  // save permit record
-  let savedPermit = null;
-
-  try {
-    savedPermit = await this.createMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedPermit,
-      flavours: savedFlavourPermits
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedPermit,
-      errorMessage: e.message
-    };
-  }
+  return {
+    status: 'success',
+    object: result
+  };
 };
 
 /**
@@ -93,7 +110,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master permit record
  */
-exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let Permit = mongoose.model('Permit');
   let permit = new Permit();
 
@@ -157,7 +174,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateUpdated && (permit.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (permit.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await permit.save();
+  return permit;
 };
 
 /**
@@ -184,7 +201,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
  * @param {*} incomingObj see example
  * @returns created lng permit record
  */
-exports.createLNG = async function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   let PermitLNG = mongoose.model('PermitLNG');
   let permitLNG = new PermitLNG();
 
@@ -248,5 +265,5 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.sourceDateUpdated && (permitLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (permitLNG.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await permitLNG.save();
+  return permitLNG;
 };
