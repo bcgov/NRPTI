@@ -33,7 +33,7 @@ For Core
 
 - client_id
 - client_secret
-- rant_type
+- grant_type
 - oidc
 
 
