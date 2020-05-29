@@ -1,5 +1,6 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
+let mongodb = require('../../utils/mongodb');
 
 /**
  * Performs all operations necessary to create a master Construction Plan record and its associated flavour records.
@@ -25,47 +26,63 @@ let ObjectId = require('mongoose').Types.ObjectId;
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function(args, res, next, incomingObj) {
-  // save flavour records
-  let observables = [];
-  let savedFlavourConstructionPlans = [];
+exports.createRecord = async function (args, res, next, incomingObj) {
+  let flavours = [];
   let flavourIds = [];
+  let observables = [];
+  // We have this in case there's error and we need to clean up.
+  let idsToDelete = [];
 
+  // Prepare flavours
+  incomingObj.ConstructionPlanLNG &&
+    flavours.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.ConstructionPlanLNG }));
+
+  // Get flavour ids for master
+  if (flavours.length > 0) {
+    flavourIds = flavours.map(
+      flavour => flavour._id
+    );
+    idsToDelete = [...flavourIds];
+  }
+
+  // Prepare master
+  let masterRecord = this.createMaster(args, res, next, incomingObj, flavourIds);
+  idsToDelete.push(masterRecord._id);
+
+  // Set master back ref to flavours get ready to save
+  for (let i = 0; i < flavours.length; i++) {
+    flavours[i]._master = new ObjectId(masterRecord._id);
+    observables.push(flavours[i].save());
+  }
+  observables.push(masterRecord.save());
+
+  // Attempt to save everything.
+
+  let result = null;
   try {
-    incomingObj.ConstructionPlanLNG &&
-      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.ConstructionPlanLNG }));
-
-    if (observables.length > 0) {
-      savedFlavourConstructionPlans = await Promise.all(observables);
-
-      flavourIds = savedFlavourConstructionPlans.map(flavourConstructionPlan => flavourConstructionPlan._id);
+    result = await Promise.all(observables);
+  } catch (e) {
+    // Something went wrong. Attempt to clean up
+    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const collection = db.collection('nrpti');
+    let orArray = [];
+    for (let i = 0; i < idsToDelete.length; i++) {
+      orArray.push({ _id: new ObjectId(idsToDelete[i]) });
     }
-  } catch (e) {
+    await collection.deleteMany({
+      $or: orArray
+    });
+
     return {
       status: 'failure',
-      object: savedFlavourConstructionPlans,
+      object: result,
       errorMessage: e.message
     };
   }
-
-  // save constructionPlan record
-  let savedConstructionPlan = null;
-
-  try {
-    savedConstructionPlan = await this.createMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedConstructionPlan,
-      flavours: savedFlavourConstructionPlans
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedConstructionPlan,
-      errorMessage: e.message
-    };
-  }
+  return {
+    status: 'success',
+    object: result
+  };
 };
 
 /**
@@ -93,7 +110,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master constructionPlan record
  */
-exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let ConstructionPlan = mongoose.model('ConstructionPlan');
   let constructionPlan = new ConstructionPlan();
 
@@ -143,7 +160,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateUpdated && (constructionPlan.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (constructionPlan.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await constructionPlan.save();
+  return constructionPlan;
 };
 
 /**
@@ -170,7 +187,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
  * @param {*} incomingObj see example
  * @returns created lng constructionPlan record
  */
-exports.createLNG = async function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   let ConstructionPlanLNG = mongoose.model('ConstructionPlanLNG');
   let constructionPlanLNG = new ConstructionPlanLNG();
 
@@ -221,5 +238,5 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.sourceDateUpdated && (constructionPlanLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (constructionPlanLNG.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await constructionPlanLNG.save();
+  return constructionPlanLNG;
 };

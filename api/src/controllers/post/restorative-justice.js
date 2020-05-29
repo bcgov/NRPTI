@@ -1,6 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
 let postUtils = require('../../utils/post-utils');
+let mongodb = require('../../utils/mongodb');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
@@ -32,49 +33,67 @@ const BusinessLogicManager = require('../../utils/business-logic-manager');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function(args, res, next, incomingObj) {
-  // save flavour records
-  let observables = [];
-  let savedFlavourRestorativeJustices = [];
+exports.createRecord = async function (args, res, next, incomingObj) {
+  let flavours = [];
   let flavourIds = [];
+  let observables = [];
+  // We have this in case there's error and we need to clean up.
+  let idsToDelete = [];
 
+  // Prepare flavours
+  incomingObj.RestorativeJusticeLNG &&
+    flavours.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.RestorativeJusticeLNG }));
+  incomingObj.RestorativeJusticeNRCED &&
+    flavours.push(
+      this.createNRCED(args, res, next, { ...incomingObj, ...incomingObj.RestorativeJusticeNRCED })
+    );
+
+  // Get flavour ids for master
+  if (flavours.length > 0) {
+    flavourIds = flavours.map(
+      flavour => flavour._id
+    );
+    idsToDelete = [...flavourIds];
+  }
+
+  // Prepare master
+  let masterRecord = this.createMaster(args, res, next, incomingObj, flavourIds);
+  idsToDelete.push(masterRecord._id);
+
+  // Set master back ref to flavours get ready to save
+  for (let i = 0; i < flavours.length; i++) {
+    flavours[i]._master = new ObjectId(masterRecord._id);
+    observables.push(flavours[i].save());
+  }
+  observables.push(masterRecord.save());
+
+  // Attempt to save everything.
+
+  let result = null;
   try {
-    incomingObj.RestorativeJusticeLNG &&
-      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.RestorativeJusticeLNG }));
-    incomingObj.RestorativeJusticeNRCED &&
-      observables.push(this.createNRCED(args, res, next, { ...incomingObj, ...incomingObj.RestorativeJusticeNRCED }));
-
-    if (observables.length > 0) {
-      savedFlavourRestorativeJustices = await Promise.all(observables);
-
-      flavourIds = savedFlavourRestorativeJustices.map(flavourRestorativeJustice => flavourRestorativeJustice._id);
+    result = await Promise.all(observables);
+  } catch (e) {
+    // Something went wrong. Attempt to clean up
+    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const collection = db.collection('nrpti');
+    let orArray = [];
+    for (let i = 0; i < idsToDelete.length; i++) {
+      orArray.push({ _id: new ObjectId(idsToDelete[i]) });
     }
-  } catch (e) {
+    await collection.deleteMany({
+      $or: orArray
+    });
+
     return {
       status: 'failure',
-      object: savedFlavourRestorativeJustices,
+      object: result,
       errorMessage: e.message
     };
   }
-
-  // save restorativeJustice record
-  let savedRestorativeJustice = null;
-
-  try {
-    savedRestorativeJustice = await this.createMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedRestorativeJustice,
-      flavours: savedFlavourRestorativeJustices
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedRestorativeJustice,
-      errorMessage: e.message
-    };
-  }
+  return {
+    status: 'success',
+    object: result
+  };
 };
 
 /**
@@ -107,7 +126,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master restorativeJustice record
  */
-exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let RestorativeJustice = mongoose.model('RestorativeJustice');
   let restorativeJustice = new RestorativeJustice();
 
@@ -198,7 +217,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateUpdated && (restorativeJustice.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (restorativeJustice.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await restorativeJustice.save();
+  return restorativeJustice;
 };
 
 /**
@@ -230,7 +249,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
  * @param {*} incomingObj see example
  * @returns created lng restorativeJustice record
  */
-exports.createLNG = async function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   let RestorativeJusticeLNG = mongoose.model('RestorativeJusticeLNG');
   let restorativeJusticeLNG = new RestorativeJusticeLNG();
 
@@ -325,7 +344,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
 
   restorativeJusticeLNG = BusinessLogicManager.applyBusinessLogicOnPost(restorativeJusticeLNG);
 
-  return await restorativeJusticeLNG.save();
+  return restorativeJusticeLNG;
 };
 
 /**
@@ -357,7 +376,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced restorativeJustice record
  */
-exports.createNRCED = async function(args, res, next, incomingObj) {
+exports.createNRCED = function (args, res, next, incomingObj) {
   let RestorativeJusticeNRCED = mongoose.model('RestorativeJusticeNRCED');
   let restorativeJusticeNRCED = new RestorativeJusticeNRCED();
 
@@ -452,5 +471,5 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
 
   restorativeJusticeNRCED = BusinessLogicManager.applyBusinessLogicOnPost(restorativeJusticeNRCED);
 
-  return await restorativeJusticeNRCED.save();
+  return restorativeJusticeNRCED;
 };

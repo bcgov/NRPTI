@@ -1,6 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
 let postUtils = require('../../utils/post-utils');
+let mongodb = require('../../utils/mongodb');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
@@ -32,49 +33,67 @@ const BusinessLogicManager = require('../../utils/business-logic-manager');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function(args, res, next, incomingObj) {
-  // save flavour records
-  let observables = [];
-  let savedFlavourTickets = [];
+exports.createRecord = async function (args, res, next, incomingObj) {
+  let flavours = [];
   let flavourIds = [];
+  let observables = [];
+  // We have this in case there's error and we need to clean up.
+  let idsToDelete = [];
 
+  // Prepare flavours
+  incomingObj.TicketLNG &&
+    flavours.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.TicketLNG }));
+  incomingObj.TicketNRCED &&
+    flavours.push(
+      this.createNRCED(args, res, next, { ...incomingObj, ...incomingObj.TicketNRCED })
+    );
+
+  // Get flavour ids for master
+  if (flavours.length > 0) {
+    flavourIds = flavours.map(
+      flavour => flavour._id
+    );
+    idsToDelete = [...flavourIds];
+  }
+
+  // Prepare master
+  let masterRecord = this.createMaster(args, res, next, incomingObj, flavourIds);
+  idsToDelete.push(masterRecord._id);
+
+  // Set master back ref to flavours get ready to save
+  for (let i = 0; i < flavours.length; i++) {
+    flavours[i]._master = new ObjectId(masterRecord._id);
+    observables.push(flavours[i].save());
+  }
+  observables.push(masterRecord.save());
+
+  // Attempt to save everything.
+
+  let result = null;
   try {
-    incomingObj.TicketLNG &&
-      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.TicketLNG }));
-    incomingObj.TicketNRCED &&
-      observables.push(this.createNRCED(args, res, next, { ...incomingObj, ...incomingObj.TicketNRCED }));
-
-    if (observables.length > 0) {
-      savedFlavourTickets = await Promise.all(observables);
-
-      flavourIds = savedFlavourTickets.map(flavourTicket => flavourTicket._id);
+    result = await Promise.all(observables);
+  } catch (e) {
+    // Something went wrong. Attempt to clean up
+    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const collection = db.collection('nrpti');
+    let orArray = [];
+    for (let i = 0; i < idsToDelete.length; i++) {
+      orArray.push({ _id: new ObjectId(idsToDelete[i]) });
     }
-  } catch (e) {
+    await collection.deleteMany({
+      $or: orArray
+    });
+
     return {
       status: 'failure',
-      object: savedFlavourTickets,
+      object: result,
       errorMessage: e.message
     };
   }
-
-  // save ticket record
-  let savedTicket = null;
-
-  try {
-    savedTicket = await this.createMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedTicket,
-      flavours: savedFlavourTickets
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedTicket,
-      errorMessage: e.message
-    };
-  }
+  return {
+    status: 'success',
+    object: result
+  };
 };
 
 /**
@@ -107,7 +126,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master ticket record
  */
-exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let Ticket = mongoose.model('Ticket');
   let ticket = new Ticket();
 
@@ -193,7 +212,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateUpdated && (ticket.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (ticket.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await ticket.save();
+  return ticket;
 };
 
 /**
@@ -225,7 +244,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
  * @param {*} incomingObj see example
  * @returns created lng ticket record
  */
-exports.createLNG = async function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   let TicketLNG = mongoose.model('TicketLNG');
   let ticketLNG = new TicketLNG();
 
@@ -315,7 +334,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
 
   ticketLNG = BusinessLogicManager.applyBusinessLogicOnPost(ticketLNG);
 
-  return await ticketLNG.save();
+  return ticketLNG;
 };
 
 /**
@@ -347,7 +366,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced ticket record
  */
-exports.createNRCED = async function(args, res, next, incomingObj) {
+exports.createNRCED = function (args, res, next, incomingObj) {
   let TicketNRCED = mongoose.model('TicketNRCED');
   let ticketNRCED = new TicketNRCED();
 
@@ -437,5 +456,5 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
 
   ticketNRCED = BusinessLogicManager.applyBusinessLogicOnPost(ticketNRCED);
 
-  return await ticketNRCED.save();
+  return ticketNRCED;
 };

@@ -1,6 +1,7 @@
 let mongoose = require('mongoose');
 let ObjectId = require('mongoose').Types.ObjectId;
 let postUtils = require('../../utils/post-utils');
+let mongodb = require('../../utils/mongodb');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
@@ -32,49 +33,67 @@ const BusinessLogicManager = require('../../utils/business-logic-manager');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function(args, res, next, incomingObj) {
-  // save flavour records
-  let observables = [];
-  let savedFlavourOrders = [];
+exports.createRecord = async function (args, res, next, incomingObj) {
+  let flavours = [];
   let flavourIds = [];
+  let observables = [];
+  // We have this in case there's error and we need to clean up.
+  let idsToDelete = [];
 
+  // Prepare flavours
+  incomingObj.OrderLNG &&
+    flavours.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.OrderLNG }));
+  incomingObj.OrderNRCED &&
+    flavours.push(
+      this.createNRCED(args, res, next, { ...incomingObj, ...incomingObj.OrderNRCED })
+    );
+
+  // Get flavour ids for master
+  if (flavours.length > 0) {
+    flavourIds = flavours.map(
+      flavour => flavour._id
+    );
+    idsToDelete = [...flavourIds];
+  }
+
+  // Prepare master
+  let masterRecord = this.createMaster(args, res, next, incomingObj, flavourIds);
+  idsToDelete.push(masterRecord._id);
+
+  // Set master back ref to flavours get ready to save
+  for (let i = 0; i < flavours.length; i++) {
+    flavours[i]._master = new ObjectId(masterRecord._id);
+    observables.push(flavours[i].save());
+  }
+  observables.push(masterRecord.save());
+
+  // Attempt to save everything.
+
+  let result = null;
   try {
-    incomingObj.OrderLNG &&
-      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.OrderLNG }));
-    incomingObj.OrderNRCED &&
-      observables.push(this.createNRCED(args, res, next, { ...incomingObj, ...incomingObj.OrderNRCED }));
-
-    if (observables.length > 0) {
-      savedFlavourOrders = await Promise.all(observables);
-
-      flavourIds = savedFlavourOrders.map(flavourOrder => flavourOrder._id);
+    result = await Promise.all(observables);
+  } catch (e) {
+    // Something went wrong. Attempt to clean up
+    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const collection = db.collection('nrpti');
+    let orArray = [];
+    for (let i = 0; i < idsToDelete.length; i++) {
+      orArray.push({ _id: new ObjectId(idsToDelete[i]) });
     }
-  } catch (e) {
+    await collection.deleteMany({
+      $or: orArray
+    });
+
     return {
       status: 'failure',
-      object: savedFlavourOrders,
+      object: result,
       errorMessage: e.message
     };
   }
-
-  // save order record
-  let savedOrder = null;
-
-  try {
-    savedOrder = await this.createMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedOrder,
-      flavours: savedFlavourOrders
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedOrder,
-      errorMessage: e.message
-    };
-  }
+  return {
+    status: 'success',
+    object: result
+  };
 };
 
 /**
@@ -107,7 +126,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master order record
  */
-exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let Order = mongoose.model('Order');
   let order = new Order();
 
@@ -192,7 +211,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateUpdated && (order.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (order.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await order.save();
+  return order;
 };
 
 /**
@@ -224,7 +243,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
  * @param {*} incomingObj see example
  * @returns created lng order record
  */
-exports.createLNG = async function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   let OrderLNG = mongoose.model('OrderLNG');
   let orderLNG = new OrderLNG();
 
@@ -313,7 +332,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
 
   orderLNG = BusinessLogicManager.applyBusinessLogicOnPost(orderLNG);
 
-  return await orderLNG.save();
+  return orderLNG;
 };
 
 /**
@@ -345,7 +364,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced order record
  */
-exports.createNRCED = async function(args, res, next, incomingObj) {
+exports.createNRCED = function (args, res, next, incomingObj) {
   let OrderNRCED = mongoose.model('OrderNRCED');
   let orderNRCED = new OrderNRCED();
 
@@ -436,5 +455,5 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
 
   orderNRCED = BusinessLogicManager.applyBusinessLogicOnPost(orderNRCED);
 
-  return await orderNRCED.save();
+  return orderNRCED;
 };
