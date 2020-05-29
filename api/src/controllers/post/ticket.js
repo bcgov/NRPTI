@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
-const mongodb = require('../../utils/mongodb');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
@@ -34,66 +33,11 @@ const BusinessLogicManager = require('../../utils/business-logic-manager');
  * @returns object containing the operation's status and created records
  */
 exports.createRecord = async function (args, res, next, incomingObj) {
-  let flavours = [];
-  let flavourIds = [];
-  let observables = [];
-  // We have this in case there's error and we need to clean up.
-  let idsToDelete = [];
-
-  // Prepare flavours
-  incomingObj.TicketLNG &&
-    flavours.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.TicketLNG }));
-  incomingObj.TicketNRCED &&
-    flavours.push(
-      this.createNRCED(args, res, next, { ...incomingObj, ...incomingObj.TicketNRCED })
-    );
-
-  // Get flavour ids for master
-  if (flavours.length > 0) {
-    flavourIds = flavours.map(
-      flavour => flavour._id
-    );
-    idsToDelete = [...flavourIds];
+  const flavourFunctions = {
+    TicketLNG: this.createLNG,
+    TicketNRCED: this.createNRCED
   }
-
-  // Prepare master
-  let masterRecord = this.createMaster(args, res, next, incomingObj, flavourIds);
-  idsToDelete.push(masterRecord._id);
-
-  // Set master back ref to flavours get ready to save
-  for (let i = 0; i < flavours.length; i++) {
-    flavours[i]._master = new ObjectId(masterRecord._id);
-    observables.push(flavours[i].save());
-  }
-  observables.push(masterRecord.save());
-
-  // Attempt to save everything.
-
-  let result = null;
-  try {
-    result = await Promise.all(observables);
-  } catch (e) {
-    // Something went wrong. Attempt to clean up
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
-    const collection = db.collection('nrpti');
-    let orArray = [];
-    for (let i = 0; i < idsToDelete.length; i++) {
-      orArray.push({ _id: new ObjectId(idsToDelete[i]) });
-    }
-    await collection.deleteMany({
-      $or: orArray
-    });
-
-    return {
-      status: 'failure',
-      object: result,
-      errorMessage: e.message
-    };
-  }
-  return {
-    status: 'success',
-    object: result
-  };
+  return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
 /**
