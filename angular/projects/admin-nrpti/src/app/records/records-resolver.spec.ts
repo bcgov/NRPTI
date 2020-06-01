@@ -93,13 +93,14 @@ describe('RecordsResolver', () => {
             'CourtConviction'
           ],
           [],
-          jasmine.any(Number),
-          jasmine.any(Number),
+          1,
+          25,
           '-dateAdded',
           {},
           false,
           {},
-          []
+          [],
+          {}
         );
       });
     });
@@ -163,13 +164,14 @@ describe('RecordsResolver', () => {
             'CourtConviction'
           ],
           [],
-          jasmine.any(Number),
-          jasmine.any(Number),
+          1,
+          25,
           '-dateAdded',
           {},
           false,
           {},
-          []
+          [],
+          {}
         );
       });
     });
@@ -239,7 +241,8 @@ describe('RecordsResolver', () => {
           {},
           false,
           { projectName: 'LNG Canada' },
-          []
+          [],
+          {}
         );
       });
     });
@@ -309,7 +312,8 @@ describe('RecordsResolver', () => {
           {},
           false,
           { projectName: 'LNG Canada,Coastal Gaslink' },
-          []
+          [],
+          {}
         );
       });
     });
@@ -376,10 +380,11 @@ describe('RecordsResolver', () => {
           1,
           25,
           '-dateAdded',
-          { projectName: '(ne)Coastal Gaslink' },
+          {},
           false,
           {},
-          []
+          [],
+          { projectName: 'Coastal Gaslink' },
         );
       });
     });
@@ -449,7 +454,8 @@ describe('RecordsResolver', () => {
           {},
           false,
           {},
-          []
+          [],
+          {}
         );
       });
     });

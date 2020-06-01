@@ -15,106 +15,137 @@ function isEmpty(obj) {
   return true;
 }
 
-let generateExpArray = async function(field, prefix = '') {
-  if (field && field != undefined) {
-    let queryString = qs.parse(field);
-    defaultLog.info('queryString:', queryString);
-    // Note that we need map and not forEach here because Promise.all uses
-    // the returned array!
-    return await Promise.all(
-      Object.keys(queryString).map(async item => {
-        let entry = queryString[item];
-        defaultLog.info('item:', item, entry);
-        if (Array.isArray(entry)) {
-          // handle nor filter
-          const norFilterString = '(nor)';
-          if (item.startsWith(norFilterString)) {
-            const propertyName = item.substr(item.indexOf(norFilterString) + norFilterString.length);
-
-            let orArray = entry.map(element => {
-              return getConvertedValue(propertyName, element);
-            });
-
-            return { $nor: orArray };
-          }
-
-          // handle or filter
-          let orArray = entry.map(element => {
-            return getConvertedValue(item, element);
-          });
-
-          return { $or: orArray };
-        } else if (moment(entry, moment.ISO_8601).isValid()) {
-          // Pluck the variable off the string because this is a date object.  It should
-          // always start with either dateRangeFromFilter or _master.dateRangeFromFilter
-
-          const dateRangeFromSearchString = prefix + 'dateRangeFromFilter';
-          const dateRangeToSearchString = prefix + 'dateRangeToFilter';
-
-          if (item.startsWith(dateRangeFromSearchString)) {
-            const propertyName = item.substr(
-              item.indexOf(dateRangeFromSearchString) + dateRangeFromSearchString.length
-            );
-
-            return handleDateStartItem(prefix + propertyName, entry);
-          } else if (item.startsWith(dateRangeToSearchString)) {
-            const propertyName = item.substr(item.indexOf('dateRangeToFilter') + 'dateRangeToFilter'.length);
-
-            return handleDateEndItem(prefix + propertyName, entry);
-          } else {
-            // Invalid. return empty {}
-            return {};
-          }
-        } else if (item === 'hasDocuments') {
-          // We're checking if there are docs in the record or not.
-          if (entry === 'true') {
-            return { documents: { $not: { $size: 0 } } };
-          } else if (entry === 'false') {
-            return { documents: { $size: 0 } };
-          }
-        } else {
-          return getConvertedValue(item, entry);
-        }
-      })
-    );
+/**
+ * Generate an array of expressions for the query string parameters.
+ *
+ * @param {string} field query string
+ * @param {string} [logicalOperator='$or'] mongo logical operator ('$or', '$and')
+ * @param {string} [comparisonOperator='$eq'] mongo comparison operator ('$eq', '$ne')
+ * @returns {object[]} array of objects
+ */
+let generateExpArray = async function(field, logicalOperator = '$or', comparisonOperator = '$eq') {
+  if (!field) {
+    return;
   }
+
+  let queryString = qs.parse(field);
+  defaultLog.info('queryString:', queryString);
+  // Note that we need map and not forEach here because Promise.all uses the returned array!
+  return await Promise.all(
+    Object.keys(queryString).map(async item => {
+      let entry = queryString[item];
+      defaultLog.info('item:', item, entry);
+
+      if (Array.isArray(entry)) {
+        return getArrayExp(item, entry, logicalOperator, comparisonOperator);
+      }
+
+      if (moment(entry, moment.ISO_8601).isValid()) {
+        return getDateExp(item, entry);
+      }
+
+      if (item === 'hasDocuments') {
+        return getHasDocumentsExp(entry);
+      }
+
+      return getConvertedValue(item, entry, comparisonOperator);
+    })
+  );
 };
 exports.generateExpArray = generateExpArray;
 
-const getConvertedValue = function(item, entry) {
-  if (isNaN(entry)) {
+/**
+ * Generate an expression for a paramter with an array of values.
+ *
+ * @param {string} item parameter key
+ * @param {*[]} entry parameter values array
+ * @param {string} logicalOperator mongo logical operator ('$and', '$or', '$nor')
+ * @param {*} comparisonOperator mongo comparison operator ('$eq', '$ne')
+ * @returns {object}
+ */
+const getArrayExp = function(item, entry, logicalOperator, comparisonOperator) {
+  if (!item || !entry || !entry.length) {
+    // Invalid
+    return {};
+  }
+
+  let arrayExp = entry.map(element => {
+    return getConvertedValue(item, element, comparisonOperator);
+  });
+
+  return { [logicalOperator]: arrayExp };
+};
+exports.getArrayExp = getArrayExp;
+
+const getDateExp = function(item, entry, prefix = '') {
+  // Pluck the variable off the string because this is a date object.  It should
+  // always start with either dateRangeFromFilter or dateRangeFromFilter
+  const dateRangeFromSearchString = prefix + 'dateRangeFromFilter';
+  const dateRangeToSearchString = prefix + 'dateRangeToFilter';
+
+  if (item.startsWith(dateRangeFromSearchString)) {
+    const propertyName = item.substr(item.indexOf(dateRangeFromSearchString) + dateRangeFromSearchString.length);
+
+    return handleDateStartItem(prefix + propertyName, entry);
+  } else if (item.startsWith(dateRangeToSearchString)) {
+    const propertyName = item.substr(item.indexOf('dateRangeToFilter') + 'dateRangeToFilter'.length);
+
+    return handleDateEndItem(prefix + propertyName, entry);
+  } else {
+    // Invalid
+    return {};
+  }
+};
+exports.getDateExp = getDateExp;
+
+const getHasDocumentsExp = function(entry) {
+  // We're checking if there are docs in the record or not.
+  if (entry === 'true') {
+    return { documents: { $not: { $size: 0 } } };
+  } else if (entry === 'false') {
+    return { documents: { $size: 0 } };
+  } else {
+    // Invalid
+    return {};
+  }
+};
+exports.getHasDocumentsExp = getHasDocumentsExp;
+
+/**
+ * Generate an expression for a basic parameter key/value
+ *
+ * @param {string} item parameter key
+ * @param {*} entry parameter value
+ * @param {string} comparisonOperator mongo comparison operator ('$eq', '$ne')
+ * @returns {object}
+ */
+const getConvertedValue = function(item, entry, comparisonOperator) {
+  if (!item || !comparisonOperator) {
+    return {};
+  }
+
+  if (isNaN(entry) || entry === null) {
     if (mongoose.Types.ObjectId.isValid(entry)) {
       defaultLog.info('objectid', entry);
       // ObjectID
-      return { [item]: mongoose.Types.ObjectId(entry) };
+      return { [item]: { [comparisonOperator]: mongoose.Types.ObjectId(entry) } };
     } else if (entry === 'true') {
       defaultLog.info('bool');
       // Bool
-      let tempObj = {};
-      tempObj[item] = true;
-      tempObj.active = true;
-      return tempObj;
+      return { [item]: { [comparisonOperator]: true } };
     } else if (entry === 'false') {
       defaultLog.info('bool');
       // Bool
-      return { [item]: false };
+      return { [item]: { [comparisonOperator]: false } };
     } else {
       defaultLog.info('string');
-
-      // handle not equal filter
-      const neFilterString = '(ne)';
-      if (entry.startsWith(neFilterString)) {
-        const entryValue = entry.substr(entry.indexOf(neFilterString) + neFilterString.length);
-
-        return { [item]: { $ne: entryValue } };
-      }
-
-      // handle equal filter
-      return { [item]: entry };
+      // String
+      return { [item]: { [comparisonOperator]: entry } };
     }
   } else {
     defaultLog.info('number');
-    return { [item]: parseInt(entry) };
+    // Number
+    return { [item]: { [comparisonOperator]: parseInt(entry) } };
   }
 };
 exports.getConvertedValue = getConvertedValue;
@@ -152,6 +183,7 @@ let searchCollection = async function(
   populate = false,
   and,
   or,
+  nor,
   subset
 ) {
   let properties = undefined;
@@ -165,7 +197,7 @@ let searchCollection = async function(
     searchProperties = { $text: { $search: keywords, $caseSensitive: caseSensitive } };
   }
 
-  let match = await generateMatchesForAggregation(and, or, searchProperties, properties, schemaName, roles);
+  let match = await generateMatchesForAggregation(and, or, nor, searchProperties, properties, schemaName, roles);
 
   defaultLog.info('match:', match);
 
@@ -291,22 +323,39 @@ exports.protectedGet = function(args, res, next) {
   executeQuery(args, res, next);
 };
 
-// Generates the main match query, and optionally generates the master field match to be used
-// later in the pipeline.
-const generateMatchesForAggregation = async function(and, or, searchProperties, properties, schemaName, roles) {
+// Generates the main match query
+const generateMatchesForAggregation = async function(and, or, nor, searchProperties, properties, schemaName, roles) {
   const andExpArray = (await generateExpArray(and)) || [];
   defaultLog.info('andExpArray:', andExpArray);
 
   const orExpArray = (await generateExpArray(or)) || [];
   defaultLog.info('orExpArray:', orExpArray);
 
+  const norExpArray = (await generateExpArray(nor, '$and', '$ne')) || [];
+  defaultLog.info('norExpArray:', norExpArray);
+
+  const expArrays = [];
+  if (andExpArray.length === 1) {
+    expArrays.push(andExpArray[0]);
+  } else if (andExpArray.length > 1) {
+    expArrays.push({ $and: andExpArray });
+  }
+  if (orExpArray.length === 1) {
+    expArrays.push(orExpArray[0]);
+  } else if (orExpArray.length > 1) {
+    expArrays.push({ $and: orExpArray });
+  }
+  if (norExpArray.length === 1) {
+    expArrays.push(norExpArray[0]);
+  } else if (norExpArray.length > 1) {
+    expArrays.push({ $and: norExpArray });
+  }
+
   let modifier = {};
-  if (andExpArray.length > 0 && orExpArray.length > 0) {
-    modifier = { $and: [{ $and: andExpArray }, { $and: orExpArray }] };
-  } else if (andExpArray.length === 0 && orExpArray.length > 0) {
-    modifier = { $and: orExpArray };
-  } else if (andExpArray.length > 0 && orExpArray.length === 0) {
-    modifier = { $and: andExpArray };
+  if (expArrays.length === 1) {
+    modifier = expArrays[0];
+  } else if (expArrays.length > 1) {
+    modifier = { $and: expArrays };
   }
 
   let match = {
@@ -331,6 +380,7 @@ const executeQuery = async function(args, res, next) {
   let caseSensitive = args.swagger.params.caseSensitive ? args.swagger.params.caseSensitive.value : false;
   let and = args.swagger.params.and ? args.swagger.params.and.value : '';
   let or = args.swagger.params.or ? args.swagger.params.or.value : '';
+  let nor = args.swagger.params.nor ? args.swagger.params.nor.value : '';
   let subset = args.swagger.params.subset ? args.swagger.params.subset.value : null;
   defaultLog.info('Searching keywords:', keywords);
   defaultLog.info('Searching datasets:', dataset);
@@ -341,6 +391,7 @@ const executeQuery = async function(args, res, next) {
   defaultLog.info('caseSensitive:', caseSensitive);
   defaultLog.info('and:', and);
   defaultLog.info('or:', or);
+  defaultLog.info('nor:', nor);
   defaultLog.info('_id:', _id);
   defaultLog.info('populate:', populate);
   defaultLog.info('subset:', subset);
@@ -390,6 +441,7 @@ const executeQuery = async function(args, res, next) {
       populate,
       and,
       or,
+      nor,
       subset
     );
 

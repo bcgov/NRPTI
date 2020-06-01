@@ -43,43 +43,44 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       subset = params.subset.split(',');
     }
 
-    const queryModifier = {};
-    const filterParams = {};
+    const and = {};
+    const or = {};
+    const nor = {};
 
     if (params.dateRangeFromFilter) {
-      filterParams['dateRangeFromFilterdateIssued'] = params.dateRangeFromFilter;
+      or['dateRangeFromFilterdateIssued'] = params.dateRangeFromFilter;
     }
 
     if (params.dateRangeToFilter) {
-      filterParams['dateRangeToFilterdateIssued'] = params.dateRangeToFilter;
+      or['dateRangeToFilterdateIssued'] = params.dateRangeToFilter;
     }
 
     if (params.issuedToCompany && params.issuedToIndividual) {
-      filterParams['issuedTo.type'] = 'Company,Individual,IndividualCombined';
+      or['issuedTo.type'] = 'Company,Individual,IndividualCombined';
     } else if (params.issuedToCompany) {
-      filterParams['issuedTo.type'] = 'Company';
+      or['issuedTo.type'] = 'Company';
     } else if (params.issuedToIndividual) {
-      filterParams['issuedTo.type'] = 'Individual,IndividualCombined';
+      or['issuedTo.type'] = 'Individual,IndividualCombined';
     }
 
     if (params.agency) {
-      filterParams['issuingAgency'] = params.agency;
+      or['issuingAgency'] = params.agency;
     }
 
     if (params.act) {
-      filterParams['legislation.act'] = params.act;
+      or['legislation.act'] = params.act;
     }
 
     if (params.regulation) {
-      filterParams['legislation.regulation'] = params.regulation;
+      or['legislation.regulation'] = params.regulation;
     }
 
     if (params.sourceSystemRef) {
-      filterParams['sourceSystemRef'] = params.sourceSystemRef;
+      or['sourceSystemRef'] = params.sourceSystemRef;
     }
 
     if (params.hasDocuments) {
-      filterParams['hasDocuments'] = params.hasDocuments;
+      or['hasDocuments'] = params.hasDocuments;
     }
 
     if (params.projects) {
@@ -96,18 +97,18 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       if (params.projects.includes('otherProjects')) {
         if (projectNames.length === 0) {
           // Selecting only Other should return all projects EXCEPT for LNG Canada and Coastal Gaslink
-          queryModifier['(nor)projectName'] = 'LNG Canada,Coastal Gaslink';
+          nor['projectName'] = 'LNG Canada,Coastal Gaslink';
         } else if (projectNames.length === 1) {
           if (projectNames[0] === 'LNG Canada') {
             // Other + LNG Canada is equivalent to NOT Coastal Gaslink
-            queryModifier['projectName'] = '(ne)Coastal Gaslink';
+            nor['projectName'] = 'Coastal Gaslink';
           } else {
             // Other + Coastal Gaslink is equivalent to NOT LNG Canada
-            queryModifier['projectName'] = '(ne)LNG Canada';
+            nor['projectName'] = 'LNG Canada';
           }
         }
       } else if (projectNames.length) {
-        filterParams['projectName'] = projectNames.join(',');
+        or['projectName'] = projectNames.join(',');
       }
     }
 
@@ -119,10 +120,11 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       tableObject.currentPage,
       tableObject.pageSize,
       tableObject.sortBy || '-dateAdded', // This needs to be common between all datasets to work properly
-      queryModifier,
+      and,
       false,
-      filterParams,
-      subset
+      or,
+      subset,
+      nor
     );
   }
 }
