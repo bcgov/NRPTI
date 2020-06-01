@@ -1,5 +1,6 @@
-let mongoose = require('mongoose');
-let ObjectId = require('mongoose').Types.ObjectId;
+const mongoose = require('mongoose');
+const ObjectId = require('mongoose').Types.ObjectId;
+const postUtils = require('../../utils/post-utils');
 
 /**
  * Performs all operations necessary to create a master Permit record and its associated flavour records.
@@ -25,47 +26,11 @@ let ObjectId = require('mongoose').Types.ObjectId;
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function(args, res, next, incomingObj) {
-  // save flavour records
-  let observables = [];
-  let savedFlavourPermits = [];
-  let flavourIds = [];
-
-  try {
-    incomingObj.PermitLNG &&
-      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.PermitLNG }));
-
-    if (observables.length > 0) {
-      savedFlavourPermits = await Promise.all(observables);
-
-      flavourIds = savedFlavourPermits.map(flavourPermit => flavourPermit._id);
-    }
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedFlavourPermits,
-      errorMessage: e.message
-    };
+exports.createRecord = async function (args, res, next, incomingObj) {
+  const flavourFunctions = {
+    PermitLNG: this.createLNG,
   }
-
-  // save permit record
-  let savedPermit = null;
-
-  try {
-    savedPermit = await this.createMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedPermit,
-      flavours: savedFlavourPermits
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedPermit,
-      errorMessage: e.message
-    };
-  }
+  return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
 /**
@@ -93,7 +58,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master permit record
  */
-exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let Permit = mongoose.model('Permit');
   let permit = new Permit();
 
@@ -157,7 +122,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateUpdated && (permit.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (permit.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await permit.save();
+  return permit;
 };
 
 /**
@@ -184,7 +149,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
  * @param {*} incomingObj see example
  * @returns created lng permit record
  */
-exports.createLNG = async function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   let PermitLNG = mongoose.model('PermitLNG');
   let permitLNG = new PermitLNG();
 
@@ -248,5 +213,5 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.sourceDateUpdated && (permitLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (permitLNG.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await permitLNG.save();
+  return permitLNG;
 };
