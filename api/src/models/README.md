@@ -1,5 +1,5 @@
 # NRPTI Data Models
-This is a collection of documentation of all of the data models NRPTI and the sites that it serves (LNG, NRCED, and BCMI). The general data models are stored in the master folder and the site specific data models are stored in their respective folders. Below are a list of the site wide data models that can be found in the [master](https://github.com/bcgov/NRPTI/tree/master/api/src/models/master) directory.
+This is a collection of documentation of all of the data models in NRPTI and the sites that it serves (LNG, NRCED, and BCMI). The general data models are stored in the master folder and the site specific data models are stored in their respective folders. Below are a list of the site wide data models that can be found in the [master](https://github.com/bcgov/NRPTI/tree/master/api/src/models/master) directory.
 ## Mine
 Mines are the main data object for BCMI and pull data from Core.
 |Field|Type|Description|

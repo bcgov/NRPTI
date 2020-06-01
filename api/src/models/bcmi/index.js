@@ -1,1 +1,1 @@
-exports.mineBCMI= require('./mine-bcmi');
+exports.mineBCMI= require('./mine');
