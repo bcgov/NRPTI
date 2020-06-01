@@ -1,6 +1,6 @@
-let mongoose = require('mongoose');
-let ObjectId = require('mongoose').Types.ObjectId;
-let postUtils = require('../../utils/post-utils');
+const mongoose = require('mongoose');
+const ObjectId = require('mongoose').Types.ObjectId;
+const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
@@ -32,49 +32,12 @@ const BusinessLogicManager = require('../../utils/business-logic-manager');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function(args, res, next, incomingObj) {
-  // save flavour records
-  let observables = [];
-  let savedFlavourOrders = [];
-  let flavourIds = [];
-
-  try {
-    incomingObj.OrderLNG &&
-      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.OrderLNG }));
-    incomingObj.OrderNRCED &&
-      observables.push(this.createNRCED(args, res, next, { ...incomingObj, ...incomingObj.OrderNRCED }));
-
-    if (observables.length > 0) {
-      savedFlavourOrders = await Promise.all(observables);
-
-      flavourIds = savedFlavourOrders.map(flavourOrder => flavourOrder._id);
-    }
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedFlavourOrders,
-      errorMessage: e.message
-    };
+exports.createRecord = async function (args, res, next, incomingObj) {
+  const flavourFunctions = {
+    OrderLNG: this.createLNG,
+    OrderNRCED: this.createNRCED
   }
-
-  // save order record
-  let savedOrder = null;
-
-  try {
-    savedOrder = await this.createMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedOrder,
-      flavours: savedFlavourOrders
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedOrder,
-      errorMessage: e.message
-    };
-  }
+  return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
 /**
@@ -107,7 +70,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master order record
  */
-exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let Order = mongoose.model('Order');
   let order = new Order();
 
@@ -192,7 +155,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateUpdated && (order.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (order.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await order.save();
+  return order;
 };
 
 /**
@@ -224,7 +187,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
  * @param {*} incomingObj see example
  * @returns created lng order record
  */
-exports.createLNG = async function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   let OrderLNG = mongoose.model('OrderLNG');
   let orderLNG = new OrderLNG();
 
@@ -313,7 +276,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
 
   orderLNG = BusinessLogicManager.applyBusinessLogicOnPost(orderLNG);
 
-  return await orderLNG.save();
+  return orderLNG;
 };
 
 /**
@@ -345,7 +308,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced order record
  */
-exports.createNRCED = async function(args, res, next, incomingObj) {
+exports.createNRCED = function (args, res, next, incomingObj) {
   let OrderNRCED = mongoose.model('OrderNRCED');
   let orderNRCED = new OrderNRCED();
 
@@ -436,5 +399,5 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
 
   orderNRCED = BusinessLogicManager.applyBusinessLogicOnPost(orderNRCED);
 
-  return await orderNRCED.save();
+  return orderNRCED;
 };

@@ -1,6 +1,6 @@
-let mongoose = require('mongoose');
-let ObjectId = require('mongoose').Types.ObjectId;
-let postUtils = require('../../utils/post-utils');
+const mongoose = require('mongoose');
+const ObjectId = require('mongoose').Types.ObjectId;
+const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
@@ -32,49 +32,12 @@ const BusinessLogicManager = require('../../utils/business-logic-manager');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function(args, res, next, incomingObj) {
-  // save flavour records
-  let observables = [];
-  let savedFlavourInspections = [];
-  let flavourIds = [];
-
-  try {
-    incomingObj.InspectionLNG &&
-      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.InspectionLNG }));
-    incomingObj.InspectionNRCED &&
-      observables.push(this.createNRCED(args, res, next, { ...incomingObj, ...incomingObj.InspectionNRCED }));
-
-    if (observables.length > 0) {
-      savedFlavourInspections = await Promise.all(observables);
-
-      flavourIds = savedFlavourInspections.map(flavourInspection => flavourInspection._id);
-    }
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedFlavourInspections,
-      errorMessage: e.message
-    };
+exports.createRecord = async function (args, res, next, incomingObj) {
+  const flavourFunctions = {
+    InspectionLNG: this.createLNG,
+    InspectionNRCED: this.createNRCED
   }
-
-  // save inspection record
-  let savedInspection = null;
-
-  try {
-    savedInspection = await this.createMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedInspection,
-      flavours: savedFlavourInspections
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedInspection,
-      errorMessage: e.message
-    };
-  }
+  return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
 /**
@@ -107,7 +70,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master inspection record
  */
-exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let Inspection = mongoose.model('Inspection');
   let inspection = new Inspection();
 
@@ -194,7 +157,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateUpdated && (inspection.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (inspection.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await inspection.save();
+  return inspection;
 };
 
 /**
@@ -226,7 +189,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
  * @param {*} incomingObj see example
  * @returns created lng inspection record
  */
-exports.createLNG = async function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   let InspectionLNG = mongoose.model('InspectionLNG');
   let inspectionLNG = new InspectionLNG();
 
@@ -317,7 +280,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
 
   inspectionLNG = BusinessLogicManager.applyBusinessLogicOnPost(inspectionLNG);
 
-  return await inspectionLNG.save();
+  return inspectionLNG;
 };
 
 /**
@@ -349,7 +312,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced inspection record
  */
-exports.createNRCED = async function(args, res, next, incomingObj) {
+exports.createNRCED = function (args, res, next, incomingObj) {
   let InspectionNRCED = mongoose.model('InspectionNRCED');
   let inspectionNRCED = new InspectionNRCED();
 
@@ -441,5 +404,5 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
 
   inspectionNRCED = BusinessLogicManager.applyBusinessLogicOnPost(inspectionNRCED);
 
-  return await inspectionNRCED.save();
+  return inspectionNRCED;
 };

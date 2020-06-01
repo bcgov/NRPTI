@@ -1,5 +1,6 @@
-let mongoose = require('mongoose');
-let ObjectId = require('mongoose').Types.ObjectId;
+const mongoose = require('mongoose');
+const ObjectId = require('mongoose').Types.ObjectId;
+const postUtils = require('../../utils/post-utils');
 
 /**
  * Performs all operations necessary to create a master Certificate record and its associated flavour records.
@@ -25,47 +26,11 @@ let ObjectId = require('mongoose').Types.ObjectId;
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function(args, res, next, incomingObj) {
-  // save flavour records
-  let observables = [];
-  let savedFlavourCertificates = [];
-  let flavourIds = [];
-
-  try {
-    incomingObj.CertificateLNG &&
-      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.CertificateLNG }));
-
-    if (observables.length > 0) {
-      savedFlavourCertificates = await Promise.all(observables);
-
-      flavourIds = savedFlavourCertificates.map(flavourCertificate => flavourCertificate._id);
-    }
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedFlavourCertificates,
-      errorMessage: e.message
-    };
+exports.createRecord = async function (args, res, next, incomingObj) {
+  const flavourFunctions = {
+    CertificateLNG: this.createLNG
   }
-
-  // save certificate record
-  let savedCertificate = null;
-
-  try {
-    savedCertificate = await this.createMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedCertificate,
-      flavours: savedFlavourCertificates
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedCertificate,
-      errorMessage: e.message
-    };
-  }
+  return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
 /**
@@ -93,7 +58,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master certificate record
  */
-exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let Certificate = mongoose.model('Certificate');
   let certificate = new Certificate();
 
@@ -157,7 +122,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateUpdated && (certificate.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (certificate.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await certificate.save();
+  return certificate;
 };
 
 /**
@@ -184,7 +149,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
  * @param {*} incomingObj see example
  * @returns created lng certificate record
  */
-exports.createLNG = async function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   let CertificateLNG = mongoose.model('CertificateLNG');
   let certificateLNG = new CertificateLNG();
 
@@ -250,5 +215,5 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.sourceDateUpdated && (certificateLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (certificateLNG.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await certificateLNG.save();
+  return certificateLNG;
 };
