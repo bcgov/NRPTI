@@ -1,5 +1,6 @@
-let mongoose = require('mongoose');
-let ObjectId = require('mongoose').Types.ObjectId;
+const mongoose = require('mongoose');
+const ObjectId = require('mongoose').Types.ObjectId;
+const postUtils = require('../../utils/post-utils');
 
 /**
  * Performs all operations necessary to create a master Construction Plan record and its associated flavour records.
@@ -25,47 +26,11 @@ let ObjectId = require('mongoose').Types.ObjectId;
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function(args, res, next, incomingObj) {
-  // save flavour records
-  let observables = [];
-  let savedFlavourConstructionPlans = [];
-  let flavourIds = [];
-
-  try {
-    incomingObj.ConstructionPlanLNG &&
-      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.ConstructionPlanLNG }));
-
-    if (observables.length > 0) {
-      savedFlavourConstructionPlans = await Promise.all(observables);
-
-      flavourIds = savedFlavourConstructionPlans.map(flavourConstructionPlan => flavourConstructionPlan._id);
-    }
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedFlavourConstructionPlans,
-      errorMessage: e.message
-    };
+exports.createRecord = async function (args, res, next, incomingObj) {
+  const flavourFunctions = {
+    ConstructionPlanLNG: this.createLNG
   }
-
-  // save constructionPlan record
-  let savedConstructionPlan = null;
-
-  try {
-    savedConstructionPlan = await this.createMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedConstructionPlan,
-      flavours: savedFlavourConstructionPlans
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedConstructionPlan,
-      errorMessage: e.message
-    };
-  }
+  return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
 /**
@@ -93,7 +58,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master constructionPlan record
  */
-exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let ConstructionPlan = mongoose.model('ConstructionPlan');
   let constructionPlan = new ConstructionPlan();
 
@@ -143,7 +108,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateUpdated && (constructionPlan.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (constructionPlan.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await constructionPlan.save();
+  return constructionPlan;
 };
 
 /**
@@ -170,7 +135,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
  * @param {*} incomingObj see example
  * @returns created lng constructionPlan record
  */
-exports.createLNG = async function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   let ConstructionPlanLNG = mongoose.model('ConstructionPlanLNG');
   let constructionPlanLNG = new ConstructionPlanLNG();
 
@@ -221,5 +186,5 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.sourceDateUpdated && (constructionPlanLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (constructionPlanLNG.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await constructionPlanLNG.save();
+  return constructionPlanLNG;
 };

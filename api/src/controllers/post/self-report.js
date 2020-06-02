@@ -1,5 +1,6 @@
-let mongoose = require('mongoose');
-let ObjectId = require('mongoose').Types.ObjectId;
+const mongoose = require('mongoose');
+const ObjectId = require('mongoose').Types.ObjectId;
+const postUtils = require('../../utils/post-utils');
 
 /**
  * Performs all operations necessary to create a master Self Report record and its associated flavour records.
@@ -25,47 +26,11 @@ let ObjectId = require('mongoose').Types.ObjectId;
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function(args, res, next, incomingObj) {
-  // save flavour records
-  let observables = [];
-  let savedFlavourSelfReports = [];
-  let flavourIds = [];
-
-  try {
-    incomingObj.SelfReportLNG &&
-      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.SelfReportLNG }));
-
-    if (observables.length > 0) {
-      savedFlavourSelfReports = await Promise.all(observables);
-
-      flavourIds = savedFlavourSelfReports.map(flavourSelfReport => flavourSelfReport._id);
-    }
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedFlavourSelfReports,
-      errorMessage: e.message
-    };
+exports.createRecord = async function (args, res, next, incomingObj) {
+  const flavourFunctions = {
+    SelfReportLNG: this.createLNG
   }
-
-  // save selfReport record
-  let savedSelfReport = null;
-
-  try {
-    savedSelfReport = await this.createMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedSelfReport,
-      flavours: savedFlavourSelfReports
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedSelfReport,
-      errorMessage: e.message
-    };
-  }
+  return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
 /**
@@ -93,7 +58,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master selfReport record
  */
-exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let SelfReport = mongoose.model('SelfReport');
   let selfReport = new SelfReport();
 
@@ -157,7 +122,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateUpdated && (selfReport.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (selfReport.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await selfReport.save();
+  return selfReport;
 };
 
 /**
@@ -184,7 +149,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
  * @param {*} incomingObj see example
  * @returns created lng selfReport record
  */
-exports.createLNG = async function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   let SelfReportLNG = mongoose.model('SelfReportLNG');
   let selfReportLNG = new SelfReportLNG();
 
@@ -251,5 +216,5 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.sourceDateUpdated && (selfReportLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (selfReportLNG.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await selfReportLNG.save();
+  return selfReportLNG;
 };

@@ -78,6 +78,10 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       filterParams['sourceSystemRef'] = params.sourceSystemRef;
     }
 
+    if (params.hasDocuments) {
+      filterParams['hasDocuments'] = params.hasDocuments;
+    }
+
     // force-reload so we always have latest data
     return this.factoryService.getRecords(
       keywords,

@@ -142,7 +142,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
           this.queryParams['agency'] ||
           this.queryParams['act'] ||
           this.queryParams['regulation'] ||
-          this.queryParams['sourceSystemRef']
+          this.queryParams['sourceSystemRef'] ||
+          this.queryParams['hasDocuments']
         ) {
           this.showAdvancedFilters = true;
         }
@@ -170,13 +171,14 @@ export class RecordsListComponent implements OnInit, OnDestroy {
           this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeToFilter))) ||
         null
       ),
-      issuedToCompany: new FormControl((this.queryParams && this.queryParams.issuedToCompany) || null),
-      issuedToIndividual: new FormControl((this.queryParams && this.queryParams.issuedToIndividual) || null),
+      issuedToCompany: new FormControl((this.queryParams && this.queryParams.issuedToCompany) || false),
+      issuedToIndividual: new FormControl((this.queryParams && this.queryParams.issuedToIndividual) || false),
       agency: new FormControl((this.queryParams && this.queryParams.agency) || null),
       act: new FormControl((this.queryParams && this.queryParams.act) || null),
       regulation: new FormControl((this.queryParams && this.queryParams.regulation) || null),
       activityType: new FormControl((this.queryParams && this.queryParams.activityType) || null),
-      sourceSystemRef: new FormControl((this.queryParams && this.queryParams.sourceSystemRef) || null)
+      sourceSystemRef: new FormControl((this.queryParams && this.queryParams.sourceSystemRef) || null),
+      hasDocuments: new FormControl((this.queryParams && this.queryParams.hasDocuments) || false)
     });
   }
 
@@ -236,6 +238,12 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         this.queryParams['sourceSystemRef'] = changes.sourceSystemRef;
       } else {
         delete this.queryParams['sourceSystemRef'];
+      }
+
+      if (changes.hasDocuments) {
+        this.queryParams['hasDocuments'] = changes.hasDocuments;
+      } else {
+        delete this.queryParams['hasDocuments'];
       }
       this.submit();
     });

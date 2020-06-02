@@ -1,5 +1,6 @@
-let mongoose = require('mongoose');
-let ObjectId = require('mongoose').Types.ObjectId;
+const mongoose = require('mongoose');
+const ObjectId = require('mongoose').Types.ObjectId;
+const postUtils = require('../../utils/post-utils');
 
 /**
  * Performs all operations necessary to create a master Agreement record and its associated flavour records.
@@ -25,47 +26,11 @@ let ObjectId = require('mongoose').Types.ObjectId;
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function(args, res, next, incomingObj) {
-  // save flavour records
-  let observables = [];
-  let savedFlavourAgreements = [];
-  let flavourIds = [];
-
-  try {
-    incomingObj.AgreementLNG &&
-      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.AgreementLNG }));
-
-    if (observables.length > 0) {
-      savedFlavourAgreements = await Promise.all(observables);
-
-      flavourIds = savedFlavourAgreements.map(flavourAgreement => flavourAgreement._id);
-    }
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedFlavourAgreements,
-      errorMessage: e.message
-    };
+exports.createRecord = async function (args, res, next, incomingObj) {
+  const flavourFunctions = {
+    AgreementLNG: this.createLNG
   }
-
-  // save agreement record
-  let savedAgreement = null;
-
-  try {
-    savedAgreement = await this.createMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedAgreement,
-      flavours: savedFlavourAgreements
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedAgreement,
-      errorMessage: e.message
-    };
-  }
+  return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
 /**
@@ -93,7 +58,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master agreement record
  */
-exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let Agreement = mongoose.model('Agreement');
   let agreement = new Agreement();
 
@@ -140,7 +105,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateUpdated && (agreement.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (agreement.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await agreement.save();
+  return agreement;
 };
 
 /**
@@ -167,7 +132,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
  * @param {*} incomingObj see example
  * @returns created lng agreement record
  */
-exports.createLNG = async function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   let AgreementLNG = mongoose.model('AgreementLNG');
   let agreementLNG = new AgreementLNG();
 
@@ -214,5 +179,5 @@ exports.createLNG = async function(args, res, next, incomingObj) {
   incomingObj.sourceDateUpdated && (agreementLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (agreementLNG.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await agreementLNG.save();
+  return agreementLNG;
 };

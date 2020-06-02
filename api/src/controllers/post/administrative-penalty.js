@@ -1,6 +1,6 @@
-let mongoose = require('mongoose');
-let ObjectId = require('mongoose').Types.ObjectId;
-let postUtils = require('../../utils/post-utils');
+const mongoose = require('mongoose');
+const ObjectId = require('mongoose').Types.ObjectId;
+const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
@@ -32,53 +32,12 @@ const BusinessLogicManager = require('../../utils/business-logic-manager');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function(args, res, next, incomingObj) {
-  // save flavour records
-  let observables = [];
-  let savedFlavourAdministrativePenalties = [];
-  let flavourIds = [];
-
-  try {
-    incomingObj.AdministrativePenaltyLNG &&
-      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.AdministrativePenaltyLNG }));
-    incomingObj.AdministrativePenaltyNRCED &&
-      observables.push(
-        this.createNRCED(args, res, next, { ...incomingObj, ...incomingObj.AdministrativePenaltyNRCED })
-      );
-
-    if (observables.length > 0) {
-      savedFlavourAdministrativePenalties = await Promise.all(observables);
-
-      flavourIds = savedFlavourAdministrativePenalties.map(
-        flavourAdministrativePenalty => flavourAdministrativePenalty._id
-      );
-    }
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedFlavourAdministrativePenalties,
-      errorMessage: e.message
-    };
+exports.createRecord = async function (args, res, next, incomingObj) {
+  const flavourFunctions = {
+    AdministrativePenaltyLNG: this.createLNG,
+    AdministrativePenaltyNRCED: this.createNRCED
   }
-
-  // save administrativePenalty record
-  let savedAdministrativePenalty = null;
-
-  try {
-    savedAdministrativePenalty = await this.createMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedAdministrativePenalty,
-      flavours: savedFlavourAdministrativePenalties
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedAdministrativePenalty,
-      errorMessage: e.message
-    };
-  }
+  return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
 /**
@@ -111,7 +70,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master administrativePenalty record
  */
-exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let AdministrativePenalty = mongoose.model('AdministrativePenalty');
   let administrativePenalty = new AdministrativePenalty();
 
@@ -204,7 +163,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateUpdated && (administrativePenalty.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (administrativePenalty.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await administrativePenalty.save();
+  return administrativePenalty;
 };
 
 /**
@@ -236,7 +195,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
  * @param {*} incomingObj see example
  * @returns created lng administrativePenalty record
  */
-exports.createLNG = async function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   let AdministrativePenaltyLNG = mongoose.model('AdministrativePenaltyLNG');
   let administrativePenaltyLNG = new AdministrativePenaltyLNG();
 
@@ -331,7 +290,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
 
   administrativePenaltyLNG = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyLNG);
 
-  return await administrativePenaltyLNG.save();
+  return administrativePenaltyLNG;
 };
 
 /**
@@ -363,7 +322,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced administrativePenalty record
  */
-exports.createNRCED = async function(args, res, next, incomingObj) {
+exports.createNRCED = function (args, res, next, incomingObj) {
   let AdministrativePenaltyNRCED = mongoose.model('AdministrativePenaltyNRCED');
   let administrativePenaltyNRCED = new AdministrativePenaltyNRCED();
 
@@ -458,5 +417,5 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
 
   administrativePenaltyNRCED = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyNRCED);
 
-  return await administrativePenaltyNRCED.save();
+  return administrativePenaltyNRCED;
 };

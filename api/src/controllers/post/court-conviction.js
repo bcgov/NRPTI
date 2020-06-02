@@ -1,6 +1,6 @@
-let mongoose = require('mongoose');
-let ObjectId = require('mongoose').Types.ObjectId;
-let postUtils = require('../../utils/post-utils');
+const mongoose = require('mongoose');
+const ObjectId = require('mongoose').Types.ObjectId;
+const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 /**
@@ -32,49 +32,12 @@ const BusinessLogicManager = require('../../utils/business-logic-manager');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function(args, res, next, incomingObj) {
-  // save flavour records
-  let observables = [];
-  let savedFlavourCourtConvictions = [];
-  let flavourIds = [];
-
-  try {
-    incomingObj.CourtConvictionLNG &&
-      observables.push(this.createLNG(args, res, next, { ...incomingObj, ...incomingObj.CourtConvictionLNG }));
-    incomingObj.CourtConvictionNRCED &&
-      observables.push(this.createNRCED(args, res, next, { ...incomingObj, ...incomingObj.CourtConvictionNRCED }));
-
-    if (observables.length > 0) {
-      savedFlavourCourtConvictions = await Promise.all(observables);
-
-      flavourIds = savedFlavourCourtConvictions.map(flavourCourtConviction => flavourCourtConviction._id);
-    }
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedFlavourCourtConvictions,
-      errorMessage: e.message
-    };
+exports.createRecord = async function (args, res, next, incomingObj) {
+  const flavourFunctions = {
+    CourtConvictionLNG: this.createLNG,
+    CourtConvictionNRCED: this.createNRCED
   }
-
-  // save courtConviction record
-  let savedCourtConviction = null;
-
-  try {
-    savedCourtConviction = await this.createMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedCourtConviction,
-      flavours: savedFlavourCourtConvictions
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedCourtConviction,
-      errorMessage: e.message
-    };
-  }
+  return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
 /**
@@ -107,7 +70,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master courtConviction record
  */
-exports.createMaster = async function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let CourtConviction = mongoose.model('CourtConviction');
   let courtConviction = new CourtConviction();
 
@@ -199,7 +162,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
   incomingObj.sourceDateUpdated && (courtConviction.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (courtConviction.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  return await courtConviction.save();
+  return courtConviction;
 };
 
 /**
@@ -231,7 +194,7 @@ exports.createMaster = async function(args, res, next, incomingObj, flavourIds) 
  * @param {*} incomingObj see example
  * @returns created lng courtConviction record
  */
-exports.createLNG = async function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   let CourtConvictionLNG = mongoose.model('CourtConvictionLNG');
   let courtConvictionLNG = new CourtConvictionLNG();
 
@@ -325,7 +288,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
 
   courtConvictionLNG = BusinessLogicManager.applyBusinessLogicOnPost(courtConvictionLNG);
 
-  return await courtConvictionLNG.save();
+  return courtConvictionLNG;
 };
 
 /**
@@ -357,7 +320,7 @@ exports.createLNG = async function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced courtConviction record
  */
-exports.createNRCED = async function(args, res, next, incomingObj) {
+exports.createNRCED = function (args, res, next, incomingObj) {
   let CourtConvictionNRCED = mongoose.model('CourtConvictionNRCED');
   let courtConvictionNRCED = new CourtConvictionNRCED();
 
@@ -451,5 +414,5 @@ exports.createNRCED = async function(args, res, next, incomingObj) {
 
   courtConvictionNRCED = BusinessLogicManager.applyBusinessLogicOnPost(courtConvictionNRCED);
 
-  return await courtConvictionNRCED.save();
+  return courtConvictionNRCED;
 };
