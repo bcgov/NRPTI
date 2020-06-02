@@ -13,3 +13,6 @@ require('./lng');
 
 // nrced
 require('./nrced');
+
+// bcmi
+require('./bcmi');
