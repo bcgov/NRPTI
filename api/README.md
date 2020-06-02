@@ -25,6 +25,18 @@ npm install -g yarn
 
 ## Install [MongoDB](https://docs.mongodb.com/v3.2/installation/)
 
+## Environment Variables
+
+The API requires a number of environment variables to be set. Some for the API and others to connection to external sources.
+
+For Core
+
+- client_id
+- client_secret
+- grant_type
+- oidc
+
+
 # Build and Run
 
 1. Download dependencies
@@ -235,3 +247,4 @@ Each record has an attribute called sourceSystemRef. We currently have the follo
 - nris-epd
 - ocers-csv
 - epic
+- core
