@@ -16,7 +16,7 @@ let GeoJSON = new mongoose.Schema(
   });
 
 module.exports = require('../../utils/model-schema-generator')(
-  'Mine',
+  'MineBCMI',
   {
     _schemaName: { type: String, default: 'Mine', index: true },
     _sourceRefId:  { type:'ObjectId', default: null, index: true },
