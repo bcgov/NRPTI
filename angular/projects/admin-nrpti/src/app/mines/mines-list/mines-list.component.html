@@ -1,0 +1,11 @@
+<main class="container-fluid-padding">
+  <div *ngIf="tableData.totalListItems === 0">
+    No Mines found.
+  </div>
+
+  <lib-table-template
+    *ngIf="tableData.totalListItems != 0"
+    [data]="tableData"
+    (messageOut)="onMessageOut($event)"
+  ></lib-table-template>
+</main>

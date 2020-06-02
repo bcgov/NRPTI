@@ -21,9 +21,10 @@
       <i class="material-icons mr-3 ">people</i>
       Entities
     </a>
-    <a [ngClass]="{ active: currentMenu === 'projects' }" id="projects" [routerLink]="['/projects']">
-      <i class="material-icons mr-3">view_list</i>
-      Projects
+    <a [routerLink]="" [ngClass]="{ active: currentMenu === 'mines' }" id="mines"
+      (click)="activateLoading(['/mines'])">
+      <i class="material-icons mr-3 ">view_list</i>
+      All Mines
     </a>
     <a [ngClass]="{ active: currentMenu === 'imports' }" id="imports" [routerLink]="['/imports']">
       <i class="material-icons mr-3">import_export</i>

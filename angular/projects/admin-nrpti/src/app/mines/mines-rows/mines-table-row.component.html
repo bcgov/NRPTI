@@ -1,0 +1,11 @@
+<td scope="row" data-label="Name" class="col-3 showPointer">{{ rowData.name || '-' }}</td>
+<td scope="row" data-label="Owner" class="col-2 showPointer">{{ rowData.owner || '-' }}</td>
+<td scope="row" data-label="Type" class="col-2 showPointer">{{ rowData.type || '-' }}</td>
+<td scope="row" data-label="Status" class="col-2 showPointer">{{ rowData.status || '-' }}</td>
+<td scope="row" data-label="Region" class="col-2 showPointer">{{ rowData.region || '-' }}</td>
+<td scope="row" class="col-1">
+  <button class="btn btn-primary" type="button" (click)="edit($event)" title="Edit mine details">
+    <i class="material-icons mr-2">create</i>
+    Edit
+  </button>
+</td>
