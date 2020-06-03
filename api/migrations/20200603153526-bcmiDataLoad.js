@@ -34,7 +34,9 @@ exports.up = function (db) {
     // could also fetch from NRPTI first: require('../src/models/bcmi/mine').find().then(...);
     // then match to BCMI, just doing it this way so we can match on name, rather then code
     console.log('Fetching all major mines in BCMI...');
-    getRequest(bcmiUrl + '/api/projects/major') // 30 results for major, 74 for published. Note, published does not return links?
+    // 30 results for major, 74 for published. Note, published does not return links so if we're supposed to use
+    // published, we'll need to do a follow up call to /api/project/bycode/<mineData.code> to get the links
+    getRequest(bcmiUrl + '/api/projects/major')
     .then(async publishedMines => {
       const promises = [];
 
@@ -48,12 +50,14 @@ exports.up = function (db) {
       // fire off the requests and wait
       let results = await Promise.all(promises);
 
-      let updatedCount, notFoundCount = 0;
+      let updatedCount = 0;
+      let notFoundCount = 0;
       results.forEach(result => {
-        if (result) {
-          updatedCount++;
-        } else {
+        if (Object.prototype.hasOwnProperty.call(result, 'notfound')) {
           notFoundCount++;
+          console.log('Could not find ' + result.data._id + ' : ' + result.data.name);
+        } else {
+          updatedCount++;
         }
       });
 
@@ -85,6 +89,7 @@ exports._meta = {
 async function updateMine(mineData, nrpti) {
   let nrptiMines = await nrpti.find({ _schemaName: 'MineBCMI', name: mineData.name}).toArray();
 
+  // should have 1 result returned. Any more or less, just ignore this update
   if (nrptiMines.length === 1) {
     let externalLinks = [];
     // format the links from the data
@@ -107,7 +112,7 @@ async function updateMine(mineData, nrpti) {
     /* let nrptiMine = await require('../src/models/bcmi/mine').findById(nrptiMines[0]._id);
 
     nrptiMine.type        = mineData.type;
-    nrptiMine.summary     = mineData.description; // BCMI doesn't have a "summary" attribute
+    nrptiMine.summary     = mineData.description;
     nrptiMine.description = mineData.description;
     nrptiMine.links       = externalLinks;
     nrptiMine.updatedBy   = 'NRPTI BCMI Data Migration';
@@ -115,7 +120,7 @@ async function updateMine(mineData, nrpti) {
     return nrptiMine.save(); */
   }
 
-  return null;
+  return { notfound: true, data: mineData };
 }
 
 function getRequest(url) {
