@@ -34,110 +34,12 @@ const RestorativeJusticePost = require('../post/restorative-justice');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.editRecord = async function(args, res, next, incomingObj) {
-  // save flavour records
-  let observables = [];
-  let savedFlavourRestorativeJustices = [];
-  let flavourIds = [];
-
-  try {
-    // make a copy of the incoming object for use by the flavours only
-    const flavourIncomingObj = { ...incomingObj };
-    // Remove fields that should not be inherited from the master record
-    delete flavourIncomingObj._id;
-    delete flavourIncomingObj._schemaName;
-    delete flavourIncomingObj._flavourRecords;
-    delete flavourIncomingObj.read;
-    delete flavourIncomingObj.write;
-
-    if (incomingObj.RestorativeJusticeLNG) {
-      if (incomingObj.RestorativeJusticeLNG._id) {
-        observables.push(
-          this.editLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.RestorativeJusticeLNG })
-        );
-      } else {
-        const masterRecord = await PutUtils.fetchMasterForCreateFlavour('RestorativeJustice', incomingObj._id);
-
-        observables.push(
-          RestorativeJusticePost.createLNG(args, res, next, {
-            ...masterRecord,
-            ...flavourIncomingObj,
-            ...incomingObj.RestorativeJusticeLNG
-          })
-        );
-      }
-
-      delete incomingObj.RestorativeJusticeLNG;
-    }
-
-    if (incomingObj.RestorativeJusticeNRCED) {
-      if (incomingObj.RestorativeJusticeNRCED._id) {
-        observables.push(
-          this.editNRCED(args, res, next, { ...flavourIncomingObj, ...incomingObj.RestorativeJusticeNRCED })
-        );
-      } else {
-        const masterRecord = await PutUtils.fetchMasterForCreateFlavour('RestorativeJustice', incomingObj._id);
-
-        observables.push(
-          RestorativeJusticePost.createNRCED(args, res, next, {
-            ...masterRecord,
-            ...flavourIncomingObj,
-            ...incomingObj.RestorativeJusticeNRCED
-          })
-        );
-      }
-
-      delete incomingObj.RestorativeJusticeNRCED;
-    }
-
-    if (observables.length > 0) {
-      savedFlavourRestorativeJustices = await Promise.all(observables);
-
-      flavourIds = savedFlavourRestorativeJustices.map(flavourRestorativeJustice => flavourRestorativeJustice._id);
-    }
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedFlavourRestorativeJustices,
-      errorMessage: e.message
-    };
+exports.editRecord = async function (args, res, next, incomingObj) {
+  const flavourFunctions = {
+    RestorativeJusticeLNG: this.editLNG,
+    RestorativeJusticeNRCED: this.editNRCED
   }
-
-  // save master restorativeJustice record
-  let savedRestorativeJustice = null;
-
-  try {
-    savedRestorativeJustice = await this.editMaster(args, res, next, incomingObj, flavourIds);
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedRestorativeJustice,
-      errorMessage: e.message
-    };
-  }
-
-  // update document roles
-  let savedDocuments = [];
-
-  try {
-    savedDocuments = BusinessLogicManager.updateDocumentRoles(
-      savedRestorativeJustice,
-      args.swagger.params.auth_payload
-    );
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedDocuments,
-      errorMessage: e.message
-    };
-  }
-
-  return {
-    status: 'success',
-    object: savedRestorativeJustice,
-    flavours: savedFlavourRestorativeJustices,
-    documents: savedDocuments
-  };
+  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, RestorativeJusticePost, 'RestorativeJustice', flavourFunctions);
 };
 
 /**
@@ -169,13 +71,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns edited master restorativeJustice record
  */
-exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
-  if (!incomingObj || !incomingObj._id) {
-    // skip, as there is no way to update the master record
-    return;
-  }
-
-  const _id = incomingObj._id;
+exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
   delete incomingObj._id;
 
   // Reject any changes to master permissions
@@ -204,9 +100,7 @@ exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
     updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
   }
 
-  return await RestorativeJustice.findOneAndUpdate({ _schemaName: 'RestorativeJustice', _id: _id }, updateObj, {
-    new: true
-  });
+  return updateObj;
 };
 
 /**
@@ -238,13 +132,7 @@ exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns edited lng restorativeJustice record
  */
-exports.editLNG = async function(args, res, next, incomingObj) {
-  if (!incomingObj || !incomingObj._id) {
-    // skip, as there is no way to update the lng record
-    return;
-  }
-
-  const _id = incomingObj._id;
+exports.editLNG = function (args, res, next, incomingObj) {
   delete incomingObj._id;
 
   // Reject any changes to permissions
@@ -277,9 +165,7 @@ exports.editLNG = async function(args, res, next, incomingObj) {
 
   updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
 
-  return await RestorativeJusticeLNG.findOneAndUpdate({ _schemaName: 'RestorativeJusticeLNG', _id: _id }, updateObj, {
-    new: true
-  });
+  return updateObj;
 };
 
 /**
@@ -311,13 +197,7 @@ exports.editLNG = async function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns edited nrced restorativeJustice record
  */
-exports.editNRCED = async function(args, res, next, incomingObj) {
-  if (!incomingObj || !incomingObj._id) {
-    // skip, as there is no way to update the NRCED record
-    return;
-  }
-
-  const _id = incomingObj._id;
+exports.editNRCED = function (args, res, next, incomingObj) {
   delete incomingObj._id;
 
   // Reject any changes to permissions
@@ -350,9 +230,5 @@ exports.editNRCED = async function(args, res, next, incomingObj) {
 
   updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
 
-  return await RestorativeJusticeNRCED.findOneAndUpdate(
-    { _schemaName: 'RestorativeJusticeNRCED', _id: _id },
-    updateObj,
-    { new: true }
-  );
+  return updateObj;
 };
