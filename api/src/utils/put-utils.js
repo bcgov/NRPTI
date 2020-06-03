@@ -118,7 +118,7 @@ exports.getDotNotation = function (obj, target, prefix) {
 exports.editRecordWithFlavours = async function (args, res, next, incomingObj, editMaster, PostFunctions, masterSchemaName, flavourFunctions = {}) {
   let flavours = [];
   let flavourIds = [];
-  let observables = [];
+  let promises = [];
 
   // make a copy of the incoming object for use by the flavours only
   const flavourIncomingObj = { ...incomingObj };
@@ -145,7 +145,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
           let flavourUpdateObj = entry[1](args, res, next, { ...flavourIncomingObj, ...flavourIncomingObj[entry[0]] });
           const Model = mongoose.model(entry[0]);
           flavourUpdateObj._master = new ObjectID(incomingObj._id);
-          observables.push(
+          promises.push(
             Model.findOneAndUpdate(
               { _id: flavourIncomingObj[entry[0]]._id },
               flavourUpdateObj,
@@ -174,7 +174,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
         if (newFlavour) {
           newFlavour._master = new ObjectID(masterRecord._id);
           flavours.push(newFlavour);
-          observables.push(newFlavour.save());
+          promises.push(newFlavour.save());
         }
       }
       delete incomingObj[entry[0]];
@@ -188,7 +188,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
   }
 
   const MasterModel = mongoose.model(masterSchemaName);
-  observables.push(
+  promises.push(
     MasterModel.findOneAndUpdate({
       _id: incomingObj._id
     },
@@ -202,7 +202,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
   // Attempt to save everything.
   let result = null;
   try {
-    result = await Promise.all(observables);
+    result = await Promise.all(promises);
 
   } catch (e) {
     return {
