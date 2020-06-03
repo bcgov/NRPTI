@@ -7,7 +7,7 @@ let seed;
 const https = require('https');
 // register the mine schema/model
 const ObjectID = require('mongodb').ObjectID;
-const bcmiUrl = 'https://mines.empr.gov.bc.ca';
+const bcmiUrl = 'https://mines.empr.gov.bc.ca'; // prod api url
 
 /**
   * We receive the dbmigrate dependency from dbmigrate initially.
@@ -19,63 +19,57 @@ exports.setup = function(options, seedLink) {
   seed = seedLink;
 };
 
-exports.up = function (db) {
+exports.up = async function (db) {
   let mClient;
 
-  return db.connection.connect(db.connectionString, { native_parser: true })
-  .then(async (conn) => {
-    mClient = conn;
+  try {
+    mClient = await db.connection.connect(db.connectionString, { native_parser: true });
     const nrpti = mClient.collection('nrpti');
 
     // API call to pull data from BCMI
-    // http://{bcmi_url}/api/projects/major
-
-    // fetch all published mines
     // could also fetch from NRPTI first: require('../src/models/bcmi/mine').find().then(...);
     // then match to BCMI, just doing it this way so we can match on name, rather then code
     console.log('Fetching all major mines in BCMI...');
     // 30 results for major, 74 for published. Note, published does not return links so if we're supposed to use
     // published, we'll need to do a follow up call to /api/project/bycode/<mineData.code> to get the links
-    getRequest(bcmiUrl + '/api/projects/major')
-    .then(async publishedMines => {
-      const promises = [];
+    const publishedMines = await getRequest(bcmiUrl + '/api/projects/published');
+    console.log('Located ' + publishedMines.length + ' mines. Batching updates...');
 
-      console.log('Located ' + publishedMines.length + ' mines. Batching updates...');
-      // build up a collection of all requests
-      for (let i = 0; i < publishedMines.length; i++) {
-        let mineData = publishedMines[i];
+    const promises = [];
+    // build up a collection of all requests
+    for (let i = 0; i < publishedMines.length; i++) {
+      try {
+        // The published endpoint doesn't have links, refresh the mineData object
+        let mineData = await getRequest(bcmiUrl + '/api/project/bycode/' + publishedMines[i].code);
         promises.push(updateMine(mineData, nrpti));
+      } catch(err) {
+        console.error('Could not find ' + publishedMines[i]._id + ' : ' + publishedMines[i].name);
+        // dont rethrow, we'll just ignore this one as a failure and check the rest
       }
+    }
 
-      // fire off the requests and wait
-      let results = await Promise.all(promises);
+    // fire off the requests and wait
+    let results = await Promise.all(promises);
 
-      let updatedCount = 0;
-      let notFoundCount = 0;
-      results.forEach(result => {
-        if (Object.prototype.hasOwnProperty.call(result, 'notfound')) {
-          notFoundCount++;
-          console.log('Could not find ' + result.data._id + ' : ' + result.data.name);
-        } else {
-          updatedCount++;
-        }
-      });
-
-      // could check results for an update count
-      // we're done, so close the connection
-      console.log('BCMI migration complete.');
-      console.log('Of ' + publishedMines.length + ' mines in BCMI, ' + notFoundCount + ' could not be found in NRPTI, and ' + updatedCount + ' were updated.');
-      mClient.close();
-    })
-    .catch(err => {
-      console.error('Error on BCMI dataload: ' + err);
-      mClient.close();
+    let updatedCount = 0;
+    let notFoundCount = 0;
+    results.forEach(result => {
+      if (Object.prototype.hasOwnProperty.call(result, 'notfound')) {
+        notFoundCount++;
+        console.log('Could not find ' + result.data._id + ' : ' + result.data.name);
+      } else {
+        updatedCount++;
+      }
     });
-  })
-  .catch((err) => {
+
+    // we're done
+    console.log('BCMI migration complete.');
+    console.log('Of ' + publishedMines.length + ' mines in BCMI, ' + notFoundCount + ' could not be found in NRPTI, and ' + updatedCount + ' were updated.');
+  } catch(err) {
     console.error('Error on BCMI dataload: ' + err);
-    mClient.close();
-  });
+  }
+
+  mClient.close();
 };
 
 exports.down = function(db) {
@@ -88,7 +82,6 @@ exports._meta = {
 
 async function updateMine(mineData, nrpti) {
   let nrptiMines = await nrpti.find({ _schemaName: 'MineBCMI', name: mineData.name}).toArray();
-
   // should have 1 result returned. Any more or less, just ignore this update
   if (nrptiMines.length === 1) {
     let externalLinks = [];
@@ -104,7 +97,8 @@ async function updateMine(mineData, nrpti) {
         summary:     mineData.description, // BCMI doesn't have a "summary" attribute
         description: mineData.description,
         links:       externalLinks,
-        updatedBy:   'NRPTI BCMI Data Migration'
+        updatedBy:   'NRPTI BCMI Data Migration',
+        sourceSystemRef: 'mem-admin'
       }
     });
 
