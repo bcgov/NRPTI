@@ -214,6 +214,8 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
 
   let savedDocuments = null;
   try {
+    // result returns with the flavours first, master record next and an object created by mongo last.
+    // we do result[result.length - 2] because we want the second last item which is the master record.
     savedDocuments = await BusinessLogicManager.updateDocumentRoles(
       result[result.length - 2],
       args.swagger.params.auth_payload
