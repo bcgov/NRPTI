@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
+const ObjectID = require('mongodb').ObjectID;
+const BusinessLogicManager = require('./business-logic-manager');
 
-exports.validateObjectAgainstModel = function(mongooseModel, incomingObj) {
+exports.validateObjectAgainstModel = function (mongooseModel, incomingObj) {
   if (!incomingObj) {
     return;
   }
@@ -19,7 +21,7 @@ exports.validateObjectAgainstModel = function(mongooseModel, incomingObj) {
  * @param {*} validObj source of truth object to compare against
  * @returns a sanitized object that only contains fields that are also found in validObj
  */
-const sanitizeObject = function(objToTest, validObj) {
+const sanitizeObject = function (objToTest, validObj) {
   let sanitizedObj = {};
 
   let objToTestKeys = Object.keys(objToTest);
@@ -54,7 +56,7 @@ function isObject(item) {
  * @param {string} id master _id
  * @returns {object} master object with certain master-specific fields removed (like _id).
  */
-exports.fetchMasterForCreateFlavour = async function(schema, id) {
+exports.fetchMasterForCreateFlavour = async function (schema, id) {
   const Model = mongoose.model(schema);
   const masterRecord = await Model.findOne({ _schemaName: schema, _id: id });
 
@@ -94,7 +96,7 @@ exports.fetchMasterForCreateFlavour = async function(schema, id) {
  * @param {*} prefix prefix to add to the start of the flattened path (default: '')
  * @returns a flattened copy of the original obj
  */
-exports.getDotNotation = function(obj, target, prefix) {
+exports.getDotNotation = function (obj, target, prefix) {
   if (!obj) {
     return obj;
   }
@@ -112,3 +114,120 @@ exports.getDotNotation = function(obj, target, prefix) {
 
   return target;
 };
+
+exports.editRecordWithFlavours = async function (args, res, next, incomingObj, editMaster, PostFunctions, masterSchemaName, flavourFunctions = {}) {
+  let flavours = [];
+  let flavourIds = [];
+  let observables = [];
+
+  // make a copy of the incoming object for use by the flavours only
+  const flavourIncomingObj = { ...incomingObj };
+  // Remove fields that should not be inherited from the master record
+  delete flavourIncomingObj._id;
+  delete flavourIncomingObj._schemaName;
+  delete flavourIncomingObj._flavourRecords;
+  delete flavourIncomingObj._master;
+  delete flavourIncomingObj.read;
+  delete flavourIncomingObj.write;
+
+  // Prepare flavours
+  const entries = Object.entries(flavourFunctions);
+  // Example of entries: [['OrderLNG', createLNG()], ['OrderNRCED', createNRCED()]]
+
+  if (entries.length > 0 && Object.keys(flavourIncomingObj).length > 0) {
+    for (let i = 0; i < entries.length; i++) {
+      const entry = entries[i];
+      if (!flavourIncomingObj[entry[0]]) {
+        continue;
+      }
+      if (flavourIncomingObj[entry[0]]._id) {
+        if (flavourIncomingObj[entry[0]]) {
+          let flavourUpdateObj = entry[1](args, res, next, { ...flavourIncomingObj, ...flavourIncomingObj[entry[0]] });
+          const Model = mongoose.model(entry[0]);
+          flavourUpdateObj._master = new ObjectID(incomingObj._id);
+          observables.push(
+            Model.findOneAndUpdate(
+              { _id: flavourIncomingObj[entry[0]]._id },
+              flavourUpdateObj,
+              { new: true }
+            )
+          );
+        }
+      } else {
+        // We are adding a flavour instead of editing.
+        // We need to get the existing master record.
+        const masterRecord = await this.fetchMasterForCreateFlavour(masterSchemaName, incomingObj._id);
+        let newFlavour = null;
+        if (entry[0].includes('LNG')) {
+          newFlavour = PostFunctions.createLNG(args, res, next, {
+            ...masterRecord,
+            ...flavourIncomingObj,
+            ...incomingObj[entry[0]]
+          });
+        } else if (entry[0].includes('NRCED')) {
+          newFlavour = PostFunctions.createNRCED(args, res, next, {
+            ...masterRecord,
+            ...flavourIncomingObj,
+            ...incomingObj[entry[0]]
+          });
+        }
+        if (newFlavour) {
+          newFlavour._master = new ObjectID(masterRecord._id);
+          flavours.push(newFlavour);
+          observables.push(newFlavour.save());
+        }
+      }
+      delete incomingObj[entry[0]];
+    }
+    // Get flavour ids for master
+    if (flavours.length > 0) {
+      flavourIds = flavours.map(
+        flavour => flavour._id
+      );
+    }
+  }
+
+  const MasterModel = mongoose.model(masterSchemaName);
+  observables.push(
+    MasterModel.findOneAndUpdate({
+      _id: incomingObj._id
+    },
+      editMaster(args, res, next, incomingObj, flavourIds)
+    ),
+    {
+      new: true
+    }
+  );
+
+  // Attempt to save everything.
+  let result = null;
+  try {
+    result = await Promise.all(observables);
+
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: result,
+      errorMessage: e.message
+    };
+  }
+
+  let savedDocuments = null;
+  try {
+    savedDocuments = await BusinessLogicManager.updateDocumentRoles(
+      result[result.length - 2],
+      args.swagger.params.auth_payload
+    );
+  } catch (e) {
+    return {
+      status: 'failure',
+      object: savedDocuments,
+      errorMessage: e.message
+    };
+  }
+
+  return {
+    status: 'success',
+    object: result
+  };
+}
