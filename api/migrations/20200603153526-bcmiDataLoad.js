@@ -93,11 +93,11 @@ async function updateMine(mineData, nrpti) {
 
     return nrpti.update({ _id: new ObjectID(nrptiMines[0]._id) }, {
       $set: {
-        type:        mineData.type,
-        summary:     mineData.description, // BCMI doesn't have a "summary" attribute
-        description: mineData.description,
-        links:       externalLinks,
-        updatedBy:   'NRPTI BCMI Data Migration',
+        type:            mineData.type,
+        summary:         mineData.description, // BCMI doesn't have a "summary" attribute
+        description:     mineData.description,
+        links:           externalLinks,
+        updatedBy:       'NRPTI BCMI Data Migration',
         sourceSystemRef: 'mem-admin'
       }
     });
