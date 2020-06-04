@@ -74,18 +74,7 @@ describe('MinesListResolver', () => {
       });
 
       it('calls factoryService.getRecords', () => {
-        expect(factoryServiceSpy.getRecords).toHaveBeenCalledWith(
-          '',
-          ['Mine'],
-          [],
-          1,
-          25,
-          '-dateAdded',
-          {},
-          false,
-          {},
-          []
-        );
+        expect(factoryServiceSpy.getRecords).toHaveBeenCalledWith('', ['Mine'], [], 1, 25, '-name', {}, false, {}, []);
       });
     });
   });
