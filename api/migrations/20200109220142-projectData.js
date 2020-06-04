@@ -42,80 +42,13 @@ exports.up = async function (db) {
       for (const item of activities) {
         // Which project?
         if (item.url.startsWith('/project/1')) {
-          promises.push(createActivityRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
-        } else {
           promises.push(createActivityRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+        } else {
+          promises.push(createActivityRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
         }
       }
 
       for (const item of project1Authorizations) {
-        switch (item.complianceDocumentType) {
-          case 'Letter':
-          case 'Report':
-          case 'Certificate':
-            promises.push(createCertificateRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
-            break;
-          case 'Permit':
-            promises.push(createPermitRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
-            break;
-          default:
-            console.log('-------------------')
-            console.log(`Unknown - skipping: (${item.complianceDocumentType}) ${item.name}`)
-            console.log('-------------------')
-            break;
-        }
-      }
-
-      for (const item of project1Compliances) {
-        switch (item.complianceDocumentType) {
-          case 'Inspection':
-            promises.push(createInspectionRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
-            break;
-          case 'Memo':
-          case 'Letter':
-          case 'Self Report':
-          case 'Compliance Self-Report':
-            promises.push(createComplianceSelfReportRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
-            break;
-          case 'Enforcement Action':
-          case 'Order':
-            promises.push(createOrderRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
-            break;
-          case 'Warning Letter':
-          case 'Warning':
-            promises.push(createWarningRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
-            break;
-          default:
-            console.log('-------------------')
-            console.log(`Unknown - skipping: (${item.complianceDocumentType}) ${item.name}`)
-            console.log('-------------------')
-            break;
-        }
-      }
-
-      for (const item of project1Nations) {
-        promises.push(createAgreementRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
-      }
-
-      for (const item of project1Plans) {
-        switch (item.complianceDocumentType || item.type) {
-          case 'Construction':
-          case 'Construction Plan':
-            promises.push(createConstructionPlanRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
-            break;
-          case 'Management':
-          case 'Management Plan':
-            promises.push(createManagementPlanRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
-            break;
-          default:
-            console.log('-------------------')
-            console.log(`Unknown - skipping: (${item.complianceDocumentType}) ${item.name}`)
-            console.log('-------------------')
-            break;
-        }
-      }
-
-      for (const item of project2Authorizations) {
         switch (item.complianceDocumentType) {
           case 'Letter':
           case 'Report':
@@ -133,7 +66,7 @@ exports.up = async function (db) {
         }
       }
 
-      for (const item of project2Compliances) {
+      for (const item of project1Compliances) {
         switch (item.complianceDocumentType) {
           case 'Inspection':
             promises.push(createInspectionRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
@@ -160,13 +93,12 @@ exports.up = async function (db) {
         }
       }
 
-      for (const item of project2Nations) {
+      for (const item of project1Nations) {
         promises.push(createAgreementRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
       }
 
-      for (const item of project2Plans) {
+      for (const item of project1Plans) {
         switch (item.complianceDocumentType || item.type) {
-          case 'Permit':
           case 'Construction':
           case 'Construction Plan':
             promises.push(createConstructionPlanRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
@@ -174,6 +106,74 @@ exports.up = async function (db) {
           case 'Management':
           case 'Management Plan':
             promises.push(createManagementPlanRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+            break;
+          default:
+            console.log('-------------------')
+            console.log(`Unknown - skipping: (${item.complianceDocumentType}) ${item.name}`)
+            console.log('-------------------')
+            break;
+        }
+      }
+
+      for (const item of project2Authorizations) {
+        switch (item.complianceDocumentType) {
+          case 'Letter':
+          case 'Report':
+          case 'Certificate':
+            promises.push(createCertificateRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
+            break;
+          case 'Permit':
+            promises.push(createPermitRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
+            break;
+          default:
+            console.log('-------------------')
+            console.log(`Unknown - skipping: (${item.complianceDocumentType}) ${item.name}`)
+            console.log('-------------------')
+            break;
+        }
+      }
+
+      for (const item of project2Compliances) {
+        switch (item.complianceDocumentType) {
+          case 'Inspection':
+            promises.push(createInspectionRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
+            break;
+          case 'Memo':
+          case 'Letter':
+          case 'Self Report':
+          case 'Compliance Self-Report':
+            promises.push(createComplianceSelfReportRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
+            break;
+          case 'Enforcement Action':
+          case 'Order':
+            promises.push(createOrderRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
+            break;
+          case 'Warning Letter':
+          case 'Warning':
+            promises.push(createWarningRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
+            break;
+          default:
+            console.log('-------------------')
+            console.log(`Unknown - skipping: (${item.complianceDocumentType}) ${item.name}`)
+            console.log('-------------------')
+            break;
+        }
+      }
+
+      for (const item of project2Nations) {
+        promises.push(createAgreementRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
+      }
+
+      for (const item of project2Plans) {
+        switch (item.complianceDocumentType || item.type) {
+          case 'Permit':
+          case 'Construction':
+          case 'Construction Plan':
+            promises.push(createConstructionPlanRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
+            break;
+          case 'Management':
+          case 'Management Plan':
+            promises.push(createManagementPlanRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
             break;
           default:
             console.log('-------------------')
@@ -207,7 +207,7 @@ let createActivityRecord = async function (item, project, nrptiCollection) {
     title: item.title,
     url: item.url,
     description: item.description,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
     // Prefer to store dates in the DB as ISO, not some random format.
     date: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null
   }
@@ -236,7 +236,7 @@ let createAgreementRecord = async function (item, project, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     nationName: item.nation,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
     documents: documents,
 
     description: item.description,
@@ -272,7 +272,7 @@ let createAgreementRecord = async function (item, project, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     nationName: item.nation,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
     documents: documents,
 
     dateAdded: new Date(),
@@ -310,7 +310,7 @@ let createManagementPlanRecord = async function (item, project, nrptiCollection)
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
     documents: documents,
 
     relatedPhase: item.phase || item.complianceDocumentSubtype,
@@ -347,7 +347,7 @@ let createManagementPlanRecord = async function (item, project, nrptiCollection)
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
     documents: documents,
 
     dateAdded: new Date(),
@@ -385,7 +385,7 @@ let createConstructionPlanRecord = async function (item, project, nrptiCollectio
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
     documents: documents,
 
     relatedPhase: item.phase || item.complianceDocumentSubtype,
@@ -423,7 +423,7 @@ let createConstructionPlanRecord = async function (item, project, nrptiCollectio
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     documents: documents,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -461,7 +461,7 @@ let createWarningRecord = async function (item, project, nrptiCollection) {
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     author: item.author,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
     documents: documents,
 
     description: item.description,
@@ -500,7 +500,7 @@ let createWarningRecord = async function (item, project, nrptiCollection) {
     issuingAgency: item.agency,
     documents: documents,
     author: item.author,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -538,7 +538,7 @@ let createComplianceSelfReportRecord = async function (item, project, nrptiColle
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     author: item.author,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
     documents: documents,
 
     relatedPhase: item.phase,
@@ -577,7 +577,7 @@ let createComplianceSelfReportRecord = async function (item, project, nrptiColle
     issuingAgency: item.agency,
     documents: documents,
     author: item.author,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -615,7 +615,7 @@ let createCertificateRecord = async function (item, project, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
     documents: documents,
 
     description: item.description,
@@ -653,7 +653,7 @@ let createCertificateRecord = async function (item, project, nrptiCollection) {
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     documents: documents,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -691,7 +691,7 @@ let createPermitRecord = async function (item, project, nrptiCollection) {
     // Prefer to store dates in the DB as ISO, not some random format.
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
     documents: documents,
 
     description: item.description,
@@ -729,7 +729,7 @@ let createPermitRecord = async function (item, project, nrptiCollection) {
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     documents: documents,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -768,7 +768,7 @@ let createOrderRecord = async function (item, project, nrptiCollection) {
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     author: item.author,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
     documents: documents,
 
     description: item.description,
@@ -807,7 +807,7 @@ let createOrderRecord = async function (item, project, nrptiCollection) {
     issuingAgency: item.agency,
     documents: documents,
     author: item.author,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
@@ -844,7 +844,7 @@ let createInspectionRecord = async function (item, project, nrptiCollection) {
     dateIssued: item.date && moment(item.date, 'DD-MM-YYYY').toDate() || null,
     issuingAgency: item.agency,
     author: item.author,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
     documents: documents,
 
     description: item.description,
@@ -882,7 +882,7 @@ let createInspectionRecord = async function (item, project, nrptiCollection) {
     issuingAgency: item.agency,
     documents: documents,
     author: item.author,
-    projectName: project === '588511c4aaecd9001b825604' ? 'LNG Canada' : 'Coastal Gaslink',
+    projectName: project === '588511c4aaecd9001b825604' ? 'Coastal Gaslink' : 'LNG Canada',
 
     dateAdded: new Date(),
     dateUpdated: new Date(),
