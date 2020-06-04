@@ -700,7 +700,7 @@ export class Picklists {
       },
       'Oil and Gas Activities Act': {
         '63': {
-          description: 'Penalty for failure to compluy with the Act or associated regulations'
+          description: 'Penalty for failure to comply with the Act or associated regulations'
         }
       }
     },
