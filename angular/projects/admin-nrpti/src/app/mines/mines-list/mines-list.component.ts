@@ -94,9 +94,7 @@ export class MinesListComponent implements OnInit, OnDestroy {
       this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
         if (!res || !res.mines) {
           alert("Uh-oh, couldn't load NRPTI mines");
-          // mines not found --> navigate back to home
           this.loadingScreenService.setLoadingState(false, 'body');
-          this.router.navigate(['/']);
           return;
         }
 
@@ -118,6 +116,8 @@ export class MinesListComponent implements OnInit, OnDestroy {
         this._changeDetectionRef.detectChanges();
         this.loadingScreenService.setLoadingState(false, 'body');
       });
+
+      this._changeDetectionRef.detectChanges();
     });
   }
 

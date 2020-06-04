@@ -17,7 +17,7 @@ export class MinesListResolver implements Resolve<Observable<object>> {
       [],
       tableObject.currentPage,
       tableObject.pageSize,
-      tableObject.sortBy || '-dateAdded',
+      tableObject.sortBy || '-name',
       {},
       false,
       {},
