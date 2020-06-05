@@ -4,7 +4,7 @@ const axios = require('axios');
 const QS = require('qs');
 
 const integrationUtils = require('../integration-utils');
-const MineUtils = require('./mines-utils');
+const MineUtils = require('./mine-utils');
 const defaultLog = require('../../utils/logger')('core-datasource');
 
 const MINES_BATCH_SIZE = 300;
