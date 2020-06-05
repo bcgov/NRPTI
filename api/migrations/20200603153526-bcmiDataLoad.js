@@ -101,17 +101,6 @@ async function updateMine(mineData, nrpti) {
         sourceSystemRef: 'mem-admin'
       }
     });
-
-    // Alternatively...
-    /* let nrptiMine = await require('../src/models/bcmi/mine').findById(nrptiMines[0]._id);
-
-    nrptiMine.type        = mineData.type;
-    nrptiMine.summary     = mineData.description;
-    nrptiMine.description = mineData.description;
-    nrptiMine.links       = externalLinks;
-    nrptiMine.updatedBy   = 'NRPTI BCMI Data Migration';
-
-    return nrptiMine.save(); */
   }
 
   return { notfound: true, data: mineData };
