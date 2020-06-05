@@ -77,7 +77,7 @@
           </div>
           <div class="grid-item__row">
             <label class="grid-item-name">Lat/Long</label>
-            <span class="grid-item-value">{{ (data && data._master.centroid) || '-' }}</span>
+            <span class="grid-item-value">{{ data && data._master.centroid ? data._master.centroid[1] + '/' + data._master.centroid[0]: '-' }}</span>
           </div>
           <div class="grid-item__row">
             <label class="grid-item-name">Location</label>
