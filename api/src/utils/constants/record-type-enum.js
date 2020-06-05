@@ -47,6 +47,12 @@ const RECORD_TYPE = Object.freeze({
     recordControllerName: 'managementPlans',
     flavours: { lng: { _schemaName: 'ManagementPlanLNG' } }
   },
+  Mine: {
+    _schemaName: 'Mine',
+    displayName: 'Mine',
+    recordControllerName: 'mines',
+    flavours: {}
+  },
   Order: {
     _schemaName: 'Order',
     displayName: 'Order',
