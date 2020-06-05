@@ -25,7 +25,7 @@ const CORE_API_PATH_COMMODITIES = process.env.CORE_API_PATH_COMMODITIES || '/api
  */
 const RECORD_TYPE = Object.freeze({
   Mine: {
-    _schemaName: 'MineBCMI',
+    _schemaName: 'Mine',
     recordControllerName: 'mines'
   },
 });

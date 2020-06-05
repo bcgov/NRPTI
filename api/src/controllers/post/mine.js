@@ -28,10 +28,10 @@ exports.createRecord = async function (args, res, next, incomingObj) {
  * @returns created master Mine record
  */
 exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
-  let Mine = mongoose.model('MineBCMI');
+  let Mine = mongoose.model('Mine');
   let mine = new Mine();
 
-  mine._schemaName = 'MineBCMI';
+  mine._schemaName = 'Mine';
 
   // set permissions
   mine.read = ['sysadmin'];
@@ -39,7 +39,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   // set data
   incomingObj.name && (mine.name = incomingObj.name);
-  incomingObj.permitNumbers.length && (mine.permitNumbers = incomingObj.permitNumbers);
+  incomingObj.permitNumbers && incomingObj.permitNumbers.length && (mine.permitNumbers = incomingObj.permitNumbers);
   incomingObj.status && (mine.status = incomingObj.status);
   incomingObj.commodities.length && (mine.commodities = incomingObj.commodities);
   incomingObj.region && (mine.region = incomingObj.region);
@@ -48,7 +48,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.type && (mine.type = incomingObj.type);
   incomingObj.summary && (mine.summary = incomingObj.summary);
   incomingObj.description && (mine.description = incomingObj.description);
-  incomingObj.links.length && (mine.links = incomingObj.links);
+  incomingObj.links && incomingObj.links.length && (mine.links = incomingObj.links);
 
   // Not checking value as it could be 0 which would fail the falsey check.
   mine.tailingImpoundments = incomingObj.tailingImpoundments;
