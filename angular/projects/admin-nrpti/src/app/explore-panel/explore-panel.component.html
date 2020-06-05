@@ -10,7 +10,8 @@
               [control]="formGroup.get('dateIssuedStart')"
               [reset]="resetControls"
               [minDate]="minDate"
-              [maxDate]="maxDate"></lib-date-picker>
+              [maxDate]="maxDate"
+            ></lib-date-picker>
           </div>
           <div class="col-6">
             <label for="dateIssuedEndFilter" class="control-label font-weight-bold">End Issued Date</label>
@@ -19,7 +20,8 @@
               [control]="formGroup.get('dateIssuedEnd')"
               [reset]="resetControls"
               [minDate]="minDate"
-              [maxDate]="maxDate"></lib-date-picker>
+              [maxDate]="maxDate"
+            ></lib-date-picker>
           </div>
         </div>
       </div>
@@ -38,8 +40,7 @@
           </div>
         </div>
       </div>
-      <div class="col-4">
-      </div>
+      <div class="col-4"></div>
     </div>
   </section>
   <section>
@@ -53,7 +54,8 @@
           [options]="activityTypeOptions"
           [reset]="resetControls"
           [placeholderText]="'Begin typing to filter activities...'"
-          (numSelected)="activityTypeCount = $event"></app-autocomplete-multi-select>
+          (numSelected)="activityTypeCount = $event"
+        ></app-autocomplete-multi-select>
       </div>
       <div class="col-4">
         <div class="label-pair">
@@ -65,7 +67,8 @@
             [options]="actOptions"
             [reset]="resetControls"
             [placeholderText]="'Begin typing to filter acts...'"
-            (numSelected)="actCount = $event"></app-autocomplete-multi-select>
+            (numSelected)="actCount = $event"
+          ></app-autocomplete-multi-select>
         </div>
       </div>
     </div>
@@ -81,7 +84,8 @@
           [options]="agencyOptions"
           [reset]="resetControls"
           [placeholderText]="'Begin typing to filter agencies...'"
-          (numSelected)="agencyCount = $event"></app-autocomplete-multi-select>
+          (numSelected)="agencyCount = $event"
+        ></app-autocomplete-multi-select>
       </div>
       <div class="col-4">
         <div class="label-pair">
@@ -93,13 +97,18 @@
             [options]="regulationOptions"
             [reset]="resetControls"
             [placeholderText]="'Begin typing to filter regulations...'"
-            (numSelected)="regulationCount = $event"></app-autocomplete-multi-select>
+            (numSelected)="regulationCount = $event"
+          ></app-autocomplete-multi-select>
         </div>
       </div>
       <div class="col-4">
         <label for="sourceSystemFilter">Source System</label>
-        <select name="sourceSystemFilter" id="sourceSystemFilter" formControlName="sourceSystemRef"
-          class="form-control">
+        <select
+          name="sourceSystemFilter"
+          id="sourceSystemFilter"
+          formControlName="sourceSystemRef"
+          class="form-control"
+        >
           <option [selected]="!selectedSystemRef" value="">None</option>
           <option [selected]="selectedSystemRef === 'nrpti'" value="nrpti">NRPTI</option>
           <option [selected]="selectedSystemRef === 'ocers-csv'" value="ocers-csv">OCERS</option>
@@ -111,29 +120,72 @@
   </section>
   <section>
     <div class="row">
-      <div class="col-4">
+      <div class="col-4" [formGroup]="formGroup.get('projects')">
+        <label class="control-label font-weight-bold">Project</label>
+        <div class="row checkbox-group" name="projectFilter">
+          <div class="col-4">
+            <div class="checkbox">
+              <input class="mr-2" type="checkbox" id="lngCanada" formControlName="lngCanada" name="lngCanada" />
+              <label for="lngCanada">LNG Canada</label>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="checkbox">
+              <input
+                class="mr-2"
+                type="checkbox"
+                id="coastalGaslink"
+                formControlName="coastalGaslink"
+                name="coastalGaslink"
+              />
+              <label for="coastalGaslink">Coastal Gaslink</label>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="checkbox">
+              <input
+                class="mr-2"
+                type="checkbox"
+                id="otherProjects"
+                formControlName="otherProjects"
+                name="otherProjects"
+              />
+              <label for="otherProjects">Other</label>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="col-4">
         <label class="control-label font-weight-bold">Documents</label>
         <div class="row radio-group" name="hasDocuments">
           <div class="col-4">
             <div class="radio">
-              <input class="mr-2" type="radio" id="hasDocs" value="true" formControlName="hasDocuments"
-                name="hasDocuments" />
+              <input
+                class="mr-2"
+                type="radio"
+                id="hasDocs"
+                value="true"
+                formControlName="hasDocuments"
+                name="hasDocuments"
+              />
               <label for="hasDocs">Yes</label>
             </div>
           </div>
           <div class="col-4">
             <div class="radio">
-              <input class="mr-2" type="radio" id="doesNothaveDocs" value="false" formControlName="hasDocuments"
-                name="hasDocuments" />
+              <input
+                class="mr-2"
+                type="radio"
+                id="doesNothaveDocs"
+                value="false"
+                formControlName="hasDocuments"
+                name="hasDocuments"
+              />
               <label for="doesNothaveDocs">No</label>
             </div>
           </div>
           <div class="col-4">
-            <button
-              class="btn btn-secondary"
-              (click)="resetDocFilter()">
+            <button class="btn btn-secondary" (click)="resetDocFilter()">
               Clear
             </button>
           </div>
@@ -144,9 +196,7 @@
 </form>
 
 <section class="mt-4">
-  <button
-    class="btn btn-primary float-right"
-    (click)="clearSearchFilters()">
+  <button class="btn btn-primary float-right" (click)="clearSearchFilters()">
     Reset Filters
   </button>
 </section>

@@ -92,7 +92,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   /**
    * Component init.
@@ -143,7 +143,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
           this.queryParams['act'] ||
           this.queryParams['regulation'] ||
           this.queryParams['sourceSystemRef'] ||
-          this.queryParams['hasDocuments']
+          this.queryParams['hasDocuments'] ||
+          this.queryParams['projects']
         ) {
           this.showAdvancedFilters = true;
         }
@@ -156,20 +157,19 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     });
   }
 
-
   public buildSearchFiltersForm() {
     this.searchFiltersForm = new FormGroup({
       dateIssuedStart: new FormControl(
         (this.queryParams &&
           this.queryParams.dateRangeFromFilter &&
           this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeFromFilter))) ||
-        null
+          null
       ),
       dateIssuedEnd: new FormControl(
         (this.queryParams &&
           this.queryParams.dateRangeToFilter &&
           this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeToFilter))) ||
-        null
+          null
       ),
       issuedToCompany: new FormControl((this.queryParams && this.queryParams.issuedToCompany) || false),
       issuedToIndividual: new FormControl((this.queryParams && this.queryParams.issuedToIndividual) || false),
@@ -178,7 +178,20 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       regulation: new FormControl((this.queryParams && this.queryParams.regulation) || null),
       activityType: new FormControl((this.queryParams && this.queryParams.activityType) || null),
       sourceSystemRef: new FormControl((this.queryParams && this.queryParams.sourceSystemRef) || null),
-      hasDocuments: new FormControl((this.queryParams && this.queryParams.hasDocuments) || false)
+      hasDocuments: new FormControl((this.queryParams && this.queryParams.hasDocuments) || false),
+      projects: new FormGroup({
+        lngCanada: new FormControl(
+          (this.queryParams && this.queryParams.projects && this.queryParams.projects.includes('lngCanada')) || false
+        ),
+        coastalGaslink: new FormControl(
+          (this.queryParams && this.queryParams.projects && this.queryParams.projects.includes('coastalGaslink')) ||
+            false
+        ),
+        otherProjects: new FormControl(
+          (this.queryParams && this.queryParams.projects && this.queryParams.projects.includes('otherProjects')) ||
+            false
+        )
+      })
     });
   }
 
@@ -191,15 +204,17 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       }
 
       if (changes.dateIssuedStart) {
-        this.queryParams['dateRangeFromFilter'] =
-          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedStart).toISOString();
+        this.queryParams['dateRangeFromFilter'] = this.utils
+          .convertFormGroupNGBDateToJSDate(changes.dateIssuedStart)
+          .toISOString();
       } else {
         delete this.queryParams['dateRangeFromFilter'];
       }
 
       if (changes.dateIssuedEnd) {
-        this.queryParams['dateRangeToFilter'] =
-          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedEnd).toISOString();
+        this.queryParams['dateRangeToFilter'] = this.utils
+          .convertFormGroupNGBDateToJSDate(changes.dateIssuedEnd)
+          .toISOString();
       } else {
         delete this.queryParams['dateRangeToFilter'];
       }
@@ -244,6 +259,12 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         this.queryParams['hasDocuments'] = changes.hasDocuments;
       } else {
         delete this.queryParams['hasDocuments'];
+      }
+
+      if (changes.projects && this.getProjectsFilterArray(changes.projects).length) {
+        this.queryParams['projects'] = this.getProjectsFilterArray(changes.projects);
+      } else {
+        delete this.queryParams['projects'];
       }
       this.submit();
     });
@@ -431,6 +452,29 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     } else if (this.queryParams.subset.includes('description')) {
       this.selectedSubset = 'Description & Summary';
     }
+  }
+
+  /**
+   * Builds an array of project names, for project filters that are enabled/selected.
+   *
+   * @param {object} projects changes.projects object
+   * @returns {string[]} array of project names
+   * @memberof RecordsListComponent
+   */
+  getProjectsFilterArray(projects: object): string[] {
+    if (!projects) {
+      return [];
+    }
+
+    const projectsQueryParam: string[] = [];
+
+    for (const projectName of Object.keys(projects)) {
+      if (projects[projectName]) {
+        projectsQueryParam.push(projectName);
+      }
+    }
+
+    return projectsQueryParam;
   }
 
   /**
