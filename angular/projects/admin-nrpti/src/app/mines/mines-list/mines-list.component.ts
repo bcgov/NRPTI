@@ -30,7 +30,12 @@ import { MinesTableRowComponent } from '../mines-rows/mines-table-row.component'
 export class MinesListComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
-  public tableData: TableObject = new TableObject({ component: MinesTableRowComponent });
+  public tableData: TableObject = new TableObject({
+    component: MinesTableRowComponent,
+    pageSize: 25,
+    currentPage: 1,
+    sortBy: '+name'
+  });
   public tableColumns: IColumnObject[] = [
     {
       name: 'Name',
@@ -38,7 +43,7 @@ export class MinesListComponent implements OnInit, OnDestroy {
       width: 'col-3'
     },
     {
-      name: 'owner',
+      name: 'Owner',
       value: 'owner',
       width: 'col-2'
     },
@@ -86,10 +91,16 @@ export class MinesListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadingScreenService.setLoadingState(true, 'body');
 
-    this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
+    this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params: Params) => {
       this.queryParams = { ...params };
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
       this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, this.tableData);
+
+      if (!this.queryParams || !Object.keys(this.queryParams).length) {
+        // Only need to manually set url params if this page loads using default parameters (IE: user navigates to this
+        // component for the first time).
+        this.setInitialURLParams();
+      }
 
       this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
         if (!res || !res.mines) {
@@ -119,6 +130,22 @@ export class MinesListComponent implements OnInit, OnDestroy {
 
       this._changeDetectionRef.detectChanges();
     });
+  }
+
+  /**
+   * Updates the url parameters based on the currently set query and table template params, without reloading the page.
+   *
+   * @memberof MinesListComponent
+   */
+  setInitialURLParams() {
+    this.location.go(
+      this.router
+        .createUrlTree([], {
+          relativeTo: this.route,
+          queryParams: { ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }
+        })
+        .toString()
+    );
   }
 
   onMessageOut(msg: ITableMessage) {
