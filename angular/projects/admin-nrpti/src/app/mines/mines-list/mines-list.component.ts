@@ -43,8 +43,8 @@ export class MinesListComponent implements OnInit, OnDestroy {
       width: 'col-3'
     },
     {
-      name: 'Owner',
-      value: 'owner',
+      name: 'Permittee',
+      value: 'permittee',
       width: 'col-2'
     },
     {
@@ -148,6 +148,12 @@ export class MinesListComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Receives messages from the table template component, and performs any corresponding actions.
+   *
+   * @param {ITableMessage} msg
+   * @memberof MinesListComponent
+   */
   onMessageOut(msg: ITableMessage) {
     switch (msg.label) {
       case 'rowClicked':

@@ -12,7 +12,9 @@ describe('MinesListComponent', () => {
 
   // component constructor mocks
   const mockLocation = jasmine.createSpyObj('Location', ['go']);
-  const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
+  mockLocation.go.and.stub();
+  const mockRouter = jasmine.createSpyObj('Router', ['navigate', 'createUrlTree']);
+  mockRouter.createUrlTree.and.returnValue('');
   const mockActivatedRoute = new ActivatedRouteStub();
 
   const mockLoadingScreenService = {
