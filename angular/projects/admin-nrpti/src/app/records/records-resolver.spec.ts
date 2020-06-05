@@ -5,6 +5,7 @@ import { RecordsResolver } from './records-resolver';
 import { of } from 'rxjs';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { TableObject } from 'nrpti-angular-components';
+import { EpicProjectIds } from '../../../../common/src/app/utils/record-constants';
 
 describe('RecordsResolver', () => {
   const spyFactoryService = jasmine.createSpyObj<FactoryService>('FactoryService', ['getRecords']);
@@ -240,7 +241,7 @@ describe('RecordsResolver', () => {
           '-dateAdded',
           {},
           false,
-          { projectName: 'LNG Canada' },
+          { _epicProjectId: EpicProjectIds.lngCanadaId },
           [],
           {}
         );
@@ -311,7 +312,7 @@ describe('RecordsResolver', () => {
           '-dateAdded',
           {},
           false,
-          { projectName: 'LNG Canada,Coastal Gaslink' },
+          { _epicProjectId: `${EpicProjectIds.lngCanadaId},${EpicProjectIds.coastalGaslinkId}` },
           [],
           {}
         );
@@ -384,7 +385,7 @@ describe('RecordsResolver', () => {
           false,
           {},
           [],
-          { projectName: 'Coastal Gaslink' },
+          { _epicProjectId: EpicProjectIds.coastalGaslinkId }
         );
       });
     });
