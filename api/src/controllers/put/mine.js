@@ -15,7 +15,6 @@ const SYSTEM_USER = 'SYSTEM_USER';
 exports.editRecord = async function(args, res, next, incomingObj) {
   try{
     // TODO: Add any flavour actions here.
-    console.log('here');
 
     const savedInspection = await this.editMaster(args, res, next, incomingObj);
 
