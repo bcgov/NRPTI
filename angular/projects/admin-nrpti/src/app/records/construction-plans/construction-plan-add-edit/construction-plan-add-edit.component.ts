@@ -102,10 +102,10 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
       projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
       location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
       latitude: new FormControl(
-        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || ''
+        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || ''
       ),
       longitude: new FormControl(
-        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || ''
+        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || ''
       ),
 
       // LNG
@@ -161,7 +161,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
 
     this.myForm.controls.location.dirty && (constructionPlan['location'] = this.myForm.controls.location.value);
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
-      (constructionPlan['centroid'] = [this.myForm.controls.latitude.value, this.myForm.controls.longitude.value]);
+      (constructionPlan['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
     // LNG flavour
     if (
