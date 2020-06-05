@@ -9,12 +9,12 @@ const defaultLog = require('../../utils/logger')('core-datasource');
 
 const CORE_API_BATCH_SIZE = process.env.CORE_API_BATCH_SIZE || 300;
 
-const CORE_TOKEN_ENDPOINT = process.env.CORE_TOKEN_ENDPOINT || 'https://sso-test.pathfinder.gov.bc.ca/auth/realms/mds/protocol/openid-connect/token';
-const CORE_CLIENT_ID = process.env.CORE_CLIENT_ID || 'bcmi-api-client';
-const CORE_CLIENT_SECRET = process.env.CORE_CLIENT_SECRET || 'a3ab3a3a-f440-477e-bf54-e4753b88bbb2';
-const CORE_GRANT_TYPE = process.env.CORE_GRANT_TYPE || 'client_credentials';
+const CORE_TOKEN_ENDPOINT = process.env.CORE_TOKEN_ENDPOINT || 'https://sso.pathfinder.gov.bc.ca/auth/realms/mds/protocol/openid-connect/token';
+const CORE_CLIENT_ID = process.env.CORE_CLIENT_ID || null;
+const CORE_CLIENT_SECRET = process.env.CORE_CLIENT_SECRET || null;
+const CORE_GRANT_TYPE = process.env.CORE_GRANT_TYPE || null;
 
-const CORE_API_HOST = process.env.CORE_API_HOST|| 'https://minesdigitalservices-test.pathfinder.gov.bc.ca';
+const CORE_API_HOST = process.env.CORE_API_HOST|| 'https://minesdigitalservices.pathfinder.gov.bc.ca';
 const CORE_API_PATH_MINES = process.env.CORE_API_PATH_MINES || '/api/mines';
 const CORE_API_PATH_PARTIES = process.env.CORE_API_PATH_PARTIES || '/api/parties/mines';
 const CORE_API_PATH_COMMODITIES = process.env.CORE_API_PATH_COMMODITIES || '/api/mines/commodity-codes';
