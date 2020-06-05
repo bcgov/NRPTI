@@ -3,6 +3,7 @@ import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
 import { FactoryService } from '../services/factory.service';
+import { EpicProjectIds } from '../../../../common/src/app/utils/record-constants';
 
 @Injectable()
 export class RecordsResolver implements Resolve<Observable<object>> {
@@ -84,31 +85,31 @@ export class RecordsResolver implements Resolve<Observable<object>> {
     }
 
     if (params.projects) {
-      const projectNames = [];
+      const projectIds = [];
 
       if (params.projects.includes('lngCanada')) {
-        projectNames.push('LNG Canada');
+        projectIds.push(EpicProjectIds.lngCanadaId);
       }
 
       if (params.projects.includes('coastalGaslink')) {
-        projectNames.push('Coastal Gaslink');
+        projectIds.push(EpicProjectIds.coastalGaslinkId);
       }
 
       if (params.projects.includes('otherProjects')) {
-        if (projectNames.length === 0) {
+        if (projectIds.length === 0) {
           // Selecting only Other should return all projects EXCEPT for LNG Canada and Coastal Gaslink
-          nor['projectName'] = 'LNG Canada,Coastal Gaslink';
-        } else if (projectNames.length === 1) {
-          if (projectNames[0] === 'LNG Canada') {
+          nor['_epicProjectId'] = `${EpicProjectIds.lngCanadaId},${EpicProjectIds.coastalGaslinkId}`;
+        } else if (projectIds.length === 1) {
+          if (projectIds[0] === EpicProjectIds.lngCanadaId) {
             // Other + LNG Canada is equivalent to NOT Coastal Gaslink
-            nor['projectName'] = 'Coastal Gaslink';
+            nor['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
           } else {
             // Other + Coastal Gaslink is equivalent to NOT LNG Canada
-            nor['projectName'] = 'LNG Canada';
+            nor['_epicProjectId'] = EpicProjectIds.lngCanadaId;
           }
         }
-      } else if (projectNames.length) {
-        or['projectName'] = projectNames.join(',');
+      } else if (projectIds.length) {
+        or['_epicProjectId'] = projectIds.join(',');
       }
     }
 
