@@ -15,7 +15,7 @@ import { Utils } from '../utils/utils';
 // @dynamic
 @Injectable()
 export class SearchService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   /**
    * Fetches a record based on its _id.  May return multiple items.
@@ -48,10 +48,11 @@ export class SearchService {
     pageNum: number = 1,
     pageSize: number = 10,
     sortBy: string = null,
-    queryModifier: object = {},
+    and: object = {},
     populate: boolean = false,
-    filter: object = {},
+    or: object = {},
     subset: string[] = [],
+    nor: object = {}
   ): Observable<SearchResults[]> {
     let queryString = `search?dataset=${dataset}`;
     if (fields && fields.length > 0) {
@@ -78,17 +79,24 @@ export class SearchService {
     if (populate) {
       queryString += `&populate=${populate}`;
     }
-    if (queryModifier && queryModifier !== {}) {
-      Object.keys(queryModifier).map(key => {
-        queryModifier[key].split(',').map(item => {
+    if (and && and !== {}) {
+      Object.keys(and).map(key => {
+        and[key].split(',').map(item => {
           queryString += `&and[${key}]=${item}`;
         });
       });
     }
-    if (filter && filter !== {}) {
-      Object.keys(filter).map(key => {
-        filter[key].split(',').map(item => {
+    if (or && or !== {}) {
+      Object.keys(or).map(key => {
+        or[key].split(',').map(item => {
           queryString += `&or[${key}]=${item}`;
+        });
+      });
+    }
+    if (nor && nor !== {}) {
+      Object.keys(nor).map(key => {
+        nor[key].split(',').map(item => {
+          queryString += `&nor[${key}]=${item}`;
         });
       });
     }

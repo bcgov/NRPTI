@@ -197,9 +197,11 @@ export class FactoryService {
    * @param {number} [pageNum=1]
    * @param {number} [pageSize=10]
    * @param {string} [sortBy=null]
-   * @param {object} [queryModifier={}]
+   * @param {object} [and={}]
    * @param {boolean} [populate=false]
-   * @param {object} [filter={}]
+   * @param {object} [or={}]
+   * @param {object} [subset=[]]
+   * @param {object} [nor={}]
    * @returns {Observable<any[]>}
    * @memberof FactoryService
    */
@@ -210,10 +212,11 @@ export class FactoryService {
     pageNum: number = 1,
     pageSize: number = 10,
     sortBy: string = null,
-    queryModifier: object = {},
+    and: object = {},
     populate: boolean = false,
-    filter: object = {},
-    subset: string[] = []
+    or: object = {},
+    subset: string[] = [],
+    nor: object = {}
   ): Observable<any[]> {
     return this.searchService.getSearchResults(
       this.getApiPath(),
@@ -223,10 +226,11 @@ export class FactoryService {
       pageNum,
       pageSize,
       sortBy,
-      queryModifier,
+      and,
       populate,
-      filter,
-      subset
+      or,
+      subset,
+      nor
     );
   }
 
