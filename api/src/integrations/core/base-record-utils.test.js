@@ -60,7 +60,7 @@ describe('BaseRecordUtils', () => {
 
       const testExistingRecord = { _id: 123 };
 
-      const result = await baseRecordUtils.updateRecord({}, testExistingRecord);
+      await baseRecordUtils.updateRecord({}, testExistingRecord);
 
       expect(spy).toHaveBeenCalled();
     });
@@ -79,7 +79,7 @@ describe('BaseRecordUtils', () => {
         return Promise.resolve({ test: 'record' });
       });
 
-      const result = await baseRecordUtils.createRecord({});
+      await baseRecordUtils.createRecord({});
 
       expect(spy).toHaveBeenCalled();
     });
