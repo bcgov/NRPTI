@@ -9,12 +9,12 @@ const defaultLog = require('../../utils/logger')('core-datasource');
 
 const MINES_BATCH_SIZE = 300;
 
-const CORE_TOKEN_ENDPOINT = process.env.CORE_TOKEN_ENDPOINT || 'https://sso.pathfinder.gov.bc.ca/auth/realms/mds/protocol/openid-connect/token';
-const CORE_CLIENT_ID = process.env.CORE_CLIENT_ID || null
-const CORE_CLIENT_SECRET = process.env.CORE_CLIENT_SECRET || null;
-const CORE_GRANT_TYPE = process.env.CORE_GRANT_TYPE || null;
+const CORE_TOKEN_ENDPOINT = process.env.CORE_TOKEN_ENDPOINT || 'https://sso-test.pathfinder.gov.bc.ca/auth/realms/mds/protocol/openid-connect/token';
+const CORE_CLIENT_ID = process.env.CORE_CLIENT_ID || 'bcmi-api-client';
+const CORE_CLIENT_SECRET = process.env.CORE_CLIENT_SECRET || 'a3ab3a3a-f440-477e-bf54-e4753b88bbb2';
+const CORE_GRANT_TYPE = process.env.CORE_GRANT_TYPE || 'client_credentials';
 
-const CORE_API_HOSTNAME = process.env.CORE_API_HOST|| 'https://minesdigitalservices.pathfinder.gov.bc.ca';
+const CORE_API_HOST = process.env.CORE_API_HOST|| 'https://minesdigitalservices-test.pathfinder.gov.bc.ca';
 const CORE_API_PATH_MINES = process.env.CORE_API_PATH_MINES || '/api/mines';
 const CORE_API_PATH_PARTIES = process.env.CORE_API_PATH_PARTIES || '/api/parties/mines';
 const CORE_API_PATH_COMMODITIES = process.env.CORE_API_PATH_COMMODITIES || '/api/mines/commodity-codes';
@@ -115,11 +115,10 @@ class CoreDataSource {
       // The Core API can not return all data in a single call. Must fetch data in batches.
       do {
         const queryParams = { per_page: MINES_BATCH_SIZE, page: currentPage };
-        const url = this.getIntegrationUrl(CORE_API_HOSTNAME, CORE_API_PATH_MINES, queryParams);
+        const url = this.getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_MINES, queryParams);
   
         // Get Core records
         const data = await integrationUtils.getRecords(url, this.getAuthHeader());
-    
         // Get records from response and add to total.
         const newRecords = data && data.mines || [];
         mineRecords = [...mineRecords, ...newRecords];
@@ -138,9 +137,9 @@ class CoreDataSource {
           relationships: 'party'
         };
   
-        const partyUrl = this.getIntegrationUrl(CORE_API_HOSTNAME, CORE_API_PATH_PARTIES, partyQueryParams);
+        const partyUrl = this.getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_PARTIES, partyQueryParams);
         const mineDetailsPath = `${CORE_API_PATH_MINES}/${mine.mine_guid}`;
-        const mineDetailsUrl = this.getIntegrationUrl(CORE_API_HOSTNAME, mineDetailsPath);
+        const mineDetailsUrl = this.getIntegrationUrl(CORE_API_HOST, mineDetailsPath);
   
         return new Promise(async (resolve) => {
           const [ parties, mineDetails ] = await Promise.all([
@@ -178,7 +177,7 @@ class CoreDataSource {
   async processRecords(recordTypeUtils, coreRecords) {
     try {
       // Get the up to date commodity types for records.
-      const url = this.getIntegrationUrl(CORE_API_HOSTNAME, CORE_API_PATH_COMMODITIES);
+      const url = this.getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_COMMODITIES);
       const commodityTypes = await integrationUtils.getRecords(url, this.getAuthHeader());
 
       // Process each core record.
