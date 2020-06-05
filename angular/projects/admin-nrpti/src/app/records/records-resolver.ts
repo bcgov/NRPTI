@@ -3,10 +3,11 @@ import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
 import { FactoryService } from '../services/factory.service';
+import { EpicProjectIds } from '../../../../common/src/app/utils/record-constants';
 
 @Injectable()
 export class RecordsResolver implements Resolve<Observable<object>> {
-  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) { }
+  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const params = { ...route.params };
@@ -43,43 +44,73 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       subset = params.subset.split(',');
     }
 
-
-    const filterParams = {};
+    const and = {};
+    const or = {};
+    const nor = {};
 
     if (params.dateRangeFromFilter) {
-      filterParams['dateRangeFromFilterdateIssued'] = params.dateRangeFromFilter;
+      or['dateRangeFromFilterdateIssued'] = params.dateRangeFromFilter;
     }
 
     if (params.dateRangeToFilter) {
-      filterParams['dateRangeToFilterdateIssued'] = params.dateRangeToFilter;
+      or['dateRangeToFilterdateIssued'] = params.dateRangeToFilter;
     }
 
     if (params.issuedToCompany && params.issuedToIndividual) {
-      filterParams['issuedTo.type'] = 'Company,Individual,IndividualCombined';
+      or['issuedTo.type'] = 'Company,Individual,IndividualCombined';
     } else if (params.issuedToCompany) {
-      filterParams['issuedTo.type'] = 'Company';
+      or['issuedTo.type'] = 'Company';
     } else if (params.issuedToIndividual) {
-      filterParams['issuedTo.type'] = 'Individual,IndividualCombined';
+      or['issuedTo.type'] = 'Individual,IndividualCombined';
     }
 
     if (params.agency) {
-      filterParams['issuingAgency'] = params.agency;
+      or['issuingAgency'] = params.agency;
     }
 
     if (params.act) {
-      filterParams['legislation.act'] = params.act;
+      or['legislation.act'] = params.act;
     }
 
     if (params.regulation) {
-      filterParams['legislation.regulation'] = params.regulation;
+      or['legislation.regulation'] = params.regulation;
     }
 
     if (params.sourceSystemRef) {
-      filterParams['sourceSystemRef'] = params.sourceSystemRef;
+      or['sourceSystemRef'] = params.sourceSystemRef;
     }
 
     if (params.hasDocuments) {
-      filterParams['hasDocuments'] = params.hasDocuments;
+      or['hasDocuments'] = params.hasDocuments;
+    }
+
+    if (params.projects) {
+      const projectIds = [];
+
+      if (params.projects.includes('lngCanada')) {
+        projectIds.push(EpicProjectIds.lngCanadaId);
+      }
+
+      if (params.projects.includes('coastalGaslink')) {
+        projectIds.push(EpicProjectIds.coastalGaslinkId);
+      }
+
+      if (params.projects.includes('otherProjects')) {
+        if (projectIds.length === 0) {
+          // Selecting only Other should return all projects EXCEPT for LNG Canada and Coastal Gaslink
+          nor['_epicProjectId'] = `${EpicProjectIds.lngCanadaId},${EpicProjectIds.coastalGaslinkId}`;
+        } else if (projectIds.length === 1) {
+          if (projectIds[0] === EpicProjectIds.lngCanadaId) {
+            // Other + LNG Canada is equivalent to NOT Coastal Gaslink
+            nor['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+          } else {
+            // Other + Coastal Gaslink is equivalent to NOT LNG Canada
+            nor['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+          }
+        }
+      } else if (projectIds.length) {
+        or['_epicProjectId'] = projectIds.join(',');
+      }
     }
 
     // force-reload so we always have latest data
@@ -90,10 +121,11 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       tableObject.currentPage,
       tableObject.pageSize,
       tableObject.sortBy || '-dateAdded', // This needs to be common between all datasets to work properly
-      {},
+      and,
       false,
-      filterParams,
-      subset
+      or,
+      subset,
+      nor
     );
   }
 }
