@@ -2,8 +2,8 @@ import { Utils } from './utils';
 import { Legislation } from '../models/master/common-models/legislation';
 
 export class EpicProjectIds {
-  public static readonly lngCanadaId = '588511c4aaecd9001b825604';
-  public static readonly coastalGaslinkId = '588510cdaaecd9001b815f84';
+  public static readonly lngCanadaId = '588510cdaaecd9001b815f84';
+  public static readonly coastalGaslinkId = '588511c4aaecd9001b825604';
 }
 
 /**
@@ -700,7 +700,7 @@ export class Picklists {
       },
       'Oil and Gas Activities Act': {
         '63': {
-          description: 'Penalty for failure to compluy with the Act or associated regulations'
+          description: 'Penalty for failure to comply with the Act or associated regulations'
         }
       }
     },

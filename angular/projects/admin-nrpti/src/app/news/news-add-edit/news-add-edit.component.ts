@@ -33,11 +33,11 @@ export class NewsAddEditComponent implements OnInit, OnDestroy {
   // Pick lists
   public projects = [{
     id: '588510cdaaecd9001b815f84',
-    name: 'Coastal Gaslink'
+    name: 'LNG Canada'
    },
    {
     id: '588511c4aaecd9001b825604',
-    name: 'LNG Canada'
+    name: 'Coastal Gaslink'
    }];
 
   constructor(
