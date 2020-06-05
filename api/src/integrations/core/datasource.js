@@ -7,7 +7,7 @@ const integrationUtils = require('../integration-utils');
 const MineUtils = require('./mine-utils');
 const defaultLog = require('../../utils/logger')('core-datasource');
 
-const MINES_BATCH_SIZE = 300;
+const CORE_API_BATCH_SIZE = process.env.CORE_API_BATCH_SIZE || 300;
 
 const CORE_TOKEN_ENDPOINT = process.env.CORE_TOKEN_ENDPOINT || 'https://sso-test.pathfinder.gov.bc.ca/auth/realms/mds/protocol/openid-connect/token';
 const CORE_CLIENT_ID = process.env.CORE_CLIENT_ID || 'bcmi-api-client';
@@ -114,7 +114,7 @@ class CoreDataSource {
 
       // The Core API can not return all data in a single call. Must fetch data in batches.
       do {
-        const queryParams = { per_page: MINES_BATCH_SIZE, page: currentPage };
+        const queryParams = { per_page: CORE_API_BATCH_SIZE, page: currentPage };
         const url = this.getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_MINES, queryParams);
   
         // Get Core records
