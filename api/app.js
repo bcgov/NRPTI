@@ -1,9 +1,5 @@
 'use strict';
 
-
-const taskAuditRecord = require('./src/utils/task-audit-record');
-const DataSource = require('./src/integrations/core/datasource');
-
 const app = require('express')();
 const cron = require('node-cron');
 const fs = require('fs');
@@ -122,10 +118,6 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
       });
 
       startCron(defaultLog);
-
-      const taskAudit = new taskAuditRecord();
-      const dataSource = new DataSource(taskAudit);
-      dataSource.run();
     },
     error => {
       defaultLog.info('Mongoose connect error:', error);
