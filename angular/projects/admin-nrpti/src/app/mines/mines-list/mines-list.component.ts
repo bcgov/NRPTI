@@ -140,9 +140,8 @@ export class MinesListComponent implements OnInit, OnDestroy {
   setInitialURLParams() {
     this.location.go(
       this.router
-        .createUrlTree([], {
-          relativeTo: this.route,
-          queryParams: { ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }
+        .createUrlTree([{ ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }], {
+          relativeTo: this.route
         })
         .toString()
     );
