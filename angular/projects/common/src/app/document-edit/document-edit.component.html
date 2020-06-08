@@ -3,7 +3,7 @@
     <span class="cell icon">
       <i class="material-icons">insert_drive_file</i>
     </span>
-    <span class="cell name" [title]="document || ''">
+    <span class="cell name" [title]="document.fileName || ''">
       <span *ngIf="!document.toDelete" class="cell__txt-content">{{ document.fileName }}</span>
       <span *ngIf="document.toDelete" class="cell__txt-content">
         <i>{{ document.fileName }} marked for deletion</i>
