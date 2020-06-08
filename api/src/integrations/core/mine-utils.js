@@ -17,6 +17,10 @@ class Mines extends BaseRecordUtils {
    * @memberof Mines
    */
   constructor(recordType) {
+    if (!recordType) {
+      throw Error('MineUtils - required recordType must be non-null.');
+    }
+
     super(recordType);
   }
 
@@ -29,9 +33,9 @@ class Mines extends BaseRecordUtils {
    * @throws {Error} if record is not provided.
    * @memberof Mines
    */
-  async transformRecord(mineRecord, commodityTypes) {
+  transformRecord(mineRecord, commodityTypes) {
     if (!mineRecord) {
-      throw Error('transformRecord - required record must be non-null.');
+      throw Error('transformRecord - required mineRecord must be non-null.');
     }
 
     if (!commodityTypes) {
@@ -47,7 +51,7 @@ class Mines extends BaseRecordUtils {
       tailingsImpoundments: mineRecord.mine_tailings_storage_facilities.length,
       region: mineRecord.mine_region,
       location : { type: 'Point', coordinates: mineRecord.coordinates },
-      permitee: this.getParty(MINE_PARTY_PERMITTEE, mineRecord),
+      permittee: this.getParty(MINE_PARTY_PERMITTEE, mineRecord),
       type: '',
       summary: '',
       description: '',
