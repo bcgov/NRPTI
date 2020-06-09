@@ -92,7 +92,7 @@
           <div class="grid-item__row">
             <label class="grid-item-name">Documents</label>
             <span class="grid-item-value__col" *ngIf="data && data.documents && data.documents.length > 0">
-              <span *ngFor="let document of data && data.documents">
+              <span class="trim-document-text"  *ngFor="let document of data && data.documents">
                 <a href="{{ document.url }}" target=" _blank">{{ document.fileName }}</a>
               </span>
             </span>
