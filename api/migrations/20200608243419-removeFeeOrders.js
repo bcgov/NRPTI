@@ -60,7 +60,7 @@ exports.up = async function(db) {
 
         // Delete from S3 if it exists.
         if (doc.key) {
-          DocumentController.deleteS3Document(doc.key);
+          await DocumentController.deleteS3Document(doc.key);
         }
       }
 
