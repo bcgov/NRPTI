@@ -21,11 +21,25 @@ $doc-list-link-color: #007bff;
     overflow: hidden;
     text-overflow: ellipsis;
 
+    @media (max-width: 767px) {
+      &__txt-content {
+        max-width: calc(100vw - 110px);
+      }
+    }
+
+    @media (min-width: 767px) {
+      &__txt-content {
+        max-width: calc(100vw - 375px);
+      }
+    }
+
     // Text Content
     &__txt-content {
       margin-top: 0.5rem;
-      display: inline-block;
+      display: block;
+      overflow: hidden;
       white-space: nowrap;
+      text-overflow: ellipsis;
 
       a {
         color: $doc-list-link-color;

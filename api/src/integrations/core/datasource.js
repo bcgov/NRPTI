@@ -6,6 +6,7 @@ const QS = require('qs');
 const integrationUtils = require('../integration-utils');
 const MineUtils = require('./mine-utils');
 const defaultLog = require('../../utils/logger')('core-datasource');
+const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 const CORE_API_BATCH_SIZE = process.env.CORE_API_BATCH_SIZE || 300;
 
@@ -19,16 +20,6 @@ const CORE_API_PATH_MINES = process.env.CORE_API_PATH_MINES || '/api/mines';
 const CORE_API_PATH_PARTIES = process.env.CORE_API_PATH_PARTIES || '/api/parties/mines';
 const CORE_API_PATH_COMMODITIES = process.env.CORE_API_PATH_COMMODITIES || '/api/mines/commodity-codes';
 
-
-/**
- * Supported NRPTI record types for Core data.
- */
-const RECORD_TYPE = Object.freeze({
-  Mine: {
-    _schemaName: 'Mine',
-    recordControllerName: 'mines'
-  },
-});
 
 class CoreDataSource {
   /**
@@ -96,7 +87,7 @@ class CoreDataSource {
       await this.processRecords(recordTypeUtils, coreRecords);
     } catch (error) {
       defaultLog.error(`updateRecords - unexpected error: ${error.message}`);
-      throw new Error('updateRecords - unexpected error');
+      throw(error);
     }
   }
 
@@ -162,7 +153,7 @@ class CoreDataSource {
       return verifiedRecords;
     } catch (error) {
       defaultLog.error(`getAllRecordData - unexpected error: ${error.message}`);
-      throw new Error('getAllRecordData - unexpected error');
+      throw(error);
     }
   }
 
@@ -176,6 +167,14 @@ class CoreDataSource {
    */
   async processRecords(recordTypeUtils, coreRecords) {
     try {
+      if (!recordTypeUtils) {
+        throw Error('processRecords - required recordTypeUtils is null.');
+      }
+
+      if (!coreRecords) {
+        throw Error('processRecords - required coreRecords is null.');
+      }
+
       // Get the up to date commodity types for records.
       const url = this.getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_COMMODITIES);
       const commodityTypes = await integrationUtils.getRecords(url, this.getAuthHeader());
@@ -187,7 +186,7 @@ class CoreDataSource {
       defaultLog.error(`processRecords - unexpected error: ${error.message}`);
       // Throwing this error will stop the processing. This will only occur if there is an issue
       // getting commodities. Single record processing errors silently and won't trigger this.
-      throw new Error('processRecords - unexpected error');
+      throw(error);
     }
   }
 

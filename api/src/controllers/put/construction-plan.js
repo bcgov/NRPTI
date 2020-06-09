@@ -27,72 +27,13 @@ const ConstructionPlanPost = require('../post/construction-plan');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.editRecord = async function(args, res, next, incomingObj) {
-  // save flavour records
-  let observables = [];
-  let savedFlavourConstructionPlans = [];
-  let flavourIds = [];
-
-  try {
-    // make a copy of the incoming object for use by the flavours only
-    const flavourIncomingObj = { ...incomingObj };
-    // Remove fields that should not be inherited from the master record
-    delete flavourIncomingObj._id;
-    delete flavourIncomingObj._schemaName;
-    delete flavourIncomingObj._flavourRecords;
-    delete flavourIncomingObj.read;
-    delete flavourIncomingObj.write;
-
-    if (incomingObj.ConstructionPlanLNG) {
-      if (incomingObj.ConstructionPlanLNG._id) {
-        observables.push(this.editLNG(args, res, next, { ...flavourIncomingObj, ...incomingObj.ConstructionPlanLNG }));
-      } else {
-        const masterRecord = await PutUtils.fetchMasterForCreateFlavour('ConstructionPlan', incomingObj._id);
-
-        observables.push(
-          ConstructionPlanPost.createLNG(args, res, next, {
-            ...masterRecord,
-            ...flavourIncomingObj,
-            ...incomingObj.ConstructionPlanLNG
-          })
-        );
-      }
-
-      delete incomingObj.ConstructionPlanLNG;
-    }
-
-    if (observables.length > 0) {
-      savedFlavourConstructionPlans = await Promise.all(observables);
-
-      flavourIds = savedFlavourConstructionPlans.map(flavourConstructionPlan => flavourConstructionPlan._id);
-    }
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedFlavourConstructionPlans,
-      errorMessage: e.message
-    };
+exports.editRecord = async function (args, res, next, incomingObj) {
+  const flavourFunctions = {
+    ConstructionPlanLNG: this.editLNG
   }
-
-  // save constructionPlan record
-  let savedConstructionPlan = null;
-
-  try {
-    savedConstructionPlan = await this.editMaster(args, res, next, incomingObj, flavourIds);
-
-    return {
-      status: 'success',
-      object: savedConstructionPlan,
-      flavours: savedFlavourConstructionPlans
-    };
-  } catch (e) {
-    return {
-      status: 'failure',
-      object: savedConstructionPlan,
-      errorMessage: e.message
-    };
-  }
+  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, ConstructionPlanPost, 'ConstructionPlan', flavourFunctions);
 };
+
 
 /**
  * Performs all operations necessary to edit a master Construction Plan record.
@@ -118,13 +59,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns edited master constructionPlan record
  */
-exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
-  if (!incomingObj || !incomingObj._id) {
-    // skip, as there is no way to update the master record
-    return;
-  }
-
-  const _id = incomingObj._id;
+exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
   delete incomingObj._id;
 
   // Reject any changes to master permissions
@@ -151,9 +86,7 @@ exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
     updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
   }
 
-  return await ConstructionPlan.findOneAndUpdate({ _schemaName: 'ConstructionPlan', _id: _id }, updateObj, {
-    new: true
-  });
+  return updateObj;
 };
 
 /**
@@ -180,13 +113,7 @@ exports.editMaster = async function(args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns edited lng constructionPlan record
  */
-exports.editLNG = async function(args, res, next, incomingObj) {
-  if (!incomingObj || !incomingObj._id) {
-    // skip, as there is no way to update the lng record
-    return;
-  }
-
-  const _id = incomingObj._id;
+exports.editLNG = function (args, res, next, incomingObj) {
   delete incomingObj._id;
 
   // Reject any changes to permissions
@@ -215,7 +142,5 @@ exports.editLNG = async function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  return await ConstructionPlanLNG.findOneAndUpdate({ _schemaName: 'ConstructionPlanLNG', _id: _id }, updateObj, {
-    new: true
-  });
+  return updateObj;
 };
