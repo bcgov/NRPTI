@@ -1,0 +1,65 @@
+<main class="container-fluid-padding">
+  <div class="d-flex">
+    <h2>Mine Details</h2>
+    <div class="ml-auto">
+      <button class="btn btn-outline-primary mr-1" (click)="navigateBack()">Back</button>
+      <button class="btn btn-primary" (click)="navigateToEditPage()">Edit</button>
+    </div>
+  </div>
+  <hr>
+  <div class="row label-pair ml-1 mb-2">
+    <label class="font-weight-bold mr-1">Name:</label>
+    <div>{{record?.name || '-'}}</div>
+  </div>
+  <div class="row label-pair ml-1 mb-2">
+    <label class="font-weight-bold mr-1">Permit Numbers:</label>
+    <div>{{record?.permitNumbers && record?.permitNumbers.length > 0 ? record?.permitNumbers?.join() : '-'}}</div>
+  </div>
+  <div class="row label-pair ml-1 mb-2">
+    <label class="font-weight-bold mr-1">Status:</label>
+    <div>{{record?.status || '-'}}</div>
+  </div>
+  <div class="row label-pair ml-1 mb-2">
+    <label class="font-weight-bold mr-1">Type:</label>
+    <div>{{record?.type || '-'}}</div>
+  </div>
+  <div class="row label-pair ml-1 mb-2">
+    <label class="font-weight-bold mr-1">Commodities:</label>
+    <div>{{record?.commodities && record?.commodities?.length > 0 ? record?.commodities?.join() : '-'}}</div>
+  </div>
+  <div class="row label-pair ml-1 mb-2">
+    <label class="font-weight-bold mr-1">Tailings Impoundments:</label>
+    <div>{{record?.tailingsImpoundments || '-' }}</div>
+  </div>
+  <div class="row label-pair ml-1 mb-2">
+    <label class="font-weight-bold mr-1">Region:</label>
+    <div>{{record?.region || '-' }}</div>
+  </div>
+  <div class="row label-pair ml-1 mb-2">
+    <label class="font-weight-bold mr-1">Permittee:</label>
+    <div>{{record?.permittee || '-' }}</div>
+  </div>
+  <div class="row label-pair ml-1 mb-2">
+    <label class="font-weight-bold mr-1">Summary:</label>
+    <div>{{record?.summary || '-' }}</div>
+  </div>
+  <div class="row label-pair ml-1 mb-2">
+    <label class="font-weight-bold mr-1">Description:</label>
+    <div>{{record?.description || '-' }}</div>
+  </div>
+  <div class="row label-pair ml-1 mb-2">
+    <label class="font-weight-bold mr-1">Location:</label>
+    <div>{{record?.location ? (' Lat:' + record?.location.coordinates[1]) + ' Long: ' + record?.location.coordinates[0] : '-' }}</div>
+  </div>
+  <div class="row label-pair ml-1 mb-2">
+    <label class="font-weight-bold mr-1">Links:</label>
+    <ul *ngIf="record && record.links && record.links.length > 0">
+      <li *ngFor="let link of record.links">
+        <a [href]="link" target="_blank">{{link}}</a>
+      </li>
+    </ul>
+  </div>
+  <div class="row ml-1 mt-5">
+    <button class="btn btn-outline-primary mr-1" (click)="delete()">Delete</button>
+  </div>
+</main>
