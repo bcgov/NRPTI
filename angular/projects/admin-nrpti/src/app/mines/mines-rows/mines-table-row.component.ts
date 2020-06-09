@@ -30,24 +30,16 @@ export class MinesTableRowComponent extends TableRowComponent implements OnInit 
   }
 
   @HostListener('click') onItemClicked() {
-    switch (this.rowData._schemaName) {
-      case 'Mine':
-        this.router.navigate(['mines', 'mines', this.rowData._id, 'detail']);
-        break;
-      default:
-        break;
+    if (this.rowData._schemaName === 'Mine') {
+      this.router.navigate(['mines', 'mines', this.rowData._id, 'detail']);
     }
   }
 
   edit(event: Event) {
     event.stopPropagation();
 
-    switch (this.rowData._schemaName) {
-      case 'Mine':
-        this.router.navigate(['mines', 'mines', this.rowData._id, 'edit']);
-        break;
-      default:
-        break;
+    if (this.rowData._schemaName === 'Mine') {
+      this.router.navigate(['mines', 'mines', this.rowData._id, 'edit']);
     }
   }
 }
