@@ -40,6 +40,19 @@
                   check_circle
                 </i>
               </button>
+              <button
+                ngbDropdownItem
+                [disabled]="selectedSubset === 'Description & Summary'"
+                (click)="changeSubset('Description & Summary')"
+              >
+                Description & Summary
+                <i
+                  *ngIf="selectedSubset === 'Description & Summary'"
+                  class="material-icons material-icons align-text-bottom"
+                >
+                  check_circle
+                </i>
+              </button>
             </div>
           </div>
           <input type="text" class="form-control" (keyup.enter)="keywordSearch()" [(ngModel)]="keywordSearchWords"
