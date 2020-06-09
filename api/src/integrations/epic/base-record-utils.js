@@ -240,7 +240,7 @@ class BaseRecordUtils {
    * @memberof BaseRecordUtils
    */
   isRecordFeeOrder(transformedRecord) {
-    if (!transformedRecord || !transformedRecord.recordName) {
+    if (!transformedRecord || !Object.prototype.hasOwnProperty.call(transformedRecord, 'recordName')) {
       throw new Error('isRecordFeeOrder - required transformedRecord must be non-null and include recordName.');
     }
 
