@@ -22,9 +22,28 @@ exports.up = async function(db) {
 
     const orders = await nrptiCollection.find({ _schemaName: 'Order' }).toArray();
 
-    console.log(`${orders.length} Fee Orders found.`);
+    // Filter out only the fee orders  
+    // Any document names that contain these terms are considered Fee Orders.
+    const orderTermsBlacklist = [
+      'fee order',
+      'order to pay fees',
+      'fee package'
+    ];
+
+    const feeOrders = [];
 
     for (const order of orders) {
+      for (const term of orderTermsBlacklist) {
+        if (order.recordName.toLowerCase().includes(term)) {
+          feeOrders.push(order);
+          break;
+        }
+      }
+    }
+
+    console.log(`${feeOrders.length} Fee Orders found.`);
+
+    for (const order of feeOrders) {
       // Delete any flavour records.
       for (const flavourId of order._flavourRecords) {
         nrptiCollection.remove({ _id: flavourId });
