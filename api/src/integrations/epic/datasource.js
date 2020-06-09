@@ -152,22 +152,19 @@ class DataSource {
             continue;
           }
 
-          // Check if Inspection
+          // Check if Inspection or Order and that it is not a Fee Order.
           const rec = await recordTypeUtils.transformRecord(theRecord);
-          if (rec._schemaName === "Inspection") {
-              processRecords.push(theRecord);
-          }
-
-          // Check if Order and not a Fee Order 
-          if (rec._schemaName === 'Order' && !recordTypeUtils.isRecordFeeOrder(rec)) {
-            processRecords.push(theRecord);
+          if (rec._schemaName === 'Inspection' || rec._schemaName === 'Order') {
+              if (!recordTypeUtils.isRecordFeeOrder(rec)) {
+                processRecords.push(theRecord);
+              }
           }
           // Skip everything else
         } else {
           const rec = await recordTypeUtils.transformRecord(theRecord);
 
-          // Check if Order and not a Fee Order 
-          if (rec._schemaName === 'Order') {
+          // Check if Order or Inspection and not a Fee Order 
+          if (rec._schemaName === 'Inspection' || rec._schemaName === 'Order') {
             if (!recordTypeUtils.isRecordFeeOrder(rec)) {
               processRecords.push(theRecord);
             }

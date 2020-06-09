@@ -21,6 +21,9 @@ exports.up = async function(db) {
     const nrptiCollection = await mClient.collection('nrpti');
 
     const orders = await nrptiCollection.find({ _schemaName: 'Order' }).toArray();
+    const inspections = await nrptiCollection.find({ _schemaName: 'Inspection' }).toArray();
+
+    const recordToCheck = [...orders, ...inspections];
 
     // Filter out only the fee orders  
     // Any document names that contain these terms are considered Fee Orders.
@@ -32,10 +35,10 @@ exports.up = async function(db) {
 
     const feeOrders = [];
 
-    for (const order of orders) {
+    for (const record of recordToCheck) {
       for (const term of orderTermsBlacklist) {
-        if (order.recordName.toLowerCase().includes(term)) {
-          feeOrders.push(order);
+        if (record.recordName.toLowerCase().includes(term)) {
+          feeOrders.push(record);
           break;
         }
       }
