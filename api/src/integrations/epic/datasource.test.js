@@ -101,14 +101,18 @@ describe('DataSource', () => {
       // mock utils called by updateRecordType()
       const mockResponse = [
         {
-          searchResults: [{ _id: '123' }, { _id: '456' }, { _id: '789' }],
+          searchResults: [
+            { _id: '123', _schemaName: 'test'}, 
+            { _id: '456', _schemaName: 'test'}, 
+            { _id: '789', _schemaName: 'test'}
+          ],
           meta: 'meta!'
         }
       ];
       jest.spyOn(require('../integration-utils'), 'getRecords').mockImplementation(() => {
         return Promise.resolve(mockResponse);
       });
-
+      
       const dataSource = new DataSource({ updateTaskRecord: jest.fn() }, null, { param1: 1 });
 
       // mock DataSource functions called by updateRecordType()
@@ -117,10 +121,16 @@ describe('DataSource', () => {
       });
       dataSource.processRecord = jest.fn(() => {});
 
+      const mockUtil = jest.fn().mockImplementation(() => {
+        return {
+          transformRecord: jest.fn(record => Promise.resolve(record))
+        };
+      });
+
       const recordType = {
         type: { typeId: '111' },
         milestone: { milestoneId: '222' },
-        getUtil: jest.fn(() => 'utils')
+        getUtil: mockUtil
       };
 
       const status = await dataSource.updateRecordType(recordType);
@@ -139,9 +149,9 @@ describe('DataSource', () => {
 
       expect(recordType.getUtil).toHaveBeenCalledTimes(1);
 
-      expect(dataSource.processRecord).toHaveBeenNthCalledWith(1, 'utils', { _id: '123' });
-      expect(dataSource.processRecord).toHaveBeenNthCalledWith(2, 'utils', { _id: '456' });
-      expect(dataSource.processRecord).toHaveBeenNthCalledWith(3, 'utils', { _id: '789' });
+      expect(dataSource.processRecord).toHaveBeenNthCalledWith(1, expect.anything(), { _id: '123', _schemaName: 'test' });
+      expect(dataSource.processRecord).toHaveBeenNthCalledWith(2, expect.anything(), { _id: '456', _schemaName: 'test' });
+      expect(dataSource.processRecord).toHaveBeenNthCalledWith(3, expect.anything(), { _id: '789', _schemaName: 'test' });
 
       expect(status).toEqual({
         type: recordType,
