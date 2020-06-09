@@ -31,7 +31,7 @@ export class MinesTableRowComponent extends TableRowComponent implements OnInit 
 
   @HostListener('click') onItemClicked() {
     if (this.rowData._schemaName === 'Mine') {
-      this.router.navigate(['mines', 'mines', this.rowData._id, 'detail']);
+      this.router.navigate(['mines', this.rowData._id, 'detail']);
     }
   }
 
@@ -39,7 +39,7 @@ export class MinesTableRowComponent extends TableRowComponent implements OnInit 
     event.stopPropagation();
 
     if (this.rowData._schemaName === 'Mine') {
-      this.router.navigate(['mines', 'mines', this.rowData._id, 'edit']);
+      this.router.navigate(['mines', this.rowData._id, 'edit']);
     }
   }
 }
