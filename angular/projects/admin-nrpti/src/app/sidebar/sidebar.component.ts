@@ -57,9 +57,7 @@ export class SidebarComponent implements OnDestroy {
   }
 
   activateLoading(path) {
-    if (this.currentMenu !== 'records') {
-      this.loadingScreenService.setLoadingState(true, 'body');
-    }
+    this.loadingScreenService.setLoadingState(true, 'body');
     this.router.navigate(path);
   }
 

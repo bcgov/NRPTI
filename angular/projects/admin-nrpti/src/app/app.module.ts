@@ -17,6 +17,7 @@ import { SharedModule } from './shared/shared.module';
 import { AppRoutingModule } from './app-routing.module';
 import { RecordsModule } from './records/records.module';
 import { NewsModule } from './news/news.module';
+import { MinesModule } from './mines/mines.module';
 
 // components
 import { AppComponent } from './app.component';
@@ -84,6 +85,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     SharedModule,
     RecordsModule,
     NewsModule,
+    MinesModule,
     AppRoutingModule, // <-- module import order matters - https://angular.io/guide/router#module-import-order-matters
     NgbModule.forRoot(),
     NgxPaginationModule,
