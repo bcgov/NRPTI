@@ -46,7 +46,7 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
           this.record = new Mine(res.record[0].data);
         } else {
           alert('Error: could not load edit mine.');
-          this.router.navigate(['/']);
+          this.router.navigate(['mines']);
         }
       } else {
         // Add

@@ -28,7 +28,7 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
       if (!res || !res.record) {
         alert("Uh-oh, couldn't load Mine");
-        this.router.navigate(['/']);
+        this.router.navigate(['mines']);
         return;
       }
 
