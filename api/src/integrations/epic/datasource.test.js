@@ -123,7 +123,8 @@ describe('DataSource', () => {
 
       const mockUtil = jest.fn().mockImplementation(() => {
         return {
-          transformRecord: jest.fn(record => Promise.resolve(record))
+          transformRecord: jest.fn(record => Promise.resolve(record)),
+          isRecordFeeOrder: jest.fn(() => false)
         };
       });
 
