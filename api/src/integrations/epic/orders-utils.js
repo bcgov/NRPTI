@@ -62,41 +62,6 @@ class Orders extends BaseRecordUtils {
       }
     };
   }
-
-  /**
-   * Indicates if a record is a fee order or not.
-   * 
-   * @param {object} transformedRecord Epic record that has been transformed to NRPTI format
-   * @returns {boolean} Indication if the record is a fee order
-   * @memberof Orders
-   */
-  isRecordFeeOrder(transformedRecord) {
-    if (!transformedRecord) {
-      throw new Error('isRecordFeeOrder - required transformedRecord must be non-null.');
-    }
-
-    // Only want to handle Orders.
-    if (transformedRecord.recordType !== 'Order' || !transformedRecord.recordName) {
-      throw new Error('isRecordFeeOrder - record must be an Order type and have a name.');
-    }
-
-    const lowercaseName = transformedRecord.recordName.toLowerCase();
-
-    // Any document names that contain these terms are considered Fee Orders.
-    const orderTermsWhitelist = [
-      'fee order',
-      'order to pay fees',
-      'fee package'
-    ];
-
-    for (const term of orderTermsWhitelist) {
-      if (lowercaseName.includes(term)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
 }
 
 module.exports = Orders;

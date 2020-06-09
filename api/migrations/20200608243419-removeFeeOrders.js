@@ -1,5 +1,7 @@
 'use strict'
 
+const DocumentController = require('../src/controllers/document-controller');
+
 let dbm;
 let type;
 let seed;
@@ -54,7 +56,12 @@ exports.up = async function(db) {
 
       // Delete any document records.
       for (const documentId of order.documents) {
-        nrptiCollection.remove({ _id: documentId });
+        const doc = await nrptiCollection.findOneAndDelete({ _id: documentId });
+
+        // Delete from S3 if it exists.
+        if (doc.key) {
+          DocumentController.deleteS3Document(doc.key);
+        }
       }
 
       nrptiCollection.remove({ _id: order._id })

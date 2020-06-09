@@ -231,6 +231,36 @@ class BaseRecordUtils {
       defaultLog.error(`Failed to create ${this.recordType._schemaName} record: ${error.message}`);
     }
   }
+
+  /**
+   * Indicates if a record is a fee order or not.
+   * 
+   * @param {object} transformedRecord Epic record that has been transformed to NRPTI format
+   * @returns {boolean} Indication if the record is a fee order
+   * @memberof BaseRecordUtils
+   */
+  isRecordFeeOrder(transformedRecord) {
+    if (!transformedRecord || !transformedRecord.recordName) {
+      throw new Error('isRecordFeeOrder - required transformedRecord must be non-null and include recordName.');
+    }
+
+    const lowercaseName = transformedRecord.recordName.toLowerCase();
+
+    // Any document names that contain these terms are considered Fee Orders.
+    const orderTermsWhitelist = [
+      'fee order',
+      'order to pay fees',
+      'fee package'
+    ];
+
+    for (const term of orderTermsWhitelist) {
+      if (lowercaseName.includes(term)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }
 
 module.exports = BaseRecordUtils;
