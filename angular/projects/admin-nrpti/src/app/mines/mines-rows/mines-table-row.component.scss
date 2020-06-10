@@ -1,0 +1,8 @@
+@import "assets/styles/base/base.scss";
+
+:host-context(tr) {
+  &:hover {
+    background-color: $table-row-hover-bg;
+    cursor: pointer;
+  }
+}
