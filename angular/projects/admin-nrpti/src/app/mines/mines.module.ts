@@ -16,6 +16,8 @@ import { MinesRoutingModule } from './mines-routing.module';
 // mines
 import { MinesTableRowComponent } from './mines-rows/mines-table-row.component';
 import { MinesListComponent } from './mines-list/mines-list.component';
+import { MinesDetailComponent } from './mines-detail/mines-detail.component';
+import { MinesAddEditComponent } from './mines-add-edit/mines-add-edit.component';
 
 @NgModule({
   imports: [
@@ -32,7 +34,12 @@ import { MinesListComponent } from './mines-list/mines-list.component';
     MatTooltipModule,
     NgbDropdownModule
   ],
-  declarations: [MinesListComponent, MinesTableRowComponent],
+  declarations: [
+    MinesListComponent,
+    MinesTableRowComponent,
+    MinesDetailComponent,
+    MinesAddEditComponent
+  ],
   providers: [],
   entryComponents: [MinesTableRowComponent],
   exports: []
