@@ -48,7 +48,7 @@ const routes: Routes = [
             component: MinesDetailComponent,
             canActivate: [CanActivateGuard],
             data: {
-              breadcrumb: 'detail'
+              breadcrumb: null
             },
             resolve: {
               record: MinesResolver
