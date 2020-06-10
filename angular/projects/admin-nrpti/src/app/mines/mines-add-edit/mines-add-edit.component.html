@@ -1,0 +1,59 @@
+<main class="container-fluid-padding">
+  <div class="spinner-container" *ngIf="loading">
+    <div class="spinner-new rotating"></div>
+  </div>
+  <div class="d-flex">
+    <h2>Edit Mine Details</h2>
+    <div class="ml-auto">
+      <button class="btn btn-outline-primary mr-1" type="cancel" (click)="navigateBack()">Cancel</button>
+      <button class="btn btn-primary" type="cancel" (click)="submit()">Save</button>
+    </div>
+  </div>
+  <hr>
+    <form *ngIf="!loading" [formGroup]="myForm" novalidate>
+    <div class="row">
+      <div class="label-pair mr-5 mt-4 col-12">
+        <label for="type" class="font-weight-bold mr-1">Type:</label>
+        <select [compareWith]="compareTypeSelection" name="type" id="type" formControlName="type" class="form-control">
+          <option *ngFor="let type of types" [ngValue]="type">{{ type }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="label-pair mr-5 mt-4 col-12">
+        <label  for="description" class="font-weight-bold mr-1">Description:</label>
+        <textarea
+            name="description"
+            id="description"
+            type="text"
+            formControlName="description"
+            class="form-control"
+            rows="10"></textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="label-pair mr-5 mt-4 col-12">
+        <label for="summary" class="font-weight-bold mr-1">Summary:</label>
+        <textarea
+            name="summary"
+            id="summary"
+            type="text"
+            formControlName="summary"
+            class="form-control"
+            rows="10"></textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="label-pair mr-5 mt-4 col-12">
+        <label  for="links" class="font-weight-bold mr-1">Links:</label>
+        <textarea
+            name="links"
+            id="links"
+            type="text"
+            formControlName="links"
+            class="form-control"
+            rows="10"></textarea>
+      </div>
+    </div>
+  </form>
+</main>
