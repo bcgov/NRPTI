@@ -121,6 +121,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.sourceDateAdded && (certificate.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (certificate.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (certificate.sourceSystemRef = incomingObj.sourceSystemRef);
+  incomingObj.isLngPublished && (certificate.isLngPublished = incomingObj.isLngPublished);
 
   return certificate;
 };

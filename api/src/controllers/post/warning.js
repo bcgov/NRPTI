@@ -157,6 +157,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.sourceDateAdded && (warning.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (warning.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (warning.sourceSystemRef = incomingObj.sourceSystemRef);
+  incomingObj.isNrcedPublished && (warning.isNrcedPublished = incomingObj.isNrcedPublished);
+  incomingObj.isLngPublished && (warning.isLngPublished = incomingObj.isLngPublished);
 
   return warning;
 };

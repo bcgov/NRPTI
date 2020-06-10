@@ -53,11 +53,25 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
   // We have this in case there's error and we need to clean up.
   let idsToDelete = [];
 
+  // Default flavour publish statuses to false
+  incomingObj.isNrcedPublished = false;
+  incomingObj.isLngPublished = false;
+
   // Prepare flavours
   const entries = Object.entries(flavourFunctions);
   // Example of entries: [['OrderLNG', createLNG()], ['OrderNRCED', createNRCED()]]
   for (let i = 0; i < entries.length; i++) {
     const entry = entries[i];
+
+    // This is to determine how we should populate the fields in master that know
+    // the publish state of its flavours.
+    if (incomingObj[entry[0]].addRole && incomingObj[entry[0]].addRole.includes('public') && entry[0].includes('NRCED')) {
+      incomingObj.isNrcedPublished = true;
+    }
+    if (incomingObj[entry[0]].addRole && incomingObj[entry[0]].addRole.includes('public') && entry[0].includes('LNG')) {
+      incomingObj.isLngPublished = true;
+    }
+
     incomingObj[entry[0]] &&
       flavours.push(entry[1](args, res, next, { ...incomingObj, ...incomingObj[entry[0]] }));
   }
