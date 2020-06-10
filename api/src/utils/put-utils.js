@@ -130,10 +130,6 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
   delete flavourIncomingObj.read;
   delete flavourIncomingObj.write;
 
-  // Default flavour publish statuses to false
-  incomingObj.isNrcedPublished = false;
-  incomingObj.isLngPublished = false;
-
   // Prepare flavours
   const entries = Object.entries(flavourFunctions);
   // Example of entries: [['OrderLNG', createLNG()], ['OrderNRCED', createNRCED()]]
@@ -151,6 +147,12 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
           incomingObj.isNrcedPublished = true;
         }
         if (flavourIncomingObj[entry[0]].addRole && flavourIncomingObj[entry[0]].addRole.includes('public') && entry[0].includes('LNG')) {
+          incomingObj.isLngPublished = true;
+        }
+        if (flavourIncomingObj[entry[0]].removeRole && flavourIncomingObj[entry[0]].removeRole.includes('public') && entry[0].includes('NRCED')) {
+          incomingObj.isNrcedPublished = true;
+        }
+        if (flavourIncomingObj[entry[0]].removeRole && flavourIncomingObj[entry[0]].removeRole.includes('public') && entry[0].includes('LNG')) {
           incomingObj.isLngPublished = true;
         }
 
