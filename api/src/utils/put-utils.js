@@ -150,10 +150,10 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
           incomingObj.isLngPublished = true;
         }
         if (flavourIncomingObj[entry[0]].removeRole && flavourIncomingObj[entry[0]].removeRole.includes('public') && entry[0].includes('NRCED')) {
-          incomingObj.isNrcedPublished = true;
+          incomingObj.isNrcedPublished = false;
         }
         if (flavourIncomingObj[entry[0]].removeRole && flavourIncomingObj[entry[0]].removeRole.includes('public') && entry[0].includes('LNG')) {
-          incomingObj.isLngPublished = true;
+          incomingObj.isLngPublished = false;
         }
 
         if (flavourIncomingObj[entry[0]]) {
