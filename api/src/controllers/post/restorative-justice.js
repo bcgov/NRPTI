@@ -160,6 +160,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.sourceDateAdded && (restorativeJustice.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (restorativeJustice.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (restorativeJustice.sourceSystemRef = incomingObj.sourceSystemRef);
+  incomingObj.isNrcedPublished && (restorativeJustice.isNrcedPublished = incomingObj.isNrcedPublished);
+  incomingObj.isLngPublished && (restorativeJustice.isLngPublished = incomingObj.isLngPublished);
 
   return restorativeJustice;
 };

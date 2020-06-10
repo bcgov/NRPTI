@@ -103,7 +103,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   // set data source references
   incomingObj.sourceDateAdded && (agreement.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (agreement.sourceDateUpdated = incomingObj.sourceDateUpdated);
-  incomingObj.sourceSystemRef && (agreement.sourceSystemRef = incomingObj.sourceSystemRef);
+  incomingObj.isLngPublished && (agreement.isLngPublished = incomingObj.isLngPublished);
 
   return agreement;
 };

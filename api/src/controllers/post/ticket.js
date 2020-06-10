@@ -155,6 +155,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.sourceDateAdded && (ticket.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (ticket.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (ticket.sourceSystemRef = incomingObj.sourceSystemRef);
+  incomingObj.isNrcedPublished && (ticket.isNrcedPublished = incomingObj.isNrcedPublished);
+  incomingObj.isLngPublished && (ticket.isLngPublished = incomingObj.isLngPublished);
 
   return ticket;
 };

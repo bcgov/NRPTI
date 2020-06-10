@@ -50,7 +50,7 @@ let EditMines = require('./put/mine');
  * @param {*} res
  * @param {*} next
  */
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
 
@@ -62,7 +62,7 @@ exports.protectedOptions = function(args, res, next) {
  * @param {*} next
  * @returns
  */
-exports.protectedGet = function(args, res, next) {
+exports.protectedGet = function (args, res, next) {
   return queryActions.sendResponse(res, 501);
 };
 
@@ -109,7 +109,7 @@ exports.protectedGet = function(args, res, next) {
  *   ...
  * }
  */
-exports.protectedPost = async function(args, res, next) {
+exports.protectedPost = async function (args, res, next) {
   let observables = [];
 
   if (args.swagger.params.data && args.swagger.params.data.value) {
@@ -183,7 +183,7 @@ exports.protectedPost = async function(args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedPut = async function(args, res, next) {
+exports.protectedPut = async function (args, res, next) {
   let observables = [];
 
   if (args.swagger.params.data && args.swagger.params.data.value) {
@@ -250,7 +250,7 @@ exports.protectedPut = async function(args, res, next) {
   }
 };
 
-exports.protectedNewsDelete = async function(args, res, next) {
+exports.protectedNewsDelete = async function (args, res, next) {
   try {
     const recordId = args.swagger.params.recordId.value;
     defaultLog.info(`protectedNewsDelete - recordId: ${recordId}`);
@@ -278,7 +278,7 @@ exports.protectedNewsDelete = async function(args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedPublish = async function(args, res, next) {
+exports.protectedPublish = async function (args, res, next) {
   try {
     const recordData = args.swagger.params.record.value;
     defaultLog.info(`protectedPublish - recordId: ${recordData._id}`);
@@ -286,6 +286,19 @@ exports.protectedPublish = async function(args, res, next) {
     const model = require('mongoose').model(recordData._schemaName);
 
     const record = await model.findOne({ _id: recordData._id });
+
+    // If we are updating a flavour, we have to make sure we update master as well
+    if (recordData._schemaName.includes('NRCED')) {
+      const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 5);
+      const masterModel = require('mongoose').model(masterSchema);
+      await masterModel.findOneAndUpdate({ _id: record._master }, { isNrcedPublished: true });
+    }
+    else if (recordData._schemaName.includes('LNG')) {
+      const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 3);
+      const masterModel = require('mongoose').model(masterSchema);
+      await masterModel.findOneAndUpdate({ _id: record._master }, { isLngPublished: true });
+    }
+
 
     if (!record) {
       defaultLog.info(`protectedPublish - couldn't find record for recordId: ${record._id}`);
@@ -309,7 +322,7 @@ exports.protectedPublish = async function(args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedUnPublish = async function(args, res, next) {
+exports.protectedUnPublish = async function (args, res, next) {
   try {
     const recordData = args.swagger.params.record.value;
     defaultLog.info(`protectedUnPublish - recordId: ${recordData._id}`);
@@ -317,6 +330,17 @@ exports.protectedUnPublish = async function(args, res, next) {
     const model = require('mongoose').model(recordData._schemaName);
 
     const record = await model.findOne({ _id: recordData._id });
+    // If we are updating a flavour, we have to make sure we update master as well
+    if (recordData._schemaName.includes('NRCED')) {
+      const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 5);
+      const masterModel = require('mongoose').model(masterSchema);
+      await masterModel.findOneAndUpdate({ _id: record._master }, { isNrcedPublished: false });
+    }
+    else if (recordData._schemaName.includes('LNG')) {
+      const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 3);
+      const masterModel = require('mongoose').model(masterSchema);
+      await masterModel.findOneAndUpdate({ _id: record._master }, { isLngPublished: false });
+    }
 
     if (!record) {
       defaultLog.info(`protectedUnPublish - couldn't find record for recordId: ${record._id}`);
@@ -343,11 +367,11 @@ exports.protectedUnPublish = async function(args, res, next) {
  * @param {*} next
  * @returns
  */
-exports.publicGet = function(args, res, next) {
+exports.publicGet = function (args, res, next) {
   return queryActions.sendResponse(res, 501);
 };
 
-const processPostRequest = async function(args, res, next, property, data) {
+const processPostRequest = async function (args, res, next, property, data) {
   if (data.length === 0) {
     return {
       status: 'success',
@@ -428,7 +452,7 @@ const processPostRequest = async function(args, res, next, property, data) {
 
 exports.processPostRequest = processPostRequest;
 
-const processPutRequest = async function(args, res, next, property, data) {
+const processPutRequest = async function (args, res, next, property, data) {
   if (data.length === 0) {
     return {
       status: 'success',
