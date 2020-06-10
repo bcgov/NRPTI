@@ -26,9 +26,9 @@ exports.up = async function (db) {
     .then(async (mClient) => {
       const collection = mClient.collection('description_summary_subset')
 
-      collection.dropIndex('description-summary-subset-text-index');
+      await collection.dropIndex('description-summary-subset-text-index');
 
-      collection.createIndex(
+      await collection.createIndex(
         {
           'flavours.description': 'text',
           'flavours.summary': 'text',
