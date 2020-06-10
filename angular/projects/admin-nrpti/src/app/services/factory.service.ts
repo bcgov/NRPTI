@@ -301,6 +301,17 @@ export class FactoryService {
       .pipe(catchError(error => this.apiService.handleError(error)));
   }
 
+  public editMine(mine: any): Observable<object> {
+    const outboundObject = {
+      mineItem: [mine]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public deleteMineItem(recordId: string, model: string): Promise<any> {
+    return this.recordService.deleteRecord(recordId, model);
+  }
+
   public editNews(news: any): Observable<object> {
     const outboundObject = {
       newsItems: [news]
