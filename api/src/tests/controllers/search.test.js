@@ -88,13 +88,13 @@ describe('generateExpArray', () => {
     it('returns documents boolean expression for field=hasDocuments and a true value', async () => {
       const result = await searchController.generateExpArray({ hasDocuments: 'true' });
 
-      expect(result).toEqual([{ documents: { $not: { $size: 0 } } }]);
+      expect(result).toEqual([{ $and: [{ documents: { $exists: true } }, { documents: { $not: { $size: 0 } } }] }]);
     });
 
     it('returns documents boolean expression for field=hasDocuments and a false value', async () => {
       const result = await searchController.generateExpArray({ hasDocuments: 'false' });
 
-      expect(result).toEqual([{ documents: { $size: 0 } }]);
+      expect(result).toEqual([{ $or: [{ documents: { $exists: false } }, { documents: { $size: 0 } }] }]);
     });
   });
 });
