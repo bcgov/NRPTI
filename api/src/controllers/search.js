@@ -311,6 +311,8 @@ let searchCollection = async function (
       collectionName = 'issued_to_subset';
     } else if (subset.includes('location')) {
       collectionName = 'location_subset';
+    } else if (subset.includes('description')) {
+      collectionName = 'description_summary_subset';
     }
   }
   const collection = db.collection(collectionName);
