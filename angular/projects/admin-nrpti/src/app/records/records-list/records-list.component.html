@@ -76,7 +76,8 @@
     <div class="col-12 mb-3">
       <app-explore-panel *ngIf="searchFiltersForm"
         #explorePanel
-        [formGroup]="searchFiltersForm">
+        [formGroup]="searchFiltersForm"
+        (filtersReset)="clearKeywordSearch(); resetSortBy()">
       </app-explore-panel>
     </div>
   </div>
