@@ -53,6 +53,10 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
   // We have this in case there's error and we need to clean up.
   let idsToDelete = [];
 
+  if (!incomingObj.documents) {
+    incomingObj.documents = [];
+  }
+
   // Default flavour publish statuses to false
   incomingObj.isNrcedPublished = false;
   incomingObj.isLngPublished = false;
