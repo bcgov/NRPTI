@@ -113,7 +113,7 @@ describe('MineUtils', () => {
 
       const result = mineUtils.getLatestStatus(mineRecord);
 
-      expect(result).toEqual('should be this');
+      expect(result).toEqual('test label');
     })
   });
 
