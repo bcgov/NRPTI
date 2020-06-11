@@ -37,7 +37,12 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   public navigationObject;
   public searchFiltersForm: FormGroup;
 
-  public tableData: TableObject = new TableObject({ component: RecordsTableRowComponent });
+  public tableData: TableObject = new TableObject({
+    component: RecordsTableRowComponent,
+    pageSize: 25,
+    currentPage: 1,
+    sortBy: '-dateAdded'
+  });
   public tableColumns: IColumnObject[] = [
     {
       name: 'Issued To',
@@ -97,7 +102,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   /**
    * Component init.
    *
-   * @memberof SearchComponent
+   * @memberof RecordsListComponent
    */
   ngOnInit(): void {
     this.loadingScreenService.setLoadingState(true, 'body');
@@ -105,6 +110,12 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       this.queryParams = { ...params };
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
       this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, this.tableData);
+
+      if (!this.queryParams || !Object.keys(this.queryParams).length) {
+        // Only need to manually set url params if this page loads using default parameters (IE: user navigates to this
+        // component for the first time).
+        this.setInitialURLParams();
+      }
 
       this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
         if (!res || !res.records) {
@@ -156,7 +167,24 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         this.loadingScreenService.setLoadingState(false, 'body');
         this._changeDetectionRef.detectChanges();
       });
+
+      this._changeDetectionRef.detectChanges();
     });
+  }
+
+  /**
+   * Updates the url parameters based on the currently set query and table template params, without reloading the page.
+   *
+   * @memberof RecordsListComponent
+   */
+  setInitialURLParams() {
+    this.location.go(
+      this.router
+        .createUrlTree([{ ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }], {
+          relativeTo: this.route
+        })
+        .toString()
+    );
   }
 
   public buildSearchFiltersForm() {
@@ -308,7 +336,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * Column sorting handler.
    *
    * @param {*} column
-   * @memberof SearchComponent
+   * @memberof RecordsListComponent
    */
   setColumnSort(column) {
     if (this.tableData.sortBy.charAt(0) === '+') {
@@ -323,7 +351,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * Page number changed (pagination).
    *
    * @param {*} pageNumber
-   * @memberof SearchComponent
+   * @memberof RecordsListComponent
    */
   onPageNumUpdate(pageNumber) {
     this.tableData.currentPage = pageNumber;
@@ -334,7 +362,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * Page size picker option selected handler.
    *
    * @param {IPageSizePickerOption} pageSize
-   * @memberof SearchComponent
+   * @memberof RecordsListComponent
    */
   onPageSizeUpdate(pageSize: IPageSizePickerOption) {
     this.tableData.pageSize = pageSize.value;
@@ -344,7 +372,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   /**
    * Update record table with latest values (whatever is set in this.tableData).
    *
-   * @memberof SearchComponent
+   * @memberof RecordsListComponent
    */
   submit() {
     this.loadingScreenService.setLoadingState(true, 'body');
@@ -364,13 +392,39 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   keywordSearch() {
     if (this.keywordSearchWords) {
       this.queryParams['keywords'] = this.keywordSearchWords;
+      // always change sortBy to '-score' if keyword search is directly triggered by user
+      this.tableData.sortBy = '-score';
     } else {
-      this.selectedSubset = 'All';
-      delete this.queryParams['keywords'];
-      delete this.queryParams['subset'];
+      this.clearKeywordSearch();
     }
     this.tableData.currentPage = 1;
     this.submit();
+  }
+
+  /**
+   * Resets sortBy to the default.
+   *
+   * @memberof RecordsListComponent
+   */
+  resetSortBy() {
+    this.tableData.sortBy = '-dateAdded';
+    this.queryParams['sortBy'] = '-dateAdded';
+  }
+
+  /**
+   * Resets the keyword search and all associated parameters/values.
+   *
+   * @memberof RecordsListComponent
+   */
+  clearKeywordSearch() {
+    this.selectedSubset = 'All';
+    this.keywordSearchWords = '';
+    delete this.queryParams['keywords'];
+    delete this.queryParams['subset'];
+    if (!this.tableData.sortBy || this.tableData.sortBy === '-score') {
+      // only change sortBy to the default, if sortBy is unset or if sorting has not been directly triggered by user
+      this.tableData.sortBy = '-dateAdded';
+    }
   }
 
   add(item) {
@@ -449,9 +503,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     }
     if (this.keywordSearchWords) {
       this.queryParams.keywords = this.keywordSearchWords;
-      if (!this.tableData.sortBy) {
-        this.tableData.sortBy = '-score';
-      }
+      // always change sortBy to '-score' if keyword search is directly triggered by user
+      this.tableData.sortBy = '-score';
       this.submit();
     }
   }
@@ -494,7 +547,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   /**
    * Cleanup on component destroy.
    *
-   * @memberof SearchComponent
+   * @memberof RecordsListComponent
    */
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();

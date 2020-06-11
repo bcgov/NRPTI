@@ -112,9 +112,9 @@ exports.getDateExp = getDateExp;
 const getHasDocumentsExp = function (entry) {
   // We're checking if there are docs in the record or not.
   if (entry === 'true') {
-    return { documents: { $not: { $size: 0 } } };
+    return { $and: [{ documents: { $exists: true } }, { documents: { $not: { $size: 0 } } }] };
   } else if (entry === 'false') {
-    return { documents: { $size: 0 } };
+    return { $or: [{ documents: { $exists: false } }, { documents: { $size: 0 } }] };
   } else {
     // Invalid
     return {};
@@ -317,6 +317,7 @@ let searchCollection = async function (
 
   return await collection
     .aggregate(aggregation, {
+      allowDiskUse: true,
       collation: {
         locale: 'en_US',
         alternate: 'shifted',

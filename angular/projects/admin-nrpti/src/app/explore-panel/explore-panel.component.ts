@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, ChangeDetectorRef, OnDestroy, Output } from '@angular/core';
 
 import { FilterSection } from '../../../../common/src/app/models/document-filter';
 import { Subject } from 'rxjs';
@@ -14,6 +14,9 @@ import { FormGroup } from '@angular/forms';
 export class ExplorePanelComponent implements OnInit, OnDestroy {
   @Input() filterSections: FilterSection[] = []; // document filter sections // used in template
   @Input() formGroup: FormGroup;
+
+  @Output() filtersReset: EventEmitter<void> = new EventEmitter<void>();
+
   public resetControls: EventEmitter<void> = new EventEmitter<void>();
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
@@ -52,6 +55,7 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
 
   clearSearchFilters() {
     this.resetControls.emit();
+    this.filtersReset.emit();
     this.formGroup.reset();
   }
 
