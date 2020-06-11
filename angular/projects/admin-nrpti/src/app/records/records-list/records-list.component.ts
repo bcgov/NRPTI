@@ -430,6 +430,10 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         this.selectedSubset = 'Location';
         this.queryParams['subset'] = ['location'];
         break;
+      case 'Record Name':
+        this.selectedSubset = 'Record Name';
+        this.queryParams['subset'] = ['recordName'];
+        break;
       default:
         break;
     }
@@ -451,6 +455,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       this.selectedSubset = 'Location';
     } else if (this.queryParams.subset.includes('description')) {
       this.selectedSubset = 'Description & Summary';
+    } else if (this.queryParams.subset.includes('recordName')) {
+      this.selectedSubset = 'Record Name';
     }
   }
 
