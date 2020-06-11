@@ -79,11 +79,13 @@ class Mines extends BaseRecordUtils {
     const commodities = [];
 
     for (const mineType of mineRecord.mine_type) {
-      for (const typeDetail of mineType.mine_type_detail) {
-        // Could be null if type is a disturbance instead of a commodity.
-        if (typeDetail.mine_commodity_code) {
-          const commodity = commodityTypes.find(commodity => commodity.mine_commodity_code === typeDetail.mine_commodity_code);
-          commodities.push(commodity.description);
+      if (mineType.mine_type_detail && mineType.mine_type_detail.length) {
+        for (const typeDetail of mineType.mine_type_detail) {
+          // Could be null if type is a disturbance instead of a commodity.
+          if (typeDetail.mine_commodity_code) {
+            const commodity = commodityTypes.find(commodity => commodity.mine_commodity_code === typeDetail.mine_commodity_code);
+            commodities.push(commodity.description);
+          }
         }
       }
     }
@@ -103,7 +105,7 @@ class Mines extends BaseRecordUtils {
       throw new Error('getLatestStatus - mineRecord must not be null.');
     }
 
-    if (!mineRecord.mine_status.length) {
+    if (mineRecord.mine_status && !mineRecord.mine_status.length) {
       return '';
     }
 
