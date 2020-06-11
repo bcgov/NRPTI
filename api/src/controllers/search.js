@@ -23,7 +23,7 @@ function isEmpty(obj) {
  * @param {string} [comparisonOperator='$eq'] mongo comparison operator ('$eq', '$ne')
  * @returns {object[]} array of objects
  */
-let generateExpArray = async function(field, logicalOperator = '$or', comparisonOperator = '$eq') {
+let generateExpArray = async function (field, logicalOperator = '$or', comparisonOperator = '$eq') {
   if (!field) {
     return;
   }
@@ -63,7 +63,7 @@ exports.generateExpArray = generateExpArray;
  * @param {*} comparisonOperator mongo comparison operator ('$eq', '$ne')
  * @returns {object}
  */
-const getArrayExp = function(item, entry, logicalOperator, comparisonOperator) {
+const getArrayExp = function (item, entry, logicalOperator, comparisonOperator) {
   if (!item || !entry || !entry.length) {
     // Invalid
     return {};
@@ -77,7 +77,7 @@ const getArrayExp = function(item, entry, logicalOperator, comparisonOperator) {
 };
 exports.getArrayExp = getArrayExp;
 
-const getDateExp = function(item, entry, prefix = '') {
+const getDateExp = function (item, entry, prefix = '') {
   // Pluck the variable off the string because this is a date object.  It should
   // always start with either dateRangeFromFilter or dateRangeFromFilter
   const dateRangeFromSearchString = prefix + 'dateRangeFromFilter';
@@ -98,7 +98,7 @@ const getDateExp = function(item, entry, prefix = '') {
 };
 exports.getDateExp = getDateExp;
 
-const getHasDocumentsExp = function(entry) {
+const getHasDocumentsExp = function (entry) {
   // We're checking if there are docs in the record or not.
   if (entry === 'true') {
     return { documents: { $not: { $size: 0 } } };
@@ -119,7 +119,7 @@ exports.getHasDocumentsExp = getHasDocumentsExp;
  * @param {string} comparisonOperator mongo comparison operator ('$eq', '$ne')
  * @returns {object}
  */
-const getConvertedValue = function(item, entry, comparisonOperator) {
+const getConvertedValue = function (item, entry, comparisonOperator) {
   if (!item || !comparisonOperator) {
     return {};
   }
@@ -150,7 +150,7 @@ const getConvertedValue = function(item, entry, comparisonOperator) {
 };
 exports.getConvertedValue = getConvertedValue;
 
-const handleDateStartItem = function(field, entry) {
+const handleDateStartItem = function (field, entry) {
   let date = new Date(entry);
 
   // Validate: valid date?
@@ -160,7 +160,7 @@ const handleDateStartItem = function(field, entry) {
   }
 };
 
-const handleDateEndItem = function(field, entry) {
+const handleDateEndItem = function (field, entry) {
   let date = new Date(entry);
 
   // Validate: valid date?
@@ -170,7 +170,7 @@ const handleDateEndItem = function(field, entry) {
   }
 };
 
-let searchCollection = async function(
+let searchCollection = async function (
   roles,
   keywords,
   schemaName,
@@ -306,6 +306,7 @@ let searchCollection = async function(
 
   return await collection
     .aggregate(aggregation, {
+      allowDiskUse: true,
       collation: {
         locale: 'en_US',
         alternate: 'shifted',
@@ -315,16 +316,16 @@ let searchCollection = async function(
     .toArray();
 };
 
-exports.publicGet = async function(args, res, next) {
+exports.publicGet = async function (args, res, next) {
   executeQuery(args, res, next);
 };
 
-exports.protectedGet = function(args, res, next) {
+exports.protectedGet = function (args, res, next) {
   executeQuery(args, res, next);
 };
 
 // Generates the main match query
-const generateMatchesForAggregation = async function(and, or, nor, searchProperties, properties, schemaName, roles) {
+const generateMatchesForAggregation = async function (and, or, nor, searchProperties, properties, schemaName, roles) {
   const andExpArray = (await generateExpArray(and)) || [];
   defaultLog.info('andExpArray:', andExpArray);
 
@@ -368,7 +369,7 @@ const generateMatchesForAggregation = async function(and, or, nor, searchPropert
   return match;
 };
 
-const executeQuery = async function(args, res, next) {
+const executeQuery = async function (args, res, next) {
   let _id = args.swagger.params._id ? args.swagger.params._id.value : null;
   let keywords = args.swagger.params.keywords.value;
   let dataset = args.swagger.params.dataset.value;
@@ -512,6 +513,6 @@ const executeQuery = async function(args, res, next) {
   }
 };
 
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
