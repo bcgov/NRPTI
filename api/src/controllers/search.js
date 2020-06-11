@@ -308,6 +308,7 @@ let searchCollection = async function (
 
   return await collection
     .aggregate(aggregation, {
+      allowDiskUse: true,
       collation: {
         locale: 'en_US',
         alternate: 'shifted',
