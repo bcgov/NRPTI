@@ -154,6 +154,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.sourceDateAdded && (order.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (order.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (order.sourceSystemRef = incomingObj.sourceSystemRef);
+  incomingObj.isNrcedPublished && (order.isNrcedPublished = incomingObj.isNrcedPublished);
+  incomingObj.isLngPublished && (order.isLngPublished = incomingObj.isLngPublished);
 
   return order;
 };

@@ -161,6 +161,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.sourceDateAdded && (courtConviction.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (courtConviction.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (courtConviction.sourceSystemRef = incomingObj.sourceSystemRef);
+  incomingObj.isNrcedPublished && (courtConviction.isNrcedPublished = incomingObj.isNrcedPublished);
+  incomingObj.isLngPublished && (courtConviction.isLngPublished = incomingObj.isLngPublished);
 
   return courtConviction;
 };
