@@ -81,7 +81,7 @@ describe('PutUtils', () => {
         }
       };
 
-      flavourFunctions = { OrderLNG: editLNG };
+      const flavourFunctions = { OrderLNG: editLNG };
 
       let response = await PutUtils.editRecordWithFlavours(args, null, null, incomingObj, editMaster,
         null, 'Order', flavourFunctions);

@@ -52,7 +52,7 @@ describe('PostUtils', () => {
         }
       };
 
-      flavourFunctions = { OrderLNG: createLNG };
+      const flavourFunctions = { OrderLNG: createLNG };
 
       const response = await PostUtils.createRecordWithFlavours(null, null, null, incomingObj, createMaster, flavourFunctions);
 
