@@ -3,6 +3,7 @@
 const defaultLog = require('../utils/logger')('import-task');
 const queryActions = require('../utils/query-actions');
 const TaskAuditRecord = require('../utils/task-audit-record');
+const { SYSTEM_USER } = require('../utils/constants/misc');
 
 exports.protectedOptions = async function(args, res, next) {
   res.status(200).send();
@@ -36,6 +37,27 @@ exports.protectedCreateTask = async function(args, res, next) {
 
   // send response immediately as the tasks will run in the background
   return queryActions.sendResponse(res, 200);
+};
+
+// Used to quickly run a task within the API runtime.
+exports.createTask = async function(dataSourceType) {
+  const nrptiDataSource = getDataSourceConfig(dataSourceType);
+
+  if (!nrptiDataSource) {
+    throw Error(
+      `createTask - could not find nrptiDataSource for dataSourceType: ${dataSourceType}`
+    );
+  }
+
+  // run data source record updates
+  await runTask(
+    nrptiDataSource,
+    {
+      displayName: SYSTEM_USER
+    },
+    null, // TODO: We're not using this param anywhere in the import logic framework, setting to null
+    null  // TODO: We're not using this param anywhere in the import logic framework, setting to null
+  );
 };
 
 /**
@@ -93,18 +115,10 @@ function getDataSourceConfig(dataSourceType) {
     return null;
   }
 
-  switch (dataSourceType) {
-    case 'epic':
-      return {
-        dataSourceLabel: 'epic',
-        dataSourceClass: require('../integrations/epic/datasource')
-      };
-    case 'nris-epd':
-      return {
-        dataSourceLabel: 'nris-epd',
-        dataSourceClass: require('../integrations/nris/datasource')
-      };
-    default:
-      return null;
-  }
+  // dataSourceType will match the name of a directory for the given
+  // integration in /src/integrations/<dataSourceType>/
+  return {
+    dataSourceLabel: dataSourceType,
+    dataSourceClass: require(`../integrations/${dataSourceType}/datasource`)
+  };
 }
