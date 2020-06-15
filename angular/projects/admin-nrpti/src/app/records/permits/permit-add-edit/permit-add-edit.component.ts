@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Picklists, EpicProjectIds } from '../../../../../../common/src/app/utils/record-constants';
+import { Picklists, EpicProjectIds, ApplicationRoles } from '../../../../../../common/src/app/utils/record-constants';
 import { Legislation } from '../../../../../../common/src/app/models/master/common-models/legislation';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -119,7 +119,10 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
+      recordName: new FormControl({
+        value: (this.currentRecord && this.currentRecord.recordName) || '',
+        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_LNG)
+      }),
       recordSubtype: new FormControl((this.currentRecord && this.currentRecord.recordSubtype) || ''),
       dateIssued: new FormControl(
         (this.currentRecord &&
@@ -156,10 +159,14 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       ),
 
       // LNG
-      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
-      publishLng: new FormControl(
-        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
-      )
+      lngDescription: new FormControl({
+        value: (this.currentRecord && this.lngFlavour && this.lngFlavour.description) || '',
+        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_LNG)
+      }),
+      publishLng: new FormControl({
+        value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
+        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_LNG)
+      })
     });
   }
 

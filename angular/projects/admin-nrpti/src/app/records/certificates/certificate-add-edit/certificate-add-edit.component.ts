@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Picklists, EpicProjectIds } from '../../../../../../common/src/app/utils/record-constants';
+import { Picklists, EpicProjectIds, ApplicationRoles } from '../../../../../../common/src/app/utils/record-constants';
 import { Legislation } from '../../../../../../common/src/app/models/master/common-models/legislation';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -118,7 +118,10 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
+      recordName: new FormControl({
+        value: (this.currentRecord && this.currentRecord.recordName) || '',
+        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_LNG)
+      }),
       recordSubtype: new FormControl((this.currentRecord && this.currentRecord.recordSubtype) || ''),
       dateIssued: new FormControl(
         (this.currentRecord &&
@@ -161,9 +164,10 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
           ''
       ),
-      publishLng: new FormControl(
-        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
-      )
+      publishLng: new FormControl({
+        value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
+        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_LNG)
+      })
     });
   }
 

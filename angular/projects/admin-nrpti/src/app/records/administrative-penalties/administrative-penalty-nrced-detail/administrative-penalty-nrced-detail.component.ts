@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RecordComponent } from '../../utils/record-component';
 import { DatePipe } from '@angular/common';
 import { FactoryService } from '../../../services/factory.service';
+import { ApplicationRoles } from '../../../../../../common/src/app/utils/record-constants';
 
 @Component({
   selector: 'app-administrative-penalty-nrced-detail',
@@ -105,6 +106,10 @@ export class AdministrativePenaltyNRCEDDetailComponent extends RecordComponent i
 
   isRecordPublished(): boolean {
     return this.data && this.data.read && this.data.read.includes('public');
+  }
+
+  userInNrcedRole() {
+    return this.factoryService.userInRole(ApplicationRoles.ADMIN_NRCED);
   }
 
   ngOnDestroy() {

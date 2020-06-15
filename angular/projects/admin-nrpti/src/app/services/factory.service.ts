@@ -8,6 +8,7 @@ import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import { TaskService, ITaskParams } from './task.service';
 import { DocumentService } from './document.service';
+import { ApplicationRoles } from '../../../../common/src/app/utils/record-constants';
 
 /**
  * Facade service for all admin-nrpti services.
@@ -141,6 +142,31 @@ export class FactoryService {
    */
   public refreshToken(): Observable<any> {
     return this.keycloakService.refreshToken();
+  }
+
+  /**
+   * Checks if the current authenticate user is a member
+   * of the requested scope/role
+   *
+   * @param role
+   * @returns {boolean} Is the user a member of this scope/role?
+   * @memberof FactoryService
+   */
+  public userInRole(role): boolean {
+    const token = this.getToken();
+
+    if (token) {
+      const jwt = JwtUtil.decodeToken(token);
+      if (jwt && jwt.realm_access && jwt.realm_access.roles) {
+        // to handle any case issues with role or the scopes, convert them
+        // all to lower case first
+        const lowerCasedStrings = jwt.realm_access.roles.join(',').toLowerCase().split(',');
+        return lowerCasedStrings.includes(ApplicationRoles.ADMIN) ||
+                                          lowerCasedStrings.includes(role.toLowerCase());
+      }
+    }
+
+    return false;
   }
 
   /**

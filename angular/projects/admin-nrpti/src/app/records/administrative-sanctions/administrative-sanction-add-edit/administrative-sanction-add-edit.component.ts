@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
-import { Picklists, EpicProjectIds } from '../../../../../../common/src/app/utils/record-constants';
+import { Picklists, EpicProjectIds, ApplicationRoles } from '../../../../../../common/src/app/utils/record-constants';
 import { Legislation } from '../../../../../../common/src/app/models/master/common-models/legislation';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -130,7 +130,10 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
+      recordName: new FormControl({
+        value: (this.currentRecord && this.currentRecord.recordName) || '',
+        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_LNG)
+      }),
       dateIssued: new FormControl(
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
@@ -198,16 +201,24 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
       penalties: new FormArray(this.getPenaltiesFormGroups()),
 
       // NRCED
-      nrcedSummary: new FormControl((this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.summary) || ''),
-      publishNrced: new FormControl(
-        (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false
-      ),
+      nrcedSummary: new FormControl({
+        value: (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.summary) || '',
+        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_NRCED)
+      }),
+      publishNrced: new FormControl({
+        value: (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false,
+        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_NRCED)
+      }),
 
       // LNG
-      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
-      publishLng: new FormControl(
-        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
-      )
+      lngDescription: new FormControl({
+        value: (this.currentRecord && this.lngFlavour && this.lngFlavour.description) || '',
+        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_LNG)
+      }),
+      publishLng: new FormControl({
+        value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
+        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_LNG)
+      })
     });
   }
 
