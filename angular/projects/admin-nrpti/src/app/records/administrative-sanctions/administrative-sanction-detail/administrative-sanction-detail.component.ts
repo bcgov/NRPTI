@@ -6,7 +6,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RecordComponent } from '../../utils/record-component';
 import { RecordUtils } from '../../utils/record-utils';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
-import { ApplicationRoles } from '../../../../../../common/src/app/utils/record-constants';
 
 @Component({
   selector: 'app-administrative-sanction-detail',
