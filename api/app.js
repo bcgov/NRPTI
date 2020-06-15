@@ -136,5 +136,6 @@ async function startCron(defaultLog) {
 
   // Scheduling imports
   cron.schedule(IMPORT_CRON_PATTERN, () => createTask('epic'));
+  cron.schedule(IMPORT_CRON_PATTERN, () => createTask('core'));
   defaultLog.info('Imports scheduled for:', IMPORT_CRON_PATTERN);
 }

@@ -115,18 +115,10 @@ function getDataSourceConfig(dataSourceType) {
     return null;
   }
 
-  switch (dataSourceType) {
-    case 'epic':
-      return {
-        dataSourceLabel: 'epic',
-        dataSourceClass: require('../integrations/epic/datasource')
-      };
-    case 'nris-epd':
-      return {
-        dataSourceLabel: 'nris-epd',
-        dataSourceClass: require('../integrations/nris/datasource')
-      };
-    default:
-      return null;
-  }
+  // dataSourceType will match the name of a directory for the given
+  // integration in /src/integrations/<dataSourceType>/
+  return {
+    dataSourceLabel: dataSourceType,
+    dataSourceClass: require(`../integrations/${dataSourceType}/datasource`)
+  };
 }
