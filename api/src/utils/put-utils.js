@@ -157,7 +157,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
       if (flavourIncomingObj[entry[0]]._id) {
         let flavourUpdateObj = entry[1](args, res, next, { ...flavourIncomingObj, ...flavourIncomingObj[entry[0]] });
         const Model = mongoose.model(entry[0]);
-        flavourUpdateObj._master = new ObjectID(incomingObj._id);
+        flavourUpdateObj._master = new ObjectID(masterId);
         promises.push(
           Model.findOneAndUpdate(
             { _id: flavourIncomingObj[entry[0]]._id },
@@ -168,7 +168,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
       } else {
         // We are adding a flavour instead of editing.
         // We need to get the existing master record.
-        const masterRecord = await this.fetchMasterForCreateFlavour(masterSchemaName, incomingObj._id);
+        const masterRecord = await this.fetchMasterForCreateFlavour(masterSchemaName, masterId);
         let newFlavour = null;
         if (entry[0].includes('LNG')) {
           newFlavour = PostFunctions.createLNG(args, res, next, {
@@ -184,7 +184,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
           });
         }
         if (newFlavour) {
-          newFlavour._master = new ObjectID(masterRecord._id);
+          newFlavour._master = new ObjectID(masterId);
           flavours.push(newFlavour);
           promises.push(newFlavour.save());
         }
