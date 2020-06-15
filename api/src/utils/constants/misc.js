@@ -1,0 +1,1 @@
+exports.SYSTEM_USER = "SYSTEM_USER";
