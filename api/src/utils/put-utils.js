@@ -119,6 +119,8 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
   let flavours = [];
   let flavourIds = [];
   let promises = [];
+  // This is needed because sanitization below will remove the reference to the masterId
+  const masterId = incomingObj._id;
 
   // make a copy of the incoming object for use by the flavours only
   const flavourIncomingObj = { ...incomingObj };
@@ -198,22 +200,20 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
   }
 
   const MasterModel = mongoose.model(masterSchemaName);
+  const updateMasterObj = editMaster(args, res, next, incomingObj, flavourIds)
   promises.push(
     MasterModel.findOneAndUpdate({
-      _id: incomingObj._id
+      _id: masterId
     },
-      editMaster(args, res, next, incomingObj, flavourIds)
-    ),
-    {
-      new: true
-    }
+      updateMasterObj,
+      { new: true }
+    )
   );
 
   // Attempt to save everything.
   let result = null;
   try {
     result = await Promise.all(promises);
-
   } catch (e) {
     return {
       status: 'failure',
@@ -224,10 +224,8 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
 
   let savedDocuments = null;
   try {
-    // result returns with the flavours first, master record next and an object created by mongo last.
-    // we do result[result.length - 2] because we want the second last item which is the master record.
     savedDocuments = await BusinessLogicManager.updateDocumentRoles(
-      result[result.length - 2],
+      result[result.findIndex(x => x._schemaName === masterSchemaName)],
       args.swagger.params.auth_payload
     );
   } catch (e) {
