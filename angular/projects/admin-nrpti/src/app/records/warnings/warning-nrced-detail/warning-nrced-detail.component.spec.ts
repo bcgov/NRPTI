@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Router, ActivatedRoute } from '@angular/router';
 import { GlobalModule } from 'nrpti-angular-components';
 import { DatePipe } from '@angular/common';
+import { FactoryService } from '../../../services/factory.service';
 
 describe('WarningNRCEDDetailComponent', () => {
   const testBedHelper = new TestBedHelper<WarningNRCEDDetailComponent>(WarningNRCEDDetailComponent);
@@ -12,6 +13,8 @@ describe('WarningNRCEDDetailComponent', () => {
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInRole']);
+  mockFactoryService.userInRole.and.returnValue(true);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -20,7 +23,8 @@ describe('WarningNRCEDDetailComponent', () => {
       providers: [
         DatePipe,
         { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute }
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: FactoryService, useValue: mockFactoryService }
       ]
     }).compileComponents();
   }));

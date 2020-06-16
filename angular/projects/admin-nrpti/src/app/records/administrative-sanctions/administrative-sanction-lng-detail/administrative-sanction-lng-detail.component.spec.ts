@@ -5,11 +5,15 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Router, ActivatedRoute } from '@angular/router';
 import { GlobalModule } from 'nrpti-angular-components';
 import { DatePipe } from '@angular/common';
+import { FactoryService } from '../../../services/factory.service';
 
 describe('AdministrativeSanctionLNGDetailComponent', () => {
   const testBedHelper = new TestBedHelper<AdministrativeSanctionLNGDetailComponent>(
     AdministrativeSanctionLNGDetailComponent
   );
+
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInRole']);
+  mockFactoryService.userInRole.and.returnValue(true);
 
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
@@ -22,7 +26,8 @@ describe('AdministrativeSanctionLNGDetailComponent', () => {
       providers: [
         DatePipe,
         { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute }
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: FactoryService, useValue: mockFactoryService }
       ]
     }).compileComponents();
   }));

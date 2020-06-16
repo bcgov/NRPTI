@@ -13,6 +13,7 @@ import { RecordUtils } from '../../utils/record-utils';
 import { CommonModule } from '../../../../../../common/src/app/common.module';
 import { MatSlideToggleModule } from '@angular/material';
 import { LoadingScreenService } from 'nrpti-angular-components';
+import { FactoryService } from '../../../services/factory.service';
 
 describe('AdministrativeSanctionAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<AdministrativeSanctionAddEditComponent>(
@@ -23,6 +24,8 @@ describe('AdministrativeSanctionAddEditComponent', () => {
   const mockLocation = jasmine.createSpyObj('Location', ['go']);
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInRole']);
+  mockFactoryService.userInRole.and.returnValue(true);
 
   const mockLoadingScreenService = {
     isLoading: false,
@@ -50,7 +53,8 @@ describe('AdministrativeSanctionAddEditComponent', () => {
         { provide: LoadingScreenService, useValue: mockLoadingScreenService },
         { provide: Location, useValue: mockLocation },
         { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute }
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: FactoryService, useValue: mockFactoryService }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();

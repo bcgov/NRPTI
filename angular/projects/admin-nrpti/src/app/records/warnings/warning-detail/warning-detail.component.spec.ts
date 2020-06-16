@@ -9,6 +9,7 @@ import { DatePipe } from '@angular/common';
 import { CommonModule } from '../../../../../../common/src/app/common.module';
 import { DocumentAuthenticatedReadOnlyComponent } from '../../../documents/document-authenticated-read-only/document-authenticated-read-only.component';
 import { S3SignedUrlAnchorComponent } from '../../../documents/s3-signed-url-anchor/s3-signed-url-anchor.component';
+import { FactoryService } from '../../../services/factory.service';
 
 describe('WarningDetailComponent', () => {
   const testBedHelper = new TestBedHelper<WarningDetailComponent>(WarningDetailComponent);
@@ -16,6 +17,8 @@ describe('WarningDetailComponent', () => {
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInRole']);
+  mockFactoryService.userInRole.and.returnValue(true);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -29,7 +32,8 @@ describe('WarningDetailComponent', () => {
       providers: [
         DatePipe,
         { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute }
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: FactoryService, useValue: mockFactoryService }
       ]
     }).compileComponents();
   }));
