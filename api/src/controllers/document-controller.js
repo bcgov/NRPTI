@@ -24,7 +24,7 @@ exports.protectedOptions = function(args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedPost = async function(args, res, next) { // Confirm ser has correct role.
+exports.protectedPost = async function(args, res, next) { // Confirm user has correct role.
   if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
     return queryActions.sendResponse(res, 400, 'Missing valid user role.');
   }  

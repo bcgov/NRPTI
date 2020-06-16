@@ -115,7 +115,7 @@ exports.protectedGet = function (args, res, next) {
 exports.protectedPost = async function (args, res, next) {
   let observables = [];
 
-  // Confirm ser has correct role.
+  // Confirm user has correct role.
   if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }  
@@ -194,7 +194,7 @@ exports.protectedPost = async function (args, res, next) {
 exports.protectedPut = async function (args, res, next) {
   let observables = [];
 
-  // Confirm ser has correct role.
+  // Confirm user has correct role.
   if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }  
@@ -265,7 +265,7 @@ exports.protectedPut = async function (args, res, next) {
 
 exports.protectedNewsDelete = async function (args, res, next) {
   try {
-    // Confirm ser has correct role.
+    // Confirm user has correct role.
     if (!userInRole([ROLES.LNGADMIN, ROLES.SYSADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
       throw new Error('Missing user role for selected record type.');
     }
@@ -298,7 +298,7 @@ exports.protectedNewsDelete = async function (args, res, next) {
  */
 exports.protectedPublish = async function (args, res, next) {
   try {
-    // Confirm ser has correct role.
+    // Confirm user has correct role.
     if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
       throw new Error('Missing valid user role.');
     }
@@ -312,7 +312,7 @@ exports.protectedPublish = async function (args, res, next) {
 
     // If we are updating a flavour, we have to make sure we update master as well
     if (recordData._schemaName.includes('NRCED')) {
-      // Confirm ser has correct role.
+      // Confirm user has correct role.
       if (!userInRole([ROLES.NRCEDADMIN, ROLES.SYSADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
         throw new Error('Missing user role for selected record type.');
       }
@@ -322,7 +322,7 @@ exports.protectedPublish = async function (args, res, next) {
       await masterModel.findOneAndUpdate({ _id: record._master }, { isNrcedPublished: true });
     }
     else if (recordData._schemaName.includes('LNG')) {
-      // Confirm ser has correct role.
+      // Confirm user has correct role.
       if (!userInRole([ROLES.LNGADMIN, ROLES.SYSADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
         throw new Error('Missing user role for selected record type.');
       }
@@ -357,7 +357,7 @@ exports.protectedPublish = async function (args, res, next) {
  */
 exports.protectedUnPublish = async function (args, res, next) {
   try {
-     // Confirm ser has correct role.
+     // Confirm user has correct role.
      if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
       throw new Error('Missing valid user role.');
     }
@@ -370,7 +370,7 @@ exports.protectedUnPublish = async function (args, res, next) {
     const record = await model.findOne({ _id: recordData._id });
     // If we are updating a flavour, we have to make sure we update master as well
     if (recordData._schemaName.includes('NRCED')) {
-      // Confirm ser has correct role.
+      // Confirm user has correct role.
       if (!userInRole([ROLES.NRCEDADMIN, ROLES.SYSADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
         throw new Error('Missing user role for selected record type.');
       }
@@ -380,7 +380,7 @@ exports.protectedUnPublish = async function (args, res, next) {
       await masterModel.findOneAndUpdate({ _id: record._master }, { isNrcedPublished: false });
     }
     else if (recordData._schemaName.includes('LNG')) {
-      // Confirm ser has correct role.
+      // Confirm user has correct role.
       if (!userInRole([ROLES.LNGADMIN, ROLES.SYSADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
         throw new Error('Missing user role for selected record type.');
       }
