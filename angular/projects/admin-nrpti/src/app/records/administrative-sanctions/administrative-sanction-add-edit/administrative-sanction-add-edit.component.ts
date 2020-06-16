@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
-import { Picklists, EpicProjectIds, ApplicationRoles } from '../../../../../../common/src/app/utils/record-constants';
+import { Picklists, EpicProjectIds } from '../../../../../../common/src/app/utils/record-constants';
 import { Legislation } from '../../../../../../common/src/app/models/master/common-models/legislation';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -132,7 +132,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
       // Master
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
-        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_LNG)
+        disabled: !this.factoryService.userInLngRole()
       }),
       dateIssued: new FormControl(
         (this.currentRecord &&
@@ -203,21 +203,21 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
       // NRCED
       nrcedSummary: new FormControl({
         value: (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.summary) || '',
-        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_NRCED)
+        disabled: !this.factoryService.userInNrcedRole()
       }),
       publishNrced: new FormControl({
         value: (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false,
-        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_NRCED)
+        disabled: !this.factoryService.userInNrcedRole()
       }),
 
       // LNG
       lngDescription: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.description) || '',
-        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_LNG)
+        disabled: !this.factoryService.userInLngRole()
       }),
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
-        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_LNG)
+        disabled: !this.factoryService.userInLngRole()
       })
     });
   }

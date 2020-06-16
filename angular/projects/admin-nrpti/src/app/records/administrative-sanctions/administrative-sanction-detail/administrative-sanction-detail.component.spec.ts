@@ -14,8 +14,9 @@ import { FactoryService } from '../../../services/factory.service';
 describe('AdministrativeSanctionDetailComponent', () => {
   const testBedHelper = new TestBedHelper<AdministrativeSanctionDetailComponent>(AdministrativeSanctionDetailComponent);
 
-  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInRole']);
-  mockFactoryService.userInRole.and.returnValue(true);
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole', 'userInNrcedRole']);
+  mockFactoryService.userInLngRole.and.returnValue(true);
+  mockFactoryService.userInNrcedRole.and.returnValue(true);
 
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);

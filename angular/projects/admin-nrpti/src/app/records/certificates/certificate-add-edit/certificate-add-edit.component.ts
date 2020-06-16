@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Picklists, EpicProjectIds, ApplicationRoles } from '../../../../../../common/src/app/utils/record-constants';
+import { Picklists, EpicProjectIds } from '../../../../../../common/src/app/utils/record-constants';
 import { Legislation } from '../../../../../../common/src/app/models/master/common-models/legislation';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
@@ -120,7 +120,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
-        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_LNG)
+        disabled: !this.factoryService.userInLngRole()
       }),
       recordSubtype: new FormControl((this.currentRecord && this.currentRecord.recordSubtype) || ''),
       dateIssued: new FormControl(
@@ -166,7 +166,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       ),
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
-        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_LNG)
+        disabled: !this.factoryService.userInLngRole()
       })
     });
   }

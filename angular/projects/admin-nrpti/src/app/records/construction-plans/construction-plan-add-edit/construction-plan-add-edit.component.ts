@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Picklists, EpicProjectIds, ApplicationRoles } from '../../../../../../common/src/app/utils/record-constants';
+import { Picklists, EpicProjectIds } from '../../../../../../common/src/app/utils/record-constants';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
@@ -92,7 +92,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
-        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_LNG)
+        disabled: !this.factoryService.userInLngRole()
       }),
       dateIssued: new FormControl(
         (this.currentRecord &&
@@ -115,11 +115,11 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
       lngRelatedPhase: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.relatedPhase) || ''),
       lngDescription: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.description) || '',
-        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_LNG)
+        disabled: !this.factoryService.userInLngRole()
       }),
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
-        disabled: !this.factoryService.userInRole(ApplicationRoles.ADMIN_LNG)
+        disabled: !this.factoryService.userInLngRole()
       })
     });
   }

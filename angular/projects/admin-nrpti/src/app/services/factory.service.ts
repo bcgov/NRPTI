@@ -169,6 +169,14 @@ export class FactoryService {
     return false;
   }
 
+  userInLngRole() {
+    return this.userInRole(ApplicationRoles.ADMIN_LNG);
+  }
+
+  userInNrcedRole() {
+    return this.userInRole(ApplicationRoles.ADMIN_NRCED);
+  }
+
   /**
    * Builds a welcome message based on the username in the auth token.  Returns empty string if no token found, or token
    * is invalid.

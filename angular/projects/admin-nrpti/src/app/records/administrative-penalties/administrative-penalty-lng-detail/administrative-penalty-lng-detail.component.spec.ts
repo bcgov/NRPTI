@@ -16,8 +16,8 @@ describe('AdministrativePenaltyLNGDetailComponent', () => {
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
 
-  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInRole']);
-  mockFactoryService.userInRole.and.returnValue(true);
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole']);
+  mockFactoryService.userInLngRole.and.returnValue(true);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

@@ -12,8 +12,8 @@ describe('AdministrativeSanctionLNGDetailComponent', () => {
     AdministrativeSanctionLNGDetailComponent
   );
 
-  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInRole']);
-  mockFactoryService.userInRole.and.returnValue(true);
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole']);
+  mockFactoryService.userInLngRole.and.returnValue(true);
 
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);

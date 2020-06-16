@@ -15,8 +15,9 @@ describe('AgreementDetailComponent', () => {
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
-  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInRole']);
-  mockFactoryService.userInRole.and.returnValue(true);
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole', 'userInNrcedRole']);
+  mockFactoryService.userInLngRole.and.returnValue(true);
+  mockFactoryService.userInNrcedRole.and.returnValue(true);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
