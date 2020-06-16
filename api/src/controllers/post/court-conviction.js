@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
+const { userInRole } = require('../../utils/auth-utils');
+const { ROLES } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Court Conviction record and its associated flavour records.
@@ -71,6 +73,11 @@ exports.createRecord = async function (args, res, next, incomingObj) {
  * @returns created master courtConviction record
  */
 exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
+  // Confirm user has correct role.
+  if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let CourtConviction = mongoose.model('CourtConviction');
   let courtConviction = new CourtConviction();
 
@@ -197,6 +204,11 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @returns created lng courtConviction record
  */
 exports.createLNG = function (args, res, next, incomingObj) {
+  // Confirm user has correct role.
+  if (!userInRole([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let CourtConvictionLNG = mongoose.model('CourtConvictionLNG');
   let courtConvictionLNG = new CourtConvictionLNG();
 
@@ -323,6 +335,11 @@ exports.createLNG = function (args, res, next, incomingObj) {
  * @returns created nrced courtConviction record
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
+  // Confirm user has correct role.
+  if (!userInRole([ROLES.NRCEDADMIN, ROLES.SYSADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let CourtConvictionNRCED = mongoose.model('CourtConvictionNRCED');
   let courtConvictionNRCED = new CourtConvictionNRCED();
 

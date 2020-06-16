@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
+const { userInRole } = require('../../utils/auth-utils');
+const { ROLES } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Order record and its associated flavour records.
@@ -71,6 +73,11 @@ exports.createRecord = async function (args, res, next, incomingObj) {
  * @returns created master order record
  */
 exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
+  // Confirm user has correct role.
+  if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let Order = mongoose.model('Order');
   let order = new Order();
 
@@ -190,6 +197,11 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @returns created lng order record
  */
 exports.createLNG = function (args, res, next, incomingObj) {
+  // Confirm user has correct role.
+  if (!userInRole([ROLES.LNGADMIN, ROLES.SYSADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let OrderLNG = mongoose.model('OrderLNG');
   let orderLNG = new OrderLNG();
 
@@ -311,6 +323,11 @@ exports.createLNG = function (args, res, next, incomingObj) {
  * @returns created nrced order record
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
+  // Confirm user has correct role.
+  if (!userInRole([ROLES.SYSADMIN, ROLES.NRCEDADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let OrderNRCED = mongoose.model('OrderNRCED');
   let orderNRCED = new OrderNRCED();
 

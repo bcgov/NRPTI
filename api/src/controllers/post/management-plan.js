@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
+const { userInRole } = require('../../utils/auth-utils');
+const { ROLES } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Management Plan record and its associated flavour records.
@@ -59,6 +61,11 @@ exports.createRecord = async function (args, res, next, incomingObj) {
  * @returns created master managementPlan record
  */
 exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
+  // Confirm user has correct role.
+  if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let ManagementPlan = mongoose.model('ManagementPlan');
   let managementPlan = new ManagementPlan();
 
@@ -137,6 +144,11 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @returns created lng managementPlan record
  */
 exports.createLNG = function (args, res, next, incomingObj) {
+  // Confirm user has correct role.
+  if (!userInRole([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let ManagementPlanLNG = mongoose.model('ManagementPlanLNG');
   let managementPlanLNG = new ManagementPlanLNG();
 

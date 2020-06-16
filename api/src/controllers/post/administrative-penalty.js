@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
+const { userInRole } = require('../../utils/auth-utils');
+const { ROLES } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Administrative Penalty record and its associated flavour records.
@@ -71,6 +73,11 @@ exports.createRecord = async function (args, res, next, incomingObj) {
  * @returns created master administrativePenalty record
  */
 exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
+  // Confirm user has correct role.
+  if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }  
+
   let AdministrativePenalty = mongoose.model('AdministrativePenalty');
   let administrativePenalty = new AdministrativePenalty();
 
@@ -198,6 +205,11 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @returns created lng administrativePenalty record
  */
 exports.createLNG = function (args, res, next, incomingObj) {
+  // Confirm user has correct role.
+  if (!userInRole([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }  
+
   let AdministrativePenaltyLNG = mongoose.model('AdministrativePenaltyLNG');
   let administrativePenaltyLNG = new AdministrativePenaltyLNG();
 
@@ -325,6 +337,11 @@ exports.createLNG = function (args, res, next, incomingObj) {
  * @returns created nrced administrativePenalty record
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
+  // Confirm user has correct role.
+  if (!userInRole([ROLES.SYSADMIN, ROLES.NRCEDADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }  
+
   let AdministrativePenaltyNRCED = mongoose.model('AdministrativePenaltyNRCED');
   let administrativePenaltyNRCED = new AdministrativePenaltyNRCED();
 
