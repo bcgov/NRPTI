@@ -90,7 +90,10 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
+      recordName: new FormControl({
+        value: (this.currentRecord && this.currentRecord.recordName) || '',
+        disabled: !this.factoryService.userInLngRole()
+      }),
       dateIssued: new FormControl(
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
@@ -110,10 +113,14 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
 
       // LNG
       lngRelatedPhase: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.relatedPhase) || ''),
-      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
-      publishLng: new FormControl(
-        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
-      )
+      lngDescription: new FormControl({
+        value: (this.currentRecord && this.lngFlavour && this.lngFlavour.description) || '',
+        disabled: !this.factoryService.userInLngRole()
+      }),
+      publishLng: new FormControl({
+        value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
+        disabled: !this.factoryService.userInLngRole()
+      })
     });
   }
 
