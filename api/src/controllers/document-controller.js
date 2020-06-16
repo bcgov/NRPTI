@@ -1,11 +1,14 @@
 const mongoose = require('mongoose');
+const AWS = require('aws-sdk');
+const ObjectID = require('mongodb').ObjectID;
+
 const queryActions = require('../utils/query-actions');
 const queryUtils = require('../utils/query-utils');
 const businessLogicManager = require('../utils/business-logic-manager');
-const AWS = require('aws-sdk');
 const mongodb = require('../utils/mongodb');
-const ObjectID = require('mongodb').ObjectID;
-let defaultLog = require('../utils/logger')('record');
+const defaultLog = require('../utils/logger')('record');
+const { userInRole } = require('../utils/auth-utils');
+const { ROLES } = require('../utils/constants/misc');
 
 const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
 const ep = new AWS.Endpoint(OBJ_STORE_URL);
@@ -21,7 +24,11 @@ exports.protectedOptions = function(args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedPost = async function(args, res, next) {
+exports.protectedPost = async function(args, res, next) { // Confirm ser has correct role.
+  if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
+    return queryActions.sendResponse(res, 400, 'Missing valid user role.');
+  }  
+
   if (
     args.swagger.params.fileName &&
     args.swagger.params.fileName.value &&
@@ -136,6 +143,10 @@ exports.protectedPost = async function(args, res, next) {
 };
 
 exports.protectedDelete = async function(args, res, next) {
+  if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
+    return queryActions.sendResponse(res, 400, 'Missing valid user role.');
+  }
+
   if (
     args.swagger.params.docId &&
     args.swagger.params.docId.value &&
@@ -442,6 +453,10 @@ exports.unpublishDocument = unpublishDocument;
  * @returns
  */
 exports.protectedGetS3SignedURL = async function(args, res, next) {
+  if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
+    return queryActions.sendResponse(res, 400, 'Missing valid user role.');
+  }  
+  
   if (!args.swagger.params.docId || !args.swagger.params.docId.value) {
     defaultLog.warn('protectedGet - missing required docId param');
     return queryActions.sendResponse(res, 400, 'Missing required docId param');

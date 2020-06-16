@@ -150,3 +150,29 @@ function verifySecret(currentScopes, tokenString, secret, req, callback, sendErr
     }
   });
 }
+
+/**
+ * Checks if a user has a role against an array of valid roles.
+ * 
+ * @param {Array<string>|string} validRoles Roles to search for a match.
+ * @param {Array<string>|string} userRoles Roles to match against.
+ * @returns {boolean} Indication if a match is found.
+ */
+exports.userInRole = function(validRoles, userRoles) {
+  // Convert to array if a single value was used.
+  if (!Array.isArray(validRoles)) {
+    validRoles = [validRoles];
+  }
+
+  if(!Array.isArray(userRoles)) {
+    userRoles = [userRoles];
+  }
+
+  for (const validRole of validRoles) {
+    if (userRoles.includes(validRole)) {
+      return true;
+    }
+  }
+
+  return false;
+};

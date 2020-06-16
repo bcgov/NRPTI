@@ -1,5 +1,8 @@
 'use strict';
 
+let { userInRole } = require('../utils/auth-utils');
+let { ROLES } = require('../utils/constants/misc');
+
 let queryActions = require('../utils/query-actions');
 let queryUtils = require('../utils/query-utils');
 
@@ -112,6 +115,11 @@ exports.protectedGet = function (args, res, next) {
 exports.protectedPost = async function (args, res, next) {
   let observables = [];
 
+  // Confirm ser has correct role.
+  if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }  
+
   if (args.swagger.params.data && args.swagger.params.data.value) {
     let data = args.swagger.params.data.value;
 
@@ -186,6 +194,11 @@ exports.protectedPost = async function (args, res, next) {
 exports.protectedPut = async function (args, res, next) {
   let observables = [];
 
+  // Confirm ser has correct role.
+  if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }  
+
   if (args.swagger.params.data && args.swagger.params.data.value) {
     let data = args.swagger.params.data.value;
 
@@ -252,6 +265,11 @@ exports.protectedPut = async function (args, res, next) {
 
 exports.protectedNewsDelete = async function (args, res, next) {
   try {
+    // Confirm ser has correct role.
+    if (!userInRole([ROLES.LNGADMIN, ROLES.SYSADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+      throw new Error('Missing user role for selected record type.');
+    }
+
     const recordId = args.swagger.params.recordId.value;
     defaultLog.info(`protectedNewsDelete - recordId: ${recordId}`);
 
@@ -280,6 +298,11 @@ exports.protectedNewsDelete = async function (args, res, next) {
  */
 exports.protectedPublish = async function (args, res, next) {
   try {
+    // Confirm ser has correct role.
+    if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
+      throw new Error('Missing valid user role.');
+    }
+
     const recordData = args.swagger.params.record.value;
     defaultLog.info(`protectedPublish - recordId: ${recordData._id}`);
 
@@ -289,11 +312,21 @@ exports.protectedPublish = async function (args, res, next) {
 
     // If we are updating a flavour, we have to make sure we update master as well
     if (recordData._schemaName.includes('NRCED')) {
+      // Confirm ser has correct role.
+      if (!userInRole([ROLES.NRCEDADMIN, ROLES.SYSADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+        throw new Error('Missing user role for selected record type.');
+      }
+
       const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 5);
       const masterModel = require('mongoose').model(masterSchema);
       await masterModel.findOneAndUpdate({ _id: record._master }, { isNrcedPublished: true });
     }
     else if (recordData._schemaName.includes('LNG')) {
+      // Confirm ser has correct role.
+      if (!userInRole([ROLES.LNGADMIN, ROLES.SYSADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+        throw new Error('Missing user role for selected record type.');
+      }
+
       const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 3);
       const masterModel = require('mongoose').model(masterSchema);
       await masterModel.findOneAndUpdate({ _id: record._master }, { isLngPublished: true });
@@ -324,6 +357,11 @@ exports.protectedPublish = async function (args, res, next) {
  */
 exports.protectedUnPublish = async function (args, res, next) {
   try {
+     // Confirm ser has correct role.
+     if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
+      throw new Error('Missing valid user role.');
+    }
+
     const recordData = args.swagger.params.record.value;
     defaultLog.info(`protectedUnPublish - recordId: ${recordData._id}`);
 
@@ -332,11 +370,21 @@ exports.protectedUnPublish = async function (args, res, next) {
     const record = await model.findOne({ _id: recordData._id });
     // If we are updating a flavour, we have to make sure we update master as well
     if (recordData._schemaName.includes('NRCED')) {
+      // Confirm ser has correct role.
+      if (!userInRole([ROLES.NRCEDADMIN, ROLES.SYSADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+        throw new Error('Missing user role for selected record type.');
+      }
+
       const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 5);
       const masterModel = require('mongoose').model(masterSchema);
       await masterModel.findOneAndUpdate({ _id: record._master }, { isNrcedPublished: false });
     }
     else if (recordData._schemaName.includes('LNG')) {
+      // Confirm ser has correct role.
+      if (!userInRole([ROLES.LNGADMIN, ROLES.SYSADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+        throw new Error('Missing user role for selected record type.');
+      }
+
       const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 3);
       const masterModel = require('mongoose').model(masterSchema);
       await masterModel.findOneAndUpdate({ _id: record._master }, { isLngPublished: false });
