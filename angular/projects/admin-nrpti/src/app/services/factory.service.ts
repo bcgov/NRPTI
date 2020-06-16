@@ -160,9 +160,9 @@ export class FactoryService {
       if (jwt && jwt.realm_access && jwt.realm_access.roles) {
         // to handle any case issues with role or the scopes, convert them
         // all to lower case first
-        const lowerCasedStrings = jwt.realm_access.roles.join(',').toLowerCase().split(',');
-        return lowerCasedStrings.includes(ApplicationRoles.ADMIN) ||
-                                          lowerCasedStrings.includes(role.toLowerCase());
+        const userRoles = jwt.realm_access.roles.map((userRole: string) => userRole.toLowerCase());
+        return userRoles.includes(ApplicationRoles.ADMIN) ||
+                                  userRoles.includes(role.toLowerCase());
       }
     }
 

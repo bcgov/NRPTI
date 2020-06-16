@@ -14,7 +14,7 @@ import { RecordUtils } from '../../utils/record-utils';
 export class AgreementDetailComponent extends RecordComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
-constructor(public route: ActivatedRoute, public router: Router, public changeDetectionRef: ChangeDetectorRef) {
+  constructor(public route: ActivatedRoute, public router: Router, public changeDetectionRef: ChangeDetectorRef) {
     super();
   }
 

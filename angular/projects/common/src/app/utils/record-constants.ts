@@ -10,7 +10,6 @@ export class ApplicationRoles {
   public static readonly ADMIN       = 'sysadmin';
   public static readonly ADMIN_NRCED = 'admin:nrced';
   public static readonly ADMIN_LNG   = 'admin:lng';
-  public static readonly ADMIN_EPIC  = 'admin:epic';
   public static readonly ADMIN_BCMI  = 'admin:bcmi';
 }
 
