@@ -142,38 +142,33 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
       if (!flavourIncomingObj[entry[0]]) {
         continue;
       }
-      if (flavourIncomingObj[entry[0]]._id) {
-        // This is to determine how we should populate the fields in master that know
-        // the publish state of its flavours.
-        if (flavourIncomingObj[entry[0]].addRole && flavourIncomingObj[entry[0]].addRole.includes('public') && entry[0].includes('NRCED')) {
-          incomingObj.isNrcedPublished = true;
-        }
-        if (flavourIncomingObj[entry[0]].addRole && flavourIncomingObj[entry[0]].addRole.includes('public') && entry[0].includes('LNG')) {
-          incomingObj.isLngPublished = true;
-        }
-        if (flavourIncomingObj[entry[0]].removeRole && flavourIncomingObj[entry[0]].removeRole.includes('public') && entry[0].includes('NRCED')) {
-          incomingObj.isNrcedPublished = false;
-        }
-        if (flavourIncomingObj[entry[0]].removeRole && flavourIncomingObj[entry[0]].removeRole.includes('public') && entry[0].includes('LNG')) {
-          incomingObj.isLngPublished = false;
-        }
 
-        if (flavourIncomingObj[entry[0]]) {
-          let flavourUpdateObj = entry[1](args, res, next, { ...flavourIncomingObj, ...flavourIncomingObj[entry[0]] });
-          const Model = mongoose.model(entry[0]);
-          flavourUpdateObj._master = new ObjectID(incomingObj._id);
-          promises.push(
-            Model.findOneAndUpdate(
-              { _id: flavourIncomingObj[entry[0]]._id },
-              flavourUpdateObj,
-              { new: true }
-            )
-          );
-        }
+      // This is to determine how we should populate the fields in master that know
+      // the publish state of its flavours.
+      if (flavourIncomingObj[entry[0]].addRole && flavourIncomingObj[entry[0]].addRole.includes('public')) {
+        entry[0].includes('NRCED') && (incomingObj.isNrcedPublished = true);
+        entry[0].includes('LNG') && (incomingObj.isLngPublished = true);
+      }
+      if (flavourIncomingObj[entry[0]].removeRole && flavourIncomingObj[entry[0]].removeRole.includes('public')) {
+        entry[0].includes('NRCED') && (incomingObj.isNrcedPublished = false);
+        entry[0].includes('LNG') && (incomingObj.isLngPublished = false);
+      }
+
+      if (flavourIncomingObj[entry[0]]._id) {
+        let flavourUpdateObj = entry[1](args, res, next, { ...flavourIncomingObj, ...flavourIncomingObj[entry[0]] });
+        const Model = mongoose.model(entry[0]);
+        flavourUpdateObj._master = new ObjectID(masterId);
+        promises.push(
+          Model.findOneAndUpdate(
+            { _id: flavourIncomingObj[entry[0]]._id },
+            flavourUpdateObj,
+            { new: true }
+          )
+        );
       } else {
         // We are adding a flavour instead of editing.
         // We need to get the existing master record.
-        const masterRecord = await this.fetchMasterForCreateFlavour(masterSchemaName, incomingObj._id);
+        const masterRecord = await this.fetchMasterForCreateFlavour(masterSchemaName, masterId);
         let newFlavour = null;
         if (entry[0].includes('LNG')) {
           newFlavour = PostFunctions.createLNG(args, res, next, {
@@ -189,7 +184,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
           });
         }
         if (newFlavour) {
-          newFlavour._master = new ObjectID(masterRecord._id);
+          newFlavour._master = new ObjectID(masterId);
           flavours.push(newFlavour);
           promises.push(newFlavour.save());
         }

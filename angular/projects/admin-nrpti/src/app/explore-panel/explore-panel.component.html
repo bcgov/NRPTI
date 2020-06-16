@@ -10,8 +10,7 @@
               [control]="formGroup.get('dateIssuedStart')"
               [reset]="resetControls"
               [minDate]="minDate"
-              [maxDate]="maxDate"
-            ></lib-date-picker>
+              [maxDate]="maxDate"></lib-date-picker>
           </div>
           <div class="col-6">
             <label for="dateIssuedEndFilter" class="control-label font-weight-bold">End Issued Date</label>
@@ -20,8 +19,7 @@
               [control]="formGroup.get('dateIssuedEnd')"
               [reset]="resetControls"
               [minDate]="minDate"
-              [maxDate]="maxDate"
-            ></lib-date-picker>
+              [maxDate]="maxDate"></lib-date-picker>
           </div>
         </div>
       </div>
@@ -40,7 +38,32 @@
           </div>
         </div>
       </div>
-      <div class="col-4"></div>
+      <div class="col-4">
+        <label class="control-label font-weight-bold">NRCED Published State</label>
+        <div class="row">
+          <div class="col-4">
+            <div class="radio">
+              <input class="mr-2" type="radio" id="nrcedPublsihed" value="true" formControlName="isNrcedPublished"
+                name="isNrcedPublished" />
+              <label for="nrcedPublsihed">Published</label>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="radio">
+              <input class="mr-2" type="radio" id="nrcedNotPublsihed" value="false" formControlName="isNrcedPublished"
+                name="isNrcedPublished" />
+              <label for="nrcedNotPublsihed">Unpublished</label>
+            </div>
+          </div>
+          <div class="col-4">
+            <button
+              class="btn btn-secondary"
+              (click)="resetFilter('isNrcedPublished')">
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
   <section>
@@ -54,8 +77,7 @@
           [options]="activityTypeOptions"
           [reset]="resetControls"
           [placeholderText]="'Begin typing to filter activities...'"
-          (numSelected)="activityTypeCount = $event"
-        ></app-autocomplete-multi-select>
+          (numSelected)="activityTypeCount = $event"></app-autocomplete-multi-select>
       </div>
       <div class="col-4">
         <div class="label-pair">
@@ -67,8 +89,33 @@
             [options]="actOptions"
             [reset]="resetControls"
             [placeholderText]="'Begin typing to filter acts...'"
-            (numSelected)="actCount = $event"
-          ></app-autocomplete-multi-select>
+            (numSelected)="actCount = $event"></app-autocomplete-multi-select>
+        </div>
+      </div>
+      <div class="col-4">
+        <label class="control-label font-weight-bold">LNG Published State</label>
+        <div class="row">
+          <div class="col-4">
+            <div class="radio">
+              <input class="mr-2" type="radio" id="lngPublsihed" value="true" formControlName="isLngPublished"
+                name="isLngPublished" />
+              <label for="lngPublsihed">Published</label>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="radio">
+              <input class="mr-2" type="radio" id="lngNotPublsihed" value="false" formControlName="isLngPublished"
+                name="isLngPublished" />
+              <label for="lngNotPublsihed">Unpublished</label>
+            </div>
+          </div>
+          <div class="col-4">
+            <button
+              class="btn btn-secondary"
+              (click)="resetFilter('isLngPublished')">
+              Clear
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -84,8 +131,7 @@
           [options]="agencyOptions"
           [reset]="resetControls"
           [placeholderText]="'Begin typing to filter agencies...'"
-          (numSelected)="agencyCount = $event"
-        ></app-autocomplete-multi-select>
+          (numSelected)="agencyCount = $event"></app-autocomplete-multi-select>
       </div>
       <div class="col-4">
         <div class="label-pair">
@@ -97,8 +143,7 @@
             [options]="regulationOptions"
             [reset]="resetControls"
             [placeholderText]="'Begin typing to filter regulations...'"
-            (numSelected)="regulationCount = $event"
-          ></app-autocomplete-multi-select>
+            (numSelected)="regulationCount = $event"></app-autocomplete-multi-select>
         </div>
       </div>
       <div class="col-4">
@@ -107,8 +152,7 @@
           name="sourceSystemFilter"
           id="sourceSystemFilter"
           formControlName="sourceSystemRef"
-          class="form-control"
-        >
+          class="form-control">
           <option [selected]="!selectedSystemRef" value="">None</option>
           <option [selected]="selectedSystemRef === 'nrpti'" value="nrpti">NRPTI</option>
           <option [selected]="selectedSystemRef === 'ocers-csv'" value="ocers-csv">OCERS</option>
@@ -136,8 +180,7 @@
                 type="checkbox"
                 id="coastalGaslink"
                 formControlName="coastalGaslink"
-                name="coastalGaslink"
-              />
+                name="coastalGaslink" />
               <label for="coastalGaslink">Coastal Gaslink</label>
             </div>
           </div>
@@ -148,8 +191,7 @@
                 type="checkbox"
                 id="otherProjects"
                 formControlName="otherProjects"
-                name="otherProjects"
-              />
+                name="otherProjects" />
               <label for="otherProjects">Other</label>
             </div>
           </div>
@@ -166,8 +208,7 @@
                 id="hasDocs"
                 value="true"
                 formControlName="hasDocuments"
-                name="hasDocuments"
-              />
+                name="hasDocuments" />
               <label for="hasDocs">Yes</label>
             </div>
           </div>
@@ -179,13 +220,12 @@
                 id="doesNothaveDocs"
                 value="false"
                 formControlName="hasDocuments"
-                name="hasDocuments"
-              />
+                name="hasDocuments" />
               <label for="doesNothaveDocs">No</label>
             </div>
           </div>
           <div class="col-4">
-            <button class="btn btn-secondary" (click)="resetDocFilter()">
+            <button class="btn btn-secondary" (click)="resetFilter('hasDocuments')">
               Clear
             </button>
           </div>

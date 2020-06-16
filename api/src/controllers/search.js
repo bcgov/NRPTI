@@ -48,6 +48,17 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
         return getHasDocumentsExp(entry);
       }
 
+      if (item === 'isNrcedPublished' && entry === 'true') {
+        return { isNrcedPublished: true }
+      } else if (item === 'isNrcedPublished' && entry === 'false') {
+        return { $or: [{ isNrcedPublished: { $exists: false } }, { isNrcedPublished: false }] };
+      }
+      if (item === 'isLngPublished' && entry === 'true') {
+        return { isLngPublished: true }
+      } else if (item === 'isLngPublished' && entry === 'false') {
+        return { $or: [{ isLngPublished: { $exists: false } }, { isLngPublished: false }] }
+      }
+
       return getConvertedValue(item, entry, comparisonOperator);
     })
   );

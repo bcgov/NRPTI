@@ -59,8 +59,8 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
     this.formGroup.reset();
   }
 
-  resetDocFilter() {
-    this.formGroup.get(['hasDocuments']).setValue(null);
+  resetFilter(filterName) {
+    this.formGroup.get([filterName]).setValue(null);
     this._changeDetectionRef.detectChanges();
   }
 
