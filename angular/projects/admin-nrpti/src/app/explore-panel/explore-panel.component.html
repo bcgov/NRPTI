@@ -79,7 +79,8 @@
   <section>
     <div class="row">
       <div class="col-md-4">
-        <label for="activityTypeFilter">Activity</label>
+        <label for="activityTypeFilter">Activity Type</label>
+        <span class="grey-subtext ml-2">Select all that apply</span>
         <span *ngIf="activityTypeCount" class="grey-subtext ml-2">({{ activityTypeCount }} selected)</span>
         <app-autocomplete-multi-select
           id="activityTypeFilter"
@@ -166,18 +167,10 @@
         </div>
       </div>
       <div class="col-md-4">
-        <label for="sourceSystemFilter">Source System</label>
-        <select
-          name="sourceSystemFilter"
-          id="sourceSystemFilter"
-          formControlName="sourceSystemRef"
-          class="form-control">
-          <option [selected]="!selectedSystemRef" value="">None</option>
-          <option [selected]="selectedSystemRef === 'nrpti'" value="nrpti">NRPTI</option>
-          <option [selected]="selectedSystemRef === 'ocers-csv'" value="ocers-csv">OCERS</option>
-          <option [selected]="selectedSystemRef === 'nris-epd'" value="nris-epd">NRIS</option>
-          <option [selected]="selectedSystemRef === 'epic'" value="epic">EPIC</option>
-        </select>
+        <mat-label>Source System</mat-label>
+        <mat-select class="border-bottom pt-3" [formControl]="systemRefControl" multiple>
+          <mat-option *ngFor="let systemRef of systemRefOptions" [value]="systemRef">{{systemRef}}</mat-option>
+        </mat-select>
       </div>
     </div>
   </section>
