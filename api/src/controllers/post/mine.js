@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const postUtils = require('../../utils/post-utils');
-const { userInRole } = require('../../utils/auth-utils');
 const { ROLES } = require('../../utils/constants/misc');
 
 /**
@@ -30,19 +29,14 @@ exports.createRecord = async function (args, res, next, incomingObj) {
  * @returns created master Mine record
  */
 exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
-  // Confirm user has correct role.
-  if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
-    throw new Error('Missing valid user role.');
-  }
-  
   let Mine = mongoose.model('Mine');
   let mine = new Mine();
 
   mine._schemaName = 'Mine';
 
   // set permissions
-  mine.read = ['sysadmin'];
-  mine.write = ['sysadmin'];
+  mine.read = ROLES.ADMIN_ROLES;
+  mine.write = ROLES.ADMIN_ROLES;
 
   // set data
   incomingObj.name && (mine.name = incomingObj.name);

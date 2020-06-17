@@ -158,7 +158,7 @@ function verifySecret(currentScopes, tokenString, secret, req, callback, sendErr
  * @param {Array<string>|string} userRoles Roles to match against.
  * @returns {boolean} Indication if a match is found.
  */
-exports.userInRole = function(validRoles, userRoles) {
+exports.userHasValidRoles = function(validRoles, userRoles) {
   // Convert to array if a single value was used.
   if (!Array.isArray(validRoles)) {
     validRoles = [validRoles];

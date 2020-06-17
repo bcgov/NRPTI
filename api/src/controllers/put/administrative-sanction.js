@@ -4,8 +4,6 @@ const PutUtils = require('../../utils/put-utils');
 const PostUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
 const AdministrativeSanctionPost = require('../post/administrative-sanction');
-const { userInRole } = require('../../utils/auth-utils');
-const { ROLES } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to edit a master Administrative Sanction record and its associated flavour records.
@@ -74,11 +72,6 @@ exports.editRecord = async function (args, res, next, incomingObj) {
  * @returns edited master administrativeSanction record
  */
 exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
-  // Confirm user has correct role.
-  if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
-    throw new Error('Missing valid user role.');
-  }  
-
   delete incomingObj._id;
 
   // Reject any changes to master permissions
@@ -140,11 +133,6 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
  * @returns edited lng administrativeSanction record
  */
 exports.editLNG = function (args, res, next, incomingObj) {
-  // Confirm user has correct role.
-  if (!userInRole([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
-    throw new Error('Missing valid user role.');
-  }  
-
   delete incomingObj._id;
 
   // Reject any changes to permissions
@@ -210,11 +198,6 @@ exports.editLNG = function (args, res, next, incomingObj) {
  * @returns edited nrced administrativeSanction record
  */
 exports.editNRCED = function (args, res, next, incomingObj) {
-  // Confirm user has correct role.
-  if (!userInRole([ROLES.SYSADMIN, ROLES.NRCEDADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
-    throw new Error('Missing valid user role.');
-  }  
-
   delete incomingObj._id;
 
   // Reject any changes to permissions

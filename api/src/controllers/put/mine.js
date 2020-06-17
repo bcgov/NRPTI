@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
 const PutUtils = require('../../utils/put-utils');
-const { userInRole } = require('../../utils/auth-utils');
-const { ROLES } = require('../../utils/constants/misc');
-
-const SYSTEM_USER = 'SYSTEM_USER';
+const { SYSTEM_USER } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to edit a master Mine record and any flavours.
@@ -43,11 +40,6 @@ exports.editRecord = async function(args, res, next, incomingObj) {
  * @returns newly created mine record
  */
 exports.editMaster = async function(args, res, next, incomingObj) {
-  // Confirm user has correct role.
-  if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
-    throw new Error('Missing valid user role.');
-  }  
-  
   if (incomingObj._schemaName !== 'Mine') {
     throw new Error('editRecord - incorrect schema type, must be Mine');
   }
@@ -69,7 +61,7 @@ exports.editMaster = async function(args, res, next, incomingObj) {
   const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
 
   return await Mine.findOneAndUpdate(
-      { _schemaName: 'Mine', _id: incomingObj._id },
+      { _schemaName: 'Mine', _id: incomingObj._id, write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
       { $set: dotNotatedObj },
       { new: true }
     );

@@ -2,8 +2,6 @@ const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 const PutUtils = require('../../utils/put-utils');
 const CertificatePost = require('../post/certificate');
-const { userInRole } = require('../../utils/auth-utils');
-const { ROLES } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to edit a master Certificate record and its associated flavour records.
@@ -62,11 +60,6 @@ exports.editRecord = async function (args, res, next, incomingObj) {
  * @returns edited master certificate record
  */
 exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
-  // Confirm user has correct role.
-  if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
-    throw new Error('Missing valid user role.');
-  }  
-
   delete incomingObj._id;
 
   // Reject any changes to master permissions
@@ -121,11 +114,6 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
  * @returns edited lng certificate record
  */
 exports.editLNG = function (args, res, next, incomingObj) {
-  // Confirm user has correct role.
-  if (!userInRole([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
-    throw new Error('Missing valid user role.');
-  }  
-  
   delete incomingObj._id;
 
   // Reject any changes to permissions

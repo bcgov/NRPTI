@@ -1,14 +1,8 @@
 const mongoose = require('mongoose');
-const { userInRole } = require('../../utils/auth-utils');
 const { ROLES } = require('../../utils/constants/misc');
 
 exports.createRecord = async function(args, res, next, incomingObj) {
   try {
-    // Confirm user has correct role.
-    if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
-      throw new Error('Missing valid user role.');
-    }
-    
     const Model = mongoose.model(incomingObj._schemaName);
 
     // TODO: Something special for NRCED/BCMI?
@@ -19,8 +13,8 @@ exports.createRecord = async function(args, res, next, incomingObj) {
   
       let newsItem = new Model({
         _schemaName: incomingObj._schemaName,
-        read: ['sysadmin', 'public'],
-        write: ['sysadmin'],
+        read: [...ROLES.ADMIN_ROLES, 'public'],
+        write: ROLES.ADMIN_ROLES,
         title: incomingObj.title,
         type: incomingObj.type,
         description: incomingObj.description,

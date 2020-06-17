@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
-const { userInRole } = require('../../utils/auth-utils');
+const { userHasValidRoles } = require('../../utils/auth-utils');
 const { ROLES } = require('../../utils/constants/misc');
 
 /**
@@ -61,11 +61,6 @@ exports.createRecord = async function (args, res, next, incomingObj) {
  * @returns created master constructionPlan record
  */
 exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
-  // Confirm user has correct role.
-  if (!userInRole(ROLES.ADMIN_ROLES, args.swagger.params.auth_payload.realm_access.roles)) {
-    throw new Error('Missing valid user role.');
-  }
-
   let ConstructionPlan = mongoose.model('ConstructionPlan');
   let constructionPlan = new ConstructionPlan();
 
@@ -83,8 +78,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (constructionPlan._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  constructionPlan.read = ['sysadmin'];
-  constructionPlan.write = ['sysadmin'];
+  constructionPlan.read = ROLES.ADMIN_ROLES;
+  constructionPlan.write = ROLES.ADMIN_ROLES;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -144,8 +139,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @returns created lng constructionPlan record
  */
 exports.createLNG = function (args, res, next, incomingObj) {
-  // Confirm user has correct role.
-  if (!userInRole([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
   
@@ -166,8 +161,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (constructionPlanLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  constructionPlanLNG.read = ['sysadmin'];
-  constructionPlanLNG.write = ['sysadmin'];
+  constructionPlanLNG.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  constructionPlanLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {

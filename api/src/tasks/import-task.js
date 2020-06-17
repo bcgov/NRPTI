@@ -3,7 +3,7 @@
 const defaultLog = require('../utils/logger')('import-task');
 const queryActions = require('../utils/query-actions');
 const TaskAuditRecord = require('../utils/task-audit-record');
-const { userInRole } = require('../utils/auth-utils');
+const { userHasValidRoles } = require('../utils/auth-utils');
 const { SYSTEM_USER, ROLES } = require('../utils/constants/misc');
 
 exports.protectedOptions = async function(args, res, next) {
@@ -12,7 +12,7 @@ exports.protectedOptions = async function(args, res, next) {
 
 exports.protectedCreateTask = async function(args, res, next) {
   // Confirm that user has correct role.
-  if (!userInRole(ROLES.SYSADMIN, args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles(ROLES.SYSADMIN, args.swagger.params.auth_payload.realm_access.roles)) {
     throw Error('protectedCreateTask - user missing valid role');
   }
 
