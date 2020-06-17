@@ -49,10 +49,12 @@ exports.protectedPost = async function(args, res, next) {
       try {
         docResponse = await createURLDocument(
           args.swagger.params.fileName.value,
-          (args.swagger.params.auth_payload && args.swagger.params.auth_payload.preferred_username) || '',
+          (args.swagger.params.auth_payload && args.swagger.params.auth_payload) || '',
           args.swagger.params.url.value,
           readRoles
         );
+
+        await queryUtils.recordAction('POST', JSON.stringify(docResponse), args.swagger.params.auth_payload, docResponse.key);
       } catch (e) {
         defaultLog.info(`Error creating URL document - fileName: ${args.swagger.params.fileName.value}, Error: ${e}`);
         return queryActions.sendResponse(
@@ -67,10 +69,12 @@ exports.protectedPost = async function(args, res, next) {
         ({ docResponse, s3Response } = await createS3Document(
           args.swagger.params.fileName.value,
           args.swagger.params.upfile.value.buffer,
-          (args.swagger.params.auth_payload && args.swagger.params.auth_payload.preferred_username) || '',
+          (args.swagger.params.auth_payload && args.swagger.params.auth_payload) || '',
           readRoles,
           s3ACLRole
         ));
+
+        await queryUtils.recordAction('POST', JSON.stringify(s3Response), args.swagger.params.auth_payload, docResponse.key);
       } catch (e) {
         defaultLog.info(`Error creating S3 document - fileName: ${args.swagger.params.fileName.value}, Error ${e}`);
         return queryActions.sendResponse(
@@ -90,6 +94,8 @@ exports.protectedPost = async function(args, res, next) {
         { $addToSet: { documents: new ObjectID(docResponse._id) } },
         { new: true }
       );
+
+      await queryUtils.recordAction('Doc Record Update', JSON.stringify(recordResponse), args.swagger.params.auth_payload, recordResponse.key);
     } catch (e) {
       defaultLog.info(
         `Error adding ${args.swagger.params.fileName.value} to record ${args.swagger.params.recordId.value}: ${e}`
@@ -112,6 +118,8 @@ exports.protectedPost = async function(args, res, next) {
             { new: true }
           )
         );
+
+        queryUtils.recordAction('Update Flavour', null, args.swagger.params.auth_payload, id);
       });
     }
     const flavourRecordResponses = await Promise.all(observables).catch(e => {
@@ -148,6 +156,7 @@ exports.protectedDelete = async function(args, res, next) {
     let s3Response = null;
     try {
       docResponse = await Document.findOneAndRemove({ _id: new ObjectID(args.swagger.params.docId.value) });
+      await queryUtils.recordAction('DELETE', JSON.stringify(docResponse), args.swagger.params.auth_payload, docResponse._id);
     } catch (e) {
       defaultLog.info(`Error removing document meta ${args.swagger.params.docId.value} from the database: ${e}`);
       return queryActions.sendResponse(
@@ -162,6 +171,7 @@ exports.protectedDelete = async function(args, res, next) {
     if (docResponse.key) {
       try {
         const s3DeleteResult = await deleteS3Document(docResponse.key);
+        await queryUtils.recordAction('DELETE', JSON.stringify(s3DeleteResult), args.swagger.params.auth_payload, docResponse.key);
 
         s3Response = s3DeleteResult;
       } catch (e) {
@@ -186,6 +196,7 @@ exports.protectedDelete = async function(args, res, next) {
         { $pull: { documents: new ObjectID(docResponse._id) } },
         { new: true }
       );
+      await queryUtils.recordAction('Doc Record Update', JSON.stringify(recordResponse), args.swagger.params.auth_payload, recordResponse.key);
     } catch (e) {
       defaultLog.info(
         `Error removing ${args.swagger.params.docId.value} from record ${args.swagger.params.recordId.value}: ${e}`
@@ -208,6 +219,7 @@ exports.protectedDelete = async function(args, res, next) {
             { new: true }
           )
         );
+        queryUtils.recordAction('Flavour Update', null, args.swagger.params.auth_payload, id);
       });
     }
     const flavourRecordResponses = await Promise.all(observables).catch(e => {
@@ -397,7 +409,7 @@ async function publishDocument(docId, auth_payload) {
 
   const published = await queryActions.publish(document);
 
-  await queryUtils.recordAction('Publish', document, auth_payload && auth_payload.displayName, document._id);
+  await queryUtils.recordAction('Publish', document, auth_payload, document._id);
 
   return published;
 }
@@ -426,7 +438,7 @@ async function unpublishDocument(docId, auth_payload) {
 
   const unpublished = await queryActions.unPublish(document);
 
-  await queryUtils.recordAction('Unpublish', document, auth_payload && auth_payload.displayName, document._id);
+  await queryUtils.recordAction('Unpublish', document, auth_payload, document._id);
 
   return unpublished;
 }
