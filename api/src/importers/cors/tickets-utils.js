@@ -1,5 +1,7 @@
 const BaseRecordUtils = require('./base-record-utils');
-const Utils = require('./utils/csv-utils');
+const CsvUtils = require('./utils/csv-utils');
+const Utils = require('../../utils/utils');
+const BusinessLogicManager = require('../../utils/business-logic-manager');
 
 const DateIssuedFormat = 'DD/MM/YYYY';
 const BirthDateFormat = 'YYYY/MM/DD';
@@ -41,10 +43,10 @@ class Tickets extends BaseRecordUtils {
 
     ticket['recordType'] = 'Ticket';
     ticket['dateIssued'] = Utils.parseDate(csvRow['ticket_date'], DateIssuedFormat) || null;
-    ticket['issuingAgency'] = Utils.getIssuingAgency(csvRow) || '';
+    ticket['issuingAgency'] = CsvUtils.getIssuingAgency(csvRow) || '';
 
     ticket['legislation'] = {
-      act: Utils.getAct(csvRow) || '',
+      act: (csvRow['act'] && BusinessLogicManager.applyBusinessLogicToAct(csvRow['act'])) || '',
       regulation: csvRow['regulation_description'] || '',
       section: csvRow['section'] || '',
       subSection: csvRow['sub_section'] || '',
@@ -53,7 +55,7 @@ class Tickets extends BaseRecordUtils {
 
     ticket['offence'] = csvRow['description'] || '';
 
-    const entityType = Utils.getEntityType(csvRow) || null;
+    const entityType = CsvUtils.getEntityType(csvRow) || null;
 
     if (entityType === 'Company') {
       ticket['issuedTo'] = {

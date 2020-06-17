@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { FactoryService } from '../../services/factory.service';
 import { ICsvTaskParams } from '../../services/task.service';
-import { CsvConstants } from '../../utils/constants/csv-constants';
+import { CsvConstants, IRequiredFormat } from '../../utils/constants/csv-constants';
+import Papa from 'papaparse';
+import moment from 'moment';
 
 @Component({
   selector: 'app-import-csv',
@@ -52,7 +54,7 @@ export class ImportCSVComponent {
     this.csvFileValidated = false;
     this.csvFileErrors = [];
 
-    this.validateCsvFile();
+    this.readCsvFile();
   }
 
   /**
@@ -78,12 +80,12 @@ export class ImportCSVComponent {
   }
 
   /**
-   * Validate the csv file for errors before attempting to import.
+   * Read the csv file data.
    *
    * @returns
    * @memberof ImportCSVComponent
    */
-  validateCsvFile() {
+  readCsvFile() {
     if (!this.dataSourceType || !this.recordType || !this.csvFiles[0]) {
       return;
     }
@@ -91,60 +93,62 @@ export class ImportCSVComponent {
     const fileReader = new FileReader();
 
     fileReader.onloadend = () => {
-      const csvData = fileReader.result;
-
-      if (!csvData) {
-        this.csvFileErrors.push(`Error reading csv file: ${this.csvFiles[0].name}`);
-        return;
-      }
-
-      // parse csv into array of rows
-      const csvRows: string[] = (csvData as string).split(/\r\n|\n/);
-
-      this.validateRequiredHeaders(csvRows);
-
-      this.validateRequiredFields(csvRows);
-
-      if (this.csvFileErrors && this.csvFileErrors.length) {
-        return;
-      }
-
-      this.csvFileValidated = true;
+      this.validateCsvFile(fileReader.result);
     };
 
     fileReader.readAsText(this.csvFiles[0]);
   }
 
   /**
-   * Validate that the csv file contains all required headers.
+   * Parse and validate the csv data for errors.
    *
-   * @param {string[]} csvRows
+   * @param {*} csvData
    * @returns
    * @memberof ImportCSVComponent
    */
-  validateRequiredHeaders(csvRows: string[]) {
-    if (!csvRows || !csvRows.length) {
-      this.csvFileErrors.push(`Error parsing csv file: ${this.csvFiles[0].name}`);
+  validateCsvFile(csvData: any) {
+    if (!csvData) {
+      this.csvFileErrors.push(`Error reading csv file: ${this.csvFiles[0].name}`);
       return;
     }
 
-    // get column header values array
-    let csvHeaderRowArray = String(csvRows[0]).split(',');
+    // parse csv into a 2D array of rows and row values
+    const csvRows: string[][] = Papa.parse<string[]>(csvData as string, { skipEmptyLines: true }).data;
 
-    if (!csvHeaderRowArray) {
+    this.validateRequiredHeaders(csvRows[0]);
+
+    this.validateFields(csvRows);
+
+    if (this.csvFileErrors && this.csvFileErrors.length) {
+      // csv errors found
+      return;
+    }
+
+    this.csvFileValidated = true;
+  }
+
+  /**
+   * Validate that the csv file contains all required headers.
+   *
+   * @param {string[]} csvHeaderRowValuesArray
+   * @returns
+   * @memberof ImportCSVComponent
+   */
+  validateRequiredHeaders(csvHeaderRowValuesArray: string[]) {
+    if (!csvHeaderRowValuesArray || !csvHeaderRowValuesArray.length) {
       this.csvFileErrors.push(`Error parsing csv file: ${this.csvFiles[0].name}`);
       return;
     }
 
     // convert header values array to lowercase
-    csvHeaderRowArray = csvHeaderRowArray.map(header => header.toLowerCase());
+    csvHeaderRowValuesArray = csvHeaderRowValuesArray.map(header => header.toLowerCase());
 
     // get required column headers for the specified data source and record type
     const requiredHeadersArray = CsvConstants.getCsvRequiredHeadersArray(this.dataSourceType, this.recordType);
 
     // determine if the csv file is missing any required column headers
     const missingHeaders = requiredHeadersArray.filter(
-      requiredHeader => !csvHeaderRowArray.includes(requiredHeader.toLowerCase())
+      requiredHeader => !csvHeaderRowValuesArray.includes(requiredHeader.toLowerCase())
     );
 
     if (missingHeaders && missingHeaders.length) {
@@ -154,46 +158,108 @@ export class ImportCSVComponent {
   }
 
   /**
-   * Validate that the csv rows contain non-null/non-empty values for all required fields.
+   * Validate csv field values.
+   * - Check that the csv rows contain non-null/non-empty values for all required fields.
+   * - Check that the csv rows contain correctly formatted values for all fields that have a required format.
    *
-   * @param {string[]} csvRows
+   * Note: Not all fields with required formats are necessarily required fields, and so may be null or empty.
+   *
+   * @param {string[][]} csvRows array of rows, each of which is an array of row values
    * @returns
    * @memberof ImportCSVComponent
    */
-  validateRequiredFields(csvRows: string[]) {
+  validateFields(csvRows: string[][]) {
     if (!csvRows || !csvRows.length) {
       this.csvFileErrors.push(`Error parsing csv file: ${this.csvFiles[0].name}`);
       return;
     }
 
     // get column header values array
-    const csvHeaderRowArray = String(csvRows[0]).split(',');
+    const csvHeaderRowValuesArray = csvRows[0];
 
     // get required fields for the specified data source and record type
     const requiredFieldsArray = CsvConstants.getCsvRequiredFieldsArray(this.dataSourceType, this.recordType);
 
+    // get required formats for fields for the specified data source and record type
+    const requiredFormatsArray = CsvConstants.getCsvRequiredFormatsArray(this.dataSourceType, this.recordType);
+
     // start loop at index 1, skipping the header row
-    for (let i = 1; i < csvRows.length; i++) {
-      if (!csvRows[i]) {
+    for (let rowNumber = 1; rowNumber < csvRows.length; rowNumber++) {
+      if (!csvRows[rowNumber]) {
         continue;
       }
 
-      const missingFields = [];
-
       // get row values array
-      const csvRowValuesArray = String(csvRows[i]).split(',');
+      const csvRowValuesArray = csvRows[rowNumber];
 
-      // determine if the csv row is missing any required fields
-      for (const requiredField of requiredFieldsArray) {
-        const requiredFieldIndex = csvHeaderRowArray.indexOf(requiredField);
+      this.validateRequiredFields(csvRowValuesArray, requiredFieldsArray, csvHeaderRowValuesArray, rowNumber);
 
-        if (!csvRowValuesArray[requiredFieldIndex]) {
-          missingFields.push(requiredField);
-        }
+      this.validateRequiredFormats(csvRowValuesArray, requiredFormatsArray, csvHeaderRowValuesArray, rowNumber);
+    }
+  }
+
+  /**
+   * Validate the csv row for missing required fields.
+   *
+   * @param {string[]} csvRowValuesArray array of values for a single csv row
+   * @param {string[]} requiredFieldsArray array of required columns
+   * @param {string[]} csvHeaderRowValuesArray array of the current csv's column headers
+   * @param {number} rowNumber csv row number
+   * @memberof ImportCSVComponent
+   */
+  validateRequiredFields(
+    csvRowValuesArray: string[],
+    requiredFieldsArray: string[],
+    csvHeaderRowValuesArray: string[],
+    rowNumber: number
+  ) {
+    const missingFields = [];
+
+    // determine if the csv row is missing any required fields
+    for (const requiredField of requiredFieldsArray) {
+      const requiredFieldIndex = csvHeaderRowValuesArray.indexOf(requiredField);
+
+      if (!csvRowValuesArray[requiredFieldIndex]) {
+        missingFields.push(requiredField);
+      }
+    }
+
+    if (missingFields.length) {
+      this.csvFileErrors.push(`CSV row ${rowNumber} is missing required fields: ${missingFields}`);
+    }
+  }
+
+  /**
+   * Validate the csv row for fields with required formats.
+   *
+   * @param {string[]} csvRowValuesArray
+   * @param {IRequiredFormat[]} requiredFormatsArray
+   * @param {string[]} csvHeaderRowValuesArray
+   * @param {number} rowNumber csv row number
+   * @memberof ImportCSVComponent
+   */
+  validateRequiredFormats(
+    csvRowValuesArray: string[],
+    requiredFormatsArray: IRequiredFormat[],
+    csvHeaderRowValuesArray: string[],
+    rowNumber: number
+  ) {
+    // determine if the csv row is contains any fields whose values are not in the required format
+    for (const requiredFormat of requiredFormatsArray) {
+      const fieldIndex = csvHeaderRowValuesArray.indexOf(requiredFormat.field);
+
+      if (!csvRowValuesArray[fieldIndex]) {
+        // Field is empty, if it was required it will have already been accounted for in the required fields check.
+        // If it is not required then no format needs to be enforced.
+        continue;
       }
 
-      if (missingFields.length) {
-        this.csvFileErrors.push(`CSV row ${i} is missing required fields: ${missingFields}`);
+      if (requiredFormat.type === 'date') {
+        if (!moment(csvRowValuesArray[fieldIndex], requiredFormat.format).isValid()) {
+          this.csvFileErrors.push(
+            `CSV row ${rowNumber}, field: ${requiredFormat.field} - has invalid format, required format: ${requiredFormat.format}`
+          );
+        }
       }
     }
   }

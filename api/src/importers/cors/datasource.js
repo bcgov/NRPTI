@@ -97,16 +97,16 @@ class CorsCsvDataSource {
       // Check if this record already exists
       const existingRecord = await recordTypeUtils.findExistingRecord(nrptiRecord);
 
-      let savedRecords = null;
+      let savedRecord = null;
       if (existingRecord) {
         // update existing record
-        savedRecords = await recordTypeUtils.updateRecord(nrptiRecord, existingRecord);
+        savedRecord = await recordTypeUtils.updateRecord(nrptiRecord, existingRecord);
       } else {
         // create new record
-        savedRecords = await recordTypeUtils.createRecord(nrptiRecord);
+        savedRecord = await recordTypeUtils.createRecord(nrptiRecord);
       }
 
-      if (savedRecords && savedRecords.length > 0 && savedRecords[0].status === 'success') {
+      if (savedRecord && savedRecord.length > 0 && savedRecord[0].status === 'success') {
         this.status.itemsProcessed++;
 
         await this.taskAuditRecord.updateTaskRecord({ itemsProcessed: this.status.itemsProcessed });
@@ -133,16 +133,15 @@ class CorsCsvDataSource {
    * @memberof CorsCsvDataSource
    */
   getRecordTypeConfig() {
-    switch (this.recordType) {
-      case 'Ticket':
-        return {
-          getUtil: (auth_payload, csvRow) => {
-            return new (require('./tickets-utils'))(auth_payload, RECORD_TYPE.Ticket, csvRow);
-          }
-        };
-      default:
-        return null;
+    if (this.recordType === 'Ticket') {
+      return {
+        getUtil: (auth_payload, csvRow) => {
+          return new (require('./tickets-utils'))(auth_payload, RECORD_TYPE.Ticket, csvRow);
+        }
+      };
     }
+
+    return null;
   }
 }
 

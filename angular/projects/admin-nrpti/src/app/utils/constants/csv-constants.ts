@@ -1,4 +1,16 @@
 /**
+ * Required format object to specify fields whose value must have a specific format.
+ *
+ * @export
+ * @interface IRequiredFormat
+ */
+export interface IRequiredFormat {
+  field: string;
+  type: string;
+  format: string;
+}
+
+/**
  * Csv import constants.
  *
  * @export
@@ -43,12 +55,26 @@ export class CsvConstants {
   public static readonly corsTicketCsvRequiredFields = ['CONTRAVENTION_ENFORCEMENT_ID'];
 
   /**
+   * Fields for CORS Ticket csv that have a required format.
+   *
+   * Note: These fields are not necessarily required, and only have a required format if present.
+   *
+   * @static
+   * @type {IRequiredFormat[]}
+   * @memberof CsvConstants
+   */
+  public static readonly corsTicketCsvRequiredFormats: IRequiredFormat[] = [
+    { field: 'TICKET_DATE', type: 'date', format: 'MM/DD/YYYY' },
+    { field: 'BIRTH_DATE', type: 'date', format: 'YYYY/MM/DD' }
+  ];
+
+  /**
    * Get the array of required csv headers for the provided dataSourceType and recordType.
    *
    * @static
    * @param {string} dataSourceType
    * @param {string} recordType
-   * @returns array of csv headers
+   * @returns array of csv required headers
    * @memberof CsvConstants
    */
   public static getCsvRequiredHeadersArray(dataSourceType: string, recordType: string): string[] {
@@ -57,13 +83,12 @@ export class CsvConstants {
     }
 
     if (dataSourceType === 'cors-csv') {
-      switch (recordType) {
-        case 'Ticket':
-          return this.corsTicketCsvRequiredHeaders;
-        default:
-          return null;
+      if (recordType === 'Ticket') {
+        return this.corsTicketCsvRequiredHeaders;
       }
     }
+
+    return null;
   }
 
   /**
@@ -72,7 +97,7 @@ export class CsvConstants {
    * @static
    * @param {string} dataSourceType
    * @param {string} recordType
-   * @returns array of csv headers
+   * @returns array of csv required fields
    * @memberof CsvConstants
    */
   public static getCsvRequiredFieldsArray(dataSourceType: string, recordType: string): string[] {
@@ -81,12 +106,34 @@ export class CsvConstants {
     }
 
     if (dataSourceType === 'cors-csv') {
-      switch (recordType) {
-        case 'Ticket':
-          return this.corsTicketCsvRequiredFields;
-        default:
-          return null;
+      if (recordType === 'Ticket') {
+        return this.corsTicketCsvRequiredFields;
       }
     }
+
+    return null;
+  }
+
+  /**
+   * Get the array of required formats for csv field values for the provided dataSourceType and recordType.
+   *
+   * @static
+   * @param {string} dataSourceType
+   * @param {string} recordType
+   * @returns {IRequiredFormat[]} array of required formats for csv fields
+   * @memberof CsvConstants
+   */
+  public static getCsvRequiredFormatsArray(dataSourceType: string, recordType: string): IRequiredFormat[] {
+    if (!dataSourceType || !recordType) {
+      return null;
+    }
+
+    if (dataSourceType === 'cors-csv') {
+      if (recordType === 'Ticket') {
+        return this.corsTicketCsvRequiredFormats;
+      }
+    }
+
+    return null;
   }
 }

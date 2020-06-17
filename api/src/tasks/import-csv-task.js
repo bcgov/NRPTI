@@ -84,7 +84,7 @@ async function runTask(nrptiDataSource, auth_payload, recordType, csvFile) {
 }
 
 /**
- * GIven a file buffer, return a 2D array, where each inner array contains the column values for a row.
+ * Given a file buffer, return a 2D array, where each inner array contains the column values for a row.
  *
  * Note: assumes there is a header row, which is removed.
  *
@@ -118,13 +118,12 @@ function getDataSourceConfig(dataSourceType) {
     return null;
   }
 
-  switch (dataSourceType) {
-    case 'cors-csv':
-      return {
-        dataSourceLabel: 'cors-csv',
-        dataSourceClass: require('../importers/cors/datasource')
-      };
-    default:
-      return null;
+  if (dataSourceType === 'cors-csv') {
+    return {
+      dataSourceLabel: 'cors-csv',
+      dataSourceClass: require('../importers/cors/datasource')
+    };
   }
+
+  return null;
 }

@@ -77,7 +77,7 @@ class BaseRecordUtils {
         _schemaName: this.recordType._schemaName,
         _sourceRefCorsId: nrptiRecord._sourceRefCorsId
       })
-      .populate('_flavourRecords');
+      .populate('_flavourRecords', '_id _schemaName');
   }
 
   /**

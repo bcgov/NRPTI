@@ -1,25 +1,4 @@
-const moment = require('moment');
-
-/**
- * Creates a formatted date from the dateString and dateFormat.
- *
- * @param {*} dateString
- * @param {*} dateFormat
- * @returns the formatted date, or null if invalid dateString or dateFormat provided.
- */
-exports.parseDate = function(dateString, dateFormat) {
-  if (!dateString || !dateFormat) {
-    return null;
-  }
-
-  const date = moment(dateString, dateFormat);
-
-  if (!date.isValid()) {
-    return null;
-  }
-
-  return date.toDate();
-};
+const MiscConstants = require('../../../utils/constants/misc');
 
 /**
  * Derives the act.
@@ -68,10 +47,10 @@ exports.getIssuingAgency = function(csvRow) {
     return null;
   }
 
-  // business logic, see https://bcmines.atlassian.net/browse/NRPT-78
+  // csv import specific business logic, see https://bcmines.atlassian.net/browse/NRPT-78
   if (csvRow['case_number'].toLowerCase().startsWith('p-')) {
-    return 'BC Parks';
+    return MiscConstants.CorsCsvIssuingAgencies.BC_Parks;
   }
 
-  return 'Conservation Officer Service';
+  return MiscConstants.CorsCsvIssuingAgencies.Conservation_Officer_Service;
 };
