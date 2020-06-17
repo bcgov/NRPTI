@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const postUtils = require('../../utils/post-utils');
+const { ROLES } = require('../../utils/constants/misc');
 
 /**
  * Create a new Mine record.
@@ -34,8 +35,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   mine._schemaName = 'Mine';
 
   // set permissions
-  mine.read = ['sysadmin'];
-  mine.write = ['sysadmin'];
+  mine.read = ROLES.ADMIN_ROLES;
+  mine.write = ROLES.ADMIN_ROLES;
 
   // set data
   incomingObj.name && (mine.name = incomingObj.name);

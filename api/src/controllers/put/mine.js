@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const PutUtils = require('../../utils/put-utils');
-
-const SYSTEM_USER = 'SYSTEM_USER';
+const { SYSTEM_USER } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to edit a master Mine record and any flavours.
@@ -62,7 +61,7 @@ exports.editMaster = async function(args, res, next, incomingObj) {
   const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
 
   return await Mine.findOneAndUpdate(
-      { _schemaName: 'Mine', _id: incomingObj._id },
+      { _schemaName: 'Mine', _id: incomingObj._id, write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
       { $set: dotNotatedObj },
       { new: true }
     );

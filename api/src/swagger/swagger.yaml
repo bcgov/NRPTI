@@ -197,6 +197,9 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
+        - admin:lng
+        - admin:nrced
+        - admin:bcmi
       parameters:
         - in: query
           name: _id
@@ -311,7 +314,7 @@ paths:
         - search
       summary: 'Get a list of things related to these keywords'
       operationId: publicGet
-      description: 'Retreiving items relating to the given keywords.'
+      description: 'Retrieving items relating to the given keywords.'
       parameters:
         - in: query
           name: _id
@@ -472,6 +475,9 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
       parameters:
         - name: recordId
           in: path
@@ -528,6 +534,9 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
       parameters:
         - name: recordId
           in: path
@@ -578,6 +587,7 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
+        - admin:lng
       parameters:
         - name: recordId
           in: path
@@ -616,6 +626,9 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
+        - admin:lng
+        - admin:nrced
+        - admin:bcmi
       parameters:
         - in: body
           name: data
@@ -642,6 +655,9 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
+        - admin:lng
+        - admin:nrced
+        - admin:bcmi
       parameters:
         - in: body
           name: data
@@ -699,6 +715,9 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
+        - admin:lng
+        - admin:nrced
+        - admin:bcmi
       consumes:
         - multipart/form-data
       parameters:
@@ -722,37 +741,6 @@ paths:
           description: "Url for links. If this is present, a link will be created."
           required: false
           type: string
-      responses:
-        '200':
-          description: 'Success'
-          schema:
-            $ref: '#/definitions/DocumentResponseObject'
-        '403':
-          description: 'Access Denied'
-          schema:
-            $ref: '#/definitions/Error'
-    put:
-      tags:
-        - Document
-      summary: 'Create new Document'
-      operationId: protectedPut
-      description: 'Authenticated access to create a Document and get a signed put URL in return'
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-      parameters:
-        - name: recordId
-          in: path
-          description: '_id of record the document is associated with'
-          required: true
-          type: string
-        - in: body
-          name: data
-          description: 'Data to create a document'
-          required: true
-          schema:
-            $ref: '#/definitions/DocumentRequestObject'
       responses:
         '200':
           description: 'Success'
@@ -798,6 +786,9 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
+        - admin:lng
+        - admin:nrced
+        - admin:bcmi
       parameters:
         - name: recordId
           in: path
@@ -847,6 +838,9 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
+        - admin:lng
+        - admin:nrced
+        - admin:bcmi
       parameters:
         - name: docId
           in: path
