@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Router, ActivatedRoute } from '@angular/router';
 import { GlobalModule } from 'nrpti-angular-components';
 import { DatePipe } from '@angular/common';
+import { FactoryService } from '../../../services/factory.service';
 
 describe('RestorativeJusticeNRCEDDetailComponent', () => {
   const testBedHelper = new TestBedHelper<RestorativeJusticeNRCEDDetailComponent>(
@@ -14,6 +15,8 @@ describe('RestorativeJusticeNRCEDDetailComponent', () => {
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInNrcedRole']);
+  mockFactoryService.userInNrcedRole.and.returnValue(true);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -22,7 +25,8 @@ describe('RestorativeJusticeNRCEDDetailComponent', () => {
       providers: [
         DatePipe,
         { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute }
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: FactoryService, useValue: mockFactoryService }
       ]
     }).compileComponents();
   }));

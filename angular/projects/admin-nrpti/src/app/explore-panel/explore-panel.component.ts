@@ -43,13 +43,13 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
   public actCount = 0;
   public regulationCount = 0;
 
-  public selectedSystemRef = null;
+  public systemRefControl = null;
+  public systemRefOptions = ['nrpti', 'ocers-csv', 'nris-epd', 'epic'];
 
   constructor(private _changeDetectionRef: ChangeDetectorRef) { }
 
   public ngOnInit() {
-    this.formGroup.get(['sourceSystemRef']).value &&
-      (this.selectedSystemRef = this.formGroup.get(['sourceSystemRef']).value);
+    this.systemRefControl = this.formGroup.get(['sourceSystemRef']);
     this._changeDetectionRef.detectChanges();
   }
 
@@ -59,8 +59,8 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
     this.formGroup.reset();
   }
 
-  resetDocFilter() {
-    this.formGroup.get(['hasDocuments']).setValue(null);
+  resetFilter(filterName) {
+    this.formGroup.get([filterName]).setValue(null);
     this._changeDetectionRef.detectChanges();
   }
 

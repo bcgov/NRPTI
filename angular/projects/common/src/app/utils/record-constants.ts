@@ -6,6 +6,13 @@ export class EpicProjectIds {
   public static readonly coastalGaslinkId = '588511c4aaecd9001b825604';
 }
 
+export class ApplicationRoles {
+  public static readonly ADMIN       = 'sysadmin';
+  public static readonly ADMIN_NRCED = 'admin:nrced';
+  public static readonly ADMIN_LNG   = 'admin:lng';
+  public static readonly ADMIN_BCMI  = 'admin:bcmi';
+}
+
 /**
  * Note: Picklist values should be alphabetical (A -> Z).  The only exception is with catch-all values like 'None' -
  * which should always be at the start, and 'Other' - which should always be at the end.

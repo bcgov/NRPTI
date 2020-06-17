@@ -1,4 +1,5 @@
-let mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const { ROLES } = require('../../utils/constants/misc');
 
 exports.createRecord = async function(args, res, next, incomingObj) {
   try {
@@ -12,8 +13,8 @@ exports.createRecord = async function(args, res, next, incomingObj) {
   
       let newsItem = new Model({
         _schemaName: incomingObj._schemaName,
-        read: ['sysadmin', 'public'],
-        write: ['sysadmin'],
+        read: [...ROLES.ADMIN_ROLES, 'public'],
+        write: ROLES.ADMIN_ROLES,
         title: incomingObj.title,
         type: incomingObj.type,
         description: incomingObj.description,
