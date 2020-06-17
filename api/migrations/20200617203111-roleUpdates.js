@@ -6,8 +6,6 @@ let dbm;
 let type;
 let seed;
 
-const PUBLIC_ROLE = 'public';
-
 const roles = {
   ADMIN:       'sysadmin',
   ADMIN_NRCED: 'admin:nrced',
@@ -43,12 +41,14 @@ exports.up = async function (db) {
     console.log('-------------------------------');
     console.log('     Starting Role Updates');
     console.log('-------------------------------');
-    console.log('\nAdding the following roles to MASTER: ' + ALL_ROLES);
-    console.log('Adding the following roles to LNG:    ' + [roles.ADMIN, roles.ADMIN_LNG]);
-    console.log('Adding the following roles to NRCED:  ' + [roles.ADMIN, roles.ADMIN_NRCED]);
-    console.log('Public role will be maintained on all read arrays\n');
+    console.log('\nAdding the following roles to MASTER WRITE: ' + ALL_ROLES);
+    console.log('Adding the following roles to LNG WRITE:    ' + [roles.ADMIN, roles.ADMIN_LNG]);
+    console.log('Adding the following roles to NRCED WRITE:  ' + [roles.ADMIN, roles.ADMIN_NRCED]);
+    console.log('\nAdding the following roles to MASTER READ: ' + [roles.ADMIN_LNG, roles.ADMIN_NRCED, roles.ADMIN_BCMI]);
+    console.log('Adding the following roles to LNG READ:    ' + [roles.ADMIN_LNG, roles.ADMIN_NRCED, roles.ADMIN_BCMI]);
+    console.log('Adding the following roles to NRCED READ:  ' + [roles.ADMIN_LNG, roles.ADMIN_NRCED, roles.ADMIN_BCMI] + '\n');
 
-    let updateResults = await documentsUpdate(nrpti);
+    let updateResults = await documentUpdates(nrpti);
 
     let found = 0;
     let modified = 0;
@@ -61,8 +61,7 @@ exports.up = async function (db) {
     });
 
     console.log(`\nQueried ${found} documents, updated ${modified}`);
-    console.log(`${updateResults.length} queries executed, ${failed} failures.`)
-
+    console.log(`${updateResults.length} queries executed, ${failed} failures.`);
   } catch(err) {
     console.log('\n// ###############################');
     console.error('// Error on Role Updates: ' + err);
@@ -84,12 +83,12 @@ exports._meta = {
   "version": 1
 };
 
-async function documentsUpdate(nrpti) {
+async function documentUpdates(nrpti) {
   let promises = [];
 
-  const masterUpdate = { $set: { read: ALL_ROLES.concat([PUBLIC_ROLE]), write: ALL_ROLES }};
-  const lngUpdate    = { $set: { read: ALL_ROLES.concat([PUBLIC_ROLE]), write: [roles.ADMIN, roles.ADMIN_LNG] }};
-  const nrcedUpdate  = { $set: { read: ALL_ROLES.concat([PUBLIC_ROLE]), write: [roles.ADMIN, roles.ADMIN_NRCED] }};
+  const masterUpdate = { $set: { write: ALL_ROLES }, $push: { read: { $each: [roles.ADMIN_LNG, roles.ADMIN_NRCED, roles.ADMIN_BCMI] }}};
+  const lngUpdate    = { $set: { write: [roles.ADMIN, roles.ADMIN_LNG] }, $push: { read: { $each: [roles.ADMIN_LNG, roles.ADMIN_NRCED, roles.ADMIN_BCMI] }}};
+  const nrcedUpdate  = { $set: { write: [roles.ADMIN, roles.ADMIN_NRCED] }, $push: { read: { $each: [roles.ADMIN_LNG, roles.ADMIN_NRCED, roles.ADMIN_BCMI] }}};
   const options      = { "upsert": false };
 
   for(const recordType in RECORD_TYPE) {
