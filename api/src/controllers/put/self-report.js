@@ -2,8 +2,6 @@ const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 const PutUtils = require('../../utils/put-utils');
 const SelfReportPost = require('../post/self-report');
-const { userHasValidRoles } = require('../../utils/auth-utils');
-const { ROLES } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to edit a master Self Report record and its associated flavour records.
