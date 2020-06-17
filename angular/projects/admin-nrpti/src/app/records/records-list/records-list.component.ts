@@ -207,7 +207,11 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       act: new FormControl((this.queryParams && this.queryParams.act) || null),
       regulation: new FormControl((this.queryParams && this.queryParams.regulation) || null),
       activityType: new FormControl((this.queryParams && this.queryParams.activityType) || null),
-      sourceSystemRef: new FormControl((this.queryParams && this.queryParams.sourceSystemRef) || null),
+      sourceSystemRef: new FormControl((
+        this.queryParams &&
+        this.queryParams.sourceSystemRef &&
+        this.queryParams.sourceSystemRef.split(',')
+      ) || null),
       hasDocuments: new FormControl((this.queryParams && this.queryParams.hasDocuments) || false),
       projects: new FormGroup({
         lngCanada: new FormControl(
