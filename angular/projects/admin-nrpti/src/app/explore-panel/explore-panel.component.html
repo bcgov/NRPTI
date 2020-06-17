@@ -1,9 +1,9 @@
 <form *ngIf="formGroup" [formGroup]="formGroup" novalidate>
   <section>
     <div class="row">
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="row">
-          <div class="col-6">
+          <div class="col-xl-6">
             <label for="dateIssuedStartFilter" class="control-label font-weight-bold">Start Issued Date</label>
             <lib-date-picker
               id="dateIssuedStartFilter"
@@ -12,7 +12,7 @@
               [minDate]="minDate"
               [maxDate]="maxDate"></lib-date-picker>
           </div>
-          <div class="col-6">
+          <div class="col-xl-6">
             <label for="dateIssuedEndFilter" class="control-label font-weight-bold">End Issued Date</label>
             <lib-date-picker
               id="dateIssuedEndFilter"
@@ -23,7 +23,7 @@
           </div>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <label class="control-label font-weight-bold">Entity Type</label>
         <div class="row">
           <div class="col-xl-3">
@@ -39,24 +39,24 @@
           <div class="col-xl-6"></div>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <label class="control-label font-weight-bold">NRCED Published State</label>
         <div class="row">
-          <div class="col-3">
+          <div class="col-xl-3">
             <div class="radio">
-              <input class="mr-2" type="radio" id="nrcedPublsihed" value="true" formControlName="isNrcedPublished"
+              <input class="mr-2" type="radio" id="nrcedPublished" value="true" formControlName="isNrcedPublished"
                 name="isNrcedPublished" />
-              <label for="nrcedPublsihed">Published</label>
+              <label for="nrcedPublished">Published</label>
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-xl-4">
             <div class="radio">
-              <input class="mr-2" type="radio" id="nrcedNotPublsihed" value="false" formControlName="isNrcedPublished"
+              <input class="mr-2" type="radio" id="nrcedNotPublished" value="false" formControlName="isNrcedPublished"
                 name="isNrcedPublished" />
-              <label for="nrcedNotPublsihed">Unpublished</label>
+              <label for="nrcedNotPublished">Unpublished</label>
             </div>
           </div>
-          <div class="col-1">
+          <div class="col-xl-1">
             <span
               class="clear-button"
               *ngIf="formGroup.get(['isNrcedPublished']).value === 'true' || formGroup.get(['isNrcedPublished']).value === 'false'"
@@ -71,14 +71,14 @@
               </svg>
             </span>
           </div>
-          <div class="col-4"></div>
+          <div class="col-xl-4"></div>
         </div>
       </div>
     </div>
   </section>
   <section>
     <div class="row">
-      <div class="col-4">
+      <div class="col-md-4">
         <label for="activityTypeFilter">Activity</label>
         <span *ngIf="activityTypeCount" class="grey-subtext ml-2">({{ activityTypeCount }} selected)</span>
         <app-autocomplete-multi-select
@@ -89,7 +89,7 @@
           [placeholderText]="'Begin typing to filter activities...'"
           (numSelected)="activityTypeCount = $event"></app-autocomplete-multi-select>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="label-pair">
           <label for="actFilter">Issued under which Act</label>
           <span *ngIf="actCount" class="grey-subtext ml-2">({{ actCount }} selected)</span>
@@ -102,24 +102,24 @@
             (numSelected)="actCount = $event"></app-autocomplete-multi-select>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <label class="control-label font-weight-bold">LNG Published State</label>
         <div class="row">
-          <div class="col-3">
+          <div class="col-xl-3">
             <div class="radio">
-              <input class="mr-2" type="radio" id="lngPublsihed" value="true" formControlName="isLngPublished"
+              <input class="mr-2" type="radio" id="lngPublished" value="true" formControlName="isLngPublished"
                 name="isLngPublished" />
-              <label for="lngPublsihed">Published</label>
+              <label for="lngPublished">Published</label>
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-xl-4">
             <div class="radio">
-              <input class="mr-2" type="radio" id="lngNotPublsihed" value="false" formControlName="isLngPublished"
+              <input class="mr-2" type="radio" id="lngNotPublished" value="false" formControlName="isLngPublished"
                 name="isLngPublished" />
-              <label for="lngNotPublsihed">Unpublished</label>
+              <label for="lngNotPublished">Unpublished</label>
             </div>
           </div>
-          <div class="col-1">
+          <div class="col-xl-1">
             <span
               class="clear-button"
               *ngIf="formGroup.get(['isLngPublished']).value === 'true' || formGroup.get(['isLngPublished']).value === 'false'"
@@ -134,14 +134,14 @@
               </svg>
             </span>
           </div>
-          <div class="col-4"></div>
+          <div class="col-xl-4"></div>
         </div>
       </div>
     </div>
   </section>
   <section>
     <div class="row">
-      <div class="col-4">
+      <div class="col-md-4">
         <label for="agencyFilter">Responsible Agency</label>
         <span *ngIf="agencyCount" class="grey-subtext ml-2">({{ agencyCount }} selected)</span>
         <app-autocomplete-multi-select
@@ -152,7 +152,7 @@
           [placeholderText]="'Begin typing to filter agencies...'"
           (numSelected)="agencyCount = $event"></app-autocomplete-multi-select>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="label-pair">
           <label for="regulationFilter">Issued under which Regulation</label>
           <span *ngIf="regulationCount" class="grey-subtext ml-2">({{ regulationCount }} selected)</span>
@@ -165,7 +165,7 @@
             (numSelected)="regulationCount = $event"></app-autocomplete-multi-select>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <label for="sourceSystemFilter">Source System</label>
         <select
           name="sourceSystemFilter"
@@ -183,16 +183,16 @@
   </section>
   <section>
     <div class="row">
-      <div class="col-4" [formGroup]="formGroup.get('projects')">
+      <div class="col-md-4" [formGroup]="formGroup.get('projects')">
         <label class="control-label font-weight-bold">Project</label>
         <div class="row checkbox-group" name="projectFilter">
-          <div class="col-4">
+          <div class="col-xl-4">
             <div class="checkbox">
               <input class="mr-2" type="checkbox" id="lngCanada" formControlName="lngCanada" name="lngCanada" />
               <label for="lngCanada">LNG Canada</label>
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-xl-4">
             <div class="checkbox">
               <input
                 class="mr-2"
@@ -203,7 +203,7 @@
               <label for="coastalGaslink">Coastal Gaslink</label>
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-xl-4">
             <div class="checkbox">
               <input
                 class="mr-2"
@@ -216,10 +216,10 @@
           </div>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <label class="control-label font-weight-bold">Documents</label>
         <div class="row radio-group" name="hasDocuments">
-          <div class="col-2">
+          <div class="col-xl-2">
             <div class="radio">
               <input
                 class="mr-2"
@@ -231,7 +231,7 @@
               <label for="hasDocs">Yes</label>
             </div>
           </div>
-          <div class="col-2">
+          <div class="col-xl-2">
             <div class="radio">
               <input
                 class="mr-2"
@@ -243,7 +243,7 @@
               <label for="doesNothaveDocs">No</label>
             </div>
           </div>
-          <div class="col-1">
+          <div class="col-xl-1">
             <span
               class="clear-button"
               *ngIf="formGroup.get(['hasDocuments']).value === 'true' || formGroup.get(['hasDocuments']).value === 'false'"
@@ -258,7 +258,7 @@
               </svg>
             </span>
           </div>
-          <div class="col-7"></div>
+          <div class="col-xl-7"></div>
         </div>
       </div>
     </div>
