@@ -3,7 +3,7 @@ const CsvUtils = require('./utils/csv-utils');
 const Utils = require('../../utils/utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
 
-const DateIssuedFormat = 'DD/MM/YYYY';
+const DateIssuedFormat = 'MM/DD/YYYY';
 const BirthDateFormat = 'YYYY/MM/DD';
 const PenaltyType = 'Fined';
 const PenaltyValueType = 'Dollars';
@@ -32,12 +32,12 @@ class Tickets extends BaseRecordUtils {
    * @returns a ticket object matching the format expected by the API record post/put controllers.
    * @memberof Tickets
    */
-  async transformRecord(csvRow) {
+  transformRecord(csvRow) {
     if (!csvRow) {
       throw Error('transformRecord - required csvRow must be non-null.');
     }
 
-    const ticket = { ...(await super.transformRecord(csvRow)) };
+    const ticket = { ...super.transformRecord(csvRow) };
 
     ticket['_sourceRefCorsId'] = Number(csvRow['contravention_enforcement_id']) || '';
 

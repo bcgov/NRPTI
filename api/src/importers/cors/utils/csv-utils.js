@@ -1,24 +1,6 @@
 const MiscConstants = require('../../../utils/constants/misc');
 
 /**
- * Derives the act.
- *
- * @param {*} csvRow
- * @returns {string} the act.
- */
-exports.getAct = function(csvRow) {
-  if (!csvRow || !csvRow['act']) {
-    return null;
-  }
-
-  if (csvRow['act'] === 'Fisheries Act') {
-    return 'Fisheries Act (Canada)';
-  }
-
-  return csvRow['act'];
-};
-
-/**
  * Derives the issued to entity type.
  *
  * @param {*} csvRow
@@ -30,10 +12,10 @@ exports.getEntityType = function(csvRow) {
   }
 
   if (csvRow['business_name']) {
-    return 'Company';
+    return MiscConstants.IssuedToEntityTypes.Company;
   }
 
-  return 'Individual';
+  return MiscConstants.IssuedToEntityTypes.Individual;
 };
 
 /**

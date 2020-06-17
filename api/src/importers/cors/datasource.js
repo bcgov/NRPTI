@@ -92,7 +92,7 @@ class CorsCsvDataSource {
       const recordTypeUtils = recordTypeConfig.getUtil(this.auth_payload, csvRow);
 
       // Perform any data transformations necessary to convert the csv row into a NRPTI record
-      const nrptiRecord = await recordTypeUtils.transformRecord(csvRow);
+      const nrptiRecord = recordTypeUtils.transformRecord(csvRow);
 
       // Check if this record already exists
       const existingRecord = await recordTypeUtils.findExistingRecord(nrptiRecord);

@@ -1,7 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const defaultLog = require('../../utils/logger')('epic-base-record-utils');
+const defaultLog = require('../../utils/logger')('cors-csv-base-record-utils');
 const RecordController = require('./../../controllers/record-controller');
 
 /**
@@ -29,19 +29,19 @@ class BaseRecordUtils {
   }
 
   /**
-   * Transform an Epic record into a NRPTI record.
+   * Transform an cors-csv row into a NRPTI record.
    *
-   * Note: Only transforms common fields found in ALL supported epic import types.
+   * Note: Only transforms common fields found in ALL supported cors-csv types.
    *       To include other values, extend this class and adjust the object returned by this function as needed.
    *
-   * @param {object} epicRecord Epic record (required)
+   * @param {object} csvRow cors-csv row (required)
    * @returns {object} NRPTI record.
    * @throws {Error} if record is not provided.
    * @memberof BaseRecordUtils
    */
-  async transformRecord(csvRow) {
+  transformRecord(csvRow) {
     if (!csvRow) {
-      throw Error('transformRecord - required epicRecord must be non-null.');
+      throw Error('transformRecord - required csvRow must be non-null.');
     }
 
     return {
