@@ -86,9 +86,9 @@ exports._meta = {
 async function documentUpdates(nrpti) {
   let promises = [];
 
-  const masterUpdate = { $set: { write: ALL_ROLES }, $push: { read: { $each: [roles.ADMIN_LNG, roles.ADMIN_NRCED, roles.ADMIN_BCMI] }}};
-  const lngUpdate    = { $set: { write: [roles.ADMIN, roles.ADMIN_LNG] }, $push: { read: { $each: [roles.ADMIN_LNG, roles.ADMIN_NRCED, roles.ADMIN_BCMI] }}};
-  const nrcedUpdate  = { $set: { write: [roles.ADMIN, roles.ADMIN_NRCED] }, $push: { read: { $each: [roles.ADMIN_LNG, roles.ADMIN_NRCED, roles.ADMIN_BCMI] }}};
+  const masterUpdate = { $set: { write: ALL_ROLES }, $addToSet: { read: { $each: ALL_ROLES }}};
+  const lngUpdate    = { $set: { write: [roles.ADMIN, roles.ADMIN_LNG] }, $addToSet: { read: { $each: ALL_ROLES }}};
+  const nrcedUpdate  = { $set: { write: [roles.ADMIN, roles.ADMIN_NRCED] }, $addToSet: { read: { $each: ALL_ROLES }}};
   const options      = { "upsert": false };
 
   for(const recordType in RECORD_TYPE) {
