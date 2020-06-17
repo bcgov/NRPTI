@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
+const { userHasValidRoles } = require('../../utils/auth-utils');
+const { ROLES } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Order record and its associated flavour records.
@@ -88,8 +90,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (order._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  order.read = ['sysadmin'];
-  order.write = ['sysadmin'];
+  order.read = ROLES.ADMIN_ROLES;
+  order.write = ROLES.ADMIN_ROLES;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -123,8 +125,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (order.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription && (order.legislationDescription = incomingObj.legislationDescription);
 
-  order.issuedTo.read = ['sysadmin'];
-  order.issuedTo.write = ['sysadmin'];
+  order.issuedTo.read = ROLES.ADMIN_ROLES;
+  order.issuedTo.write = ROLES.ADMIN_ROLES;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (order.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -190,6 +192,11 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @returns created lng order record
  */
 exports.createLNG = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.LNGADMIN, ROLES.SYSADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let OrderLNG = mongoose.model('OrderLNG');
   let orderLNG = new OrderLNG();
 
@@ -207,8 +214,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (orderLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  orderLNG.read = ['sysadmin'];
-  orderLNG.write = ['sysadmin'];
+  orderLNG.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  orderLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   orderLNG.addedBy = args.swagger.params.auth_payload.displayName;
   orderLNG.dateAdded = new Date();
@@ -236,8 +243,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (orderLNG.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription && (orderLNG.legislationDescription = incomingObj.legislationDescription);
 
-  orderLNG.issuedTo.read = ['sysadmin'];
-  orderLNG.issuedTo.write = ['sysadmin'];
+  orderLNG.issuedTo.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  orderLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (orderLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -311,6 +318,11 @@ exports.createLNG = function (args, res, next, incomingObj) {
  * @returns created nrced order record
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of role.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.NRCEDADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let OrderNRCED = mongoose.model('OrderNRCED');
   let orderNRCED = new OrderNRCED();
 
@@ -328,8 +340,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (orderNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  orderNRCED.read = ['sysadmin'];
-  orderNRCED.write = ['sysadmin'];
+  orderNRCED.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  orderNRCED.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
 
   orderNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   orderNRCED.dateAdded = new Date();
@@ -357,8 +369,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (orderNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription && (orderNRCED.legislationDescription = incomingObj.legislationDescription);
 
-  orderNRCED.issuedTo.read = ['sysadmin'];
-  orderNRCED.issuedTo.write = ['sysadmin'];
+  orderNRCED.issuedTo.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  orderNRCED.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (orderNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

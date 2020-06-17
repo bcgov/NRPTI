@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
+const AWS = require('aws-sdk');
+const ObjectID = require('mongodb').ObjectID;
+
 const queryActions = require('../utils/query-actions');
 const queryUtils = require('../utils/query-utils');
 const businessLogicManager = require('../utils/business-logic-manager');
-const AWS = require('aws-sdk');
 const mongodb = require('../utils/mongodb');
-const ObjectID = require('mongodb').ObjectID;
-let defaultLog = require('../utils/logger')('record');
+const defaultLog = require('../utils/logger')('record');
 
 const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
 const ep = new AWS.Endpoint(OBJ_STORE_URL);
@@ -21,7 +22,7 @@ exports.protectedOptions = function(args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedPost = async function(args, res, next) {
+exports.protectedPost = async function(args, res, next) { // Confirm user has correct role.
   if (
     args.swagger.params.fileName &&
     args.swagger.params.fileName.value &&
@@ -32,7 +33,7 @@ exports.protectedPost = async function(args, res, next) {
     const collection = db.collection('nrpti');
 
     // fetch master record
-    const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value) });
+    const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
 
     // Set mongo document and s3 document roles
     const readRoles = [];
@@ -86,7 +87,7 @@ exports.protectedPost = async function(args, res, next) {
     try {
       // add to master record
       recordResponse = await collection.findOneAndUpdate(
-        { _id: new ObjectID(args.swagger.params.recordId.value) },
+        { _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
         { $addToSet: { documents: new ObjectID(docResponse._id) } },
         { new: true }
       );
@@ -107,7 +108,7 @@ exports.protectedPost = async function(args, res, next) {
       recordResponse.value._flavourRecords.forEach(id => {
         observables.push(
           collection.findOneAndUpdate(
-            { _id: new ObjectID(id) },
+            { _id: new ObjectID(id), write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
             { $addToSet: { documents: new ObjectID(docResponse._id) } },
             { new: true }
           )
@@ -147,7 +148,7 @@ exports.protectedDelete = async function(args, res, next) {
     let docResponse = null;
     let s3Response = null;
     try {
-      docResponse = await Document.findOneAndRemove({ _id: new ObjectID(args.swagger.params.docId.value) });
+      docResponse = await Document.findOneAndRemove({ _id: new ObjectID(args.swagger.params.docId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
     } catch (e) {
       defaultLog.info(`Error removing document meta ${args.swagger.params.docId.value} from the database: ${e}`);
       return queryActions.sendResponse(
@@ -182,7 +183,7 @@ exports.protectedDelete = async function(args, res, next) {
     try {
       // remove from master record
       recordResponse = await collection.findOneAndUpdate(
-        { _id: new ObjectID(args.swagger.params.recordId.value) },
+        { _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
         { $pull: { documents: new ObjectID(docResponse._id) } },
         { new: true }
       );
@@ -203,7 +204,7 @@ exports.protectedDelete = async function(args, res, next) {
       recordResponse.value._flavourRecords.forEach(id => {
         observables.push(
           collection.findOneAndUpdate(
-            { _id: new ObjectID(id) },
+            { _id: new ObjectID(id), write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
             { $pull: { documents: new ObjectID(docResponse._id) } },
             { new: true }
           )
@@ -389,7 +390,7 @@ async function publishDocument(docId, auth_payload) {
   }
 
   const Document = require('mongoose').model('Document');
-  const document = await Document.findOne({ _id: new ObjectID(docId) });
+  const document = await Document.findOne({ _id: new ObjectID(docId), write: { $in: auth_payload.realm_access.roles } });
 
   if (!document) {
     defaultLog.info(`publishDocument - couldn't find document for docId: ${docId}`);
@@ -418,7 +419,7 @@ async function unpublishDocument(docId, auth_payload) {
   }
 
   const Document = require('mongoose').model('Document');
-  const document = await Document.findOne({ _id: new ObjectID(docId) });
+  const document = await Document.findOne({ _id: new ObjectID(docId), write: { $in: auth_payload.realm_access.roles } });
 
   if (!document) {
     defaultLog.info(`unpublishDocument - couldn't find document for docId: ${docId}`);
@@ -448,7 +449,7 @@ exports.protectedGetS3SignedURL = async function(args, res, next) {
   }
 
   const Document = mongoose.model('Document');
-  const document = await Document.findOne({ _id: new ObjectID(args.swagger.params.docId.value) });
+  const document = await Document.findOne({ _id: new ObjectID(args.swagger.params.docId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
 
   if (!document) {
     defaultLog.info(`protectedGetS3SignedURL - couldn't find document for docId: ${args.swagger.params.docId.value}`);

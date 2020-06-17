@@ -72,11 +72,9 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
 
     // This is to determine how we should populate the fields in master that know
     // the publish state of its flavours.
-    if (incomingObj[entry[0]].addRole && incomingObj[entry[0]].addRole.includes('public') && entry[0].includes('NRCED')) {
-      incomingObj.isNrcedPublished = true;
-    }
-    if (incomingObj[entry[0]].addRole && incomingObj[entry[0]].addRole.includes('public') && entry[0].includes('LNG')) {
-      incomingObj.isLngPublished = true;
+    if (incomingObj[entry[0]].addRole && incomingObj[entry[0]].addRole.includes('public')) {
+      entry[0].includes('NRCED') && (incomingObj.isNrcedPublished = true);
+      entry[0].includes('LNG') && (incomingObj.isLngPublished = true);
     }
 
     incomingObj[entry[0]] &&
