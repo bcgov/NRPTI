@@ -49,7 +49,7 @@ exports.protectedPost = async function(args, res, next) {
       try {
         docResponse = await createURLDocument(
           args.swagger.params.fileName.value,
-          (args.swagger.params.auth_payload && args.swagger.params.auth_payload) || '',
+          (args.swagger.params.auth_payload && args.swagger.params.auth_payload.preferred_username) || '',
           args.swagger.params.url.value,
           readRoles
         );
@@ -69,7 +69,7 @@ exports.protectedPost = async function(args, res, next) {
         ({ docResponse, s3Response } = await createS3Document(
           args.swagger.params.fileName.value,
           args.swagger.params.upfile.value.buffer,
-          (args.swagger.params.auth_payload && args.swagger.params.auth_payload) || '',
+          (args.swagger.params.auth_payload && args.swagger.params.auth_payload.preferred_username) || '',
           readRoles,
           s3ACLRole
         ));
