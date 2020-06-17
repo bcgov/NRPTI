@@ -86,16 +86,7 @@ let genSchema = function(name, definition) {
       definition._addedBy = { type: String, default: 'system' };
       definition._deletedBy = { type: String, default: 'system' };
 
-      schema.post('save', function(doc) {
-        let Audit = mongoose.model('Audit');
-        let audit = new Audit({
-          _objectSchema: doc._schemaName,
-          objId: doc._id,
-          updatedBy: doc._updatedBy,
-          addedBy: doc._addedBy
-        });
-        audit.save();
-      });
+      schema.post('save');
     }
   }
   // if (s) _.extend(schema.statics, s); // TODO replace lodash
