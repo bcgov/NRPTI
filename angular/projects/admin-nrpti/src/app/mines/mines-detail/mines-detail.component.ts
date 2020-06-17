@@ -10,9 +10,6 @@ import {
   TableTemplateUtils,
   TableObject,
   IColumnObject,
-  IPageSizePickerOption,
-  ITableMessage,
-  Utils
 } from 'nrpti-angular-components';
 
 import { MinesTableRowComponent } from '../mines-rows/mines-table-row.component';
@@ -60,6 +57,7 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
               public router: Router,
               private factoryService: FactoryService,
               public changeDetectionRef: ChangeDetectorRef,
+              private tableTemplateUtils: TableTemplateUtils,
               private dialogService: DialogService) {
   }
 
@@ -70,6 +68,8 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
         this.router.navigate(['mines']);
         return;
       }
+
+      // this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(data, this.tableData);
 
       this.mine = res.record[0] && res.record[0].data && new Mine(res.record[0].data);
 
