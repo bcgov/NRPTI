@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
+const { userHasValidRoles } = require('../../utils/auth-utils');
+const { ROLES } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Restorative Justice record and its associated flavour records.
@@ -88,8 +90,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (restorativeJustice._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  restorativeJustice.read = ['sysadmin'];
-  restorativeJustice.write = ['sysadmin'];
+  restorativeJustice.read = ROLES.ADMIN_ROLES;
+  restorativeJustice.write = ROLES.ADMIN_ROLES;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -125,8 +127,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   incomingObj.offence && (restorativeJustice.offence = incomingObj.offence);
 
-  restorativeJustice.issuedTo.read = ['sysadmin'];
-  restorativeJustice.issuedTo.write = ['sysadmin'];
+  restorativeJustice.issuedTo.read = ROLES.ADMIN_ROLES;
+  restorativeJustice.issuedTo.write = ROLES.ADMIN_ROLES;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (restorativeJustice.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -196,6 +198,11 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @returns created lng restorativeJustice record
  */
 exports.createLNG = function (args, res, next, incomingObj) {
+  // Confirm user has correct role.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let RestorativeJusticeLNG = mongoose.model('RestorativeJusticeLNG');
   let restorativeJusticeLNG = new RestorativeJusticeLNG();
 
@@ -213,8 +220,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (restorativeJusticeLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  restorativeJusticeLNG.read = ['sysadmin'];
-  restorativeJusticeLNG.write = ['sysadmin'];
+  restorativeJusticeLNG.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  restorativeJusticeLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   restorativeJusticeLNG.addedBy = args.swagger.params.auth_payload.displayName;
   restorativeJusticeLNG.dateAdded = new Date();
@@ -244,8 +251,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (restorativeJusticeLNG.offence = incomingObj.offence);
 
-  restorativeJusticeLNG.issuedTo.read = ['sysadmin'];
-  restorativeJusticeLNG.issuedTo.write = ['sysadmin'];
+  restorativeJusticeLNG.issuedTo.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  restorativeJusticeLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (restorativeJusticeLNG.issuedTo.type = incomingObj.issuedTo.type);
@@ -323,6 +330,11 @@ exports.createLNG = function (args, res, next, incomingObj) {
  * @returns created nrced restorativeJustice record
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
+  // Confirm user has correct role.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.NRCEDADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let RestorativeJusticeNRCED = mongoose.model('RestorativeJusticeNRCED');
   let restorativeJusticeNRCED = new RestorativeJusticeNRCED();
 
@@ -340,8 +352,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (restorativeJusticeNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  restorativeJusticeNRCED.read = ['sysadmin'];
-  restorativeJusticeNRCED.write = ['sysadmin'];
+  restorativeJusticeNRCED.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  restorativeJusticeNRCED.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
 
   restorativeJusticeNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   restorativeJusticeNRCED.dateAdded = new Date();
@@ -371,8 +383,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (restorativeJusticeNRCED.offence = incomingObj.offence);
 
-  restorativeJusticeNRCED.issuedTo.read = ['sysadmin'];
-  restorativeJusticeNRCED.issuedTo.write = ['sysadmin'];
+  restorativeJusticeNRCED.issuedTo.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  restorativeJusticeNRCED.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (restorativeJusticeNRCED.issuedTo.type = incomingObj.issuedTo.type);

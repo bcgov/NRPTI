@@ -23,7 +23,7 @@ describe('import-task', () => {
           params: {
             auth_payload: {
               realm_access: {
-                roles: 'roles'
+                roles: 'sysadmin'
               }
             },
             task: null
@@ -42,7 +42,7 @@ describe('import-task', () => {
           params: {
             auth_payload: {
               realm_access: {
-                roles: 'roles'
+                roles: 'sysadmin'
               }
             },
             task: {
@@ -63,7 +63,7 @@ describe('import-task', () => {
           params: {
             auth_payload: {
               realm_access: {
-                roles: 'roles'
+                roles: 'sysadmin'
               }
             },
             task: {

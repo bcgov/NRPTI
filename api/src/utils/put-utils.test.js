@@ -38,7 +38,11 @@ describe('PutUtils', () => {
     const args = {
       swagger: {
         params: {
-          auth_payload: 'MockPayload'
+          auth_payload: {
+            realm_access: {
+              roles: 'sysadmin'
+            }
+          }
         }
       }
     };
