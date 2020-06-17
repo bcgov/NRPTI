@@ -23,7 +23,7 @@ export class Mine {
   permittee:            string;
   summary:              string;
   description:          string;
-  links:                string[];
+  links:                [string[]];
   // metadata boilerplate
   dateAdded:            Date;
   dateUpdated:          Date;
@@ -53,7 +53,7 @@ export class Mine {
     this.permittee            = (obj && obj.permittee)            || '';
     this.summary              = (obj && obj.summary)              || '';
     this.description          = (obj && obj.description)          || '';
-    this.links                = (obj && obj.links)                || [];
+    this.links                = (obj && obj.links)                || [[]];
     // metadata boilerplate
     this.dateAdded            = (obj && obj.dateAdded)            || null;
     this.dateUpdated          = (obj && obj.dateUpdated)          || null;

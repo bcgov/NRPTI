@@ -6,6 +6,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmComponent } from '../../confirm/confirm.component';
 import { DialogService } from 'ng2-bootstrap-modal';
 import { FactoryService } from '../../services/factory.service';
+import {
+  TableTemplateUtils,
+  TableObject,
+  IColumnObject,
+  IPageSizePickerOption,
+  ITableMessage,
+  Utils
+} from 'nrpti-angular-components';
+
+import { MinesTableRowComponent } from '../mines-rows/mines-table-row.component';
+
 
 @Component({
   selector: 'app-mines-detail',
@@ -15,7 +26,35 @@ import { FactoryService } from '../../services/factory.service';
 export class MinesDetailComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
-  public record = null;
+  public mine = null;
+  public isPublished = false;
+
+  public tableData: TableObject = new TableObject({
+    component: MinesTableRowComponent,
+    pageSize: 5,
+    currentPage: 1,
+    sortBy: '-dateAdded'
+  });
+
+  public tableColumns: IColumnObject[] = [
+    {
+      name: 'File Name',
+      value: 'recordName',
+      width: 'col-6'
+    },
+    {
+      name: 'Date',
+      value: 'dateIssued',
+      width: 'col-3'
+    },
+    {
+      name: 'Action',
+      value: '',
+      width: 'col-3',
+      nosort: true
+    },
+  ];
+
 
   constructor(public route: ActivatedRoute,
               public router: Router,
@@ -32,10 +71,14 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.record = res.record[0] && res.record[0].data && new Mine(res.record[0].data);
+      this.mine = res.record[0] && res.record[0].data && new Mine(res.record[0].data);
 
       this.changeDetectionRef.detectChanges();
     });
+  }
+
+  alert() {
+    console.log('hello');
   }
 
   delete() {
@@ -52,7 +95,7 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
       isConfirmed => {
         if (isConfirmed) {
           try {
-            this.factoryService.deleteMineItem(this.record._id, 'mine');
+            this.factoryService.deleteMineItem(this.mine._id, 'mine');
             this.router.navigate(['mines']);
           } catch (e) {
             alert('Could not delete Mine Item');
@@ -63,7 +106,7 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
   }
 
   navigateToEditPage() {
-    this.router.navigate(['mines', this.record._id, 'edit']);
+    this.router.navigate(['mines', this.mine._id, 'edit']);
   }
 
   navigateBack() {
