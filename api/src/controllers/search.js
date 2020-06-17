@@ -421,7 +421,8 @@ const executeQuery = async function (args, res, next) {
   QueryUtils.recordAction(
     'Search',
     keywords,
-    args.swagger.params.auth_payload ? args.swagger.params.auth_payload.preferred_username : 'public'
+    args.swagger.params.auth_payload ? args.swagger.params.auth_payload
+                                     : { idir_userid: null, displayName: 'public', preferred_username: 'public' }
   );
 
   let sortDirection = undefined;

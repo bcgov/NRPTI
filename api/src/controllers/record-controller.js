@@ -170,6 +170,13 @@ exports.protectedPost = async function (args, res, next) {
 
     let response = await Promise.all(observables);
 
+    // Audit the POST action.
+    // If multiple observables are triggered, response will have multiple objects
+    // only add the metaId for single objects.
+    let meta = response && response[0] && response[0][0] ? response[0][0] : null;
+    let metaID = meta ? meta.object[0]._id : null;
+    await queryUtils.recordAction('POST', JSON.stringify(meta), args.swagger.params.auth_payload, metaID);
+
     return queryActions.sendResponse(res, 200, response);
   } else {
     return queryActions.sendResponse(res, 500, { error: 'You must provide data' });
@@ -243,6 +250,9 @@ exports.protectedPut = async function (args, res, next) {
     }
 
     let response = await Promise.all(observables);
+    let meta = response && response[0] && response[0][0] ? response[0][0] : null;
+    let metaID = meta ? meta.object[0]._id : null;
+    await queryUtils.recordAction('PUT', JSON.stringify(meta), args.swagger.params.auth_payload, metaID);
 
     return queryActions.sendResponse(res, 200, response);
   } else {
@@ -264,7 +274,7 @@ exports.protectedNewsDelete = async function (args, res, next) {
       return queryActions.sendResponse(res, 404, {});
     }
 
-    await queryUtils.recordAction('Delete', 'ActivityLNG', args.swagger.params.auth_payload.preferred_username, recordId);
+    await queryUtils.recordAction('DELETE', 'ActivityLNG', args.swagger.params.auth_payload, recordId);
     return queryActions.sendResponse(res, 200, {});
   } catch (error) {
     return queryActions.sendResponse(res, 500, error);
@@ -307,7 +317,7 @@ exports.protectedPublish = async function (args, res, next) {
 
     const published = await queryActions.publish(record, true);
 
-    await queryUtils.recordAction('Publish', record, args.swagger.params.auth_payload.preferred_username, record._id);
+    await queryUtils.recordAction('Publish', record, args.swagger.params.auth_payload, record._id);
 
     return queryActions.sendResponse(res, 200, published);
   } catch (error) {
@@ -349,7 +359,7 @@ exports.protectedUnPublish = async function (args, res, next) {
 
     const unPublished = await queryActions.unPublish(record);
 
-    await queryUtils.recordAction('UnPublish', record, args.swagger.params.auth_payload.preferred_username, record._id);
+    await queryUtils.recordAction('UnPublish', record, args.swagger.params.auth_payload, record._id);
 
     return queryActions.sendResponse(res, 200, unPublished);
   } catch (error) {

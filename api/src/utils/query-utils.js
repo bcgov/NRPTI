@@ -72,14 +72,18 @@ exports.getSkipLimitParameters = function(pageSize, pageNum) {
   return params;
 };
 
-exports.recordAction = async function(action, meta, username, objId = null) {
+exports.recordAction = async function(action, meta, authPayload, objId = null) {
   const Audit = mongoose.model('Audit');
   const audit = new Audit({
     _objectSchema: 'Query',
     action: action,
     meta: meta,
     objId: objId,
-    performedBy: username
+    performedBy: JSON.stringify({
+      idir_userid: authPayload.idir_userid,
+      displayName: authPayload.displayName,
+      preferred_username: authPayload.preferred_username
+    })
   });
   return await audit.save();
 };
