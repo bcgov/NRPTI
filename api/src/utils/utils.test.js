@@ -22,6 +22,6 @@ describe('parseDate', () => {
   it('returns a formatted date string if the date string and date format align ', async () => {
     const result = await Utils.parseDate('2019-12-30', 'YYYY-MM-DD');
 
-    expect(result).toEqual(new Date('2019-12-30T08:00:00.000Z'));
+    expect(result).toEqual(new Date('2019-12-30T00:00:00'));
   });
 });
