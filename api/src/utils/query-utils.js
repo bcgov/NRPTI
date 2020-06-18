@@ -90,9 +90,9 @@ exports.recordAction = async function(action, meta, authPayload, objId = null) {
 
     let performedBy = authPayload
                       ? JSON.stringify({
-                          idir_userid: authPayload.idir_userid,
-                          displayName: authPayload.displayName,
-                          preferred_username: authPayload.preferred_username
+                          idir_userid: authPayload.idir_userid || null,
+                          displayName: authPayload.displayName || null,
+                          preferred_username: authPayload.preferred_username || null
                         })
                       : null;
 
