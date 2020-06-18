@@ -56,9 +56,9 @@ function isObject(item) {
  * @param {string} id master _id
  * @returns {object} master object with certain master-specific fields removed (like _id).
  */
-exports.fetchMasterForCreateFlavour = async function (schema, id) {
+exports.fetchMasterForCreateFlavour = async function (schema, id, auth_payload) {
   const Model = mongoose.model(schema);
-  const masterRecord = await Model.findOne({ _schemaName: schema, _id: id });
+  const masterRecord = await Model.findOne({ _schemaName: schema, _id: id, write: { $in: auth_payload.realm_access.roles } });
 
   if (!masterRecord) {
     return {};
@@ -160,7 +160,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
         flavourUpdateObj._master = new ObjectID(masterId);
         promises.push(
           Model.findOneAndUpdate(
-            { _id: flavourIncomingObj[entry[0]]._id },
+            { _id: flavourIncomingObj[entry[0]]._id, write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
             flavourUpdateObj,
             { new: true }
           )
@@ -203,7 +203,8 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
   const updateMasterObj = editMaster(args, res, next, incomingObj, flavourIds)
   promises.push(
     MasterModel.findOneAndUpdate({
-      _id: masterId
+      _id: masterId,
+      write: { $in: args.swagger.params.auth_payload.realm_access.roles }
     },
       updateMasterObj,
       { new: true }
