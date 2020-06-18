@@ -2,7 +2,7 @@ import { Utils } from './utils';
 import { Legislation } from '../models/master/common-models/legislation';
 
 export class EpicProjectIds {
-  public static readonly lngCanadaId = '588510cdaaecd9001b815f84';
+  public static readonly lngCanadaId = '588511d0aaecd9001b826192';
   public static readonly coastalGaslinkId = '588511c4aaecd9001b825604';
 }
 
@@ -88,6 +88,7 @@ export class Picklists {
     Inspection: { displayName: 'Inspection', _schemaName: 'Inspection' },
     ManagementPlan: { displayName: 'Management Plan', _schemaName: 'ManagementPlan' },
     Order: { displayName: 'Order', _schemaName: 'Order' },
+    Permit: { displayName: 'Permit', _schemaName: 'Permit' },
     RestorativeJustice: { displayName: 'Restorative Justice', _schemaName: 'RestorativeJustice' },
     SelfReport: { displayName: 'Self Report', _schemaName: 'SelfReport' },
     Ticket: { displayName: 'Ticket', _schemaName: 'Ticket' },
