@@ -48,7 +48,7 @@ export class ApiService {
   getProjectObjectId(value: string) {
     try {
       if (value === '1') {
-        return '588510cdaaecd9001b815f84'; // LNG Canada
+        return '588511d0aaecd9001b826192'; // LNG Canada
       } else {
         return '588511c4aaecd9001b825604'; // Coastal Gaslink
       }

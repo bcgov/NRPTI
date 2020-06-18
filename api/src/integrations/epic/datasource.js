@@ -146,7 +146,7 @@ class DataSource {
           // Check if it's an Order or an Inspection and not part of LNG Canada or Coastal Gas Link
 
           // Check if !CGL/LNG
-          if (theRecord.project === ('588511c4aaecd9001b825604' || '588510cdaaecd9001b815f84')) {
+          if (theRecord.project === ('588511c4aaecd9001b825604' || '588511d0aaecd9001b826192')) {
             // Skip
             console.log("Skipping LNG Canada/Coastal Gas Link Record > 2020-04-01", theRecord.displayName)
             continue;
