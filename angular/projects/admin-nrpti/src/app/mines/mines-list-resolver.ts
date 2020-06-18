@@ -12,7 +12,7 @@ export class MinesListResolver implements Resolve<Observable<object>> {
     const tableObject = this.tableTemplateUtils.updateTableObjectWithUrlParams(route.params, new TableObject());
 
     let keywords = '';
-    if (route.params.keywords) {
+    if (route.params && route.params.keywords) {
       keywords = route.params.keywords;
     }
 

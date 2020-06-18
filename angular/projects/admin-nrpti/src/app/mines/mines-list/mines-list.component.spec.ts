@@ -6,6 +6,7 @@ import { MinesListComponent } from './mines-list.component';
 import { TestBedHelper, ActivatedRouteStub } from '../../../../../common/src/app/spec/spec-utils';
 import { CommonModule } from '../../../../../common/src/app/common.module';
 import { GlobalModule, TableTemplateUtils, Utils, LoadingScreenService } from 'nrpti-angular-components';
+import { FormsModule } from '@angular/forms';
 
 describe('MinesListComponent', () => {
   const testBedHelper = new TestBedHelper<MinesListComponent>(MinesListComponent);
@@ -23,7 +24,7 @@ describe('MinesListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, CommonModule, GlobalModule, NgxPaginationModule],
+      imports: [RouterTestingModule, CommonModule, GlobalModule, NgxPaginationModule, FormsModule],
       declarations: [MinesListComponent],
       providers: [
         { provide: Location, useValue: mockLocation },
