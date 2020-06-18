@@ -221,7 +221,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (administrativeSanctionLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  administrativeSanctionLNG.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  administrativeSanctionLNG.read = ROLES.ADMIN_ROLES;
   administrativeSanctionLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   administrativeSanctionLNG.addedBy = args.swagger.params.auth_payload.displayName;
@@ -251,7 +251,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (administrativeSanctionLNG.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription &&
     (administrativeSanctionLNG.legislationDescription = incomingObj.legislationDescription);
-  administrativeSanctionLNG.issuedTo.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  administrativeSanctionLNG.issuedTo.read = ROLES.ADMIN_ROLES;
   administrativeSanctionLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
@@ -352,7 +352,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (administrativeSanctionNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  administrativeSanctionNRCED.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  administrativeSanctionNRCED.read = ROLES.ADMIN_ROLES;
   administrativeSanctionNRCED.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
 
   administrativeSanctionNRCED.addedBy = args.swagger.params.auth_payload.displayName;
@@ -382,7 +382,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (administrativeSanctionNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription &&
     (administrativeSanctionNRCED.legislationDescription = incomingObj.legislationDescription);
-  administrativeSanctionNRCED.issuedTo.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  administrativeSanctionNRCED.issuedTo.read = ROLES.ADMIN_ROLES;
   administrativeSanctionNRCED.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
