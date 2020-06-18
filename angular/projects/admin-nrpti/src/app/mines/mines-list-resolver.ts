@@ -23,10 +23,10 @@ export class MinesListResolver implements Resolve<Observable<object>> {
       tableObject.currentPage,
       tableObject.pageSize,
       tableObject.sortBy || '+name',
-      {}, // and
-      false, // populate
-      {}, // or
-      [] // subset
+      {},
+      false,
+      {},
+      []
     );
   }
 }

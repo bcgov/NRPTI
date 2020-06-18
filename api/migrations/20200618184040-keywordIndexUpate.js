@@ -32,7 +32,8 @@ exports.up = async function (db) {
       'issuedTo.lastName': 'text',
       'issuedTo.fullName': 'text',
       permitNumbers: 'text',
-      recordName: 'text'
+      recordName: 'text',
+      name: 'text'
     },
     {
       name: 'keyword-search-text-index'
