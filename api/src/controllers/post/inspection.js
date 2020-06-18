@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
+const { userHasValidRoles } = require('../../utils/auth-utils');
+const { ROLES } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Inspection record and its associated flavour records.
@@ -88,8 +90,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (inspection._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  inspection.read = ['sysadmin'];
-  inspection.write = ['sysadmin'];
+  inspection.read = ROLES.ADMIN_ROLES;
+  inspection.write = ROLES.ADMIN_ROLES;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -121,8 +123,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     incomingObj.legislation.paragraph &&
     (inspection.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription && (inspection.legislationDescription = incomingObj.legislationDescription);
-  inspection.issuedTo.read = ['sysadmin'];
-  inspection.issuedTo.write = ['sysadmin'];
+  inspection.issuedTo.read = ROLES.ADMIN_ROLES;
+  inspection.issuedTo.write = ROLES.ADMIN_ROLES;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspection.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -192,6 +194,11 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @returns created lng inspection record
  */
 exports.createLNG = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let InspectionLNG = mongoose.model('InspectionLNG');
   let inspectionLNG = new InspectionLNG();
 
@@ -209,8 +216,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (inspectionLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  inspectionLNG.read = ['sysadmin'];
-  inspectionLNG.write = ['sysadmin'];
+  inspectionLNG.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  inspectionLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   inspectionLNG.addedBy = args.swagger.params.auth_payload.displayName;
   inspectionLNG.dateAdded = new Date();
@@ -238,8 +245,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     incomingObj.legislation.paragraph &&
     (inspectionLNG.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription && (inspectionLNG.legislationDescription = incomingObj.legislationDescription);
-  inspectionLNG.issuedTo.read = ['sysadmin'];
-  inspectionLNG.issuedTo.write = ['sysadmin'];
+  inspectionLNG.issuedTo.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  inspectionLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -315,6 +322,11 @@ exports.createLNG = function (args, res, next, incomingObj) {
  * @returns created nrced inspection record
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.NRCEDADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let InspectionNRCED = mongoose.model('InspectionNRCED');
   let inspectionNRCED = new InspectionNRCED();
 
@@ -332,8 +344,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (inspectionNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  inspectionNRCED.read = ['sysadmin'];
-  inspectionNRCED.write = ['sysadmin'];
+  inspectionNRCED.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  inspectionNRCED.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
 
   inspectionNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   inspectionNRCED.dateAdded = new Date();
@@ -361,8 +373,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     incomingObj.legislation.paragraph &&
     (inspectionNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription && (inspectionNRCED.legislationDescription = incomingObj.legislationDescription);
-  inspectionNRCED.issuedTo.read = ['sysadmin'];
-  inspectionNRCED.issuedTo.write = ['sysadmin'];
+  inspectionNRCED.issuedTo.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  inspectionNRCED.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

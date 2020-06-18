@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
+const { userHasValidRoles } = require('../../utils/auth-utils');
+const { ROLES } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Court Conviction record and its associated flavour records.
@@ -88,8 +90,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (courtConviction._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  courtConviction.read = ['sysadmin'];
-  courtConviction.write = ['sysadmin'];
+  courtConviction.read = ROLES.ADMIN_ROLES;
+  courtConviction.write = ROLES.ADMIN_ROLES;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -126,8 +128,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   incomingObj.offence && (courtConviction.offence = incomingObj.offence);
 
-  courtConviction.issuedTo.read = ['sysadmin'];
-  courtConviction.issuedTo.write = ['sysadmin'];
+  courtConviction.issuedTo.read = ROLES.ADMIN_ROLES;
+  courtConviction.issuedTo.write = ROLES.ADMIN_ROLES;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (courtConviction.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -197,6 +199,11 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @returns created lng courtConviction record
  */
 exports.createLNG = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let CourtConvictionLNG = mongoose.model('CourtConvictionLNG');
   let courtConvictionLNG = new CourtConvictionLNG();
 
@@ -214,8 +221,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (courtConvictionLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  courtConvictionLNG.read = ['sysadmin'];
-  courtConvictionLNG.write = ['sysadmin'];
+  courtConvictionLNG.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  courtConvictionLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   courtConvictionLNG.addedBy = args.swagger.params.auth_payload.displayName;
   courtConvictionLNG.dateAdded = new Date();
@@ -246,8 +253,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (courtConvictionLNG.offence = incomingObj.offence);
 
-  courtConvictionLNG.issuedTo.read = ['sysadmin'];
-  courtConvictionLNG.issuedTo.write = ['sysadmin'];
+  courtConvictionLNG.issuedTo.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  courtConvictionLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (courtConvictionLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -323,6 +330,11 @@ exports.createLNG = function (args, res, next, incomingObj) {
  * @returns created nrced courtConviction record
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.NRCEDADMIN, ROLES.SYSADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let CourtConvictionNRCED = mongoose.model('CourtConvictionNRCED');
   let courtConvictionNRCED = new CourtConvictionNRCED();
 
@@ -340,8 +352,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (courtConvictionNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  courtConvictionNRCED.read = ['sysadmin'];
-  courtConvictionNRCED.write = ['sysadmin'];
+  courtConvictionNRCED.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  courtConvictionNRCED.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
 
   courtConvictionNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   courtConvictionNRCED.dateAdded = new Date();
@@ -372,8 +384,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (courtConvictionNRCED.offence = incomingObj.offence);
 
-  courtConvictionNRCED.issuedTo.read = ['sysadmin'];
-  courtConvictionNRCED.issuedTo.write = ['sysadmin'];
+  courtConvictionNRCED.issuedTo.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  courtConvictionNRCED.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (courtConvictionNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
