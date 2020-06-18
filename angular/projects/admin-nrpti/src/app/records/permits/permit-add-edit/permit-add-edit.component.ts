@@ -226,6 +226,8 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       permit['_epicProjectId'] = EpicProjectIds.lngCanadaId;
     } else if (permit['projectName'] === 'Coastal Gaslink') {
       permit['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+    } else {
+      permit['_epicProjectId'] = null;
     }
 
     this.myForm.controls.location.dirty && (permit['location'] = this.myForm.controls.location.value);

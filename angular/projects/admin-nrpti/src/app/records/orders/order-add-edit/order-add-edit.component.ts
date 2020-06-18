@@ -311,6 +311,8 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       order['_epicProjectId'] = EpicProjectIds.lngCanadaId;
     } else if (order['projectName'] === 'Coastal Gaslink') {
       order['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+    } else {
+      order['_epicProjectId'] = null;
     }
 
     this.myForm.controls.location.dirty && (order['location'] = this.myForm.controls.location.value);
