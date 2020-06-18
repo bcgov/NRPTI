@@ -86,7 +86,9 @@ let genSchema = function(name, definition) {
       definition._addedBy = { type: String, default: 'system' };
       definition._deletedBy = { type: String, default: 'system' };
 
-      schema.post('save');
+      schema.post('save', doc => {
+        // empty func. Audit moved.
+      });
     }
   }
   // if (s) _.extend(schema.statics, s); // TODO replace lodash

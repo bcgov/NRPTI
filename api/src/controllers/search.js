@@ -418,7 +418,7 @@ const executeQuery = async function (args, res, next) {
   defaultLog.info(roles);
   defaultLog.info('******************************************************************');
 
-  QueryUtils.recordAction(
+  QueryUtils.audit(args,
     'Search',
     keywords,
     args.swagger.params.auth_payload ? args.swagger.params.auth_payload
@@ -460,7 +460,7 @@ const executeQuery = async function (args, res, next) {
       subset
     );
 
-    return QueryActions.sendResponse(res, 200, itemData);
+    QueryActions.sendResponse(res, 200, itemData);
   } else if (dataset[0] === 'Item') {
     let collectionObj = mongoose.model(args.swagger.params._schemaName.value);
     defaultLog.info('ITEM GET', { _id: args.swagger.params._id.value });
@@ -520,11 +520,12 @@ const executeQuery = async function (args, res, next) {
 
     const data = await collectionObj.aggregate(aggregation);
 
-    return QueryActions.sendResponse(res, 200, data);
+    QueryActions.sendResponse(res, 200, data);
   } else {
     defaultLog.info('Bad Request');
-    return QueryActions.sendResponse(res, 400, {});
+    QueryActions.sendResponse(res, 400, {});
   }
+  next();
 };
 
 exports.protectedOptions = function (args, res, next) {
