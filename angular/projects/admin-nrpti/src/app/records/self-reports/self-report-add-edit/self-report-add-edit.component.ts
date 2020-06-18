@@ -228,6 +228,8 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
       selfReport['_epicProjectId'] = EpicProjectIds.lngCanadaId;
     } else if (selfReport['projectName'] === 'Coastal Gaslink') {
       selfReport['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+    } else {
+      selfReport['_epicProjectId'] = null;
     }
 
     this.myForm.controls.location.dirty && (selfReport['location'] = this.myForm.controls.location.value);

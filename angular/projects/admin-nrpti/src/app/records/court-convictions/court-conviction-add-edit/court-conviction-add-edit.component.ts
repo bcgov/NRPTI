@@ -354,6 +354,8 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
       courtConviction['_epicProjectId'] = EpicProjectIds.lngCanadaId;
     } else if (courtConviction['projectName'] === 'Coastal Gaslink') {
       courtConviction['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+    } else {
+      courtConviction['_epicProjectId'] = null;
     }
 
     this.myForm.controls.location.dirty && (courtConviction['location'] = this.myForm.controls.location.value);
