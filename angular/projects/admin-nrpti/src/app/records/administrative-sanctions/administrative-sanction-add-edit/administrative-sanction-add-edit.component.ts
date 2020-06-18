@@ -370,6 +370,8 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
       administrativeSanction['_epicProjectId'] = EpicProjectIds.lngCanadaId;
     } else if (administrativeSanction['projectName'] === 'Coastal Gaslink') {
       administrativeSanction['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+    } else {
+      administrativeSanction['_epicProjectId'] = null;
     }
 
     this.myForm.controls.location.dirty && (administrativeSanction['location'] = this.myForm.controls.location.value);

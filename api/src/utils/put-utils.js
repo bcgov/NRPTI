@@ -168,7 +168,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
       } else {
         // We are adding a flavour instead of editing.
         // We need to get the existing master record.
-        const masterRecord = await this.fetchMasterForCreateFlavour(masterSchemaName, masterId);
+        const masterRecord = await this.fetchMasterForCreateFlavour(masterSchemaName, masterId, args.swagger.params.auth_payload);
         let newFlavour = null;
         if (entry[0].includes('LNG')) {
           newFlavour = PostFunctions.createLNG(args, res, next, {
