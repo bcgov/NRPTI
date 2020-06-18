@@ -367,6 +367,8 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
       restorativeJustice['_epicProjectId'] = EpicProjectIds.lngCanadaId;
     } else if (restorativeJustice['projectName'] === 'Coastal Gaslink') {
       restorativeJustice['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+    } else {
+      restorativeJustice['_epicProjectId'] = null;
     }
 
     this.myForm.controls.location.dirty && (restorativeJustice['location'] = this.myForm.controls.location.value);

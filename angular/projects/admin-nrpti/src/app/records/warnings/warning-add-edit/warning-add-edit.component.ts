@@ -302,6 +302,8 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
       warning['_epicProjectId'] = EpicProjectIds.lngCanadaId;
     } else if (warning['projectName'] === 'Coastal Gaslink') {
       warning['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+    } else {
+      warning['_epicProjectId'] = null;
     }
 
     this.myForm.controls.location.dirty && (warning['location'] = this.myForm.controls.location.value);
