@@ -5,6 +5,7 @@ let QueryUtils = require('../utils/query-utils');
 let qs = require('qs');
 let mongodb = require('../utils/mongodb');
 let moment = require('moment');
+let fuzzySearch = require('../utils/fuzzySearch');
 
 function isEmpty(obj) {
   for (const key in obj) {
@@ -205,6 +206,11 @@ let searchCollection = async function (
   // optional search keys
   let searchProperties = undefined;
   if (keywords) {
+    // for now, limit fuzzy search to the mine search only. We can expand to all searches
+    // later if desired
+    if (schemaName === 'Mine') {
+      keywords = keywords && keywords.length > 1 ? fuzzySearch.createFuzzySearchString(keywords, 4, caseSensitive) : keywords;
+    }
     searchProperties = { $text: { $search: keywords, $caseSensitive: caseSensitive } };
   }
 
