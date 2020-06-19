@@ -88,6 +88,8 @@ export class Picklists {
     Ticket: { displayName: 'Ticket', _schemaName: 'Ticket' }
   };
 
+  public static readonly sourceSystemRefPicklist = ['nrpti', 'epic', 'nris-epd', 'cors-csv', 'lng-csv', 'ocers-csv'];
+
   /**
    * Contains a mapping of acts to regulations.
    *
