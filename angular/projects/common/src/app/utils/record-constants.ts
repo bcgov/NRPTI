@@ -95,6 +95,8 @@ export class Picklists {
     Warning: { displayName: 'Warning', _schemaName: 'Warning' }
   };
 
+  public static readonly sourceSystemRefPicklist = ['nrpti', 'epic', 'nris-epd', 'cors-csv', 'lng-csv', 'ocers-csv'];
+
   /**
    * Contains a mapping of acts to regulations.
    *

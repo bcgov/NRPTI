@@ -53,7 +53,7 @@ describe('BaseRecordUtils', () => {
 
     it('calls `processPutRequest` when all arguments provided', async () => {
       const baseRecordUtils = new BaseRecordUtils(RECORD_TYPE.Mine);
-      
+
       const spy = jest.spyOn(RecordController, 'processPutRequest').mockImplementation(() => {
         return Promise.resolve({ test: 'record' });
       });
@@ -74,7 +74,7 @@ describe('BaseRecordUtils', () => {
 
     it('calls `processPostRequest` when all arguments provided', async () => {
       const baseRecordUtils = new BaseRecordUtils(RECORD_TYPE.Mine);
-      
+
       const spy = jest.spyOn(RecordController, 'processPostRequest').mockImplementation(() => {
         return Promise.resolve({ test: 'record' });
       });
