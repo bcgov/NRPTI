@@ -105,6 +105,9 @@ export class MinesListComponent implements OnInit, OnDestroy {
         this.setInitialURLParams();
       }
 
+      // if we have a keyword on the url, set the text
+      this.keywordSearchWords = this.queryParams['keywords'] || '';
+
       this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
         if (!res || !res.mines) {
           alert("Uh-oh, couldn't load NRPTI mines");
