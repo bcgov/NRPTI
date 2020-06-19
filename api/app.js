@@ -76,6 +76,23 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
 
   app.use(middleware.swaggerUi(swaggerUIConfig));
 
+  // audit call on response end
+  app.use(async function (req, res, next) {
+    req.on('data', function () {
+      // This is a no-op, here to adhere to Node.js Streaming API: https://nodejs.org/api/stream.html#stream_event_end
+    });
+    req.on('end', async function () {
+      if (req.audits) {
+        try {
+          await Promise.all(req.audits);
+        } catch(err) {
+          defaultLog.error('Failed to run audit calls: ' + err);
+        }
+      }
+    });
+    next();
+  });
+
   // Ensure uploads directory exists, otherwise create it.
   try {
     if (!fs.existsSync(UPLOAD_DIR)) {

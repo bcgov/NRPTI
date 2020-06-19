@@ -164,6 +164,8 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
       constructionPlan['_epicProjectId'] = EpicProjectIds.lngCanadaId;
     } else if (constructionPlan['projectName'] === 'Coastal Gaslink') {
       constructionPlan['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+    } else {
+      constructionPlan['_epicProjectId'] = null;
     }
 
     this.myForm.controls.location.dirty && (constructionPlan['location'] = this.myForm.controls.location.value);

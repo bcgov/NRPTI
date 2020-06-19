@@ -3,7 +3,7 @@ const NrisDataSource = require('./datasource');
 describe('NrisDataSource', () => {
   describe('constructor', () => {
     it('sets params', () => {
-      const dataSource = new NrisDataSource(null, { params: 1 });
+      const dataSource = new NrisDataSource(null, null, { params: 1 });
       expect(dataSource.params).toEqual({ params: 1 });
     });
 
@@ -13,7 +13,7 @@ describe('NrisDataSource', () => {
     });
 
     it('sets auth_payload', () => {
-      const dataSource = new NrisDataSource({ auth_payload: 'some payload' }, { params: 1 });
+      const dataSource = new NrisDataSource(null, { auth_payload: 'some payload' }, { params: 1 });
       expect(dataSource.auth_payload).toEqual({ auth_payload: 'some payload' });
     });
 

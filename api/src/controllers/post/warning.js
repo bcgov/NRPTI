@@ -217,7 +217,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (warningLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  warningLNG.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  warningLNG.read = ROLES.ADMIN_ROLES;
   warningLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   warningLNG.addedBy = args.swagger.params.auth_payload.displayName;
@@ -247,7 +247,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
   incomingObj.legislationDescription && (warningLNG.legislationDescription = incomingObj.legislationDescription);
 
-  warningLNG.issuedTo.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  warningLNG.issuedTo.read = ROLES.ADMIN_ROLES;
   warningLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (warningLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
@@ -346,7 +346,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (warningNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  warningNRCED.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  warningNRCED.read = ROLES.ADMIN_ROLES;
   warningNRCED.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
 
   warningNRCED.addedBy = args.swagger.params.auth_payload.displayName;
@@ -378,7 +378,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
 
   incomingObj.legislationDescription && (warningNRCED.legislationDescription = incomingObj.legislationDescription);
 
-  warningNRCED.issuedTo.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  warningNRCED.issuedTo.read = ROLES.ADMIN_ROLES;
   warningNRCED.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (warningNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&

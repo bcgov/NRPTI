@@ -39,7 +39,7 @@ const EPIC_RECORD_TYPE = Object.freeze({
       milestone: { name: 'Certificate', milestoneId: '5cf00c03a266b7e1877504eb' },
       projects: [
         { name: 'Coastal Gaslink', projectId: '588511c4aaecd9001b825604' },
-        { name: 'LNG', projectId: '588510cdaaecd9001b815f84' }
+        { name: 'LNG', projectId: '588511d0aaecd9001b826192' }
       ],
       getUtil: auth_payload => {
         return new (require('./certificates-utils'))(auth_payload, RECORD_TYPE.Certificate);
@@ -51,7 +51,7 @@ const EPIC_RECORD_TYPE = Object.freeze({
       milestone: { name: 'Amendment', milestoneId: '5cf00c03a266b7e1877504f2' },
       projects: [
         { name: 'Coastal Gaslink', projectId: '588511c4aaecd9001b825604' },
-        { name: 'LNG', projectId: '588510cdaaecd9001b815f84' }
+        { name: 'LNG', projectId: '588511d0aaecd9001b826192' }
       ],
       getUtil: auth_payload => {
         return new (require('./certificates-amendment-utils'))(auth_payload, RECORD_TYPE.Certificate);
@@ -65,7 +65,7 @@ const EPIC_RECORD_TYPE = Object.freeze({
       milestone: { name: 'Post-Decision Materials', milestoneId: '5cf00c03a266b7e1877504f1' },
       projects: [
         { name: 'Coastal Gaslink', projectId: '588511c4aaecd9001b825604' },
-        { name: 'LNG', projectId: '588510cdaaecd9001b815f84' }
+        { name: 'LNG', projectId: '588511d0aaecd9001b826192' }
       ],
       getUtil: auth_payload => {
         return new (require('./management-plans-utils'))(auth_payload, RECORD_TYPE.ManagementPlan);
@@ -77,7 +77,7 @@ const EPIC_RECORD_TYPE = Object.freeze({
       milestone: { name: 'Post-Decision Materials', milestoneId: '5df79dd77b5abbf7da6f51fa' },
       projects: [
         { name: 'Coastal Gaslink', projectId: '588511c4aaecd9001b825604' },
-        { name: 'LNG', projectId: '588510cdaaecd9001b815f84' }
+        { name: 'LNG', projectId: '588511d0aaecd9001b826192' }
       ],
       getUtil: auth_payload => {
         return new (require('./management-plans-utils'))(auth_payload, RECORD_TYPE.ManagementPlan);

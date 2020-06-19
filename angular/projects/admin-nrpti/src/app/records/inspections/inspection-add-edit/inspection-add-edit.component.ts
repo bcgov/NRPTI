@@ -308,6 +308,8 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
       inspection['_epicProjectId'] = EpicProjectIds.lngCanadaId;
     } else if (inspection['projectName'] === 'Coastal Gaslink') {
       inspection['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+    } else {
+      inspection['_epicProjectId'] = null;
     }
 
     this.myForm.controls.location.dirty && (inspection['location'] = this.myForm.controls.location.value);

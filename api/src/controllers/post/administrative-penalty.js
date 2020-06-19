@@ -222,7 +222,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (administrativePenaltyLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  administrativePenaltyLNG.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  administrativePenaltyLNG.read = ROLES.ADMIN_ROLES;
   administrativePenaltyLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   administrativePenaltyLNG.addedBy = args.swagger.params.auth_payload.displayName;
@@ -253,7 +253,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (administrativePenaltyLNG.offence = incomingObj.offence);
 
-  administrativePenaltyLNG.issuedTo.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  administrativePenaltyLNG.issuedTo.read = ROLES.ADMIN_ROLES;
   administrativePenaltyLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
@@ -354,7 +354,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (administrativePenaltyNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  administrativePenaltyNRCED.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  administrativePenaltyNRCED.read = ROLES.ADMIN_ROLES;
   administrativePenaltyNRCED.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
 
   administrativePenaltyNRCED.addedBy = args.swagger.params.auth_payload.displayName;
@@ -385,7 +385,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (administrativePenaltyNRCED.offence = incomingObj.offence);
 
-  administrativePenaltyNRCED.issuedTo.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  administrativePenaltyNRCED.issuedTo.read = ROLES.ADMIN_ROLES;
   administrativePenaltyNRCED.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&

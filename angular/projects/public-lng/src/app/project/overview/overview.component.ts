@@ -55,7 +55,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
           '-date', // tableObject.sortBy,
           {
             // Select either LNG Canada or Coastal Gaslink based on route.
-            _epicProjectId: this.id === '1' ? '588510cdaaecd9001b815f84' : '588511c4aaecd9001b825604'
+            _epicProjectId: this.id === '1' ? '588511d0aaecd9001b826192' : '588511c4aaecd9001b825604'
           },
           false
         )
