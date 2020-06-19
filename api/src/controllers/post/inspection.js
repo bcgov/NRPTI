@@ -216,7 +216,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (inspectionLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  inspectionLNG.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  inspectionLNG.read = ROLES.ADMIN_ROLES;
   inspectionLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   inspectionLNG.addedBy = args.swagger.params.auth_payload.displayName;
@@ -245,7 +245,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
     incomingObj.legislation.paragraph &&
     (inspectionLNG.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription && (inspectionLNG.legislationDescription = incomingObj.legislationDescription);
-  inspectionLNG.issuedTo.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  inspectionLNG.issuedTo.read = ROLES.ADMIN_ROLES;
   inspectionLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
@@ -344,7 +344,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (inspectionNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  inspectionNRCED.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  inspectionNRCED.read = ROLES.ADMIN_ROLES;
   inspectionNRCED.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
 
   inspectionNRCED.addedBy = args.swagger.params.auth_payload.displayName;
@@ -373,7 +373,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     incomingObj.legislation.paragraph &&
     (inspectionNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription && (inspectionNRCED.legislationDescription = incomingObj.legislationDescription);
-  inspectionNRCED.issuedTo.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  inspectionNRCED.issuedTo.read = ROLES.ADMIN_ROLES;
   inspectionNRCED.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&

@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const axios = require('axios');
 const documentController = require('../../controllers/document-controller');
-const RecordController = require('./../../controllers/record-controller');
+const RecordController = require('../../controllers/record-controller');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
 const fs = require('fs');
 
@@ -28,14 +28,15 @@ class NrisDataSource {
    * @param {*} [recordTypes=null] specific record types to update (optional).
    * @memberof NrisDataSource
    */
-  constructor(auth_payload, params = null, recordTypes = null) {
+  constructor(taskAuditRecord, auth_payload, params = null, recordTypes = null) {
+    this.taskAuditRecord = taskAuditRecord;
     this.auth_payload = auth_payload;
     this.params = params || {};
   }
 
-  // Setup the datasource and start running the task.
-  async run(taskAuditRecord) {
-    await taskAuditRecord.updateTaskRecord({ status: 'Running' });
+  // Start running the task.
+  async run() {
+    await this.taskAuditRecord.updateTaskRecord({ status: 'Running' });
 
     // First perform authentication against this datasource
     // We should login using env var creds - get a token from our configured endpoint.
@@ -93,7 +94,7 @@ class NrisDataSource {
         }
         statusObject.itemsProcessed += itemsProcessed;
         statusObject.itemTotal += itemTotal;
-        await taskAuditRecord.updateTaskRecord({
+        await this.taskAuditRecord.updateTaskRecord({
           itemTotal: statusObject.itemTotal,
           itemsProcessed: statusObject.itemsProcessed
         });
@@ -101,7 +102,7 @@ class NrisDataSource {
         endDate = moment(startDate).add(1, 'M');
       }
 
-      await taskAuditRecord.updateTaskRecord({ status: statusObject.status });
+      await this.taskAuditRecord.updateTaskRecord({ status: statusObject.status });
 
       return statusObject;
     } catch (error) {
@@ -335,7 +336,6 @@ class NrisDataSource {
         summary: record.description || '',
         addRole: 'public'
       };
-
       return await RecordController.processPostRequest(
         { swagger: { params: { auth_payload: this.auth_payload } } },
         null,

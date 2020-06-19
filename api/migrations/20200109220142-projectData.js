@@ -42,7 +42,7 @@ exports.up = async function (db) {
       for (const item of activities) {
         // Which project?
         if (item.url.startsWith('/project/1')) {
-          promises.push(createActivityRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+          promises.push(createActivityRecord(item, '588511d0aaecd9001b826192', nrptiCollection));
         } else {
           promises.push(createActivityRecord(item, '588511c4aaecd9001b825604', nrptiCollection));
         }
@@ -53,10 +53,10 @@ exports.up = async function (db) {
           case 'Letter':
           case 'Report':
           case 'Certificate':
-            promises.push(createCertificateRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+            promises.push(createCertificateRecord(item, '588511d0aaecd9001b826192', nrptiCollection));
             break;
           case 'Permit':
-            promises.push(createPermitRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+            promises.push(createPermitRecord(item, '588511d0aaecd9001b826192', nrptiCollection));
             break;
           default:
             console.log('-------------------')
@@ -69,21 +69,21 @@ exports.up = async function (db) {
       for (const item of project1Compliances) {
         switch (item.complianceDocumentType) {
           case 'Inspection':
-            promises.push(createInspectionRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+            promises.push(createInspectionRecord(item, '588511d0aaecd9001b826192', nrptiCollection));
             break;
           case 'Memo':
           case 'Letter':
           case 'Self Report':
           case 'Compliance Self-Report':
-            promises.push(createComplianceSelfReportRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+            promises.push(createComplianceSelfReportRecord(item, '588511d0aaecd9001b826192', nrptiCollection));
             break;
           case 'Enforcement Action':
           case 'Order':
-            promises.push(createOrderRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+            promises.push(createOrderRecord(item, '588511d0aaecd9001b826192', nrptiCollection));
             break;
           case 'Warning Letter':
           case 'Warning':
-            promises.push(createWarningRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+            promises.push(createWarningRecord(item, '588511d0aaecd9001b826192', nrptiCollection));
             break;
           default:
             console.log('-------------------')
@@ -94,18 +94,18 @@ exports.up = async function (db) {
       }
 
       for (const item of project1Nations) {
-        promises.push(createAgreementRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+        promises.push(createAgreementRecord(item, '588511d0aaecd9001b826192', nrptiCollection));
       }
 
       for (const item of project1Plans) {
         switch (item.complianceDocumentType || item.type) {
           case 'Construction':
           case 'Construction Plan':
-            promises.push(createConstructionPlanRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+            promises.push(createConstructionPlanRecord(item, '588511d0aaecd9001b826192', nrptiCollection));
             break;
           case 'Management':
           case 'Management Plan':
-            promises.push(createManagementPlanRecord(item, '588510cdaaecd9001b815f84', nrptiCollection));
+            promises.push(createManagementPlanRecord(item, '588511d0aaecd9001b826192', nrptiCollection));
             break;
           default:
             console.log('-------------------')

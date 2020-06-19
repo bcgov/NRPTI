@@ -230,6 +230,8 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       certificate['_epicProjectId'] = EpicProjectIds.lngCanadaId;
     } else if (certificate['projectName'] === 'Coastal Gaslink') {
       certificate['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+    } else {
+      certificate['_epicProjectId'] = null;
     }
 
     this.myForm.controls.location.dirty && (certificate['location'] = this.myForm.controls.location.value);
