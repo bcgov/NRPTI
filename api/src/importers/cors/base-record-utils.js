@@ -48,12 +48,6 @@ class BaseRecordUtils {
       _schemaName: this.recordType._schemaName,
       recordType: this.recordType.displayName,
 
-      dateAdded: new Date(),
-      dateUpdated: new Date(),
-
-      addedBy: (this.auth_payload && this.auth_payload.preferred_username) || '',
-      updatedBy: (this.auth_payload && this.auth_payload.preferred_username) || '',
-
       sourceSystemRef: 'cors-csv'
     };
   }
@@ -100,6 +94,11 @@ class BaseRecordUtils {
     try {
       // build update Obj, which needs to include the flavour record ids
       const updateObj = { ...nrptiRecord, _id: existingRecord._id };
+
+      updateObj.updatedBy = (this.auth_payload && this.auth_payload.preferred_username) || '';
+      updateObj.dateUpdated = new Date();
+      updateObj.sourceDateUpdated = new Date();
+
       existingRecord._flavourRecords.forEach(flavourRecord => {
         updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
       });
@@ -132,6 +131,10 @@ class BaseRecordUtils {
     try {
       // build create Obj, which should include the flavour record details
       const createObj = { ...nrptiRecord };
+
+      createObj.addedBy = (this.auth_payload && this.auth_payload.preferred_username) || '';
+      createObj.dateAdded = new Date();
+      createObj.sourceDateAdded = new Date();
 
       // publish to NRCED
       if (this.recordType.flavours.nrced) {

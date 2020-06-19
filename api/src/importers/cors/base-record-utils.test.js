@@ -28,12 +28,6 @@ describe('BaseRecordUtils', () => {
         _schemaName: 'Ticket',
         recordType: 'Ticket',
 
-        dateAdded: expect.any(Date),
-        dateUpdated: expect.any(Date),
-
-        addedBy: '',
-        updatedBy: '',
-
         sourceSystemRef: 'cors-csv'
       };
 
@@ -79,6 +73,9 @@ describe('BaseRecordUtils', () => {
           {
             _id: 123,
             newField: 'abc',
+            updatedBy: '',
+            dateUpdated: expect.any(Date),
+            sourceDateUpdated: expect.any(Date),
             flavourSchema: {
               _id: 321,
               addRole: 'public'
@@ -118,6 +115,9 @@ describe('BaseRecordUtils', () => {
         [
           {
             newField: 'abc',
+            addedBy: '',
+            dateAdded: expect.any(Date),
+            sourceDateAdded: expect.any(Date),
             TicketNRCED: {
               summary: '',
               addRole: 'public'

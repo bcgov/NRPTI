@@ -25,12 +25,6 @@ describe('transformRecord', () => {
       penalties: [{ description: '', penalty: { type: 'Dollars', value: null }, type: 'Fined' }],
       description: '',
 
-      addedBy: '',
-      updatedBy: '',
-
-      dateAdded: expect.any(Date),
-      dateUpdated: expect.any(Date),
-
       sourceSystemRef: 'cors-csv'
     });
   });
@@ -82,12 +76,6 @@ describe('transformRecord', () => {
         }
       ],
       description: 'description123',
-
-      addedBy: '',
-      updatedBy: '',
-
-      dateAdded: expect.any(Date),
-      dateUpdated: expect.any(Date),
 
       sourceSystemRef: 'cors-csv'
     });
