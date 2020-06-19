@@ -43,8 +43,8 @@ export class MinesListComponent implements OnInit, OnDestroy {
       width: 'col-3'
     },
     {
-      name: 'Permit Number',
-      value: 'permitNumber',
+      name: 'Permit Numbers',
+      value: '',
       width: 'col-2',
       nosort: true
     },
