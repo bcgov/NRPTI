@@ -24,14 +24,19 @@ class CorsCsvDataSource {
   /**
    * Run the Cors csv importer.
    *
-   * @returns
+   * @returns final status of importer
    * @memberof CorsCsvDataSource
    */
   async run() {
     defaultLog.info('run - import cors-csv');
+
+    this.status.itemTotal = this.csvRows.length;
+
     await this.taskAuditRecord.updateTaskRecord({ status: 'Running', itemTotal: this.csvRows.length });
 
-    return await this.batchProcessRecords();
+    await this.batchProcessRecords();
+
+    return this.status;
   }
 
   /**

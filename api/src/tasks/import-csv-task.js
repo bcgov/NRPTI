@@ -66,13 +66,13 @@ async function runTask(nrptiDataSource, auth_payload, recordType, csvFile) {
       throw Error(`runTask - ${nrptiDataSource.dataSourceLabel} - failed - could not create instance of dataSource`);
     }
 
-    // Run the datasource loop, passing in the audit object.
-    const res = await dataSource.run(taskAuditRecord);
+    // Run the datasource loop
+    const status = await dataSource.run();
 
     defaultLog.info(`runTask - ${nrptiDataSource.dataSourceLabel} - completed`);
 
     // Update task as completed (does not necessarily mean all records were successfully updated)
-    await taskAuditRecord.updateTaskRecord({ status: 'completed', finishDate: new Date(), ...res });
+    await taskAuditRecord.updateTaskRecord({ status: 'completed', finishDate: new Date(), ...status });
   } catch (error) {
     defaultLog.error(
       `runTask - ${nrptiDataSource.dataSourceLabel} - ${error.status} - unexpected error: ${error.message}`
