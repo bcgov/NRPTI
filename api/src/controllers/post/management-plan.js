@@ -161,7 +161,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (managementPlanLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  managementPlanLNG.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  managementPlanLNG.read = ROLES.ADMIN_ROLES;
   managementPlanLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
