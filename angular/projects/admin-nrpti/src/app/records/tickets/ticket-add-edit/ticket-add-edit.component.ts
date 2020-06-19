@@ -363,6 +363,8 @@ export class TicketAddEditComponent implements OnInit, OnDestroy {
       ticket['_epicProjectId'] = EpicProjectIds.lngCanadaId;
     } else if (ticket['projectName'] === 'Coastal Gaslink') {
       ticket['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+    } else {
+      ticket['_epicProjectId'] = null;
     }
 
     this.myForm.controls.location.dirty && (ticket['location'] = this.myForm.controls.location.value);

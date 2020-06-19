@@ -169,10 +169,18 @@ exports.protectedPost = async function (args, res, next) {
 
     let response = await Promise.all(promises);
 
-    return queryActions.sendResponse(res, 200, response);
+    // Audit the POST action.
+    // If multiple observables are triggered, response will have multiple objects
+    // only add the metaId for single objects.
+    let meta = response && response[0] && response[0][0] ? response[0][0] : null;
+    let metaID = meta && meta.object && meta.object[0] ? meta.object[0]._id : null;
+    queryUtils.audit(args, 'POST', JSON.stringify(meta), args.swagger.params.auth_payload, metaID);
+
+    queryActions.sendResponse(res, 200, response);
   } else {
-    return queryActions.sendResponse(res, 500, { error: 'You must provide data' });
+    queryActions.sendResponse(res, 500, { error: 'You must provide data' });
   }
+  next();
 };
 
 /**
@@ -243,10 +251,15 @@ exports.protectedPut = async function (args, res, next) {
 
     let response = await Promise.all(promises);
 
-    return queryActions.sendResponse(res, 200, response);
+    let meta = response && response[0] && response[0][0] ? response[0][0] : null;
+    let metaID = meta && meta.object && meta.object[0] ? meta.object[0]._id : null;
+    queryUtils.audit(args, 'PUT', JSON.stringify(meta), args.swagger.params.auth_payload, metaID);
+
+    queryActions.sendResponse(res, 200, response);
   } else {
-    return queryActions.sendResponse(res, 500, { error: 'You must provide data' });
+    queryActions.sendResponse(res, 500, { error: 'You must provide data' });
   }
+  next();
 };
 
 exports.protectedNewsDelete = async function (args, res, next) {
@@ -263,11 +276,12 @@ exports.protectedNewsDelete = async function (args, res, next) {
       return queryActions.sendResponse(res, 404, {});
     }
 
-    await queryUtils.recordAction('Delete', 'ActivityLNG', args.swagger.params.auth_payload.preferred_username, recordId);
-    return queryActions.sendResponse(res, 200, {});
+    queryUtils.audit(args, 'DELETE', 'ActivityLNG', args.swagger.params.auth_payload, recordId);
+    queryActions.sendResponse(res, 200, {});
   } catch (error) {
-    return queryActions.sendResponse(res, 500, error);
+    queryActions.sendResponse(res, 500, error);
   }
+  next();
 };
 
 /**
@@ -305,12 +319,13 @@ exports.protectedPublish = async function (args, res, next) {
 
     const published = await queryActions.publish(record, true);
 
-    await queryUtils.recordAction('Publish', record, args.swagger.params.auth_payload.preferred_username, record._id);
+    queryUtils.audit(args, 'Publish', record, args.swagger.params.auth_payload, record._id);
 
-    return queryActions.sendResponse(res, 200, published);
+    queryActions.sendResponse(res, 200, published);
   } catch (error) {
-    return queryActions.sendResponse(res, 500, error);
+    queryActions.sendResponse(res, 500, error);
   }
+  next();
 };
 
 /**
@@ -347,12 +362,13 @@ exports.protectedUnPublish = async function (args, res, next) {
 
     const unPublished = await queryActions.unPublish(record);
 
-    await queryUtils.recordAction('UnPublish', record, args.swagger.params.auth_payload.preferred_username, record._id);
+    queryUtils.audit(args, 'UnPublish', record, args.swagger.params.auth_payload, record._id);
 
-    return queryActions.sendResponse(res, 200, unPublished);
+    queryActions.sendResponse(res, 200, unPublished);
   } catch (error) {
-    return queryActions.sendResponse(res, 500, error);
+    queryActions.sendResponse(res, 500, error);
   }
+  next();
 };
 
 // Public Requests
