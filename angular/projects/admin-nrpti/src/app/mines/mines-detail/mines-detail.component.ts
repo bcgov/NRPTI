@@ -113,7 +113,7 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
       });
   }
 
-  togglePublish(): Void {
+  togglePublish(): void {
     this.canPublish = this.checkCanPublish();
     if (this.canPublish) {
       this.isPublished ? this.unPublish() : this.publish();
