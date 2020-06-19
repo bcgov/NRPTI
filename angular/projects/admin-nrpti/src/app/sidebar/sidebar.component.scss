@@ -3,7 +3,7 @@
 /* The side navigation menu */
 .sidebar {
   margin: 0;
-  padding: 20px 0 15px 5px;
+  padding: 20px 0 15px 0px;
   width: $side-content-width;
   background-color: #38598a;
   position: fixed;
@@ -27,20 +27,22 @@
   transition: 0.3s;
 }
 
-.mine-nav {
-  background: #00274e;
-  border-radius: 4px 0 0 4px;
-  padding-bottom: 12px;
-  margin: 4px 0 8px;
+.full-nav {
+  padding: 0 0 4px 5px;
 }
 
-.sidebar .project-menu {
+.mine-nav {
+  background: #00274e;
+  // border-radius: 4px 0 0 4px;
+  padding: 0 0 12px 5px;
+  // margin: 4px 0 8px;
+}
+
+.sidebar .mines-menu {
   padding: 6px 16px 8px;
   padding-left: 0.8rem;
 
   .material-icons {
-    margin-right: 0.5rem;
-    font-size: 16px;
     top: 2px;
   }
 }
@@ -91,7 +93,7 @@
 }
 
 /* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
-.project-details-dropdown-container {
+.mine-details-dropdown-container {
   padding-left: 8px;
 }
 
