@@ -49,10 +49,10 @@
             "documentFieldValues": ["Coastal GasLink"]
           },
           {
-            "displayName": "BC Oil and Gas commission",
+            "displayName": "BC Oil and Gas Commission",
             "fieldName": "authorBCOGC",
             "documentFieldName": "author",
-            "documentFieldValues": ["BC Oil and Gas commission"]
+            "documentFieldValues": ["BC Oil and Gas Commission"]
           }
         ]
       },
@@ -524,7 +524,7 @@
         "description": "The BC Oil and Gas Commission issued an order  as a result of cutting activity that occurred without a completed archaeological impact assessment. The order identifies four actions required to be taken by Coastal GasLink.",
         "name": "General Order 2019-09",
         "date": "13-09-19",
-        "agency": "BC Oil and Gas commission",
+        "agency": "BC Oil and Gas Commission",
         "category": "Compliance",
         "complianceDocumentType": "Enforcement Action",
         "complianceDocumentSubtype": "",
@@ -533,7 +533,7 @@
         "lat": "",
         "long": "",
         "nation": "",
-        "author": "BC Oil and Gas commission"
+        "author": "BC Oil and Gas Commission"
       },
       {
         "url": "https://projects.eao.gov.bc.ca/api/document/5d4362d94cb2c7001b137bbe/fetch/CGL4703-CGP-SE-RPT-0001%20SEEMP%20STATUS%20REPORT%201.pdf",
@@ -636,7 +636,7 @@
         "description": "Warning letter issued to Coastal Gaslink Pipeline Ltd for failing to provide notice of construction start to the Oil and Gas commission a minimum of 48 hours prior to the commencement of activities.",
         "name": "Warning Letter 2019-001TE CGL",
         "date": "07-02-2019",
-        "agency": "BC Oil and Gas commission",
+        "agency": "BC Oil and Gas Commission",
         "category": "Compliance",
         "complianceDocumentType": "Warning Letter",
         "complianceDocumentSubtype": "",
@@ -645,7 +645,7 @@
         "lat": "",
         "long": "",
         "nation": "",
-        "author": "BC Oil and Gas commission"
+        "author": "BC Oil and Gas Commission"
       },
       {
         "url": "https://projects.eao.gov.bc.ca/api/document/5bf73809cfbe8f00249a10ed/fetch",
