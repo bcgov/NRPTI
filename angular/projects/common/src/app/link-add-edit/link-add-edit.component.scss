@@ -1,0 +1,35 @@
+@import '../../assets/styles/base/base.scss';
+@import '../../assets/styles/components/drag-drop.scss';
+
+$link-label-font-size-sm: 0.875rem;
+$link-label-font-size-md: 1rem;
+
+$link-body-font-weight-sm: 400;
+$link-body-font-weight-md: 700;
+
+$link-delete-font-color: #d8292f;
+$link-delete-hover-font-color: #ff4a4a;
+$link-info-font-color: #949494;
+
+form {
+  input {
+    font-size: $link-label-font-size-md;
+    font-weight: $link-body-font-weight-sm;
+  }
+
+  label {
+    font-size: $link-label-font-size-sm;
+    font-weight: $link-body-font-weight-sm;
+  }
+}
+
+.btn-remove {
+  color: $link-delete-font-color;
+}
+
+.btn-no-hover {
+  &:hover {
+    color: $link-delete-hover-font-color;
+    background-color: transparent;
+  }
+}

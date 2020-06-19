@@ -67,6 +67,7 @@ definitions:
       - CourtConviction
       - Inspection
       - ManagementPlan
+      - Mine
       - Order
       - Permit
       - RestorativeJustice
@@ -104,6 +105,7 @@ definitions:
       - CourtConviction
       - Inspection
       - ManagementPlan
+      - Mine
       - Order
       - Permit
       - RestorativeJustice

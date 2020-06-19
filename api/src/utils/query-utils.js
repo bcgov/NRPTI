@@ -125,5 +125,6 @@ exports.recordTypes = [
   'Warning',
   'ConstructionPlan',
   'ManagementPlan',
-  'CourtConviction'
+  'CourtConviction',
+  'Mine'
 ];

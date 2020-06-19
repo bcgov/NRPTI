@@ -2,22 +2,14 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { FactoryService } from '../services/factory.service';
-import { Mine } from '../../../../common/src/app/models/bcmi/mine';
-import { of } from 'rxjs';
+import { SearchResults } from 'nrpti-angular-components';
 
 @Injectable()
-export class MinesResolver implements Resolve<Observable<object>> {
+export class MinesResolver implements Resolve<Observable<SearchResults[]>> {
   constructor(private factoryService: FactoryService) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<object> {
+  resolve(route: ActivatedRouteSnapshot): Observable<SearchResults[]> {
     const mineId = route.paramMap.get('mineId');
-
-    const schemaName = 'Mine';
-
-    if (mineId === null) {
-      return of(new Mine({_schemaName: schemaName}));
-    }
-
-    return this.factoryService.getRecord(mineId, schemaName);
+    return this.factoryService.getRecord(mineId, 'Mine');
   }
 }

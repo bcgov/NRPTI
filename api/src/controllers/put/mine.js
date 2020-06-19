@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
+const MinePost = require('../post/mine');
 const PutUtils = require('../../utils/put-utils');
 const { SYSTEM_USER } = require('../../utils/constants/misc');
+const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 /**
  * Performs all operations necessary to edit a master Mine record and any flavours.
@@ -12,23 +14,17 @@ const { SYSTEM_USER } = require('../../utils/constants/misc');
  * @returns object containing the operation's status and created records
  */
 exports.editRecord = async function(args, res, next, incomingObj) {
-  try{
-    // TODO: Add any flavour actions here.
-
-    const savedInspection = await this.editMaster(args, res, next, incomingObj);
-
-    return {
-      status: 'success',
-      object: savedInspection
-    };
-  } catch (error) {
-    return {
-      status: 'failure',
-      object: null,
-      errorMessage: error.message
-    };
-  }
-}
+  return await PutUtils.editRecordWithFlavours(
+    args,
+    res,
+    next,
+    incomingObj,
+    this.editMaster,
+    MinePost,
+    RECORD_TYPE.Mine._schemaName,
+    {}
+  );
+};
 
 /**
  * Performs all operations necessary to edit a master Mine record.
@@ -37,14 +33,17 @@ exports.editRecord = async function(args, res, next, incomingObj) {
  * @param {*} res
  * @param {*} next
  * @param {*} incomingObj
- * @returns newly created mine record
+ * @returns object
  */
-exports.editMaster = async function(args, res, next, incomingObj) {
-  if (incomingObj._schemaName !== 'Mine') {
-    throw new Error('editRecord - incorrect schema type, must be Mine');
-  }
+exports.editMaster = function(args, res, next, incomingObj) {
+  delete incomingObj._id;
 
-  const Mine = mongoose.model('Mine');
+  // Reject any changes to permissions
+  // Publishing must be done via addRole or removeRole
+  delete incomingObj.read;
+  delete incomingObj.write;
+
+  const Mine = mongoose.model(RECORD_TYPE.Mine._schemaName);
 
   const sanitizedObj = PutUtils.validateObjectAgainstModel(Mine, incomingObj);
 
@@ -54,15 +53,23 @@ exports.editMaster = async function(args, res, next, incomingObj) {
   }
 
   sanitizedObj.dateUpdated = new Date();
-  // If there are args it means this is an API request and has a user. If not, this is carried out by the system so 
+  // If there are args it means this is an API request and has a user. If not, this is carried out by the system so
   // use the system user.
-  sanitizedObj.updatedBy =  args && args.swagger.params.auth_payload.displayName || SYSTEM_USER;
+  sanitizedObj.updatedBy = (args && args.swagger.params.auth_payload.displayName) || SYSTEM_USER;
 
   const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
 
-  return await Mine.findOneAndUpdate(
-      { _schemaName: 'Mine', _id: incomingObj._id, write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
-      { $set: dotNotatedObj },
-      { new: true }
-    );
+  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
+
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    updateObj.$addToSet['read'] = 'public';
+    updateObj.$set['datePublished'] = new Date();
+    updateObj.$set['publishedBy'] = (args && args.swagger.params.auth_payload.displayName) || SYSTEM_USER;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
+    updateObj.$pull['read'] = 'public';
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
+  }
+
+  return updateObj;
 };

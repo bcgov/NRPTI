@@ -63,7 +63,7 @@ const routes: Routes = [
               breadcrumb: 'Edit Mine'
             },
             resolve: {
-              record: MinesResolver
+              mine: MinesResolver
             }
           }
         ]
