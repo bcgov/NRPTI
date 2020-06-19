@@ -487,7 +487,12 @@ describe('ImportCSVComponent', () => {
       component.recordType = 'recordType';
       component.csvFiles = [fileA];
 
+      // mock component methods
+      component.onFileDelete = jasmine.createSpy('onFileDelete');
+
       await component.startJob();
+
+      expect(component.onFileDelete).toHaveBeenCalledWith(fileA);
 
       expect(factoryServiceSpy.startCsvTask).toHaveBeenCalledWith({
         dataSourceType: 'dataSourceType',

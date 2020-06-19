@@ -291,6 +291,8 @@ export class ImportCSVComponent {
 
     await this.factoryService.startCsvTask(csvTaskParams).toPromise();
 
+    this.onFileDelete(this.csvFiles[0]);
+
     this.showAlert = true;
     setTimeout(() => {
       this.showAlert = false;
