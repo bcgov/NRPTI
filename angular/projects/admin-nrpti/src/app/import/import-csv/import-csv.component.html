@@ -1,0 +1,80 @@
+<div>
+  <h4>Import from CSV</h4>
+
+  <div class="label-pair">
+    <label for="csvImportRecordType">Source System</label>
+    <select
+      id="csvImportRecordType"
+      class="form-control"
+      (ngModel)="(dataSourceType)"
+      (change)="onDataSourceTypeChange($event.target.value)"
+    >
+      <!-- hard-code selected while there is only 1 possible option -->
+      <option [selected]="true" value="cors-csv">CORS</option>
+    </select>
+  </div>
+
+  <div class="label-pair">
+    <label for="csvImportRecordType">Record Type</label>
+    <select
+      id="csvImportRecordType"
+      class="form-control"
+      (ngModel)="(recordType)"
+      (change)="onRecordTypeChange($event.target.value)"
+    >
+      <!-- hard-code selected while there is only 1 possible option -->
+      <option [selected]="true" value="Ticket">Tickets</option>
+    </select>
+  </div>
+
+  <div class="label-pair lrg">
+    <label>CSV File</label>
+    <app-file-upload
+      [maxFiles]="1"
+      [maxSize]="20"
+      [fileExt]="['csv']"
+      [showInfo]="false"
+      [showList]="false"
+      [files]="csvFiles"
+      (filesChange)="onFileChange($event)"
+    ></app-file-upload>
+  </div>
+
+  <ng-container *ngIf="csvFiles[0]">
+    <ul class="doc-list">
+      <li>
+        <span class="cell icon">
+          <i class="material-icons">insert_drive_file</i>
+        </span>
+        <span class="cell name" [title]="csvFiles[0].name || ''">
+          <span class="cell__txt-content">{{ csvFiles[0].name }}</span>
+        </span>
+        <span class="cell actions">
+          <button class="btn btn-icon" type="button" title="Delete document" (click)="onFileDelete(csvFiles[0])">
+            <i class="material-icons">delete</i>
+          </button>
+        </span>
+      </li>
+    </ul>
+  </ng-container>
+
+  <ng-container *ngIf="csvFileErrors && csvFileErrors.length">
+    <div class="alert alert-danger">
+      <h5 class="alert-heading">CSV Errors Detected</h5>
+      <div *ngFor="let csvFileError of csvFileErrors">
+        <span>{{ csvFileError }}</span>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="mt-3 mb-3">
+    <button [disabled]="!csvFileValidated" class="btn btn-primary" type="button" (click)="startJob()">Start Job</button>
+  </div>
+
+  <div *ngIf="showAlert" class="input-group">
+    <div class="alert alert-success" role="alert">
+      <h5 class="alert-heading">Job Started!</h5>
+      <span>Please refresh the page to see the updated status.</span>
+    </div>
+  </div>
+</div>

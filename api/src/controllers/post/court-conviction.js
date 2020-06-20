@@ -221,7 +221,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (courtConvictionLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  courtConvictionLNG.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  courtConvictionLNG.read = ROLES.ADMIN_ROLES;
   courtConvictionLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   courtConvictionLNG.addedBy = args.swagger.params.auth_payload.displayName;
@@ -253,7 +253,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (courtConvictionLNG.offence = incomingObj.offence);
 
-  courtConvictionLNG.issuedTo.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  courtConvictionLNG.issuedTo.read = ROLES.ADMIN_ROLES;
   courtConvictionLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (courtConvictionLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
@@ -352,7 +352,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (courtConvictionNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  courtConvictionNRCED.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  courtConvictionNRCED.read = ROLES.ADMIN_ROLES;
   courtConvictionNRCED.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
 
   courtConvictionNRCED.addedBy = args.swagger.params.auth_payload.displayName;
@@ -384,7 +384,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (courtConvictionNRCED.offence = incomingObj.offence);
 
-  courtConvictionNRCED.issuedTo.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  courtConvictionNRCED.issuedTo.read = ROLES.ADMIN_ROLES;
   courtConvictionNRCED.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (courtConvictionNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&

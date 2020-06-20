@@ -88,7 +88,7 @@ async function runTask(nrptiDataSource, auth_payload, params = null, recordTypes
     }
 
     // Run the datasource loop, passing in the audit object.
-    const res = await dataSource.run(taskAuditRecord);
+    const res = await dataSource.run();
 
     defaultLog.info(`runTask - ${nrptiDataSource.dataSourceLabel} - completed`);
 

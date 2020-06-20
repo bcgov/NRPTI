@@ -147,6 +147,8 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
       agreement['_epicProjectId'] = EpicProjectIds.lngCanadaId;
     } else if (agreement['projectName'] === 'Coastal Gaslink') {
       agreement['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+    } else {
+      agreement['_epicProjectId'] = null;
     }
 
     // LNG flavour

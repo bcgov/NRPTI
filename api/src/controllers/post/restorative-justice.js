@@ -220,7 +220,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (restorativeJusticeLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  restorativeJusticeLNG.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  restorativeJusticeLNG.read = ROLES.ADMIN_ROLES;
   restorativeJusticeLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   restorativeJusticeLNG.addedBy = args.swagger.params.auth_payload.displayName;
@@ -251,7 +251,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (restorativeJusticeLNG.offence = incomingObj.offence);
 
-  restorativeJusticeLNG.issuedTo.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  restorativeJusticeLNG.issuedTo.read = ROLES.ADMIN_ROLES;
   restorativeJusticeLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
@@ -352,7 +352,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (restorativeJusticeNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  restorativeJusticeNRCED.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  restorativeJusticeNRCED.read = ROLES.ADMIN_ROLES;
   restorativeJusticeNRCED.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
 
   restorativeJusticeNRCED.addedBy = args.swagger.params.auth_payload.displayName;
@@ -383,7 +383,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (restorativeJusticeNRCED.offence = incomingObj.offence);
 
-  restorativeJusticeNRCED.issuedTo.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  restorativeJusticeNRCED.issuedTo.read = ROLES.ADMIN_ROLES;
   restorativeJusticeNRCED.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&

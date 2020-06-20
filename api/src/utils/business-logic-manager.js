@@ -189,3 +189,21 @@ exports.updateDocumentRoles = async function(masterRecord, auth_payload) {
 
   return savedDocuments;
 };
+
+/**
+ * Applies business logic, if any, to the provided act.
+ *
+ * @param {*} act
+ * @returns {string} the act with applied business logic rules.
+ */
+exports.applyBusinessLogicToAct = function(act) {
+  if (!act) {
+    return null;
+  }
+
+  if (act === 'Fisheries Act') {
+    return 'Fisheries Act (Canada)';
+  }
+
+  return act;
+};

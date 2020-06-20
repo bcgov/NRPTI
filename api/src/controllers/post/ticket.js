@@ -88,6 +88,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (ticket._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj._sourceRefCorsId && (ticket._sourceRefCorsId = incomingObj._sourceRefCorsId);
 
   // set permissions
   ticket.read = ROLES.ADMIN_ROLES;
@@ -213,9 +214,10 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (ticketLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj._sourceRefCorsId && (ticketLNG._sourceRefCorsId = incomingObj._sourceRefCorsId);
 
   // set permissions and meta
-  ticketLNG.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  ticketLNG.read = ROLES.ADMIN_ROLES;
   ticketLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   ticketLNG.addedBy = args.swagger.params.auth_payload.displayName;
@@ -244,7 +246,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (ticketLNG.offence = incomingObj.offence);
 
-  ticketLNG.issuedTo.read = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  ticketLNG.issuedTo.read = ROLES.ADMIN_ROLES;
   ticketLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (ticketLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
@@ -340,9 +342,10 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (ticketNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj._sourceRefCorsId && (ticketNRCED._sourceRefCorsId = incomingObj._sourceRefCorsId);
 
   // set permissions and meta
-  ticketNRCED.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  ticketNRCED.read = ROLES.ADMIN_ROLES;
   ticketNRCED.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
 
   ticketNRCED.addedBy = args.swagger.params.auth_payload.displayName;
@@ -371,7 +374,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (ticketNRCED.offence = incomingObj.offence);
 
-  ticketNRCED.issuedTo.read = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  ticketNRCED.issuedTo.read = ROLES.ADMIN_ROLES;
   ticketNRCED.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (ticketNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&

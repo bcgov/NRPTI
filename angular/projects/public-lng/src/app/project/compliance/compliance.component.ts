@@ -41,7 +41,7 @@ export class ComplianceComponent implements OnInit {
           fieldName: 'author'
         },
         {
-          displayName: 'BC Oil and Gas commission',
+          displayName: 'BC Oil and Gas Commission',
           fieldName: 'author'
         }
       ]
