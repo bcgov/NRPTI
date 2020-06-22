@@ -49,10 +49,10 @@
             "documentFieldValues": ["LNG Canada"]
           },
           {
-            "displayName": "BC Oil and Gas commission",
+            "displayName": "BC Oil and Gas Commission",
             "fieldName": "authorBCOGC",
             "documentFieldName": "author",
-            "documentFieldValues": ["BC Oil and Gas commission"]
+            "documentFieldValues": ["BC Oil and Gas Commission"]
           }
         ]
       },

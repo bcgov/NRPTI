@@ -21,6 +21,30 @@ export interface ITaskParams {
   recordTypes?: string[];
 }
 
+export interface ICsvTaskParams {
+  /**
+   * Data source type to update.
+   *
+   * @type {string}
+   * @memberof ICsvTaskParams
+   */
+  dataSourceType: string;
+  /**
+   * Specific record type to update.
+   *
+   * @type {string}
+   * @memberof ICsvTaskParams
+   */
+  recordType: string;
+  /**
+   * Csv file to import records from.
+   *
+   * @type {File}
+   * @memberof ICsvTaskParams
+   */
+  upfile: File;
+}
+
 /**
  * Task request handlers.
  *
@@ -41,5 +65,22 @@ export class TaskService {
   startTask(taskParams: ITaskParams): Observable<object> {
     const queryString = 'task';
     return this.http.post<object>(`${this.apiService.pathAPI}/${queryString}`, taskParams, {});
+  }
+
+  /**
+   * Send request to start a csv task.
+   *
+   * @param {ICsvTaskParams} csvTaskParams
+   * @returns {Observable<object>}
+   * @memberof ApiService
+   */
+  startCsvTask(csvTaskParams: ICsvTaskParams): Observable<object> {
+    const formData = new FormData();
+    formData.append('dataSourceType', csvTaskParams.dataSourceType);
+    formData.append('recordType', csvTaskParams.recordType);
+    formData.append('upfile', csvTaskParams.upfile);
+
+    const queryString = 'task/csv';
+    return this.http.post<object>(`${this.apiService.pathAPI}/${queryString}`, formData, {});
   }
 }

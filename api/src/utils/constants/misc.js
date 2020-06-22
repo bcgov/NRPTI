@@ -1,3 +1,5 @@
+exports.SYSTEM_USER = 'SYSTEM_USER';
+
 // Available user roles.
 exports.ROLES = {
   SYSADMIN: 'sysadmin',
@@ -11,6 +13,17 @@ exports.ROLES = {
     'admin:nrced',
     'admin:bcmi'
   ]
+};
+
+exports.IssuedToEntityTypes = {
+  Company: 'Company',
+  Individual: 'Individual',
+  IndividualCombined: 'IndividualCombined'
+};
+
+exports.CorsCsvIssuingAgencies = {
+  BC_Parks: 'BC Parks',
+  Conservation_Officer_Service: 'Conservation Officer Service'
 };
 
 exports.SYSTEM_USER = "SYSTEM_USER";

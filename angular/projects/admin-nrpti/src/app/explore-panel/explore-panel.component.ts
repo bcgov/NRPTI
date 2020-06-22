@@ -24,7 +24,6 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
   readonly minDate = new Date('01-01-1900'); // first app created
   readonly maxDate = new Date(); // today
 
-
   public agencyOptions: IMutliSelectOption[] = Picklists.agencyPicklist.map(value => {
     return { value: value, displayValue: value, selected: false, display: true };
   });
@@ -44,9 +43,9 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
   public regulationCount = 0;
 
   public systemRefControl = null;
-  public systemRefOptions = ['nrpti', 'ocers-csv', 'nris-epd', 'epic'];
+  public systemRefOptions = Picklists.sourceSystemRefPicklist;
 
-  constructor(private _changeDetectionRef: ChangeDetectorRef) { }
+  constructor(private _changeDetectionRef: ChangeDetectorRef) {}
 
   public ngOnInit() {
     this.systemRefControl = this.formGroup.get(['sourceSystemRef']);
