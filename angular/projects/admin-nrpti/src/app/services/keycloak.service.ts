@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { JwtUtil } from '../utils/jwt-utils';
 import { Observable } from 'rxjs';
+import { ROLES } from '../../../../common/src/app/constants/auth';
 
 declare let Keycloak: any;
 
@@ -113,7 +114,10 @@ export class KeycloakService {
       return false;
     }
 
-    return jwt.realm_access.roles.includes('sysadmin');
+    // Make sure they have at least one instance of including a role in the ROLE array
+    return ROLES.some(role => {
+      return jwt.realm_access.roles.includes(role);
+    });
   }
 
   /**
