@@ -39,9 +39,16 @@ export class SidebarComponent implements OnDestroy {
 
   SetActiveSidebarItem() {
     const urlArray = this.routerSnapshot.url.split('/');
-    // urlArray[0] will be empty so we use shift to get rid of it.
-    urlArray.shift();
-    this.currentMenu = urlArray[0];
+    // urlArray[0] will be empty.
+    let urlFragment = urlArray[1];
+
+    // Strip out any filter parameters if they exist.
+    if (urlFragment.includes(';')) {
+      // Grab the first part as it will be the path.
+      urlFragment = urlFragment.split(';')[0];
+    }
+
+    this.currentMenu = urlFragment;
   }
 
   toggleDropdown() {

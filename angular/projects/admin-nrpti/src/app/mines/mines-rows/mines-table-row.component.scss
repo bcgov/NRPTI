@@ -1,5 +1,18 @@
 @import "assets/styles/base/base.scss";
 
+ul {
+  padding: 0;
+  margin: 0;
+
+  li {
+    list-style: none;
+  }
+}
+
+.published-green {
+  color: #459c1e;
+}
+
 :host-context(tr) {
   &:hover {
     background-color: $table-row-hover-bg;

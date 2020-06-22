@@ -5,6 +5,11 @@
       <i class="material-icons mr-3 ">view_list</i>
       All Records
     </a>
+    <a [routerLink]="" [ngClass]="{ active: currentMenu === 'mines' }" id="mines"
+      (click)="activateLoading(['/mines'])">
+      <i class="material-icons mr-3 ">view_list</i>
+      All Mines
+    </a>
     <a [ngClass]="{ active: currentMenu === 'news' }" id="news" [routerLink]="['/news']">
       <i class="material-icons mr-3">notifications_active</i>
       News List
@@ -20,11 +25,6 @@
     <a [ngClass]="{ active: currentMenu === 'entities' }" id="entities" [routerLink]="['/entities']">
       <i class="material-icons mr-3 ">people</i>
       Entities
-    </a>
-    <a [routerLink]="" [ngClass]="{ active: currentMenu === 'mines' }" id="mines"
-      (click)="activateLoading(['/mines'])">
-      <i class="material-icons mr-3 ">view_list</i>
-      All Mines
     </a>
     <a [ngClass]="{ active: currentMenu === 'imports' }" id="imports" [routerLink]="['/imports']">
       <i class="material-icons mr-3">import_export</i>
