@@ -79,6 +79,9 @@ export class MinesListComponent implements OnInit, OnDestroy {
   // Filters
   public queryParams: Params;
 
+  // keyword search
+  public keywordSearchWords: string;
+
   constructor(
     public location: Location,
     public router: Router,
@@ -107,6 +110,9 @@ export class MinesListComponent implements OnInit, OnDestroy {
         // component for the first time).
         this.setInitialURLParams();
       }
+
+      // if we have a keyword on the url, set the text
+      this.keywordSearchWords = this.queryParams['keywords'] || '';
 
       this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
         if (!res || !res.mines) {
@@ -138,6 +144,23 @@ export class MinesListComponent implements OnInit, OnDestroy {
     });
   }
 
+  keywordSearch() {
+    if (this.keywordSearchWords) {
+      this.queryParams['keywords'] = this.keywordSearchWords;
+      // always change sortBy to '-score' if keyword search is directly triggered by user
+      this.tableData.sortBy = '-score';
+    } else {
+      this.clearSearchTerms();
+      this.queryParams['keywords'] = '';
+    }
+
+    this.tableData.currentPage = 1;
+    this.submit();
+  }
+
+  clearSearchTerms() {
+    this.keywordSearchWords = '';
+  }
   /**
    * Updates the url parameters based on the currently set query and table template params, without reloading the page.
    *
