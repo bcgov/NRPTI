@@ -247,7 +247,13 @@ let searchCollection = async function (
     $project: {
       _id: 1,
       _flavourRecords: 1,
-      read: 1
+      documents: 1,
+      read: 1,
+      recordName: 1,
+      location: 1,
+      recordType: 1,
+      'issuedTo.fullName': 1,
+      dateIssued: 1
     }
   });
 
@@ -291,6 +297,7 @@ let searchCollection = async function (
       as: 'fullRecord'
     }
   });
+
   searchResultAggregation.push({
     $replaceRoot: {
       newRoot: {
