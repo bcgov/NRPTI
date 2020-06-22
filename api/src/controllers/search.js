@@ -236,34 +236,20 @@ let searchCollection = async function (
       $limit: pageSize
     }
   );
-  // populate refs
-  if (populate) {
-    // populate flavours
-    searchResultAggregation.push({
-      $lookup: {
-        from: 'nrpti',
-        localField: '_flavourRecords',
-        foreignField: '_id',
-        as: 'flavours'
-      }
-    });
-
-    // populate documents
-    searchResultAggregation.push({
-      $lookup: {
-        from: 'nrpti',
-        localField: 'documents',
-        foreignField: '_id',
-        as: 'documents'
-      }
-    });
-  }
 
   let aggregation = [
     {
       $match: match
     }
   ];
+
+  aggregation.push({
+    $project: {
+      _id: 1,
+      _flavourRecords: 1,
+      read: 1
+    }
+  });
 
   aggregation.push({
     $redact: {
@@ -305,6 +291,38 @@ let searchCollection = async function (
       ]
     }
   });
+
+  aggregation.push({
+    $lookup: {
+      from: 'nrpti',
+      localField: 'searchResults._id',
+      foreignField: '_id',
+      as: 'searchResults'
+    }
+  });
+
+  // populate refs
+  if (populate) {
+    // populate flavours
+    searchResultAggregation.push({
+      $lookup: {
+        from: 'nrpti',
+        localField: 'searchResults._flavourRecords',
+        foreignField: '_id',
+        as: 'searchResults.flavours'
+      }
+    });
+
+    // populate documents
+    searchResultAggregation.push({
+      $lookup: {
+        from: 'nrpti',
+        localField: 'searchResults.documents',
+        foreignField: '_id',
+        as: 'searchResults.documents'
+      }
+    });
+  }
 
   defaultLog.info('Executing searching on schema(s):', schemaName);
 
