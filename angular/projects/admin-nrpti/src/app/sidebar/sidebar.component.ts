@@ -39,13 +39,6 @@ export class SidebarComponent implements OnDestroy {
       });
   }
 
-  // SetActiveSidebarItem() {
-  //   const urlArray = this.routerSnapshot.url.split('/');
-  //   // urlArray[0] will be empty so we use shift to get rid of it.
-  //   urlArray.shift();
-  //   this.currentMenu = urlArray[0];
-  // }
-
   SetActiveSidebarItem() {
     const urlArray = this.routerSnapshot.url.split('/');
 
@@ -57,19 +50,18 @@ export class SidebarComponent implements OnDestroy {
     this.mainRouteId = mainRouteId;
     this.currentMenu = currentMenu && currentMenu.split(';')[0];
 
-    switch (mainRoute) {
-      case 'mines':
-        if (mainRouteId) {
-          this.showMineDetails = true;
-        } else {
-          this.showMineDetails = false;
-        }
-        break;
-      default:
+    if (mainRoute === 'mines') {
+      if (mainRouteId) {
+        this.showMineDetails = true;
+      } else {
         this.showMineDetails = false;
+      }
+    } else {
+      this.showMineDetails = false;
+    }
     }
 
-    if (mainRoute === 'mines') {
+    if ( mainRoute === 'mines' ) {
       if (mainRouteId) {
         this.currentMineId = mainRouteId;
         try {
@@ -86,20 +78,20 @@ export class SidebarComponent implements OnDestroy {
     }
   }
 
-  toggleNav() {
+  toggleNav(); {
     this.isNavMenuOpen = !this.isNavMenuOpen;
   }
 
-  closeNav() {
+  closeNav(); {
     this.isNavMenuOpen = false;
   }
 
-  activateLoading(path) {
+  activateLoading(path); {
     this.loadingScreenService.setLoadingState(true, 'body');
     this.router.navigate(path);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(); {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }

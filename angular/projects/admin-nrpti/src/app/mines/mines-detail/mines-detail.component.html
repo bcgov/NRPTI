@@ -1,10 +1,10 @@
 <main class="container-fluid-padding">
-  <h1 id="name" class="heading-bar">{{mine.name}}
+  <h1 id="name" class="heading-bar">{{mine?.name}}
     <span ngbDropdown>
       <button class="btn btn-primary action-drop-button" id="actionDropdown" ngbDropdownToggle>Actions</button>
       <div class="dropdown-menu" aria-labelledby="actionDropdown" ngbDropdownMenu>
-        <button class="dropdown-item" [routerLink]="['mines', mine._id, 'upload']">Upload Document</button>
-        <button class="dropdown-item" [routerLink]="['mines', mine._id, 'edit']">Edit</button>
+        <button class="dropdown-item" [routerLink]="['mines', mine?._id, 'upload']">Upload Document</button>
+        <button class="dropdown-item" [routerLink]="['mines', mine?._id, 'edit']">Edit</button>
       </div>
     </span>
   </h1>
@@ -41,7 +41,7 @@
       <!-- column 2/3 -->
       <div class="col-lg-4 col-md-12">
         <div class="row label-pair ml-1 mb-2">
-          <div id="permitNumber"><b>Mines Act Permit Number: </b>{{mine?.permitNumbers && mine?.permitNumbers.length > 0 ? mine?.permitNumbers?.join() : '-'}}</div>
+          <div id="permitNumber"><b>Mines Act Permit Number: </b>{{mine?.permitNumbers && mine?.permitNumbers.length > 0 ? mine?.permitNumbers?.join(', ') : '-'}}</div>
         </div>
         <div class="row label-pair ml-1 mb-2">
           <div id="tailingsImpoundments"><b>Number of Tailings Storage Facilities: </b>{{mine?.tailingsImpoundments || '-' }} </div>
@@ -67,16 +67,22 @@
 
   <hr>
 
-  <div class="row label-pair ml-1 mb-2">
+  <div class="row ml-1 mb-2">
     <label class="font-weight-bold mr-1">Mine Type:</label>
-    <div>{{mine?.type || '-'}}</div>
   </div>
-  <div class="row label-pair ml-1 mb-2">
+  <div class="row ml-1 mb-2">
+    <p>{{mine?.type || '-'}}</p>
+  </div>
+  <div class="row ml-1 mb-2">
     <label class="font-weight-bold mr-1">Mine Description:</label>
+  </div>
+  <div class="row ml-1 mb-2">
     <p>{{mine?.description || '-' }}</p>
   </div>
-  <div class="row label-pair ml-1 mb-2">
+  <div class="row ml-1 mb-2">
     <label class="font-weight-bold mr-1">Mine Summary:</label>
+  </div>
+  <div class="row ml-1 mb-2">
     <p>{{mine?.summary || '-' }}</p>
   </div>
 
