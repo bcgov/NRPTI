@@ -58,7 +58,7 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesAddEditComponent
    */
   populateTextFields() {
-    if (this.mine.dateUpdated) {
+    if (this.mine && this.mine.dateUpdated) {
       this.lastEditedSubText = `Last Edited on ${this.utils.convertJSDateToString(new Date(this.mine.dateUpdated))}`;
     } else {
       this.lastEditedSubText = `Added on ${this.utils.convertJSDateToString(new Date(this.mine.dateAdded))}`;
@@ -108,23 +108,25 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
   /**
    * Parses an array of links FormGroups into objects expected by the API.
    *
-   * @returns {object[]} array of links objects
+   * @returns {Link[]} array of Links
    * @memberof MinesAddEditComponent
    */
-  parseLinksFormGroups(): object[] {
+  parseLinksFormGroups(): Link[] {
     const linksFormArray = this.myForm.get('links');
 
     if (!linksFormArray || !linksFormArray.value || !linksFormArray.value.length) {
       return [];
     }
 
-    const links: object[] = [];
+    const links: Link[] = [];
 
     linksFormArray.value.forEach(linkFormGroup => {
-      links.push({
-        title: linkFormGroup.title,
-        url: linkFormGroup.url
-      });
+      links.push(
+        new Link({
+          title: linkFormGroup.title,
+          url: linkFormGroup.url
+        })
+      );
     });
 
     return links;
@@ -198,7 +200,7 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
 
     const mineItem = this.buildMineObject();
 
-    this.factoryService.editMine(mineItem).subscribe(async res => {
+    this.factoryService.editMine(mineItem).subscribe(() => {
       this.loadingScreenService.setLoadingState(false, 'main');
 
       this.router.navigate(['mines', this.mine._id, 'detail']);

@@ -217,8 +217,8 @@ describe('MinesAddEditComponent', () => {
       expect(mineObject['summary']).toEqual('summaryB');
       expect(mineObject['type']).toEqual('typeC');
       expect(mineObject['links']).toEqual([
-        { title: 'title1', url: 'url1' },
-        { title: 'title2', url: 'url2' }
+        new Link({ title: 'title1', url: 'url1' }),
+        new Link({ title: 'title2', url: 'url2' })
       ]);
       expect(mineObject['addRole']).toEqual('public');
     });
