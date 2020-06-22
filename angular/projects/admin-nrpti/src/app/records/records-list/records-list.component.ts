@@ -72,7 +72,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     {
       name: 'Documents',
       value: '',
-      width: 'col-2',
+      width: 'col-1',
       nosort: true
     },
     {
