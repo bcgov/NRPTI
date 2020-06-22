@@ -1,2 +1,12 @@
 @import 'assets/styles/base/base.scss';
 @import 'assets/styles/components/add-edit.scss';
+
+.grey-subtext {
+  color: $gray6;
+  font-size: 15px;
+  font-style: italic;
+}
+
+section:nth-child(-n + 2) {
+  border-bottom: 1px solid lightgrey;
+}

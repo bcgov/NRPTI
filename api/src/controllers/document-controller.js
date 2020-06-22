@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
+const AWS = require('aws-sdk');
+const ObjectID = require('mongodb').ObjectID;
+
 const queryActions = require('../utils/query-actions');
 const queryUtils = require('../utils/query-utils');
 const businessLogicManager = require('../utils/business-logic-manager');
-const AWS = require('aws-sdk');
 const mongodb = require('../utils/mongodb');
-const ObjectID = require('mongodb').ObjectID;
-let defaultLog = require('../utils/logger')('record');
+const defaultLog = require('../utils/logger')('record');
 
 const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
 const ep = new AWS.Endpoint(OBJ_STORE_URL);
@@ -21,7 +22,7 @@ exports.protectedOptions = function(args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedPost = async function(args, res, next) {
+exports.protectedPost = async function(args, res, next) { // Confirm user has correct role.
   if (
     args.swagger.params.fileName &&
     args.swagger.params.fileName.value &&
@@ -32,7 +33,7 @@ exports.protectedPost = async function(args, res, next) {
     const collection = db.collection('nrpti');
 
     // fetch master record
-    const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value) });
+    const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
 
     // Set mongo document and s3 document roles
     const readRoles = [];
@@ -53,6 +54,8 @@ exports.protectedPost = async function(args, res, next) {
           args.swagger.params.url.value,
           readRoles
         );
+
+        queryUtils.audit(args, 'POST', JSON.stringify(docResponse), args.swagger.params.auth_payload, docResponse._id);
       } catch (e) {
         defaultLog.info(`Error creating URL document - fileName: ${args.swagger.params.fileName.value}, Error: ${e}`);
         return queryActions.sendResponse(
@@ -71,6 +74,8 @@ exports.protectedPost = async function(args, res, next) {
           readRoles,
           s3ACLRole
         ));
+
+        queryUtils.audit(args, 'POST', JSON.stringify(s3Response), args.swagger.params.auth_payload, docResponse._id);
       } catch (e) {
         defaultLog.info(`Error creating S3 document - fileName: ${args.swagger.params.fileName.value}, Error ${e}`);
         return queryActions.sendResponse(
@@ -86,10 +91,12 @@ exports.protectedPost = async function(args, res, next) {
     try {
       // add to master record
       recordResponse = await collection.findOneAndUpdate(
-        { _id: new ObjectID(args.swagger.params.recordId.value) },
+        { _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
         { $addToSet: { documents: new ObjectID(docResponse._id) } },
         { new: true }
       );
+
+      queryUtils.audit(args, 'Doc Record Update', JSON.stringify(recordResponse), args.swagger.params.auth_payload, recordResponse.key);
     } catch (e) {
       defaultLog.info(
         `Error adding ${args.swagger.params.fileName.value} to record ${args.swagger.params.recordId.value}: ${e}`
@@ -107,11 +114,13 @@ exports.protectedPost = async function(args, res, next) {
       recordResponse.value._flavourRecords.forEach(id => {
         observables.push(
           collection.findOneAndUpdate(
-            { _id: new ObjectID(id) },
+            { _id: new ObjectID(id), write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
             { $addToSet: { documents: new ObjectID(docResponse._id) } },
             { new: true }
           )
         );
+
+        queryUtils.audit(args, 'Update Flavour', null, args.swagger.params.auth_payload, id);
       });
     }
     const flavourRecordResponses = await Promise.all(observables).catch(e => {
@@ -123,7 +132,7 @@ exports.protectedPost = async function(args, res, next) {
       );
     });
 
-    return queryActions.sendResponse(res, 200, {
+    queryActions.sendResponse(res, 200, {
       document: docResponse,
       record: recordResponse,
       flavours: flavourRecordResponses,
@@ -131,8 +140,9 @@ exports.protectedPost = async function(args, res, next) {
     });
   } else {
     defaultLog.info('Error: You must provide fileName and recordId.');
-    return queryActions.sendResponse(res, 400, 'You must provide fileName and recordId.');
+    queryActions.sendResponse(res, 400, 'You must provide fileName and recordId.');
   }
+  next();
 };
 
 exports.protectedDelete = async function(args, res, next) {
@@ -147,7 +157,8 @@ exports.protectedDelete = async function(args, res, next) {
     let docResponse = null;
     let s3Response = null;
     try {
-      docResponse = await Document.findOneAndRemove({ _id: new ObjectID(args.swagger.params.docId.value) });
+      docResponse = await Document.findOneAndRemove({ _id: new ObjectID(args.swagger.params.docId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
+      queryUtils.audit(args, 'DELETE', JSON.stringify(docResponse), args.swagger.params.auth_payload, docResponse._id);
     } catch (e) {
       defaultLog.info(`Error removing document meta ${args.swagger.params.docId.value} from the database: ${e}`);
       return queryActions.sendResponse(
@@ -162,6 +173,7 @@ exports.protectedDelete = async function(args, res, next) {
     if (docResponse.key) {
       try {
         const s3DeleteResult = await deleteS3Document(docResponse.key);
+        queryUtils.audit(args, 'DELETE', JSON.stringify(s3DeleteResult), args.swagger.params.auth_payload, docResponse.key);
 
         s3Response = s3DeleteResult;
       } catch (e) {
@@ -182,10 +194,11 @@ exports.protectedDelete = async function(args, res, next) {
     try {
       // remove from master record
       recordResponse = await collection.findOneAndUpdate(
-        { _id: new ObjectID(args.swagger.params.recordId.value) },
+        { _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
         { $pull: { documents: new ObjectID(docResponse._id) } },
         { new: true }
       );
+      queryUtils.audit(args, 'Doc Record Update', JSON.stringify(recordResponse), args.swagger.params.auth_payload, recordResponse.key);
     } catch (e) {
       defaultLog.info(
         `Error removing ${args.swagger.params.docId.value} from record ${args.swagger.params.recordId.value}: ${e}`
@@ -203,11 +216,12 @@ exports.protectedDelete = async function(args, res, next) {
       recordResponse.value._flavourRecords.forEach(id => {
         observables.push(
           collection.findOneAndUpdate(
-            { _id: new ObjectID(id) },
+            { _id: new ObjectID(id), write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
             { $pull: { documents: new ObjectID(docResponse._id) } },
             { new: true }
           )
         );
+        queryUtils.audit(args, 'Flavour Update', null, args.swagger.params.auth_payload, id);
       });
     }
     const flavourRecordResponses = await Promise.all(observables).catch(e => {
@@ -219,7 +233,7 @@ exports.protectedDelete = async function(args, res, next) {
       );
     });
 
-    return queryActions.sendResponse(res, 200, {
+    queryActions.sendResponse(res, 200, {
       document: docResponse,
       record: recordResponse,
       flavours: flavourRecordResponses,
@@ -227,8 +241,9 @@ exports.protectedDelete = async function(args, res, next) {
     });
   } else {
     defaultLog.info('Error: You must provide docId and recordId');
-    return queryActions.sendResponse(res, 400, { error: 'You must provide docId and recordId' });
+    queryActions.sendResponse(res, 400, { error: 'You must provide docId and recordId' });
   }
+  next();
 };
 
 /**
@@ -389,7 +404,7 @@ async function publishDocument(docId, auth_payload) {
   }
 
   const Document = require('mongoose').model('Document');
-  const document = await Document.findOne({ _id: new ObjectID(docId) });
+  const document = await Document.findOne({ _id: new ObjectID(docId), write: { $in: auth_payload.realm_access.roles } });
 
   if (!document) {
     defaultLog.info(`publishDocument - couldn't find document for docId: ${docId}`);
@@ -397,7 +412,7 @@ async function publishDocument(docId, auth_payload) {
 
   const published = await queryActions.publish(document);
 
-  await queryUtils.recordAction('Publish', document, auth_payload && auth_payload.displayName, document._id);
+  queryUtils.recordAction('Publish', document, auth_payload, document._id);
 
   return published;
 }
@@ -418,7 +433,7 @@ async function unpublishDocument(docId, auth_payload) {
   }
 
   const Document = require('mongoose').model('Document');
-  const document = await Document.findOne({ _id: new ObjectID(docId) });
+  const document = await Document.findOne({ _id: new ObjectID(docId), write: { $in: auth_payload.realm_access.roles } });
 
   if (!document) {
     defaultLog.info(`unpublishDocument - couldn't find document for docId: ${docId}`);
@@ -426,7 +441,7 @@ async function unpublishDocument(docId, auth_payload) {
 
   const unpublished = await queryActions.unPublish(document);
 
-  await queryUtils.recordAction('Unpublish', document, auth_payload && auth_payload.displayName, document._id);
+  queryUtils.recordAction('Unpublish', document, auth_payload, document._id);
 
   return unpublished;
 }
@@ -448,7 +463,7 @@ exports.protectedGetS3SignedURL = async function(args, res, next) {
   }
 
   const Document = mongoose.model('Document');
-  const document = await Document.findOne({ _id: new ObjectID(args.swagger.params.docId.value) });
+  const document = await Document.findOne({ _id: new ObjectID(args.swagger.params.docId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
 
   if (!document) {
     defaultLog.info(`protectedGetS3SignedURL - couldn't find document for docId: ${args.swagger.params.docId.value}`);

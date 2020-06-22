@@ -81,7 +81,7 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
       return;
     }
 
-    if (changes.contorl && changes.control.currentValue) {
+    if (changes.control && changes.control.currentValue) {
       this.control = changes.control.currentValue;
 
       this.initializeFormControlValue();

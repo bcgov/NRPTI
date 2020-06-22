@@ -48,6 +48,17 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
         return getHasDocumentsExp(entry);
       }
 
+      if (item === 'isNrcedPublished' && entry === 'true') {
+        return { isNrcedPublished: true }
+      } else if (item === 'isNrcedPublished' && entry === 'false') {
+        return { $or: [{ isNrcedPublished: { $exists: false } }, { isNrcedPublished: false }] };
+      }
+      if (item === 'isLngPublished' && entry === 'true') {
+        return { isLngPublished: true }
+      } else if (item === 'isLngPublished' && entry === 'false') {
+        return { $or: [{ isLngPublished: { $exists: false } }, { isLngPublished: false }] }
+      }
+
       return getConvertedValue(item, entry, comparisonOperator);
     })
   );
@@ -409,10 +420,11 @@ const executeQuery = async function (args, res, next) {
   defaultLog.info(roles);
   defaultLog.info('******************************************************************');
 
-  QueryUtils.recordAction(
+  QueryUtils.audit(args,
     'Search',
     keywords,
-    args.swagger.params.auth_payload ? args.swagger.params.auth_payload.preferred_username : 'public'
+    args.swagger.params.auth_payload ? args.swagger.params.auth_payload
+                                     : { idir_userid: null, displayName: 'public', preferred_username: 'public' }
   );
 
   let sortDirection = undefined;
@@ -450,7 +462,7 @@ const executeQuery = async function (args, res, next) {
       subset
     );
 
-    return QueryActions.sendResponse(res, 200, itemData);
+    QueryActions.sendResponse(res, 200, itemData);
   } else if (dataset[0] === 'Item') {
     let collectionObj = mongoose.model(args.swagger.params._schemaName.value);
     defaultLog.info('ITEM GET', { _id: args.swagger.params._id.value });
@@ -510,11 +522,12 @@ const executeQuery = async function (args, res, next) {
 
     const data = await collectionObj.aggregate(aggregation);
 
-    return QueryActions.sendResponse(res, 200, data);
+    QueryActions.sendResponse(res, 200, data);
   } else {
     defaultLog.info('Bad Request');
-    return QueryActions.sendResponse(res, 400, {});
+    QueryActions.sendResponse(res, 400, {});
   }
+  next();
 };
 
 exports.protectedOptions = function (args, res, next) {

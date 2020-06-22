@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
+const { userHasValidRoles } = require('../../utils/auth-utils');
+const { ROLES } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Certificate record and its associated flavour records.
@@ -76,8 +78,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (certificate._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  certificate.read = ['sysadmin'];
-  certificate.write = ['sysadmin'];
+  certificate.read = ROLES.ADMIN_ROLES;
+  certificate.write = ROLES.ADMIN_ROLES;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -151,6 +153,11 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @returns created lng certificate record
  */
 exports.createLNG = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  } 
+
   let CertificateLNG = mongoose.model('CertificateLNG');
   let certificateLNG = new CertificateLNG();
 
@@ -168,8 +175,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (certificateLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  certificateLNG.read = ['sysadmin'];
-  certificateLNG.write = ['sysadmin'];
+  certificateLNG.read = ROLES.ADMIN_ROLES;
+  certificateLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {

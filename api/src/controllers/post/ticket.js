@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
+const { userHasValidRoles } = require('../../utils/auth-utils');
+const { ROLES } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Ticket record and its associated flavour records.
@@ -86,10 +88,11 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (ticket._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj._sourceRefCorsId && (ticket._sourceRefCorsId = incomingObj._sourceRefCorsId);
 
   // set permissions
-  ticket.read = ['sysadmin'];
-  ticket.write = ['sysadmin'];
+  ticket.read = ROLES.ADMIN_ROLES;
+  ticket.write = ROLES.ADMIN_ROLES;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -123,8 +126,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   incomingObj.offence && (ticket.offence = incomingObj.offence);
 
-  ticket.issuedTo.read = ['sysadmin'];
-  ticket.issuedTo.write = ['sysadmin'];
+  ticket.issuedTo.read = ROLES.ADMIN_ROLES;
+  ticket.issuedTo.write = ROLES.ADMIN_ROLES;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (ticket.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -191,6 +194,11 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @returns created lng ticket record
  */
 exports.createLNG = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let TicketLNG = mongoose.model('TicketLNG');
   let ticketLNG = new TicketLNG();
 
@@ -206,10 +214,11 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (ticketLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj._sourceRefCorsId && (ticketLNG._sourceRefCorsId = incomingObj._sourceRefCorsId);
 
   // set permissions and meta
-  ticketLNG.read = ['sysadmin'];
-  ticketLNG.write = ['sysadmin'];
+  ticketLNG.read = ROLES.ADMIN_ROLES;
+  ticketLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   ticketLNG.addedBy = args.swagger.params.auth_payload.displayName;
   ticketLNG.dateAdded = new Date();
@@ -237,8 +246,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (ticketLNG.offence = incomingObj.offence);
 
-  ticketLNG.issuedTo.read = ['sysadmin'];
-  ticketLNG.issuedTo.write = ['sysadmin'];
+  ticketLNG.issuedTo.read = ROLES.ADMIN_ROLES;
+  ticketLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (ticketLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -313,6 +322,11 @@ exports.createLNG = function (args, res, next, incomingObj) {
  * @returns created nrced ticket record
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.NRCEDADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let TicketNRCED = mongoose.model('TicketNRCED');
   let ticketNRCED = new TicketNRCED();
 
@@ -328,10 +342,11 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (ticketNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj._sourceRefCorsId && (ticketNRCED._sourceRefCorsId = incomingObj._sourceRefCorsId);
 
   // set permissions and meta
-  ticketNRCED.read = ['sysadmin'];
-  ticketNRCED.write = ['sysadmin'];
+  ticketNRCED.read = ROLES.ADMIN_ROLES;
+  ticketNRCED.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
 
   ticketNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   ticketNRCED.dateAdded = new Date();
@@ -359,8 +374,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (ticketNRCED.offence = incomingObj.offence);
 
-  ticketNRCED.issuedTo.read = ['sysadmin'];
-  ticketNRCED.issuedTo.write = ['sysadmin'];
+  ticketNRCED.issuedTo.read = ROLES.ADMIN_ROLES;
+  ticketNRCED.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (ticketNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

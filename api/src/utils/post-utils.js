@@ -49,7 +49,7 @@ exports.getIssuedToFullNameValue = function (issuedToObj) {
 exports.createRecordWithFlavours = async function (args, res, next, incomingObj, createMaster, flavourFunctions = {}) {
   let flavours = [];
   let flavourIds = [];
-  let observables = [];
+  let promises = [];
   // We have this in case there's error and we need to clean up.
   let idsToDelete = [];
 
@@ -66,14 +66,15 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
   // Example of entries: [['OrderLNG', createLNG()], ['OrderNRCED', createNRCED()]]
   for (let i = 0; i < entries.length; i++) {
     const entry = entries[i];
+    if (!incomingObj[entry[0]]) {
+      continue;
+    }
 
     // This is to determine how we should populate the fields in master that know
     // the publish state of its flavours.
-    if (incomingObj[entry[0]].addRole && incomingObj[entry[0]].addRole.includes('public') && entry[0].includes('NRCED')) {
-      incomingObj.isNrcedPublished = true;
-    }
-    if (incomingObj[entry[0]].addRole && incomingObj[entry[0]].addRole.includes('public') && entry[0].includes('LNG')) {
-      incomingObj.isLngPublished = true;
+    if (incomingObj[entry[0]].addRole && incomingObj[entry[0]].addRole.includes('public')) {
+      entry[0].includes('NRCED') && (incomingObj.isNrcedPublished = true);
+      entry[0].includes('LNG') && (incomingObj.isLngPublished = true);
     }
 
     incomingObj[entry[0]] &&
@@ -95,15 +96,15 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
   // Set master back ref to flavours get ready to save
   for (let i = 0; i < flavours.length; i++) {
     flavours[i]._master = new ObjectId(masterRecord._id);
-    observables.push(flavours[i].save());
+    promises.push(flavours[i].save());
   }
-  observables.push(masterRecord.save());
+  promises.push(masterRecord.save());
 
   // Attempt to save everything.
 
   let result = null;
   try {
-    result = await Promise.all(observables);
+    result = await Promise.all(promises);
   } catch (e) {
     // Something went wrong. Attempt to clean up
     const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');

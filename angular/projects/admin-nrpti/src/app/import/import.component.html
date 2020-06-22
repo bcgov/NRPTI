@@ -1,30 +1,51 @@
 <main class="container-fluid-padding">
   <section class="mb-3">
     <h4>Import from Source System</h4>
-    <div class="mb-4">
-      <div class="label-pair">
-        <label>Import from EPIC</label>
-        <div>
-          <button type="button" [disabled]="showAlert" class="btn btn-primary" (click)="startJob('epic')">
-            Start Job
-          </button>
-        </div>
+
+    <div class="label-pair mb-3">
+      <label>Import from EPIC</label>
+      <div>
+        <button
+          type="button"
+          [disabled]="showAlert['epic']"
+          class="btn btn-primary"
+          (click)="startJob('epic')"
+          title="Start EPIC import job"
+        >
+          Start Job
+        </button>
       </div>
-      <div class="label-pair">
-        <label>Import from NRIS</label>
-        <div>
-          <button type="button" [disabled]="showAlert" class="btn btn-primary" (click)="startJob('nris-epd')">
-            Start Job
-          </button>
+      <div *ngIf="showAlert['epic']" class="input-group mt-1">
+        <div class="alert alert-success" role="alert">
+          <h5 class="alert-heading">Job Started!</h5>
+          <span>Please refresh the page to see the updated status.</span>
         </div>
       </div>
     </div>
-    <div *ngIf="showAlert" class="input-group mb-3">
-      <div class="alert alert-success" role="alert">
-        <h5 class="alert-heading">Job Started!</h5>
-        <span>Please refresh the page to see the updated status.</span>
+    <div class="label-pair mb-3">
+      <label>Import from NRIS</label>
+      <div>
+        <button
+          type="button"
+          [disabled]="showAlert['nris-epd']"
+          class="btn btn-primary"
+          (click)="startJob('nris-epd')"
+          title="Start NRIS import job"
+        >
+          Start Job
+        </button>
+      </div>
+      <div *ngIf="showAlert['nris-epd']" class="input-group mt-1">
+        <div class="alert alert-success" role="alert">
+          <h5 class="alert-heading">Job Started!</h5>
+          <span>Please refresh the page to see the updated status.</span>
+        </div>
       </div>
     </div>
+  </section>
+
+  <section class="mt-4.5 mb-3">
+    <app-import-csv></app-import-csv>
   </section>
 
   <section>

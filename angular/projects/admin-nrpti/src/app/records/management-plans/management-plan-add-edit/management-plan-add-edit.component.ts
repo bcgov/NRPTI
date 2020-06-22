@@ -90,7 +90,10 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
+      recordName: new FormControl({
+        value: (this.currentRecord && this.currentRecord.recordName) || '',
+        disabled: !this.factoryService.userInLngRole()
+      }),
       dateIssued: new FormControl(
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
@@ -116,9 +119,10 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
           ''
       ),
-      publishLng: new FormControl(
-        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
-      )
+      publishLng: new FormControl({
+        value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
+        disabled: !this.factoryService.userInLngRole()
+      })
     });
   }
 
@@ -160,6 +164,8 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
       managementPlan['_epicProjectId'] = EpicProjectIds.lngCanadaId;
     } else if (managementPlan['projectName'] === 'Coastal Gaslink') {
       managementPlan['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+    } else {
+      managementPlan['_epicProjectId'] = null;
     }
 
     this.myForm.controls.location.dirty && (managementPlan['location'] = this.myForm.controls.location.value);

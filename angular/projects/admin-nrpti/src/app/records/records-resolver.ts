@@ -7,7 +7,7 @@ import { EpicProjectIds } from '../../../../common/src/app/utils/record-constant
 
 @Injectable()
 export class RecordsResolver implements Resolve<Observable<object>> {
-  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) {}
+  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) { }
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const params = { ...route.params };
@@ -111,6 +111,13 @@ export class RecordsResolver implements Resolve<Observable<object>> {
       } else if (projectIds.length) {
         or['_epicProjectId'] = projectIds.join(',');
       }
+    }
+
+    if (params.isNrcedPublished) {
+      or['isNrcedPublished'] = params.isNrcedPublished;
+    }
+    if (params.isLngPublished) {
+      or['isLngPublished'] = params.isLngPublished;
     }
 
     // force-reload so we always have latest data

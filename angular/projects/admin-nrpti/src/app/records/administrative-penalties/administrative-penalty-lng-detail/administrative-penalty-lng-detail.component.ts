@@ -6,7 +6,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RecordComponent } from '../../utils/record-component';
 import { DatePipe } from '@angular/common';
 import { FactoryService } from '../../../services/factory.service';
-
 @Component({
   selector: 'app-administrative-penalty-lng-detail',
   templateUrl: './administrative-penalty-lng-detail.component.html',
@@ -17,12 +16,14 @@ export class AdministrativePenaltyLNGDetailComponent extends RecordComponent imp
 
   public isPublished: boolean;
 
+
+
   constructor(
     public route: ActivatedRoute,
     public router: Router,
     public factoryService: FactoryService,
     public changeDetectionRef: ChangeDetectorRef,
-    public datePipe: DatePipe
+    public datePipe: DatePipe,
   ) {
     super();
   }

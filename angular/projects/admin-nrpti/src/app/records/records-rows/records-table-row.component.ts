@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit, ChangeDetectorRef } from '@angular/core';
-
+import { FactoryService } from '../../services/factory.service';
 import { TableRowComponent } from 'nrpti-angular-components';
 import { Router } from '@angular/router';
 import { Entity } from '../../../../../common/src/app/models/master/common-models/entity';
@@ -14,7 +14,11 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
 
   public entityString = '';
 
-  constructor(private router: Router, public changeDetectionRef: ChangeDetectorRef) {
+  public disableRow = false;
+
+  constructor(private router: Router,
+              public changeDetectionRef: ChangeDetectorRef,
+              public factoryService: FactoryService) {
     super();
   }
 

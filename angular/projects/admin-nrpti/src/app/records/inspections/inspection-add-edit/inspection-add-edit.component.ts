@@ -129,7 +129,10 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
+      recordName: new FormControl({
+        value: (this.currentRecord && this.currentRecord.recordName) || '',
+        disabled: !this.factoryService.userInLngRole()
+      }),
       dateIssued: new FormControl(
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
@@ -198,16 +201,18 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
       outcomeDescription: new FormControl((this.currentRecord && this.currentRecord.outcomeDescription) || ''),
 
       // NRCED
-      nrcedSummary: new FormControl(
+      nrcedSummary: new FormControl({
         // default to using the master description if the flavour record does not exist
-        (this.currentRecord &&
+        value: (this.currentRecord &&
           ((this.nrcedFlavour && this.nrcedFlavour.summary) ||
             (!this.nrcedFlavour && this.currentRecord.description))) ||
-          ''
-      ),
-      publishNrced: new FormControl(
-        (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false
-      ),
+          '',
+          disabled: !this.factoryService.userInNrcedRole()
+      }),
+      publishNrced: new FormControl({
+        value: (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false,
+        disabled: !this.factoryService.userInNrcedRole()
+      }),
 
       // LNG
       lngDescription: new FormControl(
@@ -216,9 +221,10 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
           ''
       ),
-      publishLng: new FormControl(
-        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
-      )
+      publishLng: new FormControl({
+        value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
+        disabled: !this.factoryService.userInLngRole()
+      })
     });
   }
 
@@ -302,6 +308,8 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
       inspection['_epicProjectId'] = EpicProjectIds.lngCanadaId;
     } else if (inspection['projectName'] === 'Coastal Gaslink') {
       inspection['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+    } else {
+      inspection['_epicProjectId'] = null;
     }
 
     this.myForm.controls.location.dirty && (inspection['location'] = this.myForm.controls.location.value);

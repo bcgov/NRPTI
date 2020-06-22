@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
+const { userHasValidRoles } = require('../../utils/auth-utils');
+const { ROLES } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Self Report record and its associated flavour records.
@@ -76,8 +78,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (selfReport._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  selfReport.read = ['sysadmin'];
-  selfReport.write = ['sysadmin'];
+  selfReport.read = ROLES.ADMIN_ROLES
+  selfReport.write = ROLES.ADMIN_ROLES;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -151,6 +153,11 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @returns created lng selfReport record
  */
 exports.createLNG = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let SelfReportLNG = mongoose.model('SelfReportLNG');
   let selfReportLNG = new SelfReportLNG();
 
@@ -168,8 +175,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (selfReportLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  selfReportLNG.read = ['sysadmin'];
-  selfReportLNG.write = ['sysadmin'];
+  selfReportLNG.read = ROLES.ADMIN_ROLES;
+  selfReportLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
