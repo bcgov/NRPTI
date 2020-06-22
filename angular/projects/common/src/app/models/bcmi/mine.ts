@@ -1,3 +1,13 @@
+export class Link {
+  title: string;
+  url: string;
+
+  constructor(obj?: any) {
+    this.title = (obj && obj.title) || '';
+    this.url = (obj && obj.url) || '';
+  }
+}
+
 /**
  * BCMI Mine data model.
  *
@@ -23,7 +33,7 @@ export class Mine {
   permittee:            string;
   summary:              string;
   description:          string;
-  links:                string[];
+  links:                Link[];
   // metadata boilerplate
   dateAdded:            Date;
   dateUpdated:          Date;
@@ -53,7 +63,8 @@ export class Mine {
     this.permittee            = (obj && obj.permittee)            || '';
     this.summary              = (obj && obj.summary)              || '';
     this.description          = (obj && obj.description)          || '';
-    this.links                = (obj && obj.links)                || [];
+    this.links                = (obj && obj.links && obj.links.length && obj.links.map(link => new Link(link))) || null;
+
     // metadata boilerplate
     this.dateAdded            = (obj && obj.dateAdded)            || null;
     this.dateUpdated          = (obj && obj.dateUpdated)          || null;
