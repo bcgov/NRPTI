@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit, ChangeDetectorRef } from '@angular/cor
 import { Router } from '@angular/router';
 import { TableRowComponent } from 'nrpti-angular-components';
 import { Entity } from '../../../../../common/src/app/models/master/common-models/entity';
+import { Regions } from '../../../../../common/src/app/constants/mine';
 
 @Component({
   selector: 'tr[app-mines-table-row]',
@@ -41,5 +42,9 @@ export class MinesTableRowComponent extends TableRowComponent implements OnInit 
     if (this.rowData._schemaName === 'Mine') {
       this.router.navigate(['mines', this.rowData._id, 'edit']);
     }
+  }
+
+  displayRegion(regionCode: string): string {
+    return Regions[regionCode];
   }
 }
