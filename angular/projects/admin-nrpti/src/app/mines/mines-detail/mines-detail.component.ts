@@ -63,7 +63,7 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.ngUnsubscribe),
         catchError(error => {
-          alert('Failed to publish record.');
+          alert('Failed to publish mine.');
           return of(null);
         })
       )
@@ -74,6 +74,7 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
 
         if (response.code === 409) {
           // object was already published
+          alert('Mine is already published.');
           return;
         }
 
@@ -90,7 +91,7 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.ngUnsubscribe),
         catchError(error => {
-          alert('Failed to unpublish record.');
+          alert('Failed to unpublish mine.');
           return of(null);
         })
       )
@@ -101,6 +102,7 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
 
         if (response.code === 409) {
           // object was already unpublished
+          alert('Mine is already unpublished.');
           return;
         }
 

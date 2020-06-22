@@ -59,7 +59,6 @@ export class SidebarComponent implements OnDestroy {
     } else {
       this.showMineDetails = false;
     }
-    }
 
     if ( mainRoute === 'mines' ) {
       if (mainRouteId) {
@@ -78,20 +77,20 @@ export class SidebarComponent implements OnDestroy {
     }
   }
 
-  toggleNav(); {
+  toggleNav() {
     this.isNavMenuOpen = !this.isNavMenuOpen;
   }
 
-  closeNav(); {
+  closeNav() {
     this.isNavMenuOpen = false;
   }
 
-  activateLoading(path); {
+  activateLoading(path) {
     this.loadingScreenService.setLoadingState(true, 'body');
     this.router.navigate(path);
   }
 
-  ngOnDestroy(); {
+  ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
