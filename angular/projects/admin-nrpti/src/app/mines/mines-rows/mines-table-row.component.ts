@@ -49,6 +49,6 @@ export class MinesTableRowComponent extends TableRowComponent implements OnInit 
   }
 
   isPublic() {
-    return this.rowData.read.includes('public');
+    return this.rowData.read && this.rowData.read.includes('public');
   }
 }
