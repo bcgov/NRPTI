@@ -3,6 +3,7 @@
     "Construction, development and operation activities are subject to oversight by the provincial government and strict compliance procedures.",
     "Industry is expected to operate in compliance with all conditions and requirements identified by the provincial government. These conditions and requirements are set out in the environmental assessment certificate or individual permit.",
     "Compliance and enforcement actions vary, and often depend on the severity of the situation requiring attention or correction. When non-compliances are identified the goal is always the same: to bring the company back into compliance.",
+    "For compliance information from the BC Oil and Gas Commission please go to this [page](https://www.bcogc.ca/data-reports/compliance-enforcement/). More compliance information will be added to the site soon.",
     "The list below includes all compliance actions imposed to date by the BC Oil and Gas Commission and British Columbia’s Environmental Assessment Office. For a full list of all authorizations and their associated requirements, please visit the [Authorizations](/project/1/authorizations) page."
   ],
   "documents": {
@@ -48,10 +49,10 @@
             "documentFieldValues": ["LNG Canada"]
           },
           {
-            "displayName": "BC Oil and Gas commission",
+            "displayName": "BC Oil and Gas Commission",
             "fieldName": "authorBCOGC",
             "documentFieldName": "author",
-            "documentFieldValues": ["BC Oil and Gas commission"]
+            "documentFieldValues": ["BC Oil and Gas Commission"]
           }
         ]
       },
