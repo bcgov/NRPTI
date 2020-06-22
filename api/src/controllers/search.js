@@ -243,19 +243,19 @@ let searchCollection = async function (
     }
   ];
 
-  aggregation.push({
+  let projection = {
     $project: {
       _id: 1,
       _flavourRecords: 1,
-      documents: 1,
       read: 1,
-      recordName: 1,
-      location: 1,
-      recordType: 1,
-      'issuedTo.fullName': 1,
-      dateIssued: 1
     }
-  });
+  };
+
+  if (sortField && sortDirection) {
+    projection.$project[sortField] = 1;
+  }
+
+  aggregation.push(projection);
 
   aggregation.push({
     $redact: {
