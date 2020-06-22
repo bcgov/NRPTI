@@ -10,7 +10,7 @@
 <td scope="row" data-label="Region" class="col-1">{{ rowData.region && displayRegion(rowData.region) || '-' }}</td>
 
 <td scope="row" data-label="Published State" class="col-2 d-flex">
-  <div *ngIf="isPublic(); then published else unpublished"></div>
+  <div *ngIf="rowData.read && rowData.read.includes('public'); then published else unpublished"></div>
   <ng-template #published class="test">
     <i class="material-icons published-green">check_circle</i>
     <span class="publish-label pl-1 published-green">Published</span>

@@ -47,8 +47,4 @@ export class MinesTableRowComponent extends TableRowComponent implements OnInit 
   displayRegion(regionCode: string): string {
     return Regions[regionCode];
   }
-
-  isPublic() {
-    return this.rowData.read && this.rowData.read.includes('public');
-  }
 }
