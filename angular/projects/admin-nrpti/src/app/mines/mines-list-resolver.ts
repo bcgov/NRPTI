@@ -11,8 +11,13 @@ export class MinesListResolver implements Resolve<Observable<object>> {
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const tableObject = this.tableTemplateUtils.updateTableObjectWithUrlParams(route.params, new TableObject());
 
+    let keywords = '';
+    if (route.params && route.params.keywords) {
+      keywords = route.params.keywords;
+    }
+
     return this.factoryService.getRecords(
-      '',
+      keywords,
       ['Mine'],
       [],
       tableObject.currentPage,

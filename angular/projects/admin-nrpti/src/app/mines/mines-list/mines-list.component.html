@@ -1,4 +1,40 @@
 <main class="container-fluid-padding">
+  <h1>All Mines</h1>
+  <br />
+  <div class="border-bottom">
+    <div class="row mb-3">
+      <div class="col">
+        <span class="keyword-search-text">Keyword Search</span>
+        <i
+          class="material-icons align-text-bottom ml-2"
+          matTooltip="Enter a Mine Name or permit number to search for."
+          matTooltipPosition="after"
+          aria-label="Icon that displays a tooltip when focused or hovered over">
+          help_outline
+        </i>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" (keyup.enter)="keywordSearch()" [(ngModel)]="keywordSearchWords"
+            placeholder="Type keyword search words"
+            aria-label="Type keyword search words" aria-describedby="basic-addon2">
+          <div *ngIf="keywordSearchWords && keywordSearchWords.length > 0" class="input-group-append">
+            <button class="btn btn-outline-primary" type="button" (click)="clearSearchTerms()">
+              <i class="material-icons align-middle">close</i>
+            </button>
+          </div>
+          <div class="input-group-append">
+            <button class="btn btn-outline-primary" type="button" (click)="keywordSearch()">
+              <i class="material-icons align-middle">search</i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div *ngIf="!tableData.totalListItems">
     No Mines found.
   </div>
