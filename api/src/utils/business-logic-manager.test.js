@@ -25,3 +25,43 @@ describe('applyBusinessLogicToAct', () => {
     expect(result).toEqual('Fisheries Act (Canada)');
   });
 });
+
+describe('updateDocumentRoles', () => {
+  it('returns null if null masterRecord paramter provided ', async () => {
+    const result = await BusinessLogicManager.updateDocumentRoles(null);
+
+    expect(result).toBe(null);
+  });
+
+  it('returns null if masterRecord.documents is null', async () => {
+    const result = await BusinessLogicManager.updateDocumentRoles({ documents: null });
+
+    expect(result).toBe(null);
+  });
+
+  it('returns null if masterRecord.documents is empty', async () => {
+    const result = await BusinessLogicManager.updateDocumentRoles({ documents: [] });
+
+    expect(result).toBe(null);
+  });
+});
+
+describe('isDocumentConsideredAnonymous', () => {
+  it('returns true if null masterRecord paramter provided ', async () => {
+    const result = await BusinessLogicManager.isDocumentConsideredAnonymous(null);
+
+    expect(result).toBe(true);
+  });
+
+  it('returns true if masterRecord.documents is null', async () => {
+    const result = await BusinessLogicManager.isDocumentConsideredAnonymous({ documents: null });
+
+    expect(result).toBe(true);
+  });
+
+  it('returns true if masterRecord.documents is empty', async () => {
+    const result = await BusinessLogicManager.isDocumentConsideredAnonymous({ documents: [] });
+
+    expect(result).toBe(true);
+  });
+});

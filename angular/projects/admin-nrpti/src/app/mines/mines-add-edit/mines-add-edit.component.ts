@@ -164,13 +164,12 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Transform the form data and save.
+   * Parses the form data into a mine object.
    *
+   * @returns mine object
    * @memberof MinesAddEditComponent
    */
-  async submit() {
-    this.loadingScreenService.setLoadingState(true, 'main');
-
+  buildMineObject() {
     const mineItem = {};
 
     mineItem['_id'] = this.mine._id;
@@ -185,6 +184,19 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
     } else if (this.myForm.get('publish').dirty && !this.myForm.get('publish').value) {
       mineItem['removeRole'] = 'public';
     }
+
+    return mineItem;
+  }
+
+  /**
+   * Transform the form data and save.
+   *
+   * @memberof MinesAddEditComponent
+   */
+  async submit() {
+    this.loadingScreenService.setLoadingState(true, 'main');
+
+    const mineItem = this.buildMineObject();
 
     this.factoryService.editMine(mineItem).subscribe(async res => {
       this.loadingScreenService.setLoadingState(false, 'main');
