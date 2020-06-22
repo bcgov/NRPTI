@@ -168,7 +168,7 @@
       </div>
       <div class="col-md-4">
         <mat-label>Source System</mat-label>
-        <mat-select class="border-bottom pt-3" [formControl]="systemRefControl" multiple>
+        <mat-select class="border rounded px-2 py-2" [formControl]="systemRefControl" multiple>
           <mat-option *ngFor="let systemRef of systemRefOptions" [value]="systemRef">{{systemRef}}</mat-option>
         </mat-select>
       </div>
