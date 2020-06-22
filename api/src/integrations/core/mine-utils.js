@@ -78,13 +78,17 @@ class Mines extends BaseRecordUtils {
 
     const commodities = [];
 
-    mineRecord.mine_type.forEach(type => {
-      commodityTypes.forEach(commodity => {
-        if (commodity.mine_tenure_type_codes.includes(type.mine_tenure_type_code)) {
-          commodities.push(commodity.description);
+    for (const mineType of mineRecord.mine_type) {
+      if (mineType.mine_type_detail && mineType.mine_type_detail.length) {
+        for (const typeDetail of mineType.mine_type_detail) {
+          // Could be null if type is a disturbance instead of a commodity.
+          if (typeDetail.mine_commodity_code) {
+            const commodity = commodityTypes.find(commodity => commodity.mine_commodity_code === typeDetail.mine_commodity_code);
+            commodities.push(commodity.description);
+          }
         }
-      });
-    });
+      }
+    }
 
     return commodities;
   }
@@ -101,8 +105,13 @@ class Mines extends BaseRecordUtils {
       throw new Error('getLatestStatus - mineRecord must not be null.');
     }
 
-    const latestStatus = mineRecord.mine_status.pop();
-    return (latestStatus && latestStatus.status_labels.join(' ')) || '';
+    if (mineRecord.mine_status && !mineRecord.mine_status.length) {
+      return '';
+    }
+
+    // Core always displays the status at the 0 index.
+    const latestStatus = mineRecord.mine_status[0];
+    return (latestStatus.status_labels && latestStatus.status_labels.join(' ')) || '';
   }
 
   /**
