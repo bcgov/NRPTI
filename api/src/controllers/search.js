@@ -281,6 +281,49 @@ let searchCollection = async function (
     }
   });
 
+  // add a lookup and replace root
+  // to finalize the facet
+  searchResultAggregation.push({
+    $lookup: {
+      from: 'nrpti',
+      localField: '_id',
+      foreignField: '_id',
+      as: 'fullRecord'
+    }
+  });
+  searchResultAggregation.push({
+    $replaceRoot: {
+      newRoot: {
+              $mergeObjects: [
+                { $arrayElemAt: [ "$fullRecord", 0 ] },
+                "$$ROOT" ]
+            }
+      }
+  });
+
+  // populate refs
+  if (populate) {
+    // populate flavours
+    searchResultAggregation.push({
+      $lookup: {
+        from: 'nrpti',
+        localField: '_flavourRecords',
+        foreignField: '_id',
+        as: 'flavours'
+      }
+    });
+
+    // populate documents
+    searchResultAggregation.push({
+      $lookup: {
+        from: 'nrpti',
+        localField: 'documents',
+        foreignField: '_id',
+        as: 'documents'
+      }
+    });
+  }
+
   aggregation.push({
     $facet: {
       searchResults: searchResultAggregation,
@@ -291,38 +334,6 @@ let searchCollection = async function (
       ]
     }
   });
-
-  aggregation.push({
-    $lookup: {
-      from: 'nrpti',
-      localField: 'searchResults._id',
-      foreignField: '_id',
-      as: 'searchResults'
-    }
-  });
-
-  // populate refs
-  if (populate) {
-    // populate flavours
-    searchResultAggregation.push({
-      $lookup: {
-        from: 'nrpti',
-        localField: 'searchResults._flavourRecords',
-        foreignField: '_id',
-        as: 'searchResults.flavours'
-      }
-    });
-
-    // populate documents
-    searchResultAggregation.push({
-      $lookup: {
-        from: 'nrpti',
-        localField: 'searchResults.documents',
-        foreignField: '_id',
-        as: 'searchResults.documents'
-      }
-    });
-  }
 
   defaultLog.info('Executing searching on schema(s):', schemaName);
 
