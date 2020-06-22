@@ -32,7 +32,7 @@ exports.up = async function(db) {
 
       await collection.createIndex(
         {
-          'flavours.recordName': 'text'
+          'recordName': 'text'
         },
         {
           name: 'record-name-subset-text-index'
