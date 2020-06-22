@@ -173,6 +173,12 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Clears the active keyword search text
+   */
+  clearSearchTerms() {
+    this.keywordSearchWords = '';
+  }
+  /**
    * Updates the url parameters based on the currently set query and table template params, without reloading the page.
    *
    * @memberof RecordsListComponent
