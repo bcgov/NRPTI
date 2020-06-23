@@ -23,7 +23,6 @@ describe('transformRecord', () => {
       location: '',
       offence: '',
       penalties: [{ description: '', penalty: { type: 'Dollars', value: null }, type: 'Fined' }],
-      description: '',
 
       sourceSystemRef: 'cors-csv'
     });
@@ -50,7 +49,7 @@ describe('transformRecord', () => {
       _sourceRefCorsId: 123,
 
       recordType: 'Ticket',
-      dateIssued: expect.any(Date),
+      dateIssued: expect.any(String),
       issuedTo: {
         companyName: 'businessName123',
         type: 'Company'
@@ -75,7 +74,6 @@ describe('transformRecord', () => {
           type: 'Fined'
         }
       ],
-      description: 'description123',
 
       sourceSystemRef: 'cors-csv'
     });
