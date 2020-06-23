@@ -6,6 +6,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgbModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
+import { MatSlideToggleModule } from '@angular/material';
 
 // local modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -32,7 +33,8 @@ import { MinesAddEditComponent } from './mines-add-edit/mines-add-edit.component
     NgbModule.forRoot(),
     MinesRoutingModule,
     MatTooltipModule,
-    NgbDropdownModule
+    NgbDropdownModule,
+    MatSlideToggleModule
   ],
   declarations: [
     MinesListComponent,

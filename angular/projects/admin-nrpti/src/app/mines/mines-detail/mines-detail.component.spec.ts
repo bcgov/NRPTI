@@ -8,6 +8,7 @@ import { RecordDetailDirective } from '../../records/utils/record-detail.directi
 import { DatePipe } from '@angular/common';
 import { CommonModule } from '../../../../../common/src/app/common.module';
 import { DialogService } from 'ng2-bootstrap-modal';
+import { MatSlideToggleModule } from '@angular/material';
 
 describe('MinesDetailComponent', () => {
   const testBedHelper = new TestBedHelper<MinesDetailComponent>(MinesDetailComponent);
@@ -18,13 +19,21 @@ describe('MinesDetailComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, GlobalModule, CommonModule],
-      declarations: [MinesDetailComponent, RecordDetailDirective],
+      imports: [
+        RouterTestingModule,
+        GlobalModule,
+        CommonModule,
+        MatSlideToggleModule
+      ],
+      declarations: [
+        MinesDetailComponent,
+        RecordDetailDirective
+      ],
       providers: [
         DatePipe,
         DialogService,
         { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute }
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
       ]
     }).compileComponents();
   }));

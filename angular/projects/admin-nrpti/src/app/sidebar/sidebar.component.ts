@@ -17,9 +17,11 @@ export class SidebarComponent implements OnDestroy {
   public isNavMenuOpen = false;
   public routerSnapshot = null;
   public showNotificationProjects = false;
-  public showProjectDetails = false;
+  public showMineDetails = false;
   public showProjectDetailsSubItems = false;
-  public currentProjectId = '';
+  public currentMineId = '';
+  public mainRoute = '';
+  public mainRouteId = '';
   public currentMenu = '';
 
   constructor(
@@ -39,13 +41,40 @@ export class SidebarComponent implements OnDestroy {
 
   SetActiveSidebarItem() {
     const urlArray = this.routerSnapshot.url.split('/');
-    // urlArray[0] will be empty so we use shift to get rid of it.
-    urlArray.shift();
-    this.currentMenu = urlArray[0];
-  }
 
-  toggleDropdown() {
-    this.showProjectDetailsSubItems = !this.showProjectDetailsSubItems;
+    // The first element will be empty, so shift in order to remove it.
+    urlArray.shift();
+    const [mainRoute, mainRouteId, currentMenu] = urlArray;
+
+    this.mainRoute = mainRoute;
+    this.mainRouteId = mainRouteId;
+    this.currentMenu = currentMenu && currentMenu.split(';')[0];
+
+    if (mainRoute === 'mines') {
+      if (mainRouteId) {
+        this.showMineDetails = true;
+      } else {
+        this.showMineDetails = false;
+      }
+    } else {
+      this.showMineDetails = false;
+    }
+
+    if ( mainRoute === 'mines' ) {
+      if (mainRouteId) {
+        this.currentMineId = mainRouteId;
+        try {
+          this.currentMenu = currentMenu;
+          this.currentMenu = currentMenu.split(';')[0];
+        } catch (e) {
+          // When coming from search, it's blank.
+        }
+        this.showMineDetails = true;
+      }
+    } else {
+      this.currentMineId = mainRoute;
+      this.showMineDetails = false;
+    }
   }
 
   toggleNav() {

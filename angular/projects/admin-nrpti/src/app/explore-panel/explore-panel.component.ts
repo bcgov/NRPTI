@@ -55,6 +55,7 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
   clearSearchFilters() {
     this.resetControls.emit();
     this.filtersReset.emit();
+    this.systemRefControl.reset();
     this.formGroup.reset();
   }
 

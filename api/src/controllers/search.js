@@ -5,6 +5,7 @@ let QueryUtils = require('../utils/query-utils');
 let qs = require('qs');
 let mongodb = require('../utils/mongodb');
 let moment = require('moment');
+let fuzzySearch = require('../utils/fuzzySearch');
 
 function isEmpty(obj) {
   for (const key in obj) {
@@ -205,6 +206,11 @@ let searchCollection = async function (
   // optional search keys
   let searchProperties = undefined;
   if (keywords) {
+    // for now, limit fuzzy search to the mine search only. We can expand to all searches
+    // later if desired
+    if (schemaName === 'Mine') {
+      keywords = keywords && keywords.length > 1 ? fuzzySearch.createFuzzySearchString(keywords, 4, caseSensitive) : keywords;
+    }
     searchProperties = { $text: { $search: keywords, $caseSensitive: caseSensitive } };
   }
 
@@ -230,34 +236,26 @@ let searchCollection = async function (
       $limit: pageSize
     }
   );
-  // populate refs
-  if (populate) {
-    // populate flavours
-    searchResultAggregation.push({
-      $lookup: {
-        from: 'nrpti',
-        localField: '_flavourRecords',
-        foreignField: '_id',
-        as: 'flavours'
-      }
-    });
-
-    // populate documents
-    searchResultAggregation.push({
-      $lookup: {
-        from: 'nrpti',
-        localField: 'documents',
-        foreignField: '_id',
-        as: 'documents'
-      }
-    });
-  }
 
   let aggregation = [
     {
       $match: match
     }
   ];
+
+  let projection = {
+    $project: {
+      _id: 1,
+      _flavourRecords: 1,
+      read: 1,
+    }
+  };
+
+  if (sortField && sortDirection) {
+    projection.$project[sortField] = 1;
+  }
+
+  aggregation.push(projection);
 
   aggregation.push({
     $redact: {
@@ -288,6 +286,50 @@ let searchCollection = async function (
       score: { $meta: 'textScore' }
     }
   });
+
+  // add a lookup and replace root
+  // to finalize the facet
+  searchResultAggregation.push({
+    $lookup: {
+      from: 'nrpti',
+      localField: '_id',
+      foreignField: '_id',
+      as: 'fullRecord'
+    }
+  });
+
+  searchResultAggregation.push({
+    $replaceRoot: {
+      newRoot: {
+              $mergeObjects: [
+                { $arrayElemAt: [ "$fullRecord", 0 ] },
+                "$$ROOT" ]
+            }
+      }
+  });
+
+  // populate refs
+  if (populate) {
+    // populate flavours
+    searchResultAggregation.push({
+      $lookup: {
+        from: 'nrpti',
+        localField: '_flavourRecords',
+        foreignField: '_id',
+        as: 'flavours'
+      }
+    });
+
+    // populate documents
+    searchResultAggregation.push({
+      $lookup: {
+        from: 'nrpti',
+        localField: 'documents',
+        foreignField: '_id',
+        as: 'documents'
+      }
+    });
+  }
 
   aggregation.push({
     $facet: {
