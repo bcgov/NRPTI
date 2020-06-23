@@ -6,7 +6,7 @@
           <div class="card-col-label">
             {{ tableData.columns[0].name }}
           </div>
-          <div>
+          <div class="truncate" class="truncate">
             {{ entityString || '-' }}
           </div>
         </div>
@@ -14,7 +14,7 @@
           <div class="card-col-label">
             {{ tableData.columns[1].name }}
           </div>
-          <div>
+          <div class="truncate">
             {{ rowData.recordType || '-' }}
           </div>
         </div>
@@ -22,7 +22,7 @@
           <div class="card-col-label">
             {{ tableData.columns[2].name }}
           </div>
-          <div>
+          <div class="truncate">
             {{ rowData.location || '-' }}
           </div>
         </div>
@@ -38,7 +38,7 @@
           <div class="card-col-label">
             {{ tableData.columns[4].name }}
           </div>
-          <div>
+          <div class="truncate">
             {{ (rowData.dateIssued | date: 'mediumDate') || '-' }}
           </div>
         </div>
@@ -51,8 +51,7 @@
     class="closeDetailsContainerButton"
     type="submit"
     title="Close record details"
-    (click)="removeDetailsComponent()"
-  >
+    (click)="removeDetailsComponent()">
     <i class="material-icons">close</i>
   </button>
 </td>
