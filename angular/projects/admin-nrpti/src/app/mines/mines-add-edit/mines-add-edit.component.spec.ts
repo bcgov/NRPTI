@@ -57,6 +57,9 @@ describe('MinesAddEditComponent', () => {
     it('sets publish control to true', () => {
       const { component } = testBedHelper.createComponent();
 
+      // stub component
+      component.isFormValid = () => true;
+
       component.myForm = new FormGroup({
         publish: new FormControl(false)
       });
@@ -68,6 +71,9 @@ describe('MinesAddEditComponent', () => {
 
     it('sets publish control to false', () => {
       const { component } = testBedHelper.createComponent();
+
+      // stub component
+      component.isFormValid = () => true;
 
       component.myForm = new FormGroup({
         publish: new FormControl(true)
@@ -126,6 +132,9 @@ describe('MinesAddEditComponent', () => {
     it('builds an array of links from links FormArray', () => {
       const { component } = testBedHelper.createComponent();
 
+      // stub component
+      component.isFormValid = () => true;
+
       component.myForm = new FormGroup({
         links: new FormArray([
           new FormGroup({
@@ -135,6 +144,10 @@ describe('MinesAddEditComponent', () => {
           new FormGroup({
             title: new FormControl('titleB'),
             url: new FormControl('urlB')
+          }),
+          new FormGroup({
+            title: new FormControl(''),
+            url: new FormControl('')
           })
         ])
       });
@@ -150,6 +163,9 @@ describe('MinesAddEditComponent', () => {
 
     it('builds an empty array when formArray is empty', () => {
       const { component } = testBedHelper.createComponent();
+
+      // stub component
+      component.isFormValid = () => true;
 
       component.myForm = new FormGroup({
         links: new FormArray([])
@@ -185,6 +201,9 @@ describe('MinesAddEditComponent', () => {
   describe('buildMineObject', () => {
     it('parses the dirty form controls into an object', () => {
       const { component } = testBedHelper.createComponent();
+
+      // stub component
+      component.isFormValid = () => true;
 
       component.mine = new Mine({ _id: '123' });
 

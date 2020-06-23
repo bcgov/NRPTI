@@ -24,12 +24,31 @@ form {
 }
 
 .btn-remove {
-  color: $link-delete-font-color;
-}
+  i {
+    color: $link-delete-font-color;
+    vertical-align: none;
+  }
 
-.btn-no-hover {
   &:hover {
     color: $link-delete-hover-font-color;
     background-color: transparent;
   }
+}
+
+.btn-drag {
+  i {
+    color: $link-info-font-color;
+    vertical-align: none;
+  }
+
+  &:hover {
+    color: $link-delete-hover-font-color;
+    background-color: transparent;
+  }
+}
+
+.validation-error {
+  font-size: $validator-font-size;
+  font-weight: $validator-font-weight;
+  color: $validator-font-color;
 }

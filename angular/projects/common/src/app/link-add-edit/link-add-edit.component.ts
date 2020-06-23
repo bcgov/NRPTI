@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, FormArray, FormGroup } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { UrlValidator } from '../form-validators/validators';
 
 /**
  * Links component with drag/drop support.
@@ -24,8 +25,8 @@ export class LinkAddEditComponent {
   addLink() {
     this.formArray.push(
       new FormGroup({
-        title: new FormControl(),
-        url: new FormControl()
+        title: new FormControl(''),
+        url: new FormControl('', UrlValidator)
       })
     );
 

@@ -5,24 +5,29 @@
     <form [formGroup]="formGroup" class="mb-4">
       <div class="flex-container">
         <div class="d-flex flex-fill">
-          <button class="btn btn-icon btn-no-hover align-middle mt-4" title="Drag & drop to reorder">
-            <i class="material-icons" cdkDragHandle>reorder</i>
-          </button>
-          <div class="label-pair flex-fill">
+          <div>
+            <button class="btn btn-icon btn-drag mt-4" title="Drag & drop to reorder">
+              <i class="material-icons" cdkDragHandle>reorder</i>
+            </button>
+          </div>
+          <div class="label-pair w-50 flex-fill">
             <label>Link Title</label>
             <div class="label-pair mr-3">
               <input type="text" placeholder="Enter link title" formControlName="title" class="form-control" />
             </div>
           </div>
-          <div class="label-pair flex-fill">
+          <div class="label-pair w-50 flex-fill">
             <label>Link URL</label>
             <div class="label-pair mr-3">
               <input type="text" placeholder="Enter link url" formControlName="url" class="form-control" />
             </div>
+            <div class="validation-error" *ngIf="formGroup.get('url').invalid" [hidden]="formGroup.get('url').pristine">
+              URL is invalid. Be sure to include http:// or https:// as part of your URL.
+            </div>
           </div>
           <div>
             <button
-              class="btn btn-icon btn-no-hover btn-remove align-middle mt-4"
+              class="btn btn-icon btn-remove mt-4"
               style="margin-top: 3px"
               type="button"
               title="Remove link"

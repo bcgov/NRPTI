@@ -42,16 +42,20 @@
         </div>
         <div class="col-sm col-md">
           <div class="flex-container mb-2">
-            <label for="permit" class="med mr-2">Mine Act Permit Number:</label>
-            <span id="permit" name="permit">{{ (mine && mine.permitNumbers) || '-' }}</span>
+            <label for="permit" class="med mr-2">Mines Act Permit Number:</label>
+            <span id="permit" name="permit">
+              {{ (mine && mine.permitNumbers && mine.permitNumbers.length && mine.permitNumbers.join(', ')) || '-' }}
+            </span>
           </div>
           <div class="flex-container mb-2">
             <label for="tailings" class="med mr-2">Number of Tailing Storage Facility:</label>
             <span id="tailings" name="tailings">{{ (mine && mine.tailingsImpoundments) || '-' }}</span>
           </div>
           <div class="flex-container mb-2">
-            <label for="commodity" class="med mr-2">Commodity:</label>
-            <span id="commodity" name="commodity">{{ (mine && mine.commodities) || '-' }}</span>
+            <label for="commodity" class="med mr-2">Commodities:</label>
+            <span id="commodity" name="commodity">
+              {{ (mine && mine.commodities && mine.commodities.length && mine.commodities.join(', ')) || '-' }}
+            </span>
           </div>
         </div>
         <div class="col-sm col-md">
@@ -138,7 +142,7 @@
     </section>
   </form>
   <div class="d-flex flex-row-reverse mt-4 mb-3">
-    <button class="btn btn-primary" type="submit" (click)="submit()" title="Update record">
+    <button [disabled]="!isFormValid()" class="btn btn-primary" type="submit" (click)="submit()" title="Update record">
       <i class="material-icons mr-1">
         save
       </i>

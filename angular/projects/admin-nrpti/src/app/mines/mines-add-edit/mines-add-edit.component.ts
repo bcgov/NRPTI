@@ -7,6 +7,7 @@ import { Subject } from 'rxjs/Subject';
 import { Mine, Link } from '../../../../../common/src/app/models/bcmi/mine';
 import { FactoryService } from '../../services/factory.service';
 import { Picklists } from '../../../../../common/src/app/utils/record-constants';
+import { UrlValidator } from '../../../../../common/src/app/form-validators/validators';
 
 @Component({
   selector: 'app-mines-add-edit',
@@ -97,7 +98,7 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
       links.push(
         new FormGroup({
           title: new FormControl(link.title || ''),
-          url: new FormControl(link.url || '')
+          url: new FormControl(link.url || '', UrlValidator)
         })
       );
     });
@@ -121,12 +122,15 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
     const links: Link[] = [];
 
     linksFormArray.value.forEach(linkFormGroup => {
-      links.push(
-        new Link({
-          title: linkFormGroup.title,
-          url: linkFormGroup.url
-        })
-      );
+      // don't include empty links
+      if (linkFormGroup.title || linkFormGroup.url) {
+        links.push(
+          new Link({
+            title: linkFormGroup.title,
+            url: linkFormGroup.url
+          })
+        );
+      }
     });
 
     return links;
@@ -163,6 +167,20 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.publish.setValue(event.checked);
 
     this._changeDetectionRef.detectChanges();
+  }
+
+  /**
+   * Return true if there are errors in the form data, false otherwise.
+   *
+   * @returns {boolean}
+   * @memberof MinesAddEditComponent
+   */
+  isFormValid(): boolean {
+    if (this.myForm && this.myForm.get('links').dirty && this.myForm.get('links').invalid) {
+      return false;
+    }
+
+    return true;
   }
 
   /**
