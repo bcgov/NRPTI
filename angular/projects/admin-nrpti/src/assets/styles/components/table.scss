@@ -67,10 +67,16 @@
   }
 
   tbody {
+    overflow-x: auto;
     td {
       vertical-align: top;
       border-top: none;
     }
+  }
+
+  .truncate {
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   + pagination-template {
@@ -209,7 +215,5 @@ table {
 }
 
 .table td {
-  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
