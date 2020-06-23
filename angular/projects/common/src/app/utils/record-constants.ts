@@ -97,6 +97,8 @@ export class Picklists {
 
   public static readonly sourceSystemRefPicklist = ['nrpti', 'epic', 'nris-epd', 'cors-csv', 'lng-csv', 'ocers-csv'];
 
+  public static readonly mineTypes = ['Coal', 'Metal', 'Industrial Mineral', 'Sand & Gravel'];
+
   /**
    * Contains a mapping of acts to regulations.
    *

@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, catchError } from 'rxjs/operators';
 import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
-import { Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmComponent } from '../../confirm/confirm.component';
-import { DialogService } from 'ng2-bootstrap-modal';
 import { FactoryService } from '../../services/factory.service';
 
 @Component({
@@ -15,55 +13,115 @@ import { FactoryService } from '../../services/factory.service';
 export class MinesDetailComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
-  public record = null;
+  public mine = null;
+  public canPublish = false;
+  public isPublished = false;
 
   constructor(public route: ActivatedRoute,
               public router: Router,
               private factoryService: FactoryService,
-              public changeDetectionRef: ChangeDetectorRef,
-              private dialogService: DialogService) {
+              public changeDetectionRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
-      if (!res || !res.record) {
+      if (!res || !res.mine) {
         alert("Uh-oh, couldn't load Mine");
         this.router.navigate(['mines']);
         return;
       }
 
-      this.record = res.record[0] && res.record[0].data && new Mine(res.record[0].data);
+      this.mine = res.mine[0] && res.mine[0].data && new Mine(res.mine[0].data);
+
+      this.isPublished = this.isRecordPublished();
+      this.canPublish = this.checkCanPublish();
 
       this.changeDetectionRef.detectChanges();
     });
   }
 
-  delete() {
-    this.dialogService.addDialog(ConfirmComponent,
-    {
-      title: 'Confirm Deletion',
-      message: 'Do you really want to delete this Mine Item?',
-      okOnly: false
-    }, {
-      backdropColor: 'rgba(0, 0, 0, 0.5)'
-    })
-    .pipe(takeUntil(this.ngUnsubscribe))
-    .subscribe(
-      isConfirmed => {
-        if (isConfirmed) {
-          try {
-            this.factoryService.deleteMineItem(this.record._id, 'mine');
-            this.router.navigate(['mines']);
-          } catch (e) {
-            alert('Could not delete Mine Item');
-          }
+  isRecordPublished(): boolean {
+    return this.mine && this.mine.read && this.mine.read.includes('public');
+  }
+
+  checkCanPublish(): boolean {
+    return (this.mine.name
+      && this.mine.status
+      && this.mine.permitNumbers
+      && this.mine.permitNumbers.length > 0
+      && this.mine.tailingsImpoundments
+      && this.mine.commodities
+      && this.mine.commodities.length > 0
+      && this.mine.location
+      && this.mine.location.coordinates
+      && this.mine.location.coordinates.length > 0);
+  }
+
+  publish(): void {
+    this.factoryService
+      .publishRecord(this.mine)
+      .pipe(
+        takeUntil(this.ngUnsubscribe),
+        catchError(error => {
+          alert('Failed to publish mine.');
+          return of(null);
+        })
+      )
+      .subscribe(response => {
+        if (!response) {
+          return;
         }
-      }
-    );
+
+        if (response.code === 409) {
+          // object was already published
+          alert('Mine is already published.');
+          return;
+        }
+
+        this.mine = new Mine(response);
+        this.isPublished = this.isRecordPublished();
+
+        this.changeDetectionRef.detectChanges();
+      });
+  }
+
+  unPublish(): void {
+    this.factoryService
+      .unPublishRecord(this.mine)
+      .pipe(
+        takeUntil(this.ngUnsubscribe),
+        catchError(error => {
+          alert('Failed to unpublish mine.');
+          return of(null);
+        })
+      )
+      .subscribe(response => {
+        if (!response) {
+          return;
+        }
+
+        if (response.code === 409) {
+          // object was already unpublished
+          alert('Mine is already unpublished.');
+          return;
+        }
+
+        this.mine = new Mine(response);
+        this.isPublished = this.isRecordPublished();
+
+        this.changeDetectionRef.detectChanges();
+      });
+  }
+
+  togglePublish(): void {
+    this.canPublish = this.checkCanPublish();
+    if (this.canPublish) {
+      this.isPublished ? this.unPublish() : this.publish();
+    }
   }
 
   navigateToEditPage() {
-    this.router.navigate(['mines', this.record._id, 'edit']);
+    this.router.navigate(['mines', this.mine._id, 'edit']);
   }
 
   navigateBack() {

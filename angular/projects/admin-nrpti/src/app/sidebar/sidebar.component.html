@@ -1,32 +1,44 @@
 <div class="sidebar">
+  <!-- <section class="full-nav" *ngIf="showProjectDetails === true">
+
+</section>
+   -->
   <section class="full-nav">
-    <a [routerLink]="" [ngClass]="{ active: currentMenu === 'records' }" id="records"
-      (click)="activateLoading(['/records'])">
-      <i class="material-icons mr-3 ">view_list</i>
-      All Records
-    </a>
-    <a [routerLink]="" [ngClass]="{ active: currentMenu === 'mines' }" id="mines"
+    <a [routerLink]="" [ngClass]="{ active: mainRoute === 'mines' && !currentMenu }" id="mines"
       (click)="activateLoading(['/mines'])">
       <i class="material-icons mr-3 ">view_list</i>
       All Mines
     </a>
-    <a [ngClass]="{ active: currentMenu === 'news' }" id="news" [routerLink]="['/news']">
+  </section>
+  <section class="mine-nav" *ngIf="showMineDetails">
+    <a [ngClass]="{'active': mainRoute === 'mines' && currentMenu === 'detail' }" class="dropdown-btn " [routerLink]="['mines', currentMineId, 'detail']">
+      Mine Details
+    </a>
+    <a [ngClass]="{'active': showMineDetails && currentMenu === 'records'}" class="mines-menu" id="mines-records" [routerLink]="['mines', currentMineId, 'records']"><i class="material-icons mr-3">comment</i>Records</a>
+  </section>
+  <section class="full-nav">
+    <a [routerLink]="" [ngClass]="{ active: mainRoute === 'records' }" id="records"
+      (click)="activateLoading(['/records'])">
+      <i class="material-icons mr-3 ">view_list</i>
+      All Records
+    </a>
+    <a [ngClass]="{ active: mainRoute === 'news' }" id="news" [routerLink]="['/news']">
       <i class="material-icons mr-3">notifications_active</i>
       News List
     </a>
-    <a [ngClass]="{ active: currentMenu === 'analytics' }" id="analytics" [routerLink]="['/analytics']">
+    <a [ngClass]="{ active: mainRoute === 'analytics' }" id="analytics" [routerLink]="['/analytics']">
       <i class="material-icons mr-3 ">assessment</i>
       Analytics
     </a>
-    <a [ngClass]="{ active: currentMenu === 'map' }" id="map" [routerLink]="['/map']">
+    <a [ngClass]="{ active: mainRoute === 'map' }" id="map" [routerLink]="['/map']">
       <i class="material-icons mr-3 ">map</i>
       Map
     </a>
-    <a [ngClass]="{ active: currentMenu === 'entities' }" id="entities" [routerLink]="['/entities']">
+    <a [ngClass]="{ active: mainRoute === 'entities' }" id="entities" [routerLink]="['/entities']">
       <i class="material-icons mr-3 ">people</i>
       Entities
     </a>
-    <a [ngClass]="{ active: currentMenu === 'imports' }" id="imports" [routerLink]="['/imports']">
+    <a [ngClass]="{ active: mainRoute === 'imports' }" id="imports" [routerLink]="['/imports']">
       <i class="material-icons mr-3">import_export</i>
       Imports
     </a>

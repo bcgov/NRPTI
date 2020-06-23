@@ -19,7 +19,7 @@ let AddConstructionPlan = require('./post/construction-plan');
 let AddManagementPlan = require('./post/management-plan');
 let AddCourtConviction = require('./post/court-conviction');
 let AddNewsItem = require('./post/news-item');
-let AddNewMine = require('./post/mine');
+let AddMine = require('./post/mine');
 
 let EditOrder = require('./put/order');
 let EditInspection = require('./put/inspection');
@@ -36,7 +36,7 @@ let EditConstructionPlan = require('./put/construction-plan');
 let EditManagementPlan = require('./put/management-plan');
 let EditCourtConviction = require('./put/court-conviction');
 let EditNewsItem = require('./put/news-item');
-let EditMines = require('./put/mine');
+let EditMine = require('./put/mine');
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 
@@ -166,6 +166,9 @@ exports.protectedPost = async function (args, res, next) {
     if (data.newsItems) {
       promises.push(processPostRequest(args, res, next, 'newsItems', data.newsItems));
     }
+    if (data.mines) {
+      promises.push(processPostRequest(args, res, next, 'mines', data.mines));
+    }
 
     let response = await Promise.all(promises);
 
@@ -247,6 +250,9 @@ exports.protectedPut = async function (args, res, next) {
     }
     if (data.newsItems) {
       promises.push(processPutRequest(args, res, next, 'newsItems', data.newsItems));
+    }
+    if (data.mines) {
+      promises.push(processPutRequest(args, res, next, 'mines', data.mines));
     }
 
     let response = await Promise.all(promises);
@@ -444,7 +450,7 @@ const processPostRequest = async function (args, res, next, property, data) {
         promises.push(AddNewsItem.createRecord(args, res, next, data[i]));
         break;
       case 'mines':
-        promises.push(AddNewMine.createRecord(args, res, next, data[i]));
+        promises.push(AddMine.createRecord(args, res, next, data[i]));
         break;
       default:
         return {
@@ -525,7 +531,7 @@ const processPutRequest = async function (args, res, next, property, data) {
         promises.push(EditNewsItem.editRecord(args, res, next, data[i]));
         break;
       case 'mines':
-        promises.push(EditMines.editRecord(args, res, next, data[i]));
+        promises.push(EditMine.editRecord(args, res, next, data[i]));
         break;
       default:
         return {

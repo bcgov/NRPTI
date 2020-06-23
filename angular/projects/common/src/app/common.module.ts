@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatCheckboxModule } from '@angular/material';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 // modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -19,6 +20,7 @@ import { EntityDetailComponent } from './entity/entity-detail/entity-detail.comp
 import { PenaltyAddEditComponent } from './penalty/penalty-add-edit/penalty-add-edit.component';
 import { PenaltyDetailComponent as PenaltyDetailAdminComponent } from './penalty/penalty-detail-admin/penalty-detail.component';
 import { PenaltyDetailComponent as PenaltyDetailPublicComponent } from './penalty/penalty-detail-public/penalty-detail.component';
+import { LinkAddEditComponent } from './link-add-edit/link-add-edit.component';
 
 // services
 
@@ -34,7 +36,8 @@ import { PenaltyDetailComponent as PenaltyDetailPublicComponent } from './penalt
     EntityDetailComponent,
     PenaltyAddEditComponent,
     PenaltyDetailAdminComponent,
-    PenaltyDetailPublicComponent
+    PenaltyDetailPublicComponent,
+    LinkAddEditComponent
   ],
   imports: [
     NgbModule,
@@ -44,7 +47,8 @@ import { PenaltyDetailComponent as PenaltyDetailPublicComponent } from './penalt
     FormsModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    DragDropModule
   ],
   providers: [],
   exports: [
@@ -58,7 +62,8 @@ import { PenaltyDetailComponent as PenaltyDetailPublicComponent } from './penalt
     EntityDetailComponent,
     PenaltyAddEditComponent,
     PenaltyDetailAdminComponent,
-    PenaltyDetailPublicComponent
+    PenaltyDetailPublicComponent,
+    LinkAddEditComponent
   ]
 })
 export class CommonModule {}

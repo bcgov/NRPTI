@@ -35,7 +35,12 @@ module.exports = require('../../utils/model-schema-generator')(
     permittee: { type: String, default: '' },
     summary: { type: String, default: '' },
     description: { type: String, default: '' },
-    links: [{ type: String, trim: true, default: '' }],
+    links: [
+      {
+        title: { type: String, default: '' },
+        url: { type: String, default: '' }
+      }
+    ],
 
     dateAdded: { type: Date, default: Date.now() },
     dateUpdated: { type: Date, default: null },

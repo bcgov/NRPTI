@@ -348,7 +348,7 @@ export class FactoryService {
 
   public editMine(mine: any): Observable<object> {
     const outboundObject = {
-      mineItem: [mine]
+      mines: [mine]
     };
     return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
