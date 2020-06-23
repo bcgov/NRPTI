@@ -1,0 +1,75 @@
+h1 {
+  background: #00274e;
+  color: #fff;
+  font-size: 2.1rem;
+  margin: -19px -24px 30px;
+  padding: 9px 26px 14px;
+  box-sizing: content-box;
+
+  @media screen and (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+}
+
+h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #313132;
+  margin: 0px;
+}
+
+.new-section{
+  padding-top: 30px;
+}
+
+.action-drop-button {
+  border-width: 3px;
+  border-color: white;
+  border-style: solid;
+}
+
+.link-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.link {
+  padding: 5px 0 5px 0;
+}
+
+.label-pair {
+  padding: 5px;
+}
+
+.heading-bar{
+  padding-top: 14px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.publish-wrapper {
+  padding: 0px 0px 0px 25px;
+}
+
+/* To change Default/'Accent' color for mat-slide-toggle*/
+
+::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+  background-color: #28A845
+}
+
+::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
+  background-color: lightgreen;
+}
+
+.badge {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.badge-unpublished {
+  color: #606060;
+}
+
+.badge-published {
+  color: #28A845;
+}

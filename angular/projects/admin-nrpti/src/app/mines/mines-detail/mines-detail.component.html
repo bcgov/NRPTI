@@ -1,65 +1,102 @@
 <main class="container-fluid-padding">
-  <div class="d-flex">
-    <h2>Mine Details</h2>
-    <div class="ml-auto">
-      <button class="btn btn-outline-primary mr-1" (click)="navigateBack()">Back</button>
-      <button class="btn btn-primary" (click)="navigateToEditPage()">Edit</button>
+  <h1 id="name" class="heading-bar">{{mine?.name}}
+    <span ngbDropdown>
+      <button class="btn btn-primary action-drop-button" id="actionDropdown" ngbDropdownToggle>Actions</button>
+      <div class="dropdown-menu" aria-labelledby="actionDropdown" ngbDropdownMenu>
+        <button class="dropdown-item" [routerLink]="['mines', mine?._id, 'upload']">Upload Document</button>
+        <button class="dropdown-item" [routerLink]="['mines', mine?._id, 'edit']">Edit</button>
+      </div>
+    </span>
+  </h1>
+  <div class="new-section row d-flex">
+    <h2 class="col-lg-8 col-md-12">Mine Information</h2>
+    <div class="publish-wrapper col-lg-4 col-md-12">
+      <mat-slide-toggle
+        name="publishLng"
+        id="publishLng"
+        (change)="this.togglePublish()"
+        [checked]="isPublished"
+        [disabled]="!canPublish">
+      </mat-slide-toggle>
+      <span class="badge badge-published" *ngIf="isPublished">Published</span>
+      <span class="badge badge-unpublished" *ngIf="!isPublished">Not Published</span>
+      <span class="grey-subtext d-block" *ngIf="!canPublish" >More information is needed to publish this mine.</span>
     </div>
   </div>
+
   <hr>
-  <div class="row label-pair ml-1 mb-2">
-    <label class="font-weight-bold mr-1">Name:</label>
-    <div>{{record?.name || '-'}}</div>
+
+  <!-- Mine Information -->
+  <section>
+    <div class="row">
+      <!-- column 1/3 -->
+      <div class="col-lg-4 col-md-12">
+        <div class="row label-pair ml-1 mb-2">
+          <div id="permittee"><b>Permittee: </b>{{mine?.permittee || '-' }}</div>
+        </div>
+        <div class="row label-pair ml-1 mb-2">
+          <div id="status"><b>Operating Status: </b>{{mine?.status || '-'}}</div>
+        </div>
+      </div>
+      <!-- column 2/3 -->
+      <div class="col-lg-4 col-md-12">
+        <div class="row label-pair ml-1 mb-2">
+          <div id="permitNumber"><b>Mines Act Permit Number: </b>{{mine?.permitNumbers && mine?.permitNumbers.length > 0 ? mine?.permitNumbers?.join(', ') : '-'}}</div>
+        </div>
+        <div class="row label-pair ml-1 mb-2">
+          <div id="tailingsImpoundments"><b>Number of Tailings Storage Facilities: </b>{{mine?.tailingsImpoundments || '-' }} </div>
+        </div>
+        <div class="row label-pair ml-1 mb-2">
+          <div id="commodities"><b>Commodities: </b>{{mine?.commodities && mine?.commodities?.length > 0 ? mine?.commodities?.join(', ') : '-'}}</div>
+        </div>
+      </div>
+      <!-- column 3/3 -->
+      <div class="col-lg-4 col-md-12">
+        <div class="row label-pair ml-1 mb-2">
+          <div id="region"><b>Region: </b>{{mine?.region || '-' }}</div>
+        </div>
+        <div class="row label-pair ml-1 mb-2">
+          <div id="longitude"><b>Longitude: </b>{{mine?.location ? (mine?.location.coordinates[0]) : '-'}}</div>
+        </div>
+        <div class="row label-pair ml-1 mb-2">
+          <div id="latitude"><b>Latitude: </b>{{mine?.location ? (mine?.location.coordinates[1]) : '-'}}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <div class="row ml-1 mb-2">
+    <label class="font-weight-bold mr-1">Mine Type:</label>
   </div>
-  <div class="row label-pair ml-1 mb-2">
-    <label class="font-weight-bold mr-1">Permit Numbers:</label>
-    <div>{{record?.permitNumbers && record?.permitNumbers.length > 0 ? record?.permitNumbers?.join() : '-'}}</div>
+  <div class="row ml-1 mb-2">
+    <p>{{mine?.type || '-'}}</p>
   </div>
-  <div class="row label-pair ml-1 mb-2">
-    <label class="font-weight-bold mr-1">Status:</label>
-    <div>{{record?.status || '-'}}</div>
+  <div class="row ml-1 mb-2">
+    <label class="font-weight-bold mr-1">Mine Description:</label>
   </div>
-  <div class="row label-pair ml-1 mb-2">
-    <label class="font-weight-bold mr-1">Type:</label>
-    <div>{{record?.type || '-'}}</div>
+  <div class="row ml-1 mb-2">
+    <p>{{mine?.description || '-' }}</p>
   </div>
-  <div class="row label-pair ml-1 mb-2">
-    <label class="font-weight-bold mr-1">Commodities:</label>
-    <div>{{record?.commodities && record?.commodities?.length > 0 ? record?.commodities?.join() : '-'}}</div>
+  <div class="row ml-1 mb-2">
+    <label class="font-weight-bold mr-1">Mine Summary:</label>
   </div>
-  <div class="row label-pair ml-1 mb-2">
-    <label class="font-weight-bold mr-1">Tailings Impoundments:</label>
-    <div>{{record?.tailingsImpoundments || '-' }}</div>
+  <div class="row ml-1 mb-2">
+    <p>{{mine?.summary || '-' }}</p>
   </div>
-  <div class="row label-pair ml-1 mb-2">
-    <label class="font-weight-bold mr-1">Region:</label>
-    <div>{{record?.region || '-' }}</div>
+
+  <div  *ngIf="mine && mine.links && mine.links.length > 0" class="new-section d-flex">
+    <h2>External Links and Resources</h2>
   </div>
-  <div class="row label-pair ml-1 mb-2">
-    <label class="font-weight-bold mr-1">Permittee:</label>
-    <div>{{record?.permittee || '-' }}</div>
-  </div>
-  <div class="row label-pair ml-1 mb-2">
-    <label class="font-weight-bold mr-1">Summary:</label>
-    <div>{{record?.summary || '-' }}</div>
-  </div>
-  <div class="row label-pair ml-1 mb-2">
-    <label class="font-weight-bold mr-1">Description:</label>
-    <div>{{record?.description || '-' }}</div>
-  </div>
-  <div class="row label-pair ml-1 mb-2">
-    <label class="font-weight-bold mr-1">Location:</label>
-    <div>{{record?.location ? (' Lat:' + record?.location.coordinates[1]) + ' Long: ' + record?.location.coordinates[0] : '-' }}</div>
-  </div>
-  <div class="row label-pair ml-1 mb-2">
-    <label class="font-weight-bold mr-1">Links:</label>
-    <ul *ngIf="record && record.links && record.links.length > 0">
-      <li *ngFor="let link of record.links">
-        <a [href]="link" target="_blank">{{link}}</a>
+
+  <hr  *ngIf="mine && mine.links && mine.links.length > 0">
+
+  <div class="row ml-1 mb-2">
+    <ul *ngIf="mine && mine.links && mine.links.length > 0" class="link-list">
+      <li class="link" *ngFor="let link of mine.links">
+        <a [href]="link.url" target="_blank">{{link.title}}</a>
       </li>
     </ul>
-  </div>
-  <div class="row ml-1 mt-5">
-    <button class="btn btn-outline-primary mr-1" (click)="delete()">Delete</button>
   </div>
 </main>

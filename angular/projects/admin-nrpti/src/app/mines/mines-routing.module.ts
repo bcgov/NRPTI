@@ -51,7 +51,7 @@ const routes: Routes = [
               breadcrumb: null
             },
             resolve: {
-              record: MinesResolver
+              mine: MinesResolver
             }
           },
           {
