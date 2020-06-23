@@ -57,6 +57,10 @@
           <span class="grey-subtext ml-2">(This value cannot be changed)</span>
           <input readonly name="recordType" id="recordType" type="text" value="Agreement" class="form-control" />
         </div>
+        <div class="label-pair">
+          <label for="recordName">Record Name</label>
+          <input name="recordName" id="recordName" type="text" formControlName="recordName" class="form-control" />
+        </div>
       </div>
     </section>
 
@@ -116,12 +120,6 @@
             {{ myForm.controls.publishLng.value ? 'Published' : 'Unpublished' }}
           </mat-slide-toggle>
           <span class="grey-subtext d-block">*Changes made will take effect once you click "Update Record"</span>
-        </div>
-      </div>
-      <div class="flex-container">
-        <div class="label-pair">
-          <label for="recordName">Record Name</label>
-          <input name="recordName" id="recordName" type="text" formControlName="recordName" class="form-control" />
         </div>
       </div>
       <div class="flex-container">
