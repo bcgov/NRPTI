@@ -4,7 +4,7 @@
       <button class="btn btn-primary action-drop-button" id="actionDropdown" ngbDropdownToggle>Actions</button>
       <div class="dropdown-menu" aria-labelledby="actionDropdown" ngbDropdownMenu>
         <button class="dropdown-item" [routerLink]="['mines', mine?._id, 'upload']">Upload Document</button>
-        <button class="dropdown-item" [routerLink]="['mines', mine?._id, 'edit']">Edit</button>
+        <button class="dropdown-item" (click)="navigateToEditPage()">Edit</button>
       </div>
     </span>
   </h1>

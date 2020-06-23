@@ -1,13 +1,3 @@
-export class Link {
-  title: string;
-  url: string;
-
-  constructor(obj?: any) {
-    this.title = (obj && obj.title) || '';
-    this.url = (obj && obj.url) || '';
-  }
-}
-
 /**
  * Link schema-field specification.
  *
