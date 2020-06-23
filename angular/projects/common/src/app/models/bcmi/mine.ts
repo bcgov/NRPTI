@@ -1,3 +1,11 @@
+/**
+ * Link schema-field specification.
+ *
+ * Note: This is not itself a schema.  This is a field of existing schema(s).
+ *
+ * @export
+ * @class Link
+ */
 export class Link {
   title: string;
   url: string;

@@ -1,59 +1,153 @@
 <main class="container-fluid-padding">
-  <div class="spinner-container" *ngIf="loading">
-    <div class="spinner-new rotating"></div>
-  </div>
-  <div class="d-flex">
-    <h2>Edit Mine Details</h2>
-    <div class="ml-auto">
-      <button class="btn btn-outline-primary mr-1" type="cancel" (click)="navigateBack()">Cancel</button>
-      <button class="btn btn-primary" type="cancel" (click)="submit()">Save</button>
-    </div>
-  </div>
-  <hr>
-    <form *ngIf="!loading" [formGroup]="myForm" novalidate>
-    <div class="row">
-      <div class="label-pair mr-5 mt-4 col-12">
-        <label for="type" class="font-weight-bold mr-1">Type:</label>
-        <select [compareWith]="compareTypeSelection" name="type" id="type" formControlName="type" class="form-control">
-          <option *ngFor="let type of types" [ngValue]="type">{{ type }}</option>
-        </select>
+  <form *ngIf="!loading" [formGroup]="myForm" novalidate>
+    <section class="mb-3 pb-3 border-bottom">
+      <div class="d-flex">
+        <div>
+          <h2 class="border-0">Mine Information</h2>
+          <span class="grey-subtext ml-2">{{ lastEditedSubText }}</span>
+        </div>
+        <div class="ml-auto">
+          <div class="d-flex flex-column">
+            <mat-slide-toggle
+              name="publish"
+              id="publish"
+              class="publish-toggle ml-auto"
+              [ngClass]="myForm.get('publish').value ? 'published' : 'unpublished'"
+              formControlName="publish"
+              (change)="togglePublish($event)"
+              [checked]="myForm.get('publish').value"
+              title="{{ myForm.get('publish').value ? 'Unpublish mine' : 'Publish mine' }}"
+              ngDefaultControl
+            >
+              {{ (myForm.get('publish').value && 'Published') || 'Unpublished' }}
+            </mat-slide-toggle>
+            <span class="grey-subtext ml-auto">
+              *Changes made will take effect once you click "Update Record"
+            </span>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="label-pair mr-5 mt-4 col-12">
-        <label  for="description" class="font-weight-bold mr-1">Description:</label>
-        <textarea
+    </section>
+    <section class="my-3 py-3 border-bottom">
+      <div class="row">
+        <div class="col-sm col-md">
+          <div class="flex-container mb-2">
+            <label for="permittee" class="med mr-2">Permittee:</label>
+            <span id="permittee" name="permittee">{{ (mine && mine.permittee) || '-' }}</span>
+          </div>
+          <div class="flex-container mb-2">
+            <label for="status" class="med mr-2">Operation Status:</label>
+            <span id="status" name="status">{{ (mine && mine.status) || '-' }}</span>
+          </div>
+        </div>
+        <div class="col-sm col-md">
+          <div class="flex-container mb-2">
+            <label for="permit" class="med mr-2">Mines Act Permit Number:</label>
+            <span id="permit" name="permit">
+              {{ (mine && mine.permitNumbers && mine.permitNumbers.length && mine.permitNumbers.join(', ')) || '-' }}
+            </span>
+          </div>
+          <div class="flex-container mb-2">
+            <label for="tailings" class="med mr-2">Number of Tailing Storage Facility:</label>
+            <span id="tailings" name="tailings">{{ (mine && mine.tailingsImpoundments) || '-' }}</span>
+          </div>
+          <div class="flex-container mb-2">
+            <label for="commodity" class="med mr-2">Commodities:</label>
+            <span id="commodity" name="commodity">
+              {{ (mine && mine.commodities && mine.commodities.length && mine.commodities.join(', ')) || '-' }}
+            </span>
+          </div>
+        </div>
+        <div class="col-sm col-md">
+          <div class="flex-container mb-2">
+            <label for="region" class="med mr-2">Region:</label>
+            <span id="region" name="region">{{ (mine && mine.region) || '-' }}</span>
+          </div>
+          <div class="flex-container mb-2">
+            <label for="longitude" class="med mr-2">Longitude:</label>
+            <span id="longitude" name="longitude">
+              {{ (mine && mine.location && mine.location['coordinates'] && mine.location['coordinates'][0]) || '-' }}
+            </span>
+          </div>
+          <div class="flex-container mb-2">
+            <label for="latitude" class="med mr-2">Latitude:</label>
+            <span id="latitude" name="latitude">
+              {{ (mine && mine.location && mine.location['coordinates'] && mine.location['coordinates'][1]) || '-' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="my-3 py-3">
+      <div class="flex-container">
+        <div class="label-pair">
+          <label class="sm" for="type">Type</label>
+          <select
+            [compareWith]="compareTypeSelection"
+            name="type"
+            id="type"
+            formControlName="type"
+            class="form-control"
+          >
+            <option *ngFor="let type of mineTypes" [ngValue]="type">{{ type }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex-container">
+        <div class="label-pair lrg">
+          <label class="sm" for="description">Description</label>
+          <textarea
             name="description"
             id="description"
             type="text"
             formControlName="description"
             class="form-control"
-            rows="10"></textarea>
+            rows="5"
+          ></textarea>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="label-pair mr-5 mt-4 col-12">
-        <label for="summary" class="font-weight-bold mr-1">Summary:</label>
-        <textarea
+      <div class="flex-container">
+        <div class="label-pair lrg">
+          <label class="sm" for="summary">Summary</label>
+          <textarea
             name="summary"
             id="summary"
             type="text"
             formControlName="summary"
             class="form-control"
-            rows="10"></textarea>
+            rows="5"
+          ></textarea>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="label-pair mr-5 mt-4 col-12">
-        <label  for="links" class="font-weight-bold mr-1">Links:</label>
-        <textarea
-            name="links"
-            id="links"
-            type="text"
-            formControlName="links"
-            class="form-control"
-            rows="10"></textarea>
+    </section>
+    <section class="my-3 py-3 border-bottom">
+      <div class="d-flex">
+        <div>
+          <h2 class="border-0">External Links & Resources</h2>
+        </div>
       </div>
-    </div>
+    </section>
+    <section class="my-3 py-3">
+      <app-link-add-edit [formArray]="myForm.get('links')"></app-link-add-edit>
+    </section>
+    <section class="my-3 py-3 border-bottom">
+      <div class="d-flex">
+        <div>
+          <h2 class="border-0">Records</h2>
+        </div>
+      </div>
+    </section>
+    <section class="my-3 py-3">
+      <!-- TODO records/collections -->
+    </section>
   </form>
+  <div class="d-flex flex-row-reverse mt-4 mb-3">
+    <button [disabled]="!isFormValid()" class="btn btn-primary" type="submit" (click)="submit()" title="Update record">
+      <i class="material-icons mr-1">
+        save
+      </i>
+      Update Record
+    </button>
+    <button type="button" class="btn btn-link" (click)="cancel()" title="Cancel">Cancel</button>
+  </div>
 </main>
