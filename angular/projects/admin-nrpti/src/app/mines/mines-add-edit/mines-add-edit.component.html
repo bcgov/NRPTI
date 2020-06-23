@@ -24,6 +24,9 @@
             <span class="grey-subtext ml-auto">
               *Changes made will take effect once you click "Update Record"
             </span>
+            <span *ngIf="!canPublish && !myForm.get('publish').value" class="grey-subtext ml-auto">
+              *All fields are required to publish
+            </span>
           </div>
         </div>
       </div>
