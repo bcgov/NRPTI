@@ -18,12 +18,10 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['./import.component.scss']
 })
 export class ImportComponent implements OnInit {
-  public dateStart: object = {};
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+
   public loading = true;
-  public showAlert = false;
-  public typeFilters = [];
-  public navigationObject;
+  public showAlert = { epic: false, 'nris-epd': false };
   public tableData: TableObject = new TableObject({ component: ImportTableRowsComponent });
   public tableColumns: IColumnObject[] = [
     {
@@ -143,9 +141,9 @@ export class ImportComponent implements OnInit {
   async startJob(dataSourceType: string) {
     await this.factoryService.startTask({ dataSourceType }).toPromise();
 
-    this.showAlert = true;
+    this.showAlert[dataSourceType] = true;
     setTimeout(() => {
-      this.showAlert = false;
+      this.showAlert[dataSourceType] = false;
     }, 4000);
   }
 }

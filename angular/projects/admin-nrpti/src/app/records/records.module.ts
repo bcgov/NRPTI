@@ -103,6 +103,7 @@ import { ExplorePanelComponent } from '../explore-panel/explore-panel.component'
 import { DateInputComponent } from '../explore-panel/date-input/date-input.component';
 import { DocumentAuthenticatedReadOnlyComponent } from '../documents/document-authenticated-read-only/document-authenticated-read-only.component';
 import { S3SignedUrlAnchorComponent } from '../documents/s3-signed-url-anchor/s3-signed-url-anchor.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   imports: [
@@ -116,6 +117,7 @@ import { S3SignedUrlAnchorComponent } from '../documents/s3-signed-url-anchor/s3
     NrptiCommonModule,
     SharedModule,
     NgxPaginationModule,
+    MatSelectModule,
     NgbModule.forRoot(),
     InlineSVGModule.forRoot(),
     RecordsRoutingModule,

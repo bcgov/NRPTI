@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
+const { userHasValidRoles } = require('../../utils/auth-utils');
+const { ROLES } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Warning record and its associated flavour records.
@@ -88,8 +90,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (warning._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  warning.read = ['sysadmin'];
-  warning.write = ['sysadmin'];
+  warning.read = ROLES.ADMIN_ROLES;
+  warning.write = ROLES.ADMIN_ROLES;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -124,8 +126,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   incomingObj.legislationDescription && (warning.legislationDescription = incomingObj.legislationDescription);
 
-  warning.issuedTo.read = ['sysadmin'];
-  warning.issuedTo.write = ['sysadmin'];
+  warning.issuedTo.read = ROLES.ADMIN_ROLES;
+  warning.issuedTo.write = ROLES.ADMIN_ROLES;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (warning.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -193,6 +195,11 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @returns created lng warning record
  */
 exports.createLNG = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let WarningLNG = mongoose.model('WarningLNG');
   let warningLNG = new WarningLNG();
 
@@ -210,8 +217,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (warningLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  warningLNG.read = ['sysadmin'];
-  warningLNG.write = ['sysadmin'];
+  warningLNG.read = ROLES.ADMIN_ROLES;
+  warningLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   warningLNG.addedBy = args.swagger.params.auth_payload.displayName;
   warningLNG.dateAdded = new Date();
@@ -240,8 +247,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
   incomingObj.legislationDescription && (warningLNG.legislationDescription = incomingObj.legislationDescription);
 
-  warningLNG.issuedTo.read = ['sysadmin'];
-  warningLNG.issuedTo.write = ['sysadmin'];
+  warningLNG.issuedTo.read = ROLES.ADMIN_ROLES;
+  warningLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (warningLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -317,6 +324,11 @@ exports.createLNG = function (args, res, next, incomingObj) {
  * @returns created nrced warning record
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.NRCEDADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let WarningNRCED = mongoose.model('WarningNRCED');
   let warningNRCED = new WarningNRCED();
 
@@ -334,8 +346,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (warningNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  warningNRCED.read = ['sysadmin'];
-  warningNRCED.write = ['sysadmin'];
+  warningNRCED.read = ROLES.ADMIN_ROLES;
+  warningNRCED.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
 
   warningNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   warningNRCED.dateAdded = new Date();
@@ -366,8 +378,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
 
   incomingObj.legislationDescription && (warningNRCED.legislationDescription = incomingObj.legislationDescription);
 
-  warningNRCED.issuedTo.read = ['sysadmin'];
-  warningNRCED.issuedTo.write = ['sysadmin'];
+  warningNRCED.issuedTo.read = ROLES.ADMIN_ROLES;
+  warningNRCED.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (warningNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

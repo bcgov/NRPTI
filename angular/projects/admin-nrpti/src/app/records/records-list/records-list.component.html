@@ -2,7 +2,7 @@
   <div class="border-bottom">
     <div class="row mb-3">
       <div class="col">
-        <span style="font-size: 1.25rem;">Keyword Search</span>
+        <span class="keyword-search-text">Keyword Search</span>
         <i
           class="material-icons align-text-bottom ml-2"
           matTooltip="Summary, description, location, and issued to name fields"
@@ -71,6 +71,11 @@
           <input type="text" class="form-control" (keyup.enter)="keywordSearch()" [(ngModel)]="keywordSearchWords"
             placeholder="Type keyword search words"
             aria-label="Type keyword search words" aria-describedby="basic-addon2">
+          <div *ngIf="keywordSearchWords && keywordSearchWords.length > 0" class="input-group-append">
+            <button class="btn btn-outline-primary" type="button" (click)="clearSearchTerms()">
+              <i class="material-icons align-middle">close</i>
+            </button>
+          </div>
           <div class="input-group-append">
             <button class="btn btn-outline-primary" type="button" (click)="keywordSearch()">
               <i class="material-icons align-middle">search</i>

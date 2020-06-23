@@ -119,7 +119,10 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
+      recordName: new FormControl({
+        value: (this.currentRecord && this.currentRecord.recordName) || '',
+        disabled: !this.factoryService.userInLngRole()
+      }),
       dateIssued: new FormControl(
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
@@ -157,10 +160,14 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
 
       // LNG
       lngRelatedPhase: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.relatedPhase) || ''),
-      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
-      publishLng: new FormControl(
-        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
-      )
+      lngDescription: new FormControl({
+        value: (this.currentRecord && this.lngFlavour && this.lngFlavour.description) || '',
+        disabled: !this.factoryService.userInLngRole()
+      }),
+      publishLng: new FormControl({
+        value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
+        disabled: !this.factoryService.userInLngRole()
+      })
     });
   }
 
@@ -221,6 +228,8 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
       selfReport['_epicProjectId'] = EpicProjectIds.lngCanadaId;
     } else if (selfReport['projectName'] === 'Coastal Gaslink') {
       selfReport['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+    } else {
+      selfReport['_epicProjectId'] = null;
     }
 
     this.myForm.controls.location.dirty && (selfReport['location'] = this.myForm.controls.location.value);

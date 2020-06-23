@@ -1,0 +1,71 @@
+@import 'assets/styles/base/base.scss';
+@import 'assets/styles/components/add-edit.scss';
+@import 'assets/styles/components/slide-toggle.scss';
+
+h2 {
+  color: $mine-primary-font-color;
+  font-size: $mine-header-font-size;
+  font-weight: $mine-header-font-weight;
+  text-transform: uppercase;
+}
+
+label {
+  margin-bottom: 0.25rem;
+
+  &.sm,
+  :not(.med) {
+    font-size: $mine-body-font-size-sm;
+    font-weight: $mine-body-font-weight-sm;
+  }
+
+  &.med {
+    font-size: $mine-body-font-size-md;
+    font-weight: $mine-body-font-weight-md;
+  }
+}
+
+select {
+  font-size: $mine-body-font-size-md;
+  font-weight: $mine-body-font-weight-sm;
+  border: 1px solid #ababab;
+
+  &:focus {
+    border-color: #5091cd;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+}
+
+textarea,
+input[type='text'] {
+  font-size: $mine-body-font-size-md;
+  font-weight: $mine-body-font-weight-sm;
+  border-radius: 2px;
+  box-shadow: none;
+  -webkit-appearance: none;
+  border: 1px solid #ababab;
+
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    border-color: #5091cd;
+  }
+}
+
+@include slide-toggle($mine-published-font-color, $mine-unpublished-font-color);
+.publish-toggle {
+  font-size: $mine-publish-font-size;
+  font-weight: $mine-publish-font-weight;
+
+  &.published {
+    color: $mine-published-font-color;
+  }
+
+  &.unpublished {
+    color: $mine-unpublished-font-color;
+  }
+}
+
+.grey-subtext {
+  color: $gray6;
+  font-size: 15px;
+  font-style: italic;
+}

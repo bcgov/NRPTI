@@ -6,8 +6,9 @@ import { ApiService } from './api.service';
 import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
-import { TaskService, ITaskParams } from './task.service';
+import { TaskService, ITaskParams, ICsvTaskParams } from './task.service';
 import { DocumentService } from './document.service';
+import { ApplicationRoles } from '../../../../common/src/app/utils/record-constants';
 
 /**
  * Facade service for all admin-nrpti services.
@@ -144,6 +145,39 @@ export class FactoryService {
   }
 
   /**
+   * Checks if the current authenticate user is a member
+   * of the requested scope/role
+   *
+   * @param role
+   * @returns {boolean} Is the user a member of this scope/role?
+   * @memberof FactoryService
+   */
+  public userInRole(role): boolean {
+    const token = this.getToken();
+
+    if (token) {
+      const jwt = JwtUtil.decodeToken(token);
+      if (jwt && jwt.realm_access && jwt.realm_access.roles) {
+        // to handle any case issues with role or the scopes, convert them
+        // all to lower case first
+        const userRoles = jwt.realm_access.roles.map((userRole: string) => userRole.toLowerCase());
+        return userRoles.includes(ApplicationRoles.ADMIN) ||
+                                  userRoles.includes(role.toLowerCase());
+      }
+    }
+
+    return false;
+  }
+
+  userInLngRole() {
+    return this.userInRole(ApplicationRoles.ADMIN_LNG);
+  }
+
+  userInNrcedRole() {
+    return this.userInRole(ApplicationRoles.ADMIN_NRCED);
+  }
+
+  /**
    * Builds a welcome message based on the username in the auth token.  Returns empty string if no token found, or token
    * is invalid.
    *
@@ -270,6 +304,17 @@ export class FactoryService {
   }
 
   /**
+   * Sends request to start a csv import task.
+   *
+   * @param {ICsvTaskParams} csvTaskParams csv import task parameters
+   * @returns {Observable<object>}
+   * @memberof FactoryService
+   */
+  public startCsvTask(csvTaskParams: ICsvTaskParams): Observable<object> {
+    return this.taskService.startCsvTask(csvTaskParams);
+  }
+
+  /**
    * Publish a record.
    *
    * @param {string} record record to publish
@@ -303,7 +348,7 @@ export class FactoryService {
 
   public editMine(mine: any): Observable<object> {
     const outboundObject = {
-      mineItem: [mine]
+      mines: [mine]
     };
     return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }

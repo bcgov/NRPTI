@@ -134,7 +134,7 @@ exports.isIssuedToConsideredAnonymous = isIssuedToConsideredAnonymous;
  * @returns true if the document is considered anonymous, false otherwise.
  */
 function isDocumentConsideredAnonymous(masterRecord) {
-  if (!masterRecord) {
+  if (!masterRecord || !masterRecord.documents || !masterRecord.documents.length) {
     // can't determine if document is anonymous or not, must assume anonymous
     return true;
   }
@@ -152,7 +152,7 @@ exports.isDocumentConsideredAnonymous = isDocumentConsideredAnonymous;
  * @returns savedDocuments
  */
 exports.updateDocumentRoles = async function(masterRecord, auth_payload) {
-  if (!masterRecord) {
+  if (!masterRecord || !masterRecord.documents || !masterRecord.documents.length) {
     return null;
   }
 
@@ -188,4 +188,22 @@ exports.updateDocumentRoles = async function(masterRecord, auth_payload) {
   }
 
   return savedDocuments;
+};
+
+/**
+ * Applies business logic, if any, to the provided act.
+ *
+ * @param {*} act
+ * @returns {string} the act with applied business logic rules.
+ */
+exports.applyBusinessLogicToAct = function(act) {
+  if (!act) {
+    return null;
+  }
+
+  if (act === 'Fisheries Act') {
+    return 'Fisheries Act (Canada)';
+  }
+
+  return act;
 };

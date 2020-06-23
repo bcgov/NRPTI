@@ -1,52 +1,86 @@
 <form *ngIf="formGroup" [formGroup]="formGroup" novalidate>
   <section>
     <div class="row">
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="row">
-          <div class="col-6">
+          <div class="col-xl-6">
             <label for="dateIssuedStartFilter" class="control-label font-weight-bold">Start Issued Date</label>
             <lib-date-picker
               id="dateIssuedStartFilter"
               [control]="formGroup.get('dateIssuedStart')"
               [reset]="resetControls"
               [minDate]="minDate"
-              [maxDate]="maxDate"
-            ></lib-date-picker>
+              [maxDate]="maxDate"></lib-date-picker>
           </div>
-          <div class="col-6">
+          <div class="col-xl-6">
             <label for="dateIssuedEndFilter" class="control-label font-weight-bold">End Issued Date</label>
             <lib-date-picker
               id="dateIssuedEndFilter"
               [control]="formGroup.get('dateIssuedEnd')"
               [reset]="resetControls"
               [minDate]="minDate"
-              [maxDate]="maxDate"
-            ></lib-date-picker>
+              [maxDate]="maxDate"></lib-date-picker>
           </div>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <label class="control-label font-weight-bold">Entity Type</label>
         <div class="row">
-          <div class="col-6">
+          <div class="col-xl-3">
             <mat-checkbox id="issuedToCompany" formControlName="issuedToCompany">
               Company
             </mat-checkbox>
           </div>
-          <div class="col-6">
+          <div class="col-xl-3">
             <mat-checkbox id="issuedToIndividual" formControlName="issuedToIndividual">
               Individual
             </mat-checkbox>
           </div>
+          <div class="col-xl-6"></div>
         </div>
       </div>
-      <div class="col-4"></div>
+      <div class="col-md-4">
+        <label class="control-label font-weight-bold">NRCED Published State</label>
+        <div class="row">
+          <div class="col-xl-3">
+            <div class="radio">
+              <input class="mr-2" type="radio" id="nrcedPublished" value="true" formControlName="isNrcedPublished"
+                name="isNrcedPublished" />
+              <label for="nrcedPublished">Published</label>
+            </div>
+          </div>
+          <div class="col-xl-4">
+            <div class="radio">
+              <input class="mr-2" type="radio" id="nrcedNotPublished" value="false" formControlName="isNrcedPublished"
+                name="isNrcedPublished" />
+              <label for="nrcedNotPublished">Unpublished</label>
+            </div>
+          </div>
+          <div class="col-xl-1">
+            <span
+              class="clear-button"
+              *ngIf="formGroup.get(['isNrcedPublished']).value === 'true' || formGroup.get(['isNrcedPublished']).value === 'false'"
+              (click)="resetFilter('isNrcedPublished')">
+              <svg class="bi bi-x-circle" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                <path fill-rule="evenodd"
+                  d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z" />
+                <path fill-rule="evenodd"
+                  d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z" />
+              </svg>
+            </span>
+          </div>
+          <div class="col-xl-4"></div>
+        </div>
+      </div>
     </div>
   </section>
   <section>
     <div class="row">
-      <div class="col-4">
-        <label for="activityTypeFilter">Activity</label>
+      <div class="col-md-4">
+        <label for="activityTypeFilter">Activity Type</label>
+        <span class="grey-subtext ml-2">Select all that apply</span>
         <span *ngIf="activityTypeCount" class="grey-subtext ml-2">({{ activityTypeCount }} selected)</span>
         <app-autocomplete-multi-select
           id="activityTypeFilter"
@@ -54,12 +88,11 @@
           [options]="activityTypeOptions"
           [reset]="resetControls"
           [placeholderText]="'Begin typing to filter activities...'"
-          (numSelected)="activityTypeCount = $event"
-        ></app-autocomplete-multi-select>
+          (numSelected)="activityTypeCount = $event"></app-autocomplete-multi-select>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="label-pair">
-          <label for="actFilter">Act</label>
+          <label for="actFilter">Issued under which Act</label>
           <span *ngIf="actCount" class="grey-subtext ml-2">({{ actCount }} selected)</span>
           <app-autocomplete-multi-select
             id="actFilter"
@@ -67,15 +100,49 @@
             [options]="actOptions"
             [reset]="resetControls"
             [placeholderText]="'Begin typing to filter acts...'"
-            (numSelected)="actCount = $event"
-          ></app-autocomplete-multi-select>
+            (numSelected)="actCount = $event"></app-autocomplete-multi-select>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <label class="control-label font-weight-bold">LNG Published State</label>
+        <div class="row">
+          <div class="col-xl-3">
+            <div class="radio">
+              <input class="mr-2" type="radio" id="lngPublished" value="true" formControlName="isLngPublished"
+                name="isLngPublished" />
+              <label for="lngPublished">Published</label>
+            </div>
+          </div>
+          <div class="col-xl-4">
+            <div class="radio">
+              <input class="mr-2" type="radio" id="lngNotPublished" value="false" formControlName="isLngPublished"
+                name="isLngPublished" />
+              <label for="lngNotPublished">Unpublished</label>
+            </div>
+          </div>
+          <div class="col-xl-1">
+            <span
+              class="clear-button"
+              *ngIf="formGroup.get(['isLngPublished']).value === 'true' || formGroup.get(['isLngPublished']).value === 'false'"
+              (click)="resetFilter('isLngPublished')">
+              <svg class="bi bi-x-circle" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                <path fill-rule="evenodd"
+                  d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z" />
+                <path fill-rule="evenodd"
+                  d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z" />
+              </svg>
+            </span>
+          </div>
+          <div class="col-xl-4"></div>
         </div>
       </div>
     </div>
   </section>
   <section>
     <div class="row">
-      <div class="col-4">
+      <div class="col-md-4">
         <label for="agencyFilter">Responsible Agency</label>
         <span *ngIf="agencyCount" class="grey-subtext ml-2">({{ agencyCount }} selected)</span>
         <app-autocomplete-multi-select
@@ -84,12 +151,11 @@
           [options]="agencyOptions"
           [reset]="resetControls"
           [placeholderText]="'Begin typing to filter agencies...'"
-          (numSelected)="agencyCount = $event"
-        ></app-autocomplete-multi-select>
+          (numSelected)="agencyCount = $event"></app-autocomplete-multi-select>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <div class="label-pair">
-          <label for="regulationFilter">Regulation</label>
+          <label for="regulationFilter">Issued under which Regulation</label>
           <span *ngIf="regulationCount" class="grey-subtext ml-2">({{ regulationCount }} selected)</span>
           <app-autocomplete-multi-select
             id="regulationFilter"
@@ -97,68 +163,56 @@
             [options]="regulationOptions"
             [reset]="resetControls"
             [placeholderText]="'Begin typing to filter regulations...'"
-            (numSelected)="regulationCount = $event"
-          ></app-autocomplete-multi-select>
+            (numSelected)="regulationCount = $event"></app-autocomplete-multi-select>
         </div>
       </div>
-      <div class="col-4">
-        <label for="sourceSystemFilter">Source System</label>
-        <select
-          name="sourceSystemFilter"
-          id="sourceSystemFilter"
-          formControlName="sourceSystemRef"
-          class="form-control"
-        >
-          <option [selected]="!selectedSystemRef" value="">None</option>
-          <option [selected]="selectedSystemRef === 'nrpti'" value="nrpti">NRPTI</option>
-          <option [selected]="selectedSystemRef === 'ocers-csv'" value="ocers-csv">OCERS</option>
-          <option [selected]="selectedSystemRef === 'nris-epd'" value="nris-epd">NRIS</option>
-          <option [selected]="selectedSystemRef === 'epic'" value="epic">EPIC</option>
-        </select>
+      <div class="col-md-4">
+        <mat-label>Source System</mat-label>
+        <mat-select class="border rounded px-2 py-2" [formControl]="systemRefControl" multiple>
+          <mat-option *ngFor="let systemRef of systemRefOptions" [value]="systemRef">{{systemRef}}</mat-option>
+        </mat-select>
       </div>
     </div>
   </section>
   <section>
     <div class="row">
-      <div class="col-4" [formGroup]="formGroup.get('projects')">
+      <div class="col-md-4" [formGroup]="formGroup.get('projects')">
         <label class="control-label font-weight-bold">Project</label>
         <div class="row checkbox-group" name="projectFilter">
-          <div class="col-4">
+          <div class="col-xl-4">
             <div class="checkbox">
               <input class="mr-2" type="checkbox" id="lngCanada" formControlName="lngCanada" name="lngCanada" />
               <label for="lngCanada">LNG Canada</label>
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-xl-4">
             <div class="checkbox">
               <input
                 class="mr-2"
                 type="checkbox"
                 id="coastalGaslink"
                 formControlName="coastalGaslink"
-                name="coastalGaslink"
-              />
+                name="coastalGaslink" />
               <label for="coastalGaslink">Coastal Gaslink</label>
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-xl-4">
             <div class="checkbox">
               <input
                 class="mr-2"
                 type="checkbox"
                 id="otherProjects"
                 formControlName="otherProjects"
-                name="otherProjects"
-              />
+                name="otherProjects" />
               <label for="otherProjects">Other</label>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-md-4">
         <label class="control-label font-weight-bold">Documents</label>
         <div class="row radio-group" name="hasDocuments">
-          <div class="col-4">
+          <div class="col-xl-2">
             <div class="radio">
               <input
                 class="mr-2"
@@ -166,12 +220,11 @@
                 id="hasDocs"
                 value="true"
                 formControlName="hasDocuments"
-                name="hasDocuments"
-              />
+                name="hasDocuments" />
               <label for="hasDocs">Yes</label>
             </div>
           </div>
-          <div class="col-4">
+          <div class="col-xl-2">
             <div class="radio">
               <input
                 class="mr-2"
@@ -179,16 +232,26 @@
                 id="doesNothaveDocs"
                 value="false"
                 formControlName="hasDocuments"
-                name="hasDocuments"
-              />
+                name="hasDocuments" />
               <label for="doesNothaveDocs">No</label>
             </div>
           </div>
-          <div class="col-4">
-            <button class="btn btn-secondary" (click)="resetDocFilter()">
-              Clear
-            </button>
+          <div class="col-xl-1">
+            <span
+              class="clear-button"
+              *ngIf="formGroup.get(['hasDocuments']).value === 'true' || formGroup.get(['hasDocuments']).value === 'false'"
+              (click)="resetFilter('hasDocuments')">
+              <svg class="bi bi-x-circle" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                <path fill-rule="evenodd"
+                  d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z" />
+                <path fill-rule="evenodd"
+                  d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z" />
+              </svg>
+            </span>
           </div>
+          <div class="col-xl-7"></div>
         </div>
       </div>
     </div>

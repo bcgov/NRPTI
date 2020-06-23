@@ -13,6 +13,7 @@ const defaultLog = require('./src/utils/logger')('app');
 const authUtils = require('./src/utils/auth-utils');
 
 const { updateAllMaterializedViews } = require('./materialized_views/updateViews')
+const { createTask } = require('./src/tasks/import-task');
 
 const UPLOAD_DIR = process.env.UPLOAD_DIRECTORY || './uploads/';
 const HOSTNAME = process.env.API_HOSTNAME || 'localhost:3000';
@@ -26,6 +27,7 @@ const DB_PASSWORD = process.env.MONGODB_PASSWORD || '';
 
 // Cron pattern - seconds[0-59] minutes[0-59] hours[0-23] day_of_month[1-31] months[0-11] day_of_week[0-6]
 const MATERIALIZED_VIEWS_CRON_PATTERN = '*/5 * * * *';
+const IMPORT_CRON_PATTERN = '0 0 * * *';
 
 // Increase post body sizing
 app.use(bodyParser.json({ limit: '10mb', extended: true }));
@@ -73,6 +75,23 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
   const swaggerUIConfig = { apiDocs: '/api/docs', swaggerUi: '/api/docs' };
 
   app.use(middleware.swaggerUi(swaggerUIConfig));
+
+  // audit call on response end
+  app.use(async function (req, res, next) {
+    req.on('data', function () {
+      // This is a no-op, here to adhere to Node.js Streaming API: https://nodejs.org/api/stream.html#stream_event_end
+    });
+    req.on('end', async function () {
+      if (req.audits) {
+        try {
+          await Promise.all(req.audits);
+        } catch(err) {
+          defaultLog.error('Failed to run audit calls: ' + err);
+        }
+      }
+    });
+    next();
+  });
 
   // Ensure uploads directory exists, otherwise create it.
   try {
@@ -128,6 +147,12 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
 
 async function startCron(defaultLog) {
   // Scheduling material view updates.
-  defaultLog.info('Started cron for updating materialized views');
+  defaultLog.info('Starting cron...');
   cron.schedule(MATERIALIZED_VIEWS_CRON_PATTERN, () => updateAllMaterializedViews(defaultLog));
+  defaultLog.info('Materialized Views scheduled for:', MATERIALIZED_VIEWS_CRON_PATTERN);
+
+  // Scheduling imports
+  cron.schedule(IMPORT_CRON_PATTERN, () => createTask('epic'));
+  cron.schedule(IMPORT_CRON_PATTERN, () => createTask('core'));
+  defaultLog.info('Imports scheduled for:', IMPORT_CRON_PATTERN);
 }

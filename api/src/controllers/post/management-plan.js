@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
+const { userHasValidRoles } = require('../../utils/auth-utils');
+const { ROLES } = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Management Plan record and its associated flavour records.
@@ -76,8 +78,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (managementPlan._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  managementPlan.read = ['sysadmin'];
-  managementPlan.write = ['sysadmin'];
+  managementPlan.read = ROLES.ADMIN_ROLES;
+  managementPlan.write = ROLES.ADMIN_ROLES;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -137,6 +139,11 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @returns created lng managementPlan record
  */
 exports.createLNG = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let ManagementPlanLNG = mongoose.model('ManagementPlanLNG');
   let managementPlanLNG = new ManagementPlanLNG();
 
@@ -154,8 +161,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (managementPlanLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  managementPlanLNG.read = ['sysadmin'];
-  managementPlanLNG.write = ['sysadmin'];
+  managementPlanLNG.read = ROLES.ADMIN_ROLES;
+  managementPlanLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {

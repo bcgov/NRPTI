@@ -1,5 +1,7 @@
 'use strict';
 
+const defaultLog = require('../utils/logger')('record');
+
 /**
  * This file contains query builder utility functions.
  */
@@ -72,16 +74,41 @@ exports.getSkipLimitParameters = function(pageSize, pageNum) {
   return params;
 };
 
-exports.recordAction = async function(action, meta, username, objId = null) {
-  const Audit = mongoose.model('Audit');
-  const audit = new Audit({
-    _objectSchema: 'Query',
-    action: action,
-    meta: meta,
-    objId: objId,
-    performedBy: username
-  });
-  return await audit.save();
+exports.audit = function(req, action, meta, authPayload, objId = null) {
+  try {
+    if (!req.audits) {
+      req.audits = [];
+    }
+
+    req.audits.push(this.recordAction(action, meta, authPayload, objId));
+  } catch(err) {
+    defaultLog.error('Failed to add Audit log request. ' + err);
+  }
+}
+exports.recordAction = async function(action, meta, authPayload, objId = null) {
+  try {
+
+    let performedBy = authPayload
+                      ? JSON.stringify({
+                          idir_userid: authPayload.idir_userid || null,
+                          displayName: authPayload.displayName || null,
+                          preferred_username: authPayload.preferred_username || null
+                        })
+                      : null;
+
+    const Audit = mongoose.model('Audit');
+    const audit = new Audit({
+      _objectSchema: 'Query',
+      action: action,
+      meta: meta,
+      objId: objId,
+      performedBy: performedBy
+    });
+    return await audit.save();
+  } catch(err) {
+    defaultLog.error('Failed to create Audit log. ' + err);
+    return;
+  }
 };
 
 exports.recordTypes = [
@@ -98,5 +125,6 @@ exports.recordTypes = [
   'Warning',
   'ConstructionPlan',
   'ManagementPlan',
-  'CourtConviction'
+  'CourtConviction',
+  'Mine'
 ];

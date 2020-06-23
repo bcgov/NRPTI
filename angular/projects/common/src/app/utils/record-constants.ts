@@ -2,8 +2,15 @@ import { Utils } from './utils';
 import { Legislation } from '../models/master/common-models/legislation';
 
 export class EpicProjectIds {
-  public static readonly lngCanadaId = '588510cdaaecd9001b815f84';
+  public static readonly lngCanadaId = '588511d0aaecd9001b826192';
   public static readonly coastalGaslinkId = '588511c4aaecd9001b825604';
+}
+
+export class ApplicationRoles {
+  public static readonly ADMIN = 'sysadmin';
+  public static readonly ADMIN_NRCED = 'admin:nrced';
+  public static readonly ADMIN_LNG = 'admin:lng';
+  public static readonly ADMIN_BCMI = 'admin:bcmi';
 }
 
 /**
@@ -74,12 +81,23 @@ export class Picklists {
   public static readonly activityTypePicklist = {
     AdministrativePenalty: { displayName: 'Administrative Penalty', _schemaName: 'AdministrativePenalty' },
     AdministrativeSanction: { displayName: 'Administrative Sanction', _schemaName: 'AdministrativeSanction' },
+    Agreement: { displayName: 'Agreement', _schemaName: 'Agreement' },
+    Certificate: { displayName: 'Certificate', _schemaName: 'Certificate' },
+    ConstructionPlan: { displayName: 'Construction Plan', _schemaName: 'ConstructionPlan' },
     CourtConviction: { displayName: 'Court Conviction', _schemaName: 'CourtConviction' },
     Inspection: { displayName: 'Inspection', _schemaName: 'Inspection' },
+    ManagementPlan: { displayName: 'Management Plan', _schemaName: 'ManagementPlan' },
     Order: { displayName: 'Order', _schemaName: 'Order' },
+    Permit: { displayName: 'Permit', _schemaName: 'Permit' },
     RestorativeJustice: { displayName: 'Restorative Justice', _schemaName: 'RestorativeJustice' },
-    Ticket: { displayName: 'Ticket', _schemaName: 'Ticket' }
+    SelfReport: { displayName: 'Self Report', _schemaName: 'SelfReport' },
+    Ticket: { displayName: 'Ticket', _schemaName: 'Ticket' },
+    Warning: { displayName: 'Warning', _schemaName: 'Warning' }
   };
+
+  public static readonly sourceSystemRefPicklist = ['nrpti', 'epic', 'nris-epd', 'cors-csv', 'lng-csv', 'ocers-csv'];
+
+  public static readonly mineTypes = ['Coal', 'Metal', 'Industrial Mineral', 'Sand & Gravel'];
 
   /**
    * Contains a mapping of acts to regulations.

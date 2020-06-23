@@ -12,7 +12,9 @@
   {{ (rowData.documents && rowData.documents.length) || '0' }}
 </td>
 <td scope="row" class="col-1">
-  <button (click)="edit(); $event.stopPropagation()" class="btn btn-primary" type="button">
+  <button (click)="edit(); $event.stopPropagation()"
+          class="btn btn-primary"
+          type="button">
     <i class="material-icons">create</i>
     &nbsp;Edit
   </button>

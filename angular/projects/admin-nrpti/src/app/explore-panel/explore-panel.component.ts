@@ -24,7 +24,6 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
   readonly minDate = new Date('01-01-1900'); // first app created
   readonly maxDate = new Date(); // today
 
-
   public agencyOptions: IMutliSelectOption[] = Picklists.agencyPicklist.map(value => {
     return { value: value, displayValue: value, selected: false, display: true };
   });
@@ -43,24 +42,25 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
   public actCount = 0;
   public regulationCount = 0;
 
-  public selectedSystemRef = null;
+  public systemRefControl = null;
+  public systemRefOptions = Picklists.sourceSystemRefPicklist;
 
-  constructor(private _changeDetectionRef: ChangeDetectorRef) { }
+  constructor(private _changeDetectionRef: ChangeDetectorRef) {}
 
   public ngOnInit() {
-    this.formGroup.get(['sourceSystemRef']).value &&
-      (this.selectedSystemRef = this.formGroup.get(['sourceSystemRef']).value);
+    this.systemRefControl = this.formGroup.get(['sourceSystemRef']);
     this._changeDetectionRef.detectChanges();
   }
 
   clearSearchFilters() {
     this.resetControls.emit();
     this.filtersReset.emit();
+    this.systemRefControl.reset();
     this.formGroup.reset();
   }
 
-  resetDocFilter() {
-    this.formGroup.get(['hasDocuments']).setValue(null);
+  resetFilter(filterName) {
+    this.formGroup.get([filterName]).setValue(null);
     this._changeDetectionRef.detectChanges();
   }
 

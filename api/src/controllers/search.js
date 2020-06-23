@@ -5,6 +5,7 @@ let QueryUtils = require('../utils/query-utils');
 let qs = require('qs');
 let mongodb = require('../utils/mongodb');
 let moment = require('moment');
+let fuzzySearch = require('../utils/fuzzySearch');
 
 function isEmpty(obj) {
   for (const key in obj) {
@@ -46,6 +47,17 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
 
       if (item === 'hasDocuments') {
         return getHasDocumentsExp(entry);
+      }
+
+      if (item === 'isNrcedPublished' && entry === 'true') {
+        return { isNrcedPublished: true }
+      } else if (item === 'isNrcedPublished' && entry === 'false') {
+        return { $or: [{ isNrcedPublished: { $exists: false } }, { isNrcedPublished: false }] };
+      }
+      if (item === 'isLngPublished' && entry === 'true') {
+        return { isLngPublished: true }
+      } else if (item === 'isLngPublished' && entry === 'false') {
+        return { $or: [{ isLngPublished: { $exists: false } }, { isLngPublished: false }] }
       }
 
       return getConvertedValue(item, entry, comparisonOperator);
@@ -194,6 +206,11 @@ let searchCollection = async function (
   // optional search keys
   let searchProperties = undefined;
   if (keywords) {
+    // for now, limit fuzzy search to the mine search only. We can expand to all searches
+    // later if desired
+    if (schemaName === 'Mine') {
+      keywords = keywords && keywords.length > 1 ? fuzzySearch.createFuzzySearchString(keywords, 4, caseSensitive) : keywords;
+    }
     searchProperties = { $text: { $search: keywords, $caseSensitive: caseSensitive } };
   }
 
@@ -219,34 +236,26 @@ let searchCollection = async function (
       $limit: pageSize
     }
   );
-  // populate refs
-  if (populate) {
-    // populate flavours
-    searchResultAggregation.push({
-      $lookup: {
-        from: 'nrpti',
-        localField: '_flavourRecords',
-        foreignField: '_id',
-        as: 'flavours'
-      }
-    });
-
-    // populate documents
-    searchResultAggregation.push({
-      $lookup: {
-        from: 'nrpti',
-        localField: 'documents',
-        foreignField: '_id',
-        as: 'documents'
-      }
-    });
-  }
 
   let aggregation = [
     {
       $match: match
     }
   ];
+
+  let projection = {
+    $project: {
+      _id: 1,
+      _flavourRecords: 1,
+      read: 1,
+    }
+  };
+
+  if (sortField && sortDirection) {
+    projection.$project[sortField] = 1;
+  }
+
+  aggregation.push(projection);
 
   aggregation.push({
     $redact: {
@@ -277,6 +286,50 @@ let searchCollection = async function (
       score: { $meta: 'textScore' }
     }
   });
+
+  // add a lookup and replace root
+  // to finalize the facet
+  searchResultAggregation.push({
+    $lookup: {
+      from: 'nrpti',
+      localField: '_id',
+      foreignField: '_id',
+      as: 'fullRecord'
+    }
+  });
+
+  searchResultAggregation.push({
+    $replaceRoot: {
+      newRoot: {
+              $mergeObjects: [
+                { $arrayElemAt: [ "$fullRecord", 0 ] },
+                "$$ROOT" ]
+            }
+      }
+  });
+
+  // populate refs
+  if (populate) {
+    // populate flavours
+    searchResultAggregation.push({
+      $lookup: {
+        from: 'nrpti',
+        localField: '_flavourRecords',
+        foreignField: '_id',
+        as: 'flavours'
+      }
+    });
+
+    // populate documents
+    searchResultAggregation.push({
+      $lookup: {
+        from: 'nrpti',
+        localField: 'documents',
+        foreignField: '_id',
+        as: 'documents'
+      }
+    });
+  }
 
   aggregation.push({
     $facet: {
@@ -409,10 +462,11 @@ const executeQuery = async function (args, res, next) {
   defaultLog.info(roles);
   defaultLog.info('******************************************************************');
 
-  QueryUtils.recordAction(
+  QueryUtils.audit(args,
     'Search',
     keywords,
-    args.swagger.params.auth_payload ? args.swagger.params.auth_payload.preferred_username : 'public'
+    args.swagger.params.auth_payload ? args.swagger.params.auth_payload
+                                     : { idir_userid: null, displayName: 'public', preferred_username: 'public' }
   );
 
   let sortDirection = undefined;
@@ -450,7 +504,7 @@ const executeQuery = async function (args, res, next) {
       subset
     );
 
-    return QueryActions.sendResponse(res, 200, itemData);
+    QueryActions.sendResponse(res, 200, itemData);
   } else if (dataset[0] === 'Item') {
     let collectionObj = mongoose.model(args.swagger.params._schemaName.value);
     defaultLog.info('ITEM GET', { _id: args.swagger.params._id.value });
@@ -510,11 +564,12 @@ const executeQuery = async function (args, res, next) {
 
     const data = await collectionObj.aggregate(aggregation);
 
-    return QueryActions.sendResponse(res, 200, data);
+    QueryActions.sendResponse(res, 200, data);
   } else {
     defaultLog.info('Bad Request');
-    return QueryActions.sendResponse(res, 400, {});
+    QueryActions.sendResponse(res, 400, {});
   }
+  next();
 };
 
 exports.protectedOptions = function (args, res, next) {

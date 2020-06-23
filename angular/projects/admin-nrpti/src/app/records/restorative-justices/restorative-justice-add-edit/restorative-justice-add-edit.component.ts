@@ -128,7 +128,10 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
-      recordName: new FormControl((this.currentRecord && this.currentRecord.recordName) || ''),
+      recordName: new FormControl({
+        value: (this.currentRecord && this.currentRecord.recordName) || '',
+        disabled: !this.factoryService.userInLngRole()
+      }),
       dateIssued: new FormControl(
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
@@ -196,16 +199,24 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
       penalties: new FormArray(this.getPenaltiesFormGroups()),
 
       // NRCED
-      nrcedSummary: new FormControl((this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.summary) || ''),
-      publishNrced: new FormControl(
-        (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false
-      ),
+      nrcedSummary: new FormControl({
+        value: (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.summary) || '',
+        disabled: !this.factoryService.userInNrcedRole()
+      }),
+      publishNrced: new FormControl({
+        value: (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false,
+        disabled: !this.factoryService.userInNrcedRole()
+      }),
 
       // LNG
-      lngDescription: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.description) || ''),
-      publishLng: new FormControl(
-        (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false
-      )
+      lngDescription: new FormControl({
+        value: (this.currentRecord && this.lngFlavour && this.lngFlavour.description) || '',
+        disabled: !this.factoryService.userInLngRole()
+      }),
+      publishLng: new FormControl({
+        value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
+        disabled: !this.factoryService.userInLngRole()
+      })
     });
   }
 
@@ -356,6 +367,8 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
       restorativeJustice['_epicProjectId'] = EpicProjectIds.lngCanadaId;
     } else if (restorativeJustice['projectName'] === 'Coastal Gaslink') {
       restorativeJustice['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+    } else {
+      restorativeJustice['_epicProjectId'] = null;
     }
 
     this.myForm.controls.location.dirty && (restorativeJustice['location'] = this.myForm.controls.location.value);
