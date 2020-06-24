@@ -71,6 +71,10 @@
             <option *ngFor="let author of authors" [ngValue]="author">{{ author }}</option>
           </select>
         </div>
+        <div class="label-pair">
+          <label for="recordName">Record Name</label>
+          <input name="recordName" id="recordName" type="text" formControlName="recordName" class="form-control" />
+        </div>
       </div>
     </section>
 
@@ -234,12 +238,6 @@
             {{ myForm.controls.publishLng.value ? 'Published' : 'Unpublished' }}
           </mat-slide-toggle>
           <span class="grey-subtext d-block">*Changes made will take effect once you click "Update Record"</span>
-        </div>
-      </div>
-      <div class="flex-container">
-        <div class="label-pair">
-          <label for="recordName">Record Name</label>
-          <input name="recordName" id="recordName" type="text" formControlName="recordName" class="form-control" />
         </div>
       </div>
       <div class="flex-container">
