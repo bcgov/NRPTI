@@ -20,6 +20,22 @@ const EPIC_RECORD_TYPE = Object.freeze({
       getUtil: auth_payload => {
         return new (require('./orders-other-utils'))(auth_payload, RECORD_TYPE.Order);
       }
+    },
+    {
+      // type and milestone from legislation 2018
+      type: { name: 'Order', typeId: '5df79dd77b5abbf7da6f51bf' },
+      milestone: { name: 'Compliance & Enforcement', milestoneId: '5df79dd77b5abbf7da6f5201' },
+      getUtil: auth_payload => {
+        return new (require('./orders-utils'))(auth_payload, RECORD_TYPE.Order);
+      }
+    },
+    {
+      // type and milestone from legislation 2018
+      type: { name: 'Order', typeId: '5df79dd77b5abbf7da6f51bf' },
+      milestone: { name: 'Other', milestoneId: '5df79dd77b5abbf7da6f5202' },
+      getUtil: auth_payload => {
+        return new (require('./orders-other-utils'))(auth_payload, RECORD_TYPE.Order);
+      }
     }
   ],
   Inspection: [
@@ -27,6 +43,14 @@ const EPIC_RECORD_TYPE = Object.freeze({
       // type and milestone from legislation 2002
       type: { name: 'Inspection Record', typeId: '5cf00c03a266b7e1877504d9' },
       milestone: { name: 'Compliance & Enforcement', milestoneId: '5cf00c03a266b7e1877504ef' },
+      getUtil: auth_payload => {
+        return new (require('./inspections-utils'))(auth_payload, RECORD_TYPE.Inspection);
+      }
+    },
+    {
+      // type and milestone from legislation 2018
+      type: { name: 'Inspection Record', typeId: '5df79dd77b5abbf7da6f51ca' },
+      milestone: { name: 'Compliance & Enforcement', milestoneId: '5df79dd77b5abbf7da6f5201' },
       getUtil: auth_payload => {
         return new (require('./inspections-utils'))(auth_payload, RECORD_TYPE.Inspection);
       }
@@ -56,6 +80,18 @@ const EPIC_RECORD_TYPE = Object.freeze({
       getUtil: auth_payload => {
         return new (require('./certificates-amendment-utils'))(auth_payload, RECORD_TYPE.Certificate);
       }
+    },
+    {
+      // type and milestone from legislation 2018
+      type: { name: 'Amendment Package', typeId: '5df79dd77b5abbf7da6f51cc' },
+      milestone: { name: 'Amendment', milestoneId: '5df79dd77b5abbf7da6f5200' },
+      projects: [
+        { name: 'Coastal Gaslink', projectId: '588511c4aaecd9001b825604' },
+        { name: 'LNG', projectId: '588511d0aaecd9001b826192' }
+      ],
+      getUtil: auth_payload => {
+        return new (require('./certificates-amendment-utils'))(auth_payload, RECORD_TYPE.Certificate);
+      }
     }
   ],
   ManagementPlan: [
@@ -74,6 +110,18 @@ const EPIC_RECORD_TYPE = Object.freeze({
     {
       // type and milestone from legislation 2018 ('Management Plan' doesn't exist in Legislation 2002)
       type: { name: 'Management Plan', typeId: '5df79dd77b5abbf7da6f51c2' },
+      milestone: { name: 'Post-Decision Materials', milestoneId: '5df79dd77b5abbf7da6f51fa' },
+      projects: [
+        { name: 'Coastal Gaslink', projectId: '588511c4aaecd9001b825604' },
+        { name: 'LNG', projectId: '588511d0aaecd9001b826192' }
+      ],
+      getUtil: auth_payload => {
+        return new (require('./management-plans-utils'))(auth_payload, RECORD_TYPE.ManagementPlan);
+      }
+    },
+    {
+      // type and milestone from legislation 2018
+      type: { name: 'Plan', typeId: '5df79dd77b5abbf7da6f51c3' },
       milestone: { name: 'Post-Decision Materials', milestoneId: '5df79dd77b5abbf7da6f51fa' },
       projects: [
         { name: 'Coastal Gaslink', projectId: '588511c4aaecd9001b825604' },
