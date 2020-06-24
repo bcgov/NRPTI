@@ -169,41 +169,6 @@
     <section>
       <div class="row mb-4">
         <div class="col-2">
-          <h4 class="blue-header mb-0">NRCED Site Content</h4>
-          <span class="grey-subtext d-block">{{ nrcedPublishSubtext }}</span>
-        </div>
-        <div class="col-4">
-          <mat-slide-toggle
-            name="publishNrced"
-            id="publishNrced"
-            formControlName="publishNrced"
-            (change)="togglePublish($event, 'nrced')"
-            [checked]="myForm.controls.publishNrced.value"
-            ngDefaultControl
-          >
-            {{ myForm.controls.publishNrced.value ? 'Published' : 'Unpublished' }}
-          </mat-slide-toggle>
-          <span class="grey-subtext d-block">*Changes made will take effect once you click "Update Record"</span>
-        </div>
-      </div>
-      <div class="flex-container">
-        <div class="label-pair med">
-          <label for="nrcedSummary">Summary</label>
-          <textarea
-            name="nrcedSummary"
-            id="nrcedSummary"
-            type="text"
-            formControlName="nrcedSummary"
-            class="form-control"
-            rows="5"
-          ></textarea>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="row mb-4">
-        <div class="col-2">
           <h4 class="blue-header mb-0">LNG Site Content</h4>
           <span class="grey-subtext d-block">{{ lngPublishSubtext }}</span>
         </div>
@@ -235,6 +200,41 @@
             id="lngDescription"
             type="text"
             formControlName="lngDescription"
+            class="form-control"
+            rows="5"
+          ></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="row mb-4">
+        <div class="col-2">
+          <h4 class="blue-header mb-0">NRCED Site Content</h4>
+          <span class="grey-subtext d-block">{{ nrcedPublishSubtext }}</span>
+        </div>
+        <div class="col-4">
+          <mat-slide-toggle
+            name="publishNrced"
+            id="publishNrced"
+            formControlName="publishNrced"
+            (change)="togglePublish($event, 'nrced')"
+            [checked]="myForm.controls.publishNrced.value"
+            ngDefaultControl
+          >
+            {{ myForm.controls.publishNrced.value ? 'Published' : 'Unpublished' }}
+          </mat-slide-toggle>
+          <span class="grey-subtext d-block">*Changes made will take effect once you click "Update Record"</span>
+        </div>
+      </div>
+      <div class="flex-container">
+        <div class="label-pair med">
+          <label for="nrcedSummary">Summary</label>
+          <textarea
+            name="nrcedSummary"
+            id="nrcedSummary"
+            type="text"
+            formControlName="nrcedSummary"
             class="form-control"
             rows="5"
           ></textarea>
