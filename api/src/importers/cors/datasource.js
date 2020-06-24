@@ -8,7 +8,7 @@ class CorsCsvDataSource {
    * @param {*} taskAuditRecord audit record hook for this import instance
    * @param {*} auth_payload information about the user account that started this update
    * @param {*} recordType record type to create from the csv file
-   * @param {*} csvRows csv file to import
+   * @param {*} csvRows array of csv row objects to import
    * @memberof CorsCsvDataSource
    */
   constructor(taskAuditRecord, auth_payload, recordType, csvRows) {
@@ -76,7 +76,7 @@ class CorsCsvDataSource {
   /**
    * Perform all steps necessary to process and save a single row of the csv file.
    *
-   * @param {*} csvRow array of values for a single row
+   * @param {*} csvRow object of values for a single row
    * @param {*} recordTypeConfig object containing record type specific details
    * @memberof CorsCsvDataSource
    */

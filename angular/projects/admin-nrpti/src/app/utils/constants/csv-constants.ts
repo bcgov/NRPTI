@@ -4,9 +4,21 @@
  * @export
  * @interface IRequiredFormat
  */
-export interface IRequiredFormat {
+ export interface IRequiredFormat {
   field: string;
   type: string;
+  format: string;
+}
+
+/**
+ * Date fields and their corresponding date formats.  Dates must be transformed into proper date-strings prior to
+ * being sent to the API.
+ *
+ * @export
+ * @interface IDateField
+ */
+export interface IDateField {
+  field: string;
   format: string;
 }
 
@@ -66,6 +78,18 @@ export class CsvConstants {
   public static readonly corsTicketCsvRequiredFormats: IRequiredFormat[] = [
     { field: 'TICKET_DATE', type: 'date', format: 'MM/DD/YYYY' },
     { field: 'BIRTH_DATE', type: 'date', format: 'YYYY/MM/DD' }
+  ];
+
+  /**
+   * Fields for CORS Ticket csv that represent dates.
+   *
+   * @static
+   * @type {IDateField[]}
+   * @memberof CsvConstants
+   */
+  public static readonly corsTicketCsvDateFields: IDateField[] = [
+    { field: 'TICKET_DATE', format: 'MM/DD/YYYY' },
+    { field: 'BIRTH_DATE', format: 'YYYY/MM/DD' }
   ];
 
   /**
@@ -131,6 +155,29 @@ export class CsvConstants {
     if (dataSourceType === 'cors-csv') {
       if (recordType === 'Ticket') {
         return this.corsTicketCsvRequiredFormats;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Get the array of date fields for csv dataSourceType and recordType.
+   *
+   * @static
+   * @param {string} dataSourceType
+   * @param {string} recordType
+   * @returns {IDateFields[]} array of date fields and their formats for csv
+   * @memberof CsvConstants
+   */
+  public static getCsvDateFieldsArray(dataSourceType: string, recordType: string): IDateField[] {
+    if (!dataSourceType || !recordType) {
+      return null;
+    }
+
+    if (dataSourceType === 'cors-csv') {
+      if (recordType === 'Ticket') {
+        return this.corsTicketCsvDateFields;
       }
     }
 
