@@ -22,10 +22,10 @@
               {{ (myForm.get('publish').value && 'Published') || 'Unpublished' }}
             </mat-slide-toggle>
             <span class="grey-subtext ml-auto">
-              *Changes made will take effect once you click "Update Record"
+              Changes made will take effect once you click "Update Record"
             </span>
-            <span *ngIf="!canPublish && !myForm.get('publish').value" class="grey-subtext ml-auto">
-              *All fields are required to publish
+            <span *ngIf="!canPublish && !myForm.get('publish').value" class="red-subtext ml-auto">
+              All fields are required to publish
             </span>
           </div>
         </div>
@@ -149,7 +149,7 @@
       <i class="material-icons mr-1">
         save
       </i>
-      Update Record
+      Update
     </button>
     <button type="button" class="btn btn-link" (click)="cancel()" title="Cancel">Cancel</button>
   </div>
