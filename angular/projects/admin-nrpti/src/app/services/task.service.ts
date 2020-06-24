@@ -37,12 +37,12 @@ export interface ICsvTaskParams {
    */
   recordType: string;
   /**
-   * Csv file to import records from.
+   * Csv file data to import records from.
    *
-   * @type {File}
+   * @type {string}
    * @memberof ICsvTaskParams
    */
-  upfile: File;
+   csvData: string;
 }
 
 /**
@@ -78,7 +78,7 @@ export class TaskService {
     const formData = new FormData();
     formData.append('dataSourceType', csvTaskParams.dataSourceType);
     formData.append('recordType', csvTaskParams.recordType);
-    formData.append('upfile', csvTaskParams.upfile);
+    formData.append('csvData', csvTaskParams.csvData);
 
     const queryString = 'task/csv';
     return this.http.post<object>(`${this.apiService.pathAPI}/${queryString}`, formData, {});

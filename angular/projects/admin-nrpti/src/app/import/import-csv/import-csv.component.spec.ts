@@ -8,6 +8,7 @@ import { CommonModule } from '../../../../../common/src/app/common.module';
 import { CsvConstants } from '../../utils/constants/csv-constants';
 import { FactoryService } from '../../services/factory.service';
 import { of } from 'rxjs';
+import moment from 'moment';
 
 describe('ImportCSVComponent', () => {
   const testBedHelper = new TestBedHelper<ImportCSVComponent>(ImportCSVComponent);
@@ -427,6 +428,56 @@ describe('ImportCSVComponent', () => {
     }));
   });
 
+  describe('transformFields', () => {
+    it('calls validation methods', async(() => {
+      const { component } = testBedHelper.createComponent();
+
+      // mock component methods
+      component.transformDateFields = jasmine.createSpy('transformDateFields');
+
+      component.transformFields([
+        ['headerA', 'headerB', 'headerC'],
+        ['a', 'b', 'c'],
+        ['d', 'e', 'f']
+      ]);
+
+      // calls transform methods on first row
+      expect(component.transformDateFields).toHaveBeenCalledWith(
+        ['a', 'b', 'c'],
+        CsvConstants.corsTicketCsvDateFields,
+        ['headerA', 'headerB', 'headerC']
+      );
+
+      // calls transform methods on second row
+      expect(component.transformDateFields).toHaveBeenCalledWith(
+        ['d', 'e', 'f'],
+        CsvConstants.corsTicketCsvDateFields,
+        ['headerA', 'headerB', 'headerC']
+      );
+
+      expect(component.csvFileErrors).toEqual([]);
+    }));
+  });
+
+  describe('transformDateFields', () => {
+    it('transforms dates to iso strings', async(() => {
+      const { component } = testBedHelper.createComponent();
+
+      const transformedRow: string[] = component.transformDateFields(
+        ['2019/12/30', '12/30/2019'],
+        [
+          { field: 'headerA', format: 'YYYY/MM/DD' },
+          { field: 'headerB', format: 'MM/DD/YYYY' }
+        ],
+        ['headerA', 'headerB']
+      );
+
+      expect(transformedRow.length).toEqual(2);
+      expect(transformedRow[0]).toEqual(moment('2019/12/30', 'YYYY/MM/DD').toISOString());
+      expect(transformedRow[1]).toEqual(moment('12/30/2019', 'MM/DD/YYYY').toISOString());
+    }));
+  });
+
   describe('startJob', () => {
     let factoryServiceSpy: jasmine.SpyObj<FactoryService>;
 
@@ -486,6 +537,7 @@ describe('ImportCSVComponent', () => {
       component.dataSourceType = 'dataSourceType';
       component.recordType = 'recordType';
       component.csvFiles = [fileA];
+      component.transformedValidatedCsvFile = 'fileData';
 
       // mock component methods
       component.onFileDelete = jasmine.createSpy('onFileDelete');
@@ -497,7 +549,7 @@ describe('ImportCSVComponent', () => {
       expect(factoryServiceSpy.startCsvTask).toHaveBeenCalledWith({
         dataSourceType: 'dataSourceType',
         recordType: 'recordType',
-        upfile: fileA
+        csvData: 'fileData'
       });
     }));
   });
