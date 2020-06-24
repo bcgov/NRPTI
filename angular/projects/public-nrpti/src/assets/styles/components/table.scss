@@ -96,7 +96,7 @@ th {
 
     &::before,
     &::after {
-      content: ' ';
+      content: " ";
       position: absolute;
       display: block;
       border-color: #007bff transparent;
@@ -109,7 +109,7 @@ th {
     }
 
     &::after {
-      content: ' ';
+      content: " ";
       bottom: -1px;
       border-width: $table-sort-icon-size $table-sort-icon-size 0 $table-sort-icon-size;
     }
@@ -156,7 +156,7 @@ th {
   }
 
   .table thead::before {
-    content: 'Sort by:';
+    content: "Sort by:";
     font-weight: bold;
     text-transform: uppercase;
     margin-bottom: 3px;
