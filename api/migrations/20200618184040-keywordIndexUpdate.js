@@ -31,7 +31,7 @@ exports.up = async function (db) {
       'issuedTo.middleName': 'text',
       'issuedTo.lastName': 'text',
       'issuedTo.fullName': 'text',
-      permitNumbers: 'text',
+      permitNumber: 'text',
       recordName: 'text',
       name: 'text'
     },
