@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FactoryService } from '../../services/factory.service';
 import { ICsvTaskParams } from '../../services/task.service';
-import { CsvConstants, IRequiredFormat } from '../../utils/constants/csv-constants';
+import { CsvConstants, IRequiredFormat, IDateField } from '../../utils/constants/csv-constants';
 import Papa from 'papaparse';
 import moment from 'moment';
 
@@ -17,6 +17,8 @@ export class ImportCSVComponent {
 
   public csvFileValidated = false;
   public csvFileErrors: string[] = [];
+
+  public transformedValidatedCsvFile;
 
   public showAlert = false;
 
@@ -93,7 +95,19 @@ export class ImportCSVComponent {
     const fileReader = new FileReader();
 
     fileReader.onloadend = () => {
-      this.validateCsvFile(fileReader.result);
+      const validatedCsvRows = this.validateCsvFile(fileReader.result);
+
+      if (!validatedCsvRows) {
+        return;
+      }
+
+      const transformedCsvRows = this.transformFields(validatedCsvRows);
+
+      if (!transformedCsvRows) {
+        return;
+      }
+
+      this.transformedValidatedCsvFile = Papa.unparse(transformedCsvRows);
     };
 
     fileReader.readAsText(this.csvFiles[0]);
@@ -103,10 +117,11 @@ export class ImportCSVComponent {
    * Parse and validate the csv data for errors.
    *
    * @param {*} csvData
+   * @returns {string[][]} parsed and validated csv file
    * @returns
    * @memberof ImportCSVComponent
    */
-  validateCsvFile(csvData: any) {
+  validateCsvFile(csvData: any): string[][] {
     if (!csvData) {
       this.csvFileErrors.push(`Error reading csv file: ${this.csvFiles[0].name}`);
       return;
@@ -125,6 +140,8 @@ export class ImportCSVComponent {
     }
 
     this.csvFileValidated = true;
+
+    return csvRows;
   }
 
   /**
@@ -265,6 +282,76 @@ export class ImportCSVComponent {
   }
 
   /**
+   * Transform csv field values.
+   *
+   * @param {string[][]} csvRows array of rows, each of which is an array of row values
+   * @returns {string[][]} array of rows with transformations applied.
+   * @memberof ImportCSVComponent
+   */
+  transformFields(csvRows: string[][]): string[][] {
+    if (!csvRows || !csvRows.length) {
+      this.csvFileErrors.push(`Error parsing csv file: ${this.csvFiles[0].name}`);
+      return;
+    }
+
+    // initial transformed csv rows
+    const transformedCSvRows: string[][] = [...csvRows];
+
+    // get column header values array
+    const csvHeaderRowValuesArray = csvRows[0];
+
+    const dateFields = CsvConstants.getCsvDateFieldsArray(this.dataSourceType, this.recordType);
+
+    // start loop at index 1, skipping the header row
+    for (let rowNumber = 1; rowNumber < csvRows.length; rowNumber++) {
+      if (!csvRows[rowNumber]) {
+        continue;
+      }
+
+      // get row values array
+      const csvRowValuesArray = csvRows[rowNumber];
+
+      // update row with transformed fields
+      transformedCSvRows[rowNumber] = this.transformDateFields(csvRowValuesArray, dateFields, csvHeaderRowValuesArray);
+    }
+
+    return transformedCSvRows;
+  }
+
+  /**
+   * Transform the csv date fields into iso strings.
+   *
+   * @param {string[]} csvRowValuesArray
+   * @param {string[]} dateFieldsArray
+   * @param {string[]} csvHeaderRowValuesArray
+   * @returns {string[]} csv row fields with transformed date fields
+   * @memberof ImportCSVComponent
+   */
+  transformDateFields(
+    csvRowValuesArray: string[],
+    dateFieldsArray: IDateField[],
+    csvHeaderRowValuesArray: string[]
+  ): string[] {
+    const transformedCsvRowValuesArray = [...csvRowValuesArray];
+
+    // determine if the csv row is contains any fields whose values are not in the required format
+    for (const dateField of dateFieldsArray) {
+      const fieldIndex = csvHeaderRowValuesArray.indexOf(dateField.field);
+
+      if (!csvRowValuesArray[fieldIndex]) {
+        // Field is empty, if it was required it will have already been accounted for in the required fields check.
+        // If it is not required then no format needs to be enforced.
+        continue;
+      }
+
+      // transform dates into iso strings
+      transformedCsvRowValuesArray[fieldIndex] = moment(csvRowValuesArray[fieldIndex], dateField.format).toISOString();
+    }
+
+    return transformedCsvRowValuesArray;
+  }
+
+  /**
    * Start the csv import job.
    *
    * @returns
@@ -283,10 +370,14 @@ export class ImportCSVComponent {
       return null;
     }
 
+    if (!this.transformedValidatedCsvFile) {
+      return null;
+    }
+
     const csvTaskParams: ICsvTaskParams = {
       dataSourceType: this.dataSourceType,
       recordType: this.recordType,
-      upfile: this.csvFiles[0]
+      csvData: this.transformedValidatedCsvFile
     };
 
     await this.factoryService.startCsvTask(csvTaskParams).toPromise();

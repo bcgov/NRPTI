@@ -73,6 +73,10 @@
             <option *ngFor="let author of authors" [ngValue]="author">{{ author }}</option>
           </select>
         </div>
+        <div class="label-pair">
+          <label for="recordName">Record Name</label>
+          <input name="recordName" id="recordName" type="text" formControlName="recordName" class="form-control" />
+        </div>
       </div>
     </section>
 
