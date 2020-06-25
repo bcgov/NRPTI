@@ -48,7 +48,7 @@ export class TicketAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -136,7 +136,7 @@ export class TicketAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
+        ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -182,7 +182,7 @@ export class TicketAddEditComponent implements OnInit, OnDestroy {
             this.currentRecord.issuedTo &&
             this.currentRecord.issuedTo.dateOfBirth &&
             this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
-            ''
+          ''
         ),
         anonymous: new FormControl(
           (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || ''
@@ -358,13 +358,15 @@ export class TicketAddEditComponent implements OnInit, OnDestroy {
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    this.myForm.controls.projectName.dirty && (ticket['projectName'] = this.myForm.controls.projectName.value);
-    if (ticket['projectName'] === 'LNG Canada') {
-      ticket['_epicProjectId'] = EpicProjectIds.lngCanadaId;
-    } else if (ticket['projectName'] === 'Coastal Gaslink') {
-      ticket['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
-    } else {
-      ticket['_epicProjectId'] = null;
+    if (this.myForm.controls.projectName.dirty) {
+      ticket['projectName'] = this.myForm.controls.projectName.value;
+      if (ticket['projectName'] === 'LNG Canada') {
+        ticket['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+      } else if (ticket['projectName'] === 'Coastal Gaslink') {
+        ticket['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+      } else {
+        ticket['_epicProjectId'] = null;
+      }
     }
 
     this.myForm.controls.location.dirty && (ticket['location'] = this.myForm.controls.location.value);

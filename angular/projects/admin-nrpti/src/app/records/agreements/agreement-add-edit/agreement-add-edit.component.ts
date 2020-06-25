@@ -142,13 +142,15 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    this.myForm.controls.projectName.dirty && (agreement['projectName'] = this.myForm.controls.projectName.value);
-    if (agreement['projectName'] === 'LNG Canada') {
-      agreement['_epicProjectId'] = EpicProjectIds.lngCanadaId;
-    } else if (agreement['projectName'] === 'Coastal Gaslink') {
-      agreement['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
-    } else {
-      agreement['_epicProjectId'] = null;
+    if (this.myForm.controls.projectName.dirty) {
+      agreement['projectName'] = this.myForm.controls.projectName.value;
+      if (agreement['projectName'] === 'LNG Canada') {
+        agreement['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+      } else if (agreement['projectName'] === 'Coastal Gaslink') {
+        agreement['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+      } else {
+        agreement['_epicProjectId'] = null;
+      }
     }
 
     // LNG flavour

@@ -45,7 +45,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -127,7 +127,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
+        ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       legislation: new FormGroup({
@@ -162,7 +162,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
-          ''
+        ''
       ),
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
@@ -225,13 +225,15 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    this.myForm.controls.projectName.dirty && (certificate['projectName'] = this.myForm.controls.projectName.value);
-    if (certificate['projectName'] === 'LNG Canada') {
-      certificate['_epicProjectId'] = EpicProjectIds.lngCanadaId;
-    } else if (certificate['projectName'] === 'Coastal Gaslink') {
-      certificate['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
-    } else {
-      certificate['_epicProjectId'] = null;
+    if (this.myForm.controls.projectName.dirty) {
+      certificate['projectName'] = this.myForm.controls.projectName.value;
+      if (certificate['projectName'] === 'LNG Canada') {
+        certificate['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+      } else if (certificate['projectName'] === 'Coastal Gaslink') {
+        certificate['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+      } else {
+        certificate['_epicProjectId'] = null;
+      }
     }
 
     this.myForm.controls.location.dirty && (certificate['location'] = this.myForm.controls.location.value);

@@ -46,7 +46,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -127,7 +127,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
+        ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -223,13 +223,15 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    this.myForm.controls.projectName.dirty && (selfReport['projectName'] = this.myForm.controls.projectName.value);
-    if (selfReport['projectName'] === 'LNG Canada') {
-      selfReport['_epicProjectId'] = EpicProjectIds.lngCanadaId;
-    } else if (selfReport['projectName'] === 'Coastal Gaslink') {
-      selfReport['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
-    } else {
-      selfReport['_epicProjectId'] = null;
+    if (this.myForm.controls.projectName.dirty) {
+      selfReport['projectName'] = this.myForm.controls.projectName.value;
+      if (selfReport['projectName'] === 'LNG Canada') {
+        selfReport['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+      } else if (selfReport['projectName'] === 'Coastal Gaslink') {
+        selfReport['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+      } else {
+        selfReport['_epicProjectId'] = null;
+      }
     }
 
     this.myForm.controls.location.dirty && (selfReport['location'] = this.myForm.controls.location.value);
