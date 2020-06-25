@@ -65,7 +65,7 @@ export class Mine {
     this.status               = (obj && obj.status)               || '';
     this.type                 = (obj && obj.type)                 || '';
     this.commodities          = (obj && obj.commodities)          || [];
-    this.tailingsImpoundments = (obj && obj.tailingsImpoundments) || null;
+    this.tailingsImpoundments = (obj && obj.tailingsImpoundments) || 0;
     this.region               = (obj && obj.region)               || '';
     this.location             = (obj && obj.location)             || null;
     this.permittee            = (obj && obj.permittee)            || '';

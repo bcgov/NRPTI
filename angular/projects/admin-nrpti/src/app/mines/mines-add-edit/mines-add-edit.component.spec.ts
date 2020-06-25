@@ -54,11 +54,14 @@ describe('MinesAddEditComponent', () => {
   });
 
   describe('togglePublish', () => {
-    it('sets publish control to true', () => {
+    it('sets publish control to true if record meets publishing criteria', () => {
       const { component } = testBedHelper.createComponent();
 
       // stub component
       component.isFormValid = () => true;
+      component.checkCanPublish = () => true;
+
+      component.canPublish = true;
 
       component.myForm = new FormGroup({
         publish: new FormControl(false)
@@ -69,17 +72,20 @@ describe('MinesAddEditComponent', () => {
       expect(component.myForm.get('publish').value).toEqual(true);
     });
 
-    it('sets publish control to false', () => {
+    it('does nothing if record does not meet publishing criteria', () => {
       const { component } = testBedHelper.createComponent();
 
       // stub component
       component.isFormValid = () => true;
+      component.checkCanPublish = () => false;
+
+      component.canPublish = false;
 
       component.myForm = new FormGroup({
-        publish: new FormControl(true)
+        publish: new FormControl(false)
       });
 
-      component.togglePublish({ checked: false });
+      component.togglePublish({ checked: true });
 
       expect(component.myForm.get('publish').value).toEqual(false);
     });
@@ -204,8 +210,10 @@ describe('MinesAddEditComponent', () => {
 
       // stub component
       component.isFormValid = () => true;
+      component.checkCanPublish = () => true;
 
       component.mine = new Mine({ _id: '123' });
+      component.canPublish = true;
 
       component.myForm = new FormGroup({
         description: new FormControl('descriptionA'),
@@ -240,6 +248,40 @@ describe('MinesAddEditComponent', () => {
         new Link({ title: 'title2', url: 'url2' })
       ]);
       expect(mineObject['addRole']).toEqual('public');
+    });
+
+    it('does not allow publishing if required fields are missing', () => {
+      const { component } = testBedHelper.createComponent();
+
+      // stub component
+      component.isFormValid = () => true;
+      component.checkCanPublish = () => false;
+
+      component.mine = new Mine({ _id: '123' });
+      component.canPublish = false;
+
+      component.myForm = new FormGroup({
+        description: new FormControl(''),
+        summary: new FormControl(''),
+        type: new FormControl(''),
+        links: new FormArray([
+          new FormGroup({
+            title: new FormControl(''),
+            url: new FormControl('')
+          }),
+          new FormGroup({
+            title: new FormControl(''),
+            url: new FormControl('')
+          })
+        ]),
+        publish: new FormControl(true)
+      });
+
+      component.myForm.get('publish').markAsDirty();
+
+      const mineObject = component.buildMineObject();
+
+      expect(mineObject['addRole']).not.toBeDefined();
     });
   });
 });

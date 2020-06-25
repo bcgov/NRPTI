@@ -69,3 +69,9 @@ input[type='text'] {
   font-size: 15px;
   font-style: italic;
 }
+
+.red-subtext {
+  font-size: 15px;
+  font-style: italic;
+  color: $mine-publish-error;
+}

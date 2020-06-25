@@ -21,6 +21,7 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
   public mine: Mine;
   public myForm: FormGroup;
   public lastEditedSubText = null;
+  public canPublish = false;
 
   public mineTypes = Picklists.mineTypes;
 
@@ -45,6 +46,11 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
       }
 
       this.buildForm();
+
+      this.subscribeToFormChanges();
+
+      this.canPublish = this.checkCanPublish();
+      this.togglePublishControl();
 
       this.loading = false;
       this.loadingScreenService.setLoadingState(false, 'main');
@@ -78,6 +84,20 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
       type: new FormControl((this.mine && this.mine.type) || ''),
       links: new FormArray(this.getLinksFormGroups()),
       publish: new FormControl((this.mine && this.mine.read.includes('public')) || false)
+    });
+  }
+
+  /**
+   * Subscribe to form changes.
+   *
+   * @memberof MinesAddEditComponent
+   */
+  subscribeToFormChanges() {
+    this.myForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
+      this.canPublish = this.checkCanPublish();
+      this.togglePublishControl();
+
+      this._changeDetectionRef.detectChanges();
     });
   }
 
@@ -164,9 +184,57 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesAddEditComponent
    */
   togglePublish(event) {
-    this.myForm.controls.publish.setValue(event.checked);
+    if (!event.checked) {
+      // always allow unpublishing
+      this.myForm.controls.publish.setValue(event.checked);
+    } else if (this.canPublish) {
+      // conditionally allow publishing
+      this.myForm.controls.publish.setValue(event.checked);
+    }
 
     this._changeDetectionRef.detectChanges();
+  }
+
+  /**
+   * Return true if the record meets the criteria to be published, false otherwise.
+   *
+   * @returns {boolean}
+   * @memberof MinesAddEditComponent
+   */
+  checkCanPublish(): boolean {
+    return (
+      this.mine &&
+      this.myForm &&
+      this.myForm.get('description').value &&
+      this.myForm.get('summary').value &&
+      this.myForm.get('type').value &&
+      this.mine.name &&
+      this.mine.status &&
+      this.mine.permitNumbers &&
+      this.mine.permitNumbers.length &&
+      this.mine.tailingsImpoundments !== null &&
+      this.mine.tailingsImpoundments >= 0 &&
+      this.mine.commodities &&
+      this.mine.commodities.length &&
+      this.mine.permittee &&
+      this.mine.location &&
+      this.mine.location['coordinates'] &&
+      this.mine.location['coordinates'].length
+    );
+  }
+
+  /**
+   * Enable or disable the publish control based on this.canPublish.
+   *
+   * @memberof MinesAddEditComponent
+   */
+  togglePublishControl() {
+    if (this.canPublish) {
+      this.myForm.get('publish').enable({ emitEvent: false });
+    } else {
+      this.myForm.get('publish').setValue(false, { emitEvent: false });
+      this.myForm.get('publish').disable({ emitEvent: false });
+    }
   }
 
   /**
@@ -199,9 +267,9 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
     this.myForm.get('summary').dirty && (mineItem['summary'] = this.myForm.get('summary').value);
     this.myForm.get('links').dirty && (mineItem['links'] = this.parseLinksFormGroups());
 
-    if (this.myForm.get('publish').dirty && this.myForm.get('publish').value) {
+    if (this.myForm.get('publish').dirty && this.myForm.get('publish').value && this.canPublish) {
       mineItem['addRole'] = 'public';
-    } else if (this.myForm.get('publish').dirty && !this.myForm.get('publish').value) {
+    } else if ((this.myForm.get('publish').dirty && !this.myForm.get('publish').value) || !this.canPublish) {
       mineItem['removeRole'] = 'public';
     }
 

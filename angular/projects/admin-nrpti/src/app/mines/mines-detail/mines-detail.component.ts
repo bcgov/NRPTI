@@ -45,13 +45,19 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
   }
 
   checkCanPublish(): boolean {
-    return (this.mine.name
+    return (this.mine
+      && this.mine.name
+      && this.mine.description
+      && this.mine.summary
+      && this.mine.type
       && this.mine.status
       && this.mine.permitNumbers
       && this.mine.permitNumbers.length > 0
-      && this.mine.tailingsImpoundments
+      && this.mine.tailingsImpoundments !== null
+      && this.mine.tailingsImpoundments >= 0
       && this.mine.commodities
       && this.mine.commodities.length > 0
+      && this.mine.permittee
       && this.mine.location
       && this.mine.location.coordinates
       && this.mine.location.coordinates.length > 0);

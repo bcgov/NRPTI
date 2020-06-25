@@ -45,6 +45,7 @@ export class LinkAddEditComponent {
     moveItemInArray(formArray, event.previousIndex, event.currentIndex);
 
     this.formArray.patchValue(formArray);
+    this.formArray.markAsDirty();
   }
 
   /**
