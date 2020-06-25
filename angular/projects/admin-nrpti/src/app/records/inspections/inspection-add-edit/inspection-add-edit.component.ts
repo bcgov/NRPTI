@@ -303,13 +303,15 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    this.myForm.controls.projectName.dirty && (inspection['projectName'] = this.myForm.controls.projectName.value);
-    if (inspection['projectName'] === 'LNG Canada') {
-      inspection['_epicProjectId'] = EpicProjectIds.lngCanadaId;
-    } else if (inspection['projectName'] === 'Coastal Gaslink') {
-      inspection['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
-    } else if (this.myForm.controls.projectName.dirty) {
-      inspection['_epicProjectId'] = null;
+    if (this.myForm.controls.projectName.dirty) {
+      inspection['projectName'] = this.myForm.controls.projectName.value;
+      if (inspection['projectName'] === 'LNG Canada') {
+        inspection['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+      } else if (inspection['projectName'] === 'Coastal Gaslink') {
+        inspection['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+      } else {
+        inspection['_epicProjectId'] = null;
+      }
     }
 
     this.myForm.controls.location.dirty && (inspection['location'] = this.myForm.controls.location.value);
