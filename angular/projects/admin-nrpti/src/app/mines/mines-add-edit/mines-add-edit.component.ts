@@ -203,6 +203,8 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
    */
   checkCanPublish(): boolean {
     return (
+      this.mine &&
+      this.myForm &&
       this.myForm.get('description').value &&
       this.myForm.get('summary').value &&
       this.myForm.get('type').value &&
