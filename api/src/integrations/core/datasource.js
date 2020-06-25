@@ -216,7 +216,7 @@ class CoreDataSource {
         throw Error('processRecord - required coreRecord is null.');
       }
 
-      // Get the valid permits.
+      // Get the valid permit.
       const permit = await this.getMinePermits(coreRecord);
 
       // Perform any data transformations necessary to convert core record to NRPTI record
@@ -319,11 +319,10 @@ class CoreDataSource {
   }
 
   /**
-   * Gets valid permits for a Core mine. A valid permit must meet the following criteria:
+   * Gets valid permit for a Core mine. A valid permit must meet the following criteria:
    *  - Must not be exploratory
    *  - Must not be historical
-   * 
-   * There should only be a single permit, but this function will handle more than one.
+   * .
    * 
    * @param {object} coreRecord Record from the Core API.
    * @returns {object} Valid permit.
@@ -361,7 +360,7 @@ class CoreDataSource {
         }
       }
 
-      // There should only be a single record. If there is more than we do not want to continue processing.
+      // There should only be a single record. If there is more then we do not want to continue processing.
       if (validPermitNumbers.length > 1) {
         throw new Error('getMinePermit - more than one valid permit found')
       }
