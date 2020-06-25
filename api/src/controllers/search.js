@@ -353,6 +353,8 @@ let searchCollection = async function (
       collectionName = 'issued_to_subset';
     } else if (subset.includes('location')) {
       collectionName = 'location_subset';
+    } else if (subset.includes('recordName')) {
+      collectionName = 'record_name_subset';
     } else if (subset.includes('description')) {
       collectionName = 'description_summary_subset';
     }

@@ -53,6 +53,19 @@
                   check_circle
                 </i>
               </button>
+              <button
+                ngbDropdownItem
+                [disabled]="selectedSubset === 'Record Name'"
+                (click)="changeSubset('Record Name')"
+              >
+                Record Name
+                <i
+                  *ngIf="selectedSubset === 'Record Name'"
+                  class="material-icons material-icons align-text-bottom"
+                >
+                  check_circle
+                </i>
+              </button>
             </div>
           </div>
           <input type="text" class="form-control" (keyup.enter)="keywordSearch()" [(ngModel)]="keywordSearchWords"

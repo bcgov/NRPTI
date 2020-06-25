@@ -19,14 +19,14 @@ exports.protectedCreateTask = async function(args, res, next) {
     throw Error('protectedCreateTask - missing required recordType');
   }
 
-  if (!args.swagger.params.upfile || !args.swagger.params.upfile.value) {
-    throw Error('protectedCreateTask - missing required upfile');
+  if (!args.swagger.params.csvData || !args.swagger.params.csvData.value) {
+    throw Error('protectedCreateTask - missing required csvData');
   }
 
-  const csvRows = await getCsvRowsFromBuffer(args.swagger.params.upfile.value.buffer);
+  const csvRows = await getCsvRowsFromString(args.swagger.params.csvData.value);
 
   if (!csvRows || !csvRows.length) {
-    throw Error('protectedCreateTask - could not convert upfile buffer to csv rows array');
+    throw Error('protectedCreateTask - could not convert csvData string to csv rows array');
   }
 
   const nrptiDataSource = getDataSourceConfig(args.swagger.params.dataSourceType.value);
@@ -50,9 +50,9 @@ exports.protectedCreateTask = async function(args, res, next) {
  * @param {*} nrptiDataSource object containing the nrpti data source and additional config
  * @param {*} auth_payload user information for auditing
  * @param {*} recordType specific record type to update
- * @param {*} csvFile csv file to import
+ * @param {*} csvFile array of csv row objects to import
  */
-async function runTask(nrptiDataSource, auth_payload, recordType, csvFile) {
+async function runTask(nrptiDataSource, auth_payload, recordType, csvRows) {
   const taskAuditRecord = new TaskAuditRecord();
 
   try {
@@ -60,7 +60,7 @@ async function runTask(nrptiDataSource, auth_payload, recordType, csvFile) {
 
     await taskAuditRecord.updateTaskRecord({ dataSourceLabel: nrptiDataSource.dataSourceLabel, startDate: new Date() });
 
-    const dataSource = new nrptiDataSource.dataSourceClass(taskAuditRecord, auth_payload, recordType, csvFile);
+    const dataSource = new nrptiDataSource.dataSourceClass(taskAuditRecord, auth_payload, recordType, csvRows);
 
     if (!dataSource) {
       throw Error(`runTask - ${nrptiDataSource.dataSourceLabel} - failed - could not create instance of dataSource`);
@@ -84,15 +84,15 @@ async function runTask(nrptiDataSource, auth_payload, recordType, csvFile) {
 }
 
 /**
- * Given a file buffer, return a 2D array, where each inner array contains the column values for a row.
+ * Given a csv string, return an array of row objects.
  *
- * Note: assumes there is a header row, which is removed.
+ * Note: assumes there is a header row, which is converted to lowercase.
  *
- * @param {*} csvFileBuffer
+ * @param {*} csvString
  * @returns {string[][]}
  */
-async function getCsvRowsFromBuffer(csvFileBuffer) {
-  if (!csvFileBuffer) {
+async function getCsvRowsFromString(csvString) {
+  if (!csvString) {
     return null;
   }
 
@@ -104,7 +104,7 @@ async function getCsvRowsFromBuffer(csvFileBuffer) {
       }
       return fileLine;
     })
-    .fromString(csvFileBuffer.toString());
+    .fromString(csvString);
 }
 
 /**

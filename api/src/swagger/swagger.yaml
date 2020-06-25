@@ -478,11 +478,11 @@ paths:
           enum: *recordType
           required: true
           description: 'Specific record type to update'
-        - name: upfile
+        - name: csvData
           in: formData
-          type: file
+          type: string
           required: true
-          description: "The csv file to import"
+          description: "The csv file data to import"
       responses:
         '200':
           description: 'Success'
