@@ -32,6 +32,10 @@
             <label class="grid-item-name">Date</label>
             <span class="gird-item-value">{{ (data && data._master.dateIssued | date: 'mediumDate') || '-' }}</span>
           </div>
+          <div class="grid-item__row">
+            <label class="grid-item-name">Record Name</label>
+            <span class="grid-item-value">{{ (data && data._master.recordName) || '-' }}</span>
+          </div>
         </div>
         <div class="grid-section section-2">
           <div class="grid-item__row">

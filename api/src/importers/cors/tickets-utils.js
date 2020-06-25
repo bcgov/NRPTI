@@ -1,10 +1,7 @@
 const BaseRecordUtils = require('./base-record-utils');
 const CsvUtils = require('./utils/csv-utils');
-const Utils = require('../../utils/utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
 
-const DateIssuedFormat = 'MM/DD/YYYY';
-const BirthDateFormat = 'YYYY/MM/DD';
 const PenaltyType = 'Fined';
 const PenaltyValueType = 'Dollars';
 
@@ -19,7 +16,7 @@ class Tickets extends BaseRecordUtils {
    *
    * @param {*} auth_payload user information for auditing
    * @param {*} recordType an item from record-type-enum.js -> RECORD_TYPE
-   * @param {*} csvRow an array containing the values from a single csv row.
+   * @param {*} csvRow an object containing the values from a single csv row.
    * @memberof Tickets
    */
   constructor(auth_payload, recordType, csvRow) {
@@ -27,7 +24,7 @@ class Tickets extends BaseRecordUtils {
   }
 
   /**
-   * Convert the csv row values array into the object expected by the API record post/put controllers.
+   * Convert the csv row object into the object expected by the API record post/put controllers.
    *
    * @returns a ticket object matching the format expected by the API record post/put controllers.
    * @memberof Tickets
@@ -42,7 +39,7 @@ class Tickets extends BaseRecordUtils {
     ticket['_sourceRefCorsId'] = Number(csvRow['contravention_enforcement_id']) || '';
 
     ticket['recordType'] = 'Ticket';
-    ticket['dateIssued'] = Utils.parseDate(csvRow['ticket_date'], DateIssuedFormat) || null;
+    ticket['dateIssued'] = csvRow['ticket_date'] || null;
     ticket['issuingAgency'] = CsvUtils.getIssuingAgency(csvRow) || '';
 
     ticket['legislation'] = {
@@ -70,7 +67,7 @@ class Tickets extends BaseRecordUtils {
         firstName: csvRow['first_name'] || '',
         middleName: csvRow['middle_name'] || '',
         lastName: csvRow['last_name'] || '',
-        dateOfBirth: Utils.parseDate(csvRow['birth_date'], BirthDateFormat) || null
+        dateOfBirth: csvRow['birth_date'] || null
       };
     }
 
@@ -86,8 +83,6 @@ class Tickets extends BaseRecordUtils {
         description: ''
       }
     ];
-
-    ticket['description'] = csvRow['description'] || '';
 
     return ticket;
   }
