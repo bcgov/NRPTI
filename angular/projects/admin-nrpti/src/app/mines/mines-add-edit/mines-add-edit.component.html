@@ -44,7 +44,7 @@
           <div class="flex-container mb-2">
             <label for="permit" class="med mr-2">Mines Act Permit Number:</label>
             <span id="permit" name="permit">
-              {{ (mine && mine.permitNumbers && mine.permitNumbers.length && mine.permitNumbers.join(', ')) || '-' }}
+              {{ (mine && mine.permitNumber || '-' }}
             </span>
           </div>
           <div class="flex-container mb-2">
