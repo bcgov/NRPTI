@@ -49,7 +49,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -137,7 +137,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
+        ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -183,7 +183,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
             this.currentRecord.issuedTo &&
             this.currentRecord.issuedTo.dateOfBirth &&
             this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
-            ''
+          ''
         ),
         anonymous: new FormControl(
           (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || ''
@@ -207,7 +207,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
           ((this.nrcedFlavour && this.nrcedFlavour.summary) ||
             (!this.nrcedFlavour && this.currentRecord.description))) ||
           '',
-          disabled: !this.factoryService.userInNrcedRole()
+        disabled: !this.factoryService.userInNrcedRole()
       }),
       publishNrced: new FormControl({
         value: (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false,
@@ -219,7 +219,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
-          ''
+        ''
       ),
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
@@ -308,7 +308,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
       inspection['_epicProjectId'] = EpicProjectIds.lngCanadaId;
     } else if (inspection['projectName'] === 'Coastal Gaslink') {
       inspection['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
-    } else {
+    } else if (this.myForm.controls.projectName.dirty) {
       inspection['_epicProjectId'] = null;
     }
 
