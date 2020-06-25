@@ -46,7 +46,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -128,7 +128,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
+        ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       legislation: new FormGroup({
@@ -221,13 +221,15 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    this.myForm.controls.projectName.dirty && (permit['projectName'] = this.myForm.controls.projectName.value);
-    if (permit['projectName'] === 'LNG Canada') {
-      permit['_epicProjectId'] = EpicProjectIds.lngCanadaId;
-    } else if (permit['projectName'] === 'Coastal Gaslink') {
-      permit['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
-    } else {
-      permit['_epicProjectId'] = null;
+    if (this.myForm.controls.projectName.dirty) {
+      permit['projectName'] = this.myForm.controls.projectName.value;
+      if (permit['projectName'] === 'LNG Canada') {
+        permit['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+      } else if (permit['projectName'] === 'Coastal Gaslink') {
+        permit['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+      } else {
+        permit['_epicProjectId'] = null;
+      }
     }
 
     this.myForm.controls.location.dirty && (permit['location'] = this.myForm.controls.location.value);
