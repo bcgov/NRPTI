@@ -11,7 +11,8 @@ const PermitAmendment = new mongoose.Schema(
     description: { type: String, default: '' },
     documents: [{
       _sourceRefId: { type: String, default: null},
-      documentId: { type: 'ObjectId', default: null }
+      documentId: { type: 'ObjectId', default: null },
+      documentName: { type: String, default: '' }
     }]
   });
 
