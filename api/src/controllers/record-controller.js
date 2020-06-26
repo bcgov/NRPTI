@@ -20,6 +20,7 @@ let AddManagementPlan = require('./post/management-plan');
 let AddCourtConviction = require('./post/court-conviction');
 let AddNewsItem = require('./post/news-item');
 let AddMine = require('./post/mine-bcmi');
+let AddPermitAmendment = require('./post/permit-amendment');
 
 let EditOrder = require('./put/order');
 let EditInspection = require('./put/inspection');
@@ -451,6 +452,9 @@ const processPostRequest = async function (args, res, next, property, data) {
         break;
       case 'mines':
         promises.push(AddMine.createRecord(args, res, next, data[i]));
+        break;
+      case 'permitAmendments':
+        promises.push(AddPermitAmendment.createRecord(args, res, next, data[i]));
         break;
       default:
         return {
