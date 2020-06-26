@@ -344,28 +344,33 @@ class CoreDataSource {
       const nonExploratoryPermits = permits.filter(permit => permit.permit_no[1].toLowerCase() !== 'x');
 
       // Second, mine must not be historical which is indicated by an authorized year of '9999' on the latest amendment.
-      const validPermitNumbers = []
+      let validPermit;
       for (const permit of nonExploratoryPermits) {
         // Confirm that the most recent amendment is not historical, which is always the first index.
         // If 'null' then it is considered valid.
-        if (!permit.permit_amendments[0].authorization_end_date) {
-          validPermitNumbers.push(permit);
+        if (permit.permit_amendments.length && !permit.permit_amendments[0].authorization_end_date) {
+          // There should only be a single record. If there is more then we do not want to continue processing.
+          if (validPermit) {
+            throw new Error('getMinePermit - more than one valid permit found')
+          }
+
+          validPermit = permit;
         }
         else {
           // If it is not '9999' it is considered valid.
           const authDate = new Date(permit.permit_amendments[0].authorization_end_date);
           if (authDate.getFullYear !== 9999) {
-            validPermitNumbers.push(permit);
+            // There should only be a single record. If there is more then we do not want to continue processing.
+            if (validPermit) {
+              throw new Error('getMinePermit - more than one valid permit found')
+            }
+
+            validPermit = permit;
           }
         }
       }
 
-      // There should only be a single record. If there is more then we do not want to continue processing.
-      if (validPermitNumbers.length > 1) {
-        throw new Error('getMinePermit - more than one valid permit found')
-      }
-
-      return validPermitNumbers[0];
+      return validPermit;
     } catch(error) {
       defaultLog.error(`getMinePermit - unexpected error: ${error.message}`);
       throw(error);
