@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const MinePost = require('../post/mine');
 const PutUtils = require('../../utils/put-utils');
-const { SYSTEM_USER } = require('../../utils/constants/misc');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 /**
@@ -55,7 +54,7 @@ exports.editMaster = function(args, res, next, incomingObj) {
   sanitizedObj.dateUpdated = new Date();
   // If there are args it means this is an API request and has a user. If not, this is carried out by the system so
   // use the system user.
-  sanitizedObj.updatedBy = (args && args.swagger.params.auth_payload.displayName) || SYSTEM_USER;
+  sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
 
   const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
 
@@ -64,7 +63,7 @@ exports.editMaster = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
-    updateObj.$set['publishedBy'] = (args && args.swagger.params.auth_payload.displayName) || SYSTEM_USER;
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;

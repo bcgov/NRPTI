@@ -200,7 +200,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
   }
 
   const MasterModel = mongoose.model(masterSchemaName);
-  const updateMasterObj = editMaster(args, res, next, incomingObj, flavourIds)
+  const updateMasterObj = editMaster(args, res, next, incomingObj, flavourIds);
   promises.push(
     MasterModel.findOneAndUpdate({
       _id: masterId,
