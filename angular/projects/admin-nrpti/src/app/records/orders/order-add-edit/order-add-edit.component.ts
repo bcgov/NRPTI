@@ -50,7 +50,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -139,7 +139,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
+        ''
       ),
       issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -185,7 +185,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
             this.currentRecord.issuedTo &&
             this.currentRecord.issuedTo.dateOfBirth &&
             this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
-            ''
+          ''
         ),
         anonymous: new FormControl(
           (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || ''
@@ -209,7 +209,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
           ((this.nrcedFlavour && this.nrcedFlavour.summary) ||
             (!this.nrcedFlavour && this.currentRecord.description))) ||
           '',
-          disabled: !this.factoryService.userInNrcedRole()
+        disabled: !this.factoryService.userInNrcedRole()
       }),
       publishNrced: new FormControl({
         value: (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false,
@@ -221,7 +221,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
-          ''
+        ''
       ),
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
@@ -306,13 +306,15 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    this.myForm.controls.projectName.dirty && (order['projectName'] = this.myForm.controls.projectName.value);
-    if (order['projectName'] === 'LNG Canada') {
-      order['_epicProjectId'] = EpicProjectIds.lngCanadaId;
-    } else if (order['projectName'] === 'Coastal Gaslink') {
-      order['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
-    } else {
-      order['_epicProjectId'] = null;
+    if (this.myForm.controls.projectName.dirty) {
+      order['projectName'] = this.myForm.controls.projectName.value;
+      if (order['projectName'] === 'LNG Canada') {
+        order['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+      } else if (order['projectName'] === 'Coastal Gaslink') {
+        order['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+      } else {
+        order['_epicProjectId'] = null;
+      }
     }
 
     this.myForm.controls.location.dirty && (order['location'] = this.myForm.controls.location.value);

@@ -16,11 +16,13 @@
         id="publishLng"
         (change)="this.togglePublish()"
         [checked]="isPublished"
-        [disabled]="!canPublish">
+        [disabled]="!isPublished && !canPublish">
       </mat-slide-toggle>
       <span class="badge badge-published" *ngIf="isPublished">Published</span>
       <span class="badge badge-unpublished" *ngIf="!isPublished">Not Published</span>
-      <span class="grey-subtext d-block" *ngIf="!canPublish" >More information is needed to publish this mine.</span>
+      <span class="grey-subtext d-block" *ngIf="!isPublished && !canPublish">
+        More information is needed to publish this mine.
+      </span>
     </div>
   </div>
 

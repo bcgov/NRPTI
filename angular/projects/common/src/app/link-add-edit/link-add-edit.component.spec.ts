@@ -68,6 +68,7 @@ describe('LinkAddEditComponent', () => {
       expect({ ...component.formArray.value[0] }).toEqual({ title: 'titleB', url: 'urlB' });
       expect({ ...component.formArray.value[1] }).toEqual({ title: 'titleC', url: 'urlC' });
       expect({ ...component.formArray.value[2] }).toEqual({ title: 'titleA', url: 'urlA' });
+      expect(component.formArray.dirty).toEqual(true);
     });
   });
 

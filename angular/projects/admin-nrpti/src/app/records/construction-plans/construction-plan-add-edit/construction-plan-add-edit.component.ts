@@ -44,7 +44,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -98,7 +98,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
         (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
+        ''
       ),
       agency: new FormControl((this.currentRecord && this.currentRecord.agency) || ''),
       author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
@@ -158,14 +158,15 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    this.myForm.controls.projectName.dirty &&
-      (constructionPlan['projectName'] = this.myForm.controls.projectName.value);
-    if (constructionPlan['projectName'] === 'LNG Canada') {
-      constructionPlan['_epicProjectId'] = EpicProjectIds.lngCanadaId;
-    } else if (constructionPlan['projectName'] === 'Coastal Gaslink') {
-      constructionPlan['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
-    } else {
-      constructionPlan['_epicProjectId'] = null;
+    if (this.myForm.controls.projectName.dirty) {
+      constructionPlan['projectName'] = this.myForm.controls.projectName.value;
+      if (constructionPlan['projectName'] === 'LNG Canada') {
+        constructionPlan['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+      } else if (constructionPlan['projectName'] === 'Coastal Gaslink') {
+        constructionPlan['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+      } else {
+        constructionPlan['_epicProjectId'] = null;
+      }
     }
 
     this.myForm.controls.location.dirty && (constructionPlan['location'] = this.myForm.controls.location.value);

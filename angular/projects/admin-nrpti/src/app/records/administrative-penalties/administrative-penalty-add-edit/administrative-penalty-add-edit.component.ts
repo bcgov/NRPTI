@@ -362,14 +362,15 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
 
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    this.myForm.controls.projectName.dirty &&
-      (administrativePenalty['projectName'] = this.myForm.controls.projectName.value);
-    if (administrativePenalty['projectName'] === 'LNG Canada') {
-      administrativePenalty['_epicProjectId'] = EpicProjectIds.lngCanadaId;
-    } else if (administrativePenalty['projectName'] === 'Coastal Gaslink') {
-      administrativePenalty['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
-    } else {
-      administrativePenalty['_epicProjectId'] = null;
+    if (this.myForm.controls.projectName.dirty) {
+      administrativePenalty['projectName'] = this.myForm.controls.projectName.value;
+      if (administrativePenalty['projectName'] === 'LNG Canada') {
+        administrativePenalty['_epicProjectId'] = EpicProjectIds.lngCanadaId;
+      } else if (administrativePenalty['projectName'] === 'Coastal Gaslink') {
+        administrativePenalty['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
+      } else {
+        administrativePenalty['_epicProjectId'] = null;
+      }
     }
 
     this.myForm.controls.location.dirty && (administrativePenalty['location'] = this.myForm.controls.location.value);
