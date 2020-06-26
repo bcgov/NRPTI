@@ -135,7 +135,7 @@ describe('MineUtils', () => {
     });
 
     it('gets the correct party', () => {
-      const mineUtils = new MineUtils(RECORD_TYPE.Mine);
+      const mineUtils = new MineUtils({}, RECORD_TYPE.Mine);
       const permit = { permit_guid: 'test' };
       const mineRecord = {
         parties: [
