@@ -33,7 +33,7 @@ exports.protectedCreateTask = async function(args, res, next) {
 
   if (!nrptiDataSource) {
     throw Error(
-      `protectedCreateTask - could not find nrptiDataSource for dataSourceType: ${args.swagger.params.task.value.dataSourceType}`
+      `protectedCreateTask - could not find nrptiDataSource for dataSourceType: ${args.swagger.params.dataSourceType.value}`
     );
   }
 
@@ -96,15 +96,26 @@ async function getCsvRowsFromString(csvString) {
     return null;
   }
 
-  return csvToJson()
-    .preFileLine((fileLine, idx) => {
-      if (idx === 0) {
+  let lineNumber = 0;
+
+  // preFileLine bug that prevents us from using the built in line index
+  // See: https://github.com/Keyang/node-csvtojson/issues/351
+  const csvRows = await csvToJson()
+    .preFileLine(fileLine => {
+      let line = fileLine;
+
+      if (lineNumber === 0) {
         // convert the header row to lowercase
-        return fileLine.toLowerCase();
+        line = fileLine.toLowerCase();
       }
-      return fileLine;
+
+      lineNumber++;
+
+      return line;
     })
     .fromString(csvString);
+
+  return csvRows;
 }
 
 /**
@@ -122,6 +133,13 @@ function getDataSourceConfig(dataSourceType) {
     return {
       dataSourceLabel: 'cors-csv',
       dataSourceClass: require('../importers/cors/datasource')
+    };
+  }
+
+  if (dataSourceType === 'bcogc-csv') {
+    return {
+      dataSourceLabel: 'bcogc-csv',
+      dataSourceClass: require('../importers/bcogc/datasource')
     };
   }
 

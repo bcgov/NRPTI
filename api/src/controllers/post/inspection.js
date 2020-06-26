@@ -34,11 +34,11 @@ const { ROLES } = require('../../utils/constants/misc');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function (args, res, next, incomingObj) {
+exports.createRecord = async function(args, res, next, incomingObj) {
   const flavourFunctions = {
     InspectionLNG: this.createLNG,
     InspectionNRCED: this.createNRCED
-  }
+  };
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
@@ -72,7 +72,7 @@ exports.createRecord = async function (args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master inspection record
  */
-exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   let Inspection = mongoose.model('Inspection');
   let inspection = new Inspection();
 
@@ -88,6 +88,10 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (inspection._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj._sourceRefOgcInspectionId &&
+    (inspection._sourceRefOgcInspectionId = incomingObj._sourceRefOgcInspectionId);
+  incomingObj._sourceRefOgcDeficiencyId &&
+    (inspection._sourceRefOgcDeficiencyId = incomingObj._sourceRefOgcDeficiencyId);
 
   // set permissions
   inspection.read = ROLES.ADMIN_ROLES;
@@ -193,7 +197,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created lng inspection record
  */
-exports.createLNG = function (args, res, next, incomingObj) {
+exports.createLNG = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
@@ -321,7 +325,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced inspection record
  */
-exports.createNRCED = function (args, res, next, incomingObj) {
+exports.createNRCED = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.NRCEDADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');

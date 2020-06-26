@@ -54,6 +54,7 @@ definitions:
       - epic
       - nris-epd
       - cors-csv
+      - bcogc-csv
   recordType:
     type: string
     description: 'Supported record types'
