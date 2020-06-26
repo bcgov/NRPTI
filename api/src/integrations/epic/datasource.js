@@ -248,11 +248,14 @@ class DataSource {
       // Perform any data transformations necessary to convert Epic record to NRPTI record
       const nrptiRecord = await recordTypeUtils.transformRecord(epicRecord);
 
-      // Check if this record already exists
       const existingRecord = await recordTypeUtils.findExistingRecord(nrptiRecord);
 
       let savedRecords = null;
       if (existingRecord) {
+        // Remove dateAdded/addedBy fields, this is not a new record
+        delete nrptiRecord.dateAdded;
+        delete nrptiRecord.addedBy;
+
         // Delete old documents (if any)
         await recordTypeUtils.removeDocuments(existingRecord);
 

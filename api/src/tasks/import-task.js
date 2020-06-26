@@ -53,7 +53,10 @@ exports.createTask = async function(dataSourceType) {
   await runTask(
     nrptiDataSource,
     {
-      displayName: SYSTEM_USER
+      displayName: SYSTEM_USER,
+      realm_access: {
+        roles: ['sysadmin']
+      }
     },
     null, // TODO: We're not using this param anywhere in the import logic framework, setting to null
     null  // TODO: We're not using this param anywhere in the import logic framework, setting to null

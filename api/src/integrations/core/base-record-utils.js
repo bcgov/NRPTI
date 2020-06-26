@@ -5,8 +5,6 @@ const mongoose = require('mongoose');
 const defaultLog = require('../../utils/logger')('core-base-record-utils');
 const RecordController = require('../../controllers/record-controller');
 
-const SYSTEM_USER = 'SYSTEM_USER';
-
 /**
  * Core base record type handler that can be used directly, or extended if customizations are needed.
  *
@@ -20,14 +18,16 @@ class BaseRecordUtils {
   /**
    * Creates an instance of BaseRecordUtils.
    *
+   * @param {*} auth_payload user information for auditing
    * @param {*} recordType an item from record-type-enum.js -> RECORD_TYPE
    * @memberof BaseRecordUtils
    */
-  constructor(recordType) {
+  constructor(auth_payload, recordType) {
     if (!recordType) {
       throw Error('BaseRecordUtils - required recordType must be non-null.');
     }
 
+    this.auth_payload = auth_payload;
     this.recordType = recordType;
   }
 
@@ -51,11 +51,11 @@ class BaseRecordUtils {
       _schemaName: this.recordType._schemaName,
       _sourceRefId: coreRecord.mine_guid || '',
 
+      addedBy: this.auth_payload.displayName,
+      updatedBy: this.auth_payload.displayName,
+
       dateAdded: new Date(),
       dateUpdated: new Date(),
-
-      addedBy: SYSTEM_USER,
-      updatedBy: SYSTEM_USER,
 
       sourceSystemRef: 'core'
     };
@@ -93,13 +93,16 @@ class BaseRecordUtils {
     if (!existingRecord) {
       throw Error('updateRecord - required existingRecord must be non-null.');
     }
-
     try {
+      // Remove dateAdded/addedBy fields, this is not a new record
+      delete nrptiRecord.dateAdded;
+      delete nrptiRecord.addedBy;
+
       // build update Obj, which needs to include the flavour record ids
       const updateObj = { ...nrptiRecord, _id: existingRecord._id };
 
       return await RecordController.processPutRequest(
-        null,
+        { swagger: { params: { auth_payload: this.auth_payload } } },
         null,
         null,
         this.recordType.recordControllerName,
@@ -125,7 +128,7 @@ class BaseRecordUtils {
 
     try {
       return await RecordController.processPostRequest(
-        null,
+        { swagger: { params: { auth_payload: this.auth_payload } } },
         null,
         null,
         this.recordType.recordControllerName,

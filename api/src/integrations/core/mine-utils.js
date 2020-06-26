@@ -13,15 +13,16 @@ class Mines extends BaseRecordUtils {
   /**
    * Creates an instance of Mines.
    *
+   * @param {*} auth_payload user information for auditing
    * @param {*} recordType an item from record-type-enum.js -> RECORD_TYPE
    * @memberof Mines
    */
-  constructor(recordType) {
+  constructor(auth_payload, recordType) {
     if (!recordType) {
       throw Error('MineUtils - required recordType must be non-null.');
     }
 
-    super(recordType);
+    super(auth_payload, recordType);
   }
 
   /**
@@ -58,6 +59,8 @@ class Mines extends BaseRecordUtils {
       location : { type: 'Point', coordinates: mineRecord.coordinates },
       permittee: this.getParty(MINE_PARTY_PERMITTEE, mineRecord, permit),
       type: '',
+      // TODO:  Without this, subsequent runs of the mine importer will duplicate mines every time it's run
+      // _sourceRefId: 'abc123',
       summary: '',
       description: '',
       links: []
