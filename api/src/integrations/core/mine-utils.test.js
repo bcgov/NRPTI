@@ -25,11 +25,11 @@ describe('MineUtils', () => {
 
     it('returns transformed Core record', () => {
       const mineUtils = new MineUtils(RECORD_TYPE.Mine);
-
+      const permit = { permit_guid: 'test', permit_no: '1234' };
       const coreRecord = { 
         mine_guid: 1,
         mine_name: 'test',
-        mine_permit_numbers: ['1', '2'],
+        mine_permit_numbers: 'test',
         mine_status: [
           {
             status_labels: [ 'testLabel' ]
@@ -42,6 +42,7 @@ describe('MineUtils', () => {
         parties: [
           {
             mine_party_appt_type_code: 'PMT',
+            related_guid: 'test',
             party: {
               name: 'Test Party'
             }
@@ -59,7 +60,7 @@ describe('MineUtils', () => {
         sourceSystemRef: 'core',
 
         name: 'test',
-        permitNumbers: ['1', '2'],
+        permitNumber: '1234',
         status: 'testLabel',
         commodities: [],
         tailingsImpoundments: 2,
@@ -72,7 +73,7 @@ describe('MineUtils', () => {
         links: []
       };
 
-      const result = mineUtils.transformRecord(coreRecord, []);
+      const result = mineUtils.transformRecord(coreRecord, [], permit);
 
       expect(result).toEqual(expectedResult);
     });
@@ -128,19 +129,26 @@ describe('MineUtils', () => {
       expect(() => mineUtils.getParty('PMT', null)).toThrow('getParty - mineRecord must not be null.');
     });
 
+    it('throws error if no permit provided', async () => {
+      const mineUtils = new MineUtils(RECORD_TYPE.Mine);
+      expect(() => mineUtils.getParty('PMT', {}, null)).toThrow('getParty - permit must not be null.');
+    });
+
     it('gets the correct party', () => {
       const mineUtils = new MineUtils(RECORD_TYPE.Mine);
-
+      const permit = { permit_guid: 'test' };
       const mineRecord = {
         parties: [
           {
             mine_party_appt_type_code: 'POR',
+            related_guid: 'notRight',
             party: {
               name: 'Not Me'
             }
           },
           {
             mine_party_appt_type_code: 'PMT',
+            related_guid: 'test',
             party: {
               name: 'Find Me'
             }
@@ -148,7 +156,7 @@ describe('MineUtils', () => {
         ]
       };
 
-      const result = mineUtils.getParty('PMT', mineRecord);
+      const result = mineUtils.getParty('PMT', mineRecord, permit);
 
       expect(result).toEqual('Find Me');
     });

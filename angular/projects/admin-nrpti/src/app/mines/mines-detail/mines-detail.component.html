@@ -43,7 +43,7 @@
       <!-- column 2/3 -->
       <div class="col-lg-4 col-md-12">
         <div class="row label-pair ml-1 mb-2">
-          <div id="permitNumber"><b>Mines Act Permit Number: </b>{{mine?.permitNumbers && mine?.permitNumbers.length > 0 ? mine?.permitNumbers?.join(', ') : '-'}}</div>
+          <div id="permitNumber"><b>Mines Act Permit Number: </b>{{mine?.permitNumber || '-'}}</div>
         </div>
         <div class="row label-pair ml-1 mb-2">
           <div id="tailingsImpoundments"><b>Number of Tailings Storage Facilities: </b>{{mine?.tailingsImpoundments || '-' }} </div>

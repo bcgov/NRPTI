@@ -51,8 +51,7 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
       && this.mine.summary
       && this.mine.type
       && this.mine.status
-      && this.mine.permitNumbers
-      && this.mine.permitNumbers.length > 0
+      && this.mine.permitNumber
       && this.mine.tailingsImpoundments !== null
       && this.mine.tailingsImpoundments >= 0
       && this.mine.commodities
