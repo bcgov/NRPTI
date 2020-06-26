@@ -26,10 +26,12 @@ class CoreDataSource {
    * Creates an instance of CoreDataSource.
    *
    * @param {*} taskAuditRecord audit record hook for this import instance
+   * @param {*} auth_payload information about the user account that started this update.
    * @memberof CoreDataSource
    */
-  constructor(taskAuditRecord) {
+  constructor(taskAuditRecord, auth_payload) {
     this.taskAuditRecord = taskAuditRecord;
+    this.auth_payload = auth_payload;
 
     // Set initial status
     this.status = { itemsProcessed: 0, itemTotal: 0, individualRecordStatus: [] };
@@ -59,6 +61,20 @@ class CoreDataSource {
 
   /**
    * Main function that runs all necessary operations to update Core records.
+   * Sample Record Data for reference
+      {
+        _schemaName: "Mine",
+        _sourceRefId: "abc123",
+        name: "Test Mine",
+        permitNumbers: ['M-209'],
+        mine_status: ['Abandoned'],
+        mine_type: 'Gold',
+        mine_tailings_storage_facilities: ['x'],
+        mine_region: 'Victoria',
+        coordinates : [0,0],
+        parties: [{mine_party_appt_type_code: 'PMT', name: "Nobody"}]
+      }
+    ];
    *
    * @memberof CoreDataSource
    */
@@ -76,7 +92,7 @@ class CoreDataSource {
       await this.taskAuditRecord.updateTaskRecord({ itemTotal: this.status.itemTotal });
 
       // Get the record type specific utils, that contain the unique transformations, etc, for this record type.
-      const recordTypeUtils = new MineUtils(RECORD_TYPE.Mine);
+      const recordTypeUtils = new MineUtils(this.auth_payload, RECORD_TYPE.Mine);
 
       if (!recordTypeUtils) {
         defaultLog.error('updateRecords - now record utils available');
