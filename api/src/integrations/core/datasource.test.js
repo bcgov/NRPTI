@@ -33,11 +33,11 @@ describe('Core DataSource', () => {
     });
 
     it('returns early if no core records are found', async () => {
-      jest.spyOn(defaultLogger, 'info');
+      jest.spyOn(defaultLogger, 'error');
 
-      // mock function to to return no records
+      // mock function to return no records
       const mockGetAllRecordData = jest.fn(() => {
-        return [];
+        return Promise.resolve([]);
       });
 
       const dataSource = new DataSource();
@@ -45,7 +45,7 @@ describe('Core DataSource', () => {
 
       await dataSource.updateRecords();
   
-      expect(defaultLogger.info).toHaveBeenCalledWith('updateRecords - no records found to update');
+      expect(defaultLogger.error).toHaveBeenCalledWith('updateRecords - no records found to update');
     });
   });
 

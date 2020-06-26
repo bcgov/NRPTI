@@ -1,10 +1,5 @@
 <td scope="row" data-label="Name" class="col-3">{{ rowData.name || '-' }}</td>
-<td scope="row" data-label="Permit Numbers" class="col-2">
-  <ul *ngIf="rowData.permitNumbers && rowData.permitNumbers.length > 0; else elseBlock">
-    <li *ngFor="let permit of rowData.permitNumbers">{{ permit }}</li>
-  </ul>
-  <ng-template #elseBlock>-</ng-template>
-</td>
+<td scope="row" data-label="Permit Numbers" class="col-2">{{ rowData.permitNumber || '-' }}</td>
 <td scope="row" data-label="Type" class="col-1">{{ rowData.type || '-' }}</td>
 <td scope="row" data-label="Permittee" class="col-2">{{ rowData.permittee || '-' }}</td>
 <td scope="row" data-label="Region" class="col-1">{{ rowData.region && displayRegion(rowData.region) || '-' }}</td>

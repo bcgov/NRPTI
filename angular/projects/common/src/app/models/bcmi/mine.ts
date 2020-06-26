@@ -31,7 +31,7 @@ export class Mine {
   write:                string[];
   // attributes
   name:                 string;
-  permitNumbers:        string[];
+  permitNumber:         string;
   status:               string;
   type:                 string;
   commodities:          string[];
@@ -61,7 +61,7 @@ export class Mine {
     this.write                = (obj && obj.write)                || null;
     // attributes
     this.name                 = (obj && obj.name)                 || '';
-    this.permitNumbers        = (obj && obj.permitNumbers)        || [];
+    this.permitNumber         = (obj && obj.permitNumber )        || '';
     this.status               = (obj && obj.status)               || '';
     this.type                 = (obj && obj.type)                 || '';
     this.commodities          = (obj && obj.commodities)          || [];

@@ -25,7 +25,7 @@ module.exports = require('../../utils/model-schema-generator')(
     write: [{ type: String, trim: true, default: 'sysadmin' }],
 
     name: { type: String, default: '' },
-    permitNumbers: [{ type: String, default: '' }],
+    permitNumber: { type: String, default: '' },
     status: { type: String, default: '' },
     type: { type: String, default: '' },
     commodities: [{ type: String, default: '' }],

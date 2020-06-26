@@ -30,11 +30,12 @@ class Mines extends BaseRecordUtils {
    *
    * @param {object} mineRecord Core mine record (required)
    * @param {Array<object>} commodityTypes Available commodity types
+   * @param {Array<string>} permits Valid permit numbers
    * @returns {Order} NRPTI mine record.
    * @throws {Error} if record is not provided.
    * @memberof Mines
    */
-  transformRecord(mineRecord, commodityTypes) {
+  transformRecord(mineRecord, commodityTypes, permit) {
     if (!mineRecord) {
       throw Error('transformRecord - required mineRecord must be non-null.');
     }
@@ -43,16 +44,20 @@ class Mines extends BaseRecordUtils {
       throw Error('transformRecord - required commodityTypes must be non-null.');
     }
 
+    if (!permit) {
+      throw Error('transformRecord - required permits must be non-null.');
+    }
+
     return {
       ...super.transformRecord(mineRecord),
       name: mineRecord.mine_name,
-      permitNumbers: mineRecord.mine_permit_numbers,
+      permitNumber: permit.permit_no,
       status: this.getLatestStatus(mineRecord),
       commodities: this.getCommodities(mineRecord, commodityTypes),
       tailingsImpoundments: mineRecord.mine_tailings_storage_facilities.length,
       region: mineRecord.mine_region,
       location : { type: 'Point', coordinates: mineRecord.coordinates },
-      permittee: this.getParty(MINE_PARTY_PERMITTEE, mineRecord),
+      permittee: this.getParty(MINE_PARTY_PERMITTEE, mineRecord, permit),
       type: '',
       // TODO:  Without this, subsequent runs of the mine importer will duplicate mines every time it's run
       // _sourceRefId: 'abc123',
@@ -125,7 +130,7 @@ class Mines extends BaseRecordUtils {
    * @returns {string} Name of party or empty string
    * @memberof Mines
    */
-  getParty(partyCode, mineRecord) {
+  getParty(partyCode, mineRecord, permit) {
     if (!partyCode) {
       throw new Error('getParty - partyCode must not be null.');
     }
@@ -134,7 +139,14 @@ class Mines extends BaseRecordUtils {
       throw new Error('getParty - mineRecord must not be null.');
     }
 
-    const party = mineRecord.parties.find(party => party.mine_party_appt_type_code === partyCode);
+    if (!permit) {
+      throw new Error('getParty - permit must not be null.');
+    }
+
+    const party = mineRecord.parties.find(party => 
+      party.mine_party_appt_type_code === partyCode && party.related_guid === permit.permit_guid
+    );
+    
     return (party && party.party && party.party.name) || '';
   }
 }

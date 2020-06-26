@@ -20,7 +20,6 @@ const CORE_API_PATH_MINES = process.env.CORE_API_PATH_MINES || '/api/mines';
 const CORE_API_PATH_PARTIES = process.env.CORE_API_PATH_PARTIES || '/api/parties/mines';
 const CORE_API_PATH_COMMODITIES = process.env.CORE_API_PATH_COMMODITIES || '/api/mines/commodity-codes';
 
-
 class CoreDataSource {
   /**
    * Creates an instance of CoreDataSource.
@@ -84,7 +83,7 @@ class CoreDataSource {
 
       // Failed to find any epic records
       if (!coreRecords || !coreRecords.length) {
-        defaultLog.info('updateRecords - no records found to update');
+        defaultLog.error('updateRecords - no records found to update');
         return;
       }
 
@@ -132,6 +131,8 @@ class CoreDataSource {
 
         currentPage++;
         totalPages = data.total_pages;
+
+        defaultLog.info(`Fetched page ${currentPage - 1} out of ${totalPages}`);
       } while (currentPage <= totalPages)
 
       // Filter to only verified mines. There is some discrepancy with data, so check that there is a verified mine ID to be sure.
@@ -231,8 +232,11 @@ class CoreDataSource {
         throw Error('processRecord - required coreRecord is null.');
       }
 
+      // Get the valid permit.
+      const permit = await this.getMinePermits(coreRecord);
+
       // Perform any data transformations necessary to convert core record to NRPTI record
-      const nrptiRecord = await recordTypeUtils.transformRecord(coreRecord, commodityTypes);
+      const nrptiRecord = await recordTypeUtils.transformRecord(coreRecord, commodityTypes, permit);
 
       // Check if this record already exists
       const existingRecord = await recordTypeUtils.findExistingRecord(nrptiRecord);
@@ -279,7 +283,7 @@ class CoreDataSource {
         client_secret: CORE_CLIENT_SECRET,
         grant_type: CORE_GRANT_TYPE
     };
-    
+
     const config = {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -327,6 +331,65 @@ class CoreDataSource {
       headers: {
         Authorization: `Bearer ${this.client_token}`
       }
+    }
+  }
+
+  /**
+   * Gets valid permit for a Core mine. A valid permit must meet the following criteria:
+   *  - Must not be exploratory
+   *  - Must not be historical
+   * .
+   * 
+   * @param {object} coreRecord Record from the Core API.
+   * @returns {object} Valid permit.
+   * @memberof CoreDataSource
+   */
+  async getMinePermit(coreRecord) {
+    if (!coreRecord) {
+      throw Error('getMinePermit - required coreRecord is null.');
+    }
+
+
+    try {
+      // Get permits with detailed information.
+      const url = this.getIntegrationUrl(CORE_API_HOST, `/api/mines/${coreRecord.mine_guid}/permits`);
+      const { records: permits } = await integrationUtils.getRecords(url, this.getAuthHeader());
+
+
+      // First, any mines with 'X' as their second character are considered exploratory. Remove them.
+      const nonExploratoryPermits = permits.filter(permit => permit.permit_no[1].toLowerCase() !== 'x');
+
+      // Second, mine must not be historical which is indicated by an authorized year of '9999' on the latest amendment.
+      let validPermit;
+      for (const permit of nonExploratoryPermits) {
+        // Confirm that the most recent amendment is not historical, which is always the first index.
+        // If 'null' then it is considered valid.
+        if (permit.permit_amendments.length && !permit.permit_amendments[0].authorization_end_date) {
+          // There should only be a single record. If there is more then we do not want to continue processing.
+          if (validPermit) {
+            throw new Error('getMinePermit - more than one valid permit found')
+          }
+
+          validPermit = permit;
+        }
+        else {
+          // If it is not '9999' it is considered valid.
+          const authDate = new Date(permit.permit_amendments[0].authorization_end_date);
+          if (authDate.getFullYear !== 9999) {
+            // There should only be a single record. If there is more then we do not want to continue processing.
+            if (validPermit) {
+              throw new Error('getMinePermit - more than one valid permit found')
+            }
+
+            validPermit = permit;
+          }
+        }
+      }
+
+      return validPermit;
+    } catch(error) {
+      defaultLog.error(`getMinePermit - unexpected error: ${error.message}`);
+      throw(error);
     }
   }
 }
