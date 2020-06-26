@@ -233,7 +233,7 @@ class CoreDataSource {
       }
 
       // Get the valid permit.
-      const permit = await this.getMinePermits(coreRecord);
+      const permit = await this.getMinePermit(coreRecord);
 
       // Perform any data transformations necessary to convert core record to NRPTI record
       const nrptiRecord = await recordTypeUtils.transformRecord(coreRecord, commodityTypes, permit);
