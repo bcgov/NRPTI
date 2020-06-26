@@ -130,7 +130,7 @@ async function deleteS3Documents(s3Keys) {
     throw new Error('Missing required s3Key param');
   }
 
-  var params = {
+  let params = {
     Bucket: process.env.OBJECT_STORE_bucket_name,
     Delete: {
       Objects: s3Keys
