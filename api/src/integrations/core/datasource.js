@@ -65,7 +65,7 @@ class CoreDataSource {
         _schemaName: "Mine",
         _sourceRefId: "abc123",
         name: "Test Mine",
-        permitNumbers: ['M-209'],
+        permitNumber: 'M-209',
         mine_status: ['Abandoned'],
         mine_type: 'Gold',
         mine_tailings_storage_facilities: ['x'],
