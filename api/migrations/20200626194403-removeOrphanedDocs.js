@@ -109,6 +109,7 @@ exports.up = async function (db) {
     mClient.close();
   } catch (err) {
     console.log("Error deleting orphans: ", err);
+    mClient.close();
   };
 }
 
