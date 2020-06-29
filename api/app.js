@@ -135,8 +135,8 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
       app.listen(3000, '0.0.0.0', function () {
         defaultLog.info('Started server on port 3000');
       });
-      createTask('core')
-      //startCron(defaultLog);
+
+      startCron(defaultLog);
     },
     error => {
       defaultLog.info('Mongoose connect error:', error);

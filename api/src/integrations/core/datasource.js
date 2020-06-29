@@ -321,7 +321,6 @@ class CoreDataSource {
         if (permit.permit_amendments.length && !permit.permit_amendments[0].authorization_end_date) {
           // There should only be a single record. If there is more then we do not want to continue processing.
           if (validPermit) {
-            //console.log(permit);
             throw new Error(`getMinePermit - more than one valid permit found for mine ${coreRecord.mine_guid}`);
           }
 
