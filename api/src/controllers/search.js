@@ -208,7 +208,7 @@ let searchCollection = async function (
   if (keywords) {
     // for now, limit fuzzy search to the mine search only. We can expand to all searches
     // later if desired
-    if (schemaName === 'Mine') {
+    if (schemaName === 'MineBCMI') {
       keywords = keywords && keywords.length > 1 ? fuzzySearch.createFuzzySearchString(keywords, 4, caseSensitive) : keywords;
     }
     searchProperties = { $text: { $search: keywords, $caseSensitive: caseSensitive } };

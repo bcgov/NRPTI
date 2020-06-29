@@ -1,6 +1,6 @@
 # BCMI Data Models
 This is a collection of documentation of all of the data models for BCMI.
-## Mine
+## MineBCMI
 Mines are the main data object for BCMI and pull data from Core.
 |Field|Type|Description|
 |-----|----|-----------|
