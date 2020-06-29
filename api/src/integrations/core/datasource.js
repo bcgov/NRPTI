@@ -348,6 +348,12 @@ class CoreDataSource {
     }
   }
 
+  /**
+   * Gets all verified mines from Core.
+   * 
+   * @returns {object[]} Verified Core mines.
+   * @memberof CoreDataSource
+   */
   async getVerifiedMines() {
     try{
       let currentPage = 1;
@@ -385,6 +391,13 @@ class CoreDataSource {
     }
   }
 
+  /**
+   * Adds party and lat/long details to each Core record.
+   * 
+   * @param {object[]} coreRecords Records from Core API that have not been transformed.
+   * @returns {obejct[]} Records with details added.
+   * @memberof CoreDataSource
+   */
   async addMinesDetails(coreRecords) {
     const completeRecords = [];
 
