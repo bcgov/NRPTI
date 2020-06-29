@@ -114,60 +114,10 @@ class CoreDataSource {
    */
   async getAllRecordData() {
     try{
-      let currentPage = 1;
-      let totalPages = 1;
-      let mineRecords = [];
+      const verifiedMines = await this.getVerifiedMines();
+      const minesWithDetails = await this.addMinesDetails(verifiedMines);
 
-      // The Core API can not return all data in a single call. Must fetch data in batches.
-      do {
-        const queryParams = { per_page: CORE_API_BATCH_SIZE, page: currentPage };
-        const url = this.getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_MINES, queryParams);
-  
-        // Get Core records
-        const data = await integrationUtils.getRecords(url, this.getAuthHeader());
-        // Get records from response and add to total.
-        const newRecords = data && data.mines || [];
-        mineRecords = [...mineRecords, ...newRecords];
-
-        currentPage++;
-        totalPages = data.total_pages;
-
-        defaultLog.info(`Fetched page ${currentPage - 1} out of ${totalPages}`);
-      } while (currentPage <= totalPages)
-
-      // Filter to only verified mines. There is some discrepancy with data, so check that there is a verified mine ID to be sure.
-      const verifiedRecords = mineRecords.filter(record => record.verified_status && record.verified_status.mine_guid);
-
-      // Get additional info for each mine.
-      const promises = verifiedRecords.map((mine, index) => {
-        const partyQueryParams = {
-          mine_guid: mine.mine_guid,
-          relationships: 'party'
-        };
-  
-        const partyUrl = this.getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_PARTIES, partyQueryParams);
-        const mineDetailsPath = `${CORE_API_PATH_MINES}/${mine.mine_guid}`;
-        const mineDetailsUrl = this.getIntegrationUrl(CORE_API_HOST, mineDetailsPath);
-  
-        return new Promise(async (resolve) => {
-          const [ parties, mineDetails ] = await Promise.all([
-            integrationUtils.getRecords(partyUrl, this.getAuthHeader()),
-            integrationUtils.getRecords(mineDetailsUrl, this.getAuthHeader())
-          ]);
-
-          const latitude = mineDetails.mine_location && mineDetails.mine_location.latitude || 0.00;
-          const longitude = mineDetails.mine_location && mineDetails.mine_location.longitude || 0.00;
-
-          // Add the location and parties to the mine record.
-          verifiedRecords[index].coordinates = [latitude, longitude];
-          verifiedRecords[index].parties = parties;
-          resolve();
-        });
-      });
-  
-      await Promise.all(promises);
-  
-      return verifiedRecords;
+      return minesWithDetails;
     } catch (error) {
       defaultLog.error(`getAllRecordData - unexpected error: ${error.message}`);
       throw(error);
@@ -234,6 +184,11 @@ class CoreDataSource {
 
       // Get the valid permit.
       const permit = await this.getMinePermit(coreRecord);
+
+      // A mine must have a valid permit.
+      if(!permit) {
+        throw new Error(`processRecord - no valid record found for ${coreRecord.mine_guid}`);
+      }
 
       // Perform any data transformations necessary to convert core record to NRPTI record
       const nrptiRecord = await recordTypeUtils.transformRecord(coreRecord, commodityTypes, permit);
@@ -355,7 +310,6 @@ class CoreDataSource {
       const url = this.getIntegrationUrl(CORE_API_HOST, `/api/mines/${coreRecord.mine_guid}/permits`);
       const { records: permits } = await integrationUtils.getRecords(url, this.getAuthHeader());
 
-
       // First, any mines with 'X' as their second character are considered exploratory. Remove them.
       const nonExploratoryPermits = permits.filter(permit => permit.permit_no[1].toLowerCase() !== 'x');
 
@@ -367,7 +321,8 @@ class CoreDataSource {
         if (permit.permit_amendments.length && !permit.permit_amendments[0].authorization_end_date) {
           // There should only be a single record. If there is more then we do not want to continue processing.
           if (validPermit) {
-            throw new Error('getMinePermit - more than one valid permit found')
+            //console.log(permit);
+            throw new Error(`getMinePermit - more than one valid permit found for mine ${coreRecord.mine_guid}`);
           }
 
           validPermit = permit;
@@ -375,10 +330,11 @@ class CoreDataSource {
         else {
           // If it is not '9999' it is considered valid.
           const authDate = new Date(permit.permit_amendments[0].authorization_end_date);
-          if (authDate.getFullYear !== 9999) {
+
+          if (authDate.getFullYear() !== 9999) {
             // There should only be a single record. If there is more then we do not want to continue processing.
             if (validPermit) {
-              throw new Error('getMinePermit - more than one valid permit found')
+              throw new Error(`getMinePermit - more than one valid permit found for mine ${coreRecord.mine_guid}`);
             }
 
             validPermit = permit;
@@ -391,6 +347,78 @@ class CoreDataSource {
       defaultLog.error(`getMinePermit - unexpected error: ${error.message}`);
       throw(error);
     }
+  }
+
+  async getVerifiedMines() {
+    try{
+      let currentPage = 1;
+      let totalPages = 1;
+      let mineRecords = [];
+
+      // The Core API can not return all data in a single call. Must fetch data in batches.
+      do {
+        const queryParams = { 
+          per_page: CORE_API_BATCH_SIZE, 
+          page: currentPage,
+          major: true 
+        };
+        const url = this.getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_MINES, queryParams);
+  
+        // Get Core records
+        const data = await integrationUtils.getRecords(url, this.getAuthHeader());
+        // Get records from response and add to total.
+        const newRecords = data && data.mines || [];
+        mineRecords = [...mineRecords, ...newRecords];
+
+        currentPage++;
+        totalPages = data.total_pages;
+
+        defaultLog.info(`Fetched page ${currentPage - 1} out of ${totalPages}`);
+      } while (currentPage <= totalPages)
+
+      // Filter to only verified mines. There is some discrepancy with data, so check that there is a verified mine ID to be sure.
+      const verifiedRecords = mineRecords.filter(record => record.verified_status && record.verified_status.mine_guid);
+
+      return verifiedRecords
+    } catch (error) {
+      defaultLog.error(`getVerifiedMines - unexpected error: ${error.message}`);
+      throw(error);
+    }
+  }
+
+  async addMinesDetails(coreRecords) {
+    const completeRecords = [];
+
+    for (let i = 0; i < coreRecords.length; i++) {
+      const partyQueryParams = {
+        mine_guid: coreRecords[i].mine_guid,
+        relationships: 'party'
+      };
+
+      const partyUrl = this.getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_PARTIES, partyQueryParams);
+      const mineDetailsPath = `${CORE_API_PATH_MINES}/${coreRecords[i].mine_guid}`;
+      const mineDetailsUrl = this.getIntegrationUrl(CORE_API_HOST, mineDetailsPath);
+
+      try {
+        const [ parties, mineDetails ] = await Promise.all([
+          integrationUtils.getRecords(partyUrl, this.getAuthHeader()),
+          integrationUtils.getRecords(mineDetailsUrl, this.getAuthHeader())
+        ]);
+
+        const latitude = mineDetails.mine_location && mineDetails.mine_location.latitude || 0.00;
+        const longitude = mineDetails.mine_location && mineDetails.mine_location.longitude || 0.00;
+  
+        completeRecords.push({
+          ...coreRecords[i],
+          coordinates: [latitude, longitude],
+          parties
+        });
+      } catch (error) {
+        defaultLog.error(`coreRecords - error getting details for Core record '${coreRecords[i].mine_guid}' ...skipping`);
+      }
+    }
+
+    return completeRecords;
   }
 }
 
