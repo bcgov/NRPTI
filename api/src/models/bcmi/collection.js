@@ -1,9 +1,9 @@
 'use strict';
 
 module.exports = require('../../utils/model-schema-generator')(
-  'BCMICollection',
+  'CollectionBCMI',
   {
-    _schemaName: { type: String, default: 'BCMICollection' },
+    _schemaName: { type: String, default: 'CollectionBCMI' },
     _master: { type: 'ObjectId', default: null, index: true },
 
     read: [{ type: String, trim: true, default: 'sysadmin' }],
