@@ -62,9 +62,9 @@ class CoreDataSource {
    * Main function that runs all necessary operations to update Core records.
    * Sample Record Data for reference
       {
-        _schemaName: "Mine",
-        _sourceRefId: "abc123",
-        name: "Test Mine",
+        _schemaName: 'MineBCMI',
+        _sourceRefId: 'abc123',
+        name: 'Test Mine',
         permitNumber: 'M-209',
         mine_status: ['Abandoned'],
         mine_type: 'Gold',
@@ -91,7 +91,7 @@ class CoreDataSource {
       await this.taskAuditRecord.updateTaskRecord({ itemTotal: this.status.itemTotal });
 
       // Get the record type specific utils, that contain the unique transformations, etc, for this record type.
-      const recordTypeUtils = new MineUtils(this.auth_payload, RECORD_TYPE.Mine);
+      const recordTypeUtils = new MineUtils(this.auth_payload, RECORD_TYPE.MineBCMI);
 
       if (!recordTypeUtils) {
         defaultLog.error('updateRecords - now record utils available');

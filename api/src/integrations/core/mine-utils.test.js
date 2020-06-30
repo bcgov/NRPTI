@@ -14,17 +14,17 @@ describe('MineUtils', () => {
 
   describe('transformRecord', () => {
     it('throws error if no mineRecord provided', async () => {
-      const mineUtils = new MineUtils({}, RECORD_TYPE.Mine);
-     expect(() => mineUtils.transformRecord(null, [])).toThrow('transformRecord - required mineRecord must be non-null.');
+      const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
+      expect(() => mineUtils.transformRecord(null, [])).toThrow('transformRecord - required mineRecord must be non-null.');
     });
 
     it('throws error if no commodityTypes provided', async () => {
-      const mineUtils = new MineUtils({}, RECORD_TYPE.Mine);
+      const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
       expect(() => mineUtils.transformRecord({}, null)).toThrow('transformRecord - required commodityTypes must be non-null.');
     });
 
     it('returns transformed Core record', () => {
-      const mineUtils = new MineUtils({}, RECORD_TYPE.Mine);
+      const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
       const permit = { permit_guid: 'test', permit_no: '1234' };
       const coreRecord = { 
         mine_guid: 1,
@@ -51,7 +51,7 @@ describe('MineUtils', () => {
       };
 
       const expectedResult = {
-        _schemaName: 'Mine',
+        _schemaName: 'MineBCMI',
         _sourceRefId: 1,
         dateAdded: expect.any(Date),
         dateUpdated: expect.any(Date),
@@ -81,12 +81,12 @@ describe('MineUtils', () => {
 
   describe('getCommodities', () => {
     it('throws error if no mineRecord provided', async () => {
-      const mineUtils = new MineUtils({}, RECORD_TYPE.Mine);
+      const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
      expect(() => mineUtils.getCommodities(null, [])).toThrow('getCommodities - required mineRecord and mineRecord.mine_type must be non-null.');
     });
 
     it('throws error if no commodityTypes provided', async () => {
-      const mineUtils = new MineUtils({}, RECORD_TYPE.Mine);
+      const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
      expect(() => mineUtils.getCommodities({}, null)).toThrow('getCommodities - required commodityTypes must be non-null.');
     });
   });
@@ -94,12 +94,12 @@ describe('MineUtils', () => {
 
   describe('getLatestStatus', () => {
     it('throws error if no mineRecord provided', async () => {
-      const mineUtils = new MineUtils({}, RECORD_TYPE.Mine);
+      const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
       expect(() => mineUtils.getLatestStatus(null)).toThrow('getLatestStatus - mineRecord must not be null.');
     });
 
     it('gets the latest status', () => {
-      const mineUtils = new MineUtils({}, RECORD_TYPE.Mine);
+      const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
 
       const mineRecord = {
         mine_status: [
@@ -120,22 +120,22 @@ describe('MineUtils', () => {
 
   describe('getParty', () => {
     it('throws error if no partyCode provided', async () => {
-      const mineUtils = new MineUtils({}, RECORD_TYPE.Mine);
+      const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
       expect(() => mineUtils.getParty(null, {})).toThrow('getParty - partyCode must not be null.');
     });
 
     it('throws error if no mineRecord provided', async () => {
-      const mineUtils = new MineUtils({}, RECORD_TYPE.Mine);
+      const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
       expect(() => mineUtils.getParty('PMT', null)).toThrow('getParty - mineRecord must not be null.');
     });
 
     it('throws error if no permit provided', async () => {
-      const mineUtils = new MineUtils({}, RECORD_TYPE.Mine);
+      const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
       expect(() => mineUtils.getParty('PMT', {}, null)).toThrow('getParty - permit must not be null.');
     });
 
     it('gets the correct party', () => {
-      const mineUtils = new MineUtils({}, RECORD_TYPE.Mine);
+      const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
       const permit = { permit_guid: 'test' };
       const mineRecord = {
         parties: [

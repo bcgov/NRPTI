@@ -18,7 +18,7 @@ export class MinesListResolver implements Resolve<Observable<object>> {
 
     return this.factoryService.getRecords(
       keywords,
-      ['Mine'],
+      ['MineBCMI'],
       [],
       tableObject.currentPage,
       tableObject.pageSize,
