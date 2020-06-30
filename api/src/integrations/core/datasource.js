@@ -417,8 +417,8 @@ class CoreDataSource {
           integrationUtils.getRecords(mineDetailsUrl, this.getAuthHeader())
         ]);
 
-        const latitude = mineDetails.mine_location && mineDetails.mine_location.latitude || 0.00;
-        const longitude = mineDetails.mine_location && mineDetails.mine_location.longitude || 0.00;
+        const latitude = mineDetails && mineDetails.mine_location && mineDetails.mine_location.latitude || 0.00;
+        const longitude = mineDetails && mineDetails.mine_location && mineDetails.mine_location.longitude || 0.00;
   
         completeRecords.push({
           ...coreRecords[i],
