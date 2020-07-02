@@ -153,12 +153,19 @@ function getDataSourceConfig(dataSourceType) {
     return null;
   }
 
-  // dataSourceType will match the name of a directory for the given
-  // integration in /src/integrations/<dataSourceType>/
-  return {
-    dataSourceLabel: dataSourceType,
-    dataSourceClass: require(`../integrations/${dataSourceType}/datasource`)
-  };
+  if (dataSourceType === 'cors-csv') {
+    return {
+      dataSourceLabel: 'cors-csv',
+      dataSourceClass: require('../importers/cors/datasource')
+    };
+  } else {
+    // dataSourceType will match the name of a directory for the given
+    // integration in /src/integrations/<dataSourceType>/
+    return {
+      dataSourceLabel: dataSourceType,
+      dataSourceClass: require(`../integrations/${dataSourceType}/datasource`)
+    };
+  }
 }
 
 /**
@@ -183,25 +190,4 @@ async function getCsvRowsFromString(csvString) {
       return fileLine;
     })
     .fromString(csvString);
-}
-
-/**
- * Get a supported data source config.
- *
- * @param {string} dataSourceType a data source type string
- * @returns data source config, or null if the provided data source type is not supported.
- */
-function getDataSourceConfig(dataSourceType) {
-  if (!dataSourceType) {
-    return null;
-  }
-
-  if (dataSourceType === 'cors-csv') {
-    return {
-      dataSourceLabel: 'cors-csv',
-      dataSourceClass: require('../importers/cors/datasource')
-    };
-  }
-
-  return null;
 }
