@@ -64,9 +64,9 @@ class CoreDataSource {
    * Main function that runs all necessary operations to update Core records.
    * Sample Record Data for reference
       {
-        _schemaName: "Mine",
-        _sourceRefId: "abc123",
-        name: "Test Mine",
+        _schemaName: 'MineBCMI',
+        _sourceRefId: 'abc123',	
+        name: 'Test Mine',
         permitNumber: 'M-209',
         mine_status: ['Abandoned'],
         mine_type: 'Gold',
