@@ -22,7 +22,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   scrollTo(div) {
-    console.log(`Scrolling to ${div}`);
     const element = document.querySelector('#' + div);
     if (element) {
       element.scrollIntoView();
