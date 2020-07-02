@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FactoryService } from '../../services/factory.service';
-import { ICsvTaskParams } from '../../services/task.service';
+import { ITaskParams } from '../../services/task.service';
 import { CsvConstants, IRequiredFormat, IDateField } from '../../utils/constants/csv-constants';
 import Papa from 'papaparse';
 import moment from 'moment';
@@ -22,7 +22,7 @@ export class ImportCSVComponent {
 
   public showAlert = false;
 
-  constructor(public factoryService: FactoryService) {}
+  constructor(public factoryService: FactoryService) { }
 
   /**
    * Handle data source type changes.
@@ -374,13 +374,14 @@ export class ImportCSVComponent {
       return null;
     }
 
-    const csvTaskParams: ICsvTaskParams = {
+    const taskParams: ITaskParams = {
       dataSourceType: this.dataSourceType,
-      recordType: this.recordType,
-      csvData: this.transformedValidatedCsvFile
+      recordTypes: [this.recordType],
+      csvData: this.transformedValidatedCsvFile,
+      taskType: 'csvImport'
     };
 
-    await this.factoryService.startCsvTask(csvTaskParams).toPromise();
+    await this.factoryService.startTask(taskParams).toPromise();
 
     this.onFileDelete(this.csvFiles[0]);
 

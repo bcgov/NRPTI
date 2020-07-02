@@ -6,7 +6,7 @@ import { ApiService } from './api.service';
 import { SearchService, SearchResults } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
-import { TaskService, ITaskParams, ICsvTaskParams } from './task.service';
+import { TaskService, ITaskParams } from './task.service';
 import { DocumentService } from './document.service';
 import { ApplicationRoles } from '../../../../common/src/app/utils/record-constants';
 
@@ -162,7 +162,7 @@ export class FactoryService {
         // all to lower case first
         const userRoles = jwt.realm_access.roles.map((userRole: string) => userRole.toLowerCase());
         return userRoles.includes(ApplicationRoles.ADMIN) ||
-                                  userRoles.includes(role.toLowerCase());
+          userRoles.includes(role.toLowerCase());
       }
     }
 
@@ -301,17 +301,6 @@ export class FactoryService {
    */
   public startTask(taskParams: ITaskParams): Observable<object> {
     return this.taskService.startTask(taskParams);
-  }
-
-  /**
-   * Sends request to start a csv import task.
-   *
-   * @param {ICsvTaskParams} csvTaskParams csv import task parameters
-   * @returns {Observable<object>}
-   * @memberof FactoryService
-   */
-  public startCsvTask(csvTaskParams: ICsvTaskParams): Observable<object> {
-    return this.taskService.startCsvTask(csvTaskParams);
   }
 
   /**

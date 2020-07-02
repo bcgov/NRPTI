@@ -4,43 +4,78 @@ const defaultLog = require('../utils/logger')('import-task');
 const queryActions = require('../utils/query-actions');
 const TaskAuditRecord = require('../utils/task-audit-record');
 const { SYSTEM_USER } = require('../utils/constants/misc');
+const csvToJson = require('csvtojson');
 
-exports.protectedOptions = async function(args, res, next) {
+exports.protectedOptions = async function (args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedCreateTask = async function(args, res, next) {
+exports.protectedCreateTask = async function (args, res, next) {
   // validate request parameters
   if (!args.swagger.params.task || !args.swagger.params.task.value) {
     throw Error('protectedCreateTask - missing required request body');
   }
-
+  if (!args.swagger.params.task.value.taskType) {
+    throw Error('protectedCreateTask - missing required taskType');
+  }
   if (!args.swagger.params.task.value.dataSourceType) {
     throw Error('protectedCreateTask - missing required dataSourceType');
   }
 
-  const nrptiDataSource = getDataSourceConfig(args.swagger.params.task.value.dataSourceType);
+  if (args.swagger.params.task.value.taskType === 'import') {
+    const nrptiDataSource = getDataSourceConfig(args.swagger.params.task.value.dataSourceType);
 
-  if (!nrptiDataSource) {
-    throw Error(
-      `protectedCreateTask - could not find nrptiDataSource for dataSourceType: ${args.swagger.params.task.value.dataSourceType}`
+    if (!nrptiDataSource) {
+      throw Error(
+        `protectedCreateTask - could not find nrptiDataSource for dataSourceType: ${args.swagger.params.task.value.dataSourceType}`
+      );
+    }
+
+    // run data source record updates
+    runTask(
+      nrptiDataSource,
+      args.swagger.params.auth_payload,
+      args.swagger.params.task.value.params,
+      args.swagger.params.task.value.recordTypes
+    );
+  } else if (args.swagger.params.task.value.taskType === 'csvImport') {
+    if (!args.swagger.params.task.value.recordTypes) {
+      throw Error('protectedCreateTask - missing required recordTypes');
+    }
+
+    if (!args.swagger.params.task.value.csvData) {
+      throw Error('protectedCreateTask - missing required csvData');
+    }
+
+    const csvRows = await getCsvRowsFromString(args.swagger.params.task.value.csvData);
+
+    if (!csvRows || !csvRows.length) {
+      throw Error('protectedCreateTask - could not convert csvData string to csv rows array');
+    }
+
+    const nrptiDataSource = getDataSourceConfig(args.swagger.params.task.value.dataSourceType);
+
+    if (!nrptiDataSource) {
+      throw Error(
+        `protectedCreateTask - could not find nrptiDataSource for dataSourceType: ${args.swagger.params.task.value.dataSourceType}`
+      );
+    }
+
+    // run data source record updates
+    runTask(
+      nrptiDataSource,
+      args.swagger.params.auth_payload,
+      args.swagger.params.task.value.recordTypes[0],
+      csvRows
     );
   }
-
-  // run data source record updates
-  runTask(
-    nrptiDataSource,
-    args.swagger.params.auth_payload,
-    args.swagger.params.task.value.params,
-    args.swagger.params.task.value.recordTypes
-  );
 
   // send response immediately as the tasks will run in the background
   return queryActions.sendResponse(res, 200);
 };
 
 // Used to quickly run a task within the API runtime.
-exports.createTask = async function(dataSourceType) {
+exports.createTask = async function (dataSourceType) {
   const nrptiDataSource = getDataSourceConfig(dataSourceType);
 
   if (!nrptiDataSource) {
@@ -124,4 +159,49 @@ function getDataSourceConfig(dataSourceType) {
     dataSourceLabel: dataSourceType,
     dataSourceClass: require(`../integrations/${dataSourceType}/datasource`)
   };
+}
+
+/**
+ * Given a csv string, return an array of row objects.
+ *
+ * Note: assumes there is a header row, which is converted to lowercase.
+ *
+ * @param {*} csvString
+ * @returns {string[][]}
+ */
+async function getCsvRowsFromString(csvString) {
+  if (!csvString) {
+    return null;
+  }
+
+  return csvToJson()
+    .preFileLine((fileLine, idx) => {
+      if (idx === 0) {
+        // convert the header row to lowercase
+        return fileLine.toLowerCase();
+      }
+      return fileLine;
+    })
+    .fromString(csvString);
+}
+
+/**
+ * Get a supported data source config.
+ *
+ * @param {string} dataSourceType a data source type string
+ * @returns data source config, or null if the provided data source type is not supported.
+ */
+function getDataSourceConfig(dataSourceType) {
+  if (!dataSourceType) {
+    return null;
+  }
+
+  if (dataSourceType === 'cors-csv') {
+    return {
+      dataSourceLabel: 'cors-csv',
+      dataSourceClass: require('../importers/cors/datasource')
+    };
+  }
+
+  return null;
 }
