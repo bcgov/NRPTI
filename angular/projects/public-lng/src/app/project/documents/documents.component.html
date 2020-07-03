@@ -1,11 +1,11 @@
 <div class="documents-view">
-  <div *ngIf="!loading && tableData.totalListItems === 0">
+  <div *ngIf="!loading && tableData.items.length === 0">
     No Records found.
   </div>
 
   <div class="col">
     <lib-table-template
-      *ngIf="!loading && tableData.totalListItems != 0"
+      *ngIf="!loading && tableData.items.length > 0"
       [data]="tableData"
       (messageOut)="onMessageOut($event)"
     ></lib-table-template>
