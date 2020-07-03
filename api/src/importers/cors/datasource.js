@@ -127,7 +127,6 @@ class CorsCsvDataSource {
 
       // Do not re-throw error, as a single failure is not cause to stop the other records from processing
       defaultLog.error(`processRecord - unexpected error: ${error.message}`);
-      defaultLog.error(`processRecord - unexpected error: ${error.stack}`);
     }
   }
 
