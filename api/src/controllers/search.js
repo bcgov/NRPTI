@@ -548,29 +548,6 @@ const executeQuery = async function (args, res, next) {
     let aggregation = [
       {
         $match: { _id: mongoose.Types.ObjectId(args.swagger.params._id.value) }
-      },
-      {
-        $redact: {
-          $cond: {
-            if: {
-              $cond: {
-                if: '$read',
-                then: {
-                  $anyElementTrue: {
-                    $map: {
-                      input: '$read',
-                      as: 'fieldTag',
-                      in: { $setIsSubset: [['$$fieldTag'], roles] }
-                    }
-                  }
-                },
-                else: true
-              }
-            },
-            then: '$$DESCEND',
-            else: '$$PRUNE'
-          }
-        }
       }
     ];
 
@@ -597,6 +574,30 @@ const executeQuery = async function (args, res, next) {
           as: 'documents'
         }
       });
+
+    aggregation.push(      {
+      $redact: {
+        $cond: {
+          if: {
+            $cond: {
+              if: '$read',
+              then: {
+                $anyElementTrue: {
+                  $map: {
+                    input: '$read',
+                    as: 'fieldTag',
+                    in: { $setIsSubset: [['$$fieldTag'], roles] }
+                  }
+                }
+              },
+              else: true
+            }
+          },
+          then: '$$DESCEND',
+          else: '$$PRUNE'
+        }
+      }
+    });
 
     const data = await collectionObj.aggregate(aggregation);
 
