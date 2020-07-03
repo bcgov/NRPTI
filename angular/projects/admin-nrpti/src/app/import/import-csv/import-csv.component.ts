@@ -34,7 +34,7 @@ export class ImportCSVComponent {
 
   public showAlert = false;
 
-  constructor(public factoryService: FactoryService) { }
+  constructor(public factoryService: FactoryService) {}
 
   /**
    * Handle data source type changes.

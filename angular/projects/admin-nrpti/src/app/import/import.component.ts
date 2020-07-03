@@ -56,7 +56,7 @@ export class ImportComponent implements OnInit {
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef,
     public factoryService: FactoryService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
@@ -139,10 +139,12 @@ export class ImportComponent implements OnInit {
   }
 
   async startJob(dataSourceType: string) {
-    await this.factoryService.startTask({
-      dataSourceType: dataSourceType,
-      taskType: 'import'
-    }).toPromise();
+    await this.factoryService
+      .startTask({
+        dataSourceType: dataSourceType,
+        taskType: 'import'
+      })
+      .toPromise();
 
     this.showAlert[dataSourceType] = true;
     setTimeout(() => {
