@@ -1,0 +1,42 @@
+<td scope="row" class="col-1">
+  <mat-checkbox (change)="onRowCheckboxUpdate($event, rowData)"></mat-checkbox>
+</td>
+<td scope="row" data-label="Name" class="col-2">
+  {{ rowData.recordName || '-' }}
+</td>
+<td scope="row" data-label="Agency" class="col-2">{{ rowData.issuingAgency || '-' }}</td>
+<td scope="row" data-label="Source" class="col-1">{{ rowData.sourceSystemRef || '-' }}</td>
+<td scope="row" data-label="Type" class="col-1">{{ rowData.recordType || '-' }}</td>
+<td scope="row" data-label="Collections" class="col-2">{{ rowData.collections || '-' }}</td>
+<td scope="row" data-label="Date" class="col-1">{{ rowData.dateIssued | date: 'mediumDate' || '-' }}</td>
+<td scope="row" data-label="Published" class="col-1 d-flex">
+  <!-- TODO this publish flag needs to be updated based on BCMI publish (collections?) logic when ready.  Currently, -->
+  <!-- this will always show `unpublished` as the `public` role will never be found in the master read array -->
+  <div *ngIf="rowData.read && rowData.read.includes('public'); then published; else unpublished"></div>
+  <ng-template #published>
+    <i class="material-icons published-green">check_circle</i>
+    <span class="publish-label pl-1 published-green">Published</span>
+  </ng-template>
+  <ng-template #unpublished>
+    <i class="material-icons ">cancel</i>
+    <span class="publish-label pl-1">Unpublished</span>
+  </ng-template>
+</td>
+<td scope="row" class="col-1 overflow-visible">
+  <div class="d-flex">
+    <button class="btn" type="button" (click)="goToEdit()" title="Edit record">
+      <i class="material-icons mr-2">create</i>
+    </button>
+    <div>
+      <span ngbDropdown>
+        <button class="btn" type="button" id="moreOptionsDropdown" ngbDropdownToggle>
+          <i class="material-icons">more_vert</i>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="moreOptionsDropdown" ngbDropdownMenu>
+          <button class="dropdown-item" (click)="goToEdit()">Edit Master Record</button>
+          <button class="dropdown-item" (click)="goToDetails()">View Record Details</button>
+        </div>
+      </span>
+    </div>
+  </div>
+</td>
