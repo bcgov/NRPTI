@@ -575,7 +575,7 @@ const executeQuery = async function (args, res, next) {
         }
       });
 
-    aggregation.push(      {
+    aggregation.push({
       $redact: {
         $cond: {
           if: {
