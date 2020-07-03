@@ -54,6 +54,23 @@ definitions:
       - epic
       - nris-epd
       - cors-csv
+  dataImportType:
+    type: string
+    description: 'Supported import task types'
+    example: 'import'
+    enum: &dataImportType
+      - import
+      - csvImport
+      - updateMaterializedView
+  materializedViewSubset:
+    type: string
+    description: 'Supported subsets'
+    example: 'issuedTo'
+    enum: &materializedViewSubset
+      - issuedTo
+      - location
+      - recordName
+      - descriptionSummary
   recordType:
     type: string
     description: 'Supported record types'
@@ -152,12 +169,25 @@ definitions:
         description: 'The datasource to update'
         example: 'epic'
         enum: *dataSourceType
+      taskType:
+        type: string
+        description: 'The type of task'
+        example: 'import'
+        enum: *dataImportType
       recordTypes:
         type: array
         description: 'Specific record types to update.  If not provided, all supported types will be updated.'
         items:
           type: string
           enum: *recordType
+      csvData:
+        type: string
+        description: 'Data for csv imports'
+      materializedViewSubset:
+        type: string
+        description: 'Name of subset to update'
+        example: 'issuedTo'
+        enum: *materializedViewSubset
 
   ### Common Definitions
   Token:
@@ -431,58 +461,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/TaskObject'
-      responses:
-        '200':
-          description: 'Success'
-        '403':
-          description: 'Access Denied'
-          schema:
-            $ref: '#/definitions/Error'
-  /task/csv:
-    x-swagger-router-controller: import-csv-task
-    options:
-      tags:
-        - csv, task
-      summary: 'Pre-flight request'
-      operationId: protectedOptions
-      description: 'Options on authenticated csv task route'
-      responses:
-        '200':
-          description: 'Success'
-        '403':
-          description: 'Access Denied'
-          schema:
-            $ref: '#/definitions/Error'
-    post:
-      tags:
-        - csv, task
-      summary: 'Create a new csv Task'
-      operationId: protectedCreateTask
-      description: 'Authenticated access to create a csv Task Worker'
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-      consumes:
-        - multipart/form-data
-      parameters:
-        - name: dataSourceType
-          in: formData
-          type: string
-          enum: *dataSourceType
-          required: true
-          description: 'The datasource to update'
-        - name: recordType
-          in: formData
-          type: string
-          enum: *recordType
-          required: true
-          description: 'Specific record type to update'
-        - name: csvData
-          in: formData
-          type: string
-          required: true
-          description: "The csv file data to import"
       responses:
         '200':
           description: 'Success'
