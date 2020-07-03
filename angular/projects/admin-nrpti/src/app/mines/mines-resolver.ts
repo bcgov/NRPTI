@@ -10,6 +10,6 @@ export class MinesResolver implements Resolve<Observable<SearchResults[]>> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<SearchResults[]> {
     const mineId = route.paramMap.get('mineId');
-    return this.factoryService.getRecord(mineId, 'Mine');
+    return this.factoryService.getRecord(mineId, 'MineBCMI');
   }
 }

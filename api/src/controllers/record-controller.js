@@ -19,7 +19,7 @@ let AddConstructionPlan = require('./post/construction-plan');
 let AddManagementPlan = require('./post/management-plan');
 let AddCourtConviction = require('./post/court-conviction');
 let AddNewsItem = require('./post/news-item');
-let AddMine = require('./post/mine');
+let AddMine = require('./post/mine-bcmi');
 
 let EditOrder = require('./put/order');
 let EditInspection = require('./put/inspection');
@@ -36,7 +36,7 @@ let EditConstructionPlan = require('./put/construction-plan');
 let EditManagementPlan = require('./put/management-plan');
 let EditCourtConviction = require('./put/court-conviction');
 let EditNewsItem = require('./put/news-item');
-let EditMine = require('./put/mine');
+let EditMine = require('./put/mine-bcmi');
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 

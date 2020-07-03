@@ -55,7 +55,7 @@ export class Mine {
 
   constructor(obj?: any) {
     this._id                  = (obj && obj._id)                  || null;
-    this._schemaName          = (obj && obj._schemaName)          || 'Mine';
+    this._schemaName          = (obj && obj._schemaName)          || 'MineBCMI';
     this._sourceRefId         = (obj && obj._sourceRefId)         || '';
     this.read                 = (obj && obj.read)                 || null;
     this.write                = (obj && obj.write)                || null;

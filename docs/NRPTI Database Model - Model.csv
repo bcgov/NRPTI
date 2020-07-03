@@ -55,5 +55,4 @@ _id,ManagementPlanLNG,_master,,,description,relatedPhase,dateAdded,dateUpdated,d
 _id,ConstructionPlan,_epicProjectId,_sourceRefId,_epicMilestoneId,recordName,recordType,dateIssued,issuingAgency,documentURL,dateAdded,dateUpdated,updatedBy,publishedBy,sourceDateAdded,sourceDateUpdated,sourceSystemRef,,,,,,,,,,
 _id,ConstructionPlanLNG,_master,,,description,relatedPhase,dateAdded,dateUpdated,datePublished,,,,,,,,,,,,,,,,,
 ,,,,,,,,,,,,,,,,,,,,,,,,,,
-_id,Mine,_sourceRefId,,,name,permitNumber,status,type,commodities,tailingsImpoundments,region,location,operator,owner,summary,description,links,dateAdded,dateUpdated,datePublished,addedBy,updatedBy,publishedBy,sourceDateAdded,sourceDateUpdated,sourceSystemRef
 _id,MineBCMI,_master,,,name,permitNumber,status,type,commodities,tailingsImpoundments,region,location,operator,owner,summary,description,links,dateAdded,dateUpdated,datePublished,addedBy,updatedBy,publishedBy,sourceDateAdded,sourceDateUpdated,sourceSystemRef

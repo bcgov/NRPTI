@@ -13,7 +13,7 @@ import moment from 'moment';
 describe('ImportCSVComponent', () => {
   const testBedHelper = new TestBedHelper<ImportCSVComponent>(ImportCSVComponent);
 
-  const spyFactoryService = jasmine.createSpyObj<FactoryService>('FactoryService', ['startCsvTask']);
+  const spyFactoryService = jasmine.createSpyObj<FactoryService>('FactoryService', ['startTask']);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -494,7 +494,7 @@ describe('ImportCSVComponent', () => {
 
     beforeEach(async(() => {
       factoryServiceSpy = TestBed.get(FactoryService);
-      factoryServiceSpy.startCsvTask.calls.reset();
+      factoryServiceSpy.startTask.calls.reset();
     }));
 
     it('does nothing if this.dataSourceType is null', async(async () => {
@@ -507,7 +507,7 @@ describe('ImportCSVComponent', () => {
 
       await component.startJob();
 
-      expect(factoryServiceSpy.startCsvTask).toHaveBeenCalledTimes(0);
+      expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
     }));
 
     it('does nothing if this.recordType is null', async(async () => {
@@ -520,7 +520,7 @@ describe('ImportCSVComponent', () => {
 
       await component.startJob();
 
-      expect(factoryServiceSpy.startCsvTask).toHaveBeenCalledTimes(0);
+      expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
     }));
 
     it('does nothing if this.csvFiles is null or empty', async(async () => {
@@ -533,12 +533,12 @@ describe('ImportCSVComponent', () => {
 
       await component.startJob();
 
-      expect(factoryServiceSpy.startCsvTask).toHaveBeenCalledTimes(0);
+      expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
     }));
 
-    it('calls FactoryService.startCsvTask', async(async () => {
+    it('calls FactoryService.startTask', async(async () => {
       // set FactoryService mock behaviour
-      factoryServiceSpy.startCsvTask.and.returnValue(of());
+      factoryServiceSpy.startTask.and.returnValue(of());
 
       const { component } = testBedHelper.createComponent();
 
@@ -557,10 +557,11 @@ describe('ImportCSVComponent', () => {
 
       expect(component.onFileDelete).toHaveBeenCalledWith(fileA);
 
-      expect(factoryServiceSpy.startCsvTask).toHaveBeenCalledWith({
+      expect(factoryServiceSpy.startTask).toHaveBeenCalledWith({
         dataSourceType: 'dataSourceType',
-        recordType: 'recordType',
-        csvData: 'fileData'
+        recordTypes: ['recordType'],
+        csvData: 'fileData',
+        taskType: 'csvImport'
       });
     }));
   });
