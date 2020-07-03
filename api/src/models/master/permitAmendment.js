@@ -21,11 +21,11 @@ module.exports = require('../../utils/model-schema-generator')(
 
     dateAdded: { type: Date, default: Date.now() },
     dateUpdated: { type: Date, default: null },
-    datePublished: { type: Date, default: null },
 
     addedBy: { type: String, default: '' },
     updatedBy: { type: String, default: '' },
-    publishedBy: { type: String, default: '' },
+
+    isBcmiPublished: { type: Boolean, default: false, index: true },
 
     sourceSystemRef: { type: String, default: 'core' }
   },

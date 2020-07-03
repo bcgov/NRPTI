@@ -387,7 +387,12 @@ class CoreDataSource {
     const transformedAmendments = await permitAmendmentUtils.transformRecords(permit);
     // To trigger flavour for this import.
     const preparedAmendments = transformedAmendments.map(amendment => ({ ...amendment, PermitAmendmentBCMI: {} }))
-    const savedAmendments = await permitAmendmentUtils.createRecord(preparedAmendments);
+
+    const savedAmendments = [];
+    for (const amendment of preparedAmendments) {
+      const createdRecord = await permitAmendmentUtils.createRecord(amendment);
+      savedAmendments.push(createdRecord);
+    }
  
     // Transform and create the permit record.
     const transformedPermit = await permitUtils.transformRecord(permit, savedAmendments);
@@ -421,9 +426,23 @@ class CoreDataSource {
     // Update the amendments and permit.
     const transformedAmendments = await permitAmendmentUtils.transformRecords(permit);
     // To trigger flavour for this import.
-    const preparedAmendments = transformedAmendments.map(amendment => ({ ...amendment, PermitAmendmentBCMI: {} }))
-    const updatedAmendments = await permitAmendmentUtils.updateRecord(preparedAmendments);
-     
+    const preparedAmendments = transformedAmendments.map(amendment => ({ ...amendment, PermitAmendmentBCMI: {} }));
+
+    // Need to update existing, but add any new ones.
+    const updatedAmendments = [];
+    for (const amendment of preparedAmendments) {
+      // Check if this record already exists
+      const existingRecord = await permitAmendmentUtils.findExistingRecord(amendment);
+
+      if (existingRecord) {
+        const updatedRecord = await permitAmendmentUtils.updateRecord(amendment, existingRecord);
+        updatedAmendments.push(updatedRecord);
+      } else {
+        const createdRecord = await permitAmendmentUtils.createRecord(amendment);
+        updatedAmendments.push(createdRecord);
+      }
+    }
+  
     // Transform and update the permit record.
     const transformedPermit = await permitUtils.transformRecord(permit, updatedAmendments);
     // To trigger flavour for this import.

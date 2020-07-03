@@ -45,9 +45,9 @@ class PermitAmendments extends BaseRecordUtils {
       _sourceRefId: amendment.permit_amendment_guid || '',
       statusCode: amendment.permit_amendment_status_code || '',
       typeCode: amendment.permit_amendment_type_code || '',
-      receivedDate: (amendment.received_date && new Date(amendment.received_date)) || null,
-      issueDate: (amendment.issue_date && new Date(amendment.issue_date)) || null,
-      authorizedEndDate: (amendment.authorized_end_date && new Date(amendment.authorized_end_date)) || null,
+      receivedDate: amendment.received_date || null,
+      issueDate: amendment.issue_date || null,
+      authorizedEndDate: amendment.authorized_end_date || null,
       description: amendment.description,
       documents: []
     }));
@@ -57,45 +57,28 @@ class PermitAmendments extends BaseRecordUtils {
    * Saves transformed permit amendments.
    * 
    * @param {object[]} amendments Core permit amendments
-   * @returns {PermitAmendment[]}
+   * @returns {PermitAmendment}
    * @memberof PermitAmendments
    */
-  async createRecord(amendments) {
-    const savedRecords = [];
-
-    for (const amendment of amendments) {
-      const result = await super.createRecord(amendment);
-
-      if (result[0] && result[0].object && result[0].object[0]) {
-        savedRecords.push(result[0].object[0]);
-      }
+  async createRecord(amendment) {
+    const result = await super.createRecord(amendment);
+    if (result[0] && result[0].object && result[0].object[0]) {
+      return result[0].object[0];
     }
-
-    return savedRecords;
   }
 
   /**
    * Updates transformed permit amendments.
    * 
    * @param {object[]} amendments Core permit amendments
-   * @returns {PermitAmendment[]}
+   * @returns {PermitAmendment}
    * @memberof PermitAmendments
    */
-  async updateRecord(amendments) {
-    const savedRecords = [];
-    const PermitAmendment = mongoose.model('PermitAmendment');
-
-    for (const amendment of amendments) {
-      // Get the existing amendment to compare against.
-      const existingRecord = await PermitAmendment.find({ _sourceRefId: amendment._sourceRefId });
-      const result = await super.updateRecord(existingRecord, amendment);
-
-      if (result[0] && result[0].object && result[0].object[0]) {
-        savedRecords.push(result[0].object[0]);
-      }
+  async updateRecord(amendment, existingRecord) {
+    const result = await super.updateRecord(amendment, existingRecord);
+    if (result[0] && result[0].object && result[0].object[0]) {
+      return result[0].object[0];
     }
-
-    return savedRecords;
   }
 }
 

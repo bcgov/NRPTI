@@ -38,6 +38,7 @@ let EditManagementPlan = require('./put/management-plan');
 let EditCourtConviction = require('./put/court-conviction');
 let EditNewsItem = require('./put/news-item');
 let EditMine = require('./put/mine-bcmi');
+let EditPermitAmendment = require('./put/permit-amendment');
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 
@@ -536,6 +537,9 @@ const processPutRequest = async function (args, res, next, property, data) {
         break;
       case 'mines':
         promises.push(EditMine.editRecord(args, res, next, data[i]));
+        break;
+      case 'permitAmendments':
+        promises.push(EditPermitAmendment.editRecord(args, res, next, data[i]));
         break;
       default:
         return {
