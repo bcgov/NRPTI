@@ -20,6 +20,7 @@ let AddManagementPlan = require('./post/management-plan');
 let AddCourtConviction = require('./post/court-conviction');
 let AddNewsItem = require('./post/news-item');
 let AddMine = require('./post/mine-bcmi');
+let AddPermitAmendment = require('./post/permit-amendment');
 
 let EditOrder = require('./put/order');
 let EditInspection = require('./put/inspection');
@@ -37,6 +38,7 @@ let EditManagementPlan = require('./put/management-plan');
 let EditCourtConviction = require('./put/court-conviction');
 let EditNewsItem = require('./put/news-item');
 let EditMine = require('./put/mine-bcmi');
+let EditPermitAmendment = require('./put/permit-amendment');
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 
@@ -452,6 +454,9 @@ const processPostRequest = async function (args, res, next, property, data) {
       case 'mines':
         promises.push(AddMine.createRecord(args, res, next, data[i]));
         break;
+      case 'permitAmendments':
+        promises.push(AddPermitAmendment.createRecord(args, res, next, data[i]));
+        break;
       default:
         return {
           errorMessage: `Property ${property} does not exist.`
@@ -532,6 +537,9 @@ const processPutRequest = async function (args, res, next, property, data) {
         break;
       case 'mines':
         promises.push(EditMine.editRecord(args, res, next, data[i]));
+        break;
+      case 'permitAmendments':
+        promises.push(EditPermitAmendment.editRecord(args, res, next, data[i]));
         break;
       default:
         return {

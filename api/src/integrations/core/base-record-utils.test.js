@@ -26,7 +26,6 @@ describe('BaseRecordUtils', () => {
 
       const expectedResult = {
         _schemaName: 'MineBCMI',
-        _sourceRefId: 1,
         dateAdded: expect.any(Date),
         dateUpdated: expect.any(Date),
         addedBy: undefined,

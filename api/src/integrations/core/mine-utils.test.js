@@ -25,7 +25,6 @@ describe('MineUtils', () => {
 
     it('returns transformed Core record', () => {
       const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
-      const permit = { permit_guid: 'test', permit_no: '1234' };
       const coreRecord = { 
         mine_guid: 1,
         mine_name: 'test',
@@ -60,20 +59,21 @@ describe('MineUtils', () => {
         sourceSystemRef: 'core',
 
         name: 'test',
-        permitNumber: '1234',
+        permitNumber: '',
+        permit: null,
         status: 'testLabel',
         commodities: [],
         tailingsImpoundments: 2,
         region: 'TE',
         location: { type: 'Point', coordinates: [ 123, 456 ]},
-        permittee: 'Test Party',
+        permittee: '',
         type: '',
         summary: '',
         description: '',
         links: []
       };
 
-      const result = mineUtils.transformRecord(coreRecord, [], permit);
+      const result = mineUtils.transformRecord(coreRecord, []);
 
       expect(result).toEqual(expectedResult);
     });
@@ -124,39 +124,37 @@ describe('MineUtils', () => {
       expect(() => mineUtils.getParty(null, {})).toThrow('getParty - partyCode must not be null.');
     });
 
-    it('throws error if no mineRecord provided', async () => {
+    it('throws error if no parties provided', async () => {
       const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
-      expect(() => mineUtils.getParty('PMT', null)).toThrow('getParty - mineRecord must not be null.');
+      expect(() => mineUtils.getParty('PMT', {}, null)).toThrow('getParty - parties must not be null.');
     });
 
     it('throws error if no permit provided', async () => {
       const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
-      expect(() => mineUtils.getParty('PMT', {}, null)).toThrow('getParty - permit must not be null.');
+      expect(() => mineUtils.getParty('PMT', null, {})).toThrow('getParty - permit must not be null.');
     });
 
     it('gets the correct party', () => {
       const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
-      const permit = { permit_guid: 'test' };
-      const mineRecord = {
-        parties: [
-          {
-            mine_party_appt_type_code: 'POR',
-            related_guid: 'notRight',
-            party: {
-              name: 'Not Me'
-            }
-          },
-          {
-            mine_party_appt_type_code: 'PMT',
-            related_guid: 'test',
-            party: {
-              name: 'Find Me'
-            }
+      const permit = { _sourceRefId: 'test' };
+      const parties = [
+        {
+          mine_party_appt_type_code: 'POR',
+          related_guid: 'notRight',
+          party: {
+            name: 'Not Me'
           }
-        ]
-      };
+        },
+        {
+          mine_party_appt_type_code: 'PMT',
+          related_guid: 'test',
+          party: {
+            name: 'Find Me'
+          }
+        }
+    ];
 
-      const result = mineUtils.getParty('PMT', mineRecord, permit);
+      const result = mineUtils.getParty('PMT', permit, parties);
 
       expect(result).toEqual('Find Me');
     });
