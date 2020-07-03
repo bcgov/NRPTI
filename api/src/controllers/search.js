@@ -329,7 +329,43 @@ let searchCollection = async function (
         as: 'documents'
       }
     });
+
+    // Redaction. We've imported details from
+    // flavours and documents, and we may need
+    // to prevent some of these from being returned
+    // if the user lacks the requisite role(s)
+    searchResultAggregation.push({
+      $redact: {
+        $cond: {
+          if: {
+            $cond: {
+              if: '$read',
+              then: {
+                $anyElementTrue: {
+                  $map: {
+                    input: '$read',
+                    as: 'fieldTag',
+                    in: { $setIsSubset: [['$$fieldTag'], roles] }
+                  }
+                }
+              },
+              else: true
+            }
+          },
+          then: '$$DESCEND',
+          else: '$$PRUNE'
+        }
+      }
+    });
   }
+
+  // trim out the 'fullRecord' attribute, we no longer need it
+  // after re-population
+  searchResultAggregation.push({
+    $project: {
+      fullRecord: 0
+    }
+  });
 
   aggregation.push({
     $facet: {
@@ -512,29 +548,6 @@ const executeQuery = async function (args, res, next) {
     let aggregation = [
       {
         $match: { _id: mongoose.Types.ObjectId(args.swagger.params._id.value) }
-      },
-      {
-        $redact: {
-          $cond: {
-            if: {
-              $cond: {
-                if: '$read',
-                then: {
-                  $anyElementTrue: {
-                    $map: {
-                      input: '$read',
-                      as: 'fieldTag',
-                      in: { $setIsSubset: [['$$fieldTag'], roles] }
-                    }
-                  }
-                },
-                else: true
-              }
-            },
-            then: '$$DESCEND',
-            else: '$$PRUNE'
-          }
-        }
       }
     ];
 
@@ -561,6 +574,30 @@ const executeQuery = async function (args, res, next) {
           as: 'documents'
         }
       });
+
+    aggregation.push({
+      $redact: {
+        $cond: {
+          if: {
+            $cond: {
+              if: '$read',
+              then: {
+                $anyElementTrue: {
+                  $map: {
+                    input: '$read',
+                    as: 'fieldTag',
+                    in: { $setIsSubset: [['$$fieldTag'], roles] }
+                  }
+                }
+              },
+              else: true
+            }
+          },
+          then: '$$DESCEND',
+          else: '$$PRUNE'
+        }
+      }
+    });
 
     const data = await collectionObj.aggregate(aggregation);
 

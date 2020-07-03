@@ -10,6 +10,11 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
+    path: ':div',
+    pathMatch: 'full',
+    component: HomeComponent
+  },
+  {
     // wildcard default route
     path: '**',
     redirectTo: '',
