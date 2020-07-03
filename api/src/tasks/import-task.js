@@ -18,21 +18,27 @@ exports.protectedOptions = async function (args, res, next) {
 exports.protectedCreateTask = async function (args, res, next) {
   // validate request parameters
   if (!args.swagger.params.task || !args.swagger.params.task.value) {
-    throw Error('protectedCreateTask - missing required request body');
+    defaultLog.error('protectedCreateTask - missing required request body');
+    return queryActions.sendResponse(res, 400, 'protectedCreateTask - missing required request body');
   }
   if (!args.swagger.params.task.value.taskType) {
-    throw Error('protectedCreateTask - missing required taskType');
+    defaultLog.error('protectedCreateTask - missing required taskType');
+    return queryActions.sendResponse(res, 400, 'protectedCreateTask - missing required taskType');
   }
 
   switch (args.swagger.params.task.value.taskType) {
     case 'import':
     case 'csvImport': {
       if (!args.swagger.params.task.value.dataSourceType) {
-        throw Error('protectedCreateTask - missing required dataSourceType');
+        defaultLog.error('protectedCreateTask - missing required dataSourceType');
+        return queryActions.sendResponse(res, 400, 'protectedCreateTask - missing required dataSourceType');
       }
       const nrptiDataSource = getDataSourceConfig(args.swagger.params.task.value.dataSourceType);
       if (!nrptiDataSource) {
-        throw Error(
+        defaultLog.error(
+          `protectedCreateTask - could not find nrptiDataSource for dataSourceType: ${args.swagger.params.task.value.dataSourceType}`
+        );
+        return queryActions.sendResponse(res, 400,
           `protectedCreateTask - could not find nrptiDataSource for dataSourceType: ${args.swagger.params.task.value.dataSourceType}`
         );
       }
@@ -47,17 +53,20 @@ exports.protectedCreateTask = async function (args, res, next) {
         );
       } else if (args.swagger.params.task.value.taskType === 'csvImport') {
         if (!args.swagger.params.task.value.recordTypes) {
-          throw Error('protectedCreateTask - missing required recordTypes');
+          defaultLog.error('protectedCreateTask - missing required recordTypes');
+          return queryActions.sendResponse(res, 400, 'protectedCreateTask - missing required recordTypes');
         }
 
         if (!args.swagger.params.task.value.csvData) {
-          throw Error('protectedCreateTask - missing required csvData');
+          defaultLog.error('protectedCreateTask - missing required csvData');
+          return queryActions.sendResponse(res, 400, 'protectedCreateTask - missing required csvData');
         }
 
         const csvRows = await getCsvRowsFromString(args.swagger.params.task.value.csvData);
 
         if (!csvRows || !csvRows.length) {
-          throw Error('protectedCreateTask - could not convert csvData string to csv rows array');
+          defaultLog.error('protectedCreateTask - could not convert csvData string to csv rows array');
+          return queryActions.sendResponse(res, 400, 'protectedCreateTask - could not convert csvData string to csv rows array');
         }
 
         // run data source record updates
@@ -85,14 +94,13 @@ exports.protectedCreateTask = async function (args, res, next) {
           descriptionSummarySubset.update(defaultLog);
           break;
         default:
-          throw Error(
-            `protectedCreateTask - unknown materialized view subset`
-          );
+          defaultLog.error(`protectedCreateTask - unknown materialized view subset`);
+          return queryActions.sendResponse(res, 400, `protectedCreateTask - unknown materialized view subset`);
       }
       break;
-
     default:
-      throw Error('protectedCreateTask - unknown taskType');
+      defaultLog.error('protectedCreateTask - unknown taskType');
+      return queryActions.sendResponse(res, 400, 'protectedCreateTask - unknown taskType');
   }
   // send response immediately as the tasks will run in the background
   return queryActions.sendResponse(res, 200);

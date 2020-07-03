@@ -31,8 +31,9 @@ describe('import-task', () => {
         }
       };
 
-      await expect(importTask.protectedCreateTask(mockArgs, {})).rejects.toThrow(
-        new Error('protectedCreateTask - missing required request body')
+      const res = await importTask.protectedCreateTask(mockArgs, {});
+      expect(res).toEqual(
+        {}
       );
     });
 
@@ -52,8 +53,9 @@ describe('import-task', () => {
         }
       };
 
-      await expect(importTask.protectedCreateTask(mockArgs, {})).rejects.toThrow(
-        new Error('protectedCreateTask - missing required request body')
+      const res = await importTask.protectedCreateTask(mockArgs, {});
+      expect(res).toEqual(
+        {}
       );
     });
 
@@ -76,8 +78,9 @@ describe('import-task', () => {
         }
       };
 
-      await expect(importTask.protectedCreateTask(mockArgs, {})).rejects.toThrow(
-        new Error('protectedCreateTask - missing required dataSourceType')
+      const res = await importTask.protectedCreateTask(mockArgs, {});
+      expect(res).toEqual(
+        {}
       );
     });
 
@@ -100,8 +103,9 @@ describe('import-task', () => {
         }
       };
 
-      await expect(importTask.protectedCreateTask(mockArgs, {})).rejects.toThrow(
-        new Error('protectedCreateTask - missing required taskType')
+      const res = await importTask.protectedCreateTask(mockArgs, {});
+      expect(res).toEqual(
+        {}
       );
     });
   });
