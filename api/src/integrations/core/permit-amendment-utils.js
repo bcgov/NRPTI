@@ -1,5 +1,4 @@
 'use strict';
-const mongoose = require('mongoose');
 
 const BaseRecordUtils = require('./base-record-utils');
 
