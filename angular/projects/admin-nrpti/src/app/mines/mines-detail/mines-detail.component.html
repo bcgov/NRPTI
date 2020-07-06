@@ -46,7 +46,7 @@
           <div id="permitNumber"><b>Mines Act Permit Number: </b>{{mine?.permitNumber || '-'}}</div>
         </div>
         <div class="row label-pair ml-1 mb-2">
-          <div id="tailingsImpoundments"><b>Number of Tailings Storage Facilities: </b>{{mine?.tailingsImpoundments || '-' }} </div>
+          <div id="tailingsImpoundments"><b>Number of Tailings Storage Facilities: </b>{{mine?.tailingsImpoundments || 'N/A' }} </div>
         </div>
         <div class="row label-pair ml-1 mb-2">
           <div id="commodities"><b>Commodities: </b>{{mine?.commodities && mine?.commodities?.length > 0 ? mine?.commodities?.join(', ') : '-'}}</div>
