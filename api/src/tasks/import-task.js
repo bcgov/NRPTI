@@ -11,11 +11,11 @@ const locationSubset = require('../../materialized_views/search/locationSubset')
 const recordNameSubset = require('../../materialized_views/search/recordNameSubset');
 const descriptionSummarySubset = require('../../materialized_views/search/descriptionSummarySubset');
 
-exports.protectedOptions = async function (args, res, next) {
+exports.protectedOptions = async function(args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedCreateTask = async function (args, res, next) {
+exports.protectedCreateTask = async function(args, res, next) {
   // validate request parameters
   if (!args.swagger.params.task || !args.swagger.params.task.value) {
     defaultLog.error('protectedCreateTask - missing required request body');
@@ -38,7 +38,9 @@ exports.protectedCreateTask = async function (args, res, next) {
         defaultLog.error(
           `protectedCreateTask - could not find nrptiDataSource for dataSourceType: ${args.swagger.params.task.value.dataSourceType}`
         );
-        return queryActions.sendResponse(res, 400,
+        return queryActions.sendResponse(
+          res,
+          400,
           `protectedCreateTask - could not find nrptiDataSource for dataSourceType: ${args.swagger.params.task.value.dataSourceType}`
         );
       }
@@ -66,7 +68,11 @@ exports.protectedCreateTask = async function (args, res, next) {
 
         if (!csvRows || !csvRows.length) {
           defaultLog.error('protectedCreateTask - could not convert csvData string to csv rows array');
-          return queryActions.sendResponse(res, 400, 'protectedCreateTask - could not convert csvData string to csv rows array');
+          return queryActions.sendResponse(
+            res,
+            400,
+            'protectedCreateTask - could not convert csvData string to csv rows array'
+          );
         }
 
         // run data source record updates
@@ -107,13 +113,11 @@ exports.protectedCreateTask = async function (args, res, next) {
 };
 
 // Used to quickly run a task within the API runtime.
-exports.createTask = async function (dataSourceType) {
+exports.createTask = async function(dataSourceType) {
   const nrptiDataSource = getDataSourceConfig(dataSourceType);
 
   if (!nrptiDataSource) {
-    throw Error(
-      `createTask - could not find nrptiDataSource for dataSourceType: ${dataSourceType}`
-    );
+    throw Error(`createTask - could not find nrptiDataSource for dataSourceType: ${dataSourceType}`);
   }
 
   // run data source record updates
@@ -126,7 +130,7 @@ exports.createTask = async function (dataSourceType) {
       }
     },
     null, // TODO: We're not using this param anywhere in the import logic framework, setting to null
-    null  // TODO: We're not using this param anywhere in the import logic framework, setting to null
+    null // TODO: We're not using this param anywhere in the import logic framework, setting to null
   );
 };
 
@@ -146,12 +150,7 @@ async function runTask(nrptiDataSource, auth_payload, params = null, recordTypes
 
     await taskAuditRecord.updateTaskRecord({ dataSourceLabel: nrptiDataSource.dataSourceLabel, startDate: new Date() });
 
-    const dataSource = new nrptiDataSource.dataSourceClass(
-      taskAuditRecord,
-      auth_payload,
-      params,
-      recordTypes
-    );
+    const dataSource = new nrptiDataSource.dataSourceClass(taskAuditRecord, auth_payload, params, recordTypes);
 
     if (!dataSource) {
       throw Error(`runTask - ${nrptiDataSource.dataSourceLabel} - failed - could not create instance of dataSource`);
@@ -190,14 +189,21 @@ function getDataSourceConfig(dataSourceType) {
       dataSourceLabel: 'cors-csv',
       dataSourceClass: require('../importers/cors/datasource')
     };
-  } else {
-    // dataSourceType will match the name of a directory for the given
-    // integration in /src/integrations/<dataSourceType>/
+  }
+
+  if (dataSourceType === 'bcogc-csv') {
     return {
-      dataSourceLabel: dataSourceType,
-      dataSourceClass: require(`../integrations/${dataSourceType}/datasource`)
+      dataSourceLabel: 'bcogc-csv',
+      dataSourceClass: require('../importers/bcogc/datasource')
     };
   }
+
+  // dataSourceType will match the name of a directory for the given
+  // integration in /src/integrations/<dataSourceType>/
+  return {
+    dataSourceLabel: dataSourceType,
+    dataSourceClass: require(`../integrations/${dataSourceType}/datasource`)
+  };
 }
 
 /**
@@ -213,13 +219,24 @@ async function getCsvRowsFromString(csvString) {
     return null;
   }
 
-  return csvToJson()
-    .preFileLine((fileLine, idx) => {
-      if (idx === 0) {
+  let lineNumber = 0;
+
+  // preFileLine bug that prevents us from using the built in line index
+  // See: https://github.com/Keyang/node-csvtojson/issues/351
+  const csvRows = await csvToJson()
+    .preFileLine(fileLine => {
+      let line = fileLine;
+
+      if (lineNumber === 0) {
         // convert the header row to lowercase
-        return fileLine.toLowerCase();
+        line = fileLine.toLowerCase();
       }
-      return fileLine;
+
+      lineNumber++;
+
+      return line;
     })
     .fromString(csvString);
+
+  return csvRows;
 }

@@ -95,7 +95,7 @@ export class Picklists {
     Warning: { displayName: 'Warning', _schemaName: 'Warning' }
   };
 
-  public static readonly sourceSystemRefPicklist = ['nrpti', 'epic', 'nris-epd', 'cors-csv', 'lng-csv', 'ocers-csv'];
+  public static readonly sourceSystemRefPicklist = ['core', 'cors-csv', 'epic', 'lng-csv', 'nris-epd', 'nrpti', 'ocers-csv'];
 
   public static readonly mineTypes = ['Coal', 'Metal', 'Industrial Mineral', 'Sand & Gravel'];
 

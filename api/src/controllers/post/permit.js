@@ -31,6 +31,7 @@ const { ROLES } = require('../../utils/constants/misc');
 exports.createRecord = async function (args, res, next, incomingObj) {
   const flavourFunctions = {
     PermitLNG: this.createLNG,
+    PermitBCMI: this.createBCMI,
   }
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
@@ -70,12 +71,10 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._epicProjectId &&
     ObjectId.isValid(incomingObj._epicProjectId) &&
     (permit._epicProjectId = new ObjectId(incomingObj._epicProjectId));
-  incomingObj._sourceRefId &&
-    ObjectId.isValid(incomingObj._sourceRefId) &&
-    (permit._sourceRefId = new ObjectId(incomingObj._sourceRefId));
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (permit._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj._sourceRefId && (permit._sourceRefId = incomingObj._sourceRefId);
 
   // set permissions
   permit.read = ROLES.ADMIN_ROLES;
@@ -114,6 +113,11 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.location && (permit.location = incomingObj.location);
   incomingObj.centroid && (permit.centroid = incomingObj.centroid);
   incomingObj.documents && (permit.documents = incomingObj.documents);
+
+  incomingObj.mineGuid && (permit.mineGuid = incomingObj.mineGuid);
+  incomingObj.permitNumber && (permit.permitNumber = incomingObj.permitNumber);
+  incomingObj.status && (permit.status = incomingObj.status);
+  incomingObj.permitAmendments && (permit.permitAmendments = incomingObj.permitAmendments);
 
   // set meta
   permit.addedBy = args.swagger.params.auth_payload.displayName;
@@ -222,4 +226,80 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.sourceSystemRef && (permitLNG.sourceSystemRef = incomingObj.sourceSystemRef);
 
   return permitLNG;
+};
+
+/**
+ * Creates the BCMI flavour of a permit.
+ * 
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj
+ * @returns created BCMI permit
+ */ 
+exports.createBCMI = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
+  let PermitBCMI = mongoose.model('PermitBCMI');
+  let permitBCMI = new PermitBCMI();
+
+  permitBCMI._schemaName = 'PermitBCMI';
+
+  // set integration references
+  incomingObj._sourceRefId && (permitBCMI._sourceRefId = incomingObj._sourceRefId);
+
+  // set permissions and meta
+  permitBCMI.read = ROLES.ADMIN_ROLES;
+  permitBCMI.write = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    permitBCMI.read.push('public');
+    permitBCMI.datePublished = new Date();
+    permitBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
+
+  permitBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  permitBCMI.dateAdded = new Date();
+
+  // set master data
+  incomingObj.recordName && (permitBCMI.recordName = incomingObj.recordName);
+  permitBCMI.recordType = 'Permit';
+  incomingObj.recordSubtype && (permitBCMI.recordSubtype = incomingObj.recordSubtype);
+  incomingObj.dateIssued && (permitBCMI.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (permitBCMI.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.legislation && incomingObj.legislation.act && (permitBCMI.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (permitBCMI.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (permitBCMI.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (permitBCMI.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (permitBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.legislationDescription && (permitBCMI.legislationDescription = incomingObj.legislationDescription);
+  incomingObj.projectName && (permitBCMI.projectName = incomingObj.projectName);
+  incomingObj.location && (permitBCMI.location = incomingObj.location);
+  incomingObj.centroid && (permitBCMI.centroid = incomingObj.centroid);
+  incomingObj.documents && (permitBCMI.documents = incomingObj.documents);
+
+  // set flavour data
+  incomingObj.mineGuid && (permitBCMI.mineGuid = incomingObj.mineGuid);
+  incomingObj.permitNumber && (permitBCMI.permitNumber = incomingObj.permitNumber);
+  incomingObj.status && (permitBCMI.status = incomingObj.status);
+  incomingObj.permitAmendments && (permitBCMI.permitAmendments = incomingObj.permitAmendments);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (permitBCMI.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (permitBCMI.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (permitBCMI.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return permitBCMI;
 };

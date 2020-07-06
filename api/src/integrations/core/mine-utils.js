@@ -1,5 +1,7 @@
 'use strict';
 
+const ObjectId = require('mongoose').Types.ObjectId;
+
 const BaseRecordUtils = require('./base-record-utils');
 
 const MINE_PARTY_PERMITTEE = 'PMT';
@@ -30,12 +32,11 @@ class Mines extends BaseRecordUtils {
    *
    * @param {object} mineRecord Core mine record (required)
    * @param {Array<object>} commodityTypes Available commodity types
-   * @param {Array<string>} permits Valid permit numbers
    * @returns {Order} NRPTI mine record.
    * @throws {Error} if record is not provided.
    * @memberof Mines
    */
-  transformRecord(mineRecord, commodityTypes, permit) {
+  transformRecord(mineRecord, commodityTypes) {
     if (!mineRecord) {
       throw Error('transformRecord - required mineRecord must be non-null.');
     }
@@ -44,23 +45,19 @@ class Mines extends BaseRecordUtils {
       throw Error('transformRecord - required commodityTypes must be non-null.');
     }
 
-    if (!permit) {
-      throw Error('transformRecord - required permits must be non-null.');
-    }
-
     return {
       ...super.transformRecord(mineRecord),
+      _sourceRefId: mineRecord.mine_guid,
       name: mineRecord.mine_name,
-      permitNumber: permit.permit_no,
       status: this.getLatestStatus(mineRecord),
       commodities: this.getCommodities(mineRecord, commodityTypes),
       tailingsImpoundments: mineRecord.mine_tailings_storage_facilities.length,
       region: mineRecord.mine_region,
       location : { type: 'Point', coordinates: mineRecord.coordinates },
-      permittee: this.getParty(MINE_PARTY_PERMITTEE, mineRecord, permit),
+      permittee: '',
+      permitNumber: '',
+      permit: null,
       type: '',
-      // TODO:  Without this, subsequent runs of the mine importer will duplicate mines every time it's run
-      // _sourceRefId: 'abc123',
       summary: '',
       description: '',
       links: []
@@ -130,24 +127,42 @@ class Mines extends BaseRecordUtils {
    * @returns {string} Name of party or empty string
    * @memberof Mines
    */
-  getParty(partyCode, mineRecord, permit) {
+  getParty(partyCode, permit, parties) {
     if (!partyCode) {
       throw new Error('getParty - partyCode must not be null.');
     }
 
-    if (!mineRecord) {
-      throw new Error('getParty - mineRecord must not be null.');
+    if (!parties) {
+      throw new Error('getParty - parties must not be null.');
     }
 
     if (!permit) {
       throw new Error('getParty - permit must not be null.');
     }
 
-    const party = mineRecord.parties.find(party => 
-      party.mine_party_appt_type_code === partyCode && party.related_guid === permit.permit_guid
+    const party = parties.find(party => 
+      party.mine_party_appt_type_code === partyCode && party.related_guid === permit._sourceRefId
     );
     
     return (party && party.party && party.party.name) || '';
+  }
+
+  /**
+   * Adds the permit and permittee to a Mine record.
+   * 
+   * @param {*} mineRecord Transformed Mine record
+   * @param {*} permit Permit to associate with mine
+   * @param {*} parties Parties related to Mine
+   * @returns {Mine} Mine with permit and permittee added
+   * @memberof Mines
+   */
+  addPermitToRecord(mineRecord, permit, parties) {
+    return {
+      ...mineRecord,
+      permitNumber: permit.permitNumber,
+      permit: new ObjectId(permit._id),
+      permittee: this.getParty(MINE_PARTY_PERMITTEE, permit, parties)
+    }
   }
 }
 

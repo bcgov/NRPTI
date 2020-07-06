@@ -6,11 +6,11 @@
     <select
       id="csvImportRecordType"
       class="form-control"
-      (ngModel)="(dataSourceType)"
+      [(ngModel)]="dataSourceType"
       (change)="onDataSourceTypeChange($event.target.value)"
     >
-      <!-- hard-code selected while there is only 1 possible option -->
-      <option [selected]="true" value="cors-csv">CORS</option>
+      <option value="cors-csv">CORS</option>
+      <option value="bcogc-csv">BCOGC</option>
     </select>
   </div>
 
@@ -19,11 +19,13 @@
     <select
       id="csvImportRecordType"
       class="form-control"
-      (ngModel)="(recordType)"
+      [(ngModel)]="recordType"
+      [disabled]="!dataSourceType"
       (change)="onRecordTypeChange($event.target.value)"
     >
-      <!-- hard-code selected while there is only 1 possible option -->
-      <option [selected]="true" value="Ticket">Tickets</option>
+      <option *ngFor="let record of CSVTypes.getRecordTypes(dataSourceType)" [value]="record">
+        {{ record }}
+      </option>
     </select>
   </div>
 
