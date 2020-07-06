@@ -25,5 +25,3 @@ exports.CorsCsvIssuingAgencies = {
   BC_Parks: 'BC Parks',
   Conservation_Officer_Service: 'Conservation Officer Service'
 };
-
-exports.SYSTEM_USER = "SYSTEM_USER";

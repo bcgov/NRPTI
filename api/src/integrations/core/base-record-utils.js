@@ -49,7 +49,6 @@ class BaseRecordUtils {
 
     return {
       _schemaName: this.recordType._schemaName,
-      _sourceRefId: coreRecord.mine_guid || '',
 
       addedBy: this.auth_payload.displayName,
       updatedBy: this.auth_payload.displayName,

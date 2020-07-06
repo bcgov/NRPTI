@@ -41,6 +41,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   // set data
   incomingObj.name && (mine.name = incomingObj.name);
   incomingObj.permitNumber && (mine.permitNumber = incomingObj.permitNumber);
+  incomingObj.permit && (mine.permit = incomingObj.permit);
   incomingObj.status && (mine.status = incomingObj.status);
   incomingObj.commodities.length && (mine.commodities = incomingObj.commodities);
   incomingObj.region && (mine.region = incomingObj.region);
