@@ -102,7 +102,7 @@ describe('Core DataSource', () => {
 
     it('throws error if missing recordTypeUtils param', async () => {
       const dataSource = new DataSource();
-      await expect(dataSource.processRecords(null, [])).rejects.toThrow('processRecords - required recordTypeUtils is null.');
+      await expect(dataSource.processRecords(null, [])).rejects.toThrow('processRecords - required utils is null.');
     });
 
     it('throws error if missing coreRecords param', async () => {
@@ -123,15 +123,23 @@ describe('Core DataSource', () => {
       await expect(dataSource.processRecord(mockRecordUtils, [], {})).resolves.not.toThrow();
     });
 
-    it('handles error if missing recordTypeUtils param', async () => {
+    it('handles error if missing mineUtils param', async () => {
       const dataSource = new DataSource();
-      dataSource.processRecord(null, [], {});
-      expect(dataSource.status.individualRecordStatus[0].error).toEqual('processRecord - required recordTypeUtils is null.');
+      const utils = {
+        mineUtils: null
+      };
+      dataSource.processRecord(utils, [], {});
+      expect(dataSource.status.individualRecordStatus[0].error).toEqual('processRecord - required mineUtils is null.');
     });
 
     it('handles error if missing coreRecord param', async () => {
       const dataSource = new DataSource();
-      dataSource.processRecord({}, [], null);
+      const utils = {
+        mineUtils: {},
+        permitUtils: {},
+        permitAmendmentUtils: {}
+      }
+      dataSource.processRecord(utils, [], null);
       expect(dataSource.status.individualRecordStatus[0].error).toEqual('processRecord - required coreRecord is null.');
     });
   });

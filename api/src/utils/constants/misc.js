@@ -26,8 +26,6 @@ exports.CorsCsvIssuingAgencies = {
   Conservation_Officer_Service: 'Conservation Officer Service'
 };
 
-exports.SYSTEM_USER = "SYSTEM_USER";
-
 exports.EpicProjectIds = {
   lngCanadaId: '588511d0aaecd9001b826192',
   coastalGaslinkId: '588511c4aaecd9001b825604'

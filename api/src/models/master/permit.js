@@ -5,7 +5,7 @@ module.exports = require('../../utils/model-schema-generator')(
   {
     _schemaName: { type: String, default: 'Permit', index: true },
     _epicProjectId: { type: 'ObjectId', default: null, index: true },
-    _sourceRefId: { type: 'ObjectId', default: null, index: true },
+    _sourceRefId: { type: String, default: null, index: true },
     _epicMilestoneId: { type: 'ObjectId', default: null, index: true },
 
     read: [{ type: String, trim: true, default: 'sysadmin' }],
@@ -31,6 +31,11 @@ module.exports = require('../../utils/model-schema-generator')(
     centroid: [{ type: Number, default: 0.0 }],
     documents: [{ type: 'ObjectId', default: [], index: true }],
 
+    mineGuid: { type: String, default: '' },
+    permitNumber: { type: String, default: '' },
+    status: { type: String, default: '' },
+    permitAmendments: [{ type: 'ObjectId', default: [], index: true }],
+
     dateAdded: { type: Date, default: Date.now() },
     dateUpdated: { type: Date, default: null },
 
@@ -40,7 +45,8 @@ module.exports = require('../../utils/model-schema-generator')(
     sourceDateAdded: { type: Date, default: null },
     sourceDateUpdated: { type: Date, default: null },
     sourceSystemRef: { type: String, default: 'nrpti' },
-    isLngPublished: { type: Boolean, default: false, index: true }
+    isLngPublished: { type: Boolean, default: false, index: true },
+    isBcmiPublished: { type: Boolean, default: false, index: true }
   },
   'nrpti'
 );
