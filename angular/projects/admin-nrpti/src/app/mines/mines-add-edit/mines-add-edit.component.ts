@@ -211,8 +211,6 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
       this.mine.name &&
       this.mine.status &&
       this.mine.permitNumber &&
-      this.mine.tailingsImpoundments !== null &&
-      this.mine.tailingsImpoundments >= 0 &&
       this.mine.commodities &&
       this.mine.commodities.length &&
       this.mine.permittee &&

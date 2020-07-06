@@ -1,7 +1,7 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormsModule } from '@angular/forms';
 import { ImportCSVComponent } from './import-csv.component';
 import { TestBedHelper } from '../../../../../common/src/app/spec/spec-utils';
 import { CommonModule } from '../../../../../common/src/app/common.module';
@@ -13,12 +13,12 @@ import moment from 'moment';
 describe('ImportCSVComponent', () => {
   const testBedHelper = new TestBedHelper<ImportCSVComponent>(ImportCSVComponent);
 
-  const spyFactoryService = jasmine.createSpyObj<FactoryService>('FactoryService', ['startCsvTask']);
+  const spyFactoryService = jasmine.createSpyObj<FactoryService>('FactoryService', ['startTask']);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ImportCSVComponent],
-      imports: [RouterTestingModule, HttpClientTestingModule, CommonModule],
+      imports: [RouterTestingModule, HttpClientTestingModule, FormsModule, CommonModule],
       providers: [{ provide: FactoryService, useValue: spyFactoryService }]
     }).compileComponents();
   }));
@@ -178,6 +178,8 @@ describe('ImportCSVComponent', () => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
+      component.dataSourceType = 'cors-csv';
+      component.recordType = 'Ticket';
       component.csvFiles = [new File([], 'fileA', {})];
 
       // stub validation methods
@@ -249,6 +251,8 @@ describe('ImportCSVComponent', () => {
     it('adds an error to the errors array if any required headers are missing', async(() => {
       const { component } = testBedHelper.createComponent();
 
+      component.dataSourceType = 'cors-csv';
+      component.recordType = 'Ticket';
       component.csvFiles = [new File([], 'fileA', {})];
 
       // values found in CsvConstants.corsTicketCsvRequiredHeaders, with some removed to trigger validation errors
@@ -281,6 +285,8 @@ describe('ImportCSVComponent', () => {
     it('adds no errors to the errors array if no required headers are missing', async(() => {
       const { component } = testBedHelper.createComponent();
 
+      component.dataSourceType = 'cors-csv';
+      component.recordType = 'Ticket';
       component.csvFiles = [new File([], 'fileA', {})];
 
       component.validateRequiredHeaders(CsvConstants.corsTicketCsvRequiredHeaders);
@@ -312,6 +318,9 @@ describe('ImportCSVComponent', () => {
 
     it('calls validation methods', async(() => {
       const { component } = testBedHelper.createComponent();
+
+      component.dataSourceType = 'cors-csv';
+      component.recordType = 'Ticket';
 
       // mock component methods
       component.validateRequiredFields = jasmine.createSpy('validateRequiredFields');
@@ -433,6 +442,8 @@ describe('ImportCSVComponent', () => {
       const { component } = testBedHelper.createComponent();
 
       // mock component methods
+      component.dataSourceType = 'cors-csv';
+      component.recordType = 'Ticket';
       component.transformDateFields = jasmine.createSpy('transformDateFields');
 
       component.transformFields([
@@ -483,7 +494,7 @@ describe('ImportCSVComponent', () => {
 
     beforeEach(async(() => {
       factoryServiceSpy = TestBed.get(FactoryService);
-      factoryServiceSpy.startCsvTask.calls.reset();
+      factoryServiceSpy.startTask.calls.reset();
     }));
 
     it('does nothing if this.dataSourceType is null', async(async () => {
@@ -496,7 +507,7 @@ describe('ImportCSVComponent', () => {
 
       await component.startJob();
 
-      expect(factoryServiceSpy.startCsvTask).toHaveBeenCalledTimes(0);
+      expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
     }));
 
     it('does nothing if this.recordType is null', async(async () => {
@@ -509,7 +520,7 @@ describe('ImportCSVComponent', () => {
 
       await component.startJob();
 
-      expect(factoryServiceSpy.startCsvTask).toHaveBeenCalledTimes(0);
+      expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
     }));
 
     it('does nothing if this.csvFiles is null or empty', async(async () => {
@@ -522,12 +533,12 @@ describe('ImportCSVComponent', () => {
 
       await component.startJob();
 
-      expect(factoryServiceSpy.startCsvTask).toHaveBeenCalledTimes(0);
+      expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
     }));
 
-    it('calls FactoryService.startCsvTask', async(async () => {
+    it('calls FactoryService.startTask', async(async () => {
       // set FactoryService mock behaviour
-      factoryServiceSpy.startCsvTask.and.returnValue(of());
+      factoryServiceSpy.startTask.and.returnValue(of());
 
       const { component } = testBedHelper.createComponent();
 
@@ -546,10 +557,11 @@ describe('ImportCSVComponent', () => {
 
       expect(component.onFileDelete).toHaveBeenCalledWith(fileA);
 
-      expect(factoryServiceSpy.startCsvTask).toHaveBeenCalledWith({
+      expect(factoryServiceSpy.startTask).toHaveBeenCalledWith({
         dataSourceType: 'dataSourceType',
-        recordType: 'recordType',
-        csvData: 'fileData'
+        recordTypes: ['recordType'],
+        csvData: 'fileData',
+        taskType: 'csvImport'
       });
     }));
   });

@@ -1,9 +1,15 @@
 'use strict';
 
 const defaultLog = require('../utils/logger')('import-task');
+const csvToJson = require('csvtojson');
+const { SYSTEM_USER } = require('../utils/constants/misc');
 const queryActions = require('../utils/query-actions');
 const TaskAuditRecord = require('../utils/task-audit-record');
-const { SYSTEM_USER } = require('../utils/constants/misc');
+
+const issuedToSubset = require('../../materialized_views/search/issuedToSubset');
+const locationSubset = require('../../materialized_views/search/locationSubset');
+const recordNameSubset = require('../../materialized_views/search/recordNameSubset');
+const descriptionSummarySubset = require('../../materialized_views/search/descriptionSummarySubset');
 
 exports.protectedOptions = async function(args, res, next) {
   res.status(200).send();
@@ -12,29 +18,96 @@ exports.protectedOptions = async function(args, res, next) {
 exports.protectedCreateTask = async function(args, res, next) {
   // validate request parameters
   if (!args.swagger.params.task || !args.swagger.params.task.value) {
-    throw Error('protectedCreateTask - missing required request body');
+    defaultLog.error('protectedCreateTask - missing required request body');
+    return queryActions.sendResponse(res, 400, 'protectedCreateTask - missing required request body');
+  }
+  if (!args.swagger.params.task.value.taskType) {
+    defaultLog.error('protectedCreateTask - missing required taskType');
+    return queryActions.sendResponse(res, 400, 'protectedCreateTask - missing required taskType');
   }
 
-  if (!args.swagger.params.task.value.dataSourceType) {
-    throw Error('protectedCreateTask - missing required dataSourceType');
+  switch (args.swagger.params.task.value.taskType) {
+    case 'import':
+    case 'csvImport': {
+      if (!args.swagger.params.task.value.dataSourceType) {
+        defaultLog.error('protectedCreateTask - missing required dataSourceType');
+        return queryActions.sendResponse(res, 400, 'protectedCreateTask - missing required dataSourceType');
+      }
+      const nrptiDataSource = getDataSourceConfig(args.swagger.params.task.value.dataSourceType);
+      if (!nrptiDataSource) {
+        defaultLog.error(
+          `protectedCreateTask - could not find nrptiDataSource for dataSourceType: ${args.swagger.params.task.value.dataSourceType}`
+        );
+        return queryActions.sendResponse(
+          res,
+          400,
+          `protectedCreateTask - could not find nrptiDataSource for dataSourceType: ${args.swagger.params.task.value.dataSourceType}`
+        );
+      }
+
+      if (args.swagger.params.task.value.taskType === 'import') {
+        // run data source record updates
+        runTask(
+          nrptiDataSource,
+          args.swagger.params.auth_payload,
+          args.swagger.params.task.value.params,
+          args.swagger.params.task.value.recordTypes
+        );
+      } else if (args.swagger.params.task.value.taskType === 'csvImport') {
+        if (!args.swagger.params.task.value.recordTypes) {
+          defaultLog.error('protectedCreateTask - missing required recordTypes');
+          return queryActions.sendResponse(res, 400, 'protectedCreateTask - missing required recordTypes');
+        }
+
+        if (!args.swagger.params.task.value.csvData) {
+          defaultLog.error('protectedCreateTask - missing required csvData');
+          return queryActions.sendResponse(res, 400, 'protectedCreateTask - missing required csvData');
+        }
+
+        const csvRows = await getCsvRowsFromString(args.swagger.params.task.value.csvData);
+
+        if (!csvRows || !csvRows.length) {
+          defaultLog.error('protectedCreateTask - could not convert csvData string to csv rows array');
+          return queryActions.sendResponse(
+            res,
+            400,
+            'protectedCreateTask - could not convert csvData string to csv rows array'
+          );
+        }
+
+        // run data source record updates
+        runTask(
+          nrptiDataSource,
+          args.swagger.params.auth_payload,
+          args.swagger.params.task.value.recordTypes[0],
+          csvRows
+        );
+      }
+      break;
+    }
+    case 'updateMaterializedView':
+      switch (args.swagger.params.task.value.materializedViewSubset) {
+        case 'issuedTo':
+          issuedToSubset.update(defaultLog);
+          break;
+        case 'location':
+          locationSubset.update(defaultLog);
+          break;
+        case 'recordNameSubset':
+          recordNameSubset.update(defaultLog);
+          break;
+        case 'descriptionSummary':
+          descriptionSummarySubset.update(defaultLog);
+          break;
+        default:
+          defaultLog.error(`protectedCreateTask - unknown materialized view subset`);
+          return queryActions.sendResponse(res, 400, `protectedCreateTask - unknown materialized view subset`);
+      }
+      break;
+    default:
+      defaultLog.error('protectedCreateTask - unknown taskType');
+      return queryActions.sendResponse(res, 400, 'protectedCreateTask - unknown taskType');
   }
-
-  const nrptiDataSource = getDataSourceConfig(args.swagger.params.task.value.dataSourceType);
-
-  if (!nrptiDataSource) {
-    throw Error(
-      `protectedCreateTask - could not find nrptiDataSource for dataSourceType: ${args.swagger.params.task.value.dataSourceType}`
-    );
-  }
-
-  // run data source record updates
-  runTask(
-    nrptiDataSource,
-    args.swagger.params.auth_payload,
-    args.swagger.params.task.value.params,
-    args.swagger.params.task.value.recordTypes
-  );
-
   // send response immediately as the tasks will run in the background
   return queryActions.sendResponse(res, 200);
 };
@@ -44,9 +117,7 @@ exports.createTask = async function(dataSourceType) {
   const nrptiDataSource = getDataSourceConfig(dataSourceType);
 
   if (!nrptiDataSource) {
-    throw Error(
-      `createTask - could not find nrptiDataSource for dataSourceType: ${dataSourceType}`
-    );
+    throw Error(`createTask - could not find nrptiDataSource for dataSourceType: ${dataSourceType}`);
   }
 
   // run data source record updates
@@ -59,7 +130,7 @@ exports.createTask = async function(dataSourceType) {
       }
     },
     null, // TODO: We're not using this param anywhere in the import logic framework, setting to null
-    null  // TODO: We're not using this param anywhere in the import logic framework, setting to null
+    null // TODO: We're not using this param anywhere in the import logic framework, setting to null
   );
 };
 
@@ -79,12 +150,7 @@ async function runTask(nrptiDataSource, auth_payload, params = null, recordTypes
 
     await taskAuditRecord.updateTaskRecord({ dataSourceLabel: nrptiDataSource.dataSourceLabel, startDate: new Date() });
 
-    const dataSource = new nrptiDataSource.dataSourceClass(
-      taskAuditRecord,
-      auth_payload,
-      params,
-      recordTypes
-    );
+    const dataSource = new nrptiDataSource.dataSourceClass(taskAuditRecord, auth_payload, params, recordTypes);
 
     if (!dataSource) {
       throw Error(`runTask - ${nrptiDataSource.dataSourceLabel} - failed - could not create instance of dataSource`);
@@ -118,10 +184,59 @@ function getDataSourceConfig(dataSourceType) {
     return null;
   }
 
+  if (dataSourceType === 'cors-csv') {
+    return {
+      dataSourceLabel: 'cors-csv',
+      dataSourceClass: require('../importers/cors/datasource')
+    };
+  }
+
+  if (dataSourceType === 'bcogc-csv') {
+    return {
+      dataSourceLabel: 'bcogc-csv',
+      dataSourceClass: require('../importers/bcogc/datasource')
+    };
+  }
+
   // dataSourceType will match the name of a directory for the given
   // integration in /src/integrations/<dataSourceType>/
   return {
     dataSourceLabel: dataSourceType,
     dataSourceClass: require(`../integrations/${dataSourceType}/datasource`)
   };
+}
+
+/**
+ * Given a csv string, return an array of row objects.
+ *
+ * Note: assumes there is a header row, which is converted to lowercase.
+ *
+ * @param {*} csvString
+ * @returns {string[][]}
+ */
+async function getCsvRowsFromString(csvString) {
+  if (!csvString) {
+    return null;
+  }
+
+  let lineNumber = 0;
+
+  // preFileLine bug that prevents us from using the built in line index
+  // See: https://github.com/Keyang/node-csvtojson/issues/351
+  const csvRows = await csvToJson()
+    .preFileLine(fileLine => {
+      let line = fileLine;
+
+      if (lineNumber === 0) {
+        // convert the header row to lowercase
+        line = fileLine.toLowerCase();
+      }
+
+      lineNumber++;
+
+      return line;
+    })
+    .fromString(csvString);
+
+  return csvRows;
 }

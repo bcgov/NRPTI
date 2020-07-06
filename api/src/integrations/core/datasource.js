@@ -5,6 +5,8 @@ const QS = require('qs');
 
 const integrationUtils = require('../integration-utils');
 const MineUtils = require('./mine-utils');
+const PermitUtils = require('./permit-utils');
+const PermitAmendmentUtils = require('./permit-amendment-utils');
 const defaultLog = require('../../utils/logger')('core-datasource');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
@@ -46,7 +48,7 @@ class CoreDataSource {
       await this.updateRecords();
 
       if (this.status.individualRecordStatus.length) {
-        defaultLog.error('CoreDataSource error processing some records');
+        defaultLog.error('CoreDataSource - error processing some records');
         // This means there was an error on one or more records, but the the job still completed.
        for (const error of this.status.individualRecordStatus) {
          defaultLog.error(`Core record: ${error.coreId}, error: ${error.error}`);
@@ -62,9 +64,9 @@ class CoreDataSource {
    * Main function that runs all necessary operations to update Core records.
    * Sample Record Data for reference
       {
-        _schemaName: "Mine",
-        _sourceRefId: "abc123",
-        name: "Test Mine",
+        _schemaName: 'MineBCMI',
+        _sourceRefId: 'abc123',	
+        name: 'Test Mine',
         permitNumber: 'M-209',
         mine_status: ['Abandoned'],
         mine_type: 'Gold',
@@ -90,16 +92,20 @@ class CoreDataSource {
       this.status.itemTotal += coreRecords.length;
       await this.taskAuditRecord.updateTaskRecord({ itemTotal: this.status.itemTotal });
 
-      // Get the record type specific utils, that contain the unique transformations, etc, for this record type.
-      const recordTypeUtils = new MineUtils(this.auth_payload, RECORD_TYPE.Mine);
+      // Get the record type specific utils, that contain the unique transformations, etc, for the various record types.
+      const utils = {
+        mineUtils: new MineUtils(this.auth_payload, RECORD_TYPE.MineBCMI),
+        permitUtils: new PermitUtils(this.auth_payload, RECORD_TYPE.Permit),
+        permitAmendmentUtils: new PermitAmendmentUtils(this.auth_payload, RECORD_TYPE.PermitAmendment)
+      };
 
-      if (!recordTypeUtils) {
-        defaultLog.error('updateRecords - now record utils available');
+      if (!utils.mineUtils || !utils.permitUtils || !utils.permitAmendmentUtils) {
+        defaultLog.error('updateRecords - missing required utils');
         return;
       }
 
       // Process each record.
-      await this.processRecords(recordTypeUtils, coreRecords);
+      await this.processRecords(utils, coreRecords);
     } catch (error) {
       defaultLog.error(`updateRecords - unexpected error: ${error.message}`);
       throw(error);
@@ -114,60 +120,10 @@ class CoreDataSource {
    */
   async getAllRecordData() {
     try{
-      let currentPage = 1;
-      let totalPages = 1;
-      let mineRecords = [];
+      const verifiedMines = await this.getVerifiedMines();
+      const minesWithDetails = await this.addMinesDetails(verifiedMines);
 
-      // The Core API can not return all data in a single call. Must fetch data in batches.
-      do {
-        const queryParams = { per_page: CORE_API_BATCH_SIZE, page: currentPage };
-        const url = this.getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_MINES, queryParams);
-  
-        // Get Core records
-        const data = await integrationUtils.getRecords(url, this.getAuthHeader());
-        // Get records from response and add to total.
-        const newRecords = data && data.mines || [];
-        mineRecords = [...mineRecords, ...newRecords];
-
-        currentPage++;
-        totalPages = data.total_pages;
-
-        defaultLog.info(`Fetched page ${currentPage - 1} out of ${totalPages}`);
-      } while (currentPage <= totalPages)
-
-      // Filter to only verified mines. There is some discrepancy with data, so check that there is a verified mine ID to be sure.
-      const verifiedRecords = mineRecords.filter(record => record.verified_status && record.verified_status.mine_guid);
-
-      // Get additional info for each mine.
-      const promises = verifiedRecords.map((mine, index) => {
-        const partyQueryParams = {
-          mine_guid: mine.mine_guid,
-          relationships: 'party'
-        };
-  
-        const partyUrl = this.getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_PARTIES, partyQueryParams);
-        const mineDetailsPath = `${CORE_API_PATH_MINES}/${mine.mine_guid}`;
-        const mineDetailsUrl = this.getIntegrationUrl(CORE_API_HOST, mineDetailsPath);
-  
-        return new Promise(async (resolve) => {
-          const [ parties, mineDetails ] = await Promise.all([
-            integrationUtils.getRecords(partyUrl, this.getAuthHeader()),
-            integrationUtils.getRecords(mineDetailsUrl, this.getAuthHeader())
-          ]);
-
-          const latitude = mineDetails.mine_location && mineDetails.mine_location.latitude || 0.00;
-          const longitude = mineDetails.mine_location && mineDetails.mine_location.longitude || 0.00;
-
-          // Add the location and parties to the mine record.
-          verifiedRecords[index].coordinates = [latitude, longitude];
-          verifiedRecords[index].parties = parties;
-          resolve();
-        });
-      });
-  
-      await Promise.all(promises);
-  
-      return verifiedRecords;
+      return minesWithDetails;
     } catch (error) {
       defaultLog.error(`getAllRecordData - unexpected error: ${error.message}`);
       throw(error);
@@ -179,13 +135,14 @@ class CoreDataSource {
    *
    *
    * @param {*} recordTypeUtils record type specific utils that contain the unique transformations, etc, for this type.
+   * @param {*} permitUtils utils to support permits.
    * @param {*} coreRecords core records to process.
    * @memberof CoreDataSource
    */
-  async processRecords(recordTypeUtils, coreRecords) {
+  async processRecords(utils, coreRecords) {
     try {
-      if (!recordTypeUtils) {
-        throw Error('processRecords - required recordTypeUtils is null.');
+      if (!utils) {
+        throw Error('processRecords - required utils is null.');
       }
 
       if (!coreRecords) {
@@ -194,10 +151,10 @@ class CoreDataSource {
 
       // Get the up to date commodity types for records.
       const url = this.getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_COMMODITIES);
-      const commodityTypes = await integrationUtils.getRecords(url, this.getAuthHeader());
+      const { records: commodityTypes } = await integrationUtils.getRecords(url, this.getAuthHeader());
 
       // Process each core record.
-      const promises = coreRecords.map(record => this.processRecord(recordTypeUtils, commodityTypes.records, record));
+      const promises = coreRecords.map(record => this.processRecord(utils, commodityTypes, record));
       await Promise.all(promises);
     } catch (error) {
       defaultLog.error(`processRecords - unexpected error: ${error.message}`);
@@ -216,36 +173,51 @@ class CoreDataSource {
    *   - Either performing a create or update
    *
    * @param {*} recordTypeUtils record type specific utils that contain the unique transformations, etc, for this type.
+   * @param {*} permitUtils utils to support permits.
    * @param {*} coreRecord core record to process.
    * @returns {object} status of the process operation for this record.
    * @memberof CoreDataSource
    */
-  async processRecord(recordTypeUtils, commodityTypes, coreRecord) {
+  async processRecord(utils, commodityTypes, coreRecord) {
+    const { mineUtils, permitUtils, permitAmendmentUtils } = utils;
     let recordStatus = {};
 
     try {
-      if (!recordTypeUtils) {
-        throw Error('processRecord - required recordTypeUtils is null.');
+      if (!mineUtils) {
+        throw Error('processRecord - required mineUtils is null.');
+      }
+
+      if (!permitUtils) {
+        throw Error('processRecord - required permitUtils is null.');
+      }
+
+      if (!permitAmendmentUtils) {
+        throw Error('processRecord - required permitAmendmentUtils is null.');
       }
 
       if (!coreRecord) {
         throw Error('processRecord - required coreRecord is null.');
       }
 
-      // Get the valid permit.
-      const permit = await this.getMinePermit(coreRecord);
-
       // Perform any data transformations necessary to convert core record to NRPTI record
-      const nrptiRecord = await recordTypeUtils.transformRecord(coreRecord, commodityTypes, permit);
+      const nrptiRecord = await mineUtils.transformRecord(coreRecord, commodityTypes);
 
       // Check if this record already exists
-      const existingRecord = await recordTypeUtils.findExistingRecord(nrptiRecord);
+      const existingRecord = await mineUtils.findExistingRecord(nrptiRecord);
 
       let savedRecord = null;
       if (existingRecord) {
-        savedRecord = await recordTypeUtils.updateRecord(nrptiRecord, existingRecord);
-      } else {
-        savedRecord = await recordTypeUtils.createRecord(nrptiRecord);
+        // Update permit.
+        await this.updateMinePermit(permitUtils, permitAmendmentUtils, existingRecord);
+        savedRecord = await mineUtils.updateRecord(nrptiRecord, existingRecord);
+      } else {   
+        // Create the permit and amendments.
+        const permit = await this.createMinePermit(permitUtils, permitAmendmentUtils, nrptiRecord);
+        // Get the original parties for the core record. These are required when adding a permit to a NRPTI record.
+        const parties = coreRecord.parties;
+        const recordWithPermits = mineUtils.addPermitToRecord(nrptiRecord, permit, parties);
+
+        savedRecord = await mineUtils.createRecord(recordWithPermits);
       }
 
       if (savedRecord && savedRecord.length > 0 && savedRecord[0].status === 'success') {
@@ -256,14 +228,11 @@ class CoreDataSource {
         throw Error('processRecord - savedRecord is null.');
       }
     } catch (error) {
-      recordStatus.coreId = coreRecord && coreRecord._id;
+      recordStatus.coreId = coreRecord && coreRecord.mine_guid;
       recordStatus.error = error.message;
 
       // only add individual record status when an error occurs
       this.status.individualRecordStatus.push(recordStatus);
-
-      // Do not re-throw error, as a single failure is not cause to stop the other records from processing
-      defaultLog.error(`processRecord - unexpected error: ${error.message}`);
     }
   }
 
@@ -340,57 +309,236 @@ class CoreDataSource {
    *  - Must not be historical
    * .
    * 
-   * @param {object} coreRecord Record from the Core API.
+   * @param {object} nrptiRecord NRPTI record
    * @returns {object} Valid permit.
    * @memberof CoreDataSource
    */
-  async getMinePermit(coreRecord) {
-    if (!coreRecord) {
-      throw Error('getMinePermit - required coreRecord is null.');
+  async getMinePermit(nrptiRecord) {
+    if (!nrptiRecord) {
+      throw Error('getMinePermit - required nrptiRecord is null.');
     }
 
+    // Get permits with detailed information.
+    const url = this.getIntegrationUrl(CORE_API_HOST, `/api/mines/${nrptiRecord._sourceRefId}/permits`);
+    const { records: permits } = await integrationUtils.getRecords(url, this.getAuthHeader());
 
-    try {
-      // Get permits with detailed information.
-      const url = this.getIntegrationUrl(CORE_API_HOST, `/api/mines/${coreRecord.mine_guid}/permits`);
-      const { records: permits } = await integrationUtils.getRecords(url, this.getAuthHeader());
+    // First, any mines with 'X' as their second character are considered exploratory. Remove them.
+    const nonExploratoryPermits = permits.filter(permit => permit.permit_no[1].toLowerCase() !== 'x');
 
+    // Second, mine must not be historical which is indicated by an authorized year of '9999' on the latest amendment.
+    let validPermit;
+    for (const permit of nonExploratoryPermits) {
+      // Confirm that the most recent amendment is not historical, which is always the first index.
+      // If 'null' then it is considered valid.
+      if (permit.permit_amendments.length && !permit.permit_amendments[0].authorization_end_date) {
+        // There should only be a single record. If there is more then we do not want to continue processing.
+        if (validPermit) {
+          throw new Error(`More than one valid permit found for mine ${nrptiRecord._sourceRefId}`);
+        }
 
-      // First, any mines with 'X' as their second character are considered exploratory. Remove them.
-      const nonExploratoryPermits = permits.filter(permit => permit.permit_no[1].toLowerCase() !== 'x');
+        validPermit = permit;
+      }
+      else {
+        // If it is not '9999' it is considered valid.
+        const authDate = new Date(permit.permit_amendments[0].authorization_end_date);
 
-      // Second, mine must not be historical which is indicated by an authorized year of '9999' on the latest amendment.
-      let validPermit;
-      for (const permit of nonExploratoryPermits) {
-        // Confirm that the most recent amendment is not historical, which is always the first index.
-        // If 'null' then it is considered valid.
-        if (permit.permit_amendments.length && !permit.permit_amendments[0].authorization_end_date) {
+        if (authDate.getFullYear() !== 9999) {
           // There should only be a single record. If there is more then we do not want to continue processing.
           if (validPermit) {
-            throw new Error('getMinePermit - more than one valid permit found')
+            throw new Error(`More than one valid permit found for mine ${nrptiRecord._sourceRefId}`);
           }
 
           validPermit = permit;
         }
-        else {
-          // If it is not '9999' it is considered valid.
-          const authDate = new Date(permit.permit_amendments[0].authorization_end_date);
-          if (authDate.getFullYear !== 9999) {
-            // There should only be a single record. If there is more then we do not want to continue processing.
-            if (validPermit) {
-              throw new Error('getMinePermit - more than one valid permit found')
-            }
-
-            validPermit = permit;
-          }
-        }
       }
+    }
 
-      return validPermit;
-    } catch(error) {
-      defaultLog.error(`getMinePermit - unexpected error: ${error.message}`);
+    return validPermit;
+  }
+
+  /**
+   * Creates a new Mine Permit record.
+   * 
+   * @param {object} permitUtils Mine Permit utilities.
+   * @param {*} nrptiRecord Transformed Core record.
+   * @returns {MinePermit} Newly created Mine Permit.
+   * @memberof CoreDataSource
+   */
+  async createMinePermit(permitUtils, permitAmendmentUtils, nrptiRecord) {
+    if (!permitUtils) {
+      throw new Error('createMinePermit - permitUtils is required');
+    }
+
+    if (!permitAmendmentUtils) {
+      throw new Error('createMinePermit - permitAmendmentUtils is required');
+    }
+
+    if (!nrptiRecord) {
+      throw new Error('createMinePermit - nrptiRecord is required');
+    }
+
+    const permit = await this.getMinePermit(nrptiRecord);
+
+    if (!permit) {
+      throw new Error('createMinePermit - Cannot find valid permit');
+    }
+
+    // Create the permit amendments that belong to the permit.
+    const transformedAmendments = await permitAmendmentUtils.transformRecords(permit);
+    // To trigger flavour for this import.
+    const preparedAmendments = transformedAmendments.map(amendment => ({ ...amendment, PermitAmendmentBCMI: {} }))
+
+    const savedAmendments = [];
+    for (const amendment of preparedAmendments) {
+      const createdRecord = await permitAmendmentUtils.createRecord(amendment);
+      savedAmendments.push(createdRecord);
+    }
+ 
+    // Transform and create the permit record.
+    const transformedPermit = await permitUtils.transformRecord(permit, savedAmendments);
+    // To trigger flavour for this import.
+    transformedPermit.PermitBCMI = {};
+    const savedRecord = await permitUtils.createRecord(transformedPermit);
+
+    // Get the newly created permit.
+    return savedRecord[0] &&
+            savedRecord[0].object &&
+            savedRecord[0].object[0] &&
+            savedRecord[0].object[0]
+  }
+
+  /**
+   * Updates the Mine Permit record.
+   * 
+   * @param {object} permitUtils Mine Permit utilities
+   * @param {Mine} mineRecord Existing Mine record
+   * @returns {boolean} Indication of success or not
+   * @memberof CoreDataSource
+   */
+  async updateMinePermit(permitUtils, permitAmendmentUtils, mineRecord) {
+    // Get the updated Core permit.
+    const permit = await this.getMinePermit(mineRecord);
+
+    if (!permit) {
+      throw new Error('updateMinePermit - Cannot find valid permit');
+    }
+
+    // Update the amendments and permit.
+    const transformedAmendments = await permitAmendmentUtils.transformRecords(permit);
+    // To trigger flavour for this import.
+    const preparedAmendments = transformedAmendments.map(amendment => ({ ...amendment, PermitAmendmentBCMI: {} }));
+
+    // Need to update existing, but add any new ones.
+    const updatedAmendments = [];
+    for (const amendment of preparedAmendments) {
+      // Check if this record already exists
+      const existingRecord = await permitAmendmentUtils.findExistingRecord(amendment);
+
+      if (existingRecord) {
+        const updatedRecord = await permitAmendmentUtils.updateRecord(amendment, existingRecord);
+        updatedAmendments.push(updatedRecord);
+      } else {
+        const createdRecord = await permitAmendmentUtils.createRecord(amendment);
+        updatedAmendments.push(createdRecord);
+      }
+    }
+  
+    // Transform and update the permit record.
+    const transformedPermit = await permitUtils.transformRecord(permit, updatedAmendments);
+    // To trigger flavour for this import.
+    transformedPermit.PermitBCMI = {};
+    const savedRecord = await permitUtils.updateRecord(mineRecord.permit, transformedPermit);
+
+    if (savedRecord && savedRecord[0] && savedRecord[0].status === 'success') {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Gets all verified mines from Core.
+   * 
+   * @returns {object[]} Verified Core mines.
+   * @memberof CoreDataSource
+   */
+  async getVerifiedMines() {
+    try{
+      let currentPage = 1;
+      let totalPages = 1;
+      let mineRecords = [];
+
+      // The Core API can not return all data in a single call. Must fetch data in batches.
+      do {
+        const queryParams = { 
+          per_page: CORE_API_BATCH_SIZE, 
+          page: currentPage,
+          major: true 
+        };
+        const url = this.getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_MINES, queryParams);
+  
+        // Get Core records
+        const data = await integrationUtils.getRecords(url, this.getAuthHeader());
+        // Get records from response and add to total.
+        const newRecords = data && data.mines || [];
+        mineRecords = [...mineRecords, ...newRecords];
+
+        currentPage++;
+        totalPages = data.total_pages;
+
+        defaultLog.info(`Fetched page ${currentPage - 1} out of ${totalPages}`);
+      } while (currentPage <= totalPages)
+
+      // Filter to only verified mines. There is some discrepancy with data, so check that there is a verified mine ID to be sure.
+      const verifiedRecords = mineRecords.filter(record => record.verified_status && record.verified_status.mine_guid);
+
+      return verifiedRecords
+    } catch (error) {
+      defaultLog.error(`getVerifiedMines - unexpected error: ${error.message}`);
       throw(error);
     }
+  }
+
+  /**
+   * Adds party and lat/long details to each Core record.
+   * 
+   * @param {object[]} coreRecords Records from Core API that have not been transformed.
+   * @returns {object[]} Records with details added.
+   * @memberof CoreDataSource
+   */
+  async addMinesDetails(coreRecords) {
+    const completeRecords = [];
+
+    for (let i = 0; i < coreRecords.length; i++) {
+      const partyQueryParams = {
+        mine_guid: coreRecords[i].mine_guid,
+        relationships: 'party'
+      };
+
+      const partyUrl = this.getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_PARTIES, partyQueryParams);
+      const mineDetailsPath = `${CORE_API_PATH_MINES}/${coreRecords[i].mine_guid}`;
+      const mineDetailsUrl = this.getIntegrationUrl(CORE_API_HOST, mineDetailsPath);
+
+      try {
+        const [ parties, mineDetails ] = await Promise.all([
+          integrationUtils.getRecords(partyUrl, this.getAuthHeader()),
+          integrationUtils.getRecords(mineDetailsUrl, this.getAuthHeader())
+        ]);
+
+        const latitude = mineDetails.mine_location && mineDetails.mine_location.latitude || 0.00;
+        const longitude = mineDetails.mine_location && mineDetails.mine_location.longitude || 0.00;
+  
+        completeRecords.push({
+          ...coreRecords[i],
+          coordinates: [latitude, longitude],
+          parties
+        });
+      } catch (error) {
+        defaultLog.error(`addMineDetails - error getting details for Core record ${coreRecords[i].mine_guid}: ${error.message} ...skipping`);
+      }
+    }
+
+    return completeRecords;
   }
 }
 

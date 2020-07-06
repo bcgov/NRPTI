@@ -16,9 +16,9 @@ let GeoJSON = new mongoose.Schema(
   });
 
 module.exports = require('../../utils/model-schema-generator')(
-  'Mine',
+  'MineBCMI',
   {
-    _schemaName: { type: String, default: 'Mine', index: true },
+    _schemaName: { type: String, default: 'MineBCMI', index: true },
     _sourceRefId:  { type: String, default: null, index: true },
 
     read: [{ type: String, trim: true, default: 'sysadmin' }],
@@ -26,12 +26,13 @@ module.exports = require('../../utils/model-schema-generator')(
 
     name: { type: String, default: '' },
     permitNumber: { type: String, default: '' },
+    permit: { type: 'ObjectId', default: null },
     status: { type: String, default: '' },
     type: { type: String, default: '' },
     commodities: [{ type: String, default: '' }],
     tailingsImpoundments: { type: Number, default: 0 },
     region: { type: String, default: '' },
-    location : { type: GeoJSON, default: { type: "Point", coordinates: [ 0.00, 0.00 ] } },
+    location : { type: GeoJSON, default: { type: 'Point', coordinates: [ 0.00, 0.00 ] } },
     permittee: { type: String, default: '' },
     summary: { type: String, default: '' },
     description: { type: String, default: '' },

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const MinePost = require('../post/mine');
+const MinePost = require('../post/mine-bcmi');
 const PutUtils = require('../../utils/put-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
@@ -20,7 +20,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
     incomingObj,
     this.editMaster,
     MinePost,
-    RECORD_TYPE.Mine._schemaName,
+    RECORD_TYPE.MineBCMI._schemaName,
     {}
   );
 };
@@ -42,9 +42,9 @@ exports.editMaster = function(args, res, next, incomingObj) {
   delete incomingObj.read;
   delete incomingObj.write;
 
-  const Mine = mongoose.model(RECORD_TYPE.Mine._schemaName);
+  const MineBCMI = mongoose.model(RECORD_TYPE.MineBCMI._schemaName);
 
-  const sanitizedObj = PutUtils.validateObjectAgainstModel(Mine, incomingObj);
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(MineBCMI, incomingObj);
 
   if (!sanitizedObj || sanitizedObj === {}) {
     // skip, as there are no changes to master record

@@ -126,5 +126,5 @@ exports.recordTypes = [
   'ConstructionPlan',
   'ManagementPlan',
   'CourtConviction',
-  'Mine'
+  'MineBCMI'
 ];

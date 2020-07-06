@@ -139,7 +139,6 @@ class BaseRecordUtils {
       // publish to NRCED
       if (this.recordType.flavours.nrced) {
         createObj[this.recordType.flavours.nrced._schemaName] = {
-          summary: nrptiRecord.description || '',
           addRole: 'public'
         };
       }

@@ -119,7 +119,6 @@ describe('BaseRecordUtils', () => {
             dateAdded: expect.any(Date),
             sourceDateAdded: expect.any(Date),
             TicketNRCED: {
-              summary: '',
               addRole: 'public'
             }
           }

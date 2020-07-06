@@ -12,4 +12,4 @@ exports.permit = require('./permit');
 exports.warning = require('./warning');
 exports.constructionPlan = require('./constructionPlan');
 exports.managementPlan = require('./managementPlan');
-exports.mine = require('./mine');
+exports.permitAmendment= require('./permitAmendment');

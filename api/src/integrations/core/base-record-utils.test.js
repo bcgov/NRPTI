@@ -15,18 +15,17 @@ describe('BaseRecordUtils', () => {
 
   describe('transformRecord', () => {
     it('throws error if no coreRecord provided', async () => {
-      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.Mine);
+      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.MineBCMI);
       expect(baseRecordUtils.transformRecord).toThrow('transformRecord - required coreRecord must be non-null.');
     });
 
     it('returns transformed Core record', () => {
-      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.Mine);
+      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.MineBCMI);
 
       const coreRecord = { mine_guid: 1 };
 
       const expectedResult = {
-        _schemaName: 'Mine',
-        _sourceRefId: 1,
+        _schemaName: 'MineBCMI',
         dateAdded: expect.any(Date),
         dateUpdated: expect.any(Date),
         addedBy: undefined,
@@ -42,17 +41,17 @@ describe('BaseRecordUtils', () => {
 
   describe('updateRecord', () => {
     it('throws error when nrptiRecord is not provided', async () => {
-      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.Mine);
+      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.MineBCMI);
       await expect(baseRecordUtils.updateRecord(null, {})).rejects.toThrow('updateRecord - required nrptiRecord must be non-null.');
     });
 
     it('throws error when existingRecord is not provided', async () => {
-      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.Mine);
+      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.MineBCMI);
       await expect(baseRecordUtils.updateRecord({}, null)).rejects.toThrow('updateRecord - required existingRecord must be non-null.');
     });
 
     it('calls `processPutRequest` when all arguments provided', async () => {
-      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.Mine);
+      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.MineBCMI);
 
       const spy = jest.spyOn(RecordController, 'processPutRequest').mockImplementation(() => {
         return Promise.resolve({ test: 'record' });
@@ -68,12 +67,12 @@ describe('BaseRecordUtils', () => {
 
   describe('createRecord', () => {
     it('throws error when nrptiRecord is not provided', async () => {
-      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.Mine);
+      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.MineBCMI);
       await expect(baseRecordUtils.createRecord(null)).rejects.toThrow('createRecord - required nrptiRecord must be non-null.');
     });
 
     it('calls `processPostRequest` when all arguments provided', async () => {
-      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.Mine);
+      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.MineBCMI);
 
       const spy = jest.spyOn(RecordController, 'processPostRequest').mockImplementation(() => {
         return Promise.resolve({ test: 'record' });
