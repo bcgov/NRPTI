@@ -1,18 +1,15 @@
 'use strict';
 
-const axios = require('axios');
-const QS = require('qs');
-
 const integrationUtils = require('../integration-utils');
 const MineUtils = require('./mine-utils');
 const PermitUtils = require('./permit-utils');
 const PermitAmendmentUtils = require('./permit-amendment-utils');
 const defaultLog = require('../../utils/logger')('core-datasource');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+const { getIntegrationUrl, getCoreAccessToken, getAuthHeader } = require('../integration-utils');
 
 const CORE_API_BATCH_SIZE = process.env.CORE_API_BATCH_SIZE || 300;
 
-const CORE_TOKEN_ENDPOINT = process.env.CORE_TOKEN_ENDPOINT || 'https://sso.pathfinder.gov.bc.ca/auth/realms/mds/protocol/openid-connect/token';
 const CORE_CLIENT_ID = process.env.CORE_CLIENT_ID || null;
 const CORE_CLIENT_SECRET = process.env.CORE_CLIENT_SECRET || null;
 const CORE_GRANT_TYPE = process.env.CORE_GRANT_TYPE || null;
@@ -44,7 +41,10 @@ class CoreDataSource {
     await this.taskAuditRecord.updateTaskRecord({ status: 'Running' });
 
     try{
-      await this.coreLogin();
+      // Get a new API access token.
+      this.client_token = await getCoreAccessToken(CORE_CLIENT_ID, CORE_CLIENT_SECRET, CORE_GRANT_TYPE);
+
+      // Run main process.
       await this.updateRecords();
 
       if (this.status.individualRecordStatus.length) {
@@ -150,8 +150,8 @@ class CoreDataSource {
       }
 
       // Get the up to date commodity types for records.
-      const url = this.getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_COMMODITIES);
-      const { records: commodityTypes } = await integrationUtils.getRecords(url, this.getAuthHeader());
+      const url = getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_COMMODITIES);
+      const { records: commodityTypes } = await integrationUtils.getRecords(url, getAuthHeader(this.client_token));
 
       // Process each core record.
       const promises = coreRecords.map(record => this.processRecord(utils, commodityTypes, record));
@@ -237,73 +237,6 @@ class CoreDataSource {
   }
 
   /**
-   * Logs in to the Core API and set the token for future authenticated calls.
-   *
-   * @memberof CoreDataSource
-   */
-  async coreLogin() {
-    if(!CORE_CLIENT_ID || !CORE_CLIENT_SECRET || !CORE_GRANT_TYPE) {
-      defaultLog.error('Must set connection details for Core data connection.');
-      throw new Error('Configuration Error');
-    }
-
-    const requestBody = {
-        client_id: CORE_CLIENT_ID,
-        client_secret: CORE_CLIENT_SECRET,
-        grant_type: CORE_GRANT_TYPE
-    };
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    };
-
-    const res = await axios.post(CORE_TOKEN_ENDPOINT, QS.stringify(requestBody), config);
-
-    const payload = res.data ? res.data : null;
-
-    if (!payload || !payload.access_token) {
-      defaultLog.error('Error authenticating against Core API.');
-      throw new Error('Core Login Error');
-    }
-
-    this.client_token = payload.access_token;
-    defaultLog.info('Core API token expires:', (payload.expires_in / 60 / 60).toFixed(2), ' hours');
-  }
-
-  /**
-   * Builds the integration URL string.
-   *
-   * @param {string} hostname the url hostname. Example: 'www.example.com'
-   * @param {string} pathname the url pathname. Example: '/api/some/route'
-   * @param {object} queryParams the url query params. Example: { type: 'document', other: true }
-   * @returns {URL} integration URL (see https://nodejs.org/api/url.html#url_url)
-   * @memberof CoreDataSource
-   */
-  getIntegrationUrl(hostname, pathname, queryParams = {}) {
-    const query = QS.stringify(queryParams);
-    const path = `${pathname}?${query}`;
-    const url = new URL(path, hostname);
-
-    return url;
-  }
-
-  /**
-   * Creates the authentication header for core API requests.
-   * 
-   * @returns {object} Axios header with the bearer token set
-   * @memberof CoreDataSource
-   */
-  getAuthHeader() {
-    return {
-      headers: {
-        Authorization: `Bearer ${this.client_token}`
-      }
-    }
-  }
-
-  /**
    * Gets valid permit for a Core mine. A valid permit must meet the following criteria:
    *  - Must not be exploratory
    *  - Must not be historical
@@ -319,8 +252,8 @@ class CoreDataSource {
     }
 
     // Get permits with detailed information.
-    const url = this.getIntegrationUrl(CORE_API_HOST, `/api/mines/${nrptiRecord._sourceRefId}/permits`);
-    const { records: permits } = await integrationUtils.getRecords(url, this.getAuthHeader());
+    const url = getIntegrationUrl(CORE_API_HOST, `/api/mines/${nrptiRecord._sourceRefId}/permits`);
+    const { records: permits } = await integrationUtils.getRecords(url, getAuthHeader(this.client_token));
 
     // First, any mines with 'X' as their second character are considered exploratory. Remove them.
     const nonExploratoryPermits = permits.filter(permit => permit.permit_no[1].toLowerCase() !== 'x');
@@ -475,10 +408,10 @@ class CoreDataSource {
           page: currentPage,
           major: true 
         };
-        const url = this.getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_MINES, queryParams);
+        const url = getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_MINES, queryParams);
   
         // Get Core records
-        const data = await integrationUtils.getRecords(url, this.getAuthHeader());
+        const data = await integrationUtils.getRecords(url, getAuthHeader(this.client_token));
         // Get records from response and add to total.
         const newRecords = data && data.mines || [];
         mineRecords = [...mineRecords, ...newRecords];
@@ -515,14 +448,14 @@ class CoreDataSource {
         relationships: 'party'
       };
 
-      const partyUrl = this.getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_PARTIES, partyQueryParams);
+      const partyUrl = getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_PARTIES, partyQueryParams);
       const mineDetailsPath = `${CORE_API_PATH_MINES}/${coreRecords[i].mine_guid}`;
-      const mineDetailsUrl = this.getIntegrationUrl(CORE_API_HOST, mineDetailsPath);
+      const mineDetailsUrl = getIntegrationUrl(CORE_API_HOST, mineDetailsPath);
 
       try {
         const [ parties, mineDetails ] = await Promise.all([
-          integrationUtils.getRecords(partyUrl, this.getAuthHeader()),
-          integrationUtils.getRecords(mineDetailsUrl, this.getAuthHeader())
+          integrationUtils.getRecords(partyUrl, getAuthHeader(this.client_token)),
+          integrationUtils.getRecords(mineDetailsUrl, getAuthHeader(this.client_token))
         ]);
 
         const latitude = mineDetails.mine_location && mineDetails.mine_location.latitude || 0.00;
