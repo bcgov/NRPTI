@@ -9,10 +9,14 @@
 }
 
 .section-3 {
-  grid-template-columns: 3fr 2fr 4fr;
+  grid-template-columns: 3fr 6fr;
 }
 
 .section-4 {
+  grid-template-columns: 3fr 2fr 4fr;
+}
+
+.section-5 {
   grid-template-columns: auto;
 }
 
