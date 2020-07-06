@@ -1,11 +1,12 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const defaultLog = require('../../utils/logger')('cors-csv-base-record-utils');
-const RecordController = require('./../../controllers/record-controller');
+const defaultLog = require('../../utils/logger')('bcogc-csv-base-record-utils');
+const RecordController = require('../../controllers/record-controller');
+const MiscConstants = require('../../utils/constants/misc');
 
 /**
- * Cors csv base record type handler that can be used directly, or extended if customizations are needed.
+ * Ogc csv base record type handler that can be used directly, or extended if customizations are needed.
  *
  * @class BaseRecordUtils
  */
@@ -29,12 +30,12 @@ class BaseRecordUtils {
   }
 
   /**
-   * Transform an cors-csv row into a NRPTI record.
+   * Transform an bcogc-csv row into a NRPTI record.
    *
-   * Note: Only transforms common fields found in ALL supported cors-csv types.
+   * Note: Only transforms common fields found in ALL supported bcogc-csv types.
    *       To include other values, extend this class and adjust the object returned by this function as needed.
    *
-   * @param {object} csvRow cors-csv row (required)
+   * @param {object} csvRow bcogc-csv row (required)
    * @returns {object} NRPTI record.
    * @throws {Error} if record is not provided.
    * @memberof BaseRecordUtils
@@ -48,7 +49,7 @@ class BaseRecordUtils {
       _schemaName: this.recordType._schemaName,
       recordType: this.recordType.displayName,
 
-      sourceSystemRef: 'cors-csv'
+      sourceSystemRef: 'bcogc-csv'
     };
   }
 
@@ -56,11 +57,12 @@ class BaseRecordUtils {
    * Searches for an existing master record, and returns it if found.
    *
    * @param {*} nrptiRecord
-   * @returns {object} existing NRPTI master record, or null if none found or _sourceRefCorsId is null
+   * @returns {object} existing NRPTI master record, or null if none found or _sourceRefOgcInspectionId &&
+   * _sourceRefOgcDeficiencyId are null
    * @memberof BaseRecordUtils
    */
   async findExistingRecord(nrptiRecord) {
-    if (!nrptiRecord._sourceRefCorsId) {
+    if (!nrptiRecord._sourceRefOgcInspectionId && !nrptiRecord._sourceRefOgcDeficiencyId) {
       return null;
     }
 
@@ -69,7 +71,8 @@ class BaseRecordUtils {
     return await masterRecordModel
       .findOne({
         _schemaName: this.recordType._schemaName,
-        _sourceRefCorsId: nrptiRecord._sourceRefCorsId
+        _sourceRefOgcInspectionId: nrptiRecord._sourceRefOgcInspectionId,
+        _sourceRefOgcDeficiencyId: nrptiRecord._sourceRefOgcDeficiencyId
       })
       .populate('_flavourRecords', '_id _schemaName');
   }
@@ -135,6 +138,17 @@ class BaseRecordUtils {
       createObj.addedBy = (this.auth_payload && this.auth_payload.preferred_username) || '';
       createObj.dateAdded = new Date();
       createObj.sourceDateAdded = new Date();
+
+      // publish to LNG only if the record has a known lng project _epicProjectId
+      if (
+        this.recordType.flavours.lng &&
+        nrptiRecord._epicProjectId &&
+        Object.values(MiscConstants.EpicProjectIds).includes(nrptiRecord._epicProjectId.toString())
+      ) {
+        createObj[this.recordType.flavours.lng._schemaName] = {
+          addRole: 'public'
+        };
+      }
 
       // publish to NRCED
       if (this.recordType.flavours.nrced) {

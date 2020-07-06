@@ -5,24 +5,36 @@ import { CsvConstants, IRequiredFormat, IDateField } from '../../utils/constants
 import Papa from 'papaparse';
 import moment from 'moment';
 
+class CSVTypes {
+  public static readonly csvTypes = {
+    'cors-csv': ['Ticket'],
+    'bcogc-csv': ['Inspection']
+  };
+
+  public static getRecordTypes(dataSourceType: string): string[] {
+    return this.csvTypes[dataSourceType] || [];
+  }
+}
+
 @Component({
   selector: 'app-import-csv',
   templateUrl: './import-csv.component.html',
   styleUrls: ['./import-csv.component.scss']
 })
 export class ImportCSVComponent {
-  public dataSourceType = 'cors-csv'; // hard-code value while there is only 1 possible option
-  public recordType = 'Ticket'; // hard-code value while there is only 1 possible option
+  public CSVTypes = CSVTypes; // make available in template
+
+  public dataSourceType = null;
+  public recordType = null;
   public csvFiles: File[] = [];
 
   public csvFileValidated = false;
   public csvFileErrors: string[] = [];
-
   public transformedValidatedCsvFile;
 
   public showAlert = false;
 
-  constructor(public factoryService: FactoryService) { }
+  constructor(public factoryService: FactoryService) {}
 
   /**
    * Handle data source type changes.
@@ -32,6 +44,14 @@ export class ImportCSVComponent {
    */
   onDataSourceTypeChange(dataSourceType: string) {
     this.dataSourceType = dataSourceType;
+
+    // If the datasource only has 1 record type, auto select it
+    const recordTypes = CSVTypes.getRecordTypes(dataSourceType);
+    if (recordTypes && recordTypes.length === 1) {
+      this.recordType = recordTypes[0];
+    }
+
+    this.readCsvFile();
   }
 
   /**
@@ -42,6 +62,8 @@ export class ImportCSVComponent {
    */
   onRecordTypeChange(recordType: string) {
     this.recordType = recordType;
+
+    this.readCsvFile();
   }
 
   /**
@@ -82,7 +104,7 @@ export class ImportCSVComponent {
   }
 
   /**
-   * Read the csv file data.
+   * Read the csv file data if all required parameters are valid.
    *
    * @returns
    * @memberof ImportCSVComponent
@@ -91,6 +113,10 @@ export class ImportCSVComponent {
     if (!this.dataSourceType || !this.recordType || !this.csvFiles[0]) {
       return;
     }
+
+    this.csvFileValidated = false;
+    this.csvFileErrors = [];
+    this.transformedValidatedCsvFile = null;
 
     const fileReader = new FileReader();
 
