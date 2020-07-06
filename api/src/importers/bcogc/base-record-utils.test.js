@@ -1,6 +1,7 @@
 const BaseRecordUtils = require('./base-record-utils');
 const RecordController = require('../../controllers/record-controller');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+const MiscConstants = require('../../utils/constants/misc');
 
 describe('BaseRecordUtils', () => {
   describe('constructor', () => {
@@ -13,22 +14,22 @@ describe('BaseRecordUtils', () => {
 
   describe('transformRecord', () => {
     it('throws error if no csvRow provided', () => {
-      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Ticket);
+      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Inspection);
       expect(() => baseRecordUtils.transformRecord(null)).toThrow(
         'transformRecord - required csvRow must be non-null.'
       );
     });
 
     it('returns transformed csvRow record', () => {
-      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Ticket);
+      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Inspection);
 
       const csvRow = {};
 
       const expectedResult = {
-        _schemaName: 'Ticket',
-        recordType: 'Ticket',
+        _schemaName: 'Inspection',
+        recordType: 'Inspection',
 
-        sourceSystemRef: 'cors-csv'
+        sourceSystemRef: 'bcogc-csv'
       };
 
       const result = baseRecordUtils.transformRecord(csvRow);
@@ -39,21 +40,21 @@ describe('BaseRecordUtils', () => {
 
   describe('updateRecord', () => {
     it('throws error when nrptiRecord is not provided', async () => {
-      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Ticket);
+      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Inspection);
       await expect(baseRecordUtils.updateRecord(null, {})).rejects.toThrow(
         'updateRecord - required nrptiRecord must be non-null.'
       );
     });
 
     it('throws error when existingRecord is not provided', async () => {
-      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Ticket);
+      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Inspection);
       await expect(baseRecordUtils.updateRecord({}, null)).rejects.toThrow(
         'updateRecord - required existingRecord must be non-null.'
       );
     });
 
     it('calls `processPutRequest` when all arguments provided', async () => {
-      const baseRecordUtils = new BaseRecordUtils('authPayload', RECORD_TYPE.Ticket);
+      const baseRecordUtils = new BaseRecordUtils('authPayload', RECORD_TYPE.Inspection);
 
       const processPutRequestSpy = jest.spyOn(RecordController, 'processPutRequest').mockImplementation(() => {
         return Promise.resolve({ test: 'record' });
@@ -68,7 +69,7 @@ describe('BaseRecordUtils', () => {
         { swagger: { params: { auth_payload: 'authPayload' } } },
         null,
         null,
-        RECORD_TYPE.Ticket.recordControllerName,
+        RECORD_TYPE.Inspection.recordControllerName,
         [
           {
             _id: 123,
@@ -90,20 +91,20 @@ describe('BaseRecordUtils', () => {
 
   describe('createRecord', () => {
     it('throws error when nrptiRecord is not provided', async () => {
-      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Ticket);
+      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Inspection);
       await expect(baseRecordUtils.createRecord(null)).rejects.toThrow(
         'createRecord - required nrptiRecord must be non-null.'
       );
     });
 
     it('calls `processPostRequest` when all arguments provided', async () => {
-      const baseRecordUtils = new BaseRecordUtils('authPayload', RECORD_TYPE.Ticket);
+      const baseRecordUtils = new BaseRecordUtils('authPayload', RECORD_TYPE.Inspection);
 
       const processPostRequestSpy = jest.spyOn(RecordController, 'processPostRequest').mockImplementation(() => {
         return Promise.resolve({ test: 'record' });
       });
 
-      const nrptiRecord = { newField: 'abc' };
+      const nrptiRecord = { newField: 'abc', _epicProjectId: MiscConstants.EpicProjectIds.lngCanadaId };
 
       const result = await baseRecordUtils.createRecord(nrptiRecord);
 
@@ -111,14 +112,18 @@ describe('BaseRecordUtils', () => {
         { swagger: { params: { auth_payload: 'authPayload' } } },
         null,
         null,
-        RECORD_TYPE.Ticket.recordControllerName,
+        RECORD_TYPE.Inspection.recordControllerName,
         [
           {
             newField: 'abc',
             addedBy: '',
             dateAdded: expect.any(Date),
             sourceDateAdded: expect.any(Date),
-            TicketNRCED: {
+            _epicProjectId: MiscConstants.EpicProjectIds.lngCanadaId,
+            InspectionLNG: {
+              addRole: 'public'
+            },
+            InspectionNRCED: {
               addRole: 'public'
             }
           }

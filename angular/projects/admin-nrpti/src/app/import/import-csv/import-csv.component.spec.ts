@@ -1,7 +1,7 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormsModule } from '@angular/forms';
 import { ImportCSVComponent } from './import-csv.component';
 import { TestBedHelper } from '../../../../../common/src/app/spec/spec-utils';
 import { CommonModule } from '../../../../../common/src/app/common.module';
@@ -18,7 +18,7 @@ describe('ImportCSVComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ImportCSVComponent],
-      imports: [RouterTestingModule, HttpClientTestingModule, CommonModule],
+      imports: [RouterTestingModule, HttpClientTestingModule, FormsModule, CommonModule],
       providers: [{ provide: FactoryService, useValue: spyFactoryService }]
     }).compileComponents();
   }));
@@ -178,6 +178,8 @@ describe('ImportCSVComponent', () => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
+      component.dataSourceType = 'cors-csv';
+      component.recordType = 'Ticket';
       component.csvFiles = [new File([], 'fileA', {})];
 
       // stub validation methods
@@ -249,6 +251,8 @@ describe('ImportCSVComponent', () => {
     it('adds an error to the errors array if any required headers are missing', async(() => {
       const { component } = testBedHelper.createComponent();
 
+      component.dataSourceType = 'cors-csv';
+      component.recordType = 'Ticket';
       component.csvFiles = [new File([], 'fileA', {})];
 
       // values found in CsvConstants.corsTicketCsvRequiredHeaders, with some removed to trigger validation errors
@@ -281,6 +285,8 @@ describe('ImportCSVComponent', () => {
     it('adds no errors to the errors array if no required headers are missing', async(() => {
       const { component } = testBedHelper.createComponent();
 
+      component.dataSourceType = 'cors-csv';
+      component.recordType = 'Ticket';
       component.csvFiles = [new File([], 'fileA', {})];
 
       component.validateRequiredHeaders(CsvConstants.corsTicketCsvRequiredHeaders);
@@ -312,6 +318,9 @@ describe('ImportCSVComponent', () => {
 
     it('calls validation methods', async(() => {
       const { component } = testBedHelper.createComponent();
+
+      component.dataSourceType = 'cors-csv';
+      component.recordType = 'Ticket';
 
       // mock component methods
       component.validateRequiredFields = jasmine.createSpy('validateRequiredFields');
@@ -433,6 +442,8 @@ describe('ImportCSVComponent', () => {
       const { component } = testBedHelper.createComponent();
 
       // mock component methods
+      component.dataSourceType = 'cors-csv';
+      component.recordType = 'Ticket';
       component.transformDateFields = jasmine.createSpy('transformDateFields');
 
       component.transformFields([
