@@ -475,7 +475,7 @@ describe('ImportCSVComponent', () => {
       const { component } = testBedHelper.createComponent();
 
       const transformedRow: string[] = component.transformDateFields(
-        ['2019/12/30', '12/30/2019', '30-Dec-19'],
+        ['2019/12/30', '12/30/2019', '30-Dec-2019'],
         [
           { field: 'headerA', format: 'YYYY/MM/DD' },
           { field: 'headerB', format: 'MM/DD/YYYY' },
