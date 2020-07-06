@@ -4,7 +4,7 @@
  * @export
  * @interface IRequiredFormat
  */
- export interface IRequiredFormat {
+export interface IRequiredFormat {
   field: string;
   type: string;
   format: string;
@@ -93,6 +93,58 @@ export class CsvConstants {
   ];
 
   /**
+   * Expected headers for OGC Inspection csv.
+   *
+   * Note: sort order and letter case of headers is not important.
+   *
+   * @static
+   * @memberof CsvConstants
+   */
+  public static readonly ogcInspectionCsvRequiredHeaders = [
+    'Inspection Number',
+    'Inspection Date',
+    'Location',
+    'Operator',
+    'Activities Inspected',
+    'Status',
+    'Regulation Name',
+    'Regulation Number',
+    'Deficiency Objectid'
+  ];
+
+  /**
+   * Required fields for OGC Inspection csv.
+   *
+   * @static
+   * @memberof CsvConstants
+   */
+  public static readonly ogcInspectionCsvRequiredFields = ['Inspection Number'];
+
+  /**
+   * Fields for OGC Inspection csv that have a required format.
+   *
+   * Note: These fields are not necessarily required, and only have a required format if present.
+   *
+   * @static
+   * @type {IRequiredFormat[]}
+   * @memberof CsvConstants
+   */
+  public static readonly ogcInspectionCsvRequiredFormats: IRequiredFormat[] = [
+    { field: 'Inspection Date', type: 'date', format: 'DD-MMM-YY' }
+  ];
+
+  /**
+   * Fields for OGC Inspection csv that represent dates.
+   *
+   * @static
+   * @type {IDateField[]}
+   * @memberof CsvConstants
+   */
+  public static readonly ogcInspectionCsvDateFields: IDateField[] = [
+    { field: 'Inspection Date', format: 'DD-MMM-YY' }
+  ];
+
+  /**
    * Get the array of required csv headers for the provided dataSourceType and recordType.
    *
    * @static
@@ -109,6 +161,12 @@ export class CsvConstants {
     if (dataSourceType === 'cors-csv') {
       if (recordType === 'Ticket') {
         return this.corsTicketCsvRequiredHeaders;
+      }
+    }
+
+    if (dataSourceType === 'bcogc-csv') {
+      if (recordType === 'Inspection') {
+        return this.ogcInspectionCsvRequiredHeaders;
       }
     }
 
@@ -135,6 +193,12 @@ export class CsvConstants {
       }
     }
 
+    if (dataSourceType === 'bcogc-csv') {
+      if (recordType === 'Inspection') {
+        return this.ogcInspectionCsvRequiredFields;
+      }
+    }
+
     return null;
   }
 
@@ -158,6 +222,12 @@ export class CsvConstants {
       }
     }
 
+    if (dataSourceType === 'bcogc-csv') {
+      if (recordType === 'Inspection') {
+        return this.ogcInspectionCsvRequiredFormats;
+      }
+    }
+
     return null;
   }
 
@@ -178,6 +248,12 @@ export class CsvConstants {
     if (dataSourceType === 'cors-csv') {
       if (recordType === 'Ticket') {
         return this.corsTicketCsvDateFields;
+      }
+    }
+
+    if (dataSourceType === 'bcogc-csv') {
+      if (recordType === 'Inspection') {
+        return this.ogcInspectionCsvDateFields;
       }
     }
 

@@ -54,6 +54,7 @@ definitions:
       - epic
       - nris-epd
       - cors-csv
+      - bcogc-csv
   dataImportType:
     type: string
     description: 'Supported import task types'

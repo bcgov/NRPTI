@@ -52,7 +52,12 @@
 
       .grid-section {
         display: grid;
-        grid-gap: 0.75rem;
+        & > .grid-item:not(:last-child),
+        & > .grid-item__col:not(:last-child),
+        & > .grid-item__row:not(:last-child),
+        & > .grid-item__flex:not(:last-child) {
+          margin-right: 0.75rem;
+        }
       }
 
       // Can also be nested inside <grid-item-value> - font-size scales automatically (re: 0.8em).
