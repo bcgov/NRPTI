@@ -20,10 +20,23 @@ exports.up = async function(db) {
     const nrptiCollection = await mClient.collection('nrpti');
 
     console.log('Updating All Task Read Arrays to Include All Admin Roles.');
+
     await nrptiCollection.updateMany(
       { "_schemaName" : "Task" },
       {$set:  { "read" : [ "sysadmin", "admin:lng", "admin:nrced", "admin:bcmi" ] }}
     );
+
+    console.log('Updating All Document Read and Write Arrays to Include All Admin Roles.');
+
+    await nrptiCollection.updateMany({ "_schemaName" : "Document" },
+      {$addToSet:
+        {
+          "read" :  { $each: ["sysadmin", "admin:lng", "admin:nrced", "admin:bcmi"] } ,
+          "write": { $each: ["sysadmin", "admin:lng", "admin:nrced", "admin:bcmi"] }
+        }
+      }
+    );
+
     mClient.close()
   } catch (e) {
     console.log('Error:', e)

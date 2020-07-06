@@ -254,7 +254,7 @@ exports.protectedDelete = async function(args, res, next) {
  * @param {*} [url=null] url of the document
  * @param {*} [readRoles=[]] read roles to add to the document. (optional)
  */
-async function createURLDocument(fileName, addedBy, url, readRoles = []) {
+async function createURLDocument(fileName, addedBy, url, readRoles = ['admin:lng', 'admin:nrced', 'admin:bcmi']) {
   const Document = mongoose.model('Document');
   let document = new Document();
 
@@ -262,7 +262,7 @@ async function createURLDocument(fileName, addedBy, url, readRoles = []) {
   document.addedBy = addedBy;
   document.url = url;
   document.read = ['sysadmin', ...readRoles];
-  document.write = ['sysadmin'];
+  document.write = ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'];
 
   return document.save();
 }
@@ -279,7 +279,7 @@ exports.createURLDocument = createURLDocument;
  * @param {*} [s3ACLRole=null] the ACL role to set.  Defaults to `authenticated-read` if not set. (optional)
  * @returns
  */
-async function createS3Document(fileName, fileContent, addedBy, readRoles = [], s3ACLRole = null) {
+async function createS3Document(fileName, fileContent, addedBy, readRoles = ['admin:lng', 'admin:nrced', 'admin:bcmi'], s3ACLRole = null) {
   const Document = mongoose.model('Document');
   let document = new Document();
 
@@ -290,7 +290,7 @@ async function createS3Document(fileName, fileContent, addedBy, readRoles = [], 
   document.url = `https://${process.env.OBJECT_STORE_endpoint_url}/${process.env.OBJECT_STORE_bucket_name}/${document._id}/${fileName}`;
   document.key = s3Key;
   document.read = ['sysadmin', ...readRoles];
-  document.write = ['sysadmin'];
+  document.write = ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'];
 
   const s3Response = await uploadS3Document(s3Key, fileContent, s3ACLRole);
 
@@ -408,6 +408,7 @@ async function publishDocument(docId, auth_payload) {
 
   if (!document) {
     defaultLog.info(`publishDocument - couldn't find document for docId: ${docId}`);
+    return null;
   }
 
   const published = await queryActions.publish(document);
@@ -437,6 +438,7 @@ async function unpublishDocument(docId, auth_payload) {
 
   if (!document) {
     defaultLog.info(`unpublishDocument - couldn't find document for docId: ${docId}`);
+    return null;
   }
 
   const unpublished = await queryActions.unPublish(document);
