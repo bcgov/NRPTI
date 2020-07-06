@@ -23,6 +23,10 @@ class BaseRecordUtils {
       throw Error('BaseRecordUtils - required recordType must be non-null.');
     }
 
+    if (!auth_payload) {
+      throw Error('BaseRecordUtils - required auth_payload must be non-null.');
+    }
+
     this.auth_payload = auth_payload;
     this.recordType = recordType;
   }
