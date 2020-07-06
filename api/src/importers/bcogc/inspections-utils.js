@@ -43,15 +43,14 @@ class Inspections extends BaseRecordUtils {
     inspection['recordType'] = 'Inspection';
     inspection['dateIssued'] = csvRow['inspection date'] || null;
     inspection['issuingAgency'] = 'BC Oil and Gas Commission';
-    inspection['author'] = 'BC Government';
+    inspection['author'] = 'BC Oil and Gas Commission';
 
     inspection['recordName'] = `Inspection Number ${csvRow['inspection number'] || '-'}`;
 
     inspection['legislation'] = {
       act: 'Oil and Gas Activities Act',
       section: '57',
-      subSection: '4',
-      regulation: CsvUtils.getRegulation(csvRow) || ''
+      subSection: '4'
     };
 
     inspection['issuedTo'] = {

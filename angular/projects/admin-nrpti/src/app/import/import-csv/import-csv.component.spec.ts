@@ -475,17 +475,19 @@ describe('ImportCSVComponent', () => {
       const { component } = testBedHelper.createComponent();
 
       const transformedRow: string[] = component.transformDateFields(
-        ['2019/12/30', '12/30/2019'],
+        ['2019/12/30', '12/30/2019', '30-Dec-19'],
         [
           { field: 'headerA', format: 'YYYY/MM/DD' },
-          { field: 'headerB', format: 'MM/DD/YYYY' }
+          { field: 'headerB', format: 'MM/DD/YYYY' },
+          { field: 'headerC', format: 'DD-MMM-YYYY' }
         ],
-        ['headerA', 'headerB']
+        ['headerA', 'headerB', 'headerC']
       );
 
-      expect(transformedRow.length).toEqual(2);
+      expect(transformedRow.length).toEqual(3);
       expect(transformedRow[0]).toEqual(moment('2019/12/30', 'YYYY/MM/DD').toISOString());
       expect(transformedRow[1]).toEqual(moment('12/30/2019', 'MM/DD/YYYY').toISOString());
+      expect(transformedRow[2]).toEqual(moment('30-Dec-2019', 'DD-MMM-YYYY').toISOString());
     }));
   });
 
