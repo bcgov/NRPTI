@@ -1,11 +1,12 @@
 const TaskAuditRecord = require('./task-audit-record');
+const { ROLES } = require('./constants/misc');
 
 describe('TaskAuditRecord', () => {
   describe('updateTaskRecord', () => {
     it('creates a new task record', async () => {
       // create mock create function
       const mockCreateFunction = jest.fn(() =>
-        Promise.resolve({ _id: '123', created: true, read: ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'], write: ['sysadmin'] })
+        Promise.resolve({ _id: '123', created: true, read: ROLES.ADMIN_ROLES, write: [ROLES.SYSADMIN] })
       );
       // mock mongoose to call mock create function, etc
       const mongoose = require('mongoose');
@@ -20,17 +21,17 @@ describe('TaskAuditRecord', () => {
       expect(mockCreateFunction).toHaveBeenCalledWith({
         param1: 1,
         param2: 2,
-        read: ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'],
-        write: ['sysadmin']
+        read: ROLES.ADMIN_ROLES,
+        write: [ROLES.SYSADMIN]
       });
 
-      expect(taskRecord).toEqual({ _id: '123', created: true, read: ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'], write: ['sysadmin'] });
+      expect(taskRecord).toEqual({ _id: '123', created: true, read: ROLES.ADMIN_ROLES, write: [ROLES.SYSADMIN] });
     });
 
     it('updates an existing task record', async () => {
       // create mock findOneAndUpdate function
       const mockFindOneAndUpdate = jest.fn(() =>
-        Promise.resolve({ _id: '456', updated: true, read: ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'], write: ['sysadmin'] })
+        Promise.resolve({ _id: '456', updated: true, read: ROLES.ADMIN_ROLES, write: [ROLES.SYSADMIN] })
       );
       // mock mongoose to call mock findOneAndUpdate function, etc
       const mongoose = require('mongoose');
@@ -51,11 +52,11 @@ describe('TaskAuditRecord', () => {
 
       expect(mockFindOneAndUpdate).toHaveBeenCalledWith(
         { _id: '456' },
-        { $set: { _id: '456', ...{ param1: 3, param2: 4, read: ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'], write: ['sysadmin'] } } },
+        { $set: { _id: '456', ...{ param1: 3, param2: 4, read: ROLES.ADMIN_ROLES, write: [ROLES.SYSADMIN] } } },
         { new: true }
       );
 
-      expect(taskRecord).toEqual({ _id: '456', updated: true, read: ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'], write: ['sysadmin'] });
+      expect(taskRecord).toEqual({ _id: '456', updated: true, read: ROLES.ADMIN_ROLES, write: [ROLES.SYSADMIN] });
     });
   });
 });

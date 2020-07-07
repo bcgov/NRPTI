@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const AWS = require('aws-sdk');
 const ObjectID = require('mongodb').ObjectID;
+const { ROLES } = require('../utils/constants/misc');
 
 const queryActions = require('../utils/query-actions');
 const queryUtils = require('../utils/query-utils');
@@ -36,7 +37,8 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
     const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
 
     // Set mongo document and s3 document roles
-    const readRoles = [];
+    let readRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN];
+    let writeRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN];
     let s3ACLRole = null;
     if (!businessLogicManager.isDocumentConsideredAnonymous(masterRecord)) {
       readRoles.push('public');
@@ -72,6 +74,7 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
           args.swagger.params.upfile.value.buffer,
           (args.swagger.params.auth_payload && args.swagger.params.auth_payload.preferred_username) || '',
           readRoles,
+          writeRoles,
           s3ACLRole
         ));
 
@@ -261,8 +264,8 @@ async function createURLDocument(fileName, addedBy, url, readRoles = []) {
   document.fileName = fileName;
   document.addedBy = addedBy;
   document.url = url;
-  document.read = ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi', ...readRoles];
-  document.write = ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'];
+  document.read = [ROLES.SYSADMIN, ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.BCMIADMIN, ...readRoles];
+  document.write = ROLES.ADMIN_ROLES;
 
   return document.save();
 }
@@ -279,7 +282,7 @@ exports.createURLDocument = createURLDocument;
  * @param {*} [s3ACLRole=null] the ACL role to set.  Defaults to `authenticated-read` if not set. (optional)
  * @returns
  */
-async function createS3Document(fileName, fileContent, addedBy, readRoles = ['admin:lng', 'admin:nrced', 'admin:bcmi'], s3ACLRole = null) {
+async function createS3Document(fileName, fileContent, addedBy, readRoles = [], writeRoles = [], s3ACLRole = null) {
   const Document = mongoose.model('Document');
   let document = new Document();
 
@@ -289,8 +292,8 @@ async function createS3Document(fileName, fileContent, addedBy, readRoles = ['ad
   document.addedBy = addedBy;
   document.url = `https://${process.env.OBJECT_STORE_endpoint_url}/${process.env.OBJECT_STORE_bucket_name}/${document._id}/${fileName}`;
   document.key = s3Key;
-  document.read = ['sysadmin', ...readRoles];
-  document.write = ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'];
+  document.read = [ROLES.SYSADMIN, ...readRoles];
+  document.write = [ROLES.SYSADMIN, ...writeRoles];
 
   const s3Response = await uploadS3Document(s3Key, fileContent, s3ACLRole);
 
