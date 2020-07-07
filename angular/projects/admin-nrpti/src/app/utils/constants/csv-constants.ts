@@ -130,7 +130,7 @@ export class CsvConstants {
    * @memberof CsvConstants
    */
   public static readonly ogcInspectionCsvRequiredFormats: IRequiredFormat[] = [
-    { field: 'Inspection Date', type: 'date', format: 'DD-MMM-YY' }
+    { field: 'Inspection Date', type: 'date', format: 'DD-MMM-YYYY' }
   ];
 
   /**
@@ -141,7 +141,7 @@ export class CsvConstants {
    * @memberof CsvConstants
    */
   public static readonly ogcInspectionCsvDateFields: IDateField[] = [
-    { field: 'Inspection Date', format: 'DD-MMM-YY' }
+    { field: 'Inspection Date', format: 'DD-MMM-YYYY' }
   ];
 
   /**
