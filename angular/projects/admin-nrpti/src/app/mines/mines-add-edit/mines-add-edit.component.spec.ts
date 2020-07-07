@@ -48,14 +48,21 @@ describe('MinesAddEditComponent', () => {
   }));
 
   it('should create', () => {
-    const { component } = testBedHelper.createComponent();
-
+    const { component } = testBedHelper.createComponent(false);
+    component.mine = new Mine({
+      links: [],
+      tailingsImpoundments: 0
+    });
     expect(component).toBeTruthy();
   });
 
   describe('togglePublish', () => {
     it('sets publish control to true if record meets publishing criteria', () => {
       const { component } = testBedHelper.createComponent();
+      component.mine = new Mine({
+        links: [],
+        tailingsImpoundments: 0
+      });
 
       // stub component
       component.isFormValid = () => true;
@@ -74,6 +81,9 @@ describe('MinesAddEditComponent', () => {
 
     it('does nothing if record does not meet publishing criteria', () => {
       const { component } = testBedHelper.createComponent();
+      component.mine = new Mine({
+        links: []
+      });
 
       // stub component
       component.isFormValid = () => true;
