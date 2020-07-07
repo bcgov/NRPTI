@@ -19,32 +19,24 @@
           <div ngbDropdown class="input-group-prepend">
             <button class="btn btn-outline-secondary" id="dropdown" ngbDropdownToggle>{{ selectedSubset }}</button>
             <div ngbDropdownMenu aria-labelledby="dropdown">
-              <button ngbDropdownItem [disabled]="selectedSubset === 'All'" (click)="changeSubset('All')">
+              <button
+                ngbDropdownItem
+                [disabled]="selectedSubset === SearchSubsets.all"
+                (click)="changeSubset(SearchSubsets.all)"
+              >
                 All
-                <i *ngIf="selectedSubset === 'All'" class="material-icons material-icons align-text-bottom">
-                  check_circle
-                </i>
-              </button>
-              <button ngbDropdownItem [disabled]="selectedSubset === 'Issued To'" (click)="changeSubset('Issued To')">
-                Issued To
-                <i *ngIf="selectedSubset === 'Issued To'" class="material-icons material-icons align-text-bottom">
-                  check_circle
-                </i>
-              </button>
-              <button ngbDropdownItem [disabled]="selectedSubset === 'Location'" (click)="changeSubset('Location')">
-                Location
-                <i *ngIf="selectedSubset === 'Location'" class="material-icons material-icons align-text-bottom">
+                <i *ngIf="selectedSubset === SearchSubsets.all" class="material-icons material-icons align-text-bottom">
                   check_circle
                 </i>
               </button>
               <button
                 ngbDropdownItem
-                [disabled]="selectedSubset === 'Description & Summary'"
-                (click)="changeSubset('Description & Summary')"
+                [disabled]="selectedSubset === SearchSubsets.issuedTo"
+                (click)="changeSubset(SearchSubsets.issuedTo)"
               >
-                Description & Summary
+                Issued To
                 <i
-                  *ngIf="selectedSubset === 'Description & Summary'"
+                  *ngIf="selectedSubset === SearchSubsets.issuedTo"
                   class="material-icons material-icons align-text-bottom"
                 >
                   check_circle
@@ -52,11 +44,40 @@
               </button>
               <button
                 ngbDropdownItem
-                [disabled]="selectedSubset === 'Record Name'"
-                (click)="changeSubset('Record Name')"
+                [disabled]="selectedSubset === SearchSubsets.location"
+                (click)="changeSubset(SearchSubsets.location)"
+              >
+                Location
+                <i
+                  *ngIf="selectedSubset === SearchSubsets.location"
+                  class="material-icons material-icons align-text-bottom"
+                >
+                  check_circle
+                </i>
+              </button>
+              <button
+                ngbDropdownItem
+                [disabled]="selectedSubset === SearchSubsets.descriptionAndSummary"
+                (click)="changeSubset(SearchSubsets.descriptionAndSummary)"
+              >
+                Description & Summary
+                <i
+                  *ngIf="selectedSubset === SearchSubsets.descriptionAndSummary"
+                  class="material-icons material-icons align-text-bottom"
+                >
+                  check_circle
+                </i>
+              </button>
+              <button
+                ngbDropdownItem
+                [disabled]="selectedSubset === SearchSubsets.recordName"
+                (click)="changeSubset(SearchSubsets.recordName)"
               >
                 Record Name
-                <i *ngIf="selectedSubset === 'Record Name'" class="material-icons material-icons align-text-bottom">
+                <i
+                  *ngIf="selectedSubset === SearchSubsets.recordName"
+                  class="material-icons material-icons align-text-bottom"
+                >
                   check_circle
                 </i>
               </button>
@@ -86,11 +107,8 @@
     </div>
     <div class="row">
       <div class="col mb-3">
-        <button [hidden]="showAdvancedFilters" class="btn btn-primary float-right" (click)="toggleAdvancedFilters()">
-          Open Advanced Filters
-        </button>
-        <button [hidden]="!showAdvancedFilters" class="btn btn-primary float-right" (click)="toggleAdvancedFilters()">
-          Close Advanced Filters
+        <button class="btn btn-primary float-right" (click)="toggleAdvancedFilters()">
+          {{ showAdvancedFilters ? 'Close' : 'Open' }} Advanced Filters
         </button>
       </div>
     </div>

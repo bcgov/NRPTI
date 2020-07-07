@@ -14,6 +14,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MinesRecordsTableRowComponent } from '../mines-records-rows/mines-records-table-row.component';
+import { SearchSubsets } from '../../../../../common/src/app/utils/record-constants';
 
 /**
  * Mine list page component.
@@ -30,6 +31,8 @@ import { MinesRecordsTableRowComponent } from '../mines-records-rows/mines-recor
 })
 export class MinesRecordsListComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+
+  public SearchSubsets = SearchSubsets; // make available in tempalte
 
   public tableData: TableObject = new TableObject({
     component: MinesRecordsTableRowComponent,
@@ -88,7 +91,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   // Search
   public keywordSearchWords: string;
   public showAdvancedFilters = false;
-  public selectedSubset = 'All';
+  public selectedSubset = SearchSubsets.all;
   public queryParams: Params;
   public searchFiltersForm: FormGroup;
 
@@ -208,7 +211,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
    * @memberof RecordsListComponent
    */
   clearKeywordSearch() {
-    this.selectedSubset = 'All';
+    this.selectedSubset = SearchSubsets.all;
     this.clearKeywordSearchTerms();
     delete this.queryParams['keywords'];
     delete this.queryParams['subset'];
@@ -479,24 +482,24 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
 
   changeSubset(filterText): void {
     switch (filterText) {
-      case 'All':
-        this.selectedSubset = 'All';
+      case SearchSubsets.all:
+        this.selectedSubset = SearchSubsets.all;
         delete this.queryParams['subset'];
         break;
-      case 'Description & Summary':
-        this.selectedSubset = 'Description & Summary';
+      case SearchSubsets.descriptionAndSummary:
+        this.selectedSubset = SearchSubsets.descriptionAndSummary;
         this.queryParams['subset'] = ['description'];
         break;
-      case 'Issued To':
-        this.selectedSubset = 'Issued To';
+      case SearchSubsets.issuedTo:
+        this.selectedSubset = SearchSubsets.issuedTo;
         this.queryParams['subset'] = ['issuedTo'];
         break;
-      case 'Location':
-        this.selectedSubset = 'Location';
+      case SearchSubsets.location:
+        this.selectedSubset = SearchSubsets.location;
         this.queryParams['subset'] = ['location'];
         break;
-      case 'Record Name':
-        this.selectedSubset = 'Record Name';
+      case SearchSubsets.recordName:
+        this.selectedSubset = SearchSubsets.recordName;
         this.queryParams['subset'] = ['recordName'];
         break;
       default:
@@ -517,15 +520,15 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
    */
   setSubset() {
     if (!this.queryParams.subset) {
-      this.selectedSubset = 'All';
+      this.selectedSubset = SearchSubsets.all;
     } else if (this.queryParams.subset.includes('issuedTo')) {
-      this.selectedSubset = 'Issued To';
+      this.selectedSubset = SearchSubsets.issuedTo;
     } else if (this.queryParams.subset.includes('location')) {
-      this.selectedSubset = 'Location';
+      this.selectedSubset = SearchSubsets.location;
     } else if (this.queryParams.subset.includes('description')) {
-      this.selectedSubset = 'Description & Summary';
+      this.selectedSubset = SearchSubsets.descriptionAndSummary;
     } else if (this.queryParams.subset.includes('recordName')) {
-      this.selectedSubset = 'Record Name';
+      this.selectedSubset = SearchSubsets.recordName;
     }
   }
 

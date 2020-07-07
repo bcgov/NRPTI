@@ -14,6 +14,7 @@ import {
 import { RecordsTableRowComponent } from '../records-rows/records-table-row.component';
 import { LoadingScreenService } from 'nrpti-angular-components';
 import { FormGroup, FormControl } from '@angular/forms';
+import { SearchSubsets } from '../../../../../common/src/app/utils/record-constants';
 
 /**
  * List page component.
@@ -31,10 +32,9 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class RecordsListComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
   public loading = true;
-  // public entries: User[] = null;
-  // public terms = new SearchTerms();
-  public typeFilters = [];
-  public navigationObject;
+
+  public SearchSubsets = SearchSubsets; // make available in tempalte
+
   public searchFiltersForm: FormGroup;
 
   public tableData: TableObject = new TableObject({
@@ -86,7 +86,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   // Search
   public keywordSearchWords: string;
   public showAdvancedFilters = false;
-  public selectedSubset = 'All';
+  public selectedSubset = SearchSubsets.all;
   public queryParams: Params;
 
   constructor(
@@ -427,7 +427,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * @memberof RecordsListComponent
    */
   clearKeywordSearch() {
-    this.selectedSubset = 'All';
+    this.selectedSubset = SearchSubsets.all;
     this.keywordSearchWords = '';
     delete this.queryParams['keywords'];
     delete this.queryParams['subset'];
@@ -492,24 +492,24 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
   changeSubset(filterText): void {
     switch (filterText) {
-      case 'All':
-        this.selectedSubset = 'All';
+      case SearchSubsets.all:
+        this.selectedSubset = SearchSubsets.all;
         delete this.queryParams['subset'];
         break;
-      case 'Description & Summary':
-        this.selectedSubset = 'Description & Summary';
+      case SearchSubsets.descriptionAndSummary:
+        this.selectedSubset = SearchSubsets.descriptionAndSummary;
         this.queryParams['subset'] = ['description'];
         break;
-      case 'Issued To':
-        this.selectedSubset = 'Issued To';
+      case SearchSubsets.issuedTo:
+        this.selectedSubset = SearchSubsets.issuedTo;
         this.queryParams['subset'] = ['issuedTo'];
         break;
-      case 'Location':
-        this.selectedSubset = 'Location';
+      case SearchSubsets.location:
+        this.selectedSubset = SearchSubsets.location;
         this.queryParams['subset'] = ['location'];
         break;
-      case 'Record Name':
-        this.selectedSubset = 'Record Name';
+      case SearchSubsets.recordName:
+        this.selectedSubset = SearchSubsets.recordName;
         this.queryParams['subset'] = ['recordName'];
         break;
       default:
@@ -525,15 +525,15 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
   initSubset() {
     if (!this.queryParams.subset) {
-      this.selectedSubset = 'All';
+      this.selectedSubset = SearchSubsets.all;
     } else if (this.queryParams.subset.includes('issuedTo')) {
-      this.selectedSubset = 'Issued To';
+      this.selectedSubset = SearchSubsets.issuedTo;
     } else if (this.queryParams.subset.includes('location')) {
-      this.selectedSubset = 'Location';
+      this.selectedSubset = SearchSubsets.location;
     } else if (this.queryParams.subset.includes('description')) {
-      this.selectedSubset = 'Description & Summary';
+      this.selectedSubset = SearchSubsets.descriptionAndSummary;
     } else if (this.queryParams.subset.includes('recordName')) {
-      this.selectedSubset = 'Record Name';
+      this.selectedSubset = SearchSubsets.recordName;
     }
   }
 

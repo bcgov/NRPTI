@@ -3,7 +3,7 @@ import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
 import { FactoryService } from '../services/factory.service';
-import { EpicProjectIds } from '../../../../common/src/app/utils/record-constants';
+import { EpicProjectIds, SchemaLists } from '../../../../common/src/app/utils/record-constants';
 
 @Injectable()
 export class RecordsResolver implements Resolve<Observable<object>> {
@@ -14,22 +14,7 @@ export class RecordsResolver implements Resolve<Observable<object>> {
     // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
     const tableObject = this.tableTemplateUtils.updateTableObjectWithUrlParams(route.params, new TableObject());
 
-    let schemaList = [
-      'Order',
-      'Inspection',
-      'Certificate',
-      'Permit',
-      'SelfReport',
-      'Agreement',
-      'RestorativeJustice',
-      'Ticket',
-      'AdministrativePenalty',
-      'AdministrativeSanction',
-      'Warning',
-      'ConstructionPlan',
-      'ManagementPlan',
-      'CourtConviction'
-    ];
+    let schemaList = SchemaLists.allBasicRecordTypes;
 
     if (params.activityType) {
       schemaList = params.activityType.split(',');

@@ -14,6 +14,56 @@ export class ApplicationRoles {
 }
 
 /**
+ * Supported search subsets
+ *
+ * @export
+ * @class SearchSubsets
+ */
+export class SearchSubsets {
+  public static readonly all = 'All';
+  public static readonly issuedTo = 'Issued To';
+  public static readonly location = 'Location';
+  public static readonly descriptionAndSummary = 'Description & Summary';
+  public static readonly recordName = 'Record Name';
+}
+
+/**
+ * Schema lists for search.
+ *
+ * @export
+ * @class SchemaLists
+ */
+ export class SchemaLists {
+  public static readonly allBasicRecordTypes = [
+    'Order',
+    'Inspection',
+    'Certificate',
+    'Permit',
+    'SelfReport',
+    'Agreement',
+    'RestorativeJustice',
+    'Ticket',
+    'AdministrativePenalty',
+    'AdministrativeSanction',
+    'Warning',
+    'ConstructionPlan',
+    'ManagementPlan',
+    'CourtConviction'
+  ];
+
+  public static readonly nrcedBasicRecordTypes = [
+    'Order',
+    'Inspection',
+    'RestorativeJustice',
+    'Ticket',
+    'AdministrativePenalty',
+    'AdministrativeSanction',
+    'Warning',
+    'CourtConviction'
+  ];
+}
+
+/**
  * Note: Picklist values should be alphabetical (A -> Z).  The only exception is with catch-all values like 'None' -
  * which should always be at the start, and 'Other' - which should always be at the end.
  *
