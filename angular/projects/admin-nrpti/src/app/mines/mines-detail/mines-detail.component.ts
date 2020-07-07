@@ -4,6 +4,8 @@ import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
 import { Subject, of } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FactoryService } from '../../services/factory.service';
+import { LoadingScreenService } from 'nrpti-angular-components';
+import moment from 'moment';
 
 @Component({
   selector: 'app-mines-detail',
@@ -16,14 +18,19 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
   public mine = null;
   public canPublish = false;
   public isPublished = false;
+  public lastEditedSubText = null;
 
-  constructor(public route: ActivatedRoute,
-              public router: Router,
-              private factoryService: FactoryService,
-              public changeDetectionRef: ChangeDetectorRef) {
-  }
+  constructor(
+    public route: ActivatedRoute,
+    public router: Router,
+    private factoryService: FactoryService,
+    private loadingScreenService: LoadingScreenService,
+    public changeDetectionRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
+    this.loadingScreenService.setLoadingState(true, 'main');
+
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
       if (!res || !res.mine) {
         alert("Uh-oh, couldn't load Mine");
@@ -36,9 +43,27 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
       this.isPublished = this.isRecordPublished();
       this.canPublish = this.checkCanPublish();
 
+      this.populateTextFields();
+
+      this.loadingScreenService.setLoadingState(false, 'main');
+
       this.changeDetectionRef.detectChanges();
     });
   }
+
+  /**
+   * Derive static text strings.
+   *
+   * @memberof MinesAddEditComponent
+   */
+  populateTextFields() {
+    if (this.mine && this.mine.dateUpdated) {
+      this.lastEditedSubText = `Last Edited on ${moment(this.mine.dateUpdated).format('MMMM DD, YYYY')}`;
+    } else {
+      this.lastEditedSubText = `Added on ${moment(this.mine.dateAdded).format('MMMM DD, YYYY')}`;
+    }
+  }
+
 
   isRecordPublished(): boolean {
     return this.mine && this.mine.read && this.mine.read.includes('public');
@@ -132,6 +157,8 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.loadingScreenService.setLoadingState(false, 'main');
+
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }

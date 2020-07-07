@@ -1,58 +1,66 @@
 import { Location } from '@angular/common';
-import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Router, Params } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
-  TableTemplateUtils,
-  TableObject,
   IColumnObject,
   IPageSizePickerOption,
   ITableMessage,
+  LoadingScreenService,
+  TableObject,
+  TableTemplateUtils,
   Utils
 } from 'nrpti-angular-components';
-import { RecordsTableRowComponent } from '../records-rows/records-table-row.component';
-import { LoadingScreenService } from 'nrpti-angular-components';
-import { FormGroup, FormControl } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { MinesRecordsTableRowComponent } from '../mines-records-rows/mines-records-table-row.component';
 import { SearchSubsets } from '../../../../../common/src/app/utils/record-constants';
 
 /**
- * List page component.
+ * Mine list page component.
  *
  * @export
- * @class SearchListComponent
+ * @class MinesRecordsListComponent
  * @implements {OnInit}
  * @implements {OnDestroy}
  */
 @Component({
-  selector: 'app-records-list',
-  templateUrl: './records-list.component.html',
-  styleUrls: ['./records-list.component.scss']
+  selector: 'app-mines-records-list',
+  templateUrl: './mines-records-list.component.html',
+  styleUrls: ['./mines-records-list.component.scss']
 })
-export class RecordsListComponent implements OnInit, OnDestroy {
+export class MinesRecordsListComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
-  public loading = true;
 
   public SearchSubsets = SearchSubsets; // make available in tempalte
 
-  public searchFiltersForm: FormGroup;
-
   public tableData: TableObject = new TableObject({
-    component: RecordsTableRowComponent,
+    component: MinesRecordsTableRowComponent,
     pageSize: 25,
     currentPage: 1,
     sortBy: '-dateAdded'
   });
   public tableColumns: IColumnObject[] = [
     {
-      name: 'Issued To',
-      value: 'issuedTo.fullName', // sort on issuedTo.fullName
+      name: '', // Checkbox
+      width: 'col-1',
+      nosort: true
+    },
+    {
+      name: 'Record Name',
+      value: 'recordName',
       width: 'col-2'
     },
     {
-      name: 'Name',
-      value: 'recordName',
-      width: 'col-4'
+      name: 'Agency',
+      value: 'issuingAgency',
+      width: 'col-2'
+    },
+    {
+      name: 'Source',
+      value: 'sourceSystemRef',
+      width: 'col-1',
+      nosort: true
     },
     {
       name: 'Type',
@@ -60,9 +68,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       width: 'col-1'
     },
     {
-      name: 'Location',
-      value: 'location',
-      width: 'col-2'
+      name: 'Collections',
+      width: 'col-2',
+      nosort: true
     },
     {
       name: 'Date',
@@ -70,14 +78,11 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       width: 'col-1'
     },
     {
-      name: 'Documents',
-      value: '',
-      width: 'col-1',
-      nosort: true
+      name: 'Published',
+      width: 'col-1'
     },
     {
-      name: '',
-      value: '',
+      name: '', // Buttons
       width: 'col-1',
       nosort: true
     }
@@ -88,6 +93,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   public showAdvancedFilters = false;
   public selectedSubset = SearchSubsets.all;
   public queryParams: Params;
+  public searchFiltersForm: FormGroup;
 
   constructor(
     public location: Location,
@@ -97,16 +103,17 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   /**
    * Component init.
    *
-   * @memberof RecordsListComponent
+   * @memberof MinesRecordsListComponent
    */
   ngOnInit(): void {
     this.loadingScreenService.setLoadingState(true, 'body');
-    this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
+
+    this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params: Params) => {
       this.queryParams = { ...params };
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
       this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, this.tableData);
@@ -119,9 +126,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
       this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
         if (!res || !res.records) {
-          alert("Uh-oh, couldn't load NRPTI records");
-          // project not found --> navigate back to home
-          this.router.navigate(['/']);
+          alert("Uh-oh, couldn't load NRPTI mines records");
+          this.loadingScreenService.setLoadingState(false, 'body');
           return;
         }
 
@@ -161,7 +167,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         ) {
           this.showAdvancedFilters = true;
         }
-        this.initSubset();
+        this.setSubset();
         this.buildSearchFiltersForm();
         this.subscribeToSearchFilterChanges();
         this.loadingScreenService.setLoadingState(false, 'body');
@@ -173,15 +179,60 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Clears the active keyword search text
+   * Update and trigger keyword search filter.
+   *
+   * @memberof MinesRecordsListComponent
    */
-  clearSearchTerms() {
+  keywordSearch() {
+    if (this.keywordSearchWords) {
+      this.queryParams['keywords'] = this.keywordSearchWords;
+      // always change sortBy to '-score' if keyword search is directly triggered by user
+      this.tableData.sortBy = '-score';
+    } else {
+      this.clearKeywordSearch();
+    }
+    this.tableData.currentPage = 1;
+    this.submit();
+  }
+
+  /**
+   * Resets sortBy to the default.
+   *
+   * @memberof RecordsListComponent
+   */
+  resetSortBy() {
+    this.tableData.sortBy = '-dateAdded';
+    this.queryParams['sortBy'] = '-dateAdded';
+  }
+
+  /**
+   * Resets the keyword search and all associated parameters/values.
+   *
+   * @memberof RecordsListComponent
+   */
+  clearKeywordSearch() {
+    this.selectedSubset = SearchSubsets.all;
+    this.clearKeywordSearchTerms();
+    delete this.queryParams['keywords'];
+    delete this.queryParams['subset'];
+    if (!this.tableData.sortBy || this.tableData.sortBy === '-score') {
+      // only change sortBy to the default, if sortBy is unset or if sorting has not been directly triggered by user
+      this.tableData.sortBy = '-dateAdded';
+    }
+  }
+
+  /**
+   * Set keyword search filter to empty string.
+   *
+   * @memberof MinesRecordsListComponent
+   */
+  clearKeywordSearchTerms() {
     this.keywordSearchWords = '';
   }
   /**
    * Updates the url parameters based on the currently set query and table template params, without reloading the page.
    *
-   * @memberof RecordsListComponent
+   * @memberof MinesRecordsListComponent
    */
   setInitialURLParams() {
     this.location.go(
@@ -193,19 +244,24 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Build the search filters form.
+   *
+   * @memberof MinesRecordsListComponent
+   */
   public buildSearchFiltersForm() {
     this.searchFiltersForm = new FormGroup({
       dateIssuedStart: new FormControl(
         (this.queryParams &&
           this.queryParams.dateRangeFromFilter &&
           this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeFromFilter))) ||
-        null
+          null
       ),
       dateIssuedEnd: new FormControl(
         (this.queryParams &&
           this.queryParams.dateRangeToFilter &&
           this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeToFilter))) ||
-        null
+          null
       ),
       issuedToCompany: new FormControl((this.queryParams && this.queryParams.issuedToCompany) || false),
       issuedToIndividual: new FormControl((this.queryParams && this.queryParams.issuedToIndividual) || false),
@@ -213,11 +269,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       act: new FormControl((this.queryParams && this.queryParams.act) || null),
       regulation: new FormControl((this.queryParams && this.queryParams.regulation) || null),
       activityType: new FormControl((this.queryParams && this.queryParams.activityType) || null),
-      sourceSystemRef: new FormControl((
-        this.queryParams &&
-        this.queryParams.sourceSystemRef &&
-        this.queryParams.sourceSystemRef.split(',')
-      ) || null),
+      sourceSystemRef: new FormControl(
+        (this.queryParams && this.queryParams.sourceSystemRef && this.queryParams.sourceSystemRef.split(',')) || null
+      ),
       hasDocuments: new FormControl((this.queryParams && this.queryParams.hasDocuments) || false),
       projects: new FormGroup({
         lngCanada: new FormControl(
@@ -225,11 +279,11 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         ),
         coastalGaslink: new FormControl(
           (this.queryParams && this.queryParams.projects && this.queryParams.projects.includes('coastalGaslink')) ||
-          false
+            false
         ),
         otherProjects: new FormControl(
           (this.queryParams && this.queryParams.projects && this.queryParams.projects.includes('otherProjects')) ||
-          false
+            false
         )
       }),
       isNrcedPublished: new FormControl((this.queryParams && this.queryParams.isNrcedPublished) || false),
@@ -240,7 +294,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   /**
    * Listen for search filter component changes, update query params accordingly, and re-load list content.
    *
-   * @memberof RecordsListComponent
+   * @memberof MinesRecordsListComponent
    */
   subscribeToSearchFilterChanges() {
     this.searchFiltersForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe)).subscribe(changes => {
@@ -280,11 +334,19 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Receives messages from the table template component, and performs any corresponding actions.
+   *
+   * @param {ITableMessage} msg
+   * @memberof MinesRecordsListComponent
+   */
   onMessageOut(msg: ITableMessage) {
     switch (msg.label) {
-      case 'rowClicked':
-        break;
       case 'rowSelected':
+        this.onRowCheckboxUpdate(msg.data, true);
+        break;
+      case 'rowUnselected':
+        this.onRowCheckboxUpdate(msg.data, false);
         break;
       case 'columnSort':
         this.setColumnSort(msg.data);
@@ -304,7 +366,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * Column sorting handler.
    *
    * @param {*} column
-   * @memberof RecordsListComponent
+   * @memberof MinesRecordsListComponent
    */
   setColumnSort(column) {
     if (this.tableData.sortBy.charAt(0) === '+') {
@@ -319,7 +381,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * Page number changed (pagination).
    *
    * @param {*} pageNumber
-   * @memberof RecordsListComponent
+   * @memberof MinesRecordsListComponent
    */
   onPageNumUpdate(pageNumber) {
     this.tableData.currentPage = pageNumber;
@@ -330,7 +392,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * Page size picker option selected handler.
    *
    * @param {IPageSizePickerOption} pageSize
-   * @memberof RecordsListComponent
+   * @memberof MinesRecordsListComponent
    */
   onPageSizeUpdate(pageSize: IPageSizePickerOption) {
     this.tableData.pageSize = pageSize.value;
@@ -338,110 +400,33 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Update record table with latest values (whatever is set in this.tableData).
+   * Table multi-select handler.
    *
-   * @memberof RecordsListComponent
+   * @param {*} rowData data for the row that was selected or unselected
+   * @param {boolean} checked whether or not the row was selected or unselected
+   * @memberof MinesRecordsListComponent
+   */
+  onRowCheckboxUpdate(rowData: any, checked: boolean) {
+    // TODO real multi-select functionality (adding to collections, etc)
+  }
+
+  /**
+   * Update mine table with latest values (whatever is set in this.tableData).
+   *
+   * @memberof MinesRecordsListComponent
    */
   submit() {
-    this.loadingScreenService.setLoadingState(true, 'body');
-
     // These are params that should be handled by tableData
     delete this.queryParams.sortBy;
     delete this.queryParams.currentPage;
     delete this.queryParams.pageNumber;
     delete this.queryParams.pageSize;
 
-    this.router.navigate([
-      '/records',
-      { ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }
-    ]);
-  }
+    this.loadingScreenService.setLoadingState(true, 'body');
 
-  keywordSearch() {
-    if (this.keywordSearchWords) {
-      this.queryParams['keywords'] = this.keywordSearchWords;
-      // always change sortBy to '-score' if keyword search is directly triggered by user
-      this.tableData.sortBy = '-score';
-    } else {
-      this.clearKeywordSearch();
-    }
-    this.tableData.currentPage = 1;
-    this.submit();
-  }
-
-  /**
-   * Resets sortBy to the default.
-   *
-   * @memberof RecordsListComponent
-   */
-  resetSortBy() {
-    this.tableData.sortBy = '-dateAdded';
-    this.queryParams['sortBy'] = '-dateAdded';
-  }
-
-  /**
-   * Resets the keyword search and all associated parameters/values.
-   *
-   * @memberof RecordsListComponent
-   */
-  clearKeywordSearch() {
-    this.selectedSubset = SearchSubsets.all;
-    this.keywordSearchWords = '';
-    delete this.queryParams['keywords'];
-    delete this.queryParams['subset'];
-    if (!this.tableData.sortBy || this.tableData.sortBy === '-score') {
-      // only change sortBy to the default, if sortBy is unset or if sorting has not been directly triggered by user
-      this.tableData.sortBy = '-dateAdded';
-    }
-  }
-
-  add(item) {
-    switch (item) {
-      case 'administrativePenalty':
-        this.router.navigate(['records', 'administrative-penalties', 'add']);
-        break;
-      case 'administrativeSanction':
-        this.router.navigate(['records', 'administrative-sanctions', 'add']);
-        break;
-      case 'agreement':
-        this.router.navigate(['records', 'agreements', 'add']);
-        break;
-      case 'certificate':
-        this.router.navigate(['records', 'certificates', 'add']);
-        break;
-      case 'constructionPlan':
-        this.router.navigate(['records', 'construction-plans', 'add']);
-        break;
-      case 'courtConviction':
-        this.router.navigate(['records', 'court-convictions', 'add']);
-        break;
-      case 'inspection':
-        this.router.navigate(['records', 'inspections', 'add']);
-        break;
-      case 'managementPlan':
-        this.router.navigate(['records', 'management-plans', 'add']);
-        break;
-      case 'order':
-        this.router.navigate(['records', 'orders', 'add']);
-        break;
-      case 'permit':
-        this.router.navigate(['records', 'permits', 'add']);
-        break;
-      case 'restorativeJustice':
-        this.router.navigate(['records', 'restorative-justices', 'add']);
-        break;
-      case 'selfReport':
-        this.router.navigate(['records', 'self-reports', 'add']);
-        break;
-      case 'ticket':
-        this.router.navigate(['records', 'tickets', 'add']);
-        break;
-      case 'warning':
-        this.router.navigate(['records', 'warnings', 'add']);
-        break;
-      default:
-        break;
-    }
+    this.router.navigate([{ ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }], {
+      relativeTo: this.route
+    });
   }
 
   toggleAdvancedFilters(): void {
@@ -481,7 +466,12 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     }
   }
 
-  initSubset() {
+  /**
+   * Set subset filters.
+   *
+   * @memberof MinesRecordsListComponent
+   */
+  setSubset() {
     if (!this.queryParams.subset) {
       this.selectedSubset = SearchSubsets.all;
     } else if (this.queryParams.subset.includes('issuedTo')) {
@@ -500,7 +490,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    *
    * @param {object} projects changes.projects object
    * @returns {string[]} array of project names
-   * @memberof RecordsListComponent
+   * @memberof MinesRecordsListComponent
    */
   getProjectsFilterArray(projects: object): string[] {
     if (!projects) {
@@ -525,7 +515,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * @param {string} changesValue
    * @memberof MinesRecordsListComponent
    */
-   handleFilterChange(queryParam: string, changesValue: any) {
+  handleFilterChange(queryParam: string, changesValue: any) {
     if (changesValue) {
       this.queryParams[queryParam] = changesValue;
     } else {
@@ -536,9 +526,11 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   /**
    * Cleanup on component destroy.
    *
-   * @memberof RecordsListComponent
+   * @memberof MinesRecordsListComponent
    */
   ngOnDestroy(): void {
+    this.loadingScreenService.setLoadingState(false, 'body');
+
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }

@@ -2,6 +2,24 @@
 @import 'assets/styles/components/add-edit.scss';
 @import 'assets/styles/components/slide-toggle.scss';
 
+.heading-bar {
+  margin: -18px -24px 32px;
+  padding: 14px 24px;
+  background: $side-content-nested-bg-color;
+  color: $white;
+
+  > div {
+    height: 2.5rem;
+  }
+}
+
+h1 {
+  color: $white;
+  font-size: $mine-header-font-size;
+  font-weight: $mine-header-font-weight;
+  text-transform: uppercase;
+}
+
 h2 {
   color: $mine-primary-font-color;
   font-size: $mine-header-font-size;
@@ -74,4 +92,12 @@ input[type='text'] {
   font-size: 15px;
   font-style: italic;
   color: $mine-publish-error;
+}
+
+.action-drop-button {
+  border: 3px solid $white;
+}
+
+.link-list {
+  list-style: none;
 }

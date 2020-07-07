@@ -1,13 +1,14 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormArray } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingScreenService, Utils } from 'nrpti-angular-components';
+import { LoadingScreenService } from 'nrpti-angular-components';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { Mine, Link } from '../../../../../common/src/app/models/bcmi/mine';
 import { FactoryService } from '../../services/factory.service';
 import { Picklists } from '../../../../../common/src/app/utils/record-constants';
 import { UrlValidator } from '../../../../../common/src/app/form-validators/validators';
+import moment from 'moment';
 
 @Component({
   selector: 'app-mines-add-edit',
@@ -30,7 +31,6 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
     public router: Router,
     private factoryService: FactoryService,
     private loadingScreenService: LoadingScreenService,
-    private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
   ) {}
 
@@ -46,6 +46,8 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
       }
 
       this.buildForm();
+
+      this.populateTextFields();
 
       this.subscribeToFormChanges();
 
@@ -65,10 +67,14 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesAddEditComponent
    */
   populateTextFields() {
-    if (this.mine && this.mine.dateUpdated) {
-      this.lastEditedSubText = `Last Edited on ${this.utils.convertJSDateToString(new Date(this.mine.dateUpdated))}`;
-    } else {
-      this.lastEditedSubText = `Added on ${this.utils.convertJSDateToString(new Date(this.mine.dateAdded))}`;
+    if (!this.mine) {
+      return;
+    }
+
+    if (this.mine.dateUpdated) {
+      this.lastEditedSubText = `Last Edited on ${moment(this.mine.dateUpdated).format('MMMM DD, YYYY')}`;
+    } else if (this.mine.dateAdded) {
+      this.lastEditedSubText = `Added on ${moment(this.mine.dateAdded).format('MMMM DD, YYYY')}`;
     }
   }
 

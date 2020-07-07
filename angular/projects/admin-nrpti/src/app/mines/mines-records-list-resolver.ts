@@ -6,8 +6,8 @@ import { FactoryService } from '../services/factory.service';
 import { EpicProjectIds, SchemaLists } from '../../../../common/src/app/utils/record-constants';
 
 @Injectable()
-export class RecordsResolver implements Resolve<Observable<object>> {
-  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) { }
+export class MinesRecordsListResolver implements Resolve<Observable<object>> {
+  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const params = { ...route.params };

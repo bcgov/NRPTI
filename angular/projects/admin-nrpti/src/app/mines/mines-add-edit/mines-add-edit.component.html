@@ -1,17 +1,25 @@
 <main class="container-fluid-padding">
   <form *ngIf="!loading" [formGroup]="myForm" novalidate>
-    <section class="mb-3 pb-3 border-bottom">
-      <div class="d-flex">
+    <section>
+      <div class="d-flex heading-bar">
         <div>
-          <h2 class="border-0">Mine Information</h2>
-          <span class="grey-subtext ml-2">{{ lastEditedSubText }}</span>
+          <h1 id="name" class="m-0">{{ (mine && mine.name) || '-' }}</h1>
         </div>
-        <div class="ml-auto">
+      </div>
+    </section>
+
+    <section class="mb-3 pb-3 border-bottom">
+      <div class="row">
+        <div class="mb-2 col-12 col-sm-8">
+          <h2 class="border-0 mb-0">Mine Information</h2>
+          <span class="grey-subtext">{{ lastEditedSubText }}</span>
+        </div>
+        <div class="col-12 col-sm-4">
           <div class="d-flex flex-column">
             <mat-slide-toggle
               name="publish"
               id="publish"
-              class="publish-toggle ml-auto"
+              class="publish-toggle"
               [ngClass]="myForm.get('publish').value ? 'published' : 'unpublished'"
               formControlName="publish"
               (change)="togglePublish($event)"
@@ -21,10 +29,10 @@
             >
               {{ (myForm.get('publish').value && 'Published') || 'Unpublished' }}
             </mat-slide-toggle>
-            <span class="grey-subtext ml-auto">
+            <span class="grey-subtext">
               Changes made will take effect once you click "Update"
             </span>
-            <span *ngIf="!canPublish && !myForm.get('publish').value" class="red-subtext ml-auto">
+            <span *ngIf="!canPublish && !myForm.get('publish').value" class="red-subtext">
               All fields are required to publish
             </span>
           </div>

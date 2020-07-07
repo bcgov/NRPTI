@@ -3,6 +3,7 @@ import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
 import { FactoryService } from '../../services/factory.service';
+import { SchemaLists } from '../../../../../common/src/app/utils/record-constants';
 
 @Injectable()
 export class RecordsListResolver implements Resolve<Observable<object>> {
@@ -14,17 +15,8 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
     const tableObject = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, new TableObject());
 
     // set schema filters
-    let schemaList = [
-      // default schemas when no filters specified
-      'OrderNRCED',
-      'InspectionNRCED',
-      'RestorativeJusticeNRCED',
-      'AdministrativePenaltyNRCED',
-      'AdministrativeSanctionNRCED',
-      'TicketNRCED',
-      'WarningNRCED',
-      'CourtConvictionNRCED'
-    ];
+    let schemaList = SchemaLists.nrcedBasicRecordTypes;
+
     if (params.activityType) {
       schemaList = params.activityType.split(',');
     }
