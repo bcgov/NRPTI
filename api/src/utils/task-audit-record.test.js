@@ -5,7 +5,7 @@ describe('TaskAuditRecord', () => {
     it('creates a new task record', async () => {
       // create mock create function
       const mockCreateFunction = jest.fn(() =>
-        Promise.resolve({ _id: '123', created: true, read: ['sysadmin'], write: ['sysadmin'] })
+        Promise.resolve({ _id: '123', created: true, read: ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'], write: ['sysadmin'] })
       );
       // mock mongoose to call mock create function, etc
       const mongoose = require('mongoose');
@@ -20,17 +20,17 @@ describe('TaskAuditRecord', () => {
       expect(mockCreateFunction).toHaveBeenCalledWith({
         param1: 1,
         param2: 2,
-        read: ['sysadmin'],
+        read: ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'],
         write: ['sysadmin']
       });
 
-      expect(taskRecord).toEqual({ _id: '123', created: true, read: ['sysadmin'], write: ['sysadmin'] });
+      expect(taskRecord).toEqual({ _id: '123', created: true, read: ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'], write: ['sysadmin'] });
     });
 
     it('updates an existing task record', async () => {
       // create mock findOneAndUpdate function
       const mockFindOneAndUpdate = jest.fn(() =>
-        Promise.resolve({ _id: '456', updated: true, read: ['sysadmin'], write: ['sysadmin'] })
+        Promise.resolve({ _id: '456', updated: true, read: ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'], write: ['sysadmin'] })
       );
       // mock mongoose to call mock findOneAndUpdate function, etc
       const mongoose = require('mongoose');
@@ -51,11 +51,11 @@ describe('TaskAuditRecord', () => {
 
       expect(mockFindOneAndUpdate).toHaveBeenCalledWith(
         { _id: '456' },
-        { $set: { _id: '456', ...{ param1: 3, param2: 4, read: ['sysadmin'], write: ['sysadmin'] } } },
+        { $set: { _id: '456', ...{ param1: 3, param2: 4, read: ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'], write: ['sysadmin'] } } },
         { new: true }
       );
 
-      expect(taskRecord).toEqual({ _id: '456', updated: true, read: ['sysadmin'], write: ['sysadmin'] });
+      expect(taskRecord).toEqual({ _id: '456', updated: true, read: ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'], write: ['sysadmin'] });
     });
   });
 });

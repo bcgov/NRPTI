@@ -254,14 +254,14 @@ exports.protectedDelete = async function(args, res, next) {
  * @param {*} [url=null] url of the document
  * @param {*} [readRoles=[]] read roles to add to the document. (optional)
  */
-async function createURLDocument(fileName, addedBy, url, readRoles = ['admin:lng', 'admin:nrced', 'admin:bcmi']) {
+async function createURLDocument(fileName, addedBy, url, readRoles = []) {
   const Document = mongoose.model('Document');
   let document = new Document();
 
   document.fileName = fileName;
   document.addedBy = addedBy;
   document.url = url;
-  document.read = ['sysadmin', ...readRoles];
+  document.read = ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi', ...readRoles];
   document.write = ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'];
 
   return document.save();
