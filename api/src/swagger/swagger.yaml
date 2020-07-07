@@ -455,6 +455,9 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
+        - admin:lng
+        - admin:nrced
+        - admin:bcmi
       parameters:
         - name: task
           in: body
