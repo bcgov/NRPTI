@@ -298,85 +298,38 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
    */
   subscribeToSearchFilterChanges() {
     this.searchFiltersForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe)).subscribe(changes => {
-      if (changes.activityType) {
-        this.queryParams['activityType'] = changes.activityType;
-      } else {
-        delete this.queryParams['activityType'];
-      }
+      this.handleFilterChange('activityType', changes.activityType);
 
-      if (changes.dateIssuedStart) {
-        this.queryParams['dateRangeFromFilter'] = this.utils
-          .convertFormGroupNGBDateToJSDate(changes.dateIssuedStart)
-          .toISOString();
-      } else {
-        delete this.queryParams['dateRangeFromFilter'];
-      }
+      this.handleFilterChange(
+        'dateRangeFromFilter',
+        changes.dateIssuedStart && this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedStart).toISOString()
+      );
 
-      if (changes.dateIssuedEnd) {
-        this.queryParams['dateRangeToFilter'] = this.utils
-          .convertFormGroupNGBDateToJSDate(changes.dateIssuedEnd)
-          .toISOString();
-      } else {
-        delete this.queryParams['dateRangeToFilter'];
-      }
+      this.handleFilterChange(
+        'dateRangeToFilter',
+        changes.dateIssuedEnd && this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedEnd).toISOString()
+      );
 
-      if (changes.issuedToCompany) {
-        this.queryParams['issuedToCompany'] = changes.issuedToCompany;
-      } else {
-        delete this.queryParams['issuedToCompany'];
-      }
+      this.handleFilterChange('issuedToCompany', changes.issuedToCompany);
 
-      if (changes.issuedToIndividual) {
-        this.queryParams['issuedToIndividual'] = changes.issuedToIndividual;
-      } else {
-        delete this.queryParams['issuedToIndividual'];
-      }
+      this.handleFilterChange('issuedToIndividual', changes.issuedToIndividual);
 
-      if (changes.agency && changes.agency.length) {
-        this.queryParams['agency'] = changes.agency;
-      } else {
-        delete this.queryParams['agency'];
-      }
+      this.handleFilterChange('agency', changes.agency);
 
-      if (changes.act && changes.act.length) {
-        this.queryParams['act'] = changes.act;
-      } else {
-        delete this.queryParams['act'];
-      }
+      this.handleFilterChange('act', changes.act);
 
-      if (changes.regulation && changes.regulation.length) {
-        this.queryParams['regulation'] = changes.regulation;
-      } else {
-        delete this.queryParams['regulation'];
-      }
+      this.handleFilterChange('regulation', changes.regulation);
 
-      if (changes.sourceSystemRef && changes.sourceSystemRef.length) {
-        this.queryParams['sourceSystemRef'] = changes.sourceSystemRef;
-      } else {
-        delete this.queryParams['sourceSystemRef'];
-      }
+      this.handleFilterChange('sourceSystemRef', changes.sourceSystemRef);
 
-      if (changes.hasDocuments) {
-        this.queryParams['hasDocuments'] = changes.hasDocuments;
-      } else {
-        delete this.queryParams['hasDocuments'];
-      }
+      this.handleFilterChange('hasDocuments', changes.hasDocuments);
 
-      if (changes.projects && this.getProjectsFilterArray(changes.projects).length) {
-        this.queryParams['projects'] = this.getProjectsFilterArray(changes.projects);
-      } else {
-        delete this.queryParams['projects'];
-      }
-      if (changes.isNrcedPublished) {
-        this.queryParams['isNrcedPublished'] = changes.isNrcedPublished;
-      } else {
-        delete this.queryParams['isNrcedPublished'];
-      }
-      if (changes.isLngPublished) {
-        this.queryParams['isLngPublished'] = changes.isLngPublished;
-      } else {
-        delete this.queryParams['isLngPublished'];
-      }
+      this.handleFilterChange('projects', changes.projects && this.getProjectsFilterArray(changes.projects));
+
+      this.handleFilterChange('isNrcedPublished', changes.isNrcedPublished);
+
+      this.handleFilterChange('isLngPublished', changes.isLngPublished);
+
       this.submit();
     });
   }
@@ -553,6 +506,21 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
     }
 
     return projectsQueryParam;
+  }
+
+  /**
+   * Handle filter changes for a string/boolean filter.
+   *
+   * @param {string} queryParam
+   * @param {string} changesValue
+   * @memberof MinesRecordsListComponent
+   */
+  handleFilterChange(queryParam: string, changesValue: any) {
+    if (changesValue) {
+      this.queryParams[queryParam] = changesValue;
+    } else {
+      delete this.queryParams[queryParam];
+    }
   }
 
   /**
