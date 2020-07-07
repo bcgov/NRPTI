@@ -193,10 +193,10 @@ describe('MinesAddEditComponent', () => {
       expect(component.lastEditedSubText).toContain('Last Edited on ');
     });
 
-    it('sets the lastEditedSubText if dateUpdated is null', () => {
+    it('sets the lastEditedSubText if dateUpdated is null and dateAdded is not null', () => {
       const { component } = testBedHelper.createComponent();
 
-      component.mine = new Mine({ dateUpdated: null });
+      component.mine = new Mine({ dateUpdated: null, dateAdded: new Date() });
 
       component.populateTextFields();
 

@@ -48,6 +48,13 @@ export class TestBedHelper<T> {
   }
 }
 
+export interface IActivatedRouteData {
+  data?: {};
+  params?: {};
+  queryParamMap?: {};
+  snapshot?: {};
+}
+
 /**
  * Utility class to make mocking ActivatedRoute easier.
  *
@@ -58,9 +65,13 @@ export class ActivatedRouteStub {
   public data = of({});
   public params = of({});
   public queryParamMap = of(convertToParamMap({}));
+  public snapshot = {};
 
-  constructor(initialData = {}) {
-    this.setData(initialData);
+  constructor(initialData: IActivatedRouteData = null) {
+    this.data = of((initialData && initialData.data) || {});
+    this.params = of((initialData && initialData.params) || {});
+    this.queryParamMap = of(convertToParamMap((initialData && initialData.queryParamMap) || {}));
+    this.snapshot = (initialData && initialData.snapshot) || {};
   }
 
   /**
@@ -86,11 +97,21 @@ export class ActivatedRouteStub {
   /**
    * Sets the queryParamMap property.
    *
-   * @param {{}} params
+   * @param {{}} queryParamMap
    * @memberof ActivatedRouteStub
    */
-  public setQueryParamMap(params: {}) {
-    this.queryParamMap = of(convertToParamMap(params));
+  public setQueryParamMap(queryParamMap: {}) {
+    this.queryParamMap = of(convertToParamMap(queryParamMap));
+  }
+
+  /**
+   * Sets the snapshot property.
+   *
+   * @param {{}} snapshot
+   * @memberof ActivatedRouteStub
+   */
+  public setSnapshot(snapshot: {}) {
+    this.snapshot = snapshot;
   }
 
   /**

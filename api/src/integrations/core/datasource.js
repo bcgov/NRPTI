@@ -528,9 +528,10 @@ class CoreDataSource {
         const latitude = mineDetails.mine_location && mineDetails.mine_location.latitude || 0.00;
         const longitude = mineDetails.mine_location && mineDetails.mine_location.longitude || 0.00;
   
+
         completeRecords.push({
           ...coreRecords[i],
-          coordinates: [latitude, longitude],
+          coordinates: [longitude, latitude],
           parties
         });
       } catch (error) {

@@ -17,37 +17,39 @@
       <div class="col">
         <div class="input-group mb-3">
           <div ngbDropdown class="input-group-prepend">
-            <button class="btn btn-outline-secondary" id="dropdown" ngbDropdownToggle>{{selectedSubset}}</button>
+            <button class="btn btn-outline-secondary" id="dropdown" ngbDropdownToggle>{{ selectedSubset }}</button>
             <div ngbDropdownMenu aria-labelledby="dropdown">
-              <button ngbDropdownItem [disabled]="selectedSubset === 'All'" (click)="changeSubset('All')">
+              <button ngbDropdownItem [disabled]="selectedSubset === SearchSubsets.all"
+                (click)="changeSubset(SearchSubsets.all)">
                 All
-                <i *ngIf="selectedSubset === 'All'" class="material-icons material-icons align-text-bottom">
+                <i *ngIf="selectedSubset === SearchSubsets.all" class="material-icons material-icons align-text-bottom">
                   check_circle
                 </i>
               </button>
-              <button ngbDropdownItem [disabled]="selectedSubset === 'Issued To'"
-                (click)="changeSubset('Issued To')">
+              <button ngbDropdownItem [disabled]="selectedSubset === SearchSubsets.issuedTo"
+                (click)="changeSubset(SearchSubsets.issuedTo)">
                 Issued To
-                <i *ngIf="selectedSubset === 'Issued To'"
+                <i *ngIf="selectedSubset === SearchSubsets.issuedTo"
                   class="material-icons material-icons align-text-bottom">
                   check_circle
                 </i>
               </button>
-              <button ngbDropdownItem [disabled]="selectedSubset === 'Location'"
-                (click)="changeSubset('Location')">
+              <button ngbDropdownItem [disabled]="selectedSubset === SearchSubsets.location"
+                (click)="changeSubset(SearchSubsets.location)">
                 Location
-                <i *ngIf="selectedSubset === 'Location'" class="material-icons material-icons align-text-bottom">
+                <i *ngIf="selectedSubset === SearchSubsets.location"
+                  class="material-icons material-icons align-text-bottom">
                   check_circle
                 </i>
               </button>
               <button
                 ngbDropdownItem
-                [disabled]="selectedSubset === 'Description & Summary'"
-                (click)="changeSubset('Description & Summary')"
+                [disabled]="selectedSubset === SearchSubsets.descriptionAndSummary"
+                (click)="changeSubset(SearchSubsets.descriptionAndSummary)"
               >
                 Description & Summary
                 <i
-                  *ngIf="selectedSubset === 'Description & Summary'"
+                  *ngIf="selectedSubset === SearchSubsets.descriptionAndSummary"
                   class="material-icons material-icons align-text-bottom"
                 >
                   check_circle
@@ -55,12 +57,12 @@
               </button>
               <button
                 ngbDropdownItem
-                [disabled]="selectedSubset === 'Record Name'"
-                (click)="changeSubset('Record Name')"
+                [disabled]="selectedSubset === SearchSubsets.recordName"
+                (click)="changeSubset(SearchSubsets.recordName)"
               >
                 Record Name
                 <i
-                  *ngIf="selectedSubset === 'Record Name'"
+                  *ngIf="selectedSubset === SearchSubsets.recordName"
                   class="material-icons material-icons align-text-bottom"
                 >
                   check_circle

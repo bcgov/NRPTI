@@ -9,7 +9,9 @@ import { MinesListComponent } from './mines-list/mines-list.component';
 import { MinesDetailComponent } from './mines-detail/mines-detail.component';
 import { MinesAddEditComponent } from './mines-add-edit/mines-add-edit.component';
 import { MinesResolver } from './mines-resolver';
-
+import { MinesContentComponent } from './mines-content/mines-content.component';
+import { MinesRecordsListComponent } from './mines-records-list/mines-records-list.component';
+import { MinesRecordsListResolver } from './mines-records-list-resolver';
 // other
 import { Utils } from 'nrpti-angular-components';
 
@@ -20,7 +22,6 @@ const routes: Routes = [
       breadcrumb: 'Mines List'
     },
     children: [
-      // mines
       {
         path: '',
         data: {
@@ -65,6 +66,35 @@ const routes: Routes = [
             resolve: {
               mine: MinesResolver
             }
+          },
+          {
+            path: 'content',
+            component: MinesContentComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              mine: MinesResolver
+            },
+            children: [
+              {
+                path: '',
+                redirectTo: 'records',
+                pathMatch: 'full'
+              },
+              {
+                path: 'records',
+                component: MinesRecordsListComponent,
+                canActivate: [CanActivateGuard],
+                data: {
+                  breadcrumb: 'Mine Records'
+                },
+                resolve: {
+                  records: MinesRecordsListResolver
+                }
+              }
+            ]
           }
         ]
       }
@@ -75,6 +105,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [MinesListResolver, MinesResolver, Utils]
+  providers: [MinesListResolver, MinesResolver, MinesRecordsListResolver, Utils]
 })
 export class MinesRoutingModule {}

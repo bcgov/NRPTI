@@ -9,7 +9,7 @@ module.exports = require('../utils/model-schema-generator')(
     itemTotal: { type: Number, default: 0 },
     itemsProcessed: { type: Number, default: 0 },
     status: { type: String, default: 'Created' },
-    read: [{ type: String, trim: true, default: 'sysadmin' }],
+    read: [{ type: String, trim: true, default: ['sysadmin', 'admin:lng', 'admin:nrced', 'admin:bcmi'] }],
     write: [{ type: String, trim: true, default: 'sysadmin' }]
   },
   'nrpti'

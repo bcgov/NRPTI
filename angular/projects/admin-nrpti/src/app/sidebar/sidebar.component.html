@@ -4,21 +4,41 @@
 </section>
    -->
   <section class="full-nav">
-    <a [routerLink]="" [ngClass]="{ active: mainRoute === 'mines' && !currentMenu }" id="mines"
-      (click)="activateLoading(['/mines'])">
+    <a
+      [routerLink]=""
+      [ngClass]="{ active: mainRoute === 'mines' && !currentMenu }"
+      id="mines"
+      (click)="activateLoading(['/mines'])"
+    >
       <i class="material-icons mr-3 ">view_list</i>
       All Mines
     </a>
   </section>
   <section class="mine-nav" *ngIf="showMineDetails">
-    <a [ngClass]="{'active': mainRoute === 'mines' && currentMenu === 'detail' }" class="dropdown-btn " [routerLink]="['mines', currentMineId, 'detail']">
+    <a
+      [ngClass]="{ active: mainRoute === 'mines' && currentMenu === 'detail' }"
+      class="dropdown-btn "
+      [routerLink]="['mines', currentMineId, 'detail']"
+    >
       Mine Details
     </a>
-    <a [ngClass]="{'active': showMineDetails && currentMenu === 'records'}" class="mines-menu" id="mines-records" [routerLink]="['mines', currentMineId, 'records']"><i class="material-icons mr-3">comment</i>Records</a>
+    <a
+      [ngClass]="{ active: showMineDetails && currentMenu === 'content' }"
+      class="mines-menu"
+      id="mines-content"
+      [routerLink]="['mines', currentMineId, 'content']"
+    >
+      <i class="material-icons mr-3">description</i>
+      Mine Content
+    </a>
   </section>
   <section class="full-nav">
-    <a [routerLink]="" [ngClass]="{ active: mainRoute === 'records' }" id="records"
-      (click)="activateLoading(['/records'])">
+    <a
+      [routerLink]=""
+      [ngClass]="{ active: mainRoute === 'records' }"
+      id="records"
+      (click)="activateLoading(['/records'])"
+    >
       <i class="material-icons mr-3 ">view_list</i>
       All Records
     </a>

@@ -6,7 +6,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgbModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
-import { MatSlideToggleModule } from '@angular/material';
+import { MatSlideToggleModule, MatCheckboxModule } from '@angular/material';
 
 // local modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -19,6 +19,9 @@ import { MinesTableRowComponent } from './mines-rows/mines-table-row.component';
 import { MinesListComponent } from './mines-list/mines-list.component';
 import { MinesDetailComponent } from './mines-detail/mines-detail.component';
 import { MinesAddEditComponent } from './mines-add-edit/mines-add-edit.component';
+import { MinesContentComponent } from './mines-content/mines-content.component';
+import { MinesRecordsListComponent } from './mines-records-list/mines-records-list.component';
+import { MinesRecordsTableRowComponent } from './mines-records-rows/mines-records-table-row.component';
 
 @NgModule({
   imports: [
@@ -34,16 +37,20 @@ import { MinesAddEditComponent } from './mines-add-edit/mines-add-edit.component
     MinesRoutingModule,
     MatTooltipModule,
     NgbDropdownModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatCheckboxModule
   ],
   declarations: [
     MinesListComponent,
     MinesTableRowComponent,
     MinesDetailComponent,
-    MinesAddEditComponent
+    MinesAddEditComponent,
+    MinesContentComponent,
+    MinesRecordsListComponent,
+    MinesRecordsTableRowComponent
   ],
   providers: [],
-  entryComponents: [MinesTableRowComponent],
+  entryComponents: [MinesTableRowComponent, MinesRecordsTableRowComponent],
   exports: []
 })
 export class MinesModule {}

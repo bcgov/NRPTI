@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const AWS = require('aws-sdk');
 const ObjectID = require('mongodb').ObjectID;
+const { ROLES } = require('../utils/constants/misc');
 
 const queryActions = require('../utils/query-actions');
 const queryUtils = require('../utils/query-utils');
@@ -36,7 +37,8 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
     const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
 
     // Set mongo document and s3 document roles
-    const readRoles = [];
+    let readRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN];
+    const writeRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN];
     let s3ACLRole = null;
     if (!businessLogicManager.isDocumentConsideredAnonymous(masterRecord)) {
       readRoles.push('public');
@@ -52,7 +54,8 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
           args.swagger.params.fileName.value,
           (args.swagger.params.auth_payload && args.swagger.params.auth_payload.preferred_username) || '',
           args.swagger.params.url.value,
-          readRoles
+          readRoles,
+          writeRoles
         );
 
         queryUtils.audit(args, 'POST', JSON.stringify(docResponse), args.swagger.params.auth_payload, docResponse._id);
@@ -72,6 +75,7 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
           args.swagger.params.upfile.value.buffer,
           (args.swagger.params.auth_payload && args.swagger.params.auth_payload.preferred_username) || '',
           readRoles,
+          writeRoles,
           s3ACLRole
         ));
 
@@ -254,15 +258,15 @@ exports.protectedDelete = async function(args, res, next) {
  * @param {*} [url=null] url of the document
  * @param {*} [readRoles=[]] read roles to add to the document. (optional)
  */
-async function createURLDocument(fileName, addedBy, url, readRoles = []) {
+async function createURLDocument(fileName, addedBy, url, readRoles = [], writeRoles = []) {
   const Document = mongoose.model('Document');
   let document = new Document();
 
   document.fileName = fileName;
   document.addedBy = addedBy;
   document.url = url;
-  document.read = ['sysadmin', ...readRoles];
-  document.write = ['sysadmin'];
+  document.read = [ROLES.SYSADMIN, ...readRoles];
+  document.write = [ROLES.SYSADMIN, ...writeRoles];;
 
   return document.save();
 }
@@ -279,7 +283,7 @@ exports.createURLDocument = createURLDocument;
  * @param {*} [s3ACLRole=null] the ACL role to set.  Defaults to `authenticated-read` if not set. (optional)
  * @returns
  */
-async function createS3Document(fileName, fileContent, addedBy, readRoles = [], s3ACLRole = null) {
+async function createS3Document(fileName, fileContent, addedBy, readRoles = [], writeRoles = [], s3ACLRole = null) {
   const Document = mongoose.model('Document');
   let document = new Document();
 
@@ -289,8 +293,8 @@ async function createS3Document(fileName, fileContent, addedBy, readRoles = [], 
   document.addedBy = addedBy;
   document.url = `https://${process.env.OBJECT_STORE_endpoint_url}/${process.env.OBJECT_STORE_bucket_name}/${document._id}/${fileName}`;
   document.key = s3Key;
-  document.read = ['sysadmin', ...readRoles];
-  document.write = ['sysadmin'];
+  document.read = [ROLES.SYSADMIN, ...readRoles];
+  document.write = [ROLES.SYSADMIN, ...writeRoles];
 
   const s3Response = await uploadS3Document(s3Key, fileContent, s3ACLRole);
 
@@ -408,6 +412,7 @@ async function publishDocument(docId, auth_payload) {
 
   if (!document) {
     defaultLog.info(`publishDocument - couldn't find document for docId: ${docId}`);
+    return null;
   }
 
   const published = await queryActions.publish(document);
@@ -437,6 +442,7 @@ async function unpublishDocument(docId, auth_payload) {
 
   if (!document) {
     defaultLog.info(`unpublishDocument - couldn't find document for docId: ${docId}`);
+    return null;
   }
 
   const unpublished = await queryActions.unPublish(document);
