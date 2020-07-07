@@ -278,7 +278,7 @@ class NrisDataSource {
 
     // Set mongo document and s3 document roles
     let readRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.BCMIADMIN];
-    let writeRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.BCMIADMIN];
+    const writeRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.BCMIADMIN];
     let s3ACLRole = null;
     if (!BusinessLogicManager.isDocumentConsideredAnonymous(newRecord)) {
       readRoles.push('public');

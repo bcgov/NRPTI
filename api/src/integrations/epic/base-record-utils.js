@@ -47,8 +47,8 @@ class BaseRecordUtils {
     const documents = [];
 
     if (epicRecord && epicRecord._id && epicRecord.documentFileName) {
-      let readRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN, 'public'];
-      let writeRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN];
+      const readRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN, 'public'];
+      const writeRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN];
 
       const savedDocument = await DocumentController.createURLDocument(
         epicRecord.documentFileName,

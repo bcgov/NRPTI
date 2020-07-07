@@ -38,7 +38,7 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
 
     // Set mongo document and s3 document roles
     let readRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN];
-    let writeRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN];
+    const writeRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN];
     let s3ACLRole = null;
     if (!businessLogicManager.isDocumentConsideredAnonymous(masterRecord)) {
       readRoles.push('public');
