@@ -54,7 +54,8 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
           args.swagger.params.fileName.value,
           (args.swagger.params.auth_payload && args.swagger.params.auth_payload.preferred_username) || '',
           args.swagger.params.url.value,
-          readRoles
+          readRoles,
+          writeRoles
         );
 
         queryUtils.audit(args, 'POST', JSON.stringify(docResponse), args.swagger.params.auth_payload, docResponse._id);
@@ -257,15 +258,15 @@ exports.protectedDelete = async function(args, res, next) {
  * @param {*} [url=null] url of the document
  * @param {*} [readRoles=[]] read roles to add to the document. (optional)
  */
-async function createURLDocument(fileName, addedBy, url, readRoles = []) {
+async function createURLDocument(fileName, addedBy, url, readRoles = [], writeRoles = []) {
   const Document = mongoose.model('Document');
   let document = new Document();
 
   document.fileName = fileName;
   document.addedBy = addedBy;
   document.url = url;
-  document.read = [ROLES.SYSADMIN, ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.BCMIADMIN, ...readRoles];
-  document.write = ROLES.ADMIN_ROLES;
+  document.read = [ROLES.SYSADMIN, ...readRoles];
+  document.write = [ROLES.SYSADMIN, ...writeRoles];;
 
   return document.save();
 }

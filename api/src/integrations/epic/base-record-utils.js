@@ -6,6 +6,7 @@ const defaultLog = require('../../utils/logger')('epic-base-record-utils');
 const EpicUtils = require('./epic-utils');
 const DocumentController = require('./../../controllers/document-controller');
 const RecordController = require('./../../controllers/record-controller');
+const { ROLES } = require('../../utils/constants/misc');
 
 const EPIC_PUBLIC_HOSTNAME = process.env.EPIC_PUBLIC_HOSTNAME || 'https://projects.eao.gov.bc.ca';
 
@@ -46,13 +47,17 @@ class BaseRecordUtils {
     const documents = [];
 
     if (epicRecord && epicRecord._id && epicRecord.documentFileName) {
+      let readRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN, 'public'];
+      let writeRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN];
+
       const savedDocument = await DocumentController.createURLDocument(
         epicRecord.documentFileName,
         (this.auth_payload && this.auth_payload.displayName) || '',
         `${EPIC_PUBLIC_HOSTNAME}/api/document/${epicRecord._id}/fetch/${encodeURIComponent(
           epicRecord.documentFileName
         )}`,
-        ['public']
+        readRoles,
+        writeRoles
       );
 
       documents.push(savedDocument._id);
@@ -234,7 +239,7 @@ class BaseRecordUtils {
 
   /**
    * Indicates if a record is a fee order or not.
-   * 
+   *
    * @param {object} transformedRecord Epic record that has been transformed to NRPTI format
    * @returns {boolean} Indication if the record is a fee order
    * @memberof BaseRecordUtils
