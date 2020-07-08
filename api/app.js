@@ -1,7 +1,6 @@
 'use strict';
 
 const app = require('express')();
-const cron = require('node-cron');
 const fs = require('fs');
 const swaggerTools = require('swagger-tools');
 const YAML = require('yamljs');
