@@ -15,7 +15,27 @@ exports.protectedOptions = async function(args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedCreateTask = async function(args, res, next) {
+/*Required fields for type of task:
+
+import: 
+{
+  dataSourceType: epic
+  taskType: import,
+}
+
+csvImport:
+{
+  dataSourceType: cors-csv,
+  taskType: import,
+  recordType: ['Ticket']
+}
+
+updateMaterializedView:
+{
+  taskType: import,
+  materializedViewSubset: descriptionSummary
+}*/
+exports.protectedCreateTask = async function (args, res, next) {
   // validate request parameters
   if (!args.swagger.params.task || !args.swagger.params.task.value) {
     defaultLog.error('protectedCreateTask - missing required request body');
