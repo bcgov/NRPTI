@@ -35,7 +35,7 @@ export class Mine {
   status:               string;
   type:                 string;
   commodities:          string[];
-  tailingsImpoundments: number;
+  tailingsImpoundments: any;
   region:               string;
   location:             object;
   permittee:            string;
@@ -65,7 +65,6 @@ export class Mine {
     this.status               = (obj && obj.status)               || '';
     this.type                 = (obj && obj.type)                 || '';
     this.commodities          = (obj && obj.commodities)          || [];
-    this.tailingsImpoundments = (obj && obj.tailingsImpoundments) || 0;
     this.region               = (obj && obj.region)               || '';
     this.location             = (obj && obj.location)             || null;
     this.permittee            = (obj && obj.permittee)            || '';
@@ -83,5 +82,11 @@ export class Mine {
     this.sourceDateAdded      = (obj && obj.sourceDateAdded)      || null;
     this.sourceDateUpdated    = (obj && obj.sourceDateUpdated)    || null;
     this.sourceSystemRef      = (obj && obj.sourceSystemRef)      || '';
+
+    if (obj && obj.tailingsImpoundments && obj.tailingsImpoundments > 0) {
+      this.tailingsImpoundments = obj.tailingsImpoundments;
+    } else {
+      this.tailingsImpoundments = 'N/A';
+    }
   }
 }
