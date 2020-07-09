@@ -55,7 +55,6 @@
     "jwks-rsa": "1.6.0",
     "moment": "2.24.0",
     "mongoose": "5.7.7",
-    "node-cron": "^2.0.3",
     "qs": "6.9.0",
     "reproject": "1.2.5",
     "stream": "0.0.2",
