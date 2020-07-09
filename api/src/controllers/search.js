@@ -263,8 +263,8 @@ let searchCollection = async function (
               }
             ]
           },
-          then: true,
-          else: false }
+          then: 'published',
+          else: 'unpublished' }
       }
     }
   });
