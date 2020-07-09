@@ -243,6 +243,32 @@ let searchCollection = async function (
     }
   ];
 
+  // add a dynamic "Published" attribute to allow for
+  // sorting by published
+  aggregation.push({
+    $addFields: {
+      published: {
+        $cond: {
+          if: {
+            $and: [
+              { $cond: { if: '$read', then: true, else: false } },
+              {
+                $anyElementTrue: {
+                  $map: {
+                    input: '$read',
+                    as: 'fieldTag',
+                    in: { $setIsSubset: [['$$fieldTag'], ['public']] }
+                  }
+                }
+              }
+            ]
+          },
+          then: 'published',
+          else: 'unpublished' }
+      }
+    }
+  });
+
   let projection = {
     $project: {
       _id: 1,
