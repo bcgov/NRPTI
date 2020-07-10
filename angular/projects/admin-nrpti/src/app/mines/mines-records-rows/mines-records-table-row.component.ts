@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { FactoryService } from '../../services/factory.service';
 import { TableRowComponent } from 'nrpti-angular-components';
 import { Router } from '@angular/router';
@@ -24,6 +24,18 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
     this.populateTextFields();
 
     this.changeDetectionRef.detectChanges();
+  }
+
+  /**
+   * Listen for clicks on the row.
+   *
+   * Note: Other click handlers will need to call `$event.stopPropagation()` to prevent their click events from
+   * bubbling up to this listener.
+   *
+   * @memberof MinesRecordsTableRowComponent
+   */
+  @HostListener('click') onItemClicked() {
+    this.goToDetails();
   }
 
   /**
