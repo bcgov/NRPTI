@@ -30,7 +30,6 @@ import { Utils } from 'nrpti-angular-components';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.Default
 })
-
 export class SearchFilterTemplateComponent implements OnInit, OnDestroy {
   // Inputs
   @Input() title: string;
