@@ -1,6 +1,5 @@
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import {
   IColumnObject,
@@ -14,7 +13,9 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MinesRecordsTableRowComponent } from '../mines-records-rows/mines-records-table-row.component';
-import { SearchSubsets } from '../../../../../common/src/app/utils/record-constants';
+import { SearchSubsets, Picklists } from '../../../../../common/src/app/utils/record-constants';
+import { FilterObject, FilterType, DateFilterDefinition, CheckOrRadioFilterDefinition, OptionItem, RadioOptionItem, MultiSelectDefinition, DropdownDefinition } from '../../../../../common/src/app/search-filter-template/filter-object';
+import { SubsetsObject, SubsetOption } from '../../../../../common/src/app/search-filter-template/subset-object';
 
 /**
  * Mine list page component.
@@ -91,9 +92,10 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   // Search
   public keywordSearchWords: string;
   public showAdvancedFilters = false;
-  public selectedSubset = SearchSubsets.all;
   public queryParams: Params;
-  public searchFiltersForm: FormGroup;
+
+  public filters: FilterObject[] = [];
+  public subsets: SubsetsObject;
 
   constructor(
     public location: Location,
@@ -103,7 +105,175 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) {
+    // setup the subset configuration
+    const subsetOptions = [
+      new SubsetOption('', 'All'),
+      new SubsetOption('issuedTo', 'Issued To'),
+      new SubsetOption('location', 'Location'),
+      new SubsetOption('description', 'Description & Summary'),
+      new SubsetOption('recordName', 'Record Name')
+    ];
+    this.subsets = new SubsetsObject(subsetOptions);
+
+    // setup the advanced filters
+    const issuedDateFilter = new FilterObject(
+      'issuedDate',
+      FilterType.DateRange,
+      '', // if you include a name, it will add a label to the date range filter.
+      new DateFilterDefinition('dateRangeFromFilter', 'Start Issued Date', 'dateRangeToFilter', 'End Issued Date')
+    );
+
+    const entityTypeFilter = new FilterObject(
+      'entityType',
+      FilterType.Checkbox,
+      'Entity Type',
+      new CheckOrRadioFilterDefinition([new OptionItem('issuedToCompany', 'Company'), new OptionItem('issuedToIndividual', 'Individual')])
+    );
+
+    const publishedStatefilter = new FilterObject(
+      'isNrcedPublished',
+      FilterType.RadioPicker,
+      'NRCED Published State',
+      new CheckOrRadioFilterDefinition([
+        new RadioOptionItem('publishedState', 'Published', 'true'),
+        new RadioOptionItem('unpubState', 'Unpublished', 'false')
+      ])
+    );
+
+    const activityTypeFilter = new FilterObject(
+      'activityType',
+      FilterType.MultiSelect,
+      'Activity Type',
+      new MultiSelectDefinition(Object.values(Picklists.activityTypePicklist).map(item => {
+        return { value: item._schemaName, displayValue: item.displayName, selected: false, display: true };
+      }), 'Begin typing to filter activities...', 'Select all that apply...')
+    );
+
+    const issuedUnderActFilter = new FilterObject(
+      'act',
+      FilterType.MultiSelect,
+      'Issued Under which Act',
+      new MultiSelectDefinition(Picklists.getAllActs().map(value => {
+        return { value: value, displayValue: value, selected: false, display: true };
+      }), 'Begin typing to filter acts...', '')
+    );
+
+    const lngPublishedStatefilter = new FilterObject(
+      'isLngPublished',
+      FilterType.RadioPicker,
+      'LNG Published State',
+      new CheckOrRadioFilterDefinition([
+        new RadioOptionItem('lngPublishedState', 'Published', 'true'),
+        new RadioOptionItem('lngUnpubState', 'Unpublished', 'false')
+      ])
+    );
+
+    const responsibleAgencyFilter = new FilterObject(
+      'agency',
+      FilterType.MultiSelect,
+      'Responsible Agency',
+      new MultiSelectDefinition(Picklists.agencyPicklist.map(value => {
+        return { value: value, displayValue: value, selected: false, display: true };
+      }), 'Begin typing to filter agencies...', '')
+    );
+
+    const issuedUnderRegFilter = new FilterObject(
+      'regulation',
+      FilterType.MultiSelect,
+      'Issued Under which Regulation',
+      new MultiSelectDefinition(Picklists.getAllRegulations().map(value => {
+        return { value: value, displayValue: value, selected: false, display: true };
+      }), 'Begin typing to filter regulations...', '')
+    );
+
+    const sourceSystemFilter = new FilterObject(
+      'sourceSystemRef',
+      FilterType.Dropdown,
+      'Source System',
+      new DropdownDefinition(Picklists.sourceSystemRefPicklist)
+    );
+
+    const projectFilter = new FilterObject(
+      'projects',
+      FilterType.Checkbox,
+      'Project',
+      new CheckOrRadioFilterDefinition([
+        new OptionItem('lngCanada', 'LNG Canada'),
+        new OptionItem('coastalGaslink', 'Coastal Gaslink'),
+        new OptionItem('otherProjects', 'Other')],
+        true)
+    );
+
+    const documentsfilter = new FilterObject(
+      'hasDocuments',
+      FilterType.RadioPicker,
+      'Documents',
+      new CheckOrRadioFilterDefinition([
+        new RadioOptionItem('yesDoc', 'Yes', 'true'),
+        new RadioOptionItem('noDoc', 'No', 'false')
+      ])
+    );
+
+    this.filters = [
+      issuedDateFilter,
+      entityTypeFilter,
+      publishedStatefilter,
+      activityTypeFilter,
+      issuedUnderActFilter,
+      lngPublishedStatefilter,
+      responsibleAgencyFilter,
+      issuedUnderRegFilter,
+      sourceSystemFilter,
+      projectFilter,
+      documentsfilter
+    ];
+  }
+
+  executeSearch(searchPackage) {
+    console.log(searchPackage);
+    this.clearQueryParamsFilters();
+
+    // check keyword
+    if (searchPackage.keywords) {
+      this.queryParams['keywords'] = searchPackage.keywords;
+      // always change sortBy to '-score' if keyword search is directly triggered by user
+      if (searchPackage.keywordsChanged) {
+        this.tableData.sortBy = '-score';
+      }
+    }
+
+    // check subset
+    if (searchPackage.subset) {
+      this.queryParams['subset'] = [searchPackage.subset];
+    }
+
+    Object.keys(searchPackage.filters).forEach(filter => {
+      this.queryParams[filter] = searchPackage.filters[filter];
+    });
+
+    this.tableData.currentPage = 1;
+    this.submit();
+  }
+
+  private clearQueryParamsFilters() {
+    delete this.queryParams['keywords'];
+    delete this.queryParams['subset'];
+    delete this.queryParams['activityType'];
+    delete this.queryParams['dateRangeFromFilter'];
+    delete this.queryParams['dateRangeToFilter'];
+    delete this.queryParams['issuedToCompany'];
+    delete this.queryParams['issuedToIndividual'];
+    delete this.queryParams['activityType'];
+    delete this.queryParams['agency'];
+    delete this.queryParams['act'];
+    delete this.queryParams['regulation'];
+    delete this.queryParams['sourceSystemRef'];
+    delete this.queryParams['hasDocuments'];
+    delete this.queryParams['projects'];
+    delete this.queryParams['isNrcedPublished'];
+    delete this.queryParams['isLngPublished'];
+  }
 
   /**
    * Component init.
@@ -167,32 +337,12 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
         ) {
           this.showAdvancedFilters = true;
         }
-        this.setSubset();
-        this.buildSearchFiltersForm();
-        this.subscribeToSearchFilterChanges();
         this.loadingScreenService.setLoadingState(false, 'body');
         this._changeDetectionRef.detectChanges();
       });
 
       this._changeDetectionRef.detectChanges();
     });
-  }
-
-  /**
-   * Update and trigger keyword search filter.
-   *
-   * @memberof MinesRecordsListComponent
-   */
-  keywordSearch() {
-    if (this.keywordSearchWords) {
-      this.queryParams['keywords'] = this.keywordSearchWords;
-      // always change sortBy to '-score' if keyword search is directly triggered by user
-      this.tableData.sortBy = '-score';
-    } else {
-      this.clearKeywordSearch();
-    }
-    this.tableData.currentPage = 1;
-    this.submit();
   }
 
   /**
@@ -206,30 +356,6 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Resets the keyword search and all associated parameters/values.
-   *
-   * @memberof RecordsListComponent
-   */
-  clearKeywordSearch() {
-    this.selectedSubset = SearchSubsets.all;
-    this.clearKeywordSearchTerms();
-    delete this.queryParams['keywords'];
-    delete this.queryParams['subset'];
-    if (!this.tableData.sortBy || this.tableData.sortBy === '-score') {
-      // only change sortBy to the default, if sortBy is unset or if sorting has not been directly triggered by user
-      this.tableData.sortBy = '-dateAdded';
-    }
-  }
-
-  /**
-   * Set keyword search filter to empty string.
-   *
-   * @memberof MinesRecordsListComponent
-   */
-  clearKeywordSearchTerms() {
-    this.keywordSearchWords = '';
-  }
-  /**
    * Updates the url parameters based on the currently set query and table template params, without reloading the page.
    *
    * @memberof MinesRecordsListComponent
@@ -242,96 +368,6 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
         })
         .toString()
     );
-  }
-
-  /**
-   * Build the search filters form.
-   *
-   * @memberof MinesRecordsListComponent
-   */
-  public buildSearchFiltersForm() {
-    this.searchFiltersForm = new FormGroup({
-      dateIssuedStart: new FormControl(
-        (this.queryParams &&
-          this.queryParams.dateRangeFromFilter &&
-          this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeFromFilter))) ||
-          null
-      ),
-      dateIssuedEnd: new FormControl(
-        (this.queryParams &&
-          this.queryParams.dateRangeToFilter &&
-          this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeToFilter))) ||
-          null
-      ),
-      issuedToCompany: new FormControl((this.queryParams && this.queryParams.issuedToCompany) || false),
-      issuedToIndividual: new FormControl((this.queryParams && this.queryParams.issuedToIndividual) || false),
-      agency: new FormControl((this.queryParams && this.queryParams.agency) || null),
-      act: new FormControl((this.queryParams && this.queryParams.act) || null),
-      regulation: new FormControl((this.queryParams && this.queryParams.regulation) || null),
-      activityType: new FormControl((this.queryParams && this.queryParams.activityType) || null),
-      sourceSystemRef: new FormControl(
-        (this.queryParams && this.queryParams.sourceSystemRef && this.queryParams.sourceSystemRef.split(',')) || null
-      ),
-      hasDocuments: new FormControl((this.queryParams && this.queryParams.hasDocuments) || false),
-      projects: new FormGroup({
-        lngCanada: new FormControl(
-          (this.queryParams && this.queryParams.projects && this.queryParams.projects.includes('lngCanada')) || false
-        ),
-        coastalGaslink: new FormControl(
-          (this.queryParams && this.queryParams.projects && this.queryParams.projects.includes('coastalGaslink')) ||
-            false
-        ),
-        otherProjects: new FormControl(
-          (this.queryParams && this.queryParams.projects && this.queryParams.projects.includes('otherProjects')) ||
-            false
-        )
-      }),
-      isNrcedPublished: new FormControl((this.queryParams && this.queryParams.isNrcedPublished) || false),
-      isLngPublished: new FormControl((this.queryParams && this.queryParams.isLngPublished) || false)
-    });
-  }
-
-  /**
-   * Listen for search filter component changes, update query params accordingly, and re-load list content.
-   *
-   * @memberof MinesRecordsListComponent
-   */
-  subscribeToSearchFilterChanges() {
-    this.searchFiltersForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe)).subscribe(changes => {
-      this.handleFilterChange('activityType', changes.activityType);
-
-      this.handleFilterChange(
-        'dateRangeFromFilter',
-        changes.dateIssuedStart && this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedStart).toISOString()
-      );
-
-      this.handleFilterChange(
-        'dateRangeToFilter',
-        changes.dateIssuedEnd && this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedEnd).toISOString()
-      );
-
-      this.handleFilterChange('issuedToCompany', changes.issuedToCompany);
-
-      this.handleFilterChange('issuedToIndividual', changes.issuedToIndividual);
-
-      this.handleFilterChange('agency', changes.agency);
-
-      this.handleFilterChange('act', changes.act);
-
-      this.handleFilterChange('regulation', changes.regulation);
-
-      this.handleFilterChange('sourceSystemRef', changes.sourceSystemRef);
-
-      this.handleFilterChange('hasDocuments', changes.hasDocuments);
-
-      this.handleFilterChange('projects', changes.projects && this.getProjectsFilterArray(changes.projects));
-
-      this.handleFilterChange('isNrcedPublished', changes.isNrcedPublished);
-
-      this.handleFilterChange('isLngPublished', changes.isLngPublished);
-
-      this.submit();
-    });
   }
 
   /**
@@ -427,100 +463,6 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
     this.router.navigate([{ ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }], {
       relativeTo: this.route
     });
-  }
-
-  toggleAdvancedFilters(): void {
-    this.showAdvancedFilters = !this.showAdvancedFilters;
-  }
-
-  changeSubset(filterText): void {
-    switch (filterText) {
-      case SearchSubsets.all:
-        this.selectedSubset = SearchSubsets.all;
-        delete this.queryParams['subset'];
-        break;
-      case SearchSubsets.descriptionAndSummary:
-        this.selectedSubset = SearchSubsets.descriptionAndSummary;
-        this.queryParams['subset'] = ['description'];
-        break;
-      case SearchSubsets.issuedTo:
-        this.selectedSubset = SearchSubsets.issuedTo;
-        this.queryParams['subset'] = ['issuedTo'];
-        break;
-      case SearchSubsets.location:
-        this.selectedSubset = SearchSubsets.location;
-        this.queryParams['subset'] = ['location'];
-        break;
-      case SearchSubsets.recordName:
-        this.selectedSubset = SearchSubsets.recordName;
-        this.queryParams['subset'] = ['recordName'];
-        break;
-      default:
-        break;
-    }
-    if (this.keywordSearchWords) {
-      this.queryParams.keywords = this.keywordSearchWords;
-      // always change sortBy to '-score' if keyword search is directly triggered by user
-      this.tableData.sortBy = '-score';
-      this.submit();
-    }
-  }
-
-  /**
-   * Set subset filters.
-   *
-   * @memberof MinesRecordsListComponent
-   */
-  setSubset() {
-    if (!this.queryParams.subset) {
-      this.selectedSubset = SearchSubsets.all;
-    } else if (this.queryParams.subset.includes('issuedTo')) {
-      this.selectedSubset = SearchSubsets.issuedTo;
-    } else if (this.queryParams.subset.includes('location')) {
-      this.selectedSubset = SearchSubsets.location;
-    } else if (this.queryParams.subset.includes('description')) {
-      this.selectedSubset = SearchSubsets.descriptionAndSummary;
-    } else if (this.queryParams.subset.includes('recordName')) {
-      this.selectedSubset = SearchSubsets.recordName;
-    }
-  }
-
-  /**
-   * Builds an array of project names, for project filters that are enabled/selected.
-   *
-   * @param {object} projects changes.projects object
-   * @returns {string[]} array of project names
-   * @memberof MinesRecordsListComponent
-   */
-  getProjectsFilterArray(projects: object): string[] {
-    if (!projects) {
-      return [];
-    }
-
-    const projectsQueryParam: string[] = [];
-
-    for (const projectName of Object.keys(projects)) {
-      if (projects[projectName]) {
-        projectsQueryParam.push(projectName);
-      }
-    }
-
-    return projectsQueryParam;
-  }
-
-  /**
-   * Handle filter changes for a string/boolean filter.
-   *
-   * @param {string} queryParam
-   * @param {string} changesValue
-   * @memberof MinesRecordsListComponent
-   */
-  handleFilterChange(queryParam: string, changesValue: any) {
-    if (changesValue) {
-      this.queryParams[queryParam] = changesValue;
-    } else {
-      delete this.queryParams[queryParam];
-    }
   }
 
   /**

@@ -13,9 +13,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GlobalModule } from 'nrpti-angular-components';
 import { CommonModule as NrptiCommonModule } from '../../../../common/src/app/common.module';
 
-// components
-import { ExplorePanelComponent } from '../explore-panel/explore-panel.component';
-
 // pipes
 import { DatePipe } from '@angular/common';
 import { OrderByPipe } from '../pipes/order-by.pipe';
@@ -36,7 +33,7 @@ import { LinkifyPipe } from '../pipes/linkify.pipe';
     FormsModule,
     ReactiveFormsModule
   ],
-  declarations: [OrderByPipe, NewlinesPipe, ObjectFilterPipe, LinkifyPipe, ExplorePanelComponent],
+  declarations: [OrderByPipe, NewlinesPipe, ObjectFilterPipe, LinkifyPipe],
   providers: [DatePipe],
   exports: [
     MatSlideToggleModule,
@@ -46,8 +43,7 @@ import { LinkifyPipe } from '../pipes/linkify.pipe';
     MatSelectModule,
     OrderByPipe,
     NewlinesPipe,
-    LinkifyPipe,
-    ExplorePanelComponent
+    LinkifyPipe
   ],
   entryComponents: []
 })

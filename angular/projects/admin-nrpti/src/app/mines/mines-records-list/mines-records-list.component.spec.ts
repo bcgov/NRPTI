@@ -1,5 +1,4 @@
 import { async, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -30,9 +29,7 @@ describe('MinesRecordsListComponent', () => {
         CommonModule,
         GlobalModule,
         SharedModule,
-        NgxPaginationModule,
-        FormsModule,
-        ReactiveFormsModule
+        NgxPaginationModule
       ],
       declarations: [MinesRecordsListComponent],
       providers: [
