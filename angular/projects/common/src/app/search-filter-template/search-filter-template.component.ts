@@ -36,6 +36,7 @@ export class SearchFilterTemplateComponent implements OnInit, OnDestroy {
   @Input() tooltip: string;
   @Input() subsets: SubsetsObject;
   @Input() advancedFilters = false;
+  @Input() advancedFilterText = null;
   @Input() showAdvancedFilters = false;
   @Input() searchOnFilterChange = true;
   @Input() filters: FilterObject[] = [];
@@ -80,7 +81,7 @@ export class SearchFilterTemplateComponent implements OnInit, OnDestroy {
           const filterName = filterVal.split('=')[0];
           const val = filterVal.split('=')[1];
 
-          if (val && val !== 'null' && val.length !== 0) {
+          if (val) {
 
             // we know how to handle keyword, but everything
             // else will be dynamic

@@ -64,6 +64,9 @@
 <!-- advanced filters panel -->
 <div *ngIf="advancedFilters" class="row mt-3 border-bottom" [hidden]="!showAdvancedFilters">
   <form class="filter-form" [formGroup]="formGroup" novalidate>
+    <div *ngIf="advancedFilterText && advancedFilterText.length > 0" class="row filter-panel">
+      <p>{{advancedFilterText}}</p>
+    </div>
     <div class="row">
       <!-- for each filter, create a block for each filter type -->
       <div class="filter-panel col-md-4" *ngFor="let filter of filters">
@@ -92,14 +95,14 @@
         </div>
         <!-- dropdown filter -->
         <div *ngIf="filter.type === FilterType.Dropdown">
-          <label>{{filter.name}}</label>
+          <label *ngIf="filter.name && filter.name.length > 0">{{filter.name}}</label>
           <mat-select class="border rounded px-2 py-2" [formControlName]="filter.id" [multiple]="filter.filterDefinition.multiselect">
             <mat-option *ngFor="let option of filter.filterDefinition.options" [value]="option">{{option}}</mat-option>
           </mat-select>
         </div>
         <!-- multi select filter -->
         <div *ngIf="filter.type === FilterType.MultiSelect">
-          <label for="activityTypeFilter">{{filter.name}}</label>
+          <label *ngIf="filter.name && filter.name.length > 0" for="activityTypeFilter">{{filter.name}}</label>
           <span class="grey-subtext ml-2">{{filter.filterDefinition.subtext}}</span>
           <span *ngIf="filter.filterDefinition.selectedOptionsCount" class="grey-subtext ml-2">({{ filter.filterDefinition.selectedOptionsCount }} selected)</span>
           <app-autocomplete-multi-select
@@ -112,7 +115,7 @@
         </div>
         <!-- radio button filter -->
         <div *ngIf="filter.type === FilterType.RadioPicker">
-          <label class="control-label font-weight-bold">{{filter.name}}</label>
+          <label *ngIf="filter.name && filter.name.length > 0" class="control-label font-weight-bold">{{filter.name}}</label>
           <div class="row">
             <div *ngFor="let radio of filter.filterDefinition.options">
               <div class="col-xl-3">
@@ -141,7 +144,7 @@
         </div>
         <!-- check box filter -->
         <div *ngIf="filter.type === FilterType.Checkbox">
-          <label class="control-label font-weight-bold">{{filter.name}}</label>
+          <label *ngIf="filter.name && filter.name.length > 0" class="control-label font-weight-bold">{{filter.name}}</label>
           <div class="row">
             <div *ngFor="let box of filter.filterDefinition.options">
               <div class="col-xl-3">

@@ -231,7 +231,6 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   }
 
   executeSearch(searchPackage) {
-    console.log(searchPackage);
     this.clearQueryParamsFilters();
 
     // check keyword

@@ -53,6 +53,7 @@ With the module imports in place, you can add your component to any screen. Just
     [tooltip]="myooltipVar"
     [subsets]="subsets"
     [advancedFilters]="true"
+    [advancedFilterText]="myFilterDesc"
     [showAdvancedFilters]="false"
     [filters]="filters"
     [searchOnFilterChange]="true">
@@ -65,6 +66,7 @@ The component has the following parameters and event handlers
 - tooltip
 - subsets
 - advancedFilters
+- advancedFilterText
 - showAdvancedFilters
 - filters
 - searchOnFilterChange
@@ -74,21 +76,23 @@ The component has the following parameters and event handlers
 
 ### Parameters
 
-You can pass in values to a combination of parameters. Their function is described below
+You can pass in values to a combination of parameters. Their function is described below.
 
-`title` Sets the title of the search component. Usually this is "Keyword Search". This is `required`
+`title` Sets the title of the search component. Usually this is "Keyword Search". This is `required`.
 
-`tooltip` Tooltip sets the text to display when a user mouses over the tooltip icon to the right of the title. This is `required`
+`tooltip` Tooltip sets the text to display when a user mouses over the tooltip icon to the right of the title. This is `required`.
 
-`subsets` Is a list of subset objects that will display in a dropdown menu to the left of the keyword search box. Subset objects are described in detail below. Defaults to `null`
+`subsets` Is a list of subset objects that will display in a dropdown menu to the left of the keyword search box. Subset objects are described in detail below. Defaults to `null`.
 
-`advancedFilters` Is a boolean value that indicates whether or not the advanced filter panel will display. Defaults to `false`
+`advancedFilters` Is a boolean value that indicates whether or not the advanced filter panel will display. Defaults to `false`.
 
-`showAdvancedFilters` Is a boolean value that indicates whether or not the advanced filter panel will be open by default. Defaults to `false`
+`advancedFilterText` Is a text string that will include a description or summary at the top of the advanced filters panel. Defaults to `null`.
 
-`filters` Is an array containing your filter definitions. Filter definitions are described in detail below. Defaults to `[]`
+`showAdvancedFilters` Is a boolean value that indicates whether or not the advanced filter panel will be open by default. Defaults to `false`.
 
-`searchOnFilterChange` Is a boolean that indicates whether or not a search will be triggered when a filter value changes. Defaults to `false`
+`filters` Is an array containing your filter definitions. Filter definitions are described in detail below. Defaults to `[]`.
+
+`searchOnFilterChange` Is a boolean that indicates whether or not a search will be triggered when a filter value changes. Defaults to `false`.
 
 ### Event Handlers
 
@@ -109,9 +113,9 @@ The event returns a `searchPackage` object, which contains the following details
 
 `keywords` will contain the text entered into the keyword search text box.
 
-`keywordsChanged` is a boolean value indicating if the keyword has changed since the last search request
+`keywordsChanged` is a boolean value indicating if the keyword has changed since the last search request.
 
-`subset` contains the subset value, or null if no subsets are available
+`subset` contains the subset value, or null if no subsets are available.
 
 `filters` contains a key-value pair of your API filters. It's best to ensure the filter object ID's and return values map directly to your API query parameters for ease of use. More details about that are below in the `Filter Definitions` section.
 
@@ -141,7 +145,7 @@ A subset object has the following structure:
 
 `options` contains an array of SubsetOption objects, and represents each option in the dropdown.
 
-`defaultSubset` contains the subset object to use as a default setting, or if not included, the first option in the `options` array
+`defaultSubset` contains the subset object to use as a default setting, or if not included, the first option in the `options` array.
 
 `selectedSubset` is the currently selected subset, or the first option in the `options` array, in case you want the selection to be different then the expected default.
 
@@ -217,17 +221,17 @@ The `DateFilterDefinition` object is used for date range filters.
 }
 ```
 
-`startDateId` is the id to use for the range start date, and is best if it matches your api query param id. `Required`
+`startDateId` is the id to use for the range start date, and is best if it matches your api query param id. `Required`.
 
-`startDateLabel` is the label to use for the range start date. `Required`
+`startDateLabel` is the label to use for the range start date. `Required`.
 
-`endDateId` is the id to use for the range end date, and is best if it matches your api query param id. `Required`
+`endDateId` is the id to use for the range end date, and is best if it matches your api query param id. `Required`.
 
-`endDateLabel` is the label to use for the range end date. `Required`
+`endDateLabel` is the label to use for the range end date. `Required`.
 
 `minDate` is the minimum allowed date a user can select in the date range components. Defaults to `January 1, 1900`.
 
-`maxDate` is the maximum allowed date a user can select in the date range components. Defaults to `Now`
+`maxDate` is the maximum allowed date a user can select in the date range components. Defaults to `Now`.
 
 ### CheckOrRadioFilterDefinition
 
