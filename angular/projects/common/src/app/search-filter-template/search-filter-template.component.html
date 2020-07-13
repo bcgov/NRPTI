@@ -62,9 +62,12 @@
 </div>
 
 <!-- advanced filters panel -->
-<div *ngIf="advancedFilters" class="row mt-3 border-bottom" [hidden]="!showAdvancedFilters">
+<div id="advancedFilterPanel" *ngIf="advancedFilters" class="row mt-3 border-bottom" [hidden]="!showAdvancedFilters">
   <form class="filter-form" [formGroup]="formGroup" novalidate>
-    <div *ngIf="advancedFilterText && advancedFilterText.length > 0" class="row filter-panel">
+    <div *ngIf="advancedFilterTitle && advancedFilterTitle.length > 0" class="row filter-header">
+      <h3>{{advancedFilterTitle}}</h3>
+    </div>
+    <div *ngIf="advancedFilterText && advancedFilterText.length > 0" class="row filter-header">
       <p>{{advancedFilterText}}</p>
     </div>
     <div class="row">

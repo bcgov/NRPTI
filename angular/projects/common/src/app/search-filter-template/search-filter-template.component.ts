@@ -1,9 +1,10 @@
-import { ViewEncapsulation, ChangeDetectionStrategy, OnInit, OnDestroy, Component, Input, EventEmitter, Output } from '@angular/core';
+import { ViewEncapsulation, ChangeDetectionStrategy, OnInit, OnDestroy, Component, Input, EventEmitter, Output, Inject, AfterViewInit } from '@angular/core';
 import { FilterObject, FilterType } from './filter-object';
 import { Router } from '@angular/router';
 import { SubsetsObject } from './subset-object';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Utils } from 'nrpti-angular-components';
+import { DOCUMENT } from '@angular/common';
 
 /**
  * Common template component for NRPTI search filters. The default component will only include a keyword
@@ -30,12 +31,14 @@ import { Utils } from 'nrpti-angular-components';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class SearchFilterTemplateComponent implements OnInit, OnDestroy {
+export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnDestroy {
   // Inputs
   @Input() title: string;
   @Input() tooltip: string;
   @Input() subsets: SubsetsObject;
   @Input() advancedFilters = false;
+  @Input() attachPanelToDiv = null;
+  @Input() advancedFilterTitle = null;
   @Input() advancedFilterText = null;
   @Input() showAdvancedFilters = false;
   @Input() searchOnFilterChange = true;
@@ -65,7 +68,8 @@ export class SearchFilterTemplateComponent implements OnInit, OnDestroy {
    */
   constructor(
     private router: Router,
-    public utils: Utils) { }
+    public utils: Utils,
+    @Inject(DOCUMENT) document) { }
 
   ngOnDestroy(): void { }
 
@@ -197,6 +201,17 @@ export class SearchFilterTemplateComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngAfterViewInit() {
+    // if the advanced filters panel is hidden, this will not work
+    if (this.attachPanelToDiv && document.getElementById(this.attachPanelToDiv)) {
+      // what if the user is hiding the advanced filters page? We need the panel
+      // 'visible' to append... so just grab the value and re-apply after append
+      const showAdvancedFiltersSetting = this.showAdvancedFilters;
+      this.showAdvancedFilters = true;
+      document.getElementById(this.attachPanelToDiv).appendChild(document.getElementById('advancedFilterPanel'));
+      this.showAdvancedFilters = showAdvancedFiltersSetting;
+    }
+  }
   /*****************************************************
    *  Events/Emitters
    *****************************************************/

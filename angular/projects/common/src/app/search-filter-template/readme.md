@@ -53,7 +53,9 @@ With the module imports in place, you can add your component to any screen. Just
     [tooltip]="myooltipVar"
     [subsets]="subsets"
     [advancedFilters]="true"
+    [advancedFilterTitle]="myAdvancedFilterTitle"
     [advancedFilterText]="myFilterDesc"
+    [attachPanelToDiv]="myHostComponentDiv"
     [showAdvancedFilters]="false"
     [filters]="filters"
     [searchOnFilterChange]="true">
@@ -66,7 +68,9 @@ The component has the following parameters and event handlers
 - tooltip
 - subsets
 - advancedFilters
+- advancedFilterTitle
 - advancedFilterText
+- attachPanelToDiv
 - showAdvancedFilters
 - filters
 - searchOnFilterChange
@@ -86,7 +90,11 @@ You can pass in values to a combination of parameters. Their function is describ
 
 `advancedFilters` Is a boolean value that indicates whether or not the advanced filter panel will display. Defaults to `false`.
 
+`advancedFilterTitle` Is a text string for a title label on your advanced filter panel. Defaults to `null`.
+
 `advancedFilterText` Is a text string that will include a description or summary at the top of the advanced filters panel. Defaults to `null`.
+
+`attachPanelToDiv` allows you to specify a div tag on your host component where the advanced filters panel will be moved to.
 
 `showAdvancedFilters` Is a boolean value that indicates whether or not the advanced filter panel will be open by default. Defaults to `false`.
 
