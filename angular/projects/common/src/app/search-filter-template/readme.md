@@ -49,6 +49,7 @@ With the module imports in place, you can add your component to any screen. Just
     (searchEvent)="search($event)"
     (resetControls)="filterReset($event)"
     (filterChange)="filterChange($event)"
+    (toggleFiltersPanelEvent)="togglePanel($event)"
     [title]="myTitleVar"
     [tooltip]="myooltipVar"
     [subsets]="subsets"
@@ -57,6 +58,7 @@ With the module imports in place, you can add your component to any screen. Just
     [advancedFilterText]="myFilterDesc"
     [attachPanelToDiv]="myHostComponentDiv"
     [showAdvancedFilters]="false"
+    [filterItemPanelSize]="myPanelSize"
     [filters]="filters"
     [searchOnFilterChange]="true">
   </search-filter-template>
@@ -98,6 +100,8 @@ You can pass in values to a combination of parameters. Their function is describ
 
 `showAdvancedFilters` Is a boolean value that indicates whether or not the advanced filter panel will be open by default. Defaults to `false`.
 
+`filterItemPanelSize` Is a number between 1 and 12 that will set the default column size for all panels. Defaults to `4`.
+
 `filters` Is an array containing your filter definitions. Filter definitions are described in detail below. Defaults to `[]`.
 
 `searchOnFilterChange` Is a boolean that indicates whether or not a search will be triggered when a filter value changes. Defaults to `false`.
@@ -134,6 +138,10 @@ The event returns a `searchPackage` object, which contains the following details
 #### Filter Change Event
 
 `filterChange` will be fired when an advanced filter option is changed. This is an optional event handle that may be useful if you are hooking into the search panel for any reason and need to update host component variables on a filter change.
+
+#### Toggle Filters Panel Event
+
+`toggleFiltersPanelEvent` will be fired when a user clicks the Show/Hide Advanced Filters button. This is an optional event handler that may be useful if you've moved the panel onto a different div and need to track the show/hide event for restructuring the page in some way.
 
 ## Subsets and the Subset Objects
 
@@ -192,7 +200,8 @@ The `FilterObject` has the following structure:
   id: string,
   type: FilterType,
   name: string,
-  filterDefinition: FilterDefinition
+  filterDefinition: FilterDefinition,
+  itemPanelSize: number = 4
 }
 ```
 
@@ -213,6 +222,8 @@ export enum FilterType {
 `name` is the name/label for the filter. This value will be displayed as the filters header title. If you do not want a header label to display, set this value to null or an empty string.
 
 `filterDefinition` is the actual definition of the filter. As mentioned above, the type is determined by the `type` attribute, and the instructions are placed in the filter definition. The `FilterDefinition` object itself is just an abstract class used as a point of inheritance for the filter definition classes. As you can see in the `FilterType` enum, we currently have 5 unique filter types, however Radio and Checkbox definitions are identical so we overload the class for both.
+
+`itemPanelSize` is the panel size, between 1 and 12, for the filter panel. This will override any value supplied by the search components `filterItemPanelSize` value. Defaults to `4`
 
 ### DateFilterDefinition
 

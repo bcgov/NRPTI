@@ -56,6 +56,7 @@
         class="btn btn-primary float-right"
         (click)="toggleAdvancedFilters()">
         {{showAdvancedFilters ? 'Close' : 'Open'}} Advanced Filters
+        <i class="material-icons align-middle">{{showAdvancedFilters ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</i>
       </button>
     </div>
   </div>
@@ -72,7 +73,7 @@
     </div>
     <div class="row">
       <!-- for each filter, create a block for each filter type -->
-      <div class="filter-panel col-md-4" *ngFor="let filter of filters">
+      <div [class]="'filter-panel col-md-' + (filter.itemPanelSize ? filter.itemPanelSize : filterItemPanelSize)" *ngFor="let filter of filters">
         <!-- Date range filter-->
         <div *ngIf="filter.type === FilterType.DateRange">
           <label *ngIf="filter.name && filter.name.length > 0" class="control-label font-weight-bold">{{filter.name}}</label>

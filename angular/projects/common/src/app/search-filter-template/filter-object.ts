@@ -20,13 +20,16 @@ import { IMutliSelectOption } from '../autocomplete-multi-select/autocomplete-mu
    * @param {string} name The name/label for the filter
    * @param {FilterDefinition} filterDefinition The filter definition. Should always match up with the FilterType,
    * unless you're doing something funky
+   * @param {number} itemPanelSize The panel size, can be 1 through 12, defaults to null, and if provided will
+   * override the search component size setting
    * @memberof FilterObject
    */
   constructor(
     public id: string,
     public type: FilterType,
     public name: string,
-    public filterDefinition: any
+    public filterDefinition: any,
+    public itemPanelSize: number = null
   ) { }
 }
 

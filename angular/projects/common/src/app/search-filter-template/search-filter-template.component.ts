@@ -42,6 +42,7 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
   @Input() advancedFilterText = null;
   @Input() showAdvancedFilters = false;
   @Input() searchOnFilterChange = true;
+  @Input() filterItemPanelSize = 4;
   @Input() filters: FilterObject[] = [];
 
   // Outputs and Emitters
@@ -52,6 +53,8 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
   @Output() resetControls: EventEmitter<void> = new EventEmitter<void>();
   // filterChange fires whenever a filter on the advanced filter form is changed
   @Output() filterChange: EventEmitter<any> = new EventEmitter<any>();
+  // toggleFiltersPanelEvent fires when a User clicks the show/hide advanced filters button
+  @Output() toggleFiltersPanelEvent: EventEmitter<any> = new EventEmitter<any>();
 
   // public vars
   public FilterType = FilterType; // enum access for the template html
@@ -285,8 +288,10 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
    *****************************************************/
 
   // hides and displays the advanced filters
+  // Emits an event on the toggleFiltersPanelEvent emitter
   toggleAdvancedFilters() {
     this.showAdvancedFilters = !this.showAdvancedFilters;
+    this.toggleFiltersPanelEvent.emit({ showPanel: this.showAdvancedFilters});
   }
 
   /**
