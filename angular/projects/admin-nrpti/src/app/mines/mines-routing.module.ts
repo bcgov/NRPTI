@@ -12,6 +12,8 @@ import { MinesResolver } from './mines-resolver';
 import { MinesContentComponent } from './mines-content/mines-content.component';
 import { MinesRecordsListComponent } from './mines-records-list/mines-records-list.component';
 import { MinesRecordsListResolver } from './mines-records-list-resolver';
+import { MinesCollectionDetailComponent } from './mines-collection-detail/mines-collection-detail.component';
+import { MinesCollectionResolver } from './mines-collection-resolver';
 // other
 import { Utils } from 'nrpti-angular-components';
 import { MinesCollectionsListComponent } from './mines-collections-list/mines-collections-list.component';
@@ -105,7 +107,33 @@ const routes: Routes = [
                 },
                 resolve: {
                   collections: MinesCollectionsListResolver
-                }
+                },
+                children: [
+                  {
+                    path: ':collectionId',
+                    data: {
+                      breadcrumb: 'Collection Details'
+                    },
+                    children: [
+                      {
+                        path: '',
+                        redirectTo: 'detail',
+                        pathMatch: 'full'
+                      },
+                      {
+                        path: 'detail',
+                        component: MinesCollectionDetailComponent,
+                        canActivate: [CanActivateGuard],
+                        data: {
+                          breadcrumb: null
+                        },
+                        resolve: {
+                          collection: MinesCollectionResolver
+                        }
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           }
@@ -118,6 +146,13 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [MinesListResolver, MinesResolver, MinesRecordsListResolver, MinesCollectionsListResolver, Utils]
+  providers: [
+    MinesListResolver,
+    MinesResolver,
+    MinesRecordsListResolver,
+    MinesCollectionsListResolver,
+    MinesCollectionResolver,
+    Utils
+  ]
 })
 export class MinesRoutingModule {}
