@@ -293,6 +293,35 @@ exports.protectedNewsDelete = async function (args, res, next) {
 };
 
 /**
+ * Delete a mine collection.
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ */
+exports.protectedCollectionDelete = async function(args, res, next) {
+  try {
+    const collectionId = args.swagger.params.collectionId.value;
+    defaultLog.info(`protectedCollectionDelete - collectionId: ${collectionId}`);
+
+    const model = require('mongoose').model('CollectionBCMI');
+
+    try {
+      await model.deleteOne({ _id: collectionId, write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
+    } catch (e) {
+      defaultLog.info(`protectedCollectionDelete - couldn't find record for collectionId: ${collectionId}`);
+      return queryActions.sendResponse(res, 404, {});
+    }
+
+    queryUtils.audit(args, 'DELETE', 'CollectionBCMI', args.swagger.params.auth_payload, collectionId);
+    queryActions.sendResponse(res, 200, {});
+  } catch (error) {
+    queryActions.sendResponse(res, 500, error);
+  }
+  next();
+};
+
+/**
  * Publish a record.  Adds the `public` role to the records root read array.
  *
  * @param {*} args

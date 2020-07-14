@@ -182,7 +182,34 @@ const handleDateEndItem = function (field, entry) {
   }
 };
 
-let searchCollection = async function (
+/**
+ * Adds a new field that holds the count of the specified array field.
+ * If the field is not an array, this pipeline step does nothing.
+ * If the field is an array, the added field will have the name: `count<fieldName>`.
+ *
+ * @param {*} fieldName name of the array field to count.
+ * @returns {object} aggregation pipeline stage
+ */
+const addArrayCountField = function(fieldName) {
+  if(!fieldName) {
+    return {};
+  }
+
+  return {
+    $addFields: {
+      [`count${fieldName}`]: {
+        $cond: {
+          if: { $isArray: `$${fieldName}` },
+          then: { $size: `$${fieldName}` },
+          else: '$$REMOVE'
+        }
+      }
+    }
+  };
+};
+exports.addArrayCountField = addArrayCountField;
+
+let searchCollection = async function(
   roles,
   keywords,
   schemaName,
@@ -208,7 +235,7 @@ let searchCollection = async function (
   if (keywords) {
     // for now, limit fuzzy search to the mine search only. We can expand to all searches
     // later if desired
-    if (schemaName === 'MineBCMI') {
+    if (schemaName.length === 1 && schemaName[0] === 'MineBCMI') {
       keywords = keywords && keywords.length > 1 ? fuzzySearch.createFuzzySearchString(keywords, 4, caseSensitive) : keywords;
     }
     searchProperties = { $text: { $search: keywords, $caseSensitive: caseSensitive } };
@@ -242,6 +269,11 @@ let searchCollection = async function (
       $match: match
     }
   ];
+
+  if (schemaName.length === 1 && schemaName[0] === 'CollectionBCMI') {
+    // add a "countrecords" attribute to allow sorting on "# of records" in the collection
+    aggregation.push(addArrayCountField('records'));
+  }
 
   // add a dynamic "Published" attribute to allow for
   // sorting by published

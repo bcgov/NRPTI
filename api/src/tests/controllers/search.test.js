@@ -221,3 +221,39 @@ describe('getConvertedValue', () => {
     });
   });
 });
+
+describe('addArrayCountField', () => {
+  describe('null fieldName parameter', () => {
+    it('returns empty object', () => {
+      const result = searchController.addArrayCountField(null);
+
+      expect(result).toEqual({});
+    });
+  });
+
+  describe('empty fieldName parameter', () => {
+    it('returns empty object', () => {
+      const result = searchController.addArrayCountField('');
+
+      expect(result).toEqual({});
+    });
+  });
+
+  describe('valid fieldName parameter', () => {
+    it('returns aggregation pipeline stage object', () => {
+      const result = searchController.addArrayCountField('fieldA');
+
+      expect(result).toEqual({
+        $addFields: {
+          countfieldA: {
+            $cond: {
+              if: { $isArray: '$fieldA' },
+              then: { $size: '$fieldA' },
+              else: '$$REMOVE'
+            }
+          }
+        }
+      });
+    });
+  });
+});

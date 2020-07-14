@@ -56,7 +56,25 @@ export class RecordService {
     return this.http.put<object>(`${this.apiService.pathAPI}/${queryString}`, record, {});
   }
 
+  /**
+   * Delete a record.
+   *
+   * Note: not all `models` are supported, check swagger routes.
+   *
+   * @param {string} recordId _id of the record to delete.
+   * @param {string} model swagger route specifier.
+   * @returns {Promise<any>}
+   * @memberof RecordService
+   */
   public deleteRecord(recordId: string, model: string): Promise<any> {
+    if (!recordId) {
+      throw Error('RecordService - deleteRecord - missing required recordId param');
+    }
+
+    if (!model) {
+      throw Error('RecordService - deleteRecord - missing required model param');
+    }
+
     const queryString = `record/${model}/${recordId}`;
     return this.http.delete<any>(`${this.apiService.pathAPI}/${queryString}`).toPromise();
   }

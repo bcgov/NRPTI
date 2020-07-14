@@ -51,15 +51,16 @@ export class SearchSubsets {
     'CourtConviction'
   ];
 
-  public static readonly nrcedBasicRecordTypes = [
-    'Order',
-    'Inspection',
-    'RestorativeJustice',
-    'Ticket',
-    'AdministrativePenalty',
-    'AdministrativeSanction',
-    'Warning',
-    'CourtConviction'
+  // set schema filters
+  public static readonly nrcedPublicBasicRecordTypes = [
+    'OrderNRCED',
+    'InspectionNRCED',
+    'RestorativeJusticeNRCED',
+    'AdministrativePenaltyNRCED',
+    'AdministrativeSanctionNRCED',
+    'TicketNRCED',
+    'WarningNRCED',
+    'CourtConvictionNRCED'
   ];
 }
 
