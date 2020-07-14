@@ -113,3 +113,22 @@ API --> EPIC (prod)
 API --> S3 (prod)
 ```
 
+# Tagging a Release
+
+#### TEST
+check the releases page (https://github.com/bcgov/NRPTI/releases) to see if there is anything currently in test that hasnt been pushed to production. If there is then you will have to update the commit hash on that tag. The best way to do taht is to delete the tag and create a new one pointing to the most recent hash. Make sure you copy the release notes before you delete the tag. If there is no test release yet then you can skip this step.
+
+e.g.
+```
+git tag -d v1.0.8
+git push --delete upstream v1.0.8
+```
+
+Once there is no test tag, you can create new one with the following comands. you can copy the latest comit hash from here: https://github.com/bcgov/NRPTI/commits/master
+
+e.g.
+```
+git tag -a v1.0.8 2ae61a317e6c534e782eac2323935ab6a7cee555 -m "Mad Max #3"
+git push --tags
+```
+
