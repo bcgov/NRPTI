@@ -130,6 +130,6 @@ Once there is no test tag, you can create new one with the following commands. y
 e.g.
 ```
 git tag -a v1.0.8 2ae61a317e6c534e782eac2323935ab6a7cee555 -m "Mad Max #3"
-git push --tags
+git push upstream --tags
 ```
 
