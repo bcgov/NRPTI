@@ -1,0 +1,74 @@
+<main class="container-fluid-padding">
+  <section>
+    <div class="d-flex flex-column flex-sm-row justify-content-sm-between heading-bar">
+      <div>
+        <h1 id="name" class="m-0">{{ (collection && collection.name) || '-' }}</h1>
+      </div>
+      <div>
+        <span ngbDropdown>
+          <button class="btn btn-primary action-drop-button" id="actionDropdown" ngbDropdownToggle>Actions</button>
+          <div class="dropdown-menu" aria-labelledby="actionDropdown" ngbDropdownMenu>
+            <button class="dropdown-item" (click)="navigateToEditPage()">Edit</button>
+          </div>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-3 pb-3 border-bottom">
+    <div class="row">
+      <div class="mb-2 col-12 col-sm-8">
+        <h2 class="border-0 mb-0">Collection Information</h2>
+        <span class="grey-subtext">{{ lastEditedSubText }}</span>
+      </div>
+      <div class="col-12 col-sm-4">
+        <div class="d-flex flex-column">
+          <mat-slide-toggle
+            name="publishLng"
+            id="publishLng"
+            class="publish-toggle"
+            [ngClass]="isPublished ? 'published' : 'unpublished'"
+            [checked]="isPublished"
+            [disabled]="true"
+          >
+            {{ (isPublished && 'Published') || 'Not Published' }}
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mine Information -->
+  <section class="my-3 py-3 border-bottom">
+    <div class="row">
+      <div class="col-sm">
+        <div class="flex-container mb-2">
+          <label for="date" class="med mr-2">Date:</label>
+          <span id="date" name="date">{{ (collection && formatDate(collection.date)) || '-' }}</span>
+        </div>
+      </div>
+      <div class="col-sm">
+        <div class="flex-container mb-2">
+          <label for="type" class="med mr-2">Type:</label>
+          <span id="permit" name="permit">
+            {{ (collection && collection.type) || '-' }}
+          </span>
+        </div>
+      </div>
+      <div class="col-sm">
+        <div class="flex-container mb-2">
+          <label for="agency" class="med mr-2">Agency:</label>
+          <span id="agency" name="agency">{{ (collection && collection.agency) || '-' }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="my-3 py-3">
+    <lib-table-template
+      *ngIf="tableData.totalListItems > 0"
+      [data]="tableData"
+      (messageOut)="alert()"
+    ></lib-table-template>
+  </section>
+</main>
