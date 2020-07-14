@@ -215,7 +215,8 @@ export enum FilterType {
   Dropdown = 'dropdown',
   MultiSelect = 'multi-select',
   Checkbox = 'check-box',
-  RadioPicker = 'radio-picker'
+  RadioPicker = 'radio-picker',
+  SliderToggle = 'slider-toggle'
 }
 ```
 
@@ -325,6 +326,23 @@ The `CheckOrRadioFilerDefinition` is a coponent that allows you to define a grou
 `options` is an array of string values to display in the dropdown. The string will be returned literally on selection. It would be ideal to extend this component to support Label and Value in the future.
 
 `multiselect` is a boolean value indicating if the dropdown filter allows for multiselection. Defaults to `true`.
+
+### Slider Toggle Definition
+
+`SliderToggleFilterDefinition` creates a toggle switch style check box. These behave the same as the check box filters, except they are not groupable. Slider toggles do not have an indeterminate state, so currently when turned 'off' the slider will not return a false value, but a null value.
+
+```typescript
+{
+  offOption: OptionItem,
+  onOption: OptionItem
+}
+```
+
+`offOption` is the option definition for when the slider is turned off. ID and IsChecked are optional in this case, as only the label is required.
+
+`onOption` is the option definition for when the slider is turned on. ID and IsChecked are optional in this case, as only the label is required.
+
+The primary reason for the use of OptionItem over just a label is to allow for the mapping of the ID's if needed on the host component for a more advanced filtering where you need to know the false state. It also allows for some extensibility in the future without really making things difficult for now.
 
 ### Filter Definition examples
 

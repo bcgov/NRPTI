@@ -159,6 +159,19 @@
             </div>
           </div>
         </div>
+        <!-- Slider toggle -->
+        <div *ngIf="filter.type === FilterType.SliderToggle">
+          <label *ngIf="filter.name && filter.name.length > 0" class="control-label font-weight-bold">{{filter.name}}</label>
+          <div class="row slide-toggle-margin">
+            <mat-slide-toggle
+              [name]="filter.name"
+              [id]="filter.id"
+              [formControlName]="filter.id"
+              [checked]="filter.filterDefinition.onOption.isChecked">
+              {{ formGroup.get(filter.id).value ? filter.filterDefinition.onOption.label : filter.filterDefinition.offOption.label }}
+            </mat-slide-toggle>
+          </div>
+        </div>
       </div>
     </div>
   </form>

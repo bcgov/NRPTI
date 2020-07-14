@@ -1,6 +1,6 @@
 import { async, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MatAutocompleteModule, MatTooltipModule, MatSelectModule, MatCheckboxModule } from '@angular/material';
+import { MatAutocompleteModule, MatTooltipModule, MatSelectModule, MatCheckboxModule, MatSlideToggleModule } from '@angular/material';
 import { TestBedHelper } from '../spec/spec-utils';
 import { SearchFilterTemplateComponent } from './search-filter-template.component';
 import { GlobalModule, Utils } from 'nrpti-angular-components';
@@ -19,6 +19,7 @@ describe('SearchFilterTemplateComponent', () => {
         MatTooltipModule,
         MatSelectModule,
         MatCheckboxModule,
+        MatSlideToggleModule,
         FormsModule,
         RouterTestingModule],
       providers: [Utils],

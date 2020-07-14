@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSelectModule, MatAutocompleteModule, MatCheckboxModule } from '@angular/material';
+import { MatSelectModule, MatAutocompleteModule, MatCheckboxModule, MatSlideToggleModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -52,6 +52,7 @@ import { SearchFilterTemplateComponent } from './search-filter-template/search-f
     MatAutocompleteModule,
     MatCheckboxModule,
     MatSelectModule,
+    MatSlideToggleModule,
     DragDropModule,
     MatTooltipModule
   ],

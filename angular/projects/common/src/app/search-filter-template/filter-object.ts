@@ -43,7 +43,8 @@ export enum FilterType {
   Dropdown = 'dropdown',
   MultiSelect = 'multi-select',
   Checkbox = 'check-box',
-  RadioPicker = 'radio-picker'
+  RadioPicker = 'radio-picker',
+  SliderToggle = 'slider-toggle'
 }
 
 /**
@@ -211,5 +212,26 @@ export class DropdownDefinition extends FilterDefinition {
   constructor(
     public options: string[] = [],
     public multiselect: boolean = true
+  ) { super(); }
+}
+
+/**
+ * Filter definition for a slider toggle. Note that slide toggles
+ * do not have an indeterminate state. They will always return true or false.
+ *
+ * @export
+ * @class SliderToggleFilterDefinition
+ * @extends {FilterDefinition}
+ */
+export class SliderToggleFilterDefinition extends FilterDefinition {
+  /**
+   * Creates an instance of SliderToggleFilterDefinition.
+   * @param {OptionItem} offOption an ID and label for the off position
+   * @param {OptionItem} onOption an ID and label for the on postition
+   * @memberof SliderToggleFilterDefinition
+   */
+  constructor(
+    public offOption: OptionItem,
+    public onOption: OptionItem
   ) { super(); }
 }

@@ -229,7 +229,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   }
 
   executeSearch(searchPackage) {
-    console.log(searchPackage);
     this.clearQueryParamsFilters();
 
     // check keyword
