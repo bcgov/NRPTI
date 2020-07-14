@@ -38,6 +38,19 @@
   </section>
 
   <section>
+    <search-filter-template
+      #explorePanel
+      (searchEvent)='executeSearch($event)'
+      title="Keyword Search"
+      tooltip="Search collection name"
+      [advancedFilters]="true"
+      [showAdvancedFilters]="showAdvancedFilters"
+      [searchOnFilterChange]="true"
+      [filters]="filters">
+    </search-filter-template>
+  </section>
+
+  <section>
     <div class="border-bottom">
       <div class="text-right mb-3">
         <button class="btn btn-primary" (click)="addCollection()" title="Create new collection">
@@ -59,4 +72,5 @@
       (messageOut)="onMessageOut($event)"
     ></lib-table-template>
   </section>
+
 </main>
