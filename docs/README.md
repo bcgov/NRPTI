@@ -118,6 +118,7 @@ API --> S3 (prod)
 #### TEST
 check the releases page (https://github.com/bcgov/NRPTI/releases) to see if there is anything currently in test that hasnt been pushed to production. If there is then you will have to update the commit hash on that tag. The best way to do that is to delete the tag and create a new one pointing to the most recent hash. Make sure you copy the release notes before you delete the tag. If there is no test release yet then you can skip this step.
 
+In this example and the following one upstream referes to this repo (https://github.com/bcgov/NRPTI)
 e.g.
 ```
 git tag -d v1.0.8
