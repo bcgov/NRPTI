@@ -155,7 +155,6 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
           this.queryParams['dateRangeToFilter'] ||
           this.queryParams['issuedToCompany'] ||
           this.queryParams['issuedToIndividual'] ||
-          this.queryParams['activityType'] ||
           this.queryParams['agency'] ||
           this.queryParams['act'] ||
           this.queryParams['regulation'] ||
@@ -198,7 +197,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   /**
    * Resets sortBy to the default.
    *
-   * @memberof RecordsListComponent
+   * @memberof MinesRecordsListComponent
    */
   resetSortBy() {
     this.tableData.sortBy = '-dateAdded';
@@ -208,7 +207,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   /**
    * Resets the keyword search and all associated parameters/values.
    *
-   * @memberof RecordsListComponent
+   * @memberof MinesRecordsListComponent
    */
   clearKeywordSearch() {
     this.selectedSubset = SearchSubsets.all;
@@ -424,9 +423,12 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
 
     this.loadingScreenService.setLoadingState(true, 'body');
 
-    this.router.navigate([{ ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }], {
-      relativeTo: this.route
-    });
+    this.router.navigate(
+      ['../records', { ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }],
+      {
+        relativeTo: this.route
+      }
+    );
   }
 
   toggleAdvancedFilters(): void {
