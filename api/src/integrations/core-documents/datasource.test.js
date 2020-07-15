@@ -44,8 +44,8 @@ describe('CoreDocumentsDataSource', () => {
     it('returns download token', async () => {
       const dataSource = new DataSource();
 
-      const urlSpy = jest.spyOn(integrationUtils, 'getIntegrationUrl').mockReturnValue('/test/');
-      const recordSpy = jest.spyOn(integrationUtils, 'getRecords').mockReturnValue(Promise.resolve({ token_guid: 'testing' }));
+      jest.spyOn(integrationUtils, 'getIntegrationUrl').mockReturnValue('/test/');
+      jest.spyOn(integrationUtils, 'getRecords').mockReturnValue(Promise.resolve({ token_guid: 'testing' }));
 
       const token = await dataSource.getDownloadToken('testing');
 
