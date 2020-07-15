@@ -143,31 +143,4 @@ describe('Core DataSource', () => {
       expect(dataSource.status.individualRecordStatus[0].error).toEqual('processRecord - required coreRecord is null.');
     });
   });
-
-
-  describe('getIntegrationUrl', () => {
-    it('builds and returns a URL', () => {
-      const dataSource = new DataSource();
-      const url = dataSource.getIntegrationUrl('https://www.google.com', '/some/path/to/stuff', {
-        param1: 1,
-        param2: 'hello'
-      });
-      expect(url).toEqual(new URL('/some/path/to/stuff?param1=1&param2=hello', 'https://www.google.com'));
-    });
-  });
-
-  describe('getAuthHeader', () => {
-    const dataSource = new DataSource();
-    dataSource.client_token = 'testToken';
-
-    const expectedHeader = {
-      headers: {
-        Authorization: 'Bearer testToken'
-      }
-    };
-
-    const header = dataSource.getAuthHeader();
-
-    expect(header).toEqual(expectedHeader);
-  });
 });

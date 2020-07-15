@@ -36,10 +36,8 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
   delete incomingObj.read;
   delete incomingObj.write;
 
-  const Permit = mongoose.model('PermitAmendment');
-
-  const sanitizedObj = PutUtils.validateObjectAgainstModel(Permit, incomingObj);
-
+  const PermitAmendment = mongoose.model('PermitAmendment');
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(PermitAmendment, incomingObj);
   if (!sanitizedObj || sanitizedObj === {}) {
     // skip, as there are no changes to master record
     return;
@@ -49,7 +47,6 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
   sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
 
   const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
-
   const updateObj = { $set: dotNotatedObj };
 
   if (flavourIds && flavourIds.length) {
@@ -76,16 +73,16 @@ exports.editBCMI = function (args, res, next, incomingObj) {
   delete incomingObj.read;
   delete incomingObj.write;
 
-  let PermitLNG = mongoose.model('PermitAmendmentLNG');
+  let PermitBCMI = mongoose.model('PermitAmendmentBCMI');
 
-  const sanitizedObj = PutUtils.validateObjectAgainstModel(PermitLNG, incomingObj);
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(PermitBCMI, incomingObj);
 
   sanitizedObj.dateUpdated = new Date();
 
   const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
+  const updateObj = { $set: dotNotatedObj,  $addToSet: {}, $pull: {} };
 
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj.$addToSet['read'] = 'public';

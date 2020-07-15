@@ -46,4 +46,26 @@ describe('IntegrationUtils', () => {
       expect(mockAxios).toHaveBeenCalledWith('url', undefined);
     });
   });
+
+  describe('getIntegrationUrl', () => {
+    it('builds and returns a URL', () => {
+      const url = IntegrationUtils.getIntegrationUrl('https://www.google.com', '/some/path/to/stuff', {
+        param1: 1,
+        param2: 'hello'
+      });
+      expect(url).toEqual(new URL('/some/path/to/stuff?param1=1&param2=hello', 'https://www.google.com'));
+    });
+  });
+
+  describe('getAuthHeader', () => {
+    const expectedHeader = {
+      headers: {
+        Authorization: 'Bearer testing'
+      }
+    };
+
+    const header = IntegrationUtils.getAuthHeader('testing');
+
+    expect(header).toEqual(expectedHeader);
+  });
 });
