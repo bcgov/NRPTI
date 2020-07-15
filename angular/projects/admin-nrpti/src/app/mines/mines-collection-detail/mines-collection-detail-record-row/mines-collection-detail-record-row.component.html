@@ -1,7 +1,7 @@
 <td scope="row" data-label="Name" class="col-6">{{ rowData.name || '-' }}</td>
-<td scope="row" data-label="Source System" class="col-2">{{ rowData._sourceSystem || '-' }}</td>
-<td scope="row" data-label="Date" class="col-2">{{ formatDate(rowData.date) || '-' }}</td>
-<td scope="row" data-label="Published State" class="col-2 d-flex">
+<td scope="row" data-label="Source System" class="col-2">{{ rowData.sourceSystemRef || '-' }}</td>
+<td scope="row" data-label="Date" class="col-2">{{ (rowData.date && formatDate(rowData.date)) || '-' }}</td>
+<td scope="row" data-label="Published State" class="col-2 d-lg-flex">
   <div *ngIf="rowData.read && rowData.read.includes('public'); then published else unpublished"></div>
   <ng-template #published class="test">
     <i class="material-icons published-green">check_circle</i>
