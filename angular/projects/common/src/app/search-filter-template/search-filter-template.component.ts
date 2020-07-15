@@ -178,13 +178,14 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
         groupControls[filter.id] = new FormControl();
 
         if (defaultFormValues[filter.id]) {
-          groupControls[filter.id].setValue(defaultFormValues[filter.id]);
+          console.log(defaultFormValues[filter.id]);
+          groupControls[filter.id].setValue(decodeURIComponent(defaultFormValues[filter.id]));
         }
       } else if (filter.type === FilterType.Dropdown) {
         groupControls[filter.id] = new FormControl();
 
         if (defaultFormValues[filter.id]) {
-          groupControls[filter.id].setValue(defaultFormValues[filter.id].split(','));
+          groupControls[filter.id].setValue(decodeURIComponent(defaultFormValues[filter.id].split(',')));
         }
       } else {
         groupControls[filter.id] = new FormControl();
@@ -307,14 +308,6 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
     for (const filter of this.filters.filter(f => f.type === FilterType.MultiSelect)) {
       this.formGroup.get(filter.id).setValue(null);
     }
-
-    for (const filter of this.filters.filter(f => f.type === FilterType.DateRange)) {
-      this.formGroup.get(filter.filterDefinition.startDateId).setValue(null);
-      this.formGroup.get(filter.filterDefinition.startDateId).reset();
-      this.formGroup.get(filter.filterDefinition.endDateId).setValue(null);
-      this.formGroup.get(filter.filterDefinition.endDateId).reset();
-    }
-
     // clear keywords
     this.keywordSearchWords = '';
     // reset the subset settings
