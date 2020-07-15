@@ -56,6 +56,7 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
   @Input() options: IMutliSelectOption[];
   @Input() reset: EventEmitter<any>;
   @Input() placeholderText = 'Begin typing to filter...';
+  @Input() useChips = false;
 
   @Output() numSelected: EventEmitter<number> = new EventEmitter<number>();
 
@@ -267,5 +268,14 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  removeChip(option) {
+    option.selected = false;
+  }
+
+  // for callback pipe filter
+  filterOptions(option) {
+   return option.selected;
   }
 }

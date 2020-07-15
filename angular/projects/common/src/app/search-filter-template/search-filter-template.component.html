@@ -113,6 +113,7 @@
             [id]="filter.id"
             [options]="filter.filterDefinition.options"
             [control]="formGroup.get(filter.id)"
+            [useChips]="filter.filterDefinition.useChips"
             [reset]="resetControls"
             [placeholderText]="filter.filterDefinition.placeholder"
             (numSelected)="filter.filterDefinition.selectedOptionsCount = $event"></app-autocomplete-multi-select>

@@ -186,12 +186,14 @@ export class MultiSelectDefinition extends FilterDefinition {
    * @param {IMutliSelectOption[]} [options=[]] An array of your multi select options
    * @param {string} [placeholder='Begin typing to filter'] Placeholder text to display in the typeahead text box
    * @param {string} [subtext='Select all that apply...'] Subtext for the multiselect component
+   * @param {boolean} [useChips=false] Flag that indicates whether to show selected items as a chip list
    * @memberof MultiSelectDefinition
    */
   constructor(
     public options: IMutliSelectOption[] = [],
     public placeholder: string = 'Begin typing to filter',
-    public subtext: string = 'Select all that apply...'
+    public subtext: string = 'Select all that apply...',
+    public useChips: boolean = false
   ) { super(); }
 }
 

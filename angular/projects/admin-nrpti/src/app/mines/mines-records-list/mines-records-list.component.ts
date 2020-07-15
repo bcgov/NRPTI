@@ -147,7 +147,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       'Activity Type',
       new MultiSelectDefinition(Object.values(Picklists.activityTypePicklist).map(item => {
         return { value: item._schemaName, displayValue: item.displayName, selected: false, display: true };
-      }), 'Begin typing to filter activities...', 'Select all that apply...')
+      }), 'Begin typing to filter activities...', 'Select all that apply...', true)
     );
 
     const issuedUnderActFilter = new FilterObject(
@@ -156,7 +156,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       'Issued Under which Act',
       new MultiSelectDefinition(Picklists.getAllActs().map(value => {
         return { value: value, displayValue: value, selected: false, display: true };
-      }), 'Begin typing to filter acts...', '')
+      }), 'Begin typing to filter acts...', '', true)
     );
 
     const lngPublishedStatefilter = new FilterObject(
@@ -175,7 +175,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       'Responsible Agency',
       new MultiSelectDefinition(Picklists.agencyPicklist.map(value => {
         return { value: value, displayValue: value, selected: false, display: true };
-      }), 'Begin typing to filter agencies...', '')
+      }), 'Begin typing to filter agencies...', '', true)
     );
 
     const issuedUnderRegFilter = new FilterObject(
@@ -184,7 +184,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       'Issued Under which Regulation',
       new MultiSelectDefinition(Picklists.getAllRegulations().map(value => {
         return { value: value, displayValue: value, selected: false, display: true };
-      }), 'Begin typing to filter regulations...', '')
+      }), 'Begin typing to filter regulations...', '', true)
     );
 
     const sourceSystemFilter = new FilterObject(
