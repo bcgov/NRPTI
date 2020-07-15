@@ -380,7 +380,7 @@ const activityTypeFilter = new FilterObject(
   'Activity Type',
   new MultiSelectDefinition(Object.values(Picklists.activityTypePicklist).map(item => {
     return { value: item._schemaName, displayValue: item.displayName, selected: false, display: true };
-  }), 'Begin typing to filter activities...', 'Select all that apply...')
+  }), 'Begin typing to filter activities...', 'Select all that apply...', true)
 );
 
 const sourceSystemFilter = new FilterObject(
