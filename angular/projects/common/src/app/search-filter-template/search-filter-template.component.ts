@@ -178,7 +178,6 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
         groupControls[filter.id] = new FormControl();
 
         if (defaultFormValues[filter.id]) {
-          console.log(defaultFormValues[filter.id]);
           groupControls[filter.id].setValue(decodeURIComponent(defaultFormValues[filter.id]));
         }
       } else if (filter.type === FilterType.Dropdown) {

@@ -124,13 +124,11 @@
         <div *ngIf="filter.type === FilterType.RadioPicker">
           <label *ngIf="filter.name && filter.name.length > 0" class="control-label font-weight-bold">{{filter.name}}</label>
           <div class="row">
-            <div *ngFor="let radio of filter.filterDefinition.options">
-              <div class="col-xl-3">
+            <div class="col-xl-5" *ngFor="let radio of filter.filterDefinition.options">
                 <div class="radio">
-                  <input class="mr-2" type="radio" [id]="radio.id" [value]="radio.value" [formControlName]="filter.id" [name]="filter.id"/>
-                  <label [for]="radio.id">{{radio.label}}</label>
+                  <input type="radio" [id]="radio.id" [value]="radio.value" [formControlName]="filter.id" [name]="filter.id"/>
+                  <label class="radio-label" [for]="radio.id">{{radio.label}}</label>
                 </div>
-              </div>
             </div>
             <div class="col-xl-1">
               <span
