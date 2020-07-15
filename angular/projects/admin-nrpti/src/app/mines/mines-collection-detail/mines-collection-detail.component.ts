@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { Collection } from '../../../../../common/src/app/models/bcmi/collection';
+import { CollectionBCMI } from '../../../../../common/src/app/models/bcmi/collection-bcmi';
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MinesCollectionRecordTableRowComponent } from './mines-collection-detail-record-row/mines-collection-detail-record-row.component';
@@ -80,7 +80,7 @@ export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.collection = res.collection[0] && res.collection[0].data && new Collection(res.collection[0].data);
+      this.collection = res.collection[0] && res.collection[0].data && new CollectionBCMI(res.collection[0].data);
 
       this.isPublished = this.isRecordPublished();
 
