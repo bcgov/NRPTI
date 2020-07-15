@@ -9,7 +9,6 @@ import { MinesListComponent } from './mines-list/mines-list.component';
 import { MinesDetailComponent } from './mines-detail/mines-detail.component';
 import { MinesAddEditComponent } from './mines-add-edit/mines-add-edit.component';
 import { MinesResolver } from './mines-resolver';
-import { MinesContentComponent } from './mines-content/mines-content.component';
 import { MinesRecordsListComponent } from './mines-records-list/mines-records-list.component';
 import { MinesRecordsListResolver } from './mines-records-list-resolver';
 import { MinesCollectionDetailComponent } from './mines-collection-detail/mines-collection-detail.component';
@@ -72,66 +71,56 @@ const routes: Routes = [
             }
           },
           {
-            path: 'content',
-            component: MinesContentComponent,
+            path: 'records',
+            component: MinesRecordsListComponent,
             canActivate: [CanActivateGuard],
             data: {
-              breadcrumb: null
+              breadcrumb: 'Mine Records'
             },
             resolve: {
+              records: MinesRecordsListResolver,
               mine: MinesResolver
+            }
+          },
+          {
+            path: 'collections',
+            data: {
+              breadcrumb: 'Mine Collections'
             },
             children: [
               {
                 path: '',
-                redirectTo: 'records',
-                pathMatch: 'full'
-              },
-              {
-                path: 'records',
-                component: MinesRecordsListComponent,
-                canActivate: [CanActivateGuard],
                 data: {
-                  breadcrumb: 'Mine Records'
+                  breadcrumb: null
                 },
+                component: MinesCollectionsListComponent,
+                canActivate: [CanActivateGuard],
                 resolve: {
-                  records: MinesRecordsListResolver
+                  collections: MinesCollectionsListResolver,
+                  mine: MinesResolver
                 }
               },
               {
-                path: 'collections',
-                component: MinesCollectionsListComponent,
-                canActivate: [CanActivateGuard],
+                path: ':collectionId',
                 data: {
-                  breadcrumb: 'Mine Collections'
-                },
-                resolve: {
-                  collections: MinesCollectionsListResolver
+                  breadcrumb: 'Collection Details'
                 },
                 children: [
                   {
-                    path: ':collectionId',
+                    path: '',
+                    redirectTo: 'detail',
+                    pathMatch: 'full'
+                  },
+                  {
+                    path: 'detail',
+                    component: MinesCollectionDetailComponent,
+                    canActivate: [CanActivateGuard],
                     data: {
-                      breadcrumb: 'Collection Details'
+                      breadcrumb: null
                     },
-                    children: [
-                      {
-                        path: '',
-                        redirectTo: 'detail',
-                        pathMatch: 'full'
-                      },
-                      {
-                        path: 'detail',
-                        component: MinesCollectionDetailComponent,
-                        canActivate: [CanActivateGuard],
-                        data: {
-                          breadcrumb: null
-                        },
-                        resolve: {
-                          collection: MinesCollectionResolver
-                        }
-                      }
-                    ]
+                    resolve: {
+                      collection: MinesCollectionResolver
+                    }
                   }
                 ]
               }

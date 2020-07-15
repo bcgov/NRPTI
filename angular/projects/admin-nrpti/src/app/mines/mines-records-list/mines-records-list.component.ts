@@ -15,6 +15,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MinesRecordsTableRowComponent } from '../mines-records-rows/mines-records-table-row.component';
 import { SearchSubsets } from '../../../../../common/src/app/utils/record-constants';
+import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
 
 /**
  * Mine list page component.
@@ -33,6 +34,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   public SearchSubsets = SearchSubsets; // make available in tempalte
+  public mine: Mine;
 
   public tableData: TableObject = new TableObject({
     component: MinesRecordsTableRowComponent,
@@ -40,6 +42,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
     currentPage: 1,
     sortBy: '-dateAdded'
   });
+
   public tableColumns: IColumnObject[] = [
     {
       name: '', // Checkbox
@@ -125,11 +128,13 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       }
 
       this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
-        if (!res || !res.records) {
+        if (!res || !res.records || !res.mine) {
           alert("Uh-oh, couldn't load NRPTI mines records");
           this.loadingScreenService.setLoadingState(false, 'body');
           return;
         }
+
+        this.mine = res.mine[0] && res.mine[0].data && new Mine(res.mine[0].data);
 
         const records = (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || [];
         this.tableData.items = records.map(record => {
