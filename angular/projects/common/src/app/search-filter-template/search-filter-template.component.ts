@@ -90,10 +90,15 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
 
           if (val) {
 
-            // we know how to handle keyword, but everything
+            // we know how to handle keyword and subset, but everything
             // else will be dynamic
             if (filterName === 'keywords') {
               this.keywordSearchWords = val;
+            } else if (filterName === 'subset') {
+              if (this.subsets) {
+                this.subsets.selectedSubset = this.subsets.options.find(subset => subset.subset === val) ||
+                                              this.subsets.options[0];
+              }
             } else {
               // add all remaining kvp's onto the urlValues object.
               // We can use these when building the form group to preset
