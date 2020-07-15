@@ -14,6 +14,8 @@ import { MinesRecordsListComponent } from './mines-records-list/mines-records-li
 import { MinesRecordsListResolver } from './mines-records-list-resolver';
 // other
 import { Utils } from 'nrpti-angular-components';
+import { MinesCollectionsListComponent } from './mines-collections-list/mines-collections-list.component';
+import { MinesCollectionsListResolver } from './mines-collections-list-resolver';
 
 const routes: Routes = [
   {
@@ -93,6 +95,17 @@ const routes: Routes = [
                 resolve: {
                   records: MinesRecordsListResolver
                 }
+              },
+              {
+                path: 'collections',
+                component: MinesCollectionsListComponent,
+                canActivate: [CanActivateGuard],
+                data: {
+                  breadcrumb: 'Mine Collections'
+                },
+                resolve: {
+                  collections: MinesCollectionsListResolver
+                }
               }
             ]
           }
@@ -105,6 +118,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [MinesListResolver, MinesResolver, MinesRecordsListResolver, Utils]
+  providers: [MinesListResolver, MinesResolver, MinesRecordsListResolver, MinesCollectionsListResolver, Utils]
 })
 export class MinesRoutingModule {}
