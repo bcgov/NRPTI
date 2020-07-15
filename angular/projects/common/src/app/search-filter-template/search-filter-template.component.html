@@ -83,6 +83,7 @@
               <lib-date-picker
                 [id]="filter.filterDefinition.startDateId"
                 [control]="formGroup.get(filter.filterDefinition.startDateId)"
+                [reset]="resetControls"
                 [minDate]="filter.filterDefinition.minDate"
                 [maxDate]="filter.filterDefinition.maxDate">
               </lib-date-picker>
@@ -92,6 +93,7 @@
               <lib-date-picker
                 [id]="filter.filterDefinition.endDateId"
                 [control]="formGroup.get(filter.filterDefinition.endDateId)"
+                [reset]="resetControls"
                 [minDate]="filter.filterDefinition.minDate"
                 [maxDate]="filter.filterDefinition.maxDate"></lib-date-picker>
             </div>

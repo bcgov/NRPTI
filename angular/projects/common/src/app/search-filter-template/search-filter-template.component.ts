@@ -301,12 +301,20 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
    * @memberof SearchFilterTemplateComponent
    */
   clearFilters() {
-    // reset the form group, doesn't appear to reset multiselects
+    // reset the form group, doesn't appear to reset multiselects, or date ranges
     this.formGroup.reset();
-    // clear multiSelects
+    // clear multiSelects && date ranges
     for (const filter of this.filters.filter(f => f.type === FilterType.MultiSelect)) {
       this.formGroup.get(filter.id).setValue(null);
     }
+
+    for (const filter of this.filters.filter(f => f.type === FilterType.DateRange)) {
+      this.formGroup.get(filter.filterDefinition.startDateId).setValue(null);
+      this.formGroup.get(filter.filterDefinition.startDateId).reset();
+      this.formGroup.get(filter.filterDefinition.endDateId).setValue(null);
+      this.formGroup.get(filter.filterDefinition.endDateId).reset();
+    }
+
     // clear keywords
     this.keywordSearchWords = '';
     // reset the subset settings
