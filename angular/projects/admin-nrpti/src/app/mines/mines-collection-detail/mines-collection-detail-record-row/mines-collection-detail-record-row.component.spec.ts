@@ -7,7 +7,9 @@ import { CommonModule } from '../../../../../../common/src/app/common.module';
 import { GlobalModule } from 'nrpti-angular-components';
 
 describe('MinesTableRowComponent', () => {
-  const testBedHelper = new TestBedHelper<MinesCollectionRecordTableRowComponent>(MinesCollectionRecordTableRowComponent);
+  const testBedHelper = new TestBedHelper<MinesCollectionRecordTableRowComponent>(
+    MinesCollectionRecordTableRowComponent
+  );
 
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);

@@ -18,7 +18,7 @@ export class MinesCollectionRecordTableRowComponent extends TableRowComponent im
   }
 
   @HostListener('click') onItemClicked() {
-    //TODO: Not sure how the link information for the record is going to be returned yet. Redirect here once known.
+    // TODO: Not sure how the link information for the record is going to be returned yet. Redirect here once known.
   }
 
   formatDate(date: Date): string {
