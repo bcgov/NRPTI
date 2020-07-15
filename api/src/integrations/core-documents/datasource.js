@@ -117,7 +117,7 @@ class CoreDocumentsDataSource {
           const fileContent = fs.readFileSync(tempFilePath);
 
           // Save document to S3 and locally.
-          const newDocumentId = await this.putFileS3(fileContent, 'testing.pdf');
+          const newDocumentId = await this.putFileS3(fileContent, document.documentName);
 
           // Delete temp file.
           fs.unlinkSync(tempFilePath);

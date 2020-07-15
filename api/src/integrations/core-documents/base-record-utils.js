@@ -8,10 +8,6 @@ const RecordController = require('../../controllers/record-controller');
 /**
  * Core base record type handler that can be used directly, or extended if customizations are needed.
  *
- * Must contain the following functions:
- * - transformRecord: (object) => object
- * - saveRecord: (object) => any
- *
  * @class BaseRecordUtils
  */
 class BaseRecordUtils {
@@ -49,13 +45,6 @@ class BaseRecordUtils {
 
     return {
       _schemaName: this.recordType._schemaName,
-
-      addedBy: this.auth_payload.displayName,
-      updatedBy: this.auth_payload.displayName,
-
-      dateAdded: new Date(),
-      dateUpdated: new Date(),
-
       sourceSystemRef: 'core'
     };
   }
@@ -95,6 +84,10 @@ class BaseRecordUtils {
     try {
       // build update Obj, which needs to include the flavour record ids
       const updateObj = { ...nrptiRecord, _id: existingRecord._id };
+      
+      updateObj.updatedBy = (this.auth_payload && this.auth_payload.displayName) || '';
+      updateObj.dateUpdated = new Date();
+      
       existingRecord._flavourRecords.forEach(flavourRecord => {
         updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id };
       });
@@ -123,6 +116,12 @@ class BaseRecordUtils {
     if (!nrptiRecord) {
       throw Error('createRecord - required nrptiRecord must be non-null.');
     }
+
+    // build create Obj, which should include the flavour record details
+    const createObj = { ...nrptiRecord };
+
+    createObj.addedBy = (this.auth_payload && this.auth_payload.displayName) || '';
+    createObj.dateAdded = new Date();
 
     try {
       return await RecordController.processPostRequest(
