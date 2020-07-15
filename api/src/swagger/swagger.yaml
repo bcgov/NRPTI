@@ -638,6 +638,53 @@ paths:
           description: 'Access Denied'
           schema:
             $ref: '#/definitions/Error'
+  /record/collection/{collectionId}:
+    x-swagger-router-controller: record-controller
+    options:
+      tags:
+        - record
+        - collection
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated collection route'
+      parameters:
+        - name: collectionId
+          in: path
+          description: '_id of collection'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - record
+        - collection
+      summary: 'Delete Collection'
+      operationId: protectedCollectionDelete
+      description: 'Authenticated access to delete a collection'
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:bcmi
+      parameters:
+        - name: collectionId
+          in: path
+          description: '_id of collection to delete'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
   /record:
     x-swagger-router-controller: record-controller
     options:

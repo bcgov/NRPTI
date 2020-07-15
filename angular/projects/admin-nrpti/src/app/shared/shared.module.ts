@@ -7,7 +7,8 @@ import {
   MatSlideToggleModule,
   MatAutocompleteModule,
   MatCheckboxModule,
-  MatSelectModule
+  MatSelectModule,
+  MatMenuModule
 } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GlobalModule } from 'nrpti-angular-components';
@@ -30,6 +31,7 @@ import { LinkifyPipe } from '../pipes/linkify.pipe';
     MatAutocompleteModule,
     MatCheckboxModule,
     MatSelectModule,
+    MatMenuModule,
     FormsModule,
     ReactiveFormsModule
   ],
@@ -41,6 +43,7 @@ import { LinkifyPipe } from '../pipes/linkify.pipe';
     MatAutocompleteModule,
     MatCheckboxModule,
     MatSelectModule,
+    MatMenuModule,
     OrderByPipe,
     NewlinesPipe,
     LinkifyPipe

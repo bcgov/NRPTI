@@ -161,8 +161,7 @@ export class FactoryService {
         // to handle any case issues with role or the scopes, convert them
         // all to lower case first
         const userRoles = jwt.realm_access.roles.map((userRole: string) => userRole.toLowerCase());
-        return userRoles.includes(ApplicationRoles.ADMIN) ||
-          userRoles.includes(role.toLowerCase());
+        return userRoles.includes(ApplicationRoles.ADMIN) || userRoles.includes(role.toLowerCase());
       }
     }
 
@@ -268,10 +267,6 @@ export class FactoryService {
     );
   }
 
-  // public getFullList(schema: string): Observable<Record[]> {
-  //   return this.searchService.getFullList(schema);
-  // }
-
   /**
    * Get the current environment.
    *
@@ -325,6 +320,31 @@ export class FactoryService {
     return this.recordService.unPublishRecord(record).pipe(catchError(error => this.apiService.handleError(error)));
   }
 
+  /**
+   * Edit a mine record.
+   *
+   * @param {*} mine object containing mine values to update into mine record.
+   * @returns {Observable<object>}
+   * @memberof FactoryService
+   */
+  public editMine(mine: any): Observable<object> {
+    const outboundObject = {
+      mines: [mine]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  /**
+   * Delete a mine collection.
+   *
+   * @param {string} collectionId _id of the collection to delete.
+   * @returns {Promise<any>}
+   * @memberof FactoryService
+   */
+  public deleteCollection(collectionId: string): Promise<any> {
+    return this.recordService.deleteRecord(collectionId, 'collection');
+  }
+
   // News
   public createNews(news: any): Observable<object> {
     const outboundObject = {
@@ -333,17 +353,6 @@ export class FactoryService {
     return this.recordService
       .createRecord(outboundObject)
       .pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public editMine(mine: any): Observable<object> {
-    const outboundObject = {
-      mines: [mine]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public deleteMineItem(recordId: string, model: string): Promise<any> {
-    return this.recordService.deleteRecord(recordId, model);
   }
 
   public editNews(news: any): Observable<object> {

@@ -1,0 +1,22 @@
+<section>
+  <div class="border-bottom">
+    <div class="text-right mb-3">
+      <button class="btn btn-primary" (click)="addCollection()" title="Create new collection">
+        <i class="material-icons mr-1 align-middle">add</i>
+        <span class="align-middle">Create New Collection</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="mb-1 pb-1">
+  <div *ngIf="!tableData.totalListItems">
+    No Collections found.
+  </div>
+
+  <lib-table-template
+    *ngIf="tableData.totalListItems > 0"
+    [data]="tableData"
+    (messageOut)="onMessageOut($event)"
+  ></lib-table-template>
+</section>
