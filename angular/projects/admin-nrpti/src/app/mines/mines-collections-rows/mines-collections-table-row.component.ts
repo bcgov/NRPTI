@@ -56,8 +56,7 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
    * @memberof MinesCollectionsTableRowComponent
    */
   goToEdit() {
-    // TODO update when collections add-edit page exists
-    this.router.navigate(['collections', this.rowData._id, 'edit']);
+    this.router.navigate([this.rowData._id, 'edit'], { relativeTo: this.route });
   }
 
   /**

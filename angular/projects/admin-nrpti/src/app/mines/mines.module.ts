@@ -7,6 +7,7 @@ import { NgbModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatSlideToggleModule, MatCheckboxModule } from '@angular/material';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 // local modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -25,6 +26,7 @@ import { MinesCollectionsListComponent } from './mines-collections-list/mines-co
 import { MinesCollectionsTableRowComponent } from './mines-collections-rows/mines-collections-table-row.component';
 import { MinesCollectionDetailComponent } from './mines-collection-detail/mines-collection-detail.component';
 import { MinesCollectionRecordTableRowComponent } from './mines-collection-detail/mines-collection-detail-record-row/mines-collection-detail-record-row.component';
+import { MinesCollectionsAddEditComponent } from './mines-collections-add-edit/mines-collections-add-edit.component';
 
 @NgModule({
   imports: [
@@ -41,7 +43,8 @@ import { MinesCollectionRecordTableRowComponent } from './mines-collection-detai
     MatTooltipModule,
     NgbDropdownModule,
     MatSlideToggleModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    DragDropModule
   ],
   declarations: [
     MinesListComponent,
@@ -53,7 +56,8 @@ import { MinesCollectionRecordTableRowComponent } from './mines-collection-detai
     MinesCollectionsListComponent,
     MinesCollectionsTableRowComponent,
     MinesCollectionDetailComponent,
-    MinesCollectionRecordTableRowComponent
+    MinesCollectionRecordTableRowComponent,
+    MinesCollectionsAddEditComponent
   ],
   providers: [],
   entryComponents: [

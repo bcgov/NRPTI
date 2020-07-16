@@ -33,7 +33,7 @@ export class SearchSubsets {
  * @export
  * @class SchemaLists
  */
- export class SchemaLists {
+export class SchemaLists {
   public static readonly allBasicRecordTypes = [
     'Order',
     'Inspection',
@@ -146,9 +146,37 @@ export class Picklists {
     Warning: { displayName: 'Warning', _schemaName: 'Warning' }
   };
 
-  public static readonly sourceSystemRefPicklist = ['core', 'cors-csv', 'epic', 'lng-csv', 'nris-epd', 'nrpti', 'ocers-csv'];
+  public static readonly sourceSystemRefPicklist = [
+    'core',
+    'cors-csv',
+    'epic',
+    'lng-csv',
+    'nris-epd',
+    'nrpti',
+    'ocers-csv'
+  ];
 
   public static readonly mineTypes = ['Coal', 'Metal', 'Industrial Mineral', 'Sand & Gravel'];
+
+  public static readonly collectionTypePicklist = [
+    'Annual Report',
+    'Certificate Amendment',
+    'Certificate',
+    'Compliance Self Report',
+    'Construction Plan',
+    'Dam Safety Inspection',
+    'Inspection Report',
+    'Letter of Assurance',
+    'Management Plan',
+    'Order',
+    'Permit Amendment',
+    'Permit',
+    'Report'
+  ];
+
+  public static readonly collectionAgencyPicklist = [
+    'EAO', 'EMPR', 'ENV'
+  ];
 
   /**
    * Contains a mapping of acts to regulations.
@@ -680,7 +708,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {string[]} sorted array of acts
    */
-  public static getAllActs = function (): string[] {
+  public static getAllActs = function(): string[] {
     return Object.keys(this.legislationActsMappedToRegulations).sort();
   };
 
@@ -691,7 +719,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {string[]} sorted array of regulations
    */
-  public static getAllRegulations = function (): string[] {
+  public static getAllRegulations = function(): string[] {
     const regulations = [];
 
     Object.keys(this.legislationActsMappedToRegulations).forEach(act =>
@@ -715,7 +743,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {{ [key: string]: string[] }}
    */
-  public static getLegislationRegulationsMappedToActs = function (): { [key: string]: string[] } {
+  public static getLegislationRegulationsMappedToActs = function(): { [key: string]: string[] } {
     const regulations = {};
 
     Object.keys(this.legislationActsMappedToRegulations).forEach(act =>
@@ -4532,7 +4560,7 @@ export class Picklists {
    * @static
    * @returns {string} legislation description or null
    */
-  public static getLegislationDescription = function (recordType: string, legislation: Legislation): string {
+  public static getLegislationDescription = function(recordType: string, legislation: Legislation): string {
     if (!recordType || !legislation || !legislation.act || !legislation.section) {
       return null;
     }
@@ -4587,7 +4615,7 @@ export class Picklists {
    * @param {string[]} paths properties to descend, in order, through the object.
    * @returns the value found at the end of the path, or null
    */
-  public static traverseObject = function (obj: object, paths: string[]) {
+  public static traverseObject = function(obj: object, paths: string[]) {
     if (!obj || !paths || !paths.length) {
       return null;
     }

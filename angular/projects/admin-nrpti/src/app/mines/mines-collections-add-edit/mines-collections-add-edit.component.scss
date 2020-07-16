@@ -1,0 +1,78 @@
+@import 'assets/styles/components/mine.scss';
+@import 'assets/styles/components/add-edit.scss';
+@import 'assets/styles/components/drag-drop.scss';
+
+// Copied from table-template.component.scss to help match styling used there.
+.table {
+  margin-bottom: none !important;
+  border: none;
+
+  thead {
+    tr {
+      background: #e8eff5;
+      align-items: flex-start;
+    }
+
+    th {
+      background-color: #e8eff5;
+      padding: 0.7rem 0.15rem 0.85rem;
+      border: none;
+      border-bottom: 2px solid transparent;
+
+      @media screen and (max-width: 768px) {
+        padding: 0.7rem 0.5rem 0.85rem;
+      }
+    }
+  }
+
+  tr td:first-child,
+  tr th:first-child {
+    padding-left: 1rem;
+
+    @media screen and (max-width: 768px) {
+      padding-left: 0.5rem;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  // Sorting is disabled on the mines collections add-edit record table, so hide the header when the table collapses
+  // into its responsive form.
+  .table thead {
+    display: none;
+  }
+
+  // The drag-drop preview is rendered outside of the table, and so any css that would normally be inherited needs to
+  // be manually accounted for here.  Scss below mainly copied from table.scss.
+  tr.cdk-drag-preview {
+    display: block;
+    border-bottom: 2px solid #003367;
+    padding-bottom: 12px;
+
+    td {
+      border-bottom: 1px solid #ddd;
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      min-height: 34px;
+      padding: 0.75rem;
+      overflow: hidden;
+    }
+
+    td::before {
+      content: attr(data-label);
+      float: left;
+      font-weight: bold;
+      text-transform: uppercase;
+      padding-right: 10px;
+    }
+
+    td:first-child {
+      padding-left: 0.5rem;
+    }
+
+    td:last-child {
+      border-bottom: 0;
+    }
+  }
+}

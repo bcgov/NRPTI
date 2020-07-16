@@ -4,13 +4,8 @@ import { CollectionBCMI } from '../../../../../common/src/app/models/bcmi/collec
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MinesCollectionRecordTableRowComponent } from './mines-collection-detail-record-row/mines-collection-detail-record-row.component';
-import {
-  IColumnObject,
-  LoadingScreenService,
-  TableObject
-} from 'nrpti-angular-components';
+import { IColumnObject, LoadingScreenService, TableObject } from 'nrpti-angular-components';
 import moment from 'moment';
-
 
 @Component({
   selector: 'app-mines-collection-detail',
@@ -28,7 +23,7 @@ export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
     component: MinesCollectionRecordTableRowComponent,
     pageSize: 25,
     currentPage: 1,
-    sortBy: '+name',
+    sortBy: '',
     options: {
       showPageSizePicker: false,
       showPagination: false,
@@ -42,7 +37,7 @@ export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
       name: 'Name',
       value: '',
       width: 'col-6',
-      nosort: true,
+      nosort: true
     },
     {
       name: 'Source System',
@@ -54,14 +49,14 @@ export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
       name: 'Date',
       value: '',
       width: 'col-2',
-      nosort: true,
+      nosort: true
     },
     {
       name: 'Published State',
       value: '',
       width: 'col-2',
-      nosort: true,
-    },
+      nosort: true
+    }
   ];
 
   constructor(
@@ -120,11 +115,7 @@ export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
   }
 
   navigateToEditPage() {
-    this.router.navigate(['mines', this.collection._id, 'edit']);
-  }
-
-  navigateBack() {
-    this.router.navigate(['mines']);
+    this.router.navigate(['../edit'], { relativeTo: this.route });
   }
 
   ngOnDestroy() {
