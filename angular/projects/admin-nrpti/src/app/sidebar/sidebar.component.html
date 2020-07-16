@@ -23,10 +23,10 @@
       Mine Details
     </a>
     <a
-      [ngClass]="{ active: showMineDetails && currentMenu === 'content' }"
+      [ngClass]="{ active: showMineDetails && (currentMenu === 'records' || currentMenu === 'collections') }"
       class="mines-menu"
       id="mines-content"
-      [routerLink]="['mines', currentMineId, 'content']"
+      [routerLink]="['mines', currentMineId, 'records']"
     >
       <i class="material-icons mr-3">description</i>
       Mine Content

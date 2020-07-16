@@ -13,6 +13,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MinesCollectionsTableRowComponent } from '../mines-collections-rows/mines-collections-table-row.component';
+import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
 
 /**
  * Mine list page component.
@@ -29,6 +30,8 @@ import { MinesCollectionsTableRowComponent } from '../mines-collections-rows/min
 })
 export class MinesCollectionsListComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+
+  public mine: Mine;
 
   public tableData: TableObject = new TableObject({
     component: MinesCollectionsTableRowComponent,
@@ -106,11 +109,13 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
       }
 
       this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
-        if (!res || !res.collections) {
+        if (!res || !res.collections || !res.mine) {
           alert("Uh-oh, couldn't load NRPTI mines collections");
           this.loadingScreenService.setLoadingState(false, 'body');
           return;
         }
+
+        this.mine = res.mine[0] && res.mine[0].data && new Mine(res.mine[0].data);
 
         const collections =
           (res.collections[0] && res.collections[0].data && res.collections[0].data.searchResults) || [];
@@ -154,9 +159,12 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
   setInitialURLParams() {
     this.location.go(
       this.router
-        .createUrlTree([{ ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }], {
-          relativeTo: this.route
-        })
+        .createUrlTree(
+          ['../collections', { ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }],
+          {
+            relativeTo: this.route
+          }
+        )
         .toString()
     );
   }
