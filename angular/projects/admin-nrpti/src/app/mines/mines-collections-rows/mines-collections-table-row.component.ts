@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, HostListener, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DialogService } from 'ng2-bootstrap-modal';
 import { TableRowComponent } from 'nrpti-angular-components';
 import { ConfirmComponent } from '../../confirm/confirm.component';
@@ -17,6 +17,7 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     public changeDetectionRef: ChangeDetectorRef,
     public factoryService: FactoryService,
     private dialogService: DialogService
@@ -46,8 +47,7 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
    * @memberof MinesCollectionsTableRowComponent
    */
   goToDetails() {
-    // TODO update when collections detail page exists
-    this.router.navigate(['collections', this.rowData._id, 'detail']);
+    this.router.navigate([this.rowData._id, 'detail'], { relativeTo: this.route });
   }
 
   /**

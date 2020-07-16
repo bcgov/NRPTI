@@ -1,24 +1,63 @@
-<section>
-  <search-filter-template
-    #explorePanel
-    (searchEvent)='executeSearch($event)'
-    title="Keyword Search"
-    tooltip="Summary, description, location, and issued to name fields"
-    [subsets]="subsets"
-    [advancedFilters]="true"
-    [showAdvancedFilters]="showAdvancedFilters"
-    [searchOnFilterChange]="true"
-    [filters]="filters">
-  </search-filter-template>
+<main class="container-fluid-padding">
+  <section>
+    <div class="d-flex heading-bar">
+      <div>
+        <h1 id="name" class="m-0">{{ (mine && mine.name) || '-' }}</h1>
+      </div>
+    </div>
+  </section>
 
-<section class="mb-1 pb-1">
-  <div *ngIf="!tableData.totalListItems">
-    No Mines found.
-  </div>
-
-  <lib-table-template
-    *ngIf="tableData.totalListItems > 0"
-    [data]="tableData"
-    (messageOut)="onMessageOut($event)"
-  ></lib-table-template>
-</section>
+  <section>
+    <!-- TAB HEADERS -->
+    <div role="navigation">
+      <ul class="nav nav-tabs nav-fill pl-2" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a
+            class="nav-link"
+            role="tab"
+            routerLink="/mines/{{ mine && mine._id }}/records"
+            routerLinkActive
+            #rla="routerLinkActive"
+            [class.active]="true"
+          >
+            Records
+          </a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a
+            class="nav-link"
+            role="tab"
+            routerLink="/mines/{{ mine && mine._id }}/collections"
+            [class.active]="false"
+          >
+            Collections
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+  <section>
+    <search-filter-template
+      #explorePanel
+      (searchEvent)='executeSearch($event)'
+      title="Keyword Search"
+      tooltip="Summary, description, location, and issued to name fields"
+      [subsets]="subsets"
+      [advancedFilters]="true"
+      [showAdvancedFilters]="showAdvancedFilters"
+      [searchOnFilterChange]="true"
+      [filters]="filters">
+    </search-filter-template>
+  </section>
+  <section class="mb-1 pb-1">
+    <div *ngIf="!tableData.totalListItems">
+      No Mines found.
+    </div>
+  
+    <lib-table-template
+      *ngIf="tableData.totalListItems > 0"
+      [data]="tableData"
+      (messageOut)="onMessageOut($event)"
+    ></lib-table-template>
+  </section>
+</main>
