@@ -39,6 +39,11 @@ export class MinesCollectionsListResolver implements Resolve<Observable<object>>
       or['hasRecords'] = params.hasRecords;
     }
 
+    // This should always be set.
+    if (params.mineId) {
+      and['project'] = params.mineId;
+    }
+
     // force-reload so we always have latest data
     return this.factoryService.getRecords(
       keywords,
