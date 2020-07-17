@@ -6,6 +6,8 @@ module.exports = require('../../utils/model-schema-generator')(
     _schemaName: { type: String, default: 'PermitAmendment', index: true },
     _sourceRefId:  { type: String, default: null, index: true },
 
+    mineGuid: { type: String, default: '', index: true },
+
     read: [{ type: String, trim: true, default: 'sysadmin' }],
     write: [{ type: String, trim: true, default: 'sysadmin' }],
 
