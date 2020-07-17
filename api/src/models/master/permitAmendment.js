@@ -17,7 +17,7 @@ module.exports = require('../../utils/model-schema-generator')(
     issueDate: { type: Date, default: null },
     authorizedEndDate: { type: Date, default: null },
     description: { type: String, default: '' },
-    documents: [{
+    amendmentDocuments: [{
       _sourceRefId: { type: String, default: null },
       documentName: { type: String, defualt: '' },
       documentId: { type: 'ObjectId', default: null }
