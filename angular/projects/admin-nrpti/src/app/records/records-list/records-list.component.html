@@ -1,119 +1,15 @@
 <main class="container-fluid-padding">
-  <div class="border-bottom">
-    <div class="row mb-3">
-      <div class="col">
-        <span class="keyword-search-text">Keyword Search</span>
-        <i
-          class="material-icons align-text-bottom ml-2"
-          matTooltip="Summary, description, location, and issued to name fields"
-          matTooltipPosition="after"
-          aria-label="Icon that displays a tooltip when focused or hovered over">
-          help_outline
-        </i>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        <div class="input-group mb-3">
-          <div ngbDropdown class="input-group-prepend">
-            <button class="btn btn-outline-secondary" id="dropdown" ngbDropdownToggle>{{ selectedSubset }}</button>
-            <div ngbDropdownMenu aria-labelledby="dropdown">
-              <button ngbDropdownItem [disabled]="selectedSubset === SearchSubsets.all"
-                (click)="changeSubset(SearchSubsets.all)">
-                All
-                <i *ngIf="selectedSubset === SearchSubsets.all" class="material-icons material-icons align-text-bottom">
-                  check_circle
-                </i>
-              </button>
-              <button ngbDropdownItem [disabled]="selectedSubset === SearchSubsets.issuedTo"
-                (click)="changeSubset(SearchSubsets.issuedTo)">
-                Issued To
-                <i *ngIf="selectedSubset === SearchSubsets.issuedTo"
-                  class="material-icons material-icons align-text-bottom">
-                  check_circle
-                </i>
-              </button>
-              <button ngbDropdownItem [disabled]="selectedSubset === SearchSubsets.location"
-                (click)="changeSubset(SearchSubsets.location)">
-                Location
-                <i *ngIf="selectedSubset === SearchSubsets.location"
-                  class="material-icons material-icons align-text-bottom">
-                  check_circle
-                </i>
-              </button>
-              <button
-                ngbDropdownItem
-                [disabled]="selectedSubset === SearchSubsets.descriptionAndSummary"
-                (click)="changeSubset(SearchSubsets.descriptionAndSummary)"
-              >
-                Description & Summary
-                <i
-                  *ngIf="selectedSubset === SearchSubsets.descriptionAndSummary"
-                  class="material-icons material-icons align-text-bottom"
-                >
-                  check_circle
-                </i>
-              </button>
-              <button
-                ngbDropdownItem
-                [disabled]="selectedSubset === SearchSubsets.recordName"
-                (click)="changeSubset(SearchSubsets.recordName)"
-              >
-                Record Name
-                <i
-                  *ngIf="selectedSubset === SearchSubsets.recordName"
-                  class="material-icons material-icons align-text-bottom"
-                >
-                  check_circle
-                </i>
-              </button>
-            </div>
-          </div>
-          <input type="text" class="form-control" (keyup.enter)="keywordSearch()" [(ngModel)]="keywordSearchWords"
-            placeholder="Type keyword search words"
-            aria-label="Type keyword search words" aria-describedby="basic-addon2">
-          <div *ngIf="keywordSearchWords && keywordSearchWords.length > 0" class="input-group-append">
-            <button class="btn btn-outline-primary" type="button" (click)="clearSearchTerms()">
-              <i class="material-icons align-middle">close</i>
-            </button>
-          </div>
-          <div class="input-group-append">
-            <button class="btn btn-outline-primary" type="button" (click)="keywordSearch()">
-              <i class="material-icons align-middle">search</i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row mb-3">
-      <div class="col">
-        <button
-          [hidden]="showAdvancedFilters"
-          class="btn btn-primary float-right"
-          (click)="toggleAdvancedFilters()">
-          Open Advanced Filters
-        </button>
-        <button
-          [hidden]="!showAdvancedFilters"
-          class="btn btn-primary float-right"
-          (click)="toggleAdvancedFilters()">
-          Close Advanced Filters
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="row mt-3 border-bottom" [hidden]="!showAdvancedFilters">
-    <div class="col-12 mb-3">
-      <app-explore-panel *ngIf="searchFiltersForm"
-        #explorePanel
-        [formGroup]="searchFiltersForm"
-        (filtersReset)="clearKeywordSearch(); resetSortBy()">
-      </app-explore-panel>
-    </div>
-  </div>
+  <search-filter-template
+    #explorePanel
+    (searchEvent)='executeSearch($event)'
+    title="Keyword Search"
+    tooltip="Summary, description, location, and issued to name fields"
+    [subsets]="subsets"
+    [advancedFilters]="true"
+    [showAdvancedFilters]="showAdvancedFilters"
+    [searchOnFilterChange]="true"
+    [filters]="filters">
+  </search-filter-template>
 
   <div class="row mt-3 mb-3">
     <div class="col-12 text-right">

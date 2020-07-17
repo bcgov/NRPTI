@@ -2,8 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule, MatCheckboxModule } from '@angular/material';
+import { MatSelectModule, MatAutocompleteModule, MatCheckboxModule, MatSlideToggleModule, MatChipsModule, MatChipList, MatIconModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -21,6 +22,8 @@ import { PenaltyAddEditComponent } from './penalty/penalty-add-edit/penalty-add-
 import { PenaltyDetailComponent as PenaltyDetailAdminComponent } from './penalty/penalty-detail-admin/penalty-detail.component';
 import { PenaltyDetailComponent as PenaltyDetailPublicComponent } from './penalty/penalty-detail-public/penalty-detail.component';
 import { LinkAddEditComponent } from './link-add-edit/link-add-edit.component';
+import { SearchFilterTemplateComponent } from './search-filter-template/search-filter-template.component';
+import { CallbackPipe } from './autocomplete-multi-select/callback.pipe';
 
 // services
 
@@ -37,7 +40,9 @@ import { LinkAddEditComponent } from './link-add-edit/link-add-edit.component';
     PenaltyAddEditComponent,
     PenaltyDetailAdminComponent,
     PenaltyDetailPublicComponent,
-    LinkAddEditComponent
+    LinkAddEditComponent,
+    SearchFilterTemplateComponent,
+    CallbackPipe
   ],
   imports: [
     NgbModule,
@@ -48,9 +53,14 @@ import { LinkAddEditComponent } from './link-add-edit/link-add-edit.component';
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatCheckboxModule,
-    DragDropModule
+    MatSelectModule,
+    MatSlideToggleModule,
+    MatChipsModule,
+    MatIconModule,
+    DragDropModule,
+    MatTooltipModule
   ],
-  providers: [],
+  providers: [MatChipList],
   exports: [
     FileUploadComponent,
     DocumentLinkStagingComponent,
@@ -63,7 +73,8 @@ import { LinkAddEditComponent } from './link-add-edit/link-add-edit.component';
     PenaltyAddEditComponent,
     PenaltyDetailAdminComponent,
     PenaltyDetailPublicComponent,
-    LinkAddEditComponent
+    LinkAddEditComponent,
+    SearchFilterTemplateComponent
   ]
 })
 export class CommonModule {}

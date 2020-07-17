@@ -1,14 +1,36 @@
-<input
-  #multiAutocompleteFilter
-  name="multiAutocompleteFilter"
-  type="text"
-  class="form-control"
-  placeholder="{{ placeholderText }}"
-  matInput
-  (keyup)="filterPicklist($event)"
-  (keydown)="handleEnter($event)"
-  [matAutocomplete]="multiAutocomplete"
-/>
+<mat-chip-list #chipList *ngIf="useChips">
+  <mat-chip
+      *ngFor="let option of options | callback: filterOptions"
+      [selectable]="true"
+      [removable]="true"
+      (removed)="removeChip(option)">
+      <span class="chip-text-style">{{option.displayValue}}</span>
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+  <input
+    #multiAutocompleteFilter
+    name="multiAutocompleteFilter"
+    type="text"
+    class="form-control"
+    placeholder="{{ placeholderText }}"
+    matInput
+    (keyup)="filterPicklist($event)"
+    (keydown)="handleEnter($event)"
+    [matAutocomplete]="multiAutocomplete"
+    [matChipInputFor]="chipList"
+  />
+</mat-chip-list>
+<input *ngIf="!useChips"
+    #multiAutocompleteFilter
+    name="multiAutocompleteFilter"
+    type="text"
+    class="form-control"
+    placeholder="{{ placeholderText }}"
+    matInput
+    (keyup)="filterPicklist($event)"
+    (keydown)="handleEnter($event)"
+    [matAutocomplete]="multiAutocomplete"
+  />
 <mat-autocomplete #multiAutocomplete="matAutocomplete">
   <mat-option (click)="selectNone()" title="Select none">Clear Selected</mat-option>
   <ng-container *ngFor="let option of options">

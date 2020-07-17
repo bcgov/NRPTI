@@ -144,23 +144,22 @@ export class MinesListComponent implements OnInit, OnDestroy {
     });
   }
 
-  keywordSearch() {
-    if (this.keywordSearchWords) {
-      this.queryParams['keywords'] = this.keywordSearchWords;
+  executeSearch(searchPackage) {
+    this.keywordSearchWords = '';
+    delete this.queryParams['keywords'];
+
+    if (searchPackage.keywords) {
+      this.queryParams['keywords'] = searchPackage.keywords;
       // always change sortBy to '-score' if keyword search is directly triggered by user
-      this.tableData.sortBy = '-score';
-    } else {
-      this.clearSearchTerms();
-      this.queryParams['keywords'] = '';
+      if (searchPackage.keywordsChanged) {
+        this.tableData.sortBy = '-score';
+      }
     }
 
     this.tableData.currentPage = 1;
     this.submit();
   }
 
-  clearSearchTerms() {
-    this.keywordSearchWords = '';
-  }
   /**
    * Updates the url parameters based on the currently set query and table template params, without reloading the page.
    *

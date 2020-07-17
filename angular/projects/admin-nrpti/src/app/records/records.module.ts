@@ -99,7 +99,6 @@ import { CourtConvictionNRCEDDetailComponent } from './court-convictions/court-c
 import { CourtConvictionLNGDetailComponent } from './court-convictions/court-conviction-lng-detail/court-conviction-lng-detail.component';
 
 // other
-import { DateInputComponent } from '../explore-panel/date-input/date-input.component';
 import { DocumentAuthenticatedReadOnlyComponent } from '../documents/document-authenticated-read-only/document-authenticated-read-only.component';
 import { S3SignedUrlAnchorComponent } from '../documents/s3-signed-url-anchor/s3-signed-url-anchor.component';
 
@@ -123,7 +122,6 @@ import { S3SignedUrlAnchorComponent } from '../documents/s3-signed-url-anchor/s3
     NgbDropdownModule
   ],
   declarations: [
-    DateInputComponent,
     DocumentAuthenticatedReadOnlyComponent,
     S3SignedUrlAnchorComponent,
     // records
