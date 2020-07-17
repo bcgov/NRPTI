@@ -54,6 +54,14 @@ describe('generateExpArray', () => {
         { $and: [{ item: { $ne: 'value1' } }, { item: { $ne: 'value2' } }, { item: { $ne: 'value3' } }] }
       ]);
     });
+
+    it('returns `and in contains` expression for field with multiple comma separated values', async () => {
+      const result = await searchController.generateExpArray({ item: ['value1', 'value2', 'value3'] }, '$and', '$in');
+
+      expect(result).toEqual([
+        { $and: [{ item: { $in: ['value1', 'value2', 'value3'] } }] }
+      ]);
+    });
   });
 
   describe('date', () => {
