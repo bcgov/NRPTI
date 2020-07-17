@@ -149,7 +149,7 @@ exports.getConvertedValue = getConvertedValue;
 
 const convertValue = function (item) {
   if (isNaN(item) || item === null) {
-    if (mongoose.Types.ObjectId.isValid(item)) {
+    if (mongoose.Types.ObjectId.isValid(item) && mongoose.Types.ObjectId(item).toString() === item) {
       defaultLog.info('objectid', item);
       // ObjectID
       return mongoose.Types.ObjectId(item);
