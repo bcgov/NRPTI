@@ -101,7 +101,7 @@ export class SearchService {
         });
       });
     }
-    if (_in && _in !== {}) {
+    if (Object.keys(_in).length !== 0) {
       Object.keys(_in).map(key => {
         queryString += `&_in[${key}]=${_in[key]}`;
       });
