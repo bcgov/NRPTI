@@ -21,7 +21,7 @@ function isEmpty(obj) {
  *
  * @param {string} field query string
  * @param {string} [logicalOperator='$or'] mongo logical operator ('$or', '$and')
- * @param {string} [comparisonOperator='$eq'] mongo comparison operator ('$eq', '$ne')
+ * @param {string} [comparisonOperator='$eq'] mongo comparison operator ('$eq', '$ne', '$in')
  * @returns {object[]} array of objects
  */
 let generateExpArray = async function (field, logicalOperator = '$or', comparisonOperator = '$eq') {
@@ -35,9 +35,16 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
   return await Promise.all(
     Object.keys(queryString).map(async item => {
       let entry = queryString[item];
-      defaultLog.info('item:', item, entry);
 
-      if (Array.isArray(entry)) {
+      // If $in on an array, go through all the members of the array and convert their value
+      if (Array.isArray(entry) && comparisonOperator === '$in') {
+        let arrayExp = entry.map(element => {
+          return convertValue(element);
+        });
+        return { [logicalOperator]: [{ [item]: { $in: arrayExp } }] };
+      }
+
+      if (Array.isArray(entry) && comparisonOperator !== '$in') {
         return getArrayExp(item, entry, logicalOperator, comparisonOperator);
       }
 
@@ -76,7 +83,7 @@ exports.generateExpArray = generateExpArray;
  * @param {string} item parameter key
  * @param {*[]} entry parameter values array
  * @param {string} logicalOperator mongo logical operator ('$and', '$or', '$nor')
- * @param {*} comparisonOperator mongo comparison operator ('$eq', '$ne')
+ * @param {*} comparisonOperator mongo comparison operator ('$eq', '$ne', '$in')
  * @returns {object}
  */
 const getArrayExp = function (item, entry, logicalOperator, comparisonOperator) {
@@ -145,7 +152,7 @@ exports.getHasRecordsExp = getHasRecordsExp;
  *
  * @param {string} item parameter key
  * @param {*} entry parameter value
- * @param {string} comparisonOperator mongo comparison operator ('$eq', '$ne')
+ * @param {string} comparisonOperator mongo comparison operator ('$eq', '$ne', '$in')
  * @returns {object}
  */
 const getConvertedValue = function (item, entry, comparisonOperator) {
@@ -153,31 +160,35 @@ const getConvertedValue = function (item, entry, comparisonOperator) {
     return {};
   }
 
-  if (isNaN(entry) || entry === null) {
-    if (mongoose.Types.ObjectId.isValid(entry)) {
-      defaultLog.info('objectid', entry);
+  return { [item]: { [comparisonOperator]: convertValue(entry) } };
+};
+exports.getConvertedValue = getConvertedValue;
+
+const convertValue = function (item) {
+  if (isNaN(item) || item === null) {
+    if (mongoose.Types.ObjectId.isValid(item)) {
+      defaultLog.info('objectid', item);
       // ObjectID
-      return { [item]: { [comparisonOperator]: mongoose.Types.ObjectId(entry) } };
-    } else if (entry === 'true') {
+      return mongoose.Types.ObjectId(item);
+    } else if (item === 'true') {
       defaultLog.info('bool');
       // Bool
-      return { [item]: { [comparisonOperator]: true } };
-    } else if (entry === 'false') {
+      return true;
+    } else if (item === 'false') {
       defaultLog.info('bool');
       // Bool
-      return { [item]: { [comparisonOperator]: false } };
+      return false;
     } else {
       defaultLog.info('string');
       // String
-      return { [item]: { [comparisonOperator]: entry } };
+      return item;
     }
   } else {
     defaultLog.info('number');
     // Number
-    return { [item]: { [comparisonOperator]: parseInt(entry) } };
+    return parseInt(item);
   }
-};
-exports.getConvertedValue = getConvertedValue;
+}
 
 const handleDateStartItem = function (field, entry) {
   let date = new Date(entry);
@@ -240,7 +251,8 @@ let searchCollection = async function(
   and,
   or,
   nor,
-  subset
+  subset,
+  _in
 ) {
   let properties = undefined;
   if (project) {
@@ -258,7 +270,7 @@ let searchCollection = async function(
     searchProperties = { $text: { $search: keywords, $caseSensitive: caseSensitive } };
   }
 
-  let match = await generateMatchesForAggregation(and, or, nor, searchProperties, properties, schemaName, roles);
+  let match = await generateMatchesForAggregation(and, or, nor, searchProperties, properties, schemaName, _in);
 
   defaultLog.info('match:', match);
 
@@ -493,7 +505,7 @@ exports.protectedGet = function (args, res, next) {
 };
 
 // Generates the main match query
-const generateMatchesForAggregation = async function (and, or, nor, searchProperties, properties, schemaName, roles) {
+const generateMatchesForAggregation = async function (and, or, nor, searchProperties, properties, schemaName, _in) {
   const andExpArray = (await generateExpArray(and)) || [];
   defaultLog.info('andExpArray:', andExpArray);
 
@@ -502,6 +514,9 @@ const generateMatchesForAggregation = async function (and, or, nor, searchProper
 
   const norExpArray = (await generateExpArray(nor, '$and', '$ne')) || [];
   defaultLog.info('norExpArray:', norExpArray);
+
+  const inExpArray = (await generateExpArray(_in, '$and', '$in')) || [];
+  defaultLog.info('inExpArray:', JSON.stringify(inExpArray));
 
   const expArrays = [];
   if (andExpArray.length === 1) {
@@ -518,6 +533,11 @@ const generateMatchesForAggregation = async function (and, or, nor, searchProper
     expArrays.push(norExpArray[0]);
   } else if (norExpArray.length > 1) {
     expArrays.push({ $and: norExpArray });
+  }
+  if (inExpArray.length === 1) {
+    expArrays.push(inExpArray[0]);
+  } else if (inExpArray.length > 1) {
+    expArrays.push({ $and: inExpArray });
   }
 
   let modifier = {};
@@ -550,6 +570,7 @@ const executeQuery = async function (args, res, next) {
   let and = args.swagger.params.and ? args.swagger.params.and.value : '';
   let or = args.swagger.params.or ? args.swagger.params.or.value : '';
   let nor = args.swagger.params.nor ? args.swagger.params.nor.value : '';
+  let _in = args.swagger.params._in ? args.swagger.params._in.value : '';
   let subset = args.swagger.params.subset ? args.swagger.params.subset.value : null;
   defaultLog.info('Searching keywords:', keywords);
   defaultLog.info('Searching datasets:', dataset);
@@ -561,6 +582,7 @@ const executeQuery = async function (args, res, next) {
   defaultLog.info('and:', and);
   defaultLog.info('or:', or);
   defaultLog.info('nor:', nor);
+  defaultLog.info('_in:', _in);
   defaultLog.info('_id:', _id);
   defaultLog.info('populate:', populate);
   defaultLog.info('subset:', subset);
@@ -612,7 +634,8 @@ const executeQuery = async function (args, res, next) {
       and,
       or,
       nor,
-      subset
+      subset,
+      _in
     );
 
     QueryActions.sendResponse(res, 200, itemData);

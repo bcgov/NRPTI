@@ -642,6 +642,7 @@ export class Picklists {
     'Water Utility Act': [],
     'Weed Control Act': ['Weed Control Regulation'],
     'Wild Animal and Plant Protection Act': [],
+    'Wildfire Act': ['Wildfire Regulation'],
     'Wildlife Act': [
       'Angling and Scientific Collection Regulation',
       'Closed Areas Regulation',
@@ -661,7 +662,6 @@ export class Picklists {
       'Motor Vehicle Prohibition Regulations',
       'Permit Regulation',
       'Public Access Prohibition Regulation',
-      'Wildfire Regulation',
       'Wildlife Act Commercial Activities Regulation',
       'Wildlife Act General Regulation',
       'Wildlife Management Area Use and Access Regulation',

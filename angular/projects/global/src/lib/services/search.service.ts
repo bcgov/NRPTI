@@ -52,7 +52,8 @@ export class SearchService {
     populate: boolean = false,
     or: object = {},
     subset: string[] = [],
-    nor: object = {}
+    nor: object = {},
+    _in: object = {}
   ): Observable<SearchResults[]> {
     let queryString = `search?dataset=${dataset}`;
     if (fields && fields.length > 0) {
@@ -98,6 +99,11 @@ export class SearchService {
         nor[key].split(',').map(item => {
           queryString += `&nor[${key}]=${item}`;
         });
+      });
+    }
+    if (Object.keys(_in).length !== 0) {
+      Object.keys(_in).map(key => {
+        queryString += `&_in[${key}]=${_in[key]}`;
       });
     }
     if (fields) {
