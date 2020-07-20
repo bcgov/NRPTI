@@ -3,7 +3,7 @@ import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
 import { FactoryService } from '../services/factory.service';
-import { EpicProjectIds, SchemaLists } from '../../../../common/src/app/utils/record-constants';
+import { SchemaLists } from '../../../../common/src/app/utils/record-constants';
 
 @Injectable()
 export class MinesRecordsListResolver implements Resolve<Observable<object>> {
@@ -41,68 +41,20 @@ export class MinesRecordsListResolver implements Resolve<Observable<object>> {
       or['dateRangeToFilterdateIssued'] = params.dateRangeToFilter;
     }
 
-    if (params.issuedToCompany && params.issuedToIndividual) {
-      or['issuedTo.type'] = 'Company,Individual,IndividualCombined';
-    } else if (params.issuedToCompany) {
-      or['issuedTo.type'] = 'Company';
-    } else if (params.issuedToIndividual) {
-      or['issuedTo.type'] = 'Individual,IndividualCombined';
-    }
-
     if (params.agency) {
       or['issuingAgency'] = params.agency;
-    }
-
-    if (params.act) {
-      or['legislation.act'] = params.act;
-    }
-
-    if (params.regulation) {
-      or['legislation.regulation'] = params.regulation;
     }
 
     if (params.sourceSystemRef) {
       or['sourceSystemRef'] = params.sourceSystemRef;
     }
 
-    if (params.hasDocuments) {
-      or['hasDocuments'] = params.hasDocuments;
+    if (params.isBcmiPublished) {
+      or['isBcmiPublished'] = params.isBcmiPublished;
     }
 
-    if (params.projects) {
-      const projectIds = [];
-
-      if (params.projects.includes('lngCanada')) {
-        projectIds.push(EpicProjectIds.lngCanadaId);
-      }
-
-      if (params.projects.includes('coastalGaslink')) {
-        projectIds.push(EpicProjectIds.coastalGaslinkId);
-      }
-
-      if (params.projects.includes('otherProjects')) {
-        if (projectIds.length === 0) {
-          // Selecting only Other should return all projects EXCEPT for LNG Canada and Coastal Gaslink
-          nor['_epicProjectId'] = `${EpicProjectIds.lngCanadaId},${EpicProjectIds.coastalGaslinkId}`;
-        } else if (projectIds.length === 1) {
-          if (projectIds[0] === EpicProjectIds.lngCanadaId) {
-            // Other + LNG Canada is equivalent to NOT Coastal Gaslink
-            nor['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
-          } else {
-            // Other + Coastal Gaslink is equivalent to NOT LNG Canada
-            nor['_epicProjectId'] = EpicProjectIds.lngCanadaId;
-          }
-        }
-      } else if (projectIds.length) {
-        or['_epicProjectId'] = projectIds.join(',');
-      }
-    }
-
-    if (params.isNrcedPublished) {
-      or['isNrcedPublished'] = params.isNrcedPublished;
-    }
-    if (params.isLngPublished) {
-      or['isLngPublished'] = params.isLngPublished;
+    if (params.hasCollection) {
+      or['hasCollection'] = params.hasCollection;
     }
 
     // force-reload so we always have latest data

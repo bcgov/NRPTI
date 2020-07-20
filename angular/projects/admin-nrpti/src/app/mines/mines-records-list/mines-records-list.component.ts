@@ -14,7 +14,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MinesRecordsTableRowComponent } from '../mines-records-rows/mines-records-table-row.component';
 import { SearchSubsets, Picklists } from '../../../../../common/src/app/utils/record-constants';
-import { FilterObject, FilterType, DateFilterDefinition, CheckOrRadioFilterDefinition, OptionItem, RadioOptionItem, MultiSelectDefinition, DropdownDefinition } from '../../../../../common/src/app/search-filter-template/filter-object';
+import { FilterObject, FilterType, DateFilterDefinition, CheckOrRadioFilterDefinition, RadioOptionItem, MultiSelectDefinition, DropdownDefinition } from '../../../../../common/src/app/search-filter-template/filter-object';
 import { SubsetsObject, SubsetOption } from '../../../../../common/src/app/search-filter-template/subset-object';
 import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
 
@@ -83,6 +83,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
     },
     {
       name: 'Published',
+      value: 'isBcmiPubished',
       width: 'col-1'
     },
     {
@@ -119,29 +120,12 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
     ];
     this.subsets = new SubsetsObject(subsetOptions);
 
-    // setup the advanced filters
     const issuedDateFilter = new FilterObject(
       'issuedDate',
       FilterType.DateRange,
       '', // if you include a name, it will add a label to the date range filter.
-      new DateFilterDefinition('dateRangeFromFilter', 'Start Issued Date', 'dateRangeToFilter', 'End Issued Date')
-    );
-
-    const entityTypeFilter = new FilterObject(
-      'entityType',
-      FilterType.Checkbox,
-      'Entity Type',
-      new CheckOrRadioFilterDefinition([new OptionItem('issuedToCompany', 'Company'), new OptionItem('issuedToIndividual', 'Individual')])
-    );
-
-    const publishedStatefilter = new FilterObject(
-      'isNrcedPublished',
-      FilterType.RadioPicker,
-      'NRCED Published State',
-      new CheckOrRadioFilterDefinition([
-        new RadioOptionItem('publishedState', 'Published', 'true'),
-        new RadioOptionItem('unpubState', 'Unpublished', 'false')
-      ])
+      new DateFilterDefinition('dateRangeFromFilter', 'Start Issued Date', 'dateRangeToFilter', 'End Issued Date'),
+      6
     );
 
     const activityTypeFilter = new FilterObject(
@@ -150,26 +134,8 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       'Activity Type',
       new MultiSelectDefinition(Object.values(Picklists.activityTypePicklist).map(item => {
         return { value: item._schemaName, displayValue: item.displayName, selected: false, display: true };
-      }), 'Begin typing to filter activities...', 'Select all that apply...', true)
-    );
-
-    const issuedUnderActFilter = new FilterObject(
-      'act',
-      FilterType.MultiSelect,
-      'Issued Under which Act',
-      new MultiSelectDefinition(Picklists.getAllActs().map(value => {
-        return { value: value, displayValue: value, selected: false, display: true };
-      }), 'Begin typing to filter acts...', '', true)
-    );
-
-    const lngPublishedStatefilter = new FilterObject(
-      'isLngPublished',
-      FilterType.RadioPicker,
-      'LNG Published State',
-      new CheckOrRadioFilterDefinition([
-        new RadioOptionItem('lngPublishedState', 'Published', 'true'),
-        new RadioOptionItem('lngUnpubState', 'Unpublished', 'false')
-      ])
+      }), 'Begin typing to filter activities...', 'Select all that apply...'),
+      6
     );
 
     const responsibleAgencyFilter = new FilterObject(
@@ -178,16 +144,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       'Responsible Agency',
       new MultiSelectDefinition(Picklists.agencyPicklist.map(value => {
         return { value: value, displayValue: value, selected: false, display: true };
-      }), 'Begin typing to filter agencies...', '', true)
-    );
-
-    const issuedUnderRegFilter = new FilterObject(
-      'regulation',
-      FilterType.MultiSelect,
-      'Issued Under which Regulation',
-      new MultiSelectDefinition(Picklists.getAllRegulations().map(value => {
-        return { value: value, displayValue: value, selected: false, display: true };
-      }), 'Begin typing to filter regulations...', '', true)
+      }), 'Begin typing to filter agencies...', '')
     );
 
     const sourceSystemFilter = new FilterObject(
@@ -197,40 +154,33 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       new DropdownDefinition(Picklists.sourceSystemRefPicklist)
     );
 
-    const projectFilter = new FilterObject(
-      'projects',
-      FilterType.Checkbox,
-      'Project',
+    const bcmiPublishedStatefilter = new FilterObject(
+      'isBcmiPublished',
+      FilterType.RadioPicker,
+      'BCMI Published State',
       new CheckOrRadioFilterDefinition([
-        new OptionItem('lngCanada', 'LNG Canada'),
-        new OptionItem('coastalGaslink', 'Coastal Gaslink'),
-        new OptionItem('otherProjects', 'Other')],
-        true)
+        new RadioOptionItem('bcmiPublishedState', 'Published', 'true'),
+        new RadioOptionItem('bcmiUnpubState', 'Unpublished', 'false')
+      ])
     );
 
-    const documentsfilter = new FilterObject(
-      'hasDocuments',
+    const hasCollectionsStatefilter = new FilterObject(
+      'hasCollection',
       FilterType.RadioPicker,
-      'Documents',
+      'Has Associated Collection',
       new CheckOrRadioFilterDefinition([
-        new RadioOptionItem('yesDoc', 'Yes', 'true'),
-        new RadioOptionItem('noDoc', 'No', 'false')
+        new RadioOptionItem('hasCollection', 'Yes', 'true'),
+        new RadioOptionItem('doesNotHaveCollection', 'No', 'false')
       ])
     );
 
     this.filters = [
       issuedDateFilter,
-      entityTypeFilter,
-      publishedStatefilter,
       activityTypeFilter,
-      issuedUnderActFilter,
-      lngPublishedStatefilter,
       responsibleAgencyFilter,
-      issuedUnderRegFilter,
       sourceSystemFilter,
-      projectFilter,
-      documentsfilter
-    ];
+      bcmiPublishedStatefilter,
+      hasCollectionsStatefilter];
   }
 
   executeSearch(searchPackage) {
@@ -260,21 +210,13 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
 
   private clearQueryParamsFilters() {
     delete this.queryParams['keywords'];
-    delete this.queryParams['subset'];
-    delete this.queryParams['activityType'];
     delete this.queryParams['dateRangeFromFilter'];
     delete this.queryParams['dateRangeToFilter'];
-    delete this.queryParams['issuedToCompany'];
-    delete this.queryParams['issuedToIndividual'];
     delete this.queryParams['activityType'];
     delete this.queryParams['agency'];
-    delete this.queryParams['act'];
-    delete this.queryParams['regulation'];
     delete this.queryParams['sourceSystemRef'];
-    delete this.queryParams['hasDocuments'];
-    delete this.queryParams['projects'];
-    delete this.queryParams['isNrcedPublished'];
-    delete this.queryParams['isLngPublished'];
+    delete this.queryParams['isBcmiPublished'];
+    delete this.queryParams['hasCollection'];
   }
 
   /**
