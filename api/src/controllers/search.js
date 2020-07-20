@@ -70,6 +70,11 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
       } else if (item === 'isLngPublished' && entry === 'false') {
         return { $or: [{ isLngPublished: { $exists: false } }, { isLngPublished: false }] }
       }
+      if (item === 'isBcmiPublished' && entry === 'true') {
+        return { isBcmiPublished: true }
+      } else if (item === 'isLngPublished' && entry === 'false') {
+        return { $or: [{ isBcmiPublished: { $exists: false } }, { isBcmiPublished: false }] }
+      }
 
       return getConvertedValue(item, entry, comparisonOperator);
     })

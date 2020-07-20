@@ -38,11 +38,23 @@
         <div class="col-6 col-lg-4 col-xl-3">
           <div class="d-flex justify-content-end mb-1">
             <button type="button" class="btn btn-link" (click)="cancel()" title="Cancel">Cancel</button>
-            <button class="btn btn-primary" type="submit" (click)="submit()" title="Update">
+            <button
+              *ngIf="isEditing"
+              class="btn btn-primary"
+              type="submit"
+              (click)="submit()"
+              title="Update collection"
+            >
               <i class="material-icons mr-1">
                 save
               </i>
               Update
+            </button>
+            <button *ngIf="!isEditing" class="btn btn-primary" type="submit" (click)="submit()" title="Save collection">
+              <i class="material-icons mr-1">
+                save
+              </i>
+              Save
             </button>
           </div>
           <div class="d-flex justify-content-end text-right">
@@ -233,11 +245,17 @@
     <div [ngClass]="isEditing ? 'col-6 ml-2 col-md-5 ml-md-0 col-lg-4 col-xl-3' : 'col-12'">
       <div class="d-flex justify-content-end mb-1">
         <button type="button" class="btn btn-link" (click)="cancel()" title="Cancel">Cancel</button>
-        <button class="btn btn-primary" type="submit" (click)="submit()" title="Update">
+        <button *ngIf="isEditing" class="btn btn-primary" type="submit" (click)="submit()" title="Update collection">
           <i class="material-icons mr-1">
             save
           </i>
           Update
+        </button>
+        <button *ngIf="!isEditing" class="btn btn-primary" type="submit" (click)="submit()" title="Save collection">
+          <i class="material-icons mr-1">
+            save
+          </i>
+          Save
         </button>
       </div>
       <div class="d-flex justify-content-end text-right">

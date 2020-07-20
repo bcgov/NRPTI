@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const PutUtils = require('../../utils/put-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const mongodb = require('../../utils/mongodb');
+const { ROLES } = require('../../utils/constants/misc');
+const { userHasValidRoles } = require('../../utils/auth-utils');
 
 /**
  * Performs all operations necessary to edit a master Collection record.
@@ -13,6 +15,11 @@ const mongodb = require('../../utils/mongodb');
  * @returns object containing the operation's status and edited master Collection record
  */
 exports.editRecord = async function(args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   const masterRecord = this.editMaster(args, res, next, incomingObj);
 
   let result = null;
@@ -58,6 +65,11 @@ exports.editRecord = async function(args, res, next, incomingObj) {
  * @returns master Collection record object
  */
 exports.editMaster = function(args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   // Reject any changes to permissions
   // Publishing must be done via addRole or removeRole
   delete incomingObj.read;

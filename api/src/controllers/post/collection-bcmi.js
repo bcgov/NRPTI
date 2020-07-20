@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { ROLES } = require('../../utils/constants/misc');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const mongodb = require('../../utils/mongodb');
+const { userHasValidRoles } = require('../../utils/auth-utils');
 
 /**
  * Performs all operations necessary to create a new master Collection record.
@@ -13,6 +14,11 @@ const mongodb = require('../../utils/mongodb');
  * @returns object containing the operation's status and created master Collection record
  */
 exports.createRecord = async function(args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   const masterRecord = this.createMaster(args, res, next, incomingObj);
 
   let result = null;
@@ -48,6 +54,11 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @returns master Collection record object
  */
 exports.createMaster = function(args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
   let CollectionBCMI = mongoose.model(RECORD_TYPE.CollectionBCMI._schemaName);
   let collection = new CollectionBCMI();
 
@@ -59,8 +70,8 @@ exports.createMaster = function(args, res, next, incomingObj) {
   incomingObj.project && (collection.project = incomingObj.project);
 
   // Set permissions
-  collection.read = ROLES.ADMIN_ROLES;
-  collection.write = ROLES.ADMIN_ROLES;
+  collection.read = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
+  collection.write = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
 
   // Set data
   incomingObj.name && (collection.name = incomingObj.name);
