@@ -22,12 +22,13 @@ describe('transformRecord', () => {
       issuedTo: { companyName: '', type: 'Company' },
       issuingAgency: 'BC Oil and Gas Commission',
       author: 'BC Oil and Gas Commission',
-      recordName: 'Inspection Number -',
+      recordName: '-',
       legislation: { act: 'Oil and Gas Activities Act', section: '57', subSection: '4' },
       location: 'British Columbia',
       legislationDescription: 'Inspection to verify compliance with regulatory requirement',
       description:
         'Inspection to verify compliance with regulatory requirements. Activities Inspected: -; Inspection Result: -',
+      summary: '-',
       outcomeDescription: 'Activities Inspected: -; Inspection Result: -',
 
       sourceSystemRef: 'bcogc-csv'
@@ -70,6 +71,7 @@ describe('transformRecord', () => {
       legislationDescription: 'Inspection to verify compliance with regulatory requirement',
       description:
         'Inspection to verify compliance with regulatory requirements. Activities Inspected: activitiesInspection123; Inspection Result: statusCancelled',
+      summary: 'Inspection Number 123456',
       outcomeDescription: 'Activities Inspected: activitiesInspection123; Inspection Result: statusCancelled',
 
       sourceSystemRef: 'bcogc-csv'

@@ -124,7 +124,8 @@ describe('BaseRecordUtils', () => {
               addRole: 'public'
             },
             InspectionNRCED: {
-              addRole: 'public'
+              addRole: 'public',
+              summary: '-'
             }
           }
         ]
