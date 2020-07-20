@@ -1,6 +1,8 @@
 import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
   IColumnObject,
   IPageSizePickerOption,
@@ -10,9 +12,14 @@ import {
   TableTemplateUtils,
   Utils
 } from 'nrpti-angular-components';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { MinesCollectionsTableRowComponent } from '../mines-collections-rows/mines-collections-table-row.component';
+import {
+  FilterObject,
+  FilterType,
+  CheckOrRadioFilterDefinition,
+  RadioOptionItem,
+  DateFilterDefinition
+} from '../../../../../common/src/app/search-filter-template/filter-object';
 import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
 
 /**
@@ -31,14 +38,13 @@ import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
 export class MinesCollectionsListComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
-  public mine: Mine;
-
   public tableData: TableObject = new TableObject({
     component: MinesCollectionsTableRowComponent,
     pageSize: 25,
     currentPage: 1,
     sortBy: '-dateAdded'
   });
+
   public tableColumns: IColumnObject[] = [
     {
       name: 'Collection Name',
@@ -77,7 +83,10 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
     }
   ];
 
+  public showAdvancedFilters = false;
+  public filters: FilterObject[] = [];
   public queryParams: Params;
+  public mine: Mine;
 
   constructor(
     public location: Location,
@@ -87,7 +96,58 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) {
+    // Advance search filter set up.
+    const dateFilter = new FilterObject(
+      'date',
+      FilterType.DateRange,
+      '', // if you include a name, it will add a label to the date range filter.
+      new DateFilterDefinition('dateRangeFromFilter', 'Start Date', 'dateRangeToFilter', 'End Date')
+    );
+
+    const publishedStatefilter = new FilterObject(
+      'isBcmiPublished',
+      FilterType.RadioPicker,
+      'BCMI Published State',
+      new CheckOrRadioFilterDefinition([
+        new RadioOptionItem('publishedState', 'Published', 'true'),
+        new RadioOptionItem('unpubState', 'Unpublished', 'false')
+      ])
+    );
+
+    const recordsFilter = new FilterObject(
+      'hasRecords',
+      FilterType.RadioPicker,
+      'Records',
+      new CheckOrRadioFilterDefinition([
+        new RadioOptionItem('yesDoc', 'Yes', 'true'),
+        new RadioOptionItem('noDoc', 'No', 'false')
+      ])
+    );
+
+    // TODO: Add type dropdown filter once this information is known.
+    // const typeFilter = new FilterObject(
+    //   'type',
+    //   FilterType.Dropdown,
+    //   'Type',
+    //   new DropdownDefinition()
+    // );
+
+    // TODO: Add agency dropdown filter once this information is known.
+    // const agencyFilter = new FilterObject(
+    //   'agency',
+    //   FilterType.Dropdown,
+    //   'Agency',
+    //   new DropdownDefinition()
+    // );
+
+
+    this.filters = [
+      dateFilter,
+      publishedStatefilter,
+      recordsFilter
+    ];
+  }
 
   /**
    * Component init.
@@ -243,7 +303,7 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
     this.loadingScreenService.setLoadingState(true, 'body');
 
     this.router.navigate(
-      ['../collections', { ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }],
+      ['./', { ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }],
       {
         relativeTo: this.route
       }
@@ -269,5 +329,38 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
 
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  executeSearch(searchPackage) {
+    this.clearQueryParamsFilters();
+
+    // check keyword
+    if (searchPackage.keywords) {
+      this.queryParams['keywords'] = searchPackage.keywords;
+      // always change sortBy to '-score' if keyword search is directly triggered by user
+      if (searchPackage.keywordsChanged) {
+        this.tableData.sortBy = '-score';
+      }
+    }
+
+    // check subset
+    if (searchPackage.subset) {
+      this.queryParams['subset'] = [searchPackage.subset];
+    }
+
+    Object.keys(searchPackage.filters).forEach(filter => {
+      this.queryParams[filter] = searchPackage.filters[filter];
+    });
+
+    this.tableData.currentPage = 1;
+    this.submit();
+  }
+
+  private clearQueryParamsFilters() {
+    delete this.queryParams['keywords'];
+    delete this.queryParams['isBcmiPublished'];
+    delete this.queryParams['dateRangeToFilter'];
+    delete this.queryParams['dateRangeFromFilter'];
+    delete this.queryParams['hasRecords'];
   }
 }

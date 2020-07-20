@@ -46,6 +46,7 @@
       [advancedFilters]="true"
       [showAdvancedFilters]="showAdvancedFilters"
       [searchOnFilterChange]="true"
+      filterItemPanelSize="3"
       [filters]="filters">
     </search-filter-template>
   </section>
@@ -53,7 +54,7 @@
     <div *ngIf="!tableData.totalListItems">
       No Mines found.
     </div>
-  
+
     <lib-table-template
       *ngIf="tableData.totalListItems > 0"
       [data]="tableData"

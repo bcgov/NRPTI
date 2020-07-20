@@ -315,7 +315,9 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
     // clear keywords
     this.keywordSearchWords = '';
     // reset the subset settings
-    this.changeSubset(this.subsets.defaultSubset);
+    if (this.subsets) {
+      this.changeSubset(this.subsets.defaultSubset);
+    }
     // emit to the host that the form was reset
     this.resetControls.emit();
     // rerun the search
