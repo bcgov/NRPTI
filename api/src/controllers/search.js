@@ -56,6 +56,10 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
         return getHasDocumentsExp(entry);
       }
 
+      if (item === 'hasRecords') {
+        return getHasDocumentsExp(entry);
+      }
+
       if (item === 'isNrcedPublished' && entry === 'true') {
         return { isNrcedPublished: true }
       } else if (item === 'isNrcedPublished' && entry === 'false') {
@@ -130,6 +134,19 @@ const getHasDocumentsExp = function (entry) {
 };
 exports.getHasDocumentsExp = getHasDocumentsExp;
 
+const getHasRecordsExp = function (entry) {
+  // We're checking if there are docs in the record or not.
+  if (entry === 'true') {
+    return { $and: [{ records: { $exists: true } }, { records: { $not: { $size: 0 } } }] };
+  } else if (entry === 'false') {
+    return { $or: [{ records: { $exists: false } }, { records: { $size: 0 } }] };
+  } else {
+    // Invalid
+    return {};
+  }
+};
+exports.getHasRecordsExp = getHasRecordsExp;
+
 /**
  * Generate an expression for a basic parameter key/value
  *
@@ -149,7 +166,7 @@ exports.getConvertedValue = getConvertedValue;
 
 const convertValue = function (item) {
   if (isNaN(item) || item === null) {
-    if (mongoose.Types.ObjectId.isValid(item)) {
+    if (mongoose.Types.ObjectId.isValid(item) && mongoose.Types.ObjectId(item).toString() === item) {
       defaultLog.info('objectid', item);
       // ObjectID
       return mongoose.Types.ObjectId(item);
