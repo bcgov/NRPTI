@@ -21,6 +21,7 @@ let AddCourtConviction = require('./post/court-conviction');
 let AddNewsItem = require('./post/news-item');
 let AddMine = require('./post/mine-bcmi');
 let AddPermitAmendment = require('./post/permit-amendment');
+let AddCollection = require('./post/collection-bcmi');
 
 let EditOrder = require('./put/order');
 let EditInspection = require('./put/inspection');
@@ -39,6 +40,7 @@ let EditCourtConviction = require('./put/court-conviction');
 let EditNewsItem = require('./put/news-item');
 let EditMine = require('./put/mine-bcmi');
 let EditPermitAmendment = require('./put/permit-amendment');
+let EditCollection = require('./put/collection-bcmi');
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 
@@ -171,6 +173,12 @@ exports.protectedPost = async function (args, res, next) {
     if (data.mines) {
       promises.push(processPostRequest(args, res, next, 'mines', data.mines));
     }
+    if (data.permitAmendments) {
+      promises.push(processPostRequest(args, res, next, 'permitAmendments', data.permitAmendments));
+    }
+    if (data.collections) {
+      promises.push(processPostRequest(args, res, next, 'collections', data.collections));
+    }
 
     let response = await Promise.all(promises);
 
@@ -255,6 +263,12 @@ exports.protectedPut = async function (args, res, next) {
     }
     if (data.mines) {
       promises.push(processPutRequest(args, res, next, 'mines', data.mines));
+    }
+    if (data.permitAmendments) {
+      promises.push(processPutRequest(args, res, next, 'permitAmendments', data.permitAmendments));
+    }
+    if (data.collections) {
+      promises.push(processPutRequest(args, res, next, 'collections', data.collections));
     }
 
     let response = await Promise.all(promises);
@@ -486,6 +500,9 @@ const processPostRequest = async function (args, res, next, property, data) {
       case 'permitAmendments':
         promises.push(AddPermitAmendment.createRecord(args, res, next, data[i]));
         break;
+      case 'collections':
+        promises.push(AddCollection.createRecord(args, res, next, data[i]));
+        break;
       default:
         return {
           errorMessage: `Property ${property} does not exist.`
@@ -569,6 +586,9 @@ const processPutRequest = async function (args, res, next, property, data) {
         break;
       case 'permitAmendments':
         promises.push(EditPermitAmendment.editRecord(args, res, next, data[i]));
+        break;
+      case 'collections':
+        promises.push(EditCollection.editRecord(args, res, next, data[i]));
         break;
       default:
         return {

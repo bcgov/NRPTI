@@ -8,11 +8,11 @@
 <td scope="row" data-label="Published" class="col-2 d-xl-flex">
   <div *ngIf="rowData.read && rowData.read.includes('public'); then published; else unpublished"></div>
   <ng-template #published>
-    <i class="material-icons published-green">check_circle</i>
+    <i class="material-icons align-middle published-green">check_circle</i>
     <span class="publish-label pl-1 published-green overflow-hidden truncate">Published</span>
   </ng-template>
   <ng-template #unpublished>
-    <i class="material-icons">cancel</i>
+    <i class="material-icons align-middle">cancel</i>
     <span class="publish-label pl-1 overflow-hidden truncate">Unpublished</span>
   </ng-template>
 </td>

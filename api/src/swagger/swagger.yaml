@@ -81,6 +81,7 @@ definitions:
       - AdministrativeSanction
       - Agreement
       - Certificate
+      - Collection
       - ConstructionPlan
       - CourtConviction
       - Inspection
@@ -119,6 +120,7 @@ definitions:
       - AdministrativeSanction
       - Agreement
       - Certificate
+      - Collection
       - ConstructionPlan
       - CourtConviction
       - Inspection

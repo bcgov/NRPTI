@@ -152,10 +152,6 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
     this.router.navigate(['mines', this.mine._id, 'edit']);
   }
 
-  navigateBack() {
-    this.router.navigate(['mines']);
-  }
-
   ngOnDestroy() {
     this.loadingScreenService.setLoadingState(false, 'main');
 
