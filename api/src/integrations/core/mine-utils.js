@@ -57,9 +57,6 @@ class Mines extends BaseRecordUtils {
       permittee: '',
       permitNumber: '',
       permit: null,
-      type: '',
-      summary: '',
-      description: '',
       links: []
     };
   }
@@ -163,6 +160,16 @@ class Mines extends BaseRecordUtils {
       permit: new ObjectId(permit._id),
       permittee: this.getParty(MINE_PARTY_PERMITTEE, permit, parties)
     }
+  }
+
+  updateRecord(nrptiRecord, existingRecord) {
+    // The permit information is updated separately and the NRPTI record will not contain it.
+    // Copy permit information over before updating to preserve it.
+    nrptiRecord.permittee = existingRecord.permittee;
+    nrptiRecord.permit = existingRecord.permit;
+    nrptiRecord.permitNumber = existingRecord.permitNumber;
+
+    return super.updateRecord(nrptiRecord, existingRecord);
   }
 }
 

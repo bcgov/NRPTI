@@ -48,7 +48,7 @@ class PermitAmendments extends BaseRecordUtils {
       issueDate: amendment.issue_date || null,
       authorizedEndDate: amendment.authorized_end_date || null,
       description: amendment.description,
-      documents: amendment.related_documents.map(document => ({
+      amendmentDocuments: amendment.related_documents.map(document => ({
         _sourceRefId: document.document_manager_guid,
         documentName: document.document_name,
         documentId: null

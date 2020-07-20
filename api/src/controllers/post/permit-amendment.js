@@ -57,7 +57,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.issueDate && (permitAmendment.issueDate = incomingObj.issueDate);
   incomingObj.authorizedEndDate && (permitAmendment.authorizedEndDate = incomingObj.authorizedEndDate);
   incomingObj.description && (permitAmendment.description = incomingObj.description);
-  (incomingObj.documents && incomingObj.documents.length) && (permitAmendment.documents = incomingObj.documents);
+  (incomingObj.amendmentDocuments && incomingObj.amendmentDocuments.length) && (permitAmendment.amendmentDocuments = incomingObj.amendmentDocuments);
 
   // Set meta.
   permitAmendment.addedBy = args && args.swagger.params.auth_payload.displayName || incomingObj.addedBy;
@@ -106,8 +106,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.issueDate && (permitAmendmentBCMI.issueDate = incomingObj.issueDate);
   incomingObj.authorizedEndDate && (permitAmendmentBCMI.authorizedEndDate = incomingObj.authorizedEndDate);
   incomingObj.description && (permitAmendmentBCMI.description = incomingObj.description);
-  (incomingObj.documents && incomingObj.documents.length) && (permitAmendmentBCMI.documents = incomingObj.documents);
-
+  (incomingObj.amendmentDocuments && incomingObj.amendmentDocuments.length) && (permitAmendmentBCMI.amendmentDocuments = incomingObj.amendmentDocuments);
   // Set meta.
   permitAmendmentBCMI.addedBy = args && args.swagger.params.auth_payload.displayName || incomingObj.addedBy;
   permitAmendmentBCMI.updatedBy = args && args.swagger.params.auth_payload.displayName || incomingObj.updatedBy;
