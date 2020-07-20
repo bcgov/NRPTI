@@ -96,13 +96,13 @@ class CoreDocumentsDataSource {
     const recordStatus = {};
 
     try {
-      if (!amendment || !amendment.documents) {
-        throw new Error('Param amendment is required and must have documents.');
+      if (!amendment || !amendment.amendmentDocuments) {
+        throw new Error('Param amendment is required and must have amendmentDocuments.');
       }
 
       // For any documents that do not have a local version, fetch it and create one.
       const savedDocs = [];
-      for (const document of amendment.documents) {
+      for (const document of amendment.amendmentDocuments) {
         if (!document.documentId) {
           if (!document._sourceRefId || !document.documentName) {
             // Document is missing required fields. Record error but keep processing.
@@ -251,7 +251,7 @@ class CoreDocumentsDataSource {
    * @memberof CoreDocumentsDataSource
    */
   async updateAmendment(amendment, documents, permitAmendmentUtils) {
-    if (!amendment || !amendment.documents) {
+    if (!amendment || !amendment.amendmentDocuments) {
       throw new Error('updateAmendment - param amendment must not be null and contain documents.');
     }
 
@@ -261,9 +261,9 @@ class CoreDocumentsDataSource {
 
     for (const document of documents) {
       // Add the document ID to the existing document entries in the amendment.
-      for (let i = 0; i < amendment.documents.length; i++) {
-        if (amendment.documents[i]._sourceRefId === document._sourceRefId) {
-          amendment.documents[i].documentId = document.documentId;
+      for (let i = 0; i < amendment.amendmentDocuments.length; i++) {
+        if (amendment.amendmentDocuments[i]._sourceRefId === document._sourceRefId) {
+          amendment.amendmentDocuments[i].documentId = document.documentId;
           break;
         }
       }
