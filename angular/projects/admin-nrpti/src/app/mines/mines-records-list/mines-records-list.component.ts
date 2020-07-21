@@ -402,14 +402,14 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   /**
    * Table multi-select handler.
    *
-   * Adds/Removes records from the this.collectionRecords array.
+   * Adds/Removes records from the 'collectionAddEdit' state object.
    *
    * @param {*} rowData data for the row that was selected or unselected
    * @param {boolean} checked whether or not the row was selected or unselected
    * @memberof MinesRecordsListComponent
    */
   onRowCheckboxUpdate(rowData: any, checked: boolean) {
-    if (!rowData) {
+    if (!this.collectionAddEditState || !rowData) {
       return;
     }
 
@@ -476,6 +476,15 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       'Leaving this page will discard unsaved changes. Are you sure you would like to continue?'
     );
     if (shouldCancel) {
+      // Reset the 'collectionRecords' array to the original unchanged 'originalCollectionsRecords' array.
+      const collectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
+      this.storeService.setItem({
+        [StateIDs.collectionAddEdit]: {
+          ...collectionAddEditState,
+          collectionRecords: collectionAddEditState.originalCollectionRecords
+        }
+      });
+
       if (this.storeService.getItem(StateIDs.collectionAddEdit).collectionId) {
         this.router.navigate(['mines', this.mine._id, 'collections', this.collectionAddEditState.collectionId, 'edit']);
       } else {

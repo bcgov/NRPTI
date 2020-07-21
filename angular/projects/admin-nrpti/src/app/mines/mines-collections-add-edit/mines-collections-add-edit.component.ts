@@ -132,7 +132,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
       collectionDate: new FormControl(
         (collectionState &&
           collectionState.collectionDate &&
-          this.utils.convertJSDateToNGBDate(new Date(this.collection.date))) ||
+          this.utils.convertJSDateToNGBDate(new Date(collectionState.collectionDate.date))) ||
           (this.collection &&
             this.collection.date &&
             this.utils.convertJSDateToNGBDate(new Date(this.collection.date))) ||
@@ -270,7 +270,10 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
         collectionType: this.myForm.get('collectionType').value,
         collectionAgency: this.myForm.get('collectionAgency').value,
         collectionPublish: this.myForm.get('collectionPublish').value,
-        collectionRecords: this.myForm.get('collectionRecords').value.map(recordFormGroup => recordFormGroup.record)
+        collectionRecords: this.myForm.get('collectionRecords').value.map(recordFormGroup => recordFormGroup.record),
+        originalCollectionRecords: this.myForm
+          .get('collectionRecords')
+          .value.map(recordFormGroup => recordFormGroup.record)
       }
     });
 

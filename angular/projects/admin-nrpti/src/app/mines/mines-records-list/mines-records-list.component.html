@@ -53,7 +53,8 @@
   </section>
 
   <section *ngIf="collectionAddEditState">
-      <div class="d-flex justify-content-end mb-1">
+    <div class="d-flex justify-content-end mb-1">
+      <div>
         <button
           type="button"
           class="btn btn-link"
@@ -73,7 +74,11 @@
           </i>
           Add To Collection
         </button>
+        <span class="grey-subtext text-right d-block">
+          Selected {{ collectionAddEditState.collectionRecords.length }} records.
+        </span>
       </div>
+    </div>
   </section>
 
   <section class="mb-1 pb-1">
