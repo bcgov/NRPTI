@@ -103,7 +103,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   public subsets: SubsetsObject;
 
   // Edit Collection
-  public collectionAddEditState = null;
+  public collectionState = null;
 
   constructor(
     public location: Location,
@@ -256,19 +256,17 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
 
         const records = (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || [];
 
-        const collectionAddEditStateRecordIds =
-          (this.collectionAddEditState &&
-            this.collectionAddEditState.collectionRecords &&
-            this.collectionAddEditState.collectionRecords.map(
-              collectionAddEditRecord => collectionAddEditRecord._id
-            )) ||
+        const collectionStateRecordIds =
+          (this.collectionState &&
+            this.collectionState.collectionRecords &&
+            this.collectionState.collectionRecords.map(collectionAddEditRecord => collectionAddEditRecord._id)) ||
           [];
 
         this.tableData.items = records.map(record => {
           return {
             rowData: {
               ...record,
-              rowSelected: collectionAddEditStateRecordIds.includes(record._id)
+              rowSelected: collectionStateRecordIds.includes(record._id)
             }
           };
         });
@@ -347,7 +345,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       if (tempCollectionAddEditState.status === StateStatus.invalid) {
         this.storeService.removeItem(StateIDs.collectionAddEdit);
       } else {
-        this.collectionAddEditState = tempCollectionAddEditState;
+        this.collectionState = tempCollectionAddEditState;
       }
     }
   }
@@ -441,7 +439,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
    * @memberof MinesRecordsListComponent
    */
   updateCollectionAddEditState(rowData: any, checked: boolean) {
-    if (!rowData || !this.collectionAddEditState) {
+    if (!rowData || !this.collectionState) {
       return;
     }
 
@@ -521,7 +519,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       });
 
       if (this.storeService.getItem(StateIDs.collectionAddEdit).collectionId) {
-        this.router.navigate(['mines', this.mine._id, 'collections', this.collectionAddEditState.collectionId, 'edit']);
+        this.router.navigate(['mines', this.mine._id, 'collections', this.collectionState.collectionId, 'edit']);
       } else {
         this.router.navigate(['mines', this.mine._id, 'collections', 'add']);
       }
@@ -542,8 +540,8 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       }
     });
 
-    if (this.collectionAddEditState.collectionId) {
-      this.router.navigate(['mines', this.mine._id, 'collections', this.collectionAddEditState.collectionId, 'edit']);
+    if (this.collectionState.collectionId) {
+      this.router.navigate(['mines', this.mine._id, 'collections', this.collectionState.collectionId, 'edit']);
     } else {
       this.router.navigate(['mines', this.mine._id, 'collections', 'add']);
     }

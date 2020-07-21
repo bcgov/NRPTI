@@ -52,7 +52,7 @@
     </search-filter-template>
   </section>
 
-  <section *ngIf="collectionAddEditState">
+  <section *ngIf="collectionState">
     <div class="d-flex justify-content-end mb-1">
       <div>
         <button
@@ -67,15 +67,15 @@
           class="btn add-records-btn border-0"
           type="submit"
           (click)="submitAddEditCollectionRecords()"
-          title="Add selected records to collection"
+          title="Update collection with the selected records"
         >
           <i class="material-icons align-middle mr-1">
             check_circle
           </i>
-          Add To Collection
+          Update Collection Records
         </button>
         <span class="grey-subtext text-right d-block">
-          Selected {{ collectionAddEditState.collectionRecords.length }} records.
+          Selected {{ collectionState.collectionRecords.length }} records.
         </span>
       </div>
     </div>

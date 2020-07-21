@@ -39,7 +39,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
   public collectionAgencies = Picklists.collectionAgencyPicklist;
 
   // collection add edit state
-  public collectionState = this.storeService.getItem(StateIDs.collectionAddEdit);
+  public collectionState = null;
 
   constructor(
     public route: ActivatedRoute,
