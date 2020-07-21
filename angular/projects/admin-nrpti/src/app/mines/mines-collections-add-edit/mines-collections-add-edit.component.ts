@@ -273,7 +273,8 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
         collectionRecords: this.myForm.get('collectionRecords').value.map(recordFormGroup => recordFormGroup.record),
         originalCollectionRecords: this.myForm
           .get('collectionRecords')
-          .value.map(recordFormGroup => recordFormGroup.record)
+          .value.map(recordFormGroup => recordFormGroup.record),
+        isStale: false
       }
     });
 

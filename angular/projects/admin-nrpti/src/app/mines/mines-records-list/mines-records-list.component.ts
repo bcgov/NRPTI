@@ -103,7 +103,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   public subsets: SubsetsObject;
 
   // Edit Collection
-  public collectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
+  public collectionAddEditState = null;
 
   constructor(
     public location: Location,
@@ -232,6 +232,8 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadingScreenService.setLoadingState(true, 'body');
 
+    this.setOrRemoveCollectionAddEditState();
+
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params: Params) => {
       this.queryParams = { ...params };
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
@@ -335,6 +337,22 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Sets the initial collectionAddEdit state, or removes it from the store if it is stale.
+   *
+   * @memberof MinesRecordsListComponent
+   */
+  setOrRemoveCollectionAddEditState() {
+    const tempCollectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
+    if (tempCollectionAddEditState) {
+      if (tempCollectionAddEditState.isStale) {
+        this.storeService.removeItem(StateIDs.collectionAddEdit);
+      } else {
+        this.collectionAddEditState = tempCollectionAddEditState;
+      }
+    }
+  }
+
+  /**
    * Receives messages from the table template component, and performs any corresponding actions.
    *
    * @param {ITableMessage} msg
@@ -402,14 +420,28 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   /**
    * Table multi-select handler.
    *
-   * Adds/Removes records from the 'collectionAddEdit' state object.
-   *
    * @param {*} rowData data for the row that was selected or unselected
    * @param {boolean} checked whether or not the row was selected or unselected
    * @memberof MinesRecordsListComponent
    */
   onRowCheckboxUpdate(rowData: any, checked: boolean) {
-    if (!this.collectionAddEditState || !rowData) {
+    if (!rowData) {
+      return;
+    }
+
+    this.updateCollectionAddEditState(rowData, checked);
+  }
+
+  /**
+   * Adds/Removes records from the 'collectionAddEdit' state object.
+   *
+   * @param {*} rowData
+   * @param {boolean} checked
+   * @returns
+   * @memberof MinesRecordsListComponent
+   */
+  updateCollectionAddEditState(rowData: any, checked: boolean) {
+    if (!rowData || !this.collectionAddEditState) {
       return;
     }
 
@@ -507,11 +539,29 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Marks the collectionAddEdit state as stale, if it exists.
+   *
+   * @memberof MinesRecordsListComponent
+   */
+  markCollectionAddEditStateStale() {
+    const collectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
+
+    if (collectionAddEditState) {
+      // Mark the collectionAddEdit state as stale
+      this.storeService.setItem({ [StateIDs.collectionAddEdit]: { ...collectionAddEditState, isStale: true } });
+    }
+  }
+
+  /**
    * Cleanup on component destroy.
    *
    * @memberof MinesRecordsListComponent
    */
   ngOnDestroy(): void {
+    if (this.collectionAddEditState) {
+      this.markCollectionAddEditStateStale();
+    }
+
     this.loadingScreenService.setLoadingState(false, 'body');
 
     this.ngUnsubscribe.next();
