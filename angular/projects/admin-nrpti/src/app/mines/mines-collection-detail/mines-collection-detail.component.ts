@@ -1,16 +1,10 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { CollectionBCMI } from '../../../../../common/src/app/models/bcmi/collection-bcmi';
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MinesCollectionRecordTableRowComponent } from './mines-collection-detail-record-row/mines-collection-detail-record-row.component';
-import {
-  IColumnObject,
-  LoadingScreenService,
-  TableObject
-} from 'nrpti-angular-components';
+import { IColumnObject, LoadingScreenService, TableObject } from 'nrpti-angular-components';
 import moment from 'moment';
-
 
 @Component({
   selector: 'app-mines-collection-detail',
@@ -28,7 +22,7 @@ export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
     component: MinesCollectionRecordTableRowComponent,
     pageSize: 25,
     currentPage: 1,
-    sortBy: '+name',
+    sortBy: '',
     options: {
       showPageSizePicker: false,
       showPagination: false,
@@ -42,7 +36,7 @@ export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
       name: 'Name',
       value: '',
       width: 'col-6',
-      nosort: true,
+      nosort: true
     },
     {
       name: 'Source System',
@@ -54,14 +48,14 @@ export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
       name: 'Date',
       value: '',
       width: 'col-2',
-      nosort: true,
+      nosort: true
     },
     {
       name: 'Published State',
       value: '',
       width: 'col-2',
-      nosort: true,
-    },
+      nosort: true
+    }
   ];
 
   constructor(
@@ -80,13 +74,14 @@ export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.collection = res.collection[0] && res.collection[0].data && new CollectionBCMI(res.collection[0].data);
+      this.collection = res.collection[0] && res.collection[0].data;
 
       this.isPublished = this.isRecordPublished();
 
       this.populateTextFields();
 
-      this.tableData.items = this.collection.records.map(record => ({ rowData: record }));
+      this.sortRecords();
+      this.tableData.items = this.collection.collectionRecords.map(record => ({ rowData: record }));
 
       this.tableData.totalListItems = this.tableData.items.length;
 
@@ -95,6 +90,25 @@ export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
       this.loadingScreenService.setLoadingState(false, 'main');
 
       this.changeDetectionRef.detectChanges();
+    });
+  }
+
+  /**
+   * Sort the collection.collectionRecords array.
+   *
+   * Why? Mongo $lookup does not preserve order, so the looked-up records projected into the
+   * this.collection.collectionRecords field must be sorted based on the original this.collection.records array which
+   * is in proper order.
+   *
+   * @memberof MinesAddEditComponent
+   */
+  sortRecords() {
+    if (!this.collection || !this.collection.collectionRecords || !this.collection.collectionRecords.length) {
+      return;
+    }
+
+    this.collection.collectionRecords.sort((a, b) => {
+      return this.collection.records.indexOf(a._id) - this.collection.records.indexOf(b._id);
     });
   }
 
@@ -120,11 +134,7 @@ export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
   }
 
   navigateToEditPage() {
-    this.router.navigate(['mines', this.collection._id, 'edit']);
-  }
-
-  navigateBack() {
-    this.router.navigate(['mines']);
+    this.router.navigate(['../edit'], { relativeTo: this.route });
   }
 
   ngOnDestroy() {

@@ -204,21 +204,19 @@ export class FactoryService {
    *
    * @param {string} recordId record id.
    * @param {string} schema model schema name for this record type.
+   * @param {boolean} [populate=false] populate child records
    * @returns {Observable<SearchResults[]>} An observable that emits the matching record or null if none found.
    * @memberof FactoryService
    */
-  public getRecord(recordId: string, schema: string): Observable<SearchResults[]> {
+  public getRecord(recordId: string, schema: string, populate: boolean = false): Observable<SearchResults[]> {
     if (!recordId || !schema) {
       return of([] as SearchResults[]);
     }
-    return this.searchService.getItem(this.apiService.pathAPI, recordId, schema);
+    return this.searchService.getItem(this.apiService.pathAPI, recordId, schema, populate);
   }
 
   public getRecordWithFlavours(recordId: string, schema: string): Observable<SearchResults[]> {
-    if (!recordId || !schema) {
-      return of([] as SearchResults[]);
-    }
-    return this.searchService.getItem(this.apiService.pathAPI, recordId, schema, true);
+    return this.getRecord(recordId, schema, true);
   }
 
   /**
@@ -618,5 +616,22 @@ export class FactoryService {
 
   public getS3SignedUrl(docId: string): Observable<any> {
     return this.documentService.getS3SignedUrl(docId);
+  }
+
+  // Collections
+  public createCollection(collection: any): Observable<object> {
+    const outboundObject = {
+      collections: [collection]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editCollection(collection: any): Observable<object> {
+    const outboundObject = {
+      collections: [collection]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
 }

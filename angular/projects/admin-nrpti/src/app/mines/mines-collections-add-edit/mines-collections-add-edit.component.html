@@ -1,0 +1,282 @@
+<main class="container-fluid-padding">
+  <form *ngIf="!loading" [formGroup]="myForm" novalidate>
+    <section>
+      <div class="d-flex heading-bar">
+        <div>
+          <h1 id="name" class="m-0">
+            {{ (isEditing && collection && collection.name) || (!isEditing && myForm.get('collectionName').value) }}
+          </h1>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-3 pb-3 border-bottom">
+      <div class="d-flex justify-content-between">
+        <div class="col-6 col-lg-8 col-xl-9">
+          <div>
+            <h2 class="border-0 mb-0">Edit Collection</h2>
+          </div>
+          <div class="mb-3">
+            <span class="grey-subtext">{{ lastEditedSubText }}</span>
+          </div>
+          <div>
+            <mat-slide-toggle
+              name="collectionPublish"
+              id="collectionPublish"
+              class="publish-toggle"
+              [ngClass]="myForm.get('collectionPublish').value ? 'published' : 'unpublished'"
+              formControlName="collectionPublish"
+              (change)="togglePublish($event)"
+              [checked]="myForm.get('collectionPublish').value"
+              title="{{ myForm.get('collectionPublish').value ? 'Unpublish collection' : 'Publish collection' }}"
+              ngDefaultControl
+            >
+              {{ (myForm.get('collectionPublish').value && 'Published') || 'Unpublished' }}
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="col-6 col-lg-4 col-xl-3">
+          <div class="d-flex justify-content-end mb-1">
+            <button type="button" class="btn btn-link" (click)="cancel()" title="Cancel">Cancel</button>
+            <button
+              *ngIf="isEditing"
+              class="btn btn-primary"
+              type="submit"
+              (click)="submit()"
+              title="Update collection"
+            >
+              <i class="material-icons mr-1">
+                save
+              </i>
+              Update
+            </button>
+            <button *ngIf="!isEditing" class="btn btn-primary" type="submit" (click)="submit()" title="Save collection">
+              <i class="material-icons mr-1">
+                save
+              </i>
+              Save
+            </button>
+          </div>
+          <div class="d-flex justify-content-end text-right">
+            <span *ngIf="isEditing" class="grey-subtext d-block">
+              Changes made will take effect once you click "Update". If content is published on any site, clicking the
+              Update button will update the public site immediately.
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="my-3 py-3 border-bottom">
+      <div class="flex-container">
+        <div class="label-pair">
+          <label for="collectionName">Collection Name</label>
+          <input
+            name="collectionName"
+            id="collectionName"
+            type="text"
+            formControlName="collectionName"
+            class="form-control"
+          />
+        </div>
+        <div class="label-pair">
+          <label for="collectionDate">Date</label>
+          <div class="input-group">
+            <input
+              class="form-control"
+              placeholder="yyyy-mm-dd"
+              name="dp"
+              formControlName="collectionDate"
+              ngbDatepicker
+              #d="ngbDatepicker"
+            />
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+            </div>
+          </div>
+        </div>
+        <div class="label-pair">
+          <label for="collectionType">Collection Type</label>
+          <select name="collectionType" id="collectionType" formControlName="collectionType" class="form-control">
+            <option *ngFor="let collectionType of collectionTypes" [ngValue]="collectionType">
+              {{ collectionType }}
+            </option>
+          </select>
+        </div>
+        <div class="label-pair">
+          <label for="collectionAgency">Agency</label>
+          <select name="collectionAgency" id="collectionAgency" formControlName="collectionAgency" class="form-control">
+            <option *ngFor="let collectionAgency of collectionAgencies" [ngValue]="collectionAgency">
+              {{ collectionAgency }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- <section class="my-3 py-3 border-bottom"> -->
+    <!-- TODO Manage records -->
+    <!-- </section> -->
+
+    <section>
+      <div class="text-right mb-3">
+        <button
+          class="btn btn-primary"
+          (click)="onAddRecordsToCollection()"
+          title="Select records to add to the collection"
+        >
+          <i class="material-icons mr-1 align-middle">add</i>
+          <span class="align-middle">Select Records To Add</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="my-3 py-3">
+      <div *ngIf="!myForm.get('collectionRecords').value || !myForm.get('collectionRecords').value.length">
+        No records have been added to this collection.
+      </div>
+
+      <table
+        class="table"
+        *ngIf="myForm.get('collectionRecords').value && myForm.get('collectionRecords').value.length"
+      >
+        <thead class="thead-light">
+          <tr>
+            <th class="col-1"></th>
+            <th class="col-3">
+              Record Name
+            </th>
+            <th class="col-2">
+              Agency
+            </th>
+            <th class="col-1">
+              Source System
+            </th>
+            <th class="col-2">
+              Date
+            </th>
+            <th class="col-2">
+              Published State
+            </th>
+            <th class="col-1"></th>
+          </tr>
+        </thead>
+        <tbody class="drag-drop-container" cdkDropList (cdkDropListDropped)="dropRecord($event)">
+          <ng-container *ngFor="let formGroup of myForm.get('collectionRecords')['controls']; let idx = index">
+            <tr class="drag-drop-list" cdkDrag cdkDragLockAxis="y">
+              <td class="col-1">
+                <button class="btn btn-icon cdk-drag-handle" title="Drag & drop to reorder">
+                  <i class="material-icons" cdkDragHandle>reorder</i>
+                </button>
+              </td>
+              <td data-label="Record Name" class="col-3">
+                {{ formGroup.get('record').value.recordName || '-' }}
+              </td>
+              <td data-label="Agency" class="col-2">
+                {{ formGroup.get('record').value.issuingAgency || formGroup.get('record').value.agency || '-' }}
+              </td>
+              <td data-label="Source System" class="col-1">
+                {{ formGroup.get('record').value.sourceSystemRef || '-' }}
+              </td>
+              <td data-label="Date" class="col-2">
+                {{ formGroup.get('record').value.dateIssued | date: 'mediumDate' || '-' }}
+              </td>
+              <td data-label="Published State" class="col-2">
+                <div
+                  *ngIf="
+                    formGroup.get('record').value.read && formGroup.get('record').value.read.includes('public');
+                    then published;
+                    else unpublished
+                  "
+                ></div>
+                <ng-template #published>
+                  <i class="material-icons published-green align-middle">check_circle</i>
+                  <span class="publish-label pl-1 published-green overflow-hidden truncate">Published</span>
+                </ng-template>
+                <ng-template #unpublished>
+                  <i class="material-icons align-middle">cancel</i>
+                  <span class="publish-label pl-1 overflow-hidden truncate">Unpublished</span>
+                </ng-template>
+              </td>
+              <td class="col-1">
+                <div class="d-xl-flex">
+                  <button
+                    class="btn px-2"
+                    type="button"
+                    (click)="goToEditRecord(formGroup.get('record').value)"
+                    title="Edit record"
+                  >
+                    <i class="material-icons">create</i>
+                  </button>
+                  <button
+                    mat-icon-button
+                    class="btn px-2"
+                    [matMenuTriggerFor]="menu"
+                    title="More options"
+                    aria-label="More options menu"
+                  >
+                    <i class="material-icons">more_vert</i>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <button
+                      mat-menu-item
+                      (click)="goToRecordDetails(formGroup.get('record').value)"
+                      title="View Record details"
+                    >
+                      View Record Details
+                    </button>
+                    <button
+                      mat-menu-item
+                      (click)="removeRecordFromCollection(idx)"
+                      title="Remove record from collection"
+                    >
+                      Remove Record
+                    </button>
+                  </mat-menu>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </section>
+  </form>
+
+  <div class="d-flex justify-content-between mt-4 mb-3">
+    <div *ngIf="isEditing" class="col-6 mr-2 col-md-5 mr-md-0 col-lg-4 col-xl-3">
+      <button type="button" class="btn btn-outline-dark mb-1" (click)="deleteCollection()" title="Delete">
+        <i class="material-icons mr-1">
+          delete_forever
+        </i>
+        Delete
+      </button>
+      <span class="grey-subtext d-block">
+        Deleting this collection will permanently remove this collection from the system. Associated records will NOT be
+        deleted.
+      </span>
+    </div>
+    <div [ngClass]="isEditing ? 'col-6 ml-2 col-md-5 ml-md-0 col-lg-4 col-xl-3' : 'col-12'">
+      <div class="d-flex justify-content-end mb-1">
+        <button type="button" class="btn btn-link" (click)="cancel()" title="Cancel">Cancel</button>
+        <button *ngIf="isEditing" class="btn btn-primary" type="submit" (click)="submit()" title="Update collection">
+          <i class="material-icons mr-1">
+            save
+          </i>
+          Update
+        </button>
+        <button *ngIf="!isEditing" class="btn btn-primary" type="submit" (click)="submit()" title="Save collection">
+          <i class="material-icons mr-1">
+            save
+          </i>
+          Save
+        </button>
+      </div>
+      <div class="d-flex justify-content-end text-right">
+        <span *ngIf="isEditing" class="grey-subtext d-block">
+          Changes made will take effect once you click "Update". If content is published on any site, clicking the
+          Update button will update the public site immediately.
+        </span>
+      </div>
+    </div>
+  </div>
+</main>

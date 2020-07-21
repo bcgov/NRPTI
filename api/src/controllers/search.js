@@ -70,6 +70,11 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
       } else if (item === 'isLngPublished' && entry === 'false') {
         return { $or: [{ isLngPublished: { $exists: false } }, { isLngPublished: false }] }
       }
+      if (item === 'isBcmiPublished' && entry === 'true') {
+        return { isBcmiPublished: true }
+      } else if (item === 'isLngPublished' && entry === 'false') {
+        return { $or: [{ isBcmiPublished: { $exists: false } }, { isBcmiPublished: false }] }
+      }
 
       return getConvertedValue(item, entry, comparisonOperator);
     })
@@ -648,6 +653,20 @@ const executeQuery = async function (args, res, next) {
         $match: { _id: mongoose.Types.ObjectId(args.swagger.params._id.value) }
       }
     ];
+
+    // Populate bcmi collection records
+    // Note: $lookup does not preserve order, so projecting looked-up values into a new field (collectionRecords),
+    // which can be sorted based on the original field (records).
+    populate &&
+      args.swagger.params._schemaName.value === 'CollectionBCMI' &&
+      aggregation.push({
+        $lookup: {
+          from: 'nrpti',
+          localField: 'records',
+          foreignField: '_id',
+          as: 'collectionRecords'
+        }
+      });
 
     // populate flavours
     populate &&

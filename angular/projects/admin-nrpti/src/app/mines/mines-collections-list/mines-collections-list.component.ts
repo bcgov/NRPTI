@@ -316,7 +316,7 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
    * @memberof MinesCollectionsListComponent
    */
   addCollection() {
-    this.router.navigate(['collections', 'add']);
+    this.router.navigate(['mines', this.mine._id, 'collections', 'add']);
   }
 
   /**

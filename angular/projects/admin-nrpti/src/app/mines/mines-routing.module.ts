@@ -11,12 +11,13 @@ import { MinesAddEditComponent } from './mines-add-edit/mines-add-edit.component
 import { MinesResolver } from './mines-resolver';
 import { MinesRecordsListComponent } from './mines-records-list/mines-records-list.component';
 import { MinesRecordsListResolver } from './mines-records-list-resolver';
+import { MinesCollectionsListComponent } from './mines-collections-list/mines-collections-list.component';
+import { MinesCollectionsListResolver } from './mines-collections-list-resolver';
 import { MinesCollectionDetailComponent } from './mines-collection-detail/mines-collection-detail.component';
+import { MinesCollectionsAddEditComponent } from './mines-collections-add-edit/mines-collections-add-edit.component';
 import { MinesCollectionResolver } from './mines-collection-resolver';
 // other
 import { Utils } from 'nrpti-angular-components';
-import { MinesCollectionsListComponent } from './mines-collections-list/mines-collections-list.component';
-import { MinesCollectionsListResolver } from './mines-collections-list-resolver';
 
 const routes: Routes = [
   {
@@ -101,6 +102,14 @@ const routes: Routes = [
                 }
               },
               {
+                path: 'add',
+                component: MinesCollectionsAddEditComponent,
+                canActivate: [CanActivateGuard],
+                data: {
+                  breadcrumb: 'Add Collection'
+                }
+              },
+              {
                 path: ':collectionId',
                 data: {
                   breadcrumb: 'Collection Details'
@@ -117,6 +126,17 @@ const routes: Routes = [
                     canActivate: [CanActivateGuard],
                     data: {
                       breadcrumb: null
+                    },
+                    resolve: {
+                      collection: MinesCollectionResolver
+                    }
+                  },
+                  {
+                    path: 'edit',
+                    component: MinesCollectionsAddEditComponent,
+                    canActivate: [CanActivateGuard],
+                    data: {
+                      breadcrumb: 'Edit Collection'
                     },
                     resolve: {
                       collection: MinesCollectionResolver
