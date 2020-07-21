@@ -14,7 +14,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MinesRecordsTableRowComponent } from '../mines-records-rows/mines-records-table-row.component';
-import { SearchSubsets, Picklists, StateIDs } from '../../../../../common/src/app/utils/record-constants';
+import { SearchSubsets, Picklists, StateIDs, StateStatus } from '../../../../../common/src/app/utils/record-constants';
 import { FilterObject, FilterType, DateFilterDefinition, CheckOrRadioFilterDefinition, RadioOptionItem, MultiSelectDefinition, DropdownDefinition } from '../../../../../common/src/app/search-filter-template/filter-object';
 import { SubsetsObject, SubsetOption } from '../../../../../common/src/app/search-filter-template/subset-object';
 import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
@@ -337,14 +337,14 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Sets the initial collectionAddEdit state, or removes it from the store if it is stale.
+   * Sets the initial collectionState state, or removes it from the store if it is invalid.
    *
    * @memberof MinesRecordsListComponent
    */
   setOrRemoveCollectionAddEditState() {
     const tempCollectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
     if (tempCollectionAddEditState) {
-      if (tempCollectionAddEditState.isStale) {
+      if (tempCollectionAddEditState.status === StateStatus.invalid) {
         this.storeService.removeItem(StateIDs.collectionAddEdit);
       } else {
         this.collectionAddEditState = tempCollectionAddEditState;
@@ -508,12 +508,15 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       'Leaving this page will discard unsaved changes. Are you sure you would like to continue?'
     );
     if (shouldCancel) {
-      // Reset the 'collectionRecords' array to the original unchanged 'originalCollectionsRecords' array.
+      // Reset the 'collectionRecords' array to the original unchanged 'originalCollectionsRecords' array, and mark it
+      // as valid (even though the user clicked cancel, the operation is a valid one, and we still want to preserve the
+      // other state values the user may have set when editing the collection).
       const collectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
       this.storeService.setItem({
         [StateIDs.collectionAddEdit]: {
           ...collectionAddEditState,
-          collectionRecords: collectionAddEditState.originalCollectionRecords
+          collectionRecords: collectionAddEditState.originalCollectionRecords,
+          status: StateStatus.valid
         }
       });
 
@@ -531,24 +534,18 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
    * @memberof MinesRecordsListComponent
    */
   submitAddEditCollectionRecords() {
+    // Mark collectionAddEdit status as valid
+    this.storeService.setItem({
+      [StateIDs.collectionAddEdit]: {
+        ...this.storeService.getItem(StateIDs.collectionAddEdit),
+        status: StateStatus.valid
+      }
+    });
+
     if (this.collectionAddEditState.collectionId) {
       this.router.navigate(['mines', this.mine._id, 'collections', this.collectionAddEditState.collectionId, 'edit']);
     } else {
       this.router.navigate(['mines', this.mine._id, 'collections', 'add']);
-    }
-  }
-
-  /**
-   * Marks the collectionAddEdit state as stale, if it exists.
-   *
-   * @memberof MinesRecordsListComponent
-   */
-  markCollectionAddEditStateStale() {
-    const collectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
-
-    if (collectionAddEditState) {
-      // Mark the collectionAddEdit state as stale
-      this.storeService.setItem({ [StateIDs.collectionAddEdit]: { ...collectionAddEditState, isStale: true } });
     }
   }
 
@@ -558,8 +555,11 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
    * @memberof MinesRecordsListComponent
    */
   ngOnDestroy(): void {
-    if (this.collectionAddEditState) {
-      this.markCollectionAddEditStateStale();
+    // When the component is destroying, if collectionAddEdit state exists, but the user hadn't clicked the
+    // 'submitAddEditCollectionRecords' button, then remove the state from the store.
+    const collectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
+    if (collectionAddEditState && collectionAddEditState.status !== StateStatus.valid) {
+      this.storeService.removeItem(StateIDs.collectionAddEdit);
     }
 
     this.loadingScreenService.setLoadingState(false, 'body');

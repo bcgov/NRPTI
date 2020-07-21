@@ -75,6 +75,18 @@ export class StateIDs {
 }
 
 /**
+ * Statuses for tracking the status/validity of store service objects
+ *
+ * @export
+ * @enum {number}
+ */
+export enum StateStatus {
+  created = 'created',
+  valid = 'valid',
+  invalid = 'invalid'
+}
+
+/**
  * Note: Picklist values should be alphabetical (A -> Z).  The only exception is with catch-all values like 'None' -
  * which should always be at the start, and 'Other' - which should always be at the end.
  *

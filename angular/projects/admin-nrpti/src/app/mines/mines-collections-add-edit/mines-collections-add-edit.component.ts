@@ -8,7 +8,7 @@ import { LoadingScreenService, Utils, StoreService } from 'nrpti-angular-compone
 import { of } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
-import { Picklists, StateIDs } from '../../../../../common/src/app/utils/record-constants';
+import { Picklists, StateIDs, StateStatus } from '../../../../../common/src/app/utils/record-constants';
 import { ConfirmComponent } from '../../confirm/confirm.component';
 import { RecordUtils } from '../../records/utils/record-utils';
 import { FactoryService } from '../../services/factory.service';
@@ -38,6 +38,9 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
   public collectionTypes = Picklists.collectionTypePicklist;
   public collectionAgencies = Picklists.collectionAgencyPicklist;
 
+  // collection add edit state
+  public collectionState = this.storeService.getItem(StateIDs.collectionAddEdit);
+
   constructor(
     public route: ActivatedRoute,
     public router: Router,
@@ -52,6 +55,8 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadingScreenService.setLoadingState(true, 'main');
+
+    this.setOrRemoveCollectionAddEditState();
 
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
       this.isEditing = res.breadcrumb !== 'Add Collection';
@@ -74,6 +79,22 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
 
       this._changeDetectionRef.detectChanges();
     });
+  }
+
+  /**
+   * Sets the initial collectionAddEdit state, or removes it from the store if it is invalid.
+   *
+   * @memberof MinesCollectionsAddEditComponent
+   */
+  setOrRemoveCollectionAddEditState() {
+    const tempCollectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
+    if (tempCollectionAddEditState) {
+      if (tempCollectionAddEditState.status === StateStatus.invalid) {
+        this.storeService.removeItem(StateIDs.collectionAddEdit);
+      } else {
+        this.collectionState = tempCollectionAddEditState;
+      }
+    }
   }
 
   /**
@@ -123,16 +144,14 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesCollectionsAddEditComponent
    */
   private buildForm() {
-    const collectionState = this.storeService.getItem(StateIDs.collectionAddEdit) || null;
-
     this.myForm = new FormGroup({
       collectionName: new FormControl(
-        (collectionState && collectionState.collectionName) || (this.collection && this.collection.name) || ''
+        (this.collectionState && this.collectionState.collectionName) || (this.collection && this.collection.name) || ''
       ),
       collectionDate: new FormControl(
-        (collectionState &&
-          collectionState.collectionDate &&
-          this.utils.convertJSDateToNGBDate(new Date(collectionState.collectionDate.date))) ||
+        (this.collectionState &&
+          this.collectionState.collectionDate &&
+          this.utils.convertJSDateToNGBDate(new Date(this.collectionState.collectionDate.date))) ||
           (this.collection &&
             this.collection.date &&
             this.utils.convertJSDateToNGBDate(new Date(this.collection.date))) ||
@@ -140,24 +159,26 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
           null
       ),
       collectionType: new FormControl(
-        (collectionState && collectionState.collectionType) || (this.collection && this.collection.type) || ''
+        (this.collectionState && this.collectionState.collectionType) || (this.collection && this.collection.type) || ''
       ),
       collectionAgency: new FormControl(
-        (collectionState && collectionState.collectionAgency) || (this.collection && this.collection.agency) || ''
+        (this.collectionState && this.collectionState.collectionAgency) ||
+          (this.collection && this.collection.agency) ||
+          ''
       ),
       collectionPublish: new FormControl(
-        (collectionState && collectionState.collectionPublish) ||
+        (this.collectionState && this.collectionState.collectionPublish) ||
           (this.collection && this.collection.read.includes('public')) ||
           false
       ),
       collectionRecords: new FormArray(
-        (collectionState && this.getRecordsFormGroups(collectionState.collectionRecords)) ||
+        (this.collectionState && this.getRecordsFormGroups(this.collectionState.collectionRecords)) ||
           (this.collection && this.getRecordsFormGroups(this.collection.collectionRecords)) ||
           []
       )
     });
 
-    if (collectionState) {
+    if (this.collectionState) {
       // State was saved from before, so mark everything dirty so as not to miss any previous user edits
       this.myForm.get('collectionName').markAsDirty();
       this.myForm.get('collectionDate').markAsDirty();
@@ -256,8 +277,9 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    *
    * @memberof MinesCollectionsAddEditComponent
    */
-  addRecordsToCollection() {
+  onAddRecordsToCollection() {
     // Save the current state of the form using the store service.
+    // This should always overwrite any existing collectionAddEdit state, and not append to it.
     this.storeService.setItem({
       collectionAddEdit: {
         // routing ids
@@ -274,7 +296,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
         originalCollectionRecords: this.myForm
           .get('collectionRecords')
           .value.map(recordFormGroup => recordFormGroup.record),
-        isStale: false
+        status: StateStatus.created
       }
     });
 
@@ -417,6 +439,13 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    // When the component is destroying, if collectionAddEdit state exists, but the user hadn't clicked the
+    // 'addRecordsToCollection' button, then remove the collection state from the store.
+    const collectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
+    if (collectionAddEditState && collectionAddEditState.status !== StateStatus.created) {
+      this.storeService.removeItem(StateIDs.collectionAddEdit);
+    }
+
     this.loadingScreenService.setLoadingState(false, 'main');
 
     this.ngUnsubscribe.next();
