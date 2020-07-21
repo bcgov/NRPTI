@@ -36,6 +36,7 @@
       </ul>
     </div>
   </section>
+
   <section>
     <search-filter-template
       #explorePanel
@@ -50,6 +51,36 @@
       [filters]="filters">
     </search-filter-template>
   </section>
+
+  <section *ngIf="collectionState">
+    <div class="d-flex justify-content-end mb-1">
+      <div>
+        <button
+          type="button"
+          class="btn btn-link"
+          (click)="cancelAddEditCollectionRecords()"
+          title="Cancel adding records to collection"
+        >
+          Cancel
+        </button>
+        <button
+          class="btn add-records-btn border-0"
+          type="submit"
+          (click)="submitAddEditCollectionRecords()"
+          title="Update collection with the selected records"
+        >
+          <i class="material-icons align-middle mr-1">
+            check_circle
+          </i>
+          Update Collection Records
+        </button>
+        <span class="grey-subtext text-right d-block">
+          Selected {{ collectionState.collectionRecords.length }} records.
+        </span>
+      </div>
+    </div>
+  </section>
+
   <section class="mb-1 pb-1">
     <div *ngIf="!tableData.totalListItems">
       No Mines found.

@@ -8,12 +8,13 @@ import {
   LoadingScreenService,
   TableObject,
   TableTemplateUtils,
-  Utils
+  Utils,
+  StoreService
 } from 'nrpti-angular-components';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MinesRecordsTableRowComponent } from '../mines-records-rows/mines-records-table-row.component';
-import { SearchSubsets, Picklists } from '../../../../../common/src/app/utils/record-constants';
+import { SearchSubsets, Picklists, StateIDs, StateStatus } from '../../../../../common/src/app/utils/record-constants';
 import { FilterObject, FilterType, DateFilterDefinition, CheckOrRadioFilterDefinition, RadioOptionItem, MultiSelectDefinition, DropdownDefinition } from '../../../../../common/src/app/search-filter-template/filter-object';
 import { SubsetsObject, SubsetOption } from '../../../../../common/src/app/search-filter-template/subset-object';
 import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
@@ -101,11 +102,15 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   public filters: FilterObject[] = [];
   public subsets: SubsetsObject;
 
+  // Edit Collection
+  public collectionState = null;
+
   constructor(
     public location: Location,
     public router: Router,
     public route: ActivatedRoute,
     public utils: Utils,
+    public storeService: StoreService,
     private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
@@ -227,6 +232,8 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadingScreenService.setLoadingState(true, 'body');
 
+    this.setOrRemoveCollectionAddEditState();
+
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params: Params) => {
       this.queryParams = { ...params };
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
@@ -248,8 +255,20 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
         this.mine = res.mine[0] && res.mine[0].data && new Mine(res.mine[0].data);
 
         const records = (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || [];
+
+        const collectionStateRecordIds =
+          (this.collectionState &&
+            this.collectionState.collectionRecords &&
+            this.collectionState.collectionRecords.map(collectionAddEditRecord => collectionAddEditRecord._id)) ||
+          [];
+
         this.tableData.items = records.map(record => {
-          return { rowData: record };
+          return {
+            rowData: {
+              ...record,
+              rowSelected: collectionStateRecordIds.includes(record._id)
+            }
+          };
         });
 
         this.tableData.totalListItems =
@@ -313,6 +332,22 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
         })
         .toString()
     );
+  }
+
+  /**
+   * Sets the initial collectionState state, or removes it from the store if it is invalid.
+   *
+   * @memberof MinesRecordsListComponent
+   */
+  setOrRemoveCollectionAddEditState() {
+    const tempCollectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
+    if (tempCollectionAddEditState) {
+      if (tempCollectionAddEditState.status === StateStatus.invalid) {
+        this.storeService.removeItem(StateIDs.collectionAddEdit);
+      } else {
+        this.collectionState = tempCollectionAddEditState;
+      }
+    }
   }
 
   /**
@@ -388,7 +423,55 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
    * @memberof MinesRecordsListComponent
    */
   onRowCheckboxUpdate(rowData: any, checked: boolean) {
-    // TODO real multi-select functionality (adding to collections, etc)
+    if (!rowData) {
+      return;
+    }
+
+    this.updateCollectionAddEditState(rowData, checked);
+  }
+
+  /**
+   * Adds/Removes records from the 'collectionAddEdit' state object.
+   *
+   * @param {*} rowData
+   * @param {boolean} checked
+   * @returns
+   * @memberof MinesRecordsListComponent
+   */
+  updateCollectionAddEditState(rowData: any, checked: boolean) {
+    if (!rowData || !this.collectionState) {
+      return;
+    }
+
+    const collectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
+    const collectionRecords = (collectionAddEditState && collectionAddEditState.collectionRecords) || [];
+
+    let isSelected = false;
+    let selectedIndex = null;
+
+    for (let i = 0; i < collectionRecords.length; i++) {
+      if (collectionRecords[i]._id === rowData._id) {
+        isSelected = true;
+        selectedIndex = i;
+        break;
+      }
+    }
+
+    if (checked && !isSelected) {
+      // add record that does not already exist
+      collectionRecords.push(rowData);
+    } else if (!checked && isSelected) {
+      // remove record that already exists
+      collectionRecords.splice(selectedIndex, 1);
+    }
+
+    // Update and save the collectionAddEdit state
+    this.storeService.setItem({
+      [StateIDs.collectionAddEdit]: {
+        ...collectionAddEditState,
+        collectionRecords
+      }
+    });
   }
 
   /**
@@ -414,11 +497,69 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Cancel adding records to collection.
+   *
+   * @memberof MinesRecordsListComponent
+   */
+  cancelAddEditCollectionRecords() {
+    const shouldCancel = confirm(
+      'Leaving this page will discard unsaved changes. Are you sure you would like to continue?'
+    );
+    if (shouldCancel) {
+      // Reset the 'collectionRecords' array to the original unchanged 'originalCollectionsRecords' array, and mark it
+      // as valid (even though the user clicked cancel, the operation is a valid one, and we still want to preserve the
+      // other state values the user may have set when editing the collection).
+      const collectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
+      this.storeService.setItem({
+        [StateIDs.collectionAddEdit]: {
+          ...collectionAddEditState,
+          collectionRecords: collectionAddEditState.originalCollectionRecords,
+          status: StateStatus.valid
+        }
+      });
+
+      if (this.storeService.getItem(StateIDs.collectionAddEdit).collectionId) {
+        this.router.navigate(['mines', this.mine._id, 'collections', this.collectionState.collectionId, 'edit']);
+      } else {
+        this.router.navigate(['mines', this.mine._id, 'collections', 'add']);
+      }
+    }
+  }
+
+  /**
+   * Submit adding records to collection.
+   *
+   * @memberof MinesRecordsListComponent
+   */
+  submitAddEditCollectionRecords() {
+    // Mark collectionAddEdit status as valid
+    this.storeService.setItem({
+      [StateIDs.collectionAddEdit]: {
+        ...this.storeService.getItem(StateIDs.collectionAddEdit),
+        status: StateStatus.valid
+      }
+    });
+
+    if (this.collectionState.collectionId) {
+      this.router.navigate(['mines', this.mine._id, 'collections', this.collectionState.collectionId, 'edit']);
+    } else {
+      this.router.navigate(['mines', this.mine._id, 'collections', 'add']);
+    }
+  }
+
+  /**
    * Cleanup on component destroy.
    *
    * @memberof MinesRecordsListComponent
    */
   ngOnDestroy(): void {
+    // When the component is destroying, if collectionAddEdit state exists, but the user hadn't clicked the
+    // 'submitAddEditCollectionRecords' button, then remove the state from the store.
+    const collectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
+    if (collectionAddEditState && collectionAddEditState.status !== StateStatus.valid) {
+      this.storeService.removeItem(StateIDs.collectionAddEdit);
+    }
+
     this.loadingScreenService.setLoadingState(false, 'body');
 
     this.ngUnsubscribe.next();

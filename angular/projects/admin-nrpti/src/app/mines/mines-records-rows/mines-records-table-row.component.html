@@ -1,5 +1,5 @@
 <td scope="row" class="col-1" (click)="$event.stopPropagation()">
-  <mat-checkbox (change)="onRowCheckboxUpdate($event, rowData)"></mat-checkbox>
+  <mat-checkbox [checked]="rowData.rowSelected" (change)="onRowCheckboxUpdate($event, rowData)"></mat-checkbox>
 </td>
 <td scope="row" data-label="Name" class="col-2">
   {{ rowData.recordName || '-' }}

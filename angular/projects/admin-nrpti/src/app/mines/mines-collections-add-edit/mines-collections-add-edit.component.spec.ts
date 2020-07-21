@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DialogService } from 'ng2-bootstrap-modal';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { GlobalModule, LoadingScreenService, Utils } from 'nrpti-angular-components';
+import { GlobalModule, LoadingScreenService, Utils, StoreService } from 'nrpti-angular-components';
 import { CommonModule } from '../../../../../common/src/app/common.module';
 import { ActivatedRouteStub, TestBedHelper } from '../../../../../common/src/app/spec/spec-utils';
 import { RecordUtils } from '../../records/utils/record-utils';
@@ -51,6 +51,7 @@ describe('MinesCollectionsAddEditComponent', () => {
         Utils,
         RecordUtils,
         DialogService,
+        StoreService,
         { provide: LoadingScreenService, useValue: mockLoadingScreenService },
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
@@ -59,9 +60,9 @@ describe('MinesCollectionsAddEditComponent', () => {
     }).compileComponents();
   }));
 
-  it('should create', () => {
+  it('should create', async(() => {
     const { component } = testBedHelper.createComponent();
 
     expect(component).toBeTruthy();
-  });
+  }));
 });
