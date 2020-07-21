@@ -78,7 +78,7 @@
         <div *ngIf="filter.type === FilterType.DateRange">
           <label *ngIf="filter.name && filter.name.length > 0" class="control-label font-weight-bold">{{filter.name}}</label>
           <div class="row">
-            <div class="col-xl-6">
+            <div class="col-xl-6 start-date-padding">
               <label (for)="filter.filterDefinition.filterId" class="control-label font-weight-bold">{{filter.filterDefinition.startDateLabel}}</label>
               <lib-date-picker
                 [id]="filter.filterDefinition.startDateId"
@@ -88,7 +88,7 @@
                 [maxDate]="filter.filterDefinition.maxDate">
               </lib-date-picker>
             </div>
-            <div class="col-xl-6">
+            <div class="col-xl-6 end-date-padding">
               <label (for)="filter.filterDefinition.endDateId" class="control-label font-weight-bold">{{filter.filterDefinition.endDateLabel}}</label>
               <lib-date-picker
                 [id]="filter.filterDefinition.endDateId"
@@ -101,14 +101,14 @@
         </div>
         <!-- dropdown filter -->
         <div *ngIf="filter.type === FilterType.Dropdown">
-          <label *ngIf="filter.name && filter.name.length > 0">{{filter.name}}</label>
+          <label class="control-label font-weight-bold" *ngIf="filter.name && filter.name.length > 0">{{filter.name}}</label>
           <mat-select class="border rounded px-2 py-2" [formControlName]="filter.id" [multiple]="filter.filterDefinition.multiselect">
             <mat-option *ngFor="let option of filter.filterDefinition.options" [value]="option">{{option}}</mat-option>
           </mat-select>
         </div>
         <!-- multi select filter -->
         <div *ngIf="filter.type === FilterType.MultiSelect">
-          <label *ngIf="filter.name && filter.name.length > 0" for="activityTypeFilter">{{filter.name}}</label>
+          <label class="control-label font-weight-bold" *ngIf="filter.name && filter.name.length > 0" for="activityTypeFilter">{{filter.name}}</label>
           <span class="grey-subtext ml-2">{{filter.filterDefinition.subtext}}</span>
           <span *ngIf="filter.filterDefinition.selectedOptionsCount" class="grey-subtext ml-2">({{ filter.filterDefinition.selectedOptionsCount }} selected)</span>
           <app-autocomplete-multi-select
