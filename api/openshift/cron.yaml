@@ -87,8 +87,15 @@ objects:
                         -H "Content-Type: application/json" \
                         -d '{"taskType":"import", "dataSourceType":"core"}' \
                         ${NRPTI_API_URL}/task
+
+                      echo -e "Importing CORE documents\n"
+
+                      curl -H "Authorization: Bearer ${TOKEN}" \
+                        -H "Content-Type: application/json" \
+                        -d '{"taskType":"import", "dataSourceType":"core-documents"}' \
+                        ${NRPTI_API_URL}/task
                       
-                        echo -e "-------- CRON COMPLETE --------\n"
+                      echo -e "-------- CRON COMPLETE --------\n"
                   resources:
                   limits:
                     cpu: 500m
