@@ -36,6 +36,7 @@
       </ul>
     </div>
   </section>
+
   <section>
     <search-filter-template
       #explorePanel
@@ -50,6 +51,31 @@
       [filters]="filters">
     </search-filter-template>
   </section>
+
+  <section *ngIf="collectionAddEditState">
+      <div class="d-flex justify-content-end mb-1">
+        <button
+          type="button"
+          class="btn btn-link"
+          (click)="cancelAddEditCollectionRecords()"
+          title="Cancel adding records to collection"
+        >
+          Cancel
+        </button>
+        <button
+          class="btn add-records-btn border-0"
+          type="submit"
+          (click)="submitAddEditCollectionRecords()"
+          title="Add selected records to collection"
+        >
+          <i class="material-icons align-middle mr-1">
+            check_circle
+          </i>
+          Add To Collection
+        </button>
+      </div>
+  </section>
+
   <section class="mb-1 pb-1">
     <div *ngIf="!tableData.totalListItems">
       No Mines found.

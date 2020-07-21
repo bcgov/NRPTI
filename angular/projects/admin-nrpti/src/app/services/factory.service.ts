@@ -204,21 +204,19 @@ export class FactoryService {
    *
    * @param {string} recordId record id.
    * @param {string} schema model schema name for this record type.
+   * @param {boolean} [populate=false] populate child records
    * @returns {Observable<SearchResults[]>} An observable that emits the matching record or null if none found.
    * @memberof FactoryService
    */
-  public getRecord(recordId: string, schema: string): Observable<SearchResults[]> {
+  public getRecord(recordId: string, schema: string, populate: boolean = false): Observable<SearchResults[]> {
     if (!recordId || !schema) {
       return of([] as SearchResults[]);
     }
-    return this.searchService.getItem(this.apiService.pathAPI, recordId, schema, true);
+    return this.searchService.getItem(this.apiService.pathAPI, recordId, schema, populate);
   }
 
   public getRecordWithFlavours(recordId: string, schema: string): Observable<SearchResults[]> {
-    if (!recordId || !schema) {
-      return of([] as SearchResults[]);
-    }
-    return this.searchService.getItem(this.apiService.pathAPI, recordId, schema, true);
+    return this.getRecord(recordId, schema, true);
   }
 
   /**

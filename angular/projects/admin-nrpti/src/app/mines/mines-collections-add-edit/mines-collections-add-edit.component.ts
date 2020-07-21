@@ -4,11 +4,11 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
 import { DialogService } from 'ng2-bootstrap-modal';
-import { LoadingScreenService, Utils } from 'nrpti-angular-components';
+import { LoadingScreenService, Utils, StoreService } from 'nrpti-angular-components';
 import { of } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
-import { Picklists } from '../../../../../common/src/app/utils/record-constants';
+import { Picklists, StateIDs } from '../../../../../common/src/app/utils/record-constants';
 import { ConfirmComponent } from '../../confirm/confirm.component';
 import { RecordUtils } from '../../records/utils/record-utils';
 import { FactoryService } from '../../services/factory.service';
@@ -46,6 +46,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private dialogService: DialogService,
+    private storeService: StoreService,
     private _changeDetectionRef: ChangeDetectorRef
   ) {}
 
@@ -115,42 +116,76 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
   /**
    * Build the add-edit form.
    *
-   * If editing, pre-populate any existing values.
+   * If editing, pre-populate any existing values. If StoreService contains an item named 'collectionAddEdit', use any
+   * values set in that piece of state to pre-populate the form fields, and then clear that item from the store.
    *
    * @private
    * @memberof MinesCollectionsAddEditComponent
    */
   private buildForm() {
+    const collectionState = this.storeService.getItem(StateIDs.collectionAddEdit) || null;
+
     this.myForm = new FormGroup({
-      collectionName: new FormControl((this.collection && this.collection.name) || ''),
+      collectionName: new FormControl(
+        (collectionState && collectionState.collectionName) || (this.collection && this.collection.name) || ''
+      ),
       collectionDate: new FormControl(
-        (this.collection &&
-          this.collection.date &&
+        (collectionState &&
+          collectionState.collectionDate &&
           this.utils.convertJSDateToNGBDate(new Date(this.collection.date))) ||
+          (this.collection &&
+            this.collection.date &&
+            this.utils.convertJSDateToNGBDate(new Date(this.collection.date))) ||
           '' ||
           null
       ),
-      collectionType: new FormControl((this.collection && this.collection.type) || ''),
-      collectionAgency: new FormControl((this.collection && this.collection.agency) || ''),
-      collectionPublish: new FormControl((this.collection && this.collection.read.includes('public')) || false),
-      collectionRecords: new FormArray(this.getRecordsFormGroups())
+      collectionType: new FormControl(
+        (collectionState && collectionState.collectionType) || (this.collection && this.collection.type) || ''
+      ),
+      collectionAgency: new FormControl(
+        (collectionState && collectionState.collectionAgency) || (this.collection && this.collection.agency) || ''
+      ),
+      collectionPublish: new FormControl(
+        (collectionState && collectionState.collectionPublish) ||
+          (this.collection && this.collection.read.includes('public')) ||
+          false
+      ),
+      collectionRecords: new FormArray(
+        (collectionState && this.getRecordsFormGroups(collectionState.collectionRecords)) ||
+          (this.collection && this.getRecordsFormGroups(this.collection.collectionRecords)) ||
+          []
+      )
     });
+
+    if (collectionState) {
+      // State was saved from before, so mark everything dirty so as not to miss any previous user edits
+      this.myForm.get('collectionName').markAsDirty();
+      this.myForm.get('collectionDate').markAsDirty();
+      this.myForm.get('collectionType').markAsDirty();
+      this.myForm.get('collectionAgency').markAsDirty();
+      this.myForm.get('collectionPublish').markAsDirty();
+      this.myForm.get('collectionRecords').markAsDirty();
+
+      // Remove used state
+      this.storeService.removeItem(StateIDs.collectionAddEdit);
+    }
   }
 
   /**
    * Builds an array of records FormGroups, each with its own set of FormControls.
    *
+   * @param {*} recordsArray array of records to parse into an array of FormGroups
    * @returns {FormGroup[]} array of records FormGroup elements
    * @memberof MinesAddEditComponent
    */
-  getRecordsFormGroups(): FormGroup[] {
-    if (!this.collection || !this.collection.collectionRecords || !this.collection.collectionRecords.length) {
+  getRecordsFormGroups(recordsArray): FormGroup[] {
+    if (!recordsArray || !recordsArray.length) {
       return [];
     }
 
     const records: FormGroup[] = [];
 
-    this.collection.collectionRecords.forEach((record: any) => {
+    recordsArray.forEach((record: any) => {
       records.push(
         new FormGroup({
           record: new FormControl(record || null)
@@ -214,6 +249,33 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
 
     this.myForm.get('collectionRecords').patchValue(formArray);
     this.myForm.get('collectionRecords').markAsDirty();
+  }
+
+  /**
+   * Add records to the collections array of associated records.
+   *
+   * @memberof MinesCollectionsAddEditComponent
+   */
+  addRecordsToCollection() {
+    // Save the current state of the form using the store service.
+    this.storeService.setItem({
+      collectionAddEdit: {
+        // routing ids
+        mineId: this.route.snapshot.paramMap.get('mineId'),
+        collectionId: (this.collection && this.collection._id) || null,
+
+        // form values
+        collectionName: this.myForm.get('collectionName').value,
+        collectionDate: this.myForm.get('collectionDate').value,
+        collectionType: this.myForm.get('collectionType').value,
+        collectionAgency: this.myForm.get('collectionAgency').value,
+        collectionPublish: this.myForm.get('collectionPublish').value,
+        collectionRecords: this.myForm.get('collectionRecords').value.map(recordFormGroup => recordFormGroup.record)
+      }
+    });
+
+    // Navigate to the record list page for this mine
+    this.router.navigate(['mines', this.route.snapshot.paramMap.get('mineId'), 'records']);
   }
 
   /**

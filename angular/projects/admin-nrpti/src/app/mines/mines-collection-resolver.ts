@@ -10,6 +10,6 @@ export class MinesCollectionResolver implements Resolve<Observable<SearchResults
 
   resolve(route: ActivatedRouteSnapshot): Observable<SearchResults[]> {
     const collectionId = route.paramMap.get('collectionId');
-    return this.factoryService.getRecord(collectionId, 'CollectionBCMI');
+    return this.factoryService.getRecord(collectionId, 'CollectionBCMI', true);
   }
 }

@@ -118,6 +118,19 @@
     <!-- TODO Manage records -->
     <!-- </section> -->
 
+    <section>
+      <div class="text-right mb-3">
+        <button
+          class="btn btn-primary"
+          (click)="addRecordsToCollection()"
+          title="Select records to add to the collection"
+        >
+          <i class="material-icons mr-1 align-middle">add</i>
+          <span class="align-middle">Select Records To Add</span>
+        </button>
+      </div>
+    </section>
+
     <section class="my-3 py-3">
       <div *ngIf="!myForm.get('collectionRecords').value || !myForm.get('collectionRecords').value.length">
         No records have been added to this collection.
@@ -131,7 +144,7 @@
           <tr>
             <th class="col-1"></th>
             <th class="col-3">
-              Collection Name
+              Record Name
             </th>
             <th class="col-2">
               Agency
@@ -156,11 +169,11 @@
                   <i class="material-icons" cdkDragHandle>reorder</i>
                 </button>
               </td>
-              <td data-label="Collection Name" class="col-3">
+              <td data-label="Record Name" class="col-3">
                 {{ formGroup.get('record').value.recordName || '-' }}
               </td>
               <td data-label="Agency" class="col-2">
-                {{ formGroup.get('record').value.issuingAgency || '-' }}
+                {{ formGroup.get('record').value.issuingAgency || formGroup.get('record').value.agency || '-' }}
               </td>
               <td data-label="Source System" class="col-1">
                 {{ formGroup.get('record').value.sourceSystemRef || '-' }}

@@ -65,6 +65,16 @@ export class SchemaLists {
 }
 
 /**
+ * Common store service id's to use when navigating between pages while maintaining state.
+ *
+ * @export
+ * @class StateIDs
+ */
+export class StateIDs {
+  public static readonly collectionAddEdit = 'collectionAddEdit';
+}
+
+/**
  * Note: Picklist values should be alphabetical (A -> Z).  The only exception is with catch-all values like 'None' -
  * which should always be at the start, and 'Other' - which should always be at the end.
  *

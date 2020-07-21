@@ -12,14 +12,14 @@ describe('MinesListResolver', () => {
     'updateTableObjectWithUrlParams'
   ]);
 
-  beforeEach(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       providers: [
         { provide: FactoryService, useValue: spyFactoryService },
         { provide: TableTemplateUtils, useValue: spyTableTemplateUtils }
       ]
     }).compileComponents();
-  });
+  }));
 
   it('should create', async(() => {
     const factoryService = TestBed.get(FactoryService);
