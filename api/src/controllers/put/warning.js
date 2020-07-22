@@ -34,12 +34,12 @@ const WarningPost = require('../post/warning');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.editRecord = async function (args, res, next, incomingObj) {
+exports.editRecord = async function (args, res, next, incomingObj, overridePutParams = null) {
   const flavourFunctions = {
     WarningLNG: this.editLNG,
     WarningNRCED: this.editNRCED
   }
-  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, WarningPost, 'Warning', flavourFunctions);
+  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, WarningPost, 'Warning', flavourFunctions, overridePutParams);
 };
 
 /**

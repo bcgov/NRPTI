@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = mongoose.Types.ObjectId;
 const BusinessLogicManager = require('./business-logic-manager');
 
 exports.validateObjectAgainstModel = function (mongooseModel, incomingObj) {
@@ -115,7 +115,7 @@ exports.getDotNotation = function (obj, target, prefix) {
   return target;
 };
 
-exports.editRecordWithFlavours = async function (args, res, next, incomingObj, editMaster, PostFunctions, masterSchemaName, flavourFunctions = {}) {
+exports.editRecordWithFlavours = async function (args, res, next, incomingObj, editMaster, PostFunctions, masterSchemaName, flavourFunctions = {}, overridePutParams = null) {
   let flavours = [];
   let flavourIds = [];
   let promises = [];
@@ -159,7 +159,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
       if (flavourIncomingObj[entry[0]]._id) {
         let flavourUpdateObj = entry[1](args, res, next, { ...flavourIncomingObj, ...flavourIncomingObj[entry[0]] });
         const Model = mongoose.model(entry[0]);
-        flavourUpdateObj._master = new ObjectID(masterId);
+        flavourUpdateObj._master = new ObjectId(masterId);
         promises.push(
           Model.findOneAndUpdate(
             { _id: flavourIncomingObj[entry[0]]._id, write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
@@ -186,7 +186,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
           });
         }
         if (newFlavour) {
-          newFlavour._master = new ObjectID(masterId);
+          newFlavour._master = new ObjectId(masterId);
           flavours.push(newFlavour);
           promises.push(newFlavour.save());
         }
@@ -224,7 +224,11 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
     }
 
     // We can only edit epicProjectId/mineGuid on records with sourceSystemRef as nrpti or anything csv import
-    if (masterRecord.sourceSystemRef === 'nrpti' || masterRecord.sourceSystemRef.includes('csv')) {
+    if (
+      masterRecord.sourceSystemRef === 'nrpti' ||
+      masterRecord.sourceSystemRef.includes('csv') ||
+      (overridePutParams && overridePutParams.forceMineBCMIGUIDUpdate)
+    ) {
       const MineBCMI = mongoose.model('MineBCMI');
       let mineBCMI = null;
       try {
@@ -240,8 +244,8 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
           errorMessage: `Error getting MineBCMI: ${e.message}`
         };
       }
-      if (mineBCMI && mineBCMI.mineGuid) {
-        incomingObj.mineGuid = mineBCMI.mineGuid;
+      if (mineBCMI && mineBCMI._sourceRefId) {
+        incomingObj.mineGuid = mineBCMI._sourceRefId;
       }
     }
     if (incomingObj.mineGuid) {
