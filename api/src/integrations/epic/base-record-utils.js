@@ -166,7 +166,7 @@ class BaseRecordUtils {
    * @returns {object} object containing the update master and flavour records (if any)
    * @memberof BaseRecordUtils
    */
-  async updateRecord(nrptiRecord, existingRecord) {
+  async updateRecord(nrptiRecord, existingRecord, overridePutParams = null) {
     if (!nrptiRecord) {
       throw Error('updateRecord - required nrptiRecord must be non-null.');
     }
@@ -187,7 +187,8 @@ class BaseRecordUtils {
         null,
         null,
         this.recordType.recordControllerName,
-        [updateObj]
+        [updateObj],
+        overridePutParams
       );
     } catch (error) {
       defaultLog.error(`Failed to save ${this.recordType._schemaName} record: ${error.message}`);

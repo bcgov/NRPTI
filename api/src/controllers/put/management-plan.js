@@ -27,11 +27,11 @@ const ManagementPlanPost = require('../post/management-plan');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.editRecord = async function (args, res, next, incomingObj) {
+exports.editRecord = async function (args, res, next, incomingObj, overridePutParams = null) {
   const flavourFunctions = {
     ManagementPlanLNG: this.editLNG
   }
-  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, ManagementPlanPost, 'ManagementPlan', flavourFunctions);
+  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, ManagementPlanPost, 'ManagementPlan', flavourFunctions, overridePutParams);
 };
 
 /**

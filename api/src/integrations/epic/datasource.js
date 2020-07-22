@@ -261,16 +261,13 @@ class DataSource {
 
         // Create new documents (if any) and add reference to record
         nrptiRecord.documents = await recordTypeUtils.createDocument(epicRecord);
-
-        savedRecords = await recordTypeUtils.updateRecord(nrptiRecord, existingRecord);
+        savedRecords = await recordTypeUtils.updateRecord(nrptiRecord, existingRecord, { forceMineBCMIGUIDUpdate: true });
       } else {
         // Create new documents (if any) and add reference to record
         nrptiRecord.documents = await recordTypeUtils.createDocument(epicRecord);
-
         // Create NRPTI master record OR update existing NRPTI master record and its flavours (if any)
         savedRecords = await recordTypeUtils.createRecord(nrptiRecord);
       }
-
       if (savedRecords && savedRecords.length > 0 && savedRecords[0].status === 'success') {
         this.status.itemsProcessed++;
 

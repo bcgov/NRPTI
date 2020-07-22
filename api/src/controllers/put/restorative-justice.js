@@ -34,12 +34,12 @@ const RestorativeJusticePost = require('../post/restorative-justice');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.editRecord = async function (args, res, next, incomingObj) {
+exports.editRecord = async function (args, res, next, incomingObj, overridePutParams = null) {
   const flavourFunctions = {
     RestorativeJusticeLNG: this.editLNG,
     RestorativeJusticeNRCED: this.editNRCED
   }
-  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, RestorativeJusticePost, 'RestorativeJustice', flavourFunctions);
+  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, RestorativeJusticePost, 'RestorativeJustice', flavourFunctions, overridePutParams);
 };
 
 /**

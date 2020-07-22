@@ -313,7 +313,7 @@ exports.protectedNewsDelete = async function (args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedCollectionDelete = async function(args, res, next) {
+exports.protectedCollectionDelete = async function (args, res, next) {
   try {
     const collectionId = args.swagger.params.collectionId.value;
     defaultLog.info(`protectedCollectionDelete - collectionId: ${collectionId}`);
@@ -523,7 +523,7 @@ const processPostRequest = async function (args, res, next, property, data) {
 
 exports.processPostRequest = processPostRequest;
 
-const processPutRequest = async function (args, res, next, property, data) {
+const processPutRequest = async function (args, res, next, property, data, overridePutParams = null) {
   if (data.length === 0) {
     return {
       status: 'success',
@@ -537,58 +537,58 @@ const processPutRequest = async function (args, res, next, property, data) {
   do {
     switch (property) {
       case 'orders':
-        promises.push(EditOrder.editRecord(args, res, next, data[i]));
+        promises.push(EditOrder.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'inspections':
-        promises.push(EditInspection.editRecord(args, res, next, data[i]));
+        promises.push(EditInspection.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'certificates':
-        promises.push(EditCertificate.editRecord(args, res, next, data[i]));
+        promises.push(EditCertificate.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'permits':
-        promises.push(EditPermit.editRecord(args, res, next, data[i]));
+        promises.push(EditPermit.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'agreements':
-        promises.push(EditAgreement.editRecord(args, res, next, data[i]));
+        promises.push(EditAgreement.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'selfReports':
-        promises.push(EditSelfReport.editRecord(args, res, next, data[i]));
+        promises.push(EditSelfReport.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'restorativeJustices':
-        promises.push(EditRestorativeJustice.editRecord(args, res, next, data[i]));
+        promises.push(EditRestorativeJustice.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'tickets':
-        promises.push(EditTicket.editRecord(args, res, next, data[i]));
+        promises.push(EditTicket.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'administrativePenalties':
-        promises.push(EditAdministrativePenalty.editRecord(args, res, next, data[i]));
+        promises.push(EditAdministrativePenalty.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'administrativeSanctions':
-        promises.push(EditAdministrativeSanction.editRecord(args, res, next, data[i]));
+        promises.push(EditAdministrativeSanction.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'warnings':
-        promises.push(EditWarning.editRecord(args, res, next, data[i]));
+        promises.push(EditWarning.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'constructionPlans':
-        promises.push(EditConstructionPlan.editRecord(args, res, next, data[i]));
+        promises.push(EditConstructionPlan.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'managementPlans':
-        promises.push(EditManagementPlan.editRecord(args, res, next, data[i]));
+        promises.push(EditManagementPlan.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'courtConvictions':
-        promises.push(EditCourtConviction.editRecord(args, res, next, data[i]));
+        promises.push(EditCourtConviction.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'newsItems':
-        promises.push(EditNewsItem.editRecord(args, res, next, data[i]));
+        promises.push(EditNewsItem.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'mines':
-        promises.push(EditMine.editRecord(args, res, next, data[i]));
+        promises.push(EditMine.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'permitAmendments':
-        promises.push(EditPermitAmendment.editRecord(args, res, next, data[i]));
+        promises.push(EditPermitAmendment.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'collections':
-        promises.push(EditCollection.editRecord(args, res, next, data[i]));
+        promises.push(EditCollection.editRecord(args, res, next, data[i], overridePutParams));
         break;
       default:
         return {
