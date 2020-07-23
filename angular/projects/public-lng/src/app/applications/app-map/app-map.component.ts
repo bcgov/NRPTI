@@ -1,20 +1,17 @@
 import {
   Component,
   AfterViewInit,
-  OnChanges,
   OnDestroy,
   Input,
   Output,
   EventEmitter,
   ElementRef,
-  SimpleChanges
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 // import { takeUntil, map } from 'rxjs/operators';
 import 'leaflet';
 import 'leaflet.markercluster';
-import { differenceBy } from 'lodash.differenceby';
 import 'async';
 import 'topojson-client';
 import 'jquery';
@@ -71,7 +68,7 @@ const markerIconLg = L.icon({
   templateUrl: './app-map.component.html',
   styleUrls: ['./app-map.component.scss']
 })
-export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class AppMapComponent implements AfterViewInit, OnDestroy {
   @Input() isLoading: boolean; // from applications component
   @Input() applications: Application[] = []; // from applications component
   @Input() isMapVisible: Application[] = []; // from applications component
@@ -99,7 +96,7 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
     private elementRef: ElementRef,
     public urlService: UrlService
   ) {
-    this.urlService.onNavEnd$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {});
+    this.urlService.onNavEnd$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => { });
   }
 
   // for creating custom cluster icon
@@ -551,32 +548,6 @@ export class AppMapComponent implements AfterViewInit, OnChanges, OnDestroy {
     layers.pipeline.eachLayer((layer: any) => {
       layer.setStyle({ color: '#6092ff' });
     });
-  }
-
-  // called when apps list changes
-  public ngOnChanges(changes: SimpleChanges) {
-    // update map only if it's visible
-    if (this.isMapVisible) {
-      if (changes.applications && !changes.applications.firstChange && changes.applications.currentValue) {
-        // console.log('map: got changed apps =', changes.applications);
-
-        const deletedApps = differenceBy(
-          changes.applications.previousValue as Application[],
-          changes.applications.currentValue as Application[],
-          '_id'
-        );
-        const addedApps = differenceBy(
-          changes.applications.currentValue as Application[],
-          changes.applications.previousValue as Application[],
-          '_id'
-        );
-        // console.log('deleted =', deletedApps);
-        // console.log('added =', addedApps);
-
-        // (re)draw the matching apps
-        this.drawMap(deletedApps, addedApps);
-      }
-    }
   }
 
   // when map becomes visible, draw all apps
