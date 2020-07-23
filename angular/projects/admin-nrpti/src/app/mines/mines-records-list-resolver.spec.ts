@@ -89,13 +89,17 @@ describe('MinesRecordsListResolver', () => {
             'Warning',
             'ConstructionPlan',
             'ManagementPlan',
-            'CourtConviction'
+            'CourtConviction',
+            'PermitBCMI',
+            'PermitAmendmentBCMI'
           ],
           [],
           1,
           25,
           '-dateAdded',
-          {},
+          {
+            mineGuid: ''
+          },
           false,
           {},
           [],
@@ -160,13 +164,17 @@ describe('MinesRecordsListResolver', () => {
             'Warning',
             'ConstructionPlan',
             'ManagementPlan',
-            'CourtConviction'
+            'CourtConviction',
+            'PermitBCMI',
+            'PermitAmendmentBCMI'
           ],
           [],
           1,
           25,
           '-dateAdded',
-          {},
+          {
+            mineGuid: ''
+          },
           false,
           {},
           [],
