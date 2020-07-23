@@ -91,8 +91,6 @@ let genSchema = function(name, definition) {
       });
     }
   }
-  // if (s) _.extend(schema.statics, s); // TODO replace lodash
-  // if (m) _.extend(schema.methods, m); // TODO replace lodash
   if (indexes && indexes.length) {
     indexes.forEach(function(index) {
       schema.index(index.fields, index.options);
@@ -106,11 +104,6 @@ let genSchema = function(name, definition) {
       if (virtual.set) v.set(virtual.set);
     });
   }
-
-  // Enable FTS on documents
-  // if (schema.obj._schemaName.default === "Document") {
-  //     schema.index({"$**":"text"});
-  // }
 
   return schema;
 };
