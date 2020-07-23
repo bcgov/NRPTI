@@ -193,7 +193,7 @@ export class MultiSelectDefinition extends FilterDefinition {
     public options: IMutliSelectOption[] = [],
     public placeholder: string = 'Begin typing to filter',
     public subtext: string = 'Select all that apply...',
-    public useChips: boolean = false
+    public useChips: boolean = true
   ) { super(); }
 }
 

@@ -303,7 +303,7 @@ The `CheckOrRadioFilerDefinition` is a coponent that allows you to define a grou
   options: IMutliSelectOption[] = [],
   placeholder: string = 'Begin typing to filter',
   subtext: string = 'Select all that apply...'
-  useChips: boolean = false;
+  useChips: boolean = true;
 }
 ```
 
@@ -313,7 +313,7 @@ The `CheckOrRadioFilerDefinition` is a coponent that allows you to define a grou
 
 `subtext` is a text string to display beside the title. Defaults to `Select all that apply...`.
 
-`useChips` is a boolean that indicates if the selected options from the multiselect should display as a list of chips above the dropdown component. Defaults to `false`
+`useChips` is a boolean that indicates if the selected options from the multiselect should display as a list of chips above the dropdown component. Defaults to `true`
 
 ### DropdownDefinition
 

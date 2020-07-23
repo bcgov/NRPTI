@@ -34,12 +34,12 @@ const AdministrativePenaltyPost = require('../post/administrative-penalty');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.editRecord = async function (args, res, next, incomingObj) {
+exports.editRecord = async function (args, res, next, incomingObj, overridePutParams = null) {
   const flavourFunctions = {
     AdministrativePenaltyLNG: this.editLNG,
     AdministrativePenaltyNRCED: this.editNRCED
   }
-  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, AdministrativePenaltyPost, 'AdministrativePenalty', flavourFunctions);
+  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, AdministrativePenaltyPost, 'AdministrativePenalty', flavourFunctions, overridePutParams);
 };
 
 /**

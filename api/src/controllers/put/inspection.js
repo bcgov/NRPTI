@@ -34,12 +34,12 @@ const InspectionPost = require('../post/inspection');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.editRecord = async function (args, res, next, incomingObj) {
+exports.editRecord = async function (args, res, next, incomingObj, overridePutParams = null) {
   const flavourFunctions = {
     InspectionLNG: this.editLNG,
     InspectionNRCED: this.editNRCED
   }
-  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, InspectionPost, 'Inspection', flavourFunctions);
+  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, InspectionPost, 'Inspection', flavourFunctions, overridePutParams);
 };
 
 /**

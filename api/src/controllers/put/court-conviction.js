@@ -34,12 +34,12 @@ const CourtConvictionPost = require('../post/court-conviction');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.editRecord = async function (args, res, next, incomingObj) {
+exports.editRecord = async function (args, res, next, incomingObj, overridePutParams = null) {
   const flavourFunctions = {
     CourtConvictionLNG: this.editLNG,
     CourtConvictionNRCED: this.editNRCED
   }
-  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, CourtConvictionPost, 'CourtConviction', flavourFunctions);
+  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, CourtConvictionPost, 'CourtConviction', flavourFunctions, overridePutParams);
 };
 
 /**

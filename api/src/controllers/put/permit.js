@@ -27,12 +27,12 @@ const PermitPost = require('../post/permit');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.editRecord = async function (args, res, next, incomingObj) {
+exports.editRecord = async function (args, res, next, incomingObj, overridePutParams = null) {
   const flavourFunctions = {
     PermitLNG: this.editLNG,
     PermitBCMI: this.editBCMI,
   }
-  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, PermitPost, 'Permit', flavourFunctions);
+  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, PermitPost, 'Permit', flavourFunctions, overridePutParams);
 };
 
 

@@ -20,7 +20,6 @@ import { AutoGrowTextAreaDirective } from './directives/auto-grow-textarea/auto-
 import { DigitOnlyDirective } from './directives/digit-only/digit-only.directive';
 
 // services
-import { ExportService } from './services/export.service';
 import { StoreService } from './services/store.service';
 import { SearchService } from './services/search.service';
 import { InjectComponentService } from './services/inject-component.service';
@@ -50,7 +49,6 @@ import { LoadingScreenService } from './services/loading-screen.service';
     DigitOnlyDirective
   ],
   providers: [
-    ExportService,
     StoreService,
     SearchService,
     TableTemplateUtils,
@@ -69,4 +67,4 @@ import { LoadingScreenService } from './services/loading-screen.service';
     DigitOnlyDirective
   ]
 })
-export class GlobalModule {}
+export class GlobalModule { }
