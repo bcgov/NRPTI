@@ -1,5 +1,18 @@
 <mat-chip-list #chipList *ngIf="useChips">
-  <mat-chip
+  <div class="mat-chip-list-wrapper-override">
+    <input
+      #multiAutocompleteFilter
+      name="multiAutocompleteFilter"
+      type="text"
+      class="form-control multi-box-width"
+      placeholder="{{ updatedPaceholderText }}"
+      matInput
+      (keyup)="filterPicklist($event)"
+      (keydown)="handleEnter($event)"
+      [matAutocomplete]="multiAutocomplete"
+      [matChipInputFor]="chipList"
+    />
+    <mat-chip
       *ngFor="let option of options | callback: filterOptions"
       [selectable]="true"
       [removable]="true"
@@ -7,25 +20,14 @@
       <span class="chip-text-style">{{option.displayValue}}</span>
       <mat-icon matChipRemove>cancel</mat-icon>
     </mat-chip>
-  <input
-    #multiAutocompleteFilter
-    name="multiAutocompleteFilter"
-    type="text"
-    class="form-control"
-    placeholder="{{ placeholderText }}"
-    matInput
-    (keyup)="filterPicklist($event)"
-    (keydown)="handleEnter($event)"
-    [matAutocomplete]="multiAutocomplete"
-    [matChipInputFor]="chipList"
-  />
+  </div>
 </mat-chip-list>
 <input *ngIf="!useChips"
     #multiAutocompleteFilter
     name="multiAutocompleteFilter"
     type="text"
     class="form-control"
-    placeholder="{{ placeholderText }}"
+    placeholder="{{ updatedPaceholderText }}"
     matInput
     (keyup)="filterPicklist($event)"
     (keydown)="handleEnter($event)"

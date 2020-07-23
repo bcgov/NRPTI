@@ -65,14 +65,19 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
+  public updatedPaceholderText = '';
+
   constructor(public _changeDetectionRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.updatedPaceholderText = this.placeholderText;
     this.initializeFormControlValue();
 
     if (this.reset) {
       this.reset.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => this.resetComponent());
     }
+
+    this.updatePlaceholderTextValue();
 
     this._changeDetectionRef.detectChanges();
   }
@@ -146,17 +151,27 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
 
       // Can't seem to assign the IMultiSelectOption object as the mat-option value, so reconstruct it here to pass on.
       // This is only a problem when selecting an option using the keyboard (enter).
-      const option: IMutliSelectOption = {
-        value: event.target.value,
-        displayValue: null,
-        selected: false,
-        display: true
-      };
 
-      // clear the input field, as selected options shouldn't be displayed there
-      this.multiAutocompleteFilter.nativeElement.value = '';
+      // Select the top option as the closest match
+      // But only handle if it isn't selected, otherwise it will be toggled off?
+      // ignore the process if the user hits enter without actually typing anything
+      if (event.target.value.length > 0) {
+        const topOption = this.getOptionsFromKeywords(event.target.value).find(op => op.display && !op.selected);
 
-      this.toggleSelection(option);
+        const option: IMutliSelectOption = {
+          value: topOption.value,
+          displayValue: null,
+          selected: false,
+          display: true
+        };
+
+        this.toggleSelection(option);
+
+        // clear the input field, as selected options shouldn't be displayed there
+        this.multiAutocompleteFilter.nativeElement.value = '';
+        // reset the selected options list
+        this.options = this.getOptionsFromKeywords('');
+      }
     }
   }
 
@@ -176,9 +191,23 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
 
     this.setFormControlValue();
 
+    this.updatePlaceholderTextValue();
+
     this._changeDetectionRef.detectChanges();
   }
 
+  public updatePlaceholderTextValue() {
+    // update the placeholder text
+    if (!this.useChips && this.options.filter(op => op.selected).length > 0) {
+      this.updatedPaceholderText = '';
+      for (const displayedOption of this.options.filter(op => op.selected)) {
+        this.updatedPaceholderText += displayedOption.displayValue + ', ';
+      }
+      this.updatedPaceholderText = this.updatedPaceholderText.slice(0, -2);
+    } else {
+      this.updatedPaceholderText = this.placeholderText;
+    }
+  }
   /**
    * Un-selects all options.
    *
@@ -191,6 +220,8 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
     });
 
     this.setFormControlValue();
+
+    this.updatePlaceholderTextValue();
 
     this._changeDetectionRef.detectChanges();
   }
@@ -272,6 +303,7 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
 
   removeChip(option) {
     option.selected = false;
+    this.setFormControlValue();
   }
 
   // for callback pipe filter
