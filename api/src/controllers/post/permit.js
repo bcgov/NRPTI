@@ -117,7 +117,6 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.mineGuid && (permit.mineGuid = incomingObj.mineGuid);
   incomingObj.permitNumber && (permit.permitNumber = incomingObj.permitNumber);
   incomingObj.status && (permit.status = incomingObj.status);
-  incomingObj.permitAmendments && (permit.permitAmendments = incomingObj.permitAmendments);
 
   // set meta
   permit.addedBy = args.swagger.params.auth_payload.displayName;
@@ -230,13 +229,13 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
 /**
  * Creates the BCMI flavour of a permit.
- * 
+ *
  * @param {*} args
  * @param {*} res
  * @param {*} next
  * @param {*} incomingObj
  * @returns created BCMI permit
- */ 
+ */
 exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
@@ -293,8 +292,16 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   // set flavour data
   incomingObj.mineGuid && (permitBCMI.mineGuid = incomingObj.mineGuid);
   incomingObj.permitNumber && (permitBCMI.permitNumber = incomingObj.permitNumber);
-  incomingObj.status && (permitBCMI.status = incomingObj.status);
-  incomingObj.permitAmendments && (permitBCMI.permitAmendments = incomingObj.permitAmendments);
+  incomingObj.permitStatusCode && (permitBCMI.permitStatusCode = incomingObj.permitStatusCode);
+  incomingObj.amendmentStatusCode && (permitBCMI.amendmentStatusCode = incomingObj.amendmentStatusCode);
+  incomingObj.typeCode && (permitBCMI.typeCode = incomingObj.typeCode);
+  // originalPermit should be null unless the type is amendment
+  incomingObj.originalPermit && incomingObj.typeCode.toUpperCase() === 'AMD' && (permitBCMI.originalPermit = incomingObj.originalPermit);
+  incomingObj.receivedDate && (permitBCMI.receivedDate = incomingObj.receivedDate);
+  incomingObj.issueDate && (permitBCMI.issueDate = incomingObj.issueDate);
+  incomingObj.authorizedEndDate && (permitBCMI.authorizedEndDate = incomingObj.authorizedEndDate);
+  incomingObj.description && (permitBCMI.description = incomingObj.description);
+  incomingObj.amendmentDocument && (permitBCMI.amendmentDocument = incomingObj.amendmentDocument);
 
   // set data source references
   incomingObj.sourceDateAdded && (permitBCMI.sourceDateAdded = incomingObj.sourceDateAdded);

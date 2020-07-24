@@ -35,7 +35,6 @@ module.exports = require('../../utils/model-schema-generator')(
 
     permitNumber: { type: String, default: '' },
     status: { type: String, default: '' },
-    permitAmendments: [{ type: 'ObjectId', default: [], index: true }],
 
     dateAdded: { type: Date, default: Date.now() },
     dateUpdated: { type: Date, default: null },
