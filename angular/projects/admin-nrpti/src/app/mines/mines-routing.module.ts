@@ -79,8 +79,7 @@ const routes: Routes = [
               breadcrumb: 'Mine Records'
             },
             resolve: {
-              records: MinesRecordsListResolver,
-              mine: MinesResolver
+              records: MinesRecordsListResolver
             }
           },
           {
@@ -146,7 +145,10 @@ const routes: Routes = [
               }
             ]
           }
-        ]
+        ],
+        resolve: {
+          mine: MinesResolver
+        }
       }
     ]
   }
