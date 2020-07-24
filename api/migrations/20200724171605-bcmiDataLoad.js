@@ -81,15 +81,20 @@ exports._meta = {
 };
 
 async function updateMine(mineData, nrpti) {
-  let nrptiMines = await nrpti.find({ _schemaName: 'MineBCMI', name: mineData.name}).toArray();
+  let nrptiMines = await nrpti.find({ _schemaName: 'MineBCMI', permitNumber: mineData.memPermitID}).toArray();
   // should have 1 result returned. Any more or less, just ignore this update
   if (nrptiMines.length === 1) {
     let externalLinks = [];
     // format the links from the data
     for(const idx in mineData.externalLinks) {
       const link = mineData.externalLinks[idx];
-      externalLinks.push(link.link);
+      externalLinks.push({
+        url: link.link,
+        title: link.title
+      });
     }
+
+    console.log("Updating:", mineData.name);
 
     return nrpti.update({ _id: new ObjectID(nrptiMines[0]._id) }, {
       $set: {
