@@ -7,6 +7,9 @@ module.exports = require('../../utils/model-schema-generator')(
     _epicProjectId: { type: 'ObjectId', default: null, index: true },
     read: [{ type: String, trim: true, default: 'sysadmin' }],
     write: [{ type: String, trim: true, default: 'sysadmin' }],
+    recordName: { type: String, default: '' },
+    recordType: { type: String, default: '' },
+    recordSubtype: { type: String, default: '' },
     // MineBCMI Record GUID that ties this record to a mine
     mineGuid: { type: String, default: '', index: true },
     // Permit number from the mine. Technically can be dirived from the mineGuid ref

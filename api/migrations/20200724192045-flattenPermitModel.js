@@ -25,49 +25,66 @@ exports.up = async function(db) {
     const nrpti = mClient.collection('nrpti');
 
     // pull every BCMI permit object (permit+flavour)
+    console.log('Fetching Permits...');
     let corePermits = await nrpti.find({ _schemaName: 'Permit', sourceSystemRef: 'core' }).toArray();
-
+    console.log(`Done! Found ${corePermits.length} permit records from Core.`);
     // Fetch the permits flavour and amendment objects. locate the "parent" permit, if it exists
     for(const permit of corePermits) {
       // fetch the permit BCMI flavour
       // We're making a "safe" assumption here that permits loaded by core only have the
       // BCMI flavour
-      const flavour = await nrpti.findOne({ _id: new ObjectId(permit._flavourRecords[0]) });
-      const amendments = [];
-      let originalPermit = null;
+      console.log(`Fetching flavour for permit ${permit._id}`);
+      let flavour = await nrpti.findOne({ _id: new ObjectId(permit._flavourRecords[0]) });
 
-      for(const amendmentGuid of permit.permitAmendments) {
-        // load all the permits, identify the OG
-        const permitAmendment = await nrpti.findOne({ _id: new ObjectId(amendmentGuid) });
-        const permitAmendmentFlavour = await nrpti.findOne({ _id: new ObjectId(permitAmendment._flavourRecords[0]) });
+      if(!flavour) {
+        flavour = JSON.parse(JSON.stringify(permit));
+      }
 
-        if (permitAmendment && permitAmendmentFlavour) {
-          originalPermit = permitAmendment.typeCode.toUpperCase() === 'OGP' ? { record: permitAmendment, flavour: permitAmendmentFlavour } : null;
-          if (!originalPermit) {
-            amendments.push({ record: permitAmendment, flavour: permitAmendmentFlavour });
+      if (flavour) {
+        console.log(`Done! Found flavour. Flattening model for ${permit.permitAmendments.length} amendment records`);
+        const amendments = [];
+        let originalPermit = null;
+
+        for(const amendmentGuid of permit.permitAmendments) {
+          // load all the permits, identify the OG
+          // Note the amendmentGuid will be the flavour, so we need to find the source
+          // Permit Amendment record by going in reverse...
+          const permitAmendmentFlavour = await nrpti.findOne({ _id: new ObjectId(amendmentGuid) });
+          const permitAmendment = await nrpti.findOne({ _flavourRecords: { $in: [new ObjectId(amendmentGuid)] }});
+          if (permitAmendment && permitAmendmentFlavour) {
+            originalPermit = permitAmendment.typeCode.toUpperCase() === 'OGP' ? { record: permitAmendment, flavour: permitAmendmentFlavour } : null;
+            if (!originalPermit) {
+              amendments.push({ record: permitAmendment, flavour: permitAmendmentFlavour });
+            }
+          } else {
+            console.log('Could not find record or flavour doc for amendment!');
           }
         }
+
+        console.log('Loaded all amendments and flavours for permit... rebuilding models...');
+        // We now have a Permit, flavour, amendment list with flavours, and identified the original permit (if it's available)
+        // We can now flatten and create the Parent Permit object, if it exists
+        if (originalPermit) {
+          originalPermit = await createPermits(nrpti, permit, flavour, null, originalPermit);
+          // originalPermit should now be the ObjectID guid to associate for all
+          // amendment documents
+          console.log('Created an OG! ' + originalPermit);
+        }
+
+        // with the parent defined, we'll now iterate over the amendments and flatten them
+        amendments.forEach(amendment => {
+          createPermits(nrpti, permit, flavour, originalPermit, amendment);
+        });
+
+        // Model is flattended and new objects are created. Old objects are all deleted
+        // Done with permit amendments.
+        // delete the root permit object (+flavour)
+        await nrpti.remove({ _id: new ObjectId(flavour._id) });
+        await nrpti.remove({ _id: new ObjectId(permit._id) });
+        // and repeat!
+      } else {
+        console.log('No flavour record found for the permit. Ignoring...');
       }
-
-      // We now have a Permit, flavour, amendment list with flavours, and identified the original permit (if it's available)
-      // We can now flatten and create the Parent Permit object, if it exists
-      if (originalPermit) {
-        originalPermit = createPermits(nrpti, permit, flavour, null, originalPermit);
-        // originalPermit should now be the ObjectID guid to associate for all
-        // amendment documents
-      }
-
-      // with the parent defined, we'll now iterate over the amendments and flatten them
-      amendments.forEach(amendment => {
-        createPermits(nrpti, permit, flavour, originalPermit, amendment);
-      });
-
-      // Model is flattended and new objects are created. Old objects are all deleted
-      // Done with permit amendments.
-      // delete the root permit object (+flavour)
-      await nrpti.remove({ _id: new ObjectId(flavour._id) });
-      await nrpti.remove({ _id: new ObjectId(permit._id) });
-      // and repeat!
     }
   } catch(err) {
     console.error('Error during Permit model restructuring: ' + err);
@@ -85,29 +102,32 @@ exports._meta = {
 };
 
 async function createPermits(nrpti, permit, permitFlavour, originalPermitRef, amendment) {
+  console.log('Creating permits...');
   let ogGuid;
   if (amendment.flavour.amendmentDocuments && amendment.flavour.amendmentDocuments.length > 0) {
+    console.log('Flattening amendment for ' + amendment.flavour.amendmentDocuments.length + ' docs');
     // iterate the amendment documents. We'll need to create one Permit/PermitBCMI per document
     for(const doc of amendment.flavour.amendmentDocuments) {
       // we've got a document!
       // Create a flavour PermitBCMI
-      let newFlavour = await createPermitFlavour(permitFlavour, originalPermitRef, amendment, doc);
+      let newFlavour = await createPermitFlavour(nrpti, permitFlavour, originalPermitRef, amendment, doc);
       // Create a master Permit
-      let newMaster = await createPermitMaster(permit, newFlavour, amendment);
+      let newMaster = await createPermitMaster(nrpti, permit, newFlavour, amendment);
       ogGuid = newMaster._id;
       // master and flavour have been created from a combination of
       // the permit, permit flavour, amendment, and amendment flavour.
       // Original doc has been re-assigned to the new flavour
     }
   } else {
+    console.log('Uh oh, no documents? Lets create a new permit/flavour with the new model anyway...');
     // this amendment doesn't have any documents associated with it?!?
     // Just create a single record
-    let newFlavour = await createPermitFlavour(permitFlavour, originalPermitRef, amendment, null);
+    let newFlavour = await createPermitFlavour(nrpti, permitFlavour, originalPermitRef, amendment, null);
     // Create a master Permit
-    let newMaster = await createPermitMaster(permit, newFlavour, amendment);
+    let newMaster = await createPermitMaster(nrpti, permit, newFlavour, amendment);
     ogGuid = newMaster._id;
   }
-
+  console.log('created new master/flavour, cleaning up old amendment record');
   // We've created a master and flavour Permit for each document.
   // We can now delete the original amendment record and flavour
   await nrpti.remove({ _id: new ObjectId(amendment.flavour._id) });
@@ -118,8 +138,8 @@ async function createPermits(nrpti, permit, permitFlavour, originalPermitRef, am
   return ogGuid;
 }
 
-async function createPermitFlavour(permitFlavour, originalPermitRef, amendment, doc) {
-  let PermitBCMI = mongoose.model('PermitBCMI');
+async function createPermitFlavour(nrpti, permitFlavour, originalPermitRef, amendment, doc) {
+  let PermitBCMI = require('../src/models/bcmi/index.js').permitBCMI;
   let permitBCMI = new PermitBCMI();
 
   permitBCMI._schemaName = 'PermitBCMI';
@@ -160,7 +180,7 @@ async function createPermitFlavour(permitFlavour, originalPermitRef, amendment, 
   amendment.flavour.statusCode && (permitBCMI.amendmentStatusCode =  amendment.flavour.statusCode);
   amendment.flavour.typeCode && (permitBCMI.typeCode = amendment.flavour.typeCode);
   // originalPermit should be null unless the type is amendment
-  originalPermitRef && amendment.flavour.typeCode.toUpperCase() === 'AMD' && (permitBCMI.originalPermit = originalPermitRef);
+  originalPermitRef && amendment.flavour.typeCode.toUpperCase() === 'AMD' && (permitBCMI.originalPermit = new ObjectId(originalPermitRef));
   amendment.flavour.receivedDate && (permitBCMI.receivedDate = amendment.flavour.receivedDate);
   amendment.flavour.issueDate && (permitBCMI.issueDate = amendment.flavour.issueDate);
   amendment.flavour.authorizedEndDate && (permitBCMI.authorizedEndDate = amendment.flavour.authorizedEndDate);
@@ -172,11 +192,11 @@ async function createPermitFlavour(permitFlavour, originalPermitRef, amendment, 
   amendment.flavour.sourceDateUpdated && (permitBCMI.sourceDateUpdated = amendment.flavour.sourceDateUpdated);
   amendment.flavour.sourceSystemRef && (permitBCMI.sourceSystemRef = amendment.flavour.sourceSystemRef);
 
-  return permitBCMI.save();
+  return nrpti.insertOne(permitBCMI);;
 }
 
-async function createPermitMaster(permit, newFlavour, amendment) {
-  let Permit = mongoose.model('Permit');
+async function createPermitMaster(nrpti, permit, newFlavour, amendment) {
+  let Permit = require('../src/models/master/index.js').permit;
   let master = new Permit();
 
   master._schemaName = 'Permit';
@@ -228,5 +248,5 @@ async function createPermitMaster(permit, newFlavour, amendment) {
   amendment.record.sourceSystemRef && (master.sourceSystemRef = amendment.record.sourceSystemRef);
   amendment.record.isLngPublished && (master.isLngPublished = amendment.record.isLngPublished);
 
-  return master.save();
+  return nrpti.insertOne(master);;
 }
