@@ -4,7 +4,6 @@ const QS = require('qs');
 const integrationUtils = require('../integration-utils');
 const defaultLog = require('../../utils/logger')('epic-datasource');
 const EPIC_RECORD_TYPE = require('./epic-record-type-enum');
-const moment = require('moment');
 const MAX_PAGE_SIZE = Number.MAX_SAFE_INTEGER;
 
 const EPIC_API_HOSTNAME = process.env.EPIC_API_HOSTNAME || 'eagle-prod.pathfinder.gov.bc.ca';
