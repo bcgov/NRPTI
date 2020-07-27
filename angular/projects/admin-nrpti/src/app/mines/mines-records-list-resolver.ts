@@ -14,7 +14,7 @@ export class MinesRecordsListResolver implements Resolve<Observable<object>> {
     // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
     const tableObject = this.tableTemplateUtils.updateTableObjectWithUrlParams(route.params, new TableObject());
 
-    let schemaList = SchemaLists.allBasicRecordTypes;
+    let schemaList = SchemaLists.bcmiRecordTypes;
 
     if (params.activityType) {
       schemaList = params.activityType.split(',');
@@ -29,9 +29,18 @@ export class MinesRecordsListResolver implements Resolve<Observable<object>> {
       subset = params.subset.split(',');
     }
 
-    const and = {};
+    const and = {
+      mineGuid: ''
+    };
     const or = {};
     const nor = {};
+
+    // fetch the mine from the parent resolver so we can get the sourceRefId
+
+    if (route.parent && route.parent.data && route.parent.data.mine) {
+      const mineResult = route.parent.data.mine;
+      and.mineGuid = mineResult[0].data._sourceRefId;
+    }
 
     if (params.dateRangeFromFilter) {
       or['dateRangeFromFilterdateIssued'] = params.dateRangeFromFilter;
