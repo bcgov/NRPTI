@@ -142,31 +142,12 @@ class DataSource {
       for (let z = 0; z < epicRecords.length; z++) {
         const theRecord = epicRecords[z];
 
-        if (moment(theRecord.datePosted).isBefore(moment('2020-04-01').toISOString())) {
-          // Check if it's an Order or an Inspection and not part of LNG Canada or Coastal Gas Link
 
-          // Check if !CGL/LNG
-          if (theRecord.project === ('588511c4aaecd9001b825604' || '588511d0aaecd9001b826192')) {
-            // Skip
-            console.log("Skipping LNG Canada/Coastal Gas Link Record > 2020-04-01", theRecord.displayName)
-            continue;
-          }
+        const rec = await recordTypeUtils.transformRecord(theRecord);
 
-          // Check if Inspection or Order and that it is not a Fee Order.
-          const rec = await recordTypeUtils.transformRecord(theRecord);
-          if ((rec._schemaName === "Order") || (rec._schemaName === "Inspection")) {
-            if (!recordTypeUtils.isRecordFeeOrder(rec)) {
-              processRecords.push(theRecord);
-            }
-          }
-          // Skip everything else
-        } else {
-          const rec = await recordTypeUtils.transformRecord(theRecord);
-
-          // Confirm that record is not a Fee Order.
-          if (!recordTypeUtils.isRecordFeeOrder(rec)) {
-            processRecords.push(theRecord);
-          }
+        // Confirm that record is not a Fee Order.
+        if (!recordTypeUtils.isRecordFeeOrder(rec)) {
+          processRecords.push(theRecord);
         }
       }
 
