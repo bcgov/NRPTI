@@ -16,6 +16,9 @@ import { MinesCollectionsListResolver } from './mines-collections-list-resolver'
 import { MinesCollectionDetailComponent } from './mines-collection-detail/mines-collection-detail.component';
 import { MinesCollectionsAddEditComponent } from './mines-collections-add-edit/mines-collections-add-edit.component';
 import { MinesCollectionResolver } from './mines-collection-resolver';
+import { MinesRecordDetailComponent } from './mines-records-detail/mines-records-detail.component';
+import { MinesRecordResolver } from './mines-record-resolver';
+import { MinesRecordCollectionResolver } from './mines-record-collection-resolver';
 // other
 import { Utils } from 'nrpti-angular-components';
 
@@ -73,14 +76,47 @@ const routes: Routes = [
           },
           {
             path: 'records',
-            component: MinesRecordsListComponent,
-            canActivate: [CanActivateGuard],
             data: {
               breadcrumb: 'Mine Records'
             },
-            resolve: {
-              records: MinesRecordsListResolver
-            }
+            children: [
+              {
+                path: '',
+                data: {
+                  breadcrumb: null
+                },
+                component: MinesRecordsListComponent,
+                canActivate: [CanActivateGuard],
+                resolve: {
+                  records: MinesRecordsListResolver
+                },
+              },
+              {
+                path: ':recordId',
+                data: {
+                  breadcrumb: 'Record Details'
+                },
+                children: [
+                  {
+                    path: '',
+                    redirectTo: 'detail',
+                    pathMatch: 'full'
+                  },
+                  {
+                    path: 'detail',
+                    component: MinesRecordDetailComponent,
+                    canActivate: [CanActivateGuard],
+                    data: {
+                      breadcrumb: null
+                    },
+                    resolve: {
+                      record: MinesRecordResolver,
+                      collections: MinesRecordCollectionResolver,
+                    }
+                  },
+                ]
+              }
+            ]
           },
           {
             path: 'collections',
@@ -163,6 +199,8 @@ const routes: Routes = [
     MinesRecordsListResolver,
     MinesCollectionsListResolver,
     MinesCollectionResolver,
+    MinesRecordResolver,
+    MinesRecordCollectionResolver,
     Utils
   ]
 })
