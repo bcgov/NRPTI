@@ -1,7 +1,7 @@
 import { async, TestBed } from '@angular/core/testing';
 import { MatSlideToggleModule } from '@angular/material';
 import { MinesRecordDetailComponent } from './mines-records-detail.component';
-import { TestBedHelper } from '../../../../../common/src/app/spec/spec-utils'
+import { TestBedHelper } from '../../../../../common/src/app/spec/spec-utils';
 import { RouterTestingModule } from '@angular/router/testing';
 import { GlobalModule } from 'nrpti-angular-components';
 import { DatePipe } from '@angular/common';
