@@ -150,10 +150,12 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
       if (flavourIncomingObj[entry[0]].addRole && flavourIncomingObj[entry[0]].addRole.includes('public')) {
         entry[0].includes('NRCED') && (incomingObj.isNrcedPublished = true);
         entry[0].includes('LNG') && (incomingObj.isLngPublished = true);
+        entry[0].includes('BCMI') && (incomingObj.isBcmiPublished = true);
       }
       if (flavourIncomingObj[entry[0]].removeRole && flavourIncomingObj[entry[0]].removeRole.includes('public')) {
         entry[0].includes('NRCED') && (incomingObj.isNrcedPublished = false);
         entry[0].includes('LNG') && (incomingObj.isLngPublished = false);
+        entry[0].includes('BCMI') && (incomingObj.isBcmiPublished = false);
       }
 
       if (flavourIncomingObj[entry[0]]._id) {
@@ -184,7 +186,14 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
             ...flavourIncomingObj,
             ...incomingObj[entry[0]]
           });
+        } else if (entry[0].includes('BCMI')) {
+          newFlavour = PostFunctions.createBCMI(args, res, next, {
+            ...masterRecord,
+            ...flavourIncomingObj,
+            ...incomingObj[entry[0]]
+          });
         }
+
         if (newFlavour) {
           newFlavour._master = new ObjectId(masterId);
           flavours.push(newFlavour);

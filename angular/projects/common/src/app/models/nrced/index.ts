@@ -6,3 +6,6 @@ export * from './administrative-penalty-nrced';
 export * from './administrative-sanction-nrced';
 export * from './warning-nrced';
 export * from './court-conviction-nrced';
+export * from './dam-safety-inspection-nrced';
+export * from './report-nrced';
+export * from './correspondence-nrced';

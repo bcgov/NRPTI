@@ -91,7 +91,12 @@ describe('RecordsResolver', () => {
             'Warning',
             'ConstructionPlan',
             'ManagementPlan',
-            'CourtConviction'
+            'CourtConviction',
+            'AnnualReport',
+            'CertificateAmendment',
+            'Correspondence',
+            'DamSafetyInspection',
+            'Report'
           ],
           [],
           1,
@@ -162,7 +167,12 @@ describe('RecordsResolver', () => {
             'Warning',
             'ConstructionPlan',
             'ManagementPlan',
-            'CourtConviction'
+            'CourtConviction',
+            'AnnualReport',
+            'CertificateAmendment',
+            'Correspondence',
+            'DamSafetyInspection',
+            'Report'
           ],
           [],
           1,
@@ -233,7 +243,12 @@ describe('RecordsResolver', () => {
             'Warning',
             'ConstructionPlan',
             'ManagementPlan',
-            'CourtConviction'
+            'CourtConviction',
+            'AnnualReport',
+            'CertificateAmendment',
+            'Correspondence',
+            'DamSafetyInspection',
+            'Report'
           ],
           [],
           1,
@@ -304,7 +319,12 @@ describe('RecordsResolver', () => {
             'Warning',
             'ConstructionPlan',
             'ManagementPlan',
-            'CourtConviction'
+            'CourtConviction',
+            'AnnualReport',
+            'CertificateAmendment',
+            'Correspondence',
+            'DamSafetyInspection',
+            'Report'
           ],
           [],
           1,
@@ -375,7 +395,12 @@ describe('RecordsResolver', () => {
             'Warning',
             'ConstructionPlan',
             'ManagementPlan',
-            'CourtConviction'
+            'CourtConviction',
+            'AnnualReport',
+            'CertificateAmendment',
+            'Correspondence',
+            'DamSafetyInspection',
+            'Report'
           ],
           [],
           1,
@@ -446,7 +471,12 @@ describe('RecordsResolver', () => {
             'Warning',
             'ConstructionPlan',
             'ManagementPlan',
-            'CourtConviction'
+            'CourtConviction',
+            'AnnualReport',
+            'CertificateAmendment',
+            'Correspondence',
+            'DamSafetyInspection',
+            'Report'
           ],
           [],
           1,

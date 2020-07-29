@@ -48,12 +48,22 @@ export class SchemaLists {
     'Warning',
     'ConstructionPlan',
     'ManagementPlan',
-    'CourtConviction'
+    'CourtConviction',
+    'AnnualReport',
+    'CertificateAmendment',
+    'Correspondence',
+    'DamSafetyInspection',
+    'Report'
   ];
 
   public static readonly bcmiRecordTypes = SchemaLists.allBasicRecordTypes.concat([
     'PermitBCMI',
-    'PermitAmendmentBCMI'
+    'PermitAmendmentBCMI',
+    'AnnualReportBCMI',
+    'CertificateAmendmentBCMI',
+    'CorrespondenceBCMI',
+    'DamSafetyInspectionBCMI',
+    'ReportBCMI'
   ]);
 
   // set schema filters
@@ -65,7 +75,10 @@ export class SchemaLists {
     'AdministrativeSanctionNRCED',
     'TicketNRCED',
     'WarningNRCED',
-    'CourtConvictionNRCED'
+    'CourtConvictionNRCED',
+    'CorrespondenceNRCED',
+    'DamSafetyInspectionNRCED',
+    'ReportNRCED'
   ];
 }
 
@@ -160,13 +173,18 @@ export class Picklists {
     AdministrativePenalty: { displayName: 'Administrative Penalty', _schemaName: 'AdministrativePenalty' },
     AdministrativeSanction: { displayName: 'Administrative Sanction', _schemaName: 'AdministrativeSanction' },
     Agreement: { displayName: 'Agreement', _schemaName: 'Agreement' },
+    AnnualReport: { displayName: 'Annual Report', _schemaName: 'AnnualReport' },
     Certificate: { displayName: 'Certificate', _schemaName: 'Certificate' },
+    CertificateAmendment: { displayName: 'Certificate Amendment', _schemaName: 'CertificateAmendment' },
     ConstructionPlan: { displayName: 'Construction Plan', _schemaName: 'ConstructionPlan' },
+    Correspondence: { displayName: 'Correspondence', _schemaName: 'Correspondence' },
     CourtConviction: { displayName: 'Court Conviction', _schemaName: 'CourtConviction' },
+    DamSafetyInspection: { displayName: 'Dam Safety Inspection', _schemaName: 'DamSafetyInspection' },
     Inspection: { displayName: 'Inspection', _schemaName: 'Inspection' },
     ManagementPlan: { displayName: 'Management Plan', _schemaName: 'ManagementPlan' },
     Order: { displayName: 'Order', _schemaName: 'Order' },
     Permit: { displayName: 'Permit', _schemaName: 'Permit' },
+    Report: { displayName: 'Report', _schemaName: 'Report' },
     RestorativeJustice: { displayName: 'Restorative Justice', _schemaName: 'RestorativeJustice' },
     SelfReport: { displayName: 'Self Report', _schemaName: 'SelfReport' },
     Ticket: { displayName: 'Ticket', _schemaName: 'Ticket' },
