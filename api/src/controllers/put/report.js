@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 const PutUtils = require('../../utils/put-utils');
-const ReportPost = require('../post/Report');
+const ReportPost = require('../post/report');
 
 /**
  * Performs all operations necessary to edit a master Report record and its associated flavour records.
