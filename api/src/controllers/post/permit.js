@@ -118,6 +118,13 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.permitNumber && (permit.permitNumber = incomingObj.permitNumber);
   incomingObj.status && (permit.status = incomingObj.status);
 
+  incomingObj.permitStatusCode && (permit.permitStatusCode = incomingObj.permitStatusCode);
+  incomingObj.amendmentStatusCode && (permit.amendmentStatusCode = incomingObj.amendmentStatusCode);
+  incomingObj.typeCode && (permit.status = incomingObj.typeCode);
+  ObjectId.isValid(incomingObj.originalPermit) &&
+    incomingObj.originalPermit &&
+    (permit.originalPermit = new ObjectId(incomingObj.originalPermit));
+
   // set meta
   permit.addedBy = args.swagger.params.auth_payload.displayName;
   permit.dateAdded = new Date();
@@ -216,6 +223,12 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.centroid && (permitLNG.centroid = incomingObj.centroid);
   incomingObj.documents && (permitLNG.documents = incomingObj.documents);
 
+  incomingObj.permitStatusCode && (permitLNG.permitStatusCode = incomingObj.permitStatusCode);
+  incomingObj.amendmentStatusCode && (permitLNG.amendmentStatusCode = incomingObj.amendmentStatusCode);
+  incomingObj.typeCode && (permitLNG.status = incomingObj.typeCode);
+  ObjectId.isValid(incomingObj.originalPermit) &&
+    incomingObj.originalPermit &&
+    (permitLNG.originalPermit = new ObjectId(incomingObj.originalPermit));
   // set flavour data
   incomingObj.description && (permitLNG.description = incomingObj.description);
 

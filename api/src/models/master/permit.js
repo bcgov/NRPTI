@@ -35,6 +35,15 @@ module.exports = require('../../utils/model-schema-generator')(
 
     permitNumber: { type: String, default: '' },
     status: { type: String, default: '' },
+    // status code from the root permit doc
+    permitStatusCode: { type: String, default: '' },
+    // status code from the Core amendment doc
+    amendmentStatusCode: { type: String, default: '' },
+    // Amendment doc type code, either OGP (original permit) or AMD (Amendment)
+    // If the Type is AMD, the OGP document ref will be applied to the originalPermit
+    typeCode: { type: String, default: 'OGP' }, // OGP or AMD
+    // Original Permit GUID, only populated for AMD types
+    originalPermit: { type: 'ObjectId', default: null, index: true },
 
     dateAdded: { type: Date, default: Date.now() },
     dateUpdated: { type: Date, default: null },

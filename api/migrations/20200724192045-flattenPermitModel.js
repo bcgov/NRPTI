@@ -2,6 +2,8 @@
 
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+const { permitBCMI: PermitBCMI } = require('../src/models/bcmi/index');
+const { permit: Permit }  = require('../src/models/master/index');
 
 let dbm;
 let type;
@@ -139,7 +141,6 @@ async function createPermits(nrpti, permit, permitFlavour, originalPermitRef, am
 }
 
 async function createPermitFlavour(nrpti, permitFlavour, originalPermitRef, amendment, doc) {
-  let PermitBCMI = require('../src/models/bcmi/index.js').permitBCMI;
   let permitBCMI = new PermitBCMI();
 
   permitBCMI._schemaName = 'PermitBCMI';
@@ -198,7 +199,6 @@ async function createPermitFlavour(nrpti, permitFlavour, originalPermitRef, amen
 }
 
 async function createPermitMaster(nrpti, permit, newFlavour, amendment) {
-  let Permit = require('../src/models/master/index.js').permit;
   let master = new Permit();
 
   master._schemaName = 'Permit';
