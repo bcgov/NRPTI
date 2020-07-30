@@ -76,16 +76,12 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
       this.lastEditedSubText = `Added on ${this.utils.convertJSDateToString(new Date(this.currentRecord.dateAdded))}`;
     }
     for (const flavour of this.currentRecord.flavours) {
-      switch (flavour._schemaName) {
-        case 'AnnualReportBCMI':
-          this.bcmiFlavour = flavour;
-          this.bcmiFlavour.read.includes('public') &&
-            (this.bcmiPublishSubtext = `Published on ${this.utils.convertJSDateToString(
-              new Date(this.bcmiFlavour.datePublished)
-            )}`);
-          break;
-        default:
-          break;
+      if (flavour._schemaName === 'AnnualReportBCMI') {
+        this.bcmiFlavour = flavour;
+        this.bcmiFlavour.read.includes('public') &&
+          (this.bcmiPublishSubtext = `Published on ${this.utils.convertJSDateToString(
+            new Date(this.bcmiFlavour.datePublished)
+          )}`);
       }
     }
   }
@@ -291,9 +287,8 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
 
     if (!this.isEditing) {
       this.factoryService.createAnnualReport(annualReport).subscribe(async res => {
-        console.log(res);
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -301,7 +296,6 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records']);
       });
@@ -319,7 +313,7 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
 
       this.factoryService.editAnnualReport(annualReport).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -327,7 +321,6 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records', 'annual-reports', this.currentRecord._id, 'detail']);
       });

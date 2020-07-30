@@ -342,9 +342,8 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
 
     if (!this.isEditing) {
       this.factoryService.createCertificateAmendment(certificateAmendment).subscribe(async res => {
-        console.log(res);
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -352,7 +351,6 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records']);
       });
@@ -379,7 +377,7 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
 
       this.factoryService.editCertificateAmendment(certificateAmendment).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -387,7 +385,6 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records', 'certificate-amendments', this.currentRecord._id, 'detail']);
       });

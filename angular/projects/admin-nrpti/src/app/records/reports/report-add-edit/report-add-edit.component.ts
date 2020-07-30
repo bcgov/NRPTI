@@ -340,9 +340,8 @@ export class ReportAddEditComponent implements OnInit, OnDestroy {
 
     if (!this.isEditing) {
       this.factoryService.createReport(report).subscribe(async res => {
-        console.log(res);
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -350,7 +349,6 @@ export class ReportAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records']);
       });
@@ -377,7 +375,7 @@ export class ReportAddEditComponent implements OnInit, OnDestroy {
 
       this.factoryService.editReport(report).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -385,7 +383,6 @@ export class ReportAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records', 'reports', this.currentRecord._id, 'detail']);
       });

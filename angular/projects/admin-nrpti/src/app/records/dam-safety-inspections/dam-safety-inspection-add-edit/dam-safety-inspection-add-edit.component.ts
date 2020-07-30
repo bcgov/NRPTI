@@ -340,9 +340,8 @@ export class DamSafetyInspectionAddEditComponent implements OnInit, OnDestroy {
 
     if (!this.isEditing) {
       this.factoryService.createDamSafetyInspection(damSafetyInspection).subscribe(async res => {
-        console.log(res);
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -350,7 +349,6 @@ export class DamSafetyInspectionAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records']);
       });
@@ -377,7 +375,7 @@ export class DamSafetyInspectionAddEditComponent implements OnInit, OnDestroy {
 
       this.factoryService.editDamSafetyInspection(damSafetyInspection).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -385,7 +383,6 @@ export class DamSafetyInspectionAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records', 'dam-safety-inspections', this.currentRecord._id, 'detail']);
       });

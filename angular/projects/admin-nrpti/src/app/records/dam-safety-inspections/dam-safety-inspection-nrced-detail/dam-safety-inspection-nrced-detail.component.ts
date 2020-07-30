@@ -53,7 +53,6 @@ export class DamSafetyInspectionNRCEDDetailComponent extends RecordComponent imp
       .pipe(
         takeUntil(this.ngUnsubscribe),
         catchError(error => {
-          console.log('Publish error:', error);
           alert('Failed to publish dam safety inspection.');
           return of(null);
         })
@@ -81,7 +80,6 @@ export class DamSafetyInspectionNRCEDDetailComponent extends RecordComponent imp
       .pipe(
         takeUntil(this.ngUnsubscribe),
         catchError(error => {
-          console.log('Unpublish error:', error);
           alert('Failed to unpublish record.');
           return of(null);
         })
