@@ -1,12 +1,12 @@
 import { Legislation } from '../master/common-models/legislation';
 
 /**
- * Permit LNG data model.
+ * Permit BCMI data model.
  *
  * @export
- * @class PermitLNG
+ * @class PermitBCMI
  */
-export class PermitLNG {
+export class PermitBCMI {
   _id: string;
   _schemaName: string;
 
@@ -51,7 +51,7 @@ export class PermitLNG {
 
   constructor(obj?: any) {
     this._id = (obj && obj._id) || null;
-    this._schemaName = (obj && obj._schemaName) || 'PermitLNG';
+    this._schemaName = (obj && obj._schemaName) || 'PermitBCMI';
 
     this._epicProjectId = (obj && obj._epicProjectId) || '';
     this._sourceRefId = (obj && obj._sourceRefId) || '';
