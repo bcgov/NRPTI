@@ -29,7 +29,8 @@ const ManagementPlanPost = require('../post/management-plan');
  */
 exports.editRecord = async function (args, res, next, incomingObj, overridePutParams = null) {
   const flavourFunctions = {
-    ManagementPlanLNG: this.editLNG
+    ManagementPlanLNG: this.editLNG,
+    ManagementPlanBCMI: this.editBCMI
   }
   return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, ManagementPlanPost, 'ManagementPlan', flavourFunctions, overridePutParams);
 };
@@ -123,6 +124,63 @@ exports.editLNG = function(args, res, next, incomingObj) {
   let ManagementPlanLNG = mongoose.model('ManagementPlanLNG');
 
   const sanitizedObj = PutUtils.validateObjectAgainstModel(ManagementPlanLNG, incomingObj);
+
+  sanitizedObj.dateUpdated = new Date();
+
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
+
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    updateObj.$addToSet['read'] = 'public';
+    updateObj.$set['datePublished'] = new Date();
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
+    updateObj.$pull['read'] = 'public';
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
+  }
+
+  return updateObj;
+};
+
+
+/**
+ * Performs all operations necessary to edit a BCMI Management Plan record.
+ *
+ * Example of incomingObj
+ *
+ *  managementPlans: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'managementPlan',
+ *      ...
+ *      ManagementPlanLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited bcmi managementPlan record
+ */
+ exports.editBCMI = function(args, res, next, incomingObj) {
+  delete incomingObj._id;
+
+  // Reject any changes to permissions
+  // Publishing must be done via addRole or removeRole
+  delete incomingObj.read;
+  delete incomingObj.write;
+
+  let ManagementPlanBCMI = mongoose.model('ManagementPlanBCMI');
+
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(ManagementPlanBCMI, incomingObj);
 
   sanitizedObj.dateUpdated = new Date();
 
