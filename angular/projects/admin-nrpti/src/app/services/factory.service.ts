@@ -427,7 +427,6 @@ export class FactoryService {
     const outboundObject = {
       certificateAmendments: [certificateAmendment]
     };
-    console.log(outboundObject);
     return this.recordService
       .createRecord(outboundObject)
       .pipe(catchError(error => this.apiService.handleError(error)));
@@ -445,7 +444,6 @@ export class FactoryService {
     const outboundObject = {
       correspondences: [correspondence]
     };
-    console.log(outboundObject);
     return this.recordService
       .createRecord(outboundObject)
       .pipe(catchError(error => this.apiService.handleError(error)));
@@ -463,7 +461,6 @@ export class FactoryService {
     const outboundObject = {
       reports: [report]
     };
-    console.log(outboundObject);
     return this.recordService
       .createRecord(outboundObject)
       .pipe(catchError(error => this.apiService.handleError(error)));
@@ -481,7 +478,6 @@ export class FactoryService {
     const outboundObject = {
       annualReports: [report]
     };
-    console.log(outboundObject);
     return this.recordService
       .createRecord(outboundObject)
       .pipe(catchError(error => this.apiService.handleError(error)));
@@ -499,7 +495,6 @@ export class FactoryService {
     const outboundObject = {
       damSafetyInspections: [damSafetyInspection]
     };
-    console.log(outboundObject);
     return this.recordService
       .createRecord(outboundObject)
       .pipe(catchError(error => this.apiService.handleError(error)));
