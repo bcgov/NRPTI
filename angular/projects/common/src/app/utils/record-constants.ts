@@ -51,6 +51,11 @@ export class SchemaLists {
     'CourtConviction'
   ];
 
+  public static readonly bcmiRecordTypes = SchemaLists.allBasicRecordTypes.concat([
+    'PermitBCMI',
+    'PermitAmendmentBCMI'
+  ]);
+
   // set schema filters
   public static readonly nrcedPublicBasicRecordTypes = [
     'OrderNRCED',

@@ -2,6 +2,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import {Location} from '@angular/common';
 import moment from 'moment';
 import { DialogService } from 'ng2-bootstrap-modal';
 import { LoadingScreenService, Utils, StoreService } from 'nrpti-angular-components';
@@ -44,6 +45,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
   constructor(
     public route: ActivatedRoute,
     public router: Router,
+    private location: Location,
     private recordUtils: RecordUtils,
     private factoryService: FactoryService,
     private loadingScreenService: LoadingScreenService,
@@ -172,7 +174,8 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
           false
       ),
       collectionRecords: new FormArray(
-        (this.collectionState && this.getRecordsFormGroups(this.collectionState.collectionRecords)) ||
+        // If editing and have selected records then combine them with existing collection records.
+        (this.collectionState && this.getRecordsFormGroups(this.getUniqueRecords())) ||
           (this.collection && this.getRecordsFormGroups(this.collection.collectionRecords)) ||
           []
       )
@@ -190,6 +193,26 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
       // Remove used state
       this.storeService.removeItem(StateIDs.collectionAddEdit);
     }
+  }
+
+  /**
+   * If records are arriving form the Records List screen then combine them
+   * with existing collection records, but make sure they are unique.
+   *
+   * @returns {obejct[]} Unique records.
+   */
+  getUniqueRecords() {
+    const records = this.collection && this.collection.collectionRecords || [];
+    const stateRecords = this.collectionState && this.collectionState.collectionRecords || [];
+    const collectionRecords = this.collection && this.collection.collectionRecords || [];
+
+    for (const stateRecord of stateRecords) {
+      if (!collectionRecords.find(collectionRecord => stateRecord._id === collectionRecord._id)) {
+        records.push(stateRecord);
+      }
+    }
+
+    return records;
   }
 
   /**
@@ -413,7 +436,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
       if (this.isEditing) {
         this.router.navigate(['mines', this.collection._master, 'collections', this.collection._id, 'detail']);
       } else {
-        this.router.navigate(['../'], { relativeTo: this.route });
+        this.location.back();
       }
     }
   }

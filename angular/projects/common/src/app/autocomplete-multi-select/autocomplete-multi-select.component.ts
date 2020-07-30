@@ -14,6 +14,7 @@ import {
 import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatAutocompleteTrigger} from '@angular/material';
 
 export interface IMutliSelectOption {
   /**
@@ -62,6 +63,7 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
 
   // reference to the <input> element
   @ViewChild('multiAutocompleteFilter', { read: ElementRef }) multiAutocompleteFilter: ElementRef<HTMLInputElement>;
+  @ViewChild(MatAutocompleteTrigger) trigger;
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
@@ -156,22 +158,26 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
       // But only handle if it isn't selected, otherwise it will be toggled off?
       // ignore the process if the user hits enter without actually typing anything
       if (event.target.value.length > 0) {
-        const topOption = this.getOptionsFromKeywords(event.target.value).find(op => op.display && !op.selected);
+        if (event.target.value !== 'Clear Selected') {
+          const topOption = this.getOptionsFromKeywords(event.target.value).find(op => op.display && !op.selected);
 
-        const option: IMutliSelectOption = {
-          value: topOption.value,
-          displayValue: null,
-          selected: false,
-          display: true
-        };
+          const option: IMutliSelectOption = {
+            value: topOption.value,
+            displayValue: null,
+            selected: false,
+            display: true
+          };
 
-        this.toggleSelection(option);
-
-        // clear the input field, as selected options shouldn't be displayed there
-        this.multiAutocompleteFilter.nativeElement.value = '';
-        // reset the selected options list
-        this.options = this.getOptionsFromKeywords('');
+          this.toggleSelection(option);
+        } else {
+          this.selectNone();
+        }
       }
+
+      // clear the input field, as selected options shouldn't be displayed there
+      this.multiAutocompleteFilter.nativeElement.value = '';
+      // reset the selected options list
+      this.options = this.getOptionsFromKeywords('');
     }
   }
 
@@ -219,11 +225,15 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
       return agency;
     });
 
+    this.options = this.getOptionsFromKeywords('');
     this.setFormControlValue();
-
     this.updatePlaceholderTextValue();
-
     this._changeDetectionRef.detectChanges();
+
+    // Component onFocus can sometimes not trigger the panel
+    // so this should force it open when a user clicks 'clear selected'
+    this.trigger._onChange('');
+    this.trigger.openPanel();
   }
 
   /**
@@ -304,6 +314,9 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
   removeChip(option) {
     option.selected = false;
     this.setFormControlValue();
+    this.multiAutocompleteFilter.nativeElement.value = '';
+    // reset the selected options list
+    this.options = this.getOptionsFromKeywords('');
   }
 
   // for callback pipe filter
