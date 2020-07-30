@@ -13,3 +13,4 @@ exports.warningLNG = require('./warning-lng');
 exports.constructionPlanLNG = require('./constructionPlan-lng');
 exports.managementPlanLNG = require('./managementPlan-lng');
 exports.courtConvictionLNG = require('./courtConviction-lng');
+exports.certificateAmendmentLNG = require('./certificateAmendment-lng');

@@ -79,6 +79,31 @@ import { CourtConvictionResolver } from './court-convictions/court-conviction-re
 import { CourtConvictionDetailComponent } from './court-convictions/court-conviction-detail/court-conviction-detail.component';
 import { CourtConvictionAddEditComponent } from './court-convictions/court-conviction-add-edit/court-conviction-add-edit.component';
 
+// certificate amendments
+import { CertificateAmendmentResolver } from './certificate-amendments/certificate-amendments-resolver';
+import { CertificateAmendmentDetailComponent } from './certificate-amendments/certificate-amendments-detail/certificate-amendments-detail.component';
+import { CertificateAmendmentAddEditComponent } from './certificate-amendments/certificate-amendments-add-edit/certificate-amendments-add-edit.component';
+
+// correspondence
+import { CorrespondenceResolver } from './correspondences/correspondence-resolver';
+import { CorrespondenceAddEditComponent } from './correspondences/correspondence-add-edit/correspondence-add-edit.component';
+import { CorrespondenceDetailComponent } from './correspondences/correspondence-detail/correspondence-detail.component';
+
+// report
+import { ReportResolver } from './reports/report-resolver';
+import { ReportAddEditComponent } from './reports/report-add-edit/report-add-edit.component';
+import { ReportDetailComponent } from './reports/report-detail/report-detail.component';
+
+// dam safety inspection
+import { DamSafetyInspectionAddEditComponent } from './dam-safety-inspections/dam-safety-inspection-add-edit/dam-safety-inspection-add-edit.component';
+import { DamSafetyInspectionDetailComponent } from './dam-safety-inspections/dam-safety-inspection-detail/dam-safety-inspection-detail.component';
+import { DamSafetyInspectionResolver } from './dam-safety-inspections/dam-safety-inspection-resolver';
+
+// annual reports
+import { AnnualReportAddEditComponent } from './annual-reports/annual-report-add-edit/annual-report-add-edit.component';
+import { AnnualReportDetailComponent } from './annual-reports/annual-report-detail/annual-report-detail.component';
+import { AnnualReportResolver } from './annual-reports/annual-report-resolver';
+
 // other
 import { Utils } from 'nrpti-angular-components';
 
@@ -728,6 +753,231 @@ const routes: Routes = [
             }
           }
         ]
+      },
+      // certificate amendments
+      {
+        path: 'certificate-amendments/add',
+        component: CertificateAmendmentAddEditComponent,
+        canActivate: [CanActivateGuard],
+        data: {
+          breadcrumb: 'Add Certificate Amendment'
+        }
+      },
+      {
+        path: 'certificate-amendments/:certificateAmendmentId',
+        data: {
+          breadcrumb: 'Certificate Amendment Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: CertificateAmendmentDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: CertificateAmendmentResolver
+            }
+          },
+          {
+            path: 'edit',
+            component: CertificateAmendmentAddEditComponent,
+            canActivate: [CanActivateGuard],
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+              breadcrumb: 'Edit Certificate Amendment'
+            },
+            resolve: {
+              record: CertificateAmendmentResolver
+            }
+          }
+        ]
+      },
+      // correspondence
+      {
+        path: 'correspondences/add',
+        component: CorrespondenceAddEditComponent,
+        canActivate: [CanActivateGuard],
+        data: {
+          breadcrumb: 'Add Correspondence'
+        }
+      },
+      {
+        path: 'correspondences/:correspondenceId',
+        data: {
+          breadcrumb: 'Correspondence Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: CorrespondenceDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: CorrespondenceResolver
+            }
+          },
+          {
+            path: 'edit',
+            component: CorrespondenceAddEditComponent,
+            canActivate: [CanActivateGuard],
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+              breadcrumb: 'Edit Correspondence'
+            },
+            resolve: {
+              record: CorrespondenceResolver
+            }
+          }
+        ]
+      },
+      // report
+      {
+        path: 'reports/add',
+        component: ReportAddEditComponent,
+        canActivate: [CanActivateGuard],
+        data: {
+          breadcrumb: 'Add Report'
+        }
+      },
+      {
+        path: 'reports/:reportId',
+        data: {
+          breadcrumb: 'Report Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: ReportDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: ReportResolver
+            }
+          },
+          {
+            path: 'edit',
+            component: ReportAddEditComponent,
+            canActivate: [CanActivateGuard],
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+              breadcrumb: 'Edit Report'
+            },
+            resolve: {
+              record: ReportResolver
+            }
+          }
+        ]
+      },
+      // dam safety inspection
+      {
+        path: 'dam-safety-inspections/add',
+        component: DamSafetyInspectionAddEditComponent,
+        canActivate: [CanActivateGuard],
+        data: {
+          breadcrumb: 'Add Dam Safety Inspection'
+        }
+      },
+      {
+        path: 'dam-safety-inspections/:damSafetyInspectionId',
+        data: {
+          breadcrumb: 'Dam Safety Inspection Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: DamSafetyInspectionDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: DamSafetyInspectionResolver
+            }
+          },
+          {
+            path: 'edit',
+            component: DamSafetyInspectionAddEditComponent,
+            canActivate: [CanActivateGuard],
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+              breadcrumb: 'Edit Dam Safety Inspection'
+            },
+            resolve: {
+              record: DamSafetyInspectionResolver
+            }
+          }
+        ]
+      },
+      // annual report
+      {
+        path: 'annual-reports/add',
+        component: AnnualReportAddEditComponent,
+        canActivate: [CanActivateGuard],
+        data: {
+          breadcrumb: 'Add Annual Report'
+        }
+      },
+      {
+        path: 'annual-reports/:annualReportId',
+        data: {
+          breadcrumb: 'Annual Report Details'
+        },
+        children: [
+          {
+            path: '',
+            redirectTo: 'detail',
+            pathMatch: 'full'
+          },
+          {
+            path: 'detail',
+            component: AnnualReportDetailComponent,
+            canActivate: [CanActivateGuard],
+            data: {
+              breadcrumb: null
+            },
+            resolve: {
+              records: AnnualReportResolver
+            }
+          },
+          {
+            path: 'edit',
+            component: AnnualReportAddEditComponent,
+            canActivate: [CanActivateGuard],
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+              breadcrumb: 'Edit Annual Report'
+            },
+            resolve: {
+              record: AnnualReportResolver
+            }
+          }
+        ]
       }
     ]
   }
@@ -752,6 +1002,11 @@ const routes: Routes = [
     ConstructionPlanResolver,
     ManagementPlanResolver,
     CourtConvictionResolver,
+    CertificateAmendmentResolver,
+    CorrespondenceResolver,
+    ReportResolver,
+    DamSafetyInspectionResolver,
+    AnnualReportResolver,
     Utils
   ]
 })

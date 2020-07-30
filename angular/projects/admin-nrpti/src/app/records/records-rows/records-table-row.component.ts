@@ -78,6 +78,21 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
       case 'CourtConviction':
         this.router.navigate(['records', 'court-convictions', this.rowData._id, 'detail']);
         break;
+      case 'CertificateAmendment':
+        this.router.navigate(['records', 'certificate-amendments', this.rowData._id, 'detail']);
+        break;
+      case 'Correspondence':
+        this.router.navigate(['records', 'correspondences', this.rowData._id, 'detail']);
+        break;
+      case 'Report':
+        this.router.navigate(['records', 'reports', this.rowData._id, 'detail']);
+        break;
+      case 'DamSafetyInspection':
+        this.router.navigate(['records', 'dam-safety-inspections', this.rowData._id, 'detail']);
+        break;
+      case 'AnnualReport':
+        this.router.navigate(['records', 'annual-reports', this.rowData._id, 'detail']);
+        break;
       default:
       // TODO
     }
@@ -126,6 +141,21 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
         break;
       case 'CourtConviction':
         this.router.navigate(['records', 'court-convictions', this.rowData._id, 'edit']);
+        break;
+      case 'CertificateAmendment':
+        this.router.navigate(['records', 'certificate-amendments', this.rowData._id, 'edit']);
+        break;
+      case 'Correspondence':
+        this.router.navigate(['records', 'correspondences', this.rowData._id, 'edit']);
+        break;
+      case 'Report':
+        this.router.navigate(['records', 'reports', this.rowData._id, 'edit']);
+        break;
+      case 'DamSafetyInspection':
+        this.router.navigate(['records', 'dam-safety-inspections', this.rowData._id, 'edit']);
+        break;
+      case 'AnnualReport':
+        this.router.navigate(['records', 'annual-reports', this.rowData._id, 'edit']);
         break;
       default:
         break;

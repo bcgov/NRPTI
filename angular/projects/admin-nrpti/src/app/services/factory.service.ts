@@ -172,6 +172,10 @@ export class FactoryService {
     return this.userInRole(ApplicationRoles.ADMIN_LNG);
   }
 
+  userInBcmiRole() {
+    return this.userInRole(ApplicationRoles.ADMIN_BCMI);
+  }
+
   userInNrcedRole() {
     return this.userInRole(ApplicationRoles.ADMIN_NRCED);
   }
@@ -414,6 +418,91 @@ export class FactoryService {
   public editCertificate(certificate: any): Observable<object> {
     const outboundObject = {
       certificates: [certificate]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // certificate amendments
+  public createCertificateAmendment(certificateAmendment: any): Observable<object> {
+    const outboundObject = {
+      certificateAmendments: [certificateAmendment]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editCertificateAmendment(certificateAmendment: any): Observable<object> {
+    const outboundObject = {
+      certificateAmendments: [certificateAmendment]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // correspondence
+  public createCorrespondence(correspondence: any): Observable<object> {
+    const outboundObject = {
+      correspondences: [correspondence]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editCorrespondence(correspondence: any): Observable<object> {
+    const outboundObject = {
+      correspondences: [correspondence]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // Reports
+  public createReport(report: any): Observable<object> {
+    const outboundObject = {
+      reports: [report]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editReport(report: any): Observable<object> {
+    const outboundObject = {
+      reports: [report]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+   // Annual Reports
+   public createAnnualReport(report: any): Observable<object> {
+    const outboundObject = {
+      annualReports: [report]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editAnnualReport(report: any): Observable<object> {
+    const outboundObject = {
+      annualReports: [report]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // Dam Safety Inspections
+  public createDamSafetyInspection(damSafetyInspection: any): Observable<object> {
+    const outboundObject = {
+      damSafetyInspections: [damSafetyInspection]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editDamSafetyInspection(damSafetyInspection: any): Observable<object> {
+    const outboundObject = {
+      damSafetyInspections: [damSafetyInspection]
     };
     return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
