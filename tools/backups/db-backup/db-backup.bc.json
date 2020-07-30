@@ -89,7 +89,7 @@
       "displayName": "Docker File",
       "description": "The path and file of the docker file defining the build.  Choose either 'Dockerfile' for Postgres builds or 'Dockerfile_Mongo' for MongoDB builds or 'Dockerfile_MSSQL' for MSSQL builds.",
       "required": false,
-      "value": "Dockerfile"
+      "value": "Dockerfile_Mongo"
     },
     {
       "name": "OUTPUT_IMAGE_TAG",
