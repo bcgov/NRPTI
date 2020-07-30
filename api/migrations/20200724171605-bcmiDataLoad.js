@@ -95,11 +95,14 @@ async function updateMine(mineData, nrpti) {
     }
 
     console.log("Updating:", mineData.name);
+    const summary = mineData.content.filter(content => {
+      return content.type === 'Intro' && content.page === 'Mines';
+    })[0].html;
 
     return nrpti.update({ _id: new ObjectID(nrptiMines[0]._id) }, {
       $set: {
         type:            mineData.type,
-        summary:         mineData.description, // BCMI doesn't have a "summary" attribute
+        summary:         summary,
         description:     mineData.description,
         links:           externalLinks,
         updatedBy:       'NRPTI BCMI Data Migration',
