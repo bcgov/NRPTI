@@ -12,7 +12,6 @@ exports.permit = require('./permit');
 exports.warning = require('./warning');
 exports.constructionPlan = require('./constructionPlan');
 exports.managementPlan = require('./managementPlan');
-exports.permitAmendment = require('./permitAmendment');
 exports.annualReport = require('./annualReport');
 exports.certificateAmendment = require('./certificateAmendment');
 exports.correspondence = require('./correspondence');

@@ -20,7 +20,6 @@ let AddManagementPlan = require('./post/management-plan');
 let AddCourtConviction = require('./post/court-conviction');
 let AddNewsItem = require('./post/news-item');
 let AddMine = require('./post/mine-bcmi');
-let AddPermitAmendment = require('./post/permit-amendment');
 let AddCollection = require('./post/collection-bcmi');
 let AddAnnualReport = require('./post/annual-report');
 let AddCertificateAmendment = require('./post/certificate-amendment');
@@ -44,7 +43,6 @@ let EditManagementPlan = require('./put/management-plan');
 let EditCourtConviction = require('./put/court-conviction');
 let EditNewsItem = require('./put/news-item');
 let EditMine = require('./put/mine-bcmi');
-let EditPermitAmendment = require('./put/permit-amendment');
 let EditCollection = require('./put/collection-bcmi');
 let EditAnnualReport = require('./put/annual-report');
 let EditCertificateAmendment = require('./put/certificate-amendment');
@@ -183,9 +181,6 @@ exports.protectedPost = async function (args, res, next) {
     if (data.mines) {
       promises.push(processPostRequest(args, res, next, 'mines', data.mines));
     }
-    if (data.permitAmendments) {
-      promises.push(processPostRequest(args, res, next, 'permitAmendments', data.permitAmendments));
-    }
     if (data.collections) {
       promises.push(processPostRequest(args, res, next, 'collections', data.collections));
     }
@@ -288,9 +283,6 @@ exports.protectedPut = async function (args, res, next) {
     }
     if (data.mines) {
       promises.push(processPutRequest(args, res, next, 'mines', data.mines));
-    }
-    if (data.permitAmendments) {
-      promises.push(processPutRequest(args, res, next, 'permitAmendments', data.permitAmendments));
     }
     if (data.collections) {
       promises.push(processPutRequest(args, res, next, 'collections', data.collections));
@@ -537,9 +529,6 @@ const processPostRequest = async function (args, res, next, property, data) {
       case 'mines':
         promises.push(AddMine.createRecord(args, res, next, data[i]));
         break;
-      case 'permitAmendments':
-        promises.push(AddPermitAmendment.createRecord(args, res, next, data[i]));
-        break;
       case 'collections':
         promises.push(AddCollection.createRecord(args, res, next, data[i]));
         break;
@@ -639,9 +628,6 @@ const processPutRequest = async function (args, res, next, property, data, overr
         break;
       case 'mines':
         promises.push(EditMine.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'permitAmendments':
-        promises.push(EditPermitAmendment.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'collections':
         promises.push(EditCollection.editRecord(args, res, next, data[i], overridePutParams));

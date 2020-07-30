@@ -243,7 +243,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
       try {
         mineBCMI = await MineBCMI.findOne(
           {
-            epicProjectIDs: { $in: [new ObjectId(incomingObj._epicProjectId)] },
+            _epicProjectIds: { $in: [new ObjectId(incomingObj._epicProjectId)] },
           }
         );
       } catch (e) {

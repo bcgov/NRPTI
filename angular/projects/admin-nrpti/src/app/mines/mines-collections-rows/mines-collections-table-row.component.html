@@ -17,19 +17,20 @@
   </ng-template>
 </td>
 <td scope="row" class="col-1 d-xl-flex" (click)="$event.stopPropagation()">
-  <button class="btn" type="button" (click)="goToEdit()" title="Edit record">
+  <button class="btn" type="button" [disabled]="isEditingCollection" (click)="goToEdit()" title="Edit record">
     <i class="material-icons">create</i>
   </button>
-  <button mat-icon-button class="btn" [matMenuTriggerFor]="menu" title="More options" aria-label="More options menu">
+  <button mat-icon-button class="btn" [disabled]="isEditingCollection" [matMenuTriggerFor]="menu" title="More options" aria-label="More options menu">
     <i class="material-icons">more_vert</i>
   </button>
   <mat-menu #menu="matMenu">
-    <button mat-menu-item (click)="goToDetails()" title="View collection details">
+    <button mat-menu-item [disabled]="isEditingCollection" (click)="goToDetails()" title="View collection details">
       View Collection Details
     </button>
     <button
       mat-menu-item
       *ngIf="rowData.read && !rowData.read.includes('public')"
+      [disabled]="isEditingCollection"
       (click)="publishCollection()"
       title="Publish collection"
     >
@@ -38,12 +39,13 @@
     <button
       mat-menu-item
       *ngIf="rowData.read && rowData.read.includes('public')"
+      [disabled]="isEditingCollection"
       (click)="unpublishCollection()"
       title="Unpublish collection"
     >
       Unpublish Collection
     </button>
-    <button mat-menu-item (click)="deleteCollection()" title="Delete collection">
+    <button mat-menu-item [disabled]="isEditingCollection" (click)="deleteCollection()" title="Delete collection">
       Delete Collection
     </button>
   </mat-menu>

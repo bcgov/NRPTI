@@ -112,7 +112,7 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
       mineBCMI = await Model.findOne(
         {
           _schemaName: 'MineBCMI',
-          epicProjectIDs: { $in: [new ObjectId(incomingObj._epicProjectId)] },
+          _epicProjectIds: { $in: [new ObjectId(incomingObj._epicProjectId)] },
         }
       );
     } catch (e) {

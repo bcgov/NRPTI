@@ -439,7 +439,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
    * @memberof MinesRecordsListComponent
    */
   updateCollectionAddEditState(rowData: any, checked: boolean) {
-    if (!rowData || !this.collectionState) {
+    if (!rowData) {
       return;
     }
 
@@ -540,11 +540,32 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       }
     });
 
-    if (this.collectionState.collectionId) {
+    if (this.collectionState && this.collectionState.collectionId) {
       this.router.navigate(['mines', this.mine._id, 'collections', this.collectionState.collectionId, 'edit']);
     } else {
       this.router.navigate(['mines', this.mine._id, 'collections', 'add']);
     }
+  }
+
+  /**
+   * Submit adding records to an existing collection.
+   *
+   * @memberof MinesRecordsListComponent
+   */
+  submitAddToExistingCollection() {
+    // Mark collectionAddEdit status as valid
+    this.storeService.setItem({
+      [StateIDs.collectionAddEdit]: {
+        ...this.storeService.getItem(StateIDs.collectionAddEdit),
+        status: StateStatus.valid
+      }
+    });
+
+    this.router.navigate(['mines', this.mine._id, 'collections']);
+  }
+
+  anySelectedRecords() {
+    return this.storeService.getItem(StateIDs.collectionAddEdit) ? true : false;
   }
 
   /**
