@@ -1,0 +1,82 @@
+<main class="container-fluid-padding">
+  <section>
+    <div class="d-flex flex-column flex-sm-row justify-content-sm-between heading-bar">
+      <div>
+        <h1 id="name" class="m-0">{{ (record && record.recordName) || '-' }}</h1>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-3 pb-3 border-bottom">
+    <div class="row">
+      <div class="mb-2 col-12 col-sm-8">
+        <h2 class="border-0 mb-0">Record Information</h2>
+        <span class="grey-subtext">{{ lastEditedSubText }}</span>
+      </div>
+      <div class="col-12 col-sm-4">
+        <div class="d-flex flex-column">
+          <mat-slide-toggle
+            name="publishBcmi"
+            id="publishBcmi"
+            class="publish-toggle"
+            [ngClass]="isPublished ? 'published' : 'unpublished'"
+            [checked]="isPublished"
+            [disabled]="true"
+          >
+            {{ (isPublished && 'Published') || 'Not Published' }}
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mine Information -->
+  <section class="my-3 py-3 border-bottom">
+    <div class="row">
+      <div class="col-sm">
+        <div class="flex-container mb-2">
+          <label for="type" class="med mr-2">Type:</label>
+          <span id="type" name="type">
+            {{ (record && record.recordType) || '-' }}
+          </span>
+        </div>
+      </div>
+      <div class="col-sm">
+        <div class="flex-container mb-2">
+          <label for="agency" class="med mr-2">Agency:</label>
+          <span id="agency" name="agency">
+            {{ (record && record.agency) || '-' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="mb-3 pb-3 border-bottom">
+    <div class="row">
+      <div class="col-12">
+        <span class="header-text">Documents</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <app-document-read-only [documents]="record && record.documents"></app-document-read-only>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <span class="header-text">Collections</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <ul class="doc-list">
+          <li *ngFor="let collection of collections">
+            <span class="cell name">
+              <a [routerLink]="['../../../', 'collections', collection._id]">{{ collection.name || '-' }}</a>
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>

@@ -1,5 +1,6 @@
 let defaultLog = require('winston').loggers.get('default');
 let mongoose = require('mongoose');
+let ObjectID = require('mongodb').ObjectID;
 let QueryActions = require('../utils/query-actions');
 let QueryUtils = require('../utils/query-utils');
 let qs = require('qs');
@@ -42,6 +43,8 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
           return convertValue(element);
         });
         return { [logicalOperator]: [{ [item]: { $in: arrayExp } }] };
+      } else if (!Array.isArray(entry) && comparisonOperator === '$in') {
+        return { [logicalOperator]: [{ [item]: { $in: [ObjectID(entry)] } }] };
       }
 
       if (Array.isArray(entry) && comparisonOperator !== '$in') {
