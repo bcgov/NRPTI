@@ -12,6 +12,7 @@ export class Permit {
   _epicProjectId: string;
   _sourceRefId: string;
   _epicMilestoneId: string;
+  mineGuid: string;
 
   read: string[];
   write: string[];
@@ -31,6 +32,11 @@ export class Permit {
   dateAdded: Date;
   dateUpdated: Date;
 
+  permitStatusCode: string;
+  amendmentStatusCode: string;
+  typeCode: string;
+  originalPermit: string;
+
   sourceDateAdded: Date;
   sourceDateUpdated: Date;
   sourceSystemRef: string;
@@ -44,6 +50,7 @@ export class Permit {
     this._epicProjectId = (obj && obj._epicProjectId) || null;
     this._sourceRefId = (obj && obj._sourceRefId) || null;
     this._epicMilestoneId = (obj && obj._epicMilestoneId) || null;
+    this.mineGuid = (obj && obj.mineGuid) || null;
 
     this.read = (obj && obj.read) || null;
     this.write = (obj && obj.write) || null;
@@ -59,6 +66,11 @@ export class Permit {
     this.location = (obj && obj.location) || null;
     this.centroid = (obj && obj.centroid) || null;
     this.documents = (obj && obj.documents) || null;
+
+    this.permitStatusCode = (obj && obj.permitStatusCode) || null;
+    this.amendmentStatusCode = (obj && obj.amendmentStatusCode) || null;
+    this.typeCode = (obj && obj.typeCode) || null;
+    this.originalPermit = (obj && obj.originalPermit) || null;
 
     this.dateAdded = (obj && obj.dateAdded) || null;
     this.dateUpdated = (obj && obj.dateUpdated) || null;
