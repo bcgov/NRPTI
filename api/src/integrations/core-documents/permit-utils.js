@@ -50,7 +50,7 @@ class Permits extends BaseRecordUtils {
       permitNumber: permit.permitNumber || '',
       permitStatusCode: permit.permitStatusCode || '',
       _sourceDocumentRefId: permit._sourceDocumentRefId || '',
-      recordName: permit.recordName,
+      recordName: permit.recordName || '',
       mineGuid: permit.mineGuid || '',
       documents: permit.documents || [],
       agency: permit.agency || ''

@@ -97,7 +97,7 @@ class CoreDocumentsDataSource {
 
     try {
       if (!permit) {
-        throw new Error('Param permit is required and must have amendmentDocuments.');
+        throw new Error('Param permit is required.');
       }
 
       // Get document and temporarily store it.

@@ -24,14 +24,9 @@ describe('CoreDocumentsDataSource', () => {
   });
 
   describe('processRecord', () => {
-    it('throws error if no amendments', () => {
+    it('throws error if no permit', () => {
       const dataSource = new DataSource();
-      expect(dataSource.processRecord(null, {})).rejects.toThrow('Param amendment is required and must have documents.');
-    });
-
-    it('throws error if amendments is missing documents', () => {
-      const dataSource = new DataSource();
-      expect(dataSource.processRecord({ documents: null }, {})).rejects.toThrow('Param amendment is required and must have documents.');
+      expect(dataSource.processRecord(null, {})).rejects.toThrow('Param permit is required.');
     });
   });
 

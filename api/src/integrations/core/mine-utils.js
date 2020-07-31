@@ -1,10 +1,7 @@
 'use strict';
 
-const ObjectId = require('mongoose').Types.ObjectId;
-
 const BaseRecordUtils = require('./base-record-utils');
 
-const MINE_PARTY_PERMITTEE = 'PMT';
 
 /**
  * CORE Mine record handler.
