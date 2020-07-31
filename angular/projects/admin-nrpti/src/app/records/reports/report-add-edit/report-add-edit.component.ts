@@ -339,7 +339,7 @@ export class ReportAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      report, 'reports', true).subscribe(async res => {
+      this.factoryService.writeRecord(report, 'reports', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         await this.recordUtils.handleDocumentChanges(
           this.links,
@@ -373,7 +373,7 @@ export class ReportAddEditComponent implements OnInit, OnDestroy {
         report['ReportBCMI']['_id'] = this.bcmiFlavour._id;
       }
 
-      report, 'reports', false).subscribe(async res => {
+      this.factoryService.writeRecord(report, 'reports', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         await this.recordUtils.handleDocumentChanges(
           this.links,

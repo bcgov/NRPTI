@@ -1,56 +1,5 @@
 import { Type } from '@angular/core';
-import {
-  Order,
-  OrderNRCED,
-  OrderLNG,
-  Inspection,
-  InspectionNRCED,
-  InspectionLNG,
-  Certificate,
-  CertificateLNG,
-  Permit,
-  PermitLNG,
-  Agreement,
-  AgreementLNG,
-  SelfReport,
-  SelfReportLNG,
-  RestorativeJustice,
-  RestorativeJusticeLNG,
-  RestorativeJusticeNRCED,
-  Ticket,
-  TicketLNG,
-  TicketNRCED,
-  AdministrativePenalty,
-  AdministrativePenaltyLNG,
-  AdministrativePenaltyNRCED,
-  AdministrativeSanction,
-  AdministrativeSanctionLNG,
-  AdministrativeSanctionNRCED,
-  Warning,
-  WarningLNG,
-  WarningNRCED,
-  ConstructionPlan,
-  ConstructionPlanLNG,
-  ManagementPlan,
-  ManagementPlanLNG,
-  CourtConviction,
-  CourtConvictionLNG,
-  CourtConvictionNRCED,
-  CertificateAmendment,
-  CertificateAmendmentLNG,
-  CertificateAmendmentBCMI,
-  Correspondence,
-  CorrespondenceNRCED,
-  CorrespondenceBCMI,
-  Report,
-  ReportNRCED,
-  ReportBCMI,
-  DamSafetyInspection,
-  DamSafetyInspectionBCMI,
-  DamSafetyInspectionNRCED,
-  AnnualReport,
-  AnnualReportBCMI
-} from '../../../../../common/src/app/models';
+import * as models from '../../../../../common/src/app/models';
 
 // orders
 import { OrderNRCEDDetailComponent } from '../orders/order-nrced-detail/order-nrced-detail.component';
@@ -125,6 +74,14 @@ import { AnnualReportBCMIDetailComponent } from '../annual-reports/annual-report
 import { RecordComponent } from './record-component';
 
 export class RecordUtils {
+  static getRecordModelInst(data: any): object {
+    if (!data || !data._schemaName) {
+      return null;
+    }
+
+    return this.getReflectiveInstance(data._schemaName, data);
+  }
+
   /**
    * Given a single record object, find the matching model based on the records _schemaName, and return a new instance.
    * Returns null if no matching model found.
@@ -139,110 +96,13 @@ export class RecordUtils {
       return null;
     }
 
-    switch (data._schemaName) {
-      case 'Order':
-        return new Order(data);
-      case 'OrderLNG':
-        return new OrderLNG(data);
-      case 'OrderNRCED':
-        return new OrderNRCED(data);
-      case 'Inspection':
-        return new Inspection(data);
-      case 'InspectionLNG':
-        return new InspectionLNG(data);
-      case 'InspectionNRCED':
-        return new InspectionNRCED(data);
-      case 'Certificate':
-        return new Certificate(data);
-      case 'CertificateLNG':
-        return new CertificateLNG(data);
-      case 'Permit':
-        return new Permit(data);
-      case 'PermitLNG':
-        return new PermitLNG(data);
-      case 'Agreement':
-        return new Agreement(data);
-      case 'AgreementLNG':
-        return new AgreementLNG(data);
-      case 'SelfReport':
-        return new SelfReport(data);
-      case 'SelfReportLNG':
-        return new SelfReportLNG(data);
-      case 'RestorativeJustice':
-        return new RestorativeJustice(data);
-      case 'RestorativeJusticeLNG':
-        return new RestorativeJusticeLNG(data);
-      case 'RestorativeJusticeNRCED':
-        return new RestorativeJusticeNRCED(data);
-      case 'Ticket':
-        return new Ticket(data);
-      case 'TicketLNG':
-        return new TicketLNG(data);
-      case 'TicketNRCED':
-        return new TicketNRCED(data);
-      case 'AdministrativePenalty':
-        return new AdministrativePenalty(data);
-      case 'AdministrativePenaltyLNG':
-        return new AdministrativePenaltyLNG(data);
-      case 'AdministrativePenaltyNRCED':
-        return new AdministrativePenaltyNRCED(data);
-      case 'AdministrativeSanction':
-        return new AdministrativeSanction(data);
-      case 'AdministrativeSanctionLNG':
-        return new AdministrativeSanctionLNG(data);
-      case 'AdministrativeSanctionNRCED':
-        return new AdministrativeSanctionNRCED(data);
-      case 'Warning':
-        return new Warning(data);
-      case 'WarningLNG':
-        return new WarningLNG(data);
-      case 'WarningNRCED':
-        return new WarningNRCED(data);
-      case 'ConstructionPlan':
-        return new ConstructionPlan(data);
-      case 'ConstructionPlanLNG':
-        return new ConstructionPlanLNG(data);
-      case 'ManagementPlan':
-        return new ManagementPlan(data);
-      case 'ManagementPlanLNG':
-        return new ManagementPlanLNG(data);
-      case 'CourtConviction':
-        return new CourtConviction(data);
-      case 'CourtConvictionLNG':
-        return new CourtConvictionLNG(data);
-      case 'CourtConvictionNRCED':
-        return new CourtConvictionNRCED(data);
-      case 'CertificateAmendment':
-        return new CertificateAmendment(data);
-      case 'CertificateAmendmentLNG':
-        return new CertificateAmendmentLNG(data);
-      case 'CertificateAmendmentBCMI':
-        return new CertificateAmendmentBCMI(data);
-      case 'Correspondence':
-        return new Correspondence(data);
-      case 'CorrespondenceNRCED':
-        return new CorrespondenceNRCED(data);
-      case 'CorrespondenceBCMI':
-        return new CorrespondenceBCMI(data);
-      case 'Report':
-        return new Report(data);
-      case 'ReportNRCED':
-        return new ReportNRCED(data);
-      case 'ReportBCMI':
-        return new ReportBCMI(data);
-      case 'DamSafetyInspection':
-        return new DamSafetyInspection(data);
-      case 'DamSafetyInspectionNRCED':
-        return new DamSafetyInspectionNRCED(data);
-      case 'DamSafetyInspectionBCMI':
-        return new DamSafetyInspectionBCMI(data);
-      case 'AnnualReport':
-        return new AnnualReport(data);
-      case 'AnnualReportBCMI':
-        return new AnnualReportBCMI(data);
-      default:
-        return null;
-    }
+    // We can find and create the model instance via reflection
+    // This only works when our Schema Name is IDENTICAL to the class name
+    // So when creating new models/flavours for records, always ensure the class
+    // name and schema name match, case sensitive.
+    // If you're getting errors here, you've likely named your model class
+    // something different, so make sure you fix the name so it matches your Schema
+    return this.getReflectiveInstance(models, data._schemaName, data);
   }
 
   /**
@@ -258,6 +118,8 @@ export class RecordUtils {
     if (!recordType) {
       return null;
     }
+
+    console.log(this);
 
     switch (recordType) {
       case 'OrderNRCED':
@@ -380,5 +242,16 @@ export class RecordUtils {
         alert('Failed to save one or more flavour records');
       }
     }
+  }
+
+  static getReflectiveInstance(context: any, name: string, ...args: any[]) {
+    const instance = Object.create(context[name].prototype);
+    if (args) {
+      instance.constructor.apply(instance, args);
+    }
+
+    console.log(instance);
+
+    return instance;
   }
 }
