@@ -74,14 +74,6 @@ import { AnnualReportBCMIDetailComponent } from '../annual-reports/annual-report
 import { RecordComponent } from './record-component';
 
 export class RecordUtils {
-  static getRecordModelInst(data: any): object {
-    if (!data || !data._schemaName) {
-      return null;
-    }
-
-    return this.getReflectiveInstance(data._schemaName, data);
-  }
-
   /**
    * Given a single record object, find the matching model based on the records _schemaName, and return a new instance.
    * Returns null if no matching model found.
@@ -119,8 +111,8 @@ export class RecordUtils {
       return null;
     }
 
-    console.log(this);
-
+    // we can't use a reflective visitor with these because
+    // importing from RecordModule would cause circular dependencies.
     switch (recordType) {
       case 'OrderNRCED':
         return OrderNRCEDDetailComponent;
@@ -246,11 +238,10 @@ export class RecordUtils {
 
   static getReflectiveInstance(context: any, name: string, ...args: any[]) {
     const instance = Object.create(context[name].prototype);
+
     if (args) {
       instance.constructor.apply(instance, args);
     }
-
-    console.log(instance);
 
     return instance;
   }
