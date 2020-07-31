@@ -117,48 +117,18 @@ class Mines extends BaseRecordUtils {
   }
 
   /**
-   * Get a party name based on a part code. 
-   * 
-   * @param {string} partyCode Code for the type of party to search for
-   * @param {object} mineRecord Core mine record
-   * @returns {string} Name of party or empty string
-   * @memberof Mines
-   */
-  getParty(partyCode, permit, parties) {
-    if (!partyCode) {
-      throw new Error('getParty - partyCode must not be null.');
-    }
-
-    if (!parties) {
-      throw new Error('getParty - parties must not be null.');
-    }
-
-    if (!permit) {
-      throw new Error('getParty - permit must not be null.');
-    }
-
-    const party = parties.find(party => 
-      party.mine_party_appt_type_code === partyCode && party.related_guid === permit._sourceRefId
-    );
-    
-    return (party && party.party && party.party.name) || '';
-  }
-
-  /**
    * Adds the permit and permittee to a Mine record.
    * 
    * @param {*} mineRecord Transformed Mine record
-   * @param {*} permit Permit to associate with mine
-   * @param {*} parties Parties related to Mine
+   * @param {*} permitInfo Permit number and permittee
    * @returns {Mine} Mine with permit and permittee added
    * @memberof Mines
    */
-  addPermitToRecord(mineRecord, permit, parties) {
+  addPermitToRecord(mineRecord, permitInfo) {
     return {
       ...mineRecord,
-      permitNumber: permit.permitNumber,
-      permit: new ObjectId(permit._id),
-      permittee: this.getParty(MINE_PARTY_PERMITTEE, permit, parties)
+      permitNumber: permitInfo.permitNumber,
+      permittee: permitInfo.permittee
     }
   }
 
