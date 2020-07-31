@@ -10,7 +10,7 @@
       </div>
     </section>
 
-    <section class="mb-3 pb-3 border-bottom">
+    <section class="mb-3 pb-3">
       <div class="d-flex justify-content-between">
         <div class="col-6 col-lg-8 col-xl-9">
           <div>
@@ -20,17 +20,12 @@
             <span class="grey-subtext">{{ lastEditedSubText }}</span>
           </div>
           <div>
-            <mat-slide-toggle
-              name="collectionPublish"
-              id="collectionPublish"
-              class="publish-toggle"
+            <mat-slide-toggle name="collectionPublish" id="collectionPublish" class="publish-toggle"
               [ngClass]="myForm.get('collectionPublish').value ? 'published' : 'unpublished'"
-              formControlName="collectionPublish"
-              (change)="togglePublish($event)"
+              formControlName="collectionPublish" (change)="togglePublish($event)"
               [checked]="myForm.get('collectionPublish').value"
               title="{{ myForm.get('collectionPublish').value ? 'Unpublish collection' : 'Publish collection' }}"
-              ngDefaultControl
-            >
+              ngDefaultControl>
               {{ (myForm.get('collectionPublish').value && 'Published') || 'Unpublished' }}
             </mat-slide-toggle>
           </div>
@@ -38,13 +33,8 @@
         <div class="col-6 col-lg-4 col-xl-3">
           <div class="d-flex justify-content-end mb-1">
             <button type="button" class="btn btn-link" (click)="cancel()" title="Cancel">Cancel</button>
-            <button
-              *ngIf="isEditing"
-              class="btn btn-primary"
-              type="submit"
-              (click)="submit()"
-              title="Update collection"
-            >
+            <button *ngIf="isEditing" class="btn btn-primary" type="submit" (click)="submit()"
+              title="Update collection">
               <i class="material-icons mr-1">
                 save
               </i>
@@ -71,25 +61,14 @@
       <div class="flex-container">
         <div class="label-pair">
           <label for="collectionName">Collection Name</label>
-          <input
-            name="collectionName"
-            id="collectionName"
-            type="text"
-            formControlName="collectionName"
-            class="form-control"
-          />
+          <input name="collectionName" id="collectionName" type="text" formControlName="collectionName"
+            class="form-control" />
         </div>
         <div class="label-pair">
           <label for="collectionDate">Date</label>
           <div class="input-group">
-            <input
-              class="form-control"
-              placeholder="yyyy-mm-dd"
-              name="dp"
-              formControlName="collectionDate"
-              ngbDatepicker
-              #d="ngbDatepicker"
-            />
+            <input class="form-control" placeholder="yyyy-mm-dd" name="dp" formControlName="collectionDate"
+              ngbDatepicker #d="ngbDatepicker" />
             <div class="input-group-append">
               <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
             </div>
@@ -114,32 +93,50 @@
       </div>
     </section>
 
-    <!-- <section class="my-3 py-3 border-bottom"> -->
-    <!-- TODO Manage records -->
-    <!-- </section> -->
-
-    <section>
-      <div class="text-right mb-3">
-        <button
-          class="btn btn-primary"
-          (click)="onAddRecordsToCollection()"
-          title="Select records to add to the collection"
-        >
-          <i class="material-icons mr-1 align-middle">add</i>
-          <span class="align-middle">Select Records To Add</span>
-        </button>
+    <section class="mb-3 pb-3">
+      <div class="d-flex justify-content-between">
+        <div class="col-5 col-lg-6 col-xl-86">
+          <div>
+            <h3 class="border-0 mb-0">Associated Records</h3>
+          </div>
+        </div>
+        <div class="col-7 col-lg-6 col-xl-6">
+          <div class="text-right mb-3">
+            <button class="btn btn-primary" (click)="onAddRecordsToCollection()"
+              title="Select records to add to the collection">
+              <i class="material-icons mr-1 align-middle">add</i>
+              <span class="align-middle">Add Existing Record</span>
+            </button>
+            &nbsp;
+            <button *ngIf="!showRecordForm" class="btn btn-primary" (click)="showRecordForm = !showRecordForm"
+              title="Create and add new record">
+              <i class="material-icons mr-1 align-middle">add</i>
+              <span class="align-middle">Create and Add New Record</span>
+            </button>
+            <button *ngIf="showRecordForm" class="btn btn-secondary" (click)="showRecordForm = !showRecordForm"
+              title="Create and add new record">
+              <i class="material-icons mr-1 align-middle">add</i>
+              <span class="align-middle">Create and Add New Record</span>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="my-3 py-3">
+    <app-mines-collections-record-add
+      *ngIf="mine && showRecordForm"
+      [mine]="mine"
+      [collectionId]="collection._id"
+      (addedRecord)="updateRecordList($event)">
+    </app-mines-collections-record-add>
+
+    <section class=" my-3 py-3">
       <div *ngIf="!myForm.get('collectionRecords').value || !myForm.get('collectionRecords').value.length">
         No records have been added to this collection.
       </div>
 
-      <table
-        class="table"
-        *ngIf="myForm.get('collectionRecords').value && myForm.get('collectionRecords').value.length"
-      >
+      <table class="table"
+        *ngIf="myForm.get('collectionRecords').value && myForm.get('collectionRecords').value.length">
         <thead class="thead-light">
           <tr>
             <th class="col-1"></th>
@@ -182,13 +179,11 @@
                 {{ formGroup.get('record').value.dateIssued | date: 'mediumDate' || '-' }}
               </td>
               <td data-label="Published State" class="col-2">
-                <div
-                  *ngIf="
+                <div *ngIf="
                     formGroup.get('record').value.read && formGroup.get('record').value.read.includes('public');
                     then published;
                     else unpublished
-                  "
-                ></div>
+                  "></div>
                 <ng-template #published>
                   <i class="material-icons published-green align-middle">check_circle</i>
                   <span class="publish-label pl-1 published-green overflow-hidden truncate">Published</span>
@@ -200,36 +195,21 @@
               </td>
               <td class="col-1">
                 <div class="d-xl-flex">
-                  <button
-                    class="btn px-2"
-                    type="button"
-                    (click)="goToEditRecord(formGroup.get('record').value)"
-                    title="Edit record"
-                  >
+                  <button class="btn px-2" type="button" (click)="goToEditRecord(formGroup.get('record').value)"
+                    title="Edit record">
                     <i class="material-icons">create</i>
                   </button>
-                  <button
-                    mat-icon-button
-                    class="btn px-2"
-                    [matMenuTriggerFor]="menu"
-                    title="More options"
-                    aria-label="More options menu"
-                  >
+                  <button mat-icon-button class="btn px-2" [matMenuTriggerFor]="menu" title="More options"
+                    aria-label="More options menu">
                     <i class="material-icons">more_vert</i>
                   </button>
                   <mat-menu #menu="matMenu">
-                    <button
-                      mat-menu-item
-                      (click)="goToRecordDetails(formGroup.get('record').value)"
-                      title="View Record details"
-                    >
+                    <button mat-menu-item (click)="goToRecordDetails(formGroup.get('record').value)"
+                      title="View Record details">
                       View Record Details
                     </button>
-                    <button
-                      mat-menu-item
-                      (click)="removeRecordFromCollection(idx)"
-                      title="Remove record from collection"
-                    >
+                    <button mat-menu-item (click)="removeRecordFromCollection(idx)"
+                      title="Remove record from collection">
                       Remove Record
                     </button>
                   </mat-menu>

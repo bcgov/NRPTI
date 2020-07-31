@@ -2,7 +2,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import {Location} from '@angular/common';
+import { Location } from '@angular/common';
 import moment from 'moment';
 import { DialogService } from 'ng2-bootstrap-modal';
 import { LoadingScreenService, Utils, StoreService } from 'nrpti-angular-components';
@@ -27,11 +27,13 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
   public isEditing = false;
   public isPublished = false;
   public canPublish = false;
+  public showRecordForm = false;
 
   // form
   public myForm: FormGroup;
 
   // data
+  public mine = null;
   public collection = null;
   public lastEditedSubText = null;
 
@@ -41,6 +43,14 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
 
   // collection add edit state
   public collectionState = null;
+
+  public newRecord = {
+    recordName: null,
+    recordAgency: null,
+    dateIssued: null,
+    recordType: null,
+    documents: null
+  };
 
   constructor(
     public route: ActivatedRoute,
@@ -53,7 +63,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private storeService: StoreService,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadingScreenService.setLoadingState(true, 'main');
@@ -62,6 +72,11 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
 
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
       this.isEditing = res.breadcrumb !== 'Add Collection';
+
+      if (res && res.mine && res.mine[0] && res.mine[0].data) {
+        this.mine = res.mine[0].data;
+      }
+
       if (this.isEditing) {
         if (res && res.collection && res.collection[0] && res.collection[0].data) {
           this.collection = res.collection[0].data;
@@ -154,30 +169,30 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
         (this.collectionState &&
           this.collectionState.collectionDate &&
           this.utils.convertJSDateToNGBDate(new Date(this.collectionState.collectionDate.date))) ||
-          (this.collection &&
-            this.collection.date &&
-            this.utils.convertJSDateToNGBDate(new Date(this.collection.date))) ||
-          '' ||
-          null
+        (this.collection &&
+          this.collection.date &&
+          this.utils.convertJSDateToNGBDate(new Date(this.collection.date))) ||
+        '' ||
+        null
       ),
       collectionType: new FormControl(
         (this.collectionState && this.collectionState.collectionType) || (this.collection && this.collection.type) || ''
       ),
       collectionAgency: new FormControl(
         (this.collectionState && this.collectionState.collectionAgency) ||
-          (this.collection && this.collection.agency) ||
-          ''
+        (this.collection && this.collection.agency) ||
+        ''
       ),
       collectionPublish: new FormControl(
         (this.collectionState && this.collectionState.collectionPublish) ||
-          (this.collection && this.collection.read.includes('public')) ||
-          false
+        (this.collection && this.collection.read.includes('public')) ||
+        false
       ),
       collectionRecords: new FormArray(
         // If editing and have selected records then combine them with existing collection records.
         (this.collectionState && this.getRecordsFormGroups(this.getUniqueRecords())) ||
-          (this.collection && this.getRecordsFormGroups(this.collection.collectionRecords)) ||
-          []
+        (this.collection && this.getRecordsFormGroups(this.collection.collectionRecords)) ||
+        []
       )
     });
 
@@ -459,6 +474,15 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    */
   goToEditRecord(record: any) {
     // TODO NRPT-197 - manage records within the context of a mine
+  }
+
+  updateRecordList(recordToAdd) {
+    (this.myForm.get('collectionRecords') as FormArray).push(new FormGroup({
+      record: new FormControl(recordToAdd || null)
+    }));
+
+    this.myForm.get('collectionRecords').markAsDirty();
+    this._changeDetectionRef.detectChanges();
   }
 
   ngOnDestroy(): void {
