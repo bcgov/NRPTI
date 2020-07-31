@@ -286,7 +286,7 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createAnnualReport(annualReport).subscribe(async res => {
+      this.factoryService.writeRecord(annualReport, 'annualReports', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         await this.recordUtils.handleDocumentChanges(
           this.links,
@@ -311,7 +311,7 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
         annualReport['AnnualReportBCMI']['_id'] = this.bcmiFlavour._id;
       }
 
-      this.factoryService.editAnnualReport(annualReport).subscribe(async res => {
+      this.factoryService.writeRecord(annualReport, 'annualReports', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         await this.recordUtils.handleDocumentChanges(
           this.links,

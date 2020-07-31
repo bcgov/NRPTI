@@ -253,7 +253,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createCertificate(certificate).subscribe(async res => {
+      this.factoryService.writeRecord(certificate, 'certificates', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,
@@ -279,7 +279,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         certificate['CertificateLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.editCertificate(certificate).subscribe(async res => {
+      this.factoryService.writeRecord(certificate, 'certificates', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,

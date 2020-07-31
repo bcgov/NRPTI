@@ -409,7 +409,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
     }
 
     if (!this.isEditing) {
-      this.factoryService.createAdministrativeSanction(administrativeSanction).subscribe(async res => {
+      this.factoryService.writeRecord(administrativeSanction, 'administrativeSanctions', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,
@@ -444,7 +444,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
         administrativeSanction['AdministrativeSanctionLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.editAdministrativeSanction(administrativeSanction).subscribe(async res => {
+      this.factoryService.writeRecord(administrativeSanction, 'administrativeSanctions', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,

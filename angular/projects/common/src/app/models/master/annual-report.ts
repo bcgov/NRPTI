@@ -1,5 +1,6 @@
 import { Legislation } from './common-models/legislation';
 import { Entity } from './common-models/entity';
+import { RecordModel } from '../record-model-abstract';
 
 /**
  * Annual Report data model.
@@ -7,69 +8,36 @@ import { Entity } from './common-models/entity';
  * @export
  * @class AnnualReport
  */
-export class AnnualReport {
-  _id: string;
-  _schemaName: string;
-  _sourceRefId: string;
-  read: string[];
-  write: string[];
-  recordName: string;
-  recordType: string;
+export class AnnualReport extends RecordModel {
   issuedTo: Entity;
   dateIssued: Date;
   issuingAgency: string;
   legislation: Legislation;
   legislationDescription: string;
-  projectName: string;
-  location: string;
-  centroid: number[];
   documents: object[];
   description: string;
   dateAdded: Date;
   dateUpdated: Date;
   datePublished: Date;
-  addedBy: string;
-  updatedBy: string;
   publishedBy: string;
-  sourceDateAdded: Date;
-  sourceDateUpdated: Date;
-  sourceSystemRef: string;
   isBcmiPublished: boolean;
 
   constructor(obj?: any) {
-    this._id = (obj && obj._id) || null;
-    this._schemaName = (obj && obj._schemaName) || 'AnnualReport';
+    super(obj);
 
-    this._sourceRefId = (obj && obj._sourceRefId) || '';
-
-    this.read = (obj && obj.read) || null;
-    this.write = (obj && obj.write) || null;
-
-    this.recordName = (obj && obj.recordName) || '';
-    this.recordType = (obj && obj.recordType) || '';
+    this._schemaName = 'AnnualReport';
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || '';
     this.issuedTo = (obj && obj.issuedTo) || '';
     this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
     this.legislationDescription = (obj && obj.legislationDescription) || '';
-    this.projectName = (obj && obj.projectName) || '';
-    this.location = (obj && obj.location) || '';
-    this.centroid = (obj && obj.centroid) || [];
     this.documents = (obj && obj.documents) || [];
 
     this.description = (obj && obj.description) || null;
 
-    this.dateAdded = (obj && obj.dateAdded) || null;
-    this.dateUpdated = (obj && obj.dateUpdated) || null;
     this.datePublished = (obj && obj.datePublished) || null;
-
-    this.addedBy = (obj && obj.addedBy) || '';
-    this.updatedBy = (obj && obj.updatedBy) || '';
     this.publishedBy = (obj && obj.publishedBy) || '';
 
-    this.sourceDateAdded = (obj && obj.sourceDateAdded) || null;
-    this.sourceDateUpdated = (obj && obj.sourceDateUpdated) || null;
-    this.sourceSystemRef = (obj && obj.sourceSystemRef) || '';
     this.isBcmiPublished = (obj && obj.isBcmiPublished) || false;
   }
 }
