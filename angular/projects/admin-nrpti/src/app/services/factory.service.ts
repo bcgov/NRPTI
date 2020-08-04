@@ -350,6 +350,97 @@ export class FactoryService {
     return this.recordService.deleteRecord(collectionId, 'collection');
   }
 
+  /**
+   * Edit a mine record.
+   *
+   * @param {*} record object containing mine record values to update into a record item.
+   * @returns {Observable<object>}
+   * @memberof FactoryService
+   */
+  public editMineRecord(record: any): Observable<object> {
+    let outboundObject = {};
+
+    switch (record.recordType) {
+      case 'Administrative Penalty':
+        outboundObject['administrativePenalties'] = [record];
+        break;
+      case 'Administrative Sanction':
+        outboundObject['administrativeSanctions'] = [record];
+        break;
+      case 'Certificate':
+        outboundObject['certificates'] = [record];
+        break;
+      case 'Certificate Amendment':
+        outboundObject['certificateAmendments'] = [record];
+        break;
+      case 'Compliance Self-report':
+        outboundObject['selfReports'] = [record];
+        break;
+      case 'Construction Plan':
+        outboundObject['constructionPlans'] = [record];
+        break;
+      case 'Inspection':
+        outboundObject['inspections'] = [record];
+        break;
+      case 'Order':
+        outboundObject['orders'] = [record];
+        break;
+      case 'Permit':
+        outboundObject['permits'] = [record];
+        break;
+      case 'Report':
+        outboundObject['reports'] = [record];
+        break;
+      default:
+        outboundObject['records'] = [record];
+        break;
+    }
+
+    console.log(outboundObject);
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // todo determine payload type to set
+  public createMineRecord(record: any) {
+    // parse record.type to detemine create call to use
+    switch (record.recordType) {
+      case 'Administrative Penalty':
+        return this.createAdministrativePenalty(record);
+      case 'Administrative Sanction':
+        return this.createAdministrativeSanction(record);
+      case 'Certificate':
+        return this.createCertificate(record);
+      case 'Certificate Amendment':
+        return this.createCertificateAmendment(record);
+      case 'Compliance Self-report':
+      // todo confirm this is the right report
+        return this.createSelfReport(record);
+      case 'Construction Plan':
+        return this.createConstructionPlan(record);
+      case 'Inspection':
+        return this.createInspection(record);
+      case 'Order':
+        return this.createOrder(record);
+      case 'Permit':
+        return this.createPermit(record);
+      case 'Report':
+        return this.createReport(record);
+    }
+  }
+
+  /**
+   * Delete a mine record.
+   *
+   * @param {string} recordId _id of the record to delete.
+   * @param {string} model schema of record to delete
+   * @returns {Promise<any>}
+   * @memberof FactoryService
+   */
+  // todo verify need model specified
+  public deleteMineRecord(recordId: string, model: string): Promise<any> {
+    return this.recordService.deleteRecord(recordId, model);
+  }
+
   // News
   public createNews(news: any): Observable<object> {
     const outboundObject = {

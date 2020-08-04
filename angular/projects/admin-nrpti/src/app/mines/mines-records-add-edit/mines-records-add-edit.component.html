@@ -1,0 +1,166 @@
+<main class="container-fluid-padding">
+  <form *ngIf="!loading" [formGroup]="myForm" novalidate>
+    <section>
+      <div class="d-flex heading-bar">
+        <div>
+          <h1 id="name" class="m-0">
+            {{ (isEditing && record && record.name) || (!isEditing && myForm.get('recordName').value) }}
+          </h1>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-3 pb-3 border-bottom">
+      <div class="d-flex justify-content-between">
+        <div class="col-6 col-lg-8 col-xl-9">
+          <div>
+            <h2 class="border-0 mb-0">Edit record</h2>
+          </div>
+          <div class="mb-3">
+            <span class="grey-subtext">{{ lastEditedSubText }}</span>
+          </div>
+          <div>
+            <mat-slide-toggle
+              name="recordPublish"
+              id="recordPublish"
+              class="publish-toggle"
+              [ngClass]="myForm.get('recordPublish').value ? 'published' : 'unpublished'"
+              formControlName="recordPublish"
+              (change)="togglePublish($event)"
+              [checked]="myForm.get('recordPublish').value"
+              title="{{ myForm.get('recordPublish').value ? 'Unpublish record' : 'Publish record' }}"
+              ngDefaultControl
+            >
+              {{ (myForm.get('recordPublish').value && 'Published') || 'Unpublished' }}
+            </mat-slide-toggle>
+          </div>
+        </div>
+        <div class="col-6 col-lg-4 col-xl-3">
+          <div class="d-flex justify-content-end mb-1">
+            <button type="button" class="btn btn-link" (click)="cancel()" title="Cancel">Cancel</button>
+            <button
+              *ngIf="isEditing"
+              class="btn btn-primary"
+              type="submit"
+              (click)="submit()"
+              title="Update record"
+            >
+              <i class="material-icons mr-1">
+                save
+              </i>
+              Update
+            </button>
+            <button *ngIf="!isEditing" class="btn btn-primary" type="submit" (click)="submit()" title="Save record">
+              <i class="material-icons mr-1">
+                save
+              </i>
+              Save
+            </button>
+          </div>
+          <div class="d-flex justify-content-end text-right">
+            <span *ngIf="isEditing" class="grey-subtext d-block">
+              Changes made will take effect once you click "Update". If content is published on any site, clicking the
+              Update button will update the public site immediately.
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="my-3 py-3 border-bottom">
+      <div class="flex-container">
+        <div class="label-pair">
+          <label for="recordName">Record Name</label>
+          <input
+            name="recordName"
+            id="recordName"
+            type="text"
+            formControlName="recordName"
+            class="form-control"
+          />
+        </div>
+        <div class="label-pair">
+          <label for="recordDate">Date</label>
+          <div class="input-group">
+            <input
+              class="form-control"
+              placeholder="yyyy-mm-dd"
+              name="dp"
+              formControlName="recordDate"
+              ngbDatepicker
+              #d="ngbDatepicker"
+            />
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+            </div>
+          </div>
+        </div>
+        <div class="label-pair">
+          <label for="recordType">Record Type</label>
+          <select name="recordType" id="recordType" formControlName="recordType" class="form-control">
+            <option *ngFor="let recordType of recordTypeNamesBCMI" [ngValue]="recordType">
+              {{ recordType }}
+            </option>
+          </select>
+        </div>
+        <div class="label-pair">
+          <label for="recordAgency">Agency</label>
+          <select name="recordAgency" id="recordAgency" formControlName="recordAgency" class="form-control">
+            <option *ngFor="let recordAgency of recordAgencies" [ngValue]="recordAgency">
+              {{ recordAgency }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h4>Documents</h4>
+      <app-document-edit
+        [documents]="record ? record.documents : []"
+        (documentsToDelete)="documentsToDelete = $event"></app-document-edit>
+      <app-document-link-staging
+        [maxFiles]=1
+        (linksChanged)="links = $event"
+        (documentsChanged)="documents = $event"></app-document-link-staging>
+    </section>
+  </form>
+
+  <div class="d-flex justify-content-between mt-4 mb-3">
+    <div *ngIf="isEditing" class="col-6 mr-2 col-md-5 mr-md-0 col-lg-4 col-xl-3">
+      <button type="button" class="btn btn-outline-dark mb-1" (click)="deleteRecord()" title="Delete">
+        <i class="material-icons mr-1">
+          delete_forever
+        </i>
+        Delete
+      </button>
+      <span class="grey-subtext d-block">
+        Deleting this record will permanently remove this record from the system. Associated records will NOT be
+        deleted.
+      </span>
+    </div>
+    <div [ngClass]="isEditing ? 'col-6 ml-2 col-md-5 ml-md-0 col-lg-4 col-xl-3' : 'col-12'">
+      <div class="d-flex justify-content-end mb-1">
+        <button type="button" class="btn btn-link" (click)="cancel()" title="Cancel">Cancel</button>
+        <button *ngIf="isEditing" class="btn btn-primary" type="submit" (click)="submit()" title="Update record">
+          <i class="material-icons mr-1">
+            save
+          </i>
+          Update
+        </button>
+        <button *ngIf="!isEditing" class="btn btn-primary" type="submit" (click)="submit()" title="Save record">
+          <i class="material-icons mr-1">
+            save
+          </i>
+          Save
+        </button>
+      </div>
+      <div class="d-flex justify-content-end text-right">
+        <span *ngIf="isEditing" class="grey-subtext d-block">
+          Changes made will take effect once you click "Update". If content is published on any site, clicking the
+          Update button will update the public site immediately.
+        </span>
+      </div>
+    </div>
+  </div>
+</main>

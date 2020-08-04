@@ -80,51 +80,6 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
    * @memberof MinesRecordsTableRowComponent
    */
   goToEdit() {
-    switch (this.rowData._schemaName) {
-      case 'Order':
-        this.router.navigate(['records', 'orders', this.rowData._id, 'edit']);
-        break;
-      case 'Inspection':
-        this.router.navigate(['records', 'inspections', this.rowData._id, 'edit']);
-        break;
-      case 'Certificate':
-        this.router.navigate(['records', 'certificates', this.rowData._id, 'edit']);
-        break;
-      case 'Permit':
-        this.router.navigate(['records', 'permits', this.rowData._id, 'edit']);
-        break;
-      case 'Agreement':
-        this.router.navigate(['records', 'agreements', this.rowData._id, 'edit']);
-        break;
-      case 'SelfReport':
-        this.router.navigate(['records', 'self-reports', this.rowData._id, 'edit']);
-        break;
-      case 'RestorativeJustice':
-        this.router.navigate(['records', 'restorative-justices', this.rowData._id, 'edit']);
-        break;
-      case 'Ticket':
-        this.router.navigate(['records', 'tickets', this.rowData._id, 'edit']);
-        break;
-      case 'AdministrativePenalty':
-        this.router.navigate(['records', 'administrative-penalties', this.rowData._id, 'edit']);
-        break;
-      case 'AdministrativeSanction':
-        this.router.navigate(['records', 'administrative-sanctions', this.rowData._id, 'edit']);
-        break;
-      case 'Warning':
-        this.router.navigate(['records', 'warnings', this.rowData._id, 'edit']);
-        break;
-      case 'ConstructionPlan':
-        this.router.navigate(['records', 'construction-plans', this.rowData._id, 'edit']);
-        break;
-      case 'ManagementPlan':
-        this.router.navigate(['records', 'management-plans', this.rowData._id, 'edit']);
-        break;
-      case 'CourtConviction':
-        this.router.navigate(['records', 'court-convictions', this.rowData._id, 'edit']);
-        break;
-      default:
-        break;
-    }
+    this.router.navigate([this.rowData._id, 'edit'], { relativeTo: this.route });
   }
 }
