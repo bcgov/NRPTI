@@ -358,8 +358,9 @@ export class FactoryService {
    * @memberof FactoryService
    */
   public editMineRecord(record: any): Observable<object> {
-    let outboundObject = {};
+    const outboundObject = {};
 
+    // theres a bunch missing?
     switch (record.recordType) {
       case 'Administrative Penalty':
         outboundObject['administrativePenalties'] = [record];
@@ -544,6 +545,7 @@ export class FactoryService {
     const outboundObject = {
       correspondences: [correspondence]
     };
+    console.log(outboundObject);
     return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
 

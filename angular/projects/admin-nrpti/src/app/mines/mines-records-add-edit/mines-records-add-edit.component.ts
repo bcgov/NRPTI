@@ -32,7 +32,10 @@ export class MinesRecordsAddEditComponent implements OnInit {
 
   // data
   public record = null;
+  public bcmiFlavour = null;
   public lastEditedSubText = null;
+  // source mine
+  public mine = null;
 
   // Documents
   public documents = [];
@@ -49,8 +52,6 @@ export class MinesRecordsAddEditComponent implements OnInit {
 
   // record add edit state
   public recordState = null;
-  // source mine
-  public mine = null;
 
   constructor(
     public route: ActivatedRoute,
@@ -75,9 +76,13 @@ export class MinesRecordsAddEditComponent implements OnInit {
         if (res && res.record && res.record[0] && res.record[0].data
             && res.record[0].data.searchResults && res.record[0].data.searchResults[0]) {
           this.record = res.record[0].data.searchResults[0];
-          console.log(res.mine[0]);
-          console.log(res.mine[0].SearchResults);
+          this.bcmiFlavour = this.record.flavours.find(f => f._schemaName.endsWith('BCMI'));
           this.mine = res.mine[0].data;
+          // if we have a current flavour, use that
+          if (this.bcmiFlavour) {
+            this.record = this.bcmiFlavour;
+          }
+console.log(this.record);
           this.populateTextFields();
         } else {
           alert('Error: could not load record.');
@@ -143,7 +148,8 @@ export class MinesRecordsAddEditComponent implements OnInit {
         (this.recordState &&
           this.recordState.recordDate &&
           this.utils.convertJSDateToNGBDate(new Date(this.recordState.recordDate.date))) ||
-          (this.record && this.record.date && this.utils.convertJSDateToNGBDate(new Date(this.record.date))) ||
+          (this.record && this.record.issueDate &&
+           this.utils.convertJSDateToNGBDate(new Date(this.record.issueDate))) ||
           '' || null
       ),
       recordType: new FormControl(
@@ -239,44 +245,46 @@ export class MinesRecordsAddEditComponent implements OnInit {
 
     this.myForm.get('recordName').dirty && (record['recordName'] = this.myForm.get('recordName').value);
     this.myForm.get('recordDate').dirty &&
-      (record['date'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('recordDate').value));
-    this.myForm.get('recordType').dirty && (record['recordType'] = this.myForm.get('recordType').value);
+      (record['issueDate'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('recordDate').value));
+    record['recordType'] = this.myForm.get('recordType').value;
     this.myForm.get('recordAgency').dirty && (record['issuingAgency'] = this.myForm.get('recordAgency').value);
 
-    if (!this.isEditing) {
-      // lookup appropriate schemaName from from type value
-      const recordSchema = Object.values(Picklists.bcmiRecordTypePicklist).filter(item => {
-        return item.displayName === record['recordType'];
-      });
-      const schemaString = recordSchema[0]._schemaName;
+    // lookup appropriate schemaName from from type value
+    console.log(record['recordType']);
+    const recordSchema = Object.values(Picklists.bcmiRecordTypePicklist).filter(item => {
+      return item.displayName === record['recordType'];
+    });
 
-       // todo flesh out anay additional logic for BCMI flavour
-      // BCMI flavour
-      record[schemaString] = {};
-      record[schemaString]['recordName'] = record['nrecordNameame'];
-      record[schemaString]['issuingAgency'] = record['issuingAgency'];
-      if (this.myForm.get('recordPublish').dirty && this.myForm.get('recordPublish').value) {
-        record[schemaString]['addRole'] = 'public';
-      } else if (this.myForm.get('recordPublish').dirty && !this.myForm.get('recordPublish').value) {
-        record[schemaString]['removeRole'] = 'public';
-      }
+    const schemaString = recordSchema[0]._schemaName;
+
+    // todo flesh out anay additional logic for BCMI flavour
+    // BCMI flavour
+    record[schemaString] = {};
+    record[schemaString]['recordName'] = record['recordName'];
+    record[schemaString]['issuingAgency'] = record['issuingAgency'];
+    if (this.myForm.get('recordPublish').dirty && this.myForm.get('recordPublish').value) {
+      record[schemaString]['addRole'] = 'public';
+    } else if (this.myForm.get('recordPublish').dirty && !this.myForm.get('recordPublish').value) {
+      record[schemaString]['removeRole'] = 'public';
     }
 
     if (this.isEditing) {
-      record['_id'] = this.record._id;
-      record['recordType'] = this.myForm.get('recordAgency').dirty ? this.myForm.get('recordType').value
-                                                                   : this.record.recordType;
-      record['read'] = [
-        'sysadmin',
-        'admin:lng',
-        'admin:nrced',
-        'admin:bcmi'
-    ];
 
-      // publish should create the bcmi flavour
-      if (this.myForm.get('recordPublish').value && !this.record.read.includes('public')) {
-        record['read'].push('public');
+      // if we have a flavour, update the flavour.
+      // if we do not, create a flavour.
+      if (this.bcmiFlavour) {
+        record[schemaString]._id = this.bcmiFlavour._id;
       }
+
+      // we're editing, so remove the changes on record, and only
+      // track the ones on the flavour
+      delete record['recordName'];
+      delete record['issuingAgency'];
+      delete record['issueDate'];
+
+      record['_id'] = this.record._id;
+      record['recordType'] = this.myForm.get('recordType').dirty ? this.myForm.get('recordType').value
+                                                                 : this.record.recordType;
 
       this.factoryService.editMineRecord(record).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
@@ -314,7 +322,7 @@ export class MinesRecordsAddEditComponent implements OnInit {
         this.loadingScreenService.setLoadingState(false, 'main');
         // first record in array is the BCMI flavour record
         if (createdRecord[0]) {
-          this.router.navigate(['mines', createdRecord[0]._id, 'records', createdRecord[0]._id, 'detail']);
+          this.router.navigate(['mines', this.mine._id, 'records', createdRecord[0]._id, 'detail']);
         } else {
           this.router.navigate(['../'], {relativeTo: this.route});
         }
@@ -333,7 +341,7 @@ export class MinesRecordsAddEditComponent implements OnInit {
     );
     if (shouldCancel) {
       if (this.isEditing) {
-        this.router.navigate(['mines', this.record._master, 'records', this.record._id, 'detail']);
+        this.router.navigate(['mines', this.mine._id, 'records', this.record._id, 'detail']);
       } else {
         this.location.back();
       }
