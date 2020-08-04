@@ -14,7 +14,7 @@ export class MinesRecordsListResolver implements Resolve<Observable<object>> {
     // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
     const tableObject = this.tableTemplateUtils.updateTableObjectWithUrlParams(route.params, new TableObject());
 
-    let schemaList = SchemaLists.bcmiRecordTypes;
+    let schemaList = SchemaLists.allBasicRecordTypes;
 
     if (params.activityType) {
       schemaList = params.activityType.split(',');
