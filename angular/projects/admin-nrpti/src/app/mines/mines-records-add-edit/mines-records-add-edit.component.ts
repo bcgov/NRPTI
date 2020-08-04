@@ -82,12 +82,14 @@ export class MinesRecordsAddEditComponent implements OnInit {
           if (this.bcmiFlavour) {
             this.record = this.bcmiFlavour;
           }
-console.log(this.record);
+
           this.populateTextFields();
         } else {
           alert('Error: could not load record.');
           this.router.navigate(['mines']);
         }
+      } else {
+        this.mine = res.mine[0].data;
       }
       this.buildForm();
 
@@ -146,10 +148,10 @@ console.log(this.record);
       ),
       recordDate: new FormControl(
         (this.recordState &&
-          this.recordState.recordDate &&
-          this.utils.convertJSDateToNGBDate(new Date(this.recordState.recordDate.date))) ||
-          (this.record && this.record.issueDate &&
-           this.utils.convertJSDateToNGBDate(new Date(this.record.issueDate))) ||
+          this.recordState.dateIssued &&
+          this.utils.convertJSDateToNGBDate(new Date(this.recordState.dateIssued.date))) ||
+          (this.record && this.record.dateIssued &&
+           this.utils.convertJSDateToNGBDate(new Date(this.record.dateIssued))) ||
           '' || null
       ),
       recordType: new FormControl(
@@ -166,6 +168,10 @@ console.log(this.record);
           (this.record && this.record.read.includes('public')) || false
       )
     });
+
+    if (this.isEditing) {
+      this.myForm.get('recordType').disable();
+    }
 
     if (this.recordState) {
       // State was saved from before, so mark everything dirty so as not to miss any previous user edits
@@ -245,7 +251,7 @@ console.log(this.record);
 
     this.myForm.get('recordName').dirty && (record['recordName'] = this.myForm.get('recordName').value);
     this.myForm.get('recordDate').dirty &&
-      (record['issueDate'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('recordDate').value));
+      (record['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('recordDate').value));
     record['recordType'] = this.myForm.get('recordType').value;
     this.myForm.get('recordAgency').dirty && (record['issuingAgency'] = this.myForm.get('recordAgency').value);
 
@@ -260,8 +266,8 @@ console.log(this.record);
     // todo flesh out anay additional logic for BCMI flavour
     // BCMI flavour
     record[schemaString] = {};
-    record[schemaString]['recordName'] = record['recordName'];
-    record[schemaString]['issuingAgency'] = record['issuingAgency'];
+    record['recordName'] && (record[schemaString]['recordName'] = record['recordName']);
+    record['issuingAgency'] && (record[schemaString]['issuingAgency'] = record['issuingAgency']);
     if (this.myForm.get('recordPublish').dirty && this.myForm.get('recordPublish').value) {
       record[schemaString]['addRole'] = 'public';
     } else if (this.myForm.get('recordPublish').dirty && !this.myForm.get('recordPublish').value) {
@@ -275,12 +281,6 @@ console.log(this.record);
       if (this.bcmiFlavour) {
         record[schemaString]._id = this.bcmiFlavour._id;
       }
-
-      // we're editing, so remove the changes on record, and only
-      // track the ones on the flavour
-      delete record['recordName'];
-      delete record['issuingAgency'];
-      delete record['issueDate'];
 
       record['_id'] = this.record._id;
       record['recordType'] = this.myForm.get('recordType').dirty ? this.myForm.get('recordType').value
@@ -301,8 +301,15 @@ console.log(this.record);
         this.router.navigate(['mines', this.mine._id, 'records', this.record._id, 'detail']);
       });
     } else {
-      record['_master'] = this.route.snapshot.paramMap.get('mineId');
-      record['project'] = this.route.snapshot.paramMap.get('mineId');
+      record['_master'] = this.mine._id;
+      record['project'] = this.mine._id;
+
+      // add in other master attributes
+      record['mineGuid'] = this.mine._sourceRefId;
+      record['issuedTo'] = this.mine.permittee;
+      record['sourceSystemRef'] = 'nrpti';
+      record['centroid'] = this.mine.location ?
+        [this.mine.location.coordinates[1], this.mine.location.coordinates[0]] : [0, 0];
 
       this.factoryService.createMineRecord(record).subscribe(async (res: any) => {
         this.recordUtils.parseResForErrors(res);

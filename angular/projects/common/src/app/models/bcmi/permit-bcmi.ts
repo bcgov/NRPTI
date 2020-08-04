@@ -62,7 +62,7 @@ export class PermitBCMI {
     this.write = (obj && obj.write) || null;
 
     this.recordName = (obj && obj.recordName) || '';
-    this.recordType = (obj && obj.recordType) || '';
+    this.recordType = (obj && obj.recordType) || 'Permit';
     this.recordSubtype = (obj && obj.recordSubtype) || '';
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || '';

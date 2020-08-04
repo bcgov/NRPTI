@@ -89,7 +89,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   // set data
   incomingObj.recordName && (damSafetyInspection.recordName = incomingObj.recordName);
-  damSafetyInspection.recordType = 'DamSafetyInspection';
+  damSafetyInspection.recordType = 'Dam Safety Inspection';
   damSafetyInspection.issuedTo.read = ROLES.ADMIN_ROLES;
   damSafetyInspection.issuedTo.write = ROLES.ADMIN_ROLES;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (damSafetyInspection.issuedTo.type = incomingObj.issuedTo.type);

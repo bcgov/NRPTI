@@ -47,7 +47,7 @@ export class DamSafetyInspectionNRCED {
     this.write = (obj && obj.write) || null;
 
     this.recordName = (obj && obj.recordName) || '';
-    this.recordType = (obj && obj.recordType) || '';
+    this.recordType = (obj && obj.recordType) || 'Dam Safety Inspection';
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || '';
     this.issuedTo = (obj && obj.issuedTo) || '';

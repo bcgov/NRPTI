@@ -4,7 +4,7 @@
       <div class="d-flex heading-bar">
         <div>
           <h1 id="name" class="m-0">
-            {{ (isEditing && record && record.name) || (!isEditing && myForm.get('recordName').value) }}
+            {{ myForm.get('recordName').value }}
           </h1>
         </div>
       </div>

@@ -51,7 +51,7 @@ export class CorrespondenceNRCED {
     this.write = (obj && obj.write) || null;
 
     this.recordName = (obj && obj.recordName) || '';
-    this.recordType = (obj && obj.recordType) || '';
+    this.recordType = (obj && obj.recordType) || 'Correspondence';
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || '';
     this.issuedTo = (obj && obj.issuedTo) || '';

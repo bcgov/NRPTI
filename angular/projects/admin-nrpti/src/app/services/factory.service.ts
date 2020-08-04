@@ -368,6 +368,12 @@ export class FactoryService {
       case 'Administrative Sanction':
         outboundObject['administrativeSanctions'] = [record];
         break;
+      case 'Agreement':
+        outboundObject['aggrements'] = [record];
+        break;
+      case 'Annual Report':
+        outboundObject['annualReports'] = [record];
+        break;
       case 'Certificate':
         outboundObject['certificates'] = [record];
         break;
@@ -380,8 +386,17 @@ export class FactoryService {
       case 'Construction Plan':
         outboundObject['constructionPlans'] = [record];
         break;
+      case 'Correspondence':
+        outboundObject['correspondences'] = [record];
+        break;
+      case 'Dam Safety Inspection':
+        outboundObject['damSafetyInspections'] = [record];
+        break;
       case 'Inspection':
         outboundObject['inspections'] = [record];
+        break;
+      case 'Management Plan':
+        outboundObject['managementPlans'] = [record];
         break;
       case 'Order':
         outboundObject['orders'] = [record];
@@ -391,6 +406,15 @@ export class FactoryService {
         break;
       case 'Report':
         outboundObject['reports'] = [record];
+        break;
+      case 'Restoritive Justice':
+        outboundObject['restorativeJustices'] = [record];
+        break;
+      case 'Ticket':
+        outboundObject['tickets'] = [record];
+        break;
+      case 'Warning':
+        outboundObject['warnings'] = [record];
         break;
       default:
         outboundObject['records'] = [record];
@@ -407,6 +431,10 @@ export class FactoryService {
     switch (record.recordType) {
       case 'Administrative Penalty':
         return this.createAdministrativePenalty(record);
+      case 'Agreement':
+        return this.createAgreement(record);
+      case 'Annual Report':
+        return this.createAnnualReport(record);
       case 'Administrative Sanction':
         return this.createAdministrativeSanction(record);
       case 'Certificate':
@@ -418,14 +446,28 @@ export class FactoryService {
         return this.createSelfReport(record);
       case 'Construction Plan':
         return this.createConstructionPlan(record);
+      case 'Correspondence':
+        return this.createCorrespondence(record);
       case 'Inspection':
         return this.createInspection(record);
+      case 'Management Plan':
+        return this.createManagementPlan(record);
+      case 'Dam Safety Inspection':
+        return this.createDamSafetyInspection(record);
       case 'Order':
         return this.createOrder(record);
       case 'Permit':
         return this.createPermit(record);
       case 'Report':
         return this.createReport(record);
+      case 'Restoritive Justice':
+        return this.createRestorativeJustice(record);
+      case 'Ticket':
+        return this.createTicket(record);
+      case 'Warning':
+        return this.createWarning(record);
+      default:
+        return null;
     }
   }
 
@@ -588,6 +630,8 @@ export class FactoryService {
     const outboundObject = {
       damSafetyInspections: [damSafetyInspection]
     };
+    console.log('Outbound:');
+    console.log(outboundObject);
     return this.recordService
       .createRecord(outboundObject)
       .pipe(catchError(error => this.apiService.handleError(error)));

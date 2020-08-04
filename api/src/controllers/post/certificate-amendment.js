@@ -65,7 +65,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let CertificateAmendment = mongoose.model('CertificateAmendment');
   let certificateAmendment = new CertificateAmendment();
 
-  certificateAmendment._schemaName = 'CertificateAmendment';
+  certificateAmendment._schemaName = 'Certificate Amendment';
 
   // set integration references
   incomingObj._epicProjectId &&

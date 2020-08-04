@@ -88,7 +88,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   // set data
   incomingObj.recordName && (annualReport.recordName = incomingObj.recordName);
-  annualReport.recordType = 'AnnualReport';
+  annualReport.recordType = 'Annual Report';
   annualReport.issuedTo.read = ROLES.ADMIN_ROLES;
   annualReport.issuedTo.write = ROLES.ADMIN_ROLES;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (annualReport.issuedTo.type = incomingObj.issuedTo.type);
