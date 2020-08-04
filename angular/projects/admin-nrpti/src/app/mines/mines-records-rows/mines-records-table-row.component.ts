@@ -25,7 +25,6 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
     this.populateTextFields();
 
     this.changeDetectionRef.detectChanges();
-    console.log(this.rowData);
   }
 
   public isPublished() {
