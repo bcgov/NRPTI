@@ -256,7 +256,6 @@ export class MinesRecordsAddEditComponent implements OnInit {
     this.myForm.get('recordAgency').dirty && (record['issuingAgency'] = this.myForm.get('recordAgency').value);
 
     // lookup appropriate schemaName from from type value
-    console.log(record['recordType']);
     const recordSchema = Object.values(Picklists.bcmiRecordTypePicklist).filter(item => {
       return item.displayName === record['recordType'];
     });
@@ -314,8 +313,6 @@ export class MinesRecordsAddEditComponent implements OnInit {
       this.factoryService.createMineRecord(record).subscribe(async (res: any) => {
         this.recordUtils.parseResForErrors(res);
 
-        console.log('res: ', res);
-        // todo check 400 error, likely local docker minio config
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
@@ -323,7 +320,6 @@ export class MinesRecordsAddEditComponent implements OnInit {
           res[0][0].object[0]._id,
           this.factoryService
         );
-        console.log(docResponse);
 
         const createdRecord = res && res.length && res[0] && res[0].length && res[0][0] && res[0][0].object;
         this.loadingScreenService.setLoadingState(false, 'main');
