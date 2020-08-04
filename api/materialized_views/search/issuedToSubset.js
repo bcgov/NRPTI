@@ -29,7 +29,7 @@ async function update(defaultLog) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const mainCollection = db.collection('nrpti');
 
-  defaultLog.debug('Updating issued_to_subset');
+  defaultLog.info('Updating issued_to_subset');
   aggregate.push({ $out: 'issued_to_subset' });
 
   await mainCollection.aggregate(aggregate).next();

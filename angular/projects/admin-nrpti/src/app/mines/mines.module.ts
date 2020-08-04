@@ -7,6 +7,7 @@ import { NgbModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatSlideToggleModule, MatCheckboxModule } from '@angular/material';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 // local modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -19,9 +20,14 @@ import { MinesTableRowComponent } from './mines-rows/mines-table-row.component';
 import { MinesListComponent } from './mines-list/mines-list.component';
 import { MinesDetailComponent } from './mines-detail/mines-detail.component';
 import { MinesAddEditComponent } from './mines-add-edit/mines-add-edit.component';
-import { MinesContentComponent } from './mines-content/mines-content.component';
 import { MinesRecordsListComponent } from './mines-records-list/mines-records-list.component';
 import { MinesRecordsTableRowComponent } from './mines-records-rows/mines-records-table-row.component';
+import { MinesCollectionsListComponent } from './mines-collections-list/mines-collections-list.component';
+import { MinesCollectionsTableRowComponent } from './mines-collections-rows/mines-collections-table-row.component';
+import { MinesCollectionDetailComponent } from './mines-collection-detail/mines-collection-detail.component';
+import { MinesCollectionRecordTableRowComponent } from './mines-collection-detail/mines-collection-detail-record-row/mines-collection-detail-record-row.component';
+import { MinesCollectionsAddEditComponent } from './mines-collections-add-edit/mines-collections-add-edit.component';
+import { MinesRecordDetailComponent } from './mines-records-detail/mines-records-detail.component';
 
 @NgModule({
   imports: [
@@ -38,19 +44,30 @@ import { MinesRecordsTableRowComponent } from './mines-records-rows/mines-record
     MatTooltipModule,
     NgbDropdownModule,
     MatSlideToggleModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    DragDropModule
   ],
   declarations: [
     MinesListComponent,
     MinesTableRowComponent,
     MinesDetailComponent,
     MinesAddEditComponent,
-    MinesContentComponent,
     MinesRecordsListComponent,
-    MinesRecordsTableRowComponent
+    MinesRecordsTableRowComponent,
+    MinesCollectionsListComponent,
+    MinesCollectionsTableRowComponent,
+    MinesCollectionDetailComponent,
+    MinesCollectionRecordTableRowComponent,
+    MinesCollectionsAddEditComponent,
+    MinesRecordDetailComponent
   ],
   providers: [],
-  entryComponents: [MinesTableRowComponent, MinesRecordsTableRowComponent],
+  entryComponents: [
+    MinesTableRowComponent,
+    MinesRecordsTableRowComponent,
+    MinesCollectionsTableRowComponent,
+    MinesCollectionRecordTableRowComponent
+  ],
   exports: []
 })
 export class MinesModule {}

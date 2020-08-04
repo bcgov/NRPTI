@@ -67,9 +67,6 @@ describe('MineUtils', () => {
         region: 'TE',
         location: { type: 'Point', coordinates: [ 123, 456 ]},
         permittee: '',
-        type: '',
-        summary: '',
-        description: '',
         links: []
       };
 

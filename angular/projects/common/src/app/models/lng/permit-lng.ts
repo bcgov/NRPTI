@@ -13,6 +13,7 @@ export class PermitLNG {
   _epicProjectId: string;
   _sourceRefId: string;
   _epicMilestoneId: string;
+  mineGuid: string;
 
   read: string[];
   write: string[];
@@ -39,6 +40,11 @@ export class PermitLNG {
   updatedBy: string;
   publishedBy: string;
 
+  permitStatusCode: string;
+  amendmentStatusCode: string;
+  typeCode: string;
+  originalPermit: string;
+
   sourceDateAdded: Date;
   sourceDateUpdated: Date;
   sourceSystemRef: string;
@@ -50,6 +56,7 @@ export class PermitLNG {
     this._epicProjectId = (obj && obj._epicProjectId) || '';
     this._sourceRefId = (obj && obj._sourceRefId) || '';
     this._epicMilestoneId = (obj && obj._epicMilestoneId) || '';
+    this.mineGuid = (obj && obj.mineGuid) || null;
 
     this.read = (obj && obj.read) || null;
     this.write = (obj && obj.write) || null;
@@ -71,6 +78,11 @@ export class PermitLNG {
     this.dateAdded = (obj && obj.dateAdded) || null;
     this.dateUpdated = (obj && obj.dateUpdated) || null;
     this.datePublished = (obj && obj.datePublished) || null;
+
+    this.permitStatusCode = (obj && obj.permitStatusCode) || null;
+    this.amendmentStatusCode = (obj && obj.amendmentStatusCode) || null;
+    this.typeCode = (obj && obj.typeCode) || null;
+    this.originalPermit = (obj && obj.originalPermit) || null;
 
     this.addedBy = (obj && obj.addedBy) || '';
     this.updatedBy = (obj && obj.updatedBy) || '';

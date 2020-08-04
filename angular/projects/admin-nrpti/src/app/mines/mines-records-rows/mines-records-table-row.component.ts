@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { FactoryService } from '../../services/factory.service';
 import { TableRowComponent } from 'nrpti-angular-components';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Entity } from '../../../../../common/src/app/models/master/common-models/entity';
 
 @Component({
@@ -13,6 +13,7 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
   public entityString = '';
 
   constructor(
+    public route: ActivatedRoute,
     private router: Router,
     public changeDetectionRef: ChangeDetectorRef,
     public factoryService: FactoryService
@@ -24,6 +25,18 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
     this.populateTextFields();
 
     this.changeDetectionRef.detectChanges();
+  }
+
+  /**
+   * Listen for clicks on the row.
+   *
+   * Note: Other click handlers will need to call `$event.stopPropagation()` to prevent their click events from
+   * bubbling up to this listener.
+   *
+   * @memberof MinesRecordsTableRowComponent
+   */
+  @HostListener('click') onItemClicked() {
+    this.goToDetails();
   }
 
   /**
@@ -58,52 +71,7 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
    * @memberof MinesRecordsTableRowComponent
    */
   goToDetails() {
-    switch (this.rowData._schemaName) {
-      case 'Order':
-        this.router.navigate(['records', 'orders', this.rowData._id, 'detail']);
-        break;
-      case 'Inspection':
-        this.router.navigate(['records', 'inspections', this.rowData._id, 'detail']);
-        break;
-      case 'Certificate':
-        this.router.navigate(['records', 'certificates', this.rowData._id, 'detail']);
-        break;
-      case 'Permit':
-        this.router.navigate(['records', 'permits', this.rowData._id, 'detail']);
-        break;
-      case 'Agreement':
-        this.router.navigate(['records', 'agreements', this.rowData._id, 'detail']);
-        break;
-      case 'SelfReport':
-        this.router.navigate(['records', 'self-reports', this.rowData._id, 'detail']);
-        break;
-      case 'RestorativeJustice':
-        this.router.navigate(['records', 'restorative-justices', this.rowData._id, 'detail']);
-        break;
-      case 'Ticket':
-        this.router.navigate(['records', 'tickets', this.rowData._id, 'detail']);
-        break;
-      case 'AdministrativePenalty':
-        this.router.navigate(['records', 'administrative-penalties', this.rowData._id, 'detail']);
-        break;
-      case 'AdministrativeSanction':
-        this.router.navigate(['records', 'administrative-sanctions', this.rowData._id, 'detail']);
-        break;
-      case 'Warning':
-        this.router.navigate(['records', 'warnings', this.rowData._id, 'detail']);
-        break;
-      case 'ConstructionPlan':
-        this.router.navigate(['records', 'construction-plans', this.rowData._id, 'detail']);
-        break;
-      case 'ManagementPlan':
-        this.router.navigate(['records', 'management-plans', this.rowData._id, 'detail']);
-        break;
-      case 'CourtConviction':
-        this.router.navigate(['records', 'court-convictions', this.rowData._id, 'detail']);
-        break;
-      default:
-        break;
-    }
+    this.router.navigate([this.rowData._id, 'detail'], { relativeTo: this.route });
   }
 
   /**

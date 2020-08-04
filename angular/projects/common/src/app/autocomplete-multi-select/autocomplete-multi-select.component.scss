@@ -1,3 +1,18 @@
 .no-pointer-events {
   pointer-events: none;
 }
+
+.chip-text-style {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-chip-list-wrapper-override {
+  display: block;
+  width: 100%;
+}
+
+.multi-box-width {
+  width: 100% !important;
+}

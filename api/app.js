@@ -1,7 +1,6 @@
 'use strict';
 
 const app = require('express')();
-const cron = require('node-cron');
 const fs = require('fs');
 const swaggerTools = require('swagger-tools');
 const YAML = require('yamljs');
@@ -12,9 +11,6 @@ const swaggerConfig = YAML.load('./src/swagger/swagger.yaml');
 const defaultLog = require('./src/utils/logger')('app');
 const authUtils = require('./src/utils/auth-utils');
 
-const { updateAllMaterializedViews } = require('./materialized_views/updateViews')
-const { createTask } = require('./src/tasks/import-task');
-
 const UPLOAD_DIR = process.env.UPLOAD_DIRECTORY || './uploads/';
 const HOSTNAME = process.env.API_HOSTNAME || 'localhost:3000';
 const DB_CONNECTION =
@@ -24,10 +20,6 @@ const DB_CONNECTION =
   (process.env.MONGODB_DATABASE || 'nrpti-dev');
 const DB_USERNAME = process.env.MONGODB_USERNAME || '';
 const DB_PASSWORD = process.env.MONGODB_PASSWORD || '';
-
-// Cron pattern - seconds[0-59] minutes[0-59] hours[0-23] day_of_month[1-31] months[0-11] day_of_week[0-6]
-const MATERIALIZED_VIEWS_CRON_PATTERN = '*/5 * * * *';
-const IMPORT_CRON_PATTERN = '0 0 * * *';
 
 // Increase post body sizing
 app.use(bodyParser.json({ limit: '10mb', extended: true }));
@@ -85,12 +77,19 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
       if (req.audits) {
         try {
           await Promise.all(req.audits);
-        } catch(err) {
+        } catch (err) {
           defaultLog.error('Failed to run audit calls: ' + err);
         }
       }
     });
     next();
+  });
+
+  // Counterintuitively, we crash because we don't want the pod hanging around.  Let's just spin up
+  // a new pod incase the mongo topology was destroyed, among other things.
+  process.on('unhandledRejection', function(reason) {
+    console.log("Unhandled Rejection:", reason);
+    process.exit(1);
   });
 
   // Ensure uploads directory exists, otherwise create it.
@@ -135,8 +134,6 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
       app.listen(3000, '0.0.0.0', function () {
         defaultLog.info('Started server on port 3000');
       });
-
-      startCron(defaultLog);
     },
     error => {
       defaultLog.info('Mongoose connect error:', error);
@@ -144,15 +141,3 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
     }
   );
 });
-
-async function startCron(defaultLog) {
-  // Scheduling material view updates.
-  defaultLog.info('Starting cron...');
-  cron.schedule(MATERIALIZED_VIEWS_CRON_PATTERN, () => updateAllMaterializedViews(defaultLog));
-  defaultLog.info('Materialized Views scheduled for:', MATERIALIZED_VIEWS_CRON_PATTERN);
-
-  // Scheduling imports
-  cron.schedule(IMPORT_CRON_PATTERN, () => createTask('epic'));
-  cron.schedule(IMPORT_CRON_PATTERN, () => createTask('core'));
-  defaultLog.info('Imports scheduled for:', IMPORT_CRON_PATTERN);
-}

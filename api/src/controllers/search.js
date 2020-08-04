@@ -1,5 +1,6 @@
 let defaultLog = require('winston').loggers.get('default');
 let mongoose = require('mongoose');
+let ObjectID = require('mongodb').ObjectID;
 let QueryActions = require('../utils/query-actions');
 let QueryUtils = require('../utils/query-utils');
 let qs = require('qs');
@@ -21,7 +22,7 @@ function isEmpty(obj) {
  *
  * @param {string} field query string
  * @param {string} [logicalOperator='$or'] mongo logical operator ('$or', '$and')
- * @param {string} [comparisonOperator='$eq'] mongo comparison operator ('$eq', '$ne')
+ * @param {string} [comparisonOperator='$eq'] mongo comparison operator ('$eq', '$ne', '$in')
  * @returns {object[]} array of objects
  */
 let generateExpArray = async function (field, logicalOperator = '$or', comparisonOperator = '$eq') {
@@ -35,9 +36,18 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
   return await Promise.all(
     Object.keys(queryString).map(async item => {
       let entry = queryString[item];
-      defaultLog.info('item:', item, entry);
 
-      if (Array.isArray(entry)) {
+      // If $in on an array, go through all the members of the array and convert their value
+      if (Array.isArray(entry) && comparisonOperator === '$in') {
+        let arrayExp = entry.map(element => {
+          return convertValue(element);
+        });
+        return { [logicalOperator]: [{ [item]: { $in: arrayExp } }] };
+      } else if (!Array.isArray(entry) && comparisonOperator === '$in') {
+        return { [logicalOperator]: [{ [item]: { $in: [ObjectID(entry)] } }] };
+      }
+
+      if (Array.isArray(entry) && comparisonOperator !== '$in') {
         return getArrayExp(item, entry, logicalOperator, comparisonOperator);
       }
 
@@ -46,6 +56,10 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
       }
 
       if (item === 'hasDocuments') {
+        return getHasDocumentsExp(entry);
+      }
+
+      if (item === 'hasRecords') {
         return getHasDocumentsExp(entry);
       }
 
@@ -58,6 +72,11 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
         return { isLngPublished: true }
       } else if (item === 'isLngPublished' && entry === 'false') {
         return { $or: [{ isLngPublished: { $exists: false } }, { isLngPublished: false }] }
+      }
+      if (item === 'isBcmiPublished' && entry === 'true') {
+        return { isBcmiPublished: true }
+      } else if (item === 'isBcmiPublished' && entry === 'false') {
+        return { $or: [{ isBcmiPublished: { $exists: false } }, { isBcmiPublished: false }] }
       }
 
       return getConvertedValue(item, entry, comparisonOperator);
@@ -72,7 +91,7 @@ exports.generateExpArray = generateExpArray;
  * @param {string} item parameter key
  * @param {*[]} entry parameter values array
  * @param {string} logicalOperator mongo logical operator ('$and', '$or', '$nor')
- * @param {*} comparisonOperator mongo comparison operator ('$eq', '$ne')
+ * @param {*} comparisonOperator mongo comparison operator ('$eq', '$ne', '$in')
  * @returns {object}
  */
 const getArrayExp = function (item, entry, logicalOperator, comparisonOperator) {
@@ -123,12 +142,25 @@ const getHasDocumentsExp = function (entry) {
 };
 exports.getHasDocumentsExp = getHasDocumentsExp;
 
+const getHasRecordsExp = function (entry) {
+  // We're checking if there are docs in the record or not.
+  if (entry === 'true') {
+    return { $and: [{ records: { $exists: true } }, { records: { $not: { $size: 0 } } }] };
+  } else if (entry === 'false') {
+    return { $or: [{ records: { $exists: false } }, { records: { $size: 0 } }] };
+  } else {
+    // Invalid
+    return {};
+  }
+};
+exports.getHasRecordsExp = getHasRecordsExp;
+
 /**
  * Generate an expression for a basic parameter key/value
  *
  * @param {string} item parameter key
  * @param {*} entry parameter value
- * @param {string} comparisonOperator mongo comparison operator ('$eq', '$ne')
+ * @param {string} comparisonOperator mongo comparison operator ('$eq', '$ne', '$in')
  * @returns {object}
  */
 const getConvertedValue = function (item, entry, comparisonOperator) {
@@ -136,31 +168,35 @@ const getConvertedValue = function (item, entry, comparisonOperator) {
     return {};
   }
 
-  if (isNaN(entry) || entry === null) {
-    if (mongoose.Types.ObjectId.isValid(entry)) {
-      defaultLog.info('objectid', entry);
+  return { [item]: { [comparisonOperator]: convertValue(entry) } };
+};
+exports.getConvertedValue = getConvertedValue;
+
+const convertValue = function (item) {
+  if (isNaN(item) || item === null) {
+    if (mongoose.Types.ObjectId.isValid(item) && mongoose.Types.ObjectId(item).toString() === item) {
+      defaultLog.info('objectid', item);
       // ObjectID
-      return { [item]: { [comparisonOperator]: mongoose.Types.ObjectId(entry) } };
-    } else if (entry === 'true') {
+      return mongoose.Types.ObjectId(item);
+    } else if (item === 'true') {
       defaultLog.info('bool');
       // Bool
-      return { [item]: { [comparisonOperator]: true } };
-    } else if (entry === 'false') {
+      return true;
+    } else if (item === 'false') {
       defaultLog.info('bool');
       // Bool
-      return { [item]: { [comparisonOperator]: false } };
+      return false;
     } else {
       defaultLog.info('string');
       // String
-      return { [item]: { [comparisonOperator]: entry } };
+      return item;
     }
   } else {
     defaultLog.info('number');
     // Number
-    return { [item]: { [comparisonOperator]: parseInt(entry) } };
+    return parseInt(item);
   }
-};
-exports.getConvertedValue = getConvertedValue;
+}
 
 const handleDateStartItem = function (field, entry) {
   let date = new Date(entry);
@@ -182,7 +218,34 @@ const handleDateEndItem = function (field, entry) {
   }
 };
 
-let searchCollection = async function (
+/**
+ * Adds a new field that holds the count of the specified array field.
+ * If the field is not an array, this pipeline step does nothing.
+ * If the field is an array, the added field will have the name: `count<fieldName>`.
+ *
+ * @param {*} fieldName name of the array field to count.
+ * @returns {object} aggregation pipeline stage
+ */
+const addArrayCountField = function(fieldName) {
+  if(!fieldName) {
+    return {};
+  }
+
+  return {
+    $addFields: {
+      [`count${fieldName}`]: {
+        $cond: {
+          if: { $isArray: `$${fieldName}` },
+          then: { $size: `$${fieldName}` },
+          else: '$$REMOVE'
+        }
+      }
+    }
+  };
+};
+exports.addArrayCountField = addArrayCountField;
+
+let searchCollection = async function(
   roles,
   keywords,
   schemaName,
@@ -196,7 +259,8 @@ let searchCollection = async function (
   and,
   or,
   nor,
-  subset
+  subset,
+  _in
 ) {
   let properties = undefined;
   if (project) {
@@ -208,13 +272,13 @@ let searchCollection = async function (
   if (keywords) {
     // for now, limit fuzzy search to the mine search only. We can expand to all searches
     // later if desired
-    if (schemaName === 'MineBCMI') {
+    if (schemaName.length === 1 && schemaName[0] === 'MineBCMI') {
       keywords = keywords && keywords.length > 1 ? fuzzySearch.createFuzzySearchString(keywords, 4, caseSensitive) : keywords;
     }
     searchProperties = { $text: { $search: keywords, $caseSensitive: caseSensitive } };
   }
 
-  let match = await generateMatchesForAggregation(and, or, nor, searchProperties, properties, schemaName, roles);
+  let match = await generateMatchesForAggregation(and, or, nor, searchProperties, properties, schemaName, _in);
 
   defaultLog.info('match:', match);
 
@@ -242,6 +306,37 @@ let searchCollection = async function (
       $match: match
     }
   ];
+
+  if (schemaName.length === 1 && schemaName[0] === 'CollectionBCMI') {
+    // add a "countrecords" attribute to allow sorting on "# of records" in the collection
+    aggregation.push(addArrayCountField('records'));
+  }
+
+  // add a dynamic "Published" attribute to allow for
+  // sorting by published
+  aggregation.push({
+    $addFields: {
+      published: {
+        $cond: {
+          if: {
+            $and: [
+              { $cond: { if: '$read', then: true, else: false } },
+              {
+                $anyElementTrue: {
+                  $map: {
+                    input: '$read',
+                    as: 'fieldTag',
+                    in: { $setIsSubset: [['$$fieldTag'], ['public']] }
+                  }
+                }
+              }
+            ]
+          },
+          then: 'published',
+          else: 'unpublished' }
+      }
+    }
+  });
 
   let projection = {
     $project: {
@@ -418,7 +513,7 @@ exports.protectedGet = function (args, res, next) {
 };
 
 // Generates the main match query
-const generateMatchesForAggregation = async function (and, or, nor, searchProperties, properties, schemaName, roles) {
+const generateMatchesForAggregation = async function (and, or, nor, searchProperties, properties, schemaName, _in) {
   const andExpArray = (await generateExpArray(and)) || [];
   defaultLog.info('andExpArray:', andExpArray);
 
@@ -427,6 +522,9 @@ const generateMatchesForAggregation = async function (and, or, nor, searchProper
 
   const norExpArray = (await generateExpArray(nor, '$and', '$ne')) || [];
   defaultLog.info('norExpArray:', norExpArray);
+
+  const inExpArray = (await generateExpArray(_in, '$and', '$in')) || [];
+  defaultLog.info('inExpArray:', JSON.stringify(inExpArray));
 
   const expArrays = [];
   if (andExpArray.length === 1) {
@@ -443,6 +541,11 @@ const generateMatchesForAggregation = async function (and, or, nor, searchProper
     expArrays.push(norExpArray[0]);
   } else if (norExpArray.length > 1) {
     expArrays.push({ $and: norExpArray });
+  }
+  if (inExpArray.length === 1) {
+    expArrays.push(inExpArray[0]);
+  } else if (inExpArray.length > 1) {
+    expArrays.push({ $and: inExpArray });
   }
 
   let modifier = {};
@@ -475,6 +578,7 @@ const executeQuery = async function (args, res, next) {
   let and = args.swagger.params.and ? args.swagger.params.and.value : '';
   let or = args.swagger.params.or ? args.swagger.params.or.value : '';
   let nor = args.swagger.params.nor ? args.swagger.params.nor.value : '';
+  let _in = args.swagger.params._in ? args.swagger.params._in.value : '';
   let subset = args.swagger.params.subset ? args.swagger.params.subset.value : null;
   defaultLog.info('Searching keywords:', keywords);
   defaultLog.info('Searching datasets:', dataset);
@@ -486,6 +590,7 @@ const executeQuery = async function (args, res, next) {
   defaultLog.info('and:', and);
   defaultLog.info('or:', or);
   defaultLog.info('nor:', nor);
+  defaultLog.info('_in:', _in);
   defaultLog.info('_id:', _id);
   defaultLog.info('populate:', populate);
   defaultLog.info('subset:', subset);
@@ -537,7 +642,8 @@ const executeQuery = async function (args, res, next) {
       and,
       or,
       nor,
-      subset
+      subset,
+      _in
     );
 
     QueryActions.sendResponse(res, 200, itemData);
@@ -550,6 +656,20 @@ const executeQuery = async function (args, res, next) {
         $match: { _id: mongoose.Types.ObjectId(args.swagger.params._id.value) }
       }
     ];
+
+    // Populate bcmi collection records
+    // Note: $lookup does not preserve order, so projecting looked-up values into a new field (collectionRecords),
+    // which can be sorted based on the original field (records).
+    populate &&
+      args.swagger.params._schemaName.value === 'CollectionBCMI' &&
+      aggregation.push({
+        $lookup: {
+          from: 'nrpti',
+          localField: 'records',
+          foreignField: '_id',
+          as: 'collectionRecords'
+        }
+      });
 
     // populate flavours
     populate &&

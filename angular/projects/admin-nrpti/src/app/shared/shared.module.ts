@@ -7,14 +7,12 @@ import {
   MatSlideToggleModule,
   MatAutocompleteModule,
   MatCheckboxModule,
-  MatSelectModule
+  MatSelectModule,
+  MatMenuModule
 } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GlobalModule } from 'nrpti-angular-components';
 import { CommonModule as NrptiCommonModule } from '../../../../common/src/app/common.module';
-
-// components
-import { ExplorePanelComponent } from '../explore-panel/explore-panel.component';
 
 // pipes
 import { DatePipe } from '@angular/common';
@@ -33,10 +31,11 @@ import { LinkifyPipe } from '../pipes/linkify.pipe';
     MatAutocompleteModule,
     MatCheckboxModule,
     MatSelectModule,
+    MatMenuModule,
     FormsModule,
     ReactiveFormsModule
   ],
-  declarations: [OrderByPipe, NewlinesPipe, ObjectFilterPipe, LinkifyPipe, ExplorePanelComponent],
+  declarations: [OrderByPipe, NewlinesPipe, ObjectFilterPipe, LinkifyPipe],
   providers: [DatePipe],
   exports: [
     MatSlideToggleModule,
@@ -44,10 +43,10 @@ import { LinkifyPipe } from '../pipes/linkify.pipe';
     MatAutocompleteModule,
     MatCheckboxModule,
     MatSelectModule,
+    MatMenuModule,
     OrderByPipe,
     NewlinesPipe,
-    LinkifyPipe,
-    ExplorePanelComponent
+    LinkifyPipe
   ],
   entryComponents: []
 })

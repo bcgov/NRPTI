@@ -14,6 +14,7 @@ import {
 import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatAutocompleteTrigger} from '@angular/material';
 
 export interface IMutliSelectOption {
   /**
@@ -56,22 +57,29 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
   @Input() options: IMutliSelectOption[];
   @Input() reset: EventEmitter<any>;
   @Input() placeholderText = 'Begin typing to filter...';
+  @Input() useChips = false;
 
   @Output() numSelected: EventEmitter<number> = new EventEmitter<number>();
 
   // reference to the <input> element
   @ViewChild('multiAutocompleteFilter', { read: ElementRef }) multiAutocompleteFilter: ElementRef<HTMLInputElement>;
+  @ViewChild(MatAutocompleteTrigger) trigger;
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+
+  public updatedPaceholderText = '';
 
   constructor(public _changeDetectionRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.updatedPaceholderText = this.placeholderText;
     this.initializeFormControlValue();
 
     if (this.reset) {
       this.reset.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => this.resetComponent());
     }
+
+    this.updatePlaceholderTextValue();
 
     this._changeDetectionRef.detectChanges();
   }
@@ -145,17 +153,31 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
 
       // Can't seem to assign the IMultiSelectOption object as the mat-option value, so reconstruct it here to pass on.
       // This is only a problem when selecting an option using the keyboard (enter).
-      const option: IMutliSelectOption = {
-        value: event.target.value,
-        displayValue: null,
-        selected: false,
-        display: true
-      };
+
+      // Select the top option as the closest match
+      // But only handle if it isn't selected, otherwise it will be toggled off?
+      // ignore the process if the user hits enter without actually typing anything
+      if (event.target.value.length > 0) {
+        if (event.target.value !== 'Clear Selected') {
+          const topOption = this.getOptionsFromKeywords(event.target.value).find(op => op.display && !op.selected);
+
+          const option: IMutliSelectOption = {
+            value: topOption.value,
+            displayValue: null,
+            selected: false,
+            display: true
+          };
+
+          this.toggleSelection(option);
+        } else {
+          this.selectNone();
+        }
+      }
 
       // clear the input field, as selected options shouldn't be displayed there
       this.multiAutocompleteFilter.nativeElement.value = '';
-
-      this.toggleSelection(option);
+      // reset the selected options list
+      this.options = this.getOptionsFromKeywords('');
     }
   }
 
@@ -175,9 +197,23 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
 
     this.setFormControlValue();
 
+    this.updatePlaceholderTextValue();
+
     this._changeDetectionRef.detectChanges();
   }
 
+  public updatePlaceholderTextValue() {
+    // update the placeholder text
+    if (!this.useChips && this.options.filter(op => op.selected).length > 0) {
+      this.updatedPaceholderText = '';
+      for (const displayedOption of this.options.filter(op => op.selected)) {
+        this.updatedPaceholderText += displayedOption.displayValue + ', ';
+      }
+      this.updatedPaceholderText = this.updatedPaceholderText.slice(0, -2);
+    } else {
+      this.updatedPaceholderText = this.placeholderText;
+    }
+  }
   /**
    * Un-selects all options.
    *
@@ -189,9 +225,15 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
       return agency;
     });
 
+    this.options = this.getOptionsFromKeywords('');
     this.setFormControlValue();
-
+    this.updatePlaceholderTextValue();
     this._changeDetectionRef.detectChanges();
+
+    // Component onFocus can sometimes not trigger the panel
+    // so this should force it open when a user clicks 'clear selected'
+    this.trigger._onChange('');
+    this.trigger.openPanel();
   }
 
   /**
@@ -267,5 +309,18 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  removeChip(option) {
+    option.selected = false;
+    this.setFormControlValue();
+    this.multiAutocompleteFilter.nativeElement.value = '';
+    // reset the selected options list
+    this.options = this.getOptionsFromKeywords('');
+  }
+
+  // for callback pipe filter
+  filterOptions(option) {
+   return option.selected;
   }
 }

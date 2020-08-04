@@ -161,8 +161,7 @@ export class FactoryService {
         // to handle any case issues with role or the scopes, convert them
         // all to lower case first
         const userRoles = jwt.realm_access.roles.map((userRole: string) => userRole.toLowerCase());
-        return userRoles.includes(ApplicationRoles.ADMIN) ||
-          userRoles.includes(role.toLowerCase());
+        return userRoles.includes(ApplicationRoles.ADMIN) || userRoles.includes(role.toLowerCase());
       }
     }
 
@@ -171,6 +170,10 @@ export class FactoryService {
 
   userInLngRole() {
     return this.userInRole(ApplicationRoles.ADMIN_LNG);
+  }
+
+  userInBcmiRole() {
+    return this.userInRole(ApplicationRoles.ADMIN_BCMI);
   }
 
   userInNrcedRole() {
@@ -205,21 +208,19 @@ export class FactoryService {
    *
    * @param {string} recordId record id.
    * @param {string} schema model schema name for this record type.
+   * @param {boolean} [populate=false] populate child records
    * @returns {Observable<SearchResults[]>} An observable that emits the matching record or null if none found.
    * @memberof FactoryService
    */
-  public getRecord(recordId: string, schema: string): Observable<SearchResults[]> {
+  public getRecord(recordId: string, schema: string, populate: boolean = false): Observable<SearchResults[]> {
     if (!recordId || !schema) {
       return of([] as SearchResults[]);
     }
-    return this.searchService.getItem(this.apiService.pathAPI, recordId, schema);
+    return this.searchService.getItem(this.apiService.pathAPI, recordId, schema, populate);
   }
 
   public getRecordWithFlavours(recordId: string, schema: string): Observable<SearchResults[]> {
-    if (!recordId || !schema) {
-      return of([] as SearchResults[]);
-    }
-    return this.searchService.getItem(this.apiService.pathAPI, recordId, schema, true);
+    return this.getRecord(recordId, schema, true);
   }
 
   /**
@@ -236,6 +237,7 @@ export class FactoryService {
    * @param {object} [or={}]
    * @param {object} [subset=[]]
    * @param {object} [nor={}]
+   * @param {object} [in={}]
    * @returns {Observable<any[]>}
    * @memberof FactoryService
    */
@@ -250,7 +252,8 @@ export class FactoryService {
     populate: boolean = false,
     or: object = {},
     subset: string[] = [],
-    nor: object = {}
+    nor: object = {},
+    _in: object = {}
   ): Observable<any[]> {
     return this.searchService.getSearchResults(
       this.getApiPath(),
@@ -264,13 +267,10 @@ export class FactoryService {
       populate,
       or,
       subset,
-      nor
+      nor,
+      _in
     );
   }
-
-  // public getFullList(schema: string): Observable<Record[]> {
-  //   return this.searchService.getFullList(schema);
-  // }
 
   /**
    * Get the current environment.
@@ -325,6 +325,31 @@ export class FactoryService {
     return this.recordService.unPublishRecord(record).pipe(catchError(error => this.apiService.handleError(error)));
   }
 
+  /**
+   * Edit a mine record.
+   *
+   * @param {*} mine object containing mine values to update into mine record.
+   * @returns {Observable<object>}
+   * @memberof FactoryService
+   */
+  public editMine(mine: any): Observable<object> {
+    const outboundObject = {
+      mines: [mine]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  /**
+   * Delete a mine collection.
+   *
+   * @param {string} collectionId _id of the collection to delete.
+   * @returns {Promise<any>}
+   * @memberof FactoryService
+   */
+  public deleteCollection(collectionId: string): Promise<any> {
+    return this.recordService.deleteRecord(collectionId, 'collection');
+  }
+
   // News
   public createNews(news: any): Observable<object> {
     const outboundObject = {
@@ -333,17 +358,6 @@ export class FactoryService {
     return this.recordService
       .createRecord(outboundObject)
       .pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public editMine(mine: any): Observable<object> {
-    const outboundObject = {
-      mines: [mine]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public deleteMineItem(recordId: string, model: string): Promise<any> {
-    return this.recordService.deleteRecord(recordId, model);
   }
 
   public editNews(news: any): Observable<object> {
@@ -404,6 +418,91 @@ export class FactoryService {
   public editCertificate(certificate: any): Observable<object> {
     const outboundObject = {
       certificates: [certificate]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // certificate amendments
+  public createCertificateAmendment(certificateAmendment: any): Observable<object> {
+    const outboundObject = {
+      certificateAmendments: [certificateAmendment]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editCertificateAmendment(certificateAmendment: any): Observable<object> {
+    const outboundObject = {
+      certificateAmendments: [certificateAmendment]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // correspondence
+  public createCorrespondence(correspondence: any): Observable<object> {
+    const outboundObject = {
+      correspondences: [correspondence]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editCorrespondence(correspondence: any): Observable<object> {
+    const outboundObject = {
+      correspondences: [correspondence]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // Reports
+  public createReport(report: any): Observable<object> {
+    const outboundObject = {
+      reports: [report]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editReport(report: any): Observable<object> {
+    const outboundObject = {
+      reports: [report]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+   // Annual Reports
+   public createAnnualReport(report: any): Observable<object> {
+    const outboundObject = {
+      annualReports: [report]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editAnnualReport(report: any): Observable<object> {
+    const outboundObject = {
+      annualReports: [report]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // Dam Safety Inspections
+  public createDamSafetyInspection(damSafetyInspection: any): Observable<object> {
+    const outboundObject = {
+      damSafetyInspections: [damSafetyInspection]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editDamSafetyInspection(damSafetyInspection: any): Observable<object> {
+    const outboundObject = {
+      damSafetyInspections: [damSafetyInspection]
     };
     return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
@@ -606,5 +705,22 @@ export class FactoryService {
 
   public getS3SignedUrl(docId: string): Observable<any> {
     return this.documentService.getS3SignedUrl(docId);
+  }
+
+  // Collections
+  public createCollection(collection: any): Observable<object> {
+    const outboundObject = {
+      collections: [collection]
+    };
+    return this.recordService
+      .createRecord(outboundObject)
+      .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public editCollection(collection: any): Observable<object> {
+    const outboundObject = {
+      collections: [collection]
+    };
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
 }

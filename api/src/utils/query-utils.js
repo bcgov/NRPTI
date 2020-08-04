@@ -25,33 +25,6 @@ exports.getSanitizedFields = function(allowedFields, fields) {
 /**
  * TODO: populate this documentation
  *
- * @param {*} property
- * @param {*} values
- * @param {*} query
- * @returns
- */
-exports.buildQuery = function(property, values, query) {
-  let objectIDs = [];
-  if (Array.isArray(values)) {
-    for (let id in values) {
-      objectIDs.push(mongoose.Types.ObjectId(id));
-    }
-  } else {
-    objectIDs.push(mongoose.Types.ObjectId(values));
-  }
-  return {
-    ...query,
-    ...{
-      [property]: {
-        $in: objectIDs
-      }
-    }
-  };
-};
-
-/**
- * TODO: populate this documentation
- *
  * @param {*} pageSize
  * @param {*} pageNum
  * @returns
@@ -126,5 +99,19 @@ exports.recordTypes = [
   'ConstructionPlan',
   'ManagementPlan',
   'CourtConviction',
-  'MineBCMI'
+  'MineBCMI',
+  'AnnualReport',
+  'AnnualReportBCMI',
+  'CertificateAmendment',
+  'CertificateAmendmentLNG',
+  'CertificateAmendmentBCMI',
+  'DamSafetyInspection',
+  'DamSafetyInspectionBCMI',
+  'DamSafetyInspectionNRCED',
+  'Correspondence',
+  'CorrespondenceBCMI',
+  'CorrespondenceNRCED',
+  'Report',
+  'ReportBCMI',
+  'ReportNRCED'
 ];

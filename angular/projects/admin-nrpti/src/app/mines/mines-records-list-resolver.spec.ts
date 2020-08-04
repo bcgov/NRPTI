@@ -11,14 +11,14 @@ describe('MinesRecordsListResolver', () => {
     'updateTableObjectWithUrlParams'
   ]);
 
-  beforeEach(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       providers: [
         { provide: FactoryService, useValue: spyFactoryService },
         { provide: TableTemplateUtils, useValue: spyTableTemplateUtils }
       ]
     }).compileComponents();
-  });
+  }));
 
   it('should create', async(() => {
     const factoryService = TestBed.get(FactoryService);
@@ -89,13 +89,27 @@ describe('MinesRecordsListResolver', () => {
             'Warning',
             'ConstructionPlan',
             'ManagementPlan',
-            'CourtConviction'
+            'CourtConviction',
+            'AnnualReport',
+            'CertificateAmendment',
+            'Correspondence',
+            'DamSafetyInspection',
+            'Report',
+            'PermitBCMI',
+            'PermitAmendmentBCMI',
+            'AnnualReportBCMI',
+            'CertificateAmendmentBCMI',
+            'CorrespondenceBCMI',
+            'DamSafetyInspectionBCMI',
+            'ReportBCMI'
           ],
           [],
           1,
           25,
           '-dateAdded',
-          {},
+          {
+            mineGuid: ''
+          },
           false,
           {},
           [],
@@ -160,13 +174,27 @@ describe('MinesRecordsListResolver', () => {
             'Warning',
             'ConstructionPlan',
             'ManagementPlan',
-            'CourtConviction'
+            'CourtConviction',
+            'AnnualReport',
+            'CertificateAmendment',
+            'Correspondence',
+            'DamSafetyInspection',
+            'Report',
+            'PermitBCMI',
+            'PermitAmendmentBCMI',
+            'AnnualReportBCMI',
+            'CertificateAmendmentBCMI',
+            'CorrespondenceBCMI',
+            'DamSafetyInspectionBCMI',
+            'ReportBCMI'
           ],
           [],
           1,
           25,
           '-dateAdded',
-          {},
+          {
+            mineGuid: ''
+          },
           false,
           {},
           [],

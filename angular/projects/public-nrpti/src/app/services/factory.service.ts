@@ -111,7 +111,8 @@ export class FactoryService {
     populate: boolean = false,
     or: object = {},
     subset: string[] = [],
-    nor: object = {}
+    nor: object = {},
+    _in: object = {}
   ): Observable<any[]> {
     return this.searchService.getSearchResults(
       this.getApiPath(),
@@ -125,7 +126,8 @@ export class FactoryService {
       populate,
       or,
       subset,
-      nor
+      nor,
+      _in
     );
   }
 

@@ -1,5 +1,5 @@
-<td scope="row" class="col-1">
-  <mat-checkbox (change)="onRowCheckboxUpdate($event, rowData)"></mat-checkbox>
+<td scope="row" class="col-1" (click)="$event.stopPropagation()">
+  <mat-checkbox [checked]="rowData.rowSelected" (change)="onRowCheckboxUpdate($event, rowData)"></mat-checkbox>
 </td>
 <td scope="row" data-label="Name" class="col-2">
   {{ rowData.recordName || '-' }}
@@ -22,17 +22,14 @@
     <span class="publish-label pl-1 overflow-hidden truncate">Unpublished</span>
   </ng-template>
 </td>
-<td scope="row" class="col-1 d-xl-flex overflow-visible">
+<td scope="row" class="col-1 d-xl-flex" (click)="$event.stopPropagation()">
   <button class="btn" type="button" (click)="goToEdit()" title="Edit record">
-    <i class="material-icons mr-2">create</i>
+    <i class="material-icons">create</i>
   </button>
-  <span ngbDropdown>
-    <button class="btn" type="button" id="moreOptionsDropdown" ngbDropdownToggle>
-      <i class="material-icons">more_vert</i>
-    </button>
-    <div class="dropdown-menu" aria-labelledby="moreOptionsDropdown" ngbDropdownMenu>
-      <button class="dropdown-item" (click)="goToEdit()">Edit Master Record</button>
-      <button class="dropdown-item" (click)="goToDetails()">View Record Details</button>
-    </div>
-  </span>
+  <button mat-icon-button class="btn" [matMenuTriggerFor]="menu" title="More options" aria-label="More options menu">
+    <i class="material-icons">more_vert</i>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="goToDetails()" title="View record details">View Record Details</button>
+  </mat-menu>
 </td>

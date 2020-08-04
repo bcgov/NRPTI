@@ -82,6 +82,11 @@ input[type='text'] {
   }
 }
 
+.add-records-btn {
+  color: $white;
+  background-color: $mine-add-record-btn;
+}
+
 .grey-subtext {
   color: $gray6;
   font-size: 15px;

@@ -24,6 +24,12 @@ const RECORD_TYPE = Object.freeze({
     recordControllerName: 'certificates',
     flavours: { lng: { _schemaName: 'CertificateLNG' } }
   },
+  CollectionBCMI: {
+    _schemaName: 'CollectionBCMI',
+    displayName: 'Collection',
+    recordControllerName: 'collections',
+    flavours: {}
+  },
   ConstructionPlan: {
     _schemaName: 'ConstructionPlan',
     displayName: 'Construction Plan',
@@ -59,17 +65,17 @@ const RECORD_TYPE = Object.freeze({
     recordControllerName: 'orders',
     flavours: { lng: { _schemaName: 'OrderLNG' }, nrced: { _schemaName: 'OrderNRCED' } }
   },
-  Permit: { 
-    _schemaName: 'Permit', 
-    displayName: 'Permit', 
+  Permit: {
+    _schemaName: 'Permit',
+    displayName: 'Permit',
     recordControllerName: 'permits',
-    flavours: { lng: { _schemaName: 'PermitLNG' }, bcmi: { _schemaName: 'PermitBCMI' } } 
+    flavours: { lng: { _schemaName: 'PermitLNG' }, bcmi: { _schemaName: 'PermitBCMI' } }
   },
   PermitAmendment: {
     _schemaName: 'PermitAmendment',
     displayName: 'Permit Amendment',
     recordControllerName: 'permitAmendments',
-    flavours: { bcmi: { _schemaName: 'PermitAmendmentBCMI' } } 
+    flavours: { bcmi: { _schemaName: 'PermitAmendmentBCMI' } }
   },
   RestorativeJustice: {
     _schemaName: 'RestorativeJustice',

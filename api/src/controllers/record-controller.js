@@ -20,7 +20,12 @@ let AddManagementPlan = require('./post/management-plan');
 let AddCourtConviction = require('./post/court-conviction');
 let AddNewsItem = require('./post/news-item');
 let AddMine = require('./post/mine-bcmi');
-let AddPermitAmendment = require('./post/permit-amendment');
+let AddCollection = require('./post/collection-bcmi');
+let AddAnnualReport = require('./post/annual-report');
+let AddCertificateAmendment = require('./post/certificate-amendment');
+let AddCorrespondence = require('./post/correspondence');
+let AddDamSafetyInspection = require('./post/dam-safety-inspection');
+let AddReport = require('./post/report');
 
 let EditOrder = require('./put/order');
 let EditInspection = require('./put/inspection');
@@ -38,7 +43,12 @@ let EditManagementPlan = require('./put/management-plan');
 let EditCourtConviction = require('./put/court-conviction');
 let EditNewsItem = require('./put/news-item');
 let EditMine = require('./put/mine-bcmi');
-let EditPermitAmendment = require('./put/permit-amendment');
+let EditCollection = require('./put/collection-bcmi');
+let EditAnnualReport = require('./put/annual-report');
+let EditCertificateAmendment = require('./put/certificate-amendment');
+let EditCorrespondence = require('./put/correspondence');
+let EditDamSafetyInspection = require('./put/dam-safety-inspection');
+let EditReport = require('./put/report');
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 
@@ -171,6 +181,24 @@ exports.protectedPost = async function (args, res, next) {
     if (data.mines) {
       promises.push(processPostRequest(args, res, next, 'mines', data.mines));
     }
+    if (data.collections) {
+      promises.push(processPostRequest(args, res, next, 'collections', data.collections));
+    }
+    if (data.annualReports) {
+      promises.push(processPostRequest(args, res, next, 'annualReports', data.annualReports));
+    }
+    if (data.certificateAmendments) {
+      promises.push(processPostRequest(args, res, next, 'certificateAmendments', data.certificateAmendments));
+    }
+    if (data.correspondences) {
+      promises.push(processPostRequest(args, res, next, 'correspondences', data.correspondences));
+    }
+    if (data.damSafetyInspections) {
+      promises.push(processPostRequest(args, res, next, 'damSafetyInspections', data.damSafetyInspections));
+    }
+    if (data.reports) {
+      promises.push(processPostRequest(args, res, next, 'reports', data.reports));
+    }
 
     let response = await Promise.all(promises);
 
@@ -256,6 +284,24 @@ exports.protectedPut = async function (args, res, next) {
     if (data.mines) {
       promises.push(processPutRequest(args, res, next, 'mines', data.mines));
     }
+    if (data.collections) {
+      promises.push(processPutRequest(args, res, next, 'collections', data.collections));
+    }
+    if (data.annualReports) {
+      promises.push(processPutRequest(args, res, next, 'annualReports', data.annualReports));
+    }
+    if (data.certificateAmendments) {
+      promises.push(processPutRequest(args, res, next, 'certificateAmendments', data.certificateAmendments));
+    }
+    if (data.correspondences) {
+      promises.push(processPutRequest(args, res, next, 'correspondences', data.correspondences));
+    }
+    if (data.damSafetyInspections) {
+      promises.push(processPutRequest(args, res, next, 'damSafetyInspections', data.damSafetyInspections));
+    }
+    if (data.reports) {
+      promises.push(processPutRequest(args, res, next, 'reports', data.reports));
+    }
 
     let response = await Promise.all(promises);
 
@@ -285,6 +331,35 @@ exports.protectedNewsDelete = async function (args, res, next) {
     }
 
     queryUtils.audit(args, 'DELETE', 'ActivityLNG', args.swagger.params.auth_payload, recordId);
+    queryActions.sendResponse(res, 200, {});
+  } catch (error) {
+    queryActions.sendResponse(res, 500, error);
+  }
+  next();
+};
+
+/**
+ * Delete a mine collection.
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ */
+exports.protectedCollectionDelete = async function (args, res, next) {
+  try {
+    const collectionId = args.swagger.params.collectionId.value;
+    defaultLog.info(`protectedCollectionDelete - collectionId: ${collectionId}`);
+
+    const model = require('mongoose').model('CollectionBCMI');
+
+    try {
+      await model.deleteOne({ _id: collectionId, write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
+    } catch (e) {
+      defaultLog.info(`protectedCollectionDelete - couldn't find record for collectionId: ${collectionId}`);
+      return queryActions.sendResponse(res, 404, {});
+    }
+
+    queryUtils.audit(args, 'DELETE', 'CollectionBCMI', args.swagger.params.auth_payload, collectionId);
     queryActions.sendResponse(res, 200, {});
   } catch (error) {
     queryActions.sendResponse(res, 500, error);
@@ -454,9 +529,25 @@ const processPostRequest = async function (args, res, next, property, data) {
       case 'mines':
         promises.push(AddMine.createRecord(args, res, next, data[i]));
         break;
-      case 'permitAmendments':
-        promises.push(AddPermitAmendment.createRecord(args, res, next, data[i]));
+      case 'collections':
+        promises.push(AddCollection.createRecord(args, res, next, data[i]));
         break;
+      case 'annualReports':
+        promises.push(AddAnnualReport.createRecord(args, res, next, data[i]));
+        break;
+      case 'certificateAmendments':
+        promises.push(AddCertificateAmendment.createRecord(args, res, next, data[i]));
+        break;
+      case 'correspondences':
+        promises.push(AddCorrespondence.createRecord(args, res, next, data[i]));
+        break;
+      case 'damSafetyInspections':
+        promises.push(AddDamSafetyInspection.createRecord(args, res, next, data[i]));
+        break;
+      case 'reports':
+        promises.push(AddReport.createRecord(args, res, next, data[i]));
+        break;
+
       default:
         return {
           errorMessage: `Property ${property} does not exist.`
@@ -477,7 +568,7 @@ const processPostRequest = async function (args, res, next, property, data) {
 
 exports.processPostRequest = processPostRequest;
 
-const processPutRequest = async function (args, res, next, property, data) {
+const processPutRequest = async function (args, res, next, property, data, overridePutParams = null) {
   if (data.length === 0) {
     return {
       status: 'success',
@@ -491,56 +582,72 @@ const processPutRequest = async function (args, res, next, property, data) {
   do {
     switch (property) {
       case 'orders':
-        promises.push(EditOrder.editRecord(args, res, next, data[i]));
+        promises.push(EditOrder.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'inspections':
-        promises.push(EditInspection.editRecord(args, res, next, data[i]));
+        promises.push(EditInspection.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'certificates':
-        promises.push(EditCertificate.editRecord(args, res, next, data[i]));
+        promises.push(EditCertificate.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'permits':
-        promises.push(EditPermit.editRecord(args, res, next, data[i]));
+        promises.push(EditPermit.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'agreements':
-        promises.push(EditAgreement.editRecord(args, res, next, data[i]));
+        promises.push(EditAgreement.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'selfReports':
-        promises.push(EditSelfReport.editRecord(args, res, next, data[i]));
+        promises.push(EditSelfReport.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'restorativeJustices':
-        promises.push(EditRestorativeJustice.editRecord(args, res, next, data[i]));
+        promises.push(EditRestorativeJustice.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'tickets':
-        promises.push(EditTicket.editRecord(args, res, next, data[i]));
+        promises.push(EditTicket.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'administrativePenalties':
-        promises.push(EditAdministrativePenalty.editRecord(args, res, next, data[i]));
+        promises.push(EditAdministrativePenalty.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'administrativeSanctions':
-        promises.push(EditAdministrativeSanction.editRecord(args, res, next, data[i]));
+        promises.push(EditAdministrativeSanction.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'warnings':
-        promises.push(EditWarning.editRecord(args, res, next, data[i]));
+        promises.push(EditWarning.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'constructionPlans':
-        promises.push(EditConstructionPlan.editRecord(args, res, next, data[i]));
+        promises.push(EditConstructionPlan.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'managementPlans':
-        promises.push(EditManagementPlan.editRecord(args, res, next, data[i]));
+        promises.push(EditManagementPlan.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'courtConvictions':
-        promises.push(EditCourtConviction.editRecord(args, res, next, data[i]));
+        promises.push(EditCourtConviction.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'newsItems':
-        promises.push(EditNewsItem.editRecord(args, res, next, data[i]));
+        promises.push(EditNewsItem.editRecord(args, res, next, data[i], overridePutParams));
         break;
       case 'mines':
-        promises.push(EditMine.editRecord(args, res, next, data[i]));
+        promises.push(EditMine.editRecord(args, res, next, data[i], overridePutParams));
         break;
-      case 'permitAmendments':
-        promises.push(EditPermitAmendment.editRecord(args, res, next, data[i]));
+      case 'collections':
+        promises.push(EditCollection.editRecord(args, res, next, data[i], overridePutParams));
         break;
+      case 'annualReports':
+        promises.push(EditAnnualReport.editRecord(args, res, next, data[i], overridePutParams));
+        break;
+      case 'certificateAmendments':
+        promises.push(EditCertificateAmendment.editRecord(args, res, next, data[i], overridePutParams));
+        break;
+      case 'correspondences':
+        promises.push(EditCorrespondence.editRecord(args, res, next, data[i], overridePutParams));
+        break;
+      case 'damSafetyInspections':
+        promises.push(EditDamSafetyInspection.editRecord(args, res, next, data[i], overridePutParams));
+        break;
+      case 'reports':
+        promises.push(EditReport.editRecord(args, res, next, data[i], overridePutParams));
+        break;
+
       default:
         return {
           errorMessage: `Property ${property} does not exist.`

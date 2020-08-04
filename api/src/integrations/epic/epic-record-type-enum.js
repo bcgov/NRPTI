@@ -61,10 +61,6 @@ const EPIC_RECORD_TYPE = Object.freeze({
       // type and milestone from legislation 2002
       type: { name: 'Certificate Package', typeId: '5cf00c03a266b7e1877504d5' },
       milestone: { name: 'Certificate', milestoneId: '5cf00c03a266b7e1877504eb' },
-      projects: [
-        { name: 'Coastal Gaslink', projectId: '588511c4aaecd9001b825604' },
-        { name: 'LNG', projectId: '588511d0aaecd9001b826192' }
-      ],
       getUtil: auth_payload => {
         return new (require('./certificates-utils'))(auth_payload, RECORD_TYPE.Certificate);
       }
@@ -73,10 +69,6 @@ const EPIC_RECORD_TYPE = Object.freeze({
       // type and milestone from legislation 2002
       type: { name: 'Amendment Package', typeId: '5cf00c03a266b7e1877504d7' },
       milestone: { name: 'Amendment', milestoneId: '5cf00c03a266b7e1877504f2' },
-      projects: [
-        { name: 'Coastal Gaslink', projectId: '588511c4aaecd9001b825604' },
-        { name: 'LNG', projectId: '588511d0aaecd9001b826192' }
-      ],
       getUtil: auth_payload => {
         return new (require('./certificates-amendment-utils'))(auth_payload, RECORD_TYPE.Certificate);
       }
@@ -85,10 +77,6 @@ const EPIC_RECORD_TYPE = Object.freeze({
       // type and milestone from legislation 2018
       type: { name: 'Amendment Package', typeId: '5df79dd77b5abbf7da6f51cc' },
       milestone: { name: 'Amendment', milestoneId: '5df79dd77b5abbf7da6f5200' },
-      projects: [
-        { name: 'Coastal Gaslink', projectId: '588511c4aaecd9001b825604' },
-        { name: 'LNG', projectId: '588511d0aaecd9001b826192' }
-      ],
       getUtil: auth_payload => {
         return new (require('./certificates-amendment-utils'))(auth_payload, RECORD_TYPE.Certificate);
       }

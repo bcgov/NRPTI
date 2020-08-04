@@ -54,6 +54,14 @@ describe('generateExpArray', () => {
         { $and: [{ item: { $ne: 'value1' } }, { item: { $ne: 'value2' } }, { item: { $ne: 'value3' } }] }
       ]);
     });
+
+    it('returns `and in contains` expression for field with multiple comma separated values', async () => {
+      const result = await searchController.generateExpArray({ item: ['value1', 'value2', 'value3'] }, '$and', '$in');
+
+      expect(result).toEqual([
+        { $and: [{ item: { $in: ['value1', 'value2', 'value3'] } }] }
+      ]);
+    });
   });
 
   describe('date', () => {
@@ -217,6 +225,42 @@ describe('getConvertedValue', () => {
         const result = searchController.getConvertedValue('item', objectId, '$ne');
 
         expect(result).toEqual({ item: { $ne: objectId } });
+      });
+    });
+  });
+});
+
+describe('addArrayCountField', () => {
+  describe('null fieldName parameter', () => {
+    it('returns empty object', () => {
+      const result = searchController.addArrayCountField(null);
+
+      expect(result).toEqual({});
+    });
+  });
+
+  describe('empty fieldName parameter', () => {
+    it('returns empty object', () => {
+      const result = searchController.addArrayCountField('');
+
+      expect(result).toEqual({});
+    });
+  });
+
+  describe('valid fieldName parameter', () => {
+    it('returns aggregation pipeline stage object', () => {
+      const result = searchController.addArrayCountField('fieldA');
+
+      expect(result).toEqual({
+        $addFields: {
+          countfieldA: {
+            $cond: {
+              if: { $isArray: '$fieldA' },
+              then: { $size: '$fieldA' },
+              else: '$$REMOVE'
+            }
+          }
+        }
       });
     });
   });

@@ -33,7 +33,7 @@ export class SearchSubsets {
  * @export
  * @class SchemaLists
  */
- export class SchemaLists {
+export class SchemaLists {
   public static readonly allBasicRecordTypes = [
     'Order',
     'Inspection',
@@ -48,19 +48,60 @@ export class SearchSubsets {
     'Warning',
     'ConstructionPlan',
     'ManagementPlan',
-    'CourtConviction'
+    'CourtConviction',
+    'AnnualReport',
+    'CertificateAmendment',
+    'Correspondence',
+    'DamSafetyInspection',
+    'Report'
   ];
 
-  public static readonly nrcedBasicRecordTypes = [
-    'Order',
-    'Inspection',
-    'RestorativeJustice',
-    'Ticket',
-    'AdministrativePenalty',
-    'AdministrativeSanction',
-    'Warning',
-    'CourtConviction'
+  public static readonly bcmiRecordTypes = SchemaLists.allBasicRecordTypes.concat([
+    'PermitBCMI',
+    'PermitAmendmentBCMI',
+    'AnnualReportBCMI',
+    'CertificateAmendmentBCMI',
+    'CorrespondenceBCMI',
+    'DamSafetyInspectionBCMI',
+    'ReportBCMI'
+  ]);
+
+  // set schema filters
+  public static readonly nrcedPublicBasicRecordTypes = [
+    'OrderNRCED',
+    'InspectionNRCED',
+    'RestorativeJusticeNRCED',
+    'AdministrativePenaltyNRCED',
+    'AdministrativeSanctionNRCED',
+    'TicketNRCED',
+    'WarningNRCED',
+    'CourtConvictionNRCED',
+    'CorrespondenceNRCED',
+    'DamSafetyInspectionNRCED',
+    'ReportNRCED'
   ];
+}
+
+/**
+ * Common store service id's to use when navigating between pages while maintaining state.
+ *
+ * @export
+ * @class StateIDs
+ */
+export class StateIDs {
+  public static readonly collectionAddEdit = 'collectionAddEdit';
+}
+
+/**
+ * Statuses for tracking the status/validity of store service objects
+ *
+ * @export
+ * @enum {number}
+ */
+export enum StateStatus {
+  created = 'created',
+  valid = 'valid',
+  invalid = 'invalid'
 }
 
 /**
@@ -132,22 +173,55 @@ export class Picklists {
     AdministrativePenalty: { displayName: 'Administrative Penalty', _schemaName: 'AdministrativePenalty' },
     AdministrativeSanction: { displayName: 'Administrative Sanction', _schemaName: 'AdministrativeSanction' },
     Agreement: { displayName: 'Agreement', _schemaName: 'Agreement' },
+    AnnualReport: { displayName: 'Annual Report', _schemaName: 'AnnualReport' },
     Certificate: { displayName: 'Certificate', _schemaName: 'Certificate' },
+    CertificateAmendment: { displayName: 'Certificate Amendment', _schemaName: 'CertificateAmendment' },
     ConstructionPlan: { displayName: 'Construction Plan', _schemaName: 'ConstructionPlan' },
+    Correspondence: { displayName: 'Correspondence', _schemaName: 'Correspondence' },
     CourtConviction: { displayName: 'Court Conviction', _schemaName: 'CourtConviction' },
+    DamSafetyInspection: { displayName: 'Dam Safety Inspection', _schemaName: 'DamSafetyInspection' },
     Inspection: { displayName: 'Inspection', _schemaName: 'Inspection' },
     ManagementPlan: { displayName: 'Management Plan', _schemaName: 'ManagementPlan' },
     Order: { displayName: 'Order', _schemaName: 'Order' },
     Permit: { displayName: 'Permit', _schemaName: 'Permit' },
+    Report: { displayName: 'Report', _schemaName: 'Report' },
     RestorativeJustice: { displayName: 'Restorative Justice', _schemaName: 'RestorativeJustice' },
     SelfReport: { displayName: 'Self Report', _schemaName: 'SelfReport' },
     Ticket: { displayName: 'Ticket', _schemaName: 'Ticket' },
     Warning: { displayName: 'Warning', _schemaName: 'Warning' }
   };
 
-  public static readonly sourceSystemRefPicklist = ['core', 'cors-csv', 'epic', 'lng-csv', 'nris-epd', 'nrpti', 'ocers-csv'];
+  public static readonly sourceSystemRefPicklist = [
+    'core',
+    'cors-csv',
+    'epic',
+    'lng-csv',
+    'nris-epd',
+    'nrpti',
+    'ocers-csv'
+  ];
 
   public static readonly mineTypes = ['Coal', 'Metal', 'Industrial Mineral', 'Sand & Gravel'];
+
+  public static readonly collectionTypePicklist = [
+    'Annual Report',
+    'Certificate Amendment',
+    'Certificate',
+    'Compliance Self Report',
+    'Construction Plan',
+    'Dam Safety Inspection',
+    'Inspection Report',
+    'Letter of Assurance',
+    'Management Plan',
+    'Order',
+    'Permit Amendment',
+    'Permit',
+    'Report'
+  ];
+
+  public static readonly collectionAgencyPicklist = [
+    'EAO', 'EMPR', 'ENV'
+  ];
 
   /**
    * Contains a mapping of acts to regulations.
@@ -641,6 +715,7 @@ export class Picklists {
     'Water Utility Act': [],
     'Weed Control Act': ['Weed Control Regulation'],
     'Wild Animal and Plant Protection Act': [],
+    'Wildfire Act': ['Wildfire Regulation'],
     'Wildlife Act': [
       'Angling and Scientific Collection Regulation',
       'Closed Areas Regulation',
@@ -660,7 +735,6 @@ export class Picklists {
       'Motor Vehicle Prohibition Regulations',
       'Permit Regulation',
       'Public Access Prohibition Regulation',
-      'Wildfire Regulation',
       'Wildlife Act Commercial Activities Regulation',
       'Wildlife Act General Regulation',
       'Wildlife Management Area Use and Access Regulation',
@@ -679,7 +753,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {string[]} sorted array of acts
    */
-  public static getAllActs = function (): string[] {
+  public static getAllActs = function(): string[] {
     return Object.keys(this.legislationActsMappedToRegulations).sort();
   };
 
@@ -690,7 +764,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {string[]} sorted array of regulations
    */
-  public static getAllRegulations = function (): string[] {
+  public static getAllRegulations = function(): string[] {
     const regulations = [];
 
     Object.keys(this.legislationActsMappedToRegulations).forEach(act =>
@@ -714,7 +788,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {{ [key: string]: string[] }}
    */
-  public static getLegislationRegulationsMappedToActs = function (): { [key: string]: string[] } {
+  public static getLegislationRegulationsMappedToActs = function(): { [key: string]: string[] } {
     const regulations = {};
 
     Object.keys(this.legislationActsMappedToRegulations).forEach(act =>
@@ -4531,7 +4605,7 @@ export class Picklists {
    * @static
    * @returns {string} legislation description or null
    */
-  public static getLegislationDescription = function (recordType: string, legislation: Legislation): string {
+  public static getLegislationDescription = function(recordType: string, legislation: Legislation): string {
     if (!recordType || !legislation || !legislation.act || !legislation.section) {
       return null;
     }
@@ -4586,7 +4660,7 @@ export class Picklists {
    * @param {string[]} paths properties to descend, in order, through the object.
    * @returns the value found at the end of the path, or null
    */
-  public static traverseObject = function (obj: object, paths: string[]) {
+  public static traverseObject = function(obj: object, paths: string[]) {
     if (!obj || !paths || !paths.length) {
       return null;
     }

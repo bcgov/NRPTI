@@ -15,7 +15,7 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
     const tableObject = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, new TableObject());
 
     // set schema filters
-    let schemaList = SchemaLists.nrcedBasicRecordTypes;
+    let schemaList = SchemaLists.nrcedPublicBasicRecordTypes;
 
     if (params.activityType) {
       schemaList = params.activityType.split(',');
@@ -63,7 +63,7 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
       [],
       tableObject.currentPage,
       tableObject.pageSize,
-      tableObject.sortBy || '-dateAdded', // This needs to be common between all datasets to work properly
+      tableObject.sortBy || '-dateIssued', // This needs to be common between all datasets to work properly
       {},
       false,
       filterParams

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = mongoose.Types.ObjectId;
 const BusinessLogicManager = require('./business-logic-manager');
 
 exports.validateObjectAgainstModel = function (mongooseModel, incomingObj) {
@@ -115,10 +115,12 @@ exports.getDotNotation = function (obj, target, prefix) {
   return target;
 };
 
-exports.editRecordWithFlavours = async function (args, res, next, incomingObj, editMaster, PostFunctions, masterSchemaName, flavourFunctions = {}) {
+exports.editRecordWithFlavours = async function (args, res, next, incomingObj, editMaster, PostFunctions, masterSchemaName, flavourFunctions = {}, overridePutParams = null) {
   let flavours = [];
   let flavourIds = [];
   let promises = [];
+  let masterRecord = null;
+
   // This is needed because sanitization below will remove the reference to the masterId
   const masterId = incomingObj._id;
 
@@ -148,16 +150,18 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
       if (flavourIncomingObj[entry[0]].addRole && flavourIncomingObj[entry[0]].addRole.includes('public')) {
         entry[0].includes('NRCED') && (incomingObj.isNrcedPublished = true);
         entry[0].includes('LNG') && (incomingObj.isLngPublished = true);
+        entry[0].includes('BCMI') && (incomingObj.isBcmiPublished = true);
       }
       if (flavourIncomingObj[entry[0]].removeRole && flavourIncomingObj[entry[0]].removeRole.includes('public')) {
         entry[0].includes('NRCED') && (incomingObj.isNrcedPublished = false);
         entry[0].includes('LNG') && (incomingObj.isLngPublished = false);
+        entry[0].includes('BCMI') && (incomingObj.isBcmiPublished = false);
       }
 
       if (flavourIncomingObj[entry[0]]._id) {
         let flavourUpdateObj = entry[1](args, res, next, { ...flavourIncomingObj, ...flavourIncomingObj[entry[0]] });
         const Model = mongoose.model(entry[0]);
-        flavourUpdateObj._master = new ObjectID(masterId);
+        flavourUpdateObj._master = new ObjectId(masterId);
         promises.push(
           Model.findOneAndUpdate(
             { _id: flavourIncomingObj[entry[0]]._id, write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
@@ -168,7 +172,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
       } else {
         // We are adding a flavour instead of editing.
         // We need to get the existing master record.
-        const masterRecord = await this.fetchMasterForCreateFlavour(masterSchemaName, masterId, args.swagger.params.auth_payload);
+        masterRecord = await this.fetchMasterForCreateFlavour(masterSchemaName, masterId, args.swagger.params.auth_payload);
         let newFlavour = null;
         if (entry[0].includes('LNG')) {
           newFlavour = PostFunctions.createLNG(args, res, next, {
@@ -182,9 +186,16 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
             ...flavourIncomingObj,
             ...incomingObj[entry[0]]
           });
+        } else if (entry[0].includes('BCMI')) {
+          newFlavour = PostFunctions.createBCMI(args, res, next, {
+            ...masterRecord,
+            ...flavourIncomingObj,
+            ...incomingObj[entry[0]]
+          });
         }
+
         if (newFlavour) {
-          newFlavour._master = new ObjectID(masterId);
+          newFlavour._master = new ObjectId(masterId);
           flavours.push(newFlavour);
           promises.push(newFlavour.save());
         }
@@ -201,6 +212,57 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
 
   const MasterModel = mongoose.model(masterSchemaName);
   const updateMasterObj = editMaster(args, res, next, incomingObj, flavourIds);
+
+  // Mine GUID logic
+  // If an _epicProjectId is provided and we find a mine that requires the project
+  // disregard incomingObj.mineGuid
+  if (incomingObj._epicProjectId || incomingObj.mineGuid) {
+    // We might have the master record from creating flavours earlier.
+    if (!masterRecord) {
+      try {
+        masterRecord = await MasterModel.findOne(
+          { _id: new ObjectId(masterId) }
+        );
+      } catch (e) {
+        return {
+          status: 'failure',
+          object: masterRecord,
+          errorMessage: `Error getting master record for mineGuid logic: ${e.message}`
+        };
+      }
+    }
+
+    // We can only edit epicProjectId/mineGuid on records with sourceSystemRef as nrpti or anything csv import
+    if (
+      masterRecord.sourceSystemRef === 'nrpti' ||
+      masterRecord.sourceSystemRef.includes('csv') ||
+      (overridePutParams && overridePutParams.forceMineBCMIGUIDUpdate)
+    ) {
+      const MineBCMI = mongoose.model('MineBCMI');
+      let mineBCMI = null;
+      try {
+        mineBCMI = await MineBCMI.findOne(
+          {
+            _epicProjectIds: { $in: [new ObjectId(incomingObj._epicProjectId)] },
+          }
+        );
+      } catch (e) {
+        return {
+          status: 'failure',
+          object: mineBCMI,
+          errorMessage: `Error getting MineBCMI: ${e.message}`
+        };
+      }
+      if (mineBCMI && mineBCMI._sourceRefId) {
+        incomingObj.mineGuid = mineBCMI._sourceRefId;
+      }
+    }
+    if (incomingObj.mineGuid) {
+      updateMasterObj.mineGuid = incomingObj.mineGuid;
+    }
+  }
+
+
   promises.push(
     MasterModel.findOneAndUpdate({
       _id: masterId,
