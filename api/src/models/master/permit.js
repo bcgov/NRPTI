@@ -7,6 +7,7 @@ module.exports = require('../../utils/model-schema-generator')(
     _epicProjectId: { type: 'ObjectId', default: null, index: true },
     _sourceRefId: { type: String, default: null, index: true },
     _epicMilestoneId: { type: 'ObjectId', default: null, index: true },
+    _sourceDocumentRefId: { type: String, default: null, index: true },
 
     mineGuid: { type: String, default: '', index: true },
 

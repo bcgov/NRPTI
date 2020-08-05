@@ -114,46 +114,4 @@ describe('MineUtils', () => {
       expect(result).toEqual('test label');
     })
   });
-
-  describe('getParty', () => {
-    it('throws error if no partyCode provided', async () => {
-      const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
-      expect(() => mineUtils.getParty(null, {})).toThrow('getParty - partyCode must not be null.');
-    });
-
-    it('throws error if no parties provided', async () => {
-      const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
-      expect(() => mineUtils.getParty('PMT', {}, null)).toThrow('getParty - parties must not be null.');
-    });
-
-    it('throws error if no permit provided', async () => {
-      const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
-      expect(() => mineUtils.getParty('PMT', null, {})).toThrow('getParty - permit must not be null.');
-    });
-
-    it('gets the correct party', () => {
-      const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
-      const permit = { _sourceRefId: 'test' };
-      const parties = [
-        {
-          mine_party_appt_type_code: 'POR',
-          related_guid: 'notRight',
-          party: {
-            name: 'Not Me'
-          }
-        },
-        {
-          mine_party_appt_type_code: 'PMT',
-          related_guid: 'test',
-          party: {
-            name: 'Find Me'
-          }
-        }
-    ];
-
-      const result = mineUtils.getParty('PMT', permit, parties);
-
-      expect(result).toEqual('Find Me');
-    });
-  });
 });
