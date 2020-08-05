@@ -1,9 +1,7 @@
 <main class="container-fluid-padding">
   <section>
     <div class="d-flex flex-column flex-sm-row justify-content-sm-between heading-bar">
-      <div>
-        <h1 id="name" class="m-0">{{ (record && record.recordName) || '-' }}</h1>
-      </div>
+      <h1 id="name" class="m-0 truncate">{{ (record && record.recordName) || '-' }}</h1>
     </div>
   </section>
 
@@ -46,6 +44,14 @@
           <label for="agency" class="med mr-2">Agency:</label>
           <span id="agency" name="agency">
             {{ (record && record.agency) || '-' }}
+          </span>
+        </div>
+      </div>
+      <div class="col-sm">
+        <div class="flex-container mb-2">
+          <label for="agency" class="med mr-2">Date Issued:</label>
+          <span id="agency" name="agency">
+            {{ (record && record.dateIssued | date: 'mediumDate') || '-' }}
           </span>
         </div>
       </div>
