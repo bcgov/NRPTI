@@ -75,6 +75,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (permit._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj._sourceRefId && (permit._sourceRefId = incomingObj._sourceRefId);
+  incomingObj._sourceDocumentRefId && (permit._sourceDocumentRefId = incomingObj._sourceDocumentRefId);
 
   // set permissions
   permit.read = ROLES.ADMIN_ROLES;
@@ -262,6 +263,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
 
   // set integration references
   incomingObj._sourceRefId && (permitBCMI._sourceRefId = incomingObj._sourceRefId);
+  incomingObj._sourceDocumentRefId && (permitBCMI._sourceDocumentRefId = incomingObj._sourceDocumentRefId);
 
   // set permissions and meta
   permitBCMI.read = ROLES.ADMIN_ROLES;
