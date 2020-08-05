@@ -28,25 +28,10 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
   }
 
   public isPublished() {
-    if (this.rowData && this.rowData.flavours && this.rowData.flavours.find(f => f._schemaName.endsWith('BCMI'))) {
-      return this.rowData.flavours.find(f => f._schemaName.endsWith('BCMI')).read.includes('public');
-    } else {
-      return false;
-    }
+    return this.rowData.isBcmiPublished;
   }
   public getAttributeValue(attribute) {
-    let attributeValue = '-';
-
-    if (this.rowData && this.rowData.flavours && this.rowData.flavours.find(f => f._schemaName.endsWith('BCMI'))) {
-
-      const flavour = this.rowData.flavours.find(f => f._schemaName.endsWith('BCMI'));
-      attributeValue = flavour[attribute] || '-';
-
-    } else {
-      attributeValue = this.rowData[attribute] || '-';
-    }
-
-    return attributeValue;
+    return this.rowData[attribute] || '-';
   }
   /**
    * Listen for clicks on the row.

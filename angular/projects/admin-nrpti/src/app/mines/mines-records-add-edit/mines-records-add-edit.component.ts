@@ -227,7 +227,7 @@ export class MinesRecordsAddEditComponent implements OnInit {
         }
 
         try {
-          await this.factoryService.deleteMineRecord(this.record._id, this.record.recordType);
+          await this.factoryService.deleteMineRecord(this.record._id, this.record._schemaName.toLowerCase());
 
           this.router.navigate(['../../records'], { relativeTo: this.route });
         } catch (e) {
@@ -310,7 +310,7 @@ export class MinesRecordsAddEditComponent implements OnInit {
       this.factoryService.createMineRecord(record).subscribe(async (res: any) => {
         this.recordUtils.parseResForErrors(res);
 
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
