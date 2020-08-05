@@ -37,7 +37,8 @@ const InspectionPost = require('../post/inspection');
 exports.editRecord = async function (args, res, next, incomingObj, overridePutParams = null) {
   const flavourFunctions = {
     InspectionLNG: this.editLNG,
-    InspectionNRCED: this.editNRCED
+    InspectionNRCED: this.editNRCED,
+    InspectionBCMI: this.editBCMI
   }
   return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, InspectionPost, 'Inspection', flavourFunctions, overridePutParams);
 };
@@ -208,6 +209,72 @@ exports.editNRCED = function (args, res, next, incomingObj) {
   let InspectionNRCED = mongoose.model('InspectionNRCED');
 
   const sanitizedObj = PutUtils.validateObjectAgainstModel(InspectionNRCED, incomingObj);
+
+  sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+
+  sanitizedObj.dateUpdated = new Date();
+
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  let updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
+
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    updateObj.$addToSet['read'] = 'public';
+    updateObj.$set['datePublished'] = new Date();
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
+    updateObj.$pull['read'] = 'public';
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
+  }
+
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
+
+  return updateObj;
+};
+
+
+/**
+ * Performs all operations necessary to edit a bcmi Inspection record.
+ *
+ * Example of incomingObj
+ *
+ *  inspections: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'inspection',
+ *      ...
+ *      InspectionLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      InspectionNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited bcmi inspection record
+ */
+ exports.editBCMI = function (args, res, next, incomingObj) {
+  delete incomingObj._id;
+
+  // Reject any changes to permissions
+  // Publishing must be done via addRole or removeRole
+  delete incomingObj.read;
+  delete incomingObj.write;
+
+  let InspectionBCMI = mongoose.model('InspectionBCMI');
+
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(InspectionBCMI, incomingObj);
 
   sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
 
