@@ -120,6 +120,7 @@
         [documents]="record ? record.documents : []"
         (documentsToDelete)="documentsToDelete = $event"></app-document-edit>
       <app-document-link-staging
+        *ngIf="record.documents && record.documents.length === 0"
         [maxFiles]=1
         (linksChanged)="links = $event"
         (documentsChanged)="documents = $event"></app-document-link-staging>
