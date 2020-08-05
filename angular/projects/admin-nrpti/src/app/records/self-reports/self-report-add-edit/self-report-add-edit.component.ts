@@ -257,7 +257,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createSelfReport(selfReport).subscribe(async res => {
+      this.factoryService.writeRecord(selfReport, 'selfReports', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,
@@ -283,7 +283,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
         selfReport['SelfReportLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.editSelfReport(selfReport).subscribe(async res => {
+      this.factoryService.writeRecord(selfReport, 'selfReports', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,

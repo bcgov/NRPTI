@@ -391,7 +391,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createCourtConviction(courtConviction).subscribe(async res => {
+      this.factoryService.writeRecord(courtConviction, 'courtConvictions', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         await this.recordUtils.handleDocumentChanges(
           this.links,
@@ -424,7 +424,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
         courtConviction['CourtConvictionLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.editCourtConviction(courtConviction).subscribe(async res => {
+      this.factoryService.writeRecord(courtConviction, 'courtConvictions', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         await this.recordUtils.handleDocumentChanges(
           this.links,

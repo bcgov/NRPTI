@@ -166,7 +166,7 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createAgreement(agreement).subscribe(async res => {
+      this.factoryService.writeRecord(agreement, 'agreements', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,
@@ -192,7 +192,7 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
         agreement['AgreementLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.editAgreement(agreement).subscribe(async res => {
+      this.factoryService.writeRecord(agreement, 'agreements', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,

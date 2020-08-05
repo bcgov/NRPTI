@@ -192,7 +192,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createConstructionPlan(constructionPlan).subscribe(async res => {
+      this.factoryService.writeRecord(constructionPlan, 'constructionPlans', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,
@@ -218,7 +218,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
         constructionPlan['ConstructionPlanLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.editConstructionPlan(constructionPlan).subscribe(async res => {
+      this.factoryService.writeRecord(constructionPlan, 'constructionPlans', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,

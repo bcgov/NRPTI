@@ -34,131 +34,60 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
     }
   }
 
-  @HostListener('click') onItemClicked() {
+  private getSchemaRoute(schemaName) {
     switch (this.rowData._schemaName) {
       case 'Order':
-        this.router.navigate(['records', 'orders', this.rowData._id, 'detail']);
-        break;
+        return 'orders';
       case 'Inspection':
-        this.router.navigate(['records', 'inspections', this.rowData._id, 'detail']);
-        break;
+        return 'inspections';
       case 'Certificate':
-        this.router.navigate(['records', 'certificates', this.rowData._id, 'detail']);
-        break;
+        return 'certificates';
       case 'Permit':
-        this.router.navigate(['records', 'permits', this.rowData._id, 'detail']);
-        break;
+        return 'permits';
       case 'Agreement':
-        this.router.navigate(['records', 'agreements', this.rowData._id, 'detail']);
-        break;
+        return 'agreements';
       case 'SelfReport':
-        this.router.navigate(['records', 'self-reports', this.rowData._id, 'detail']);
-        break;
+        return 'self-reports';
       case 'RestorativeJustice':
-        this.router.navigate(['records', 'restorative-justices', this.rowData._id, 'detail']);
-        break;
+        return 'restorative-justices';
       case 'Ticket':
-        this.router.navigate(['records', 'tickets', this.rowData._id, 'detail']);
-        break;
+        return 'tickets';
       case 'AdministrativePenalty':
-        this.router.navigate(['records', 'administrative-penalties', this.rowData._id, 'detail']);
-        break;
+        return 'administrative-penalties';
       case 'AdministrativeSanction':
-        this.router.navigate(['records', 'administrative-sanctions', this.rowData._id, 'detail']);
-        break;
+        return 'administrative-sanctions';
       case 'Warning':
-        this.router.navigate(['records', 'warnings', this.rowData._id, 'detail']);
-        break;
+        return 'warnings';
       case 'ConstructionPlan':
-        this.router.navigate(['records', 'construction-plans', this.rowData._id, 'detail']);
-        break;
+        return 'construction-plans';
       case 'ManagementPlan':
-        this.router.navigate(['records', 'management-plans', this.rowData._id, 'detail']);
-        break;
+        return 'management-plans';
       case 'CourtConviction':
-        this.router.navigate(['records', 'court-convictions', this.rowData._id, 'detail']);
-        break;
+        return 'court-convictions';
       case 'CertificateAmendment':
-        this.router.navigate(['records', 'certificate-amendments', this.rowData._id, 'detail']);
-        break;
+        return 'certificate-amendments';
       case 'Correspondence':
-        this.router.navigate(['records', 'correspondences', this.rowData._id, 'detail']);
-        break;
+        return 'correspondences';
       case 'Report':
-        this.router.navigate(['records', 'reports', this.rowData._id, 'detail']);
-        break;
+        return 'reports';
       case 'DamSafetyInspection':
-        this.router.navigate(['records', 'dam-safety-inspections', this.rowData._id, 'detail']);
-        break;
+        return 'dam-safety-inspections';
       case 'AnnualReport':
-        this.router.navigate(['records', 'annual-reports', this.rowData._id, 'detail']);
-        break;
+        return 'annual-reports';
       default:
-      // TODO
+        return 'no-route';
     }
   }
 
+  @HostListener('click') onItemClicked() {
+    this.routeToRecordsPage('detail');
+  }
+
   edit() {
-    switch (this.rowData._schemaName) {
-      case 'Order':
-        this.router.navigate(['records', 'orders', this.rowData._id, 'edit']);
-        break;
-      case 'Inspection':
-        this.router.navigate(['records', 'inspections', this.rowData._id, 'edit']);
-        break;
-      case 'Certificate':
-        this.router.navigate(['records', 'certificates', this.rowData._id, 'edit']);
-        break;
-      case 'Permit':
-        this.router.navigate(['records', 'permits', this.rowData._id, 'edit']);
-        break;
-      case 'Agreement':
-        this.router.navigate(['records', 'agreements', this.rowData._id, 'edit']);
-        break;
-      case 'SelfReport':
-        this.router.navigate(['records', 'self-reports', this.rowData._id, 'edit']);
-        break;
-      case 'RestorativeJustice':
-        this.router.navigate(['records', 'restorative-justices', this.rowData._id, 'edit']);
-        break;
-      case 'Ticket':
-        this.router.navigate(['records', 'tickets', this.rowData._id, 'edit']);
-        break;
-      case 'AdministrativePenalty':
-        this.router.navigate(['records', 'administrative-penalties', this.rowData._id, 'edit']);
-        break;
-      case 'AdministrativeSanction':
-        this.router.navigate(['records', 'administrative-sanctions', this.rowData._id, 'edit']);
-        break;
-      case 'Warning':
-        this.router.navigate(['records', 'warnings', this.rowData._id, 'edit']);
-        break;
-      case 'ConstructionPlan':
-        this.router.navigate(['records', 'construction-plans', this.rowData._id, 'edit']);
-        break;
-      case 'ManagementPlan':
-        this.router.navigate(['records', 'management-plans', this.rowData._id, 'edit']);
-        break;
-      case 'CourtConviction':
-        this.router.navigate(['records', 'court-convictions', this.rowData._id, 'edit']);
-        break;
-      case 'CertificateAmendment':
-        this.router.navigate(['records', 'certificate-amendments', this.rowData._id, 'edit']);
-        break;
-      case 'Correspondence':
-        this.router.navigate(['records', 'correspondences', this.rowData._id, 'edit']);
-        break;
-      case 'Report':
-        this.router.navigate(['records', 'reports', this.rowData._id, 'edit']);
-        break;
-      case 'DamSafetyInspection':
-        this.router.navigate(['records', 'dam-safety-inspections', this.rowData._id, 'edit']);
-        break;
-      case 'AnnualReport':
-        this.router.navigate(['records', 'annual-reports', this.rowData._id, 'edit']);
-        break;
-      default:
-        break;
-    }
+    this.routeToRecordsPage('edit');
+  }
+
+  private routeToRecordsPage(type) {
+    this.router.navigate(['records', this.getSchemaRoute(this.rowData._schemaName), this.rowData._id, type]);
   }
 }

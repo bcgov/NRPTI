@@ -400,7 +400,7 @@ export class TicketAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createTicket(ticket).subscribe(async res => {
+      this.factoryService.writeRecord(ticket, 'tickets', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,
@@ -435,7 +435,7 @@ export class TicketAddEditComponent implements OnInit, OnDestroy {
         ticket['TicketLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.editTicket(ticket).subscribe(async res => {
+      this.factoryService.writeRecord(ticket, 'tickets', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,

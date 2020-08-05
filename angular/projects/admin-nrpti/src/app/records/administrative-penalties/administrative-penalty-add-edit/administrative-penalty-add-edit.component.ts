@@ -404,7 +404,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     }
 
     if (!this.isEditing) {
-      this.factoryService.createAdministrativePenalty(administrativePenalty).subscribe(async res => {
+      this.factoryService.writeRecord(administrativePenalty, 'administrativePenalties', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,
@@ -439,7 +439,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
         administrativePenalty['AdministrativePenaltyLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.editAdministrativePenalty(administrativePenalty).subscribe(async res => {
+      this.factoryService.writeRecord(administrativePenalty, 'administrativePenalties', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,
