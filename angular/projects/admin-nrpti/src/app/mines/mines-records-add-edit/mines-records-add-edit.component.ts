@@ -259,7 +259,6 @@ export class MinesRecordsAddEditComponent implements OnInit {
 
     const schemaString = recordSchema[0]._schemaName;
 
-    // todo flesh out anay additional logic for BCMI flavour
     // BCMI flavour
     record[schemaString] = {};
     record['recordName'] && (record[schemaString]['recordName'] = record['recordName']);
