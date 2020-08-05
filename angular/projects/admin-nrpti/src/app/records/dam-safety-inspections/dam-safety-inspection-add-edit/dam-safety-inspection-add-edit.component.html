@@ -1,0 +1,245 @@
+<main class="container-fluid-padding">
+  <form *ngIf="!loading" [formGroup]="myForm" novalidate>
+    <section>
+      <div class="row">
+        <div class="col-6">
+          <h4 class="blue-header">Shared Data [Master]</h4>
+          <span *ngIf="isEditing" class="grey-subtext ml-2">{{ lastEditedSubText }}</span>
+        </div>
+        <div class="col-6 right-justified-action-btn">
+          <div class="row mb-2">
+            <div class="col-12">
+              <button type="button" class="btn btn-link" (click)="cancel()">Cancel</button>
+              <button class="btn btn-primary" type="submit" (click)="submit()">
+                <i class="material-icons">
+                  save
+                </i>
+                &nbsp;
+                <span *ngIf="!isEditing">Save Record</span>
+                <span *ngIf="isEditing">Update Record</span>
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-7"></div>
+            <div class="col-5">
+              <span class="grey-subtext">
+                If content is published on any site, clicking the Save/Update Record button will update the public site
+                immediately
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h4>Basic Information</h4>
+      <div class="flex-container">
+        <div class="label-pair">
+          <label for="dateIssued">Date Issued</label>
+          <div class="input-group">
+            <input
+              class="form-control"
+              placeholder="yyyy-mm-dd"
+              name="dp"
+              formControlName="dateIssued"
+              ngbDatepicker
+              #d="ngbDatepicker" />
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+            </div>
+          </div>
+        </div>
+        <div class="label-pair">
+          <label for="recordType">Type</label>
+          <span class="grey-subtext ml-2">(This value cannot be changed)</span>
+          <input readonly name="recordType" id="recordType" type="text" value="Dam Safety Inspection" class="form-control" />
+        </div>
+        <div class="label-pair">
+          <label for="issuingAgency">Issuing Agency</label>
+          <select name="issuingAgency" id="issuingAgency" formControlName="issuingAgency" class="form-control">
+            <option *ngFor="let agency of agencies" [ngValue]="agency">{{ agency }}</option>
+          </select>
+        </div>
+        <div class="label-pair">
+          <label for="recordName">Record Name</label>
+          <input name="recordName" id="recordName" type="text" formControlName="recordName" class="form-control" />
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h4>Legislation</h4>
+      <app-legislation-add-edit [formGroup]="this.myForm.get('legislation')"></app-legislation-add-edit>
+      <div class="label-pair">
+        <label for="legislationDescription">Description</label>
+        <input
+          readonly
+          name="legislationDescription"
+          id="legislationDescription"
+          type="text"
+          formControlName="legislationDescription"
+          class="form-control"
+        />
+        <span
+          *ngIf="this.myForm.get('legislation.act').value && !this.myForm.get('legislationDescription').value"
+          class="grey-subtext"
+        >
+          No description available for the selected combination of act, regulation, section, subsection and paragraph.
+          Please double-check that you have filled out those fields correctly; if they are correct, please contact the
+          system administrator at
+          <a href="mailto:nrced@gov.bc.ca">nrced@gov.bc.ca</a>
+          to request a new description be added to the system.
+        </span>
+      </div>
+    </section>
+
+    <section>
+      <h4>Issued To</h4>
+      <div class="flex-container">
+        <div class="label-pair">
+          <label for="projectName">Project</label>
+          <span class="grey-subtext ml-2">(If Applicable)</span>
+          <div name="projectName" class="radio-group">
+            <div class="radio">
+              <input default type="radio" id="Other" value="" formControlName="projectName" name="projectName" />
+              <label for="Other">Other</label>
+            </div>
+            <div class="radio">
+              <input
+                type="radio"
+                id="coastalGaslink"
+                value="Coastal Gaslink"
+                formControlName="projectName"
+                name="projectName" />
+              <label for="coastalGaslink">Coastal Gaslink</label>
+            </div>
+            <div class="radio">
+              <input type="radio" id="lngCanada" value="LNG Canada" formControlName="projectName" name="projectName" />
+              <label for="lngCanada">LNG Canada</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <app-entity-add-edit [formGroup]="this.myForm.controls.issuedTo"></app-entity-add-edit>
+    </section>
+
+    <section>
+      <h4>Location Details</h4>
+      <div class="flex-container">
+        <div class="label-pair">
+          <label for="location">Location Description</label>
+          <input name="location" id="location" type="text" formControlName="location" class="form-control" />
+        </div>
+        <div class="label-pair xsm">
+          <label for="latitude">Latitude</label>
+          <input name="latitude" id="latitude" type="number" formControlName="latitude" class="form-control" />
+        </div>
+        <div class="label-pair xsm">
+          <label for="longitude">Longitude</label>
+          <input name="longitude" id="longitude" type="number" formControlName="longitude" class="form-control" />
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h4>Documents</h4>
+      <app-document-edit
+        [documents]="currentRecord ? currentRecord.documents : []"
+        (documentsToDelete)="documentsToDelete = $event"></app-document-edit>
+      <app-document-link-staging
+        (linksChanged)="links = $event"
+        (documentsChanged)="documents = $event"></app-document-link-staging>
+    </section>
+
+    <section>
+      <div class="row mb-4">
+        <div class="col-2">
+          <h4 class="blue-header mb-0">NRCED Site Content</h4>
+          <span class="grey-subtext d-block">{{ nrcedPublishSubtext }}</span>
+        </div>
+        <div class="col-4">
+          <mat-slide-toggle
+            name="publishNrced"
+            id="publishNrced"
+            formControlName="publishNrced"
+            (change)="togglePublish($event, 'nrced')"
+            [checked]="myForm.controls.publishNrced.value"
+            ngDefaultControl>
+            {{ myForm.controls.publishNrced.value ? 'Published' : 'Unpublished' }}
+          </mat-slide-toggle>
+          <span class="grey-subtext d-block">*Changes made will take effect once you click "Update Record"</span>
+        </div>
+      </div>
+      <div class="flex-container">
+        <div class="label-pair med">
+          <label for="nrcedDescription">Description</label>
+          <textarea
+            name="nrcedDescription"
+            id="nrcedDescription"
+            type="text"
+            formControlName="nrcedDescription"
+            class="form-control"
+            rows="5"></textarea>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="row mb-4">
+        <div class="col-2">
+          <h4 class="blue-header mb-0">BCMI Site Content</h4>
+          <span class="grey-subtext d-block">{{ bcmiPublishSubtext }}</span>
+        </div>
+        <div class="col-4">
+          <mat-slide-toggle
+            name="publishBcmi"
+            id="publishBcmi"
+            formControlName="publishBcmi"
+            (change)="togglePublish($event, 'bcmi')"
+            [checked]="myForm.controls.publishBcmi.value"
+            ngDefaultControl>
+            {{ myForm.controls.publishBcmi.value ? 'Published' : 'Unpublished' }}
+          </mat-slide-toggle>
+          <span class="grey-subtext d-block">*Changes made will take effect once you click "Update Record"</span>
+        </div>
+      </div>
+      <div class="flex-container">
+        <div class="label-pair med">
+          <label for="bcmiDescription">Description</label>
+          <textarea
+            name="bcmiDescription"
+            id="bcmoDescription"
+            type="text"
+            formControlName="bcmiDescription"
+            class="form-control"
+            rows="5"></textarea>
+        </div>
+      </div>
+    </section>
+  </form>
+  <div class="row mt-4">
+    <div class="col-6"></div>
+    <div class="col-6 right-justified-action-btn">
+      <div class="row mb-2">
+        <div class="col-12">
+          <button type="button" class="btn btn-link" (click)="cancel()">Cancel</button>
+          <button class="btn btn-primary" type="submit" (click)="submit()">
+            <i class="material-icons">
+              save
+            </i>
+            &nbsp;
+            <span *ngIf="!isEditing">Save Record</span>
+            <span *ngIf="isEditing">Update Record</span>
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-7"></div>
+        <div class="col-5">
+          <span class="grey-subtext">
+            If content is published on any site, clicking the Save/Update Record button will update the public site
+            immediately
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

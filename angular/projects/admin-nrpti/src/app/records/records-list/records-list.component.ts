@@ -489,6 +489,21 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       case 'warning':
         this.router.navigate(['records', 'warnings', 'add']);
         break;
+      case 'annualReport':
+        this.router.navigate(['records', 'annual-reports', 'add']);
+        break;
+      case 'certificateAmendment':
+        this.router.navigate(['records', 'certificate-amendments', 'add']);
+        break;
+      case 'correspondence':
+        this.router.navigate(['records', 'correspondences', 'add']);
+        break;
+      case 'damSafetyInspection':
+        this.router.navigate(['records', 'dam-safety-inspections', 'add']);
+        break;
+      case 'report':
+        this.router.navigate(['records', 'reports', 'add']);
+        break;
       default:
         break;
     }

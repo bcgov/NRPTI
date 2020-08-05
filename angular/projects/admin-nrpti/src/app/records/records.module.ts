@@ -98,6 +98,35 @@ import { CourtConvictionDetailComponent } from './court-convictions/court-convic
 import { CourtConvictionNRCEDDetailComponent } from './court-convictions/court-conviction-nrced-detail/court-conviction-nrced-detail.component';
 import { CourtConvictionLNGDetailComponent } from './court-convictions/court-conviction-lng-detail/court-conviction-lng-detail.component';
 
+// certificate amendments
+import { CertificateAmendmentAddEditComponent } from './certificate-amendments/certificate-amendments-add-edit/certificate-amendments-add-edit.component';
+import { CertificateAmendmentDetailComponent } from './certificate-amendments/certificate-amendments-detail/certificate-amendments-detail.component';
+import { CertificateAmendmentLNGDetailComponent } from './certificate-amendments/certificate-amendments-lng-detail/certificate-amendments-lng-detail.component';
+import { CertificateAmendmentBCMIDetailComponent } from './certificate-amendments/certificate-amendments-bcmi-detail/certificate-amendments-bcmi-detail.component';
+
+// correspondence
+import { CorrespondenceAddEditComponent } from './correspondences/correspondence-add-edit/correspondence-add-edit.component';
+import { CorrespondenceDetailComponent } from './correspondences/correspondence-detail/correspondence-detail.component';
+import { CorrespondenceBCMIDetailComponent } from './correspondences/correspondence-bcmi-detail/correspondence-bcmi-detail.component';
+import { CorrespondenceNRCEDDetailComponent } from './correspondences/correspondence-nrced-detail/correspondence-nrced-detail.component';
+
+// report
+import { ReportAddEditComponent } from './reports/report-add-edit/report-add-edit.component';
+import { ReportDetailComponent } from './reports/report-detail/report-detail.component';
+import { ReportBCMIDetailComponent } from './reports/report-bcmi-detail/report-bcmi-detail.component';
+import { ReportNRCEDDetailComponent } from './reports/report-nrced-detail/report-nrced-detail.component';
+
+// dam safety inspection
+import { DamSafetyInspectionAddEditComponent } from './dam-safety-inspections/dam-safety-inspection-add-edit/dam-safety-inspection-add-edit.component';
+import { DamSafetyInspectionDetailComponent } from './dam-safety-inspections/dam-safety-inspection-detail/dam-safety-inspection-detail.component';
+import { DamSafetyInspectionBCMIDetailComponent } from './dam-safety-inspections/dam-safety-inspection-bcmi-detail/dam-safety-inspection-bcmi-detail.component';
+import { DamSafetyInspectionNRCEDDetailComponent } from './dam-safety-inspections/dam-safety-inspection-nrced-detail/dam-safety-inspection-nrced-detail.component';
+
+// annual reports
+import { AnnualReportAddEditComponent } from './annual-reports/annual-report-add-edit/annual-report-add-edit.component';
+import { AnnualReportDetailComponent } from './annual-reports/annual-report-detail/annual-report-detail.component';
+import { AnnualReportBCMIDetailComponent } from './annual-reports/annual-report-bcmi-detail/annual-report-bcmi-detail.component';
+
 // other
 import { DocumentAuthenticatedReadOnlyComponent } from '../documents/document-authenticated-read-only/document-authenticated-read-only.component';
 import { S3SignedUrlAnchorComponent } from '../documents/s3-signed-url-anchor/s3-signed-url-anchor.component';
@@ -191,7 +220,31 @@ import { S3SignedUrlAnchorComponent } from '../documents/s3-signed-url-anchor/s3
     CourtConvictionAddEditComponent,
     CourtConvictionDetailComponent,
     CourtConvictionNRCEDDetailComponent,
-    CourtConvictionLNGDetailComponent
+    CourtConvictionLNGDetailComponent,
+    // certificate amendments
+    CertificateAmendmentAddEditComponent,
+    CertificateAmendmentDetailComponent,
+    CertificateAmendmentLNGDetailComponent,
+    CertificateAmendmentBCMIDetailComponent,
+    // correspondence
+    CorrespondenceAddEditComponent,
+    CorrespondenceDetailComponent,
+    CorrespondenceBCMIDetailComponent,
+    CorrespondenceNRCEDDetailComponent,
+    // report
+    ReportAddEditComponent,
+    ReportDetailComponent,
+    ReportBCMIDetailComponent,
+    ReportNRCEDDetailComponent,
+    // dam safety inspection
+    DamSafetyInspectionAddEditComponent,
+    DamSafetyInspectionDetailComponent,
+    DamSafetyInspectionBCMIDetailComponent,
+    DamSafetyInspectionNRCEDDetailComponent,
+    // annual report
+    AnnualReportAddEditComponent,
+    AnnualReportDetailComponent,
+    AnnualReportBCMIDetailComponent
   ],
   providers: [],
   entryComponents: [
@@ -258,7 +311,31 @@ import { S3SignedUrlAnchorComponent } from '../documents/s3-signed-url-anchor/s3
     CourtConvictionAddEditComponent,
     CourtConvictionDetailComponent,
     CourtConvictionNRCEDDetailComponent,
-    CourtConvictionLNGDetailComponent
+    CourtConvictionLNGDetailComponent,
+    // certificate amendments
+    CertificateAmendmentAddEditComponent,
+    CertificateAmendmentDetailComponent,
+    CertificateAmendmentBCMIDetailComponent,
+    CertificateAmendmentLNGDetailComponent,
+    // correspondence
+    CorrespondenceAddEditComponent,
+    CorrespondenceDetailComponent,
+    CorrespondenceBCMIDetailComponent,
+    CorrespondenceNRCEDDetailComponent,
+    // report
+    ReportAddEditComponent,
+    ReportDetailComponent,
+    ReportBCMIDetailComponent,
+    ReportNRCEDDetailComponent,
+    // dam safety inspection
+    DamSafetyInspectionAddEditComponent,
+    DamSafetyInspectionDetailComponent,
+    DamSafetyInspectionBCMIDetailComponent,
+    DamSafetyInspectionNRCEDDetailComponent,
+    // annual report
+    AnnualReportAddEditComponent,
+    AnnualReportDetailComponent,
+    AnnualReportBCMIDetailComponent
   ],
   exports: []
 })

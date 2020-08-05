@@ -99,5 +99,19 @@ exports.recordTypes = [
   'ConstructionPlan',
   'ManagementPlan',
   'CourtConviction',
-  'MineBCMI'
+  'MineBCMI',
+  'AnnualReport',
+  'AnnualReportBCMI',
+  'CertificateAmendment',
+  'CertificateAmendmentLNG',
+  'CertificateAmendmentBCMI',
+  'DamSafetyInspection',
+  'DamSafetyInspectionBCMI',
+  'DamSafetyInspectionNRCED',
+  'Correspondence',
+  'CorrespondenceBCMI',
+  'CorrespondenceNRCED',
+  'Report',
+  'ReportBCMI',
+  'ReportNRCED'
 ];

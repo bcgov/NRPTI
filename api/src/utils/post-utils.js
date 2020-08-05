@@ -61,6 +61,7 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
   // Default flavour publish statuses to false
   incomingObj.isNrcedPublished = false;
   incomingObj.isLngPublished = false;
+  incomingObj.isBcmiPublished = false;
 
   // Prepare flavours
   const entries = Object.entries(flavourFunctions);
@@ -76,6 +77,7 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
     if (incomingObj[entry[0]].addRole && incomingObj[entry[0]].addRole.includes('public')) {
       entry[0].includes('NRCED') && (incomingObj.isNrcedPublished = true);
       entry[0].includes('LNG') && (incomingObj.isLngPublished = true);
+      entry[0].includes('BCMI') && (incomingObj.isBcmiPublished = true);
     }
 
     incomingObj[entry[0]] &&

@@ -75,7 +75,7 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
       }
       if (item === 'isBcmiPublished' && entry === 'true') {
         return { isBcmiPublished: true }
-      } else if (item === 'isLngPublished' && entry === 'false') {
+      } else if (item === 'isBcmiPublished' && entry === 'false') {
         return { $or: [{ isBcmiPublished: { $exists: false } }, { isBcmiPublished: false }] }
       }
 

@@ -35,7 +35,21 @@ import {
   ManagementPlanLNG,
   CourtConviction,
   CourtConvictionLNG,
-  CourtConvictionNRCED
+  CourtConvictionNRCED,
+  CertificateAmendment,
+  CertificateAmendmentLNG,
+  CertificateAmendmentBCMI,
+  Correspondence,
+  CorrespondenceNRCED,
+  CorrespondenceBCMI,
+  Report,
+  ReportNRCED,
+  ReportBCMI,
+  DamSafetyInspection,
+  DamSafetyInspectionBCMI,
+  DamSafetyInspectionNRCED,
+  AnnualReport,
+  AnnualReportBCMI
 } from '../../../../../common/src/app/models';
 
 // orders
@@ -87,6 +101,25 @@ import { ManagementPlanLNGDetailComponent } from '../management-plans/management
 // court convictions
 import { CourtConvictionLNGDetailComponent } from '../court-convictions/court-conviction-lng-detail/court-conviction-lng-detail.component';
 import { CourtConvictionNRCEDDetailComponent } from '../court-convictions/court-conviction-nrced-detail/court-conviction-nrced-detail.component';
+
+// certificate amendment
+import { CertificateAmendmentLNGDetailComponent } from '../certificate-amendments/certificate-amendments-lng-detail/certificate-amendments-lng-detail.component';
+import { CertificateAmendmentBCMIDetailComponent } from '../certificate-amendments/certificate-amendments-bcmi-detail/certificate-amendments-bcmi-detail.component';
+
+// correspondence
+import { CorrespondenceNRCEDDetailComponent } from '../correspondences/correspondence-nrced-detail/correspondence-nrced-detail.component';
+import { CorrespondenceBCMIDetailComponent } from '../correspondences/correspondence-bcmi-detail/correspondence-bcmi-detail.component';
+
+// report
+import { ReportNRCEDDetailComponent } from '../reports/report-nrced-detail/report-nrced-detail.component';
+import { ReportBCMIDetailComponent } from '../reports/report-bcmi-detail/report-bcmi-detail.component';
+
+// dam safety inspection
+import { DamSafetyInspectionNRCEDDetailComponent } from '../dam-safety-inspections/dam-safety-inspection-nrced-detail/dam-safety-inspection-nrced-detail.component';
+import { DamSafetyInspectionBCMIDetailComponent } from '../dam-safety-inspections/dam-safety-inspection-bcmi-detail/dam-safety-inspection-bcmi-detail.component';
+
+// annual reports
+import { AnnualReportBCMIDetailComponent } from '../annual-reports/annual-report-bcmi-detail/annual-report-bcmi-detail.component';
 
 // other
 import { RecordComponent } from './record-component';
@@ -179,6 +212,34 @@ export class RecordUtils {
         return new CourtConvictionLNG(data);
       case 'CourtConvictionNRCED':
         return new CourtConvictionNRCED(data);
+      case 'CertificateAmendment':
+        return new CertificateAmendment(data);
+      case 'CertificateAmendmentLNG':
+        return new CertificateAmendmentLNG(data);
+      case 'CertificateAmendmentBCMI':
+        return new CertificateAmendmentBCMI(data);
+      case 'Correspondence':
+        return new Correspondence(data);
+      case 'CorrespondenceNRCED':
+        return new CorrespondenceNRCED(data);
+      case 'CorrespondenceBCMI':
+        return new CorrespondenceBCMI(data);
+      case 'Report':
+        return new Report(data);
+      case 'ReportNRCED':
+        return new ReportNRCED(data);
+      case 'ReportBCMI':
+        return new ReportBCMI(data);
+      case 'DamSafetyInspection':
+        return new DamSafetyInspection(data);
+      case 'DamSafetyInspectionNRCED':
+        return new DamSafetyInspectionNRCED(data);
+      case 'DamSafetyInspectionBCMI':
+        return new DamSafetyInspectionBCMI(data);
+      case 'AnnualReport':
+        return new AnnualReport(data);
+      case 'AnnualReportBCMI':
+        return new AnnualReportBCMI(data);
       default:
         return null;
     }
@@ -243,6 +304,24 @@ export class RecordUtils {
         return CourtConvictionLNGDetailComponent;
       case 'CourtConvictionNRCED':
         return CourtConvictionNRCEDDetailComponent;
+      case 'CertificateAmendmentLNG':
+        return CertificateAmendmentLNGDetailComponent;
+      case 'CertificateAmendmentBCMI':
+        return CertificateAmendmentBCMIDetailComponent;
+      case 'CorrespondenceNRCED':
+        return CorrespondenceNRCEDDetailComponent;
+      case 'CorrespondenceBCMI':
+        return CorrespondenceBCMIDetailComponent;
+      case 'ReportNRCED':
+        return ReportNRCEDDetailComponent;
+      case 'ReportBCMI':
+        return ReportBCMIDetailComponent;
+      case 'DamSafetyInspectionNRCED':
+        return DamSafetyInspectionNRCEDDetailComponent;
+      case 'DamSafetyInspectionBCMI':
+        return DamSafetyInspectionBCMIDetailComponent;
+      case 'AnnualReportBCMI':
+        return AnnualReportBCMIDetailComponent;
       default:
         return null;
     }

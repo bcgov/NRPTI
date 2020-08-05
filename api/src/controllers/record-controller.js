@@ -21,6 +21,11 @@ let AddCourtConviction = require('./post/court-conviction');
 let AddNewsItem = require('./post/news-item');
 let AddMine = require('./post/mine-bcmi');
 let AddCollection = require('./post/collection-bcmi');
+let AddAnnualReport = require('./post/annual-report');
+let AddCertificateAmendment = require('./post/certificate-amendment');
+let AddCorrespondence = require('./post/correspondence');
+let AddDamSafetyInspection = require('./post/dam-safety-inspection');
+let AddReport = require('./post/report');
 
 let EditOrder = require('./put/order');
 let EditInspection = require('./put/inspection');
@@ -39,6 +44,11 @@ let EditCourtConviction = require('./put/court-conviction');
 let EditNewsItem = require('./put/news-item');
 let EditMine = require('./put/mine-bcmi');
 let EditCollection = require('./put/collection-bcmi');
+let EditAnnualReport = require('./put/annual-report');
+let EditCertificateAmendment = require('./put/certificate-amendment');
+let EditCorrespondence = require('./put/correspondence');
+let EditDamSafetyInspection = require('./put/dam-safety-inspection');
+let EditReport = require('./put/report');
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 
@@ -174,6 +184,21 @@ exports.protectedPost = async function (args, res, next) {
     if (data.collections) {
       promises.push(processPostRequest(args, res, next, 'collections', data.collections));
     }
+    if (data.annualReports) {
+      promises.push(processPostRequest(args, res, next, 'annualReports', data.annualReports));
+    }
+    if (data.certificateAmendments) {
+      promises.push(processPostRequest(args, res, next, 'certificateAmendments', data.certificateAmendments));
+    }
+    if (data.correspondences) {
+      promises.push(processPostRequest(args, res, next, 'correspondences', data.correspondences));
+    }
+    if (data.damSafetyInspections) {
+      promises.push(processPostRequest(args, res, next, 'damSafetyInspections', data.damSafetyInspections));
+    }
+    if (data.reports) {
+      promises.push(processPostRequest(args, res, next, 'reports', data.reports));
+    }
 
     let response = await Promise.all(promises);
 
@@ -261,6 +286,21 @@ exports.protectedPut = async function (args, res, next) {
     }
     if (data.collections) {
       promises.push(processPutRequest(args, res, next, 'collections', data.collections));
+    }
+    if (data.annualReports) {
+      promises.push(processPutRequest(args, res, next, 'annualReports', data.annualReports));
+    }
+    if (data.certificateAmendments) {
+      promises.push(processPutRequest(args, res, next, 'certificateAmendments', data.certificateAmendments));
+    }
+    if (data.correspondences) {
+      promises.push(processPutRequest(args, res, next, 'correspondences', data.correspondences));
+    }
+    if (data.damSafetyInspections) {
+      promises.push(processPutRequest(args, res, next, 'damSafetyInspections', data.damSafetyInspections));
+    }
+    if (data.reports) {
+      promises.push(processPutRequest(args, res, next, 'reports', data.reports));
     }
 
     let response = await Promise.all(promises);
@@ -492,6 +532,22 @@ const processPostRequest = async function (args, res, next, property, data) {
       case 'collections':
         promises.push(AddCollection.createRecord(args, res, next, data[i]));
         break;
+      case 'annualReports':
+        promises.push(AddAnnualReport.createRecord(args, res, next, data[i]));
+        break;
+      case 'certificateAmendments':
+        promises.push(AddCertificateAmendment.createRecord(args, res, next, data[i]));
+        break;
+      case 'correspondences':
+        promises.push(AddCorrespondence.createRecord(args, res, next, data[i]));
+        break;
+      case 'damSafetyInspections':
+        promises.push(AddDamSafetyInspection.createRecord(args, res, next, data[i]));
+        break;
+      case 'reports':
+        promises.push(AddReport.createRecord(args, res, next, data[i]));
+        break;
+
       default:
         return {
           errorMessage: `Property ${property} does not exist.`
@@ -576,6 +632,22 @@ const processPutRequest = async function (args, res, next, property, data, overr
       case 'collections':
         promises.push(EditCollection.editRecord(args, res, next, data[i], overridePutParams));
         break;
+      case 'annualReports':
+        promises.push(EditAnnualReport.editRecord(args, res, next, data[i], overridePutParams));
+        break;
+      case 'certificateAmendments':
+        promises.push(EditCertificateAmendment.editRecord(args, res, next, data[i], overridePutParams));
+        break;
+      case 'correspondences':
+        promises.push(EditCorrespondence.editRecord(args, res, next, data[i], overridePutParams));
+        break;
+      case 'damSafetyInspections':
+        promises.push(EditDamSafetyInspection.editRecord(args, res, next, data[i], overridePutParams));
+        break;
+      case 'reports':
+        promises.push(EditReport.editRecord(args, res, next, data[i], overridePutParams));
+        break;
+
       default:
         return {
           errorMessage: `Property ${property} does not exist.`
