@@ -6,7 +6,7 @@ const fs = require('fs');
 const defaultLog = require('../../utils/logger')('core-datasource');
 const integrationUtils = require('../integration-utils');
 const DocumentController = require('../../controllers/document-controller');
-const PermitAmendmentUtils = require('./permit-amendment-utils');
+const PermitUtils = require('./permit-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const { getCoreAccessToken, getIntegrationUrl, getAuthHeader } = require('../integration-utils');
 
@@ -64,17 +64,17 @@ class CoreDocumentsDataSource {
    */
   async updateRecords() {
     try {
-      const amendments = await this.getPermitAmendments();
+      const permits = await this.getPermits();
 
-      this.status.itemTotal = amendments.length;
+      this.status.itemTotal = permits.length;
       await this.taskAuditRecord.updateTaskRecord({ itemTotal: this.status.itemTotal });
 
-      const permitAmendmentUtils = new PermitAmendmentUtils(this.auth_payload, RECORD_TYPE.PermitAmendment)
+      const permitUtils = new PermitUtils(this.auth_payload, RECORD_TYPE.Permit)
 
       // Process each amendment one at a time. As each record makes calls to the Core API, only process one at a time to prevent 504 errors.
-      for (let i = 0; i < amendments.length; i++) {
-        defaultLog.info(`Processing amendment ${i + 1} out of ${amendments.length}`);
-        await this.processRecord(amendments[i], permitAmendmentUtils);
+      for (let i = 0; i < permits.length; i++) {
+        defaultLog.info(`Processing permit ${i + 1} out of ${permits.length}`);
+        await this.processRecord(permits[i], permitUtils);
       }
     } catch (error) {
       defaultLog.error(`updateRecords - unexpected error: ${error.message}`);
@@ -85,54 +85,34 @@ class CoreDocumentsDataSource {
 
 
   /**
-   * Process a permit amendment record.
+   * Process a permit record.
    *
-   * @param {PermitAmendment} amendment Permit amendment to process.
-   * @param {PermitAmendmentUtils} permitAmendmentUtils Permit amendment utils.
+   * @param {Permit} permit Permit to process.
+   * @param {PermitUtils} permitUtils Permit utils.
    * @returns {object} status of the process operation for this record.
    * @memberof CoreDocumentsDataSource
    */
-  async processRecord(amendment, permitAmendmentUtils) {
+  async processRecord(permit, permitUtils) {
     const recordStatus = {};
 
     try {
-      if (!amendment || !amendment.amendmentDocuments) {
-        throw new Error('Param amendment is required and must have amendmentDocuments.');
+      if (!permit) {
+        throw new Error('Param permit is required.');
       }
 
-      // For any documents that do not have a local version, fetch it and create one.
-      const savedDocs = [];
-      for (const document of amendment.amendmentDocuments) {
-        if (!document.documentId) {
-          if (!document._sourceRefId || !document.documentName) {
-            // Document is missing required fields. Record error but keep processing.
-            recordStatus.amendmentId = amendment._id;
-            recordStatus.error = 'Document missing required fields to process.';
-            this.status.individualRecordStatus.push(recordStatus);
-            continue;
-          }
+      // Get document and temporarily store it.
+      const tempFilePath = await this.getTemporaryDocument(permit._sourceDocumentRefId, permit.recordName);
+      const fileContent = fs.readFileSync(tempFilePath);
 
-          // Get document and temporarily store it.
-          const tempFilePath = await this.getTemporaryDocument(document._sourceRefId, document.documentName);
-          const fileContent = fs.readFileSync(tempFilePath);
+      // Save document to S3 and locally.
+      const newDocumentId = await this.putFileS3(fileContent, permit.recordName);
 
-          // Save document to S3 and locally.
-          const newDocumentId = await this.putFileS3(fileContent, document.documentName);
+      // Delete temp file.
+      fs.unlinkSync(tempFilePath);
 
-          // Delete temp file.
-          fs.unlinkSync(tempFilePath);
-
-          savedDocs.push({
-            documentId: newDocumentId,
-            _sourceRefId: document._sourceRefId
-          });
-        }
-      }
-
-      // Save the new documents to the permit amendment.
-      await this.updateAmendment(amendment, savedDocs, permitAmendmentUtils);
+      await this.updatePermit(permit, newDocumentId, permitUtils);
     } catch (error) {
-      recordStatus.amendmentId = amendment._id;
+      recordStatus.amendmentId = permit._id;
       recordStatus.error = error.message;
 
       // only add individual record status when an error occurs so that processing continues.
@@ -146,9 +126,13 @@ class CoreDocumentsDataSource {
    * @returns {PermitAmendment[]} Permit Amendments missing documents.
    * @memberof CoreDocumentsDataSource
    */
-  async getPermitAmendments() {
-    const PermitAmendment = mongoose.model('PermitAmendment');
-    return await PermitAmendment.find({ _schemaName: 'PermitAmendment', 'documents.documentId': null }).populate('_flavourRecords');
+  async getPermits() {
+    const PermitAmendment = mongoose.model('Permit');
+    return await PermitAmendment.find({ 
+      _schemaName: 'Permit',
+      _sourceDocumentRefId: { $ne: null },
+      documents: []
+    }).populate('_flavourRecords');
   }
 
   /**
@@ -243,37 +227,28 @@ class CoreDocumentsDataSource {
   }
 
   /**
-   * Updates a permit amendment with references to documents that have been created.
+   * Updates a permit with references to a document that has been created.
    *
-   * @param {PermitAmendment} amendment Permit amendment to update.
+   * @param {Permit} permit Permit to update.
    * @param {object[]} documents Array of document IDs and source ref info.
-   * @param {PermitAmendmentUtils} permitAmendmentUtils Permit Amendment utils.
+   * @param {PermitUtils} permitUtils Permit utils.
    * @memberof CoreDocumentsDataSource
    */
-  async updateAmendment(amendment, documents, permitAmendmentUtils) {
-    if (!amendment || !amendment.amendmentDocuments) {
-      throw new Error('updateAmendment - param amendment must not be null and contain documents.');
+  async updatePermit(permit, documentId, permitUtils) {
+    if (!permit) {
+      throw new Error('updateAmendment - param permit must not be null and contain documents.');
     }
 
-    if (!documents) {
-      throw new Error('updateAmendment - param documents must not be null.');
+    if (!documentId) {
+      throw new Error('updateAmendment - param documentId must not be null.');
     }
 
-    for (const document of documents) {
-      // Add the document ID to the existing document entries in the amendment.
-      for (let i = 0; i < amendment.amendmentDocuments.length; i++) {
-        if (amendment.amendmentDocuments[i]._sourceRefId === document._sourceRefId) {
-          amendment.amendmentDocuments[i].documentId = document.documentId;
-          break;
-        }
-      }
-    }
+    permit.documents.push(documentId);
 
     try {
       // Before saving we want to transform to remove anything associated with the mongoose model
-      const transformedAmendment = permitAmendmentUtils.transformRecord(amendment);
-      // Must add field to trigger flavour update.
-      await permitAmendmentUtils.updateRecord(transformedAmendment, amendment);
+      const transformedAmendment = permitUtils.transformRecord(permit);
+      await permitUtils.updateRecord(transformedAmendment, permit);
     } catch (error) {
       throw new Error(`updateAmendment - unexpected error: ${error.message}`);
     }

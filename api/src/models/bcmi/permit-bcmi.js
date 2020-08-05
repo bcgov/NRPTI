@@ -24,7 +24,7 @@ module.exports = require('../../utils/model-schema-generator')(
     // Original Permit GUID, only populated for AMD types
     originalPermit: { type: 'ObjectId', default: null, index: true },
     receivedDate: { type: Date, default: null },
-    issueDate: { type: Date, default: null },
+    dateIssued: { type: Date, default: null },
     authorizedEndDate: { type: Date, default: null },
     description: { type: String, default: '' },
     // Document ref to meta record and physical document on the object store
