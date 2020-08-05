@@ -79,9 +79,6 @@ export class MinesRecordsAddEditComponent implements OnInit {
           this.bcmiFlavour = this.record.flavours.find(f => f._schemaName.endsWith('BCMI'));
           this.mine = res.mine[0].data;
           // if we have a current flavour, use that
-          if (this.bcmiFlavour) {
-            this.record = this.bcmiFlavour;
-          }
 
           this.populateTextFields();
         } else {
@@ -165,7 +162,7 @@ export class MinesRecordsAddEditComponent implements OnInit {
       ),
       recordPublish: new FormControl(
         (this.recordState && this.recordState.recordPublish) ||
-          (this.record && this.record.read.includes('public')) || false
+          (this.record && this.record.isBcmiPublished) || false
       )
     });
 
