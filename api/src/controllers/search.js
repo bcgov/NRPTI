@@ -648,7 +648,6 @@ const executeQuery = async function (args, res, next) {
 
     QueryActions.sendResponse(res, 200, itemData);
   } else if (dataset[0] === 'Item') {
-    let collectionObj = mongoose.model(args.swagger.params._schemaName.value);
     defaultLog.info('ITEM GET', { _id: args.swagger.params._id.value });
 
     let aggregation = [
@@ -673,7 +672,6 @@ const executeQuery = async function (args, res, next) {
 
     // populate flavours
     populate &&
-      QueryUtils.recordTypes.includes(args.swagger.params._schemaName.value) &&
       aggregation.push({
         $lookup: {
           from: 'nrpti',
@@ -685,7 +683,6 @@ const executeQuery = async function (args, res, next) {
 
     // Populate documents in a record
     populate &&
-      QueryUtils.recordTypes.includes(args.swagger.params._schemaName.value) &&
       aggregation.push({
         $lookup: {
           from: 'nrpti',
@@ -719,7 +716,24 @@ const executeQuery = async function (args, res, next) {
       }
     });
 
-    const data = await collectionObj.aggregate(aggregation);
+    let data = [];
+
+    if (args.swagger.params._schemaName.value) {
+      let collectionObj = mongoose.model(args.swagger.params._schemaName.value);
+      data = await collectionObj.aggregate(aggregation);
+    } else {
+      const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+      const collection = db.collection('nrpti');
+      data = await collection.aggregate(aggregation, {
+        allowDiskUse: true,
+        collation: {
+          locale: 'en_US',
+          alternate: 'shifted',
+          numericOrdering: true
+        }
+      })
+      .toArray();
+    }
 
     QueryActions.sendResponse(res, 200, data);
   } else {
