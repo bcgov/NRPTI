@@ -403,7 +403,7 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createRestorativeJustice(restorativeJustice).subscribe(async res => {
+      this.factoryService.writeRecord(restorativeJustice, 'restorativeJustices', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,
@@ -438,7 +438,7 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
         restorativeJustice['RestorativeJusticeLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.editRestorativeJustice(restorativeJustice).subscribe(async res => {
+      this.factoryService.writeRecord(restorativeJustice, 'restorativeJustices', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,

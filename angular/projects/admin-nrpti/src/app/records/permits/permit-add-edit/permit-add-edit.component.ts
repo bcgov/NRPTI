@@ -249,7 +249,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createPermit(permit).subscribe(async res => {
+      this.factoryService.writeRecord(permit, 'permits', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,
@@ -275,7 +275,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
         permit['PermitLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.editPermit(permit).subscribe(async res => {
+      this.factoryService.writeRecord(permit, 'permits', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,

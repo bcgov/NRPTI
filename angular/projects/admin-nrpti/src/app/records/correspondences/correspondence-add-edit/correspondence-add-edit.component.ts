@@ -339,7 +339,7 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createCorrespondence(correspondence).subscribe(async res => {
+      this.factoryService.writeRecord(correspondence, 'correspondences', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         await this.recordUtils.handleDocumentChanges(
           this.links,
@@ -373,7 +373,7 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
         correspondence['CorrespondenceBCMI']['_id'] = this.bcmiFlavour._id;
       }
 
-      this.factoryService.editCorrespondence(correspondence).subscribe(async res => {
+      this.factoryService.writeRecord(correspondence, 'correspondences', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         await this.recordUtils.handleDocumentChanges(
           this.links,

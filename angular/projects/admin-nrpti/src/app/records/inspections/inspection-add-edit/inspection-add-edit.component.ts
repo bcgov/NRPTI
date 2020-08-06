@@ -347,7 +347,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createInspection(inspection).subscribe(async res => {
+      this.factoryService.writeRecord(inspection, 'inspections', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,
@@ -382,7 +382,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
         inspection['InspectionLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.editInspection(inspection).subscribe(async res => {
+      this.factoryService.writeRecord(inspection, 'inspections', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,

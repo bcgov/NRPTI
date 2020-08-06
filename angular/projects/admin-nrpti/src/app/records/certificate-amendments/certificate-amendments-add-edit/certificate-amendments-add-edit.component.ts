@@ -341,7 +341,7 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createCertificateAmendment(certificateAmendment).subscribe(async res => {
+      this.factoryService.writeRecord(certificateAmendment, 'certificateAmendments', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         await this.recordUtils.handleDocumentChanges(
           this.links,
@@ -375,7 +375,7 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
         certificateAmendment['CertificateAmendmentBCMI']['_id'] = this.bcmiFlavour._id;
       }
 
-      this.factoryService.editCertificateAmendment(certificateAmendment).subscribe(async res => {
+      this.factoryService.writeRecord(certificateAmendment, 'certificateAmendments', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         await this.recordUtils.handleDocumentChanges(
           this.links,

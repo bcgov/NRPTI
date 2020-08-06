@@ -193,7 +193,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createManagementPlan(managementPlan).subscribe(async res => {
+      this.factoryService.writeRecord(managementPlan, 'managementPlans', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,
@@ -219,7 +219,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
         managementPlan['ManagementPlanLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.editManagementPlan(managementPlan).subscribe(async res => {
+      this.factoryService.writeRecord(managementPlan, 'managementPlans', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,

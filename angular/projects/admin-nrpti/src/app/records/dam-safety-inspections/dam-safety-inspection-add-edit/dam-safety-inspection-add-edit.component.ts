@@ -339,7 +339,7 @@ export class DamSafetyInspectionAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createDamSafetyInspection(damSafetyInspection).subscribe(async res => {
+      this.factoryService.writeRecord(damSafetyInspection, 'damSafetyInspections', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         await this.recordUtils.handleDocumentChanges(
           this.links,
@@ -373,7 +373,7 @@ export class DamSafetyInspectionAddEditComponent implements OnInit, OnDestroy {
         damSafetyInspection['DamSafetyInspectionBCMI']['_id'] = this.bcmiFlavour._id;
       }
 
-      this.factoryService.editDamSafetyInspection(damSafetyInspection).subscribe(async res => {
+      this.factoryService.writeRecord(damSafetyInspection, 'damSafetyInspections', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         await this.recordUtils.handleDocumentChanges(
           this.links,
