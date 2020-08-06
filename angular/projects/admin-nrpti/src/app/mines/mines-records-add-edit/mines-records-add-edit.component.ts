@@ -252,7 +252,7 @@ export class MinesRecordsAddEditComponent implements OnInit {
     record['recordType'] = this.myForm.get('recordType').value;
     this.myForm.get('recordAgency').dirty && (record['issuingAgency'] = this.myForm.get('recordAgency').value);
 
-    // lookup appropriate schemaName from from type value
+    // lookup appropriate schemaName from type value
     const recordSchema = Object.values(Picklists.bcmiRecordTypePicklist).filter(item => {
       return item.displayName === record['recordType'];
     });

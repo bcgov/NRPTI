@@ -360,7 +360,6 @@ export class FactoryService {
   public editMineRecord(record: any): Observable<object> {
     const outboundObject = {};
 
-    // theres a bunch missing?
     switch (record.recordType) {
       case 'Administrative Penalty':
         outboundObject['administrativePenalties'] = [record];
@@ -421,13 +420,11 @@ export class FactoryService {
         break;
     }
 
-    console.log(outboundObject);
     return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
 
   // todo determine payload type to set
   public createMineRecord(record: any) {
-    // parse record.type to detemine create call to use
     switch (record.recordType) {
       case 'Administrative Penalty':
         return this.writeRecord(record, 'administrativePenalties', true);
@@ -478,7 +475,6 @@ export class FactoryService {
    * @returns {Promise<any>}
    * @memberof FactoryService
    */
-  // todo verify need model specified
   public deleteMineRecord(recordId: string, model: string): Promise<any> {
     return this.recordService.deleteRecord(recordId, model);
   }
