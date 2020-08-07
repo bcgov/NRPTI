@@ -200,7 +200,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
 
   // set data
   incomingObj.recordName && (damSafetyInspectionBCMI.recordName = incomingObj.recordName);
-  damSafetyInspectionBCMI.recordType = 'DamSafetyInspection';
+  damSafetyInspectionBCMI.recordType = 'Dam Safety Inspection';
   damSafetyInspectionBCMI.issuedTo.read = ROLES.ADMIN_ROLES;
   damSafetyInspectionBCMI.issuedTo.write = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (damSafetyInspectionBCMI.issuedTo.type = incomingObj.issuedTo.type);

@@ -39,6 +39,18 @@
           </span>
         </div>
       </div>
+      <div class="col-sm" *ngIf="record && record.recordType === 'Permit'">
+        <div class="flex-container mb-2">
+          <label for="type" class="med mr-2">Permit Type:</label>
+          <span id="type" name="type">
+            {{ (record && record.typeCode && record.typeCode === 'OGP') ?
+            'Original Permit' :
+            (record && record.typeCode && record.typeCode === 'AMD') ?
+            'Permit Amendment' :
+            '-' }}
+          </span>
+        </div>
+      </div>
       <div class="col-sm">
         <div class="flex-container mb-2">
           <label for="agency" class="med mr-2">Agency:</label>

@@ -47,6 +47,7 @@ export class MinesRecordsAddEditComponent implements OnInit {
   public recordTypeNamesBCMI = Object.values(Picklists.bcmiRecordTypePicklist).map(item => {
     return item.displayName;
   }).sort();
+  public permitTypes = ['OGP', 'AMD'];
 
   public recordAgencies = Picklists.collectionAgencyPicklist;
 
@@ -155,6 +156,10 @@ export class MinesRecordsAddEditComponent implements OnInit {
         (this.recordState && this.recordState.recordType)
         || (this.record && this.record.recordType) || ''
       ),
+      typeCode: new FormControl(
+        (this.recordState  && this.recordState.recordType === 'Permit' && this.recordState.typeCode)
+        || (this.record && this.record.recordType === 'Permit' && this.record.typeCode) || ''
+      ),
       recordAgency: new FormControl(
         (this.recordState && this.recordState.recordAgency) ||
           (this.record && this.record.agency) ||
@@ -250,6 +255,9 @@ export class MinesRecordsAddEditComponent implements OnInit {
     this.myForm.get('recordDate').dirty &&
       (record['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('recordDate').value));
     record['recordType'] = this.myForm.get('recordType').value;
+    if (record['recordType'] === 'Permit') {
+      record['typeCode'] = this.myForm.get('typeCode').value;
+    }
     this.myForm.get('recordAgency').dirty && (record['issuingAgency'] = this.myForm.get('recordAgency').value);
 
     // lookup appropriate schemaName from type value
@@ -263,6 +271,9 @@ export class MinesRecordsAddEditComponent implements OnInit {
     record[schemaString] = {};
     record['recordName'] && (record[schemaString]['recordName'] = record['recordName']);
     record['issuingAgency'] && (record[schemaString]['issuingAgency'] = record['issuingAgency']);
+    if (record['recordType'] === 'Permit') {
+      record[schemaString]['typeCode'] = this.myForm.get('typeCode').value;
+    }
     if (this.myForm.get('recordPublish').dirty && this.myForm.get('recordPublish').value) {
       record[schemaString]['addRole'] = 'public';
     } else if (this.myForm.get('recordPublish').dirty && !this.myForm.get('recordPublish').value) {
