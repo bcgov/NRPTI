@@ -202,7 +202,7 @@ export class Picklists {
     // Certificate: { displayName: 'Certificate', _schemaName: 'CertificateBCMI' },
     CertificateAmendment: { displayName: 'Certificate Amendment', _schemaName: 'CertificateAmendmentBCMI' },
     // ConstructionPlan: { displayName: 'Construction Plan', _schemaName: 'ConstructionPlanBCMI' },
-    Correspondence: { displayName: 'Correspondence', _schemaName: 'CorrespondenceBCMIBCMI' },
+    Correspondence: { displayName: 'Correspondence', _schemaName: 'CorrespondenceBCMI' },
     // CourtConviction: { displayName: 'Court Conviction', _schemaName: 'CourtConvictionBCMI' },
     DamSafetyInspection: { displayName: 'Dam Safety Inspection', _schemaName: 'DamSafetyInspectionBCMI' },
     Inspection: { displayName: 'Inspection', _schemaName: 'InspectionBCMI' },

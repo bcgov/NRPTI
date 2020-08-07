@@ -12,6 +12,7 @@ export class ManagementPlanBCMI extends RecordModel {
 
   dateIssued: Date;
   agency: string;
+  issuingAgency: string;
   author: string;
   documents: object[];
 
@@ -31,6 +32,7 @@ export class ManagementPlanBCMI extends RecordModel {
 
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.agency = (obj && obj.agency) || '';
+    this.issuingAgency = (obj && obj.agency) || '';
     this.author = (obj && obj.author) || '';
     this.documents = (obj && obj.documents) || [];
 
