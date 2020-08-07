@@ -141,30 +141,35 @@ export class MinesRecordsAddEditComponent implements OnInit {
    */
   private buildForm() {
     this.myForm = new FormGroup({
-      recordName: new FormControl(
-        (this.recordState && this.recordState.recordName) || (this.record && this.record.recordName) || ''
-      ),
-      recordDate: new FormControl(
-        (this.recordState &&
+      recordName: new FormControl({
+        value: (this.recordState && this.recordState.recordName) || (this.record && this.record.recordName) || '',
+        disabled: (this.record && this.record.sourceSystemRef !== 'nrpti')
+      }),
+      recordDate: new FormControl({
+        value: (this.recordState &&
           this.recordState.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.recordState.dateIssued.date))) ||
           (this.record && this.record.dateIssued &&
            this.utils.convertJSDateToNGBDate(new Date(this.record.dateIssued))) ||
-          '' || null
-      ),
-      recordType: new FormControl(
-        (this.recordState && this.recordState.recordType)
-        || (this.record && this.record.recordType) || ''
-      ),
-      typeCode: new FormControl(
-        (this.recordState  && this.recordState.recordType === 'Permit' && this.recordState.typeCode)
-        || (this.record && this.record.recordType === 'Permit' && this.record.typeCode) || ''
-      ),
-      recordAgency: new FormControl(
-        (this.recordState && this.recordState.recordAgency) ||
+          '' || null,
+          disabled: (this.record && this.record.sourceSystemRef !== 'nrpti')
+      }),
+      recordType: new FormControl({
+        value: (this.recordState && this.recordState.recordType)
+        || (this.record && this.record.recordType) || '',
+        disabled: (this.record && this.record.sourceSystemRef !== 'nrpti')
+      }),
+      typeCode: new FormControl({
+        value: (this.recordState  && this.recordState.recordType === 'Permit' && this.recordState.typeCode)
+        || (this.record && this.record.recordType === 'Permit' && this.record.typeCode) || '',
+        disabled: (this.record && this.record.sourceSystemRef !== 'nrpti')
+      }),
+      recordAgency: new FormControl({
+        value: (this.recordState && this.recordState.recordAgency) ||
           (this.record && this.record.agency) ||
-          (this.record && this.record.issuingAgency) || ''
-      ),
+          (this.record && this.record.issuingAgency) || '',
+          disabled: (this.record && this.record.sourceSystemRef !== 'nrpti')
+      }),
       recordPublish: new FormControl(
         (this.recordState && this.recordState.recordPublish) ||
           (this.record && this.record.isBcmiPublished) || false
