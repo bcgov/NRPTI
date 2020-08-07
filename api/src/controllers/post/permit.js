@@ -96,6 +96,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.recordSubtype && (permit.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (permit.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (permit.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.issuedTo && (permit.issuedTo = incomingObj.issuedTo);
   incomingObj.legislation && incomingObj.legislation.act && (permit.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
     incomingObj.legislation.regulation &&
