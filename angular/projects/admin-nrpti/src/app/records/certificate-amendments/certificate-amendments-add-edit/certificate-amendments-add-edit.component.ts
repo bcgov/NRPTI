@@ -135,74 +135,74 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti' &&
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti') &&
         (!this.factoryService.userInLngRole() || !this.factoryService.userInBcmiRole())
       }),
       recordSubtype: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordSubtype) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       dateIssued: new FormControl({
         value: (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
         '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       issuingAgency: new FormControl({
         value: (this.currentRecord && this.currentRecord.issuingAgency) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       legislation: new FormGroup({
         act: new FormControl({
           value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.act) || '',
-          disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
         }),
         regulation: new FormControl({
           value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.regulation) || '',
-          disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
         }),
         section: new FormControl({
           value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.section) || '',
-          disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
         }),
         subSection: new FormControl({
           value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.subSection) || '',
-          disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
         }),
         paragraph: new FormControl({
           value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || '',
-          disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
         })
       }),
       legislationDescription: new FormControl({
         value: (this.currentRecord && this.currentRecord.legislationDescription) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       issuedTo: new FormGroup({
         type: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.type) || '',
-          disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
         }),
         companyName: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.companyName) || '',
-          disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
         }),
         firstName: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.firstName) || '',
-          disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
         }),
         middleName: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.middleName) || '',
-          disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
         }),
         lastName: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.lastName) || '',
-          disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
         }),
         fullName: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.fullName) || '',
-          disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
         }),
         dateOfBirth: new FormControl({
           value: (this.currentRecord &&
@@ -210,28 +210,28 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
             this.currentRecord.issuedTo.dateOfBirth &&
             this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
           '',
-          disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
           }),
         anonymous: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || '',
-          disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
         })
       }),
       projectName: new FormControl({
         value: (this.currentRecord && this.currentRecord.projectName) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       location: new FormControl({
         value: (this.currentRecord && this.currentRecord.location) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       latitude: new FormControl({
         value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       longitude: new FormControl({
         value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
 
       // LNG

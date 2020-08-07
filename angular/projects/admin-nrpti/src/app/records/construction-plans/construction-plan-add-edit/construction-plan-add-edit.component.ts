@@ -98,38 +98,39 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti' && !this.factoryService.userInLngRole()
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti') &&
+          !this.factoryService.userInLngRole()
       }),
       dateIssued: new FormControl({
         value: (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
         '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
         }),
       agency: new FormControl({
         value: (this.currentRecord && this.currentRecord.agency) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       author: new FormControl({
         value: (this.currentRecord && this.currentRecord.author) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       projectName: new FormControl({
         value: (this.currentRecord && this.currentRecord.projectName) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       location: new FormControl({
         value: (this.currentRecord && this.currentRecord.location) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       latitude: new FormControl({
         value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       longitude: new FormControl({
         value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
 
       // LNG

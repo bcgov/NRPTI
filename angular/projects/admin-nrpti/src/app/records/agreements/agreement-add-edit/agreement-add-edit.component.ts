@@ -95,22 +95,23 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti' && !this.factoryService.userInLngRole()
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti') &&
+          !this.factoryService.userInLngRole()
       }),
       dateIssued: new FormControl({
         value: (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
           '',
-          disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
         }),
       nationName: new FormControl({
         value: (this.currentRecord && this.currentRecord.nationName) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       projectName: new FormControl({
         value: (this.currentRecord && this.currentRecord.projectName) || '',
-        disabled: this.currentRecord.sourceSystemRef !== 'nrpti'
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
 
       // LNG
