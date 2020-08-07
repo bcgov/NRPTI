@@ -14,7 +14,7 @@
       <div class="d-flex justify-content-between">
         <div class="col-6 col-lg-8 col-xl-9">
           <div>
-            <h2 class="border-0 mb-0">Edit record</h2>
+            <h2 class="border-0 mb-0">{{isEditing ? 'Edit' : 'Add'}} record</h2>
           </div>
           <div class="mb-3">
             <span class="grey-subtext">{{ lastEditedSubText }}</span>
@@ -120,7 +120,7 @@
         [documents]="record ? record.documents : []"
         (documentsToDelete)="documentsToDelete = $event"></app-document-edit>
       <app-document-link-staging
-        *ngIf="record && record.documents && record.documents.length === 0"
+        *ngIf="!record || (record && record.documents && record.documents.length === 0)"
         [maxFiles]=1
         (linksChanged)="links = $event"
         (documentsChanged)="documents = $event"></app-document-link-staging>
