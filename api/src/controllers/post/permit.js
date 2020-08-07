@@ -206,6 +206,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.recordSubtype && (permitLNG.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (permitLNG.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (permitLNG.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.issuedTo && (permitLNG.issuedTo = incomingObj.issuedTo);
   incomingObj.legislation && incomingObj.legislation.act && (permitLNG.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
     incomingObj.legislation.regulation &&
@@ -286,6 +287,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.recordSubtype && (permitBCMI.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (permitBCMI.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (permitBCMI.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.issuedTo && (permitBCMI.issuedTo = incomingObj.issuedTo);
   incomingObj.legislation && incomingObj.legislation.act && (permitBCMI.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
     incomingObj.legislation.regulation &&
