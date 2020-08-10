@@ -341,11 +341,18 @@ export class ReportAddEditComponent implements OnInit, OnDestroy {
     if (!this.isEditing) {
       this.factoryService.writeRecord(report, 'reports', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
+        let _id = null;
+        if (Array.isArray(res[0][0].object)) {
+          _id = res[0][0].object.find(r => r._schemaName === 'Report')._id;
+        } else {
+          _id = res[0][0].object._id;
+        }
+
         await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
-          res[0][0].object._id,
+          _id,
           this.factoryService
         );
 
