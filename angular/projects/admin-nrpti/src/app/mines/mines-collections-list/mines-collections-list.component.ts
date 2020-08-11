@@ -19,10 +19,11 @@ import {
   FilterType,
   CheckOrRadioFilterDefinition,
   RadioOptionItem,
-  DateFilterDefinition
+  DateFilterDefinition,
+  MultiSelectDefinition
 } from '../../../../../common/src/app/search-filter-template/filter-object';
 import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
-import { StateIDs, StateStatus } from '../../../../../common/src/app/utils/record-constants';
+import { StateIDs, StateStatus, Picklists } from '../../../../../common/src/app/utils/record-constants';
 
 
 /**
@@ -107,10 +108,37 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
       new DateFilterDefinition('dateRangeFromFilter', 'Start Date', 'dateRangeToFilter', 'End Date')
     );
 
+    const collectionTypeFilter = new FilterObject(
+      'type',
+      FilterType.MultiSelect,
+      'Collection Type',
+      new MultiSelectDefinition(Picklists.collectionTypePicklist.map(item => {
+        return { value: item, displayValue: item, selected: false, display: true };
+      }), 'Begin typing to filter collection types...', 'Select all that apply...')
+    );
+
+    const responsibleAgencyFilter = new FilterObject(
+      'agency',
+      FilterType.MultiSelect,
+      'Agency',
+      new MultiSelectDefinition(Picklists.collectionAgencyPicklist.map(value => {
+        return { value: value, displayValue: value, selected: false, display: true };
+      }), 'Begin typing to filter agencies...', '')
+    );
+
+    const bcmiTabFilter = new FilterObject(
+      'bcmiTabType',
+      FilterType.MultiSelect,
+      'Tab on BCMI',
+      new MultiSelectDefinition(['Authorizations', 'Compliance Oversight', 'Other'].map(item => {
+        return { value: item, displayValue: item, selected: false, display: true };
+      }), 'Begin typing to filter BCMI tab types...', '')
+    );
+
     const publishedStatefilter = new FilterObject(
       'isBcmiPublished',
       FilterType.RadioPicker,
-      'BCMI Published State',
+      'Published State (BCMI)',
       new CheckOrRadioFilterDefinition([
         new RadioOptionItem('publishedState', 'Published', 'true'),
         new RadioOptionItem('unpubState', 'Unpublished', 'false')
@@ -120,32 +148,18 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
     const recordsFilter = new FilterObject(
       'hasRecords',
       FilterType.RadioPicker,
-      'Records',
+      'Has Associated Records',
       new CheckOrRadioFilterDefinition([
         new RadioOptionItem('yesDoc', 'Yes', 'true'),
         new RadioOptionItem('noDoc', 'No', 'false')
       ])
     );
 
-    // TODO: Add type dropdown filter once this information is known.
-    // const typeFilter = new FilterObject(
-    //   'type',
-    //   FilterType.Dropdown,
-    //   'Type',
-    //   new DropdownDefinition()
-    // );
-
-    // TODO: Add agency dropdown filter once this information is known.
-    // const agencyFilter = new FilterObject(
-    //   'agency',
-    //   FilterType.Dropdown,
-    //   'Agency',
-    //   new DropdownDefinition()
-    // );
-
-
     this.filters = [
       dateFilter,
+      collectionTypeFilter,
+      responsibleAgencyFilter,
+      bcmiTabFilter,
       publishedStatefilter,
       recordsFilter
     ];
@@ -390,5 +404,8 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
     delete this.queryParams['dateRangeToFilter'];
     delete this.queryParams['dateRangeFromFilter'];
     delete this.queryParams['hasRecords'];
+    delete this.queryParams['type'];
+    delete this.queryParams['agency'];
+    delete this.queryParams['bcmiTabType'];
   }
 }
