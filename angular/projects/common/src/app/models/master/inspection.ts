@@ -25,6 +25,7 @@ export class Inspection extends RecordModel {
 
   InspectionNRCED: object;
   InspectionLNG: object;
+  isBcmiPublished: boolean;
 
   constructor(obj?: any) {
     super(obj);
@@ -43,5 +44,6 @@ export class Inspection extends RecordModel {
     this.outcomeStatus = (obj && obj.outcomeStatus) || null;
     this.outcomeDescription = (obj && obj.outcomeDescription) || null;
     this.documents = (obj && obj.documents) || null;
+    this.isBcmiPublished = (obj && obj.isBcmiPublished) || false;
   }
 }

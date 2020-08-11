@@ -15,6 +15,7 @@ export class DocumentLinkStagingComponent {
   public linkUrl = '';
   public maxFilesReached = false;
 
+  @Input() maxFiles = 5;
   @Output() linksChanged = new EventEmitter();
   @Output() documentsChanged = new EventEmitter();
 

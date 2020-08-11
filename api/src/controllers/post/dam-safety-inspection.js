@@ -89,7 +89,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   // set data
   incomingObj.recordName && (damSafetyInspection.recordName = incomingObj.recordName);
-  damSafetyInspection.recordType = 'DamSafetyInspection';
+  damSafetyInspection.recordType = 'Dam Safety Inspection';
   damSafetyInspection.issuedTo.read = ROLES.ADMIN_ROLES;
   damSafetyInspection.issuedTo.write = ROLES.ADMIN_ROLES;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (damSafetyInspection.issuedTo.type = incomingObj.issuedTo.type);
@@ -200,7 +200,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
 
   // set data
   incomingObj.recordName && (damSafetyInspectionBCMI.recordName = incomingObj.recordName);
-  damSafetyInspectionBCMI.recordType = 'DamSafetyInspection';
+  damSafetyInspectionBCMI.recordType = 'Dam Safety Inspection';
   damSafetyInspectionBCMI.issuedTo.read = ROLES.ADMIN_ROLES;
   damSafetyInspectionBCMI.issuedTo.write = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (damSafetyInspectionBCMI.issuedTo.type = incomingObj.issuedTo.type);

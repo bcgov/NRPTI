@@ -29,6 +29,7 @@ import { MinesCollectionRecordTableRowComponent } from './mines-collection-detai
 import { MinesCollectionsAddEditComponent } from './mines-collections-add-edit/mines-collections-add-edit.component';
 import { MinesRecordDetailComponent } from './mines-records-detail/mines-records-detail.component';
 import { MinesCollectionsRecordAddComponent } from './mines-collections-record-add/mines-collections-record-add.component';
+import { MinesRecordsAddEditComponent } from './mines-records-add-edit/mines-records-add-edit.component';
 
 @NgModule({
   imports: [
@@ -61,7 +62,8 @@ import { MinesCollectionsRecordAddComponent } from './mines-collections-record-a
     MinesCollectionRecordTableRowComponent,
     MinesCollectionsAddEditComponent,
     MinesCollectionsRecordAddComponent,
-    MinesRecordDetailComponent
+    MinesRecordDetailComponent,
+    MinesRecordsAddEditComponent
   ],
   providers: [],
   entryComponents: [
