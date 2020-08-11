@@ -95,7 +95,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   // set data
   incomingObj.recordName && (certificateAmendment.recordName = incomingObj.recordName);
-  certificateAmendment.recordType = 'CertificateAmendment';
+  certificateAmendment.recordType = 'Certificate Amendment';
   certificateAmendment.recordSubtype = 'Certificate';
   certificateAmendment.issuedTo.read = ROLES.ADMIN_ROLES;
   certificateAmendment.issuedTo.write = ROLES.ADMIN_ROLES;
@@ -213,7 +213,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   // set data
   incomingObj.recordName && (certificateAmendmentLNG.recordName = incomingObj.recordName);
-  certificateAmendmentLNG.recordType = 'CertificateAmendment';
+  certificateAmendmentLNG.recordType = 'Certificate Amendment';
   certificateAmendmentLNG.recordSubtype = 'Certificate';
   certificateAmendmentLNG.issuedTo.read = ROLES.ADMIN_ROLES;
   certificateAmendmentLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
@@ -332,7 +332,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
 
   // set data
   incomingObj.recordName && (certificateAmendmentBCMI.recordName = incomingObj.recordName);
-  certificateAmendmentBCMI.recordType = 'CertificateAmendment';
+  certificateAmendmentBCMI.recordType = 'Certificate Amendment';
   certificateAmendmentBCMI.recordSubtype = 'Certificate';
   certificateAmendmentBCMI.issuedTo.read = ROLES.ADMIN_ROLES;
   certificateAmendmentBCMI.issuedTo.write = [ROLES.SYSADMIN, ROLES.BCMIADMIN];

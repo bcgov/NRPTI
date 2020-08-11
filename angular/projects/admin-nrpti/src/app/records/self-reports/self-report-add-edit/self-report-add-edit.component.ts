@@ -59,7 +59,13 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
           alert('Error: could not load edit selfReport.');
           this.router.navigate(['/']);
         }
+      } else {
+        this.currentRecord = {
+          sourceSystemRef: 'nrpti',
+          documents: []
+        };
       }
+
       this.buildForm();
 
       this.subscribeToFormControlChanges();
@@ -121,42 +127,66 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
-        disabled: !this.factoryService.userInLngRole()
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti') &&
+          !this.factoryService.userInLngRole()
       }),
-      dateIssued: new FormControl(
-        (this.currentRecord &&
+      dateIssued: new FormControl({
+        value: (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-        ''
-      ),
-      issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
-      author: new FormControl((this.currentRecord && this.currentRecord.author) || ''),
-      legislation: new FormGroup({
-        act: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.act) || ''
-        ),
-        regulation: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.regulation) || ''
-        ),
-        section: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.section) || ''
-        ),
-        subSection: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.subSection) || ''
-        ),
-        paragraph: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
-        )
+        '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
-      legislationDescription: new FormControl((this.currentRecord && this.currentRecord.legislationDescription) || ''),
-      projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
-      location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
-      latitude: new FormControl(
-        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || ''
-      ),
-      longitude: new FormControl(
-        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || ''
-      ),
+      issuingAgency: new FormControl({
+        value: (this.currentRecord && this.currentRecord.issuingAgency) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      author: new FormControl({
+        value: (this.currentRecord && this.currentRecord.author) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      legislation: new FormGroup({
+        act: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.act) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        regulation: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.regulation) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        section: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.section) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        subSection: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.subSection) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        paragraph: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        })
+      }),
+      legislationDescription: new FormControl({
+        value: (this.currentRecord && this.currentRecord.legislationDescription) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      projectName: new FormControl({
+        value: (this.currentRecord && this.currentRecord.projectName) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      location: new FormControl({
+        value: (this.currentRecord && this.currentRecord.location) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      latitude: new FormControl({
+        value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      longitude: new FormControl({
+        value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
 
       // LNG
       lngRelatedPhase: new FormControl((this.currentRecord && this.lngFlavour && this.lngFlavour.relatedPhase) || ''),

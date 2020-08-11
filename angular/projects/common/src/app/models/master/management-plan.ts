@@ -19,6 +19,8 @@ export class ManagementPlan extends RecordModel {
   // Fields for saving flavour in API.
   ManagementPlanLNG: object;
 
+  isBcmiPublished: boolean;
+
   constructor(obj?: any) {
     super(obj);
 
@@ -32,5 +34,6 @@ export class ManagementPlan extends RecordModel {
     this.author = (obj && obj.author) || null;
     this.description = (obj && obj.description) || null;
     this.documents = (obj && obj.documents) || null;
+    this.isBcmiPublished = (obj && obj.isBcmiPublished) || false;
   }
 }

@@ -59,6 +59,7 @@
         <div class="dropdown-menu" aria-labelledby="actionDropdown" ngbDropdownMenu>
           <button class="dropdown-item" [disabled]="!anySelectedRecords()" (click)="submitAddEditCollectionRecords()">Add to new Collection</button>
           <button class="dropdown-item" [disabled]="!anySelectedRecords()" (click)="submitAddToExistingCollection()">Add to existing Collection</button>
+          <button class="dropdown-item" (click)="submitAddRecord()">Add new Record</button>
         </div>
       </span>
     </div>
