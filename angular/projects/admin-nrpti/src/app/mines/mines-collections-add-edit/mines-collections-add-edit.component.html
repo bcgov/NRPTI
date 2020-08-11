@@ -136,8 +136,7 @@
       </div>
 
       <table class="table"
-        *ngIf="myForm.get('collectionRecords').value && myForm.get('collectionRecords').value.length"
-        summary="List of Records for Collection">
+        *ngIf="myForm.get('collectionRecords').value && myForm.get('collectionRecords').value.length">
         <thead class="thead-light">
           <tr>
             <th class="col-1"></th>
@@ -201,16 +200,14 @@
                     class="btn px-2"
                     [matMenuTriggerFor]="menu"
                     title="More options"
-                    aria-label="More options menu"
-                  >
+                    aria-label="More options menu">
                     <i class="material-icons">more_vert</i>
                   </button>
                   <mat-menu #menu="matMenu">
                     <button
                       mat-menu-item
                       (click)="removeRecordFromCollection(idx)"
-                      title="Remove record from collection"
-                    >
+                      title="Remove record from collection">
                       Remove Record
                     </button>
                   </mat-menu>
