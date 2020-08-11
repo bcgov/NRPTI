@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
+import { Component, ChangeDetectorRef, EventEmitter, Output, Input } from '@angular/core';
 import { Document } from '../models/document';
 
 @Component({
@@ -14,6 +14,7 @@ export class DocumentLinkStagingComponent {
   public linkFileName = '';
   public linkUrl = '';
 
+  @Input() maxFiles = 5;
   @Output() linksChanged = new EventEmitter();
   @Output() documentsChanged = new EventEmitter();
 

@@ -5,3 +5,7 @@ export * from './dam-safety-inspection-bcmi';
 export * from './annual-report-bcmi';
 export * from './report-bcmi';
 export * from './correspondence-bcmi';
+export * from './permit-bcmi';
+export * from './order-bcmi';
+export * from './management-plan-bcmi';
+export * from './inspection-bcmi';

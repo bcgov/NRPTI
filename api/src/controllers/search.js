@@ -61,7 +61,7 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
       }
 
       if (item === 'hasRecords') {
-        return getHasDocumentsExp(entry);
+        return getHasRecordsExp(entry);
       }
 
       if (item === 'isNrcedPublished' && entry === 'true') {

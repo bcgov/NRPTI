@@ -94,14 +94,7 @@ describe('MinesRecordsListResolver', () => {
             'CertificateAmendment',
             'Correspondence',
             'DamSafetyInspection',
-            'Report',
-            'PermitBCMI',
-            'PermitAmendmentBCMI',
-            'AnnualReportBCMI',
-            'CertificateAmendmentBCMI',
-            'CorrespondenceBCMI',
-            'DamSafetyInspectionBCMI',
-            'ReportBCMI'
+            'Report'
           ],
           [],
           1,
@@ -110,7 +103,7 @@ describe('MinesRecordsListResolver', () => {
           {
             mineGuid: null
           },
-          false,
+          true,
           {},
           [],
           {}
@@ -179,14 +172,7 @@ describe('MinesRecordsListResolver', () => {
             'CertificateAmendment',
             'Correspondence',
             'DamSafetyInspection',
-            'Report',
-            'PermitBCMI',
-            'PermitAmendmentBCMI',
-            'AnnualReportBCMI',
-            'CertificateAmendmentBCMI',
-            'CorrespondenceBCMI',
-            'DamSafetyInspectionBCMI',
-            'ReportBCMI'
+            'Report'
           ],
           [],
           1,
@@ -195,7 +181,7 @@ describe('MinesRecordsListResolver', () => {
           {
             mineGuid: null
           },
-          false,
+          true,
           {},
           [],
           {}

@@ -1,0 +1,40 @@
+@import 'assets/styles/components/mine.scss';
+@import 'assets/styles/components/add-edit.scss';
+@import 'assets/styles/components/drag-drop.scss';
+
+// Copied from table-template.component.scss to help match styling used there.
+.table {
+  margin-bottom: none !important;
+  border: none;
+
+  thead {
+    tr {
+      background: #e8eff5;
+      align-items: flex-start;
+    }
+
+    th {
+      background-color: #e8eff5;
+      padding: 0.7rem 0.15rem 0.85rem;
+      border: none;
+      border-bottom: 2px solid transparent;
+
+      @media screen and (max-width: 768px) {
+        padding: 0.7rem 0.5rem 0.85rem;
+      }
+    }
+  }
+
+  tr td:first-child,
+  tr th:first-child {
+    padding-left: 1rem;
+
+    @media screen and (max-width: 768px) {
+      padding-left: 0.5rem;
+    }
+  }
+}
+
+section {
+  border-bottom: 1px solid lightgrey;
+}
