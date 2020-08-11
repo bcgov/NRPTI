@@ -1,4 +1,5 @@
 import { Legislation } from '../master/common-models/legislation';
+import { Entity } from '../master/common-models/entity';
 import { RecordModel } from '../record-model-abstract';
 
 /**
@@ -15,6 +16,7 @@ export class PermitBCMI extends RecordModel {
   recordSubtype: string;
   dateIssued: Date;
   issuingAgency: string;
+  issuedTo: Entity;
   legislation: Legislation;
   legislationDescription: string;
   documents: object[];
