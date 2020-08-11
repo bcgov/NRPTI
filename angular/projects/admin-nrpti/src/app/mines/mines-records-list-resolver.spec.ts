@@ -101,7 +101,7 @@ describe('MinesRecordsListResolver', () => {
           25,
           '-dateAdded',
           {
-            mineGuid: ''
+            mineGuid: null
           },
           true,
           {},
@@ -179,7 +179,7 @@ describe('MinesRecordsListResolver', () => {
           25,
           '-dateAdded',
           {
-            mineGuid: ''
+            mineGuid: null
           },
           true,
           {},

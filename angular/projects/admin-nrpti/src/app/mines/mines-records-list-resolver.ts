@@ -30,7 +30,7 @@ export class MinesRecordsListResolver implements Resolve<Observable<object>> {
     }
 
     const and = {
-      mineGuid: ''
+      mineGuid: null
     };
     const or = {};
     const nor = {};

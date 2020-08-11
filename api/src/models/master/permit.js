@@ -9,7 +9,7 @@ module.exports = require('../../utils/model-schema-generator')(
     _epicMilestoneId: { type: 'ObjectId', default: null, index: true },
     _sourceDocumentRefId: { type: String, default: null, index: true },
 
-    mineGuid: { type: String, default: '', index: true },
+    mineGuid: { type: String, default: null, index: true },
 
     read: [{ type: String, trim: true, default: 'sysadmin' }],
     write: [{ type: String, trim: true, default: 'sysadmin' }],
@@ -21,6 +21,18 @@ module.exports = require('../../utils/model-schema-generator')(
     recordSubtype: { type: String, default: '' },
     dateIssued: { type: Date, default: null },
     issuingAgency: { type: String, default: '' },
+    issuedTo: {
+      write: [{ type: String, trim: true, default: 'sysadmin' }],
+      read: [{ type: String, trim: true, default: 'sysadmin' }],
+
+      type: { type: String, enum: ['Company', 'Individual', 'IndividualCombined'] },
+      companyName: { type: String, default: '' },
+      firstName: { type: String, default: '' },
+      middleName: { type: String, default: '' },
+      lastName: { type: String, default: '' },
+      fullName: { type: String, default: '' },
+      dateOfBirth: { type: Date, default: null }
+    },
     legislation: {
       act: { type: String, default: '' },
       regulation: { type: String, default: '' },
