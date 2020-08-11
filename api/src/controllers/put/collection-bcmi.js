@@ -24,10 +24,11 @@ exports.editRecord = async function(args, res, next, incomingObj) {
 
   // if any values in the "records" attribute exist on any other collection, throw an error
   if (incomingObj.records && incomingObj.records.length > 0) {
-    for(const record of incomingObj.record) {
+    for(const record of incomingObj.records) {
       // does this record exit in any other collection?
-      const collectionCount = await CollectionBCMI.count({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName,  records: { $elemMatch: { $eq: new ObjectID(record._id) } } });
-      if (collectionCount && collectionCount > 0) {
+      const collections = await CollectionBCMI.find({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName,  records: { $elemMatch: { $eq: new ObjectID(record) }}}).exec();
+      const otherCollections = collections.find(c => c._id.toString() !== incomingObj._id.toString());
+      if (collections && otherCollections && otherCollections.length > 0) {
         throw new Error('Collection contains records that are already associated with another collection');
       }
     }
