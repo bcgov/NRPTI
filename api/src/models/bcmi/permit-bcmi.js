@@ -27,12 +27,8 @@ module.exports = require('../../utils/model-schema-generator')(
     dateIssued: { type: Date, default: null },
     authorizedEndDate: { type: Date, default: null },
     description: { type: String, default: '' },
-    // Document ref to meta record and physical document on the object store
-    amendmentDocument: {
-      _sourceRefId: { type: String, default: null },
-      documentName: { type: String, defualt: '' },
-      documentId: { type: 'ObjectId', default: null }
-    },
+    documents: [{ type: 'ObjectId', default: [], index: true }],
+
     // final Record boilerplate
     dateAdded: { type: Date, default: Date.now() },
     dateUpdated: { type: Date, default: null },
