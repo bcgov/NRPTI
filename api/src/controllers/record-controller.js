@@ -3,6 +3,8 @@
 let queryActions = require('../utils/query-actions');
 let queryUtils = require('../utils/query-utils');
 let defaultLog = require('../utils/logger')('record');
+let documentController = require('./document-controller');
+const businessLogicManager = require('../utils/business-logic-manager');
 
 let AddOrder = require('./post/order');
 let AddInspection = require('./post/inspection');
@@ -296,6 +298,11 @@ exports.protectedPublish = async function (args, res, next) {
       const masterModel = require('mongoose').model(masterSchema);
       await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isLngPublished: true });
     }
+    else if (recordData._schemaName.includes('BCMI')) {
+      const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 3);
+      const masterModel = require('mongoose').model(masterSchema);
+      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isBcmiPublished: true });
+    }
 
     if (!record) {
       defaultLog.info(`protectedPublish - couldn't find record for recordId: ${record._id}`);
@@ -303,6 +310,15 @@ exports.protectedPublish = async function (args, res, next) {
     }
 
     const published = await queryActions.publish(record, true);
+    // this should also publish documents, or they may not be usable by other applications
+    if (published.documents) {
+      for (const docId of published.documents) {
+        // only allow a publish if the record is not anonymous
+        if (!businessLogicManager.isDocumentConsideredAnonymous(published)) {
+          await documentController.publishDocument(docId, args.swagger.params.auth_payload);
+        }
+      }
+    }
 
     queryUtils.audit(args, 'Publish', record, args.swagger.params.auth_payload, record._id);
 
@@ -339,6 +355,11 @@ exports.protectedUnPublish = async function (args, res, next) {
       const masterModel = require('mongoose').model(masterSchema);
       await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isLngPublished: false });
     }
+    else if (recordData._schemaName.includes('BCMI')) {
+      const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 3);
+      const masterModel = require('mongoose').model(masterSchema);
+      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isBcmiPublished: false });
+    }
 
     if (!record) {
       defaultLog.info(`protectedUnPublish - couldn't find record for recordId: ${record._id}`);
@@ -346,6 +367,13 @@ exports.protectedUnPublish = async function (args, res, next) {
     }
 
     const unPublished = await queryActions.unPublish(record);
+
+    // this should also un-publish documents, or they may not be usable by other applications
+    if (unPublished.documents) {
+      for (const docId of unPublished.documents) {
+        await documentController.unpublishDocument(docId, args.swagger.params.auth_payload);
+      }
+    }
 
     queryUtils.audit(args, 'UnPublish', record, args.swagger.params.auth_payload, record._id);
 
