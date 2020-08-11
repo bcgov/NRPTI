@@ -201,14 +201,6 @@
               <td class="col-1">
                 <div class="d-xl-flex">
                   <button
-                    class="btn px-2"
-                    type="button"
-                    (click)="goToEditRecord(formGroup.get('record').value)"
-                    title="Edit record"
-                  >
-                    <i class="material-icons">create</i>
-                  </button>
-                  <button
                     mat-icon-button
                     class="btn px-2"
                     [matMenuTriggerFor]="menu"
@@ -218,13 +210,6 @@
                     <i class="material-icons">more_vert</i>
                   </button>
                   <mat-menu #menu="matMenu">
-                    <button
-                      mat-menu-item
-                      (click)="goToRecordDetails(formGroup.get('record').value)"
-                      title="View Record details"
-                    >
-                      View Record Details
-                    </button>
                     <button
                       mat-menu-item
                       (click)="removeRecordFromCollection(idx)"

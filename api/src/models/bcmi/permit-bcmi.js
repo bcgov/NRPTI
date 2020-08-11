@@ -11,7 +11,7 @@ module.exports = require('../../utils/model-schema-generator')(
     recordType: { type: String, default: '' },
     recordSubtype: { type: String, default: '' },
     // MineBCMI Record GUID that ties this record to a mine
-    mineGuid: { type: String, default: '', index: true },
+    mineGuid: { type: String, default: null, index: true },
     // Permit number from the mine. Technically can be dirived from the mineGuid ref
     permitNumber: { type: String, default: '' },
     // status code from the root permit doc
