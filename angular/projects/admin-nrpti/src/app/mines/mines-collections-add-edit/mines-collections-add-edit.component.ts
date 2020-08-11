@@ -456,26 +456,6 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Navigate to record details page.
-   *
-   * @param {*} record
-   * @memberof MinesCollectionsAddEditComponent
-   */
-  goToRecordDetails(record: any) {
-    // TODO NRPT-197 - manage records within the context of a mine
-  }
-
-  /**
-   * Navigate to record edit page.
-   *
-   * @param {*} record
-   * @memberof MinesCollectionsAddEditComponent
-   */
-  goToEditRecord(record: any) {
-    // TODO NRPT-197 - manage records within the context of a mine
-  }
-
   updateRecordList(recordToAdd) {
     // tslint:disable
     let formArray = this.myForm.get('collectionRecords') as FormArray;
@@ -486,7 +466,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     this.myForm.get('collectionRecords').markAsDirty();
     this._changeDetectionRef.detectChanges();
   }
-
+  
   ngOnDestroy(): void {
     // When the component is destroying, if collectionAddEdit state exists, but the user hadn't clicked the
     // 'addRecordsToCollection' button, then remove the collection state from the store.
