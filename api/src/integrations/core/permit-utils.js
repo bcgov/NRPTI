@@ -59,6 +59,11 @@ class Permits extends BaseRecordUtils {
 
           permitNumber: permit.permit_no || '',
           permitStatusCode: permit.permit_status_code || '',
+          issuedTo: {
+            type: 'Company',
+            companyName: permit.current_permittee,
+            fullName: permit.current_permittee
+          },
 
           _sourceDocumentRefId: document.document_manager_guid || '',
           recordName: document.document_name,
