@@ -106,6 +106,7 @@ export class MinesCollectionsRecordAddComponent implements OnInit, OnDestroy {
         flavourSchemaName = this.myForm.get('recordType').value + 'BCMI';
       }
       record[flavourSchemaName] = { addRole: 'public' };
+      record['isBcmiPublished'] = false;
     }
 
     let containerName = record['recordType'].charAt(0).toLowerCase() + record['recordType'].slice(1);
