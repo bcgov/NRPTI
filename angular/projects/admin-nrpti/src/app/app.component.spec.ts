@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { AppComponent } from './app.component';
@@ -11,14 +11,14 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
 import {
-  BreadcrumbComponent,
   StoreService,
+  GlobalModule,
   LoadingScreenService
 } from 'nrpti-angular-components';
-import { of } from 'rxjs';
+import { EventEmitter } from 'events';
 
 describe('AppComponent', () => {
-  beforeEach(async(() => {
+  beforeEach((() => {
     const mockKeycloakService = {
       isValidForSite: () => {
         return true;
@@ -26,8 +26,8 @@ describe('AppComponent', () => {
     };
 
     const mockStoreService = {
-      stateChange: of(),
-      toggleSideNave: () => { }
+      getItem: () => { },
+      stateChange: new EventEmitter()
     };
 
     const mockLoadingScreenService = {
@@ -40,10 +40,9 @@ describe('AppComponent', () => {
         HeaderComponent,
         FooterComponent,
         SidebarComponent,
-        ToggleButtonComponent,
-        BreadcrumbComponent
+        ToggleButtonComponent
       ],
-      imports: [RouterTestingModule, HttpClientTestingModule, BrowserAnimationsModule],
+      imports: [GlobalModule, RouterTestingModule, HttpClientTestingModule, BrowserAnimationsModule],
       providers: [
         ApiService,
         { provide: LoadingScreenService, useValue: mockLoadingScreenService },
@@ -53,7 +52,7 @@ describe('AppComponent', () => {
     }).compileComponents();
   }));
 
-  it('should create the app', async(() => {
+  it('should create the app', (() => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();

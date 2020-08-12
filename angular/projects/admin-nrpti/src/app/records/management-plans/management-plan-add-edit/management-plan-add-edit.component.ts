@@ -8,7 +8,7 @@ import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
-import { LoadingScreenService } from 'nrpti-angular-components';
+import { LoadingScreenService, StoreService } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-management-plan-add-edit',
@@ -40,6 +40,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     public router: Router,
     private recordUtils: RecordUtils,
+    private storeService: StoreService,
     private factoryService: FactoryService,
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
@@ -144,6 +145,17 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
         disabled: !this.factoryService.userInLngRole()
+      }),
+
+      association: new FormGroup({
+        _epicProjectId: new FormControl({
+          value: this.currentRecord && this.currentRecord._epicProjectId || null,
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        }),
+        mineGuid: new FormControl({
+          value: this.currentRecord && this.currentRecord.mineGuid || null,
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        })
       })
     });
   }
@@ -212,6 +224,23 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
       managementPlan['ManagementPlanLNG']['addRole'] = 'public';
     } else if (this.myForm.controls.publishLng.dirty && !this.myForm.controls.publishLng.value) {
       managementPlan['ManagementPlanLNG']['removeRole'] = 'public';
+    }
+
+    if (this.myForm.get('association._epicProjectId').dirty) {
+      managementPlan['_epicProjectId'] = this.myForm.get('association._epicProjectId').value;
+    }
+
+    if (this.myForm.get('association.mineGuid').dirty) {
+      managementPlan['mineGuid'] = this.myForm.get('association.mineGuid').value;
+    }
+
+    // Set the friendly name of projectName
+    const epicProjectList = this.storeService.getItem('epicProjects');
+    const filterResult = epicProjectList.filter(item => {
+      return item._id === managementPlan['_epicProjectId'];
+    });
+    if (filterResult && filterResult[0] && filterResult[0].name) {
+      managementPlan['projectName'] = filterResult[0].name;
     }
 
     if (!this.isEditing) {

@@ -1,16 +1,24 @@
-import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { IBreadcrumb, StoreService, LoadingScreenService } from 'nrpti-angular-components';
+import { FactoryService } from './services/factory.service';
+import { Subscription } from 'rxjs/internal/Subscription';
+import { interval } from 'rxjs/internal/observable/interval';
+import { takeWhile, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+  private alive = true;
   public currentWindowWidth = window.innerWidth;
   public showSideContent = this.currentWindowWidth > 768 ? true : false;
   public userClosedSideContent = false;
+
+  mineSubscription: Subscription;
+  epicProjectSubscription: Subscription;
 
   public breadcrumbs: IBreadcrumb[];
   public activeBreadcrumb: IBreadcrumb;
@@ -21,6 +29,7 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     private loadingScreenService: LoadingScreenService,
+    private factoryService: FactoryService,
     private storeService: StoreService,
     private _changeDetectionRef: ChangeDetectorRef
   ) {
@@ -28,6 +37,14 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.mineSubscription) {
+      this.mineSubscription.unsubscribe();
+    }
+
+    if (this.epicProjectSubscription) {
+      this.epicProjectSubscription.unsubscribe();
+    }
+
     this.storeService.stateChange.subscribe((state: object) => {
       if (state && state.hasOwnProperty('userClosedSideContent')) {
         this.userClosedSideContent = state['userClosedSideContent'];
@@ -52,6 +69,90 @@ export class AppComponent implements OnInit {
       }
       this._changeDetectionRef.detectChanges();
     });
+
+    // Subscribe to updates on specific models
+    this.updateMines();
+    this.updateEpicProjects();
+  }
+
+  private updateMines() {
+    // Fetch initially
+    const minesSub = this.factoryService.searchService.getSearchResults(
+      this.factoryService.apiService.pathAPI,
+      '',
+      ['MineBCMI'],
+      [],
+      1,
+      100000,
+      '+name'
+    ).subscribe((mineResults: any[]) => {
+      this.setStoreServiceItem('mines', mineResults[0].data.searchResults);
+      minesSub.unsubscribe();
+    });
+
+    // Update every 4 hours
+    this.mineSubscription = interval(1000 * 60 * 60 * 4)
+    .pipe(
+      takeWhile(() => this.alive),
+      switchMap(() => this.factoryService.searchService.getSearchResults(
+        this.factoryService.apiService.pathAPI,
+        '',
+        ['MineBCMI'],
+        [],
+        1,
+        100000,
+        '+name'
+      )),
+    )
+    .subscribe((mineResults: any[]) => {
+      this.setStoreServiceItem('mines', mineResults[0].data.searchResults);
+    });
+  }
+
+  private updateEpicProjects() {
+    // Fetch initially
+    const epicSub = this.factoryService.searchService.getSearchResults(
+      this.factoryService.apiService.pathAPI,
+      '',
+      ['EPICProject'],
+      [],
+      1,
+      100000,
+      '+name'
+    ).subscribe((epicProjectResults: any[]) => {
+      this.setStoreServiceItem('epicProjects', epicProjectResults[0].data.searchResults);
+      epicSub.unsubscribe();
+    });
+
+    // Update every 4 hours
+    this.epicProjectSubscription = interval(1000 * 60 * 60 * 4)
+    .pipe(
+      takeWhile(() => this.alive),
+      switchMap(() => this.factoryService.searchService.getSearchResults(
+        this.factoryService.apiService.pathAPI,
+        '',
+        ['EPICProject'],
+        [],
+        1,
+        100000,
+        '+name'
+      )),
+    )
+    .subscribe((epicProjectResults: any[]) => {
+      this.setStoreServiceItem('epicProjects', epicProjectResults[0].data.searchResults);
+    });
+  }
+
+  // Sets a store service list item, but unshifts a null-based element first.
+  private setStoreServiceItem(key, list) {
+    // First unshift an item into the list.
+    list.unshift({_id: null, name: 'None'});
+
+    // Set the object in the store service
+    // tslint:disable-next-line: prefer-const
+    let newObject = {};
+    newObject[key] = list;
+    this.storeService.setItem(newObject);
   }
 
   public navigateBreadcrumb(breadcrumbData) {
@@ -81,5 +182,9 @@ export class AppComponent implements OnInit {
     }
 
     this.currentWindowWidth = window.innerWidth;
+  }
+
+  ngOnDestroy() {
+    this.alive = false;
   }
 }

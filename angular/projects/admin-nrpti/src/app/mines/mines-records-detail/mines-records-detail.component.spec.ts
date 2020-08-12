@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { MatSlideToggleModule } from '@angular/material';
 import { MinesRecordDetailComponent } from './mines-records-detail.component';
 import { TestBedHelper } from '../../../../../common/src/app/spec/spec-utils';
@@ -11,7 +11,7 @@ describe('MinesRecordDetailComponent', () => {
   const testBedHelper = new TestBedHelper<MinesRecordDetailComponent>(MinesRecordDetailComponent);
 
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, GlobalModule, CommonModule, MatSlideToggleModule],
       declarations: [MinesRecordDetailComponent],

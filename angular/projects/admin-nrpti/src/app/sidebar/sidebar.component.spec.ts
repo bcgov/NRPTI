@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Router, RouterEvent } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ReplaySubject, of } from 'rxjs';
@@ -23,7 +23,7 @@ describe('SidebarComponent', () => {
     }
   };
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
       declarations: [SidebarComponent],

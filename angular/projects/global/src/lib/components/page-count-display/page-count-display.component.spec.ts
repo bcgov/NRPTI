@@ -1,11 +1,11 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { PageCountDisplayComponent } from './page-count-display.component';
 import { TestBedHelper } from '../../../../../common/src/app/spec/spec-utils';
 
 describe('PageCountDisplayComponent', () => {
   const testBedHelper = new TestBedHelper<PageCountDisplayComponent>(PageCountDisplayComponent);
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       declarations: [PageCountDisplayComponent]
     }).compileComponents();

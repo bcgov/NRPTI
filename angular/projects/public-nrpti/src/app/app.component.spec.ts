@@ -15,7 +15,7 @@ import {
 import { of } from 'rxjs';
 
 describe('AppComponent', () => {
-  beforeEach(async(() => {
+  beforeEach((() => {
     const mockStoreService = {
       change: of(),
       toggleSideNave: () => { }

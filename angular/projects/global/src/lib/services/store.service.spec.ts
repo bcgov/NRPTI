@@ -1,9 +1,9 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { StoreService } from './store.service';
 
 describe('StoreService', () => {
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       providers: [StoreService]
     });

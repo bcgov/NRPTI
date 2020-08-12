@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material';
 import { TestBedHelper } from '../spec/spec-utils';
@@ -8,7 +8,7 @@ import { Utils } from 'nrpti-angular-components';
 describe('LegislationAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<LegislationAddEditComponent>(LegislationAddEditComponent);
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       declarations: [LegislationAddEditComponent],
       imports: [ReactiveFormsModule, MatAutocompleteModule],

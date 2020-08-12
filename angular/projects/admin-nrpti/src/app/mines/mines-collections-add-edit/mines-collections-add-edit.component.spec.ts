@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -34,7 +34,7 @@ describe('MinesCollectionsAddEditComponent', () => {
     }
   };
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
@@ -61,7 +61,7 @@ describe('MinesCollectionsAddEditComponent', () => {
     }).compileComponents();
   }));
 
-  it('should create', async(() => {
+  it('should create', (() => {
     const { component } = testBedHelper.createComponent();
 
     expect(component).toBeTruthy();

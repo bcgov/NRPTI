@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConstructionPlanAddEditComponent } from './construction-plan-add-edit.component';
@@ -10,8 +10,9 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Utils } from 'nrpti-angular-components';
 import { RecordUtils } from '../../utils/record-utils';
-import { LoadingScreenService } from 'nrpti-angular-components';
+import { LoadingScreenService, StoreService } from 'nrpti-angular-components';
 import { FactoryService } from '../../../services/factory.service';
+import { EventEmitter } from '@angular/core';
 
 describe('ConstructionPlanAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<ConstructionPlanAddEditComponent>(ConstructionPlanAddEditComponent);
@@ -20,9 +21,15 @@ describe('ConstructionPlanAddEditComponent', () => {
   const mockLocation = jasmine.createSpyObj('Location', ['go']);
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
-  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole', 'userInNrcedRole']);
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole', 'userInBcmiRole', 'userInNrcedRole']);
   mockFactoryService.userInLngRole.and.returnValue(true);
+  mockFactoryService.userInBcmiRole.and.returnValue(true);
   mockFactoryService.userInNrcedRole.and.returnValue(true);
+
+  const mockStoreService = {
+    getItem: () => { },
+    stateChange: new EventEmitter()
+  };
 
   const mockLoadingScreenService = {
     isLoading: false,
@@ -31,7 +38,7 @@ describe('ConstructionPlanAddEditComponent', () => {
     }
   };
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
@@ -46,6 +53,7 @@ describe('ConstructionPlanAddEditComponent', () => {
         Utils,
         RecordUtils,
         { provide: LoadingScreenService, useValue: mockLoadingScreenService },
+        { provide: StoreService, useValue: mockStoreService },
         { provide: Location, useValue: mockLocation },
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },

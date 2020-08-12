@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
@@ -15,7 +15,7 @@ describe('ImportCSVComponent', () => {
 
   const spyFactoryService = jasmine.createSpyObj<FactoryService>('FactoryService', ['startTask']);
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       declarations: [ImportCSVComponent],
       imports: [RouterTestingModule, HttpClientTestingModule, FormsModule, CommonModule],
@@ -23,14 +23,14 @@ describe('ImportCSVComponent', () => {
     }).compileComponents();
   }));
 
-  it('should create', async(() => {
+  it('should create', (() => {
     const { component } = testBedHelper.createComponent();
 
     expect(component).toBeTruthy();
   }));
 
   describe('onFileDelete', () => {
-    it('does nothing if required file parameter is null', async(() => {
+    it('does nothing if required file parameter is null', (() => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
@@ -46,7 +46,7 @@ describe('ImportCSVComponent', () => {
       expect(component.csvFileErrors).toEqual(['an error']);
     }));
 
-    it('does nothing if file parameter does not match any existing files', async(() => {
+    it('does nothing if file parameter does not match any existing files', (() => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
@@ -64,7 +64,7 @@ describe('ImportCSVComponent', () => {
       expect(component.csvFileErrors).toEqual(['an error']);
     }));
 
-    it('removes the file, sets flags, resets errors when valid file provided', async(() => {
+    it('removes the file, sets flags, resets errors when valid file provided', (() => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
@@ -83,7 +83,7 @@ describe('ImportCSVComponent', () => {
   });
 
   describe('readCsvFile', () => {
-    it('does nothing if this.dataSourceType is null', async(() => {
+    it('does nothing if this.dataSourceType is null', (() => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
@@ -101,7 +101,7 @@ describe('ImportCSVComponent', () => {
       expect(mockFileReader.readAsText).toHaveBeenCalledTimes(0);
     }));
 
-    it('does nothing if this.recordType is null', async(() => {
+    it('does nothing if this.recordType is null', (() => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
@@ -119,7 +119,7 @@ describe('ImportCSVComponent', () => {
       expect(mockFileReader.readAsText).toHaveBeenCalledTimes(0);
     }));
 
-    it('does nothing if this.csvFiles[0] is null', async(() => {
+    it('does nothing if this.csvFiles[0] is null', (() => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
@@ -137,7 +137,7 @@ describe('ImportCSVComponent', () => {
       expect(mockFileReader.readAsText).toHaveBeenCalledTimes(0);
     }));
 
-    it('calls validateCsvFile with file data', async(() => {
+    it('calls validateCsvFile with file data', (() => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
@@ -163,7 +163,7 @@ describe('ImportCSVComponent', () => {
   });
 
   describe('validateCsvFile', () => {
-    it('adds error to errors array if csvData is null', async(() => {
+    it('adds error to errors array if csvData is null', (() => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
@@ -174,7 +174,7 @@ describe('ImportCSVComponent', () => {
       expect(component.csvFileErrors).toEqual(['Error reading csv file: fileA']);
     }));
 
-    it('parses the csv data and calls validation methods', async(() => {
+    it('parses the csv data and calls validation methods', (() => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
@@ -200,7 +200,7 @@ describe('ImportCSVComponent', () => {
       expect(component.csvFileErrors).toEqual([]);
     }));
 
-    it('parses the csv data, calls validation methods and does not set csvFileValidated if errors found', async(() => {
+    it('parses the csv data, calls validation methods and does not set csvFileValidated if errors found', (() => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
@@ -228,7 +228,7 @@ describe('ImportCSVComponent', () => {
   });
 
   describe('validateRequiredHeaders', () => {
-    it('adds an error to the errors array if csvHeaderRowValuesArray is null', async(() => {
+    it('adds an error to the errors array if csvHeaderRowValuesArray is null', (() => {
       const { component } = testBedHelper.createComponent();
 
       component.csvFiles = [new File([], 'fileA', {})];
@@ -238,7 +238,7 @@ describe('ImportCSVComponent', () => {
       expect(component.csvFileErrors).toEqual(['Error parsing csv file: fileA']);
     }));
 
-    it('adds an error to the errors array if csvHeaderRowValuesArray is empty', async(() => {
+    it('adds an error to the errors array if csvHeaderRowValuesArray is empty', (() => {
       const { component } = testBedHelper.createComponent();
 
       component.csvFiles = [new File([], 'fileA', {})];
@@ -248,7 +248,7 @@ describe('ImportCSVComponent', () => {
       expect(component.csvFileErrors).toEqual(['Error parsing csv file: fileA']);
     }));
 
-    it('adds an error to the errors array if any required headers are missing', async(() => {
+    it('adds an error to the errors array if any required headers are missing', (() => {
       const { component } = testBedHelper.createComponent();
 
       component.dataSourceType = 'cors-csv';
@@ -282,7 +282,7 @@ describe('ImportCSVComponent', () => {
       ]);
     }));
 
-    it('adds no errors to the errors array if no required headers are missing', async(() => {
+    it('adds no errors to the errors array if no required headers are missing', (() => {
       const { component } = testBedHelper.createComponent();
 
       component.dataSourceType = 'cors-csv';
@@ -296,7 +296,7 @@ describe('ImportCSVComponent', () => {
   });
 
   describe('validateFields', () => {
-    it('adds an error to the errors array if csvRows is null', async(() => {
+    it('adds an error to the errors array if csvRows is null', (() => {
       const { component } = testBedHelper.createComponent();
 
       component.csvFiles = [new File([], 'fileA', {})];
@@ -306,7 +306,7 @@ describe('ImportCSVComponent', () => {
       expect(component.csvFileErrors).toEqual(['Error parsing csv file: fileA']);
     }));
 
-    it('adds an error to the errors array if csvRows is empty', async(() => {
+    it('adds an error to the errors array if csvRows is empty', (() => {
       const { component } = testBedHelper.createComponent();
 
       component.csvFiles = [new File([], 'fileA', {})];
@@ -316,7 +316,7 @@ describe('ImportCSVComponent', () => {
       expect(component.csvFileErrors).toEqual(['Error parsing csv file: fileA']);
     }));
 
-    it('calls validation methods', async(() => {
+    it('calls validation methods', (() => {
       const { component } = testBedHelper.createComponent();
 
       component.dataSourceType = 'cors-csv';
@@ -365,7 +365,7 @@ describe('ImportCSVComponent', () => {
   });
 
   describe('validateRequiredFields', () => {
-    it('adds an error to the errors array if any required fields are missing', async(() => {
+    it('adds an error to the errors array if any required fields are missing', (() => {
       const { component } = testBedHelper.createComponent();
 
       component.validateRequiredFields(
@@ -378,7 +378,7 @@ describe('ImportCSVComponent', () => {
       expect(component.csvFileErrors).toEqual(['CSV row 1 is missing required fields: headerC,headerE']);
     }));
 
-    it('adds no errors to the errors array if no fields are required', async(() => {
+    it('adds no errors to the errors array if no fields are required', (() => {
       const { component } = testBedHelper.createComponent();
 
       component.validateRequiredFields(['a', 'b', 'c', 'e'], [], ['headerA', 'headerB', 'headerC', 'headerE'], 1);
@@ -386,7 +386,7 @@ describe('ImportCSVComponent', () => {
       expect(component.csvFileErrors).toEqual([]);
     }));
 
-    it('adds no errors to the errors array if no required fields are missing', async(() => {
+    it('adds no errors to the errors array if no required fields are missing', (() => {
       const { component } = testBedHelper.createComponent();
 
       component.validateRequiredFields(
@@ -401,7 +401,7 @@ describe('ImportCSVComponent', () => {
   });
 
   describe('validateRequiredFormats', () => {
-    it('adds an error to the errors array if any fields are missing the required format', async(() => {
+    it('adds an error to the errors array if any fields are missing the required format', (() => {
       const { component } = testBedHelper.createComponent();
 
       component.validateRequiredFormats(
@@ -420,7 +420,7 @@ describe('ImportCSVComponent', () => {
       ]);
     }));
 
-    it('adds no errors to the errors array if no fields are missing the required format', async(() => {
+    it('adds no errors to the errors array if no fields are missing the required format', (() => {
       const { component } = testBedHelper.createComponent();
 
       component.validateRequiredFormats(
@@ -438,7 +438,7 @@ describe('ImportCSVComponent', () => {
   });
 
   describe('transformFields', () => {
-    it('calls validation methods', async(() => {
+    it('calls validation methods', (() => {
       const { component } = testBedHelper.createComponent();
 
       // mock component methods
@@ -471,7 +471,7 @@ describe('ImportCSVComponent', () => {
   });
 
   describe('transformDateFields', () => {
-    it('transforms dates to iso strings', async(() => {
+    it('transforms dates to iso strings', (() => {
       const { component } = testBedHelper.createComponent();
 
       const transformedRow: string[] = component.transformDateFields(
@@ -494,12 +494,12 @@ describe('ImportCSVComponent', () => {
   describe('startJob', () => {
     let factoryServiceSpy: jasmine.SpyObj<FactoryService>;
 
-    beforeEach(async(() => {
+    beforeEach((() => {
       factoryServiceSpy = TestBed.get(FactoryService);
       factoryServiceSpy.startTask.calls.reset();
     }));
 
-    it('does nothing if this.dataSourceType is null', async(async () => {
+    it('does nothing if this.dataSourceType is null', ( () => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
@@ -507,12 +507,13 @@ describe('ImportCSVComponent', () => {
       component.recordType = 'recordType';
       component.csvFiles = [new File([], 'fileA', {})];
 
-      await component.startJob();
+      component.startJob().then(() => {
+        expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
+      });
 
-      expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
     }));
 
-    it('does nothing if this.recordType is null', async(async () => {
+    it('does nothing if this.recordType is null', ( () => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
@@ -520,12 +521,12 @@ describe('ImportCSVComponent', () => {
       component.recordType = null;
       component.csvFiles = [new File([], 'fileA', {})];
 
-      await component.startJob();
-
-      expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
+      component.startJob().then(() => {
+        expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
+      });
     }));
 
-    it('does nothing if this.csvFiles is null or empty', async(async () => {
+    it('does nothing if this.csvFiles is null or empty', ( () => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
@@ -533,12 +534,12 @@ describe('ImportCSVComponent', () => {
       component.recordType = 'recordType';
       component.csvFiles = [];
 
-      await component.startJob();
-
-      expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
+      component.startJob().then(() => {
+        expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
+      });
     }));
 
-    it('calls FactoryService.startTask', async(async () => {
+    it('calls FactoryService.startTask', ( () => {
       // set FactoryService mock behaviour
       factoryServiceSpy.startTask.and.returnValue(of());
 
@@ -555,9 +556,9 @@ describe('ImportCSVComponent', () => {
       // mock component methods
       component.onFileDelete = jasmine.createSpy('onFileDelete');
 
-      await component.startJob();
-
-      expect(component.onFileDelete).toHaveBeenCalledWith(fileA);
+      component.startJob().then(() => {
+        expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(1);
+      });
 
       expect(factoryServiceSpy.startTask).toHaveBeenCalledWith({
         dataSourceType: 'dataSourceType',
