@@ -457,8 +457,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
   }
 
   updateRecordList(recordToAdd) {
-    // tslint:disable
-    let formArray = this.myForm.get('collectionRecords') as FormArray;
+    const formArray = this.myForm.get('collectionRecords') as FormArray;
     formArray.push(new FormGroup({
       record: new FormControl(recordToAdd || null)
     }));

@@ -88,7 +88,7 @@ export class MinesCollectionsRecordAddComponent implements OnInit, OnDestroy {
       type: 'Company',
       companyName: this.mine.permittee
     };
-    record['centroid'] = [this.mine.location.coordinates[0], this.mine.location.coordinates[1]];
+    record['centroid'] = [this.mine.location.coordinates[1], this.mine.location.coordinates[0]];
     record['sourceSystemRef'] = 'nrpti';
     record['projectName'] = this.mine.name;
 
