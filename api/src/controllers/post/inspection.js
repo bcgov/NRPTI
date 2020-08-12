@@ -93,6 +93,8 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
     (inspection._sourceRefOgcInspectionId = incomingObj._sourceRefOgcInspectionId);
   incomingObj._sourceRefOgcDeficiencyId &&
     (inspection._sourceRefOgcDeficiencyId = incomingObj._sourceRefOgcDeficiencyId);
+  incomingObj._sourceRefNrisId &&
+    (inspection._sourceRefNrisId = incomingObj._sourceRefNrisId);
 
   // set permissions
   inspection.read = ROLES.ADMIN_ROLES;

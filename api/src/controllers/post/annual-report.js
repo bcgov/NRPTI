@@ -88,7 +88,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   // set data
   incomingObj.recordName && (annualReport.recordName = incomingObj.recordName);
-  annualReport.recordType = 'AnnualReport';
+  annualReport.recordType = 'Annual Report';
   annualReport.issuedTo.read = ROLES.ADMIN_ROLES;
   annualReport.issuedTo.write = ROLES.ADMIN_ROLES;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (annualReport.issuedTo.type = incomingObj.issuedTo.type);
@@ -198,7 +198,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
 
   // set data
   incomingObj.recordName && (annualReportBCMI.recordName = incomingObj.recordName);
-  annualReportBCMI.recordType = 'AnnualReport';
+  annualReportBCMI.recordType = 'Annual Report';
   annualReportBCMI.issuedTo.read = ROLES.ADMIN_ROLES;
   annualReportBCMI.issuedTo.write = ROLES.ADMIN_ROLES;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (annualReportBCMI.issuedTo.type = incomingObj.issuedTo.type);

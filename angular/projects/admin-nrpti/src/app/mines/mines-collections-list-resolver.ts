@@ -44,6 +44,36 @@ export class MinesCollectionsListResolver implements Resolve<Observable<object>>
       and['project'] = params.mineId;
     }
 
+    if (params.type) {
+      or['type'] = params.type.join(',');
+    }
+
+    if (params.agency) {
+      or['agency'] = params.agency.join(',');
+    }
+
+    if (params.bcmiTabType) {
+      if (!or['type']) {
+        or['type'] = '';
+      }
+
+      if (params.bcmiTabType.includes('Authorizations')) {
+        or['type'] += 'Permit,Permit Amendment,Certificate,Certificate Amendment';
+      }
+
+      if (params.bcmiTabType.includes('Compliance Oversight')) {
+        or['type'] += 'Order,Inspection Report';
+      }
+
+      if (params.bcmiTabType.includes('Other')) {
+        or['type'] += 'Report,Annual Report,Letter of Assurance,Dam Safety Inspection,Management Plan, Compliance Self Report';
+      }
+
+      if (or['type'] === '') {
+        delete or['type'];
+      }
+    }
+
     // force-reload so we always have latest data
     return this.factoryService.getRecords(
       keywords,

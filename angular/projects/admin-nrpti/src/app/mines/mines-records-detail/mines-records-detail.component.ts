@@ -62,7 +62,7 @@ export class MinesRecordDetailComponent  implements OnInit, OnDestroy {
   }
 
   isRecordPublished(): boolean {
-    return this.record && this.record.read && this.record.read.includes('public');
+    return this.record && this.record.isBcmiPublished;
   }
 
   navigateToEditPage() {

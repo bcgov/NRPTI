@@ -105,6 +105,8 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
 
   // Edit Collection
   public collectionState = null;
+  // Edit Record
+  public recordState = null;
 
   constructor(
     public location: Location,
@@ -223,6 +225,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
     this.loadingScreenService.setLoadingState(true, 'body');
 
     this.setOrRemoveCollectionAddEditState();
+    this.setOrRemoveRecordAddEditState();
 
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params: Params) => {
       this.queryParams = { ...params };
@@ -336,6 +339,22 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
         this.storeService.removeItem(StateIDs.collectionAddEdit);
       } else {
         this.collectionState = tempCollectionAddEditState;
+      }
+    }
+  }
+
+  /**
+   * Sets the intial recordState, or removes it from store if it is invalid
+   *
+   *  @memberof MinesRecordListComponent
+   */
+  setOrRemoveRecordAddEditState() {
+    const tempRecordAddEditState = this.storeService.getItem(StateIDs.recordAddEdit);
+    if (tempRecordAddEditState) {
+      if (tempRecordAddEditState.status === StateStatus.invalid) {
+        this.storeService.removeItem(StateIDs.recordAddEdit);
+      } else {
+        this.recordState = tempRecordAddEditState;
       }
     }
   }
@@ -552,6 +571,23 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
     });
 
     this.router.navigate(['mines', this.mine._id, 'collections']);
+  }
+
+  /**
+   * Submit adding a new record to the system
+   *
+   * @memberof MinesRecordsListComponent
+   */
+  submitAddRecord() {
+    // Mark recordAddEdit status as valid
+    this.storeService.setItem({
+      [StateIDs.recordAddEdit]: {
+        ...this.storeService.getItem(StateIDs.recordAddEdit),
+        status: StateStatus.valid
+      }
+    });
+
+    this.router.navigate(['mines', this.mine._id, 'records', 'add']);
   }
 
   anySelectedRecords() {

@@ -61,12 +61,14 @@ exports.applyBusinessLogicOnPost = function(record) {
  * @returns boolean true if the record is considered anonymous, false otherwise.
  */
 function isRecordConsideredAnonymous(record) {
+  // if the record is null, assume anonymous
   if (!record) {
-    // can't determine if record is anonymous or not, must assume anonymous
     return true;
   }
-
-  let isAnonymous = isIssuedToConsideredAnonymous(record.issuedTo);
+  // if we don't have an 'issuedTo' attribute on the doc, it should not be
+  // considered anonymous. Some record types do not include an issuedTo section
+  // by default.
+  let isAnonymous = record.issuedTo ? isIssuedToConsideredAnonymous(record.issuedTo) : false;
 
   if (record.sourceSystemRef && record.sourceSystemRef.toLowerCase() === 'ocers-csv') {
     // records imported from OCERS are not anonymous
@@ -97,8 +99,11 @@ exports.isRecordConsideredAnonymous = isRecordConsideredAnonymous;
  */
 function isIssuedToConsideredAnonymous(issuedTo) {
   if (!issuedTo) {
-    // can't determine if issuedTo is anonymous or not, must assume anonymous
-    return true;
+    // can't determine if issuedTo is anonymous or not as it doesn't exist
+    // If we assume anonymous, then any record type that doesn't use issuedTo
+    // can never be published, so this must return false.
+
+    return false;
   }
 
   if (issuedTo.type !== 'Individual' && issuedTo.type !== 'IndividualCombined') {
@@ -134,8 +139,11 @@ exports.isIssuedToConsideredAnonymous = isIssuedToConsideredAnonymous;
  * @returns true if the document is considered anonymous, false otherwise.
  */
 function isDocumentConsideredAnonymous(masterRecord) {
-  if (!masterRecord || !masterRecord.documents || !masterRecord.documents.length) {
+  if (!masterRecord) {
     // can't determine if document is anonymous or not, must assume anonymous
+    // only fail here if we have a null master. Empty document array shouldn't
+    // be a factor.
+
     return true;
   }
 
