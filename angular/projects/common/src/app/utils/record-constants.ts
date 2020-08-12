@@ -56,6 +56,19 @@ export class SchemaLists {
     'Report'
   ];
 
+  public static readonly basicRecordTypeBcmiSubset = [
+    'AnnualReport',
+    'ConstructionPlan',
+    'Correspondence',
+    'DamSafetyInspection',
+    'Inspection',
+    'ManagementPlan',
+    'Order',
+    'Permit',
+    'PermitAmendment',
+    'Report'
+  ];
+
   public static readonly bcmiRecordTypes = SchemaLists.allBasicRecordTypes.concat([
     'PermitBCMI',
     'PermitAmendmentBCMI',

@@ -12,11 +12,10 @@ import { ActivatedRouteStub, TestBedHelper } from '../../../../../common/src/app
 import { RecordUtils } from '../../records/utils/record-utils';
 import { FactoryService } from '../../services/factory.service';
 import { SharedModule } from '../../shared/shared.module';
-import { MinesModule } from '../mines.module';
-import { MinesCollectionsAddEditComponent } from './mines-collections-add-edit.component';
+import { MinesCollectionsRecordAddComponent } from './mines-collections-record-add.component';
 
 describe('MinesCollectionsAddEditComponent', () => {
-  const testBedHelper = new TestBedHelper<MinesCollectionsAddEditComponent>(MinesCollectionsAddEditComponent);
+  const testBedHelper = new TestBedHelper<MinesCollectionsRecordAddComponent>(MinesCollectionsRecordAddComponent);
 
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
@@ -43,11 +42,11 @@ describe('MinesCollectionsAddEditComponent', () => {
         GlobalModule,
         CommonModule,
         SharedModule,
-        MinesModule,
         MatSlideToggleModule,
         NgxPaginationModule,
         NgbModule.forRoot()
       ],
+      declarations: [MinesCollectionsRecordAddComponent],
       providers: [
         Utils,
         RecordUtils,
