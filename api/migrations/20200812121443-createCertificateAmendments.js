@@ -29,31 +29,32 @@ exports.up = async function(db) {
     console.log(`Found ${certificateAmendments.length} Certificate Amendments`);
 
     for (const amendment of certificateAmendments) {
-      let flavourRecordId = null;
-      let masterRecordId = null;
+      let flavourRecordResult = null;
+      let masterRecordResult = null;
+      let flavourRecord = null;
 
       // Check if there is an LNG flavour.
       if (amendment._flavourRecords && amendment._flavourRecords.length) {
         // Epic certificates should only have a single LNG flavour, but lets confirm.
-        const flavourRecord = await nrpti.find({ _id: ObjectId(amendment._flavourRecords[0]) });
-        
+        flavourRecord = await nrpti.findOne({ _id: ObjectId(amendment._flavourRecords[0]) });
+
         if (flavourRecord._schemaName.includes('LNG')) {
-          flavourRecordId = await createLngFlavour(nrpti, flavourRecord);
+          flavourRecordResult = await createLngFlavour(nrpti, flavourRecord);
         } else {
           console.log(`Master record ${amendment._id} had a flavour that wasn't LNG. Check flavour record ${flavourRecord._id}`);
         }
       }
 
       // Create the master record.
-      masterRecordId = await createMaster(nrpti, amendment, flavourRecordId);
+      masterRecordResult = await createMaster(nrpti, amendment, flavourRecordResult.insertedId);
 
       // Delete the originals.
-      if (masterRecordId) {
-        await deleteRecord(masterRecordId);
+      if (masterRecordResult) {
+        await deleteRecord(nrpti, amendment._id);
       }
 
-      if (flavourRecordId) {
-        await deleteRecord(flavourRecordId);
+      if (flavourRecordResult) {
+        await deleteRecord(nrpti, flavourRecord._id);
       }
     }
 
@@ -91,9 +92,9 @@ async function createLngFlavour(nrptiCollection, flavourRecord) {
     recordType: 'CertificateAmendment',
     recordSubtype: '',
     dateIssued: flavourRecord.dateIssued || null,
-    issuingAgency: flavourRecord.issuingRecord || '',
+    issuingAgency: flavourRecord.issuingAgency || '',
     legislationDescription: flavourRecord.legislationDescription || '',
-    projectName: flavourRecord.flavourRecord || '',
+    projectName: flavourRecord.projectName || '',
     location: flavourRecord.location || '',
     centroid: flavourRecord.centroid || [],
     documents: flavourRecord.documents || [],
@@ -129,8 +130,7 @@ async function createLngFlavour(nrptiCollection, flavourRecord) {
     }
   };
 
-  const { insertedId } = await nrptiCollection.insertOne(transformedRecord);
-  return insertedId;
+  return await nrptiCollection.insertOne(transformedRecord);
 }
 
 async function createMaster(nrptiCollection, amendment, flavourRecordId) {
@@ -153,9 +153,9 @@ async function createMaster(nrptiCollection, amendment, flavourRecordId) {
     recordType: 'CertificateAmendment',
     recordSubtype: '',
     dateIssued: amendment.dateIssued || null,
-    issuingAgency: amendment.issuingRecord || '',
+    issuingAgency: amendment.issuingAgency || '',
     legislationDescription: amendment.legislationDescription || '',
-    projectName: amendment.flavourRecord || '',
+    projectName: amendment.projectName || '',
     location: amendment.location || '',
     centroid: amendment.centroid || [],
     documents: amendment.documents || [],
@@ -192,8 +192,7 @@ async function createMaster(nrptiCollection, amendment, flavourRecordId) {
   };
 
 
-  const { insertedId } = await nrptiCollection.insertOne(transformedRecord);
-  return insertedId;
+  return await nrptiCollection.insertOne(transformedRecord);
 }
 
 async function deleteRecord(nrptiCollection, recordId) {
