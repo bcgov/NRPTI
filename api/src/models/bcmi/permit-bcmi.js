@@ -25,6 +25,19 @@ module.exports = require('../../utils/model-schema-generator')(
     originalPermit: { type: 'ObjectId', default: null, index: true },
     receivedDate: { type: Date, default: null },
     dateIssued: { type: Date, default: null },
+    issuingAgency: { type: String, default: '' },
+    issuedTo: {
+      write: [{ type: String, trim: true, default: 'sysadmin' }],
+      read: [{ type: String, trim: true, default: 'sysadmin' }],
+
+      type: { type: String, enum: ['Company', 'Individual', 'IndividualCombined'] },
+      companyName: { type: String, default: '' },
+      firstName: { type: String, default: '' },
+      middleName: { type: String, default: '' },
+      lastName: { type: String, default: '' },
+      fullName: { type: String, default: '' },
+      dateOfBirth: { type: Date, default: null }
+    },
     authorizedEndDate: { type: Date, default: null },
     description: { type: String, default: '' },
     documents: [{ type: 'ObjectId', default: [], index: true }],

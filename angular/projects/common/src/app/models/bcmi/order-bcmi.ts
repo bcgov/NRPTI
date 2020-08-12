@@ -3,59 +3,53 @@ import { Entity } from '../master/common-models/entity';
 import { RecordModel } from '../record-model-abstract';
 
 /**
- * Permit BCMI data model.
+ * Order BCMI data model.
  *
  * @export
- * @class PermitBCMI
+ * @class OrderBCMI
  */
-export class PermitBCMI extends RecordModel {
+export class OrderBCMI extends RecordModel {
   _epicProjectId: string;
   _epicMilestoneId: string;
-  mineGuid: string;
 
   recordSubtype: string;
   dateIssued: Date;
   issuingAgency: string;
-  issuedTo: Entity;
+  author: string;
   legislation: Legislation;
   legislationDescription: string;
+  issuedTo: Entity;
+  outcomeStatus: string;
+  outcomeDescription: string;
   documents: object[];
 
-  description: string;
+  summary: string;
 
   datePublished: Date;
   publishedBy: string;
 
-  permitStatusCode: string;
-  amendmentStatusCode: string;
-  typeCode: string;
-  originalPermit: string;
-
   constructor(obj?: any) {
     super(obj);
 
-    this._schemaName = 'PermitBCMI';
+    this._schemaName = 'OrderBCMI';
 
     this._epicProjectId = (obj && obj._epicProjectId) || '';
     this._epicMilestoneId = (obj && obj._epicMilestoneId) || '';
-    this.mineGuid = (obj && obj.mineGuid) || null;
 
     this.recordSubtype = (obj && obj.recordSubtype) || '';
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || '';
+    this.author = (obj && obj.author) || '';
     this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
     this.legislationDescription = (obj && obj.legislationDescription) || '';
+    this.issuedTo = (obj && obj.issuedTo && new Entity(obj.issuedTo)) || null;
+    this.outcomeStatus = (obj && obj.outcomeStatus) || '';
+    this.outcomeDescription = (obj && obj.outcomeDescription) || '';
     this.documents = (obj && obj.documents) || [];
 
-    this.description = (obj && obj.description) || null;
+    this.summary = (obj && obj.summary) || null;
 
     this.datePublished = (obj && obj.datePublished) || null;
-
-    this.permitStatusCode = (obj && obj.permitStatusCode) || null;
-    this.amendmentStatusCode = (obj && obj.amendmentStatusCode) || null;
-    this.typeCode = (obj && obj.typeCode) || null;
-    this.originalPermit = (obj && obj.originalPermit) || null;
-
     this.publishedBy = (obj && obj.publishedBy) || '';
   }
 }

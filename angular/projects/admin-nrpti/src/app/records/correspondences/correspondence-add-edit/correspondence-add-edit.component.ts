@@ -59,7 +59,13 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
           alert('Error: could not load edit correspondence.');
           this.router.navigate(['/']);
         }
+      } else {
+        this.currentRecord = {
+          sourceSystemRef: 'nrpti',
+          documents: []
+        };
       }
+
       this.buildForm();
 
       this.subscribeToFormControlChanges();
@@ -129,71 +135,100 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
-        disabled: !this.factoryService.userInNrcedRole() || !this.factoryService.userInBcmiRole()
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti') &&
+        (!this.factoryService.userInNrcedRole() || !this.factoryService.userInBcmiRole())
       }),
-      dateIssued: new FormControl(
-        (this.currentRecord &&
+      dateIssued: new FormControl({
+        value: (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-        ''
-      ),
-      issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
-      legislation: new FormGroup({
-        act: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.act) || ''
-        ),
-        regulation: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.regulation) || ''
-        ),
-        section: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.section) || ''
-        ),
-        subSection: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.subSection) || ''
-        ),
-        paragraph: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
-        )
+        '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
-      legislationDescription: new FormControl((this.currentRecord && this.currentRecord.legislationDescription) || ''),
+      issuingAgency: new FormControl({
+        value: (this.currentRecord && this.currentRecord.issuingAgency) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      legislation: new FormGroup({
+        act: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.act) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        regulation: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.regulation) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        section: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.section) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        subSection: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.subSection) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        paragraph: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        })
+      }),
+      legislationDescription: new FormControl({
+        value: (this.currentRecord && this.currentRecord.legislationDescription) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
       issuedTo: new FormGroup({
-        type: new FormControl(
-          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.type) || ''
-        ),
-        companyName: new FormControl(
-          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.companyName) || ''
-        ),
-        firstName: new FormControl(
-          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.firstName) || ''
-        ),
-        middleName: new FormControl(
-          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.middleName) || ''
-        ),
-        lastName: new FormControl(
-          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.lastName) || ''
-        ),
-        fullName: new FormControl(
-          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.fullName) || ''
-        ),
-        dateOfBirth: new FormControl(
-          (this.currentRecord &&
+        type: new FormControl({
+          value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.type) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        companyName: new FormControl({
+          value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.companyName) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        firstName: new FormControl({
+          value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.firstName) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        middleName: new FormControl({
+          value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.middleName) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        lastName: new FormControl({
+          value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.lastName) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        fullName: new FormControl({
+          value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.fullName) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        dateOfBirth: new FormControl({
+          value: (this.currentRecord &&
             this.currentRecord.issuedTo &&
             this.currentRecord.issuedTo.dateOfBirth &&
             this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
-          ''
-        ),
-        anonymous: new FormControl(
-          (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || ''
-        )
+          '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          }),
+        anonymous: new FormControl({
+          value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        })
       }),
-      projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
-      location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
-      latitude: new FormControl(
-        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || ''
-      ),
-      longitude: new FormControl(
-        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || ''
-      ),
+      projectName: new FormControl({
+        value: (this.currentRecord && this.currentRecord.projectName) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      location: new FormControl({
+        value: (this.currentRecord && this.currentRecord.location) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      latitude: new FormControl({
+        value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      longitude: new FormControl({
+        value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
 
       // NRCED
       nrcedDescription: new FormControl(
@@ -341,11 +376,18 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
     if (!this.isEditing) {
       this.factoryService.writeRecord(correspondence, 'correspondences', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
+        let _id = null;
+        if (Array.isArray(res[0][0].object)) {
+          _id = res[0][0].object.find(r => r._schemaName === 'Correspondence')._id;
+        } else {
+          _id = res[0][0].object._id;
+        }
+
         await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
-          res[0][0].object._id,
+          _id,
           this.factoryService
         );
 
