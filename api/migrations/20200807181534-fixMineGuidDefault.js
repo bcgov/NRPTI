@@ -14,7 +14,7 @@ exports.setup = function(options, seedLink) {
   seed = seedLink;
 };
 
-exports.up = function(db) {
+exports.up = async function(db) {
   const mClient = await db.connection.connect(db.connectionString, { native_parser: true })
   try {
     console.log('Starting fix for mineGUID.');
