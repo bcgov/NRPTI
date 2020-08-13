@@ -26,7 +26,6 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
   public loading = true;
   public isEditing = false;
   public isPublished = false;
-  public canPublish = false;
   public showRecordForm = false;
 
   // form
@@ -284,14 +283,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesCollectionsAddEditComponent
    */
   togglePublish(event) {
-    if (!event.checked) {
-      // always allow unpublishing
-      this.myForm.get('collectionPublish').setValue(event.checked);
-    } else if (this.canPublish) {
-      // conditionally allow publishing
-      this.myForm.get('collectionPublish').setValue(event.checked);
-    }
-
+    this.myForm.get('collectionPublish').setValue(event.checked);
     this._changeDetectionRef.detectChanges();
   }
 
@@ -372,8 +364,12 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
 
     this.myForm.get('collectionRecords').dirty && (collection['records'] = this.parseRecordsFormGroups());
 
-    if (this.myForm.get('collectionPublish').dirty && this.myForm.get('collectionPublish').value) {
-      collection['addRole'] = 'public';
+    if (this.myForm.get('collectionPublish').dirty) {
+      if (this.myForm.get('collectionPublish').value) {
+        collection['addRole'] = 'public';
+      } else {
+        collection['removeRole'] = 'public';
+      }
     }
 
     if (this.isEditing) {
