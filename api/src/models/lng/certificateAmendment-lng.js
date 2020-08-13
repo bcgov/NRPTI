@@ -12,7 +12,7 @@ module.exports = require('../../utils/model-schema-generator')(
     write:            [{ type: String, trim: true, default: 'sysadmin' }],
     recordName:       { type: String, default: '' },
     recordType:       { type: String, default: '' },
-    recordSubtype:    { type: String, default: 'Certificate' },
+    recordSubtype:    { type: String, default: '' },
     issuedTo: {
       write:       [{ type: String, trim: true, default: 'sysadmin' }],
       read:        [{ type: String, trim: true, default: 'sysadmin' }],
