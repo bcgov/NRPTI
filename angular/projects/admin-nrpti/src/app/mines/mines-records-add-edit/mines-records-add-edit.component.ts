@@ -313,11 +313,17 @@ export class MinesRecordsAddEditComponent implements OnInit {
       });
     } else {
       record['_master'] = this.mine._id;
-      record['project'] = this.mine._id;
-
-      // add in other master attributes
+      record['projectName'] = this.mine.name;
       record['mineGuid'] = this.mine._sourceRefId;
-      record['issuedTo'] = this.mine.permittee;
+      record['issuedTo'] = {
+        companyName: this.mine.permittee,
+        firstName: null,
+        middleName: null,
+        lastName: null,
+        fullName: null,
+        dateOfBirth: null,
+        type: 'Company'
+      };
       record['sourceSystemRef'] = 'nrpti';
       record['centroid'] = this.mine.location ?
         [this.mine.location.coordinates[1], this.mine.location.coordinates[0]] : [0, 0];
