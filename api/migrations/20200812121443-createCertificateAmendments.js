@@ -111,8 +111,8 @@ async function createLngFlavour(nrptiCollection, flavourRecord) {
     isBcmiPublished: flavourRecord.isBcmiPublished || false,
 
     issuedTo: {
-      write: ['sysadmin'],
-      read: ['sysadmin'],
+      write: ['sysadmin', 'admin:lng'],
+      read: ['sysadmin', 'admin:lng'],
       type: null,
       companyName: '',
       firstName: '',
@@ -172,8 +172,8 @@ async function createMaster(nrptiCollection, amendment, flavourRecordId) {
     isBcmiPublished: amendment.isBcmiPublished || false,
 
     issuedTo: {
-      write: ['sysadmin'],
-      read: ['sysadmin'],
+      write: ['sysadmin', 'admin:lng'],
+      read: ['sysadmin', 'admin:lngg'],
       type: null,
       companyName: '',
       firstName: '',
