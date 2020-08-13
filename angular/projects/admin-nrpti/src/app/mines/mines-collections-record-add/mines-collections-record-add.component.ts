@@ -74,7 +74,14 @@ export class MinesCollectionsRecordAddComponent implements OnInit, OnDestroy {
     record['recordName'] = this.myForm.get('recordName').value;
     this.myForm.controls.dateIssued.dirty &&
       (record['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
-    record['recordAgency'] = this.myForm.get('recordAgency').value;
+    if (
+      this.myForm.get('recordType').value === 'ManagementPlan' ||
+      this.myForm.get('recordType').value === 'ConstructionPlan'
+    ) {
+      record['agency'] = this.myForm.get('recordAgency').value;
+    } else {
+      record['issuingAgency'] = this.myForm.get('recordAgency').value;
+    }
 
     if (this.myForm.get('recordType').value === 'PermitAmendment') {
       record['recordType'] = 'Permit';
