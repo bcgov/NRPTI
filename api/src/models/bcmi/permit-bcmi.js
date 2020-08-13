@@ -7,6 +7,8 @@ module.exports = require('../../utils/model-schema-generator')(
     _epicProjectId: { type: 'ObjectId', default: null, index: true },
     read: [{ type: String, trim: true, default: 'sysadmin' }],
     write: [{ type: String, trim: true, default: 'sysadmin' }],
+    projectName: { type: String, default: '' },
+    centroid: [{ type: Number, default: 0.0 }],
     recordName: { type: String, default: '' },
     recordType: { type: String, default: '' },
     recordSubtype: { type: String, default: '' },
