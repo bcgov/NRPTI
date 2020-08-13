@@ -316,8 +316,6 @@ export class MinesRecordsAddEditComponent implements OnInit {
       record['projectName'] = this.mine.name;
       record['mineGuid'] = this.mine._sourceRefId;
       record['issuedTo'] = {
-        write: ['sysadmin', 'admin:bcmi'],
-        read: ['sysadmin', 'admin:bcmi'],
         companyName: this.mine.permittee,
         firstName: null,
         middleName: null,
