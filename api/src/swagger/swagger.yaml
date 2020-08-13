@@ -905,7 +905,7 @@ paths:
       tags:
         - document
       summary: 'Pre-flight request'
-      operationId: protectedGetS3SignedURL
+      operationId: protectedOptions
       description: 'Options on authenticated document route'
       parameters:
         - name: docId
