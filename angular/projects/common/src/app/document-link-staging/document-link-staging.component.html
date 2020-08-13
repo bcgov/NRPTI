@@ -16,12 +16,13 @@
           <div class="col-6">
             <label>Upload Document</label>
             <app-file-upload
-              [maxFiles]="5"
-              [maxSize]="10"
-              [showInfo]="false"
-              [showList]="false"
+              [maxFiles]="params.maxFiles ? params.maxFiles : 5"
+              [maxSize]="params.maxSize ? params.maxSize : 10"
+              [showInfo]="params.showInfo ? params.showInfo : false"
+              [showList]="params.showList ? params.showList : false"
               [files]="recordFiles"
               (filesChange)="addDocuments($event)"
+              *ngIf="!maxFilesReached"
             ></app-file-upload>
             <br />
             <ul class="doc-list mb-3" *ngIf="documents && documents.length > 0">
@@ -42,7 +43,7 @@
           </div>
           <div class="col-6">
             <label>Add Link</label>
-            <div class="flex-container addLink">
+            <div class="flex-container addLink" *ngIf="!maxFilesReached">
               <div class="label-pair mr-3">
                 <input type="text" placeholder="Enter file name" [(ngModel)]="linkFileName" />
               </div>
