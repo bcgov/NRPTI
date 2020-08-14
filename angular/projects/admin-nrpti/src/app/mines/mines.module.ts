@@ -14,6 +14,7 @@ import { GlobalModule } from 'nrpti-angular-components';
 import { CommonModule as NrptiCommonModule } from '../../../../common/src/app/common.module';
 import { SharedModule } from '../shared/shared.module';
 import { MinesRoutingModule } from './mines-routing.module';
+import { DocumentsModule } from '../documents/documents.module';
 
 // mines
 import { MinesTableRowComponent } from './mines-rows/mines-table-row.component';
@@ -47,7 +48,8 @@ import { MinesRecordsAddEditComponent } from './mines-records-add-edit/mines-rec
     NgbDropdownModule,
     MatSlideToggleModule,
     MatCheckboxModule,
-    DragDropModule
+    DragDropModule,
+    DocumentsModule
   ],
   declarations: [
     MinesListComponent,

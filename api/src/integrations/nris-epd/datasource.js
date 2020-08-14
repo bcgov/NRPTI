@@ -186,7 +186,7 @@ class NrisDataSource {
     newRecord.recordName = `Inspection - ${record.requirementSource} - ${record.assessmentId}`;
     newRecord.legislationDescription = 'Inspection to verify compliance with regulatory requirement.';
     newRecord.recordType = 'Inspection';
-    newRecord._sourceRefNrisId = null
+    newRecord._sourceRefNrisId = record.assessmentId;
     newRecord.dateIssued = record.assessmentDate;
     newRecord.issuingAgency = this.stringTransformEPOtoEPD(record.resourceAgency);
     newRecord.author = 'Environmental Protection Division';
