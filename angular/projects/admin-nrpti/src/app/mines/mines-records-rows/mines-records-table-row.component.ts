@@ -56,21 +56,17 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
     }
   }
 
-  /**
-   * Emit message when row checkbox is toggled.
-   *
-   * @param {*} event checkbox event
-   * @param {*} rowData entire row data object
-   * @memberof MinesRecordsTableRowComponent
-   */
-  onRowCheckboxUpdate(event, rowData) {
-    if (event.checked) {
-      this.messageOut.emit({ label: 'rowSelected', data: rowData });
-    } else {
-      this.messageOut.emit({ label: 'rowUnselected', data: rowData });
-    }
-  }
+  public toggleCheckbox() {
+    this.rowData.rowSelected = !this.rowData.rowSelected;
 
+    if (this.rowData.rowSelected) {
+      this.messageOut.emit({ label: 'rowSelected', data: this.rowData });
+    } else {
+      this.messageOut.emit({ label: 'rowUnselected', data: this.rowData });
+    }
+
+    this.changeDetectionRef.detectChanges();
+  }
   /**
    * Navigate to record details page.
    *
