@@ -14,6 +14,7 @@ import { GlobalModule } from 'nrpti-angular-components';
 import { CommonModule as NrptiCommonModule } from '../../../../common/src/app/common.module';
 import { SharedModule } from '../shared/shared.module';
 import { MinesRoutingModule } from './mines-routing.module';
+import { DocumentsModule } from '../documents/documents.module';
 
 // mines
 import { MinesTableRowComponent } from './mines-rows/mines-table-row.component';
@@ -27,6 +28,9 @@ import { MinesCollectionsTableRowComponent } from './mines-collections-rows/mine
 import { MinesCollectionDetailComponent } from './mines-collection-detail/mines-collection-detail.component';
 import { MinesCollectionRecordTableRowComponent } from './mines-collection-detail/mines-collection-detail-record-row/mines-collection-detail-record-row.component';
 import { MinesCollectionsAddEditComponent } from './mines-collections-add-edit/mines-collections-add-edit.component';
+import { MinesRecordDetailComponent } from './mines-records-detail/mines-records-detail.component';
+import { MinesCollectionsRecordAddComponent } from './mines-collections-record-add/mines-collections-record-add.component';
+import { MinesRecordsAddEditComponent } from './mines-records-add-edit/mines-records-add-edit.component';
 
 @NgModule({
   imports: [
@@ -44,7 +48,8 @@ import { MinesCollectionsAddEditComponent } from './mines-collections-add-edit/m
     NgbDropdownModule,
     MatSlideToggleModule,
     MatCheckboxModule,
-    DragDropModule
+    DragDropModule,
+    DocumentsModule
   ],
   declarations: [
     MinesListComponent,
@@ -57,15 +62,20 @@ import { MinesCollectionsAddEditComponent } from './mines-collections-add-edit/m
     MinesCollectionsTableRowComponent,
     MinesCollectionDetailComponent,
     MinesCollectionRecordTableRowComponent,
-    MinesCollectionsAddEditComponent
+    MinesCollectionsAddEditComponent,
+    MinesCollectionsRecordAddComponent,
+    MinesRecordDetailComponent,
+    MinesRecordsAddEditComponent
   ],
   providers: [],
   entryComponents: [
     MinesTableRowComponent,
     MinesRecordsTableRowComponent,
     MinesCollectionsTableRowComponent,
-    MinesCollectionRecordTableRowComponent
+    MinesCollectionRecordTableRowComponent,
   ],
-  exports: []
+  exports: [
+    MinesCollectionsRecordAddComponent
+  ]
 })
-export class MinesModule {}
+export class MinesModule { }

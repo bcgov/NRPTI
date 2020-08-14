@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormGroup, FormControl, FormArray } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material';
 import { TestBedHelper } from '../../spec/spec-utils';
@@ -8,7 +8,7 @@ import { GlobalModule, Utils } from 'nrpti-angular-components';
 describe('PenaltyAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<PenaltyAddEditComponent>(PenaltyAddEditComponent);
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, MatAutocompleteModule, GlobalModule],
       providers: [Utils],

@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Component } from '@angular/core';
 import { DigitOnlyDirective } from './digit-only.directive';
 import { TestBedHelper } from '../../../../../common/src/app/spec/spec-utils';
@@ -13,7 +13,7 @@ class TestComponent {}
 describe('DigitOnlyDirective', () => {
   const testBedHelper = new TestBedHelper<TestComponent>(TestComponent);
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       declarations: [DigitOnlyDirective, TestComponent]
     }).compileComponents();

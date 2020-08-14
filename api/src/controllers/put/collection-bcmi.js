@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
+const ObjectID = require('mongodb').ObjectID;
 const PutUtils = require('../../utils/put-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
-const mongodb = require('../../utils/mongodb');
-const { ROLES } = require('../../utils/constants/misc');
 const { userHasValidRoles } = require('../../utils/auth-utils');
+const utils = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to edit a master Collection record.
@@ -16,8 +16,22 @@ const { userHasValidRoles } = require('../../utils/auth-utils');
  */
 exports.editRecord = async function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
+  }
+
+  const CollectionBCMI = mongoose.model(RECORD_TYPE.CollectionBCMI._schemaName);
+
+  // if any values in the "records" attribute exist on any other collection, throw an error
+  if (incomingObj.records && incomingObj.records.length > 0) {
+    for(const record of incomingObj.records) {
+      // does this record exit in any other collection?
+      const collections = await CollectionBCMI.find({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName,  records: { $elemMatch: { $eq: new ObjectID(record) }}}).exec();
+      const otherCollections = collections.find(c => c._id.toString() !== incomingObj._id.toString());
+      if (collections && otherCollections && otherCollections.length > 0) {
+        throw new Error('Collection contains records that are already associated with another collection');
+      }
+    }
   }
 
   const masterRecord = this.editMaster(args, res, next, incomingObj);
@@ -25,8 +39,6 @@ exports.editRecord = async function(args, res, next, incomingObj) {
   let result = null;
 
   try {
-    const CollectionBCMI = mongoose.model(RECORD_TYPE.CollectionBCMI._schemaName);
-
     result = await CollectionBCMI.findOneAndUpdate(
       {
         _id: incomingObj._id,
@@ -37,11 +49,6 @@ exports.editRecord = async function(args, res, next, incomingObj) {
       { new: true }
     );
   } catch (error) {
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
-    const collection = db.collection('nrpti');
-
-    await collection.deleteOne({ _id: incomingObj._id });
-
     return {
       status: 'failure',
       object: result,
@@ -66,7 +73,7 @@ exports.editRecord = async function(args, res, next, incomingObj) {
  */
 exports.editMaster = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 

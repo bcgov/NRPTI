@@ -1,0 +1,33 @@
+@import "~assets/styles/base/base.scss";
+// base record detail scss found in record-details.scss
+
+.section-1 {
+  grid-template-columns: 3fr 2fr 2fr 2fr 2fr;
+}
+
+.section-2 {
+  grid-template-columns: 3fr 4fr 4fr;
+}
+
+.section-3 {
+  grid-template-columns: 3fr 2fr 6fr;
+}
+
+.section-4 {
+  grid-template-columns: auto;
+}
+
+@media screen and (max-width: 768px) {
+  .section-1,
+  .section-2,
+  .section-3,
+  .section-4 {
+    grid-template-columns: none;
+  }
+
+  .grid-item__row {
+    grid-template-rows: none;
+    grid-template-columns: 1fr 2fr;
+    grid-gap: 0.625rem;
+  }
+}

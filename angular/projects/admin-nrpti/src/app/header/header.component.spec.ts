@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { HeaderComponent } from './header.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,7 +16,7 @@ describe('HeaderComponent', () => {
 
   const mockRouter = jasmine.createSpyObj('Router', ['navigate', 'events']);
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [BrowserAnimationsModule],
       declarations: [HeaderComponent],

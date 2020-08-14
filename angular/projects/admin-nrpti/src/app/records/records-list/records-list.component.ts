@@ -446,52 +446,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   }
 
   add(item) {
-    switch (item) {
-      case 'administrativePenalty':
-        this.router.navigate(['records', 'administrative-penalties', 'add']);
-        break;
-      case 'administrativeSanction':
-        this.router.navigate(['records', 'administrative-sanctions', 'add']);
-        break;
-      case 'agreement':
-        this.router.navigate(['records', 'agreements', 'add']);
-        break;
-      case 'certificate':
-        this.router.navigate(['records', 'certificates', 'add']);
-        break;
-      case 'constructionPlan':
-        this.router.navigate(['records', 'construction-plans', 'add']);
-        break;
-      case 'courtConviction':
-        this.router.navigate(['records', 'court-convictions', 'add']);
-        break;
-      case 'inspection':
-        this.router.navigate(['records', 'inspections', 'add']);
-        break;
-      case 'managementPlan':
-        this.router.navigate(['records', 'management-plans', 'add']);
-        break;
-      case 'order':
-        this.router.navigate(['records', 'orders', 'add']);
-        break;
-      case 'permit':
-        this.router.navigate(['records', 'permits', 'add']);
-        break;
-      case 'restorativeJustice':
-        this.router.navigate(['records', 'restorative-justices', 'add']);
-        break;
-      case 'selfReport':
-        this.router.navigate(['records', 'self-reports', 'add']);
-        break;
-      case 'ticket':
-        this.router.navigate(['records', 'tickets', 'add']);
-        break;
-      case 'warning':
-        this.router.navigate(['records', 'warnings', 'add']);
-        break;
-      default:
-        break;
-    }
+    this.router.navigate(['records', item, 'add']);
   }
 
   /**

@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material';
 import { TestBedHelper } from '../../spec/spec-utils';
@@ -8,7 +8,7 @@ import { Penalty } from '../../models/master/common-models/penalty';
 describe('PenaltyDetailComponent', () => {
   const testBedHelper = new TestBedHelper<PenaltyDetailComponent>(PenaltyDetailComponent);
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       declarations: [PenaltyDetailComponent],
       imports: [ReactiveFormsModule, MatAutocompleteModule]

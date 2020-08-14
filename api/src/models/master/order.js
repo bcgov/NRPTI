@@ -8,7 +8,7 @@ module.exports = require('../../utils/model-schema-generator')(
     _sourceRefId: { type: 'ObjectId', default: null, index: true },
     _epicMilestoneId: { type: 'ObjectId', default: null, index: true },
 
-    mineGuid: { type: String, default: '', index: true },
+    mineGuid: { type: String, default: null, index: true },
 
     read: [{ type: String, trim: true, default: 'sysadmin' }],
     write: [{ type: String, trim: true, default: 'sysadmin' }],
@@ -60,7 +60,8 @@ module.exports = require('../../utils/model-schema-generator')(
     sourceDateUpdated: { type: Date, default: null },
     sourceSystemRef: { type: String, default: 'nrpti' },
     isNrcedPublished: { type: Boolean, default: false, index: true },
-    isLngPublished: { type: Boolean, default: false, index: true }
+    isLngPublished: { type: Boolean, default: false, index: true },
+    isBcmiPublished: { type: Boolean, default: false, index: true }
   },
   'nrpti'
 );

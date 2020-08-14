@@ -1,7 +1,5 @@
 'use strict';
 
-const defaultLog = require('./logger')('queryActions');
-
 /**
  * Publish the obj: add 'public' to the 'read' field.
  *
@@ -13,8 +11,6 @@ exports.publish = async function(obj, auth_payload) {
   return new Promise(async function(resolve, reject) {
     // Object was already published?
     if (self.isPublished(obj)) {
-      defaultLog.info(`publish - HTTP 409 - Object already published: ${JSON.stringify(obj)}`);
-
       resolve({
         code: 409,
         message: 'Object already published'
@@ -84,8 +80,6 @@ exports.unPublish = async function(obj, auth_payload) {
   return new Promise(async function(resolve, reject) {
     // Object wasn't already published?
     if (!self.isPublished(obj)) {
-      defaultLog.info(`unPublish - HTTP 409 - Object already unpublished: ${JSON.stringify(obj)}`);
-
       resolve({
         code: 409,
         message: 'Object already unpublished'

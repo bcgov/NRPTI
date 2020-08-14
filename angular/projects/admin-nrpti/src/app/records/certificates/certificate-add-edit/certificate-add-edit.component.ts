@@ -9,7 +9,7 @@ import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
-import { LoadingScreenService } from 'nrpti-angular-components';
+import { LoadingScreenService, StoreService } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-certificate-add-edit',
@@ -41,6 +41,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     public router: Router,
     private recordUtils: RecordUtils,
+    private storeService: StoreService,
     private factoryService: FactoryService,
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
@@ -58,7 +59,13 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
           alert('Error: could not load edit certificate.');
           this.router.navigate(['/']);
         }
+      } else {
+        this.currentRecord = {
+          sourceSystemRef: 'nrpti',
+          documents: []
+        };
       }
+
       this.buildForm();
 
       this.subscribeToFormControlChanges();
@@ -120,42 +127,63 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
-        disabled: !this.factoryService.userInLngRole()
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti') &&
+          !this.factoryService.userInLngRole()
       }),
       recordSubtype: new FormControl((this.currentRecord && this.currentRecord.recordSubtype) || ''),
-      dateIssued: new FormControl(
-        (this.currentRecord &&
+      dateIssued: new FormControl({
+        value: (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-        ''
-      ),
-      issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
-      legislation: new FormGroup({
-        act: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.act) || ''
-        ),
-        regulation: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.regulation) || ''
-        ),
-        section: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.section) || ''
-        ),
-        subSection: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.subSection) || ''
-        ),
-        paragraph: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
-        )
+        '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
-      legislationDescription: new FormControl((this.currentRecord && this.currentRecord.legislationDescription) || ''),
-      projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
-      location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
-      latitude: new FormControl(
-        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || ''
-      ),
-      longitude: new FormControl(
-        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || ''
-      ),
+      issuingAgency: new FormControl({
+        value: (this.currentRecord && this.currentRecord.issuingAgency) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      legislation: new FormGroup({
+        act: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.act) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        regulation: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.regulation) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        section: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.section) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        subSection: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.subSection) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        paragraph: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        })
+      }),
+      legislationDescription: new FormControl({
+        value: (this.currentRecord && this.currentRecord.legislationDescription) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      projectName: new FormControl({
+        value: (this.currentRecord && this.currentRecord.projectName) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      location: new FormControl({
+        value: (this.currentRecord && this.currentRecord.location) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      latitude: new FormControl({
+        value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      longitude: new FormControl({
+        value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
 
       // LNG
       lngDescription: new FormControl(
@@ -167,6 +195,17 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
         disabled: !this.factoryService.userInLngRole()
+      }),
+
+      association: new FormGroup({
+        _epicProjectId: new FormControl({
+          value: this.currentRecord && this.currentRecord._epicProjectId || null,
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        }),
+        mineGuid: new FormControl({
+          value: this.currentRecord && this.currentRecord.mineGuid || null,
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        })
       })
     });
   }
@@ -252,14 +291,38 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       certificate['CertificateLNG']['removeRole'] = 'public';
     }
 
+    if (this.myForm.get('association._epicProjectId').dirty) {
+      certificate['_epicProjectId'] = this.myForm.get('association._epicProjectId').value;
+    }
+
+    if (this.myForm.get('association.mineGuid').dirty) {
+      certificate['mineGuid'] = this.myForm.get('association.mineGuid').value;
+    }
+
+    // Set the friendly name of projectName
+    const epicProjectList = this.storeService.getItem('epicProjects');
+    const filterResult = epicProjectList.filter(item => {
+      return item._id === certificate['_epicProjectId'];
+    });
+    if (filterResult && filterResult[0] && filterResult[0].name) {
+      certificate['projectName'] = filterResult[0].name;
+    }
+
     if (!this.isEditing) {
-      this.factoryService.createCertificate(certificate).subscribe(async res => {
+      this.factoryService.writeRecord(certificate, 'certificates', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
+        let _id = null;
+        if (Array.isArray(res[0][0].object)) {
+          _id = res[0][0].object.find(r => r._schemaName === 'Certificate')._id;
+        } else {
+          _id = res[0][0].object._id;
+        }
+
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
-          res[0][0].object._id,
+          _id,
           this.factoryService
         );
 
@@ -279,7 +342,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         certificate['CertificateLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.editCertificate(certificate).subscribe(async res => {
+      this.factoryService.writeRecord(certificate, 'certificates', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,

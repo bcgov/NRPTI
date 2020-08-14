@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const AWS = require('aws-sdk');
 const ObjectID = require('mongodb').ObjectID;
-const { ROLES } = require('../utils/constants/misc');
+const utils = require('../utils/constants/misc');
 
 const queryActions = require('../utils/query-actions');
 const queryUtils = require('../utils/query-utils');
@@ -34,12 +34,26 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
     const collection = db.collection('nrpti');
 
     // fetch master record
+
+    // It's possible to bring down the API if you pass in an invalid record ID, or null.
+    // a post to "/api/record/thisWillBreakTheServer/document" will cause the server to die.
+    // This will still let any 12 char value through (it passes isValid)
+    if (!args.swagger.params.recordId.value || !ObjectID.isValid(args.swagger.params.recordId.value)) {
+      defaultLog.info(`Error creating document: ${args.swagger.params.fileName.value}, Error: Invalid Master Record ID supplied`)
+      return queryActions.sendResponse(
+        res,
+        400,
+        `Error creating document for ${args.swagger.params.fileName.value}. Invalid master record id supplied`
+      );
+    }
+
     const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
 
     // Set mongo document and s3 document roles
-    let readRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN];
-    const writeRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN];
+    let readRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_NRCED];
+    const writeRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_NRCED];
     let s3ACLRole = null;
+
     if (!businessLogicManager.isDocumentConsideredAnonymous(masterRecord)) {
       readRoles.push('public');
       s3ACLRole = 'public-read';
@@ -265,8 +279,8 @@ async function createURLDocument(fileName, addedBy, url, readRoles = [], writeRo
   document.fileName = fileName;
   document.addedBy = addedBy;
   document.url = url;
-  document.read = [ROLES.SYSADMIN, ...readRoles];
-  document.write = [ROLES.SYSADMIN, ...writeRoles];;
+  document.read = [utils.ApplicationRoles.ADMIN, ...readRoles];
+  document.write = [utils.ApplicationRoles.ADMIN, ...writeRoles];;
 
   return document.save();
 }
@@ -293,8 +307,8 @@ async function createS3Document(fileName, fileContent, addedBy, readRoles = [], 
   document.addedBy = addedBy;
   document.url = `https://${process.env.OBJECT_STORE_endpoint_url}/${process.env.OBJECT_STORE_bucket_name}/${document._id}/${fileName}`;
   document.key = s3Key;
-  document.read = [ROLES.SYSADMIN, ...readRoles];
-  document.write = [ROLES.SYSADMIN, ...writeRoles];
+  document.read = [utils.ApplicationRoles.ADMIN, ...readRoles];
+  document.write = [utils.ApplicationRoles.ADMIN, ...writeRoles];
 
   const s3Response = await uploadS3Document(s3Key, fileContent, s3ACLRole);
 

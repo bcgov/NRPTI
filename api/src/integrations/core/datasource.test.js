@@ -137,7 +137,7 @@ describe('Core DataSource', () => {
       const utils = {
         mineUtils: {},
         permitUtils: {},
-        permitAmendmentUtils: {}
+        collectionUtils: {}
       }
       dataSource.processRecord(utils, [], null);
       expect(dataSource.status.individualRecordStatus[0].error).toEqual('processRecord - required coreRecord is null.');

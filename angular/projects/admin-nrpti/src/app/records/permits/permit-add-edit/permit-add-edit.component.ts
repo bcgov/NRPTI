@@ -3,13 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Picklists, EpicProjectIds } from '../../../../../../common/src/app/utils/record-constants';
+import { Picklists } from '../../../../../../common/src/app/utils/record-constants';
 import { Legislation } from '../../../../../../common/src/app/models/master/common-models/legislation';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
-import { LoadingScreenService } from 'nrpti-angular-components';
+import { LoadingScreenService, StoreService} from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-permit-add-edit',
@@ -43,6 +43,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     public router: Router,
     private recordUtils: RecordUtils,
     private factoryService: FactoryService,
+    private storeService: StoreService,
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
@@ -59,7 +60,13 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
           alert('Error: could not load edit permit.');
           this.router.navigate(['/']);
         }
+      } else {
+        this.currentRecord = {
+          sourceSystemRef: 'nrpti',
+          documents: []
+        };
       }
+
       this.buildForm();
 
       this.subscribeToFormControlChanges();
@@ -121,42 +128,66 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
-        disabled: !this.factoryService.userInLngRole()
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti') &&
+          !this.factoryService.userInLngRole()
       }),
-      recordSubtype: new FormControl((this.currentRecord && this.currentRecord.recordSubtype) || ''),
-      dateIssued: new FormControl(
-        (this.currentRecord &&
+      recordSubtype: new FormControl({
+        value: (this.currentRecord && this.currentRecord.recordSubtype) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      dateIssued: new FormControl({
+        value: (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-        ''
-      ),
-      issuingAgency: new FormControl((this.currentRecord && this.currentRecord.issuingAgency) || ''),
-      legislation: new FormGroup({
-        act: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.act) || ''
-        ),
-        regulation: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.regulation) || ''
-        ),
-        section: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.section) || ''
-        ),
-        subSection: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.subSection) || ''
-        ),
-        paragraph: new FormControl(
-          (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || ''
-        )
+        '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
-      legislationDescription: new FormControl((this.currentRecord && this.currentRecord.legislationDescription) || ''),
-      projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
-      location: new FormControl((this.currentRecord && this.currentRecord.location) || ''),
-      latitude: new FormControl(
-        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || ''
-      ),
-      longitude: new FormControl(
-        (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || ''
-      ),
+      issuingAgency: new FormControl({
+        value: (this.currentRecord && this.currentRecord.issuingAgency) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      legislation: new FormGroup({
+        act: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.act) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        regulation: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.regulation) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        section: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.section) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        subSection: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.subSection) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+        paragraph: new FormControl({
+          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        })
+      }),
+      legislationDescription: new FormControl({
+        value: (this.currentRecord && this.currentRecord.legislationDescription) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      projectName: new FormControl({
+        value: (this.currentRecord && this.currentRecord.projectName) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      location: new FormControl({
+        value: (this.currentRecord && this.currentRecord.location) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      latitude: new FormControl({
+        value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      longitude: new FormControl({
+        value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
 
       // LNG
       lngDescription: new FormControl({
@@ -166,7 +197,18 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
         disabled: !this.factoryService.userInLngRole()
-      })
+      }),
+
+      association: new FormGroup({
+        _epicProjectId: new FormControl({
+          value: this.currentRecord && this.currentRecord._epicProjectId || null,
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        }),
+        mineGuid: new FormControl({
+          value: this.currentRecord && this.currentRecord.mineGuid || null,
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        })
+      }),
     });
   }
 
@@ -187,12 +229,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
 
   async submit() {
     this.loadingScreenService.setLoadingState(true, 'main');
-    // TODO
-    // _epicProjectId
-    // _sourceRefId
-    // _epicMilestoneId
-    // legislation
-    // projectName
 
     const permit = {};
     this.myForm.controls.recordName.dirty && (permit['recordName'] = this.myForm.controls.recordName.value);
@@ -219,19 +255,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.legislationDescription.dirty &&
       (permit['legislationDescription'] = this.myForm.controls.legislationDescription.value);
 
-    // Project name logic
-    // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    if (this.myForm.controls.projectName.dirty) {
-      permit['projectName'] = this.myForm.controls.projectName.value;
-      if (permit['projectName'] === 'LNG Canada') {
-        permit['_epicProjectId'] = EpicProjectIds.lngCanadaId;
-      } else if (permit['projectName'] === 'Coastal Gaslink') {
-        permit['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
-      } else {
-        permit['_epicProjectId'] = null;
-      }
-    }
-
     this.myForm.controls.location.dirty && (permit['location'] = this.myForm.controls.location.value);
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (permit['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
@@ -248,18 +271,41 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       permit['PermitLNG']['removeRole'] = 'public';
     }
 
+    if (this.myForm.get('association._epicProjectId').dirty) {
+      permit['_epicProjectId'] = this.myForm.get('association._epicProjectId').value;
+    }
+
+    if (this.myForm.get('association.mineGuid').dirty) {
+      permit['mineGuid'] = this.myForm.get('association.mineGuid').value;
+    }
+
+    // Set the friendly name of projectName
+    const epicProjectList = this.storeService.getItem('epicProjects');
+    const filterResult = epicProjectList.filter(item => {
+      return item._id === permit['_epicProjectId'];
+    });
+    if (filterResult && filterResult[0] && filterResult[0].name) {
+      permit['projectName'] = filterResult[0].name;
+    }
+
     if (!this.isEditing) {
-      this.factoryService.createPermit(permit).subscribe(async res => {
+      this.factoryService.writeRecord(permit, 'permits', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        let _id = null;
+        if (Array.isArray(res[0][0].object)) {
+          _id = res[0][0].object.find(r => r._schemaName === 'Permit')._id;
+        } else {
+          _id = res[0][0].object._id;
+        }
+
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
-          res[0][0].object._id,
+          _id,
           this.factoryService
         );
 
-        console.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records']);
       });
@@ -275,9 +321,9 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
         permit['PermitLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.editPermit(permit).subscribe(async res => {
+      this.factoryService.writeRecord(permit, 'permits', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -285,7 +331,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records', 'permits', this.currentRecord._id, 'detail']);
       });

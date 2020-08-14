@@ -1,0 +1,93 @@
+<main class="detail-page">
+  <div>
+    <section class="content-section">
+      <div class="content-grid">
+        <div class="grid-section-header">
+          <div class="grid-section-header-title">
+            <h4 class="grid-section-header-title-text blue-header">Shared Data [Master]</h4>
+            <span *ngIf="data && data._master.dateUpdated" class="grey-subtext ml-2">
+              Last Edited {{ (data && data._master.dateUpdated | date: 'mediumDate') || '-' }}
+            </span>
+          </div>
+          <div class="grid-section-header-button">
+            <button class="button-edit" (click)="navigateToEditPage()">
+              <i class="material-icons">edit</i>
+              <span>Edit</span>
+            </button>
+          </div>
+        </div>
+        <div class="grid-section-sub-header">
+          <span class="grid-section-sub-header-text">Basic Information</span>
+        </div>
+        <div class="grid-section section-1">
+          <div class="grid-item__row">
+            <label class="grid-item-name">Record Type</label>
+            <span class="grid-item-value">{{ (data && data._master.recordType) || '-' }}</span>
+          </div>
+          <div class="grid-item__row">
+            <label class="grid-item-name">Record Sub-Type</label>
+            <span class="grid-item-value">{{ (data && data._master.recordSubtype) || '-' }}</span>
+          </div>
+          <div class="grid-item__row">
+            <label class="grid-item-name">Date Issued</label>
+            <span class="gird-item-value">{{ (data && data._master.dateIssued | date: 'mediumDate') || '-' }}</span>
+          </div>
+          <div class="grid-item__row">
+            <label class="grid-item-name">Record Name</label>
+            <span class="grid-item-value">{{ (data && data._master.recordName) || '-' }}</span>
+          </div>
+        </div>
+        <div class="grid-section section-2">
+          <div class="grid-item__row">
+            <label class="grid-item-name">Issuing Agency</label>
+            <span class="grid-item-value">{{ (data && data._master.issuingAgency) || '-' }}</span>
+          </div>
+          <div class="grid-item__row">
+            <label class="grid-item-name">Legislation</label>
+            <span class="grid-item-value">{{ legislationString || '-' }}</span>
+          </div>
+          <div class="grid-item__row">
+            <label class="grid-item-name">Description</label>
+            <span class="grid-item-value">{{ (data && data._master.legislationDescription) || '-' }}</span>
+          </div>
+          <div class="grid-item__row">
+            <label class="grid-item-name">Source System</label>
+            <span class="grid-item-value">{{ (data && data._master && data._master.sourceSystemRef) || '-' }}</span>
+          </div>
+        </div>
+        <div class="grid-section-border"></div>
+        <div class="grid-section-sub-header">
+          <span class="grid-section-sub-header-text">Entity Details</span>
+        </div>
+        <app-entity-detail class="grid-section" [data]="data && data._master.issuedTo"></app-entity-detail>
+        <div class="grid-section-border"></div>
+        <div class="grid-section-sub-header">
+          <span class="grid-section-sub-header-text">Location Details</span>
+        </div>
+        <div class="grid-section section-3">
+          <div class="grid-item__row">
+            <label class="grid-item-name">Site/Project</label>
+            <span class="grid-item-value">{{ (data && data._master.projectName) || '-' }}</span>
+          </div>
+          <div class="grid-item__row">
+            <label class="grid-item-name">Lat/Long</label>
+            <span class="grid-item-value">{{ data && data._master.centroid ? data._master.centroid[1] + '/' + data._master.centroid[0]: '-' }}</span>
+          </div>
+          <div class="grid-item__row">
+            <label class="grid-item-name">Location</label>
+            <span class="grid-item-value">{{ (data && data._master.location) || '-' }}</span>
+          </div>
+        </div>
+        <div class="grid-section-border"></div>
+        <div class="grid-section-sub-header">
+          <span class="grid-section-sub-header-text">Documents</span>
+        </div>
+        <div class="grid-section section-4">
+          <app-document-read-only [documents]="data && data._master && data._master.documents"></app-document-read-only>
+        </div>
+        <div class="grid-section-border"></div>
+      </div>
+    </section>
+    <ng-container *ngFor="let flavourData of data && data.flavourData" [appRecordDetail]="flavourData"></ng-container>
+  </div>
+</main>

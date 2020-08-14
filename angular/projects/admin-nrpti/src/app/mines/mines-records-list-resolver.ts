@@ -29,9 +29,18 @@ export class MinesRecordsListResolver implements Resolve<Observable<object>> {
       subset = params.subset.split(',');
     }
 
-    const and = {};
+    const and = {
+      mineGuid: null
+    };
     const or = {};
     const nor = {};
+
+    // fetch the mine from the parent resolver so we can get the sourceRefId
+
+    if (route.parent && route.parent.data && route.parent.data.mine) {
+      const mineResult = route.parent.data.mine;
+      and.mineGuid = mineResult[0].data._sourceRefId;
+    }
 
     if (params.dateRangeFromFilter) {
       or['dateRangeFromFilterdateIssued'] = params.dateRangeFromFilter;
@@ -66,7 +75,7 @@ export class MinesRecordsListResolver implements Resolve<Observable<object>> {
       tableObject.pageSize,
       tableObject.sortBy || '-dateAdded', // This needs to be common between all datasets to work properly
       and,
-      false,
+      true,
       or,
       subset,
       nor

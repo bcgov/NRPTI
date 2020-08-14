@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { CourtConvictionDetailComponent } from './court-conviction-detail.component';
 import { TestBedHelper, ActivatedRouteStub } from '../../../../../../common/src/app/spec/spec-utils';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -21,7 +21,7 @@ describe('CourtConvictionDetailComponent', () => {
   mockFactoryService.userInLngRole.and.returnValue(true);
   mockFactoryService.userInNrcedRole.and.returnValue(true);
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, GlobalModule, CommonModule],
       declarations: [

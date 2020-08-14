@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
-const { ROLES } = require('../../utils/constants/misc');
+const ObjectID = require('mongodb').ObjectID;
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const mongodb = require('../../utils/mongodb');
 const { userHasValidRoles } = require('../../utils/auth-utils');
+const utils = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a new master Collection record.
@@ -15,11 +16,11 @@ const { userHasValidRoles } = require('../../utils/auth-utils');
  */
 exports.createRecord = async function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
-  const masterRecord = this.createMaster(args, res, next, incomingObj);
+  const masterRecord = await this.createMaster(args, res, next, incomingObj);
 
   let result = null;
 
@@ -53,9 +54,9 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  * @param {*} incomingObj Collection record to create
  * @returns master Collection record object
  */
-exports.createMaster = function(args, res, next, incomingObj) {
+exports.createMaster = async function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -70,8 +71,8 @@ exports.createMaster = function(args, res, next, incomingObj) {
   incomingObj.project && (collection.project = incomingObj.project);
 
   // Set permissions
-  collection.read = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
-  collection.write = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
+  collection.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  collection.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // Set data
   incomingObj.name && (collection.name = incomingObj.name);
@@ -79,6 +80,18 @@ exports.createMaster = function(args, res, next, incomingObj) {
   incomingObj.type && (collection.type = incomingObj.type);
   incomingObj.agency && (collection.agency = incomingObj.agency);
   incomingObj.records && incomingObj.records.length && (collection.records = incomingObj.records);
+
+  // if any values in the "records" attribute exist on any other collection, throw an error
+  if (collection.records && collection.records.length > 0) {
+    const model = require('mongoose').model(RECORD_TYPE.CollectionBCMI._schemaName);
+    for(const record of collection.record) {
+      // does this record exit in any other collection?
+      const collectionCount = await model.count({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName,  records: { $elemMatch: { $eq: new ObjectID(record) } } });
+      if (collectionCount && collectionCount > 0) {
+        throw new Error('Collection contains records that are already associated with another collection');
+      }
+    }
+  }
 
   // Add 'public' role and associated meta
   if (incomingObj.addRole && incomingObj.addRole === 'public') {

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const { userHasValidRoles } = require('../../utils/auth-utils');
-const { ROLES } = require('../../utils/constants/misc');
+const utils = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Management Plan record and its associated flavour records.
@@ -30,7 +30,8 @@ const { ROLES } = require('../../utils/constants/misc');
  */
 exports.createRecord = async function (args, res, next, incomingObj) {
   const flavourFunctions = {
-    ManagementPlanLNG: this.createLNG
+    ManagementPlanLNG: this.createLNG,
+    ManagementPlanBCMI: this.createBCMI
   }
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
@@ -78,8 +79,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (managementPlan._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  managementPlan.read = ROLES.ADMIN_ROLES;
-  managementPlan.write = ROLES.ADMIN_ROLES;
+  managementPlan.read = utils.ApplicationAdminRoles;
+  managementPlan.write = utils.ApplicationAdminRoles;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -140,7 +141,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -161,8 +162,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (managementPlanLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  managementPlanLNG.read = ROLES.ADMIN_ROLES;
-  managementPlanLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  managementPlanLNG.read = utils.ApplicationAdminRoles;
+  managementPlanLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
@@ -195,4 +196,87 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.sourceSystemRef && (managementPlanLNG.sourceSystemRef = incomingObj.sourceSystemRef);
 
   return managementPlanLNG;
+};
+
+/**
+ * Performs all operations necessary to create a BCMI Management Plan record.
+ *
+ * Example of incomingObj
+ *
+ *  managementPlans: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'managementPlan',
+ *      ...
+ *      ManagementPlanLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created bcmi managementPlan record
+ */
+ exports.createBCMI = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
+  let ManagementPlanLNG = mongoose.model('ManagementPlanBCMI');
+  let managementPlanBCMI = new ManagementPlanLNG();
+
+  managementPlanBCMI._schemaName = 'ManagementPlanBCMI';
+
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (managementPlanBCMI._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (managementPlanBCMI._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (managementPlanBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
+  managementPlanBCMI.read = utils.ApplicationAdminRoles;
+  managementPlanBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    managementPlanBCMI.read.push('public');
+    managementPlanBCMI.datePublished = new Date();
+    managementPlanBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
+
+  managementPlanBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  managementPlanBCMI.dateAdded = new Date();
+
+  // set master data
+  incomingObj.recordName && (managementPlanBCMI.recordName = incomingObj.recordName);
+  managementPlanBCMI.recordType = 'Management Plan';
+  incomingObj.dateIssued && (managementPlanBCMI.dateIssued = incomingObj.dateIssued);
+  incomingObj.agency && (managementPlanBCMI.agency = incomingObj.agency);
+  incomingObj.author && (managementPlanBCMI.author = incomingObj.author);
+  incomingObj.projectName && (managementPlanBCMI.projectName = incomingObj.projectName);
+  incomingObj.location && (managementPlanBCMI.location = incomingObj.location);
+  incomingObj.centroid && (managementPlanBCMI.centroid = incomingObj.centroid);
+  incomingObj.documents && (managementPlanBCMI.documents = incomingObj.documents);
+
+  // set flavour data
+  incomingObj.description && (managementPlanBCMI.description = incomingObj.description);
+  incomingObj.relatedPhase && (managementPlanBCMI.relatedPhase = incomingObj.relatedPhase);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (managementPlanBCMI.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (managementPlanBCMI.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (managementPlanBCMI.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return managementPlanBCMI;
 };

@@ -37,7 +37,8 @@ const OrderPost = require('../post/order');
 exports.editRecord = async function (args, res, next, incomingObj, overridePutParams = null) {
   const flavourFunctions = {
     OrderLNG: this.editLNG,
-    OrderNRCED: this.editNRCED
+    OrderNRCED: this.editNRCED,
+    OrderBCMI: this.editBCMI
   }
   return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, OrderPost, 'Order', flavourFunctions, overridePutParams);
 };
@@ -208,6 +209,71 @@ exports.editNRCED = function (args, res, next, incomingObj) {
   let OrderNRCED = mongoose.model('OrderNRCED');
 
   const sanitizedObj = PutUtils.validateObjectAgainstModel(OrderNRCED, incomingObj);
+
+  sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+
+  sanitizedObj.dateUpdated = new Date();
+
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  let updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
+
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    updateObj.$addToSet['read'] = 'public';
+    updateObj.$set['datePublished'] = new Date();
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
+    updateObj.$pull['read'] = 'public';
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
+  }
+
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
+
+  return updateObj;
+};
+
+/**
+ * Performs all operations necessary to edit a BCMI Order record.
+ *
+ * Example of incomingObj
+ *
+ *  orders: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'order',
+ *      ...
+ *      OrderLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      OrderNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited bcmi order record
+ */
+ exports.editBCMI = function (args, res, next, incomingObj) {
+  delete incomingObj._id;
+
+  // Reject any changes to permissions
+  // Publishing must be done via addRole or removeRole
+  delete incomingObj.read;
+  delete incomingObj.write;
+
+  let OrderBCMI = mongoose.model('OrderBCMI');
+
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(OrderBCMI, incomingObj);
 
   sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
 

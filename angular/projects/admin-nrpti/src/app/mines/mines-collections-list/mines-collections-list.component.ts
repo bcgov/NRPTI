@@ -10,7 +10,8 @@ import {
   LoadingScreenService,
   TableObject,
   TableTemplateUtils,
-  Utils
+  Utils,
+  StoreService,
 } from 'nrpti-angular-components';
 import { MinesCollectionsTableRowComponent } from '../mines-collections-rows/mines-collections-table-row.component';
 import {
@@ -18,9 +19,12 @@ import {
   FilterType,
   CheckOrRadioFilterDefinition,
   RadioOptionItem,
-  DateFilterDefinition
+  DateFilterDefinition,
+  MultiSelectDefinition
 } from '../../../../../common/src/app/search-filter-template/filter-object';
 import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
+import { StateIDs, StateStatus, Picklists } from '../../../../../common/src/app/utils/record-constants';
+
 
 /**
  * Mine list page component.
@@ -75,11 +79,6 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
       name: 'Publish State',
       value: 'published',
       width: 'col-2'
-    },
-    {
-      name: '', // Buttons
-      width: 'col-1',
-      nosort: true
     }
   ];
 
@@ -88,11 +87,15 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
   public queryParams: Params;
   public mine: Mine;
 
+  // collection add edit state
+  public collectionState = null;
+
   constructor(
     public location: Location,
     public router: Router,
     public route: ActivatedRoute,
     public utils: Utils,
+    private storeService: StoreService,
     private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
@@ -105,10 +108,37 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
       new DateFilterDefinition('dateRangeFromFilter', 'Start Date', 'dateRangeToFilter', 'End Date')
     );
 
+    const collectionTypeFilter = new FilterObject(
+      'type',
+      FilterType.MultiSelect,
+      'Collection Type',
+      new MultiSelectDefinition(Picklists.collectionTypePicklist.map(item => {
+        return { value: item, displayValue: item, selected: false, display: true };
+      }), 'Begin typing to filter collection types...', 'Select all that apply...')
+    );
+
+    const responsibleAgencyFilter = new FilterObject(
+      'agency',
+      FilterType.MultiSelect,
+      'Agency',
+      new MultiSelectDefinition(Picklists.collectionAgencyPicklist.map(value => {
+        return { value: value, displayValue: value, selected: false, display: true };
+      }), 'Begin typing to filter agencies...', '')
+    );
+
+    const bcmiTabFilter = new FilterObject(
+      'bcmiTabType',
+      FilterType.MultiSelect,
+      'Tab on BCMI',
+      new MultiSelectDefinition(['Authorizations', 'Compliance Oversight', 'Other'].map(item => {
+        return { value: item, displayValue: item, selected: false, display: true };
+      }), 'Begin typing to filter BCMI tab types...', '')
+    );
+
     const publishedStatefilter = new FilterObject(
       'isBcmiPublished',
       FilterType.RadioPicker,
-      'BCMI Published State',
+      'Published State (BCMI)',
       new CheckOrRadioFilterDefinition([
         new RadioOptionItem('publishedState', 'Published', 'true'),
         new RadioOptionItem('unpubState', 'Unpublished', 'false')
@@ -118,32 +148,18 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
     const recordsFilter = new FilterObject(
       'hasRecords',
       FilterType.RadioPicker,
-      'Records',
+      'Has Associated Records',
       new CheckOrRadioFilterDefinition([
         new RadioOptionItem('yesDoc', 'Yes', 'true'),
         new RadioOptionItem('noDoc', 'No', 'false')
       ])
     );
 
-    // TODO: Add type dropdown filter once this information is known.
-    // const typeFilter = new FilterObject(
-    //   'type',
-    //   FilterType.Dropdown,
-    //   'Type',
-    //   new DropdownDefinition()
-    // );
-
-    // TODO: Add agency dropdown filter once this information is known.
-    // const agencyFilter = new FilterObject(
-    //   'agency',
-    //   FilterType.Dropdown,
-    //   'Agency',
-    //   new DropdownDefinition()
-    // );
-
-
     this.filters = [
       dateFilter,
+      collectionTypeFilter,
+      responsibleAgencyFilter,
+      bcmiTabFilter,
       publishedStatefilter,
       recordsFilter
     ];
@@ -156,6 +172,8 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.loadingScreenService.setLoadingState(true, 'body');
+
+    this.setOrRemoveCollectionAddEditState();
 
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params: Params) => {
       this.queryParams = { ...params };
@@ -325,6 +343,13 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
    * @memberof MinesCollectionsListComponent
    */
   ngOnDestroy(): void {
+    // When the component is destroying, if collectionAddEdit state exists, but the user hadn't clicked the
+    // 'Add to collection' button, then remove the state from the store.
+    const collectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
+    if (collectionAddEditState && collectionAddEditState.status !== StateStatus.valid) {
+      this.storeService.removeItem(StateIDs.collectionAddEdit);
+    }
+
     this.loadingScreenService.setLoadingState(false, 'body');
 
     this.ngUnsubscribe.next();
@@ -356,11 +381,31 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
     this.submit();
   }
 
+
+  /**
+   * Sets the initial collectionState state, or removes it from the store if it is invalid.
+   *
+   * @memberof MinesRecordsListComponent
+   */
+  setOrRemoveCollectionAddEditState() {
+    const tempCollectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
+    if (tempCollectionAddEditState) {
+      if (tempCollectionAddEditState.status === StateStatus.invalid) {
+        this.storeService.removeItem(StateIDs.collectionAddEdit);
+      } else {
+        this.collectionState = tempCollectionAddEditState;
+      }
+    }
+  }
+
   private clearQueryParamsFilters() {
     delete this.queryParams['keywords'];
     delete this.queryParams['isBcmiPublished'];
     delete this.queryParams['dateRangeToFilter'];
     delete this.queryParams['dateRangeFromFilter'];
     delete this.queryParams['hasRecords'];
+    delete this.queryParams['type'];
+    delete this.queryParams['agency'];
+    delete this.queryParams['bcmiTabType'];
   }
 }

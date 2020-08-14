@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
+import { Component, ChangeDetectorRef, EventEmitter, Output, Input } from '@angular/core';
 import { Document } from '../models/document';
 
 @Component({
@@ -13,9 +13,19 @@ export class DocumentLinkStagingComponent {
   public links: Document[] = [];
   public linkFileName = '';
   public linkUrl = '';
+  public maxFilesReached = false;
 
+  @Input() maxFiles = 5;
   @Output() linksChanged = new EventEmitter();
   @Output() documentsChanged = new EventEmitter();
+
+  @Input() params = {
+    maxFiles: 5,
+    maxSize: 10,
+    showInfo: false,
+    showList: false,
+    hideWhenMaxFilesReached: false
+  };
 
   constructor(private _changeDetectionRef: ChangeDetectorRef) { }
 
@@ -33,6 +43,7 @@ export class DocumentLinkStagingComponent {
           this.documents.push(document);
         }
       }
+      this.checkIfMaxFilesReached();
       this.documentsChanged.emit(this.documents);
     }
     this._changeDetectionRef.detectChanges();
@@ -55,6 +66,7 @@ export class DocumentLinkStagingComponent {
 
       // save link for upload to db when project is added or saved
       this.links.push(link);
+      this.checkIfMaxFilesReached();
       this.linksChanged.emit(this.links);
       this.linkFileName = '';
       this.linkUrl = '';
@@ -68,6 +80,7 @@ export class DocumentLinkStagingComponent {
       // remove doc from current list
       this.recordFiles = this.recordFiles.filter(item => item.name !== doc.fileName);
       this.documents = this.documents.filter(item => item.fileName !== doc.fileName);
+      this.checkIfMaxFilesReached();
       this.documentsChanged.emit(this.documents);
     }
   }
@@ -77,7 +90,15 @@ export class DocumentLinkStagingComponent {
       // safety check
       // remove doc from current list
       this.links = this.links.filter(item => item.fileName !== link.fileName);
+      this.checkIfMaxFilesReached();
       this.linksChanged.emit(this.links);
     }
+  }
+
+  private checkIfMaxFilesReached() {
+    this.maxFilesReached = (
+      this.params.hideWhenMaxFilesReached &&
+      this.documents.length + this.links.length === Number(this.params.maxFiles)
+    );
   }
 }

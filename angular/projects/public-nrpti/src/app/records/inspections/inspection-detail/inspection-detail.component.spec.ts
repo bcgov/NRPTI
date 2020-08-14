@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InspectionDetailComponent } from './inspection-detail.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,7 +12,7 @@ describe('InspectionDetailComponent', () => {
   const activedRouteStub = new ActivatedRouteStub();
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [GlobalModule],
       declarations: [InspectionDetailComponent],

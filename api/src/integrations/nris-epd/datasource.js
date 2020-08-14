@@ -9,7 +9,8 @@ const axios = require('axios');
 const documentController = require('../../controllers/document-controller');
 const RecordController = require('../../controllers/record-controller');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
-const { ROLES } = require('../../utils/constants/misc');
+const utils = require('../../utils/constants/misc');
+
 const fs = require('fs');
 
 const NRIS_TOKEN_ENDPOINT =
@@ -143,7 +144,16 @@ class NrisDataSource {
           moment().diff(moment(records[i].completionDate), 'days') > 7
         ) {
           const newRecord = await this.transformRecord(records[i]);
-          await this.createRecord(newRecord);
+
+          const existingRecord = await this.findExistingRecord(newRecord);
+
+          if (existingRecord) {
+            await this.updateRecord(newRecord, existingRecord);
+          } else {
+            await this.createRecordAttachments(records[i], newRecord);
+            await this.createRecord(newRecord);
+          }
+
           // Assuming we didn't get thrown an error, update the items successfully processed.
           processingObject.itemsProcessed++;
         } else {
@@ -233,6 +243,12 @@ class NrisDataSource {
       newRecord.outcomeDescription += ' - ' + record.inspection.inspctResponse;
     }
 
+    defaultLog.info('Processed:', record.assessmentId);
+    return newRecord;
+  }
+
+  // Gets the files and saves them for a record's attachment.
+  async createRecordAttachments(record, newRecord) {
     for (let i = 0; i < record.attachment.length; i++) {
       if (record.attachment[i].fileType === 'Final Report') {
         const tempFileData = await this.getFileFromNRIS(record.assessmentId, record.attachment[i].attachmentId);
@@ -244,9 +260,6 @@ class NrisDataSource {
         }
       }
     }
-
-    defaultLog.info('Processed:', record.assessmentId);
-    return newRecord;
   }
 
   // Grabs a file from NRIS datasource
@@ -277,8 +290,8 @@ class NrisDataSource {
     let s3Response = null;
 
     // Set mongo document and s3 document roles
-    let readRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.BCMIADMIN];
-    const writeRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.BCMIADMIN];
+    let readRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_BCMI];
+    const writeRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_BCMI];
     let s3ACLRole = null;
     if (!BusinessLogicManager.isDocumentConsideredAnonymous(newRecord)) {
       readRoles.push('public');
@@ -348,6 +361,47 @@ class NrisDataSource {
       );
     } catch (error) {
       defaultLog.error(`Failed to create Inspection record: ${error.message}`);
+    }
+  }
+
+  // Checks to see if a record already exists.
+  async findExistingRecord(transformedRecord) {
+    const masterRecordModel = mongoose.model(RECORD_TYPE.Inspection._schemaName);
+
+    return await masterRecordModel
+      .findOne({
+        _schemaName: RECORD_TYPE.Inspection._schemaName,
+        _sourceRefNrisId: transformedRecord._sourceRefNrisId
+      })
+      .populate('_flavourRecords');
+  }
+
+  // Updates an existing record with new data pulled from the API.
+  async updateRecord(newRecord, existingRecord) {
+    if (!newRecord) {
+      throw Error('updateRecord - required newRecord must be non-null.');
+    }
+
+    if (!existingRecord) {
+      throw Error('updateRecord - required existingRecord must be non-null.');
+    }
+
+    try {
+      // build update Obj, which needs to include the flavour record ids
+      const updateObj = { ...newRecord, _id: existingRecord._id };
+      existingRecord._flavourRecords.forEach(flavourRecord => {
+        updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
+      });
+
+      return await RecordController.processPutRequest(
+        { swagger: { params: { auth_payload: this.auth_payload } } },
+        null,
+        null,
+        RECORD_TYPE.Inspection.recordControllerName,
+        [updateObj]
+      );
+    } catch (error) {
+      defaultLog.error(`Failed to save ${RECORD_TYPE.Inspection._schemaName} record: ${error.message}`);
     }
   }
 }

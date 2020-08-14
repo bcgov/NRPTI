@@ -8,8 +8,7 @@ import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import { TaskService, ITaskParams } from './task.service';
 import { DocumentService } from './document.service';
-import { ApplicationRoles } from '../../../../common/src/app/utils/record-constants';
-
+import { ApplicationRoles } from '../../../../../../api/src/utils/constants/misc';
 /**
  * Facade service for all admin-nrpti services.
  *
@@ -170,6 +169,10 @@ export class FactoryService {
 
   userInLngRole() {
     return this.userInRole(ApplicationRoles.ADMIN_LNG);
+  }
+
+  userInBcmiRole() {
+    return this.userInRole(ApplicationRoles.ADMIN_BCMI);
   }
 
   userInNrcedRole() {
@@ -346,6 +349,135 @@ export class FactoryService {
     return this.recordService.deleteRecord(collectionId, 'collection');
   }
 
+  /**
+   * Edit a mine record.
+   *
+   * @param {*} record object containing mine record values to update into a record item.
+   * @returns {Observable<object>}
+   * @memberof FactoryService
+   */
+  public editMineRecord(record: any): Observable<object> {
+    const outboundObject = {};
+
+    switch (record.recordType) {
+      case 'Administrative Penalty':
+        outboundObject['administrativePenalties'] = [record];
+        break;
+      case 'Administrative Sanction':
+        outboundObject['administrativeSanctions'] = [record];
+        break;
+      case 'Agreement':
+        outboundObject['aggrements'] = [record];
+        break;
+      case 'Annual Report':
+        outboundObject['annualReports'] = [record];
+        break;
+      case 'Certificate':
+        outboundObject['certificates'] = [record];
+        break;
+      case 'Certificate Amendment':
+        outboundObject['certificateAmendments'] = [record];
+        break;
+      case 'Compliance Self-report':
+        outboundObject['selfReports'] = [record];
+        break;
+      case 'Construction Plan':
+        outboundObject['constructionPlans'] = [record];
+        break;
+      case 'Correspondence':
+        outboundObject['correspondences'] = [record];
+        break;
+      case 'Dam Safety Inspection':
+        outboundObject['damSafetyInspections'] = [record];
+        break;
+      case 'Inspection':
+        outboundObject['inspections'] = [record];
+        break;
+      case 'Management Plan':
+        outboundObject['managementPlans'] = [record];
+        break;
+      case 'Order':
+        outboundObject['orders'] = [record];
+        break;
+      case 'Permit':
+        outboundObject['permits'] = [record];
+        break;
+      case 'Report':
+        outboundObject['reports'] = [record];
+        break;
+      case 'Restoritive Justice':
+        outboundObject['restorativeJustices'] = [record];
+        break;
+      case 'Ticket':
+        outboundObject['tickets'] = [record];
+        break;
+      case 'Warning':
+        outboundObject['warnings'] = [record];
+        break;
+      default:
+        outboundObject['records'] = [record];
+        break;
+    }
+
+    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // todo determine payload type to set
+  public createMineRecord(record: any) {
+    switch (record.recordType) {
+      case 'Administrative Penalty':
+        return this.writeRecord(record, 'administrativePenalties', true);
+      case 'Agreement':
+        return this.writeRecord(record, 'aggrements', true);
+      case 'Annual Report':
+        return this.writeRecord(record, 'annualReports', true);
+      case 'Administrative Sanction':
+        return this.writeRecord(record, 'administrativeSanctions', true);
+      case 'Certificate':
+        return this.writeRecord(record, 'certificates', true);
+      case 'Certificate Amendment':
+        return this.writeRecord(record, 'certificateAmendments', true);
+      case 'Compliance Self-report':
+        return this.writeRecord(record, 'selfReports', true);
+      case 'Construction Plan':
+        return this.writeRecord(record, 'constructionPlans', true);
+      case 'Correspondence':
+        return this.writeRecord(record, 'correspondences', true);
+      case 'Inspection':
+        return this.writeRecord(record, 'inspections', true);
+      case 'Management Plan':
+        return this.writeRecord(record, 'managementPlans', true);
+      case 'Dam Safety Inspection':
+        return this.writeRecord(record, 'damSafetyInspections', true);
+      case 'Order':
+        return this.writeRecord(record, 'orders', true);
+      case 'Permit':
+        return this.writeRecord(record, 'permits', true);
+      case 'Report':
+        return this.writeRecord(record, 'reports', true);
+      case 'Restoritive Justice':
+        return this.writeRecord(record, 'restorativeJustices', true);
+      case 'Ticket':
+        return this.writeRecord(record, 'tickets', true);
+      case 'Warning':
+        return this.writeRecord(record, 'warnings', true);
+      default:
+        return null;
+    }
+  }
+
+  /**
+   * Delete a mine record.
+   *
+   * @param {string} recordId _id of the record to delete.
+   * @param {string} model schema of record to delete
+   * @returns {Promise<any>}
+   * @memberof FactoryService
+   */
+  public deleteMineRecord(recordId: string, model: string): Promise<any> {
+    return this.recordService.deleteRecord(recordId, model);
+  }
+
   // News
   public createNews(news: any): Observable<object> {
     const outboundObject = {
@@ -365,244 +497,6 @@ export class FactoryService {
 
   public deleteNewsItem(recordId: string, model: string): Promise<any> {
     return this.recordService.deleteRecord(recordId, model);
-  }
-
-  // Orders
-  public createOrder(order: any): Observable<object> {
-    const outboundObject = {
-      orders: [order]
-    };
-    return this.recordService
-      .createRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public editOrder(order: any): Observable<object> {
-    const outboundObject = {
-      orders: [order]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  // Inspections
-  public createInspection(inspection: any): Observable<object> {
-    const outboundObject = {
-      inspections: [inspection]
-    };
-    return this.recordService
-      .createRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public editInspection(inspection: any): Observable<object> {
-    const outboundObject = {
-      inspections: [inspection]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  // Certificates
-  public createCertificate(certificate: any): Observable<object> {
-    const outboundObject = {
-      certificates: [certificate]
-    };
-    return this.recordService
-      .createRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public editCertificate(certificate: any): Observable<object> {
-    const outboundObject = {
-      certificates: [certificate]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  // Permits
-  public createPermit(permit: any): Observable<object> {
-    const outboundObject = {
-      permits: [permit]
-    };
-    return this.recordService
-      .createRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public editPermit(permit: any): Observable<object> {
-    const outboundObject = {
-      permits: [permit]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  // Agreements
-  public createAgreement(agreement: any): Observable<object> {
-    const outboundObject = {
-      agreements: [agreement]
-    };
-    return this.recordService
-      .createRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public editAgreement(agreement: any): Observable<object> {
-    const outboundObject = {
-      agreements: [agreement]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  // SelfReports
-  public createSelfReport(selfReport: any): Observable<object> {
-    const outboundObject = {
-      selfReports: [selfReport]
-    };
-    return this.recordService
-      .createRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public editSelfReport(selfReport: any): Observable<object> {
-    const outboundObject = {
-      selfReports: [selfReport]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  // Restorative Justices
-  public createRestorativeJustice(restorativeJustice: any): Observable<object> {
-    const outboundObject = {
-      restorativeJustices: [restorativeJustice]
-    };
-    return this.recordService
-      .createRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public editRestorativeJustice(restorativeJustice: any): Observable<object> {
-    const outboundObject = {
-      restorativeJustices: [restorativeJustice]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  // Tickets
-  public createTicket(ticket: any): Observable<object> {
-    const outboundObject = {
-      tickets: [ticket]
-    };
-    return this.recordService
-      .createRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public editTicket(ticket: any): Observable<object> {
-    const outboundObject = {
-      tickets: [ticket]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  // Administrative Penalties
-  public createAdministrativePenalty(administrativePenalty: any): Observable<object> {
-    const outboundObject = {
-      administrativePenalties: [administrativePenalty]
-    };
-    return this.recordService
-      .createRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public editAdministrativePenalty(administrativePenalty: any): Observable<object> {
-    const outboundObject = {
-      administrativePenalties: [administrativePenalty]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  // Administrative Sanctions
-  public createAdministrativeSanction(administrativeSanction: any): Observable<object> {
-    const outboundObject = {
-      administrativeSanctions: [administrativeSanction]
-    };
-    return this.recordService
-      .createRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public editAdministrativeSanction(administrativeSanction: any): Observable<object> {
-    const outboundObject = {
-      administrativeSanctions: [administrativeSanction]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  // Warnings
-  public createWarning(warning: any): Observable<object> {
-    const outboundObject = {
-      warnings: [warning]
-    };
-    return this.recordService
-      .createRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public editWarning(warning: any): Observable<object> {
-    const outboundObject = {
-      warnings: [warning]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  // Construction Plans
-  public createConstructionPlan(constructionPlan: any): Observable<object> {
-    const outboundObject = {
-      constructionPlans: [constructionPlan]
-    };
-    return this.recordService
-      .createRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public editConstructionPlan(constructionPlan: any): Observable<object> {
-    const outboundObject = {
-      constructionPlans: [constructionPlan]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  // Management Plans
-  public createManagementPlan(managementPLan: any): Observable<object> {
-    const outboundObject = {
-      managementPlans: [managementPLan]
-    };
-    return this.recordService
-      .createRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public editManagementPlan(managementPLan: any): Observable<object> {
-    const outboundObject = {
-      managementPlans: [managementPLan]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  // Court Convictions
-  public createCourtConviction(courtConviction: any): Observable<object> {
-    const outboundObject = {
-      courtConvictions: [courtConviction]
-    };
-    return this.recordService
-      .createRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
-  }
-
-  public editCourtConviction(courtConviction: any): Observable<object> {
-    const outboundObject = {
-      courtConvictions: [courtConviction]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
 
   // Documents
@@ -633,5 +527,20 @@ export class FactoryService {
       collections: [collection]
     };
     return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  // Record insert/edit helper
+  // Could replace record: any with record: IRecordModel,however this would mean
+  // more expansive updates to the existing add-edit components.
+  public writeRecord(record: any, containerName: string, isInsert: boolean = true): Observable<object> {
+    const dataPackage = {};
+    dataPackage[containerName] = [record];
+
+    return isInsert ? this.recordService
+                          .createRecord(dataPackage)
+                          .pipe(catchError(error => this.apiService.handleError(error)))
+                    : this.recordService
+                          .editRecord(dataPackage)
+                          .pipe(catchError(error => this.apiService.handleError(error)));
   }
 }

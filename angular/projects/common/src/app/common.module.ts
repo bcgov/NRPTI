@@ -23,7 +23,9 @@ import { PenaltyDetailComponent as PenaltyDetailAdminComponent } from './penalty
 import { PenaltyDetailComponent as PenaltyDetailPublicComponent } from './penalty/penalty-detail-public/penalty-detail.component';
 import { LinkAddEditComponent } from './link-add-edit/link-add-edit.component';
 import { SearchFilterTemplateComponent } from './search-filter-template/search-filter-template.component';
+import { RecordAssociationEditComponent } from './record-association/record-association-edit.component';
 import { CallbackPipe } from './autocomplete-multi-select/callback.pipe';
+import { StoreService } from 'nrpti-angular-components';
 
 // services
 
@@ -42,6 +44,7 @@ import { CallbackPipe } from './autocomplete-multi-select/callback.pipe';
     PenaltyDetailPublicComponent,
     LinkAddEditComponent,
     SearchFilterTemplateComponent,
+    RecordAssociationEditComponent,
     CallbackPipe
   ],
   imports: [
@@ -60,7 +63,7 @@ import { CallbackPipe } from './autocomplete-multi-select/callback.pipe';
     DragDropModule,
     MatTooltipModule
   ],
-  providers: [MatChipList],
+  providers: [MatChipList, StoreService],
   exports: [
     FileUploadComponent,
     DocumentLinkStagingComponent,
@@ -74,7 +77,8 @@ import { CallbackPipe } from './autocomplete-multi-select/callback.pipe';
     PenaltyDetailAdminComponent,
     PenaltyDetailPublicComponent,
     LinkAddEditComponent,
-    SearchFilterTemplateComponent
+    SearchFilterTemplateComponent,
+    RecordAssociationEditComponent
   ]
 })
 export class CommonModule {}

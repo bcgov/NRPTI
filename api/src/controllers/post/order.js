@@ -3,7 +3,7 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
 const { userHasValidRoles } = require('../../utils/auth-utils');
-const { ROLES } = require('../../utils/constants/misc');
+const utils = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Order record and its associated flavour records.
@@ -37,7 +37,8 @@ const { ROLES } = require('../../utils/constants/misc');
 exports.createRecord = async function (args, res, next, incomingObj) {
   const flavourFunctions = {
     OrderLNG: this.createLNG,
-    OrderNRCED: this.createNRCED
+    OrderNRCED: this.createNRCED,
+    OrderBCMI: this.createBCMI
   }
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
@@ -90,8 +91,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (order._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  order.read = ROLES.ADMIN_ROLES;
-  order.write = ROLES.ADMIN_ROLES;
+  order.read = utils.ApplicationAdminRoles;
+  order.write = utils.ApplicationAdminRoles;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -125,8 +126,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (order.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription && (order.legislationDescription = incomingObj.legislationDescription);
 
-  order.issuedTo.read = ROLES.ADMIN_ROLES;
-  order.issuedTo.write = ROLES.ADMIN_ROLES;
+  order.issuedTo.read = utils.ApplicationAdminRoles;
+  order.issuedTo.write = utils.ApplicationAdminRoles;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (order.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -193,7 +194,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.LNGADMIN, ROLES.SYSADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -214,8 +215,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (orderLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  orderLNG.read = ROLES.ADMIN_ROLES;
-  orderLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  orderLNG.read = utils.ApplicationAdminRoles;
+  orderLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
   orderLNG.addedBy = args.swagger.params.auth_payload.displayName;
   orderLNG.dateAdded = new Date();
@@ -243,8 +244,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (orderLNG.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription && (orderLNG.legislationDescription = incomingObj.legislationDescription);
 
-  orderLNG.issuedTo.read = ROLES.ADMIN_ROLES;
-  orderLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  orderLNG.issuedTo.read = utils.ApplicationAdminRoles;
+  orderLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (orderLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -319,7 +320,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of role.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.NRCEDADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -340,8 +341,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (orderNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  orderNRCED.read = ROLES.ADMIN_ROLES;
-  orderNRCED.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  orderNRCED.read = utils.ApplicationAdminRoles;
+  orderNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
 
   orderNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   orderNRCED.dateAdded = new Date();
@@ -369,8 +370,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (orderNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription && (orderNRCED.legislationDescription = incomingObj.legislationDescription);
 
-  orderNRCED.issuedTo.read = ROLES.ADMIN_ROLES;
-  orderNRCED.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  orderNRCED.issuedTo.read = utils.ApplicationAdminRoles;
+  orderNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (orderNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -414,4 +415,133 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   orderNRCED = BusinessLogicManager.applyBusinessLogicOnPost(orderNRCED);
 
   return orderNRCED;
+};
+
+
+/**
+ * Performs all operations necessary to create a NRCED Order record.
+ *
+ * Example of incomingObj
+ *
+ *  orders: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'order',
+ *      ...
+ *      OrderLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      OrderNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created nrced order record
+ */
+ exports.createBCMI = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of role.
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
+  let OrderNRCED = mongoose.model('OrderBCMI');
+  let orderBCMI = new OrderNRCED();
+
+  orderBCMI._schemaName = 'OrderBCMI';
+
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (orderBCMI._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (orderBCMI._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (orderBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
+  orderBCMI.read = utils.ApplicationAdminRoles;
+  orderBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+
+  orderBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  orderBCMI.dateAdded = new Date();
+
+  // set master data
+  incomingObj.recordName && (orderBCMI.recordName = incomingObj.recordName);
+  orderBCMI.recordType = 'Order';
+  incomingObj.recordSubtype && (orderBCMI.recordSubtype = incomingObj.recordSubtype);
+  incomingObj.dateIssued && (orderBCMI.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (orderBCMI.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.author && (orderBCMI.author = incomingObj.author);
+
+  incomingObj.legislation && incomingObj.legislation.act && (orderBCMI.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (orderBCMI.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (orderBCMI.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (orderBCMI.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (orderBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.legislationDescription && (orderBCMI.legislationDescription = incomingObj.legislationDescription);
+
+  orderBCMI.issuedTo.read = utils.ApplicationAdminRoles;
+  orderBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  incomingObj.issuedTo && incomingObj.issuedTo.type && (orderBCMI.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
+    (orderBCMI.issuedTo.companyName = incomingObj.issuedTo.companyName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
+    (orderBCMI.issuedTo.firstName = incomingObj.issuedTo.firstName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
+    (orderBCMI.issuedTo.middleName = incomingObj.issuedTo.middleName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.lastName &&
+    (orderBCMI.issuedTo.lastName = incomingObj.issuedTo.lastName);
+  incomingObj.issuedTo && (orderBCMI.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
+    (orderBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+
+  incomingObj.projectName && (orderBCMI.projectName = incomingObj.projectName);
+  incomingObj.location && (orderBCMI.location = incomingObj.location);
+  incomingObj.centroid && (orderBCMI.centroid = incomingObj.centroid);
+  incomingObj.outcomeStatus && (orderBCMI.outcomeStatus = incomingObj.outcomeStatus);
+  incomingObj.outcomeDescription && (orderBCMI.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.documents && (orderBCMI.documents = incomingObj.documents);
+
+  // set flavour data
+  incomingObj.summary && (orderBCMI.summary = incomingObj.summary);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (orderBCMI.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (orderBCMI.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (orderBCMI.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    orderBCMI.read.push('public');
+    orderBCMI.datePublished = new Date();
+    orderBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
+
+  orderBCMI = BusinessLogicManager.applyBusinessLogicOnPost(orderBCMI);
+
+  return orderBCMI;
 };

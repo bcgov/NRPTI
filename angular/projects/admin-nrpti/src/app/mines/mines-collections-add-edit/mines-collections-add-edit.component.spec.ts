@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,6 +12,7 @@ import { ActivatedRouteStub, TestBedHelper } from '../../../../../common/src/app
 import { RecordUtils } from '../../records/utils/record-utils';
 import { FactoryService } from '../../services/factory.service';
 import { SharedModule } from '../../shared/shared.module';
+import { MinesModule } from '../mines.module';
 import { MinesCollectionsAddEditComponent } from './mines-collections-add-edit.component';
 
 describe('MinesCollectionsAddEditComponent', () => {
@@ -33,7 +34,7 @@ describe('MinesCollectionsAddEditComponent', () => {
     }
   };
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
@@ -42,11 +43,11 @@ describe('MinesCollectionsAddEditComponent', () => {
         GlobalModule,
         CommonModule,
         SharedModule,
+        MinesModule,
         MatSlideToggleModule,
         NgxPaginationModule,
         NgbModule.forRoot()
       ],
-      declarations: [MinesCollectionsAddEditComponent],
       providers: [
         Utils,
         RecordUtils,
@@ -60,7 +61,7 @@ describe('MinesCollectionsAddEditComponent', () => {
     }).compileComponents();
   }));
 
-  it('should create', async(() => {
+  it('should create', (() => {
     const { component } = testBedHelper.createComponent();
 
     expect(component).toBeTruthy();

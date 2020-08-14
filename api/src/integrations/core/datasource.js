@@ -1,9 +1,11 @@
 'use strict';
 
+const mongoose = require('mongoose');
+
 const integrationUtils = require('../integration-utils');
 const MineUtils = require('./mine-utils');
 const PermitUtils = require('./permit-utils');
-const PermitAmendmentUtils = require('./permit-amendment-utils');
+const CollectionUtils = require('./collection-utils');
 const defaultLog = require('../../utils/logger')('core-datasource');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const { getIntegrationUrl, getCoreAccessToken, getAuthHeader } = require('../integration-utils');
@@ -16,7 +18,6 @@ const CORE_GRANT_TYPE = process.env.CORE_GRANT_TYPE || null;
 
 const CORE_API_HOST = process.env.CORE_API_HOST|| 'https://minesdigitalservices.pathfinder.gov.bc.ca';
 const CORE_API_PATH_MINES = process.env.CORE_API_PATH_MINES || '/api/mines';
-const CORE_API_PATH_PARTIES = process.env.CORE_API_PATH_PARTIES || '/api/parties/mines';
 const CORE_API_PATH_COMMODITIES = process.env.CORE_API_PATH_COMMODITIES || '/api/mines/commodity-codes';
 
 class CoreDataSource {
@@ -96,10 +97,10 @@ class CoreDataSource {
       const utils = {
         mineUtils: new MineUtils(this.auth_payload, RECORD_TYPE.MineBCMI),
         permitUtils: new PermitUtils(this.auth_payload, RECORD_TYPE.Permit),
-        permitAmendmentUtils: new PermitAmendmentUtils(this.auth_payload, RECORD_TYPE.PermitAmendment)
+        collectionUtils: new CollectionUtils(this.auth_payload, RECORD_TYPE.CollectionBCMI)
       };
 
-      if (!utils.mineUtils || !utils.permitUtils || !utils.permitAmendmentUtils) {
+      if (!utils.mineUtils || !utils.permitUtils) {
         defaultLog.error('updateRecords - missing required utils');
         return;
       }
@@ -179,7 +180,7 @@ class CoreDataSource {
    * @memberof CoreDataSource
    */
   async processRecord(utils, commodityTypes, coreRecord) {
-    const { mineUtils, permitUtils, permitAmendmentUtils } = utils;
+    const { mineUtils, permitUtils, collectionUtils } = utils;
     let recordStatus = {};
 
     try {
@@ -191,8 +192,8 @@ class CoreDataSource {
         throw Error('processRecord - required permitUtils is null.');
       }
 
-      if (!permitAmendmentUtils) {
-        throw Error('processRecord - required permitAmendmentUtils is null.');
+      if (!collectionUtils) {
+        throw Error('processRecord - required collectionUtils is null.');
       }
 
       if (!coreRecord) {
@@ -208,16 +209,18 @@ class CoreDataSource {
       let savedRecord = null;
       if (existingRecord) {
         // Update permit.
-        await this.updateMinePermit(permitUtils, permitAmendmentUtils, existingRecord);
+        await this.updateMinePermit(permitUtils, existingRecord);
         savedRecord = await mineUtils.updateRecord(nrptiRecord, existingRecord);
       } else {   
-        // Create the permit and amendments.
-        const permit = await this.createMinePermit(permitUtils, permitAmendmentUtils, nrptiRecord);
-        // Get the original parties for the core record. These are required when adding a permit to a NRPTI record.
-        const parties = coreRecord.parties;
-        const recordWithPermits = mineUtils.addPermitToRecord(nrptiRecord, permit, parties);
+        // Create the permits.
+        const permitInfo = await this.createMinePermit(permitUtils, nrptiRecord);
 
+        // Add permit info to the mine record.
+        const recordWithPermits = mineUtils.addPermitToRecord(nrptiRecord, permitInfo);
         savedRecord = await mineUtils.createRecord(recordWithPermits);
+        
+        // Create a new collections if possible.
+        await this.createCollections(collectionUtils, permitInfo.permit, savedRecord[0].object[0]);
       }
 
       if (savedRecord && savedRecord.length > 0 && savedRecord[0].status === 'success') {
@@ -290,20 +293,16 @@ class CoreDataSource {
   }
 
   /**
-   * Creates a new Mine Permit record.
+   * Creates a new Mine Permit record and any associated collections.
    * 
    * @param {object} permitUtils Mine Permit utilities.
    * @param {*} nrptiRecord Transformed Core record.
-   * @returns {MinePermit} Newly created Mine Permit.
+   * @returns {object} Permit number and Permitee
    * @memberof CoreDataSource
    */
-  async createMinePermit(permitUtils, permitAmendmentUtils, nrptiRecord) {
+  async createMinePermit(permitUtils, nrptiRecord) {
     if (!permitUtils) {
       throw new Error('createMinePermit - permitUtils is required');
-    }
-
-    if (!permitAmendmentUtils) {
-      throw new Error('createMinePermit - permitAmendmentUtils is required');
     }
 
     if (!nrptiRecord) {
@@ -316,77 +315,63 @@ class CoreDataSource {
       throw new Error('createMinePermit - Cannot find valid permit');
     }
 
-    // Create the permit amendments that belong to the permit.
-    const transformedAmendments = await permitAmendmentUtils.transformRecords(permit);
-    // To trigger flavour for this import.
-    const preparedAmendments = transformedAmendments.map(amendment => ({ ...amendment, PermitAmendmentBCMI: {} }))
+    // Transform the permit and amendments into single permits. Each document in an amendment will create a single permit.
+    const transformedPermits = await permitUtils.transformRecord(permit, nrptiRecord);
 
-    const savedAmendments = [];
-    for (const amendment of preparedAmendments) {
-      const createdRecord = await permitAmendmentUtils.createRecord(amendment);
-      savedAmendments.push(createdRecord);
+    // To trigger flavour for this import.
+    const preparedPermits = transformedPermits.map(amendment => ({ ...amendment, PermitBCMI: {} }))
+
+    const promises = preparedPermits.map(permit => permitUtils.createRecord(permit));
+    await Promise.all(promises);
+
+    return {
+      permitNumber: permit.permit_no,
+      permittee: permit.current_permittee,
+      permit
     }
- 
-    // Transform and create the permit record.
-    const transformedPermit = await permitUtils.transformRecord(permit, savedAmendments);
-    // To trigger flavour for this import.
-    transformedPermit.PermitBCMI = {};
-    const savedRecord = await permitUtils.createRecord(transformedPermit);
-
-    // Get the newly created permit.
-    return savedRecord[0] &&
-            savedRecord[0].object &&
-            savedRecord[0].object[0] &&
-            savedRecord[0].object[0]
   }
 
   /**
-   * Updates the Mine Permit record.
+   * Updates the Mine Permit records.
    * 
    * @param {object} permitUtils Mine Permit utilities
    * @param {Mine} mineRecord Existing Mine record
    * @returns {boolean} Indication of success or not
    * @memberof CoreDataSource
    */
-  async updateMinePermit(permitUtils, permitAmendmentUtils, mineRecord) {
+  async updateMinePermit(permitUtils, mineRecord) {
     // Get the updated Core permit.
     const permit = await this.getMinePermit(mineRecord);
 
-    if (!permit) {
+    if (!permit || !permit.permit_amendments || !permit.permit_amendments.length) {
       throw new Error('updateMinePermit - Cannot find valid permit');
     }
 
-    // Update the amendments and permit.
-    const transformedAmendments = await permitAmendmentUtils.transformRecords(permit);
-    // To trigger flavour for this import.
-    const preparedAmendments = transformedAmendments.map(amendment => ({ ...amendment, PermitAmendmentBCMI: {} }));
+    // Check how many documents exist on the current permit.
+    const currentDocCount = permit.permit_amendments.reduce((acc, amendment) => acc + amendment.related_documents.length, 0);
 
-    // Need to update existing, but add any new ones.
-    const updatedAmendments = [];
-    for (const amendment of preparedAmendments) {
-      // Check if this record already exists
-      const existingRecord = await permitAmendmentUtils.findExistingRecord(amendment);
+    // Get the current permits for the mine.
+    const currentPermits = await permitUtils.getMinePermits(mineRecord._sourceRefId);
 
-      if (existingRecord) {
-        const updatedRecord = await permitAmendmentUtils.updateRecord(amendment, existingRecord);
-        updatedAmendments.push(updatedRecord);
-      } else {
-        const createdRecord = await permitAmendmentUtils.createRecord(amendment);
-        updatedAmendments.push(createdRecord);
+    // If there are currently more documents than permits, locate the missing ones and create new permits for them.
+    if (currentDocCount > currentPermits.length) {
+      // Transform into permits.
+      const transformedPermits = permitUtils.transformRecord(permit, mineRecord);
+
+      // Find the new permits that need to be created.
+      const newPermits = [];
+      for (const transformedPermit of transformedPermits) {
+        if (!currentPermits.some(current => current._sourceDocumentRefId === transformedPermit._sourceDocumentRefId)) {
+          newPermits.push(transformedPermit);
+        }
       }
-    }
-  
-    // Transform and update the permit record.
-    const transformedPermit = await permitUtils.transformRecord(permit, updatedAmendments);
-    // To trigger flavour for this import.
-    transformedPermit.PermitBCMI = {};
-    const savedRecord = await permitUtils.updateRecord(mineRecord.permit, transformedPermit);
 
-    if (savedRecord && savedRecord[0] && savedRecord[0].status === 'success') {
-      return true;
-    }
+      // To trigger flavour for this import.
+      const preparedPermits = newPermits.map(amendment => ({ ...amendment, PermitBCMI: {} }))
 
-    return false;
+      const promises = preparedPermits.map(permit => permitUtils.createRecord(permit));
+      await Promise.all(promises);
+    }
   }
 
   /**
@@ -433,7 +418,7 @@ class CoreDataSource {
   }
 
   /**
-   * Adds party and lat/long details to each Core record.
+   * Adds lat/long details to each Core record.
    * 
    * @param {object[]} coreRecords Records from Core API that have not been transformed.
    * @returns {object[]} Records with details added.
@@ -443,20 +428,11 @@ class CoreDataSource {
     const completeRecords = [];
 
     for (let i = 0; i < coreRecords.length; i++) {
-      const partyQueryParams = {
-        mine_guid: coreRecords[i].mine_guid,
-        relationships: 'party'
-      };
-
-      const partyUrl = getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_PARTIES, partyQueryParams);
       const mineDetailsPath = `${CORE_API_PATH_MINES}/${coreRecords[i].mine_guid}`;
       const mineDetailsUrl = getIntegrationUrl(CORE_API_HOST, mineDetailsPath);
 
       try {
-        const [ parties, mineDetails ] = await Promise.all([
-          integrationUtils.getRecords(partyUrl, getAuthHeader(this.client_token)),
-          integrationUtils.getRecords(mineDetailsUrl, getAuthHeader(this.client_token))
-        ]);
+        const mineDetails = await integrationUtils.getRecords(mineDetailsUrl, getAuthHeader(this.client_token));
 
         const latitude = mineDetails.mine_location && mineDetails.mine_location.latitude || 0.00;
         const longitude = mineDetails.mine_location && mineDetails.mine_location.longitude || 0.00;
@@ -465,7 +441,6 @@ class CoreDataSource {
         completeRecords.push({
           ...coreRecords[i],
           coordinates: [longitude, latitude],
-          parties
         });
       } catch (error) {
         defaultLog.error(`addMineDetails - error getting details for Core record ${coreRecords[i].mine_guid}: ${error.message} ...skipping`);
@@ -473,6 +448,38 @@ class CoreDataSource {
     }
 
     return completeRecords;
+  }
+
+  async createCollections(collectionUtils, permit, mineRecord) {
+    if (!collectionUtils) {
+      throw new Error('createCollections - param collectionUtils is null.');
+    }
+
+    if (!permit || !permit.permit_amendments || !permit.permit_amendments.length) {
+      throw new Error('createCollections - param permit is null.');
+    }
+
+    if (!mineRecord) {
+      throw new Error('createCollections - param mineRecord is null.');
+    }
+
+    // For each amendment find the existing documents and create a collection.
+    for (const amendment of permit.permit_amendments) {
+      const Permit = mongoose.model('Permit');
+      const existingPermits = await Permit.find({ _schemaName: 'Permit', _sourceRefId: amendment.permit_amendment_guid });
+
+      const collection = {
+        _master: mineRecord._id,
+        project: mineRecord._id,
+        name: amendment.description,
+        date: amendment.issue_date,
+        type: amendment.permit_amendment_type_code === 'OGP' ? 'Permit' : 'Permit Amendment',
+        agency: 'EMPR',
+        records: (existingPermits && existingPermits.map(permit => permit._id)) || []
+      }
+
+      await collectionUtils.createRecord(collection);
+    }
   }
 }
 

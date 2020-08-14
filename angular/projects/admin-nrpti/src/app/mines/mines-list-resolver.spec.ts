@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { FactoryService } from '../services/factory.service';
 import { TableTemplateUtils } from 'nrpti-angular-components';
 import { MinesListResolver } from './mines-list-resolver';
@@ -12,7 +12,7 @@ describe('MinesListResolver', () => {
     'updateTableObjectWithUrlParams'
   ]);
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       providers: [
         { provide: FactoryService, useValue: spyFactoryService },
@@ -21,7 +21,7 @@ describe('MinesListResolver', () => {
     }).compileComponents();
   }));
 
-  it('should create', async(() => {
+  it('should create', (() => {
     const factoryService = TestBed.get(FactoryService);
     const tableTemplateUtils = TestBed.get(TableTemplateUtils);
 
@@ -53,7 +53,7 @@ describe('MinesListResolver', () => {
         queryParamMap: null
       };
 
-      beforeAll(async(() => {
+      beforeAll((() => {
         factoryServiceSpy = TestBed.get(FactoryService);
         tableTemplateUtilsSpy = TestBed.get(TableTemplateUtils);
 

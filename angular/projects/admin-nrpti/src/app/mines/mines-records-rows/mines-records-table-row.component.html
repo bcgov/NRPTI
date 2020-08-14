@@ -1,18 +1,18 @@
-<td scope="row" class="col-1" (click)="$event.stopPropagation()">
-  <mat-checkbox [checked]="rowData.rowSelected" (change)="onRowCheckboxUpdate($event, rowData)"></mat-checkbox>
+<td scope="row" class="col-1" (click)="$event.stopPropagation(); toggleCheckbox();">
+  <mat-checkbox *ngIf="!rowData.collections || rowData.collections.length === 0" (click)="$event.stopPropagation();" [checked]="rowData.rowSelected"></mat-checkbox>
 </td>
 <td scope="row" data-label="Name" class="col-2">
-  {{ rowData.recordName || '-' }}
+  {{ getAttributeValue('recordName') }}
 </td>
-<td scope="row" data-label="Agency" class="col-2 truncate">{{ rowData.issuingAgency || '-' }}</td>
-<td scope="row" data-label="Source" class="col-1 truncate">{{ rowData.sourceSystemRef || '-' }}</td>
-<td scope="row" data-label="Type" class="col-1 truncate">{{ rowData.recordType || '-' }}</td>
-<td scope="row" data-label="Collections" class="col-2 truncate">{{ rowData.collections || '-' }}</td>
-<td scope="row" data-label="Date" class="col-1 truncate">{{ rowData.dateIssued | date: 'mediumDate' || '-' }}</td>
+<td scope="row" data-label="Agency" class="col-2 truncate">{{ getAttributeValue('issuingAgency') }}</td>
+<td scope="row" data-label="Source" class="col-1 truncate">{{ getAttributeValue('sourceSystemRef') }}</td>
+<td scope="row" data-label="Type" class="col-1 truncate">{{ getAttributeValue('recordType') }}</td>
+<td scope="row" data-label="Collections" class="col-2 truncate">{{ rowData.collections && rowData.collections[0] ? rowData.collections[0].name : '-' }}</td>
+<td scope="row" data-label="Date" class="col-1 truncate">{{ getAttributeValue('dateIssued') }}</td>
 <td scope="row" data-label="Published" class="col-1 d-xl-flex">
   <!-- TODO this publish flag needs to be updated based on BCMI publish (collections?) logic when ready.  Currently, -->
   <!-- this will always show `unpublished` as the `public` role will never be found in the master read array -->
-  <div *ngIf="rowData.read && rowData.read.includes('public'); then published; else unpublished"></div>
+  <div *ngIf="isPublished(); then published; else unpublished"></div>
   <ng-template #published>
     <i class="material-icons published-green">check_circle</i>
     <span class="publish-label pl-1 published-green overflow-hidden truncate">Published</span>
