@@ -149,9 +149,7 @@ export class AppComponent implements OnInit, OnDestroy {
     list.unshift({_id: null, name: 'None'});
 
     // Set the object in the store service
-    // tslint:disable-next-line: prefer-const
-    let newObject = {};
-    newObject[key] = list;
+    const newObject = { [key]: list };
     this.storeService.setItem(newObject);
   }
 
