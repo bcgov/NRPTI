@@ -18,11 +18,11 @@ class Permits extends BaseRecordUtils {
    */
   constructor(auth_payload, recordType) {
     if (!auth_payload) {
-      throw Error('PermitUtils - required auth_payload must be non-null.');
+      throw new Error('PermitUtils - required auth_payload must be non-null.');
     }
 
     if (!recordType) {
-      throw Error('PermitUtils - required recordType must be non-null.');
+      throw new Error('PermitUtils - required recordType must be non-null.');
     }
 
     super(auth_payload, recordType);
@@ -32,13 +32,17 @@ class Permits extends BaseRecordUtils {
    * Transform an CORE mine permit record into a NRPTI Mine record.
    *
    * @param {object} permit Core mine permit record (required)
-   * @param {object} amendments Core mine permit amendments (required)
+   * @param {object} mineRecord Core mine record.
    * @returns {PermitBCMI} NRPTI mine permit record.
    * @memberof Permits
    */
-  transformRecord(permit) {
+  transformRecord(permit, mineRecord) {
     if (!permit || !permit.permit_amendments || !permit.permit_amendments.length) {
-      throw Error('transformRecords - required permits must be non-null.');
+      throw new Error('transformRecords - required permits must be non-null.');
+    }
+
+    if (!mineRecord) {
+      throw new Error('transformRecords - required mineRecord must be non-null.')
     }
 
     const permits = [];
@@ -61,15 +65,18 @@ class Permits extends BaseRecordUtils {
           permitStatusCode: permit.permit_status_code || '',
           issuedTo: {
             type: 'Company',
-            companyName: permit.current_permittee,
-            fullName: permit.current_permittee
+            companyName: permit.current_permittee || '',
+            fullName: permit.current_permittee || ''
           },
 
           _sourceDocumentRefId: document.document_manager_guid || '',
           recordName: document.document_name,
           mineGuid: document.mine_guid || '',
 
-          agency: 'EMPR'
+          projectName: mineRecord.name || '',
+          centroid: (mineRecord.location && mineRecord.location.coordinates) || [],
+
+          issuingAgency: 'EMPR'
         });
       }
     }

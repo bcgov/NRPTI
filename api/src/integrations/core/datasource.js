@@ -316,7 +316,7 @@ class CoreDataSource {
     }
 
     // Transform the permit and amendments into single permits. Each document in an amendment will create a single permit.
-    const transformedPermits = await permitUtils.transformRecord(permit);
+    const transformedPermits = await permitUtils.transformRecord(permit, nrptiRecord);
 
     // To trigger flavour for this import.
     const preparedPermits = transformedPermits.map(amendment => ({ ...amendment, PermitBCMI: {} }))
@@ -356,7 +356,7 @@ class CoreDataSource {
     // If there are currently more documents than permits, locate the missing ones and create new permits for them.
     if (currentDocCount > currentPermits.length) {
       // Transform into permits.
-      const transformedPermits = permitUtils.transformRecord(permit);
+      const transformedPermits = permitUtils.transformRecord(permit, mineRecord);
 
       // Find the new permits that need to be created.
       const newPermits = [];
