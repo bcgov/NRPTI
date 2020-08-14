@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
-const { ROLES } = require('../../utils/constants/misc');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const mongodb = require('../../utils/mongodb');
 const { userHasValidRoles } = require('../../utils/auth-utils');
+const utils = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a new master Collection record.
@@ -16,7 +16,7 @@ const { userHasValidRoles } = require('../../utils/auth-utils');
  */
 exports.createRecord = async function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -56,7 +56,7 @@ exports.createRecord = async function(args, res, next, incomingObj) {
  */
 exports.createMaster = async function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -71,8 +71,8 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   incomingObj.project && (collection.project = incomingObj.project);
 
   // Set permissions
-  collection.read = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
-  collection.write = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
+  collection.read = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  collection.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // Set data
   incomingObj.name && (collection.name = incomingObj.name);

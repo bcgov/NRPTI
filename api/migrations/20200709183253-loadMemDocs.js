@@ -121,8 +121,8 @@ exports.up = async function (db) {
           // Now, create a NRPTI collection and shove the docs into it!
           let bcmiCollection = new CollectionBCMI();
           bcmiCollection._master = new ObjectID(nrptiMine._id);
-          bcmiCollection.read =  [utils.ROLES.SYSADMIN, utils.ROLES.BCMIADMIN, 'public'];
-          bcmiCollection.write = [utils.ROLES.SYSADMIN, utils.ROLES.BCMIADMIN];
+          bcmiCollection.read =  [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI, 'public'];
+          bcmiCollection.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
           bcmiCollection.name = collection.displayName;
           bcmiCollection.date = new Date();
           bcmiCollection.project = new ObjectID(nrptiMine._id);
@@ -184,8 +184,8 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc) {
   document.addedBy = 'BCMI Mine Doc Import';
   document.url = `https://${OBJ_STORE_URL}/${OBJ_STORE_BUCKET}/${document._id}/${collectionDoc.document.displayName}`;
   document.key = s3Key;
-  document.read = [utils.ROLES.SYSADMIN, utils.ROLES.BCMIADMIN];
-  document.write = [utils.ROLES.SYSADMIN, utils.ROLES.BCMIADMIN];
+  document.read = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  document.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // upload to s3
   await s3.upload({
@@ -272,8 +272,8 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc) {
   flavourData.sourceDateAdded = collectionDoc.document.dateAdded;
   flavourData.sourceDateUpdated = collectionDoc.document.dateUpdated;
   flavourData.sourceSystemRef = 'mem-admin';
-  flavourData.read = [utils.ROLES.SYSADMIN, utils.ROLES.BCMIADMIN, 'public'];
-  flavourData.write = [utils.ROLES.SYSADMIN, utils.ROLES.BCMIADMIN];
+  flavourData.read = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI, 'public'];
+  flavourData.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   await nrpti.insertOne(flavourData);
 
   // Master
@@ -289,8 +289,8 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc) {
   if (Object.prototype.hasOwnProperty.call(flavourData, 'isLngPublished')) masterData.isLngPublished = false;
   masterData.sourceDateAdded = collectionDoc.document.dateAdded;
   masterData.sourceDateUpdated = collectionDoc.document.dateUpdated;
-  masterData.read = [utils.ROLES.SYSADMIN, utils.ROLES.BCMIADMIN, 'public'];
-  masterData.write = [utils.ROLES.SYSADMIN, utils.ROLES.BCMIADMIN];
+  masterData.read = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI, 'public'];
+  masterData.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   masterData.sourceSystemRef = 'mem-admin';
 
   await nrpti.insertOne(masterData);

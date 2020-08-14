@@ -1,19 +1,11 @@
 exports.SYSTEM_USER = 'SYSTEM_USER';
 
-// Available user roles.
-exports.ROLES = {
-  SYSADMIN: 'sysadmin',
-  LNGADMIN: 'admin:lng',
-  NRCEDADMIN: 'admin:nrced',
-  BCMIADMIN: 'admin:bcmi',
-
-  ADMIN_ROLES: [
-    'sysadmin',
-    'admin:lng',
-    'admin:nrced',
-    'admin:bcmi'
-  ]
-};
+exports.ApplicationRoles = {
+  ADMIN: 'sysadmin',
+  ADMIN_NRCED: 'admin:nrced',
+  ADMIN_LNG: 'admin:lng',
+  ADMIN_BCMI: 'admin:bcmi',
+}
 
 exports.IssuedToEntityTypes = {
   Company: 'Company',

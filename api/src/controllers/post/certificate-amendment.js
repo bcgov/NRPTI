@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const { userHasValidRoles } = require('../../utils/auth-utils');
-const { ROLES } = require('../../utils/constants/misc');
+const utils = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Certificate amendment record and its associated flavour records.
@@ -81,8 +81,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (certificateAmendment.mineGuid = incomingObj.mineGuid);
 
   // set permissions
-  certificateAmendment.read = ROLES.ADMIN_ROLES;
-  certificateAmendment.write = ROLES.ADMIN_ROLES;
+  certificateAmendment.read = utils.ApplicationRoles.ADMIN_ROLES;
+  certificateAmendment.write = utils.ApplicationRoles.ADMIN_ROLES;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -97,8 +97,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.recordName && (certificateAmendment.recordName = incomingObj.recordName);
   certificateAmendment.recordType = 'Certificate Amendment';
   certificateAmendment.recordSubtype = 'Certificate';
-  certificateAmendment.issuedTo.read = ROLES.ADMIN_ROLES;
-  certificateAmendment.issuedTo.write = ROLES.ADMIN_ROLES;
+  certificateAmendment.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
+  certificateAmendment.issuedTo.write = utils.ApplicationRoles.ADMIN_ROLES;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (certificateAmendment.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -178,7 +178,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
  exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -201,8 +201,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (certificateAmendmentLNG.mineGuid = incomingObj.mineGuid);
 
   // set permissions
-  certificateAmendmentLNG.read = ROLES.ADMIN_ROLES;
-  certificateAmendmentLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  certificateAmendmentLNG.read = utils.ApplicationRoles.ADMIN_ROLES;
+  certificateAmendmentLNG.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
@@ -215,8 +215,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.recordName && (certificateAmendmentLNG.recordName = incomingObj.recordName);
   certificateAmendmentLNG.recordType = 'Certificate Amendment';
   certificateAmendmentLNG.recordSubtype = 'Certificate';
-  certificateAmendmentLNG.issuedTo.read = ROLES.ADMIN_ROLES;
-  certificateAmendmentLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  certificateAmendmentLNG.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
+  certificateAmendmentLNG.issuedTo.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (certificateAmendmentLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -297,7 +297,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -320,8 +320,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
     (certificateAmendmentBCMI.mineGuid = incomingObj.mineGuid);
 
   // set permissions
-  certificateAmendmentBCMI.read = ROLES.ADMIN_ROLES;
-  certificateAmendmentBCMI.write = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
+  certificateAmendmentBCMI.read = utils.ApplicationRoles.ADMIN_ROLES;
+  certificateAmendmentBCMI.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
@@ -334,8 +334,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.recordName && (certificateAmendmentBCMI.recordName = incomingObj.recordName);
   certificateAmendmentBCMI.recordType = 'Certificate Amendment';
   certificateAmendmentBCMI.recordSubtype = 'Certificate';
-  certificateAmendmentBCMI.issuedTo.read = ROLES.ADMIN_ROLES;
-  certificateAmendmentBCMI.issuedTo.write = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
+  certificateAmendmentBCMI.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
+  certificateAmendmentBCMI.issuedTo.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (certificateAmendmentBCMI.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

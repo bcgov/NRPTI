@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const AWS = require('aws-sdk');
 const ObjectID = require('mongodb').ObjectID;
-const { ROLES } = require('../utils/constants/misc');
+const utils = require('../utils/constants/misc');
 
 const queryActions = require('../utils/query-actions');
 const queryUtils = require('../utils/query-utils');
@@ -50,8 +50,8 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
     const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
 
     // Set mongo document and s3 document roles
-    let readRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN];
-    const writeRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN];
+    let readRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_NRCED];
+    const writeRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_NRCED];
     let s3ACLRole = null;
 
     if (!businessLogicManager.isDocumentConsideredAnonymous(masterRecord)) {
@@ -279,8 +279,8 @@ async function createURLDocument(fileName, addedBy, url, readRoles = [], writeRo
   document.fileName = fileName;
   document.addedBy = addedBy;
   document.url = url;
-  document.read = [ROLES.SYSADMIN, ...readRoles];
-  document.write = [ROLES.SYSADMIN, ...writeRoles];;
+  document.read = [utils.ApplicationRoles.SYSADMIN, ...readRoles];
+  document.write = [utils.ApplicationRoles.SYSADMIN, ...writeRoles];;
 
   return document.save();
 }
@@ -307,8 +307,8 @@ async function createS3Document(fileName, fileContent, addedBy, readRoles = [], 
   document.addedBy = addedBy;
   document.url = `https://${process.env.OBJECT_STORE_endpoint_url}/${process.env.OBJECT_STORE_bucket_name}/${document._id}/${fileName}`;
   document.key = s3Key;
-  document.read = [ROLES.SYSADMIN, ...readRoles];
-  document.write = [ROLES.SYSADMIN, ...writeRoles];
+  document.read = [utils.ApplicationRoles.SYSADMIN, ...readRoles];
+  document.write = [utils.ApplicationRoles.SYSADMIN, ...writeRoles];
 
   const s3Response = await uploadS3Document(s3Key, fileContent, s3ACLRole);
 

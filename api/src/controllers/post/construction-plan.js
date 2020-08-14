@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const { userHasValidRoles } = require('../../utils/auth-utils');
-const { ROLES } = require('../../utils/constants/misc');
+const utils = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Construction Plan record and its associated flavour records.
@@ -78,8 +78,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (constructionPlan._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  constructionPlan.read = ROLES.ADMIN_ROLES;
-  constructionPlan.write = ROLES.ADMIN_ROLES;
+  constructionPlan.read = utils.ApplicationRoles.ADMIN_ROLES;
+  constructionPlan.write = utils.ApplicationRoles.ADMIN_ROLES;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -140,7 +140,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
   
@@ -161,8 +161,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (constructionPlanLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  constructionPlanLNG.read = ROLES.ADMIN_ROLES;
-  constructionPlanLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  constructionPlanLNG.read = utils.ApplicationRoles.ADMIN_ROLES;
+  constructionPlanLNG.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {

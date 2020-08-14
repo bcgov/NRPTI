@@ -1,7 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const { ROLES } = require('./constants/misc');
+const utils = require('./constants/misc');
 
 /**
  * Facilitates the creation and updating of a single Task audit record.
@@ -18,7 +18,7 @@ class TaskAuditRecord {
    */
   async updateTaskRecord(params) {
     // add default sysadmin roles
-    params = { ...params, read: ROLES.ADMIN_ROLES, write: [ROLES.SYSADMIN] };
+    params = { ...params, read: utils.ApplicationRoles.ADMIN_ROLES, write: [utils.ApplicationRoles.SYSADMIN] };
 
     const Task = mongoose.model('Task');
 
