@@ -6,13 +6,6 @@ export class EpicProjectIds {
   public static readonly coastalGaslinkId = '588511c4aaecd9001b825604';
 }
 
-export class ApplicationRoles {
-  public static readonly ADMIN = 'sysadmin';
-  public static readonly ADMIN_NRCED = 'admin:nrced';
-  public static readonly ADMIN_LNG = 'admin:lng';
-  public static readonly ADMIN_BCMI = 'admin:bcmi';
-}
-
 /**
  * Supported search subsets
  *

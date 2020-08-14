@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const { userHasValidRoles } = require('../../utils/auth-utils');
-const { ROLES } = require('../../utils/constants/misc');
+const utils = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Agreement record and its associated flavour records.
@@ -78,8 +78,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (agreement._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  agreement.read = ROLES.ADMIN_ROLES;
-  agreement.write = ROLES.ADMIN_ROLES;
+  agreement.read = utils.ApplicationAdminRoles;
+  agreement.write = utils.ApplicationAdminRoles;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -136,7 +136,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   } 
 
@@ -157,8 +157,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (agreementLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  agreementLNG.read = ROLES.ADMIN_ROLES;
-  agreementLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  agreementLNG.read = utils.ApplicationAdminRoles;
+  agreementLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
