@@ -24,6 +24,12 @@ const RECORD_TYPE = Object.freeze({
     recordControllerName: 'certificates',
     flavours: { lng: { _schemaName: 'CertificateLNG' } }
   },
+  CertificateAmendment: {
+    _schemaName: 'CertificateAmendment',
+    displayName: 'Certificate Amendment',
+    recordControllerName: 'certificateAmendments',
+    flavours: { lng: { _schemaName: 'CertificateAmendmentLNG' }, bcmi: { _schemaName: 'PermitCertificateAmendmentBCMI' }  }
+  },
   CollectionBCMI: {
     _schemaName: 'CollectionBCMI',
     displayName: 'Collection',

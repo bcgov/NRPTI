@@ -6,6 +6,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { GlobalModule } from 'nrpti-angular-components';
 import { DatePipe } from '@angular/common';
 import { CommonModule } from '../../../../../common/src/app/common.module';
+import { DocumentAuthenticatedReadOnlyComponent } from '../../documents/document-authenticated-read-only/document-authenticated-read-only.component';
+import { S3SignedUrlAnchorComponent } from '../../documents/s3-signed-url-anchor/s3-signed-url-anchor.component';
 
 describe('MinesRecordDetailComponent', () => {
   const testBedHelper = new TestBedHelper<MinesRecordDetailComponent>(MinesRecordDetailComponent);
@@ -14,7 +16,7 @@ describe('MinesRecordDetailComponent', () => {
   beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, GlobalModule, CommonModule, MatSlideToggleModule],
-      declarations: [MinesRecordDetailComponent],
+      declarations: [MinesRecordDetailComponent, DocumentAuthenticatedReadOnlyComponent, S3SignedUrlAnchorComponent],
       providers: [
         DatePipe,
       ]

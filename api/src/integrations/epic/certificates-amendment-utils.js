@@ -34,7 +34,10 @@ class CertificatesAmendment extends Certificates {
 
     return {
       ...(await super.transformRecord(epicRecord)),
-      recordSubtype: 'Amendment'
+      issuingAgency: 'Environmental Assessment Office',
+      legislation: {
+        act: (epicRecord.project && epicRecord.project.legislation) || ''
+      }
     };
   }
 }
