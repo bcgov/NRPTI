@@ -3,7 +3,7 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
 const { userHasValidRoles } = require('../../utils/auth-utils');
-const { ROLES } = require('../../utils/constants/misc');
+const utils = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Inspection record and its associated flavour records.
@@ -97,8 +97,8 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
     (inspection._sourceRefNrisId = incomingObj._sourceRefNrisId);
 
   // set permissions
-  inspection.read = ROLES.ADMIN_ROLES;
-  inspection.write = ROLES.ADMIN_ROLES;
+  inspection.read = utils.ApplicationAdminRoles;
+  inspection.write = utils.ApplicationAdminRoles;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -130,8 +130,8 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
     incomingObj.legislation.paragraph &&
     (inspection.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription && (inspection.legislationDescription = incomingObj.legislationDescription);
-  inspection.issuedTo.read = ROLES.ADMIN_ROLES;
-  inspection.issuedTo.write = ROLES.ADMIN_ROLES;
+  inspection.issuedTo.read = utils.ApplicationAdminRoles;
+  inspection.issuedTo.write = utils.ApplicationAdminRoles;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspection.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -202,7 +202,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -223,8 +223,8 @@ exports.createLNG = function(args, res, next, incomingObj) {
     (inspectionLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  inspectionLNG.read = ROLES.ADMIN_ROLES;
-  inspectionLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  inspectionLNG.read = utils.ApplicationAdminRoles;
+  inspectionLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
   inspectionLNG.addedBy = args.swagger.params.auth_payload.displayName;
   inspectionLNG.dateAdded = new Date();
@@ -252,8 +252,8 @@ exports.createLNG = function(args, res, next, incomingObj) {
     incomingObj.legislation.paragraph &&
     (inspectionLNG.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription && (inspectionLNG.legislationDescription = incomingObj.legislationDescription);
-  inspectionLNG.issuedTo.read = ROLES.ADMIN_ROLES;
-  inspectionLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  inspectionLNG.issuedTo.read = utils.ApplicationAdminRoles;
+  inspectionLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -330,7 +330,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
  */
 exports.createNRCED = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.NRCEDADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -351,8 +351,8 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     (inspectionNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  inspectionNRCED.read = ROLES.ADMIN_ROLES;
-  inspectionNRCED.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  inspectionNRCED.read = utils.ApplicationAdminRoles;
+  inspectionNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
 
   inspectionNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   inspectionNRCED.dateAdded = new Date();
@@ -380,8 +380,8 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     incomingObj.legislation.paragraph &&
     (inspectionNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription && (inspectionNRCED.legislationDescription = incomingObj.legislationDescription);
-  inspectionNRCED.issuedTo.read = ROLES.ADMIN_ROLES;
-  inspectionNRCED.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  inspectionNRCED.issuedTo.read = utils.ApplicationAdminRoles;
+  inspectionNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -459,7 +459,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
  */
  exports.createBCMI = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -480,8 +480,8 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     (inspectionBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  inspectionBCMI.read = ROLES.ADMIN_ROLES;
-  inspectionBCMI.write = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
+  inspectionBCMI.read = utils.ApplicationAdminRoles;
+  inspectionBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   inspectionBCMI.addedBy = args.swagger.params.auth_payload.displayName;
   inspectionBCMI.dateAdded = new Date();
@@ -509,8 +509,8 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     incomingObj.legislation.paragraph &&
     (inspectionBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription && (inspectionBCMI.legislationDescription = incomingObj.legislationDescription);
-  inspectionBCMI.issuedTo.read = ROLES.ADMIN_ROLES;
-  inspectionBCMI.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  inspectionBCMI.issuedTo.read = utils.ApplicationAdminRoles;
+  inspectionBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionBCMI.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const { userHasValidRoles } = require('../../utils/auth-utils');
-const { ROLES } = require('../../utils/constants/misc');
+const utils = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master correspondence record and its associated flavour records.
@@ -80,8 +80,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (correspondence.mineGuid = incomingObj.mineGuid);
 
   // set permissions
-  correspondence.read = ROLES.ADMIN_ROLES;
-  correspondence.write = ROLES.ADMIN_ROLES;
+  correspondence.read = utils.ApplicationAdminRoles;
+  correspondence.write = utils.ApplicationAdminRoles;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -95,8 +95,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   // set data
   incomingObj.recordName && (correspondence.recordName = incomingObj.recordName);
   correspondence.recordType = 'Correspondence';
-  correspondence.issuedTo.read = ROLES.ADMIN_ROLES;
-  correspondence.issuedTo.write = ROLES.ADMIN_ROLES;
+  correspondence.issuedTo.read = utils.ApplicationAdminRoles;
+  correspondence.issuedTo.write = utils.ApplicationAdminRoles;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (correspondence.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -176,7 +176,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -199,8 +199,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
     (correspondenceBCMI.mineGuid = incomingObj.mineGuid);
 
   // set permissions
-  correspondenceBCMI.read = ROLES.ADMIN_ROLES;
-  correspondenceBCMI.write = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
+  correspondenceBCMI.read = utils.ApplicationAdminRoles;
+  correspondenceBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
@@ -212,8 +212,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   // set data
   incomingObj.recordName && (correspondenceBCMI.recordName = incomingObj.recordName);
   correspondenceBCMI.recordType = 'Correspondence';
-  correspondenceBCMI.issuedTo.read = ROLES.ADMIN_ROLES;
-  correspondenceBCMI.issuedTo.write = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
+  correspondenceBCMI.issuedTo.read = utils.ApplicationAdminRoles;
+  correspondenceBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (correspondenceBCMI.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -294,7 +294,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
  */
  exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -317,8 +317,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
     (correspondenceNRCED.mineGuid = incomingObj.mineGuid);
 
   // set permissions
-  correspondenceNRCED.read = ROLES.ADMIN_ROLES;
-  correspondenceNRCED.write = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
+  correspondenceNRCED.read = utils.ApplicationAdminRoles;
+  correspondenceNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
@@ -330,8 +330,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   // set data
   incomingObj.recordName && (correspondenceNRCED.recordName = incomingObj.recordName);
   correspondenceNRCED.recordType = 'Correspondence';
-  correspondenceNRCED.issuedTo.read = ROLES.ADMIN_ROLES;
-  correspondenceNRCED.issuedTo.write = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
+  correspondenceNRCED.issuedTo.read = utils.ApplicationAdminRoles;
+  correspondenceNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (correspondenceNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

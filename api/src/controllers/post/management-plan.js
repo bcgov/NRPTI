@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const { userHasValidRoles } = require('../../utils/auth-utils');
-const { ROLES } = require('../../utils/constants/misc');
+const utils = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Management Plan record and its associated flavour records.
@@ -79,8 +79,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (managementPlan._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  managementPlan.read = ROLES.ADMIN_ROLES;
-  managementPlan.write = ROLES.ADMIN_ROLES;
+  managementPlan.read = utils.ApplicationAdminRoles;
+  managementPlan.write = utils.ApplicationAdminRoles;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -141,7 +141,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -162,8 +162,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (managementPlanLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  managementPlanLNG.read = ROLES.ADMIN_ROLES;
-  managementPlanLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  managementPlanLNG.read = utils.ApplicationAdminRoles;
+  managementPlanLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
@@ -224,7 +224,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
  */
  exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -245,8 +245,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (managementPlanBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  managementPlanBCMI.read = ROLES.ADMIN_ROLES;
-  managementPlanBCMI.write = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
+  managementPlanBCMI.read = utils.ApplicationAdminRoles;
+  managementPlanBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {

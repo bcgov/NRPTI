@@ -8,8 +8,7 @@ import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import { TaskService, ITaskParams } from './task.service';
 import { DocumentService } from './document.service';
-import { ApplicationRoles } from '../../../../common/src/app/utils/record-constants';
-
+import { ApplicationRoles } from '../../../../../../api/src/utils/constants/misc';
 /**
  * Facade service for all admin-nrpti services.
  *

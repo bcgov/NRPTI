@@ -3,7 +3,7 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
 const { userHasValidRoles } = require('../../utils/auth-utils');
-const { ROLES } = require('../../utils/constants/misc');
+const utils = require('../../utils/constants/misc');
 
 /**
  * Performs all operations necessary to create a master Administrative Sanction record and its associated flavour records.
@@ -90,8 +90,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (administrativeSanction._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  administrativeSanction.read = ROLES.ADMIN_ROLES;
-  administrativeSanction.write = ROLES.ADMIN_ROLES;
+  administrativeSanction.read = utils.ApplicationAdminRoles;
+  administrativeSanction.write = utils.ApplicationAdminRoles;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -126,8 +126,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (administrativeSanction.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription &&
     (administrativeSanction.legislationDescription = incomingObj.legislationDescription);
-  administrativeSanction.issuedTo.read = ROLES.ADMIN_ROLES;
-  administrativeSanction.issuedTo.write = ROLES.ADMIN_ROLES;
+  administrativeSanction.issuedTo.read = utils.ApplicationAdminRoles;
+  administrativeSanction.issuedTo.write = utils.ApplicationAdminRoles;
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (administrativeSanction.issuedTo.type = incomingObj.issuedTo.type);
@@ -200,7 +200,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.LNGADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   } 
 
@@ -221,8 +221,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (administrativeSanctionLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  administrativeSanctionLNG.read = ROLES.ADMIN_ROLES;
-  administrativeSanctionLNG.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  administrativeSanctionLNG.read = utils.ApplicationAdminRoles;
+  administrativeSanctionLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
   administrativeSanctionLNG.addedBy = args.swagger.params.auth_payload.displayName;
   administrativeSanctionLNG.dateAdded = new Date();
@@ -251,8 +251,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (administrativeSanctionLNG.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription &&
     (administrativeSanctionLNG.legislationDescription = incomingObj.legislationDescription);
-  administrativeSanctionLNG.issuedTo.read = ROLES.ADMIN_ROLES;
-  administrativeSanctionLNG.issuedTo.write = [ROLES.SYSADMIN, ROLES.LNGADMIN];
+  administrativeSanctionLNG.issuedTo.read = utils.ApplicationAdminRoles;
+  administrativeSanctionLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (administrativeSanctionLNG.issuedTo.type = incomingObj.issuedTo.type);
@@ -331,7 +331,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.NRCEDADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   } 
 
@@ -352,8 +352,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (administrativeSanctionNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  administrativeSanctionNRCED.read = ROLES.ADMIN_ROLES;
-  administrativeSanctionNRCED.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  administrativeSanctionNRCED.read = utils.ApplicationAdminRoles;
+  administrativeSanctionNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
 
   administrativeSanctionNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   administrativeSanctionNRCED.dateAdded = new Date();
@@ -382,8 +382,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (administrativeSanctionNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription &&
     (administrativeSanctionNRCED.legislationDescription = incomingObj.legislationDescription);
-  administrativeSanctionNRCED.issuedTo.read = ROLES.ADMIN_ROLES;
-  administrativeSanctionNRCED.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  administrativeSanctionNRCED.issuedTo.read = utils.ApplicationAdminRoles;
+  administrativeSanctionNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (administrativeSanctionNRCED.issuedTo.type = incomingObj.issuedTo.type);

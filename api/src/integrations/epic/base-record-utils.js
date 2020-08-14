@@ -6,7 +6,8 @@ const defaultLog = require('../../utils/logger')('epic-base-record-utils');
 const EpicUtils = require('./epic-utils');
 const DocumentController = require('./../../controllers/document-controller');
 const RecordController = require('./../../controllers/record-controller');
-const { ROLES } = require('../../utils/constants/misc');
+const utils = require('../../utils/constants/misc');
+
 
 const EPIC_PUBLIC_HOSTNAME = process.env.EPIC_PUBLIC_HOSTNAME || 'https://projects.eao.gov.bc.ca';
 
@@ -47,8 +48,8 @@ class BaseRecordUtils {
     const documents = [];
 
     if (epicRecord && epicRecord._id && epicRecord.documentFileName) {
-      const readRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN, 'public'];
-      const writeRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN];
+      const readRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_NRCED, 'public'];
+      const writeRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_NRCED];
 
       const savedDocument = await DocumentController.createURLDocument(
         epicRecord.documentFileName,

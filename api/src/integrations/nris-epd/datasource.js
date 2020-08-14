@@ -9,7 +9,8 @@ const axios = require('axios');
 const documentController = require('../../controllers/document-controller');
 const RecordController = require('../../controllers/record-controller');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
-const { ROLES } = require('../../utils/constants/misc');
+const utils = require('../../utils/constants/misc');
+
 const fs = require('fs');
 
 const NRIS_TOKEN_ENDPOINT =
@@ -289,8 +290,8 @@ class NrisDataSource {
     let s3Response = null;
 
     // Set mongo document and s3 document roles
-    let readRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.BCMIADMIN];
-    const writeRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.BCMIADMIN];
+    let readRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_BCMI];
+    const writeRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_BCMI];
     let s3ACLRole = null;
     if (!BusinessLogicManager.isDocumentConsideredAnonymous(newRecord)) {
       readRoles.push('public');
