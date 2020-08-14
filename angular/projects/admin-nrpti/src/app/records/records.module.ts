@@ -14,6 +14,7 @@ import { CommonModule as NrptiCommonModule } from '../../../../common/src/app/co
 import { SharedModule } from '../shared/shared.module';
 import { RecordsRoutingModule } from './records-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
+import { DocumentsModule } from '../documents/documents.module';
 
 // records
 import { RecordsListComponent } from './records-list/records-list.component';
@@ -127,10 +128,6 @@ import { AnnualReportAddEditComponent } from './annual-reports/annual-report-add
 import { AnnualReportDetailComponent } from './annual-reports/annual-report-detail/annual-report-detail.component';
 import { AnnualReportBCMIDetailComponent } from './annual-reports/annual-report-bcmi-detail/annual-report-bcmi-detail.component';
 
-// other
-import { DocumentAuthenticatedReadOnlyComponent } from '../documents/document-authenticated-read-only/document-authenticated-read-only.component';
-import { S3SignedUrlAnchorComponent } from '../documents/s3-signed-url-anchor/s3-signed-url-anchor.component';
-
 @NgModule({
   imports: [
     BrowserModule,
@@ -148,11 +145,10 @@ import { S3SignedUrlAnchorComponent } from '../documents/s3-signed-url-anchor/s3
     RecordsRoutingModule,
     MatTooltipModule,
     MatCheckboxModule,
-    NgbDropdownModule
+    NgbDropdownModule,
+    DocumentsModule
   ],
   declarations: [
-    DocumentAuthenticatedReadOnlyComponent,
-    S3SignedUrlAnchorComponent,
     // records
     RecordsListComponent,
     RecordsTableRowComponent,
