@@ -53,15 +53,15 @@ describe('isDocumentConsideredAnonymous', () => {
     expect(result).toBe(true);
   });
 
-  it('returns true if masterRecord.documents is null', async () => {
+  it('returns false if masterRecord.documents is null', async () => {
     const result = await BusinessLogicManager.isDocumentConsideredAnonymous({ documents: null });
 
-    expect(result).toBe(true);
+    expect(result).toBe(false);
   });
 
-  it('returns true if masterRecord.documents is empty', async () => {
+  it('returns false if masterRecord.documents is empty', async () => {
     const result = await BusinessLogicManager.isDocumentConsideredAnonymous({ documents: [] });
 
-    expect(result).toBe(true);
+    expect(result).toBe(false);
   });
 });

@@ -37,7 +37,8 @@ const { ROLES } = require('../../utils/constants/misc');
 exports.createRecord = async function(args, res, next, incomingObj) {
   const flavourFunctions = {
     InspectionLNG: this.createLNG,
-    InspectionNRCED: this.createNRCED
+    InspectionNRCED: this.createNRCED,
+    InspectionBCMI: this.createBCMI
   };
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
@@ -92,6 +93,8 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
     (inspection._sourceRefOgcInspectionId = incomingObj._sourceRefOgcInspectionId);
   incomingObj._sourceRefOgcDeficiencyId &&
     (inspection._sourceRefOgcDeficiencyId = incomingObj._sourceRefOgcDeficiencyId);
+  incomingObj._sourceRefNrisId &&
+    (inspection._sourceRefNrisId = incomingObj._sourceRefNrisId);
 
   // set permissions
   inspection.read = ROLES.ADMIN_ROLES;
@@ -423,4 +426,133 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   inspectionNRCED = BusinessLogicManager.applyBusinessLogicOnPost(inspectionNRCED);
 
   return inspectionNRCED;
+};
+
+/**
+ * Performs all operations necessary to create a BCMI Inspection record.
+ *
+ * Example of incomingObj
+ *
+ *  inspections: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'inspection',
+ *      ...
+ *      InspectionLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      InspectionNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created bcmi inspection record
+ */
+ exports.createBCMI = function(args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
+  let InspectionNRCED = mongoose.model('InspectionBCMI');
+  let inspectionBCMI = new InspectionNRCED();
+
+  inspectionBCMI._schemaName = 'InspectionBCMI';
+
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (inspectionBCMI._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (inspectionBCMI._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (inspectionBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
+  inspectionBCMI.read = ROLES.ADMIN_ROLES;
+  inspectionBCMI.write = [ROLES.SYSADMIN, ROLES.BCMIADMIN];
+
+  inspectionBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  inspectionBCMI.dateAdded = new Date();
+
+  // set master data
+  incomingObj.recordName && (inspectionBCMI.recordName = incomingObj.recordName);
+  inspectionBCMI.recordType = 'Inspection';
+  incomingObj.dateIssued && (inspectionBCMI.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (inspectionBCMI.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.author && (inspectionBCMI.author = incomingObj.author);
+
+  incomingObj.legislation &&
+    incomingObj.legislation.act &&
+    (inspectionBCMI.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (inspectionBCMI.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (inspectionBCMI.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (inspectionBCMI.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (inspectionBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.legislationDescription && (inspectionBCMI.legislationDescription = incomingObj.legislationDescription);
+  inspectionBCMI.issuedTo.read = ROLES.ADMIN_ROLES;
+  inspectionBCMI.issuedTo.write = [ROLES.SYSADMIN, ROLES.NRCEDADMIN];
+  incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionBCMI.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
+    (inspectionBCMI.issuedTo.companyName = incomingObj.issuedTo.companyName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
+    (inspectionBCMI.issuedTo.firstName = incomingObj.issuedTo.firstName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
+    (inspectionBCMI.issuedTo.middleName = incomingObj.issuedTo.middleName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.lastName &&
+    (inspectionBCMI.issuedTo.lastName = incomingObj.issuedTo.lastName);
+  incomingObj.issuedTo &&
+    (inspectionBCMI.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
+    (inspectionBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+
+  incomingObj.projectName && (inspectionBCMI.projectName = incomingObj.projectName);
+  incomingObj.location && (inspectionBCMI.location = incomingObj.location);
+  incomingObj.centroid && (inspectionBCMI.centroid = incomingObj.centroid);
+  incomingObj.outcomeStatus && (inspectionBCMI.outcomeStatus = incomingObj.outcomeStatus);
+  incomingObj.outcomeDescription && (inspectionBCMI.outcomeDescription = incomingObj.outcomeDescription);
+  incomingObj.documents && (inspectionBCMI.documents = incomingObj.documents);
+
+  // set flavour data
+  incomingObj.summary && (inspectionBCMI.summary = incomingObj.summary);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (inspectionBCMI.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (inspectionBCMI.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (inspectionBCMI.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    inspectionBCMI.read.push('public');
+    inspectionBCMI.datePublished = new Date();
+    inspectionBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
+
+  inspectionBCMI = BusinessLogicManager.applyBusinessLogicOnPost(inspectionBCMI);
+
+  return inspectionBCMI;
 };

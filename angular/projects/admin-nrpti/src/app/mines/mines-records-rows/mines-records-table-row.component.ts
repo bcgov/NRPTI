@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { FactoryService } from '../../services/factory.service';
 import { TableRowComponent } from 'nrpti-angular-components';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Entity } from '../../../../../common/src/app/models/master/common-models/entity';
 
 @Component({
@@ -13,6 +13,7 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
   public entityString = '';
 
   constructor(
+    public route: ActivatedRoute,
     private router: Router,
     public changeDetectionRef: ChangeDetectorRef,
     public factoryService: FactoryService
@@ -26,6 +27,12 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
     this.changeDetectionRef.detectChanges();
   }
 
+  public isPublished() {
+    return this.rowData.isBcmiPublished;
+  }
+  public getAttributeValue(attribute) {
+    return this.rowData[attribute] || '-';
+  }
   /**
    * Listen for clicks on the row.
    *
@@ -49,73 +56,24 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
     }
   }
 
-  /**
-   * Emit message when row checkbox is toggled.
-   *
-   * @param {*} event checkbox event
-   * @param {*} rowData entire row data object
-   * @memberof MinesRecordsTableRowComponent
-   */
-  onRowCheckboxUpdate(event, rowData) {
-    if (event.checked) {
-      this.messageOut.emit({ label: 'rowSelected', data: rowData });
-    } else {
-      this.messageOut.emit({ label: 'rowUnselected', data: rowData });
-    }
-  }
+  public toggleCheckbox() {
+    this.rowData.rowSelected = !this.rowData.rowSelected;
 
+    if (this.rowData.rowSelected) {
+      this.messageOut.emit({ label: 'rowSelected', data: this.rowData });
+    } else {
+      this.messageOut.emit({ label: 'rowUnselected', data: this.rowData });
+    }
+
+    this.changeDetectionRef.detectChanges();
+  }
   /**
    * Navigate to record details page.
    *
    * @memberof MinesRecordsTableRowComponent
    */
   goToDetails() {
-    switch (this.rowData._schemaName) {
-      case 'Order':
-        this.router.navigate(['records', 'orders', this.rowData._id, 'detail']);
-        break;
-      case 'Inspection':
-        this.router.navigate(['records', 'inspections', this.rowData._id, 'detail']);
-        break;
-      case 'Certificate':
-        this.router.navigate(['records', 'certificates', this.rowData._id, 'detail']);
-        break;
-      case 'Permit':
-        this.router.navigate(['records', 'permits', this.rowData._id, 'detail']);
-        break;
-      case 'Agreement':
-        this.router.navigate(['records', 'agreements', this.rowData._id, 'detail']);
-        break;
-      case 'SelfReport':
-        this.router.navigate(['records', 'self-reports', this.rowData._id, 'detail']);
-        break;
-      case 'RestorativeJustice':
-        this.router.navigate(['records', 'restorative-justices', this.rowData._id, 'detail']);
-        break;
-      case 'Ticket':
-        this.router.navigate(['records', 'tickets', this.rowData._id, 'detail']);
-        break;
-      case 'AdministrativePenalty':
-        this.router.navigate(['records', 'administrative-penalties', this.rowData._id, 'detail']);
-        break;
-      case 'AdministrativeSanction':
-        this.router.navigate(['records', 'administrative-sanctions', this.rowData._id, 'detail']);
-        break;
-      case 'Warning':
-        this.router.navigate(['records', 'warnings', this.rowData._id, 'detail']);
-        break;
-      case 'ConstructionPlan':
-        this.router.navigate(['records', 'construction-plans', this.rowData._id, 'detail']);
-        break;
-      case 'ManagementPlan':
-        this.router.navigate(['records', 'management-plans', this.rowData._id, 'detail']);
-        break;
-      case 'CourtConviction':
-        this.router.navigate(['records', 'court-convictions', this.rowData._id, 'detail']);
-        break;
-      default:
-        break;
-    }
+    this.router.navigate([this.rowData._id, 'detail'], { relativeTo: this.route });
   }
 
   /**
@@ -124,51 +82,6 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
    * @memberof MinesRecordsTableRowComponent
    */
   goToEdit() {
-    switch (this.rowData._schemaName) {
-      case 'Order':
-        this.router.navigate(['records', 'orders', this.rowData._id, 'edit']);
-        break;
-      case 'Inspection':
-        this.router.navigate(['records', 'inspections', this.rowData._id, 'edit']);
-        break;
-      case 'Certificate':
-        this.router.navigate(['records', 'certificates', this.rowData._id, 'edit']);
-        break;
-      case 'Permit':
-        this.router.navigate(['records', 'permits', this.rowData._id, 'edit']);
-        break;
-      case 'Agreement':
-        this.router.navigate(['records', 'agreements', this.rowData._id, 'edit']);
-        break;
-      case 'SelfReport':
-        this.router.navigate(['records', 'self-reports', this.rowData._id, 'edit']);
-        break;
-      case 'RestorativeJustice':
-        this.router.navigate(['records', 'restorative-justices', this.rowData._id, 'edit']);
-        break;
-      case 'Ticket':
-        this.router.navigate(['records', 'tickets', this.rowData._id, 'edit']);
-        break;
-      case 'AdministrativePenalty':
-        this.router.navigate(['records', 'administrative-penalties', this.rowData._id, 'edit']);
-        break;
-      case 'AdministrativeSanction':
-        this.router.navigate(['records', 'administrative-sanctions', this.rowData._id, 'edit']);
-        break;
-      case 'Warning':
-        this.router.navigate(['records', 'warnings', this.rowData._id, 'edit']);
-        break;
-      case 'ConstructionPlan':
-        this.router.navigate(['records', 'construction-plans', this.rowData._id, 'edit']);
-        break;
-      case 'ManagementPlan':
-        this.router.navigate(['records', 'management-plans', this.rowData._id, 'edit']);
-        break;
-      case 'CourtConviction':
-        this.router.navigate(['records', 'court-convictions', this.rowData._id, 'edit']);
-        break;
-      default:
-        break;
-    }
+    this.router.navigate([this.rowData._id, 'edit'], { relativeTo: this.route });
   }
 }

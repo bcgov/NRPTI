@@ -3,6 +3,8 @@
 let queryActions = require('../utils/query-actions');
 let queryUtils = require('../utils/query-utils');
 let defaultLog = require('../utils/logger')('record');
+let documentController = require('./document-controller');
+const businessLogicManager = require('../utils/business-logic-manager');
 
 let AddOrder = require('./post/order');
 let AddInspection = require('./post/inspection');
@@ -20,8 +22,12 @@ let AddManagementPlan = require('./post/management-plan');
 let AddCourtConviction = require('./post/court-conviction');
 let AddNewsItem = require('./post/news-item');
 let AddMine = require('./post/mine-bcmi');
-let AddPermitAmendment = require('./post/permit-amendment');
 let AddCollection = require('./post/collection-bcmi');
+let AddAnnualReport = require('./post/annual-report');
+let AddCertificateAmendment = require('./post/certificate-amendment');
+let AddCorrespondence = require('./post/correspondence');
+let AddDamSafetyInspection = require('./post/dam-safety-inspection');
+let AddReport = require('./post/report');
 
 let EditOrder = require('./put/order');
 let EditInspection = require('./put/inspection');
@@ -39,8 +45,40 @@ let EditManagementPlan = require('./put/management-plan');
 let EditCourtConviction = require('./put/court-conviction');
 let EditNewsItem = require('./put/news-item');
 let EditMine = require('./put/mine-bcmi');
-let EditPermitAmendment = require('./put/permit-amendment');
 let EditCollection = require('./put/collection-bcmi');
+let EditAnnualReport = require('./put/annual-report');
+let EditCertificateAmendment = require('./put/certificate-amendment');
+let EditCorrespondence = require('./put/correspondence');
+let EditDamSafetyInspection = require('./put/dam-safety-inspection');
+let EditReport = require('./put/report');
+
+// Expected data types for Post/Put operations with Records
+// including their Add and Edit function exports.
+// Update this collection with new types
+const ACCEPTED_DATA_TYPES = [
+  { type: 'orders',                  add: AddOrder,                  edit: EditOrder },
+  { type: 'inspections',             add: AddInspection,             edit: EditInspection },
+  { type: 'certificates',            add: AddCertificate,            edit: EditCertificate },
+  { type: 'permits',                 add: AddPermit,                 edit: EditPermit },
+  { type: 'agreements',              add: AddAgreement,              edit: EditAgreement },
+  { type: 'selfReports',             add: AddSelfReport,             edit: EditSelfReport },
+  { type: 'restorativeJustices',     add: AddRestorativeJustice,     edit: EditRestorativeJustice },
+  { type: 'tickets',                 add: AddTicket,                 edit: EditTicket },
+  { type: 'administrativePenalties', add: AddAdministrativePenalty,  edit: EditAdministrativePenalty },
+  { type: 'administrativeSanctions', add: AddAdministrativeSanction, edit: EditAdministrativeSanction },
+  { type: 'warnings',                add: AddWarning,                edit: EditWarning },
+  { type: 'constructionPlans',       add: AddConstructionPlan,       edit: EditConstructionPlan },
+  { type: 'managementPlans',         add: AddManagementPlan,         edit: EditManagementPlan },
+  { type: 'courtConvictions',        add: AddCourtConviction,        edit: EditCourtConviction },
+  { type: 'newsItems',               add: AddNewsItem,               edit: EditNewsItem },
+  { type: 'mines',                   add: AddMine,                   edit: EditMine },
+  { type: 'collections',             add: AddCollection,             edit: EditCollection },
+  { type: 'annualReports',           add: AddAnnualReport,           edit: EditAnnualReport },
+  { type: 'certificateAmendments',   add: AddCertificateAmendment,   edit: EditCertificateAmendment },
+  { type: 'correspondences',         add: AddCorrespondence,         edit: EditCorrespondence },
+  { type: 'damSafetyInspections',    add: AddDamSafetyInspection,    edit: EditDamSafetyInspection },
+  { type: 'reports',                 add: AddReport,                 edit: EditReport },
+];
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
 
@@ -123,61 +161,10 @@ exports.protectedPost = async function (args, res, next) {
       data[property].forEach(element => {
         delete element.documents;
       });
-    }
 
-    if (data.orders) {
-      promises.push(processPostRequest(args, res, next, 'orders', data.orders));
-    }
-    if (data.inspections) {
-      promises.push(processPostRequest(args, res, next, 'inspections', data.inspections));
-    }
-    if (data.certificates) {
-      promises.push(processPostRequest(args, res, next, 'certificates', data.certificates));
-    }
-    if (data.permits) {
-      promises.push(processPostRequest(args, res, next, 'permits', data.permits));
-    }
-    if (data.agreements) {
-      promises.push(processPostRequest(args, res, next, 'agreements', data.agreements));
-    }
-    if (data.selfReports) {
-      promises.push(processPostRequest(args, res, next, 'selfReports', data.selfReports));
-    }
-    if (data.restorativeJustices) {
-      promises.push(processPostRequest(args, res, next, 'restorativeJustices', data.restorativeJustices));
-    }
-    if (data.tickets) {
-      promises.push(processPostRequest(args, res, next, 'tickets', data.tickets));
-    }
-    if (data.administrativePenalties) {
-      promises.push(processPostRequest(args, res, next, 'administrativePenalties', data.administrativePenalties));
-    }
-    if (data.administrativeSanctions) {
-      promises.push(processPostRequest(args, res, next, 'administrativeSanctions', data.administrativeSanctions));
-    }
-    if (data.warnings) {
-      promises.push(processPostRequest(args, res, next, 'warnings', data.warnings));
-    }
-    if (data.constructionPlans) {
-      promises.push(processPostRequest(args, res, next, 'constructionPlans', data.constructionPlans));
-    }
-    if (data.managementPlans) {
-      promises.push(processPostRequest(args, res, next, 'managementPlans', data.managementPlans));
-    }
-    if (data.courtConvictions) {
-      promises.push(processPostRequest(args, res, next, 'courtConvictions', data.courtConvictions));
-    }
-    if (data.newsItems) {
-      promises.push(processPostRequest(args, res, next, 'newsItems', data.newsItems));
-    }
-    if (data.mines) {
-      promises.push(processPostRequest(args, res, next, 'mines', data.mines));
-    }
-    if (data.permitAmendments) {
-      promises.push(processPostRequest(args, res, next, 'permitAmendments', data.permitAmendments));
-    }
-    if (data.collections) {
-      promises.push(processPostRequest(args, res, next, 'collections', data.collections));
+      if (ACCEPTED_DATA_TYPES.find(t => t.type === property)) {
+        promises.push(processPostRequest(args, res, next, property, data[property]));
+      }
     }
 
     let response = await Promise.all(promises);
@@ -214,61 +201,10 @@ exports.protectedPut = async function (args, res, next) {
       data[property].forEach(element => {
         delete element.documents;
       });
-    }
 
-    if (data.orders) {
-      promises.push(processPutRequest(args, res, next, 'orders', data.orders));
-    }
-    if (data.inspections) {
-      promises.push(processPutRequest(args, res, next, 'inspections', data.inspections));
-    }
-    if (data.certificates) {
-      promises.push(processPutRequest(args, res, next, 'certificates', data.certificates));
-    }
-    if (data.permits) {
-      promises.push(processPutRequest(args, res, next, 'permits', data.permits));
-    }
-    if (data.agreements) {
-      promises.push(processPutRequest(args, res, next, 'agreements', data.agreements));
-    }
-    if (data.selfReports) {
-      promises.push(processPutRequest(args, res, next, 'selfReports', data.selfReports));
-    }
-    if (data.restorativeJustices) {
-      promises.push(processPutRequest(args, res, next, 'restorativeJustices', data.restorativeJustices));
-    }
-    if (data.tickets) {
-      promises.push(processPutRequest(args, res, next, 'tickets', data.tickets));
-    }
-    if (data.administrativePenalties) {
-      promises.push(processPutRequest(args, res, next, 'administrativePenalties', data.administrativePenalties));
-    }
-    if (data.administrativeSanctions) {
-      promises.push(processPutRequest(args, res, next, 'administrativeSanctions', data.administrativeSanctions));
-    }
-    if (data.warnings) {
-      promises.push(processPutRequest(args, res, next, 'warnings', data.warnings));
-    }
-    if (data.constructionPlans) {
-      promises.push(processPutRequest(args, res, next, 'constructionPlans', data.constructionPlans));
-    }
-    if (data.managementPlans) {
-      promises.push(processPutRequest(args, res, next, 'managementPlans', data.managementPlans));
-    }
-    if (data.courtConvictions) {
-      promises.push(processPutRequest(args, res, next, 'courtConvictions', data.courtConvictions));
-    }
-    if (data.newsItems) {
-      promises.push(processPutRequest(args, res, next, 'newsItems', data.newsItems));
-    }
-    if (data.mines) {
-      promises.push(processPutRequest(args, res, next, 'mines', data.mines));
-    }
-    if (data.permitAmendments) {
-      promises.push(processPutRequest(args, res, next, 'permitAmendments', data.permitAmendments));
-    }
-    if (data.collections) {
-      promises.push(processPutRequest(args, res, next, 'collections', data.collections));
+      if (ACCEPTED_DATA_TYPES.find(t => t.type === property)) {
+        promises.push(processPutRequest(args, res, next, property, data[property]));
+      }
     }
 
     let response = await Promise.all(promises);
@@ -362,6 +298,11 @@ exports.protectedPublish = async function (args, res, next) {
       const masterModel = require('mongoose').model(masterSchema);
       await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isLngPublished: true });
     }
+    else if (recordData._schemaName.includes('BCMI')) {
+      const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 3);
+      const masterModel = require('mongoose').model(masterSchema);
+      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isBcmiPublished: true });
+    }
 
     if (!record) {
       defaultLog.info(`protectedPublish - couldn't find record for recordId: ${record._id}`);
@@ -369,6 +310,15 @@ exports.protectedPublish = async function (args, res, next) {
     }
 
     const published = await queryActions.publish(record, true);
+    // this should also publish documents, or they may not be usable by other applications
+    if (published.documents) {
+      for (const docId of published.documents) {
+        // only allow a publish if the record is not anonymous
+        if (!businessLogicManager.isDocumentConsideredAnonymous(published)) {
+          await documentController.publishDocument(docId, args.swagger.params.auth_payload);
+        }
+      }
+    }
 
     queryUtils.audit(args, 'Publish', record, args.swagger.params.auth_payload, record._id);
 
@@ -405,6 +355,11 @@ exports.protectedUnPublish = async function (args, res, next) {
       const masterModel = require('mongoose').model(masterSchema);
       await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isLngPublished: false });
     }
+    else if (recordData._schemaName.includes('BCMI')) {
+      const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 3);
+      const masterModel = require('mongoose').model(masterSchema);
+      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isBcmiPublished: false });
+    }
 
     if (!record) {
       defaultLog.info(`protectedUnPublish - couldn't find record for recordId: ${record._id}`);
@@ -412,6 +367,13 @@ exports.protectedUnPublish = async function (args, res, next) {
     }
 
     const unPublished = await queryActions.unPublish(record);
+
+    // this should also un-publish documents, or they may not be usable by other applications
+    if (unPublished.documents) {
+      for (const docId of unPublished.documents) {
+        await documentController.unpublishDocument(docId, args.swagger.params.auth_payload);
+      }
+    }
 
     queryUtils.audit(args, 'UnPublish', record, args.swagger.params.auth_payload, record._id);
 
@@ -448,65 +410,13 @@ const processPostRequest = async function (args, res, next, property, data) {
   let promises = [];
 
   do {
-    switch (property) {
-      case 'orders':
-        promises.push(AddOrder.createRecord(args, res, next, data[i]));
-        break;
-      case 'inspections':
-        promises.push(AddInspection.createRecord(args, res, next, data[i]));
-        break;
-      case 'certificates':
-        promises.push(AddCertificate.createRecord(args, res, next, data[i]));
-        break;
-      case 'permits':
-        promises.push(AddPermit.createRecord(args, res, next, data[i]));
-        break;
-      case 'agreements':
-        promises.push(AddAgreement.createRecord(args, res, next, data[i]));
-        break;
-      case 'selfReports':
-        promises.push(AddSelfReport.createRecord(args, res, next, data[i]));
-        break;
-      case 'restorativeJustices':
-        promises.push(AddRestorativeJustice.createRecord(args, res, next, data[i]));
-        break;
-      case 'tickets':
-        promises.push(AddTicket.createRecord(args, res, next, data[i]));
-        break;
-      case 'administrativePenalties':
-        promises.push(AddAdministrativePenalty.createRecord(args, res, next, data[i]));
-        break;
-      case 'administrativeSanctions':
-        promises.push(AddAdministrativeSanction.createRecord(args, res, next, data[i]));
-        break;
-      case 'warnings':
-        promises.push(AddWarning.createRecord(args, res, next, data[i]));
-        break;
-      case 'constructionPlans':
-        promises.push(AddConstructionPlan.createRecord(args, res, next, data[i]));
-        break;
-      case 'managementPlans':
-        promises.push(AddManagementPlan.createRecord(args, res, next, data[i]));
-        break;
-      case 'courtConvictions':
-        promises.push(AddCourtConviction.createRecord(args, res, next, data[i]));
-        break;
-      case 'newsItems':
-        promises.push(AddNewsItem.createRecord(args, res, next, data[i]));
-        break;
-      case 'mines':
-        promises.push(AddMine.createRecord(args, res, next, data[i]));
-        break;
-      case 'permitAmendments':
-        promises.push(AddPermitAmendment.createRecord(args, res, next, data[i]));
-        break;
-      case 'collections':
-        promises.push(AddCollection.createRecord(args, res, next, data[i]));
-        break;
-      default:
-        return {
-          errorMessage: `Property ${property} does not exist.`
-        };
+    const typeMethods = ACCEPTED_DATA_TYPES.find(t => t.type === property);
+    if (typeMethods) {
+      promises.push(typeMethods.add.createRecord(args, res, next, data[i]));
+    } else {
+      return {
+        errorMessage: `Property ${property} does not exist.`
+      };
     }
   } while (i-- > 0);
 
@@ -535,65 +445,13 @@ const processPutRequest = async function (args, res, next, property, data, overr
   let promises = [];
 
   do {
-    switch (property) {
-      case 'orders':
-        promises.push(EditOrder.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'inspections':
-        promises.push(EditInspection.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'certificates':
-        promises.push(EditCertificate.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'permits':
-        promises.push(EditPermit.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'agreements':
-        promises.push(EditAgreement.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'selfReports':
-        promises.push(EditSelfReport.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'restorativeJustices':
-        promises.push(EditRestorativeJustice.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'tickets':
-        promises.push(EditTicket.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'administrativePenalties':
-        promises.push(EditAdministrativePenalty.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'administrativeSanctions':
-        promises.push(EditAdministrativeSanction.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'warnings':
-        promises.push(EditWarning.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'constructionPlans':
-        promises.push(EditConstructionPlan.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'managementPlans':
-        promises.push(EditManagementPlan.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'courtConvictions':
-        promises.push(EditCourtConviction.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'newsItems':
-        promises.push(EditNewsItem.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'mines':
-        promises.push(EditMine.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'permitAmendments':
-        promises.push(EditPermitAmendment.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      case 'collections':
-        promises.push(EditCollection.editRecord(args, res, next, data[i], overridePutParams));
-        break;
-      default:
-        return {
-          errorMessage: `Property ${property} does not exist.`
-        };
+    const typeMethods = ACCEPTED_DATA_TYPES.find(t => t.type === property);
+    if (typeMethods) {
+      promises.push(typeMethods.edit.editRecord(args, res, next, data[i]));
+    } else {
+      return {
+        errorMessage: `Property ${property} does not exist.`
+      };
     }
   } while (i-- > 0);
 

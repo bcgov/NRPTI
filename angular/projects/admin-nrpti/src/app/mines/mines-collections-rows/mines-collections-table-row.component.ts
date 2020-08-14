@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DialogService } from 'ng2-bootstrap-modal';
-import { TableRowComponent } from 'nrpti-angular-components';
+import { TableRowComponent, StoreService } from 'nrpti-angular-components';
 import { ConfirmComponent } from '../../confirm/confirm.component';
 import { FactoryService } from '../../services/factory.service';
+import { StateIDs, StateStatus } from '../../../../../common/src/app/utils/record-constants';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
 
@@ -13,11 +14,13 @@ import { Subject, of } from 'rxjs';
   styleUrls: ['./mines-collections-table-row.component.scss']
 })
 export class MinesCollectionsTableRowComponent extends TableRowComponent implements OnInit, OnDestroy {
+  public isEditingCollection: boolean;
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private storeService: StoreService,
     public changeDetectionRef: ChangeDetectorRef,
     public factoryService: FactoryService,
     private dialogService: DialogService
@@ -26,6 +29,8 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
   }
 
   ngOnInit() {
+    this.setOrRemoveCollectionAddEditState();
+
     this.changeDetectionRef.detectChanges();
   }
 
@@ -38,7 +43,11 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
    * @memberof MinesCollectionsTableRowComponent
    */
   @HostListener('click') onItemClicked() {
-    this.goToDetails();
+    if (this.isEditingCollection) {
+      this.goToEdit();
+    } else {
+      this.goToDetails();
+    }
   }
 
   /**
@@ -156,7 +165,29 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
       });
   }
 
+  /**
+   * Sets the initial collectionState state, or removes it from the store if it is invalid.
+   *
+   * @memberof MinesRecordsListComponent
+   */
+  setOrRemoveCollectionAddEditState() {
+    const tempCollectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
+    if (tempCollectionAddEditState) {
+      if (tempCollectionAddEditState.status === StateStatus.invalid) {
+        this.storeService.removeItem(StateIDs.collectionAddEdit);
+        this.isEditingCollection = false;
+      } else {
+        this.isEditingCollection = true;
+      }
+    }
+  }
+
   ngOnDestroy() {
+    const collectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
+    if (collectionAddEditState && collectionAddEditState.status !== StateStatus.valid) {
+      this.storeService.removeItem(StateIDs.collectionAddEdit);
+    }
+
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }

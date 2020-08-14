@@ -178,9 +178,9 @@ exports.editBCMI = function (args, res, next, incomingObj) {
   delete incomingObj.read;
   delete incomingObj.write;
 
-  let PermitLNG = mongoose.model('PermitBCMI');
+  let PermitBCMI = mongoose.model('PermitBCMI');
 
-  const sanitizedObj = PutUtils.validateObjectAgainstModel(PermitLNG, incomingObj);
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(PermitBCMI, incomingObj);
 
   sanitizedObj.dateUpdated = new Date();
 

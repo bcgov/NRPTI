@@ -1,42 +1,5 @@
 import { Type } from '@angular/core';
-import {
-  Order,
-  OrderNRCED,
-  OrderLNG,
-  Inspection,
-  InspectionNRCED,
-  InspectionLNG,
-  Certificate,
-  CertificateLNG,
-  Permit,
-  PermitLNG,
-  Agreement,
-  AgreementLNG,
-  SelfReport,
-  SelfReportLNG,
-  RestorativeJustice,
-  RestorativeJusticeLNG,
-  RestorativeJusticeNRCED,
-  Ticket,
-  TicketLNG,
-  TicketNRCED,
-  AdministrativePenalty,
-  AdministrativePenaltyLNG,
-  AdministrativePenaltyNRCED,
-  AdministrativeSanction,
-  AdministrativeSanctionLNG,
-  AdministrativeSanctionNRCED,
-  Warning,
-  WarningLNG,
-  WarningNRCED,
-  ConstructionPlan,
-  ConstructionPlanLNG,
-  ManagementPlan,
-  ManagementPlanLNG,
-  CourtConviction,
-  CourtConvictionLNG,
-  CourtConvictionNRCED
-} from '../../../../../common/src/app/models';
+import * as models from '../../../../../common/src/app/models';
 
 // orders
 import { OrderNRCEDDetailComponent } from '../orders/order-nrced-detail/order-nrced-detail.component';
@@ -88,6 +51,25 @@ import { ManagementPlanLNGDetailComponent } from '../management-plans/management
 import { CourtConvictionLNGDetailComponent } from '../court-convictions/court-conviction-lng-detail/court-conviction-lng-detail.component';
 import { CourtConvictionNRCEDDetailComponent } from '../court-convictions/court-conviction-nrced-detail/court-conviction-nrced-detail.component';
 
+// certificate amendment
+import { CertificateAmendmentLNGDetailComponent } from '../certificate-amendments/certificate-amendments-lng-detail/certificate-amendments-lng-detail.component';
+import { CertificateAmendmentBCMIDetailComponent } from '../certificate-amendments/certificate-amendments-bcmi-detail/certificate-amendments-bcmi-detail.component';
+
+// correspondence
+import { CorrespondenceNRCEDDetailComponent } from '../correspondences/correspondence-nrced-detail/correspondence-nrced-detail.component';
+import { CorrespondenceBCMIDetailComponent } from '../correspondences/correspondence-bcmi-detail/correspondence-bcmi-detail.component';
+
+// report
+import { ReportNRCEDDetailComponent } from '../reports/report-nrced-detail/report-nrced-detail.component';
+import { ReportBCMIDetailComponent } from '../reports/report-bcmi-detail/report-bcmi-detail.component';
+
+// dam safety inspection
+import { DamSafetyInspectionNRCEDDetailComponent } from '../dam-safety-inspections/dam-safety-inspection-nrced-detail/dam-safety-inspection-nrced-detail.component';
+import { DamSafetyInspectionBCMIDetailComponent } from '../dam-safety-inspections/dam-safety-inspection-bcmi-detail/dam-safety-inspection-bcmi-detail.component';
+
+// annual reports
+import { AnnualReportBCMIDetailComponent } from '../annual-reports/annual-report-bcmi-detail/annual-report-bcmi-detail.component';
+
 // other
 import { RecordComponent } from './record-component';
 
@@ -106,82 +88,13 @@ export class RecordUtils {
       return null;
     }
 
-    switch (data._schemaName) {
-      case 'Order':
-        return new Order(data);
-      case 'OrderLNG':
-        return new OrderLNG(data);
-      case 'OrderNRCED':
-        return new OrderNRCED(data);
-      case 'Inspection':
-        return new Inspection(data);
-      case 'InspectionLNG':
-        return new InspectionLNG(data);
-      case 'InspectionNRCED':
-        return new InspectionNRCED(data);
-      case 'Certificate':
-        return new Certificate(data);
-      case 'CertificateLNG':
-        return new CertificateLNG(data);
-      case 'Permit':
-        return new Permit(data);
-      case 'PermitLNG':
-        return new PermitLNG(data);
-      case 'Agreement':
-        return new Agreement(data);
-      case 'AgreementLNG':
-        return new AgreementLNG(data);
-      case 'SelfReport':
-        return new SelfReport(data);
-      case 'SelfReportLNG':
-        return new SelfReportLNG(data);
-      case 'RestorativeJustice':
-        return new RestorativeJustice(data);
-      case 'RestorativeJusticeLNG':
-        return new RestorativeJusticeLNG(data);
-      case 'RestorativeJusticeNRCED':
-        return new RestorativeJusticeNRCED(data);
-      case 'Ticket':
-        return new Ticket(data);
-      case 'TicketLNG':
-        return new TicketLNG(data);
-      case 'TicketNRCED':
-        return new TicketNRCED(data);
-      case 'AdministrativePenalty':
-        return new AdministrativePenalty(data);
-      case 'AdministrativePenaltyLNG':
-        return new AdministrativePenaltyLNG(data);
-      case 'AdministrativePenaltyNRCED':
-        return new AdministrativePenaltyNRCED(data);
-      case 'AdministrativeSanction':
-        return new AdministrativeSanction(data);
-      case 'AdministrativeSanctionLNG':
-        return new AdministrativeSanctionLNG(data);
-      case 'AdministrativeSanctionNRCED':
-        return new AdministrativeSanctionNRCED(data);
-      case 'Warning':
-        return new Warning(data);
-      case 'WarningLNG':
-        return new WarningLNG(data);
-      case 'WarningNRCED':
-        return new WarningNRCED(data);
-      case 'ConstructionPlan':
-        return new ConstructionPlan(data);
-      case 'ConstructionPlanLNG':
-        return new ConstructionPlanLNG(data);
-      case 'ManagementPlan':
-        return new ManagementPlan(data);
-      case 'ManagementPlanLNG':
-        return new ManagementPlanLNG(data);
-      case 'CourtConviction':
-        return new CourtConviction(data);
-      case 'CourtConvictionLNG':
-        return new CourtConvictionLNG(data);
-      case 'CourtConvictionNRCED':
-        return new CourtConvictionNRCED(data);
-      default:
-        return null;
-    }
+    // We can find and create the model instance via reflection
+    // This only works when our Schema Name is IDENTICAL to the class name
+    // So when creating new models/flavours for records, always ensure the class
+    // name and schema name match, case sensitive.
+    // If you're getting errors here, you've likely named your model class
+    // something different, so make sure you fix the name so it matches your Schema
+    return this.getReflectiveInstance(models, data._schemaName, data);
   }
 
   /**
@@ -198,6 +111,8 @@ export class RecordUtils {
       return null;
     }
 
+    // we can't use a reflective visitor with these because
+    // importing from RecordModule would cause circular dependencies.
     switch (recordType) {
       case 'OrderNRCED':
         return OrderNRCEDDetailComponent;
@@ -243,6 +158,24 @@ export class RecordUtils {
         return CourtConvictionLNGDetailComponent;
       case 'CourtConvictionNRCED':
         return CourtConvictionNRCEDDetailComponent;
+      case 'CertificateAmendmentLNG':
+        return CertificateAmendmentLNGDetailComponent;
+      case 'CertificateAmendmentBCMI':
+        return CertificateAmendmentBCMIDetailComponent;
+      case 'CorrespondenceNRCED':
+        return CorrespondenceNRCEDDetailComponent;
+      case 'CorrespondenceBCMI':
+        return CorrespondenceBCMIDetailComponent;
+      case 'ReportNRCED':
+        return ReportNRCEDDetailComponent;
+      case 'ReportBCMI':
+        return ReportBCMIDetailComponent;
+      case 'DamSafetyInspectionNRCED':
+        return DamSafetyInspectionNRCEDDetailComponent;
+      case 'DamSafetyInspectionBCMI':
+        return DamSafetyInspectionBCMIDetailComponent;
+      case 'AnnualReportBCMI':
+        return AnnualReportBCMIDetailComponent;
       default:
         return null;
     }
@@ -301,5 +234,15 @@ export class RecordUtils {
         alert('Failed to save one or more flavour records');
       }
     }
+  }
+
+  static getReflectiveInstance(context: any, name: string, ...args: any[]) {
+    const instance = Object.create(context[name].prototype);
+
+    if (args) {
+      instance.constructor.apply(instance, args);
+    }
+
+    return instance;
   }
 }

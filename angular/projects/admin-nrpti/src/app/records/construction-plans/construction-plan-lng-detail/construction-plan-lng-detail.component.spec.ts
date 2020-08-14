@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { ConstructionPlanLNGDetailComponent } from './construction-plan-lng-detail.component';
 import { TestBedHelper, ActivatedRouteStub } from '../../../../../../common/src/app/spec/spec-utils';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -16,7 +16,7 @@ describe('ConstructionPlanLNGDetailComponent', () => {
   const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole']);
   mockFactoryService.userInLngRole.and.returnValue(true);
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, GlobalModule],
       declarations: [ConstructionPlanLNGDetailComponent],

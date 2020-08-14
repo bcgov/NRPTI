@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DialogService } from 'ng2-bootstrap-modal';
@@ -15,7 +15,7 @@ describe('MinesCollectionsTableRowComponent', () => {
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, SharedModule, CommonModule, GlobalModule],
       declarations: [MinesCollectionsTableRowComponent],

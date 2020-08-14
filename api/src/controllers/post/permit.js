@@ -75,6 +75,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (permit._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj._sourceRefId && (permit._sourceRefId = incomingObj._sourceRefId);
+  incomingObj._sourceDocumentRefId && (permit._sourceDocumentRefId = incomingObj._sourceDocumentRefId);
 
   // set permissions
   permit.read = ROLES.ADMIN_ROLES;
@@ -95,6 +96,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.recordSubtype && (permit.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (permit.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (permit.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.issuedTo && (permit.issuedTo = incomingObj.issuedTo);
   incomingObj.legislation && incomingObj.legislation.act && (permit.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
     incomingObj.legislation.regulation &&
@@ -117,7 +119,13 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.mineGuid && (permit.mineGuid = incomingObj.mineGuid);
   incomingObj.permitNumber && (permit.permitNumber = incomingObj.permitNumber);
   incomingObj.status && (permit.status = incomingObj.status);
-  incomingObj.permitAmendments && (permit.permitAmendments = incomingObj.permitAmendments);
+
+  incomingObj.permitStatusCode && (permit.permitStatusCode = incomingObj.permitStatusCode);
+  incomingObj.amendmentStatusCode && (permit.amendmentStatusCode = incomingObj.amendmentStatusCode);
+  incomingObj.typeCode && (permit.status = incomingObj.typeCode);
+  ObjectId.isValid(incomingObj.originalPermit) &&
+    incomingObj.originalPermit &&
+    (permit.originalPermit = new ObjectId(incomingObj.originalPermit));
 
   // set meta
   permit.addedBy = args.swagger.params.auth_payload.displayName;
@@ -198,6 +206,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.recordSubtype && (permitLNG.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (permitLNG.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (permitLNG.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.issuedTo && (permitLNG.issuedTo = incomingObj.issuedTo);
   incomingObj.legislation && incomingObj.legislation.act && (permitLNG.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
     incomingObj.legislation.regulation &&
@@ -217,6 +226,12 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.centroid && (permitLNG.centroid = incomingObj.centroid);
   incomingObj.documents && (permitLNG.documents = incomingObj.documents);
 
+  incomingObj.permitStatusCode && (permitLNG.permitStatusCode = incomingObj.permitStatusCode);
+  incomingObj.amendmentStatusCode && (permitLNG.amendmentStatusCode = incomingObj.amendmentStatusCode);
+  incomingObj.typeCode && (permitLNG.status = incomingObj.typeCode);
+  ObjectId.isValid(incomingObj.originalPermit) &&
+    incomingObj.originalPermit &&
+    (permitLNG.originalPermit = new ObjectId(incomingObj.originalPermit));
   // set flavour data
   incomingObj.description && (permitLNG.description = incomingObj.description);
 
@@ -230,13 +245,13 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
 /**
  * Creates the BCMI flavour of a permit.
- * 
+ *
  * @param {*} args
  * @param {*} res
  * @param {*} next
  * @param {*} incomingObj
  * @returns created BCMI permit
- */ 
+ */
 exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (!userHasValidRoles([ROLES.SYSADMIN, ROLES.BCMIADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
@@ -250,6 +265,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
 
   // set integration references
   incomingObj._sourceRefId && (permitBCMI._sourceRefId = incomingObj._sourceRefId);
+  incomingObj._sourceDocumentRefId && (permitBCMI._sourceDocumentRefId = incomingObj._sourceDocumentRefId);
 
   // set permissions and meta
   permitBCMI.read = ROLES.ADMIN_ROLES;
@@ -271,6 +287,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.recordSubtype && (permitBCMI.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (permitBCMI.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (permitBCMI.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.issuedTo && (permitBCMI.issuedTo = incomingObj.issuedTo);
   incomingObj.legislation && incomingObj.legislation.act && (permitBCMI.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
     incomingObj.legislation.regulation &&
@@ -293,8 +310,16 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   // set flavour data
   incomingObj.mineGuid && (permitBCMI.mineGuid = incomingObj.mineGuid);
   incomingObj.permitNumber && (permitBCMI.permitNumber = incomingObj.permitNumber);
-  incomingObj.status && (permitBCMI.status = incomingObj.status);
-  incomingObj.permitAmendments && (permitBCMI.permitAmendments = incomingObj.permitAmendments);
+  incomingObj.permitStatusCode && (permitBCMI.permitStatusCode = incomingObj.permitStatusCode);
+  incomingObj.amendmentStatusCode && (permitBCMI.amendmentStatusCode = incomingObj.amendmentStatusCode);
+  incomingObj.typeCode && (permitBCMI.typeCode = incomingObj.typeCode);
+  // originalPermit should be null unless the type is amendment
+  incomingObj.originalPermit && incomingObj.typeCode.toUpperCase() === 'AMD' && (permitBCMI.originalPermit = incomingObj.originalPermit);
+  incomingObj.receivedDate && (permitBCMI.receivedDate = incomingObj.receivedDate);
+  incomingObj.issueDate && (permitBCMI.issueDate = incomingObj.issueDate);
+  incomingObj.authorizedEndDate && (permitBCMI.authorizedEndDate = incomingObj.authorizedEndDate);
+  incomingObj.description && (permitBCMI.description = incomingObj.description);
+  incomingObj.amendmentDocument && (permitBCMI.amendmentDocument = incomingObj.amendmentDocument);
 
   // set data source references
   incomingObj.sourceDateAdded && (permitBCMI.sourceDateAdded = incomingObj.sourceDateAdded);

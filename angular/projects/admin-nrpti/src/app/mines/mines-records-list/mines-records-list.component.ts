@@ -75,6 +75,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
     {
       name: 'Collections',
       width: 'col-2',
+      value: 'collections',
       nosort: true
     },
     {
@@ -104,6 +105,8 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
 
   // Edit Collection
   public collectionState = null;
+  // Edit Record
+  public recordState = null;
 
   constructor(
     public location: Location,
@@ -169,23 +172,12 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       ])
     );
 
-    const hasCollectionsStatefilter = new FilterObject(
-      'hasCollection',
-      FilterType.RadioPicker,
-      'Has Associated Collection',
-      new CheckOrRadioFilterDefinition([
-        new RadioOptionItem('hasCollection', 'Yes', 'true'),
-        new RadioOptionItem('doesNotHaveCollection', 'No', 'false')
-      ])
-    );
-
     this.filters = [
       issuedDateFilter,
       activityTypeFilter,
       responsibleAgencyFilter,
       sourceSystemFilter,
-      bcmiPublishedStatefilter,
-      hasCollectionsStatefilter];
+      bcmiPublishedStatefilter];
   }
 
   executeSearch(searchPackage) {
@@ -233,6 +225,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
     this.loadingScreenService.setLoadingState(true, 'body');
 
     this.setOrRemoveCollectionAddEditState();
+    this.setOrRemoveRecordAddEditState();
 
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params: Params) => {
       this.queryParams = { ...params };
@@ -351,6 +344,22 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Sets the intial recordState, or removes it from store if it is invalid
+   *
+   *  @memberof MinesRecordListComponent
+   */
+  setOrRemoveRecordAddEditState() {
+    const tempRecordAddEditState = this.storeService.getItem(StateIDs.recordAddEdit);
+    if (tempRecordAddEditState) {
+      if (tempRecordAddEditState.status === StateStatus.invalid) {
+        this.storeService.removeItem(StateIDs.recordAddEdit);
+      } else {
+        this.recordState = tempRecordAddEditState;
+      }
+    }
+  }
+
+  /**
    * Receives messages from the table template component, and performs any corresponding actions.
    *
    * @param {ITableMessage} msg
@@ -439,7 +448,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
    * @memberof MinesRecordsListComponent
    */
   updateCollectionAddEditState(rowData: any, checked: boolean) {
-    if (!rowData || !this.collectionState) {
+    if (!rowData) {
       return;
     }
 
@@ -540,11 +549,49 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       }
     });
 
-    if (this.collectionState.collectionId) {
+    if (this.collectionState && this.collectionState.collectionId) {
       this.router.navigate(['mines', this.mine._id, 'collections', this.collectionState.collectionId, 'edit']);
     } else {
       this.router.navigate(['mines', this.mine._id, 'collections', 'add']);
     }
+  }
+
+  /**
+   * Submit adding records to an existing collection.
+   *
+   * @memberof MinesRecordsListComponent
+   */
+  submitAddToExistingCollection() {
+    // Mark collectionAddEdit status as valid
+    this.storeService.setItem({
+      [StateIDs.collectionAddEdit]: {
+        ...this.storeService.getItem(StateIDs.collectionAddEdit),
+        status: StateStatus.valid
+      }
+    });
+
+    this.router.navigate(['mines', this.mine._id, 'collections']);
+  }
+
+  /**
+   * Submit adding a new record to the system
+   *
+   * @memberof MinesRecordsListComponent
+   */
+  submitAddRecord() {
+    // Mark recordAddEdit status as valid
+    this.storeService.setItem({
+      [StateIDs.recordAddEdit]: {
+        ...this.storeService.getItem(StateIDs.recordAddEdit),
+        status: StateStatus.valid
+      }
+    });
+
+    this.router.navigate(['mines', this.mine._id, 'records', 'add']);
+  }
+
+  anySelectedRecords() {
+    return this.storeService.getItem(StateIDs.collectionAddEdit) ? true : false;
   }
 
   /**

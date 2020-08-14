@@ -1,6 +1,6 @@
-@import 'assets/styles/components/mine.scss';
-@import 'assets/styles/components/add-edit.scss';
-@import 'assets/styles/components/drag-drop.scss';
+@import "assets/styles/components/mine.scss";
+@import "assets/styles/components/add-edit.scss";
+@import "assets/styles/components/drag-drop.scss";
 
 // Copied from table-template.component.scss to help match styling used there.
 .table {
@@ -75,4 +75,8 @@
       border-bottom: 0;
     }
   }
+}
+
+section {
+  margin-left: 10px;
 }

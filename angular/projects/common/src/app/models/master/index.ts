@@ -12,3 +12,8 @@ export * from './warning';
 export * from './construction-plan';
 export * from './management-plan';
 export * from './court-conviction';
+export * from './certificate-amendment';
+export * from './dam-safety-inspection';
+export * from './annual-report';
+export * from './report';
+export * from './correspondence';

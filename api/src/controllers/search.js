@@ -1,11 +1,13 @@
 let defaultLog = require('winston').loggers.get('default');
 let mongoose = require('mongoose');
+let ObjectID = require('mongodb').ObjectID;
 let QueryActions = require('../utils/query-actions');
 let QueryUtils = require('../utils/query-utils');
 let qs = require('qs');
 let mongodb = require('../utils/mongodb');
 let moment = require('moment');
 let fuzzySearch = require('../utils/fuzzySearch');
+const RECORD_TYPE = require('../utils/constants/record-type-enum');
 
 function isEmpty(obj) {
   for (const key in obj) {
@@ -42,6 +44,8 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
           return convertValue(element);
         });
         return { [logicalOperator]: [{ [item]: { $in: arrayExp } }] };
+      } else if (!Array.isArray(entry) && comparisonOperator === '$in') {
+        return { [logicalOperator]: [{ [item]: { $in: [ObjectID(entry)] } }] };
       }
 
       if (Array.isArray(entry) && comparisonOperator !== '$in') {
@@ -57,7 +61,7 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
       }
 
       if (item === 'hasRecords') {
-        return getHasDocumentsExp(entry);
+        return getHasRecordsExp(entry);
       }
 
       if (item === 'isNrcedPublished' && entry === 'true') {
@@ -72,7 +76,7 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
       }
       if (item === 'isBcmiPublished' && entry === 'true') {
         return { isBcmiPublished: true }
-      } else if (item === 'isLngPublished' && entry === 'false') {
+      } else if (item === 'isBcmiPublished' && entry === 'false') {
         return { $or: [{ isBcmiPublished: { $exists: false } }, { isBcmiPublished: false }] }
       }
 
@@ -489,7 +493,7 @@ let searchCollection = async function(
   }
   const collection = db.collection(collectionName);
 
-  return await collection
+  const data = await collection
     .aggregate(aggregation, {
       allowDiskUse: true,
       collation: {
@@ -499,6 +503,50 @@ let searchCollection = async function(
       }
     })
     .toArray();
+
+  // Now that we have a bunch of records, we can find any collections they may be a part of and append them
+  // with MongoDB 4.0 we can replace the code here with a lookup as the last step of the searchResultAggregation.
+  // This currently isnt possible in mongodb 3.6 due to known issues around lookups/expr with ObjectIds being
+  // converted to strings, and not being able to convert them back.
+  // Note: This may also mean the "hasCollection" filter option is effectively impossible to do in 3.6
+  /* future update (after upgrading MongoDB to 4.x)
+  $lookup: {
+        from: 'nrpti',
+        as: 'collections',
+        let: { srcid: '$_id' },
+        pipeline: [
+          {
+            $addFields: {
+              recid: '$$srcid'
+            }
+          },
+          {
+            $match: {
+              _schemaName: 'CollectionBCMI',
+              records: { $elemMatch: { $eq: '$recid' } }
+            }
+          },
+          {
+            $project: {
+              _id: 1,
+              name: 1,
+              records: 1
+          }
+        }
+      ]
+    }
+  */
+
+  if (collectionName === 'nrpti' && data && data[0] && data[0].searchResults && data[0].searchResults.length > 0) {
+    const model = require('mongoose').model(RECORD_TYPE.CollectionBCMI._schemaName);
+
+    for(const record of data[0].searchResults) {
+      const collectionBcmi = await model.find({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName,  records: { $elemMatch: { $eq: new ObjectID(record._id) } } }, '_id name').exec();
+      record['collections'] = collectionBcmi;
+    }
+  }
+
+  return data;
 };
 
 exports.publicGet = async function (args, res, next) {
@@ -645,7 +693,6 @@ const executeQuery = async function (args, res, next) {
 
     QueryActions.sendResponse(res, 200, itemData);
   } else if (dataset[0] === 'Item') {
-    let collectionObj = mongoose.model(args.swagger.params._schemaName.value);
     defaultLog.info('ITEM GET', { _id: args.swagger.params._id.value });
 
     let aggregation = [
@@ -670,7 +717,6 @@ const executeQuery = async function (args, res, next) {
 
     // populate flavours
     populate &&
-      QueryUtils.recordTypes.includes(args.swagger.params._schemaName.value) &&
       aggregation.push({
         $lookup: {
           from: 'nrpti',
@@ -682,7 +728,6 @@ const executeQuery = async function (args, res, next) {
 
     // Populate documents in a record
     populate &&
-      QueryUtils.recordTypes.includes(args.swagger.params._schemaName.value) &&
       aggregation.push({
         $lookup: {
           from: 'nrpti',
@@ -716,7 +761,24 @@ const executeQuery = async function (args, res, next) {
       }
     });
 
-    const data = await collectionObj.aggregate(aggregation);
+    let data = [];
+
+    if (args.swagger.params._schemaName.value) {
+      let collectionObj = mongoose.model(args.swagger.params._schemaName.value);
+      data = await collectionObj.aggregate(aggregation);
+    } else {
+      const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+      const collection = db.collection('nrpti');
+      data = await collection.aggregate(aggregation, {
+        allowDiskUse: true,
+        collation: {
+          locale: 'en_US',
+          alternate: 'shifted',
+          numericOrdering: true
+        }
+      })
+      .toArray();
+    }
 
     QueryActions.sendResponse(res, 200, data);
   } else {

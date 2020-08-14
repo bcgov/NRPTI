@@ -48,8 +48,36 @@ export class SchemaLists {
     'Warning',
     'ConstructionPlan',
     'ManagementPlan',
-    'CourtConviction'
+    'CourtConviction',
+    'AnnualReport',
+    'CertificateAmendment',
+    'Correspondence',
+    'DamSafetyInspection',
+    'Report'
   ];
+
+  public static readonly basicRecordTypeBcmiSubset = [
+    'AnnualReport',
+    'ConstructionPlan',
+    'Correspondence',
+    'DamSafetyInspection',
+    'Inspection',
+    'ManagementPlan',
+    'Order',
+    'Permit',
+    'PermitAmendment',
+    'Report'
+  ];
+
+  public static readonly bcmiRecordTypes = SchemaLists.allBasicRecordTypes.concat([
+    'PermitBCMI',
+    'PermitAmendmentBCMI',
+    'AnnualReportBCMI',
+    'CertificateAmendmentBCMI',
+    'CorrespondenceBCMI',
+    'DamSafetyInspectionBCMI',
+    'ReportBCMI'
+  ]);
 
   // set schema filters
   public static readonly nrcedPublicBasicRecordTypes = [
@@ -60,7 +88,10 @@ export class SchemaLists {
     'AdministrativeSanctionNRCED',
     'TicketNRCED',
     'WarningNRCED',
-    'CourtConvictionNRCED'
+    'CourtConvictionNRCED',
+    'CorrespondenceNRCED',
+    'DamSafetyInspectionNRCED',
+    'ReportNRCED'
   ];
 }
 
@@ -72,6 +103,7 @@ export class SchemaLists {
  */
 export class StateIDs {
   public static readonly collectionAddEdit = 'collectionAddEdit';
+  public static readonly recordAddEdit = 'recordAddEdit';
 }
 
 /**
@@ -155,17 +187,46 @@ export class Picklists {
     AdministrativePenalty: { displayName: 'Administrative Penalty', _schemaName: 'AdministrativePenalty' },
     AdministrativeSanction: { displayName: 'Administrative Sanction', _schemaName: 'AdministrativeSanction' },
     Agreement: { displayName: 'Agreement', _schemaName: 'Agreement' },
+    AnnualReport: { displayName: 'Annual Report', _schemaName: 'AnnualReport' },
     Certificate: { displayName: 'Certificate', _schemaName: 'Certificate' },
+    CertificateAmendment: { displayName: 'Certificate Amendment', _schemaName: 'CertificateAmendment' },
     ConstructionPlan: { displayName: 'Construction Plan', _schemaName: 'ConstructionPlan' },
+    Correspondence: { displayName: 'Correspondence', _schemaName: 'Correspondence' },
     CourtConviction: { displayName: 'Court Conviction', _schemaName: 'CourtConviction' },
+    DamSafetyInspection: { displayName: 'Dam Safety Inspection', _schemaName: 'DamSafetyInspection' },
     Inspection: { displayName: 'Inspection', _schemaName: 'Inspection' },
     ManagementPlan: { displayName: 'Management Plan', _schemaName: 'ManagementPlan' },
     Order: { displayName: 'Order', _schemaName: 'Order' },
     Permit: { displayName: 'Permit', _schemaName: 'Permit' },
+    Report: { displayName: 'Report', _schemaName: 'Report' },
     RestorativeJustice: { displayName: 'Restorative Justice', _schemaName: 'RestorativeJustice' },
     SelfReport: { displayName: 'Self Report', _schemaName: 'SelfReport' },
     Ticket: { displayName: 'Ticket', _schemaName: 'Ticket' },
     Warning: { displayName: 'Warning', _schemaName: 'Warning' }
+  };
+
+  public static readonly bcmiRecordTypePicklist = {
+    // TODO: Commented out sections currently do not have a BCMI flavour. These need to be added
+    // TODO: before they can be created via Mine Record Add/Edit screens.
+    // AdministrativePenalty: { displayName: 'Administrative Penalty', _schemaName: 'AdministrativePenaltyBCMI' },
+    // AdministrativeSanction: { displayName: 'Administrative Sanction', _schemaName: 'AdministrativeSanctionBCMI' },
+    // Agreement: { displayName: 'Agreement', _schemaName: 'AgreementBCMI' },
+    AnnualReport: { displayName: 'Annual Report', _schemaName: 'AnnualReportBCMI' },
+    // Certificate: { displayName: 'Certificate', _schemaName: 'CertificateBCMI' },
+    CertificateAmendment: { displayName: 'Certificate Amendment', _schemaName: 'CertificateAmendmentBCMI' },
+    // ConstructionPlan: { displayName: 'Construction Plan', _schemaName: 'ConstructionPlanBCMI' },
+    Correspondence: { displayName: 'Correspondence', _schemaName: 'CorrespondenceBCMI' },
+    // CourtConviction: { displayName: 'Court Conviction', _schemaName: 'CourtConvictionBCMI' },
+    DamSafetyInspection: { displayName: 'Dam Safety Inspection', _schemaName: 'DamSafetyInspectionBCMI' },
+    Inspection: { displayName: 'Inspection', _schemaName: 'InspectionBCMI' },
+    ManagementPlan: { displayName: 'Management Plan', _schemaName: 'ManagementPlanBCMI' },
+    Order: { displayName: 'Order', _schemaName: 'OrderBCMI' },
+    Permit: { displayName: 'Permit', _schemaName: 'PermitBCMI' },
+    Report: { displayName: 'Report', _schemaName: 'ReportBCMI' },
+    // RestorativeJustice: { displayName: 'Restorative Justice', _schemaName: 'RestorativeJusticeBCMI' },
+    // SelfReport: { displayName: 'Self Report', _schemaName: 'SelfReportBCMI' },
+    // Ticket: { displayName: 'Ticket', _schemaName: 'TicketBCMI' },
+    // Warning: { displayName: 'Warning', _schemaName: 'WarningBCMI' }
   };
 
   public static readonly sourceSystemRefPicklist = [

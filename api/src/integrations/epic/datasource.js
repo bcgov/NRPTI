@@ -1,10 +1,10 @@
 'use strict';
 
 const QS = require('qs');
+const mongoose = require('mongoose');
 const integrationUtils = require('../integration-utils');
 const defaultLog = require('../../utils/logger')('epic-datasource');
 const EPIC_RECORD_TYPE = require('./epic-record-type-enum');
-const moment = require('moment');
 const MAX_PAGE_SIZE = Number.MAX_SAFE_INTEGER;
 
 const EPIC_API_HOSTNAME = process.env.EPIC_API_HOSTNAME || 'eagle-prod.pathfinder.gov.bc.ca';
@@ -142,31 +142,12 @@ class DataSource {
       for (let z = 0; z < epicRecords.length; z++) {
         const theRecord = epicRecords[z];
 
-        if (moment(theRecord.datePosted).isBefore(moment('2020-04-01').toISOString())) {
-          // Check if it's an Order or an Inspection and not part of LNG Canada or Coastal Gas Link
 
-          // Check if !CGL/LNG
-          if (theRecord.project === ('588511c4aaecd9001b825604' || '588511d0aaecd9001b826192')) {
-            // Skip
-            console.log("Skipping LNG Canada/Coastal Gas Link Record > 2020-04-01", theRecord.displayName)
-            continue;
-          }
+        const rec = await recordTypeUtils.transformRecord(theRecord);
 
-          // Check if Inspection or Order and that it is not a Fee Order.
-          const rec = await recordTypeUtils.transformRecord(theRecord);
-          if ((rec._schemaName === "Order") || (rec._schemaName === "Inspection")) {
-            if (!recordTypeUtils.isRecordFeeOrder(rec)) {
-              processRecords.push(theRecord);
-            }
-          }
-          // Skip everything else
-        } else {
-          const rec = await recordTypeUtils.transformRecord(theRecord);
-
-          // Confirm that record is not a Fee Order.
-          if (!recordTypeUtils.isRecordFeeOrder(rec)) {
-            processRecords.push(theRecord);
-          }
+        // Confirm that record is not a Fee Order.
+        if (!recordTypeUtils.isRecordFeeOrder(rec)) {
+          processRecords.push(theRecord);
         }
       }
 
@@ -361,8 +342,25 @@ class DataSource {
     const response = await integrationUtils.getRecords(url);
 
     if (!response || !response[0]) {
-      throw Error('getRecordProject - failed to fetch Project.');
+      // This isn't always a problem, sometimes the projects will not have any documents that satisfy the criteria.
+      throw Error('getRecordProject - failed to fetch Project:' + url.href);
     }
+
+    // Save/update this id's name in our DB
+    const EPICProjectModel = mongoose.model('EPICProject');
+    await EPICProjectModel.findOneAndUpdate(
+      { _id: mongoose.Types.ObjectId(response[0]._id) },
+      {
+        _id: mongoose.Types.ObjectId(response[0]._id),
+        _schemaName: "EPICProject",
+        name: response[0].name,
+        read: ['sysadmin', 'public'],
+        write: ['sysadmin']
+      },
+      {
+        upsert: true
+      }
+    );
 
     return response[0];
   }

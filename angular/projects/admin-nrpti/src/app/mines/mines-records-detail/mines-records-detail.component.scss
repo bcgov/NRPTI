@@ -1,0 +1,13 @@
+@import 'assets/styles/components/mine.scss';
+
+.header-text {
+  margin-left: 0.25rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.truncate {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

@@ -17,7 +17,7 @@ export class ImportTableRowsComponent extends TableRowComponent implements OnIni
     super();
   }
 
-  async ngOnInit() {}
+  ngOnInit() {}
 
   ngOnDestroy() {
     this.ngUnsubscribe.next();

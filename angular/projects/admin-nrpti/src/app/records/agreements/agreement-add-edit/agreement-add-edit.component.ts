@@ -54,7 +54,13 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
           alert('Error: could not load edit agreement.');
           this.router.navigate(['/']);
         }
+      } else {
+        this.currentRecord = {
+          sourceSystemRef: 'nrpti',
+          documents: []
+        };
       }
+
       this.buildForm();
       this.loading = false;
       this._changeDetectionRef.detectChanges();
@@ -89,16 +95,24 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
-        disabled: !this.factoryService.userInLngRole()
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti') &&
+          !this.factoryService.userInLngRole()
       }),
-      dateIssued: new FormControl(
-        (this.currentRecord &&
+      dateIssued: new FormControl({
+        value: (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-          ''
-      ),
-      nationName: new FormControl((this.currentRecord && this.currentRecord.nationName) || ''),
-      projectName: new FormControl((this.currentRecord && this.currentRecord.projectName) || ''),
+          '',
+          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        }),
+      nationName: new FormControl({
+        value: (this.currentRecord && this.currentRecord.nationName) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      projectName: new FormControl({
+        value: (this.currentRecord && this.currentRecord.projectName) || '',
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
 
       // LNG
       lngDescription: new FormControl({
@@ -166,13 +180,21 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.createAgreement(agreement).subscribe(async res => {
+      this.factoryService.writeRecord(agreement, 'agreements', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
+
+        let _id = null;
+        if (Array.isArray(res[0][0].object)) {
+          _id = res[0][0].object.find(r => r._schemaName === 'Agreement')._id;
+        } else {
+          _id = res[0][0].object._id;
+        }
+
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
-          res[0][0].object._id,
+          _id,
           this.factoryService
         );
 
@@ -192,7 +214,7 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
         agreement['AgreementLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.editAgreement(agreement).subscribe(async res => {
+      this.factoryService.writeRecord(agreement, 'agreements', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
         const docResponse = await this.recordUtils.handleDocumentChanges(
           this.links,

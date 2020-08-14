@@ -1,11 +1,11 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { PageSizePickerComponent } from './page-size-picker.component';
 import { TestBedHelper } from '../../../../../common/src/app/spec/spec-utils';
 
 describe('PageSizePickerComponent', () => {
   const testBedHelper = new TestBedHelper<PageSizePickerComponent>(PageSizePickerComponent);
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       declarations: [PageSizePickerComponent]
     }).compileComponents();

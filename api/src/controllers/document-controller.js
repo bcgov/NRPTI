@@ -34,12 +34,26 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
     const collection = db.collection('nrpti');
 
     // fetch master record
+
+    // It's possible to bring down the API if you pass in an invalid record ID, or null.
+    // a post to "/api/record/thisWillBreakTheServer/document" will cause the server to die.
+    // This will still let any 12 char value through (it passes isValid)
+    if (!args.swagger.params.recordId.value || !ObjectID.isValid(args.swagger.params.recordId.value)) {
+      defaultLog.info(`Error creating document: ${args.swagger.params.fileName.value}, Error: Invalid Master Record ID supplied`)
+      return queryActions.sendResponse(
+        res,
+        400,
+        `Error creating document for ${args.swagger.params.fileName.value}. Invalid master record id supplied`
+      );
+    }
+
     const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
 
     // Set mongo document and s3 document roles
     let readRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN];
     const writeRoles = [ROLES.LNGADMIN, ROLES.NRCEDADMIN, ROLES.NRCEDADMIN];
     let s3ACLRole = null;
+
     if (!businessLogicManager.isDocumentConsideredAnonymous(masterRecord)) {
       readRoles.push('public');
       s3ACLRole = 'public-read';
