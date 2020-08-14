@@ -1,13 +1,14 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { PermitDetailComponent } from './permit-detail.component';
 import { TestBedHelper, ActivatedRouteStub } from '../../../../../../common/src/app/spec/spec-utils';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router, ActivatedRoute } from '@angular/router';
-import { GlobalModule } from 'nrpti-angular-components';
+import { GlobalModule, StoreService } from 'nrpti-angular-components';
 import { RecordDetailDirective } from '../../utils/record-detail.directive';
 import { DatePipe } from '@angular/common';
 import { CommonModule } from '../../../../../../common/src/app/common.module';
 import { FactoryService } from '../../../services/factory.service';
+import { EventEmitter } from '@angular/core';
 
 describe('PermitDetailComponent', () => {
   const testBedHelper = new TestBedHelper<PermitDetailComponent>(PermitDetailComponent);
@@ -15,17 +16,24 @@ describe('PermitDetailComponent', () => {
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
-  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole', 'userInNrcedRole']);
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole', 'userInBcmiRole', 'userInNrcedRole']);
   mockFactoryService.userInLngRole.and.returnValue(true);
+  mockFactoryService.userInBcmiRole.and.returnValue(true);
   mockFactoryService.userInNrcedRole.and.returnValue(true);
 
-  beforeEach(async(() => {
+  const mockStoreService = {
+    getItem: () => { },
+    stateChange: new EventEmitter()
+  };
+
+  beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, GlobalModule, CommonModule],
       declarations: [PermitDetailComponent, RecordDetailDirective],
       providers: [
         DatePipe,
         { provide: Router, useValue: mockRouter },
+        { provide: StoreService, useValue: mockStoreService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: FactoryService, useValue: mockFactoryService }
       ]

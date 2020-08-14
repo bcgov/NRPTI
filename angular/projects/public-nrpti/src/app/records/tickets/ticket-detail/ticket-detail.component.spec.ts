@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TicketDetailComponent } from './ticket-detail.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,7 +13,7 @@ describe('TicketDetailComponent', () => {
   const activedRouteStub = new ActivatedRouteStub();
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [GlobalModule, CommonModule],
       declarations: [TicketDetailComponent],

@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { LinkAddEditComponent } from './link-add-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, FormGroup, FormArray, FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -7,7 +7,7 @@ import { TestBedHelper } from '../../../../common/src/app/spec/spec-utils';
 describe('LinkAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<LinkAddEditComponent>(LinkAddEditComponent);
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       declarations: [LinkAddEditComponent],
       imports: [FormsModule, ReactiveFormsModule, NgbModule.forRoot()]

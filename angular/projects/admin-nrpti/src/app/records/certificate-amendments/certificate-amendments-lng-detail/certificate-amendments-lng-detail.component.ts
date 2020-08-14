@@ -31,7 +31,7 @@ export class CertificateAmendmentLNGDetailComponent extends RecordComponent impl
     if (!this.data) {
       this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
         if (!res || !res.records) {
-          alert("Uh-oh, couldn't load Certificate Amendment");
+          alert("Uh-oh, couldn't load Certificate Amendment for LNG Component");
           this.router.navigate(['/']);
           return;
         }

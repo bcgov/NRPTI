@@ -77,31 +77,18 @@
     </section>
 
     <section>
+      <h4>Issued To</h4>
+      <record-association-edit
+        [formGroup]="this.myForm.get('association')"
+        [mines]="this.storeService.getItem('mines')"
+        [epicProjects]="this.storeService.getItem('epicProjects')"
+      >
+      </record-association-edit>
+    </section>
+
+    <section>
       <h4>Location Details</h4>
       <div class="flex-container">
-        <div class="label-pair">
-          <label for="projectName">Project</label>
-          <span class="grey-subtext ml-2">(If Applicable)</span>
-          <div name="projectName" class="radio-group">
-            <div class="radio">
-              <input default type="radio" id="Other" value="" formControlName="projectName" name="projectName" />
-              <label for="Other">Other</label>
-            </div>
-            <div class="radio">
-              <input
-                type="radio"
-                id="coastalGaslink"
-                value="Coastal Gaslink"
-                formControlName="projectName"
-                name="projectName" />
-              <label for="coastalGaslink">Coastal Gaslink</label>
-            </div>
-            <div class="radio">
-              <input type="radio" id="lngCanada" value="LNG Canada" formControlName="projectName" name="projectName" />
-              <label for="lngCanada">LNG Canada</label>
-            </div>
-          </div>
-        </div>
         <div class="label-pair">
           <label for="location">Location Description</label>
           <input name="location" id="location" type="text" formControlName="location" class="form-control" />

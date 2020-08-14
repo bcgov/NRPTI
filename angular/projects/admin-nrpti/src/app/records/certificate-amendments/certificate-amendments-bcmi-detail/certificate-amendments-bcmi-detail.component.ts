@@ -31,7 +31,7 @@ export class CertificateAmendmentBCMIDetailComponent extends RecordComponent imp
     if (!this.data) {
       this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
         if (!res || !res.records) {
-          alert("Uh-oh, couldn't load Certificate amendment");
+          alert("Uh-oh, couldn't load Certificate amendment for BCMI Component");
           this.router.navigate(['/']);
           return;
         }

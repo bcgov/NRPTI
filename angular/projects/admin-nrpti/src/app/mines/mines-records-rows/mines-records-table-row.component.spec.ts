@@ -1,7 +1,7 @@
  // TODO: see if test can be fixed. Using routerLink creates errors with blank paths. See bug: https://github.com/angular/angular/issues/27674
  // TODO: see if test can be fixed. Using routerLink creates errors with blank paths. See bug: https://github.com/angular/angular/issues/27674
 
-// import { async, TestBed } from '@angular/core/testing';
+// import { TestBed } from '@angular/core/testing';
 // import { Router } from '@angular/router';
 // import { RouterTestingModule } from '@angular/router/testing';
 // import { MinesRecordsTableRowComponent } from './mines-records-table-row.component';
@@ -16,7 +16,7 @@
 //   // component constructor mocks
 //   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
 
-//   beforeEach(async(() => {
+//   beforeEach((() => {
 //     TestBed.configureTestingModule({
 //       imports: [RouterTestingModule, SharedModule, CommonModule, GlobalModule],
 //       declarations: [MinesRecordsTableRowComponent],

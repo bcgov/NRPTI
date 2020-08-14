@@ -52,7 +52,7 @@
           </div>
           <div class="grid-item__row">
             <label class="grid-item-name">Source System</label>
-            <span class="grid-item-value">{{ (data && data._master.sourceSystemRef) || '-' }}</span>
+            <span class="grid-item-value">{{ (data && data._master && data._master.sourceSystemRef) || '-' }}</span>
           </div>
         </div>
         <div class="grid-section-border"></div>
