@@ -90,8 +90,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (restorativeJustice._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  restorativeJustice.read = utils.ApplicationRoles.ADMIN_ROLES;
-  restorativeJustice.write = utils.ApplicationRoles.ADMIN_ROLES;
+  restorativeJustice.read = utils.ApplicationAdminRoles;
+  restorativeJustice.write = utils.ApplicationAdminRoles;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -127,8 +127,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   incomingObj.offence && (restorativeJustice.offence = incomingObj.offence);
 
-  restorativeJustice.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  restorativeJustice.issuedTo.write = utils.ApplicationRoles.ADMIN_ROLES;
+  restorativeJustice.issuedTo.read = utils.ApplicationAdminRoles;
+  restorativeJustice.issuedTo.write = utils.ApplicationAdminRoles;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (restorativeJustice.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -199,7 +199,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role.
-  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -220,8 +220,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (restorativeJusticeLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  restorativeJusticeLNG.read = utils.ApplicationRoles.ADMIN_ROLES;
-  restorativeJusticeLNG.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  restorativeJusticeLNG.read = utils.ApplicationAdminRoles;
+  restorativeJusticeLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
   restorativeJusticeLNG.addedBy = args.swagger.params.auth_payload.displayName;
   restorativeJusticeLNG.dateAdded = new Date();
@@ -251,8 +251,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (restorativeJusticeLNG.offence = incomingObj.offence);
 
-  restorativeJusticeLNG.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  restorativeJusticeLNG.issuedTo.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  restorativeJusticeLNG.issuedTo.read = utils.ApplicationAdminRoles;
+  restorativeJusticeLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (restorativeJusticeLNG.issuedTo.type = incomingObj.issuedTo.type);
@@ -331,7 +331,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role.
-  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_NRCED], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -352,8 +352,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (restorativeJusticeNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  restorativeJusticeNRCED.read = utils.ApplicationRoles.ADMIN_ROLES;
-  restorativeJusticeNRCED.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  restorativeJusticeNRCED.read = utils.ApplicationAdminRoles;
+  restorativeJusticeNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
 
   restorativeJusticeNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   restorativeJusticeNRCED.dateAdded = new Date();
@@ -383,8 +383,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (restorativeJusticeNRCED.offence = incomingObj.offence);
 
-  restorativeJusticeNRCED.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  restorativeJusticeNRCED.issuedTo.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  restorativeJusticeNRCED.issuedTo.read = utils.ApplicationAdminRoles;
+  restorativeJusticeNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (restorativeJusticeNRCED.issuedTo.type = incomingObj.issuedTo.type);

@@ -5,7 +5,12 @@ exports.ApplicationRoles = {
   ADMIN_NRCED: 'admin:nrced',
   ADMIN_LNG: 'admin:lng',
   ADMIN_BCMI: 'admin:bcmi',
-}
+};
+
+exports.ApplicationAdminRoles = Object.keys(this.ApplicationRoles).map(role => {
+    return this.ApplicationRoles[role];
+  }
+);
 
 exports.IssuedToEntityTypes = {
   Company: 'Company',

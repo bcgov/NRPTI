@@ -13,8 +13,8 @@ exports.createRecord = async function(args, res, next, incomingObj) {
   
       let newsItem = new Model({
         _schemaName: incomingObj._schemaName,
-        read: [...utils.ApplicationRoles.ADMIN_ROLES, 'public'],
-        write: utils.ApplicationRoles.ADMIN_ROLES,
+        read: [...utils.ApplicationAdminRoles, 'public'],
+        write: utils.ApplicationAdminRoles,
         title: incomingObj.title,
         type: incomingObj.type,
         description: incomingObj.description,

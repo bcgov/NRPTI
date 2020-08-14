@@ -75,8 +75,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (damSafetyInspection.mineGuid = incomingObj.mineGuid);
 
   // set permissions
-  damSafetyInspection.read = utils.ApplicationRoles.ADMIN_ROLES;
-  damSafetyInspection.write = utils.ApplicationRoles.ADMIN_ROLES;
+  damSafetyInspection.read = utils.ApplicationAdminRoles;
+  damSafetyInspection.write = utils.ApplicationAdminRoles;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -90,8 +90,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   // set data
   incomingObj.recordName && (damSafetyInspection.recordName = incomingObj.recordName);
   damSafetyInspection.recordType = 'Dam Safety Inspection';
-  damSafetyInspection.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  damSafetyInspection.issuedTo.write = utils.ApplicationRoles.ADMIN_ROLES;
+  damSafetyInspection.issuedTo.read = utils.ApplicationAdminRoles;
+  damSafetyInspection.issuedTo.write = utils.ApplicationAdminRoles;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (damSafetyInspection.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -171,7 +171,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -188,8 +188,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
     (damSafetyInspectionBCMI.mineGuid = incomingObj.mineGuid);
 
   // set permissions
-  damSafetyInspectionBCMI.read = utils.ApplicationRoles.ADMIN_ROLES;
-  damSafetyInspectionBCMI.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  damSafetyInspectionBCMI.read = utils.ApplicationAdminRoles;
+  damSafetyInspectionBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
@@ -201,8 +201,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   // set data
   incomingObj.recordName && (damSafetyInspectionBCMI.recordName = incomingObj.recordName);
   damSafetyInspectionBCMI.recordType = 'Dam Safety Inspection';
-  damSafetyInspectionBCMI.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  damSafetyInspectionBCMI.issuedTo.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  damSafetyInspectionBCMI.issuedTo.read = utils.ApplicationAdminRoles;
+  damSafetyInspectionBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (damSafetyInspectionBCMI.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -282,7 +282,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
  */
  exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -299,8 +299,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
     (damSafetyInspectionNRCED.mineGuid = incomingObj.mineGuid);
 
   // set permissions
-  damSafetyInspectionNRCED.read = utils.ApplicationRoles.ADMIN_ROLES;
-  damSafetyInspectionNRCED.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  damSafetyInspectionNRCED.read = utils.ApplicationAdminRoles;
+  damSafetyInspectionNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
@@ -312,8 +312,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   // set data
   incomingObj.recordName && (damSafetyInspectionNRCED.recordName = incomingObj.recordName);
   damSafetyInspectionNRCED.recordType = 'DamSafetyInspection';
-  damSafetyInspectionNRCED.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  damSafetyInspectionNRCED.issuedTo.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  damSafetyInspectionNRCED.issuedTo.read = utils.ApplicationAdminRoles;
+  damSafetyInspectionNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (damSafetyInspectionNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

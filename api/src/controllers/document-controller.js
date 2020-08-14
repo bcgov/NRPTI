@@ -279,8 +279,8 @@ async function createURLDocument(fileName, addedBy, url, readRoles = [], writeRo
   document.fileName = fileName;
   document.addedBy = addedBy;
   document.url = url;
-  document.read = [utils.ApplicationRoles.SYSADMIN, ...readRoles];
-  document.write = [utils.ApplicationRoles.SYSADMIN, ...writeRoles];;
+  document.read = [utils.ApplicationRoles.ADMIN, ...readRoles];
+  document.write = [utils.ApplicationRoles.ADMIN, ...writeRoles];;
 
   return document.save();
 }
@@ -307,8 +307,8 @@ async function createS3Document(fileName, fileContent, addedBy, readRoles = [], 
   document.addedBy = addedBy;
   document.url = `https://${process.env.OBJECT_STORE_endpoint_url}/${process.env.OBJECT_STORE_bucket_name}/${document._id}/${fileName}`;
   document.key = s3Key;
-  document.read = [utils.ApplicationRoles.SYSADMIN, ...readRoles];
-  document.write = [utils.ApplicationRoles.SYSADMIN, ...writeRoles];
+  document.read = [utils.ApplicationRoles.ADMIN, ...readRoles];
+  document.write = [utils.ApplicationRoles.ADMIN, ...writeRoles];
 
   const s3Response = await uploadS3Document(s3Key, fileContent, s3ACLRole);
 

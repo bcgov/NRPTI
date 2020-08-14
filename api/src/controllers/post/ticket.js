@@ -91,8 +91,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._sourceRefCorsId && (ticket._sourceRefCorsId = incomingObj._sourceRefCorsId);
 
   // set permissions
-  ticket.read = utils.ApplicationRoles.ADMIN_ROLES;
-  ticket.write = utils.ApplicationRoles.ADMIN_ROLES;
+  ticket.read = utils.ApplicationAdminRoles;
+  ticket.write = utils.ApplicationAdminRoles;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -126,8 +126,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   incomingObj.offence && (ticket.offence = incomingObj.offence);
 
-  ticket.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  ticket.issuedTo.write = utils.ApplicationRoles.ADMIN_ROLES;
+  ticket.issuedTo.read = utils.ApplicationAdminRoles;
+  ticket.issuedTo.write = utils.ApplicationAdminRoles;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (ticket.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -195,7 +195,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -217,8 +217,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj._sourceRefCorsId && (ticketLNG._sourceRefCorsId = incomingObj._sourceRefCorsId);
 
   // set permissions and meta
-  ticketLNG.read = utils.ApplicationRoles.ADMIN_ROLES;
-  ticketLNG.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  ticketLNG.read = utils.ApplicationAdminRoles;
+  ticketLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
   ticketLNG.addedBy = args.swagger.params.auth_payload.displayName;
   ticketLNG.dateAdded = new Date();
@@ -246,8 +246,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (ticketLNG.offence = incomingObj.offence);
 
-  ticketLNG.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  ticketLNG.issuedTo.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  ticketLNG.issuedTo.read = utils.ApplicationAdminRoles;
+  ticketLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (ticketLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -323,7 +323,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_NRCED], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -345,8 +345,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj._sourceRefCorsId && (ticketNRCED._sourceRefCorsId = incomingObj._sourceRefCorsId);
 
   // set permissions and meta
-  ticketNRCED.read = utils.ApplicationRoles.ADMIN_ROLES;
-  ticketNRCED.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  ticketNRCED.read = utils.ApplicationAdminRoles;
+  ticketNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
 
   ticketNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   ticketNRCED.dateAdded = new Date();
@@ -374,8 +374,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (ticketNRCED.offence = incomingObj.offence);
 
-  ticketNRCED.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  ticketNRCED.issuedTo.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  ticketNRCED.issuedTo.read = utils.ApplicationAdminRoles;
+  ticketNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (ticketNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

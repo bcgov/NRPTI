@@ -35,8 +35,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   mine._schemaName = 'MineBCMI';
 
   // set permissions
-  mine.read = utils.ApplicationRoles.ADMIN_ROLES;
-  mine.write = utils.ApplicationRoles.ADMIN_ROLES;
+  mine.read = utils.ApplicationAdminRoles;
+  mine.write = utils.ApplicationAdminRoles;
 
   // set data
   incomingObj.name && (mine.name = incomingObj.name);

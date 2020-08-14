@@ -81,8 +81,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (report.mineGuid = incomingObj.mineGuid);
 
   // set permissions
-  report.read = utils.ApplicationRoles.ADMIN_ROLES;
-  report.write = utils.ApplicationRoles.ADMIN_ROLES;
+  report.read = utils.ApplicationAdminRoles;
+  report.write = utils.ApplicationAdminRoles;
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
@@ -103,8 +103,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   // set data
   incomingObj.recordName && (report.recordName = incomingObj.recordName);
   report.recordType = 'Report';
-  report.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  report.issuedTo.write = utils.ApplicationRoles.ADMIN_ROLES;
+  report.issuedTo.read = utils.ApplicationAdminRoles;
+  report.issuedTo.write = utils.ApplicationAdminRoles;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (report.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -184,7 +184,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -206,8 +206,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   (reportBCMI.mineGuid = incomingObj.mineGuid);
 
   // set permissions
-  reportBCMI.read = utils.ApplicationRoles.ADMIN_ROLES;
-  reportBCMI.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  reportBCMI.read = utils.ApplicationAdminRoles;
+  reportBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
@@ -219,8 +219,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   // set data
   incomingObj.recordName && (reportBCMI.recordName = incomingObj.recordName);
   reportBCMI.recordType = 'Report';
-  reportBCMI.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  reportBCMI.issuedTo.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  reportBCMI.issuedTo.read = utils.ApplicationAdminRoles;
+  reportBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (reportBCMI.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
   incomingObj.issuedTo.companyName &&
@@ -301,7 +301,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
  */
  exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -323,8 +323,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   (reportNRCED.mineGuid = incomingObj.mineGuid);
 
   // set permissions
-  reportNRCED.read = utils.ApplicationRoles.ADMIN_ROLES;
-  reportNRCED.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  reportNRCED.read = utils.ApplicationAdminRoles;
+  reportNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
@@ -336,8 +336,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   // set data
   incomingObj.recordName && (reportNRCED.recordName = incomingObj.recordName);
   reportNRCED.recordType = 'Report';
-  reportNRCED.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  reportNRCED.issuedTo.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  reportNRCED.issuedTo.read = utils.ApplicationAdminRoles;
+  reportNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (reportNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
   incomingObj.issuedTo.companyName &&

@@ -79,8 +79,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (managementPlan._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  managementPlan.read = utils.ApplicationRoles.ADMIN_ROLES;
-  managementPlan.write = utils.ApplicationRoles.ADMIN_ROLES;
+  managementPlan.read = utils.ApplicationAdminRoles;
+  managementPlan.write = utils.ApplicationAdminRoles;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -141,7 +141,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -162,8 +162,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (managementPlanLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  managementPlanLNG.read = utils.ApplicationRoles.ADMIN_ROLES;
-  managementPlanLNG.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  managementPlanLNG.read = utils.ApplicationAdminRoles;
+  managementPlanLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
@@ -224,7 +224,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
  */
  exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -245,8 +245,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (managementPlanBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  managementPlanBCMI.read = utils.ApplicationRoles.ADMIN_ROLES;
-  managementPlanBCMI.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  managementPlanBCMI.read = utils.ApplicationAdminRoles;
+  managementPlanBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {

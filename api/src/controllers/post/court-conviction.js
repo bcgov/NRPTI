@@ -90,8 +90,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (courtConviction._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  courtConviction.read = utils.ApplicationRoles.ADMIN_ROLES;
-  courtConviction.write = utils.ApplicationRoles.ADMIN_ROLES;
+  courtConviction.read = utils.ApplicationAdminRoles;
+  courtConviction.write = utils.ApplicationAdminRoles;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -128,8 +128,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   incomingObj.offence && (courtConviction.offence = incomingObj.offence);
 
-  courtConviction.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  courtConviction.issuedTo.write = utils.ApplicationRoles.ADMIN_ROLES;
+  courtConviction.issuedTo.read = utils.ApplicationAdminRoles;
+  courtConviction.issuedTo.write = utils.ApplicationAdminRoles;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (courtConviction.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -200,7 +200,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -221,8 +221,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (courtConvictionLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  courtConvictionLNG.read = utils.ApplicationRoles.ADMIN_ROLES;
-  courtConvictionLNG.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  courtConvictionLNG.read = utils.ApplicationAdminRoles;
+  courtConvictionLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
   courtConvictionLNG.addedBy = args.swagger.params.auth_payload.displayName;
   courtConvictionLNG.dateAdded = new Date();
@@ -253,8 +253,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (courtConvictionLNG.offence = incomingObj.offence);
 
-  courtConvictionLNG.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  courtConvictionLNG.issuedTo.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  courtConvictionLNG.issuedTo.read = utils.ApplicationAdminRoles;
+  courtConvictionLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (courtConvictionLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -331,7 +331,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.SYSADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -352,8 +352,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (courtConvictionNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  courtConvictionNRCED.read = utils.ApplicationRoles.ADMIN_ROLES;
-  courtConvictionNRCED.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  courtConvictionNRCED.read = utils.ApplicationAdminRoles;
+  courtConvictionNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
 
   courtConvictionNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   courtConvictionNRCED.dateAdded = new Date();
@@ -384,8 +384,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
 
   incomingObj.offence && (courtConvictionNRCED.offence = incomingObj.offence);
 
-  courtConvictionNRCED.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  courtConvictionNRCED.issuedTo.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  courtConvictionNRCED.issuedTo.read = utils.ApplicationAdminRoles;
+  courtConvictionNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (courtConvictionNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

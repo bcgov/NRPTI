@@ -90,8 +90,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (warning._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  warning.read = utils.ApplicationRoles.ADMIN_ROLES;
-  warning.write = utils.ApplicationRoles.ADMIN_ROLES;
+  warning.read = utils.ApplicationAdminRoles;
+  warning.write = utils.ApplicationAdminRoles;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -126,8 +126,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   incomingObj.legislationDescription && (warning.legislationDescription = incomingObj.legislationDescription);
 
-  warning.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  warning.issuedTo.write = utils.ApplicationRoles.ADMIN_ROLES;
+  warning.issuedTo.read = utils.ApplicationAdminRoles;
+  warning.issuedTo.write = utils.ApplicationAdminRoles;
   incomingObj.issuedTo && incomingObj.issuedTo.type && (warning.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -196,7 +196,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -217,8 +217,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (warningLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  warningLNG.read = utils.ApplicationRoles.ADMIN_ROLES;
-  warningLNG.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  warningLNG.read = utils.ApplicationAdminRoles;
+  warningLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
   warningLNG.addedBy = args.swagger.params.auth_payload.displayName;
   warningLNG.dateAdded = new Date();
@@ -247,8 +247,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
   incomingObj.legislationDescription && (warningLNG.legislationDescription = incomingObj.legislationDescription);
 
-  warningLNG.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  warningLNG.issuedTo.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  warningLNG.issuedTo.read = utils.ApplicationAdminRoles;
+  warningLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (warningLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -325,7 +325,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_NRCED], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -346,8 +346,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (warningNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  warningNRCED.read = utils.ApplicationRoles.ADMIN_ROLES;
-  warningNRCED.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  warningNRCED.read = utils.ApplicationAdminRoles;
+  warningNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
 
   warningNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   warningNRCED.dateAdded = new Date();
@@ -378,8 +378,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
 
   incomingObj.legislationDescription && (warningNRCED.legislationDescription = incomingObj.legislationDescription);
 
-  warningNRCED.issuedTo.read = utils.ApplicationRoles.ADMIN_ROLES;
-  warningNRCED.issuedTo.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  warningNRCED.issuedTo.read = utils.ApplicationAdminRoles;
+  warningNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (warningNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

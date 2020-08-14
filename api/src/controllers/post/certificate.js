@@ -78,8 +78,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (certificate._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions
-  certificate.read = utils.ApplicationRoles.ADMIN_ROLES;
-  certificate.write = utils.ApplicationRoles.ADMIN_ROLES;
+  certificate.read = utils.ApplicationAdminRoles;
+  certificate.write = utils.ApplicationAdminRoles;
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -154,7 +154,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   } 
 
@@ -175,8 +175,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     (certificateLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
   // set permissions and meta
-  certificateLNG.read = utils.ApplicationRoles.ADMIN_ROLES;
-  certificateLNG.write = [utils.ApplicationRoles.SYSADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  certificateLNG.read = utils.ApplicationAdminRoles;
+  certificateLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
