@@ -3,13 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Picklists, EpicProjectIds } from '../../../../../../common/src/app/utils/record-constants';
+import { Picklists } from '../../../../../../common/src/app/utils/record-constants';
 import { Legislation } from '../../../../../../common/src/app/models/master/common-models/legislation';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
-import { LoadingScreenService } from 'nrpti-angular-components';
+import { LoadingScreenService, StoreService} from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-permit-add-edit',
@@ -43,6 +43,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     public router: Router,
     private recordUtils: RecordUtils,
     private factoryService: FactoryService,
+    private storeService: StoreService,
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
@@ -196,7 +197,18 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
         disabled: !this.factoryService.userInLngRole()
-      })
+      }),
+
+      association: new FormGroup({
+        _epicProjectId: new FormControl({
+          value: this.currentRecord && this.currentRecord._epicProjectId || null,
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        }),
+        mineGuid: new FormControl({
+          value: this.currentRecord && this.currentRecord.mineGuid || null,
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        })
+      }),
     });
   }
 
@@ -217,12 +229,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
 
   async submit() {
     this.loadingScreenService.setLoadingState(true, 'main');
-    // TODO
-    // _epicProjectId
-    // _sourceRefId
-    // _epicMilestoneId
-    // legislation
-    // projectName
 
     const permit = {};
     this.myForm.controls.recordName.dirty && (permit['recordName'] = this.myForm.controls.recordName.value);
@@ -249,19 +255,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.legislationDescription.dirty &&
       (permit['legislationDescription'] = this.myForm.controls.legislationDescription.value);
 
-    // Project name logic
-    // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
-    if (this.myForm.controls.projectName.dirty) {
-      permit['projectName'] = this.myForm.controls.projectName.value;
-      if (permit['projectName'] === 'LNG Canada') {
-        permit['_epicProjectId'] = EpicProjectIds.lngCanadaId;
-      } else if (permit['projectName'] === 'Coastal Gaslink') {
-        permit['_epicProjectId'] = EpicProjectIds.coastalGaslinkId;
-      } else {
-        permit['_epicProjectId'] = null;
-      }
-    }
-
     this.myForm.controls.location.dirty && (permit['location'] = this.myForm.controls.location.value);
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (permit['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
@@ -278,6 +271,23 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       permit['PermitLNG']['removeRole'] = 'public';
     }
 
+    if (this.myForm.get('association._epicProjectId').dirty) {
+      permit['_epicProjectId'] = this.myForm.get('association._epicProjectId').value;
+    }
+
+    if (this.myForm.get('association.mineGuid').dirty) {
+      permit['mineGuid'] = this.myForm.get('association.mineGuid').value;
+    }
+
+    // Set the friendly name of projectName
+    const epicProjectList = this.storeService.getItem('epicProjects');
+    const filterResult = epicProjectList.filter(item => {
+      return item._id === permit['_epicProjectId'];
+    });
+    if (filterResult && filterResult[0] && filterResult[0].name) {
+      permit['projectName'] = filterResult[0].name;
+    }
+
     if (!this.isEditing) {
       this.factoryService.writeRecord(permit, 'permits', true).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
@@ -288,7 +298,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
           _id = res[0][0].object._id;
         }
 
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -296,7 +306,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records']);
       });
@@ -314,7 +323,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
 
       this.factoryService.writeRecord(permit, 'permits', false).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
+        await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
@@ -322,7 +331,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records', 'permits', this.currentRecord._id, 'detail']);
       });

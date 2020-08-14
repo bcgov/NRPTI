@@ -4,6 +4,7 @@
 exports.audit = require('./audit');
 exports.task = require('./task');
 exports.document = require('./document');
+exports.epicProject = require('./epicProject');
 
 // master
 require('./master');

@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { TableObject, TableTemplateUtils } from 'nrpti-angular-components';
 import { of } from 'rxjs';
@@ -11,7 +11,7 @@ describe('MinesRecordsListResolver', () => {
     'updateTableObjectWithUrlParams'
   ]);
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       providers: [
         { provide: FactoryService, useValue: spyFactoryService },
@@ -20,7 +20,7 @@ describe('MinesRecordsListResolver', () => {
     }).compileComponents();
   }));
 
-  it('should create', async(() => {
+  it('should create', (() => {
     const factoryService = TestBed.get(FactoryService);
     const tableTemplateUtils = TestBed.get(TableTemplateUtils);
 
@@ -52,7 +52,7 @@ describe('MinesRecordsListResolver', () => {
         queryParamMap: null
       };
 
-      beforeAll(async(() => {
+      beforeAll((() => {
         factoryServiceSpy = TestBed.get(FactoryService);
         tableTemplateUtilsSpy = TestBed.get(TableTemplateUtils);
 
@@ -130,7 +130,7 @@ describe('MinesRecordsListResolver', () => {
         queryParamMap: null
       };
 
-      beforeAll(async(() => {
+      beforeAll((() => {
         factoryServiceSpy = TestBed.get(FactoryService);
         tableTemplateUtilsSpy = TestBed.get(TableTemplateUtils);
 

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DocumentEditComponent } from './document-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FileUploadComponent } from '../file-upload/file-upload.component';
@@ -8,7 +8,7 @@ describe('DocumentEditComponent', () => {
   let component: DocumentEditComponent;
   let fixture: ComponentFixture<DocumentEditComponent>;
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       declarations: [DocumentEditComponent, FileUploadComponent],
       imports: [FormsModule, NgbModule]

@@ -1,4 +1,4 @@
-import { Output, EventEmitter } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 
 /**
  * An object containing a single key value pair.
@@ -11,7 +11,7 @@ export interface IStateItem {
 }
 
 export class StoreService {
-  @Output() stateChange: EventEmitter<object> = new EventEmitter();
+  public stateChange: EventEmitter<object> = new EventEmitter();
 
   private currentState: object;
 

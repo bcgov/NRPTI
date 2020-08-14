@@ -1,6 +1,7 @@
 'use strict';
 
 const QS = require('qs');
+const mongoose = require('mongoose');
 const integrationUtils = require('../integration-utils');
 const defaultLog = require('../../utils/logger')('epic-datasource');
 const EPIC_RECORD_TYPE = require('./epic-record-type-enum');
@@ -341,8 +342,25 @@ class DataSource {
     const response = await integrationUtils.getRecords(url);
 
     if (!response || !response[0]) {
-      throw Error('getRecordProject - failed to fetch Project.');
+      // This isn't always a problem, sometimes the projects will not have any documents that satisfy the criteria.
+      throw Error('getRecordProject - failed to fetch Project:' + url.href);
     }
+
+    // Save/update this id's name in our DB
+    const EPICProjectModel = mongoose.model('EPICProject');
+    await EPICProjectModel.findOneAndUpdate(
+      { _id: mongoose.Types.ObjectId(response[0]._id) },
+      {
+        _id: mongoose.Types.ObjectId(response[0]._id),
+        _schemaName: "EPICProject",
+        name: response[0].name,
+        read: ['sysadmin', 'public'],
+        write: ['sysadmin']
+      },
+      {
+        upsert: true
+      }
+    );
 
     return response[0];
   }

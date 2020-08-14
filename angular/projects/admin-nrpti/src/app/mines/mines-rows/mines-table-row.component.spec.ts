@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MinesTableRowComponent } from './mines-table-row.component';
@@ -12,7 +12,7 @@ describe('MinesTableRowComponent', () => {
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, CommonModule, GlobalModule],
       declarations: [MinesTableRowComponent],

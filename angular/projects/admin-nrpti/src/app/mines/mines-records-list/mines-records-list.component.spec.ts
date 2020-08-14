@@ -1,6 +1,6 @@
  // TODO: see if test can be fixed. Using routerLink creates errors with blank paths. See bug: https://github.com/angular/angular/issues/27674
 
-// import { async, TestBed } from '@angular/core/testing';
+// import { TestBed } from '@angular/core/testing';
 // import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // import { ActivatedRoute } from '@angular/router';
 // import { RouterTestingModule } from '@angular/router/testing';
@@ -25,7 +25,7 @@
 //     setLoadingState: () => {}
 //   };
 
-//   beforeEach(async(() => {
+//   beforeEach((() => {
 //     TestBed.configureTestingModule({
 //       imports: [
 //         RouterTestingModule,

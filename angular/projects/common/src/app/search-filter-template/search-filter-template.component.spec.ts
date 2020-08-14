@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatAutocompleteModule, MatTooltipModule, MatSelectModule, MatCheckboxModule, MatSlideToggleModule, MatChipsModule, MatIconModule } from '@angular/material';
 import { TestBedHelper } from '../spec/spec-utils';
@@ -11,7 +11,7 @@ import { CallbackPipe } from '../autocomplete-multi-select/callback.pipe';
 describe('SearchFilterTemplateComponent', () => {
   const testBedHelper = new TestBedHelper<SearchFilterTemplateComponent>(SearchFilterTemplateComponent);
 
-  beforeEach(async(() => {
+  beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
