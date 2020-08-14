@@ -7,6 +7,7 @@ let qs = require('qs');
 let mongodb = require('../utils/mongodb');
 let moment = require('moment');
 let fuzzySearch = require('../utils/fuzzySearch');
+const RECORD_TYPE = require('../utils/constants/record-type-enum');
 
 function isEmpty(obj) {
   for (const key in obj) {
@@ -492,7 +493,7 @@ let searchCollection = async function(
   }
   const collection = db.collection(collectionName);
 
-  return await collection
+  const data = await collection
     .aggregate(aggregation, {
       allowDiskUse: true,
       collation: {
@@ -502,6 +503,50 @@ let searchCollection = async function(
       }
     })
     .toArray();
+
+  // Now that we have a bunch of records, we can find any collections they may be a part of and append them
+  // with MongoDB 4.0 we can replace the code here with a lookup as the last step of the searchResultAggregation.
+  // This currently isnt possible in mongodb 3.6 due to known issues around lookups/expr with ObjectIds being
+  // converted to strings, and not being able to convert them back.
+  // Note: This may also mean the "hasCollection" filter option is effectively impossible to do in 3.6
+  /* future update (after upgrading MongoDB to 4.x)
+  $lookup: {
+        from: 'nrpti',
+        as: 'collections',
+        let: { srcid: '$_id' },
+        pipeline: [
+          {
+            $addFields: {
+              recid: '$$srcid'
+            }
+          },
+          {
+            $match: {
+              _schemaName: 'CollectionBCMI',
+              records: { $elemMatch: { $eq: '$recid' } }
+            }
+          },
+          {
+            $project: {
+              _id: 1,
+              name: 1,
+              records: 1
+          }
+        }
+      ]
+    }
+  */
+
+  if (collectionName === 'nrpti' && data && data[0] && data[0].searchResults && data[0].searchResults.length > 0) {
+    const model = require('mongoose').model(RECORD_TYPE.CollectionBCMI._schemaName);
+
+    for(const record of data[0].searchResults) {
+      const collectionBcmi = await model.find({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName,  records: { $elemMatch: { $eq: new ObjectID(record._id) } } }, '_id name').exec();
+      record['collections'] = collectionBcmi;
+    }
+  }
+
+  return data;
 };
 
 exports.publicGet = async function (args, res, next) {
