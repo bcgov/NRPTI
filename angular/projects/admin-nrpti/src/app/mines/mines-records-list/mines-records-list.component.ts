@@ -85,7 +85,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
     },
     {
       name: 'Published',
-      value: 'isBcmiPubished',
+      value: 'isBcmiPublished',
       width: 'col-1'
     },
     {

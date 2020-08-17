@@ -10,14 +10,12 @@
 <td scope="row" data-label="Collections" class="col-2 truncate">{{ rowData.collections && rowData.collections[0] ? rowData.collections[0].name : '-' }}</td>
 <td scope="row" data-label="Date" class="col-1 truncate">{{ getAttributeValue('dateIssued') }}</td>
 <td scope="row" data-label="Published" class="col-1 d-xl-flex">
-  <!-- TODO this publish flag needs to be updated based on BCMI publish (collections?) logic when ready.  Currently, -->
-  <!-- this will always show `unpublished` as the `public` role will never be found in the master read array -->
   <div *ngIf="isPublished(); then published; else unpublished"></div>
-  <ng-template #published>
+  <ng-template #published class="test">
     <i class="material-icons published-green">check_circle</i>
-    <span class="publish-label pl-1 published-green overflow-hidden truncate">Published</span>
+    <span class="publish-label pl-1 overflow-hidden truncate published-green">Published</span>
   </ng-template>
-  <ng-template #unpublished>
+  <ng-template #unpublished class="test">
     <i class="material-icons">cancel</i>
     <span class="publish-label pl-1 overflow-hidden truncate">Unpublished</span>
   </ng-template>
