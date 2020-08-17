@@ -7,6 +7,10 @@
   }
 }
 
+.published-green {
+  color: $mine-published-font-color;
+}
+
 // hide dropdown caret
 .dropdown-toggle::after {
   display: none;
