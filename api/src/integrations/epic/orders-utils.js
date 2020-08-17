@@ -40,8 +40,7 @@ class Orders extends BaseRecordUtils {
         break;
       case 2018:
         legislation['act'] = 'Environmental Assessment Act';
-        legislation['section'] = '56';
-        legislation['subSection'] = '1';
+        legislation['section'] = '53';
         break;
       default:
         legislation['act'] = (epicRecord.project && epicRecord.project.legislation) || '';
