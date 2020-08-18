@@ -8,7 +8,7 @@ import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import { TaskService, ITaskParams } from './task.service';
 import { DocumentService } from './document.service';
-import { ApplicationRoles } from '../../../../../../api/src/utils/constants/misc';
+import { Constants } from '../utils/constants/misc';
 /**
  * Facade service for all admin-nrpti services.
  *
@@ -160,7 +160,7 @@ export class FactoryService {
         // to handle any case issues with role or the scopes, convert them
         // all to lower case first
         const userRoles = jwt.realm_access.roles.map((userRole: string) => userRole.toLowerCase());
-        return userRoles.includes(ApplicationRoles.ADMIN) || userRoles.includes(role.toLowerCase());
+        return userRoles.includes(Constants.ApplicationRoles.ADMIN) || userRoles.includes(role.toLowerCase());
       }
     }
 
@@ -168,15 +168,15 @@ export class FactoryService {
   }
 
   userInLngRole() {
-    return this.userInRole(ApplicationRoles.ADMIN_LNG);
+    return this.userInRole(Constants.ApplicationRoles.ADMIN_LNG);
   }
 
   userInBcmiRole() {
-    return this.userInRole(ApplicationRoles.ADMIN_BCMI);
+    return this.userInRole(Constants.ApplicationRoles.ADMIN_BCMI);
   }
 
   userInNrcedRole() {
-    return this.userInRole(ApplicationRoles.ADMIN_NRCED);
+    return this.userInRole(Constants.ApplicationRoles.ADMIN_NRCED);
   }
 
   /**
