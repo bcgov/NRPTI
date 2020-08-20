@@ -275,13 +275,17 @@ class CoreDataSource {
         if (validPermit) {
           // we already have a valid permit. replace validPermit with whichever
           // permit is more recent and carry on.
-          const validPermitNo = validPermit.permit_no.split('-');
-          const proposedPermitNo = permit.permit_no.split('-');
+          try {
+            const validPermitNo = validPermit.permit_no.split('-');
+            const proposedPermitNo = permit.permit_no.split('-');
 
-          validPermit = Number.parseInt(validPermitNo[validPermitNo.length - 1]) >
-                        Number.parseInt(proposedPermitNo[proposedPermitNo.length - 1])
-                        ? validPermit
-                        : permit;
+            validPermit = Number.parseInt(validPermitNo[validPermitNo.length - 1]) >
+                          Number.parseInt(proposedPermitNo[proposedPermitNo.length - 1])
+                          ? validPermit
+                          : permit;
+          } catch(error) {
+            throw new Error(`Failed to parse permit numbers [ ${validPermitNo} / ${proposedPermitNo} ]`);
+          }
         } else {
           validPermit = permit;
         }
