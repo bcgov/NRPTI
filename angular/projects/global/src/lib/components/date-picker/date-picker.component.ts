@@ -25,6 +25,7 @@ export class DatePickerComponent implements OnInit, OnChanges, OnDestroy {
   @Input() minDate: Date = null;
   @Input() maxDate: Date = null;
   @Input() reset: EventEmitter<any>;
+  @Input() required = false;
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
@@ -34,7 +35,7 @@ export class DatePickerComponent implements OnInit, OnChanges, OnDestroy {
 
   public loading = true;
 
-  constructor(private _changeDetectionRef: ChangeDetectorRef, private utils: Utils) {}
+  constructor(private _changeDetectionRef: ChangeDetectorRef, private utils: Utils) { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.minDate && changes.minDate.currentValue) {
@@ -58,15 +59,21 @@ export class DatePickerComponent implements OnInit, OnChanges, OnDestroy {
 
   onDateChange(ngbDate: NgbDateStruct) {
     this.control.setValue(ngbDate);
+    this.control.markAsDirty();
   }
 
   clearDate() {
     this.ngbDate = null;
-    this.control.reset();
+    this.control.setValue(null);
+    this.control.markAsDirty();
   }
 
   public isValidDate(date: NgbDateStruct): boolean {
-    return date && !isNaN(date.year) && !isNaN(date.month) && !isNaN(date.day);
+    if (date === null && !this.required) {
+      return true;
+    } else {
+      return date && !isNaN(date.year) && !isNaN(date.month) && !isNaN(date.day);
+    }
   }
 
   ngOnDestroy() {
