@@ -1,5 +1,4 @@
 import { ActivatedRoute } from '@angular/router';
-import { IBreadcrumb } from '../../../../../global/src/lib/components/breadcrumb/breadcrumb.component';
 
 export class Constants {
   public static readonly ApplicationRoles: any = {
@@ -10,15 +9,14 @@ export class Constants {
   };
 }
 export class MiscUtils {
-  public static updateBreadcrumbLabel(mine: any, route: ActivatedRoute, url: string = '',
-    breadcrumbs: IBreadcrumb[] = []): IBreadcrumb[] {
+  public static updateBreadcrumbLabel(mine: any, route: ActivatedRoute, url: string = '') {
     const ROUTE_DATA_BREADCRUMB = 'breadcrumb';
     // get the child routes
     const children: ActivatedRoute[] = route.children;
 
     // return if there are no more children
     if (children.length === 0) {
-      return breadcrumbs;
+      return;
     }
 
     // iterate over each children
@@ -30,12 +28,12 @@ export class MiscUtils {
 
       // verify the custom data property "breadcrumb" is specified on the route
       if (!child.snapshot.data.hasOwnProperty(ROUTE_DATA_BREADCRUMB)) {
-        return this.updateBreadcrumbLabel(mine, child, url, breadcrumbs);
+        return this.updateBreadcrumbLabel(mine, child, url);
       }
 
       // skip if breadcrumb data is null
       if (!child.snapshot.data[ROUTE_DATA_BREADCRUMB]) {
-        return this.updateBreadcrumbLabel(mine, child, url, breadcrumbs);
+        return this.updateBreadcrumbLabel(mine, child, url);
       }
 
       // get the route's URL segment
@@ -44,14 +42,6 @@ export class MiscUtils {
       // append route URL to URL
       url += `/${routeURL}`;
 
-      // add breadcrumb
-      const breadcrumb: IBreadcrumb = {
-        label: child.snapshot.data[ROUTE_DATA_BREADCRUMB],
-        params: child.snapshot.params,
-        url: url
-      };
-      breadcrumbs.push(breadcrumb);
-
       // If this is the Mine Details breadcrumb, replace the name with the current
       // mine name, otherwise ignore and continue the recursive check
       if (child.snapshot.data[ROUTE_DATA_BREADCRUMB] === 'Mine Details') {
@@ -59,7 +49,7 @@ export class MiscUtils {
       }
 
       // recursive
-      return this.updateBreadcrumbLabel(mine, child, url, breadcrumbs);
+      return this.updateBreadcrumbLabel(mine, child, url);
     }
   }
 }
