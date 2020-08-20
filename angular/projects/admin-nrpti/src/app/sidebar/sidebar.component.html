@@ -17,19 +17,28 @@
   <section class="mine-nav" *ngIf="showMineDetails">
     <a
       [ngClass]="{ active: mainRoute === 'mines' && currentMenu === 'detail' }"
-      class="dropdown-btn "
+      class="dropdown-btn"
       [routerLink]="['mines', currentMineId, 'detail']"
     >
       Mine Details
     </a>
     <a
-      [ngClass]="{ active: showMineDetails && (currentMenu === 'records' || currentMenu === 'collections') }"
+      [ngClass]="{ active: showMineDetails && currentMenu === 'records' }"
       class="mines-menu"
       id="mines-content"
       [routerLink]="['mines', currentMineId, 'records']"
     >
-      <i class="material-icons mr-3">description</i>
-      Mine Content
+      <em class="material-icons mr-3 mines-menu-icon">description</em>
+      Mine Records
+    </a>
+    <a
+      [ngClass]="{ active: showMineDetails && currentMenu === 'collections' }"
+      class="mines-menu"
+      id="mines-content"
+      [routerLink]="['mines', currentMineId, 'collections']"
+    >
+      <em class="material-icons mr-3 mines-menu-icon">collections_bookmark</em>
+      Mine Collections
     </a>
   </section>
   <section class="full-nav">

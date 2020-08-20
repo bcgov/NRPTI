@@ -64,15 +64,12 @@
           <input name="collectionName" id="collectionName" type="text" formControlName="collectionName"
             class="form-control" />
         </div>
-        <div class="label-pair">
+        <div class="label-pair" *ngIf="myForm && myForm.controls.collectionDate">
           <label for="collectionDate">Date</label>
-          <div class="input-group">
-            <input class="form-control" placeholder="yyyy-mm-dd" name="dp" formControlName="collectionDate"
-              ngbDatepicker #d="ngbDatepicker" />
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
-            </div>
-          </div>
+          <lib-date-picker
+            [control]="myForm.controls.collectionDate"
+            [isValidate]="true">
+          </lib-date-picker>
         </div>
         <div class="label-pair">
           <label for="collectionType">Collection Type</label>
@@ -201,16 +198,14 @@
                     class="btn px-2"
                     [matMenuTriggerFor]="menu"
                     title="More options"
-                    aria-label="More options menu"
-                  >
+                    aria-label="More options menu">
                     <i class="material-icons">more_vert</i>
                   </button>
                   <mat-menu #menu="matMenu">
                     <button
                       mat-menu-item
                       (click)="removeRecordFromCollection(idx)"
-                      title="Remove record from collection"
-                    >
+                      title="Remove record from collection">
                       Remove Record
                     </button>
                   </mat-menu>
