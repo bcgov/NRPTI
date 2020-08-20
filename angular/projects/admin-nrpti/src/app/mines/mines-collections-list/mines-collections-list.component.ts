@@ -24,6 +24,7 @@ import {
 } from '../../../../../common/src/app/search-filter-template/filter-object';
 import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
 import { StateIDs, StateStatus, Picklists } from '../../../../../common/src/app/utils/record-constants';
+import { MiscUtils } from '../../utils/constants/misc';
 
 
 /**
@@ -194,6 +195,8 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
         }
 
         this.mine = res.mine[0] && res.mine[0].data && new Mine(res.mine[0].data);
+
+        MiscUtils.updateBreadcrumbLabel(this.mine, this.route.root);
 
         const collections =
           (res.collections[0] && res.collections[0].data && res.collections[0].data.searchResults) || [];
