@@ -392,7 +392,10 @@ class NrisDataSource {
       existingRecord._flavourRecords.forEach(flavourRecord => {
         updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
       });
-
+      // document ids need to be copied over as well
+      existingRecord.documents.forEach(doc => {
+        updateObj.documents.push(doc);
+      })
       return await RecordController.processPutRequest(
         { swagger: { params: { auth_payload: this.auth_payload } } },
         null,
