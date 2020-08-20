@@ -9,7 +9,7 @@ export class Constants {
   };
 }
 export class MiscUtils {
-  public static updateBreadcrumbLabel(mine: any, route: ActivatedRoute, url: string = '') {
+  public static updateBreadcrumbLabel(mine: any, route: ActivatedRoute) {
     const ROUTE_DATA_BREADCRUMB = 'breadcrumb';
     // get the child routes
     const children: ActivatedRoute[] = route.children;
@@ -28,19 +28,13 @@ export class MiscUtils {
 
       // verify the custom data property "breadcrumb" is specified on the route
       if (!child.snapshot.data.hasOwnProperty(ROUTE_DATA_BREADCRUMB)) {
-        return this.updateBreadcrumbLabel(mine, child, url);
+        return this.updateBreadcrumbLabel(mine, child);
       }
 
       // skip if breadcrumb data is null
       if (!child.snapshot.data[ROUTE_DATA_BREADCRUMB]) {
-        return this.updateBreadcrumbLabel(mine, child, url);
+        return this.updateBreadcrumbLabel(mine, child);
       }
-
-      // get the route's URL segment
-      const routeURL: string = child.snapshot.url.map(segment => segment.path).join('/');
-
-      // append route URL to URL
-      url += `/${routeURL}`;
 
       // If this is the Mine Details breadcrumb, replace the name with the current
       // mine name, otherwise ignore and continue the recursive check
@@ -49,7 +43,7 @@ export class MiscUtils {
       }
 
       // recursive
-      return this.updateBreadcrumbLabel(mine, child, url);
+      return this.updateBreadcrumbLabel(mine, child);
     }
   }
 }
