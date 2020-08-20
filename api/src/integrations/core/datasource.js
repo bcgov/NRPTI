@@ -16,7 +16,7 @@ const CORE_CLIENT_ID = process.env.CORE_CLIENT_ID || null;
 const CORE_CLIENT_SECRET = process.env.CORE_CLIENT_SECRET || null;
 const CORE_GRANT_TYPE = process.env.CORE_GRANT_TYPE || null;
 
-const CORE_API_HOST = process.env.CORE_API_HOST|| 'https://minesdigitalservices.pathfinder.gov.bc.ca';
+const CORE_API_HOST = process.env.CORE_API_HOST|| 'https://minesdigitalservices.gov.bc.ca';
 const CORE_API_PATH_MINES = process.env.CORE_API_PATH_MINES || '/api/mines';
 const CORE_API_PATH_COMMODITIES = process.env.CORE_API_PATH_COMMODITIES || '/api/mines/commodity-codes';
 
@@ -66,7 +66,7 @@ class CoreDataSource {
    * Sample Record Data for reference
       {
         _schemaName: 'MineBCMI',
-        _sourceRefId: 'abc123',	
+        _sourceRefId: 'abc123',
         name: 'Test Mine',
         permitNumber: 'M-209',
         mine_status: ['Abandoned'],
@@ -84,7 +84,7 @@ class CoreDataSource {
     try {
       const coreRecords = await this.getAllRecordData();
 
-      // Failed to find any epic records
+      // Failed to find any core records
       if (!coreRecords || !coreRecords.length) {
         defaultLog.error('updateRecords - no records found to update');
         return;
@@ -115,7 +115,7 @@ class CoreDataSource {
 
   /**
    * Gets all mine records. Calls multiple API endpoints and consolidates the results.
-   * 
+   *
    * @returns {Array<object>} Mine records with complete data
    * @memberof CoreDataSource
    */
@@ -211,14 +211,14 @@ class CoreDataSource {
         // Update permit.
         await this.updateMinePermit(permitUtils, existingRecord);
         savedRecord = await mineUtils.updateRecord(nrptiRecord, existingRecord);
-      } else {   
+      } else {
         // Create the permits.
         const permitInfo = await this.createMinePermit(permitUtils, nrptiRecord);
 
         // Add permit info to the mine record.
         const recordWithPermits = mineUtils.addPermitToRecord(nrptiRecord, permitInfo);
         savedRecord = await mineUtils.createRecord(recordWithPermits);
-        
+
         // Create a new collections if possible.
         await this.createCollections(collectionUtils, permitInfo.permit, savedRecord[0].object[0]);
       }
@@ -244,7 +244,7 @@ class CoreDataSource {
    *  - Must not be exploratory
    *  - Must not be historical
    * .
-   * 
+   *
    * @param {object} nrptiRecord NRPTI record
    * @returns {object} Valid permit.
    * @memberof CoreDataSource
@@ -266,24 +266,23 @@ class CoreDataSource {
     for (const permit of nonExploratoryPermits) {
       // Confirm that the most recent amendment is not historical, which is always the first index.
       // If 'null' then it is considered valid.
-      if (permit.permit_amendments.length && !permit.permit_amendments[0].authorization_end_date) {
-        // There should only be a single record. If there is more then we do not want to continue processing.
+      // Otherwise, if the status is O, it's valid. (date 9999 check removed)
+      if ((permit.permit_amendments.length &&
+          !permit.permit_amendments[0].authorization_end_date) ||
+          permit.permit_status_code === 'O') {
+        // There should only be a single record. If there is more then we need to identify the most
+        // recent permit as the official valid permit
         if (validPermit) {
-          throw new Error(`More than one valid permit found for mine ${nrptiRecord._sourceRefId}`);
-        }
+          // we already have a valid permit. replace validPermit with whichever
+          // permit is more recent and carry on.
+          const validPermitNo = validPermit.permit_no.split('-');
+          const proposedPermitNo = permit.permit_no.split('-');
 
-        validPermit = permit;
-      }
-      else {
-        // If it is not '9999' it is considered valid.
-        const authDate = new Date(permit.permit_amendments[0].authorization_end_date);
-
-        if (authDate.getFullYear() !== 9999) {
-          // There should only be a single record. If there is more then we do not want to continue processing.
-          if (validPermit) {
-            throw new Error(`More than one valid permit found for mine ${nrptiRecord._sourceRefId}`);
-          }
-
+          validPermit = Number.parseInt(validPermitNo[validPermitNo.length - 1]) >
+                        Number.parseInt(proposedPermitNo[proposedPermitNo.length - 1])
+                        ? validPermit
+                        : permit;
+        } else {
           validPermit = permit;
         }
       }
@@ -294,7 +293,7 @@ class CoreDataSource {
 
   /**
    * Creates a new Mine Permit record and any associated collections.
-   * 
+   *
    * @param {object} permitUtils Mine Permit utilities.
    * @param {*} nrptiRecord Transformed Core record.
    * @returns {object} Permit number and Permitee
@@ -333,7 +332,7 @@ class CoreDataSource {
 
   /**
    * Updates the Mine Permit records.
-   * 
+   *
    * @param {object} permitUtils Mine Permit utilities
    * @param {Mine} mineRecord Existing Mine record
    * @returns {boolean} Indication of success or not
@@ -376,7 +375,7 @@ class CoreDataSource {
 
   /**
    * Gets all verified mines from Core.
-   * 
+   *
    * @returns {object[]} Verified Core mines.
    * @memberof CoreDataSource
    */
@@ -388,13 +387,13 @@ class CoreDataSource {
 
       // The Core API can not return all data in a single call. Must fetch data in batches.
       do {
-        const queryParams = { 
-          per_page: CORE_API_BATCH_SIZE, 
+        const queryParams = {
+          per_page: CORE_API_BATCH_SIZE,
           page: currentPage,
-          major: true 
+          major: true
         };
         const url = getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_MINES, queryParams);
-  
+
         // Get Core records
         const data = await integrationUtils.getRecords(url, getAuthHeader(this.client_token));
         // Get records from response and add to total.
@@ -419,7 +418,7 @@ class CoreDataSource {
 
   /**
    * Adds lat/long details to each Core record.
-   * 
+   *
    * @param {object[]} coreRecords Records from Core API that have not been transformed.
    * @returns {object[]} Records with details added.
    * @memberof CoreDataSource
@@ -436,7 +435,7 @@ class CoreDataSource {
 
         const latitude = mineDetails.mine_location && mineDetails.mine_location.latitude || 0.00;
         const longitude = mineDetails.mine_location && mineDetails.mine_location.longitude || 0.00;
-  
+
 
         completeRecords.push({
           ...coreRecords[i],
