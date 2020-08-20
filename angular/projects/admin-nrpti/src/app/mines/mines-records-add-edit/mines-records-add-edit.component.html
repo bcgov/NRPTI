@@ -29,8 +29,7 @@
               (change)="togglePublish($event)"
               [checked]="myForm.get('recordPublish').value"
               title="{{ myForm.get('recordPublish').value ? 'Unpublish record' : 'Publish record' }}"
-              ngDefaultControl
-            >
+              ngDefaultControl>
               {{ (myForm.get('recordPublish').value && 'Published') || 'Unpublished' }}
             </mat-slide-toggle>
           </div>
@@ -43,8 +42,7 @@
               class="btn btn-primary"
               type="submit"
               (click)="submit()"
-              title="Update record"
-            >
+              title="Update record">
               <i class="material-icons mr-1">
                 save
               </i>
@@ -76,24 +74,14 @@
             id="recordName"
             type="text"
             formControlName="recordName"
-            class="form-control"
-          />
+            class="form-control" />
         </div>
-        <div class="label-pair">
-          <label for="recordDate">Date</label>
-          <div class="input-group">
-            <input
-              class="form-control"
-              placeholder="yyyy-mm-dd"
-              name="dp"
-              formControlName="recordDate"
-              ngbDatepicker
-              #d="ngbDatepicker"
-            />
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
-            </div>
-          </div>
+        <div class="label-pair" *ngIf="myForm && myForm.controls.recordDate">
+          <label for="recordDate">Date Issued</label>
+          <lib-date-picker
+            [control]="myForm.controls.recordDate"
+            [isValidate]="true">
+          </lib-date-picker>
         </div>
         <div class="label-pair">
           <label for="recordType">Record Type</label>

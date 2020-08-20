@@ -30,15 +30,12 @@
             </option>
           </select>
         </div>
-        <div class="label-pair">
+        <div class="label-pair" *ngIf="myForm && myForm.controls.dateIssued">
           <label for="dateIssued">Date</label>
-          <div class="input-group">
-            <input class="form-control" placeholder="yyyy-mm-dd" name="dp" formControlName="dateIssued" ngbDatepicker
-              #d="ngbDatepicker" />
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
-            </div>
-          </div>
+          <lib-date-picker
+            [control]="myForm.controls.dateIssued"
+            [isValidate]="true">
+          </lib-date-picker>
         </div>
         <div class="label-pair">
           <label for="recordType">Type <span class="red-asterisk">*</span></label>

@@ -10,22 +10,14 @@
     </div>
   </div>
   <hr>
-    <form *ngIf="!loading" [formGroup]="myForm" novalidate>
+  <form *ngIf="!loading" [formGroup]="myForm" novalidate>
     <div class="row m-1">
-      <div class="label-pair mr-5 mt-4">
+      <div class="label-pair mr-5 mt-4" *ngIf="myForm && myForm.controls.date">
         <label class="font-weight-bold" for="date">Date:</label>
-        <div class="input-group">
-          <input
-            class="form-control"
-            placeholder="yyyy-mm-dd"
-            name="dp"
-            formControlName="date"
-            ngbDatepicker
-            #d="ngbDatepicker" />
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
-          </div>
-        </div>
+        <lib-date-picker
+          [control]="myForm.controls.date"
+          [isValidate]="true">
+        </lib-date-picker>
       </div>
       <div class="label-pair mr-5 mt-4">
         <label for="type" class="font-weight-bold mr-1">Type:</label>
@@ -44,30 +36,31 @@
       <div class="label-pair mr-5 mt-4 col-12">
         <label for="title" class="font-weight-bold mr-1">Title:</label>
         <textarea
-            name="title"
-            id="title"
-            type="text"
-            formControlName="title"
-            class="form-control"
-            rows="1"></textarea>
+          name="title"
+          id="title"
+          type="text"
+          formControlName="title"
+          class="form-control"
+          rows="1"></textarea>
       </div>
     </div>
     <div class="row">
       <div class="label-pair mr-5 mt-4 col-12">
-        <label  for="description" class="font-weight-bold mr-1">Content:</label>
+        <label for="description" class="font-weight-bold mr-1">Content:</label>
         <textarea
-            name="description"
-            id="description"
-            type="text"
-            formControlName="description"
-            class="form-control"
-            rows="10"></textarea>
+          name="description"
+          id="description"
+          type="text"
+          formControlName="description"
+          class="form-control"
+          rows="10"></textarea>
       </div>
     </div>
     <div class="row">
       <div class="label-pair mr-5 mt-4 col-12">
         <label for="project name" class="font-weight-bold mr-1">Project:</label>
-        <select [compareWith]="compareProjectSelection" name="_epicProjectId" id="_epicProjectId" formControlName="_epicProjectId" class="form-control">
+        <select [compareWith]="compareProjectSelection" name="_epicProjectId" id="_epicProjectId"
+          formControlName="_epicProjectId" class="form-control">
           <option *ngFor="let project of projects" [ngValue]="project">{{ project.name }}</option>
         </select>
       </div>
@@ -76,12 +69,12 @@
       <div class="label-pair mr-5 mt-4 col-12">
         <label for="url" class="font-weight-bold mr-1">URL:</label>
         <textarea
-            name="url"
-            id="url"
-            type="text"
-            formControlName="url"
-            class="form-control"
-            rows="1"></textarea>
+          name="url"
+          id="url"
+          type="text"
+          formControlName="url"
+          class="form-control"
+          rows="1"></textarea>
       </div>
     </div>
   </form>

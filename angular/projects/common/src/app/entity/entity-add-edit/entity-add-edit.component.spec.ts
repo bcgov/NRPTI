@@ -4,6 +4,7 @@ import { MatSlideToggleModule } from '@angular/material';
 import { TestBedHelper } from '../../spec/spec-utils';
 import { EntityAddEditComponent } from './entity-add-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('EntityAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<EntityAddEditComponent>(EntityAddEditComponent);
@@ -11,7 +12,8 @@ describe('EntityAddEditComponent', () => {
   beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, MatSlideToggleModule, NgbModule.forRoot()],
-      declarations: [EntityAddEditComponent]
+      declarations: [EntityAddEditComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
   }));
 
