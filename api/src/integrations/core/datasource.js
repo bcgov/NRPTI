@@ -275,9 +275,11 @@ class CoreDataSource {
         if (validPermit) {
           // we already have a valid permit. replace validPermit with whichever
           // permit is more recent and carry on.
+          let validPermitNo;
+          let proposedPermitNo;
           try {
-            const validPermitNo = validPermit.permit_no.split('-');
-            const proposedPermitNo = permit.permit_no.split('-');
+            validPermitNo = validPermit.permit_no.split('-');
+            proposedPermitNo = permit.permit_no.split('-');
 
             validPermit = Number.parseInt(validPermitNo[validPermitNo.length - 1]) >
                           Number.parseInt(proposedPermitNo[proposedPermitNo.length - 1])
