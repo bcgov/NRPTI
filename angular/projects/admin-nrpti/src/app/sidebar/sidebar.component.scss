@@ -38,11 +38,16 @@
 
 .sidebar .mines-menu {
   padding: 6px 16px 8px;
-  padding-left: 0.8rem;
+  padding-left: 0.4rem;
+  font-size: 14px;
 
   .material-icons {
     top: 2px;
   }
+}
+
+.sidebar .mines-menu-icon {
+  margin-right: 0.2rem !important;
 }
 
 /* Active/current link */

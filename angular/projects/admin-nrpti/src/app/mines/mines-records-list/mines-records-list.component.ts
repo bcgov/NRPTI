@@ -18,6 +18,7 @@ import { SearchSubsets, Picklists, StateIDs, StateStatus } from '../../../../../
 import { FilterObject, FilterType, DateFilterDefinition, CheckOrRadioFilterDefinition, RadioOptionItem, MultiSelectDefinition, DropdownDefinition } from '../../../../../common/src/app/search-filter-template/filter-object';
 import { SubsetsObject, SubsetOption } from '../../../../../common/src/app/search-filter-template/subset-object';
 import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
+import { MiscUtils } from '../../utils/constants/misc';
 
 /**
  * Mine list page component.
@@ -246,6 +247,8 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
         }
 
         this.mine = res.mine[0] && res.mine[0].data && new Mine(res.mine[0].data);
+
+        MiscUtils.updateBreadcrumbLabel(this.mine, this.route.root);
 
         const records = (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || [];
 

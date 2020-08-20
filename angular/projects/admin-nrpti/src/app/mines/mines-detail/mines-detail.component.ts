@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FactoryService } from '../../services/factory.service';
 import { LoadingScreenService } from 'nrpti-angular-components';
 import moment from 'moment';
+import { MiscUtils } from '../../utils/constants/misc';
 
 @Component({
   selector: 'app-mines-detail',
@@ -39,6 +40,8 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
       }
 
       this.mine = res.mine[0] && res.mine[0].data && new Mine(res.mine[0].data);
+
+      MiscUtils.updateBreadcrumbLabel(this.mine, this.route.root);
 
       this.isPublished = this.isRecordPublished();
       this.canPublish = this.checkCanPublish();
