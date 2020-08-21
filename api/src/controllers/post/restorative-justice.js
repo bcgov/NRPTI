@@ -90,7 +90,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (restorativeJustice._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
-    (warning.restorativeJustice = new ObjectId(incomingObj.collectionId));
+    (restorativeJustice.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions
   restorativeJustice.read = utils.ApplicationAdminRoles;

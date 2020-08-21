@@ -7,7 +7,6 @@ let qs = require('qs');
 let mongodb = require('../utils/mongodb');
 let moment = require('moment');
 let fuzzySearch = require('../utils/fuzzySearch');
-const RECORD_TYPE = require('../utils/constants/record-type-enum');
 
 function isEmpty(obj) {
   for (const key in obj) {
