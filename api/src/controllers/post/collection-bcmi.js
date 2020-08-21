@@ -89,6 +89,9 @@ exports.createMaster = async function(args, res, next, incomingObj) {
       const collectionCount = await model.count({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName,  records: { $elemMatch: { $eq: new ObjectID(record) } } });
       if (collectionCount && collectionCount > 0) {
         throw new Error('Collection contains records that are already associated with another collection');
+      } else {
+        // ensure the record has the collectionId set
+        await mongoose.connection.db.collection('nrpti').updateOne({ _id: new ObjectID(record) }, { $set: { collectionId: new ObjectID(collection._id) }});
       }
     }
   }

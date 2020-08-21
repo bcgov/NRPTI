@@ -76,8 +76,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
     {
       name: 'Collections',
       width: 'col-2',
-      value: 'collections',
-      nosort: true
+      value: 'collectionId'
     },
     {
       name: 'Date',
