@@ -73,6 +73,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (damSafetyInspection._sourceRefId = new ObjectId(incomingObj._sourceRefId));
   incomingObj.mineGuid &&
     (damSafetyInspection.mineGuid = incomingObj.mineGuid);
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (damSafetyInspection.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions
   damSafetyInspection.read = utils.ApplicationAdminRoles;
@@ -186,6 +189,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
     (damSafetyInspectionBCMI._sourceRefId = new ObjectId(incomingObj._sourceRefId));
   incomingObj.mineGuid &&
     (damSafetyInspectionBCMI.mineGuid = incomingObj.mineGuid);
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (damSafetyInspectionBCMI.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions
   damSafetyInspectionBCMI.read = utils.ApplicationAdminRoles;

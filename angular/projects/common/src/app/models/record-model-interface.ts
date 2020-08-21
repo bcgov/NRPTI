@@ -7,6 +7,8 @@ export interface IRecordModel {
   _id:               string;
   _schemaName:       string;
   _sourceRefId:      string;
+  mineGuid:          string;
+  collectionId:      string;
   read:              string[];
   write:             string[];
   recordName:        string;
