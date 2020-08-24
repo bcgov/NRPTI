@@ -483,6 +483,53 @@ paths:
   ###
   ### Record Routes
   ###
+  /record/{recordId}:
+    x-swagger-router-controller: record-controller
+    options:
+      tags:
+        - record
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated record route'
+      parameters:
+        - name: recordId
+          in: path
+          description: '_id of record'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - record
+      summary: 'Delete a record'
+      operationId: protectedDelete
+      description: "Deletes a record via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
+      parameters:
+        - name: recordId
+          in: path
+          description: '_id of record to delete'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
   /record/{recordId}/publish:
     x-swagger-router-controller: record-controller
     options:

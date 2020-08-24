@@ -346,7 +346,7 @@ export class FactoryService {
    * @memberof FactoryService
    */
   public deleteCollection(collectionId: string): Promise<any> {
-    return this.recordService.deleteRecord(collectionId, 'collection');
+    return this.recordService.deleteRecord(collectionId);
   }
 
   /**
@@ -474,8 +474,8 @@ export class FactoryService {
    * @returns {Promise<any>}
    * @memberof FactoryService
    */
-  public deleteMineRecord(recordId: string, model: string): Promise<any> {
-    return this.recordService.deleteRecord(recordId, model);
+  public deleteMineRecord(recordId: string): Promise<any> {
+    return this.recordService.deleteRecord(recordId);
   }
 
   // News
@@ -495,8 +495,8 @@ export class FactoryService {
     return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public deleteNewsItem(recordId: string, model: string): Promise<any> {
-    return this.recordService.deleteRecord(recordId, model);
+  public deleteNewsItem(recordId: string): Promise<any> {
+    return this.recordService.deleteRecord(recordId);
   }
 
   // Documents
@@ -537,10 +537,10 @@ export class FactoryService {
     dataPackage[containerName] = [record];
 
     return isInsert ? this.recordService
-                          .createRecord(dataPackage)
-                          .pipe(catchError(error => this.apiService.handleError(error)))
-                    : this.recordService
-                          .editRecord(dataPackage)
-                          .pipe(catchError(error => this.apiService.handleError(error)));
+      .createRecord(dataPackage)
+      .pipe(catchError(error => this.apiService.handleError(error)))
+      : this.recordService
+        .editRecord(dataPackage)
+        .pipe(catchError(error => this.apiService.handleError(error)));
   }
 }

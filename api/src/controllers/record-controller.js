@@ -1,5 +1,10 @@
 'use strict';
 
+const ObjectID = require('mongodb').ObjectID;
+const mongodb = require('../utils/mongodb');
+const Delete = require('../controllers/delete/delete');
+const RecordTypeEnum = require('../utils/constants/record-type-enum');
+
 let queryActions = require('../utils/query-actions');
 let queryUtils = require('../utils/query-utils');
 let defaultLog = require('../utils/logger')('record');
@@ -56,28 +61,28 @@ let EditReport = require('./put/report');
 // including their Add and Edit function exports.
 // Update this collection with new types
 const ACCEPTED_DATA_TYPES = [
-  { type: 'orders',                  add: AddOrder,                  edit: EditOrder },
-  { type: 'inspections',             add: AddInspection,             edit: EditInspection },
-  { type: 'certificates',            add: AddCertificate,            edit: EditCertificate },
-  { type: 'permits',                 add: AddPermit,                 edit: EditPermit },
-  { type: 'agreements',              add: AddAgreement,              edit: EditAgreement },
-  { type: 'selfReports',             add: AddSelfReport,             edit: EditSelfReport },
-  { type: 'restorativeJustices',     add: AddRestorativeJustice,     edit: EditRestorativeJustice },
-  { type: 'tickets',                 add: AddTicket,                 edit: EditTicket },
-  { type: 'administrativePenalties', add: AddAdministrativePenalty,  edit: EditAdministrativePenalty },
+  { type: 'orders', add: AddOrder, edit: EditOrder },
+  { type: 'inspections', add: AddInspection, edit: EditInspection },
+  { type: 'certificates', add: AddCertificate, edit: EditCertificate },
+  { type: 'permits', add: AddPermit, edit: EditPermit },
+  { type: 'agreements', add: AddAgreement, edit: EditAgreement },
+  { type: 'selfReports', add: AddSelfReport, edit: EditSelfReport },
+  { type: 'restorativeJustices', add: AddRestorativeJustice, edit: EditRestorativeJustice },
+  { type: 'tickets', add: AddTicket, edit: EditTicket },
+  { type: 'administrativePenalties', add: AddAdministrativePenalty, edit: EditAdministrativePenalty },
   { type: 'administrativeSanctions', add: AddAdministrativeSanction, edit: EditAdministrativeSanction },
-  { type: 'warnings',                add: AddWarning,                edit: EditWarning },
-  { type: 'constructionPlans',       add: AddConstructionPlan,       edit: EditConstructionPlan },
-  { type: 'managementPlans',         add: AddManagementPlan,         edit: EditManagementPlan },
-  { type: 'courtConvictions',        add: AddCourtConviction,        edit: EditCourtConviction },
-  { type: 'newsItems',               add: AddNewsItem,               edit: EditNewsItem },
-  { type: 'mines',                   add: AddMine,                   edit: EditMine },
-  { type: 'collections',             add: AddCollection,             edit: EditCollection },
-  { type: 'annualReports',           add: AddAnnualReport,           edit: EditAnnualReport },
-  { type: 'certificateAmendments',   add: AddCertificateAmendment,   edit: EditCertificateAmendment },
-  { type: 'correspondences',         add: AddCorrespondence,         edit: EditCorrespondence },
-  { type: 'damSafetyInspections',    add: AddDamSafetyInspection,    edit: EditDamSafetyInspection },
-  { type: 'reports',                 add: AddReport,                 edit: EditReport },
+  { type: 'warnings', add: AddWarning, edit: EditWarning },
+  { type: 'constructionPlans', add: AddConstructionPlan, edit: EditConstructionPlan },
+  { type: 'managementPlans', add: AddManagementPlan, edit: EditManagementPlan },
+  { type: 'courtConvictions', add: AddCourtConviction, edit: EditCourtConviction },
+  { type: 'newsItems', add: AddNewsItem, edit: EditNewsItem },
+  { type: 'mines', add: AddMine, edit: EditMine },
+  { type: 'collections', add: AddCollection, edit: EditCollection },
+  { type: 'annualReports', add: AddAnnualReport, edit: EditAnnualReport },
+  { type: 'certificateAmendments', add: AddCertificateAmendment, edit: EditCertificateAmendment },
+  { type: 'correspondences', add: AddCorrespondence, edit: EditCorrespondence },
+  { type: 'damSafetyInspections', add: AddDamSafetyInspection, edit: EditDamSafetyInspection },
+  { type: 'reports', add: AddReport, edit: EditReport },
 ];
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
@@ -219,6 +224,52 @@ exports.protectedPut = async function (args, res, next) {
   }
   next();
 };
+
+exports.protectedDelete = async function (args, res, next) {
+  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const collection = db.collection('nrpti');
+  let recordId = null
+
+  if (args.swagger.params.recordId || args.swagger.params.recordId.value) {
+    recordId = args.swagger.params.recordId.value
+  } else {
+    defaultLog.info(`protectedDelete - you must provide an id to delete`);
+    queryActions.sendResponse(res, 400, {});
+    next();
+  }
+
+  let record = null;
+  try {
+    record = await collection.findOne({ _id: new ObjectID(recordId) });
+  } catch (error) {
+    defaultLog.info(`protectedDelete - couldn't find record for recordId: ${recordId}`);
+    defaultLog.debug(error);
+    return queryActions.sendResponse(res, 404, {});
+  }
+
+  try {
+    if (RecordTypeEnum.BCMI_SCHEMA_NAMES.includes(record._schemaName)) {
+      await Delete.deleteFlavourRecord(recordId, 'bcmi');
+    } else if (RecordTypeEnum.NRCED_SCHEMA_NAMES.includes(record._schemaName)) {
+      await Delete.deleteFlavourRecord(recordId, 'nrced');
+    } else if (RecordTypeEnum.LNG_SCHEMA_NAMES.includes(record._schemaName)) {
+      await Delete.deleteFlavourRecord(recordId, 'lng');
+    } else if (RecordTypeEnum.MASTER_SCHEMA_NAMES.includes(record._schemaName)) {
+      await Delete.deleteMasterRecord(recordId);
+    } else {
+      defaultLog.info(`protectedDelete - schemaName not supported: ${record._schemaName}`);
+      queryActions.sendResponse(res, 400, {});
+      next();
+    }
+  } catch (error) {
+    defaultLog.info(`protectedDelete - error deleting record record: ${recordId}`);
+    defaultLog.debug(error);
+    return queryActions.sendResponse(res, 400, {});
+  }
+
+  queryActions.sendResponse(res, 200, {});
+  next();
+}
 
 exports.protectedNewsDelete = async function (args, res, next) {
   try {

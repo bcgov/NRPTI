@@ -105,14 +105,12 @@
               <span class="align-middle">Add Existing Record</span>
             </button>
             &nbsp;
-            <button *ngIf="!showRecordForm" class="btn btn-primary" (click)="showRecordForm = !showRecordForm"
+            <button
+              class="btn"
+              [ngClass]="{'btn-primary' : !showRecordForm, 'btn-secondary' : showRecordForm}"
+              (click)="showRecordForm = !showRecordForm"
               title="Create and add new record">
               <em class="material-icons mr-1 align-middle">add</em>
-              <span class="align-middle">Create and Add New Record</span>
-            </button>
-            <button *ngIf="showRecordForm" class="btn btn-secondary" (click)="showRecordForm = !showRecordForm"
-              title="Create and add new record">
-              <i class="material-icons mr-1 align-middle">add</i>
               <span class="align-middle">Create and Add New Record</span>
             </button>
           </div>
@@ -120,12 +118,12 @@
       </div>
     </section>
 
-    <app-mines-collections-record-add
+    <app-mines-record-add
       *ngIf="mine && showRecordForm"
       [mine]="mine"
       [collectionId]="collection._id"
       (addedRecord)="updateRecordList($event)">
-    </app-mines-collections-record-add>
+    </app-mines-record-add>
 
     <section class=" my-3 py-3">
       <div *ngIf="!myForm.get('collectionRecords').value || !myForm.get('collectionRecords').value.length">

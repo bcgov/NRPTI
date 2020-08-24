@@ -1,20 +1,21 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Picklists, SchemaLists } from '../../../../../common/src/app/utils/record-constants';
-import { LoadingScreenService, Utils } from 'nrpti-angular-components';
+import { Picklists } from '../../../../../common/src/app/utils/record-constants';
+import { DatePickerComponent, LoadingScreenService, Utils } from 'nrpti-angular-components';
 import { FactoryService } from '../../services/factory.service';
 import { RecordUtils } from '../../records/utils/record-utils';
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-mines-collections-record-add',
-  templateUrl: './mines-collections-record-add.component.html',
-  styleUrls: ['./mines-collections-record-add.component.scss']
+  selector: 'app-mines-record-add',
+  templateUrl: './mines-record-add.component.html',
+  styleUrls: ['./mines-record-add.component.scss']
 })
-export class MinesCollectionsRecordAddComponent implements OnInit, OnDestroy {
+export class MinesRecordAddComponent implements OnInit, OnDestroy {
   @Input() mine = null;
   @Input() collectionId = null;
   @Output() addedRecord: EventEmitter<object> = new EventEmitter<object>();
+  @ViewChild(DatePickerComponent) DatePicker: DatePickerComponent;
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
@@ -29,14 +30,18 @@ export class MinesCollectionsRecordAddComponent implements OnInit, OnDestroy {
       recordAgency: new FormControl(''),
       dateIssued: new FormControl(''),
       recordType: new FormControl(''),
+      typeCode: new FormControl(''),
       documents: new FormControl(''),
-      publishBcmi: new FormControl(false)
+      publishBcmi: new FormControl(false),
     }
   );
 
   // Pick lists
-  public recordAgencies = Picklists.agencyPicklist;
-  public basicRecordTypeBcmiSubset = SchemaLists.basicRecordTypeBcmiSubset;
+  public recordAgencies = Picklists.collectionAgencyPicklist;
+  public recordTypeNamesBCMI = Object.values(Picklists.bcmiRecordTypePicklist).map(item => {
+    return item.displayName;
+  }).sort();
+  public permitTypes = ['OGP', 'AMD'];
 
   // Documents
   public documents = [];
@@ -71,6 +76,14 @@ export class MinesCollectionsRecordAddComponent implements OnInit, OnDestroy {
     }
 
     const record = {};
+
+    if (
+      this.myForm.get('recordType').value === 'Permit' &&
+      !this.myForm.get('typeCode').value
+    ) {
+      alert('You must select a permit type.');
+    }
+
     record['recordName'] = this.myForm.get('recordName').value;
     this.myForm.controls.dateIssued.dirty &&
       (record['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
@@ -83,50 +96,62 @@ export class MinesCollectionsRecordAddComponent implements OnInit, OnDestroy {
       record['issuingAgency'] = this.myForm.get('recordAgency').value;
     }
 
-    if (this.myForm.get('recordType').value === 'PermitAmendment') {
-      record['recordType'] = 'Permit';
-      record['typeCode'] = 'AMD';
-    } else {
-      record['recordType'] = this.myForm.get('recordType').value;
+    record['recordType'] = this.myForm.get('recordType').value;
+    if (record['recordType'] === 'Permit') {
+      record['typeCode'] = this.myForm.get('typeCode').value;
     }
 
     // Fields that are auto populated
-    record['issuedTo'] = {
-      type: 'Company',
-      companyName: this.mine.permittee
-    };
-    record['centroid'] = [this.mine.location.coordinates[1], this.mine.location.coordinates[0]];
-    record['sourceSystemRef'] = 'nrpti';
+    record['_master'] = this.mine._id;
     record['projectName'] = this.mine.name;
     record['mineGuid'] = this.mine._sourceRefId;
+    record['issuedTo'] = {
+      companyName: this.mine.permittee,
+      firstName: null,
+      middleName: null,
+      lastName: null,
+      fullName: null,
+      dateOfBirth: null,
+      type: 'Company'
+    };
+    record['sourceSystemRef'] = 'nrpti';
+    record['centroid'] = this.mine.location ?
+      [this.mine.location.coordinates[1], this.mine.location.coordinates[0]] : [0, 0];
 
     // If we are editing a collection, we add right away.
     if (this.collectionId) {
       record['collectionId'] = this.collectionId;
     }
 
+    // lookup appropriate schemaName from type value
+    const recordSchema = Object.values(Picklists.bcmiRecordTypePicklist).filter(item => {
+      return item.displayName === record['recordType'];
+    });
+
+    const schemaString = recordSchema[0]._schemaName;
+
     // BCMI flavour
-    if (this.myForm.get('publishBcmi').value) {
-      let flavourSchemaName = '';
-      if (this.myForm.get('recordType').value === 'PermitAmendment') {
-        flavourSchemaName = 'PermitBCMI';
-      } else {
-        flavourSchemaName = this.myForm.get('recordType').value + 'BCMI';
-      }
-      record[flavourSchemaName] = { addRole: 'public' };
-      record['isBcmiPublished'] = false;
+    record[schemaString] = {};
+    if (record['recordType'] === 'Permit') {
+      record[schemaString]['typeCode'] = this.myForm.get('typeCode').value;
+    }
+    if (this.myForm.get('publishBcmi').dirty && this.myForm.get('publishBcmi').value) {
+      record[schemaString]['addRole'] = 'public';
+    } else if (this.myForm.get('publishBcmi').dirty && !this.myForm.get('publishBcmi').value) {
+      record[schemaString]['removeRole'] = 'public';
     }
 
-    let containerName = record['recordType'].charAt(0).toLowerCase() + record['recordType'].slice(1);
-    containerName += 's';
-
-    this.factoryService.writeRecord(record, containerName, true).subscribe(async res => {
+    this.factoryService.createMineRecord(record).subscribe(async (res: any) => {
       this.recordUtils.parseResForErrors(res);
+
+      // API responds with the master and BCMI flavour records that were created. First record is the BCMI flavour and second is the master.
+      const createdRecord = res && res.length && res[0] && res[0].length && res[0][0] && res[0][0].object;
+
       await this.recordUtils.handleDocumentChanges(
         this.links,
         this.documents,
         [],
-        res[0][0].object[0]._id,
+        createdRecord[1]._id,
         this.factoryService
       );
 
@@ -135,6 +160,7 @@ export class MinesCollectionsRecordAddComponent implements OnInit, OnDestroy {
 
       this.addedRecord.emit(res[0][0].object[0]);
       this.myForm.reset();
+      this.DatePicker.clearDate();
 
       this.documents = [];
       this.links = [];
@@ -147,7 +173,6 @@ export class MinesCollectionsRecordAddComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
-
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
