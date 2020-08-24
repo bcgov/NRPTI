@@ -51,6 +51,8 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     documents: null
   };
 
+  private recordsToUnlink: any[] = [];
+
   constructor(
     public route: ActivatedRoute,
     public router: Router,
@@ -276,6 +278,30 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     return recordIds;
   }
 
+  updateRecordsCollectionId(collectionId) {
+    const recordsFormArray = this.myForm.get('collectionRecords');
+
+    if (!recordsFormArray || !recordsFormArray.value || !recordsFormArray.value.length || !this.myForm.get('collectionRecords').dirty) {
+      return;
+    }
+
+    recordsFormArray.value.forEach(recordFormGroup => {
+      recordFormGroup.record.collectionId = collectionId;
+      this.factoryService.editMineRecord(recordFormGroup.record).subscribe(async res => {
+        this.recordUtils.parseResForErrors(res);
+      });
+    });
+
+    if (this.recordsToUnlink.length > 0) {
+      for (const recordToUnlink of this.recordsToUnlink) {
+        recordToUnlink.collectionId = null;
+        this.factoryService.editMineRecord(recordToUnlink).subscribe(async res => {
+          this.recordUtils.parseResForErrors(res);
+        });
+      }
+    }
+  }
+
   /**
    * Toggle the publish formcontrol.
    *
@@ -341,8 +367,10 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesCollectionsAddEditComponent
    */
   removeRecordFromCollection(idx: number) {
-    (this.myForm.get('collectionRecords') as FormArray).removeAt(idx);
+    const recordControl = (this.myForm.get('collectionRecords') as FormArray).at(idx);
+    this.recordsToUnlink.push(recordControl.value.record);
 
+    (this.myForm.get('collectionRecords') as FormArray).removeAt(idx);
     this.myForm.get('collectionRecords').markAsDirty();
   }
 
@@ -378,6 +406,9 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
       this.factoryService.editCollection(collection).subscribe(async res => {
         this.recordUtils.parseResForErrors(res);
 
+        // update the records collectionId
+        this.updateRecordsCollectionId(this.collection._id);
+
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['mines', this.collection._master, 'collections', this.collection._id, 'detail']);
       });
@@ -392,6 +423,9 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
 
         this.loadingScreenService.setLoadingState(false, 'main');
         if (createdCollection) {
+          // update the records collectionId
+          this.updateRecordsCollectionId(createdCollection._id);
+
           this.router.navigate(['mines', createdCollection._master, 'collections', createdCollection._id, 'detail']);
         } else {
           this.router.navigate(['../'], { relativeTo: this.route });

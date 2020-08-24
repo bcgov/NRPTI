@@ -79,6 +79,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (certificateAmendment._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj.mineGuid &&
     (certificateAmendment.mineGuid = incomingObj.mineGuid);
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (certificateAmendment.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions
   certificateAmendment.read = utils.ApplicationAdminRoles;
@@ -318,6 +321,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
     (certificateAmendmentBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj.mineGuid &&
     (certificateAmendmentBCMI.mineGuid = incomingObj.mineGuid);
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (certificateAmendmentBCMI.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions
   certificateAmendmentBCMI.read = utils.ApplicationAdminRoles;

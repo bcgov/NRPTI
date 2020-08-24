@@ -76,8 +76,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
     {
       name: 'Collections',
       width: 'col-2',
-      value: 'collections',
-      nosort: true
+      value: 'collectionId'
     },
     {
       name: 'Date',
@@ -173,12 +172,23 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       ])
     );
 
+    const hasCollectionsStatefilter = new FilterObject(
+      'hasCollection',
+      FilterType.RadioPicker,
+      'Has Associated Collection',
+      new CheckOrRadioFilterDefinition([
+        new RadioOptionItem('hasCollection', 'Yes', 'true'),
+        new RadioOptionItem('doesNotHaveCollection', 'No', 'false')
+      ])
+    );
+
     this.filters = [
       issuedDateFilter,
       activityTypeFilter,
       responsibleAgencyFilter,
       sourceSystemFilter,
-      bcmiPublishedStatefilter];
+      bcmiPublishedStatefilter,
+      hasCollectionsStatefilter];
   }
 
   executeSearch(searchPackage) {
