@@ -331,15 +331,17 @@ export class MinesRecordsAddEditComponent implements OnInit {
       this.factoryService.createMineRecord(record).subscribe(async (res: any) => {
         this.recordUtils.parseResForErrors(res);
 
+        // API responds with the master and BCMI flavour records that were created. First record is the BCMI flavour and second is the master.
+        const createdRecord = res && res.length && res[0] && res[0].length && res[0][0] && res[0][0].object;
+
         await this.recordUtils.handleDocumentChanges(
           this.links,
           this.documents,
           this.documentsToDelete,
-          res[0][0].object[0]._id,
+          createdRecord[1]._id,
           this.factoryService
         );
 
-        const createdRecord = res && res.length && res[0] && res[0].length && res[0][0] && res[0][0].object;
         this.loadingScreenService.setLoadingState(false, 'main');
         // first record in array is the BCMI flavour record
         if (createdRecord[0]) {
