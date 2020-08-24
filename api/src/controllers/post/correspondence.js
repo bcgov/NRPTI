@@ -78,6 +78,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (correspondence._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj.mineGuid &&
     (correspondence.mineGuid = incomingObj.mineGuid);
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (correspondence.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions
   correspondence.read = utils.ApplicationAdminRoles;
@@ -197,6 +200,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
     (correspondenceBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj.mineGuid &&
     (correspondenceBCMI.mineGuid = incomingObj.mineGuid);
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (correspondenceBCMI.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions
   correspondenceBCMI.read = utils.ApplicationAdminRoles;

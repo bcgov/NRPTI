@@ -77,6 +77,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (managementPlan._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (managementPlan.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions
   managementPlan.read = utils.ApplicationAdminRoles;
@@ -243,6 +246,9 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (managementPlanBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (managementPlanBCMI.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions and meta
   managementPlanBCMI.read = utils.ApplicationAdminRoles;

@@ -88,6 +88,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (administrativeSanction._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (administrativeSanction.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions
   administrativeSanction.read = utils.ApplicationAdminRoles;
@@ -202,7 +205,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
-  } 
+  }
 
   let AdministrativeSanctionLNG = mongoose.model('AdministrativeSanctionLNG');
   let administrativeSanctionLNG = new AdministrativeSanctionLNG();
@@ -333,7 +336,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
-  } 
+  }
 
   let AdministrativeSanctionNRCED = mongoose.model('AdministrativeSanctionNRCED');
   let administrativeSanctionNRCED = new AdministrativeSanctionNRCED();

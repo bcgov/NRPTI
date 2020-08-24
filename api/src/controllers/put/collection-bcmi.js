@@ -30,7 +30,20 @@ exports.editRecord = async function(args, res, next, incomingObj) {
       const otherCollections = collections.find(c => c._id.toString() !== incomingObj._id.toString());
       if (collections && otherCollections && otherCollections.length > 0) {
         throw new Error('Collection contains records that are already associated with another collection');
+      } else {
+        // ensure the record has the collectionId set
+        await mongoose.connection.db.collection('nrpti').updateOne({ _id: new ObjectID(record) }, { $set: { collectionId: new ObjectID(incomingObj._id) }});
       }
+    }
+  }
+
+  // find any records that have this collection in their collectionId, but aren't actually a part of the collection
+  // and remove their collectionid
+  const collectionRecords = await mongoose.connection.db.collection('nrpti').find({ collectionId: new ObjectID(incomingObj._id)}).toArray();
+  for (const record of collectionRecords) {
+    if (!incomingObj.records.includes(record)) {
+      // remove this collection id
+      await mongoose.connection.db.collection('nrpti').update({ _id: new ObjectID(record._id) }, { $set: { collectionId: null }});
     }
   }
 

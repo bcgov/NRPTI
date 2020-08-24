@@ -76,6 +76,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (selfReport._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (selfReport.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions
   selfReport.read = utils.ApplicationAdminRoles

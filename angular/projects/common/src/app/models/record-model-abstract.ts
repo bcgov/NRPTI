@@ -12,6 +12,8 @@ export abstract class RecordModel implements IRecordModel {
   _id:               string;
   _schemaName:       string;
   _sourceRefId:      string;
+  mineGuid:          string;
+  collectionId:      string;
   read:              string[];
   write:             string[];
   recordName:        string;
@@ -31,6 +33,8 @@ export abstract class RecordModel implements IRecordModel {
     this._id               = (record && record._id)               || null;
     this._schemaName       = (record && record._schemaName)       || 'INVALID_SCHEMA';
     this._sourceRefId      = (record && record._sourceRefId)      || null;
+    this.mineGuid          = (record && record.mineGuid)          || null;
+    this.collectionId      = (record && record.collectionId)      || null;
     this.read              = (record && record.read)              || null;
     this.write             = (record && record.write)             || null;
     this.recordName        = (record && record.recordName)        || null;

@@ -72,6 +72,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (annualReport._sourceRefId = new ObjectId(incomingObj._sourceRefId));
   incomingObj.mineGuid &&
     (annualReport.mineGuid = incomingObj.mineGuid);
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (annualReport.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions
   annualReport.read = utils.ApplicationAdminRoles;
@@ -184,6 +187,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
     (annualReportBCMI._sourceRefId = new ObjectId(incomingObj._sourceRefId));
   incomingObj.mineGuid &&
     (annualReportBCMI.mineGuid = incomingObj.mineGuid);
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (annualReportBCMI.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions
   annualReportBCMI.read = utils.ApplicationAdminRoles;
