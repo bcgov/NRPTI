@@ -89,6 +89,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (ticket._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj._sourceRefCorsId && (ticket._sourceRefCorsId = incomingObj._sourceRefCorsId);
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (ticket.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions
   ticket.read = utils.ApplicationAdminRoles;

@@ -8,7 +8,7 @@ module.exports = require('../../utils/model-schema-generator')(
     _sourceRefId: { type: String, default: null, index: true },
     _epicMilestoneId: { type: 'ObjectId', default: null, index: true },
     _sourceDocumentRefId: { type: String, default: null, index: true },
-
+    collectionId:     { type: 'ObjectId', default: null },
     mineGuid: { type: String, default: null, index: true },
 
     read: [{ type: String, trim: true, default: 'sysadmin' }],

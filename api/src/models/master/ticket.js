@@ -12,7 +12,7 @@ module.exports = require('../../utils/model-schema-generator')(
     _sourceRefCorsId: { type: Number, default: null, index: true },
 
     mineGuid: { type: String, default: null, index: true },
-
+    collectionId:     { type: 'ObjectId', default: null },
     read: [{ type: String, trim: true, default: 'sysadmin' }],
     write: [{ type: String, trim: true, default: 'sysadmin' }],
 

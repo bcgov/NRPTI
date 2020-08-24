@@ -11,7 +11,6 @@ import { RecordModel } from '../record-model-abstract';
 export class Permit extends RecordModel {
   _epicProjectId: string;
   _epicMilestoneId: string;
-  mineGuid: string;
 
   recordSubtype: string;
   dateIssued: Date;
@@ -36,7 +35,6 @@ export class Permit extends RecordModel {
     this._schemaName = 'Permit';
     this._epicProjectId = (obj && obj._epicProjectId) || null;
     this._epicMilestoneId = (obj && obj._epicMilestoneId) || null;
-    this.mineGuid = (obj && obj.mineGuid) || null;
 
     this.recordSubtype = (obj && obj.recordSubtype) || null;
     this.dateIssued = (obj && obj.dateIssued) || null;

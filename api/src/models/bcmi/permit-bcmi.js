@@ -5,6 +5,7 @@ module.exports = require('../../utils/model-schema-generator')(
     _schemaName: { type: String, default: 'PermitBCMI', index: true },
     _sourceRefId:  { type: String, default: null, index: true },
     _epicProjectId: { type: 'ObjectId', default: null, index: true },
+    collectionId:     { type: 'ObjectId', default: null },
     read: [{ type: String, trim: true, default: 'sysadmin' }],
     write: [{ type: String, trim: true, default: 'sysadmin' }],
     projectName: { type: String, default: '' },

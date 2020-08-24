@@ -95,6 +95,9 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
     (inspection._sourceRefOgcDeficiencyId = incomingObj._sourceRefOgcDeficiencyId);
   incomingObj._sourceRefNrisId &&
     (inspection._sourceRefNrisId = incomingObj._sourceRefNrisId);
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (inspection.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions
   inspection.read = utils.ApplicationAdminRoles;
@@ -478,6 +481,9 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (inspectionBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (inspectionBCMI.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions and meta
   inspectionBCMI.read = utils.ApplicationAdminRoles;
