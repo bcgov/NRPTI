@@ -396,7 +396,7 @@ class CoreDataSource {
         const queryParams = {
           per_page: CORE_API_BATCH_SIZE,
           page: currentPage,
-          major: true
+          verified: true
         };
         const url = getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_MINES, queryParams);
 
@@ -412,10 +412,7 @@ class CoreDataSource {
         defaultLog.info(`Fetched page ${currentPage - 1} out of ${totalPages}`);
       } while (currentPage <= totalPages)
 
-      // Filter to only verified mines. There is some discrepancy with data, so check that there is a verified mine ID to be sure.
-      const verifiedRecords = mineRecords.filter(record => record.verified_status && record.verified_status.mine_guid);
-
-      return verifiedRecords
+      return mineRecords;
     } catch (error) {
       defaultLog.error(`getVerifiedMines - unexpected error: ${error.message}`);
       throw(error);

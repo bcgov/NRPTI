@@ -89,6 +89,10 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (warning._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (warning.collectionId = new ObjectId(incomingObj.collectionId));
+
   // set permissions
   warning.read = utils.ApplicationAdminRoles;
   warning.write = utils.ApplicationAdminRoles;

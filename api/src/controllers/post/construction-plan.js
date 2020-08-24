@@ -76,6 +76,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (constructionPlan._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (constructionPlan.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions
   constructionPlan.read = utils.ApplicationAdminRoles;
@@ -143,7 +146,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
   if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
-  
+
   let ConstructionPlanLNG = mongoose.model('ConstructionPlanLNG');
   let constructionPlanLNG = new ConstructionPlanLNG();
 

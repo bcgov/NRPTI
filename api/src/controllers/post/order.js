@@ -89,6 +89,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (order._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (order.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions
   order.read = utils.ApplicationAdminRoles;
@@ -468,6 +471,9 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (orderBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (orderBCMI.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions and meta
   orderBCMI.read = utils.ApplicationAdminRoles;

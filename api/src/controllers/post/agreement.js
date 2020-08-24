@@ -76,6 +76,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (agreement._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj.collectionId &&
+    ObjectId.isValid(incomingObj.collectionId) &&
+    (agreement.collectionId = new ObjectId(incomingObj.collectionId));
 
   // set permissions
   agreement.read = utils.ApplicationAdminRoles;
@@ -138,7 +141,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
-  } 
+  }
 
   let AgreementLNG = mongoose.model('AgreementLNG');
   let agreementLNG = new AgreementLNG();

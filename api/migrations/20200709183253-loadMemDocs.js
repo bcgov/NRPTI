@@ -94,13 +94,16 @@ exports.up = async function (db) {
         // Found a mine, now lets create a record and upload up the docs
         for(const collection of mine.collectionData) {
           console.log(`Processing collection ${collection.displayName}`);
+          // init the collection so we can pass an id
+          let bcmiCollection = new CollectionBCMI();
+          // prep the docs
           const allDocs = collection.mainDocuments.concat(collection.otherDocuments);
           const allNewDocs = [];
           console.log(`Fetched ${allDocs.length} documents. Creating NRPTI records/flavours...`);
           for(const collectionDoc of allDocs) {
             if (collection.type && collection.type.length > 0 && !collection.isForEAO) {
               try {
-                const newDoc = await createMineDocument(nrpti, nrptiMine, collection, collectionDoc);
+                const newDoc = await createMineDocument(nrpti, nrptiMine, collection, collectionDoc, bcmiCollection._id);
                 if (newDoc) {
                   allNewDocs.push(new ObjectID(newDoc._id));
                   docsCreated += 1;
@@ -119,7 +122,6 @@ exports.up = async function (db) {
           console.log(`Creating NRPTI collection for ${collection.displayName}`);
           // Master, Meta and Documents for this collection are all created.
           // Now, create a NRPTI collection and shove the docs into it!
-          let bcmiCollection = new CollectionBCMI();
           bcmiCollection._master = new ObjectID(nrptiMine._id);
           bcmiCollection.read =  [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, 'public'];
           bcmiCollection.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
@@ -128,7 +130,7 @@ exports.up = async function (db) {
           bcmiCollection.project = new ObjectID(nrptiMine._id);
           bcmiCollection.type = collection.type;
           bcmiCollection.agency = collection.isForMEM ? 'EMPR' : collection.isForEAO ? 'EAO' : 'ENV';
-          bcmiCollection.records = allNewDocs;
+          bcmiCollection.records = allNewDocs; // move this whole thing to the top if we remove records array
           bcmiCollection.addedBy = 'nrpti';
           bcmiCollection.datePublished = new Date();
           bcmiCollection.publishedBy = 'nrpti';
@@ -170,7 +172,7 @@ exports._meta = {
   "version": 1
 };
 
-async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc) {
+async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, newCollectionId) {
   // fetch doc from mem-admin
   // rawDoc will be a buffer from the get request.
   await sleep(3000);
@@ -263,6 +265,7 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc) {
   } else {
     flavourData.documents = [document._id];
   }
+  flavourData.collectionId = new ObjectId(newCollectionId);
   flavourData.mineGuid = nrptiMine._sourceRefId;
   flavourData.issuingAgency = issuingAgency;
   flavourData.author = collectionDoc.document.documentAuthor;
@@ -279,6 +282,7 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc) {
   // Master
   masterData._flavourRecords = [new ObjectID(flavourData._id)];
   masterData.documents = [document._id];
+  masterData.collectionId = new ObjectId(newCollectionId);
   masterData.mineGuid =  nrptiMine._sourceRefId;
   masterData.issuingAgency = issuingAgency;
   masterData.author = collectionDoc.document.documentAuthor;

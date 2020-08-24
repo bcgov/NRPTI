@@ -11,7 +11,6 @@ import { RecordModel } from '../record-model-abstract';
 export class PermitBCMI extends RecordModel {
   _epicProjectId: string;
   _epicMilestoneId: string;
-  mineGuid: string;
 
   recordSubtype: string;
   dateIssued: Date;
@@ -38,7 +37,6 @@ export class PermitBCMI extends RecordModel {
 
     this._epicProjectId = (obj && obj._epicProjectId) || '';
     this._epicMilestoneId = (obj && obj._epicMilestoneId) || '';
-    this.mineGuid = (obj && obj.mineGuid) || null;
 
     this.recordSubtype = (obj && obj.recordSubtype) || '';
     this.dateIssued = (obj && obj.dateIssued) || null;
