@@ -298,7 +298,7 @@ exports.protectedPublish = async function (args, res, next) {
       const masterModel = require('mongoose').model(masterSchema);
       await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isLngPublished: true });
     }
-    else if (recordData._schemaName.includes('BCMI')) {
+    else if (recordData._schemaName !== 'CollectionBCMI' && recordData._schemaName.includes('BCMI')) {
       const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 3);
       const masterModel = require('mongoose').model(masterSchema);
       await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isBcmiPublished: true });
