@@ -23,11 +23,8 @@ exports.up = async function(db) {
   try {
     const nrpti = await mClient.collection('nrpti');
     const documents = await nrpti.find({ _schemaName: 'Document' }).toArray();
-    const promises = [];
-
-    for (const document of documents) {
-      promises.push(updatePermissions(document));
-    }
+    
+    const promises = documents.map(document => updatePermissions(document));
 
     await Promise.all(promises);
   } catch (err) {
