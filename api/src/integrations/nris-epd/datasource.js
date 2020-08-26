@@ -232,7 +232,7 @@ class NrisDataSource {
     newRecord.location = record.location.locationDescription;
 
     if (record.location && Number(record.location.latitude) && Number(record.location.longitude)) {
-      newRecord.centroid = [Number(record.location.latitude), Number(record.location.longitude)];
+      newRecord.centroid = [Number(record.location.longitude), Number(record.location.latitude)];
     }
 
     if (record.complianceStatus) {
