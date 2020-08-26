@@ -278,6 +278,18 @@ let searchCollection = async function(
     searchProperties = { $text: { $search: keywords, $caseSensitive: caseSensitive } };
   }
 
+  // has collection filter
+  // For this filter to work, we need to create a field and re-create the hasCollection match
+  // if we add to the initial match criteria though, it will break the initial match. So we
+  // flag it for addition later and remove the check from the "or" variable
+  let hasCollectionTest = false;
+  let hasCollection = null;
+  if (or && Object.prototype.hasOwnProperty.call(or, 'hasCollection')) {
+    hasCollectionTest = true;
+    hasCollection = or.hasCollection === 'true' ? true : false;
+    delete or.hasCollection;
+  }
+
   let match = await generateMatchesForAggregation(and, or, nor, searchProperties, properties, schemaName, _in);
 
   defaultLog.info('match:', match);
@@ -303,16 +315,23 @@ let searchCollection = async function(
 
   let aggregation = [
     {
+      $match: match
+    }
+  ];
+
+  // has collection filter
+  // If we detected the need for a hasCollection filter, add the field/match here
+  if (hasCollectionTest) {
+    aggregation.push({
       $addFields: {
         hasCollection: {
           $cond: [{ $eq: [ '$collectionId', null ] }, false, true ]
         }
       }
-    },
-    {
-      $match: match
-    }
-  ];
+    },{
+      $match: { hasCollection: hasCollection }
+    });
+  }
 
   if (schemaName.length === 1 && schemaName[0] === 'CollectionBCMI') {
     // add a "countrecords" attribute to allow sorting on "# of records" in the collection
@@ -643,30 +662,7 @@ const executeQuery = async function (args, res, next) {
   defaultLog.info('sortField:', sortField);
   defaultLog.info('sortDirection:', sortDirection);
 
-  if (dataset[0] !== 'Item') {
-    defaultLog.info('Searching Dataset:', dataset);
-    defaultLog.info('sortField:', sortField);
-
-    let itemData = await searchCollection(
-      roles,
-      keywords,
-      dataset,
-      pageNum,
-      pageSize,
-      project,
-      sortField,
-      sortDirection,
-      caseSensitive,
-      populate,
-      and,
-      or,
-      nor,
-      subset,
-      _in
-    );
-
-    QueryActions.sendResponse(res, 200, itemData);
-  } else if (dataset[0] === 'Item') {
+  if (dataset[0] === 'Item') {
     defaultLog.info('ITEM GET', { _id: args.swagger.params._id.value });
 
     let aggregation = [
@@ -755,6 +751,98 @@ const executeQuery = async function (args, res, next) {
     }
 
     QueryActions.sendResponse(res, 200, data);
+  } else if (dataset[0] === 'CollectionDocuments') { // dataset == collection, id = collection id, flavourtype?
+    defaultLog.info('COLLECTION DOCUMENTS GET', { _id: args.swagger.params._id.value });
+
+    let aggregation = [
+      // match on collectionBCMI schema and by supplied objectId
+      {
+        $match: { _id: mongoose.Types.ObjectId(args.swagger.params._id.value) }
+      },
+      // lookup the records
+      {
+        $lookup: { from: 'nrpti', localField: 'records', foreignField: '_id', as: 'populatedRecords'}
+      },
+      // lookup the documents
+      {
+        $lookup: { from: 'nrpti', localField: 'populatedRecords.documents', foreignField: '_id', as: 'documents' }
+      },
+      // turf the uneeded attributes
+      {
+        $project: { documents: 1 }
+      },
+      // unwind the documents array so we have a flat array of document records
+      {
+        $unwind: { path: '$documents' }
+      },
+      // push everything off the document attribute to the root
+      {
+        $replaceRoot: { newRoot: '$documents' }
+      },
+      // redact based on scope
+      {
+        $redact: {
+          $cond: {
+            if: {
+              $cond: {
+                if: '$read',
+                then: {
+                  $anyElementTrue: {
+                    $map: {
+                      input: '$read',
+                      as: 'fieldTag',
+                      in: { $setIsSubset: [['$$fieldTag'], roles] }
+                    }
+                  }
+                },
+                else: true
+              }
+            },
+            then: '$$DESCEND',
+            else: '$$PRUNE'
+          }
+        }
+      }
+    ];
+
+    let data = [];
+
+    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const collection = db.collection('nrpti');
+
+    data = await collection.aggregate(aggregation, {
+      allowDiskUse: true,
+      collation: {
+        locale: 'en_US',
+        alternate: 'shifted',
+        numericOrdering: true
+      }
+    }).toArray();
+
+    QueryActions.sendResponse(res, 200, data);
+  } else if (dataset[0] !== 'Item' && dataset[0] !== 'CollectionDocuments') {
+    defaultLog.info('Searching Dataset:', dataset);
+    defaultLog.info('sortField:', sortField);
+
+    let itemData = await searchCollection(
+      roles,
+      keywords,
+      dataset,
+      pageNum,
+      pageSize,
+      project,
+      sortField,
+      sortDirection,
+      caseSensitive,
+      populate,
+      and,
+      or,
+      nor,
+      subset,
+      _in
+    );
+
+    QueryActions.sendResponse(res, 200, itemData);
   } else {
     defaultLog.info('Bad Request');
     QueryActions.sendResponse(res, 400, {});

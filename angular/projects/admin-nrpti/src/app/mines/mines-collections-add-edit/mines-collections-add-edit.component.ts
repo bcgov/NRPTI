@@ -395,8 +395,10 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     if (this.myForm.get('collectionPublish').dirty) {
       if (this.myForm.get('collectionPublish').value) {
         collection['addRole'] = 'public';
+        collection['isBcmiPublished'] = true;
       } else {
         collection['removeRole'] = 'public';
+        collection['isBcmiPublished'] = false;
       }
     }
 

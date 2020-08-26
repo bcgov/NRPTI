@@ -280,8 +280,10 @@ export class MinesRecordsAddEditComponent implements OnInit {
       record[schemaString]['typeCode'] = this.myForm.get('typeCode').value;
     }
     if (this.myForm.get('recordPublish').dirty && this.myForm.get('recordPublish').value) {
+      record['isBcmiPublished'] = true;
       record[schemaString]['addRole'] = 'public';
     } else if (this.myForm.get('recordPublish').dirty && !this.myForm.get('recordPublish').value) {
+      record['isBcmiPublished'] = false;
       record[schemaString]['removeRole'] = 'public';
     }
 
