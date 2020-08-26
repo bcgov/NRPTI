@@ -41,7 +41,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
   public sortingDisplay = {
     '-dateIssued': 'Date Issued (newest at top)',
-    '+recordType': 'Activity Type (a-z)',
+    '+recordType': 'Type (a-z)',
     '+issuedTo.fullName': 'Issued To (a-z)',
     '+location': 'Location (a-z)'
   };
@@ -63,7 +63,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       width: 'col-3'
     },
     {
-      name: 'Activity Type',
+      name: 'Type',
       value: 'type',
       width: 'col-1'
     },
