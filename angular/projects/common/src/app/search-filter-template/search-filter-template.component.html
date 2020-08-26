@@ -33,8 +33,8 @@
           </div>
         </div>
         <input type="text" class="form-control" (keyup.enter)="search()" [(ngModel)]="keywordSearchWords"
-          placeholder="Type keyword search words"
-          aria-label="Type keyword search words" aria-describedby="basic-addon2">
+          [placeholder]="keywordWatermark || 'Type keyword search words'"
+          (aria-label)="keywordWatermark || 'Type keyword search words'" aria-describedby="basic-addon2">
         <div *ngIf="keywordSearchWords && keywordSearchWords.length > 0" class="input-group-append">
           <button class="btn btn-outline-primary" type="button" (click)="clearSearchTerms()">
             <i class="material-icons align-middle">close</i>

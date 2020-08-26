@@ -52,6 +52,7 @@ With the module imports in place, you can add your component to any screen. Just
     (toggleFiltersPanelEvent)="togglePanel($event)"
     [title]="myTitleVar"
     [tooltip]="myooltipVar"
+    [keywordWatermark]="myWatermarkVar"
     [subsets]="subsets"
     [advancedFilters]="true"
     [advancedFilterTitle]="myAdvancedFilterTitle"
@@ -68,6 +69,7 @@ The component has the following parameters and event handlers
 
 - title
 - tooltip
+- keywordWatermark
 - subsets
 - advancedFilters
 - advancedFilterTitle
@@ -87,6 +89,8 @@ You can pass in values to a combination of parameters. Their function is describ
 `title` Sets the title of the search component. Usually this is "Keyword Search". This is `required`.
 
 `tooltip` Tooltip sets the text to display when a user mouses over the tooltip icon to the right of the title. This is `required`.
+
+`keywordWatermark` Sets the watermark text to place inside the keyword search box. If no text is supplied this will default to "Type keyword search words".
 
 `subsets` Is a list of subset objects that will display in a dropdown menu to the left of the keyword search box. Subset objects are described in detail below. Defaults to `null`.
 

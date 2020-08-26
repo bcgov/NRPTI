@@ -35,6 +35,7 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
   // Inputs
   @Input() title: string;
   @Input() tooltip: string;
+  @Input() keywordWatermark: string;
   @Input() subsets: SubsetsObject;
   @Input() advancedFilters = false;
   @Input() attachPanelToDiv = null;
