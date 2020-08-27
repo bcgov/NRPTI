@@ -419,6 +419,68 @@ let searchCollection = async function(
     }
   });
 
+  // For read only users, we need to redact out the details
+  // of any individual where the birthdate is null or the individual
+  // is less then 19 years old. First step to do this is calculate their
+  // age
+  if (roles.includes('public')) {
+    searchResultAggregation.push({
+      $project: {
+        fullRecord: 1,
+        issuedToAge: {
+          $cond: {
+            if: { $ne: [ { $arrayElemAt: [ '$fullRecord.issuedTo.dateOfBirth', 0 ]}, null ] },
+            then: {
+              $subtract: [
+                { $year: {date: new Date() } },
+                { $year: { date: { $arrayElemAt: [ '$fullRecord.issuedTo.dateOfBirth', 0 ] } } }
+              ]
+            },
+            else: 0
+          }
+        }
+      }
+    },{
+      $addFields: {
+        'fullRecord.issuedTo.firstName': {
+          $cond: {
+            if: { $gt: ['$issuedToAge', 18] },
+            then: { $arrayElemAt: ['$fullRecord.issuedTo.firstName', 0] },
+            else: ''
+          }
+        },
+        'fullRecord.issuedTo.lastName': {
+          $cond: {
+            if: { $gt: ['$issuedToAge', 18] },
+            then: { $arrayElemAt: ['$fullRecord.issuedTo.lastName', 0] },
+            else: 'Unpublished'
+          }
+        },
+        'fullRecord.issuedTo.middleName': {
+          $cond: {
+            if: { $gt: ['$issuedToAge', 18] },
+            then: { $arrayElemAt: ['$fullRecord.issuedTo.middleName', 0] },
+            else: ''
+          }
+        },
+        'fullRecord.issuedTo.fullName': {
+          $cond: {
+            if: { $gt: ['$issuedToAge', 18] },
+            then: { $arrayElemAt: ['$fullRecord.issuedTo.fullName', 0] },
+            else: 'Unpublished'
+          }
+        },
+        'fullRecord.issuedTo.dateOfBirth': {
+          $cond: {
+            if: { $gt: ['$issuedToAge', 18] },
+            then: { $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] },
+            else: ''
+          }
+        }
+      }
+    });
+  }
+
   searchResultAggregation.push({
     $replaceRoot: {
       newRoot: {
@@ -494,7 +556,8 @@ let searchCollection = async function(
   // after re-population
   searchResultAggregation.push({
     $project: {
-      fullRecord: 0
+      fullRecord: 0,
+      issuedtoAge: 0
     }
   });
 
