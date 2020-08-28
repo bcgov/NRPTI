@@ -1,4 +1,4 @@
-import { NgModule, ApplicationRef } from '@angular/core';
+import { NgModule, ApplicationRef, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -28,9 +28,14 @@ import { HomeComponent } from './home/home.component';
 import { ApiService } from './services/api.service';
 import { DocumentService } from './services/document.service';
 import { FactoryService } from './services/factory.service';
+import { ConfigService } from 'nrpti-angular-components';
 
 export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrategy {
   return () => overlay.scrollStrategies.close();
+}
+
+export function initConfig(configService: ConfigService) {
+  return () => configService.init();
 }
 
 @NgModule({
@@ -52,6 +57,12 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     BootstrapModalModule.forRoot({ container: document.body })
   ],
   providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initConfig,
+      deps: [ConfigService],
+      multi: true
+    },
     {
       // Tells mat-autocomplete select box to close when the page is scrolled. Aligns with default select box behaviour.
       provide: MAT_AUTOCOMPLETE_SCROLL_STRATEGY,

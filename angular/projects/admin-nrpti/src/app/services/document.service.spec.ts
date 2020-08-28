@@ -3,12 +3,13 @@ import { TestBed } from '@angular/core/testing';
 import { DocumentService } from './document.service';
 import { ApiService } from './api.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ConfigService } from 'nrpti-angular-components';
 
 describe('DocumentService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [DocumentService, ApiService]
+      providers: [DocumentService, ConfigService, ApiService]
     });
   });
 

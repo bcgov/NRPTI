@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { throwError, Observable } from 'rxjs';
+import { ConfigService } from 'nrpti-angular-components';
 
 /**
  * TODO: populate this documentation
@@ -14,36 +15,18 @@ export class ApiService {
   public isMS: boolean; // IE, Edge, etc
 
   pathAPI: string;
-  env: 'local' | 'dev' | 'test' | 'master' | 'prod';
+  env: 'local' | 'dev' | 'test' | 'prod';
 
-  constructor(public http: HttpClient) {
-    const { hostname } = window.location;
-    this.isMS = window.navigator.msSaveOrOpenBlob ? true : false;
+  constructor(
+    public http: HttpClient,
+    private configService: ConfigService
+    ) {
+      this.isMS = window.navigator.msSaveOrOpenBlob ? true : false;
 
-    switch (hostname) {
-      case 'localhost':
-        // Local
-        this.pathAPI = 'http://localhost:3000/api';
-        this.env = 'local';
-        break;
+      this.env     = this.configService.config['ENVIRONMENT'];
 
-      case 'admin-nrpti-dev.pathfinder.gov.bc.ca':
-        // Dev
-        this.pathAPI = 'https://nrpti-dev.pathfinder.gov.bc.ca/api';
-        this.env = 'dev';
-        break;
-
-      case 'admin-nrpti-test.pathfinder.gov.bc.ca':
-        // Test
-        this.pathAPI = 'https://nrpti-test.pathfinder.gov.bc.ca/api';
-        this.env = 'test';
-        break;
-
-      default:
-        // Prod
-        this.pathAPI = 'https://nrpti-prod.pathfinder.gov.bc.ca/api';
-        this.env = 'prod';
-    }
+      this.pathAPI = this.configService.config['API_HOSTNAME']
+                     + this.configService.config['API_PATH'];
   }
 
   /**
