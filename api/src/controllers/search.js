@@ -7,6 +7,7 @@ let qs = require('qs');
 let mongodb = require('../utils/mongodb');
 let moment = require('moment');
 let fuzzySearch = require('../utils/fuzzySearch');
+let constants = require('../utils/constants/misc')
 
 function isEmpty(obj) {
   for (const key in obj) {
@@ -423,7 +424,7 @@ let searchCollection = async function(
   // of any individual where the birthdate is null or the individual
   // is less then 19 years old. First step to do this is calculate their
   // age
-  if (roles.includes('public')) {
+  if (!roles.some(r => constants.ApplicationAdminRoles.indexOf(r) >= 0)) {
     searchResultAggregation.push({
       $project: {
         fullRecord: 1,
