@@ -21,7 +21,7 @@ export class ImportListResolver implements Resolve<Observable<object>> {
       [],
       tableObject.currentPage,
       tableObject.pageSize,
-      tableObject.sortBy,
+      tableObject.sortBy || '-startDate',
       {},
       false
     );
