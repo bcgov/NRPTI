@@ -42,9 +42,9 @@
               type="submit"
               (click)="submit()"
               title="Update record">
-              <i class="material-icons mr-1">
+              <em class="material-icons mr-1">
                 save
-              </i>
+              </em>
               Update
             </button>
           </div>
@@ -119,9 +119,9 @@
   <div class="d-flex justify-content-between mt-4 mb-3">
     <div *ngIf="record && record.sourceSystemRef === 'nrpti'" class="col-6 mr-2 col-md-5 mr-md-0 col-lg-4 col-xl-3">
       <button type="button" class="btn btn-outline-dark mb-1" (click)="deleteRecord()" title="Delete">
-        <i class="material-icons mr-1">
+        <em class="material-icons mr-1">
           delete_forever
-        </i>
+        </em>
         Delete
       </button>
       <span class="grey-subtext d-block">
@@ -133,9 +133,9 @@
       <div class="d-flex justify-content-end mb-1">
         <button type="button" class="btn btn-link" (click)="cancel()" title="Cancel">Cancel</button>
         <button class="btn btn-primary" type="submit" (click)="submit()" title="Update record">
-          <i class="material-icons mr-1">
+          <em class="material-icons mr-1">
             save
-          </i>
+          </em>
           Update
         </button>
       </div>

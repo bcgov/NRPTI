@@ -191,11 +191,8 @@ export class MinesRecordsEditComponent implements OnInit {
    * @memberof MinesRecordsEditComponent
    */
   togglePublish(event) {
-    if (!event.checked) {
+    if (!event.checked || this.canPublish) {
       // always allow unpublishing
-      this.myForm.get('recordPublish').setValue(event.checked);
-    } else if (this.canPublish) {
-      // conditionally allow publishing
       this.myForm.get('recordPublish').setValue(event.checked);
     }
 

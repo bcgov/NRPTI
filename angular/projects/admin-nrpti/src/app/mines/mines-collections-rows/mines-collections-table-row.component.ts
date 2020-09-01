@@ -169,7 +169,7 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
    * Sets the initial collectionState state, or removes it from the store if it is invalid.
    *
    * @memberof MinesRecordsListComponent
-  */
+   */
   setOrRemoveCollectionAddEditState() {
     const tempCollectionAddEditState = this.storeService.getItem(StateIDs.collectionAddEdit);
     if (tempCollectionAddEditState) {
