@@ -230,7 +230,7 @@ exports.protectedDelete = async function (args, res, next) {
   const collection = db.collection('nrpti');
   
   let recordId = null;
-  if (args.swagger.params.recordId || args.swagger.params.recordId.value) {
+  if (args.swagger.params.recordId && args.swagger.params.recordId.value) {
     recordId = args.swagger.params.recordId.value
   } else {
     defaultLog.info(`protectedDelete - you must provide an id to delete`);

@@ -127,7 +127,6 @@ exports.deleteFlavourRecord = async function (flavourId, flavourType) {
     }
     return await this.deleteById(flavourId);
   } catch (error) {
-    console.log(error);
     defaultLog.info(`protectedDelete - couldn't find master record of: ${flavourId}`);
     defaultLog.debug(error);
     throw error;
