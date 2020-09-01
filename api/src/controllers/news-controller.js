@@ -7,9 +7,9 @@ exports.protectedOptions = function (args, res, next) {
 };
 
 exports.protectedDelete = async function (args, res, next) {
-  let collectionId = null;
-  if (args.swagger.params.collectionId || args.swagger.params.collectionId.value) {
-    collectionId = args.swagger.params.collectionId.value
+  let newsId = null;
+  if (args.swagger.params.newsId || args.swagger.params.newsId.value) {
+    newsId = args.swagger.params.newsId.value
   } else {
     defaultLog.info(`protectedDelete - you must provide an id to delete`);
     queryActions.sendResponse(res, 400, {});
@@ -17,9 +17,9 @@ exports.protectedDelete = async function (args, res, next) {
   }
 
   try {
-    await Delete.deleteById(collectionId);
+    await Delete.deleteById(newsId);
   } catch (error) {
-    defaultLog.info(`protectedDelete - error deleting collection: ${collectionId}`);
+    defaultLog.info(`protectedDelete - error deleting news: ${newsId}`);
     defaultLog.debug(error);
     return queryActions.sendResponse(res, 400, {});
   }

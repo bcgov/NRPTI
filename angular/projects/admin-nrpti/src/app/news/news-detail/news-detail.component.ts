@@ -52,7 +52,7 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
         isConfirmed => {
           if (isConfirmed) {
             try {
-              this.factoryService.deleteNewsItem(this.record._id);
+              this.factoryService.deleteNews(this.record._id);
               this.router.navigate(['news']);
             } catch (e) {
               alert('Could not delete News Item');

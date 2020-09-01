@@ -228,8 +228,8 @@ exports.protectedPut = async function (args, res, next) {
 exports.protectedDelete = async function (args, res, next) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const collection = db.collection('nrpti');
-  let recordId = null
-
+  
+  let recordId = null;
   if (args.swagger.params.recordId || args.swagger.params.recordId.value) {
     recordId = args.swagger.params.recordId.value
   } else {
@@ -262,7 +262,7 @@ exports.protectedDelete = async function (args, res, next) {
       next();
     }
   } catch (error) {
-    defaultLog.info(`protectedDelete - error deleting record record: ${recordId}`);
+    defaultLog.info(`protectedDelete - error deleting record: ${recordId}`);
     defaultLog.debug(error);
     return queryActions.sendResponse(res, 400, {});
   }
@@ -270,57 +270,6 @@ exports.protectedDelete = async function (args, res, next) {
   queryActions.sendResponse(res, 200, {});
   next();
 }
-
-exports.protectedNewsDelete = async function (args, res, next) {
-  try {
-    const recordId = args.swagger.params.recordId.value;
-    defaultLog.info(`protectedNewsDelete - recordId: ${recordId}`);
-
-    const model = require('mongoose').model('ActivityLNG');
-
-    try {
-      await model.deleteOne({ _id: recordId, write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
-    } catch (e) {
-      defaultLog.info(`protectedNewsDelete - couldn't find record for recordId: ${recordId}`);
-      return queryActions.sendResponse(res, 404, {});
-    }
-
-    queryUtils.audit(args, 'DELETE', 'ActivityLNG', args.swagger.params.auth_payload, recordId);
-    queryActions.sendResponse(res, 200, {});
-  } catch (error) {
-    queryActions.sendResponse(res, 500, error);
-  }
-  next();
-};
-
-/**
- * Delete a mine collection.
- *
- * @param {*} args
- * @param {*} res
- * @param {*} next
- */
-exports.protectedCollectionDelete = async function (args, res, next) {
-  try {
-    const collectionId = args.swagger.params.collectionId.value;
-    defaultLog.info(`protectedCollectionDelete - collectionId: ${collectionId}`);
-
-    const model = require('mongoose').model('CollectionBCMI');
-
-    try {
-      await model.deleteOne({ _id: collectionId, write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
-    } catch (e) {
-      defaultLog.info(`protectedCollectionDelete - couldn't find record for collectionId: ${collectionId}`);
-      return queryActions.sendResponse(res, 404, {});
-    }
-
-    queryUtils.audit(args, 'DELETE', 'CollectionBCMI', args.swagger.params.auth_payload, collectionId);
-    queryActions.sendResponse(res, 200, {});
-  } catch (error) {
-    queryActions.sendResponse(res, 500, error);
-  }
-  next();
-};
 
 /**
  * Publish a record.  Adds the `public` role to the records root read array.
