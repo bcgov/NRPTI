@@ -1,6 +1,6 @@
 const Delete = require('../controllers/delete/delete');
-let queryActions = require('../utils/query-actions');
-let defaultLog = require('../utils/logger')('record');
+const queryActions = require('../utils/query-actions');
+const defaultLog = require('../utils/logger')('record');
 
 exports.protectedOptions = function (args, res, next) {
   res.status(200).send();

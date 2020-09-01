@@ -72,7 +72,6 @@ export class MinesRecordsEditComponent implements OnInit {
       if (res && res.record && res.record[0] && res.record[0].data
         && res.record[0].data.searchResults && res.record[0].data.searchResults[0]) {
         this.record = res.record[0].data.searchResults[0];
-        console.log(this.record);
         this.bcmiFlavour = this.record.flavours.find(f => f._schemaName.endsWith('BCMI'));
         this.mine = res.mine[0].data;
         // if we have a current flavour, use that
