@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Subject, of } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Location } from '@angular/common';
 import { Picklists, StateStatus, StateIDs } from '../../../../../common/src/app/utils/record-constants';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecordUtils } from '../../records/utils/record-utils';
@@ -13,17 +12,16 @@ import { ConfirmComponent } from '../../confirm/confirm.component';
 import { takeUntil, catchError } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-mines-records-add-edit',
-  templateUrl: './mines-records-add-edit.component.html',
-  styleUrls: ['./mines-records-add-edit.component.scss']
+  selector: 'app-mines-records-edit',
+  templateUrl: './mines-records-edit.component.html',
+  styleUrls: ['./mines-records-edit.component.scss']
 })
-export class MinesRecordsAddEditComponent implements OnInit {
+export class MinesRecordsEditComponent implements OnInit {
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   // flags
   public loading = true;
-  public isEditing = false;
   public isPublished = false;
   public canPublish = false;
 
@@ -57,7 +55,6 @@ export class MinesRecordsAddEditComponent implements OnInit {
   constructor(
     public route: ActivatedRoute,
     public router: Router,
-    private location: Location,
     private recordUtils: RecordUtils,
     private factoryService: FactoryService,
     private loadingScreenService: LoadingScreenService,
@@ -72,22 +69,17 @@ export class MinesRecordsAddEditComponent implements OnInit {
 
     this.setOrRemoveRecordAddEditState();
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
-      this.isEditing = res.breadcrumb !== 'Add Record';
-      if (this.isEditing) {
-        if (res && res.record && res.record[0] && res.record[0].data
-            && res.record[0].data.searchResults && res.record[0].data.searchResults[0]) {
-          this.record = res.record[0].data.searchResults[0];
-          this.bcmiFlavour = this.record.flavours.find(f => f._schemaName.endsWith('BCMI'));
-          this.mine = res.mine[0].data;
-          // if we have a current flavour, use that
-
-          this.populateTextFields();
-        } else {
-          alert('Error: could not load record.');
-          this.router.navigate(['mines']);
-        }
-      } else {
+      if (res && res.record && res.record[0] && res.record[0].data
+        && res.record[0].data.searchResults && res.record[0].data.searchResults[0]) {
+        this.record = res.record[0].data.searchResults[0];
+        this.bcmiFlavour = this.record.flavours.find(f => f._schemaName.endsWith('BCMI'));
         this.mine = res.mine[0].data;
+        // if we have a current flavour, use that
+
+        this.populateTextFields();
+      } else {
+        alert('Error: could not load record.');
+        this.router.navigate(['mines']);
       }
       this.buildForm();
 
@@ -100,7 +92,7 @@ export class MinesRecordsAddEditComponent implements OnInit {
   /**
    * Sets the initial recordAddEdit state, or removes it from the store if it is invalid.
    *
-   * @memberof MinesRecordsAddEditComponent
+   * @memberof MinesRecordsEditComponent
    */
   setOrRemoveRecordAddEditState() {
     const temprecordAddEditState = this.storeService.getItem(StateIDs.recordAddEdit);
@@ -116,7 +108,7 @@ export class MinesRecordsAddEditComponent implements OnInit {
   /**
    * Derive static text strings.
    *
-   * @memberof MinesRecordsAddEditComponent
+   * @memberof MinesRecordsEditComponent
    */
   populateTextFields() {
     if (!this.record) {
@@ -137,7 +129,7 @@ export class MinesRecordsAddEditComponent implements OnInit {
    * values set in that piece of state to pre-populate the form fields, and then clear that item from the store.
    *
    * @private
-   * @memberof MinesRecordsAddEditComponent
+   * @memberof MinesRecordsEditComponent
    */
   private buildForm() {
     this.myForm = new FormGroup({
@@ -150,41 +142,38 @@ export class MinesRecordsAddEditComponent implements OnInit {
           this.recordState.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.recordState.dateIssued.date))) ||
           (this.record && this.record.dateIssued &&
-           this.utils.convertJSDateToNGBDate(new Date(this.record.dateIssued))) ||
+            this.utils.convertJSDateToNGBDate(new Date(this.record.dateIssued))) ||
           '' || null,
-          disabled: (this.record && this.record.sourceSystemRef !== 'nrpti')
+        disabled: (this.record && this.record.sourceSystemRef !== 'nrpti')
       }),
       recordType: new FormControl({
         value: (this.recordState && this.recordState.recordType)
-        || (this.record && this.record.recordType) || '',
+          || (this.record && this.record.recordType) || '',
         disabled: (this.record && this.record.sourceSystemRef !== 'nrpti')
       }),
       typeCode: new FormControl({
-        value: (this.recordState  && this.recordState.recordType === 'Permit' && this.recordState.typeCode)
-        || (this.record && this.record.recordType === 'Permit' && this.record.typeCode) || '',
+        value: (this.recordState && this.recordState.recordType === 'Permit' && this.recordState.typeCode)
+          || (this.record && this.record.recordType === 'Permit' && this.record.typeCode) || '',
         disabled: (this.record && this.record.sourceSystemRef !== 'nrpti')
       }),
       recordAgency: new FormControl({
         value: (this.recordState && this.recordState.recordAgency) ||
           (this.record && this.record.agency) ||
           (this.record && this.record.issuingAgency) || '',
-          disabled: (this.record && this.record.sourceSystemRef !== 'nrpti')
+        disabled: (this.record && this.record.sourceSystemRef !== 'nrpti')
       }),
       recordPublish: new FormControl(
         (this.recordState && this.recordState.recordPublish) ||
-          (this.record && this.record.isBcmiPublished) || false
+        (this.record && this.record.isBcmiPublished) || false
       )
     });
 
-    if (this.isEditing) {
-      this.myForm.get('recordType').disable();
-    }
+    this.myForm.get('recordType').disable();
 
     if (this.recordState) {
       // State was saved from before, so mark everything dirty so as not to miss any previous user edits
       this.myForm.get('recordName').markAsDirty();
       this.myForm.get('recordDate').markAsDirty();
-      this.myForm.get('recordType').markAsDirty();
       this.myForm.get('recordAgency').markAsDirty();
       this.myForm.get('recordPublish').markAsDirty();
 
@@ -198,14 +187,11 @@ export class MinesRecordsAddEditComponent implements OnInit {
    * Toggle the publish formcontrol.
    *
    * @param {*} event
-   * @memberof MinesRecordsAddEditComponent
+   * @memberof MinesRecordsEditComponent
    */
   togglePublish(event) {
-    if (!event.checked) {
+    if (!event.checked || this.canPublish) {
       // always allow unpublishing
-      this.myForm.get('recordPublish').setValue(event.checked);
-    } else if (this.canPublish) {
-      // conditionally allow publishing
       this.myForm.get('recordPublish').setValue(event.checked);
     }
 
@@ -237,9 +223,13 @@ export class MinesRecordsAddEditComponent implements OnInit {
         }
 
         try {
-          await this.factoryService.deleteMineRecord(this.record._id, this.record._schemaName.toLowerCase());
-
-          this.router.navigate(['../../records'], { relativeTo: this.route });
+          for (const flavour of this.record.flavours) {
+            if (flavour._schemaName.includes('BCMI')) {
+              await this.factoryService.deleteMineRecord(flavour._id);
+              break;
+            }
+          }
+          this.router.navigate(['mines', this.mine._id, 'records']);
         } catch (e) {
           alert('Could not delete Record.');
         }
@@ -249,7 +239,7 @@ export class MinesRecordsAddEditComponent implements OnInit {
   /**
    * Submit form data to API.
    *
-   * @memberof MinesRecordsAddEditComponent
+   * @memberof MinesRecordsEditComponent
    */
   async submit() {
     this.loadingScreenService.setLoadingState(true, 'main');
@@ -280,96 +270,48 @@ export class MinesRecordsAddEditComponent implements OnInit {
       record[schemaString]['typeCode'] = this.myForm.get('typeCode').value;
     }
     if (this.myForm.get('recordPublish').dirty && this.myForm.get('recordPublish').value) {
-      record['isBcmiPublished'] = true;
       record[schemaString]['addRole'] = 'public';
     } else if (this.myForm.get('recordPublish').dirty && !this.myForm.get('recordPublish').value) {
-      record['isBcmiPublished'] = false;
       record[schemaString]['removeRole'] = 'public';
     }
 
-    if (this.isEditing) {
-
-      // if we have a flavour, update the flavour.
-      // if we do not, create a flavour.
-      if (this.bcmiFlavour) {
-        record[schemaString]._id = this.bcmiFlavour._id;
-      }
-
-      record['_id'] = this.record._id;
-      record['recordType'] = this.myForm.get('recordType').dirty ? this.myForm.get('recordType').value
-                                                                 : this.record.recordType;
-
-      this.factoryService.editMineRecord(record).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-
-        await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          this.record._id,
-          this.factoryService
-        );
-
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['mines', this.mine._id, 'records', this.record._id, 'detail']);
-      });
-    } else {
-      record['_master'] = this.mine._id;
-      record['projectName'] = this.mine.name;
-      record['mineGuid'] = this.mine._sourceRefId;
-      record['issuedTo'] = {
-        companyName: this.mine.permittee,
-        firstName: null,
-        middleName: null,
-        lastName: null,
-        fullName: null,
-        dateOfBirth: null,
-        type: 'Company'
-      };
-      record['sourceSystemRef'] = 'nrpti';
-      record['centroid'] = this.mine.location ?
-        [this.mine.location.coordinates[1], this.mine.location.coordinates[0]] : [0, 0];
-
-      this.factoryService.createMineRecord(record).subscribe(async (res: any) => {
-        this.recordUtils.parseResForErrors(res);
-
-        // API responds with the master and BCMI flavour records that were created. First record is the BCMI flavour and second is the master.
-        const createdRecord = res && res.length && res[0] && res[0].length && res[0][0] && res[0][0].object;
-
-        await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          createdRecord[1]._id,
-          this.factoryService
-        );
-
-        this.loadingScreenService.setLoadingState(false, 'main');
-        // first record in array is the BCMI flavour record
-        if (createdRecord[0]) {
-          this.router.navigate(['mines', this.mine._id, 'records', createdRecord[0]._id, 'detail']);
-        } else {
-          this.router.navigate(['../'], {relativeTo: this.route});
-        }
-      });
+    // if we have a flavour, update the flavour.
+    // if we do not, create a flavour.
+    if (this.bcmiFlavour) {
+      record[schemaString]._id = this.bcmiFlavour._id;
     }
+
+    record['_id'] = this.record._id;
+    record['recordType'] = this.myForm.get('recordType').dirty ? this.myForm.get('recordType').value
+      : this.record.recordType;
+
+    this.factoryService.editMineRecord(record).subscribe(async res => {
+      this.recordUtils.parseResForErrors(res);
+
+      await this.recordUtils.handleDocumentChanges(
+        this.links,
+        this.documents,
+        this.documentsToDelete,
+        this.record._id,
+        this.factoryService
+      );
+
+      this.loadingScreenService.setLoadingState(false, 'main');
+      this.router.navigate(['mines', this.mine._id, 'records', this.record._id, 'detail']);
+    });
   }
 
   /**
    * Cancel editing.
    *
-   * @memberof MinesRecordsAddEditComponent
+   * @memberof MinesRecordsEditComponent
    */
   cancel() {
     const shouldCancel = confirm(
       'Leaving this page will discard unsaved changes. Are you sure you would like to continue?'
     );
     if (shouldCancel) {
-      if (this.isEditing) {
-        this.router.navigate(['mines', this.mine._id, 'records', this.record._id, 'detail']);
-      } else {
-        this.location.back();
-      }
+      this.router.navigate(['mines', this.mine._id, 'records', this.record._id, 'detail']);
     }
   }
 }

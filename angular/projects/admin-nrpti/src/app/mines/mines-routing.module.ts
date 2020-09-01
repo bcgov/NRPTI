@@ -19,7 +19,7 @@ import { MinesCollectionResolver } from './mines-collection-resolver';
 import { MinesRecordDetailComponent } from './mines-records-detail/mines-records-detail.component';
 import { MinesRecordResolver } from './mines-record-resolver';
 import { MinesRecordCollectionResolver } from './mines-record-collection-resolver';
-import { MinesRecordsAddEditComponent } from './mines-records-add-edit/mines-records-add-edit.component';
+import { MinesRecordsEditComponent } from './mines-records-edit/mines-records-edit.component';
 // other
 import { Utils } from 'nrpti-angular-components';
 
@@ -94,7 +94,7 @@ const routes: Routes = [
               },
               {
                 path: 'add',
-                component: MinesRecordsAddEditComponent,
+                component: MinesRecordsEditComponent,
                 canActivate: [CanActivateGuard],
                 data: {
                   breadcrumb: 'Add Record'
@@ -125,7 +125,7 @@ const routes: Routes = [
                   },
                   {
                     path: 'edit',
-                    component: MinesRecordsAddEditComponent,
+                    component: MinesRecordsEditComponent,
                     canActivate: [CanActivateGuard],
                     data: {
                       breadcrumb: 'Edit Record'

@@ -35,7 +35,7 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
   }
 
   private getSchemaRoute(schemaName) {
-    switch (this.rowData._schemaName) {
+    switch (schemaName) {
       case 'Order':
         return 'orders';
       case 'Inspection':

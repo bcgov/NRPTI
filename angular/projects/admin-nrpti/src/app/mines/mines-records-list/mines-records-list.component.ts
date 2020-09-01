@@ -108,6 +108,9 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   // Edit Record
   public recordState = null;
 
+  // Flags
+  public showRecordForm = false;
+
   constructor(
     public location: Location,
     public router: Router,
@@ -605,6 +608,17 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
 
   anySelectedRecords() {
     return this.storeService.getItem(StateIDs.collectionAddEdit) ? true : false;
+  }
+
+  updateRecordList(recordToAdd) {
+    if (recordToAdd.read.includes('public')) {
+      recordToAdd['isBcmiPublished'] = true;
+    }
+    this.tableData.items.unshift({
+      rowData: recordToAdd
+    });
+    this.tableData.items.pop();
+    this._changeDetectionRef.detectChanges();
   }
 
   /**

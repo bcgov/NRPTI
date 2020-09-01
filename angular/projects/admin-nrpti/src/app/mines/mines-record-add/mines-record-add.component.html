@@ -40,8 +40,16 @@
         <div class="label-pair">
           <label for="recordType">Type <span class="red-asterisk">*</span></label>
           <select name="recordType" id="recordType" formControlName="recordType" class="form-control">
-            <option *ngFor="let recordType of basicRecordTypeBcmiSubset" [ngValue]="recordType">
+            <option *ngFor="let recordType of recordTypeNamesBCMI" [ngValue]="recordType">
               {{ recordType }}
+            </option>
+          </select>
+        </div>
+        <div class="label-pair" *ngIf="myForm.get('recordType').value === 'Permit'">
+          <label for="typeCode">Permit Type <span class="red-asterisk">*</span></label>
+          <select name="typeCode" id="typeCode" formControlName="typeCode" class="form-control">
+            <option *ngFor="let typeCode of permitTypes" [ngValue]="typeCode">
+              {{ typeCode === 'OGP' ? 'Original Permit' : 'Permit Amendment' }}
             </option>
           </select>
         </div>

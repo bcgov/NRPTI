@@ -1,31 +1,30 @@
-import { MinesRecordsAddEditComponent } from './mines-records-add-edit.component';
 import { async, TestBed } from '@angular/core/testing';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
-import { Router, ActivatedRoute } from '@angular/router';
-import { GlobalModule } from 'nrpti-angular-components';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Utils } from 'nrpti-angular-components';
 import { MatSlideToggleModule } from '@angular/material';
-import { LoadingScreenService } from 'nrpti-angular-components';
-import { TestBedHelper, ActivatedRouteStub } from '../../../../../common/src/app/spec/spec-utils';
-import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DialogService } from 'ng2-bootstrap-modal';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { GlobalModule, LoadingScreenService, Utils, StoreService } from 'nrpti-angular-components';
+import { CommonModule } from '../../../../../common/src/app/common.module';
+import { ActivatedRouteStub, TestBedHelper } from '../../../../../common/src/app/spec/spec-utils';
 import { RecordUtils } from '../../records/utils/record-utils';
 import { FactoryService } from '../../services/factory.service';
-import { DialogService } from 'ng2-bootstrap-modal';
+import { SharedModule } from '../../shared/shared.module';
+import { MinesRecordAddComponent } from './mines-record-add.component';
 
-describe('MinesRecordsAddEditComponent', () => {
-  const testBedHelper = new TestBedHelper<MinesRecordsAddEditComponent>(MinesRecordsAddEditComponent);
-
-  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInBcmiRole']);
-  mockFactoryService.userInBcmiRole.and.returnValue(true);
+describe('MinesAddEditComponent', () => {
+  const testBedHelper = new TestBedHelper<MinesRecordAddComponent>(MinesRecordAddComponent);
 
   // component constructor mocks
-  const mockLocation = jasmine.createSpyObj('Location', ['go']);
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', [
+    'editCollection',
+    'createCollection',
+    'deleteCollection'
+  ]);
 
   const mockLoadingScreenService = {
     isLoading: false,
@@ -42,28 +41,28 @@ describe('MinesRecordsAddEditComponent', () => {
         ReactiveFormsModule,
         GlobalModule,
         CommonModule,
+        SharedModule,
         MatSlideToggleModule,
         NgxPaginationModule,
         NgbModule.forRoot()
       ],
-      declarations: [MinesRecordsAddEditComponent],
+      declarations: [MinesRecordAddComponent],
       providers: [
         Utils,
         RecordUtils,
         DialogService,
+        StoreService,
         { provide: LoadingScreenService, useValue: mockLoadingScreenService },
-        { provide: Location, useValue: mockLocation },
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: FactoryService, useValue: mockFactoryService }
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      ]
     }).compileComponents();
   }));
 
-  it('should create', () => {
+  it('should create', async(() => {
     const { component } = testBedHelper.createComponent();
 
     expect(component).toBeTruthy();
-  });
+  }));
 });
