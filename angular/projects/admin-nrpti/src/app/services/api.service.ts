@@ -25,7 +25,7 @@ export class ApiService {
 
       this.env     = this.configService.config['ENVIRONMENT'];
 
-      this.pathAPI = this.configService.config['API_HOSTNAME']
+      this.pathAPI = this.configService.config['API_LOCATION']
                      + this.configService.config['API_PATH'];
   }
 

@@ -16,7 +16,7 @@ export class ApiService {
       this.isMS = window.navigator.msSaveOrOpenBlob ? true : false;
 
       this.env      = this.configService.config['ENVIRONMENT'];
-      this.apiPath  = this.configService.config['API_HOSTNAME']
+      this.apiPath  = this.configService.config['API_LOCATION']
                       + this.configService.config['API_PUBLIC_PATH'];
   }
 
