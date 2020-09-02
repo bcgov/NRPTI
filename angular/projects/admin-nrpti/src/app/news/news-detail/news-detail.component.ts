@@ -18,10 +18,10 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
   public record = null;
 
   constructor(public route: ActivatedRoute,
-              public router: Router,
-              private factoryService: FactoryService,
-              public changeDetectionRef: ChangeDetectorRef,
-              private dialogService: DialogService) {
+    public router: Router,
+    private factoryService: FactoryService,
+    public changeDetectionRef: ChangeDetectorRef,
+    private dialogService: DialogService) {
   }
 
   ngOnInit() {
@@ -40,26 +40,26 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
 
   delete() {
     this.dialogService.addDialog(ConfirmComponent,
-    {
-      title: 'Confirm Deletion',
-      message: 'Do you really want to delete this News Item?',
-      okOnly: false
-    }, {
+      {
+        title: 'Confirm Deletion',
+        message: 'Do you really want to delete this News Item?',
+        okOnly: false
+      }, {
       backdropColor: 'rgba(0, 0, 0, 0.5)'
     })
-    .pipe(takeUntil(this.ngUnsubscribe))
-    .subscribe(
-      isConfirmed => {
-        if (isConfirmed) {
-          try {
-            this.factoryService.deleteNewsItem(this.record._id, 'news');
-            this.router.navigate(['news']);
-          } catch (e) {
-            alert('Could not delete News Item');
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(
+        isConfirmed => {
+          if (isConfirmed) {
+            try {
+              this.factoryService.deleteNews(this.record._id);
+              this.router.navigate(['news']);
+            } catch (e) {
+              alert('Could not delete News Item');
+            }
           }
         }
-      }
-    );
+      );
   }
 
   navigateToEditPage() {

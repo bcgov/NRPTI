@@ -28,7 +28,7 @@ const RECORD_TYPE = Object.freeze({
     _schemaName: 'CertificateAmendment',
     displayName: 'Certificate Amendment',
     recordControllerName: 'certificateAmendments',
-    flavours: { lng: { _schemaName: 'CertificateAmendmentLNG' }, bcmi: { _schemaName: 'PermitCertificateAmendmentBCMI' }  }
+    flavours: { lng: { _schemaName: 'CertificateAmendmentLNG' }, bcmi: { _schemaName: 'CertificateAmendmentBCMI' } }
   },
   CollectionBCMI: {
     _schemaName: 'CollectionBCMI',
@@ -108,5 +108,73 @@ const RECORD_TYPE = Object.freeze({
     flavours: { lng: { _schemaName: 'WarningLNG' }, nrced: { _schemaName: 'WarningNRCED' } }
   }
 });
-
 module.exports = RECORD_TYPE;
+
+exports.MASTER_SCHEMA_NAMES = [
+  'AdministrativePenalty',
+  'AdministrativeSanction',
+  'Agreement',
+  'AnnualReport',
+  'Certificate',
+  'CertificateAmendment',
+  'ConstructionPlan',
+  'Correspondence',
+  'CourtConviction',
+  'DamSafetyInspection',
+  'Inspection',
+  'ManagementPlan',
+  'Order',
+  'Permit',
+  'Report',
+  'RestorativeJustice',
+  'SelfReport',
+  'Ticket',
+  'Warning'
+];
+
+exports.LNG_SCHEMA_NAMES = [
+  'ActivityLNG',
+  'AdministrativePenaltyLNG',
+  'AdministrativeSanctionLNG',
+  'AgreementLNG',
+  'CertificateLNG',
+  'CertificateAmendmentLNG',
+  'ConstructionPlanLNG',
+  'CourtConvictionLNG',
+  'InspectionLNG',
+  'ManagementPlanLNG',
+  'OrderLNG',
+  'PermitLNG',
+  'RestorativeJusticeLNG',
+  'SelfReportLNG',
+  'TicketLNG',
+  'WarningLNG'
+];
+
+exports.NRCED_SCHEMA_NAMES = [
+  'AdministrativePenaltyNRCED',
+  'AdministrativeSanctionNRCED',
+  'CorrespondenceNRCED',
+  'CourtConvictionNRCED',
+  'DamSafetyInspectionNRCED',
+  'InspectionNRCED',
+  'OrderNRCED',
+  'ReportNRCED',
+  'RestorativeJusticeNRCED',
+  'TicketNRCED',
+  'WarningNRCED'
+];
+
+exports.BCMI_SCHEMA_NAMES = [
+  'AnnualReportBCMI',
+  'CertificateAmendmentBCMI',
+  'CollectionBCMI',
+  'CorrespondenceBCMI',
+  'DamSafetyInspectionBCMI',
+  'InspectionBCMI',
+  'ManagementPlanBCMI',
+  'MineBCMI',
+  'OrderBCMI',
+  'PermitBCMI',
+  'ReportBCMI'
+];

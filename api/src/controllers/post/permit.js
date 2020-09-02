@@ -139,6 +139,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.sourceDateUpdated && (permit.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (permit.sourceSystemRef = incomingObj.sourceSystemRef);
   incomingObj.isLngPublished && (permit.isLngPublished = incomingObj.isLngPublished);
+  incomingObj.isBcmiPublished && (permit.isBcmiPublished = incomingObj.isBcmiPublished);
 
   return permit;
 };

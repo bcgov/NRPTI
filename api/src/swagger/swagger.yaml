@@ -94,6 +94,14 @@ definitions:
       - Ticket
       - Warning
 
+  ### Collection Type Definitions
+  CollectionRequestObject:
+    type: object
+
+  ### News Type Definitions
+  NewsRequestObject:
+    type: object
+
   ### Document Type Definitions
   DocumentRequestObject:
     type: object
@@ -519,6 +527,53 @@ paths:
   ###
   ### Record Routes
   ###
+  /record/{recordId}:
+    x-swagger-router-controller: record-controller
+    options:
+      tags:
+        - record
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated record route'
+      parameters:
+        - name: recordId
+          in: path
+          description: '_id of record'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - record
+      summary: 'Delete a record'
+      operationId: protectedDelete
+      description: "Deletes a record via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
+      parameters:
+        - name: recordId
+          in: path
+          description: '_id of record to delete'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
   /record/{recordId}/publish:
     x-swagger-router-controller: record-controller
     options:
@@ -630,98 +685,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/RecordRequestObject'
-      responses:
-        '200':
-          description: 'Success'
-        '403':
-          description: 'Access Denied'
-          schema:
-            $ref: '#/definitions/Error'
-  /record/news/{recordId}:
-    x-swagger-router-controller: record-controller
-    options:
-      tags:
-        - record
-      summary: 'Pre-flight request'
-      operationId: protectedOptions
-      description: 'Options on authenticated record route'
-      parameters:
-        - name: recordId
-          in: path
-          description: '_id of record to delete'
-          required: true
-          type: string
-      responses:
-        '200':
-          description: 'Success'
-        '403':
-          description: 'Access Denied'
-          schema:
-            $ref: '#/definitions/Error'
-    delete:
-      tags:
-        - record
-      summary: 'Delete Record'
-      operationId: protectedNewsDelete
-      description: 'Authenticated access to delete a News Record'
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-        - admin:lng
-      parameters:
-        - name: recordId
-          in: path
-          description: '_id of record'
-          required: true
-          type: string
-      responses:
-        '200':
-          description: 'Success'
-        '403':
-          description: 'Access Denied'
-          schema:
-            $ref: '#/definitions/Error'
-  /record/collection/{collectionId}:
-    x-swagger-router-controller: record-controller
-    options:
-      tags:
-        - record
-        - collection
-      summary: 'Pre-flight request'
-      operationId: protectedOptions
-      description: 'Options on authenticated collection route'
-      parameters:
-        - name: collectionId
-          in: path
-          description: '_id of collection'
-          required: true
-          type: string
-      responses:
-        '200':
-          description: 'Success'
-        '403':
-          description: 'Access Denied'
-          schema:
-            $ref: '#/definitions/Error'
-    delete:
-      tags:
-        - record
-        - collection
-      summary: 'Delete Collection'
-      operationId: protectedCollectionDelete
-      description: 'Authenticated access to delete a collection'
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-        - admin:bcmi
-      parameters:
-        - name: collectionId
-          in: path
-          description: '_id of collection to delete'
-          required: true
-          type: string
       responses:
         '200':
           description: 'Success'
@@ -973,6 +936,306 @@ paths:
         - name: docId
           in: path
           description: '_id of document to get an s3 signed url for'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  ###
+  ### News Routes
+  ###
+  /news/:
+    x-swagger-router-controller: news-controller
+    options:
+      tags:
+        - news
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated news route'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - news
+      summary: 'Post a news'
+      operationId: protectedPost
+      description: "Creates a news via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
+      parameters:
+        - name: news
+          in: body
+          description: 'news to create'
+          required: true
+          schema:
+            $ref: '#/definitions/NewsRequestObject'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /news/{newsId}:
+    x-swagger-router-controller: news-controller
+    options:
+      tags:
+        - news
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated news route'
+      parameters:
+        - name: newsId
+          in: path
+          description: '_id of news'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - news
+      summary: 'Get a news'
+      operationId: protectedGet
+      description: "Get a news via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
+      parameters:
+        - name: newsId
+          in: path
+          description: '_id of news to get'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - news
+      summary: 'Put a news'
+      operationId: protectedPut
+      description: "Updates a news via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
+      parameters:
+        - name: newsId
+          in: path
+          description: '_id of news to update'
+          required: true
+          type: string
+        - name: news
+          in: body
+          description: 'news to update'
+          required: true
+          schema:
+            $ref: '#/definitions/NewsRequestObject'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - news
+      summary: 'Delete a news'
+      operationId: protectedDelete
+      description: "Deletes a news via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
+      parameters:
+        - name: newsId
+          in: path
+          description: '_id of news to delete'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  ###
+  ### collection Routes
+  ###
+  /collection/:
+    x-swagger-router-controller: collection-controller
+    options:
+      tags:
+        - collection
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated collection route'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - collection
+      summary: 'Post a collection'
+      operationId: protectedPost
+      description: "Creates a collection via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
+      parameters:
+        - name: collection
+          in: body
+          description: 'collection to create'
+          required: true
+          schema:
+            $ref: '#/definitions/CollectionRequestObject'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /collection/{collectionId}:
+    x-swagger-router-controller: collection-controller
+    options:
+      tags:
+        - collection
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated collection route'
+      parameters:
+        - name: collectionId
+          in: path
+          description: '_id of collection'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - collection
+      summary: 'Get a collection'
+      operationId: protectedGet
+      description: "Get a collection via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
+      parameters:
+        - name: collectionId
+          in: path
+          description: '_id of collection to get'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - collection
+      summary: 'Put a collection'
+      operationId: protectedPut
+      description: "Updates a collection via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
+      parameters:
+        - name: collectionId
+          in: path
+          description: '_id of collection to update'
+          required: true
+          type: string
+        - name: collection
+          in: body
+          description: 'collection to update'
+          required: true
+          schema:
+            $ref: '#/definitions/CollectionRequestObject'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - collection
+      summary: 'Delete a collection'
+      operationId: protectedDelete
+      description: "Deletes a collection via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
+      parameters:
+        - name: collectionId
+          in: path
+          description: '_id of collection to delete'
           required: true
           type: string
       responses:

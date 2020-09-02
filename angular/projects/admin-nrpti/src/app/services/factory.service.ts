@@ -9,6 +9,8 @@ import { catchError } from 'rxjs/operators';
 import { TaskService, ITaskParams } from './task.service';
 import { DocumentService } from './document.service';
 import { Constants } from '../utils/constants/misc';
+import { NewsService } from './news.service';
+import { CollectionService } from './collection.service';
 /**
  * Facade service for all admin-nrpti services.
  *
@@ -23,6 +25,8 @@ export class FactoryService {
   private _apiService: ApiService;
   private _searchService: SearchService;
   private _recordService: RecordService;
+  private _newsService: NewsService;
+  private _collectionService: CollectionService;
   private _taskService: TaskService;
   private _documentService: DocumentService;
 
@@ -90,6 +94,20 @@ export class FactoryService {
       this._recordService = this.injector.get(RecordService);
     }
     return this._recordService;
+  }
+
+  public get newsService(): NewsService {
+    if (!this._newsService) {
+      this._newsService = this.injector.get(NewsService);
+    }
+    return this._newsService;
+  }
+
+  public get collectionService(): CollectionService {
+    if (!this._collectionService) {
+      this._collectionService = this.injector.get(CollectionService);
+    }
+    return this._collectionService;
   }
 
   /**
@@ -346,7 +364,7 @@ export class FactoryService {
    * @memberof FactoryService
    */
   public deleteCollection(collectionId: string): Promise<any> {
-    return this.recordService.deleteRecord(collectionId, 'collection');
+    return this.collectionService.deleteCollection(collectionId);
   }
 
   /**
@@ -474,8 +492,8 @@ export class FactoryService {
    * @returns {Promise<any>}
    * @memberof FactoryService
    */
-  public deleteMineRecord(recordId: string, model: string): Promise<any> {
-    return this.recordService.deleteRecord(recordId, model);
+  public deleteMineRecord(recordId: string): Promise<any> {
+    return this.recordService.deleteRecord(recordId);
   }
 
   // News
@@ -495,8 +513,8 @@ export class FactoryService {
     return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
   }
 
-  public deleteNewsItem(recordId: string, model: string): Promise<any> {
-    return this.recordService.deleteRecord(recordId, model);
+  public deleteNews(newsId: string): Promise<any> {
+    return this.newsService.deleteNews(newsId);
   }
 
   // Documents
@@ -537,10 +555,10 @@ export class FactoryService {
     dataPackage[containerName] = [record];
 
     return isInsert ? this.recordService
-                          .createRecord(dataPackage)
-                          .pipe(catchError(error => this.apiService.handleError(error)))
-                    : this.recordService
-                          .editRecord(dataPackage)
-                          .pipe(catchError(error => this.apiService.handleError(error)));
+      .createRecord(dataPackage)
+      .pipe(catchError(error => this.apiService.handleError(error)))
+      : this.recordService
+        .editRecord(dataPackage)
+        .pipe(catchError(error => this.apiService.handleError(error)));
   }
 }

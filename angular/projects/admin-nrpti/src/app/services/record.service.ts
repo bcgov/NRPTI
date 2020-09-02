@@ -12,7 +12,7 @@ import { ApiService } from './api.service';
  */
 @Injectable({ providedIn: 'root' })
 export class RecordService {
-  constructor(public apiService: ApiService, public http: HttpClient) {}
+  constructor(public apiService: ApiService, public http: HttpClient) { }
 
   /**
    * Publish a record.
@@ -66,16 +66,12 @@ export class RecordService {
    * @returns {Promise<any>}
    * @memberof RecordService
    */
-  public deleteRecord(recordId: string, model: string): Promise<any> {
+  public deleteRecord(recordId: string): Promise<any> {
     if (!recordId) {
       throw Error('RecordService - deleteRecord - missing required recordId param');
     }
 
-    if (!model) {
-      throw Error('RecordService - deleteRecord - missing required model param');
-    }
-
-    const queryString = `record/${model}/${recordId}`;
+    const queryString = `record/${recordId}`;
     return this.http.delete<any>(`${this.apiService.pathAPI}/${queryString}`).toPromise();
   }
 }
