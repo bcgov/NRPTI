@@ -15,7 +15,7 @@ export class ConfigService {
    */
   async init() {
     try {
-      this.configuration = await this.httpClient.get('config')
+      this.configuration = await this.httpClient.get('api/config')
         .pipe(
           tap((configuration: any) => this.configuration = configuration),
           mapTo(undefined),
