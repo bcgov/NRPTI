@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap, mapTo } from 'rxjs/operators';
 
 @Injectable()
 export class ConfigService {
@@ -15,11 +14,8 @@ export class ConfigService {
    */
   async init() {
     try {
-      this.configuration = await this.httpClient.get('api/config')
-        .pipe(
-          tap((configuration: any) => this.configuration = configuration),
-          mapTo(undefined),
-        ).toPromise();
+      this.configuration = await this.httpClient.get('api/config').toPromise();
+      console.log('Configuration:', this.configuration);
       if (this.configuration['debugMode']) {
         console.log('Configuration:', this.configuration);
       }
