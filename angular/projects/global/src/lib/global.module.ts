@@ -22,6 +22,7 @@ import { DigitOnlyDirective } from './directives/digit-only/digit-only.directive
 // services
 import { StoreService } from './services/store.service';
 import { SearchService } from './services/search.service';
+import { ConfigService } from './services/config.service';
 import { InjectComponentService } from './services/inject-component.service';
 
 // utils
@@ -50,6 +51,7 @@ import { LoadingScreenService } from './services/loading-screen.service';
   ],
   providers: [
     StoreService,
+    ConfigService,
     SearchService,
     TableTemplateUtils,
     InjectComponentService,

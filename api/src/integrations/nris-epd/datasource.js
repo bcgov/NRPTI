@@ -144,11 +144,14 @@ class NrisDataSource {
           moment().diff(moment(records[i].completionDate), 'days') > 7
         ) {
           const newRecord = await this.transformRecord(records[i]);
-
           const existingRecord = await this.findExistingRecord(newRecord);
 
           if (existingRecord) {
             await this.updateRecord(newRecord, existingRecord);
+            if (newRecord.documents.length === 0) {
+              // create attachment if no existing document was found, if no "Final Report" is attached no document will be created
+              await this.createRecordAttachments(records[i], newRecord)
+            }
           } else {
             await this.createRecordAttachments(records[i], newRecord);
             await this.createRecord(newRecord);
@@ -201,6 +204,16 @@ class NrisDataSource {
     newRecord.updatedBy = (this.auth_payload && this.auth_payload.displayName) || '';
 
     newRecord.sourceSystemRef = 'nris-epd';
+
+    // check if document exists already in the system but is orphaned
+    for (let i = 0; i < record.attachment.length; i++) {
+      if (record.attachment[i].fileType === 'Final Report') {
+        const existingDocument = await this.findExistingDocument(record.attachment[i].filePath);
+        if (existingDocument && existingDocument._id && !newRecord.documents.includes(existingDocument._id)) {
+          newRecord.documents.push(existingDocument._id);
+        }
+      }
+    }
 
     if (record.client && record.client.length > 0 && record.client[0]) {
       const clientType = record.client[0].clientType;
@@ -297,7 +310,6 @@ class NrisDataSource {
       readRoles.push('public');
       s3ACLRole = 'public-read';
     }
-
     try {
       ({ docResponse, s3Response } = await documentController.createS3Document(
         fileName,
@@ -367,13 +379,20 @@ class NrisDataSource {
   // Checks to see if a record already exists.
   async findExistingRecord(transformedRecord) {
     const masterRecordModel = mongoose.model(RECORD_TYPE.Inspection._schemaName);
-
     return await masterRecordModel
       .findOne({
         _schemaName: RECORD_TYPE.Inspection._schemaName,
         _sourceRefNrisId: transformedRecord._sourceRefNrisId
       })
       .populate('_flavourRecords');
+  }
+
+  async findExistingDocument(documentName) {
+    const documentModel = mongoose.model('Document');
+    return await documentModel
+      .findOne({
+        fileName: documentName
+      })
   }
 
   // Updates an existing record with new data pulled from the API.
@@ -392,10 +411,7 @@ class NrisDataSource {
       existingRecord._flavourRecords.forEach(flavourRecord => {
         updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
       });
-      // document ids need to be copied over as well
-      existingRecord.documents.forEach(doc => {
-        updateObj.documents.push(doc);
-      })
+
       return await RecordController.processPutRequest(
         { swagger: { params: { auth_payload: this.auth_payload } } },
         null,
