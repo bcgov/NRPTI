@@ -20,6 +20,7 @@ export class ConfigService {
           tap((configuration: any) => this.configuration = configuration),
           mapTo(undefined),
         ).toPromise();
+      console.log('Configuration:', this.configuration);
       if (this.configuration['debugMode']) {
         console.log('Configuration:', this.configuration);
       }
