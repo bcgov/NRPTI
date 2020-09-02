@@ -39,6 +39,7 @@ import { FactoryService } from './services/factory.service';
 import { KeycloakService } from './services/keycloak.service';
 import { RecordService } from './services/record.service';
 import { TaskService } from './services/task.service';
+import { ConfigService } from 'nrpti-angular-components';
 import { NewsService } from './services/news.service';
 
 // resolvers
@@ -54,6 +55,11 @@ import { CanDeactivateGuard } from './guards/can-deactivate-guard.service';
 import { TokenInterceptor } from './utils/token-interceptor';
 import { RecordUtils } from './records/utils/record-utils';
 import { CollectionService } from './services/collection.service';
+
+
+export function initConfig(configService: ConfigService) {
+  return () => configService.init();
+}
 
 export function keycloakFactory(keycloakService: KeycloakService) {
   return () => keycloakService.init();
@@ -96,6 +102,12 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     BootstrapModalModule.forRoot({ container: document.body })
   ],
   providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initConfig,
+      deps: [ConfigService],
+      multi: true
+    },
     KeycloakService,
     {
       provide: APP_INITIALIZER,

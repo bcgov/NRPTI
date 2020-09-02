@@ -28,7 +28,8 @@
             "polyfills": "projects/admin-nrpti/src/polyfills.ts",
             "assets": [
               "projects/admin-nrpti/src/assets",
-              "projects/admin-nrpti/src/favicon.ico"
+              "projects/admin-nrpti/src/favicon.ico",
+              "projects/admin-nrpti/src/env.js"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -98,7 +99,8 @@
             ],
             "assets": [
               "projects/admin-nrpti/src/assets",
-              "projects/admin-nrpti/src/favicon.ico"
+              "projects/admin-nrpti/src/favicon.ico",
+              "projects/admin-nrpti/src/env.js"
             ]
           }
         },
@@ -122,7 +124,8 @@
             ],
             "assets": [
               "projects/admin-nrpti/src/assets",
-              "projects/admin-nrpti/src/favicon.ico"
+              "projects/admin-nrpti/src/favicon.ico",
+              "projects/admin-nrpti/src/env.js"
             ]
           }
         },
@@ -163,7 +166,8 @@
             "polyfills": "projects/public-nrpti/src/polyfills.ts",
             "assets": [
               "projects/public-nrpti/src/assets",
-              "projects/public-nrpti/src/favicon.ico"
+              "projects/public-nrpti/src/favicon.ico",
+              "projects/public-nrpti/src/env.js"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -233,7 +237,8 @@
             ],
             "assets": [
               "projects/public-nrpti/src/assets",
-              "projects/public-nrpti/src/favicon.ico"
+              "projects/public-nrpti/src/favicon.ico",
+              "projects/public-nrpti/src/env.js"
             ]
           }
         },
@@ -257,7 +262,8 @@
             ],
             "assets": [
               "projects/public-nrpti/src/assets",
-              "projects/public-nrpti/src/favicon.ico"
+              "projects/public-nrpti/src/favicon.ico",
+              "projects/public-nrpti/src/env.js"
             ]
           }
         },
@@ -298,7 +304,8 @@
             "polyfills": "projects/public-lng/src/polyfills.ts",
             "assets": [
               "projects/public-lng/src/assets",
-              "projects/public-lng/src/favicon.ico"
+              "projects/public-lng/src/favicon.ico",
+              "projects/public-lng/src/env.js"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -384,7 +391,8 @@
             ],
             "assets": [
               "projects/public-lng/src/assets",
-              "projects/public-lng/src/favicon.ico"
+              "projects/public-lng/src/favicon.ico",
+              "projects/public-lng/src/env.js"
             ]
           }
         },
@@ -415,7 +423,8 @@
             ],
             "assets": [
               "projects/public-lng/src/assets",
-              "projects/public-lng/src/favicon.ico"
+              "projects/public-lng/src/favicon.ico",
+              "projects/public-lng/src/env.js"
             ]
           }
         },

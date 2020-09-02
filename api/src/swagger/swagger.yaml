@@ -112,6 +112,10 @@ definitions:
         type: string
         example: 'A pre-signed URL.'
 
+  ### Config Definitions
+  ConfigObject:
+    type: object
+
   ### Search Definitions
   SearchObject:
     type: object
@@ -214,6 +218,38 @@ definitions:
         type: string
 
 paths:
+  /config:
+    x-swagger-router-controller: config
+    options:
+      tags:
+        - config
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on config Route'
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/ConfigObject'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - config
+      summary: 'Get the app configuration'
+      operationId: protectedGetConfig
+      description: 'Retrieves configuration data.'
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/ConfigObject'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
   /search:
     x-swagger-router-controller: search
     options:
