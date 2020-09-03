@@ -15,6 +15,7 @@ export class ConfigService {
   async init() {
     try {
       this.configuration = await this.httpClient.get('api/config').toPromise();
+
       console.log('Configuration:', this.configuration);
       if (this.configuration['debugMode']) {
         console.log('Configuration:', this.configuration);
