@@ -1,0 +1,79 @@
+<main class="container-fluid-padding">
+  <section class="mb-3">
+    <h4>Application Communication Popup</h4>
+    <!-- Tab headers for selecting application -->
+    <section>
+      <div role="navigation">
+        <ul class="nav nav-tabs nav-fill pl-2" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" role="tab" routerLink="/communications/BCMI" [class.active]="selectedApplication === 'BCMI'">
+              BCMI
+            </a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" role="tab" routerLink="/communications/NRCED" [class.active]="selectedApplication === 'NRCED'">
+              NRCED
+            </a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" role="tab" routerLink="/communications/LNG" routerLinkActive [class.active]="selectedApplication === 'LNG'">
+              LNG
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- popup edit section-->
+    <!-- Should include some instructions here -->
+    <p>With this form you can supply details for a popup message that will be displayed to users of BCMI, LNG or NRCED.
+       Enter a popup title and description, and supply a date range when the popup will display. You can only have one
+       popup active at a time, so any edits here will replace the existing popup.
+    </p>
+    <section class="my-3 py-3 border-bottom">
+      <form [formGroup]="myForm" novalidate>
+        <div class="flex-container">
+          <div class="label-pair">
+            <label for="popupTitle">Title</label>
+            <input name="popupTitle" id="popupTitle" type="text" formControlName="popupTitle" class="form-control" />
+          </div>
+        </div>
+        <div class="flex-container">
+          <div class="label-pair lrg">
+            <label for="description">Description</label>
+            <textarea
+              name="description"
+              id="description"
+              type="text"
+              formControlName="description"
+              class="form-control"
+              rows="5"
+            ></textarea>
+          </div>
+        </div>
+        <div class="flex-container">
+          <div class="label-pair">
+            <label for="startDate">Start Date</label>
+            <lib-date-picker
+              [control]="myForm.controls.startDate"
+              [isValidate]="true">
+            </lib-date-picker>
+          </div>
+          <div class="label-pair">
+            <label for="endDate">End Date</label>
+            <lib-date-picker
+              [control]="myForm.controls.endDate"
+              [isValidate]="true">
+            </lib-date-picker>
+          </div>
+        </div>
+        <!-- Add an advanced section for updating the communication package additional info json blob? -->
+      </form>
+    </section>
+    <div class="d-flex justify-content-end mb-1">
+      <button class="btn btn-primary" type="submit" (click)="submit()" title="Save Popup">
+        Save Popup
+      </button>
+    </div>
+  </section>
+</main>

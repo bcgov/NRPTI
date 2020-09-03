@@ -71,5 +71,9 @@
       <i class="material-icons mr-3">import_export</i>
       Imports
     </a>
+    <a [ngClass]="{ active: mainRoute === 'communications' }" id="communications" [routerLink]="['/communications', 'BCMI']">
+      <i class="material-icons mr-3">chat</i>
+      Communications
+    </a>
   </section>
 </div>
