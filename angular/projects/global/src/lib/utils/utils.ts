@@ -105,4 +105,14 @@ export class Utils {
       return fn(...args);
     };
   }
+
+  static convertAcronyms(acronym): string {
+    if (acronym && acronym === 'EAO') {
+      return 'Environmental Assessment Office';
+    } else if (acronym && acronym === 'EMPR') {
+      return 'Ministry of Energy, Mines and Petroleum Resources';
+    } else {
+      return acronym;
+    }
+  }
 }
