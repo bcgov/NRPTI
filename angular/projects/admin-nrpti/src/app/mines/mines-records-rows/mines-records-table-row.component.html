@@ -1,4 +1,4 @@
-<td scope="row" class="col-1" (click)="toggleCheckbox(); $event.stopPropagation();">
+<td scope="row" class="col-1" (click)="toggleCheckbox(null); $event.stopPropagation();">
   <mat-checkbox #rowCheckBox *ngIf="!rowData.collections || rowData.collections.length === 0" [checked]="rowData.rowSelected" (change)="toggleCheckbox($event)"></mat-checkbox>
 </td>
 <td scope="row" data-label="Name" class="col-2">
