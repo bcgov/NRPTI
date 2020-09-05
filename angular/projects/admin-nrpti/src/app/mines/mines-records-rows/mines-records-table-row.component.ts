@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { FactoryService } from '../../services/factory.service';
 import { TableRowComponent } from 'nrpti-angular-components';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -11,6 +11,8 @@ import { Entity } from '../../../../../common/src/app/models/master/common-model
 })
 export class MinesRecordsTableRowComponent extends TableRowComponent implements OnInit {
   public entityString = '';
+
+  @ViewChild('rowCheckBox') rowCheckBox: ElementRef;
 
   constructor(
     public route: ActivatedRoute,
@@ -56,7 +58,13 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
     }
   }
 
-  public toggleCheckbox() {
+  public toggleCheckbox(event) {
+
+    if (!event) {
+      this.rowCheckBox['checked'] = true;
+      return;
+    }
+
     this.rowData.rowSelected = !this.rowData.rowSelected;
 
     if (this.rowData.rowSelected) {
@@ -64,9 +72,8 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
     } else {
       this.messageOut.emit({ label: 'rowUnselected', data: this.rowData });
     }
-
-    this.changeDetectionRef.detectChanges();
   }
+
   /**
    * Navigate to record details page.
    *
