@@ -13,7 +13,6 @@
       (searchEvent)='executeSearch($event)'
       title="Keyword Search"
       tooltip="Summary, description, location, and issued to name fields"
-      keywordWatermark="Type keyword to search"
       [subsets]="subsets"
       [advancedFilters]="true"
       [showAdvancedFilters]="showAdvancedFilters"
@@ -25,16 +24,40 @@
 
   <section class="d-flex justify-content-end">
     <div *ngIf="!collectionState">
-      <span ngbDropdown>
-        <button class="btn btn-primary" id="actionDropdown" ngbDropdownToggle>Actions</button>
-        <div class="dropdown-menu" aria-labelledby="actionDropdown" ngbDropdownMenu>
-          <button class="dropdown-item" [disabled]="!anySelectedRecords()" (click)="submitAddEditCollectionRecords()">Add to new Collection</button>
-          <button class="dropdown-item" [disabled]="!anySelectedRecords()" (click)="submitAddToExistingCollection()">Add to existing Collection</button>
-          <button class="dropdown-item" (click)="submitAddRecord()">Add new Record</button>
-        </div>
-      </span>
+      <button
+        class="btn btn-primary"
+        [disabled]="!anySelectedRecords()"
+        (click)="submitAddEditCollectionRecords()"
+        title="Add to new collection">
+        <em class="material-icons mr-1 align-middle">add</em>
+        <span class="align-middle">Add to new Collection</span>
+      </button>
+      &nbsp;
+      <button
+        class="btn btn-primary"
+        [disabled]="!anySelectedRecords()"
+        (click)="submitAddToExistingCollection()"
+        title="Add to existing collection">
+        <em class="material-icons mr-1 align-middle">add</em>
+        <span class="align-middle">Add to existing Collection</span>
+      </button>
+      &nbsp;
+      <button
+        class="btn"
+        [ngClass]="{'btn-primary' : !showRecordForm, 'btn-secondary' : showRecordForm }"
+        (click)="showRecordForm = !showRecordForm"
+        title="Add new record">
+        <em class="material-icons mr-1 align-middle">add</em>
+        <span class="align-middle">Add New Record</span>
+      </button>
     </div>
   </section>
+
+  <app-mines-record-add
+    *ngIf="mine && showRecordForm"
+    [mine]="mine"
+    (addedRecord)="updateRecordList($event)">
+  </app-mines-record-add>
 
   <section *ngIf="collectionState">
     <div class="d-flex justify-content-end mb-1">
@@ -43,8 +66,7 @@
           type="button"
           class="btn btn-link"
           (click)="cancelAddEditCollectionRecords()"
-          title="Cancel adding records to collection"
-        >
+          title="Cancel adding records to collection">
           Cancel
         </button>
         <button
@@ -69,7 +91,6 @@
     <lib-table-template
       *ngIf="tableData.totalListItems > 0"
       [data]="tableData"
-      (messageOut)="onMessageOut($event)"
-    ></lib-table-template>
+      (messageOut)="onMessageOut($event)"></lib-table-template>
   </section>
 </main>

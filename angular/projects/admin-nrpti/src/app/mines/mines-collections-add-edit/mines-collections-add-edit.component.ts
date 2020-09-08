@@ -463,7 +463,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
         try {
           await this.factoryService.deleteCollection(this.collection._id);
 
-          this.router.navigate(['../../collections'], { relativeTo: this.route });
+          this.router.navigate(['mines', this.collection._master, 'collections']);
         } catch (e) {
           alert('Could not delete Collection.');
         }

@@ -127,7 +127,7 @@ export class KeycloakService {
    * @memberof KeycloakService
    */
   getToken(): string {
-    return this.keycloakAuth.token;
+    return this.keycloakAuth && this.keycloakAuth.token;
   }
 
   /**

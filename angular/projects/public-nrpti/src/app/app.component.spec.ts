@@ -8,6 +8,7 @@ import { ApiService } from './services/api.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import {
+  ConfigService,
   BreadcrumbComponent,
   StoreService,
   LoadingScreenService
@@ -29,6 +30,7 @@ describe('AppComponent', () => {
       declarations: [AppComponent, HeaderComponent, FooterComponent, BreadcrumbComponent],
       imports: [RouterTestingModule, HttpClientTestingModule, BrowserAnimationsModule],
       providers: [
+        ConfigService,
         ApiService,
         { provide: StoreService, useValue: mockStoreService },
         { provide: LoadingScreenService, useValue: mockLoadingScreenService }

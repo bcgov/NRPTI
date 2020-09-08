@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -30,6 +30,11 @@ import { UrlService } from './services/url.service';
 import { DataService } from './services/data.service';
 import { FaqComponent } from './faq/faq.component';
 import { SearchService } from 'nrpti-angular-components';
+import { ConfigService } from 'nrpti-angular-components';
+
+export function initConfig(configService: ConfigService) {
+  return () => configService.init();
+}
 
 @NgModule({
   imports: [
@@ -49,7 +54,14 @@ import { SearchService } from 'nrpti-angular-components';
     BootstrapModalModule.forRoot({ container: document.body })
   ],
   declarations: [AppComponent, ContactComponent, HeaderComponent, FooterComponent, FaqComponent, HomeComponent],
-  providers: [ApiService, UrlService, DataService, SearchService, Utils],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initConfig,
+      deps: [ConfigService],
+      multi: true
+    },
+    ApiService, UrlService, DataService, SearchService, Utils],
   entryComponents: [],
   bootstrap: [AppComponent]
 })

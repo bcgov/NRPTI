@@ -384,7 +384,6 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
     this.submit();
   }
 
-
   /**
    * Sets the initial collectionState state, or removes it from the store if it is invalid.
    *
