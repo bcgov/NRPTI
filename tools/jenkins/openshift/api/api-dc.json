@@ -160,6 +160,26 @@
                   {
                     "name": "API_HOSTNAME",
                     "value": "${APPLICATION_DOMAIN}"
+                  },
+                  {
+                    "name": "API_LOCATION",
+                    "value": "${API_LOCATION}"
+                  },
+                  {
+                    "name": "API_PATH",
+                    "value": "${API_PATH}"
+                  },
+                  {
+                    "name": "API_PUBLIC_PATH",
+                    "value": "${API_PUBLIC_PATH}"
+                  },
+                  {
+                    "name": "KEYCLOAK_CLIENT_ID",
+                    "value": "${KEYCLOAK_CLIENT_ID}"
+                  },
+                  {
+                    "name": "ENVIRONMENT",
+                    "value": "${ENVIRONMENT}"
                   }
                 ],
                 "envFrom": [
@@ -398,6 +418,31 @@
       "displayName": "Application Hostname",
       "description": "The exposed hostname that will route to the Node.js service, if left blank a value will be defaulted.",
       "value": "nrpti-test.pathfinder.gov.bc.ca"
+    },
+    {
+      "name": "API_LOCATION",
+      "displayName": "Protocol and hostname of api site",
+      "value": "https://admin-nrpti-dev.pathfinder.gov.bc.ca"
+    },
+    {
+      "name": "API_PATH",
+      "displayName": "Root level api path",
+      "value": "/api"
+    },
+    {
+      "name": "API_PUBLIC_PATH",
+      "displayName": "Path to the public section of the api",
+      "value": "/api/public"
+    },
+    {
+      "name": "KEYCLOAK_CLIENT_ID",
+      "displayName": "The keycloak client id for admin",
+      "value": "nrpti-admin"
+    },
+    {
+      "name": "ENVIRONMENT",
+      "displayName": "Name of this environment",
+      "value": "dev"
     },
     {
       "name": "APPLICATION_DOMAIN_PATH",

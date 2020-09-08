@@ -11,6 +11,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
 import {
+  ConfigService,
   StoreService,
   GlobalModule,
   LoadingScreenService
@@ -44,6 +45,7 @@ describe('AppComponent', () => {
       ],
       imports: [GlobalModule, RouterTestingModule, HttpClientTestingModule, BrowserAnimationsModule],
       providers: [
+        ConfigService,
         ApiService,
         { provide: LoadingScreenService, useValue: mockLoadingScreenService },
         { provide: KeycloakService, useValue: mockKeycloakService },

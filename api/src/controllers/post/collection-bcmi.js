@@ -84,7 +84,7 @@ exports.createMaster = async function(args, res, next, incomingObj) {
   // if any values in the "records" attribute exist on any other collection, throw an error
   if (collection.records && collection.records.length > 0) {
     const model = require('mongoose').model(RECORD_TYPE.CollectionBCMI._schemaName);
-    for(const record of collection.record) {
+    for(const record of collection.records) {
       // does this record exit in any other collection?
       const collectionCount = await model.count({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName,  records: { $elemMatch: { $eq: new ObjectID(record) } } });
       if (collectionCount && collectionCount > 0) {
