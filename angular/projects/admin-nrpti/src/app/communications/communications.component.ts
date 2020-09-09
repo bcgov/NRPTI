@@ -33,8 +33,7 @@ export class CommunicationsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
       this.commPackage = res.communicationsPackage.COMMUNICATIONS;
-      const urlSegments = this.router.url.split('/');
-      this.selectedApplication = urlSegments[urlSegments.length - 1].toUpperCase();
+      this.selectedApplication = this.route.snapshot.params.application.toUpperCase();
 
       this.buildForm();
     });

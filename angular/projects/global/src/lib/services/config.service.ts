@@ -40,7 +40,8 @@ export class ConfigService {
   }
 
   public createCommunicationPackage(communicationPackage, pathAPI: string) {
-    if (!communicationPackage) {
+    if (!communicationPackage ||
+        (communicationPackage && !Object.prototype.hasOwnProperty.call(communicationPackage, 'application'))) {
       throw new Error('Invalid communication pakage!');
     }
 
