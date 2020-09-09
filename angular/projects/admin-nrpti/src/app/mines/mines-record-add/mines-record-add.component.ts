@@ -116,7 +116,7 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
     };
     record['sourceSystemRef'] = 'nrpti';
     record['centroid'] = this.mine.location ?
-      [this.mine.location.coordinates[1], this.mine.location.coordinates[0]] : [0, 0];
+      [this.mine.location.coordinates[0], this.mine.location.coordinates[1]] : [0, 0];
 
     // If we are editing a collection, we add right away.
     if (this.collectionId) {
