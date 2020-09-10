@@ -73,6 +73,7 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
       !this.myForm.get('recordType').value
     ) {
       alert('Please fill all manditory fields related to record.');
+      return;
     }
 
     const record = {};
@@ -82,6 +83,7 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
       !this.myForm.get('typeCode').value
     ) {
       alert('You must select a permit type.');
+      return;
     }
 
     record['recordName'] = this.myForm.get('recordName').value;
@@ -117,11 +119,6 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
     record['sourceSystemRef'] = 'nrpti';
     record['centroid'] = this.mine.location ?
       [this.mine.location.coordinates[0], this.mine.location.coordinates[1]] : [0, 0];
-
-    // If we are editing a collection, we add right away.
-    if (this.collectionId) {
-      record['collectionId'] = this.collectionId;
-    }
 
     // lookup appropriate schemaName from type value
     const recordSchema = Object.values(Picklists.bcmiRecordTypePicklist).filter(item => {

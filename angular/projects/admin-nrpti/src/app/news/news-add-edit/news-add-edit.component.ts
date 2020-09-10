@@ -34,11 +34,11 @@ export class NewsAddEditComponent implements OnInit, OnDestroy {
   public projects = [{
     id: '588511d0aaecd9001b826192',
     name: 'LNG Canada'
-   },
-   {
+  },
+  {
     id: '588511c4aaecd9001b825604',
     name: 'Coastal Gaslink'
-   }];
+  }];
 
   constructor(
     public route: ActivatedRoute,
@@ -47,7 +47,7 @@ export class NewsAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -81,7 +81,7 @@ export class NewsAddEditComponent implements OnInit, OnDestroy {
       _epicProjectId: new FormControl({
         id: this.record._epicProjectId,
         name: this.record.projectName
-       }),
+      }),
       type: new FormControl(this.record.type),
       title: new FormControl(this.record.title),
       url: new FormControl((this.record && this.record.url) || ''),
@@ -89,7 +89,7 @@ export class NewsAddEditComponent implements OnInit, OnDestroy {
         (this.record &&
           this.record.date &&
           this.utils.convertJSDateToNGBDate(new Date(this.record.date))) ||
-          ''
+        ''
       ),
     });
   }
@@ -101,7 +101,7 @@ export class NewsAddEditComponent implements OnInit, OnDestroy {
   // Needed in order to determine which complex object is selected
   compareProjectSelection(optionA: any, optionB: any): boolean {
     return optionA && optionB ? optionA.id === optionB.id : optionA === optionB;
- }
+  }
 
   navigateBack() {
     if (this.isEditing) {
@@ -128,19 +128,20 @@ export class NewsAddEditComponent implements OnInit, OnDestroy {
 
     if (!this.isEditing) {
       // Add the news item.
-      this.factoryService.createNews(newsItem).subscribe(async res => {
-        // TODO: Need to check for res.length, as the return is typed object, but it's actually an array.
-        if (!res /*|| !res.length*/ || !res[0] || !res[0].length || !res[0][0]) {
-          alert('Failed to create News Item.');
-        } else {
-          this.router.navigate(['news', this.record.system, res[0][0].object._id, 'detail']);
-        }
-      });
+      const res = await this.factoryService.createNews(newsItem);
+      if (!res || res.insertedCount !== 1) {
+        alert('Failed to create News Item.');
+      } else {
+        this.router.navigate(['news', this.record.system, res.insertedId, 'detail']);
+      }
     } else {
       // Update the news item.
-      this.factoryService.editNews(newsItem).subscribe(async res => {
+      const res = await this.factoryService.editNews(newsItem);
+      if (!res || res.modifiedCount !== 1) {
+        alert('Failed to create News Item.');
+      } else {
         this.router.navigate(['news', this.record.system, this.record._id, 'detail']);
-      });
+      }
     }
   }
 

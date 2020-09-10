@@ -44,11 +44,12 @@
       &nbsp;
       <button
         class="btn"
-        [ngClass]="{'btn-primary' : !showRecordForm, 'btn-secondary' : showRecordForm }"
+        [ngClass]="{'btn-primary' : !showRecordForm, 'btn-secondary' : showRecordForm}"
         (click)="showRecordForm = !showRecordForm"
         title="Add new record">
-        <em class="material-icons mr-1 align-middle">add</em>
         <span class="align-middle">Add New Record</span>
+        <em
+          class="material-icons align-middle">{{showRecordForm ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</em>
       </button>
     </div>
   </section>

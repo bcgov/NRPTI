@@ -49,10 +49,10 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
     })
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(
-        isConfirmed => {
+        async isConfirmed => {
           if (isConfirmed) {
             try {
-              this.factoryService.deleteNews(this.record._id);
+              await this.factoryService.deleteNews(this.record._id);
               this.router.navigate(['news']);
             } catch (e) {
               alert('Could not delete News Item');

@@ -11,7 +11,6 @@ import { catchError, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { Picklists, StateIDs, StateStatus } from '../../../../../common/src/app/utils/record-constants';
 import { ConfirmComponent } from '../../confirm/confirm.component';
-import { RecordUtils } from '../../records/utils/record-utils';
 import { FactoryService } from '../../services/factory.service';
 
 @Component({
@@ -57,7 +56,6 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     public router: Router,
     private location: Location,
-    private recordUtils: RecordUtils,
     private factoryService: FactoryService,
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
@@ -168,8 +166,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
       ),
       collectionDate: new FormControl(
         (this.collectionState &&
-          this.collectionState.collectionDate &&
-          this.utils.convertJSDateToNGBDate(new Date(this.collectionState.collectionDate.date))) ||
+          this.collectionState.collectionDate) ||
         (this.collection &&
           this.collection.date &&
           this.utils.convertJSDateToNGBDate(new Date(this.collection.date))) ||
@@ -278,30 +275,6 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     return recordIds;
   }
 
-  updateRecordsCollectionId(collectionId) {
-    const recordsFormArray = this.myForm.get('collectionRecords');
-
-    if (!recordsFormArray || !recordsFormArray.value || !recordsFormArray.value.length || !this.myForm.get('collectionRecords').dirty) {
-      return;
-    }
-
-    recordsFormArray.value.forEach(recordFormGroup => {
-      recordFormGroup.record.collectionId = collectionId;
-      this.factoryService.editMineRecord(recordFormGroup.record).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-      });
-    });
-
-    if (this.recordsToUnlink.length > 0) {
-      for (const recordToUnlink of this.recordsToUnlink) {
-        recordToUnlink.collectionId = null;
-        this.factoryService.editMineRecord(recordToUnlink).subscribe(async res => {
-          this.recordUtils.parseResForErrors(res);
-        });
-      }
-    }
-  }
-
   /**
    * Toggle the publish formcontrol.
    *
@@ -405,34 +378,30 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     if (this.isEditing) {
       collection['_id'] = this.collection._id;
 
-      this.factoryService.editCollection(collection).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-
-        // update the records collectionId
-        this.updateRecordsCollectionId(this.collection._id);
-
+      const res = await this.factoryService.editCollection(collection);
+      if (!res || res.modifiedCount !== 1) {
+        alert('Failed to create collection.');
+      } else {
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['mines', this.collection._master, 'collections', this.collection._id, 'detail']);
-      });
+      }
     } else {
       collection['_master'] = this.route.snapshot.paramMap.get('mineId');
       collection['project'] = this.route.snapshot.paramMap.get('mineId');
 
-      this.factoryService.createCollection(collection).subscribe(async (res: any) => {
-        this.recordUtils.parseResForErrors(res);
-
-        const createdCollection = res && res.length && res[0] && res[0].length && res[0][0] && res[0][0].object;
+      const res = await this.factoryService.createCollection(collection);
+      if (!res || res.insertedCount !== 1) {
+        alert('Failed to create collection.');
+      } else {
+        const createdCollection = res.ops[0];
 
         this.loadingScreenService.setLoadingState(false, 'main');
         if (createdCollection) {
-          // update the records collectionId
-          this.updateRecordsCollectionId(createdCollection._id);
-
           this.router.navigate(['mines', createdCollection._master, 'collections', createdCollection._id, 'detail']);
         } else {
           this.router.navigate(['../'], { relativeTo: this.route });
         }
-      });
+      }
     }
   }
 

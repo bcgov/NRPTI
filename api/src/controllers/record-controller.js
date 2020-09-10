@@ -3,7 +3,7 @@
 const ObjectID = require('mongodb').ObjectID;
 const mongodb = require('../utils/mongodb');
 const Delete = require('../controllers/delete/delete');
-const RecordTypeEnum = require('../utils/constants/record-type-enum');
+const RecordTypeEnum = require('../utils/constants/misc');
 
 let queryActions = require('../utils/query-actions');
 let queryUtils = require('../utils/query-utils');
@@ -25,9 +25,7 @@ let AddWarning = require('./post/warning');
 let AddConstructionPlan = require('./post/construction-plan');
 let AddManagementPlan = require('./post/management-plan');
 let AddCourtConviction = require('./post/court-conviction');
-let AddNewsItem = require('./post/news-item');
 let AddMine = require('./post/mine-bcmi');
-let AddCollection = require('./post/collection-bcmi');
 let AddAnnualReport = require('./post/annual-report');
 let AddCertificateAmendment = require('./post/certificate-amendment');
 let AddCorrespondence = require('./post/correspondence');
@@ -48,9 +46,7 @@ let EditWarning = require('./put/warning');
 let EditConstructionPlan = require('./put/construction-plan');
 let EditManagementPlan = require('./put/management-plan');
 let EditCourtConviction = require('./put/court-conviction');
-let EditNewsItem = require('./put/news-item');
 let EditMine = require('./put/mine-bcmi');
-let EditCollection = require('./put/collection-bcmi');
 let EditAnnualReport = require('./put/annual-report');
 let EditCertificateAmendment = require('./put/certificate-amendment');
 let EditCorrespondence = require('./put/correspondence');
@@ -75,9 +71,7 @@ const ACCEPTED_DATA_TYPES = [
   { type: 'constructionPlans', add: AddConstructionPlan, edit: EditConstructionPlan },
   { type: 'managementPlans', add: AddManagementPlan, edit: EditManagementPlan },
   { type: 'courtConvictions', add: AddCourtConviction, edit: EditCourtConviction },
-  { type: 'newsItems', add: AddNewsItem, edit: EditNewsItem },
   { type: 'mines', add: AddMine, edit: EditMine },
-  { type: 'collections', add: AddCollection, edit: EditCollection },
   { type: 'annualReports', add: AddAnnualReport, edit: EditAnnualReport },
   { type: 'certificateAmendments', add: AddCertificateAmendment, edit: EditCertificateAmendment },
   { type: 'correspondences', add: AddCorrespondence, edit: EditCorrespondence },
@@ -228,7 +222,7 @@ exports.protectedPut = async function (args, res, next) {
 exports.protectedDelete = async function (args, res, next) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const collection = db.collection('nrpti');
-  
+
   let recordId = null;
   if (args.swagger.params.recordId && args.swagger.params.recordId.value) {
     recordId = args.swagger.params.recordId.value
@@ -248,6 +242,7 @@ exports.protectedDelete = async function (args, res, next) {
   }
 
   try {
+    console.log(RecordTypeEnum.BCMI_SCHEMA_NAMES);
     if (RecordTypeEnum.BCMI_SCHEMA_NAMES.includes(record._schemaName)) {
       await Delete.deleteFlavourRecord(recordId, 'bcmi');
     } else if (RecordTypeEnum.NRCED_SCHEMA_NAMES.includes(record._schemaName)) {
@@ -264,6 +259,7 @@ exports.protectedDelete = async function (args, res, next) {
   } catch (error) {
     defaultLog.info(`protectedDelete - error deleting record: ${recordId}`);
     defaultLog.debug(error);
+    console.log(error);
     return queryActions.sendResponse(res, 400, {});
   }
 
