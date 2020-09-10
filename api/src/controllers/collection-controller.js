@@ -66,7 +66,7 @@ exports.protectedPut = async function (args, res, next) {
   }
 
   // if any values in the "records" attribute exist on any other collection, throw an error
-  if (incomingObj.records && incomingObj.records.length > 0) {
+  if (incomingObj && incomingObj.records && incomingObj.records.length > 0) {
     // find any records that have this collection in their collectionId, but aren't actually a part of the collection
     // and remove their collectionid
     let recordIds = [];
@@ -182,19 +182,19 @@ exports.protectedPost = async function (args, res, next) {
   collection._schemaName = RECORD_TYPE.CollectionBCMI._schemaName;
 
   // Set parent/mine ids
-  incomingObj._master && (collection._master = incomingObj._master);
-  incomingObj.project && (collection.project = incomingObj.project);
+  incomingObj && incomingObj._master && (collection._master = incomingObj._master);
+  incomingObj && incomingObj.project && (collection.project = incomingObj.project);
 
   // Set permissions
   collection.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   collection.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // Set data
-  incomingObj.name && (collection.name = incomingObj.name);
-  incomingObj.date && (collection.date = incomingObj.date);
-  incomingObj.type && (collection.type = incomingObj.type);
-  incomingObj.agency && (collection.agency = incomingObj.agency);
-  incomingObj.records && incomingObj.records.length && (collection.records = incomingObj.records);
+  incomingObj && incomingObj.name && (collection.name = incomingObj.name);
+  incomingObj && incomingObj.date && (collection.date = incomingObj.date);
+  incomingObj && incomingObj.type && (collection.type = incomingObj.type);
+  incomingObj && incomingObj.agency && (collection.agency = incomingObj.agency);
+  incomingObj && incomingObj.records && incomingObj.records.length && (collection.records = incomingObj.records);
 
   // if any values in the "records" attribute exist on any other collection, throw an error
   if (collection.records && collection.records.length > 0) {
@@ -208,7 +208,7 @@ exports.protectedPost = async function (args, res, next) {
   }
 
   // Add 'public' role and associated meta
-  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+  if (incomingObj && incomingObj.addRole && incomingObj.addRole === 'public') {
     collection.read.push('public');
     collection.datePublished = new Date();
     collection.publishedBy = args.swagger.params.auth_payload.displayName;

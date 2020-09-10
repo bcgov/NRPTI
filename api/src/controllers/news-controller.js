@@ -94,16 +94,16 @@ exports.protectedPost = async function (args, res, next) {
   let news = new ActivityLNG();
   news._schemaName = 'ActivityLNG';
 
-  incomingObj._epicProjectId &&
+  incomingObj && incomingObj._epicProjectId &&
     ObjectID.isValid(incomingObj._epicProjectId) &&
     (news._epicProjectId = new ObjectID(incomingObj._epicProjectId));
 
-  incomingObj.description && (news.description = incomingObj.description);
-  incomingObj.projectName && (news.projectName = incomingObj.projectName);
-  incomingObj.type && (news.type = incomingObj.type);
-  incomingObj.type && (news.type = incomingObj.type);
-  incomingObj.url && (news.url = incomingObj.url);
-  incomingObj.date && (news.date = incomingObj.date);
+  incomingObj && incomingObj.description && (news.description = incomingObj.description);
+  incomingObj && incomingObj.projectName && (news.projectName = incomingObj.projectName);
+  incomingObj && incomingObj.type && (news.type = incomingObj.type);
+  incomingObj && incomingObj.type && (news.type = incomingObj.type);
+  incomingObj && incomingObj.url && (news.url = incomingObj.url);
+  incomingObj && incomingObj.date && (news.date = incomingObj.date);
   news.read = [...utils.ApplicationAdminRoles, 'public'];
   news.write = utils.ApplicationAdminRoles;
 
