@@ -44,7 +44,7 @@ exports.protectedPut = async function (args, res, next) {
     queryActions.sendResponse(res, 400, {});
     next();
   }
-  let incomingObj = null;
+  let incomingObj = {};
   if (args.swagger.params.news && args.swagger.params.news.value) {
     incomingObj = args.swagger.params.news.value
   } else {
@@ -81,7 +81,7 @@ exports.protectedPut = async function (args, res, next) {
 }
 
 exports.protectedPost = async function (args, res, next) {
-  let incomingObj = null;
+  let incomingObj = {};
   if (args.swagger.params.news && args.swagger.params.news.value) {
     incomingObj = args.swagger.params.news.value
   } else {
@@ -94,16 +94,16 @@ exports.protectedPost = async function (args, res, next) {
   let news = new ActivityLNG();
   news._schemaName = 'ActivityLNG';
 
-  incomingObj && incomingObj._epicProjectId &&
+  incomingObj._epicProjectId &&
     ObjectID.isValid(incomingObj._epicProjectId) &&
     (news._epicProjectId = new ObjectID(incomingObj._epicProjectId));
 
-  incomingObj && incomingObj.description && (news.description = incomingObj.description);
-  incomingObj && incomingObj.projectName && (news.projectName = incomingObj.projectName);
-  incomingObj && incomingObj.type && (news.type = incomingObj.type);
-  incomingObj && incomingObj.type && (news.type = incomingObj.type);
-  incomingObj && incomingObj.url && (news.url = incomingObj.url);
-  incomingObj && incomingObj.date && (news.date = incomingObj.date);
+  incomingObj.description && (news.description = incomingObj.description);
+  incomingObj.projectName && (news.projectName = incomingObj.projectName);
+  incomingObj.type && (news.type = incomingObj.type);
+  incomingObj.type && (news.type = incomingObj.type);
+  incomingObj.url && (news.url = incomingObj.url);
+  incomingObj.date && (news.date = incomingObj.date);
   news.read = [...utils.ApplicationAdminRoles, 'public'];
   news.write = utils.ApplicationAdminRoles;
 
