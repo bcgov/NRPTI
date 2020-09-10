@@ -26,7 +26,7 @@
     <div *ngIf="!collectionState">
       <button
         class="btn btn-primary"
-        [disabled]="!anySelectedRecords()"
+        [disabled]="!anySelectedRecords"
         (click)="submitAddEditCollectionRecords()"
         title="Add to new collection">
         <em class="material-icons mr-1 align-middle">add</em>
@@ -35,7 +35,7 @@
       &nbsp;
       <button
         class="btn btn-primary"
-        [disabled]="!anySelectedRecords()"
+        [disabled]="!anySelectedRecords"
         (click)="submitAddToExistingCollection()"
         title="Add to existing collection">
         <em class="material-icons mr-1 align-middle">add</em>

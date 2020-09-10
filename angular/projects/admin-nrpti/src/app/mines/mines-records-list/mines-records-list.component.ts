@@ -110,6 +110,8 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
 
   // Flags
   public showRecordForm = false;
+  public anySelectedRecords = false;
+  public rowSelectedCount = 0;
 
   constructor(
     public location: Location,
@@ -385,9 +387,11 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
     switch (msg.label) {
       case 'rowSelected':
         this.onRowCheckboxUpdate(msg.data, true);
+        this.rowSelectedCount++;
         break;
       case 'rowUnselected':
         this.onRowCheckboxUpdate(msg.data, false);
+        this.rowSelectedCount--;
         break;
       case 'columnSort':
         this.setColumnSort(msg.data);
@@ -401,6 +405,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       default:
         break;
     }
+    this.rowSelectedCount > 0 ? this.anySelectedRecords = true : this.anySelectedRecords = false;
   }
 
   /**
@@ -606,9 +611,9 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
     this.router.navigate(['mines', this.mine._id, 'records', 'add']);
   }
 
-  anySelectedRecords() {
-    return this.storeService.getItem(StateIDs.collectionAddEdit) ? true : false;
-  }
+  // anySelectedRecords() {
+  //   return this.storeService.getItem(StateIDs.collectionAddEdit) ? true : false;
+  // }
 
   updateRecordList(recordToAdd) {
     if (recordToAdd.read.includes('public')) {
