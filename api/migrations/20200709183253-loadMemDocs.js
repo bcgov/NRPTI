@@ -112,7 +112,7 @@ exports.up = async function (db) {
                 }
               } catch(err) {
                 console.error('#######################################');
-                console.error(`## An error occured while creating doc ${collectionDoc.document._id}`);
+                console.error(`## An error occured while creating the doc`);
                 console.error(err);
                 console.error('#######################################');
                 errors += 1;
@@ -265,7 +265,7 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   } else {
     flavourData.documents = [document._id];
   }
-  flavourData.collectionId = new ObjectId(newCollectionId);
+  flavourData.collectionId = new ObjectID(newCollectionId);
   flavourData.mineGuid = nrptiMine._sourceRefId;
   flavourData.issuingAgency = issuingAgency;
   flavourData.author = collectionDoc.document.documentAuthor;
@@ -282,7 +282,7 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   // Master
   masterData._flavourRecords = [new ObjectID(flavourData._id)];
   masterData.documents = [document._id];
-  masterData.collectionId = new ObjectId(newCollectionId);
+  masterData.collectionId = new ObjectID(newCollectionId);
   masterData.mineGuid =  nrptiMine._sourceRefId;
   masterData.issuingAgency = issuingAgency;
   masterData.author = collectionDoc.document.documentAuthor;
