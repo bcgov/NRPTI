@@ -65,24 +65,30 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
   }
 
   submit() {
-    this.loadingScreenService.setLoadingState(true, 'main');
-
     if (
       !this.myForm.get('recordName').value ||
       !this.myForm.get('recordAgency').value ||
       !this.myForm.get('recordType').value
     ) {
       alert('Please fill all manditory fields related to record.');
+      return;
     }
-
-    const record = {};
 
     if (
       this.myForm.get('recordType').value === 'Permit' &&
       !this.myForm.get('typeCode').value
     ) {
       alert('You must select a permit type.');
+      return;
     }
+
+    if (!this.links.length && !this.documents.length) {
+      alert('A document or link must be added.');
+      return;
+    }
+
+    this.loadingScreenService.setLoadingState(true, 'main');
+    const record = {};
 
     record['recordName'] = this.myForm.get('recordName').value;
     this.myForm.controls.dateIssued.dirty &&
