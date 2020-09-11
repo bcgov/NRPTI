@@ -17,11 +17,8 @@ export class NewsService {
   }
 
   public editNews(news: any): Promise<any> {
-    if (!news) {
+    if (!news || !news._id) {
       throw Error('NewsService - createNews - missing required news param');
-    }
-    if (!news._id) {
-      throw Error('NewsService - createNews - missing required newsId param');
     }
 
     const queryString = `news/${news._id}`;

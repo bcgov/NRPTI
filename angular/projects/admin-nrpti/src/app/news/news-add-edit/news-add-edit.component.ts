@@ -129,7 +129,7 @@ export class NewsAddEditComponent implements OnInit, OnDestroy {
     if (!this.isEditing) {
       // Add the news item.
       const res = await this.factoryService.createNews(newsItem);
-      if (!res || res.insertedCount !== 1) {
+      if (!res || res.ok !== 1) {
         alert('Failed to create News Item.');
       } else {
         this.router.navigate(['news', this.record.system, res.insertedId, 'detail']);
@@ -137,7 +137,7 @@ export class NewsAddEditComponent implements OnInit, OnDestroy {
     } else {
       // Update the news item.
       const res = await this.factoryService.editNews(newsItem);
-      if (!res || res.modifiedCount !== 1) {
+      if (!res || res.ok !== 1) {
         alert('Failed to create News Item.');
       } else {
         this.router.navigate(['news', this.record.system, this.record._id, 'detail']);

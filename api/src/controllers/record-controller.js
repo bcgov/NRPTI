@@ -242,7 +242,6 @@ exports.protectedDelete = async function (args, res, next) {
   }
 
   try {
-    console.log(RecordTypeEnum.BCMI_SCHEMA_NAMES);
     if (RecordTypeEnum.BCMI_SCHEMA_NAMES.includes(record._schemaName)) {
       await Delete.deleteFlavourRecord(recordId, 'bcmi');
     } else if (RecordTypeEnum.NRCED_SCHEMA_NAMES.includes(record._schemaName)) {
@@ -259,7 +258,6 @@ exports.protectedDelete = async function (args, res, next) {
   } catch (error) {
     defaultLog.info(`protectedDelete - error deleting record: ${recordId}`);
     defaultLog.debug(error);
-    console.log(error);
     return queryActions.sendResponse(res, 400, {});
   }
 

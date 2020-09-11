@@ -379,7 +379,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
       collection['_id'] = this.collection._id;
 
       const res = await this.factoryService.editCollection(collection);
-      if (!res || res.modifiedCount !== 1) {
+      if (!res || res.ok !== 1) {
         alert('Failed to create collection.');
       } else {
         this.loadingScreenService.setLoadingState(false, 'main');
@@ -390,7 +390,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
       collection['project'] = this.route.snapshot.paramMap.get('mineId');
 
       const res = await this.factoryService.createCollection(collection);
-      if (!res || res.insertedCount !== 1) {
+      if (!res || res.ok !== 1) {
         alert('Failed to create collection.');
       } else {
         const createdCollection = res.ops[0];

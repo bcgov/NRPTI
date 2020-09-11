@@ -71,8 +71,6 @@ exports.protectedPut = async function (args, res, next) {
   } catch (error) {
     defaultLog.info(`protectedPut - error updating news: ${newsId}`);
     defaultLog.debug(error);
-    console.log(news);
-    console.log(error);
     return queryActions.sendResponse(res, 400, error);
   }
 
@@ -101,7 +99,7 @@ exports.protectedPost = async function (args, res, next) {
   incomingObj.description && (news.description = incomingObj.description);
   incomingObj.projectName && (news.projectName = incomingObj.projectName);
   incomingObj.type && (news.type = incomingObj.type);
-  incomingObj.type && (news.type = incomingObj.type);
+  incomingObj.title && (news.title = incomingObj.title);
   incomingObj.url && (news.url = incomingObj.url);
   incomingObj.date && (news.date = incomingObj.date);
   news.read = [...utils.ApplicationAdminRoles, 'public'];
