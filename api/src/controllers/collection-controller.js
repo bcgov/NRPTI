@@ -260,7 +260,7 @@ const checkRecordExistsInCollection = async function (records, collectionId, edi
   let promises = [];
   for (const record of records) {
     // does this record exit in any other collection?
-    const collectionCount = await collectionDB.countDocuments({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName, records: { $elemMatch: { $eq: new ObjectID(record) } } });
+    const collectionCount = await collectionDB.count({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName, records: { $elemMatch: { $eq: new ObjectID(record) } } });
     if (collectionCount && collectionCount > 0) {
       if (!editing) {
         throw new Error('Collection contains records that are already associated with another collection');
