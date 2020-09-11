@@ -129,7 +129,6 @@ export class NewsAddEditComponent implements OnInit, OnDestroy {
     if (!this.isEditing) {
       // Add the news item.
       const res = await this.factoryService.createNews(newsItem);
-      console.log(res);
       if (!res || !res._id) {
         alert('Failed to create News Item.');
       } else {
