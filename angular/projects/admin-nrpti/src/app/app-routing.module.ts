@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
 import { HomeComponent } from './home/home.component';
 import { ImportComponent } from './import/import.component';
 import { ImportListResolver } from './import/import-list-resolver';
 import { NewsResolver } from './news/news-resolver';
 import { NewsListComponent } from './news/news-list.component';
+import { CommunicationsComponent } from './communications/communications.component';
+import { CommunicationsResolver } from './communications/communications.resolver';
 
 const routes: Routes = [
   {
@@ -40,6 +41,24 @@ const routes: Routes = [
     data: {
       breadcrumb: 'News'
     }
+  },
+  {
+    path: 'communications',
+    data: {
+      breadcrumb: 'Communications'
+    },
+    children: [
+      {
+        path: ':application',
+        data: {
+          breadcrumb: null
+        },
+        component: CommunicationsComponent,
+        resolve: {
+          communicationsPackage: CommunicationsResolver
+        }
+      },
+    ]
   },
   {
     // wildcard default route
