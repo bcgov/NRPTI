@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { TicketNRCED, Document } from '../../../../../../common/src/app/models';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
+import { Utils as GlobalUtils } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-ticket-detail',
@@ -91,5 +92,9 @@ export class TicketDetailComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  convertAcronyms(acronym) {
+    return GlobalUtils.convertAcronyms(acronym);
   }
 }

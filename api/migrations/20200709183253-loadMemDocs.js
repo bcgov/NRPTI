@@ -126,13 +126,13 @@ exports.up = async function (db) {
           bcmiCollection.read =  [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, 'public'];
           bcmiCollection.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
           bcmiCollection.name = collection.displayName;
-          bcmiCollection.date = new Date();
+          bcmiCollection.date = collection.date;
           bcmiCollection.project = new ObjectID(nrptiMine._id);
           bcmiCollection.type = collection.type;
           bcmiCollection.agency = collection.isForMEM ? 'EMPR' : collection.isForEAO ? 'EAO' : 'ENV';
           bcmiCollection.records = allNewDocs; // move this whole thing to the top if we remove records array
           bcmiCollection.addedBy = 'nrpti';
-          bcmiCollection.datePublished = new Date();
+          bcmiCollection.datePublished = collection.date;
           bcmiCollection.publishedBy = 'nrpti';
           bcmiCollection.isBcmiPublished = true;
 

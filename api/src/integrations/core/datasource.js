@@ -412,7 +412,22 @@ class CoreDataSource {
         defaultLog.info(`Fetched page ${currentPage - 1} out of ${totalPages}`);
       } while (currentPage <= totalPages)
 
-      return mineRecords;
+      // Only want mines that are not abandoned.
+      const activeMines = mineRecords.filter(mine => {
+        // If the mine is missing a status we still want to include it.
+        if (!mine.mine_status || !mine.mine_status.length) {
+          return true;
+        }
+
+        // If the mine's most recent status does not include 'Abandoned' then include it.
+        if (mine.mine_status[0].status_values && !mine.mine_status[0].status_values.includes('ABN')) {
+          return true;
+        }
+
+        return false;
+      });
+
+      return activeMines;
     } catch (error) {
       defaultLog.error(`getVerifiedMines - unexpected error: ${error.message}`);
       throw(error);
