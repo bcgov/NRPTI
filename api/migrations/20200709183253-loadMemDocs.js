@@ -112,7 +112,7 @@ exports.up = async function (db) {
                 }
               } catch(err) {
                 console.error('#######################################');
-                console.error(`## An error occured while creating doc ${collectionDoc.document._id}`);
+                console.error(`## An error occured while creating the doc`);
                 console.error(err);
                 console.error('#######################################');
                 errors += 1;
