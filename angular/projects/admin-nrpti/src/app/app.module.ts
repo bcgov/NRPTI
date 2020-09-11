@@ -18,6 +18,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { RecordsModule } from './records/records.module';
 import { NewsModule } from './news/news.module';
 import { MinesModule } from './mines/mines.module';
+import { CommunicationsModule } from './communications/communications.module';
 
 // components
 import { AppComponent } from './app.component';
@@ -46,6 +47,7 @@ import { NewsService } from './services/news.service';
 import { ImportListResolver } from './import/import-list-resolver';
 import { NewsResolver } from './news/news-resolver';
 import { NewsListResolver } from './news/news-list.resolver';
+import { CommunicationsResolver } from './communications/communications.resolver';
 
 // guards
 import { CanActivateGuard } from './guards/can-activate-guard.service';
@@ -96,6 +98,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     RecordsModule,
     NewsModule,
     MinesModule,
+    CommunicationsModule,
     AppRoutingModule, // <-- module import order matters - https://angular.io/guide/router#module-import-order-matters
     NgbModule.forRoot(),
     NgxPaginationModule,
@@ -137,6 +140,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     ImportListResolver,
     NewsResolver,
     NewsListResolver,
+    CommunicationsResolver,
     CanActivateGuard,
     CanDeactivateGuard,
     RecordUtils,
