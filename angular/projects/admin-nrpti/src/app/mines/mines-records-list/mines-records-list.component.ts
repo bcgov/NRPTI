@@ -611,10 +611,6 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
     this.router.navigate(['mines', this.mine._id, 'records', 'add']);
   }
 
-  // anySelectedRecords() {
-  //   return this.storeService.getItem(StateIDs.collectionAddEdit) ? true : false;
-  // }
-
   updateRecordList(recordToAdd) {
     if (recordToAdd.read.includes('public')) {
       recordToAdd['isBcmiPublished'] = true;
