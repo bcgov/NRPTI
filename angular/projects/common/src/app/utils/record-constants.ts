@@ -138,11 +138,11 @@ export class Picklists {
     'BC Wildfire Service',
     'Climate Action Secretariat',
     'Conservation Officer Service (COS)',
-    'Environmental Assessment Office',
+    'EAO',
     'Environmental Protection Division',
     'LNG Secretariat',
     'Ministry of Agriculture',
-    'Ministry of Energy, Mines and Petroleum Resources',
+    'EMPR',
     'Ministry of Forests, Lands, Natural Resource Operations and Rural Development',
     'Natural Resource Officers (NRO)'
   ];

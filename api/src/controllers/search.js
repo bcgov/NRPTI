@@ -445,37 +445,37 @@ let searchCollection = async function(
       $addFields: {
         'fullRecord.issuedTo.firstName': {
           $cond: {
-            if: { $gt: ['$issuedToAge', 18] },
-            then: { $arrayElemAt: ['$fullRecord.issuedTo.firstName', 0] },
-            else: ''
+            if: { $and: [{ $lt: ['$issuedToAge', 19] }, { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] }] },
+            then: '',
+            else: { $arrayElemAt: ['$fullRecord.issuedTo.firstName', 0] }
           }
         },
         'fullRecord.issuedTo.lastName': {
           $cond: {
-            if: { $gt: ['$issuedToAge', 18] },
-            then: { $arrayElemAt: ['$fullRecord.issuedTo.lastName', 0] },
-            else: 'Unpublished'
+            if: { $and: [{ $lt: ['$issuedToAge', 19] }, { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] }] },
+            then: 'Unpublished',
+            else: { $arrayElemAt: ['$fullRecord.issuedTo.lastName', 0] }
           }
         },
         'fullRecord.issuedTo.middleName': {
           $cond: {
-            if: { $gt: ['$issuedToAge', 18] },
-            then: { $arrayElemAt: ['$fullRecord.issuedTo.middleName', 0] },
-            else: ''
+            if: { $and: [{ $lt: ['$issuedToAge', 19] }, { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] }] },
+            then: '',
+            else: { $arrayElemAt: ['$fullRecord.issuedTo.middleName', 0] }
           }
         },
         'fullRecord.issuedTo.fullName': {
           $cond: {
-            if: { $gt: ['$issuedToAge', 18] },
-            then: { $arrayElemAt: ['$fullRecord.issuedTo.fullName', 0] },
-            else: 'Unpublished'
+            if: { $and: [{ $lt: ['$issuedToAge', 19] }, { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] }] },
+            then: 'Unpublished',
+            else: { $arrayElemAt: ['$fullRecord.issuedTo.fullName', 0] }
           }
         },
         'fullRecord.issuedTo.dateOfBirth': {
           $cond: {
-            if: { $gt: ['$issuedToAge', 18] },
-            then: { $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] },
-            else: ''
+            if: { $and: [{ $lt: ['$issuedToAge', 19] }, { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] }] },
+            then: '',
+            else: { $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }
           }
         }
       }
