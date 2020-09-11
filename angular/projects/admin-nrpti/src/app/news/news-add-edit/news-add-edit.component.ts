@@ -129,15 +129,16 @@ export class NewsAddEditComponent implements OnInit, OnDestroy {
     if (!this.isEditing) {
       // Add the news item.
       const res = await this.factoryService.createNews(newsItem);
-      if (!res || res.ok !== 1) {
+      console.log(res);
+      if (!res || !res._id) {
         alert('Failed to create News Item.');
       } else {
-        this.router.navigate(['news', this.record.system, res.insertedId, 'detail']);
+        this.router.navigate(['news', this.record.system, res._id, 'detail']);
       }
     } else {
       // Update the news item.
       const res = await this.factoryService.editNews(newsItem);
-      if (!res || res.ok !== 1) {
+      if (!res || !res._id) {
         alert('Failed to create News Item.');
       } else {
         this.router.navigate(['news', this.record.system, this.record._id, 'detail']);

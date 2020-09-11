@@ -156,7 +156,7 @@ exports.protectedPut = async function (args, res, next) {
     return queryActions.sendResponse(res, 400, {});
   }
 
-  queryActions.sendResponse(res, 200, obj);
+  queryActions.sendResponse(res, 200, obj.value);
   next();
 }
 
@@ -227,7 +227,7 @@ exports.protectedPost = async function (args, res, next) {
     return queryActions.sendResponse(res, 400, {});
   }
 
-  queryActions.sendResponse(res, 200, obj);
+  queryActions.sendResponse(res, 200, obj.ops[0]);
   next();
 }
 
