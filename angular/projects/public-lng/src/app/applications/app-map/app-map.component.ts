@@ -194,29 +194,6 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
     // identify when map has initialized with a view
     this.map.whenReady(() => (this.isMapReady = true));
 
-    // this.map.on('movestart', function () {
-    //   console.log('movestart');
-    // }, this);
-
-    // this.map.on('resize', function () {
-    //   console.log('resize');
-    // }, this);
-
-    // NB: moveend is called after zoomstart, movestart and resize
-    // NB: fitBounds() also ends up here
-    this.map.on('moveend', () => {
-      // console.log('moveend');
-      // notify applications component of updated coordinates
-      // const newZoom = this.map.getZoom();
-      // const doEmit = newZoom <= this.oldZoom; // ignore zooming in
-      // this.oldZoom = newZoom;
-      // if (doEmit) { this.emitCoordinates(); }
-      // if (this.isMapReady && this.doNotify) {
-      //   this.emitCoordinates();
-      // }
-      // this.doNotify = true; // reset for next time
-    });
-
     const dataUrls = [
       '/assets/data/facilities-12jun2019.json',
       '/assets/data/facility-29apr2019.json',
@@ -475,7 +452,6 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
   // ref: https://github.com/Leaflet/Leaflet/issues/4835
   // ref: https://stackoverflow.com/questions/19669786/check-if-element-is-visible-in-dom
   private fixMap() {
-    // console.log('fixing map');
     if (this.elementRef.nativeElement.offsetParent) {
       // try to restore map state
       const lat = this.urlService.query('lat');
@@ -575,7 +551,6 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
    * Resets map view.
    */
   public resetView(doNotify: boolean = true) {
-    // console.log('resetting view');
     this.fitBounds(); // default bounds
   }
 
@@ -609,7 +584,6 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
   // NB: do not animate fitBounds() as it can lead to getting
   // the latest apps BEFORE the final coordinates are set
   private fitBounds(bounds: L.LatLngBounds = null) {
-    // console.log('fitting bounds');
     const fitBoundsOptions: L.FitBoundsOptions = {
       animate: false,
       paddingTopLeft: [0, 100],
@@ -626,8 +600,6 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
    * Removes deleted / draws added applications.
    */
   private drawMap(deletedApps: Application[], addedApps: Application[]) {
-    console.log('drawing map');
-
     // remove deleted apps from list and map
     deletedApps.forEach(app => {
       const markerIndex = this.markerList.findIndex(element => {

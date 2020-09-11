@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RecordComponent } from '../../utils/record-component';
 import { DatePipe } from '@angular/common';
 import { FactoryService } from '../../../services/factory.service';
+import { LoggerService } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-inspection-nrced-detail',
@@ -20,8 +21,9 @@ export class InspectionNRCEDDetailComponent extends RecordComponent implements O
   constructor(
     public route: ActivatedRoute,
     public router: Router,
-    public factoryService: FactoryService,
-    public changeDetectionRef: ChangeDetectorRef,
+    private factoryService: FactoryService,
+    private logger: LoggerService,
+    private changeDetectionRef: ChangeDetectorRef,
     public datePipe: DatePipe
   ) {
     super();
@@ -53,7 +55,7 @@ export class InspectionNRCEDDetailComponent extends RecordComponent implements O
       .pipe(
         takeUntil(this.ngUnsubscribe),
         catchError(error => {
-          console.log('Publish error:', error);
+          this.logger.log(`Publish error: ${error}`);
           alert('Failed to publish record.');
           return of(null);
         })
@@ -81,7 +83,7 @@ export class InspectionNRCEDDetailComponent extends RecordComponent implements O
       .pipe(
         takeUntil(this.ngUnsubscribe),
         catchError(error => {
-          console.log('Unpublish error:', error);
+          this.logger.log(`Unpublish error: ${error}`);
           alert('Failed to unpublish record.');
           return of(null);
         })

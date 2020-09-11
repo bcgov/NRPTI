@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { LoggerService } from 'nrpti-angular-components';
 import { JwtUtil } from '../utils/jwt-utils';
 import { Observable } from 'rxjs';
 import { Constants } from '../utils/constants/misc';
@@ -11,7 +12,7 @@ export class KeycloakService {
   private keycloakUrl: string;
   private keycloakRealm: string;
 
-  constructor() {
+  constructor(private logger: LoggerService) {
     switch (window.location.origin) {
       case 'http://localhost:4200':
       case 'https://admin-nrpti-dev.pathfinder.gov.bc.ca':
@@ -69,10 +70,10 @@ export class KeycloakService {
         this.keycloakAuth
           .updateToken()
           .success(refreshed => {
-            console.log('KC refreshed token?:', refreshed);
+            this.logger.log(`KC refreshed token?: ${refreshed}`);
           })
           .error(err => {
-            console.log('KC refresh error:', err);
+            this.logger.log(`KC refresh error: ${err}`);
           });
       };
 
@@ -81,7 +82,7 @@ export class KeycloakService {
         .init({})
         .success(auth => {
           // console.log('KC Refresh Success?:', this.keycloakAuth.authServerUrl);
-          console.log('KC Success:', auth);
+          this.logger.log(`KC Success: ${auth}`);
           if (!auth) {
             this.keycloakAuth.login({ idpHint: 'idir' });
           } else {
@@ -89,7 +90,7 @@ export class KeycloakService {
           }
         })
         .error(err => {
-          console.log('KC error:', err);
+          this.logger.log(`KC error: ${err}`);
           reject();
         });
     });
@@ -142,12 +143,12 @@ export class KeycloakService {
       this.keycloakAuth
         .updateToken(30)
         .success(refreshed => {
-          console.log('KC refreshed token?:', refreshed);
+          this.logger.log(`KC refreshed token?: ${refreshed}`);
           observer.next();
           observer.complete();
         })
         .error(err => {
-          console.log('KC refresh error:', err);
+          this.logger.log(`KC refresh error: ${err}`);
           observer.error();
         });
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { throwError, Observable } from 'rxjs';
-import { ConfigService } from 'nrpti-angular-components';
+import { ConfigService, LoggerService } from 'nrpti-angular-components';
 
 /**
  * TODO: populate this documentation
@@ -19,7 +19,8 @@ export class ApiService {
 
   constructor(
     public http: HttpClient,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private logger: LoggerService
     ) {
       this.isMS = window.navigator.msSaveOrOpenBlob ? true : false;
 
@@ -51,7 +52,7 @@ export class ApiService {
       }
     }
 
-    console.log('Server Error:', errorMessage);
+    this.logger.log(`Server Error: ${errorMessage}`);
     return throwError(error);
   }
 }

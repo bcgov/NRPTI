@@ -30,6 +30,7 @@ export * from './lib/services/store.service';
 export * from './lib/services/config.service';
 export * from './lib/services/search.service';
 export * from './lib/services/inject-component.service';
+export * from './lib/services/logger.service';
 
 // modules
 export * from './lib/global.module';

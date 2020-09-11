@@ -9,7 +9,7 @@ import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
-import { LoadingScreenService, StoreService } from 'nrpti-angular-components';
+import { LoadingScreenService, StoreService, LoggerService } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-certificate-add-edit',
@@ -43,6 +43,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
     private recordUtils: RecordUtils,
     private storeService: StoreService,
     private factoryService: FactoryService,
+    private logger: LoggerService,
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
@@ -326,7 +327,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
+        this.logger.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records']);
       });
@@ -352,7 +353,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
+        this.logger.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records', 'certificates', this.currentRecord._id, 'detail']);
       });

@@ -29,8 +29,7 @@ import { ApiService } from './services/api';
 import { UrlService } from './services/url.service';
 import { DataService } from './services/data.service';
 import { FaqComponent } from './faq/faq.component';
-import { SearchService } from 'nrpti-angular-components';
-import { ConfigService } from 'nrpti-angular-components';
+import { SearchService, ConfigService, LoggerService } from 'nrpti-angular-components';
 
 export function initConfig(configService: ConfigService) {
   return () => configService.init();
@@ -61,7 +60,7 @@ export function initConfig(configService: ConfigService) {
       deps: [ConfigService],
       multi: true
     },
-    ApiService, UrlService, DataService, SearchService, Utils],
+    ApiService, UrlService, DataService, SearchService, LoggerService, Utils],
   entryComponents: [],
   bootstrap: [AppComponent]
 })
