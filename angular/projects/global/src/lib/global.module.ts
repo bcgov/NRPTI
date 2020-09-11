@@ -24,6 +24,7 @@ import { StoreService } from './services/store.service';
 import { SearchService } from './services/search.service';
 import { ConfigService } from './services/config.service';
 import { InjectComponentService } from './services/inject-component.service';
+import { LoggerService } from './services/logger.service';
 
 // utils
 import { TableTemplateUtils } from './components/table-template/table-template-utils';
@@ -55,7 +56,8 @@ import { LoadingScreenService } from './services/loading-screen.service';
     SearchService,
     TableTemplateUtils,
     InjectComponentService,
-    LoadingScreenService
+    LoadingScreenService,
+    LoggerService
   ],
   exports: [
     ButtonSpinnerComponent,

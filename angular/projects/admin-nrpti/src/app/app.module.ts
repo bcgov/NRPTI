@@ -40,7 +40,7 @@ import { FactoryService } from './services/factory.service';
 import { KeycloakService } from './services/keycloak.service';
 import { RecordService } from './services/record.service';
 import { TaskService } from './services/task.service';
-import { ConfigService } from 'nrpti-angular-components';
+import { ConfigService , LoggerService } from 'nrpti-angular-components';
 import { NewsService } from './services/news.service';
 
 // resolvers
@@ -135,6 +135,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     RecordService,
     NewsService,
     CollectionService,
+    LoggerService,
     TaskService,
     ImportListResolver,
     NewsResolver,
@@ -142,7 +143,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     CommunicationsResolver,
     CanActivateGuard,
     CanDeactivateGuard,
-    RecordUtils
+    RecordUtils,
   ],
   entryComponents: [ConfirmComponent, HomeComponent, ImportComponent, ImportTableRowsComponent],
   bootstrap: [AppComponent]
