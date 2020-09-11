@@ -170,6 +170,10 @@ definitions:
       - +documentType
       - -documentType
 
+  ### Communication Package Definition
+  CommunicationPackage:
+    type: object
+
   ### Task Definitions
   TaskObject:
     type: object
@@ -246,6 +250,82 @@ paths:
           description: 'Success'
           schema:
             $ref: '#/definitions/ConfigObject'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /config/{app}:
+    x-swagger-router-controller: config
+    options:
+      tags:
+        - config
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on config Route'
+      parameters:
+        - name: app
+          in: path
+          description: 'Specific application/business area you want to fetch configurations for'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/ConfigObject'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - config
+      summary: 'Get the app configuration'
+      operationId: protectedGetConfig
+      description: 'Retrieves configuration data.'
+      parameters:
+        - name: app
+          in: path
+          description: 'Specific application/business area you want to fetch configurations for'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/ConfigObject'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - config
+      summary: 'Create an app communication package (note: this will remove any existing package)'
+      operationId: communicationPackageCreate
+      description: 'Authenticated access to create a communication package'
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:lng
+        - admin:nrced
+        - admin:bcmi
+      parameters:
+        - name: app
+          in: path
+          description: 'Specific application/business area you want to fetch configurations for'
+          required: true
+          type: string
+        - name: communicationPackage
+          in: body
+          description: 'Create comm package body'
+          required: true
+          schema:
+            $ref: '#/definitions/CommunicationPackage'
+      responses:
+        '201':
+          description: 'Success'
         '403':
           description: 'Access Denied'
           schema:
