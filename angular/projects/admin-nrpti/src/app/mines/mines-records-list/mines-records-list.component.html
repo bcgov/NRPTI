@@ -26,7 +26,7 @@
     <div *ngIf="!collectionState">
       <button
         class="btn btn-primary"
-        [disabled]="!anySelectedRecords()"
+        [disabled]="!anySelectedRecords"
         (click)="submitAddEditCollectionRecords()"
         title="Add to new collection">
         <em class="material-icons mr-1 align-middle">add</em>
@@ -35,7 +35,7 @@
       &nbsp;
       <button
         class="btn btn-primary"
-        [disabled]="!anySelectedRecords()"
+        [disabled]="!anySelectedRecords"
         (click)="submitAddToExistingCollection()"
         title="Add to existing collection">
         <em class="material-icons mr-1 align-middle">add</em>
@@ -44,11 +44,12 @@
       &nbsp;
       <button
         class="btn"
-        [ngClass]="{'btn-primary' : !showRecordForm, 'btn-secondary' : showRecordForm }"
+        [ngClass]="{'btn-primary' : !showRecordForm, 'btn-secondary' : showRecordForm}"
         (click)="showRecordForm = !showRecordForm"
         title="Add new record">
-        <em class="material-icons mr-1 align-middle">add</em>
         <span class="align-middle">Add New Record</span>
+        <em
+          class="material-icons align-middle">{{showRecordForm ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</em>
       </button>
     </div>
   </section>
