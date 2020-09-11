@@ -9,7 +9,7 @@ import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
-import { LoadingScreenService } from 'nrpti-angular-components';
+import { LoadingScreenService, LoggerService } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-administrative-penalty-add-edit',
@@ -46,6 +46,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     private recordUtils: RecordUtils,
     private factoryService: FactoryService,
     private loadingScreenService: LoadingScreenService,
+    private logger: LoggerService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
   ) { }
@@ -471,7 +472,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
           this.factoryService
         );
 
-        console.log(docResponse);
+        this.logger.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records']);
       });
@@ -506,7 +507,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
           this.factoryService
         );
 
-        console.log(docResponse);
+        this.logger.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records', 'administrative-penalties', this.currentRecord._id, 'detail']);
       });
