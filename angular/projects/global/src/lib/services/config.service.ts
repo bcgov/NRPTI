@@ -34,4 +34,17 @@ export class ConfigService {
   get config(): any {
     return this.configuration;
   }
+
+  public getCommunicationPackage(application, pathAPI: string) {
+    return this.httpClient.get(`${pathAPI}/config/${application}`, {});
+  }
+
+  public createCommunicationPackage(communicationPackage, pathAPI: string) {
+    if (!communicationPackage ||
+        (communicationPackage && !Object.prototype.hasOwnProperty.call(communicationPackage, 'application'))) {
+      throw new Error('Invalid communication pakage!');
+    }
+
+    return this.httpClient.post(`${pathAPI}/config/${communicationPackage.application}`, communicationPackage, {});
+  }
 }
