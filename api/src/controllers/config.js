@@ -63,7 +63,7 @@ exports.communicationPackageCreate = async function (args, res, next) {
     let newCommPackage = new CommunicationPackage(communicationPackage);
 
     newCommPackage._schemaName = 'CommunicationPackage';
-    newCommPackage.application = args.swagger.params.app.value;
+    newCommPackage.application = args.swagger.params.app.value.toUpperCase();
     newCommPackage.addedBy = args.swagger.params.auth_payload.displayName;
     newCommPackage.dateAdded = new Date();
     newCommPackage.write = utils.ApplicationAdminRoles;
