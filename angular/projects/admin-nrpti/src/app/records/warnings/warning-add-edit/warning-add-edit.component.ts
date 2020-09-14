@@ -9,7 +9,7 @@ import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
-import { LoadingScreenService } from 'nrpti-angular-components';
+import { LoadingScreenService, LoggerService } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-warning-add-edit',
@@ -46,6 +46,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
     public router: Router,
     private recordUtils: RecordUtils,
     private factoryService: FactoryService,
+    private logger: LoggerService,
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
@@ -401,7 +402,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
+        this.logger.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records']);
       });
@@ -436,7 +437,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
+        this.logger.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records', 'warnings', this.currentRecord._id, 'detail']);
       });

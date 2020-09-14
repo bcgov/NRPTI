@@ -14,7 +14,7 @@
       <div class="d-flex justify-content-between">
         <div class="col-6 col-lg-8 col-xl-9">
           <div>
-            <h2 class="border-0 mb-0">Edit Collection</h2>
+            <h2 class="border-0 mb-0">{{ (isEditing && 'Edit') || (!isEditing && 'Add') }} Collection</h2>
           </div>
           <div class="mb-3">
             <span class="grey-subtext">{{ lastEditedSubText }}</span>
@@ -110,8 +110,10 @@
               [ngClass]="{'btn-primary' : !showRecordForm, 'btn-secondary' : showRecordForm}"
               (click)="showRecordForm = !showRecordForm"
               title="Create and add new record">
-              <em class="material-icons mr-1 align-middle">add</em>
               <span class="align-middle">Create and Add New Record</span>
+              <em
+                class="material-icons align-middle">{{showRecordForm ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}
+              </em>
             </button>
           </div>
         </div>
@@ -121,7 +123,7 @@
     <app-mines-record-add
       *ngIf="mine && showRecordForm"
       [mine]="mine"
-      [collectionId]="collection._id"
+      [collectionId]="collection ? collection._id : null"
       (addedRecord)="updateRecordList($event)">
     </app-mines-record-add>
 
