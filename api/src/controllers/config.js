@@ -27,7 +27,7 @@ exports.protectedGetConfig = async function (args, res, next) {
   if (args.swagger.params.app && args.swagger.params.app.value) {
     // fetch the latest business area specific CommunicationPackage
     // attach it to the configuration data under "COMMUNICATIONS"
-    const commPackage = await CommunicationPackage.findOne({ _schemaName: 'CommunicationPackage', application: args.swagger.params.app.value });
+    const commPackage = await CommunicationPackage.findOne({ _schemaName: 'CommunicationPackage', application: args.swagger.params.app.value.toUpperCase() });
     configurationData['COMMUNICATIONS'] = commPackage;
   }
 
@@ -63,7 +63,7 @@ exports.communicationPackageCreate = async function (args, res, next) {
     let newCommPackage = new CommunicationPackage(communicationPackage);
 
     newCommPackage._schemaName = 'CommunicationPackage';
-    newCommPackage.application = args.swagger.params.app.value;
+    newCommPackage.application = args.swagger.params.app.value.toUpperCase();
     newCommPackage.addedBy = args.swagger.params.auth_payload.displayName;
     newCommPackage.dateAdded = new Date();
     newCommPackage.write = utils.ApplicationAdminRoles;
