@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Observable, throwError } from 'rxjs';
-import { ConfigService } from 'nrpti-angular-components';
+import { ConfigService, LoggerService } from 'nrpti-angular-components';
 
 @Injectable()
 export class ApiService {
@@ -11,7 +11,8 @@ export class ApiService {
   public env: 'local' | 'dev' | 'test' | 'prod';
 
   constructor(
-    private configService: ConfigService
+    private configService: ConfigService,
+    private logger: LoggerService
     ) {
       this.isMS = window.navigator.msSaveOrOpenBlob ? true : false;
 
@@ -28,7 +29,7 @@ export class ApiService {
         return '588511c4aaecd9001b825604'; // Coastal Gaslink
       }
     } catch (e) {
-      console.log('error:', e);
+      this.logger.log(e);
       return '';
     }
   }
@@ -39,7 +40,7 @@ export class ApiService {
       : error.status
       ? `${error.status} - ${error.statusText}`
       : 'Server error';
-    console.log('API error:', reason);
+    this.logger.log(`API error: ${reason}`);
     return throwError(error);
   }
 }

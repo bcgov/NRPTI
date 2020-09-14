@@ -3,7 +3,7 @@ import { KeycloakService } from './keycloak.service';
 import { JwtUtil } from '../utils/jwt-utils';
 import { Observable, of } from 'rxjs';
 import { ApiService } from './api.service';
-import { SearchService, SearchResults } from 'nrpti-angular-components';
+import { SearchService, SearchResults, ConfigService } from 'nrpti-angular-components';
 import { RecordService } from './record.service';
 import { catchError } from 'rxjs/operators';
 import { TaskService, ITaskParams } from './task.service';
@@ -29,6 +29,7 @@ export class FactoryService {
   private _collectionService: CollectionService;
   private _taskService: TaskService;
   private _documentService: DocumentService;
+  private _configService: ConfigService;
 
   constructor(private injector: Injector) {
     // The following items are loaded by a file that is only present on cluster builds.
@@ -131,6 +132,12 @@ export class FactoryService {
     return this._documentService;
   }
 
+  public get configService(): ConfigService {
+    if (!this._configService) {
+      this._configService = this.injector.get(ConfigService);
+    }
+    return this._configService;
+  }
   /**
    * True if the user is authenticated, false otherwise.
    *
@@ -497,20 +504,12 @@ export class FactoryService {
   }
 
   // News
-  public createNews(news: any): Observable<object> {
-    const outboundObject = {
-      newsItems: [news]
-    };
-    return this.recordService
-      .createRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
+  public createNews(news: any): Promise<any> {
+    return this.newsService.createNews(news);
   }
 
-  public editNews(news: any): Observable<object> {
-    const outboundObject = {
-      newsItems: [news]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  public editNews(news: any): Promise<any> {
+    return this.newsService.editNews(news);
   }
 
   public deleteNews(newsId: string): Promise<any> {
@@ -531,20 +530,12 @@ export class FactoryService {
   }
 
   // Collections
-  public createCollection(collection: any): Observable<object> {
-    const outboundObject = {
-      collections: [collection]
-    };
-    return this.recordService
-      .createRecord(outboundObject)
-      .pipe(catchError(error => this.apiService.handleError(error)));
+  public createCollection(collection: any): Promise<any> {
+    return this.collectionService.createCollection(collection);
   }
 
-  public editCollection(collection: any): Observable<object> {
-    const outboundObject = {
-      collections: [collection]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  public editCollection(collection: any): Promise<any> {
+    return this.collectionService.editCollection(collection);
   }
 
   // Record insert/edit helper
@@ -560,5 +551,13 @@ export class FactoryService {
       : this.recordService
         .editRecord(dataPackage)
         .pipe(catchError(error => this.apiService.handleError(error)));
+  }
+
+  public getCommunicationPackage(application): Observable<object> {
+    return this.configService.getCommunicationPackage(application, this.apiService.pathAPI);
+  }
+
+  public createCommunicationPackage(communicationPackage): Observable<object> {
+    return this.configService.createCommunicationPackage(communicationPackage, this.apiService.pathAPI);
   }
 }

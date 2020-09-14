@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RecordComponent } from '../../utils/record-component';
 import { DatePipe } from '@angular/common';
 import { FactoryService } from '../../../services/factory.service';
+import { LoggerService } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-management-plan-lng-detail',
@@ -21,6 +22,7 @@ export class ManagementPlanLNGDetailComponent extends RecordComponent implements
     public route: ActivatedRoute,
     public router: Router,
     public factoryService: FactoryService,
+    private logger: LoggerService,
     public changeDetectionRef: ChangeDetectorRef,
     public datePipe: DatePipe
   ) {
@@ -53,7 +55,7 @@ export class ManagementPlanLNGDetailComponent extends RecordComponent implements
       .pipe(
         takeUntil(this.ngUnsubscribe),
         catchError(error => {
-          console.log('Publish error:', error);
+          this.logger.log(`Publish error: ${error}`);
           alert('Failed to publish record.');
           return of(null);
         })
@@ -81,7 +83,7 @@ export class ManagementPlanLNGDetailComponent extends RecordComponent implements
       .pipe(
         takeUntil(this.ngUnsubscribe),
         catchError(error => {
-          console.log('Unpublish error:', error);
+          this.logger.log(`Unpublish error: ${error}`);
           alert('Failed to unpublish record.');
           return of(null);
         })

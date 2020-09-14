@@ -9,7 +9,7 @@ import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
-import { LoadingScreenService, StoreService} from 'nrpti-angular-components';
+import { LoadingScreenService, StoreService, LoggerService } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-order-add-edit',
@@ -48,6 +48,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     private recordUtils: RecordUtils,
     private factoryService: FactoryService,
     private storeService: StoreService,
+    private logger: LoggerService,
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
@@ -442,7 +443,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
+        this.logger.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records']);
       });
@@ -477,7 +478,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
           this.factoryService
         );
 
-        console.log(docResponse);
+        this.logger.log(docResponse);
         this.loadingScreenService.setLoadingState(false, 'main');
         this.router.navigate(['records', 'orders', this.currentRecord._id, 'detail']);
       });

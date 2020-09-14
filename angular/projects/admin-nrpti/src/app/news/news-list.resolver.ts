@@ -6,7 +6,7 @@ import { FactoryService } from '../services/factory.service';
 
 @Injectable()
 export class NewsListResolver implements Resolve<Observable<object>> {
-  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) {}
+  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) { }
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
@@ -49,7 +49,7 @@ export class NewsListResolver implements Resolve<Observable<object>> {
       [],
       tableObject.currentPage,
       tableObject.pageSize,
-      tableObject.sortBy || '-dateAdded', // This needs to be common between all datasets to work properly
+      tableObject.sortBy || '-date', // This needs to be common between all datasets to work properly
       {},
       false,
       filterParams

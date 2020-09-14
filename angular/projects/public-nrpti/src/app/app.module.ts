@@ -28,7 +28,7 @@ import { HomeComponent } from './home/home.component';
 import { ApiService } from './services/api.service';
 import { DocumentService } from './services/document.service';
 import { FactoryService } from './services/factory.service';
-import { ConfigService } from 'nrpti-angular-components';
+import { ConfigService, LoggerService } from 'nrpti-angular-components';
 
 export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrategy {
   return () => overlay.scrollStrategies.close();
@@ -71,7 +71,8 @@ export function initConfig(configService: ConfigService) {
     },
     ApiService,
     DocumentService,
-    FactoryService
+    FactoryService,
+    LoggerService
   ],
   entryComponents: [ConfirmComponent, HomeComponent],
   bootstrap: [AppComponent]

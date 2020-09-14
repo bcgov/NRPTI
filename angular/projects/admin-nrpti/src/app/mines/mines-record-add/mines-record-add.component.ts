@@ -124,11 +124,6 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
     record['centroid'] = this.mine.location ?
       [this.mine.location.coordinates[0], this.mine.location.coordinates[1]] : [0, 0];
 
-    // If we are editing a collection, we add right away.
-    if (this.collectionId) {
-      record['collectionId'] = this.collectionId;
-    }
-
     // lookup appropriate schemaName from type value
     const recordSchema = Object.values(Picklists.bcmiRecordTypePicklist).filter(item => {
       return item.displayName === record['recordType'];

@@ -72,6 +72,9 @@ exports.deleteMasterRecord = async function (record) {
 exports.deleteFlavourRecord = async function (flavourId, flavourType) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const collectionDB = db.collection('nrpti');
+
+  let promises = [];
+
   // We need to make sure we ony delete manual added records.
   try {
     const filter = {
@@ -82,50 +85,77 @@ exports.deleteFlavourRecord = async function (flavourId, flavourType) {
 
     switch (flavourType) {
       case 'bcmi':
-        await collectionDB.findOneAndUpdate(
-          filter,
-          {
-            $set: {
-              mineGuid: null,
-              isBcmiPublished: false
-            },
-            $pull: {
-              _flavourRecords: new ObjectID(flavourId)
+        // Update the master record
+        promises.push(
+          collectionDB.findOneAndUpdate(
+            filter,
+            {
+              $set: {
+                mineGuid: null,
+                isBcmiPublished: false
+              },
+              $pull: {
+                _flavourRecords: new ObjectID(flavourId)
+              }
             }
-          }
+          )
+        );
+
+        // We also have to find all collections and edit them accordingly.
+        promises.push(
+          collectionDB.updateMany(
+            {
+              _schemaName: 'CollectionBCMI',
+              records: {
+                $in: [new ObjectID(flavourId)]
+              }
+            },
+            {
+              $pull: {
+                records: new ObjectID(flavourId)
+              }
+            }
+          )
         );
         break;
       case 'nrced':
-        await collectionDB.findOneAndUpdate(
-          filter,
-          {
-            $set: {
-              isNrcedPublished: false
-            },
-            $pull: {
-              _flavourRecords: new ObjectID(flavourId)
+        // Update the master record
+        promises.push(
+          collectionDB.findOneAndUpdate(
+            filter,
+            {
+              $set: {
+                isNrcedPublished: false
+              },
+              $pull: {
+                _flavourRecords: new ObjectID(flavourId)
+              }
             }
-          }
+          )
         );
         break;
       case 'lng':
-        await collectionDB.findOneAndUpdate(
-          filter,
-          {
-            $set: {
-              isLngPublished: false
-            },
-            $pull: {
-              _flavourRecords: new ObjectID(flavourId)
+        // Update the master record
+        promises.push(
+          collectionDB.findOneAndUpdate(
+            filter,
+            {
+              $set: {
+                isLngPublished: false
+              },
+              $pull: {
+                _flavourRecords: new ObjectID(flavourId)
+              }
             }
-          }
+          )
         );
         break;
       default:
         defaultLog.info(`protectedDelete - flavour type not supported: ${flavourType}`);
         throw `protectedDelete - flavour type not supported: ${flavourType}`;
     }
-    return await this.deleteById(flavourId);
+    promises.push(this.deleteById(flavourId));
+    return Promise.all(promises);
   } catch (error) {
     defaultLog.info(`protectedDelete - couldn't find master record of: ${flavourId}`);
     defaultLog.debug(error);

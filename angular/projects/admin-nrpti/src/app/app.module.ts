@@ -18,6 +18,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { RecordsModule } from './records/records.module';
 import { NewsModule } from './news/news.module';
 import { MinesModule } from './mines/mines.module';
+import { CommunicationsModule } from './communications/communications.module';
 
 // components
 import { AppComponent } from './app.component';
@@ -39,13 +40,14 @@ import { FactoryService } from './services/factory.service';
 import { KeycloakService } from './services/keycloak.service';
 import { RecordService } from './services/record.service';
 import { TaskService } from './services/task.service';
-import { ConfigService } from 'nrpti-angular-components';
+import { ConfigService , LoggerService } from 'nrpti-angular-components';
 import { NewsService } from './services/news.service';
 
 // resolvers
 import { ImportListResolver } from './import/import-list-resolver';
 import { NewsResolver } from './news/news-resolver';
 import { NewsListResolver } from './news/news-list.resolver';
+import { CommunicationsResolver } from './communications/communications.resolver';
 
 // guards
 import { CanActivateGuard } from './guards/can-activate-guard.service';
@@ -96,6 +98,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     RecordsModule,
     NewsModule,
     MinesModule,
+    CommunicationsModule,
     AppRoutingModule, // <-- module import order matters - https://angular.io/guide/router#module-import-order-matters
     NgbModule.forRoot(),
     NgxPaginationModule,
@@ -132,13 +135,15 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     RecordService,
     NewsService,
     CollectionService,
+    LoggerService,
     TaskService,
     ImportListResolver,
     NewsResolver,
     NewsListResolver,
+    CommunicationsResolver,
     CanActivateGuard,
     CanDeactivateGuard,
-    RecordUtils
+    RecordUtils,
   ],
   entryComponents: [ConfirmComponent, HomeComponent, ImportComponent, ImportTableRowsComponent],
   bootstrap: [AppComponent]
