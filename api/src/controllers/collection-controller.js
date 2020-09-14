@@ -141,10 +141,12 @@ exports.protectedPut = async function (args, res, next) {
     updateObj['$addToSet'] = { read: 'public' };
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+    updateObj.$set['isBcmiPublished'] = true;
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj['$pull'] = { read: 'public' };
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
+    updateObj.$set['isBcmiPublished'] = false;
   }
 
   let obj = null;
@@ -212,6 +214,9 @@ exports.protectedPost = async function (args, res, next) {
     collection.read.push('public');
     collection.datePublished = new Date();
     collection.publishedBy = args.swagger.params.auth_payload.displayName;
+    collection.isBcmiPublished = true;
+  } else {
+    collection.isBcmiPublished = false;
   }
 
   // Set auditing meta
