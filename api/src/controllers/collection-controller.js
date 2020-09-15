@@ -99,7 +99,16 @@ exports.protectedPut = async function (args, res, next) {
     // Remove records
     let recordsToRemove = recordIds.filter(x => incomingObj.records.indexOf(x) === -1);
     for (const record of recordsToRemove) {
-      promises.push(collectionDB.updateOne({ _id: new ObjectID(record) }, { $set: { collectionId: null } }));
+      promises.push(collectionDB.findOneAndUpdate(
+        { _id: new ObjectID(record) },
+        {
+          $set: {
+            collectionId: null,
+            isBcmiPublished: false
+          },
+          $pull: { read: 'public' }
+        }
+      ));
     }
 
     try {
@@ -265,7 +274,15 @@ const checkRecordExistsInCollection = async function (records, collectionId, edi
   let promises = [];
   for (const record of records) {
     // does this record exit in any other collection?
-    const collectionCount = await collectionDB.count({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName, records: { $elemMatch: { $eq: new ObjectID(record) } } });
+    // TODO: once we upgrade to mongo 4 we should replace this with a .countDocuments()
+    // There seems to be an issue with .count() and mongodb 3.6
+    const collectionCount = await collectionDB.find(
+      {
+        _schemaName: RECORD_TYPE.CollectionBCMI._schemaName,
+        records: { $elemMatch: { $eq: new ObjectID(record) } }
+      }
+    ).toArray().length;
+
     if (collectionCount && collectionCount > 0) {
       if (!editing) {
         throw new Error('Collection contains records that are already associated with another collection');
@@ -273,8 +290,18 @@ const checkRecordExistsInCollection = async function (records, collectionId, edi
         continue;
       }
     } else {
-      // ensure the record has the collectionId set
-      promises.push(collectionDB.updateOne({ _id: new ObjectID(record) }, { $set: { collectionId: new ObjectID(collectionId) } }));
+      // Ensure the record has the collectionId set
+      // Also, if we are associating a record, we auto-publish that record
+      promises.push(collectionDB.findOneAndUpdate(
+        { _id: new ObjectID(record) },
+        {
+          $set: {
+            collectionId: new ObjectID(collectionId),
+            isBcmiPublished: true
+          },
+          $addToSet: { read: 'public' }
+        }
+      ));
     }
   }
   try {
