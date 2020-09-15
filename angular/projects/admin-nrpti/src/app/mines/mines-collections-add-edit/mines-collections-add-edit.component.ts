@@ -24,7 +24,6 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
   // flags
   public loading = true;
   public isEditing = false;
-  public isPublished = false;
   public showRecordForm = false;
 
   // form
@@ -181,11 +180,6 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
         (this.collection && this.collection.agency) ||
         ''
       ),
-      collectionPublish: new FormControl(
-        (this.collectionState && this.collectionState.collectionPublish) ||
-        (this.collection && this.collection.read.includes('public')) ||
-        false
-      ),
       collectionRecords: new FormArray(
         // If editing and have selected records then combine them with existing collection records.
         (this.collectionState && this.getRecordsFormGroups(this.getUniqueRecords())) ||
@@ -200,7 +194,6 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
       this.myForm.get('collectionDate').markAsDirty();
       this.myForm.get('collectionType').markAsDirty();
       this.myForm.get('collectionAgency').markAsDirty();
-      this.myForm.get('collectionPublish').markAsDirty();
       this.myForm.get('collectionRecords').markAsDirty();
 
       // Remove used state
@@ -276,17 +269,6 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Toggle the publish formcontrol.
-   *
-   * @param {*} event
-   * @memberof MinesCollectionsAddEditComponent
-   */
-  togglePublish(event) {
-    this.myForm.get('collectionPublish').setValue(event.checked);
-    this._changeDetectionRef.detectChanges();
-  }
-
-  /**
    * Link has been dragged/dropped.  Update the array of controls to the new order.
    *
    * @param {CdkDragDrop<string[]>} event
@@ -320,7 +302,6 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
         collectionDate: this.myForm.get('collectionDate').value,
         collectionType: this.myForm.get('collectionType').value,
         collectionAgency: this.myForm.get('collectionAgency').value,
-        collectionPublish: this.myForm.get('collectionPublish').value,
         collectionRecords: this.myForm.get('collectionRecords').value.map(recordFormGroup => recordFormGroup.record),
         originalCollectionRecords: this.myForm
           .get('collectionRecords')
@@ -353,50 +334,70 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesCollectionsAddEditComponent
    */
   async submit() {
-    this.loadingScreenService.setLoadingState(true, 'main');
-
-    const collection = {};
-
-    this.myForm.get('collectionName').dirty && (collection['name'] = this.myForm.get('collectionName').value);
-    this.myForm.get('collectionDate').dirty &&
-      (collection['date'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('collectionDate').value));
-    this.myForm.get('collectionType').dirty && (collection['type'] = this.myForm.get('collectionType').value);
-    this.myForm.get('collectionAgency').dirty && (collection['agency'] = this.myForm.get('collectionAgency').value);
-
-    this.myForm.get('collectionRecords').dirty && (collection['records'] = this.parseRecordsFormGroups());
-
-    if (this.myForm.get('collectionPublish').dirty) {
-      if (this.myForm.get('collectionPublish').value) {
-        collection['addRole'] = 'public';
-        collection['isBcmiPublished'] = true;
-      } else {
-        collection['removeRole'] = 'public';
-        collection['isBcmiPublished'] = false;
-      }
+    if (this.myForm.get('collectionRecords').value.length === 0) {
+      alert('You must add at least one record.');
+      this.loadingScreenService.setLoadingState(false, 'main');
+      return;
     }
 
-    if (this.isEditing) {
-      collection['_id'] = this.collection._id;
+    this.dialogService
+      .addDialog(
+        ConfirmComponent,
+        {
+          title: 'Confirm Deletion',
+          message: `This will publish ${this.myForm.get('collectionRecords').value.length} record(s), do you want to proceed?`,
+          okOnly: false
+        },
+        { backdropColor: 'rgba(0, 0, 0, 0.5)' }
+      )
+      .pipe(
+        takeUntil(this.ngUnsubscribe),
+        catchError(() => {
+          alert('Failed to delete record.');
+          return of(null);
+        })
+      )
+      .subscribe(async isConfirmed => {
+        if (!isConfirmed) {
+          return;
+        }
+        this.loadingScreenService.setLoadingState(true, 'main');
 
-      const res = await this.factoryService.editCollection(collection);
-      if (!res || !res._id) {
-        alert('Failed to create collection.');
-      } else {
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['mines', this.collection._master, 'collections', this.collection._id, 'detail']);
-      }
-    } else {
-      collection['_master'] = this.route.snapshot.paramMap.get('mineId');
-      collection['project'] = this.route.snapshot.paramMap.get('mineId');
+        const collection = {};
 
-      const res = await this.factoryService.createCollection(collection);
-      if (!res || !res._id || !res._master) {
-        alert('Failed to create collection.');
-      } else {
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['mines', res._master, 'collections', res._id, 'detail']);
-      }
-    }
+        this.myForm.get('collectionName').dirty && (collection['name'] = this.myForm.get('collectionName').value);
+        this.myForm.get('collectionDate').dirty &&
+          (collection['date'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('collectionDate').value));
+        this.myForm.get('collectionType').dirty && (collection['type'] = this.myForm.get('collectionType').value);
+        this.myForm.get('collectionAgency').dirty && (collection['agency'] = this.myForm.get('collectionAgency').value);
+
+        this.myForm.get('collectionRecords').dirty && (collection['records'] = this.parseRecordsFormGroups());
+
+        if (this.isEditing) {
+          collection['_id'] = this.collection._id;
+
+          const res = await this.factoryService.editCollection(collection);
+          if (!res || !res._id) {
+            alert('Failed to create collection.');
+          } else {
+            this.loadingScreenService.setLoadingState(false, 'main');
+            this.router.navigate(['mines', this.collection._master, 'collections', this.collection._id, 'detail']);
+          }
+        } else {
+          collection['_master'] = this.route.snapshot.paramMap.get('mineId');
+          collection['project'] = this.route.snapshot.paramMap.get('mineId');
+
+          const res = await this.factoryService.createCollection(collection);
+          if (!res || !res._id || !res._master) {
+            alert('Failed to create collection.');
+          } else {
+            this.loadingScreenService.setLoadingState(false, 'main');
+            this.router.navigate(['mines', res._master, 'collections', res._id, 'detail']);
+          }
+        }
+      });
+
+
   }
 
   /**

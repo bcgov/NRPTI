@@ -19,16 +19,6 @@
           <div class="mb-3">
             <span class="grey-subtext">{{ lastEditedSubText }}</span>
           </div>
-          <div>
-            <mat-slide-toggle name="collectionPublish" id="collectionPublish" class="publish-toggle"
-              [ngClass]="myForm.get('collectionPublish').value ? 'published' : 'unpublished'"
-              formControlName="collectionPublish" (change)="togglePublish($event)"
-              [checked]="myForm.get('collectionPublish').value"
-              title="{{ myForm.get('collectionPublish').value ? 'Unpublish collection' : 'Publish collection' }}"
-              ngDefaultControl>
-              {{ (myForm.get('collectionPublish').value && 'Published') || 'Unpublished' }}
-            </mat-slide-toggle>
-          </div>
         </div>
         <div class="col-6 col-lg-4 col-xl-3">
           <div class="d-flex justify-content-end text-left">

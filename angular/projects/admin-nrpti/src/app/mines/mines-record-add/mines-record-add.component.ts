@@ -31,8 +31,7 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
       dateIssued: new FormControl(''),
       recordType: new FormControl(''),
       typeCode: new FormControl(''),
-      documents: new FormControl(''),
-      publishBcmi: new FormControl(false),
+      documents: new FormControl('')
     }
   );
 
@@ -57,11 +56,6 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loading = false;
-  }
-
-  togglePublish(event) {
-    this.myForm.get('publishBcmi').setValue(event.checked);
-    this._changeDetectionRef.detectChanges();
   }
 
   submit() {
@@ -135,11 +129,6 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
     record[schemaString] = {};
     if (record['recordType'] === 'Permit') {
       record[schemaString]['typeCode'] = this.myForm.get('typeCode').value;
-    }
-    if (this.myForm.get('publishBcmi').dirty && this.myForm.get('publishBcmi').value) {
-      record[schemaString]['addRole'] = 'public';
-    } else if (this.myForm.get('publishBcmi').dirty && !this.myForm.get('publishBcmi').value) {
-      record[schemaString]['removeRole'] = 'public';
     }
 
     this.factoryService.createMineRecord(record).subscribe(async (res: any) => {
