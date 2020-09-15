@@ -334,50 +334,71 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesCollectionsAddEditComponent
    */
   async submit() {
-    this.loadingScreenService.setLoadingState(true, 'main');
-
-    const collection = {};
-
-    this.myForm.get('collectionName').dirty && (collection['name'] = this.myForm.get('collectionName').value);
-    this.myForm.get('collectionDate').dirty &&
-      (collection['date'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('collectionDate').value));
-    this.myForm.get('collectionType').dirty && (collection['type'] = this.myForm.get('collectionType').value);
-    this.myForm.get('collectionAgency').dirty && (collection['agency'] = this.myForm.get('collectionAgency').value);
-
-    this.myForm.get('collectionRecords').dirty && (collection['records'] = this.parseRecordsFormGroups());
     if (this.myForm.get('collectionRecords').value.length === 0) {
       alert('You must add at least one record.');
       this.loadingScreenService.setLoadingState(false, 'main');
       return;
     }
 
-    // If a collection exists, it is published
-    // The only way to unpub is to delete
-    collection['addRole'] = 'public';
-    collection['isBcmiPublished'] = true;
+    this.dialogService
+      .addDialog(
+        ConfirmComponent,
+        { title: 'Confirm Deletion', message: `This will publish ${this.myForm.get('collectionRecords').value.length} record(s), do you want to proceed?`, okOnly: false },
+        { backdropColor: 'rgba(0, 0, 0, 0.5)' }
+      )
+      .pipe(
+        takeUntil(this.ngUnsubscribe),
+        catchError(() => {
+          alert('Failed to delete record.');
+          return of(null);
+        })
+      )
+      .subscribe(async isConfirmed => {
+        if (!isConfirmed) {
+          return;
+        }
+        this.loadingScreenService.setLoadingState(true, 'main');
 
-    if (this.isEditing) {
-      collection['_id'] = this.collection._id;
+        const collection = {};
 
-      const res = await this.factoryService.editCollection(collection);
-      if (!res || !res._id) {
-        alert('Failed to create collection.');
-      } else {
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['mines', this.collection._master, 'collections', this.collection._id, 'detail']);
-      }
-    } else {
-      collection['_master'] = this.route.snapshot.paramMap.get('mineId');
-      collection['project'] = this.route.snapshot.paramMap.get('mineId');
+        this.myForm.get('collectionName').dirty && (collection['name'] = this.myForm.get('collectionName').value);
+        this.myForm.get('collectionDate').dirty &&
+          (collection['date'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('collectionDate').value));
+        this.myForm.get('collectionType').dirty && (collection['type'] = this.myForm.get('collectionType').value);
+        this.myForm.get('collectionAgency').dirty && (collection['agency'] = this.myForm.get('collectionAgency').value);
 
-      const res = await this.factoryService.createCollection(collection);
-      if (!res || !res._id || !res._master) {
-        alert('Failed to create collection.');
-      } else {
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['mines', res._master, 'collections', res._id, 'detail']);
-      }
-    }
+        this.myForm.get('collectionRecords').dirty && (collection['records'] = this.parseRecordsFormGroups());
+
+        // If a collection exists, it is published
+        // The only way to unpub is to delete
+        collection['addRole'] = 'public';
+        collection['isBcmiPublished'] = true;
+
+        if (this.isEditing) {
+          collection['_id'] = this.collection._id;
+
+          const res = await this.factoryService.editCollection(collection);
+          if (!res || !res._id) {
+            alert('Failed to create collection.');
+          } else {
+            this.loadingScreenService.setLoadingState(false, 'main');
+            this.router.navigate(['mines', this.collection._master, 'collections', this.collection._id, 'detail']);
+          }
+        } else {
+          collection['_master'] = this.route.snapshot.paramMap.get('mineId');
+          collection['project'] = this.route.snapshot.paramMap.get('mineId');
+
+          const res = await this.factoryService.createCollection(collection);
+          if (!res || !res._id || !res._master) {
+            alert('Failed to create collection.');
+          } else {
+            this.loadingScreenService.setLoadingState(false, 'main');
+            this.router.navigate(['mines', res._master, 'collections', res._id, 'detail']);
+          }
+        }
+      });
+
+
   }
 
   /**
