@@ -145,19 +145,6 @@ exports.protectedPut = async function (args, res, next) {
 
   const updateObj = { $set: dotNotatedObj };
 
-  // Add or remove 'public' role and update associated meta
-  if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    updateObj['$addToSet'] = { read: 'public' };
-    updateObj.$set['datePublished'] = new Date();
-    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
-    updateObj.$set['isBcmiPublished'] = true;
-  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
-    updateObj['$pull'] = { read: 'public' };
-    updateObj.$set['datePublished'] = null;
-    updateObj.$set['publishedBy'] = '';
-    updateObj.$set['isBcmiPublished'] = false;
-  }
-
   let obj = null;
   try {
     obj = await Put.updateById(collectionId, updateObj);
@@ -219,14 +206,11 @@ exports.protectedPost = async function (args, res, next) {
   }
 
   // Add 'public' role and associated meta
-  if (incomingObj.addRole && incomingObj.addRole === 'public') {
-    collection.read.push('public');
-    collection.datePublished = new Date();
-    collection.publishedBy = args.swagger.params.auth_payload.displayName;
-    collection.isBcmiPublished = true;
-  } else {
-    collection.isBcmiPublished = false;
-  }
+  // All collections are autopublished
+  collection.read.push('public');
+  collection.datePublished = new Date();
+  collection.publishedBy = args.swagger.params.auth_payload.displayName;
+  collection.isBcmiPublished = true;
 
   // Set auditing meta
   collection.addedBy = (args && args.swagger.params.auth_payload.displayName) || incomingObj.addedBy;

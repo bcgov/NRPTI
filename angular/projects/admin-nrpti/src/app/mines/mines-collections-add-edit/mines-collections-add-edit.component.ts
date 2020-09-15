@@ -343,7 +343,11 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     this.dialogService
       .addDialog(
         ConfirmComponent,
-        { title: 'Confirm Deletion', message: `This will publish ${this.myForm.get('collectionRecords').value.length} record(s), do you want to proceed?`, okOnly: false },
+        {
+          title: 'Confirm Deletion',
+          message: `This will publish ${this.myForm.get('collectionRecords').value.length} record(s), do you want to proceed?`,
+          okOnly: false
+        },
         { backdropColor: 'rgba(0, 0, 0, 0.5)' }
       )
       .pipe(
@@ -368,11 +372,6 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
         this.myForm.get('collectionAgency').dirty && (collection['agency'] = this.myForm.get('collectionAgency').value);
 
         this.myForm.get('collectionRecords').dirty && (collection['records'] = this.parseRecordsFormGroups());
-
-        // If a collection exists, it is published
-        // The only way to unpub is to delete
-        collection['addRole'] = 'public';
-        collection['isBcmiPublished'] = true;
 
         if (this.isEditing) {
           collection['_id'] = this.collection._id;
