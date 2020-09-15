@@ -41,11 +41,18 @@
       <app-document-link-staging *ngIf="!resetDocStaging" [params]="{ maxFiles: 1 , hideWhenMaxFilesReached: true }"
         (linksChanged)="links = $event" (documentsChanged)="documents = $event">
       </app-document-link-staging>
-      <div class="d-flex justify-content-end mb-1">
+      <div *ngIf="collectionId else recordSave" class="d-flex justify-content-end mb-1">
         <button class="btn btn-primary" type="submit" (click)="submit()" title="Save record">
-          Save & Add
+          Add to Collection
         </button>
       </div>
+      <ng-template #recordSave>
+        <div class="d-flex justify-content-end mb-1">
+          <button class="btn btn-primary" type="submit" (click)="submit()" title="Save record">
+            Save Record
+          </button>
+        </div>
+      </ng-template>
     </div>
   </section>
 </form>
