@@ -14,7 +14,6 @@ import { Subject } from 'rxjs';
 export class MinesRecordAddComponent implements OnInit, OnDestroy {
   @Input() mine = null;
   @Input() collectionId = null;
-  @Input() collectionPublishState = false;
   @Output() addedRecord: EventEmitter<object> = new EventEmitter<object>();
   @ViewChild(DatePickerComponent) DatePicker: DatePickerComponent;
 

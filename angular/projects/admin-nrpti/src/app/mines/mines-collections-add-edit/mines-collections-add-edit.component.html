@@ -114,7 +114,6 @@
       *ngIf="mine && showRecordForm"
       [mine]="mine"
       [collectionId]="collection ? collection._id : null"
-      [collectionPublishState]="true"
       (addedRecord)="updateRecordList($event)">
     </app-mines-record-add>
 
