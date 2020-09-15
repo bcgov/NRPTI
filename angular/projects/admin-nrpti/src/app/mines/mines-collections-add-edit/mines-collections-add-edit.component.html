@@ -31,6 +31,11 @@
           </div>
         </div>
         <div class="col-6 col-lg-4 col-xl-3">
+          <div class="d-flex justify-content-end text-left">
+            <span *ngIf="isEditing" class="grey-subtext d-block">
+              Cancel will cause you to lose any records or links added to this collection. If you do not want to lose the added items, click update.
+            </span>
+          </div>
           <div class="d-flex justify-content-end mb-1">
             <button type="button" class="btn btn-link" (click)="cancel()" title="Cancel">Cancel</button>
             <button *ngIf="isEditing" class="btn btn-primary" type="submit" (click)="submit()"
@@ -46,12 +51,6 @@
               </i>
               Save
             </button>
-          </div>
-          <div class="d-flex justify-content-end text-right">
-            <span *ngIf="isEditing" class="grey-subtext d-block">
-              Changes made will take effect once you click "Update". If content is published on any site, clicking the
-              Update button will update the public site immediately.
-            </span>
           </div>
         </div>
       </div>
