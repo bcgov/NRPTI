@@ -344,7 +344,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
       .addDialog(
         ConfirmComponent,
         {
-          title: 'Confirm Deletion',
+          title: 'Confirm Publication',
           message: `This will publish ${this.myForm.get('collectionRecords').value.length} record(s), do you want to proceed?`,
           okOnly: false
         },
