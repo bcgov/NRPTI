@@ -310,6 +310,8 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
       }
     });
 
+    console.log(this.myForm.get('collectionRecords')['controls']);
+
     // Navigate to the record list page for this mine
     this.router.navigate(['mines', this.route.snapshot.paramMap.get('mineId'), 'records']);
   }
@@ -344,7 +346,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
       .addDialog(
         ConfirmComponent,
         {
-          title: 'Confirm Deletion',
+          title: 'Confirm Publication',
           message: `This will publish ${this.myForm.get('collectionRecords').value.length} record(s), do you want to proceed?`,
           okOnly: false
         },
