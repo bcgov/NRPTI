@@ -214,6 +214,7 @@ export class Picklists {
     'cors-csv',
     'epic',
     'lng-csv',
+    "mem-admin",
     'nris-epd',
     'nrpti',
     'ocers-csv'
