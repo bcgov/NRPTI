@@ -1,5 +1,10 @@
-<td scope="row" class="col-1" (click)="toggleCheckbox(null); $event.stopPropagation();">
-  <mat-checkbox #rowCheckBox *ngIf="!rowData.collections || rowData.collections.length === 0" [checked]="rowData.rowSelected" (change)="toggleCheckbox($event)"></mat-checkbox>
+<td scope="row" class="col-1" (click)="updateCheckbox(rowData); $event.stopPropagation()">
+  <mat-checkbox #rowCheckBox
+                *ngIf="!rowData.collections || rowData.collections.length === 0"
+                [(ngModel)]="rowData.rowSelected"
+                (click)="$event.stopPropagation()"
+                (change)="rowSelectionChange(rowData)">
+  </mat-checkbox>
 </td>
 <td scope="row" data-label="Name" class="col-2">
   {{ getAttributeValue('recordName') }}
