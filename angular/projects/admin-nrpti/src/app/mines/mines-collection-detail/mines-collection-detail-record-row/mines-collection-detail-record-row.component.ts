@@ -23,7 +23,7 @@ export class MinesCollectionRecordTableRowComponent extends TableRowComponent im
   }
 
   @HostListener('click') onItemClicked() {
-    const url = this.router.url.substr(0, this.router.url.lastIndexOf("/collections"));
+    const url = this.router.url.substr(0, this.router.url.lastIndexOf('/collections'));
     window.open(`${url}/records/${this.rowData._id}/detail`, '_blank');
   }
 
