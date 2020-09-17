@@ -178,52 +178,6 @@ exports.protectedPost = async function (args, res, next) {
     next();
   }
 
-<<<<<<< Updated upstream
-  let CollectionBCMI = mongoose.model(RECORD_TYPE.CollectionBCMI._schemaName);
-  let collection = new CollectionBCMI();
-
-  // Set schema
-  collection._schemaName = RECORD_TYPE.CollectionBCMI._schemaName;
-
-  // Set parent/mine ids
-  incomingObj._master && (collection._master = incomingObj._master);
-  incomingObj.project && (collection.project = incomingObj.project);
-
-  // Set permissions
-  collection.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
-  collection.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
-
-  // Set data
-  incomingObj.name && (collection.name = incomingObj.name);
-  incomingObj.date && (collection.date = incomingObj.date);
-  incomingObj.type && (collection.type = incomingObj.type);
-  incomingObj.agency && (collection.agency = incomingObj.agency);
-  incomingObj.records && incomingObj.records.length && (collection.records = incomingObj.records);
-
-  // if any values in the "records" attribute exist on any other collection, throw an error
-  if (collection.records && collection.records.length > 0) {
-    try {
-      await checkRecordExistsInCollection(collection.records, collection._id);
-    } catch (error) {
-      defaultLog.info(`protectedPost - error inserting collection: ${collection}`);
-      defaultLog.debug(error);
-      return queryActions.sendResponse(res, 400, error);
-    }
-  }
-
-  // Add 'public' role and associated meta
-  // All collections are autopublished
-  collection.read.push('public');
-  collection.datePublished = new Date();
-  collection.publishedBy = args.swagger.params.auth_payload.displayName;
-  collection.isBcmiPublished = true;
-
-  // Set auditing meta
-  collection.addedBy = (args && args.swagger.params.auth_payload.displayName) || incomingObj.addedBy;
-  collection.dateAdded = new Date();
-
-=======
->>>>>>> Stashed changes
   let obj = null;
   try {
     obj = await createCollection(incomingObj, args.swagger.params.auth_payload.displayName);
