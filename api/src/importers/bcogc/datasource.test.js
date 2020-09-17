@@ -68,7 +68,7 @@ describe('OgcCsvDataSource', () => {
           return { transformed: true };
         }),
         findExistingRecord: jest.fn(() => null),
-        createRecord: jest.fn(() => {
+        createItem: jest.fn(() => {
           return [{ status: 'success' }];
         }),
         updateRecord: jest.fn(() => {
@@ -82,7 +82,7 @@ describe('OgcCsvDataSource', () => {
 
       expect(recordTypeUtils.findExistingRecord).toHaveBeenCalledWith({ transformed: true });
 
-      expect(recordTypeUtils.createRecord).toHaveBeenCalledWith({ transformed: true });
+      expect(recordTypeUtils.createItem).toHaveBeenCalledWith({ transformed: true });
 
       expect(dataSource.status.itemsProcessed).toEqual(1);
 
@@ -104,7 +104,7 @@ describe('OgcCsvDataSource', () => {
         findExistingRecord: jest.fn(() => {
           return { _id: 123 };
         }),
-        createRecord: jest.fn(() => {
+        createItem: jest.fn(() => {
           return [{ status: 'failure' }];
         }),
         updateRecord: jest.fn(() => {

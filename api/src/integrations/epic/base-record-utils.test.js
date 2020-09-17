@@ -108,11 +108,11 @@ describe('BaseRecordUtils', () => {
     });
   });
 
-  describe('createRecord', () => {
+  describe('createItem', () => {
     it('throws error if no record provided', async () => {
       const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Order);
-      await expect(baseRecordUtils.createRecord()).rejects.toThrow(
-        new Error('createRecord - required nrptiRecord must be non-null.')
+      await expect(baseRecordUtils.createItem()).rejects.toThrow(
+        new Error('createItem - required nrptiRecord must be non-null.')
       );
     });
 
@@ -125,7 +125,7 @@ describe('BaseRecordUtils', () => {
 
       const orderRecord = { _id: '321' };
 
-      await expect(baseRecordUtils.createRecord(orderRecord)).resolves.not.toThrow();
+      await expect(baseRecordUtils.createItem(orderRecord)).resolves.not.toThrow();
     });
 
     it('creates and saves a new record', async () => {
@@ -137,7 +137,7 @@ describe('BaseRecordUtils', () => {
 
       const orderRecord = { _id: '123' };
 
-      const status = await baseRecordUtils.createRecord(orderRecord);
+      const status = await baseRecordUtils.createItem(orderRecord);
 
       expect(status).toEqual([{ status: 'success' }]);
     });

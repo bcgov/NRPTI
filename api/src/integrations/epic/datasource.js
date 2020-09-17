@@ -247,7 +247,7 @@ class DataSource {
         // Create new documents (if any) and add reference to record
         nrptiRecord.documents = await recordTypeUtils.createDocument(epicRecord);
         // Create NRPTI master record OR update existing NRPTI master record and its flavours (if any)
-        savedRecords = await recordTypeUtils.createRecord(nrptiRecord);
+        savedRecords = await recordTypeUtils.createItem(nrptiRecord);
       }
       if (savedRecords && savedRecords.length > 0 && savedRecords[0].status === 'success') {
         this.status.itemsProcessed++;

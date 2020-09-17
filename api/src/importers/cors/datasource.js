@@ -108,7 +108,7 @@ class CorsCsvDataSource {
         savedRecord = await recordTypeUtils.updateRecord(nrptiRecord, existingRecord);
       } else {
         // create new record
-        savedRecord = await recordTypeUtils.createRecord(nrptiRecord);
+        savedRecord = await recordTypeUtils.createItem(nrptiRecord);
       }
 
       if (savedRecord && savedRecord.length > 0 && savedRecord[0].status === 'success') {
