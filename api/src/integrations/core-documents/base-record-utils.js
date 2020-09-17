@@ -116,9 +116,9 @@ class BaseRecordUtils {
    * @returns {object} object containing the newly inserted master and flavour records
    * @memberof BaseRecordUtils
    */
-  async createRecord(nrptiRecord) {
+  async createItem(nrptiRecord) {
     if (!nrptiRecord) {
-      throw Error('createRecord - required nrptiRecord must be non-null.');
+      throw Error('createItem - required nrptiRecord must be non-null.');
     }
 
     // build create Obj, which should include the flavour record details
