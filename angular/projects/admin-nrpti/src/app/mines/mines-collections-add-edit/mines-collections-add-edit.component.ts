@@ -484,7 +484,6 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
   }
 
   updateRecordList(recordToAdd) {
-    console.log(recordToAdd);
     for (const item of this.myForm.get('collectionRecords').value) {
       if (recordToAdd.record.recordName === item.record.recordName) {
         alert('Record names must be unique.');
