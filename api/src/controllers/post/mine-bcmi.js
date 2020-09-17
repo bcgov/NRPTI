@@ -12,7 +12,7 @@ const utils = require('../../utils/constants/misc');
  * @param {*} incomingObj Mine record to create
  * @returns new Mine record
  */
-exports.createRecord = async function (args, res, next, incomingObj) {
+exports.createItem = async function (args, res, next, incomingObj) {
   // TODO: Populate if needed.
   const flavourFunctions = {};
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
