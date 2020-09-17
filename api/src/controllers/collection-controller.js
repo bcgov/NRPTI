@@ -292,14 +292,10 @@ const createCollection = async function (collectionObj, user) {
   }
 
   // Add 'public' role and associated meta
-  if (collectionObj.addRole && collectionObj.addRole === 'public') {
-    collection.read.push('public');
-    collection.datePublished = new Date();
-    collection.publishedBy = user;
-    collection.isBcmiPublished = true;
-  } else {
-    collection.isBcmiPublished = false;
-  }
+  collection.read.push('public');
+  collection.datePublished = new Date();
+  collection.publishedBy = user;
+  collection.isBcmiPublished = true;
 
   // Set auditing meta
   collection.addedBy = user || collectionObj.addedBy;
