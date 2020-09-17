@@ -136,7 +136,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         value: (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-        '',
+          '',
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       issuingAgency: new FormControl({
@@ -310,27 +310,26 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.writeRecord(certificate, 'certificates', true).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-        let _id = null;
-        if (Array.isArray(res[0][0].object)) {
-          _id = res[0][0].object.find(r => r._schemaName === 'Certificate')._id;
-        } else {
-          _id = res[0][0].object._id;
-        }
+      const res = await this.factoryService.writeRecord(certificate, 'certificates', true);
+      this.recordUtils.parseResForErrors(res);
+      let _id = null;
+      if (Array.isArray(res[0][0].object)) {
+        _id = res[0][0].object.find(r => r._schemaName === 'Certificate')._id;
+      } else {
+        _id = res[0][0].object._id;
+      }
 
-        const docResponse = await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          _id,
-          this.factoryService
-        );
+      const docResponse = await this.recordUtils.handleDocumentChanges(
+        this.links,
+        this.documents,
+        this.documentsToDelete,
+        _id,
+        this.factoryService
+      );
 
-        this.logger.log(docResponse);
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['records']);
-      });
+      this.logger.log(docResponse);
+      this.loadingScreenService.setLoadingState(false, 'main');
+      this.router.navigate(['records']);
     } else {
       certificate['_id'] = this.currentRecord._id;
 
@@ -343,20 +342,19 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         certificate['CertificateLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.writeRecord(certificate, 'certificates', false).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          this.currentRecord._id,
-          this.factoryService
-        );
+      const res = await this.factoryService.writeRecord(certificate, 'certificates', false);
+      this.recordUtils.parseResForErrors(res);
+      const docResponse = await this.recordUtils.handleDocumentChanges(
+        this.links,
+        this.documents,
+        this.documentsToDelete,
+        this.currentRecord._id,
+        this.factoryService
+      );
 
-        this.logger.log(docResponse);
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['records', 'certificates', this.currentRecord._id, 'detail']);
-      });
+      this.logger.log(docResponse);
+      this.loadingScreenService.setLoadingState(false, 'main');
+      this.router.navigate(['records', 'certificates', this.currentRecord._id, 'detail']);
     }
   }
 

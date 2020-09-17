@@ -23,7 +23,8 @@
         <div class="col-6 col-lg-4 col-xl-3">
           <div class="d-flex justify-content-end text-left">
             <span *ngIf="isEditing" class="grey-subtext d-block">
-              Cancel will cause you to lose any records or links added to this collection. If you do not want to lose the added items, click update.
+              Cancel will cause you to lose any records or links added to this collection. If you do not want to lose
+              the added items, click update.
             </span>
           </div>
           <div class="d-flex justify-content-end mb-1">
@@ -113,6 +114,7 @@
       *ngIf="mine && showRecordForm"
       [mine]="mine"
       [collectionId]="collection ? collection._id : null"
+      [returnObjInsteadOfSubmit]=true
       (addedRecord)="updateRecordList($event)">
     </app-mines-record-add>
 
@@ -130,17 +132,14 @@
             <th class="col-3">
               Record Name
             </th>
-            <th class="col-2">
+            <th class="col-3">
               Agency
             </th>
-            <th class="col-1">
+            <th class="col-2">
               Source System
             </th>
             <th class="col-2">
               Date
-            </th>
-            <th class="col-2">
-              Published State
             </th>
             <th class="col-1"></th>
           </tr>
@@ -156,29 +155,14 @@
               <td data-label="Record Name" class="col-3">
                 {{ formGroup.get('record').value.recordName || '-' }}
               </td>
-              <td data-label="Agency" class="col-2">
+              <td data-label="Agency" class="col-33">
                 {{ formGroup.get('record').value.issuingAgency || formGroup.get('record').value.agency || '-' }}
               </td>
-              <td data-label="Source System" class="col-1">
+              <td data-label="Source System" class="col-2">
                 {{ formGroup.get('record').value.sourceSystemRef || '-' }}
               </td>
               <td data-label="Date" class="col-2">
                 {{ formGroup.get('record').value.dateIssued | date: 'mediumDate' || '-' }}
-              </td>
-              <td data-label="Published State" class="col-2">
-                <div *ngIf="
-                    formGroup.get('record').value.read && formGroup.get('record').value.read.includes('public');
-                    then published;
-                    else unpublished
-                  "></div>
-                <ng-template #published>
-                  <i class="material-icons published-green align-middle">check_circle</i>
-                  <span class="publish-label pl-1 published-green overflow-hidden truncate">Published</span>
-                </ng-template>
-                <ng-template #unpublished>
-                  <i class="material-icons align-middle">cancel</i>
-                  <span class="publish-label pl-1 overflow-hidden truncate">Unpublished</span>
-                </ng-template>
               </td>
               <td class="col-1">
                 <div class="d-xl-flex">
@@ -238,7 +222,8 @@
       </div>
       <div class="d-flex justify-content-end text-right">
         <span *ngIf="isEditing" class="grey-subtext d-block">
-          Changes made will take effect once you click "update" and will make any record or links added to the collection public.
+          Changes made will take effect once you click "update" and will make any record or links added to the
+          collection public.
         </span>
       </div>
     </div>

@@ -14,6 +14,7 @@ import { Subject } from 'rxjs';
 export class MinesRecordAddComponent implements OnInit, OnDestroy {
   @Input() mine = null;
   @Input() collectionId = null;
+  @Input() returnObjInsteadOfSubmit = false;
   @Output() addedRecord: EventEmitter<object> = new EventEmitter<object>();
   @ViewChild(DatePickerComponent) DatePicker: DatePickerComponent;
 
@@ -58,7 +59,7 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
     this.loading = false;
   }
 
-  submit() {
+  async submit() {
     if (
       !this.myForm.get('recordName').value ||
       !this.myForm.get('recordAgency').value ||
@@ -131,11 +132,15 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
       record[schemaString]['typeCode'] = this.myForm.get('typeCode').value;
     }
 
-    this.factoryService.createMineRecord(record).subscribe(async (res: any) => {
+    if (this.returnObjInsteadOfSubmit) {
+      record['savePending'] = true;
+      this.addedRecord.emit({ record: record, documents: this.documents, links: this.links });
+    } else {
+      const res = await this.factoryService.createMineRecord(record);
       this.recordUtils.parseResForErrors(res);
 
       // API responds with the master and BCMI flavour records that were created. First record is the BCMI flavour and second is the master.
-      const createdRecord = res && res.length && res[0] && res[0].length && res[0][0] && res[0][0].object;
+      const createdRecord = res && res[0] && res[0].length && res[0][0] && res[0][0].object;
 
       await this.recordUtils.handleDocumentChanges(
         this.links,
@@ -149,18 +154,17 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
       this._changeDetectionRef.detectChanges();
 
       this.addedRecord.emit(res[0][0].object[0]);
-      this.myForm.reset();
-      this.DatePicker.clearDate();
+    }
+    this.myForm.reset();
+    this.DatePicker.clearDate();
 
-      this.documents = [];
-      this.links = [];
-      this.resetDocStaging = false;
-      this._changeDetectionRef.detectChanges();
+    this.documents = [];
+    this.links = [];
+    this.resetDocStaging = false;
+    this._changeDetectionRef.detectChanges();
 
-      this.loadingScreenService.setLoadingState(false, 'main');
-    });
+    this.loadingScreenService.setLoadingState(false, 'main');
   }
-
 
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
