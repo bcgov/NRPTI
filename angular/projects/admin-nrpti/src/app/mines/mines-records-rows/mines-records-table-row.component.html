@@ -1,5 +1,6 @@
 <td scope="row" class="col-1" (click)="toggleCheckbox(null); $event.stopPropagation();">
-  <mat-checkbox #rowCheckBox *ngIf="!rowData.collections || rowData.collections.length === 0" [checked]="rowData.rowSelected" (change)="toggleCheckbox($event)"></mat-checkbox>
+  <mat-checkbox #rowCheckBox *ngIf="!rowData.collections || rowData.collections.length === 0"
+    [checked]="rowData.rowSelected" (change)="toggleCheckbox($event)"></mat-checkbox>
 </td>
 <td scope="row" data-label="Name" class="col-2">
   {{ getAttributeValue('recordName') }}
@@ -7,7 +8,8 @@
 <td scope="row" data-label="Agency" class="col-2 truncate">{{ getAttributeValue('issuingAgency') }}</td>
 <td scope="row" data-label="Source" class="col-1 truncate">{{ getAttributeValue('sourceSystemRef') }}</td>
 <td scope="row" data-label="Type" class="col-1 truncate">{{ getAttributeValue('recordType') }}</td>
-<td scope="row" data-label="Collections" class="col-2 truncate">{{ rowData.collections && rowData.collections[0] ? rowData.collections[0].name : '-' }}</td>
+<td scope="row" data-label="Collections" class="col-2 truncate">
+  {{ rowData.collections && rowData.collections[0] ? rowData.collections[0].name : '-' }}</td>
 <td scope="row" data-label="Date" class="col-1 truncate">{{ getAttributeValue('dateIssued') }}</td>
 <td scope="row" data-label="Published" class="col-1 d-xl-flex">
   <div *ngIf="isPublished(); then published; else unpublished"></div>
@@ -20,14 +22,12 @@
     <span class="publish-label pl-1 overflow-hidden truncate">Unpublished</span>
   </ng-template>
 </td>
-<td scope="row" class="col-1 d-xl-flex" (click)="$event.stopPropagation()">
-  <button class="btn" type="button" (click)="goToEdit()" title="Edit record">
-    <i class="material-icons">create</i>
-  </button>
+<td scope="row" class="col-1 d-xl-flex justify-content-end" (click)="$event.stopPropagation()">
   <button mat-icon-button class="btn" [matMenuTriggerFor]="menu" title="More options" aria-label="More options menu">
     <i class="material-icons">more_vert</i>
   </button>
   <mat-menu #menu="matMenu">
     <button mat-menu-item (click)="goToDetails()" title="View record details">View Record Details</button>
+    <button mat-menu-item (click)="goToEdit()" title="Edit record">Edit Record</button>
   </mat-menu>
 </td>
