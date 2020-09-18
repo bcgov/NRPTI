@@ -202,7 +202,7 @@ describe('DataSource', () => {
         }),
         findExistingRecord: jest.fn(() => null),
         createDocument: jest.fn(() => []),
-        createRecord: jest.fn(record => {
+        createItem: jest.fn(record => {
           return [{ status: 'success' }];
         })
       };
@@ -230,7 +230,7 @@ describe('DataSource', () => {
         project: { name: '123' }
       });
 
-      expect(recordTypeUtils.createRecord).toHaveBeenCalledWith({
+      expect(recordTypeUtils.createItem).toHaveBeenCalledWith({
         _id: '123',
         documents: [],
         project: { name: '123' },

@@ -154,7 +154,7 @@ class NrisDataSource {
             }
           } else {
             await this.createRecordAttachments(records[i], newRecord);
-            await this.createRecord(newRecord);
+            await this.createItem(newRecord);
           }
 
           // Assuming we didn't get thrown an error, update the items successfully processed.
@@ -346,9 +346,9 @@ class NrisDataSource {
    * @returns {object} object containing the newly inserted master and flavour records
    * @memberof NrisDataSource
    */
-  async createRecord(record) {
+  async createItem(record) {
     if (!record) {
-      throw Error('createRecord - required record must be non-null.');
+      throw Error('createItem - required record must be non-null.');
     }
 
     try {

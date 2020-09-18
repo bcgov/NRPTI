@@ -88,11 +88,11 @@ describe('BaseRecordUtils', () => {
     });
   });
 
-  describe('createRecord', () => {
+  describe('createItem', () => {
     it('throws error when nrptiRecord is not provided', async () => {
       const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Ticket);
-      await expect(baseRecordUtils.createRecord(null)).rejects.toThrow(
-        'createRecord - required nrptiRecord must be non-null.'
+      await expect(baseRecordUtils.createItem(null)).rejects.toThrow(
+        'createItem - required nrptiRecord must be non-null.'
       );
     });
 
@@ -105,7 +105,7 @@ describe('BaseRecordUtils', () => {
 
       const nrptiRecord = { newField: 'abc' };
 
-      const result = await baseRecordUtils.createRecord(nrptiRecord);
+      const result = await baseRecordUtils.createItem(nrptiRecord);
 
       expect(processPostRequestSpy).toHaveBeenCalledWith(
         { swagger: { params: { auth_payload: 'authPayload' } } },
