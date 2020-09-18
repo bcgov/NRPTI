@@ -27,24 +27,6 @@
     <button mat-menu-item [disabled]="isEditingCollection" (click)="goToDetails()" title="View collection details">
       View Collection Details
     </button>
-    <button
-      mat-menu-item
-      *ngIf="rowData.read && !rowData.read.includes('public')"
-      [disabled]="isEditingCollection"
-      (click)="publishCollection()"
-      title="Publish collection"
-    >
-      Publish Collection
-    </button>
-    <button
-      mat-menu-item
-      *ngIf="rowData.read && rowData.read.includes('public')"
-      [disabled]="isEditingCollection"
-      (click)="unpublishCollection()"
-      title="Unpublish collection"
-    >
-      Unpublish Collection
-    </button>
     <button mat-menu-item [disabled]="isEditingCollection" (click)="deleteCollection()" title="Delete collection">
       Delete Collection
     </button>
