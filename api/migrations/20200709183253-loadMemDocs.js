@@ -194,7 +194,7 @@ exports._meta = {
 async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, newCollectionId) {
   // fetch doc from mem-admin
   // rawDoc will be a buffer from the get request.
-  await sleep(3000);
+  await sleep(1000);
   const rawDoc = await getRequest(bcmiUrl + '/api/document/' + collectionDoc.document._id + '/fetch', false);
   // create a document meta
   let document = new Document();
