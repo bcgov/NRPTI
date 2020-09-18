@@ -146,7 +146,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
         value: (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-        '',
+          '',
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       issuingAgency: new FormControl({
@@ -213,9 +213,9 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
             this.currentRecord.issuedTo &&
             this.currentRecord.issuedTo.dateOfBirth &&
             this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
-          '',
+            '',
           disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
-          }),
+        }),
         anonymous: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || '',
           disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
@@ -432,25 +432,24 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.writeRecord(courtConviction, 'courtConvictions', true).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-        let _id = null;
-        if (Array.isArray(res[0][0].object)) {
-          _id = res[0][0].object.find(r => r._schemaName === 'CourtConviction')._id;
-        } else {
-          _id = res[0][0].object._id;
-        }
+      const res = await this.factoryService.writeRecord(courtConviction, 'courtConvictions', true);
+      this.recordUtils.parseResForErrors(res);
+      let _id = null;
+      if (Array.isArray(res[0][0].object)) {
+        _id = res[0][0].object.find(r => r._schemaName === 'CourtConviction')._id;
+      } else {
+        _id = res[0][0].object._id;
+      }
 
-        await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          _id,
-          this.factoryService
-        );
+      await this.recordUtils.handleDocumentChanges(
+        this.links,
+        this.documents,
+        this.documentsToDelete,
+        _id,
+        this.factoryService
+      );
 
-        this.router.navigate(['records']);
-      });
+      this.router.navigate(['records']);
     } else {
       courtConviction['_id'] = this.currentRecord._id;
 
@@ -472,18 +471,17 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
         courtConviction['CourtConvictionLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.writeRecord(courtConviction, 'courtConvictions', false).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-        await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          this.currentRecord._id,
-          this.factoryService
-        );
+      const res = await this.factoryService.writeRecord(courtConviction, 'courtConvictions', false);
+      this.recordUtils.parseResForErrors(res);
+      await this.recordUtils.handleDocumentChanges(
+        this.links,
+        this.documents,
+        this.documentsToDelete,
+        this.currentRecord._id,
+        this.factoryService
+      );
 
-        this.router.navigate(['records', 'court-convictions', this.currentRecord._id, 'detail']);
-      });
+      this.router.navigate(['records', 'court-convictions', this.currentRecord._id, 'detail']);
     }
   }
 

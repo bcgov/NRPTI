@@ -137,7 +137,7 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti') &&
-        (!this.factoryService.userInLngRole() || !this.factoryService.userInBcmiRole())
+          (!this.factoryService.userInLngRole() || !this.factoryService.userInBcmiRole())
       }),
       recordSubtype: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordSubtype) || '',
@@ -147,7 +147,7 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
         value: (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-        '',
+          '',
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       issuingAgency: new FormControl({
@@ -210,9 +210,9 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
             this.currentRecord.issuedTo &&
             this.currentRecord.issuedTo.dateOfBirth &&
             this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
-          '',
+            '',
           disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
-          }),
+        }),
         anonymous: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || '',
           disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
@@ -252,8 +252,8 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.bcmiFlavour && this.bcmiFlavour.description) ||
-          (!this.bcmiFlavour && this.currentRecord.description))) ||
-          ''
+            (!this.bcmiFlavour && this.currentRecord.description))) ||
+        ''
       ),
       publishBcmi: new FormControl({
         value: (this.currentRecord && this.bcmiFlavour && this.bcmiFlavour.read.includes('public')) || false,
@@ -408,26 +408,25 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.writeRecord(certificateAmendment, 'certificateAmendments', true).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-        let _id = null;
-        if (Array.isArray(res[0][0].object)) {
-          _id = res[0][0].object.find(r => r._schemaName === 'CertificateAmendment')._id;
-        } else {
-          _id = res[0][0].object._id;
-        }
+      const res = await this.factoryService.writeRecord(certificateAmendment, 'certificateAmendments', true);
+      this.recordUtils.parseResForErrors(res);
+      let _id = null;
+      if (Array.isArray(res[0][0].object)) {
+        _id = res[0][0].object.find(r => r._schemaName === 'CertificateAmendment')._id;
+      } else {
+        _id = res[0][0].object._id;
+      }
 
-        await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          _id,
-          this.factoryService
-        );
+      await this.recordUtils.handleDocumentChanges(
+        this.links,
+        this.documents,
+        this.documentsToDelete,
+        _id,
+        this.factoryService
+      );
 
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['records']);
-      });
+      this.loadingScreenService.setLoadingState(false, 'main');
+      this.router.navigate(['records']);
     } else {
       certificateAmendment['_id'] = this.currentRecord._id;
 
@@ -449,19 +448,18 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
         certificateAmendment['CertificateAmendmentBCMI']['_id'] = this.bcmiFlavour._id;
       }
 
-      this.factoryService.writeRecord(certificateAmendment, 'certificateAmendments', false).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-        await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          this.currentRecord._id,
-          this.factoryService
-        );
+      const res = await this.factoryService.writeRecord(certificateAmendment, 'certificateAmendments', false);
+      this.recordUtils.parseResForErrors(res);
+      await this.recordUtils.handleDocumentChanges(
+        this.links,
+        this.documents,
+        this.documentsToDelete,
+        this.currentRecord._id,
+        this.factoryService
+      );
 
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['records', 'certificate-amendments', this.currentRecord._id, 'detail']);
-      });
+      this.loadingScreenService.setLoadingState(false, 'main');
+      this.router.navigate(['records', 'certificate-amendments', this.currentRecord._id, 'detail']);
     }
   }
 

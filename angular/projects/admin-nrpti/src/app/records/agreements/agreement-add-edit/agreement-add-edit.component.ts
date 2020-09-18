@@ -42,7 +42,7 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -104,8 +104,8 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
           '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
-        }),
+        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
       nationName: new FormControl({
         value: (this.currentRecord && this.currentRecord.nationName) || '',
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
@@ -181,28 +181,27 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.writeRecord(agreement, 'agreements', true).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
+      const res = await this.factoryService.writeRecord(agreement, 'agreements', true);
+      this.recordUtils.parseResForErrors(res);
 
-        let _id = null;
-        if (Array.isArray(res[0][0].object)) {
-          _id = res[0][0].object.find(r => r._schemaName === 'Agreement')._id;
-        } else {
-          _id = res[0][0].object._id;
-        }
+      let _id = null;
+      if (Array.isArray(res[0][0].object)) {
+        _id = res[0][0].object.find(r => r._schemaName === 'Agreement')._id;
+      } else {
+        _id = res[0][0].object._id;
+      }
 
-        const docResponse = await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          _id,
-          this.factoryService
-        );
+      const docResponse = await this.recordUtils.handleDocumentChanges(
+        this.links,
+        this.documents,
+        this.documentsToDelete,
+        _id,
+        this.factoryService
+      );
 
-        this.logger.log(docResponse);
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['records']);
-      });
+      this.logger.log(docResponse);
+      this.loadingScreenService.setLoadingState(false, 'main');
+      this.router.navigate(['records']);
     } else {
       agreement['_id'] = this.currentRecord._id;
 
@@ -215,20 +214,19 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
         agreement['AgreementLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.writeRecord(agreement, 'agreements', false).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          this.currentRecord._id,
-          this.factoryService
-        );
+      const res = await this.factoryService.writeRecord(agreement, 'agreements', false);
+      this.recordUtils.parseResForErrors(res);
+      const docResponse = await this.recordUtils.handleDocumentChanges(
+        this.links,
+        this.documents,
+        this.documentsToDelete,
+        this.currentRecord._id,
+        this.factoryService
+      );
 
-        this.logger.log(docResponse);
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['records', 'agreements', this.currentRecord._id, 'detail']);
-      });
+      this.logger.log(docResponse);
+      this.loadingScreenService.setLoadingState(false, 'main');
+      this.router.navigate(['records', 'agreements', this.currentRecord._id, 'detail']);
     }
   }
 
