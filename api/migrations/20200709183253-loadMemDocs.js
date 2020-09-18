@@ -27,6 +27,7 @@ const OBJ_STORE_BUCKET = process.env.OBJECT_STORE_bucket_name || 'test';
 const ep = new AWS.Endpoint(OBJ_STORE_URL);
 const s3 = new AWS.S3({
   endpoint: ep,
+  sslEnabled: false,
   accessKeyId: process.env.OBJECT_STORE_user_account,
   secretAccessKey: process.env.OBJECT_STORE_password,
   signatureVersion: 'v4',
@@ -56,7 +57,9 @@ exports.up = async function (db) {
   console.log('****************************************');
 
   let docsCreated = 0;
+  let docsExisting = 0;
   let collectionsCreated = 0;
+  let collectionsExisting = 0;
   let errors = 0;
 
   const mClient = await db.connection.connect(db.connectionString, { native_parser: true });
@@ -101,44 +104,59 @@ exports.up = async function (db) {
           const allNewDocs = [];
           console.log(`Fetched ${allDocs.length} documents. Creating NRPTI records/flavours...`);
           for(const collectionDoc of allDocs) {
-            if (collection.type && collection.type.length > 0 && !collection.isForEAO) {
-              try {
-                const newDoc = await createMineDocument(nrpti, nrptiMine, collection, collectionDoc, bcmiCollection._id);
-                if (newDoc) {
-                  allNewDocs.push(new ObjectID(newDoc._id));
-                  docsCreated += 1;
-                } else {
-                  throw Error('No document generated?');
+            const existingDoc = await nrpti.findOne({ mineGuid: nrptiMine._sourceRefId, fileName: collectionDoc.document.displayName });
+            if (!existingDoc) {
+              if (collection.type && collection.type.length > 0 && !collection.isForEAO) {
+                try {
+                  const newDoc = await createMineDocument(nrpti, nrptiMine, collection, collectionDoc, bcmiCollection._id);
+                  if (newDoc) {
+                    allNewDocs.push(new ObjectID(newDoc._id));
+                    docsCreated += 1;
+                  } else {
+                    throw Error('No document generated?');
+                  }
+                } catch(err) {
+                  console.error('#######################################');
+                  console.error(`## An error occured while creating the doc`);
+                  console.error(err);
+                  console.error('#######################################');
+                  errors += 1;
                 }
-              } catch(err) {
-                console.error('#######################################');
-                console.error(`## An error occured while creating the doc`);
-                console.error(err);
-                console.error('#######################################');
-                errors += 1;
               }
+            } else {
+              docsExisting += 1;
             }
           }
-          console.log(`Creating NRPTI collection for ${collection.displayName}`);
-          // Master, Meta and Documents for this collection are all created.
-          // Now, create a NRPTI collection and shove the docs into it!
-          bcmiCollection._master = new ObjectID(nrptiMine._id);
-          bcmiCollection.read =  [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, 'public'];
-          bcmiCollection.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
-          bcmiCollection.name = collection.displayName;
-          bcmiCollection.date = collection.date;
-          bcmiCollection.project = new ObjectID(nrptiMine._id);
-          bcmiCollection.type = collection.type;
-          bcmiCollection.agency = collection.isForMEM ? 'EMPR' : collection.isForEAO ? 'EAO' : 'ENV';
-          bcmiCollection.records = allNewDocs; // move this whole thing to the top if we remove records array
-          bcmiCollection.addedBy = 'nrpti';
-          bcmiCollection.datePublished = collection.date;
-          bcmiCollection.publishedBy = 'nrpti';
-          bcmiCollection.isBcmiPublished = true;
+          const existingCollection  = await nrpti.findOne({ _schemaName: "CollectionBCMI", name: collection.displayName });
+          if (!existingCollection) {
+            console.log(`Creating NRPTI collection for ${collection.displayName}`);
+            // Master, Meta and Documents for this collection are all created.
+            // Now, create a NRPTI collection and shove the docs into it!
+            bcmiCollection._master = new ObjectID(nrptiMine._id);
+            bcmiCollection.read =  [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, 'public'];
+            bcmiCollection.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+            bcmiCollection.name = collection.displayName;
+            bcmiCollection.date = collection.date;
+            bcmiCollection.project = new ObjectID(nrptiMine._id);
+            bcmiCollection.type = collection.type;
+            bcmiCollection.agency = collection.isForMEM ? 'EMPR' : collection.isForEAO ? 'EAO' : 'ENV';
+            bcmiCollection.records = allNewDocs; // move this whole thing to the top if we remove records array
+            bcmiCollection.addedBy = 'nrpti';
+            bcmiCollection.datePublished = collection.date;
+            bcmiCollection.publishedBy = 'nrpti';
+            bcmiCollection.isBcmiPublished = true;
+            // todo add lookup for existing collection skip creating if it exists
+            await nrpti.insertOne(bcmiCollection);
 
-          await nrpti.insertOne(bcmiCollection);
-
-          collectionsCreated += 1;
+            collectionsCreated += 1;
+          } else {
+            if (allNewDocs) {
+              existingCollection.records.push(allNewDocs);
+              await nrpti.findOneAndUpdate({ _schemaName: "CollectionBCMI", name: collection.displayName }, existingCollection)
+              console.log(`Update existing collection ${existingCollection.displayName} with new documents`)
+            }
+            collectionsExisting += 1;
+          }
         }
       } else {
         console.error('#######################################');
@@ -157,6 +175,7 @@ exports.up = async function (db) {
   }
 
   console.log(`Process complete with ${docsCreated} records created, ${collectionsCreated} collections created, and ${errors} errors.`);
+  console.log(`Process found ${docsExisting} existing documents, ${collectionsExisting} existing collections already created in NRPTI`);
   console.log('****************************************');
   console.log('** Finished mem-admin collection load **');
   console.log('****************************************');
