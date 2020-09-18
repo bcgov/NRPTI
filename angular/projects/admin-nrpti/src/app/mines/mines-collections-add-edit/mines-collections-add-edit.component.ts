@@ -12,6 +12,7 @@ import { Subject } from 'rxjs/Subject';
 import { Picklists, StateIDs, StateStatus } from '../../../../../common/src/app/utils/record-constants';
 import { ConfirmComponent } from '../../confirm/confirm.component';
 import { FactoryService } from '../../services/factory.service';
+import { RecordUtils } from '../../records/utils/record-utils';
 
 @Component({
   selector: 'app-mines-collections-add-edit',
@@ -33,6 +34,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
   public mine = null;
   public collection = null;
   public lastEditedSubText = null;
+  public pendingRecords = [];
 
   // Pick lists
   public collectionTypes = Picklists.collectionTypePicklist;
@@ -56,6 +58,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     public router: Router,
     private location: Location,
     private factoryService: FactoryService,
+    private recordUtils: RecordUtils,
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private dialogService: DialogService,
@@ -322,7 +325,15 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    */
   removeRecordFromCollection(idx: number) {
     const recordControl = (this.myForm.get('collectionRecords') as FormArray).at(idx);
-    this.recordsToUnlink.push(recordControl.value.record);
+    // This is a flag set by mines-record-add component
+    // If it is set, this is not a record in the DB
+    if (recordControl.value.record.savePending) {
+      this.pendingRecords = this.pendingRecords.filter((obj) => {
+        return obj.recordName !== recordControl.value.record.recordName;
+      });
+    } else {
+      this.recordsToUnlink.push(recordControl.value.record);
+    }
 
     (this.myForm.get('collectionRecords') as FormArray).removeAt(idx);
     this.myForm.get('collectionRecords').markAsDirty();
@@ -334,7 +345,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesCollectionsAddEditComponent
    */
   async submit() {
-    if (this.myForm.get('collectionRecords').value.length === 0) {
+    if (this.myForm.get('collectionRecords').value.length === 0 && this.recordsToUnlink.length === 0) {
       alert('You must add at least one record.');
       this.loadingScreenService.setLoadingState(false, 'main');
       return;
@@ -345,7 +356,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
         ConfirmComponent,
         {
           title: 'Confirm Publication',
-          message: `This will publish ${this.myForm.get('collectionRecords').value.length} record(s), do you want to proceed?`,
+          message: `This will publish the current collection and ${this.myForm.get('collectionRecords').value.length} record(s), do you want to proceed?`,
           okOnly: false
         },
         { backdropColor: 'rgba(0, 0, 0, 0.5)' }
@@ -371,7 +382,29 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
         this.myForm.get('collectionType').dirty && (collection['type'] = this.myForm.get('collectionType').value);
         this.myForm.get('collectionAgency').dirty && (collection['agency'] = this.myForm.get('collectionAgency').value);
 
-        this.myForm.get('collectionRecords').dirty && (collection['records'] = this.parseRecordsFormGroups());
+        // Add records first
+        if (this.myForm.get('collectionRecords').dirty) {
+          for (const obj of this.pendingRecords) {
+            delete obj.record.savePending;
+            const res = await this.factoryService.createMineRecord(obj.record);
+            this.recordUtils.parseResForErrors(res);
+            // API responds with the master and BCMI flavour records that were created. First record is the BCMI flavour and second is the master.
+            const createdRecord = res && res[0] && res[0].length && res[0][0] && res[0][0].object;
+
+            await this.recordUtils.handleDocumentChanges(
+              obj.links,
+              obj.documents,
+              [],
+              createdRecord[1]._id,
+              this.factoryService
+            );
+            const updatedRecordList = this.myForm.get('collectionRecords').value.map((item) => {
+              return item.record.recordName === createdRecord[0].recordName ? { record: createdRecord[0] } : item;
+            });
+            this.myForm.get('collectionRecords').patchValue(updatedRecordList);
+          }
+          collection['records'] = this.parseRecordsFormGroups();
+        }
 
         if (this.isEditing) {
           collection['_id'] = this.collection._id;
@@ -396,8 +429,6 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
           }
         }
       });
-
-
   }
 
   /**
@@ -453,9 +484,16 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
   }
 
   updateRecordList(recordToAdd) {
+    for (const item of this.myForm.get('collectionRecords').value) {
+      if (recordToAdd.record.recordName === item.record.recordName) {
+        alert('Record names must be unique.');
+        return;
+      }
+    }
+    this.pendingRecords.push(recordToAdd);
     const formArray = this.myForm.get('collectionRecords') as FormArray;
     formArray.push(new FormGroup({
-      record: new FormControl(recordToAdd || null)
+      record: new FormControl(recordToAdd.record || null)
     }));
 
     this.myForm.get('collectionRecords').markAsDirty();

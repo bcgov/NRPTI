@@ -69,68 +69,6 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
   }
 
   /**
-   * Publish the collection, adding the `public` role to the read array.
-   *
-   * @memberof MinesCollectionsTableRowComponent
-   */
-  publishCollection(): void {
-    this.factoryService
-      .publishRecord(this.rowData)
-      .pipe(
-        takeUntil(this.ngUnsubscribe),
-        catchError(() => {
-          alert('Failed to publish collection.');
-          return of(null);
-        })
-      )
-      .subscribe(response => {
-        if (!response) {
-          return;
-        }
-
-        if (response.code === 409) {
-          // object was already published
-          return;
-        }
-
-        this.rowData = response;
-
-        this.changeDetectionRef.detectChanges();
-      });
-  }
-
-  /**
-   * Unpublish the collection, removing the `public` role from the read array.
-   *
-   * @memberof MinesCollectionsTableRowComponent
-   */
-  unpublishCollection(): void {
-    this.factoryService
-      .unPublishRecord(this.rowData)
-      .pipe(
-        takeUntil(this.ngUnsubscribe),
-        catchError(() => {
-          alert('Failed to unpublish collection.');
-          return of(null);
-        })
-      )
-      .subscribe(response => {
-        if (!response) {
-          return;
-        }
-
-        if (response.code === 409) {
-          // object was already unpublished
-          return;
-        }
-
-        this.rowData = response;
-
-        this.changeDetectionRef.detectChanges();
-      });
-  }
-
-  /**
    * Delete the collection.
    *
    * @memberof MinesCollectionsTableRowComponent

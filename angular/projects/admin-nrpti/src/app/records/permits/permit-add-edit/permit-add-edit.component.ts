@@ -9,7 +9,7 @@ import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
-import { LoadingScreenService, StoreService} from 'nrpti-angular-components';
+import { LoadingScreenService, StoreService } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-permit-add-edit',
@@ -139,7 +139,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
         value: (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-        '',
+          '',
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       issuingAgency: new FormControl({
@@ -289,26 +289,25 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.writeRecord(permit, 'permits', true).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-        let _id = null;
-        if (Array.isArray(res[0][0].object)) {
-          _id = res[0][0].object.find(r => r._schemaName === 'Permit')._id;
-        } else {
-          _id = res[0][0].object._id;
-        }
+      const res = await this.factoryService.writeRecord(permit, 'permits', true);
+      this.recordUtils.parseResForErrors(res);
+      let _id = null;
+      if (Array.isArray(res[0][0].object)) {
+        _id = res[0][0].object.find(r => r._schemaName === 'Permit')._id;
+      } else {
+        _id = res[0][0].object._id;
+      }
 
-        await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          _id,
-          this.factoryService
-        );
+      await this.recordUtils.handleDocumentChanges(
+        this.links,
+        this.documents,
+        this.documentsToDelete,
+        _id,
+        this.factoryService
+      );
 
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['records']);
-      });
+      this.loadingScreenService.setLoadingState(false, 'main');
+      this.router.navigate(['records']);
     } else {
       permit['_id'] = this.currentRecord._id;
 
@@ -321,19 +320,18 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
         permit['PermitLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.writeRecord(permit, 'permits', false).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-        await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          this.currentRecord._id,
-          this.factoryService
-        );
+      const res = await this.factoryService.writeRecord(permit, 'permits', false);
+      this.recordUtils.parseResForErrors(res);
+      await this.recordUtils.handleDocumentChanges(
+        this.links,
+        this.documents,
+        this.documentsToDelete,
+        this.currentRecord._id,
+        this.factoryService
+      );
 
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['records', 'permits', this.currentRecord._id, 'detail']);
-      });
+      this.loadingScreenService.setLoadingState(false, 'main');
+      this.router.navigate(['records', 'permits', this.currentRecord._id, 'detail']);
     }
   }
 

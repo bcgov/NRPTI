@@ -130,7 +130,7 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
         value: (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-        '',
+          '',
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       issuingAgency: new FormControl({
@@ -193,9 +193,9 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
             this.currentRecord.issuedTo &&
             this.currentRecord.issuedTo.dateOfBirth &&
             this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
-          '',
+            '',
           disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
-          }),
+        }),
         anonymous: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || '',
           disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
@@ -223,8 +223,8 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.bcmiFlavour && this.bcmiFlavour.description) ||
-          (!this.bcmiFlavour && this.currentRecord.description))) ||
-          ''
+            (!this.bcmiFlavour && this.currentRecord.description))) ||
+        ''
       ),
       publishBcmi: new FormControl({
         value: (this.currentRecord && this.bcmiFlavour && this.bcmiFlavour.read.includes('public')) || false,
@@ -350,26 +350,25 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.writeRecord(annualReport, 'annualReports', true).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-        let _id = null;
-        if (Array.isArray(res[0][0].object)) {
-          _id = res[0][0].object.find(r => r._schemaName === 'AnnualReport')._id;
-        } else {
-          _id = res[0][0].object._id;
-        }
+      const res = await this.factoryService.writeRecord(annualReport, 'annualReports', true);
+      this.recordUtils.parseResForErrors(res);
+      let _id = null;
+      if (Array.isArray(res[0][0].object)) {
+        _id = res[0][0].object.find(r => r._schemaName === 'AnnualReport')._id;
+      } else {
+        _id = res[0][0].object._id;
+      }
 
-        await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          _id,
-          this.factoryService
-        );
+      await this.recordUtils.handleDocumentChanges(
+        this.links,
+        this.documents,
+        this.documentsToDelete,
+        _id,
+        this.factoryService
+      );
 
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['records']);
-      });
+      this.loadingScreenService.setLoadingState(false, 'main');
+      this.router.navigate(['records']);
     } else {
       annualReport['_id'] = this.currentRecord._id;
 
@@ -382,19 +381,18 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
         annualReport['AnnualReportBCMI']['_id'] = this.bcmiFlavour._id;
       }
 
-      this.factoryService.writeRecord(annualReport, 'annualReports', false).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-        await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          this.currentRecord._id,
-          this.factoryService
-        );
+      const res = await this.factoryService.writeRecord(annualReport, 'annualReports', false);
+      this.recordUtils.parseResForErrors(res);
+      await this.recordUtils.handleDocumentChanges(
+        this.links,
+        this.documents,
+        this.documentsToDelete,
+        this.currentRecord._id,
+        this.factoryService
+      );
 
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['records', 'annual-reports', this.currentRecord._id, 'detail']);
-      });
+      this.loadingScreenService.setLoadingState(false, 'main');
+      this.router.navigate(['records', 'annual-reports', this.currentRecord._id, 'detail']);
     }
   }
 

@@ -137,13 +137,13 @@ export class DamSafetyInspectionAddEditComponent implements OnInit, OnDestroy {
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti') &&
-        (!this.factoryService.userInNrcedRole() || !this.factoryService.userInBcmiRole())
+          (!this.factoryService.userInNrcedRole() || !this.factoryService.userInBcmiRole())
       }),
       dateIssued: new FormControl({
         value: (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-        '',
+          '',
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       issuingAgency: new FormControl({
@@ -206,9 +206,9 @@ export class DamSafetyInspectionAddEditComponent implements OnInit, OnDestroy {
             this.currentRecord.issuedTo &&
             this.currentRecord.issuedTo.dateOfBirth &&
             this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
-          '',
+            '',
           disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
-          }),
+        }),
         anonymous: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || '',
           disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
@@ -236,7 +236,7 @@ export class DamSafetyInspectionAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.nrcedFlavour && this.nrcedFlavour.description) ||
-          (!this.nrcedFlavour && this.currentRecord.description))) ||
+            (!this.nrcedFlavour && this.currentRecord.description))) ||
         ''
       ),
       publishNrced: new FormControl({
@@ -249,8 +249,8 @@ export class DamSafetyInspectionAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.bcmiFlavour && this.bcmiFlavour.description) ||
-          (!this.bcmiFlavour && this.currentRecord.description))) ||
-          ''
+            (!this.bcmiFlavour && this.currentRecord.description))) ||
+        ''
       ),
       publishBcmi: new FormControl({
         value: (this.currentRecord && this.bcmiFlavour && this.bcmiFlavour.read.includes('public')) || false,
@@ -403,26 +403,25 @@ export class DamSafetyInspectionAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.writeRecord(damSafetyInspection, 'damSafetyInspections', true).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-        let _id = null;
-        if (Array.isArray(res[0][0].object)) {
-          _id = res[0][0].object.find(r => r._schemaName === 'DamSafetyInspection')._id;
-        } else {
-          _id = res[0][0].object._id;
-        }
+      const res = await this.factoryService.writeRecord(damSafetyInspection, 'damSafetyInspections', true);
+      this.recordUtils.parseResForErrors(res);
+      let _id = null;
+      if (Array.isArray(res[0][0].object)) {
+        _id = res[0][0].object.find(r => r._schemaName === 'DamSafetyInspection')._id;
+      } else {
+        _id = res[0][0].object._id;
+      }
 
-        await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          _id,
-          this.factoryService
-        );
+      await this.recordUtils.handleDocumentChanges(
+        this.links,
+        this.documents,
+        this.documentsToDelete,
+        _id,
+        this.factoryService
+      );
 
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['records']);
-      });
+      this.loadingScreenService.setLoadingState(false, 'main');
+      this.router.navigate(['records']);
     } else {
       damSafetyInspection['_id'] = this.currentRecord._id;
 
@@ -444,19 +443,18 @@ export class DamSafetyInspectionAddEditComponent implements OnInit, OnDestroy {
         damSafetyInspection['DamSafetyInspectionBCMI']['_id'] = this.bcmiFlavour._id;
       }
 
-      this.factoryService.writeRecord(damSafetyInspection, 'damSafetyInspections', false).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-        await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          this.currentRecord._id,
-          this.factoryService
-        );
+      const res = await this.factoryService.writeRecord(damSafetyInspection, 'damSafetyInspections', false);
+      this.recordUtils.parseResForErrors(res);
+      await this.recordUtils.handleDocumentChanges(
+        this.links,
+        this.documents,
+        this.documentsToDelete,
+        this.currentRecord._id,
+        this.factoryService
+      );
 
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['records', 'dam-safety-inspections', this.currentRecord._id, 'detail']);
-      });
+      this.loadingScreenService.setLoadingState(false, 'main');
+      this.router.navigate(['records', 'dam-safety-inspections', this.currentRecord._id, 'detail']);
     }
   }
 
