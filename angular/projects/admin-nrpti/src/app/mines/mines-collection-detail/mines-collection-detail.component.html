@@ -21,20 +21,6 @@
         <h2 class="border-0 mb-0">Collection Information</h2>
         <span class="grey-subtext">{{ lastEditedSubText }}</span>
       </div>
-      <div class="col-12 col-sm-4">
-        <div class="d-flex flex-column">
-          <mat-slide-toggle
-            name="publishLng"
-            id="publishLng"
-            class="publish-toggle"
-            [ngClass]="isPublished ? 'published' : 'unpublished'"
-            [checked]="isPublished"
-            [disabled]="true"
-          >
-            {{ (isPublished && 'Published') || 'Not Published' }}
-          </mat-slide-toggle>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -67,7 +53,6 @@
   <section class="my-3 py-3">
     <lib-table-template
       *ngIf="tableData.totalListItems > 0"
-      [data]="tableData"
-    ></lib-table-template>
+      [data]="tableData"></lib-table-template>
   </section>
 </main>

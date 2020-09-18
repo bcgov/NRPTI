@@ -1,49 +1,21 @@
-<td scope="row" data-label="Collection Name" class="col-3 truncate">{{ rowData.name || '-' }}</td>
-<td scope="row" data-label="Agency" class="col-1 truncate">{{ rowData.agency || '-' }}</td>
+<td scope="row" data-label="Collection Name" class="col-4 truncate">{{ rowData.name || '-' }}</td>
+<td scope="row" data-label="Agency" class="col-2 truncate">{{ rowData.agency || '-' }}</td>
 <td scope="row" data-label="Type" class="col-2 truncate">{{ rowData.type || '-' }}</td>
 <td scope="row" data-label="Date" class="col-2 truncate">{{ rowData.date | date: 'mediumDate' || '-' }}</td>
 <td scope="row" data-label="# of Records" class="col-1 truncate">
   {{ (rowData.records && rowData.records.length) || 0 }}
 </td>
-<td scope="row" data-label="Published" class="col-2 d-xl-flex">
-  <div *ngIf="rowData.read && rowData.read.includes('public'); then published; else unpublished"></div>
-  <ng-template #published>
-    <i class="material-icons align-middle published-green">check_circle</i>
-    <span class="publish-label pl-1 published-green overflow-hidden truncate">Published</span>
-  </ng-template>
-  <ng-template #unpublished>
-    <i class="material-icons align-middle">cancel</i>
-    <span class="publish-label pl-1 overflow-hidden truncate">Unpublished</span>
-  </ng-template>
-</td>
 <td scope="row" class="col-1 d-xl-flex" (click)="$event.stopPropagation()">
   <button class="btn" type="button" [disabled]="isEditingCollection" (click)="goToEdit()" title="Edit record">
     <i class="material-icons">create</i>
   </button>
-  <button mat-icon-button class="btn" [disabled]="isEditingCollection" [matMenuTriggerFor]="menu" title="More options" aria-label="More options menu">
+  <button mat-icon-button class="btn" [disabled]="isEditingCollection" [matMenuTriggerFor]="menu" title="More options"
+    aria-label="More options menu">
     <i class="material-icons">more_vert</i>
   </button>
   <mat-menu #menu="matMenu">
     <button mat-menu-item [disabled]="isEditingCollection" (click)="goToDetails()" title="View collection details">
       View Collection Details
-    </button>
-    <button
-      mat-menu-item
-      *ngIf="rowData.read && !rowData.read.includes('public')"
-      [disabled]="isEditingCollection"
-      (click)="publishCollection()"
-      title="Publish collection"
-    >
-      Publish Collection
-    </button>
-    <button
-      mat-menu-item
-      *ngIf="rowData.read && rowData.read.includes('public')"
-      [disabled]="isEditingCollection"
-      (click)="unpublishCollection()"
-      title="Unpublish collection"
-    >
-      Unpublish Collection
     </button>
     <button mat-menu-item [disabled]="isEditingCollection" (click)="deleteCollection()" title="Delete collection">
       Delete Collection

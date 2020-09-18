@@ -58,15 +58,12 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
     }
   }
 
-  public toggleCheckbox(event) {
+  public updateCheckbox(rowData) {
+    rowData.rowSelected = !rowData.rowSelected;
+    this.rowSelectionChange();
+  }
 
-    if (!event) {
-      this.rowCheckBox['checked'] = true;
-      return;
-    }
-
-    this.rowData.rowSelected = !this.rowData.rowSelected;
-
+  public rowSelectionChange() {
     if (this.rowData.rowSelected) {
       this.messageOut.emit({ label: 'rowSelected', data: this.rowData });
     } else {
@@ -80,7 +77,7 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
    * @memberof MinesRecordsTableRowComponent
    */
   goToDetails() {
-    this.router.navigate([this.rowData._id, 'detail'], { relativeTo: this.route });
+    window.open(`${this.router.url}/${this.rowData._id}/detail`, '_blank');
   }
 
   /**
@@ -89,6 +86,6 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
    * @memberof MinesRecordsTableRowComponent
    */
   goToEdit() {
-    this.router.navigate([this.rowData._id, 'edit'], { relativeTo: this.route });
+    window.open(`${this.router.url}/${this.rowData._id}/edit`, '_blank');
   }
 }
