@@ -356,7 +356,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
         ConfirmComponent,
         {
           title: 'Confirm Publication',
-          message: `This will publish ${this.myForm.get('collectionRecords').value.length} record(s), do you want to proceed?`,
+          message: `This will publish the current collection and ${this.myForm.get('collectionRecords').value.length} record(s), do you want to proceed?`,
           okOnly: false
         },
         { backdropColor: 'rgba(0, 0, 0, 0.5)' }

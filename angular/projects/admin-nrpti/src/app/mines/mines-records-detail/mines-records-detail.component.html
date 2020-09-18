@@ -11,20 +11,6 @@
         <h2 class="border-0 mb-0">Record Information</h2>
         <span class="grey-subtext">{{ lastEditedSubText }}</span>
       </div>
-      <div class="col-12 col-sm-4">
-        <div class="d-flex flex-column">
-          <mat-slide-toggle
-            name="publishBcmi"
-            id="publishBcmi"
-            class="publish-toggle"
-            [ngClass]="isPublished ? 'published' : 'unpublished'"
-            [checked]="isPublished"
-            [disabled]="true"
-          >
-            {{ (isPublished && 'Published') || 'Not Published' }}
-          </mat-slide-toggle>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -77,7 +63,8 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <app-document-authenticated-read-only [documents]="record && record.documents"></app-document-authenticated-read-only>
+        <app-document-authenticated-read-only [documents]="record && record.documents">
+        </app-document-authenticated-read-only>
       </div>
     </div>
     <div class="row">
