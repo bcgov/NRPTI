@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MinesCollectionRecordTableRowComponent } from './mines-collection-detail-record-row.component';
 import { TestBedHelper } from '../../../../../../common/src/app/spec/spec-utils';
@@ -11,14 +10,11 @@ describe('MinesTableRowComponent', () => {
     MinesCollectionRecordTableRowComponent
   );
 
-  // component constructor mocks
-  const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
-
   beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, CommonModule, GlobalModule],
       declarations: [MinesCollectionRecordTableRowComponent],
-      providers: [{ provide: Router, useValue: mockRouter }]
+      providers: []
     }).compileComponents();
   }));
 

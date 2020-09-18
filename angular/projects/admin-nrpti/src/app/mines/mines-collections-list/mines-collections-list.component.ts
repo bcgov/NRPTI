@@ -54,12 +54,12 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
     {
       name: 'Collection Name',
       value: 'name',
-      width: 'col-3'
+      width: 'col-4'
     },
     {
       name: 'Agency',
       value: 'agency',
-      width: 'col-1'
+      width: 'col-2'
     },
     {
       name: 'Type',
@@ -75,11 +75,6 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
       name: '# of Records',
       value: 'countrecords',
       width: 'col-1'
-    },
-    {
-      name: 'Publish State',
-      value: 'published',
-      width: 'col-2'
     }
   ];
 

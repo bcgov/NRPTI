@@ -15,7 +15,6 @@ export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   public collection = null;
-  public isPublished = false;
   public lastEditedSubText = null;
 
   public tableData: TableObject = new TableObject({
@@ -76,8 +75,6 @@ export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
 
       this.collection = res.collection[0] && res.collection[0].data;
 
-      this.isPublished = this.isRecordPublished();
-
       this.populateTextFields();
 
       this.sortRecords();
@@ -123,10 +120,6 @@ export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
     } else {
       this.lastEditedSubText = `Added on ${moment(this.collection.dateAdded).format('MMMM DD, YYYY')}`;
     }
-  }
-
-  isRecordPublished(): boolean {
-    return this.collection && this.collection.read && this.collection.read.includes('public');
   }
 
   formatDate(date: Date): string {

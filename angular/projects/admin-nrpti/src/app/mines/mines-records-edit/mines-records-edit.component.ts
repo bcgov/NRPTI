@@ -118,7 +118,7 @@ export class MinesRecordsEditComponent implements OnInit {
     if (this.record.dateUpdated) {
       this.lastEditedSubText = `Last Edited on ${moment(this.record.dateUpdated).format('MMMM DD, YYYY')}`;
     } else if (this.record.dateAdded) {
-      this.lastEditedSubText = `Added on ${moment(this.record.dateAdded).format('MMMM DD, YYYY')}`;
+      this.lastEditedSubText = `Published on ${moment(this.record.dateAdded).format('MMMM DD, YYYY')}`;
     }
   }
 
@@ -180,22 +180,6 @@ export class MinesRecordsEditComponent implements OnInit {
       // Remove used state
       this.storeService.removeItem(StateIDs.recordAddEdit);
     }
-  }
-
-
-  /**
-   * Toggle the publish formcontrol.
-   *
-   * @param {*} event
-   * @memberof MinesRecordsEditComponent
-   */
-  togglePublish(event) {
-    if (!event.checked || this.canPublish) {
-      // always allow unpublishing
-      this.myForm.get('recordPublish').setValue(event.checked);
-    }
-
-    this._changeDetectionRef.detectChanges();
   }
 
   /**
