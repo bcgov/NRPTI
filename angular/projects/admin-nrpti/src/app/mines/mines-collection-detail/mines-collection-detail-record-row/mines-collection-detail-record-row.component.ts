@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
 
 import { TableRowComponent } from 'nrpti-angular-components';
@@ -10,7 +11,11 @@ import { TableRowComponent } from 'nrpti-angular-components';
 })
 export class MinesCollectionRecordTableRowComponent extends TableRowComponent implements OnInit {
 
-  constructor(public changeDetectionRef: ChangeDetectorRef) {
+  constructor(
+    public changeDetectionRef: ChangeDetectorRef,
+    public route: ActivatedRoute,
+    private router: Router
+  ) {
     super();
   }
 
@@ -18,7 +23,8 @@ export class MinesCollectionRecordTableRowComponent extends TableRowComponent im
   }
 
   @HostListener('click') onItemClicked() {
-    // TODO: Not sure how the link information for the record is going to be returned yet. Redirect here once known.
+    const url = this.router.url.substr(0, this.router.url.lastIndexOf('/collections'));
+    window.open(`${url}/records/${this.rowData._id}/detail`, '_blank');
   }
 
   formatDate(date: Date): string {
