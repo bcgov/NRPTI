@@ -271,6 +271,12 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   flavourData.author = collectionDoc.document.documentAuthor;
   flavourData.recordName = collectionDoc.document.displayName;
   flavourData.description = collectionDoc.document.description;
+  try {
+    flavourData.dateIssued = new Date(collectionDoc.document.documentDate);
+  } catch (e) {
+    // Skip
+    console.log("Error setting dateIssued:", e);
+  }
   flavourData.isBcmiPublished = true;
   flavourData.sourceDateAdded = collectionDoc.document.dateAdded;
   flavourData.sourceDateUpdated = collectionDoc.document.dateUpdated;
@@ -288,6 +294,12 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   masterData.author = collectionDoc.document.documentAuthor;
   masterData.recordName = collectionDoc.document.displayName
   masterData.description = collectionDoc.document.description;
+  try {
+    masterData.dateIssued = new Date(collectionDoc.document.documentDate);
+  } catch (e) {
+    // Skip
+    console.log("Error setting dateIssued:", e);
+  }
   if (Object.prototype.hasOwnProperty.call(flavourData, 'isBcmiPublished')) masterData.isBcmiPublished = true;
   if (Object.prototype.hasOwnProperty.call(flavourData, 'isNrcedPublished')) masterData.isNrcedPublished = false;
   if (Object.prototype.hasOwnProperty.call(flavourData, 'isLngPublished')) masterData.isLngPublished = false;
