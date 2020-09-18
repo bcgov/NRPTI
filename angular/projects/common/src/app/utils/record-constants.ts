@@ -202,7 +202,7 @@ export class Picklists {
     ManagementPlan: { displayName: 'Management Plan', _schemaName: 'ManagementPlanBCMI' },
     Order: { displayName: 'Order', _schemaName: 'OrderBCMI' },
     Permit: { displayName: 'Permit', _schemaName: 'PermitBCMI' },
-    Report: { displayName: 'Report', _schemaName: 'ReportBCMI' },
+    Report: { displayName: 'Report', _schemaName: 'ReportBCMI' }
     // RestorativeJustice: { displayName: 'Restorative Justice', _schemaName: 'RestorativeJusticeBCMI' },
     // SelfReport: { displayName: 'Self Report', _schemaName: 'SelfReportBCMI' },
     // Ticket: { displayName: 'Ticket', _schemaName: 'TicketBCMI' },
@@ -214,6 +214,7 @@ export class Picklists {
     'cors-csv',
     'epic',
     'lng-csv',
+    'mem-admin',
     'nris-epd',
     'nrpti',
     'ocers-csv'
@@ -237,9 +238,7 @@ export class Picklists {
     'Report'
   ];
 
-  public static readonly collectionAgencyPicklist = [
-    'EAO', 'EMPR', 'ENV'
-  ];
+  public static readonly collectionAgencyPicklist = ['EAO', 'EMPR', 'ENV'];
 
   /**
    * Contains a mapping of acts to regulations.
@@ -771,7 +770,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {string[]} sorted array of acts
    */
-  public static getAllActs = function (): string[] {
+  public static getAllActs = function(): string[] {
     return Object.keys(this.legislationActsMappedToRegulations).sort();
   };
 
@@ -782,7 +781,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {string[]} sorted array of regulations
    */
-  public static getAllRegulations = function (): string[] {
+  public static getAllRegulations = function(): string[] {
     const regulations = [];
 
     Object.keys(this.legislationActsMappedToRegulations).forEach(act =>
@@ -806,7 +805,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {{ [key: string]: string[] }}
    */
-  public static getLegislationRegulationsMappedToActs = function (): { [key: string]: string[] } {
+  public static getLegislationRegulationsMappedToActs = function(): { [key: string]: string[] } {
     const regulations = {};
 
     Object.keys(this.legislationActsMappedToRegulations).forEach(act =>
@@ -4623,7 +4622,7 @@ export class Picklists {
    * @static
    * @returns {string} legislation description or null
    */
-  public static getLegislationDescription = function (recordType: string, legislation: Legislation): string {
+  public static getLegislationDescription = function(recordType: string, legislation: Legislation): string {
     if (!recordType || !legislation || !legislation.act || !legislation.section) {
       return null;
     }
@@ -4678,7 +4677,7 @@ export class Picklists {
    * @param {string[]} paths properties to descend, in order, through the object.
    * @returns the value found at the end of the path, or null
    */
-  public static traverseObject = function (obj: object, paths: string[]) {
+  public static traverseObject = function(obj: object, paths: string[]) {
     if (!obj || !paths || !paths.length) {
       return null;
     }
