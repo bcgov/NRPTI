@@ -67,10 +67,10 @@ describe('BaseRecordUtils', () => {
     });
   });
 
-  describe('createRecord', () => {
+  describe('createItem', () => {
     it('throws error when nrptiRecord is not provided', async () => {
       const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.PermitAmendment);
-      await expect(baseRecordUtils.createRecord(null)).rejects.toThrow('createRecord - required nrptiRecord must be non-null.');
+      await expect(baseRecordUtils.createItem(null)).rejects.toThrow('createItem - required nrptiRecord must be non-null.');
     });
 
     it('calls `processPostRequest` when all arguments provided', async () => {
@@ -80,7 +80,7 @@ describe('BaseRecordUtils', () => {
         return Promise.resolve({ test: 'record' });
       });
 
-      await baseRecordUtils.createRecord({});
+      await baseRecordUtils.createItem({});
 
       expect(spy).toHaveBeenCalled();
     });

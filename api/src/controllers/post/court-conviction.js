@@ -34,7 +34,7 @@ const utils = require('../../utils/constants/misc');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createRecord = async function (args, res, next, incomingObj) {
+exports.createItem = async function (args, res, next, incomingObj) {
   const flavourFunctions = {
     CourtConvictionLNG: this.createLNG,
     CourtConvictionNRCED: this.createNRCED
