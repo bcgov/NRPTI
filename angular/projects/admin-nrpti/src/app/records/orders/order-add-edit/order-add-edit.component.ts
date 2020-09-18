@@ -151,7 +151,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         value: (this.currentRecord &&
           this.currentRecord.dateIssued &&
           this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
-        '',
+          '',
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       issuingAgency: new FormControl({
@@ -218,9 +218,9 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
             this.currentRecord.issuedTo &&
             this.currentRecord.issuedTo.dateOfBirth &&
             this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
-          '',
+            '',
           disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
-          }),
+        }),
         anonymous: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || '',
           disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
@@ -426,27 +426,26 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (!this.isEditing) {
-      this.factoryService.writeRecord(order, 'orders', true).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-        let _id = null;
-        if (Array.isArray(res[0][0].object)) {
-          _id = res[0][0].object.find(r => r._schemaName === 'Order')._id;
-        } else {
-          _id = res[0][0].object._id;
-        }
+      const res = await this.factoryService.writeRecord(order, 'orders', true);
+      this.recordUtils.parseResForErrors(res);
+      let _id = null;
+      if (Array.isArray(res[0][0].object)) {
+        _id = res[0][0].object.find(r => r._schemaName === 'Order')._id;
+      } else {
+        _id = res[0][0].object._id;
+      }
 
-        const docResponse = await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          _id,
-          this.factoryService
-        );
+      const docResponse = await this.recordUtils.handleDocumentChanges(
+        this.links,
+        this.documents,
+        this.documentsToDelete,
+        _id,
+        this.factoryService
+      );
 
-        this.logger.log(docResponse);
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['records']);
-      });
+      this.logger.log(docResponse);
+      this.loadingScreenService.setLoadingState(false, 'main');
+      this.router.navigate(['records']);
     } else {
       order['_id'] = this.currentRecord._id;
 
@@ -468,20 +467,19 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         order['OrderLNG']['_id'] = this.lngFlavour._id;
       }
 
-      this.factoryService.writeRecord(order, 'orders', false).subscribe(async res => {
-        this.recordUtils.parseResForErrors(res);
-        const docResponse = await this.recordUtils.handleDocumentChanges(
-          this.links,
-          this.documents,
-          this.documentsToDelete,
-          this.currentRecord._id,
-          this.factoryService
-        );
+      const res = await this.factoryService.writeRecord(order, 'orders', false);
+      this.recordUtils.parseResForErrors(res);
+      const docResponse = await this.recordUtils.handleDocumentChanges(
+        this.links,
+        this.documents,
+        this.documentsToDelete,
+        this.currentRecord._id,
+        this.factoryService
+      );
 
-        this.logger.log(docResponse);
-        this.loadingScreenService.setLoadingState(false, 'main');
-        this.router.navigate(['records', 'orders', this.currentRecord._id, 'detail']);
-      });
+      this.logger.log(docResponse);
+      this.loadingScreenService.setLoadingState(false, 'main');
+      this.router.navigate(['records', 'orders', this.currentRecord._id, 'detail']);
     }
   }
 

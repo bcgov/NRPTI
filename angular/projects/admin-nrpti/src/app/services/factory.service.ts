@@ -541,16 +541,16 @@ export class FactoryService {
   // Record insert/edit helper
   // Could replace record: any with record: IRecordModel,however this would mean
   // more expansive updates to the existing add-edit components.
-  public writeRecord(record: any, containerName: string, isInsert: boolean = true): Observable<object> {
+  public writeRecord(record: any, containerName: string, isInsert: boolean = true): Promise<any> {
     const dataPackage = {};
     dataPackage[containerName] = [record];
 
     return isInsert ? this.recordService
       .createRecord(dataPackage)
-      .pipe(catchError(error => this.apiService.handleError(error)))
+      .pipe(catchError(error => this.apiService.handleError(error))).toPromise()
       : this.recordService
         .editRecord(dataPackage)
-        .pipe(catchError(error => this.apiService.handleError(error)));
+        .pipe(catchError(error => this.apiService.handleError(error))).toPromise();
   }
 
   public getCommunicationPackage(application): Observable<object> {
