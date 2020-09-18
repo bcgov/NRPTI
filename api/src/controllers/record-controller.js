@@ -9,6 +9,7 @@ let queryActions = require('../utils/query-actions');
 let queryUtils = require('../utils/query-utils');
 let defaultLog = require('../utils/logger')('record');
 let documentController = require('./document-controller');
+let collectionController = require('./collection-controller');
 const businessLogicManager = require('../utils/business-logic-manager');
 
 let AddOrder = require('./post/order');
@@ -77,6 +78,7 @@ const ACCEPTED_DATA_TYPES = [
   { type: 'correspondences', add: AddCorrespondence, edit: EditCorrespondence },
   { type: 'damSafetyInspections', add: AddDamSafetyInspection, edit: EditDamSafetyInspection },
   { type: 'reports', add: AddReport, edit: EditReport },
+  { type: 'collections', add: collectionController , edit: collectionController }
 ];
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
@@ -406,7 +408,7 @@ const processPostRequest = async function (args, res, next, property, data) {
   do {
     const typeMethods = ACCEPTED_DATA_TYPES.find(t => t.type === property);
     if (typeMethods) {
-      promises.push(typeMethods.add.createRecord(args, res, next, data[i]));
+      promises.push(typeMethods.add.createItem(args, res, next, data[i]));
     } else {
       return {
         errorMessage: `Property ${property} does not exist.`

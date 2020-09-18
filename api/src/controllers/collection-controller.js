@@ -158,6 +158,11 @@ exports.protectedPut = async function (args, res, next) {
   next();
 }
 
+// This wrapper allows this controller to work with the record controller.
+exports.createItem = function(args, res, next, collection)  {
+ return createCollection(collection, args.swagger.params.auth_payload.displayName);
+}
+
 exports.protectedPost = async function (args, res, next) {
   // Confirm user has correct role for this type of record.
   if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
@@ -173,54 +178,11 @@ exports.protectedPost = async function (args, res, next) {
     next();
   }
 
-  let CollectionBCMI = mongoose.model(RECORD_TYPE.CollectionBCMI._schemaName);
-  let collection = new CollectionBCMI();
-
-  // Set schema
-  collection._schemaName = RECORD_TYPE.CollectionBCMI._schemaName;
-
-  // Set parent/mine ids
-  incomingObj._master && (collection._master = incomingObj._master);
-  incomingObj.project && (collection.project = incomingObj.project);
-
-  // Set permissions
-  collection.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
-  collection.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
-
-  // Set data
-  incomingObj.name && (collection.name = incomingObj.name);
-  incomingObj.date && (collection.date = incomingObj.date);
-  incomingObj.type && (collection.type = incomingObj.type);
-  incomingObj.agency && (collection.agency = incomingObj.agency);
-  incomingObj.records && incomingObj.records.length && (collection.records = incomingObj.records);
-
-  // if any values in the "records" attribute exist on any other collection, throw an error
-  if (collection.records && collection.records.length > 0) {
-    try {
-      await checkRecordExistsInCollection(collection.records, collection._id);
-    } catch (error) {
-      defaultLog.info(`protectedPost - error inserting collection: ${collection}`);
-      defaultLog.debug(error);
-      return queryActions.sendResponse(res, 400, error);
-    }
-  }
-
-  // Add 'public' role and associated meta
-  // All collections are autopublished
-  collection.read.push('public');
-  collection.datePublished = new Date();
-  collection.publishedBy = args.swagger.params.auth_payload.displayName;
-  collection.isBcmiPublished = true;
-
-  // Set auditing meta
-  collection.addedBy = (args && args.swagger.params.auth_payload.displayName) || incomingObj.addedBy;
-  collection.dateAdded = new Date();
-
   let obj = null;
   try {
-    obj = await Post.insert(collection);
+    obj = await createCollection(incomingObj, args.swagger.params.auth_payload.displayName);
   } catch (error) {
-    defaultLog.info(`protectedPost - error inserting collection: ${collection}`);
+    defaultLog.info(`protectedPost - error inserting collection: ${incomingObj}`);
     defaultLog.debug(error);
     return queryActions.sendResponse(res, 400, {});
   }
@@ -292,5 +254,59 @@ const checkRecordExistsInCollection = async function (records, collectionId, edi
     return await Promise.all(promises);
   } catch (error) {
     throw new Error('Error updating records with collection.')
+  }
+}
+
+const createCollection = async function (collectionObj, user) {
+  
+  let CollectionBCMI = mongoose.model(RECORD_TYPE.CollectionBCMI._schemaName);
+  let collection = new CollectionBCMI();
+
+  // Set schema
+  collection._schemaName = RECORD_TYPE.CollectionBCMI._schemaName;
+
+  // Set parent/mine ids
+  collectionObj._master && (collection._master = collectionObj._master);
+  collectionObj.project && (collection.project = collectionObj.project);
+
+  // Set permissions
+  collection.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  collection.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+
+  // Set data
+  collectionObj.name && (collection.name = collectionObj.name);
+  collectionObj.date && (collection.date = collectionObj.date);
+  collectionObj.type && (collection.type = collectionObj.type);
+  collectionObj.agency && (collection.agency = collectionObj.agency);
+  collectionObj.records && collectionObj.records.length && (collection.records = collectionObj.records);
+
+  // if any values in the "records" attribute exist on any other collection, throw an error
+  if (collection.records && collection.records.length > 0) {
+    try {
+      await checkRecordExistsInCollection(collection.records, collection._id);
+    } catch (error) {
+      defaultLog.info(`protectedPost - error inserting collection: ${collection}`);
+      defaultLog.debug(error);
+      throw error;
+    }
+  }
+
+  // Add 'public' role and associated meta
+  collection.read.push('public');
+  collection.datePublished = new Date();
+  collection.publishedBy = user;
+  collection.isBcmiPublished = true;
+
+  // Set auditing meta
+  collection.addedBy = user || collectionObj.addedBy;
+  collection.dateAdded = new Date();
+
+  try {
+    const newCollection = await Post.insert(collection);
+    return newCollection;
+  } catch (error) {
+    defaultLog.info(`createCollection - error inserting collection: ${collection}`);
+    defaultLog.debug(error);
+    throw new Error('Error creating collection');
   }
 }

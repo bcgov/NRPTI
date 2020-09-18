@@ -217,7 +217,7 @@ class CoreDataSource {
 
         // Add permit info to the mine record.
         const recordWithPermits = mineUtils.addPermitToRecord(nrptiRecord, permitInfo);
-        savedRecord = await mineUtils.createRecord(recordWithPermits);
+        savedRecord = await mineUtils.createItem(recordWithPermits);
 
         // Create a new collections if possible.
         await this.createCollections(collectionUtils, permitInfo.permit, savedRecord[0].object[0]);
@@ -326,7 +326,7 @@ class CoreDataSource {
     // To trigger flavour for this import.
     const preparedPermits = transformedPermits.map(amendment => ({ ...amendment, PermitBCMI: {} }))
 
-    const promises = preparedPermits.map(permit => permitUtils.createRecord(permit));
+    const promises = preparedPermits.map(permit => permitUtils.createItem(permit));
     await Promise.all(promises);
 
     return {
@@ -374,7 +374,7 @@ class CoreDataSource {
       // To trigger flavour for this import.
       const preparedPermits = newPermits.map(amendment => ({ ...amendment, PermitBCMI: {} }))
 
-      const promises = preparedPermits.map(permit => permitUtils.createRecord(permit));
+      const promises = preparedPermits.map(permit => permitUtils.createItem(permit));
       await Promise.all(promises);
     }
   }
@@ -495,7 +495,7 @@ class CoreDataSource {
         records: (existingPermits && existingPermits.map(permit => permit._id)) || []
       }
 
-      await collectionUtils.createRecord(collection);
+      await collectionUtils.createItem(collection);
     }
   }
 }
