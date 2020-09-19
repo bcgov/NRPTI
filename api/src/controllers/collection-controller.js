@@ -159,8 +159,8 @@ exports.protectedPut = async function (args, res, next) {
 }
 
 // This wrapper allows this controller to work with the record controller.
-exports.createItem = function(args, res, next, collection)  {
- return createCollection(collection, args.swagger.params.auth_payload.displayName);
+exports.createItem = async function (args, res, next, collection) {
+  return await createCollection(collection, args.swagger.params.auth_payload.displayName);
 }
 
 exports.protectedPost = async function (args, res, next) {
@@ -258,7 +258,7 @@ const checkRecordExistsInCollection = async function (records, collectionId, edi
 }
 
 const createCollection = async function (collectionObj, user) {
-  
+
   let CollectionBCMI = mongoose.model(RECORD_TYPE.CollectionBCMI._schemaName);
   let collection = new CollectionBCMI();
 
