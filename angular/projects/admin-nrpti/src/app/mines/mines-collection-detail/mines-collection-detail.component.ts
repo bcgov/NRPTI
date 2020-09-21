@@ -118,7 +118,7 @@ export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
     if (this.collection && this.collection.dateUpdated) {
       this.lastEditedSubText = `Last Edited on ${moment(this.collection.dateUpdated).format('MMMM DD, YYYY')}`;
     } else {
-      this.lastEditedSubText = `Added on ${moment(this.collection.dateAdded).format('MMMM DD, YYYY')}`;
+      this.lastEditedSubText = `Published on ${moment(this.collection.dateAdded).format('MMMM DD, YYYY')}`;
     }
   }
 
