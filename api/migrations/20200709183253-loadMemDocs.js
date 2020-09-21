@@ -27,7 +27,6 @@ const OBJ_STORE_BUCKET = process.env.OBJECT_STORE_bucket_name || 'test';
 const ep = new AWS.Endpoint(OBJ_STORE_URL);
 const s3 = new AWS.S3({
   endpoint: ep,
-  sslEnabled: false,
   accessKeyId: process.env.OBJECT_STORE_user_account,
   secretAccessKey: process.env.OBJECT_STORE_password,
   signatureVersion: 'v4',
@@ -90,9 +89,14 @@ exports.up = async function (db) {
 
     for(const mine of publishedMines) {
       // find the mine in nrpti by permit ID
+      let nrptiMine
       console.log(`Processing mine ${mine.memPermitID}`);
-      const nrptiMine = await nrpti.findOne({ _schemaName: 'MineBCMI', permitNumber: mine.memPermitID })
-
+      if (mine.memPermitID === 'C-3' && mine.name === 'Fording River Operations') {
+        console.log('Found Fording River Operations, using C-102 as permit number')
+        nrptiMine = await nrpti.findOne({ _schemaName: 'MineBCMI', permitNumber: 'C-102'})
+      } else {
+        nrptiMine = await nrpti.findOne({ _schemaName: 'MineBCMI', permitNumber: mine.memPermitID })
+      }
       if (nrptiMine) {
         // Found a mine, now lets create a record and upload up the docs
         for(const collection of mine.collectionData) {
@@ -104,7 +108,12 @@ exports.up = async function (db) {
           const allNewDocs = [];
           console.log(`Fetched ${allDocs.length} documents. Creating NRPTI records/flavours...`);
           for(const collectionDoc of allDocs) {
-            const existingDoc = await nrpti.findOne({ mineGuid: nrptiMine._sourceRefId, fileName: collectionDoc.document.displayName });
+            let existingDoc;
+            if (!collectionDoc.document && !collectionDoc.hasOwnProperty('displayName')) {
+              console.log(`missing displayName: ${JSON.stringify(collectionDoc)}`)
+            } else {
+              existingDoc = await nrpti.findOne({ mineGuid: nrptiMine._sourceRefId, recordName: collectionDoc.document.displayName });
+            }
             if (!existingDoc) {
               if (collection.type && collection.type.length > 0 && !collection.isForEAO) {
                 try {
@@ -145,15 +154,14 @@ exports.up = async function (db) {
             bcmiCollection.datePublished = collection.date;
             bcmiCollection.publishedBy = 'nrpti';
             bcmiCollection.isBcmiPublished = true;
-            // todo add lookup for existing collection skip creating if it exists
             await nrpti.insertOne(bcmiCollection);
 
             collectionsCreated += 1;
           } else {
-            if (allNewDocs) {
-              existingCollection.records.push(allNewDocs);
+            if (allNewDocs.length) {
+              existingCollection.records.concat(allNewDocs);
               await nrpti.findOneAndUpdate({ _schemaName: "CollectionBCMI", name: collection.displayName }, existingCollection)
-              console.log(`Update existing collection ${existingCollection.displayName} with new documents`)
+              console.log(`Update existing collection ${existingCollection.name} with new documents`)
             }
             collectionsExisting += 1;
           }
