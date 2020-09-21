@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
@@ -16,6 +16,7 @@ export class CommunicationsComponent implements OnInit, OnDestroy {
   @ViewChild(DatePickerComponent) DatePicker: DatePickerComponent;
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  public resetDates: EventEmitter<void> = new EventEmitter<void>();
 
   public myForm: FormGroup;
 
@@ -34,7 +35,7 @@ export class CommunicationsComponent implements OnInit, OnDestroy {
     public router: Router,
     private factoryService: FactoryService,
     private utils: Utils,
-    private loadingScreenService: LoadingScreenService
+    private loadingScreenService: LoadingScreenService,
   ) {}
 
   ngOnInit() {
@@ -97,6 +98,25 @@ export class CommunicationsComponent implements OnInit, OnDestroy {
       this.loadingScreenService.setLoadingState(false, 'main');
     });
   }
+
+  async cancel() {
+    this.loadingScreenService.setLoadingState(true, 'main');
+
+    const popup = {};
+
+    // Use the original values and save them without dates. This will cancel the popup.
+    popup['title'] = this.commPackage.title;
+    popup['description'] = this.commPackage.description;
+    popup['startDate'] = null;
+    popup['endDate'] = null;
+    popup['application'] = this.selectedApplication;
+
+    this.factoryService.createCommunicationPackage(popup).subscribe(async (res: any) => {
+      this.loadingScreenService.setLoadingState(false, 'main');
+      this.resetDates.emit();
+    });
+  }
+
 
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
