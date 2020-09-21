@@ -22,6 +22,13 @@ export class CommunicationsComponent implements OnInit, OnDestroy {
   public commPackage: CommunicationsPackage;
   public selectedApplication: string;
 
+  public tinyMceSettings = {
+    base_url: '/tinymce',
+    suffix: '.min',
+    browser_spellcheck: true,
+    height: 240
+  };
+
   constructor(
     public route: ActivatedRoute,
     public router: Router,
