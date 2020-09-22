@@ -152,8 +152,9 @@
                   <i class="material-icons" cdkDragHandle>reorder</i>
                 </button>
               </td>
-              <td data-label="Record Name" class="col-3">
+              <td data-label="Record Name" class="col-3 d-flex">
                 {{ formGroup.get('record').value.recordName || '-' }}
+                <i *ngIf="formGroup.get('record').value.isLink" class="material-icons ml-2">link</i>
               </td>
               <td data-label="Agency" class="col-33">
                 {{ formGroup.get('record').value.issuingAgency || formGroup.get('record').value.agency || '-' }}
