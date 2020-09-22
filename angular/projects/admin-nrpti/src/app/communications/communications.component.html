@@ -40,14 +40,12 @@
         <div class="flex-container">
           <div class="label-pair lrg">
             <label for="description">Description</label>
-            <textarea
+            <editor
+              [init]="tinyMceSettings"
               name="description"
               id="description"
-              type="text"
               formControlName="description"
-              class="form-control"
-              rows="5"
-            ></textarea>
+            ></editor>
           </div>
         </div>
         <div class="flex-container">
@@ -55,14 +53,16 @@
             <label for="startDate">Start Date</label>
             <lib-date-picker
               [control]="myForm.controls.startDate"
-              [isValidate]="true">
+              [isValidate]="true"
+              [reset]="resetDates">
             </lib-date-picker>
           </div>
           <div class="label-pair">
             <label for="endDate">End Date</label>
             <lib-date-picker
               [control]="myForm.controls.endDate"
-              [isValidate]="true">
+              [isValidate]="true"
+              [reset]="resetDates">
             </lib-date-picker>
           </div>
         </div>
@@ -70,6 +70,9 @@
       </form>
     </section>
     <div class="d-flex justify-content-end mb-1">
+      <button class="btn btn-primary mr-1" (click)="cancel()" title="Cancel Popup">
+        Cancel Popup
+      </button>
       <button class="btn btn-primary" type="submit" (click)="submit()" title="Save Popup">
         Save Popup
       </button>

@@ -8,8 +8,8 @@ module.exports = require('../utils/model-schema-generator')(
     // data
     title: { type: String, default: null, required: true },
     description: { type: String, default: null, required: true },
-    startDate: { type: Date, default: Date.now(), required: true },
-    endDate: { type: Date, default: null, required: true },
+    startDate: { type: Date, default: null },
+    endDate: { type: Date, default: null },
     // Additional Info is a freeform json object that can be populated to send
     // special instructions to the front ends
     additionalInfo: { type: Object, default: null },
