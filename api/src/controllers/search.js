@@ -747,6 +747,73 @@ const executeQuery = async function (args, res, next) {
           foreignField: '_id',
           as: 'collectionRecords'
         }
+      }, {
+        $unwind: {
+          path: "$collectionRecords",
+          preserveNullAndEmptyArrays: true
+        }
+      }, {
+        $lookup: {
+          from: "nrpti",
+          localField: "collectionRecords.documents",
+          foreignField: "_id",
+          as: "collectionRecords.documents",
+        }
+      }, {
+        $unwind: {
+          path: "$collectionRecords.documents",
+          preserveNullAndEmptyArrays: true
+        }
+      }, {
+        $addFields: {
+          'collectionRecords.isLink': { 
+            $cond: [
+              { $ifNull: [ '$collectionRecords.documents.key', false] },
+              false,
+              true
+            ]
+          }
+        }
+      }, {
+        $group: {
+          _id: "$_id",
+          _schemaName: { $first: "$_schemaName" },
+          _master: { $first: "$_master" },
+          name: { $first: "$name" },
+          date: { $first: "$date" },
+          project: { $first: "$project" },
+          type: { $first: "$type" },
+          agency: { $first: "$agency" },
+          records: { $first: "$records" },
+          dateAdded: { $first: "$dateAdded" },
+          addedBy: { $first: "$addedBy" },
+          dateUpdated: { $first: "$dateUpdated" },
+          updatedBy: { $first: "$updatedBy" },
+          datePublished: { $first: "$datePublished" },
+          publishedBy: { $first: "$publishedBy" },
+          isBcmiPublished: { $first: "$isBcmiPublished" },
+          collectionRecords: { $push: "$collectionRecords" }
+        }
+      }, {
+        $project: {
+          _id: 1,
+          name: 1,
+          date: 1,
+          project: 1,
+          type: 1,
+          agency: 1,
+          records: 1,
+          dateAdded: 1,
+          addedBy: 1,
+          dateUpdated: 1,
+          updatedBy: 1,
+          datePublished: 1,
+          publishedBy: 1,
+          isBcmiPublished: 1,
+          collectionRecords: {
+            $filter: { input: "$collectionRecords", as: "a", cond: { $ifNull: ["$$a._id", false] } }
+          }
+        }
       });
 
     // populate flavours
