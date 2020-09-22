@@ -295,7 +295,6 @@ const createCollection = async function (collectionObj, user) {
   collection.read.push('public');
   collection.datePublished = new Date();
   collection.publishedBy = user;
-  collection.isBcmiPublished = true;
 
   // Set auditing meta
   collection.addedBy = user || collectionObj.addedBy;
