@@ -267,8 +267,6 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (correspondenceBCMI.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (correspondenceBCMI.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (correspondenceBCMI.sourceSystemRef = incomingObj.sourceSystemRef);
-  incomingObj.isBcmiPublished && (correspondenceBCMI.isBcmiPublished = incomingObj.isBcmiPublished);
-  incomingObj.isNrcedPublished && (correspondenceBCMI.isNrcedPublished = incomingObj.isNrcedPublished);
 
   return correspondenceBCMI;
 };
@@ -385,8 +383,6 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (correspondenceNRCED.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (correspondenceNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (correspondenceNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
-  incomingObj.isBcmiPublished && (correspondenceNRCED.isBcmiPublished = incomingObj.isBcmiPublished);
-  incomingObj.isNrcedPublished && (correspondenceNRCED.isNrcedPublished = incomingObj.isNrcedPublished);
 
   return correspondenceNRCED;
 };

@@ -268,8 +268,6 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.sourceDateAdded && (certificateAmendmentLNG.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (certificateAmendmentLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (certificateAmendmentLNG.sourceSystemRef = incomingObj.sourceSystemRef);
-  incomingObj.isLngPublished && (certificateAmendmentLNG.isLngPublished = incomingObj.isLngPublished);
-  incomingObj.isBcmiPublished && (certificateAmendmentLNG.isBcmiPublished = incomingObj.isBcmiPublished);
 
   return certificateAmendmentLNG;
 };
@@ -390,8 +388,6 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (certificateAmendmentBCMI.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (certificateAmendmentBCMI.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (certificateAmendmentBCMI.sourceSystemRef = incomingObj.sourceSystemRef);
-  incomingObj.isLngPublished && (certificateAmendmentBCMI.isLngPublished = incomingObj.isLngPublished);
-  incomingObj.isBcmiPublished && (certificateAmendmentBCMI.isBcmiPublished = incomingObj.isBcmiPublished);
 
   return certificateAmendmentBCMI;
 };
