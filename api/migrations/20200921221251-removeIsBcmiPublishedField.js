@@ -15,7 +15,7 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = async function (db) {
-  console.log('**** Fixing issues with isBcmiPublished not set correctly ****');
+  console.log('**** Removing isBcmiPublished field from collections ****');
   const mClient = await db.connection.connect(db.connectionString, { native_parser: true });
 
   try {
@@ -24,25 +24,10 @@ exports.up = async function (db) {
     await nrpti.updateMany(
       {
         _schemaName: 'CollectionBCMI',
-        isBcmiPublished: false,
-        read: { $in: ['public'] }
+        isBcmiPublished: { $exists: true }
       },
       {
-        $set: {
-          isBcmiPublished: true
-        }
-      }
-    );
-    await nrpti.updateMany(
-      {
-        _schemaName: 'CollectionBCMI',
-        isBcmiPublished: true,
-        read: { $nin: ['public'] }
-      },
-      {
-        $set: {
-          isBcmiPublished: false
-        }
+        $unset: { 'isBcmiPublished': 1 }
       }
     );
 
