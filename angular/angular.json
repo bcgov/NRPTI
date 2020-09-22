@@ -29,7 +29,12 @@
             "assets": [
               "projects/admin-nrpti/src/assets",
               "projects/admin-nrpti/src/favicon.ico",
-              "projects/admin-nrpti/src/env.js"
+              "projects/admin-nrpti/src/env.js",
+              {
+                "glob": "**/*",
+                "input": "node_modules/tinymce",
+                "output": "/tinymce/"
+              }
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -38,7 +43,8 @@
             ],
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/dist/keycloak.min.js"
+              "node_modules/keycloak-js/dist/keycloak.min.js",
+              "node_modules/tinymce/tinymce.min.js"
             ]
           },
           "configurations": {
