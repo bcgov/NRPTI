@@ -490,7 +490,12 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
         return;
       }
     }
+
     this.pendingRecords.push(recordToAdd);
+
+    // Need to indicate if the pending record is a document or a link.
+    recordToAdd.record.isLink = recordToAdd.links.length > 0 ? true : false;
+
     const formArray = this.myForm.get('collectionRecords') as FormArray;
     formArray.push(new FormGroup({
       record: new FormControl(recordToAdd.record || null)
