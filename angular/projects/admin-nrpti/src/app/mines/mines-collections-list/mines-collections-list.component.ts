@@ -131,16 +131,6 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
       }), 'Begin typing to filter BCMI tab types...', '')
     );
 
-    const publishedStatefilter = new FilterObject(
-      'isBcmiPublished',
-      FilterType.RadioPicker,
-      'Published State (BCMI)',
-      new CheckOrRadioFilterDefinition([
-        new RadioOptionItem('publishedState', 'Published', 'true'),
-        new RadioOptionItem('unpubState', 'Unpublished', 'false')
-      ])
-    );
-
     const recordsFilter = new FilterObject(
       'hasRecords',
       FilterType.RadioPicker,
@@ -156,7 +146,6 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
       collectionTypeFilter,
       responsibleAgencyFilter,
       bcmiTabFilter,
-      publishedStatefilter,
       recordsFilter
     ];
   }

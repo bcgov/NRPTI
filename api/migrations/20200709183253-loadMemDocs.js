@@ -5,20 +5,20 @@ const Document = require('../src/models/document');
 const utils = require('../src/utils/constants/misc');
 // master and BCMI flavour types
 const { permitBCMI: PermitBCMI,
-        orderBCMI: OrderBCMI,
-        inspectionBCMI: InspectionBCMI,
-        annualReportBCMI: AnnualReportBCMI,
-        damSafetyInspectionBCMI: DamSafetyInspectionBCMI,
-        managementPlanBCMI: ManagementPlanBCMI,
-        correspondenceBCMI: CorrespondenceBCMI,
-        collectionBCMI: CollectionBCMI } = require('../src/models/bcmi/index');
+  orderBCMI: OrderBCMI,
+  inspectionBCMI: InspectionBCMI,
+  annualReportBCMI: AnnualReportBCMI,
+  damSafetyInspectionBCMI: DamSafetyInspectionBCMI,
+  managementPlanBCMI: ManagementPlanBCMI,
+  correspondenceBCMI: CorrespondenceBCMI,
+  collectionBCMI: CollectionBCMI } = require('../src/models/bcmi/index');
 const { managementPlan: ManagementPlan,
-        damSafetyInspection: DamSafetyInspection,
-        annualReport: AnnualReport,
-        inspection: Inspection,
-        order: Order,
-        permit: Permit,
-        correspondence: Correspondence }  = require('../src/models/master/index');
+  damSafetyInspection: DamSafetyInspection,
+  annualReport: AnnualReport,
+  inspection: Inspection,
+  order: Order,
+  permit: Permit,
+  correspondence: Correspondence } = require('../src/models/master/index');
 
 const AWS = require('aws-sdk');
 
@@ -44,7 +44,7 @@ const bcmiUrl = 'https://mines.empr.gov.bc.ca'; // prod mem-admin api url
   * We receive the dbmigrate dependency from dbmigrate initially.
   * This enables us to not have to rely on NODE_PATH.
   */
-exports.setup = function(options, seedLink) {
+exports.setup = function (options, seedLink) {
   dbm = options.dbmigrate;
   type = dbm.dataType;
   seed = seedLink;
@@ -68,13 +68,13 @@ exports.up = async function (db) {
     const publishedMines = await getRequest(bcmiUrl + '/api/projects/published');
     console.log('Located ' + publishedMines.length + ' mines. Fetching Collections and Docs for import to NRPTI...');
 
-    for(const publishedMine of publishedMines) {
+    for (const publishedMine of publishedMines) {
       try {
         console.log(`Loading ${publishedMine.code} collections...`);
         const collections = await getRequest(bcmiUrl + '/api/collections/project/' + publishedMine.code);
         // add the collection to the mine
         publishedMine.collectionData = collections;
-      } catch(err) {
+      } catch (err) {
         console.error('Could not find ' + publishedMine._id + ' : ' + publishedMine.name);
         console.error(err);
         // dont rethrow, we'll just ignore this one as a failure and check the rest
@@ -87,19 +87,19 @@ exports.up = async function (db) {
     // then, follow that up by pulling the doc from mem-admin, and pushing it up to nrpti's s3
     const nrpti = await mClient.collection('nrpti');
 
-    for(const mine of publishedMines) {
+    for (const mine of publishedMines) {
       // find the mine in nrpti by permit ID
       let nrptiMine
       console.log(`Processing mine ${mine.memPermitID}`);
       if (mine.memPermitID === 'C-3' && mine.name === 'Fording River Operations') {
         console.log('Found Fording River Operations, using C-102 as permit number')
-        nrptiMine = await nrpti.findOne({ _schemaName: 'MineBCMI', permitNumber: 'C-102'})
+        nrptiMine = await nrpti.findOne({ _schemaName: 'MineBCMI', permitNumber: 'C-102' })
       } else {
         nrptiMine = await nrpti.findOne({ _schemaName: 'MineBCMI', permitNumber: mine.memPermitID })
       }
       if (nrptiMine) {
         // Found a mine, now lets create a record and upload up the docs
-        for(const collection of mine.collectionData) {
+        for (const collection of mine.collectionData) {
           console.log(`Processing collection ${collection.displayName}`);
           // init the collection so we can pass an id
           let bcmiCollection = new CollectionBCMI();
@@ -107,7 +107,7 @@ exports.up = async function (db) {
           const allDocs = collection.mainDocuments.concat(collection.otherDocuments);
           const allNewDocs = [];
           console.log(`Fetched ${allDocs.length} documents. Creating NRPTI records/flavours...`);
-          for(const collectionDoc of allDocs) {
+          for (const collectionDoc of allDocs) {
             let existingDoc;
             if (!collectionDoc.document && !collectionDoc.hasOwnProperty('displayName')) {
               console.log(`missing displayName: ${JSON.stringify(collectionDoc)}`)
@@ -124,7 +124,7 @@ exports.up = async function (db) {
                   } else {
                     throw Error('No document generated?');
                   }
-                } catch(err) {
+                } catch (err) {
                   console.error('#######################################');
                   console.error(`## An error occured while creating the doc`);
                   console.error(err);
@@ -136,13 +136,13 @@ exports.up = async function (db) {
               docsExisting += 1;
             }
           }
-          const existingCollection  = await nrpti.findOne({ _schemaName: "CollectionBCMI", name: collection.displayName });
+          const existingCollection = await nrpti.findOne({ _schemaName: "CollectionBCMI", name: collection.displayName });
           if (!existingCollection) {
             console.log(`Creating NRPTI collection for ${collection.displayName}`);
             // Master, Meta and Documents for this collection are all created.
             // Now, create a NRPTI collection and shove the docs into it!
             bcmiCollection._master = new ObjectID(nrptiMine._id);
-            bcmiCollection.read =  [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, 'public'];
+            bcmiCollection.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, 'public'];
             bcmiCollection.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
             bcmiCollection.name = collection.displayName;
             bcmiCollection.date = collection.date;
@@ -153,7 +153,6 @@ exports.up = async function (db) {
             bcmiCollection.addedBy = 'nrpti';
             bcmiCollection.datePublished = collection.date;
             bcmiCollection.publishedBy = 'nrpti';
-            bcmiCollection.isBcmiPublished = true;
             await nrpti.insertOne(bcmiCollection);
 
             collectionsCreated += 1;
@@ -174,7 +173,7 @@ exports.up = async function (db) {
         errors += 1;
       }
     }
-  } catch(err) {
+  } catch (err) {
     console.error('#######################################');
     console.error('## An error occured while loading docs!');
     console.error(err);
@@ -191,7 +190,7 @@ exports.up = async function (db) {
   mClient.close();
 };
 
-exports.down = function(db) {
+exports.down = function (db) {
   return null;
 };
 
@@ -316,7 +315,7 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   masterData._flavourRecords = [new ObjectID(flavourData._id)];
   masterData.documents = [document._id];
   masterData.collectionId = new ObjectID(newCollectionId);
-  masterData.mineGuid =  nrptiMine._sourceRefId;
+  masterData.mineGuid = nrptiMine._sourceRefId;
   masterData.issuingAgency = issuingAgency;
   masterData.author = collectionDoc.document.documentAuthor;
   masterData.recordName = collectionDoc.document.displayName
@@ -327,12 +326,12 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
     // Skip
     console.log("Error setting dateIssued:", e);
   }
-  if (Object.prototype.hasOwnProperty.call(flavourData, 'isBcmiPublished')) masterData.isBcmiPublished = true;
+  masterData.isBcmiPublished = true;
   if (Object.prototype.hasOwnProperty.call(flavourData, 'isNrcedPublished')) masterData.isNrcedPublished = false;
   if (Object.prototype.hasOwnProperty.call(flavourData, 'isLngPublished')) masterData.isLngPublished = false;
   masterData.sourceDateAdded = collectionDoc.document.dateAdded;
   masterData.sourceDateUpdated = collectionDoc.document.dateUpdated;
-  masterData.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, 'public'];
+  masterData.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   masterData.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   masterData.sourceSystemRef = 'mem-admin';
 
@@ -342,32 +341,32 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
 }
 
 function getRequest(url, asJson = true) {
-  return new Promise(function(resolve, reject) {
-      let req = https.get(url, function(res) {
-          if (res.statusCode < 200 || res.statusCode >= 300) {
-              return reject(new Error('statusCode=' + res.statusCode));
+  return new Promise(function (resolve, reject) {
+    let req = https.get(url, function (res) {
+      if (res.statusCode < 200 || res.statusCode >= 300) {
+        return reject(new Error('statusCode=' + res.statusCode));
+      }
+      let body = [];
+      res.on('data', function (chunk) {
+        body.push(chunk);
+      });
+      res.on('end', function () {
+        try {
+          if (asJson) {
+            body = JSON.parse(Buffer.concat(body).toString());
           }
-          let body = [];
-          res.on('data', function(chunk) {
-              body.push(chunk);
-          });
-          res.on('end', function() {
-              try {
-                if (asJson) {
-                  body = JSON.parse(Buffer.concat(body).toString());
-                }
-              } catch(e) {
-                  reject(e);
-              }
-              resolve(body);
-          });
+        } catch (e) {
+          reject(e);
+        }
+        resolve(body);
       });
+    });
 
-      req.on('error', function(err) {
-          reject(err);
-      });
+    req.on('error', function (err) {
+      reject(err);
+    });
 
-      req.end();
+    req.end();
   });
 }
 
