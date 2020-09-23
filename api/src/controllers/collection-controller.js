@@ -191,7 +191,6 @@ exports.protectedPost = async function (args, res, next) {
   next();
 }
 
-
 exports.protectedDelete = async function (args, res, next) {
   let collectionId = null;
   if (args.swagger.params.collectionId && args.swagger.params.collectionId.value) {
@@ -212,6 +211,96 @@ exports.protectedDelete = async function (args, res, next) {
 
   queryActions.sendResponse(res, 200, {});
   next();
+}
+
+/**
+ * Unpublishes all collections, their records and their documents for a mine.
+ * 
+ * @param {*} mineId - Mine to update
+ * @param {*} auth_payload - User authorization
+ */
+exports.unpublishCollections = async function (mineId, auth_payload) {
+  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const nrpti = db.collection('nrpti');
+
+  const collections = await nrpti.find({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName, project: mineId, write: { $in: auth_payload.realm_access.roles } }).toArray();
+  const promises = [];
+
+  try {
+    // Unpublish every collection, their records, and their documents.
+    for (const collection of collections) {
+      if (collection.records && collection.records.length) {
+        const records = await nrpti.find({ _id: { $in: collection.records }, write: { $in: auth_payload.realm_access.roles } }).toArray();
+
+        // Unpublish all documents of all records.
+        for (const record of records) {
+          if (record.documents && record.documents.length) {
+            promises.push(nrpti.updateMany({ _id: { $in: record.documents }, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } }));
+          }
+
+          // Unpublish the flavour record.
+          promises.push(nrpti.update({ _id: record._id, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public'} }));
+          
+          // Set the flag on the master record.
+          promises.push(nrpti.update({ _flavourRecords: record._id, write: { $in: auth_payload.realm_access.roles } }, { $set: { isBcmiPublished: false } }));
+        }
+      }
+
+      // Unpublish the collection.
+      promises.push(nrpti.update({ _id: collection._id, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public'} }));
+    }
+
+    await Promise.all(promises);
+  } catch (error) {
+    defaultLog.info(`unpublishCollections - error unpublishing mine collections: ${mineId}`);
+    defaultLog.debug(error);
+    throw new Error('Error unpublishing collections');
+  }
+}
+
+/**
+ * Publishes all collections, their records and their documents for a mine.
+ * 
+ * @param {*} mineId 
+ * @param {*} auth_payload 
+ */
+exports.publishCollections = async function (mineId, auth_payload) {
+  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const nrpti = db.collection('nrpti');
+
+  const collections = await nrpti.find({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName, project: mineId, write: { $in: auth_payload.realm_access.roles } }).toArray();
+  const promises = [];
+
+  try {
+    // Publish every collection, their records, and their documents.
+    for (const collection of collections) {
+      if (collection.records && collection.records.length) {
+        const records = await nrpti.find({ _id: { $in: collection.records }, write: { $in: auth_payload.realm_access.roles } }).toArray();
+
+        // Publish all documents of all records.
+        for (const record of records) {
+          if (record.documents && record.documents.length) {
+            promises.push(nrpti.updateMany({ _id: { $in: record.documents }, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } }));
+          }
+
+          // Publish the flavour record.
+          promises.push(nrpti.update({ _id: record._id, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public'} }));
+          
+          // Set the flag on the master record.
+          promises.push(nrpti.update({ _flavourRecords: record._id, write: { $in: auth_payload.realm_access.roles } }, { $set: { isBcmiPublished: true } }));
+        }
+      }
+
+      // Publish the collection.
+      promises.push(nrpti.update({ _id: collection._id, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public'} }));
+    }
+
+    await Promise.all(promises);
+  } catch (error) {
+    defaultLog.info(`publishCollections - error publishing mine collections: ${mineId}`);
+    defaultLog.debug(error);
+    throw new Error('Error publishing collections');
+  }
 }
 
 const checkRecordExistsInCollection = async function (records, collectionId, editing = false) {
