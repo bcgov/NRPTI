@@ -18,8 +18,6 @@ export class DamSafetyInspectionNRCED extends RecordModel {
   description: string;
   datePublished: Date;
   publishedBy: string;
-  isNrcedPublished: boolean;
-  isBcmiPublished: boolean;
 
   constructor(obj?: any) {
     super(obj);
@@ -37,8 +35,5 @@ export class DamSafetyInspectionNRCED extends RecordModel {
 
     this.datePublished = (obj && obj.datePublished) || null;
     this.publishedBy = (obj && obj.publishedBy) || '';
-
-    this.isNrcedPublished = (obj && obj.isNrcedPublished) || false;
-    this.isBcmiPublished = (obj && obj.isBcmiPublished) || false;
   }
 }
