@@ -386,7 +386,6 @@ exports.protectedUnPublish = async function (args, res, next) {
 
     queryActions.sendResponse(res, 200, unPublished);
   } catch (error) {
-    console.log(error)
     queryActions.sendResponse(res, 500, error);
   }
   next();
