@@ -303,7 +303,6 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
     // Skip
     console.log("Error setting dateIssued:", e);
   }
-  flavourData.isBcmiPublished = true;
   flavourData.sourceDateAdded = collectionDoc.document.dateAdded;
   flavourData.sourceDateUpdated = collectionDoc.document.dateUpdated;
   flavourData.sourceSystemRef = 'mem-admin';
