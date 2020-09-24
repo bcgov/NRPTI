@@ -414,7 +414,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
             alert('Failed to create collection.');
           } else {
             this.loadingScreenService.setLoadingState(false, 'main');
-            this.router.navigate(['mines', this.collection._master, 'collections', this.collection._id, 'detail']);
+            this.router.navigate(['mines', this.collection.project, 'collections', this.collection._id, 'detail']);
           }
         } else {
           collection['_master'] = this.route.snapshot.paramMap.get('mineId');
