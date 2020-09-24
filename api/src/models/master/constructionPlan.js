@@ -7,7 +7,7 @@ module.exports = require('../../utils/model-schema-generator')(
     _epicProjectId: { type: 'ObjectId', default: null, index: true },
     _sourceRefId: { type: 'ObjectId', default: null, index: true },
     _epicMilestoneId: { type: 'ObjectId', default: null, index: true },
-    collectionId:     { type: 'ObjectId', default: null },
+    collectionId: { type: 'ObjectId', default: null },
     mineGuid: { type: String, default: null, index: true },
 
     read: [{ type: String, trim: true, default: 'sysadmin' }],
@@ -18,7 +18,7 @@ module.exports = require('../../utils/model-schema-generator')(
     recordName: { type: String, default: '' },
     recordType: { type: String, default: '' },
     dateIssued: { type: Date, default: null },
-    agency: { type: String, default: '' },
+    issuingAgency: { type: String, default: '' },
     author: { type: String, default: '' },
     projectName: { type: String, default: '' },
     location: { type: String, default: '' },

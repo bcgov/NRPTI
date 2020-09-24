@@ -28,10 +28,10 @@ const utils = require('../../utils/constants/misc');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createItem = async function (args, res, next, incomingObj) {
+exports.createItem = async function(args, res, next, incomingObj) {
   const flavourFunctions = {
     ConstructionPlanLNG: this.createLNG
-  }
+  };
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
@@ -60,7 +60,7 @@ exports.createItem = async function (args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master constructionPlan record
  */
-exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   let ConstructionPlan = mongoose.model('ConstructionPlan');
   let constructionPlan = new ConstructionPlan();
 
@@ -97,7 +97,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.recordName && (constructionPlan.recordName = incomingObj.recordName);
   constructionPlan.recordType = 'Construction Plan';
   incomingObj.dateIssued && (constructionPlan.dateIssued = incomingObj.dateIssued);
-  incomingObj.agency && (constructionPlan.agency = incomingObj.agency);
+  incomingObj.issuingAgency && (constructionPlan.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (constructionPlan.author = incomingObj.author);
   incomingObj.projectName && (constructionPlan.projectName = incomingObj.projectName);
   incomingObj.location && (constructionPlan.location = incomingObj.location);
@@ -141,9 +141,14 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created lng constructionPlan record
  */
-exports.createLNG = function (args, res, next, incomingObj) {
+exports.createLNG = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG],
+      args.swagger.params.auth_payload.realm_access.roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -181,7 +186,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.recordName && (constructionPlanLNG.recordName = incomingObj.recordName);
   constructionPlanLNG.recordType = 'Construction Plan';
   incomingObj.dateIssued && (constructionPlanLNG.dateIssued = incomingObj.dateIssued);
-  incomingObj.agency && (constructionPlanLNG.agency = incomingObj.agency);
+  incomingObj.issuingAgency && (constructionPlanLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (constructionPlanLNG.author = incomingObj.author);
   incomingObj.projectName && (constructionPlanLNG.projectName = incomingObj.projectName);
   incomingObj.location && (constructionPlanLNG.location = incomingObj.location);
