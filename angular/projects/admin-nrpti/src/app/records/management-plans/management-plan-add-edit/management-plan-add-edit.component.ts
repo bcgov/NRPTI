@@ -110,8 +110,8 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
           '',
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
-      agency: new FormControl({
-        value: (this.currentRecord && this.currentRecord.agency) || '',
+      issuingAgency: new FormControl({
+        value: (this.currentRecord && this.currentRecord.issuingAgency) || '',
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       author: new FormControl({
@@ -189,7 +189,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.recordName.dirty && (managementPlan['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.dateIssued.dirty &&
       (managementPlan['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
-    this.myForm.controls.agency.dirty && (managementPlan['agency'] = this.myForm.controls.agency.value);
+    this.myForm.controls.issuingAgency.dirty && (managementPlan['issuingAgency'] = this.myForm.controls.issuingAgency.value);
     this.myForm.controls.author.dirty && (managementPlan['author'] = this.myForm.controls.author.value);
 
     // Project name logic
