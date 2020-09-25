@@ -162,10 +162,6 @@ export class MinesRecordsEditComponent implements OnInit {
           (this.record && this.record.issuingAgency) || '',
         disabled: (this.record && this.record.sourceSystemRef !== 'nrpti')
       }),
-      recordPublish: new FormControl(
-        (this.recordState && this.recordState.recordPublish) ||
-        (this.record && this.record.isBcmiPublished) || false
-      )
     });
 
     this.myForm.get('recordType').disable();
