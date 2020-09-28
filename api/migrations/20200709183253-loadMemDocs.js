@@ -212,7 +212,7 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   document.addedBy = 'BCMI Mine Doc Import';
   document.url = `https://${OBJ_STORE_URL}/${OBJ_STORE_BUCKET}/${document._id}/${collectionDoc.document.displayName}`;
   document.key = s3Key;
-  document.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  document.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, 'public'];
   document.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // upload to s3
