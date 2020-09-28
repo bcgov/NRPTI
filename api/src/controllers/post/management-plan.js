@@ -114,6 +114,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.sourceDateUpdated && (managementPlan.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (managementPlan.sourceSystemRef = incomingObj.sourceSystemRef);
   incomingObj.isLngPublished && (managementPlan.isLngPublished = incomingObj.isLngPublished);
+  incomingObj.isBcmiPublished && (managementPlan.isBcmiPublished = incomingObj.isBcmiPublished);
 
   return managementPlan;
 };

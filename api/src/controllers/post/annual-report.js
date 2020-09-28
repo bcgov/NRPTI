@@ -254,7 +254,6 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (annualReportBCMI.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (annualReportBCMI.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (annualReportBCMI.sourceSystemRef = incomingObj.sourceSystemRef);
-  incomingObj.isBcmiPublished && (annualReportBCMI.isBcmiPublished = incomingObj.isBcmiPublished);
 
   return annualReportBCMI;
 };

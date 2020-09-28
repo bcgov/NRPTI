@@ -30,7 +30,7 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
   }
 
   public isPublished() {
-    return this.rowData.isBcmiPublished;
+    return this.rowData.read.includes('public');
   }
   public getAttributeValue(attribute) {
     return this.rowData[attribute] || '-';

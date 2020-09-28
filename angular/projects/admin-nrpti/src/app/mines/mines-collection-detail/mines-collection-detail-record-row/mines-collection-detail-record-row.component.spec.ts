@@ -21,7 +21,7 @@ describe('MinesTableRowComponent', () => {
   it('should create', () => {
     const { component, fixture } = testBedHelper.createComponent(false);
 
-    component.rowData = {};
+    component.rowData = { read: [] };
 
     fixture.detectChanges();
 

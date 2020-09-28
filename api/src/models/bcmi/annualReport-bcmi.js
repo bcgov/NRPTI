@@ -46,7 +46,6 @@ module.exports = require('../../utils/model-schema-generator')(
     sourceDateUpdated:      { type: Date, default: null },
     sourceSystemRef:        { type: String, default: 'nrpti' },
     datePublished:          { type: Date, default: null },
-    isBcmiPublished:        { type: Boolean, default: false, index: true }
   },
   'nrpti'
 );

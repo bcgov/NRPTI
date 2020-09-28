@@ -256,8 +256,6 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (damSafetyInspectionBCMI.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (damSafetyInspectionBCMI.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (damSafetyInspectionBCMI.sourceSystemRef = incomingObj.sourceSystemRef);
-  incomingObj.isBcmiPublished && (damSafetyInspectionBCMI.isBcmiPublished = incomingObj.isBcmiPublished);
-  incomingObj.isNrcedPublished && (damSafetyInspectionBCMI.isNrcedPublished = incomingObj.isNrcedPublished);
 
   return damSafetyInspectionBCMI;
 };
@@ -367,8 +365,6 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (damSafetyInspectionNRCED.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (damSafetyInspectionNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (damSafetyInspectionNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
-  incomingObj.isBcmiPublished && (damSafetyInspectionNRCED.isBcmiPublished = incomingObj.isBcmiPublished);
-  incomingObj.isNrcedPublished && (damSafetyInspectionNRCED.isNrcedPublished = incomingObj.isNrcedPublished);
 
   return damSafetyInspectionNRCED;
 };

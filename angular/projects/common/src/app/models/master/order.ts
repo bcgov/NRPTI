@@ -29,6 +29,8 @@ export class Order extends RecordModel {
   OrderNRCED: object;
 
   isBcmiPublished: boolean;
+  isLngPublished: boolean;
+  isNrcedPublished: boolean;
 
   constructor(obj?: any) {
     super(obj);
@@ -49,5 +51,7 @@ export class Order extends RecordModel {
     this.outcomeDescription = (obj && obj.outcomeDescription) || null;
     this.documents = (obj && obj.documents) || null;
     this.isBcmiPublished = (obj && obj.isBcmiPublished) || false;
+    this.isLngPublished = (obj && obj.isLngPublished) || false;
+    this.isNrcedPublished = (obj && obj.isNrcedPublished) || false;
   }
 }
