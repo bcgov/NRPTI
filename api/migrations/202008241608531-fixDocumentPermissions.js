@@ -50,7 +50,7 @@ async function updatePermissions(document) {
   }
 
   if (!document.read || !document.key) {
-    throw new Error(`Error processing document ${document._id}: Document missing read or key property`);
+    return;
   }
 
   try {

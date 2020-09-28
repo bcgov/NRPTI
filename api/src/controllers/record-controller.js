@@ -294,8 +294,8 @@ exports.protectedPublish = async function (args, res, next) {
       const masterModel = require('mongoose').model(masterSchema);
       await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isLngPublished: true });
     }
-    else if (recordData._schemaName !== 'CollectionBCMI' && recordData._schemaName.includes('BCMI')) {
-      const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 3);
+    else if (!['CollectionBCMI', 'MineBCMI'].includes(recordData._schemaName) && recordData._schemaName.includes('BCMI')) {
+      const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 4);
       const masterModel = require('mongoose').model(masterSchema);
       await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isBcmiPublished: true });
     }
@@ -316,6 +316,11 @@ exports.protectedPublish = async function (args, res, next) {
       }
     }
 
+    // This should also publish any collections and their documents.
+    if (published._schemaName === 'MineBCMI') {
+      await collectionController.publishCollections(published._id, args.swagger.params.auth_payload);
+    }
+  
     queryUtils.audit(args, 'Publish', record, args.swagger.params.auth_payload, record._id);
 
     queryActions.sendResponse(res, 200, published);
@@ -351,8 +356,9 @@ exports.protectedUnPublish = async function (args, res, next) {
       const masterModel = require('mongoose').model(masterSchema);
       await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isLngPublished: false });
     }
-    else if (recordData._schemaName.includes('BCMI')) {
-      const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 3);
+    // Mines are a special case where they have no master and only exist as the BCMI flavour.
+    else if (recordData._schemaName.includes('BCMI') && recordData._schemaName !== 'MineBCMI') {
+      const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 4);
       const masterModel = require('mongoose').model(masterSchema);
       await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isBcmiPublished: false });
     }
@@ -369,6 +375,11 @@ exports.protectedUnPublish = async function (args, res, next) {
       for (const docId of unPublished.documents) {
         await documentController.unpublishDocument(docId, args.swagger.params.auth_payload);
       }
+    }
+
+    // This should also unpublish any collections and their documents.
+    if (unPublished._schemaName === 'MineBCMI') {
+      await collectionController.unpublishCollections(unPublished._id, args.swagger.params.auth_payload);
     }
 
     queryUtils.audit(args, 'UnPublish', record, args.swagger.params.auth_payload, record._id);
