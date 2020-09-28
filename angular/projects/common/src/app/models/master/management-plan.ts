@@ -11,7 +11,7 @@ export class ManagementPlan extends RecordModel {
   _epicMilestoneId: string;
 
   dateIssued: Date;
-  agency: string;
+  issuingAgency: string;
   author: string;
   description: string;
   documents: object[];
@@ -30,7 +30,7 @@ export class ManagementPlan extends RecordModel {
     this._epicMilestoneId = (obj && obj._epicMilestoneId) || null;
 
     this.dateIssued = (obj && obj.dateIssued) || null;
-    this.agency = (obj && obj.agency) || null;
+    this.issuingAgency = (obj && obj.issuingAgency) || null;
     this.author = (obj && obj.author) || null;
     this.description = (obj && obj.description) || null;
     this.documents = (obj && obj.documents) || null;

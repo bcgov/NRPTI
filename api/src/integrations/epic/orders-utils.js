@@ -49,15 +49,15 @@ class Orders extends BaseRecordUtils {
 
     return {
       ...(await super.transformRecord(epicRecord)),
-      issuingAgency: 'Environmental Assessment Office',
+      issuingAgency: 'EAO',
       author: epicRecord.documentAuthor || '',
       legislation: legislation,
       legislationDescription: 'Order to cease or remedy.',
       issuedTo: {
         // Epic doesn't support `Individual` proponents
         type: 'Company',
-        companyName: epicRecord.project.proponent && this.getCompanyName(epicRecord.project.proponent) || '',
-        fullName: epicRecord.project.proponent && this.getCompanyName(epicRecord.project.proponent) || ''
+        companyName: (epicRecord.project.proponent && this.getCompanyName(epicRecord.project.proponent)) || '',
+        fullName: (epicRecord.project.proponent && this.getCompanyName(epicRecord.project.proponent)) || ''
       }
     };
   }
