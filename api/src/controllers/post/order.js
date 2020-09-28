@@ -162,6 +162,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.sourceSystemRef && (order.sourceSystemRef = incomingObj.sourceSystemRef);
   incomingObj.isNrcedPublished && (order.isNrcedPublished = incomingObj.isNrcedPublished);
   incomingObj.isLngPublished && (order.isLngPublished = incomingObj.isLngPublished);
+  incomingObj.isBcmiPublished && (order.isBcmiPublished = incomingObj.isBcmiPublished);
 
   return order;
 };

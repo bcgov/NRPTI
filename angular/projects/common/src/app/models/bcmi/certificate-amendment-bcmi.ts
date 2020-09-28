@@ -21,8 +21,6 @@ export class CertificateAmendmentBCMI extends RecordModel {
   description: string;
   datePublished: Date;
   publishedBy: string;
-  isLngPublished: boolean;
-  isBcmiPublished: boolean;
 
   constructor(obj?: any) {
     super(obj);
@@ -44,8 +42,5 @@ export class CertificateAmendmentBCMI extends RecordModel {
 
     this.datePublished = (obj && obj.datePublished) || null;
     this.publishedBy = (obj && obj.publishedBy) || '';
-
-    this.isLngPublished = (obj && obj.isLngPublished) || false;
-    this.isBcmiPublished = (obj && obj.isBcmiPublished) || false;
   }
 }

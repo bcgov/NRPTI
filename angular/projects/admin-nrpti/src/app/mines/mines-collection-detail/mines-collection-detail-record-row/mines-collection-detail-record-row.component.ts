@@ -30,4 +30,8 @@ export class MinesCollectionRecordTableRowComponent extends TableRowComponent im
   formatDate(date: Date): string {
     return moment(date).format('MMMM DD, YYYY');
   }
+
+  isPublished() {
+    return this.rowData.read.includes('public');
+  }
 }

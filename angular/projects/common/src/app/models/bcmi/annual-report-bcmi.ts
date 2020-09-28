@@ -18,7 +18,6 @@ export class AnnualReportBCMI extends RecordModel {
   description: string;
   datePublished: Date;
   publishedBy: string;
-  isBcmiPublished: boolean;
 
   constructor(obj?: any) {
     super(obj);
@@ -36,7 +35,5 @@ export class AnnualReportBCMI extends RecordModel {
 
     this.datePublished = (obj && obj.datePublished) || null;
     this.publishedBy = (obj && obj.publishedBy) || '';
-
-    this.isBcmiPublished = (obj && obj.isBcmiPublished) || false;
   }
 }

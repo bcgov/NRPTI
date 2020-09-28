@@ -25,6 +25,8 @@ export class Warning extends RecordModel {
 
   WarningNRCED: object;
   WarningLNG: object;
+  isLngPublished: boolean;
+  isNrcedPublished: boolean;
 
   constructor(obj?: any) {
     super(obj);
@@ -42,5 +44,7 @@ export class Warning extends RecordModel {
     this.outcomeStatus = (obj && obj.outcomeStatus) || null;
     this.outcomeDescription = (obj && obj.outcomeDescription) || null;
     this.documents = (obj && obj.documents) || null;
+    this.isLngPublished = (obj && obj.isLngPublished) || false;
+    this.isNrcedPublished = (obj && obj.isNrcedPublished) || false;
   }
 }

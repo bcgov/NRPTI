@@ -274,8 +274,6 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (reportBCMI.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (reportBCMI.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (reportBCMI.sourceSystemRef = incomingObj.sourceSystemRef);
-  incomingObj.isBcmiPublished && (reportBCMI.isBcmiPublished = incomingObj.isBcmiPublished);
-  incomingObj.isNrcedPublished && (reportBCMI.isNrcedPublished = incomingObj.isNrcedPublished);
 
   return reportBCMI;
 };
@@ -391,8 +389,6 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (reportNRCED.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (reportNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (reportNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
-  incomingObj.isBcmiPublished && (reportNRCED.isBcmiPublished = incomingObj.isBcmiPublished);
-  incomingObj.isNrcedPublished && (reportNRCED.isNrcedPublished = incomingObj.isNrcedPublished);
 
   return reportNRCED;
 };

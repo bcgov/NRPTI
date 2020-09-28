@@ -24,6 +24,8 @@ export class Ticket extends RecordModel {
 
   TicketNRCED: object;
   TicketLNG: object;
+  isLngPublished: boolean;
+  isNrcedPublished: boolean;
 
   constructor(obj?: any) {
     super(obj);
@@ -41,5 +43,7 @@ export class Ticket extends RecordModel {
     this.penalties =
       (obj && obj.penalties && obj.penalties.length && obj.penalties.map(penalty => new Penalty(penalty))) || null;
     this.documents = (obj && obj.documents) || null;
+    this.isLngPublished = (obj && obj.isLngPublished) || false;
+    this.isNrcedPublished = (obj && obj.isNrcedPublished) || false;
   }
 }

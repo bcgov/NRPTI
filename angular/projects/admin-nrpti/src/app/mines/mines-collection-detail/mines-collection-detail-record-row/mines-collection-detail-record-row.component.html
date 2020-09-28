@@ -4,7 +4,7 @@
 <td scope="row" data-label="Source System" class="col-2">{{ rowData && rowData.sourceSystemRef || '-' }}</td>
 <td scope="row" data-label="Date" class="col-2">{{ (rowData.dateIssued && formatDate(rowData.dateIssued)) || '-' }}</td>
 <td scope="row" data-label="Published State" class="col-2 d-lg-flex">
-  <div *ngIf="rowData.isBcmiPublished; then published; else unpublished"></div>
+  <div *ngIf="isPublished(); then published; else unpublished"></div>
   <ng-template #published class="test">
     <em class="material-icons published-green">check_circle</em>
     <span class="publish-label pl-1 published-green">Published</span>

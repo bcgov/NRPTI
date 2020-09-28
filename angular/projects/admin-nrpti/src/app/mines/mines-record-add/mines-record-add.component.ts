@@ -131,7 +131,10 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
     if (record['recordType'] === 'Permit') {
       record[schemaString]['typeCode'] = this.myForm.get('typeCode').value;
     }
-
+    // add public if created in collection so isPublished flag is set on master
+    if (this.collectionId) {
+      record[schemaString]['addRole'] = 'public';
+    }
     if (this.returnObjInsteadOfSubmit) {
       record['savePending'] = true;
       this.addedRecord.emit({ record: record, documents: this.documents, links: this.links });
@@ -141,7 +144,6 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
 
       // API responds with the master and BCMI flavour records that were created. First record is the BCMI flavour and second is the master.
       const createdRecord = res && res[0] && res[0].length && res[0][0] && res[0][0].object;
-
       await this.recordUtils.handleDocumentChanges(
         this.links,
         this.documents,

@@ -28,6 +28,8 @@ export class Permit extends RecordModel {
 
   // Fields for saving flavour in API.
   PermitLNG: object;
+  isBcmiPublished: boolean;
+  isLngPublished: boolean;
 
   constructor(obj?: any) {
     super(obj);
@@ -47,5 +49,7 @@ export class Permit extends RecordModel {
     this.amendmentStatusCode = (obj && obj.amendmentStatusCode) || null;
     this.typeCode = (obj && obj.typeCode) || null;
     this.originalPermit = (obj && obj.originalPermit) || null;
+    this.isBcmiPublished = (obj && obj.isBcmiPublished) || false;
+    this.isLngPublished = (obj && obj.isLngPublished) || false;
   }
 }
