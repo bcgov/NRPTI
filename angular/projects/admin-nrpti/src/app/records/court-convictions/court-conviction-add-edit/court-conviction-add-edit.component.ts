@@ -9,6 +9,7 @@ import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
+import { Constants } from '../../../utils/constants/misc';
 
 @Component({
   selector: 'app-court-conviction-add-edit',
@@ -39,6 +40,8 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
   public documents = [];
   public links = [];
   public documentsToDelete = [];
+
+  public datepickerMinDate = Constants.DatepickerMinDate;
 
   constructor(
     private route: ActivatedRoute,

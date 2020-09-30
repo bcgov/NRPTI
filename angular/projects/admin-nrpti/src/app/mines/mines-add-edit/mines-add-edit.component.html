@@ -141,16 +141,6 @@
     <section class="my-3 py-3">
       <app-link-add-edit [formArray]="myForm.get('links')"></app-link-add-edit>
     </section>
-    <section class="my-3 py-3 border-bottom">
-      <div class="d-flex">
-        <div>
-          <h2 class="border-0">Records</h2>
-        </div>
-      </div>
-    </section>
-    <section class="my-3 py-3">
-      <!-- TODO records/collections -->
-    </section>
   </form>
   <div class="d-flex flex-row-reverse mt-4 mb-3">
     <button [disabled]="!isFormValid()" class="btn btn-primary" type="submit" (click)="submit()" title="Update">

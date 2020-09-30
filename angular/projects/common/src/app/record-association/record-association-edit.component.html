@@ -12,7 +12,7 @@
     </div>
     <div class="flex-container mb-2">
       <div class="label-pair">
-        <label for="mineGuid">Mine Guid</label>
+        <label for="mineGuid">Mine Name</label>
         <select name="mineGuid" id="mineGuid" formControlName="mineGuid" class="form-control">
           <option *ngFor="let mine of mines" [ngValue]="mine._sourceRefId">
             {{ mine.name }}
