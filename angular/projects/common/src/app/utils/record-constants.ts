@@ -56,8 +56,8 @@ export class SchemaLists {
     'DamSafetyInspectionBCMI',
     'InspectionBCMI',
     'ManagementPlanBCMI',
-    'PermitBCMI',
     'OrderBCMI',
+    'PermitBCMI',
     'PermitAmendmentBCMI',
     'ReportBCMI'
   ];
