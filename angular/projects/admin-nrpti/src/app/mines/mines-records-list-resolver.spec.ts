@@ -82,8 +82,8 @@ describe('MinesRecordsListResolver', () => {
             'DamSafetyInspectionBCMI',
             'InspectionBCMI',
             'ManagementPlanBCMI',
-            'PermitBCMI',
             'OrderBCMI',
+            'PermitBCMI',
             'PermitAmendmentBCMI',
             'ReportBCMI'
           ],
@@ -151,8 +151,8 @@ describe('MinesRecordsListResolver', () => {
             'DamSafetyInspectionBCMI',
             'InspectionBCMI',
             'ManagementPlanBCMI',
-            'PermitBCMI',
             'OrderBCMI',
+            'PermitBCMI',
             'PermitAmendmentBCMI',
             'ReportBCMI'
           ],
