@@ -10,6 +10,7 @@ import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
 import { LoadingScreenService, LoggerService } from 'nrpti-angular-components';
+import { Constants } from '../../../utils/constants/misc';
 
 @Component({
   selector: 'app-administrative-sanction-add-edit',
@@ -39,6 +40,8 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
   public documents = [];
   public links = [];
   public documentsToDelete = [];
+
+  public datepickerMinDate = Constants.DatepickerMinDate;
 
   constructor(
     public route: ActivatedRoute,

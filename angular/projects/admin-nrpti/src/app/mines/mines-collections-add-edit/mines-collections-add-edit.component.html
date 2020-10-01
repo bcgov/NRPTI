@@ -58,7 +58,8 @@
           <label for="collectionDate">Date</label>
           <lib-date-picker
             [control]="myForm.controls.collectionDate"
-            [isValidate]="true">
+            [isValidate]="true"
+            [minDate]="minDateYear">
           </lib-date-picker>
         </div>
         <div class="label-pair">
