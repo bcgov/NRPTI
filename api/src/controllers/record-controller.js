@@ -422,9 +422,9 @@ const processPostRequest = async function (args, res, next, property, data) {
       const bcmiFlavourSchemaName = typeMethods.schemaName.concat('BCMI');
       if (
         RecordTypeEnum.BCMI_SCHEMA_NAMES.includes(bcmiFlavourSchemaName) &&
-        !data[bcmiFlavourSchemaName]
+        !data[i][bcmiFlavourSchemaName]
       ) {
-        data[bcmiFlavourSchemaName] = {};
+        data[i][bcmiFlavourSchemaName] = {};
       }
       promises.push(typeMethods.add.createItem(args, res, next, data[i]));
     } else {
