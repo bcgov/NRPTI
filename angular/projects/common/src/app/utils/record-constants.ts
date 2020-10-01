@@ -49,15 +49,18 @@ export class SchemaLists {
     'Report'
   ];
 
-  public static readonly bcmiRecordTypes = SchemaLists.allBasicRecordTypes.concat([
-    'PermitBCMI',
-    'PermitAmendmentBCMI',
+  public static readonly bcmiRecordTypes = [
     'AnnualReportBCMI',
     'CertificateAmendmentBCMI',
     'CorrespondenceBCMI',
     'DamSafetyInspectionBCMI',
+    'InspectionBCMI',
+    'ManagementPlanBCMI',
+    'PermitBCMI',
+    'OrderBCMI',
+    'PermitAmendmentBCMI',
     'ReportBCMI'
-  ]);
+  ];
 
   // set schema filters
   public static readonly nrcedPublicBasicRecordTypes = [

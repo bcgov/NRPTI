@@ -345,7 +345,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesCollectionsAddEditComponent
    */
   async submit() {
-    if (this.myForm.get('collectionRecords').value.length === 0 && this.recordsToUnlink.length === 0) {
+    if (this.myForm.get('collectionRecords').value.length === 0 && this.pendingRecords.length === 0) {
       alert('You must add at least one record.');
       this.loadingScreenService.setLoadingState(false, 'main');
       return;

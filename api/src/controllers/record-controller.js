@@ -78,7 +78,6 @@ const ACCEPTED_DATA_TYPES = [
   { type: 'correspondences', add: AddCorrespondence, edit: EditCorrespondence },
   { type: 'damSafetyInspections', add: AddDamSafetyInspection, edit: EditDamSafetyInspection },
   { type: 'reports', add: AddReport, edit: EditReport },
-  { type: 'collections', add: collectionController , edit: collectionController }
 ];
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
@@ -320,7 +319,7 @@ exports.protectedPublish = async function (args, res, next) {
     if (published._schemaName === 'MineBCMI') {
       await collectionController.publishCollections(published._id, args.swagger.params.auth_payload);
     }
-  
+
     queryUtils.audit(args, 'Publish', record, args.swagger.params.auth_payload, record._id);
 
     queryActions.sendResponse(res, 200, published);
@@ -419,6 +418,16 @@ const processPostRequest = async function (args, res, next, property, data) {
   do {
     const typeMethods = ACCEPTED_DATA_TYPES.find(t => t.type === property);
     if (typeMethods) {
+      // Force the creation of a BCMI flavour.
+      let bcmiFlavourSchemaName = property.slice(0, -1);
+      bcmiFlavourSchemaName = bcmiFlavourSchemaName.charAt(0).toUpperCase() + bcmiFlavourSchemaName.slice(1);
+      bcmiFlavourSchemaName = bcmiFlavourSchemaName.concat('BCMI');
+      if (
+        RecordTypeEnum.BCMI_SCHEMA_NAMES.includes(bcmiFlavourSchemaName) &&
+        !data[bcmiFlavourSchemaName]
+      ) {
+        data[bcmiFlavourSchemaName] = {};
+      }
       promises.push(typeMethods.add.createItem(args, res, next, data[i]));
     } else {
       return {

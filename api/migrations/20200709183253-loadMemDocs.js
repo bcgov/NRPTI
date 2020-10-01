@@ -336,7 +336,8 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
 
   await nrpti.insertOne(masterData);
 
-  return masterData;
+  // We now store flavour records in the collection records array.
+  return flavourData;
 }
 
 function getRequest(url, asJson = true) {

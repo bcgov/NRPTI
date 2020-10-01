@@ -16,7 +16,7 @@ const CORE_CLIENT_ID = process.env.CORE_CLIENT_ID || null;
 const CORE_CLIENT_SECRET = process.env.CORE_CLIENT_SECRET || null;
 const CORE_GRANT_TYPE = process.env.CORE_GRANT_TYPE || null;
 
-const CORE_API_HOST = process.env.CORE_API_HOST|| 'https://minesdigitalservices.gov.bc.ca';
+const CORE_API_HOST = process.env.CORE_API_HOST || 'https://minesdigitalservices.gov.bc.ca';
 const CORE_API_PATH_MINES = process.env.CORE_API_PATH_MINES || '/api/mines';
 const CORE_API_PATH_COMMODITIES = process.env.CORE_API_PATH_COMMODITIES || '/api/mines/commodity-codes';
 
@@ -41,7 +41,7 @@ class CoreDataSource {
     defaultLog.info('run - update core datasource');
     await this.taskAuditRecord.updateTaskRecord({ status: 'Running' });
 
-    try{
+    try {
       // Get a new API access token.
       this.client_token = await getCoreAccessToken(CORE_CLIENT_ID, CORE_CLIENT_SECRET, CORE_GRANT_TYPE);
 
@@ -51,9 +51,9 @@ class CoreDataSource {
       if (this.status.individualRecordStatus.length) {
         defaultLog.error('CoreDataSource - error processing some records');
         // This means there was an error on one or more records, but the the job still completed.
-       for (const error of this.status.individualRecordStatus) {
-         defaultLog.error(`Core record: ${error.coreId}, error: ${error.error}`);
-       }
+        for (const error of this.status.individualRecordStatus) {
+          defaultLog.error(`Core record: ${error.coreId}, error: ${error.error}`);
+        }
       }
     }
     catch (error) {
@@ -109,7 +109,7 @@ class CoreDataSource {
       await this.processRecords(utils, coreRecords);
     } catch (error) {
       defaultLog.error(`updateRecords - unexpected error: ${error.message}`);
-      throw(error);
+      throw (error);
     }
   }
 
@@ -120,14 +120,14 @@ class CoreDataSource {
    * @memberof CoreDataSource
    */
   async getAllRecordData() {
-    try{
+    try {
       const verifiedMines = await this.getVerifiedMines();
       const minesWithDetails = await this.addMinesDetails(verifiedMines);
 
       return minesWithDetails;
     } catch (error) {
       defaultLog.error(`getAllRecordData - unexpected error: ${error.message}`);
-      throw(error);
+      throw (error);
     }
   }
 
@@ -161,7 +161,7 @@ class CoreDataSource {
       defaultLog.error(`processRecords - unexpected error: ${error.message}`);
       // Throwing this error will stop the processing. This will only occur if there is an issue
       // getting commodities. Single record processing errors silently and won't trigger this.
-      throw(error);
+      throw (error);
     }
   }
 
@@ -268,8 +268,8 @@ class CoreDataSource {
       // If 'null' then it is considered valid.
       // Otherwise, if the status is O, it's valid. (date 9999 check removed)
       if ((permit.permit_amendments.length &&
-          !permit.permit_amendments[0].authorization_end_date) ||
-          permit.permit_status_code === 'O') {
+        !permit.permit_amendments[0].authorization_end_date) ||
+        permit.permit_status_code === 'O') {
         // There should only be a single record. If there is more then we need to identify the most
         // recent permit as the official valid permit
         if (validPermit) {
@@ -282,10 +282,10 @@ class CoreDataSource {
             proposedPermitNo = permit.permit_no.split('-');
 
             validPermit = Number.parseInt(validPermitNo[validPermitNo.length - 1]) >
-                          Number.parseInt(proposedPermitNo[proposedPermitNo.length - 1])
-                          ? validPermit
-                          : permit;
-          } catch(error) {
+              Number.parseInt(proposedPermitNo[proposedPermitNo.length - 1])
+              ? validPermit
+              : permit;
+          } catch (error) {
             throw new Error(`Failed to parse permit numbers [ ${validPermitNo} / ${proposedPermitNo} ]`);
           }
         } else {
@@ -386,7 +386,7 @@ class CoreDataSource {
    * @memberof CoreDataSource
    */
   async getVerifiedMines() {
-    try{
+    try {
       let currentPage = 1;
       let totalPages = 1;
       let mineRecords = [];
@@ -430,7 +430,7 @@ class CoreDataSource {
       return activeMines;
     } catch (error) {
       defaultLog.error(`getVerifiedMines - unexpected error: ${error.message}`);
-      throw(error);
+      throw (error);
     }
   }
 
@@ -482,8 +482,8 @@ class CoreDataSource {
 
     // For each amendment find the existing documents and create a collection.
     for (const amendment of permit.permit_amendments) {
-      const Permit = mongoose.model('Permit');
-      const existingPermits = await Permit.find({ _schemaName: 'Permit', _sourceRefId: amendment.permit_amendment_guid });
+      const PermitBCMI = mongoose.model('PermitBCMI');
+      const existingPermits = await PermitBCMI.find({ _schemaName: 'PermitBCMI', _sourceRefId: amendment.permit_amendment_guid });
 
       const collection = {
         _master: mineRecord._id,

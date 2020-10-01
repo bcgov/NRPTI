@@ -79,6 +79,12 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
       } else if (item === 'isBcmiPublished' && entry === 'false') {
         return { $or: [{ isBcmiPublished: { $exists: false } }, { isBcmiPublished: false }] }
       }
+      // Checks if root item is published
+      if (item === 'isPublished' && entry === 'true') {
+        return { read: { $in: ['public'] } };
+      } else if (item === 'isBcmiPublished' && entry === 'false') {
+        return { read: { $nin: ['public'] } };
+      }
 
       return getConvertedValue(item, entry, comparisonOperator);
     })
@@ -227,8 +233,8 @@ const handleDateEndItem = function (field, entry) {
  * @param {*} fieldName name of the array field to count.
  * @returns {object} aggregation pipeline stage
  */
-const addArrayCountField = function(fieldName) {
-  if(!fieldName) {
+const addArrayCountField = function (fieldName) {
+  if (!fieldName) {
     return {};
   }
 
@@ -246,7 +252,7 @@ const addArrayCountField = function(fieldName) {
 };
 exports.addArrayCountField = addArrayCountField;
 
-let searchCollection = async function(
+let searchCollection = async function (
   roles,
   keywords,
   schemaName,
@@ -326,10 +332,10 @@ let searchCollection = async function(
     aggregation.push({
       $addFields: {
         hasCollection: {
-          $cond: [{ $eq: [ '$collectionId', null ] }, false, true ]
+          $cond: [{ $eq: ['$collectionId', null] }, false, true]
         }
       }
-    },{
+    }, {
       $match: { hasCollection: hasCollection }
     });
   }
@@ -360,7 +366,8 @@ let searchCollection = async function(
             ]
           },
           then: 'published',
-          else: 'unpublished' }
+          else: 'unpublished'
+        }
       }
     }
   });
@@ -430,18 +437,18 @@ let searchCollection = async function(
         fullRecord: 1,
         issuedToAge: {
           $cond: {
-            if: { $ne: [ { $arrayElemAt: [ '$fullRecord.issuedTo.dateOfBirth', 0 ]}, null ] },
+            if: { $ne: [{ $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }, null] },
             then: {
               $subtract: [
-                { $year: {date: new Date() } },
-                { $year: { date: { $arrayElemAt: [ '$fullRecord.issuedTo.dateOfBirth', 0 ] } } }
+                { $year: { date: new Date() } },
+                { $year: { date: { $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] } } }
               ]
             },
             else: 0
           }
         }
       }
-    },{
+    }, {
       $addFields: {
         'fullRecord.issuedTo.firstName': {
           $cond: {
@@ -485,11 +492,11 @@ let searchCollection = async function(
   searchResultAggregation.push({
     $replaceRoot: {
       newRoot: {
-              $mergeObjects: [
-                { $arrayElemAt: [ "$fullRecord", 0 ] },
-                "$$ROOT" ]
-            }
+        $mergeObjects: [
+          { $arrayElemAt: ["$fullRecord", 0] },
+          "$$ROOT"]
       }
+    }
   });
 
   // populate refs
@@ -709,7 +716,7 @@ const executeQuery = async function (args, res, next) {
     'Search',
     keywords,
     args.swagger.params.auth_payload ? args.swagger.params.auth_payload
-                                     : { idir_userid: null, displayName: 'public', preferred_username: 'public' }
+      : { idir_userid: null, displayName: 'public', preferred_username: 'public' }
   );
 
   let sortDirection = undefined;
@@ -766,9 +773,9 @@ const executeQuery = async function (args, res, next) {
         }
       }, {
         $addFields: {
-          'collectionRecords.isLink': { 
+          'collectionRecords.isLink': {
             $cond: [
-              { $ifNull: [ '$collectionRecords.documents.key', false] },
+              { $ifNull: ['$collectionRecords.documents.key', false] },
               false,
               true
             ]
@@ -878,7 +885,7 @@ const executeQuery = async function (args, res, next) {
           numericOrdering: true
         }
       })
-      .toArray();
+        .toArray();
     }
 
     QueryActions.sendResponse(res, 200, data);
@@ -892,7 +899,7 @@ const executeQuery = async function (args, res, next) {
       },
       // lookup the records
       {
-        $lookup: { from: 'nrpti', localField: 'records', foreignField: '_id', as: 'populatedRecords'}
+        $lookup: { from: 'nrpti', localField: 'records', foreignField: '_id', as: 'populatedRecords' }
       },
       // lookup the documents
       {
