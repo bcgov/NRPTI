@@ -13,6 +13,7 @@ import { Picklists, StateIDs, StateStatus } from '../../../../../common/src/app/
 import { ConfirmComponent } from '../../confirm/confirm.component';
 import { FactoryService } from '../../services/factory.service';
 import { RecordUtils } from '../../records/utils/record-utils';
+import { Constants } from '../../utils/constants/misc';
 
 @Component({
   selector: 'app-mines-collections-add-edit',
@@ -42,6 +43,9 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
 
   // collection add edit state
   public collectionState = null;
+
+  // Datepicker is off by one, so add a one to the desired year.
+  public minDateYear = Constants.DatepickerMinDate;
 
   public newRecord = {
     recordName: null,
@@ -345,12 +349,15 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesCollectionsAddEditComponent
    */
   async submit() {
+    const message = this.myForm.get('collectionRecords').value.length
+      ? `This will publish the current collection and ${this.myForm.get('collectionRecords').value.length} record(s), do you want to proceed?`
+      : 'There are no records in this collection, it will not display on BCMI, do you want to proceed?';
     this.dialogService
       .addDialog(
         ConfirmComponent,
         {
           title: 'Confirm Publication',
-          message: `This will publish the current collection and ${this.myForm.get('collectionRecords').value.length} record(s), do you want to proceed?`,
+          message,
           okOnly: false
         },
         { backdropColor: 'rgba(0, 0, 0, 0.5)' }

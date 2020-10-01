@@ -10,6 +10,7 @@ import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
 import { LoadingScreenService, StoreService, LoggerService } from 'nrpti-angular-components';
+import { Constants } from '../../../utils/constants/misc';
 
 @Component({
   selector: 'app-certificate-add-edit',
@@ -32,6 +33,8 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
   // Pick lists
   public certificateSubtypes = Picklists.certificateSubtypePicklist;
   public agencies = Picklists.agencyPicklist;
+
+  public datepickerMinDate = Constants.DatepickerMinDate;
 
   // Documents
   public documents = [];

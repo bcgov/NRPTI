@@ -1,10 +1,11 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Picklists } from '../../../../../common/src/app/utils/record-constants';
+import { Subject } from 'rxjs';
 import { DatePickerComponent, LoadingScreenService, Utils } from 'nrpti-angular-components';
+import { Picklists } from '../../../../../common/src/app/utils/record-constants';
 import { FactoryService } from '../../services/factory.service';
 import { RecordUtils } from '../../records/utils/record-utils';
-import { Subject } from 'rxjs';
+import { Constants } from '../../utils/constants/misc';
 
 @Component({
   selector: 'app-mines-record-add',
@@ -46,6 +47,8 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
   // Documents
   public documents = [];
   public links = [];
+
+  public datepickerMinDate = Constants.DatepickerMinDate;
 
   constructor(
     private loadingScreenService: LoadingScreenService,

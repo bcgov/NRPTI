@@ -9,6 +9,7 @@ import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
 import { LoadingScreenService, StoreService, LoggerService } from 'nrpti-angular-components';
+import { Constants } from '../../../utils/constants/misc';
 
 @Component({
   selector: 'app-management-plan-add-edit',
@@ -35,6 +36,8 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
   public documents = [];
   public links = [];
   public documentsToDelete = [];
+
+  public datepickerMinDate = Constants.DatepickerMinDate;
 
   constructor(
     public route: ActivatedRoute,

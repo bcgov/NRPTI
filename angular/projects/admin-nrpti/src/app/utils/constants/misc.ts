@@ -7,6 +7,9 @@ export class Constants {
     ADMIN_LNG: 'admin:lng',
     ADMIN_BCMI: 'admin:bcmi',
   };
+
+  // Datepicker is off by one so add one to the desired year.
+  public static readonly DatepickerMinDate = new Date('1901');
 }
 export class MiscUtils {
   public static updateBreadcrumbLabel(mine: any, route: ActivatedRoute) {
