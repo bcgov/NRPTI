@@ -58,26 +58,26 @@ let EditReport = require('./put/report');
 // including their Add and Edit function exports.
 // Update this collection with new types
 const ACCEPTED_DATA_TYPES = [
-  { type: 'orders', add: AddOrder, edit: EditOrder },
-  { type: 'inspections', add: AddInspection, edit: EditInspection },
-  { type: 'certificates', add: AddCertificate, edit: EditCertificate },
-  { type: 'permits', add: AddPermit, edit: EditPermit },
-  { type: 'agreements', add: AddAgreement, edit: EditAgreement },
-  { type: 'selfReports', add: AddSelfReport, edit: EditSelfReport },
-  { type: 'restorativeJustices', add: AddRestorativeJustice, edit: EditRestorativeJustice },
-  { type: 'tickets', add: AddTicket, edit: EditTicket },
-  { type: 'administrativePenalties', add: AddAdministrativePenalty, edit: EditAdministrativePenalty },
-  { type: 'administrativeSanctions', add: AddAdministrativeSanction, edit: EditAdministrativeSanction },
-  { type: 'warnings', add: AddWarning, edit: EditWarning },
-  { type: 'constructionPlans', add: AddConstructionPlan, edit: EditConstructionPlan },
-  { type: 'managementPlans', add: AddManagementPlan, edit: EditManagementPlan },
-  { type: 'courtConvictions', add: AddCourtConviction, edit: EditCourtConviction },
-  { type: 'mines', add: AddMine, edit: EditMine },
-  { type: 'annualReports', add: AddAnnualReport, edit: EditAnnualReport },
-  { type: 'certificateAmendments', add: AddCertificateAmendment, edit: EditCertificateAmendment },
-  { type: 'correspondences', add: AddCorrespondence, edit: EditCorrespondence },
-  { type: 'damSafetyInspections', add: AddDamSafetyInspection, edit: EditDamSafetyInspection },
-  { type: 'reports', add: AddReport, edit: EditReport },
+  { type: 'orders', add: AddOrder, edit: EditOrder, schemaName: 'Order' },
+  { type: 'inspections', add: AddInspection, edit: EditInspection, schemaName: 'Inspection' },
+  { type: 'certificates', add: AddCertificate, edit: EditCertificate, schemaName: 'Certificate' },
+  { type: 'permits', add: AddPermit, edit: EditPermit, schemaName: 'Permit' },
+  { type: 'agreements', add: AddAgreement, edit: EditAgreement, schemaName: 'Agreement' },
+  { type: 'selfReports', add: AddSelfReport, edit: EditSelfReport, schemaName: 'SelfReport' },
+  { type: 'restorativeJustices', add: AddRestorativeJustice, edit: EditRestorativeJustice, schemaName: 'RestorativeJustice' },
+  { type: 'tickets', add: AddTicket, edit: EditTicket, schemaName: 'Ticket' },
+  { type: 'administrativePenalties', add: AddAdministrativePenalty, edit: EditAdministrativePenalty, schemaName: 'AdministrativePenaltie' },
+  { type: 'administrativeSanctions', add: AddAdministrativeSanction, edit: EditAdministrativeSanction, schemaName: 'AdministrativeSanction' },
+  { type: 'warnings', add: AddWarning, edit: EditWarning, schemaName: 'Warning' },
+  { type: 'constructionPlans', add: AddConstructionPlan, edit: EditConstructionPlan, schemaName: 'ConstructionPlan' },
+  { type: 'managementPlans', add: AddManagementPlan, edit: EditManagementPlan, schemaName: 'ManagementPlan' },
+  { type: 'courtConvictions', add: AddCourtConviction, edit: EditCourtConviction, schemaName: 'CourtConviction' },
+  { type: 'mines', add: AddMine, edit: EditMine, schemaName: 'Mine' },
+  { type: 'annualReports', add: AddAnnualReport, edit: EditAnnualReport, schemaName: 'AnnualReport' },
+  { type: 'certificateAmendments', add: AddCertificateAmendment, edit: EditCertificateAmendment, schemaName: 'CertificateAmendment' },
+  { type: 'correspondences', add: AddCorrespondence, edit: EditCorrespondence, schemaName: 'Correspondence' },
+  { type: 'damSafetyInspections', add: AddDamSafetyInspection, edit: EditDamSafetyInspection, schemaName: 'DamSafetyInspection' },
+  { type: 'reports', add: AddReport, edit: EditReport, schemaName: 'Report' }
 ];
 
 // let allowedFields = ['_createdBy', 'createdDate', 'description', 'publishDate', 'type'];
@@ -419,9 +419,7 @@ const processPostRequest = async function (args, res, next, property, data) {
     const typeMethods = ACCEPTED_DATA_TYPES.find(t => t.type === property);
     if (typeMethods) {
       // Force the creation of a BCMI flavour.
-      let bcmiFlavourSchemaName = property.slice(0, -1);
-      bcmiFlavourSchemaName = bcmiFlavourSchemaName.charAt(0).toUpperCase() + bcmiFlavourSchemaName.slice(1);
-      bcmiFlavourSchemaName = bcmiFlavourSchemaName.concat('BCMI');
+      const bcmiFlavourSchemaName = typeMethods.schemaName.concat('BCMI');
       if (
         RecordTypeEnum.BCMI_SCHEMA_NAMES.includes(bcmiFlavourSchemaName) &&
         !data[bcmiFlavourSchemaName]
