@@ -7,14 +7,14 @@ import { SchemaLists } from '../../../../common/src/app/utils/record-constants';
 
 @Injectable()
 export class MinesRecordsListResolver implements Resolve<Observable<object>> {
-  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) {}
+  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) { }
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const params = { ...route.params };
     // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
     const tableObject = this.tableTemplateUtils.updateTableObjectWithUrlParams(route.params, new TableObject());
 
-    let schemaList = SchemaLists.allBasicRecordTypes;
+    let schemaList = SchemaLists.bcmiRecordTypes;
 
     if (params.activityType) {
       schemaList = params.activityType.split(',');
@@ -59,7 +59,7 @@ export class MinesRecordsListResolver implements Resolve<Observable<object>> {
     }
 
     if (params.isBcmiPublished) {
-      or['isBcmiPublished'] = params.isBcmiPublished;
+      or['isPublished'] = params.isBcmiPublished;
     }
 
     if (params.hasCollection) {

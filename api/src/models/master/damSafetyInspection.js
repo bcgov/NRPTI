@@ -5,7 +5,6 @@ module.exports = require('../../utils/model-schema-generator')(
   {
     _schemaName:       { type: String, default: 'DamSafetyInspection', index: true },
     _sourceRefId:     { type: 'ObjectId', default: null, index: true },
-    collectionId:     { type: 'ObjectId', default: null },
     mineGuid:         { type: String, default: '', index: true },
     read:             [{ type: String, trim: true, default: 'sysadmin' }],
     write:            [{ type: String, trim: true, default: 'sysadmin' }],

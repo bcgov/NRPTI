@@ -349,15 +349,9 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesCollectionsAddEditComponent
    */
   async submit() {
-    if (this.myForm.get('collectionRecords').value.length === 0 && this.recordsToUnlink.length === 0) {
-      alert('You must add at least one record.');
-      this.loadingScreenService.setLoadingState(false, 'main');
-      return;
-    }
-     const message = this.myForm.get('collectionRecords').value.length
-                    ? `This will publish the current collection and ${this.myForm.get('collectionRecords').value.length} record(s), do you want to proceed?`
-                    : 'There are no records in this collection, it will not display on BCMI, do you want to proceed?';
-
+    const message = this.myForm.get('collectionRecords').value.length
+      ? `This will publish the current collection and ${this.myForm.get('collectionRecords').value.length} record(s), do you want to proceed?`
+      : 'There are no records in this collection, it will not display on BCMI, do you want to proceed?';
     this.dialogService
       .addDialog(
         ConfirmComponent,

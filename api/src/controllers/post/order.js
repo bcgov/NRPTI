@@ -92,6 +92,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (order.collectionId = new ObjectId(incomingObj.collectionId));
+  incomingObj.mineGuid &&
+    (order.mineGuid = incomingObj.mineGuid);
 
   // set permissions
   order.read = utils.ApplicationAdminRoles;
@@ -451,7 +453,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced order record
  */
- exports.createBCMI = function (args, res, next, incomingObj) {
+exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of role.
   if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
@@ -475,6 +477,9 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (orderBCMI.collectionId = new ObjectId(incomingObj.collectionId));
+  incomingObj.mineGuid &&
+    (orderBCMI.mineGuid = incomingObj.mineGuid);
+
 
   // set permissions and meta
   orderBCMI.read = utils.ApplicationAdminRoles;

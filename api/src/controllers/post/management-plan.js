@@ -96,6 +96,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   // set data
   incomingObj.recordName && (managementPlan.recordName = incomingObj.recordName);
+  incomingObj.mineGuid && (managementPlan.mineGuid = incomingObj.mineGuid);
   managementPlan.recordType = 'Management Plan';
   incomingObj.dateIssued && (managementPlan.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (managementPlan.issuingAgency = incomingObj.issuingAgency);
@@ -165,6 +166,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (managementPlanLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
+
   // set permissions and meta
   managementPlanLNG.read = utils.ApplicationAdminRoles;
   managementPlanLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
@@ -226,7 +228,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created bcmi managementPlan record
  */
- exports.createBCMI = function (args, res, next, incomingObj) {
+exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
@@ -267,6 +269,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
   // set master data
   incomingObj.recordName && (managementPlanBCMI.recordName = incomingObj.recordName);
+  incomingObj.mineGuid && (managementPlanBCMI.mineGuid = incomingObj.mineGuid);
   managementPlanBCMI.recordType = 'Management Plan';
   incomingObj.dateIssued && (managementPlanBCMI.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (managementPlanBCMI.issuingAgency = incomingObj.issuingAgency);
