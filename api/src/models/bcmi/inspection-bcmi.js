@@ -11,7 +11,7 @@ module.exports = require('../../utils/model-schema-generator')(
     _sourceRefOgcInspectionId: { type: String, default: null, index: true },
     _sourceRefOgcDeficiencyId: { type: String, default: null, index: true },
     _master: { type: 'ObjectId', default: null, index: true },
-    collectionId:     { type: 'ObjectId', default: null },
+    collectionId: { type: 'ObjectId', default: null },
     mineGuid: { type: String, default: null, index: true },
 
     read: [{ type: String, trim: true, default: 'sysadmin' }],

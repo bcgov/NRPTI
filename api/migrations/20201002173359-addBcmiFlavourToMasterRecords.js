@@ -1,8 +1,8 @@
 'use strict';
 
-var dbm;
-var type;
-var seed;
+let dbm;
+let type;
+let seed;
 
 const AnnualReport = require('../src/controllers/post/annual-report');
 const CertificateAmendment = require('../src/controllers/post/certificate-amendment');
@@ -14,8 +14,8 @@ const Order = require('../src/controllers/post/order');
 const Permit = require('../src/controllers/post/permit');
 const Report = require('../src/controllers/post/report');
 
-var mongoose = require('mongoose');
-var ObjectID = require('mongodb').ObjectID;
+const mongoose = require('mongoose');
+const ObjectID = require('mongodb').ObjectID;
 
 const DB_CONNECTION =
   'mongodb://' +
@@ -152,7 +152,7 @@ exports.up = async function (db) {
         }
 
         if (obj) {
-          promises.push(await obj.save());
+          promises.push(obj.save());
           promises.push(nrpti.findOneAndUpdate({ _id: ObjectID(record._id) }, { $push: { _flavourRecords: ObjectID(obj._id) } }));
         } else {
           throw 'Error creating BCMI flavour object';
