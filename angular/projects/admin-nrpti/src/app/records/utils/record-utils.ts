@@ -209,7 +209,7 @@ export class RecordUtils {
     });
 
     // Execute
-    return await Promise.all(promises).catch(e => {
+    return Promise.all(promises).catch(e => {
       alert('Server Error: ' + e.error);
     });
   }
