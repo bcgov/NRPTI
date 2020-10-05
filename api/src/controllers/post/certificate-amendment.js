@@ -322,6 +322,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (certificateAmendmentBCMI.collectionId = new ObjectId(incomingObj.collectionId));
+  incomingObj._master &&
+    ObjectId.isValid(incomingObj._master) &&
+    (certificateAmendmentBCMI._master = new ObjectId(incomingObj._master));
 
   // set permissions
   certificateAmendmentBCMI.read = utils.ApplicationAdminRoles;

@@ -239,15 +239,15 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
           }
 
           // Unpublish the flavour record.
-          promises.push(nrpti.update({ _id: record._id, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public'} }));
-          
+          promises.push(nrpti.update({ _id: record._id, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } }));
+
           // Set the flag on the master record.
           promises.push(nrpti.update({ _flavourRecords: record._id, write: { $in: auth_payload.realm_access.roles } }, { $set: { isBcmiPublished: false } }));
         }
       }
 
       // Unpublish the collection.
-      promises.push(nrpti.update({ _id: collection._id, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public'} }));
+      promises.push(nrpti.update({ _id: collection._id, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } }));
     }
 
     await Promise.all(promises);
@@ -284,15 +284,15 @@ exports.publishCollections = async function (mineId, auth_payload) {
           }
 
           // Publish the flavour record.
-          promises.push(nrpti.update({ _id: record._id, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public'} }));
-          
+          promises.push(nrpti.update({ _id: record._id, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } }));
+
           // Set the flag on the master record.
           promises.push(nrpti.update({ _flavourRecords: record._id, write: { $in: auth_payload.realm_access.roles } }, { $set: { isBcmiPublished: true } }));
         }
       }
 
       // Publish the collection.
-      promises.push(nrpti.update({ _id: collection._id, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public'} }));
+      promises.push(nrpti.update({ _id: collection._id, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } }));
     }
 
     await Promise.all(promises);
@@ -355,7 +355,6 @@ const createCollection = async function (collectionObj, user) {
   collection._schemaName = RECORD_TYPE.CollectionBCMI._schemaName;
 
   // Set parent/mine ids
-  collectionObj._master && (collection._master = collectionObj._master);
   collectionObj.project && (collection.project = collectionObj.project);
 
   // Set permissions

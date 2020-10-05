@@ -197,19 +197,22 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   reportBCMI._schemaName = 'ReportBCMI';
   // set integration references
   incomingObj._epicProjectId &&
-  ObjectId.isValid(incomingObj._epicProjectId) &&
-  (reportBCMI._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (reportBCMI._epicProjectId = new ObjectId(incomingObj._epicProjectId));
   incomingObj._sourceRefId &&
-  ObjectId.isValid(incomingObj._sourceRefId) &&
-  (reportBCMI._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (reportBCMI._sourceRefId = new ObjectId(incomingObj._sourceRefId));
   incomingObj._epicMilestoneId &&
-  ObjectId.isValid(incomingObj._epicMilestoneId) &&
-  (reportBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (reportBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj.mineGuid &&
-  (reportBCMI.mineGuid = incomingObj.mineGuid);
+    (reportBCMI.mineGuid = incomingObj.mineGuid);
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (reportBCMI.collectionId = new ObjectId(incomingObj.collectionId));
+  incomingObj._master &&
+    ObjectId.isValid(incomingObj._master) &&
+    (reportBCMI._master = new ObjectId(incomingObj._master));
 
   // set permissions
   reportBCMI.read = utils.ApplicationAdminRoles;
@@ -229,36 +232,36 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   reportBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (reportBCMI.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
-  incomingObj.issuedTo.companyName &&
-  (reportBCMI.issuedTo.companyName = incomingObj.issuedTo.companyName);
+    incomingObj.issuedTo.companyName &&
+    (reportBCMI.issuedTo.companyName = incomingObj.issuedTo.companyName);
   incomingObj.issuedTo &&
-  incomingObj.issuedTo.firstName &&
-  (reportBCMI.issuedTo.firstName = incomingObj.issuedTo.firstName);
+    incomingObj.issuedTo.firstName &&
+    (reportBCMI.issuedTo.firstName = incomingObj.issuedTo.firstName);
   incomingObj.issuedTo &&
-  incomingObj.issuedTo.middleName &&
-  (reportBCMI.issuedTo.middleName = incomingObj.issuedTo.middleName);
+    incomingObj.issuedTo.middleName &&
+    (reportBCMI.issuedTo.middleName = incomingObj.issuedTo.middleName);
   incomingObj.issuedTo &&
-  incomingObj.issuedTo.lastName &&
-  (reportBCMI.issuedTo.lastName = incomingObj.issuedTo.lastName);
+    incomingObj.issuedTo.lastName &&
+    (reportBCMI.issuedTo.lastName = incomingObj.issuedTo.lastName);
   incomingObj.issuedTo && (reportBCMI.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
   incomingObj.issuedTo &&
-  incomingObj.issuedTo.dateOfBirth &&
-  (reportBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+    incomingObj.issuedTo.dateOfBirth &&
+    (reportBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.dateIssued && (reportBCMI.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (reportBCMI.issuingAgency = incomingObj.issuingAgency);
   incomingObj.legislation && incomingObj.legislation.act && (reportBCMI.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
-  incomingObj.legislation.regulation &&
-  (reportBCMI.legislation.regulation = incomingObj.legislation.regulation);
+    incomingObj.legislation.regulation &&
+    (reportBCMI.legislation.regulation = incomingObj.legislation.regulation);
   incomingObj.legislation &&
-  incomingObj.legislation.section &&
-  (reportBCMI.legislation.section = incomingObj.legislation.section);
+    incomingObj.legislation.section &&
+    (reportBCMI.legislation.section = incomingObj.legislation.section);
   incomingObj.legislation &&
-  incomingObj.legislation.subSection &&
-  (reportBCMI.legislation.subSection = incomingObj.legislation.subSection);
+    incomingObj.legislation.subSection &&
+    (reportBCMI.legislation.subSection = incomingObj.legislation.subSection);
   incomingObj.legislation &&
-  incomingObj.legislation.paragraph &&
-  (reportBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
+    incomingObj.legislation.paragraph &&
+    (reportBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription && (reportBCMI.legislationDescription = incomingObj.legislationDescription);
   incomingObj.projectName && (reportBCMI.projectName = incomingObj.projectName);
   incomingObj.location && (reportBCMI.location = incomingObj.location);
@@ -303,7 +306,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created bcmi  report record
  */
- exports.createNRCED = function (args, res, next, incomingObj) {
+exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
@@ -315,16 +318,16 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   reportNRCED._schemaName = 'ReportNRCED';
   // set integration references
   incomingObj._epicProjectId &&
-  ObjectId.isValid(incomingObj._epicProjectId) &&
-  (reportNRCED._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (reportNRCED._epicProjectId = new ObjectId(incomingObj._epicProjectId));
   incomingObj._sourceRefId &&
-  ObjectId.isValid(incomingObj._sourceRefId) &&
-  (reportNRCED._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (reportNRCED._sourceRefId = new ObjectId(incomingObj._sourceRefId));
   incomingObj._epicMilestoneId &&
-  ObjectId.isValid(incomingObj._epicMilestoneId) &&
-  (reportNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (reportNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj.mineGuid &&
-  (reportNRCED.mineGuid = incomingObj.mineGuid);
+    (reportNRCED.mineGuid = incomingObj.mineGuid);
 
   // set permissions
   reportNRCED.read = utils.ApplicationAdminRoles;
@@ -344,36 +347,36 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   reportNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (reportNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
-  incomingObj.issuedTo.companyName &&
-  (reportNRCED.issuedTo.companyName = incomingObj.issuedTo.companyName);
+    incomingObj.issuedTo.companyName &&
+    (reportNRCED.issuedTo.companyName = incomingObj.issuedTo.companyName);
   incomingObj.issuedTo &&
-  incomingObj.issuedTo.firstName &&
-  (reportNRCED.issuedTo.firstName = incomingObj.issuedTo.firstName);
+    incomingObj.issuedTo.firstName &&
+    (reportNRCED.issuedTo.firstName = incomingObj.issuedTo.firstName);
   incomingObj.issuedTo &&
-  incomingObj.issuedTo.middleName &&
-  (reportNRCED.issuedTo.middleName = incomingObj.issuedTo.middleName);
+    incomingObj.issuedTo.middleName &&
+    (reportNRCED.issuedTo.middleName = incomingObj.issuedTo.middleName);
   incomingObj.issuedTo &&
-  incomingObj.issuedTo.lastName &&
-  (reportNRCED.issuedTo.lastName = incomingObj.issuedTo.lastName);
+    incomingObj.issuedTo.lastName &&
+    (reportNRCED.issuedTo.lastName = incomingObj.issuedTo.lastName);
   incomingObj.issuedTo && (reportNRCED.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
   incomingObj.issuedTo &&
-  incomingObj.issuedTo.dateOfBirth &&
-  (reportNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+    incomingObj.issuedTo.dateOfBirth &&
+    (reportNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.dateIssued && (reportNRCED.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (reportNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.legislation && incomingObj.legislation.act && (reportNRCED.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
-  incomingObj.legislation.regulation &&
-  (reportNRCED.legislation.regulation = incomingObj.legislation.regulation);
+    incomingObj.legislation.regulation &&
+    (reportNRCED.legislation.regulation = incomingObj.legislation.regulation);
   incomingObj.legislation &&
-  incomingObj.legislation.section &&
-  (reportNRCED.legislation.section = incomingObj.legislation.section);
+    incomingObj.legislation.section &&
+    (reportNRCED.legislation.section = incomingObj.legislation.section);
   incomingObj.legislation &&
-  incomingObj.legislation.subSection &&
-  (reportNRCED.legislation.subSection = incomingObj.legislation.subSection);
+    incomingObj.legislation.subSection &&
+    (reportNRCED.legislation.subSection = incomingObj.legislation.subSection);
   incomingObj.legislation &&
-  incomingObj.legislation.paragraph &&
-  (reportNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
+    incomingObj.legislation.paragraph &&
+    (reportNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
   incomingObj.legislationDescription && (reportNRCED.legislationDescription = incomingObj.legislationDescription);
   incomingObj.projectName && (reportNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (reportNRCED.location = incomingObj.location);

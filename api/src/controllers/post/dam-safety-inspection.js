@@ -192,6 +192,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (damSafetyInspectionBCMI.collectionId = new ObjectId(incomingObj.collectionId));
+  incomingObj._master &&
+    ObjectId.isValid(incomingObj._master) &&
+    (damSafetyInspectionBCMI._master = new ObjectId(incomingObj._master));
 
   // set permissions
   damSafetyInspectionBCMI.read = utils.ApplicationAdminRoles;

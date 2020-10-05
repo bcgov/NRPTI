@@ -141,7 +141,6 @@ exports.up = async function (db) {
             console.log(`Creating NRPTI collection for ${collection.displayName}`);
             // Master, Meta and Documents for this collection are all created.
             // Now, create a NRPTI collection and shove the docs into it!
-            bcmiCollection._master = new ObjectID(nrptiMine._id);
             bcmiCollection.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, 'public'];
             bcmiCollection.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
             bcmiCollection.name = collection.displayName;
