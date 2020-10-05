@@ -203,6 +203,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (correspondenceBCMI.collectionId = new ObjectId(incomingObj.collectionId));
+  incomingObj._master &&
+    ObjectId.isValid(incomingObj._master) &&
+    (correspondenceBCMI._master = new ObjectId(incomingObj._master));
 
   // set permissions
   correspondenceBCMI.read = utils.ApplicationAdminRoles;
@@ -296,7 +299,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created bcmi Correspondence record
  */
- exports.createNRCED = function (args, res, next, incomingObj) {
+exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');

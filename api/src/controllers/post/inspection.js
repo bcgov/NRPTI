@@ -486,6 +486,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (inspectionBCMI.collectionId = new ObjectId(incomingObj.collectionId));
+  incomingObj._master &&
+    ObjectId.isValid(incomingObj._master) &&
+    (inspectionBCMI._master = new ObjectId(incomingObj._master));
   incomingObj.mineGuid &&
     (inspectionBCMI.mineGuid = incomingObj.mineGuid);
 

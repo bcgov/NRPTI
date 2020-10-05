@@ -7,13 +7,12 @@ module.exports = require('../../utils/model-schema-generator')(
     _epicProjectId: { type: 'ObjectId', default: null, index: true },
     _sourceRefId: { type: 'ObjectId', default: null, index: true },
     _epicMilestoneId: { type: 'ObjectId', default: null, index: true },
+    _master: { type: 'ObjectId', default: null, index: true },
     collectionId:     { type: 'ObjectId', default: null },
     mineGuid: { type: String, default: null, index: true },
 
     read: [{ type: String, trim: true, default: 'sysadmin' }],
     write: [{ type: String, trim: true, default: 'sysadmin' }],
-
-    _flavourRecords: [{ type: 'ObjectId', default: [], index: true }],
 
     recordName: { type: String, default: '' },
     recordType: { type: String, default: '' },

@@ -476,7 +476,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     );
     if (shouldCancel) {
       if (this.isEditing) {
-        this.router.navigate(['mines', this.collection._master, 'collections', this.collection._id, 'detail']);
+        this.router.navigate(['mines', this.collection.project, 'collections', this.collection._id, 'detail']);
       } else {
         this.location.back();
       }
