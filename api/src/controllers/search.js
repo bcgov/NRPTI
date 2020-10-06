@@ -897,48 +897,40 @@ const executeQuery = async function (args, res, next) {
       {
         $match: { _id: mongoose.Types.ObjectId(args.swagger.params._id.value) }
       },
-      // lookup the records and set order as defined by collection records array
+      // lookup the records in collection
       {
-        $lookup: {
-          from: 'nrpti',
-          let: { orderedRecords: '$records' },
-          pipeline: [
-            { $match: { $expr: { $in: [ '$_id', '$$orderedRecords' ]}}},
-            { $addFields: { "sortOrder": { "$indexOfArray": [ "$$orderedRecords", "$_id" ]}}},
-          ],
-          as: 'sortedRecords'
-        }
+        $lookup: { from: 'nrpti', localField: 'records', foreignField: '_id', as: 'populatedRecords' }
       },
       // turf unused collection info
       {
-        $project: { sortedRecords: 1, _id: 0 }
+        $project: { populatedRecords: 1, records: 1, _id: 0 }
       },
       {
-        $unwind: { path: '$sortedRecords' }
+        $unwind: { path: '$populatedRecords' }
       },
-      // lookup the documents and copy the record order
+      // add sort order based on collection records array positions
       {
-        $lookup: {
-          from: 'nrpti',
-          let: { orderedRecords: '$sortedRecords' },
-          pipeline: [
-            { $match: { $expr: { $in: [ '$_id', '$$orderedRecords.documents' ]}}},
-            { $addFields: { '_sort': '$$orderedRecords.sortOrder' }}
-          ],
-          as: 'documents'
-        }
+        $addFields: { 'populatedRecords.sortOrder': { $indexOfArray: ['$records', '$populatedRecords._id' ] } }
       },
-      // turf the uneeded attributes
+      // only need populated records now
       {
-        $project: { documents: 1, _id: 0 }
+        $project: { populatedRecords: 1 }
+      },
+      // lookup the documents
+      {
+        $lookup: { from: 'nrpti', localField: 'populatedRecords.documents', foreignField: '_id', as: 'populatedRecords.documents' }
+      },
+      // copy sort order into document objects
+      {
+        $addFields: { 'populatedRecords.documents._sort': '$populatedRecords.sortOrder' }
       },
       // unwind the documents array so we have a flat array of document records
       {
-        $unwind: { path: '$documents' }
+        $unwind: { path: '$populatedRecords.documents' }
       },
       // push everything off the document attribute to the root
       {
-        $replaceRoot: { newRoot: '$documents' }
+        $replaceRoot: { newRoot: '$populatedRecords.documents' }
       },
       // sort the docs
       {
