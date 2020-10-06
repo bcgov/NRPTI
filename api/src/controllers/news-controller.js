@@ -107,7 +107,7 @@ exports.protectedPost = async function (args, res, next) {
 
   let obj = null;
   try {
-    obj = await Post.insertOne(news);
+    obj = await Post.insert(news);
   } catch (error) {
     defaultLog.info(`protectedPost - error inserting news: ${news}`);
     defaultLog.debug(error);

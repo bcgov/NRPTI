@@ -39,8 +39,7 @@ const routes: Routes = [
         component: NewsAddEditComponent,
         canActivate: [CanActivateGuard],
         data: {
-          breadcrumb: 'Add News',
-          cock: 'yes'
+          breadcrumb: 'Add News'
         },
         resolve: {
           record: NewsResolver
@@ -94,4 +93,4 @@ const routes: Routes = [
     Utils
   ]
 })
-export class NewsRoutingModule {}
+export class NewsRoutingModule { }

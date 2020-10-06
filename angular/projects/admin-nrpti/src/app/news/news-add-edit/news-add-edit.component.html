@@ -3,7 +3,8 @@
     <div class="spinner-new rotating"></div>
   </div>
   <div class="d-flex">
-    <h2>Edit News Post</h2>
+    <h2 *ngIf="isEditing">Edit News Post</h2>
+    <h2 *ngIf="!isEditing">Add News Post</h2>
     <div class="ml-auto">
       <button class="btn btn-outline-primary mr-1" type="cancel" (click)="navigateBack()">Cancel</button>
       <button class="btn btn-primary" type="cancel" (click)="submit()">Save</button>
