@@ -290,6 +290,7 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   } else {
     flavourData.documents = [document._id];
   }
+  flavourData._master = new ObjectID(masterData._id);
   flavourData.collectionId = new ObjectID(newCollectionId);
   flavourData.mineGuid = nrptiMine._sourceRefId;
   flavourData.issuingAgency = issuingAgency;

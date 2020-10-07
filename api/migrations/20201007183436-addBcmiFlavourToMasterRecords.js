@@ -92,7 +92,7 @@ exports.up = async function (db) {
       let hasBcmiFlavour = false;
       while (j--) {
         const flavourMasterId = flavourMasterIds[j];
-        if (record._id.toString() === flavourMasterId.toString()) {
+        if (!flavourMasterId || (record._id.toString() === flavourMasterId.toString())) {
           flavourMasterIds.splice(j, 1);
           hasBcmiFlavour = true;
           break;

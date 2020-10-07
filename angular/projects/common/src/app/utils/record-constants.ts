@@ -49,6 +49,25 @@ export class SchemaLists {
     'Report'
   ];
 
+  public static readonly lngRecordTypes = [
+    'ActivityLNG',
+    'AdministrativePenaltyLNG',
+    'AdministrativeSanctionLNG',
+    'AgreementLNG',
+    'CertificateLNG',
+    'CertificateAmendmentLNG',
+    'ConstructionPlanLNG',
+    'CourtConvictionLNG',
+    'InspectionLNG',
+    'ManagementPlanLNG',
+    'OrderLNG',
+    'PermitLNG',
+    'RestorativeJusticeLNG',
+    'SelfReportLNG',
+    'TicketLNG',
+    'WarningLNG'
+  ];
+
   public static readonly bcmiRecordTypes = [
     'AnnualReportBCMI',
     'CertificateAmendmentBCMI',
@@ -58,7 +77,6 @@ export class SchemaLists {
     'ManagementPlanBCMI',
     'OrderBCMI',
     'PermitBCMI',
-    'PermitAmendmentBCMI',
     'ReportBCMI'
   ];
 
@@ -773,7 +791,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {string[]} sorted array of acts
    */
-  public static getAllActs = function(): string[] {
+  public static getAllActs = function (): string[] {
     return Object.keys(this.legislationActsMappedToRegulations).sort();
   };
 
@@ -784,7 +802,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {string[]} sorted array of regulations
    */
-  public static getAllRegulations = function(): string[] {
+  public static getAllRegulations = function (): string[] {
     const regulations = [];
 
     Object.keys(this.legislationActsMappedToRegulations).forEach(act =>
@@ -808,7 +826,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {{ [key: string]: string[] }}
    */
-  public static getLegislationRegulationsMappedToActs = function(): { [key: string]: string[] } {
+  public static getLegislationRegulationsMappedToActs = function (): { [key: string]: string[] } {
     const regulations = {};
 
     Object.keys(this.legislationActsMappedToRegulations).forEach(act =>
@@ -4625,7 +4643,7 @@ export class Picklists {
    * @static
    * @returns {string} legislation description or null
    */
-  public static getLegislationDescription = function(recordType: string, legislation: Legislation): string {
+  public static getLegislationDescription = function (recordType: string, legislation: Legislation): string {
     if (!recordType || !legislation || !legislation.act || !legislation.section) {
       return null;
     }
@@ -4680,7 +4698,7 @@ export class Picklists {
    * @param {string[]} paths properties to descend, in order, through the object.
    * @returns the value found at the end of the path, or null
    */
-  public static traverseObject = function(obj: object, paths: string[]) {
+  public static traverseObject = function (obj: object, paths: string[]) {
     if (!obj || !paths || !paths.length) {
       return null;
     }
