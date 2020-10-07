@@ -84,7 +84,6 @@ describe('MinesRecordsListResolver', () => {
             'ManagementPlanBCMI',
             'OrderBCMI',
             'PermitBCMI',
-            'PermitAmendmentBCMI',
             'ReportBCMI'
           ],
           [],
@@ -153,7 +152,6 @@ describe('MinesRecordsListResolver', () => {
             'ManagementPlanBCMI',
             'OrderBCMI',
             'PermitBCMI',
-            'PermitAmendmentBCMI',
             'ReportBCMI'
           ],
           [],
