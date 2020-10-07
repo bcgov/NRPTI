@@ -418,15 +418,14 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
             this.router.navigate(['mines', this.collection.project, 'collections', this.collection._id, 'detail']);
           }
         } else {
-          collection['_master'] = this.route.snapshot.paramMap.get('mineId');
           collection['project'] = this.route.snapshot.paramMap.get('mineId');
 
           const res = await this.factoryService.createCollection(collection);
-          if (!res || !res._id || !res._master) {
+          if (!res || !res._id) {
             alert('Failed to create collection.');
           } else {
             this.loadingScreenService.setLoadingState(false, 'main');
-            this.router.navigate(['mines', res._master, 'collections', res._id, 'detail']);
+            this.router.navigate(['mines', res.project, 'collections', res._id, 'detail']);
           }
         }
       });
