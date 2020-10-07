@@ -897,25 +897,44 @@ const executeQuery = async function (args, res, next) {
       {
         $match: { _id: mongoose.Types.ObjectId(args.swagger.params._id.value) }
       },
-      // lookup the records
+      // lookup the records in collection
       {
         $lookup: { from: 'nrpti', localField: 'records', foreignField: '_id', as: 'populatedRecords' }
       },
+      // turf unused collection info
+      {
+        $project: { populatedRecords: 1, records: 1, _id: 0 }
+      },
+      {
+        $unwind: { path: '$populatedRecords' }
+      },
+      // add sort order based on collection records array positions
+      {
+        $addFields: { 'populatedRecords.sortOrder': { $indexOfArray: ['$records', '$populatedRecords._id' ] } }
+      },
+      // only need populated records now
+      {
+        $project: { populatedRecords: 1 }
+      },
       // lookup the documents
       {
-        $lookup: { from: 'nrpti', localField: 'populatedRecords.documents', foreignField: '_id', as: 'documents' }
+        $lookup: { from: 'nrpti', localField: 'populatedRecords.documents', foreignField: '_id', as: 'populatedRecords.documents' }
       },
-      // turf the uneeded attributes
+      // copy sort order into document objects
       {
-        $project: { documents: 1 }
+        $addFields: { 'populatedRecords.documents._sort': '$populatedRecords.sortOrder' }
       },
       // unwind the documents array so we have a flat array of document records
       {
-        $unwind: { path: '$documents' }
+        $unwind: { path: '$populatedRecords.documents' }
       },
       // push everything off the document attribute to the root
       {
-        $replaceRoot: { newRoot: '$documents' }
+        $replaceRoot: { newRoot: '$populatedRecords.documents' }
+      },
+      // sort the docs
+      {
+        $sort: { "_sort": 1 }
       },
       // redact based on scope
       {
@@ -947,7 +966,6 @@ const executeQuery = async function (args, res, next) {
 
     const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
     const collection = db.collection('nrpti');
-
     data = await collection.aggregate(aggregation, {
       allowDiskUse: true,
       collation: {
