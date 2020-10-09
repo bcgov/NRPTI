@@ -220,7 +220,7 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
     Key: s3Key,
     Body: rawDoc,
     ACL: 'authenticated-read'
-  });
+  }).promise();
 
   // save the document meta
   await nrpti.insertOne(document);
@@ -346,14 +346,14 @@ function getRequest(url, asJson = true) {
       if (res.statusCode < 200 || res.statusCode >= 300) {
         return reject(new Error('statusCode=' + res.statusCode));
       }
-      let body = [];
+      let body = '';
       res.on('data', function (chunk) {
-        body.push(chunk);
+        body += chunk;
       });
       res.on('end', function () {
         try {
           if (asJson) {
-            body = JSON.parse(Buffer.concat(body).toString());
+            body = JSON.parse(body);
           }
         } catch (e) {
           reject(e);
