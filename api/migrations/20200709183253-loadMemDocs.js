@@ -346,14 +346,15 @@ function getRequest(url, asJson = true) {
       if (res.statusCode < 200 || res.statusCode >= 300) {
         return reject(new Error('statusCode=' + res.statusCode));
       }
-      let body = '';
+      let body = [];
       res.on('data', function (chunk) {
-        body += chunk;
+        body.push(chunk);
       });
       res.on('end', function () {
         try {
+          body = Buffer.concat(body);
           if (asJson) {
-            body = JSON.parse(body);
+            body = body.toString();
           }
         } catch (e) {
           reject(e);
