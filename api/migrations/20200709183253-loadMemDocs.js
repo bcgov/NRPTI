@@ -281,16 +281,7 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   const issuingAgency = collection.isForMEM ? 'EMPR' : collection.isForEAO ? 'EAO' : 'ENV';
 
   // BCMI flavour
-  //
-  if (flavourData.recordType === 'Permit') {
-    flavourData.amendmentDocument = {
-      documentId: document._id,
-      documentName: document.fileName,
-      _sourceRefId: 'mem-admin'
-    };
-  } else {
-    flavourData.documents = [document._id];
-  }
+  flavourData.documents = [document._id];
   flavourData._master = new ObjectID(masterData._id);
   flavourData.collectionId = new ObjectID(newCollectionId);
   flavourData.mineGuid = nrptiMine._sourceRefId;
