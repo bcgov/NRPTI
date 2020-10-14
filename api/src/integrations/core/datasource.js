@@ -486,7 +486,6 @@ class CoreDataSource {
       const existingPermits = await PermitBCMI.find({ _schemaName: 'PermitBCMI', _sourceRefId: amendment.permit_amendment_guid });
 
       const collection = {
-        _master: mineRecord._id,
         project: mineRecord._id,
         name: amendment.description,
         date: amendment.issue_date,
