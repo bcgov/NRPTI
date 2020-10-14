@@ -202,6 +202,7 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   // rawDoc will be a buffer from the get request.
   await sleep(1000);
   const rawDoc = await getRequest(bcmiUrl + '/api/document/' + collectionDoc.document._id + '/fetch', false);
+
   // create a document meta
   let document = new Document();
 
@@ -215,12 +216,12 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   document.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // upload to s3
-  await s3.upload({
+ await s3.upload({
     Bucket: OBJ_STORE_BUCKET,
     Key: s3Key,
     Body: rawDoc,
     ACL: 'authenticated-read'
-  });
+  }).promise()
 
   // save the document meta
   await nrpti.insertOne(document);
@@ -352,8 +353,10 @@ function getRequest(url, asJson = true) {
       });
       res.on('end', function () {
         try {
+          body = Buffer.concat(body);
+          // If request is expecting JSON response then convert the bugger to JSON.
           if (asJson) {
-            body = JSON.parse(Buffer.concat(body).toString());
+            body = JSON.parse(body.toString());
           }
         } catch (e) {
           reject(e);
