@@ -373,7 +373,8 @@ const createCollection = async function (collectionObj, user) {
     try {
       await checkRecordExistsInCollection(collection.records, collection._id);
     } catch (error) {
-      defaultLog.info(`protectedPost - error inserting collection: ${collection}`);
+
+      defaultLog.info(`createCollection - error inserting collection: ${collection}`);
       defaultLog.debug(error);
       throw error;
     }
@@ -397,3 +398,5 @@ const createCollection = async function (collectionObj, user) {
     throw new Error('Error creating collection');
   }
 }
+
+exports.createCollection = createCollection;

@@ -155,8 +155,9 @@ class CoreDataSource {
       const { records: commodityTypes } = await integrationUtils.getRecords(url, getAuthHeader(this.client_token));
 
       // Process each core record.
-      const promises = coreRecords.map(record => this.processRecord(utils, commodityTypes, record));
-      await Promise.all(promises);
+      for (const record of coreRecords) {
+        await this.processRecord(utils, commodityTypes, record);
+      }
     } catch (error) {
       defaultLog.error(`processRecords - unexpected error: ${error.message}`);
       // Throwing this error will stop the processing. This will only occur if there is an issue
@@ -454,7 +455,6 @@ class CoreDataSource {
         const latitude = mineDetails.mine_location && mineDetails.mine_location.latitude || 0.00;
         const longitude = mineDetails.mine_location && mineDetails.mine_location.longitude || 0.00;
 
-
         completeRecords.push({
           ...coreRecords[i],
           coordinates: [longitude, latitude],
@@ -486,7 +486,6 @@ class CoreDataSource {
       const existingPermits = await PermitBCMI.find({ _schemaName: 'PermitBCMI', _sourceRefId: amendment.permit_amendment_guid });
 
       const collection = {
-        _master: mineRecord._id,
         project: mineRecord._id,
         name: amendment.description,
         date: amendment.issue_date,
