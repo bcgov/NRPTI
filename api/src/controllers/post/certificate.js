@@ -30,6 +30,7 @@ const utils = require('../../utils/constants/misc');
  */
 exports.createItem = async function (args, res, next, incomingObj) {
   const flavourFunctions = {
+    CertificateBCMI: this.createBCMI,
     CertificateLNG: this.createLNG
   }
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
@@ -227,4 +228,79 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.sourceSystemRef && (certificateLNG.sourceSystemRef = incomingObj.sourceSystemRef);
 
   return certificateLNG;
+};
+
+exports.createBCMI = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
+    throw new Error('Missing valid user role.');
+  }
+
+  let CertificateBCMI = mongoose.model('CertificateBCMI');
+  let certificateBCMI = new CertificateBCMI();
+
+  certificateBCMI._schemaName = 'CertificateBCMI';
+
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (certificateBCMI._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (certificateBCMI._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (certificateBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj.mineGuid && (certificateBCMI.mineGuid = incomingObj.mineGuid);
+
+  // set permissions and meta
+  certificateBCMI.read = utils.ApplicationAdminRoles;
+  certificateBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    certificateBCMI.read.push('public');
+    certificateBCMI.datePublished = new Date();
+    certificateBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
+
+  certificateBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  certificateBCMI.dateAdded = new Date();
+
+  // set master data
+  incomingObj.recordName && (certificateBCMI.recordName = incomingObj.recordName);
+  certificateBCMI.recordType = 'Certificate';
+  incomingObj.recordSubtype && (certificateBCMI.recordSubtype = incomingObj.recordSubtype);
+  incomingObj.dateIssued && (certificateBCMI.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (certificateBCMI.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.legislation &&
+    incomingObj.legislation.act &&
+    (certificateBCMI.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (certificateBCMI.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (certificateBCMI.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (certificateBCMI.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (certificateBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
+  incomingObj.legislationDescription && (certificateBCMI.legislationDescription = incomingObj.legislationDescription);
+  incomingObj.projectName && (certificateBCMI.projectName = incomingObj.projectName);
+  incomingObj.location && (certificateBCMI.location = incomingObj.location);
+  incomingObj.centroid && (certificateBCMI.centroid = incomingObj.centroid);
+  incomingObj.documents && (certificateBCMI.documents = incomingObj.documents);
+
+  // set flavour data
+  incomingObj.description && (certificateBCMI.description = incomingObj.description);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (certificateBCMI.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (certificateBCMI.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (certificateBCMI.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return certificateBCMI;
 };

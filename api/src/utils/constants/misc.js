@@ -8,9 +8,8 @@ exports.ApplicationRoles = {
 };
 
 exports.ApplicationAdminRoles = Object.keys(this.ApplicationRoles).map(role => {
-    return this.ApplicationRoles[role];
-  }
-);
+  return this.ApplicationRoles[role];
+});
 
 exports.IssuedToEntityTypes = {
   Company: 'Company',
@@ -85,7 +84,9 @@ exports.NRCED_SCHEMA_NAMES = [
 
 exports.BCMI_SCHEMA_NAMES = [
   'AnnualReportBCMI',
+  'CertificateBCMI',
   'CertificateAmendmentBCMI',
+  'ConstructionPlanBCMI',
   'CollectionBCMI',
   'CorrespondenceBCMI',
   'DamSafetyInspectionBCMI',

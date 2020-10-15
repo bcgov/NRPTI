@@ -28,9 +28,10 @@ const utils = require('../../utils/constants/misc');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createItem = async function(args, res, next, incomingObj) {
+exports.createItem = async function (args, res, next, incomingObj) {
   const flavourFunctions = {
-    ConstructionPlanLNG: this.createLNG
+    ConstructionPlanLNG: this.createLNG,
+    ConstructionPlanBCMI: this.createBCMI
   };
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
@@ -60,7 +61,7 @@ exports.createItem = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master constructionPlan record
  */
-exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let ConstructionPlan = mongoose.model('ConstructionPlan');
   let constructionPlan = new ConstructionPlan();
 
@@ -141,7 +142,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created lng constructionPlan record
  */
-exports.createLNG = function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (
     !userHasValidRoles(
@@ -203,4 +204,69 @@ exports.createLNG = function(args, res, next, incomingObj) {
   incomingObj.sourceSystemRef && (constructionPlanLNG.sourceSystemRef = incomingObj.sourceSystemRef);
 
   return constructionPlanLNG;
+};
+
+exports.createBCMI = function (args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI],
+      args.swagger.params.auth_payload.realm_access.roles
+    )
+  ) {
+    throw new Error('Missing valid user role.');
+  }
+
+  let ConstructionPlanBCMI = mongoose.model('ConstructionPlanBCMI');
+  let constructionPlanBCMI = new ConstructionPlanBCMI();
+
+  constructionPlanBCMI._schemaName = 'ConstructionPlanBCMI';
+
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (constructionPlanBCMI._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (constructionPlanBCMI._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (constructionPlanBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
+  constructionPlanBCMI.read = utils.ApplicationAdminRoles;
+  constructionPlanBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    constructionPlanBCMI.read.push('public');
+    constructionPlanBCMI.datePublished = new Date();
+    constructionPlanBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
+
+  constructionPlanBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  constructionPlanBCMI.dateAdded = new Date();
+
+  // set master data
+  incomingObj.mineGuid && (constructionPlanBCMI.mineGuid = incomingObj.mineGuid);
+  incomingObj.recordName && (constructionPlanBCMI.recordName = incomingObj.recordName);
+  constructionPlanBCMI.recordType = 'Construction Plan';
+  incomingObj.dateIssued && (constructionPlanBCMI.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (constructionPlanBCMI.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.author && (constructionPlanBCMI.author = incomingObj.author);
+  incomingObj.projectName && (constructionPlanBCMI.projectName = incomingObj.projectName);
+  incomingObj.location && (constructionPlanBCMI.location = incomingObj.location);
+  incomingObj.centroid && (constructionPlanBCMI.centroid = incomingObj.centroid);
+  incomingObj.documents && (constructionPlanBCMI.documents = incomingObj.documents);
+
+  // set flavour data
+  incomingObj.description && (constructionPlanBCMI.description = incomingObj.description);
+  incomingObj.relatedPhase && (constructionPlanBCMI.relatedPhase = incomingObj.relatedPhase);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (constructionPlanBCMI.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (constructionPlanBCMI.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (constructionPlanBCMI.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  return constructionPlanBCMI;
 };
