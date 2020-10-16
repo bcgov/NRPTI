@@ -134,7 +134,7 @@ const mineMaps = [
   * We receive the dbmigrate dependency from dbmigrate initially.
   * This enables us to not have to rely on NODE_PATH.
   */
-exports.setup = function(options, seedLink) {
+exports.setup = function (options, seedLink) {
   dbm = options.dbmigrate;
 };
 
@@ -143,7 +143,7 @@ exports.setup = function(options, seedLink) {
   * Mine model to be up-to-date, as well as the mineGUID to be up-to-date pointing to the correct mineGUID in the 
   * respective Mine model.
   */
-exports.up = async function(db) {
+exports.up = async function (db) {
   const mClient = await db.connection.connect(db.connectionString, { native_parser: true })
   try {
     console.log('Starting mine mapper.');
@@ -155,16 +155,34 @@ exports.up = async function(db) {
     for (let i = 0; i < mineMaps.length; i++) {
       console.log('Update permit number:', mineMaps[i].permitNumber);
       const mineRecord = await nrptiCollection.findOneAndUpdate({ _schemaName: 'MineBCMI', permitNumber: mineMaps[i].permitNumber },
-                                                                { $set: { _epicProjectIds: mineMaps[i].epicProjectIDs } },
-                                                                { new: true });
+        { $set: { _epicProjectIds: mineMaps[i].epicProjectIDs } },
+        { new: true });
 
       // If there was a a permit that we actually updated (maybe it's not in the system yet)
       if (mineRecord.value) {
         console.log("Updating master records reference to mineGuid:", mineRecord.value._sourceRefId);
 
-        // Bulk update only the master records with the map to mineGuid
-        await nrptiCollection.updateMany({ _master: { $exists: false }, _epicProjectId: { $in: mineMaps[i].epicProjectIDs }},
-                                         { $set: { mineGuid: mineRecord.value._sourceRefId } })
+        // Bulk update only BCMI Flavour records with the map to mineGuid
+        await nrptiCollection.updateMany(
+          {
+            _schemaName: {
+              $in: [
+                'AnnualReportBCMI',
+                'CertificateBCMI',
+                'CertificateAmendmentBCMI',
+                'ConstructionPlanBCMI',
+                'CorrespondenceBCMI',
+                'DamSafetyInspectionBCMI',
+                'InspectionBCMI',
+                'ManagementPlanBCMI',
+                'OrderBCMI',
+                'PermitBCMI',
+                'ReportBCMI'
+              ]
+            },
+            _epicProjectId: { $in: mineMaps[i].epicProjectIDs }
+          },
+          { $set: { mineGuid: mineRecord.value._sourceRefId } })
       } else {
         console.log("Permit number wasn't found.")
       }
@@ -178,7 +196,7 @@ exports.up = async function(db) {
   mClient.close()
 };
 
-exports.down = function(db) {
+exports.down = function (db) {
   return null;
 };
 
