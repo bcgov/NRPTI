@@ -171,7 +171,6 @@ export class MinesRecordsEditComponent implements OnInit {
       this.myForm.get('recordName').markAsDirty();
       this.myForm.get('recordDate').markAsDirty();
       this.myForm.get('recordAgency').markAsDirty();
-      this.myForm.get('recordPublish').markAsDirty();
 
       // Remove used state
       this.storeService.removeItem(StateIDs.recordAddEdit);
@@ -248,11 +247,6 @@ export class MinesRecordsEditComponent implements OnInit {
     record['issuingAgency'] && (record[schemaString]['issuingAgency'] = record['issuingAgency']);
     if (record['recordType'] === 'Permit') {
       record[schemaString]['typeCode'] = this.myForm.get('typeCode').value;
-    }
-    if (this.myForm.get('recordPublish').dirty && this.myForm.get('recordPublish').value) {
-      record[schemaString]['addRole'] = 'public';
-    } else if (this.myForm.get('recordPublish').dirty && !this.myForm.get('recordPublish').value) {
-      record[schemaString]['removeRole'] = 'public';
     }
 
     // if we have a flavour, update the flavour.
