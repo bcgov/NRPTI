@@ -1,5 +1,9 @@
-const defaultLog = require('../../utils/logger')('bcogc-csv-datasource');
+const defaultLog = require('../../utils/logger')('bcogc-datasource');
+const integrationUtils = require('../integration-utils');
+const { getCsvRowsFromString } = require('../../utils/helpers');
+
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+const BCOGC_CSV_ENDPOINT = process.env.BCOGC_CSV_ENDPOINT || 'https://reports.bcogc.ca/ogc/f?p=200:501::CSV';
 
 class OgcCsvDataSource {
   /**
@@ -11,11 +15,11 @@ class OgcCsvDataSource {
    * @param {*} csvRows array of csv row objects to import
    * @memberof OgcCsvDataSource
    */
-  constructor(taskAuditRecord, auth_payload, recordType, csvRows) {
+  constructor(taskAuditRecord, auth_payload, params = null, recordTypes = null) {
     this.taskAuditRecord = taskAuditRecord;
     this.auth_payload = auth_payload;
-    this.recordType = recordType;
-    this.csvRows = csvRows;
+    this.recordTypes = recordTypes;
+    this.params = params;
 
     // Set initial status
     this.status = { itemsProcessed: 0, itemTotal: 0, individualRecordStatus: [] };
@@ -28,14 +32,15 @@ class OgcCsvDataSource {
    * @memberof OgcCsvDataSource
    */
   async run() {
-    defaultLog.info('run - import bcogc-csv');
+    defaultLog.info('run - import bcogc');
+    
+    const csvRows = await this.fetchBcogcCsv();
 
-    this.status.itemTotal = this.csvRows.length;
+    this.status.itemTotal = csvRows.length;
+    await this.taskAuditRecord.updateTaskRecord({ status: 'Running', itemTotal: this.status.itemTotal});
 
-    await this.taskAuditRecord.updateTaskRecord({ status: 'Running', itemTotal: this.csvRows.length });
-
-    await this.batchProcessRecords();
-
+    await this.batchProcessRecords(csvRows);
+    
     return this.status;
   }
 
@@ -43,10 +48,10 @@ class OgcCsvDataSource {
    * Runs processRecord() on each csv row, in batches.
    *
    * Batch size configured by env variable `CSV_IMPORT_BATCH_SIZE` if it exists, or 100 by default.
-   *
+   * @param {Array<*>} csvRows array of objects of values for a single row
    * @memberof OgcCsvDataSource
    */
-  async batchProcessRecords() {
+  async batchProcessRecords(csvRows) {
     try {
       let batchSize = process.env.CSV_IMPORT_BATCH_SIZE || 100;
 
@@ -57,10 +62,10 @@ class OgcCsvDataSource {
       }
 
       let promises = [];
-      for (let i = 0; i < this.csvRows.length; i++) {
-        promises.push(this.processRecord(this.csvRows[i], recordTypeConfig));
+      for (let i = 0; i < csvRows.length; i++) {
+        promises.push(this.processRecord(csvRows[i], recordTypeConfig));
 
-        if (i % batchSize === 0 || i === this.csvRows.length - 1) {
+        if (i % batchSize === 0 || i === csvRows.length - 1) {
           await Promise.all(promises);
           promises = [];
         }
@@ -132,21 +137,39 @@ class OgcCsvDataSource {
   }
 
   /**
-   * Supported bcogc-csv record type configs.
+   * Supported bcogc record type configs.
    *
    * @returns {*} object with getUtil method to create a new instance of the record type utils.
    * @memberof OgcCsvDataSource
    */
   getRecordTypeConfig() {
-    if (this.recordType === 'Inspection') {
-      return {
-        getUtil: (auth_payload, csvRow) => {
-          return new (require('./inspections-utils'))(auth_payload, RECORD_TYPE.Inspection, csvRow);
-        }
-      };
-    }
+    return {
+      getUtil: (auth_payload, csvRow) => {
+        return new (require('./inspections-utils'))(auth_payload, RECORD_TYPE.Inspection, csvRow);
+      }
+    };
+  }
 
-    return null;
+  /**
+   * Gets the CSV of inspection from BCOGC
+   * 
+   * @returns {Array<*>} array of objects for a processed CSV
+   * @memberof OgcCsvDataSource
+   */
+  async fetchBcogcCsv() {
+    try {
+      const validUrl = new URL(BCOGC_CSV_ENDPOINT);
+      
+      const response = await integrationUtils.getRecords(validUrl);
+      const transformedCsv = getCsvRowsFromString(response);
+
+      return transformedCsv;
+    } catch (error) {
+      this.status.message = 'fetchBcogcCsv - unexpected error';
+      this.status.error = error.message;
+
+      defaultLog.error(`fetchBcogcCsv - unexpected error: ${error.message}`);
+    }
   }
 }
 

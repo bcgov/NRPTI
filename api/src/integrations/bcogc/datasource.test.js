@@ -13,13 +13,13 @@ describe('OgcCsvDataSource', () => {
     });
 
     it('sets recordType', () => {
-      const dataSource = new OgcCsvDataSource(null, null, 'recordType', null);
-      expect(dataSource.recordType).toEqual('recordType');
+      const dataSource = new OgcCsvDataSource(null, null, null, 'recordTypes');
+      expect(dataSource.recordTypes).toEqual('recordTypes');
     });
 
-    it('sets recordType', () => {
-      const dataSource = new OgcCsvDataSource(null, null, null, 'csvRows');
-      expect(dataSource.csvRows).toEqual('csvRows');
+    it('sets params', () => {
+      const dataSource = new OgcCsvDataSource(null, null, 'params', null);
+      expect(dataSource.params).toEqual('params');
     });
 
     it('sets default status fields', () => {

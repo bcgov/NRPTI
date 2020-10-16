@@ -21,7 +21,7 @@ export class ImportComponent implements OnInit {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   public loading = true;
-  public showAlert = { epic: false, 'nris-epd': false, core: false };
+  public showAlert = { epic: false, 'nris-epd': false, core: false, bcogc: false };
   public tableData: TableObject = new TableObject({ component: ImportTableRowsComponent });
   public tableColumns: IColumnObject[] = [
     {

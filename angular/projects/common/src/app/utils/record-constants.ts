@@ -231,6 +231,7 @@ export class Picklists {
   };
 
   public static readonly sourceSystemRefPicklist = [
+    'bcogc',
     'core',
     'cors-csv',
     'epic',

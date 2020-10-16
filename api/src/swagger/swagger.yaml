@@ -51,10 +51,12 @@ definitions:
     description: 'Supported data sources'
     example: 'epic'
     enum: &dataSourceType
+      - core
+      - core-documents
       - epic
       - nris-epd
       - cors-csv
-      - bcogc-csv
+      - bcogc
   dataImportType:
     type: string
     description: 'Supported import task types'
