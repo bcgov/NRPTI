@@ -26,12 +26,12 @@ describe('BaseRecordUtils', () => {
     });
 
     it('returns transformed Core record', () => {
-      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.PermitAmendment);
+      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.Permit);
 
       const coreRecord = { mine_guid: 1 };
 
       const expectedResult = {
-        _schemaName: 'PermitAmendment',
+        _schemaName: 'Permit',
         sourceSystemRef: 'core'
       };
 
@@ -43,17 +43,17 @@ describe('BaseRecordUtils', () => {
 
   describe('updateRecord', () => {
     it('throws error when nrptiRecord is not provided', async () => {
-      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.PermitAmendment);
+      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.Permit);
       await expect(baseRecordUtils.updateRecord(null, {})).rejects.toThrow('updateRecord - required nrptiRecord must be non-null.');
     });
 
     it('throws error when existingRecord is not provided', async () => {
-      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.PermitAmendment);
+      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.Permit);
       await expect(baseRecordUtils.updateRecord({}, null)).rejects.toThrow('updateRecord - required existingRecord must be non-null.');
     });
 
     it('calls `processPutRequest` when all arguments provided', async () => {
-      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.PermitAmendment);
+      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.Permit);
 
       const spy = jest.spyOn(RecordController, 'processPutRequest').mockImplementation(() => {
         return Promise.resolve({ test: 'record' });
@@ -69,12 +69,12 @@ describe('BaseRecordUtils', () => {
 
   describe('createItem', () => {
     it('throws error when nrptiRecord is not provided', async () => {
-      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.PermitAmendment);
+      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.Permit);
       await expect(baseRecordUtils.createItem(null)).rejects.toThrow('createItem - required nrptiRecord must be non-null.');
     });
 
     it('calls `processPostRequest` when all arguments provided', async () => {
-      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.PermitAmendment);
+      const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.Permit);
 
       const spy = jest.spyOn(RecordController, 'processPostRequest').mockImplementation(() => {
         return Promise.resolve({ test: 'record' });

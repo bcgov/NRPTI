@@ -77,7 +77,9 @@ describe('MinesRecordsListResolver', () => {
           '',
           [
             'AnnualReportBCMI',
+            'CertificateBCMI',
             'CertificateAmendmentBCMI',
+            'ConstructionPlanBCMI',
             'CorrespondenceBCMI',
             'DamSafetyInspectionBCMI',
             'InspectionBCMI',
@@ -145,7 +147,9 @@ describe('MinesRecordsListResolver', () => {
           '',
           [
             'AnnualReportBCMI',
+            'CertificateBCMI',
             'CertificateAmendmentBCMI',
+            'ConstructionPlanBCMI',
             'CorrespondenceBCMI',
             'DamSafetyInspectionBCMI',
             'InspectionBCMI',
