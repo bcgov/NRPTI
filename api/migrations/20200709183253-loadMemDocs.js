@@ -61,6 +61,9 @@ exports.up = async function (db) {
   let collectionsExisting = 0;
   let errors = 0;
 
+  let errorLog = "";
+  let documentErrorCount = 0;
+
   const mClient = await db.connection.connect(db.connectionString, { native_parser: true });
   try {
     // API call to pull data from BCMI
@@ -125,10 +128,25 @@ exports.up = async function (db) {
                     throw Error('No document generated?');
                   }
                 } catch (err) {
-                  console.error('#######################################');
-                  console.error(`## An error occured while creating the doc`);
+
+                  let mineInfo = (nrptiMine._id ? nrptiMine._id : "Couldn't find mine id") + ", " +  (nrptiMine.name ? nrptiMine.name : "Couldn't find mine name");
+                  let collectionInfo = (collection._id ? collection._id : "Couldn't find collection id") + ", " +  (collection.displayName ? collection.displayName : "Couldn't find collection name");
+                  let documentInfo = (collectionDoc.document ? ( collectionDoc.document._id ? collectionDoc.document._id : "Couldn't find document id" )  : "Couldn't find document")
+                  + ", " +  (collectionDoc.document ? ( collectionDoc.document.displayName ? collectionDoc.document.displayName : "Couldn't find document display name" ) : "Couldn't find document");
+
+                  let thisErrorLog = `\n#######################################`;
+                  thisErrorLog += `\n## An Error Occured While Creating a Document:`;
+                  thisErrorLog += `\n## NRPTI Mine: ` + mineInfo;
+                  thisErrorLog += `\n## EMPR Collection: ` + collectionInfo;
+                  thisErrorLog += `\n## EMPR Document: ` + documentInfo;
+                  thisErrorLog += `\n#######################################`;
+
+                  documentErrorCount += 1;
+                  errorLog += thisErrorLog;
+
+                  console.error(thisErrorLog);
                   console.error(err);
-                  console.error('#######################################');
+                  console.error('#######################################\n');
                   errors += 1;
                 }
               }
@@ -182,6 +200,11 @@ exports.up = async function (db) {
 
   console.log(`Process complete with ${docsCreated} records created, ${collectionsCreated} collections created, and ${errors} errors.`);
   console.log(`Process found ${docsExisting} existing documents, ${collectionsExisting} existing collections already created in NRPTI`);
+
+  console.log(`\nThe following documents did not come through correctly, and require human attention: `);
+  console.log(errorLog);
+  console.log(`\nThere were ` + documentErrorCount + ` documents that need attention.\n`);
+
   console.log('****************************************');
   console.log('** Finished mem-admin collection load **');
   console.log('****************************************');
