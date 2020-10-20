@@ -79,9 +79,10 @@ exports.up = async function (db) {
   let collectionsCreated = 0;
   let collectionsExisting = 0;
   let errors = 0;
-
-  let errorLog = "";
+  let documentErrorLog = "";
   let documentErrorCount = 0;
+  let mineErrorLog = "";
+  let mineErrorCount = 0;
 
   const mClient = await db.connection.connect(db.connectionString, { native_parser: true });
   try {
@@ -161,7 +162,7 @@ exports.up = async function (db) {
                   thisErrorLog += `\n#######################################`;
 
                   documentErrorCount += 1;
-                  errorLog += thisErrorLog;
+                  documentErrorLog += thisErrorLog;
 
                   console.error(thisErrorLog);
                   console.error(err);
@@ -202,10 +203,17 @@ exports.up = async function (db) {
           }
         }
       } else {
-        console.error('#######################################');
-        console.error('## An error occured while loading the mine!');
-        console.error(`Could not locate mine for ${mine.name} : ${mine.memPermitID}`);
-        console.error('#######################################');
+
+        let thisErrorLog = `\n#######################################`;
+        thisErrorLog += `\n## An error occured while loading a mine:`;
+        thisErrorLog += `\n## EMPR Mine: ` + mine.name;
+        thisErrorLog += `\n## EMPR Permit ID: ` + mine.memPermitID;
+        thisErrorLog += `\n#######################################`;
+
+        mineErrorLog += thisErrorLog;
+        mineErrorCount += 1;
+
+        console.error(thisErrorLog);
         errors += 1;
       }
     }
@@ -217,12 +225,16 @@ exports.up = async function (db) {
     errors += 1;
   }
 
+  console.log(`\nThe following documents did not come through correctly, and require human attention: `);
+  console.log(documentErrorLog);
+  console.log(`\nThere were ` + documentErrorCount + ` documents that need attention.\n`);
+
+  console.log(`\nThe following mines could not be found in NRPTI: `);
+  console.log(mineErrorLog);
+  console.log(`\nThere were ` + mineErrorCount + ` that couldn't be found.\n`);
+
   console.log(`Process complete with ${docsCreated} records created, ${collectionsCreated} collections created, and ${errors} errors.`);
   console.log(`Process found ${docsExisting} existing documents, ${collectionsExisting} existing collections already created in NRPTI`);
-
-  console.log(`\nThe following documents did not come through correctly, and require human attention: `);
-  console.log(errorLog);
-  console.log(`\nThere were ` + documentErrorCount + ` documents that need attention.\n`);
 
   console.log('****************************************');
   console.log('** Finished mem-admin collection load **');
