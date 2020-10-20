@@ -64,7 +64,7 @@ class CoreDocumentsDataSource {
    */
   async updateRecords() {
     try {
-      const jobCount = process.env.PARALLEL_IMPORT_LIMIT || 1;
+      const jobCount = process.env.PARALLEL_IMPORT_LIMIT ? parseInt(process.env.PARALLEL_IMPORT_LIMIT) : 1;
 
       const permits = await this.getPermits();
 
