@@ -31,7 +31,7 @@ describe('transformRecord', () => {
       summary: '-',
       outcomeDescription: 'Activities Inspected: -; Inspection Result: -',
 
-      sourceSystemRef: 'bcogc-csv'
+      sourceSystemRef: 'bcogc'
     });
   });
 
@@ -74,7 +74,7 @@ describe('transformRecord', () => {
       summary: 'Inspection Number 123456',
       outcomeDescription: 'Activities Inspected: activitiesInspection123; Inspection Result: statusCancelled',
 
-      sourceSystemRef: 'bcogc-csv'
+      sourceSystemRef: 'bcogc'
     });
   });
 

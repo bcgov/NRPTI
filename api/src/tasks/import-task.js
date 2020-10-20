@@ -1,10 +1,10 @@
 'use strict';
 
 const defaultLog = require('../utils/logger')('import-task');
-const csvToJson = require('csvtojson');
 const { SYSTEM_USER } = require('../utils/constants/misc');
 const queryActions = require('../utils/query-actions');
 const TaskAuditRecord = require('../utils/task-audit-record');
+const { getCsvRowsFromString } = require('../utils/helpers');
 
 const issuedToSubset = require('../../materialized_views/search/issuedToSubset');
 const locationSubset = require('../../materialized_views/search/locationSubset');
@@ -211,13 +211,6 @@ function getDataSourceConfig(dataSourceType) {
     };
   }
 
-  if (dataSourceType === 'bcogc-csv') {
-    return {
-      dataSourceLabel: 'bcogc-csv',
-      dataSourceClass: require('../importers/bcogc/datasource')
-    };
-  }
-
   // dataSourceType will match the name of a directory for the given
   // integration in /src/integrations/<dataSourceType>/
   return {
@@ -226,37 +219,3 @@ function getDataSourceConfig(dataSourceType) {
   };
 }
 
-/**
- * Given a csv string, return an array of row objects.
- *
- * Note: assumes there is a header row, which is converted to lowercase.
- *
- * @param {*} csvString
- * @returns {string[][]}
- */
-async function getCsvRowsFromString(csvString) {
-  if (!csvString) {
-    return null;
-  }
-
-  let lineNumber = 0;
-
-  // preFileLine bug that prevents us from using the built in line index
-  // See: https://github.com/Keyang/node-csvtojson/issues/351
-  const csvRows = await csvToJson()
-    .preFileLine(fileLine => {
-      let line = fileLine;
-
-      if (lineNumber === 0) {
-        // convert the header row to lowercase
-        line = fileLine.toLowerCase();
-      }
-
-      lineNumber++;
-
-      return line;
-    })
-    .fromString(csvString);
-
-  return csvRows;
-}

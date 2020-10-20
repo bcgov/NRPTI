@@ -164,7 +164,7 @@ export class CsvConstants {
       }
     }
 
-    if (dataSourceType === 'bcogc-csv') {
+    if (dataSourceType === 'bcogc') {
       if (recordType === 'Inspection') {
         return this.ogcInspectionCsvRequiredHeaders;
       }
@@ -193,7 +193,7 @@ export class CsvConstants {
       }
     }
 
-    if (dataSourceType === 'bcogc-csv') {
+    if (dataSourceType === 'bcogc') {
       if (recordType === 'Inspection') {
         return this.ogcInspectionCsvRequiredFields;
       }
@@ -222,7 +222,7 @@ export class CsvConstants {
       }
     }
 
-    if (dataSourceType === 'bcogc-csv') {
+    if (dataSourceType === 'bcogc') {
       if (recordType === 'Inspection') {
         return this.ogcInspectionCsvRequiredFormats;
       }
@@ -251,7 +251,7 @@ export class CsvConstants {
       }
     }
 
-    if (dataSourceType === 'bcogc-csv') {
+    if (dataSourceType === 'bcogc') {
       if (recordType === 'Inspection') {
         return this.ogcInspectionCsvDateFields;
       }
