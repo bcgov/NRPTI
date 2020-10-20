@@ -2,6 +2,12 @@
  * Supported NRPTI record types.
  */
 const RECORD_TYPE = Object.freeze({
+  ActivityLNG: {
+    _schemaName: 'ActivityLNG',
+    displayName: 'Activity',
+    recordControllerName: 'news',
+    flavours: {}
+  },
   AdministrativePenalty: {
     _schemaName: 'AdministrativePenalty',
     displayName: 'Administrative Penalty',
@@ -17,12 +23,21 @@ const RECORD_TYPE = Object.freeze({
       nrced: { _schemaName: 'AdministrativeSanctionNRCED' }
     }
   },
-  Agreement: { _schemaName: 'Agreement', displayName: 'Agreement', flavours: { lng: { _schemaName: 'AgreementLNG' } } },
+  Agreement: {
+    _schemaName: 'Agreement',
+    displayName: 'Agreement',
+    flavours: { lng: { _schemaName: 'AgreementLNG' } }
+  },
+  AnnualReport: {
+    _schemaName: 'AnnualReport',
+    displayName: 'Annual Report',
+    flavours: { bcmi: { _schemaName: 'AnnualReportBCMI' } }
+  },
   Certificate: {
     _schemaName: 'Certificate',
     displayName: 'Certificate',
     recordControllerName: 'certificates',
-    flavours: { lng: { _schemaName: 'CertificateLNG' } }
+    flavours: { lng: { _schemaName: 'CertificateLNG' }, bcmi: { _schemaName: 'CertificateBCMI' } }
   },
   CertificateAmendment: {
     _schemaName: 'CertificateAmendment',
@@ -40,24 +55,36 @@ const RECORD_TYPE = Object.freeze({
     _schemaName: 'ConstructionPlan',
     displayName: 'Construction Plan',
     recordControllerName: 'constructionPlans',
-    flavours: { lng: { _schemaName: 'ConstructionPlanLNG' } }
+    flavours: { lng: { _schemaName: 'ConstructionPlanLNG' }, bcmi: { _schemaName: 'ConstructionPlanBCMI' } }
+  },
+  Correspondence: {
+    _schemaName: 'Correspondence',
+    displayName: 'Correspondence',
+    recordControllerName: 'correspondence',
+    flavours: { nrced: { _schemaName: 'CorrespondenceNRCED' }, bcmi: { _schemaName: 'CorrespondenceBCMI' } }
   },
   CourtConviction: {
     _schemaName: 'CourtConviction',
     displayName: 'Court Conviction',
     flavours: { lng: { _schemaName: 'CourtConvictionLNG' }, nrced: { _schemaName: 'CourtConvictionNRCED' } }
   },
+  DamSafetyInspection: {
+    _schemaName: 'DamSafetyInspection',
+    displayName: 'Dam Safety Inspection',
+    recordControllerName: 'damSafetyInspection',
+    flavours: { nrced: { _schemaName: 'DamSafetyInspectionNRCED' }, bcmi: { _schemaName: 'DamSafetyInspectionBCMI' } }
+  },
   Inspection: {
     _schemaName: 'Inspection',
     displayName: 'Inspection',
     recordControllerName: 'inspections',
-    flavours: { lng: { _schemaName: 'InspectionLNG' }, nrced: { _schemaName: 'InspectionNRCED' } }
+    flavours: { lng: { _schemaName: 'InspectionLNG' }, nrced: { _schemaName: 'InspectionNRCED' }, bcmi: { _schemaName: 'InspectionBCMI' } }
   },
   ManagementPlan: {
     _schemaName: 'ManagementPlan',
     displayName: 'Management Plan',
     recordControllerName: 'managementPlans',
-    flavours: { lng: { _schemaName: 'ManagementPlanLNG' } }
+    flavours: { lng: { _schemaName: 'ManagementPlanLNG' }, bcmi: { _schemaName: 'ManagementPlan' } }
   },
   MineBCMI: {
     _schemaName: 'MineBCMI',
@@ -69,7 +96,7 @@ const RECORD_TYPE = Object.freeze({
     _schemaName: 'Order',
     displayName: 'Order',
     recordControllerName: 'orders',
-    flavours: { lng: { _schemaName: 'OrderLNG' }, nrced: { _schemaName: 'OrderNRCED' } }
+    flavours: { lng: { _schemaName: 'OrderLNG' }, nrced: { _schemaName: 'OrderNRCED' }, bcmi: { _schemaName: 'OrderBCMI' } }
   },
   Permit: {
     _schemaName: 'Permit',
@@ -77,11 +104,11 @@ const RECORD_TYPE = Object.freeze({
     recordControllerName: 'permits',
     flavours: { lng: { _schemaName: 'PermitLNG' }, bcmi: { _schemaName: 'PermitBCMI' } }
   },
-  PermitAmendment: {
-    _schemaName: 'PermitAmendment',
-    displayName: 'Permit Amendment',
-    recordControllerName: 'permitAmendments',
-    flavours: { bcmi: { _schemaName: 'PermitAmendmentBCMI' } }
+  Report: {
+    _schemaName: 'Report',
+    displayName: 'Report',
+    recordControllerName: 'report',
+    flavours: { nrced: { _schemaName: 'ReportNRCED' }, bcmi: { _schemaName: 'ReportBCMI' } }
   },
   RestorativeJustice: {
     _schemaName: 'RestorativeJustice',

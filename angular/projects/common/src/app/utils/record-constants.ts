@@ -70,7 +70,9 @@ export class SchemaLists {
 
   public static readonly bcmiRecordTypes = [
     'AnnualReportBCMI',
+    'CertificateBCMI',
     'CertificateAmendmentBCMI',
+    'ConstructionPlanBCMI',
     'CorrespondenceBCMI',
     'DamSafetyInspectionBCMI',
     'InspectionBCMI',
@@ -213,9 +215,9 @@ export class Picklists {
     // AdministrativeSanction: { displayName: 'Administrative Sanction', _schemaName: 'AdministrativeSanctionBCMI' },
     // Agreement: { displayName: 'Agreement', _schemaName: 'AgreementBCMI' },
     AnnualReport: { displayName: 'Annual Report', _schemaName: 'AnnualReportBCMI' },
-    // Certificate: { displayName: 'Certificate', _schemaName: 'CertificateBCMI' },
+    Certificate: { displayName: 'Certificate', _schemaName: 'CertificateBCMI' },
     CertificateAmendment: { displayName: 'Certificate Amendment', _schemaName: 'CertificateAmendmentBCMI' },
-    // ConstructionPlan: { displayName: 'Construction Plan', _schemaName: 'ConstructionPlanBCMI' },
+    ConstructionPlan: { displayName: 'Construction Plan', _schemaName: 'ConstructionPlanBCMI' },
     Correspondence: { displayName: 'Correspondence', _schemaName: 'CorrespondenceBCMI' },
     // CourtConviction: { displayName: 'Court Conviction', _schemaName: 'CourtConvictionBCMI' },
     DamSafetyInspection: { displayName: 'Dam Safety Inspection', _schemaName: 'DamSafetyInspectionBCMI' },

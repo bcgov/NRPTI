@@ -82,7 +82,7 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
       // Checks if root item is published
       if (item === 'isPublished' && entry === 'true') {
         return { read: { $in: ['public'] } };
-      } else if (item === 'isBcmiPublished' && entry === 'false') {
+      } else if (item === 'isPublished' && entry === 'false') {
         return { read: { $nin: ['public'] } };
       }
 
