@@ -33,6 +33,17 @@ const s3 = new AWS.S3({
   s3ForcePathStyle: true
 });
 
+const MINIO_URL = process.env.MEM_MINIO_endpoint_url || 'minio-mem-prod-mem-mmt-prod.pathfinder.gov.bc.ca';
+const MINIO_BUCKET = process.env.MEM_MINIO_bucket_name;
+const minioEndpoint = new AWS.Endpoint(MINIO_URL);
+const minio = new AWS.S3({
+  endpoint: minioEndpoint,
+  accessKeyId: process.env.MEM_MINIO_user_account,
+  secretAccessKey: process.env.MEM_MINIO_password,
+  s3ForcePathStyle: true,
+  signatureVersion: "v4",
+});
+
 let dbm;
 let type;
 let seed;
@@ -51,6 +62,14 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = async function (db) {
+  if (!process.env.MEM_MINIO_user_account || !process.env.MEM_MINIO_password || !MINIO_URL || !MINIO_BUCKET) {
+    console.log('*****************************************************************************');
+    console.log('** Minio connection environment variables not set - termninating migration **');
+    console.log('*****************************************************************************');
+
+    throw new Error(`Minio connection environment variables are not set`);
+  }
+
   console.log('****************************************');
   console.log('** Starting mem-admin collection load **');
   console.log('****************************************');
@@ -233,10 +252,13 @@ exports._meta = {
 };
 
 async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, newCollectionId) {
-  // fetch doc from mem-admin
-  // rawDoc will be a buffer from the get request.
-  await sleep(1000);
-  const rawDoc = await getRequest(bcmiUrl + '/api/document/' + collectionDoc.document._id + '/fetch', false);
+  // fetch doc from mem-admin Minio
+  // minioObject contains de-serialized data returned from the getObject request.  Body field contains the data buffer
+  // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property
+  const minioObject = await minio.getObject({
+    Bucket: MINIO_BUCKET,
+    Key: collectionDoc.document.internalURL
+  }).promise();
 
   // create a document meta
   let document = new Document();
@@ -251,10 +273,10 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   document.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // upload to s3
- await s3.upload({
+  await s3.upload({
     Bucket: OBJ_STORE_BUCKET,
     Key: s3Key,
-    Body: rawDoc,
+    Body: minioObject.Body,
     ACL: 'authenticated-read'
   }).promise()
 
@@ -371,7 +393,7 @@ function getRequest(url, asJson = true) {
   return new Promise(function (resolve, reject) {
     let req = https.get(url, function (res) {
       if (res.statusCode < 200 || res.statusCode >= 300) {
-        return reject(new Error('statusCode=' + res.statusCode));
+        return reject(new Error(`statusCode=${res.statusCode} url=${url}`));
       }
       let body = [];
       res.on('data', function (chunk) {

@@ -14,7 +14,8 @@ const CORE_CLIENT_ID = process.env.CORE_CLIENT_ID || null;
 const CORE_CLIENT_SECRET = process.env.CORE_CLIENT_SECRET || null;
 const CORE_GRANT_TYPE = process.env.CORE_GRANT_TYPE || null;
 const CORE_API_HOST = process.env.CORE_API_HOST || 'https://minesdigitalservices.pathfinder.gov.bc.ca';
-const CORE_DOC_MANAGER_HOST = process.env.CORE_DOC_MANAGER_HOST || 'https://minesdigitalservices.gov.bc.ca/document-manager';
+const CORE_DOC_MANAGER_HOST =
+  process.env.CORE_DOC_MANAGER_HOST || 'https://minesdigitalservices.gov.bc.ca/document-manager';
 
 class CoreDocumentsDataSource {
   /**
@@ -37,7 +38,7 @@ class CoreDocumentsDataSource {
     defaultLog.info('run - update core documents datasource');
     await this.taskAuditRecord.updateTaskRecord({ status: 'Running' });
 
-    try{
+    try {
       // Get Core API access token.
       this.client_token = await getCoreAccessToken(CORE_CLIENT_ID, CORE_CLIENT_SECRET, CORE_GRANT_TYPE);
 
@@ -47,12 +48,11 @@ class CoreDocumentsDataSource {
       if (this.status.individualRecordStatus.length) {
         defaultLog.error('CoreDocumentsDataSource - error processing some records');
         // This means there was an error on one or more records, but the the job still completed.
-       for (const error of this.status.individualRecordStatus) {
-         defaultLog.error(`Core record: ${error.coreId}, error: ${error.error}`);
-       }
+        for (const error of this.status.individualRecordStatus) {
+          defaultLog.error(`Core record: ${error.coreId}, error: ${error.error}`);
+        }
       }
-    }
-    catch (error) {
+    } catch (error) {
       defaultLog.error('CoreDataSource run error:', error.message);
     }
   }
@@ -64,25 +64,32 @@ class CoreDocumentsDataSource {
    */
   async updateRecords() {
     try {
+      const jobCount = process.env.PARALLEL_IMPORT_LIMIT ? parseInt(process.env.PARALLEL_IMPORT_LIMIT) : 1;
+
       const permits = await this.getPermits();
 
       this.status.itemTotal = permits.length;
       await this.taskAuditRecord.updateTaskRecord({ itemTotal: this.status.itemTotal });
 
-      const permitUtils = new PermitUtils(this.auth_payload, RECORD_TYPE.Permit)
+      const permitUtils = new PermitUtils(this.auth_payload, RECORD_TYPE.Permit);
 
-      // Process each amendment one at a time. As each record makes calls to the Core API, only process one at a time to prevent 504 errors.
-      for (let i = 0; i < permits.length; i++) {
-        defaultLog.info(`Processing permit ${i + 1} out of ${permits.length}`);
-        await this.processRecord(permits[i], permitUtils);
+      // Push records to proccess into a Promise array to be processed in parallel.
+      for (let i = 0; i < permits.length; i += jobCount) {
+        const promises = [];
+        for (let j = 0; j < jobCount && i + j < permits.length; j++) {
+          defaultLog.info(`Processing permit ${i + j + 1} out of ${permits.length}`);
+          promises.push(this.processRecord(permits[i + j], permitUtils));
+        }
+
+        if (promises.length > 0) {
+          await Promise.all(promises);
+        }
       }
     } catch (error) {
       defaultLog.error(`updateRecords - unexpected error: ${error.message}`);
-      throw(error);
+      throw error;
     }
   }
-
-
 
   /**
    * Process a permit record.
@@ -122,13 +129,13 @@ class CoreDocumentsDataSource {
 
   /**
    * Gets all Permit Amendments that still need to retrieve a document.
-   * 
+   *
    * @returns {PermitAmendment[]} Permit Amendments missing documents.
    * @memberof CoreDocumentsDataSource
    */
   async getPermits() {
     const PermitAmendment = mongoose.model('Permit');
-    return await PermitAmendment.find({ 
+    return await PermitAmendment.find({
       _schemaName: 'Permit',
       _sourceDocumentRefId: { $ne: null },
       documents: []
@@ -152,7 +159,7 @@ class CoreDocumentsDataSource {
       const { token_guid } = await integrationUtils.getRecords(url, getAuthHeader(this.client_token));
       return token_guid;
     } catch (error) {
-      throw (`getDownloadToken - unexpected error: ${error.message}`);
+      throw `getDownloadToken - unexpected error: ${error.message}`;
     }
   }
 
@@ -180,19 +187,23 @@ class CoreDocumentsDataSource {
       const downloadToken = await this.getDownloadToken(documentId);
 
       const url = `${CORE_DOC_MANAGER_HOST}/documents?token=${downloadToken}`;
+
       const res = await axios.get(url, getAuthHeader(this.client_token, { responseType: 'stream' }));
 
       const tempFilePath = `${uploadDir}/${documentName}`;
       // Attempt to save locally.
       await new Promise((resolve, reject) => {
-        res.data.pipe(fs.createWriteStream(tempFilePath))
+        res.data
+          .pipe(fs.createWriteStream(tempFilePath))
           .on('finish', resolve)
-          .on('error', (error) => reject(error));
+          .on('error', error => reject(error));
       });
 
       return tempFilePath;
     } catch (error) {
-      throw new Error(`getTemporaryDocument - unexpected error: ${error.message}`);
+      throw new Error(
+        `getTemporaryDocument - documentId ${documentId} - documentName ${documentName} - unexpected error: ${error.message}`
+      );
     }
   }
 

@@ -178,6 +178,10 @@
                     "value": "${KEYCLOAK_CLIENT_ID}"
                   },
                   {
+                    "name": "PARALLEL_IMPORT_LIMIT",
+                    "value": "${PARALLEL_IMPORT_LIMIT}"
+                  },
+                  {
                     "name": "ENVIRONMENT",
                     "value": "${ENVIRONMENT}"
                   }
@@ -536,6 +540,13 @@
       "description": "Place to store documents on the filesystem",
       "value": "/opt/app-root/src/uploads",
       "required": true
+    },
+    {
+      "name": "PARALLEL_IMPORT_LIMIT",
+      "displayName": "Maximum number of parallel import jobs to run",
+      "description": "Maximum number of parallel import jobs to run",
+      "value": 1,
+      "required": false
     }
   ]
 }
