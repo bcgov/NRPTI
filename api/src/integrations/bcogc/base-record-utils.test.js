@@ -29,7 +29,7 @@ describe('BaseRecordUtils', () => {
         _schemaName: 'Inspection',
         recordType: 'Inspection',
 
-        sourceSystemRef: 'bcogc-csv'
+        sourceSystemRef: 'bcogc'
       };
 
       const result = baseRecordUtils.transformRecord(csvRow);

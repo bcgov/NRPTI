@@ -8,7 +8,6 @@ import moment from 'moment';
 class CSVTypes {
   public static readonly csvTypes = {
     'cors-csv': ['Ticket'],
-    'bcogc-csv': ['Inspection']
   };
 
   public static getRecordTypes(dataSourceType: string): string[] {

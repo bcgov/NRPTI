@@ -49,7 +49,7 @@ class BaseRecordUtils {
       _schemaName: this.recordType._schemaName,
       recordType: this.recordType.displayName,
 
-      sourceSystemRef: 'bcogc-csv'
+      sourceSystemRef: 'bcogc'
     };
   }
 
