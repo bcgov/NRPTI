@@ -11,6 +11,7 @@ const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 const mongodb = require('../utils/mongodb');
 const PutUtils = require('../utils/put-utils');
+const { publishS3Document, unpublishS3Document } = require('../controllers/document-controller');
 
 exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
@@ -230,12 +231,38 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
     // Unpublish every collection, their records, and their documents.
     for (const collection of collections) {
       if (collection.records && collection.records.length) {
-        const records = await nrpti.find({ _id: { $in: collection.records }, write: { $in: auth_payload.realm_access.roles } }).toArray();
+        const recordAggregate = [
+          {
+            $match: {
+              _id: {
+                $in: collection.records
+              },
+              write: {
+                $in: auth_payload.realm_access.roles
+              }
+            }
+          },
+          {
+            $lookup: {
+                from: 'nrpti',
+                localField: "documents",
+                foreignField: "_id",
+                as: "documents",
+            }
+          }
+        ];
+        
+        const records = await nrpti.aggregate(recordAggregate).toArray();
 
         // Unpublish all documents of all records.
         for (const record of records) {
           if (record.documents && record.documents.length) {
             promises.push(nrpti.updateMany({ _id: { $in: record.documents }, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } }));
+          }
+
+          // Update the S3 object properties for each document.
+          for (const document of record.documents) {
+            promises.push(unpublishS3Document(document.key));
           }
 
           // Unpublish the flavour record.
@@ -275,12 +302,38 @@ exports.publishCollections = async function (mineId, auth_payload) {
     // Publish every collection, their records, and their documents.
     for (const collection of collections) {
       if (collection.records && collection.records.length) {
-        const records = await nrpti.find({ _id: { $in: collection.records }, write: { $in: auth_payload.realm_access.roles } }).toArray();
+        const recordAggregate = [
+          {
+            $match: {
+              _id: {
+                $in: collection.records
+              },
+              write: {
+                $in: auth_payload.realm_access.roles
+              }
+            }
+          },
+          {
+            $lookup: {
+                from: 'nrpti',
+                localField: "documents",
+                foreignField: "_id",
+                as: "documents",
+            }
+          }
+        ];
+        
+        const records = await nrpti.aggregate(recordAggregate).toArray();
 
         // Publish all documents of all records.
         for (const record of records) {
           if (record.documents && record.documents.length) {
             promises.push(nrpti.updateMany({ _id: { $in: record.documents }, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } }));
+            
+            // Update the S3 object properties for each document.
+            for (const document of record.documents) {
+              promises.push(publishS3Document(document.key));
+            }            
           }
 
           // Publish the flavour record.
