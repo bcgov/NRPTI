@@ -10,7 +10,8 @@
     }
   },
   "labels": {
-    "template": "${NAME}"
+    "template": "${NAME}",
+    "app": "${GROUP_NAME}"
   },
   "objects": [
     {
@@ -131,7 +132,8 @@
           "metadata": {
             "name": "${NAME}",
             "labels": {
-              "name": "${NAME}"
+              "name": "${NAME}",
+              "app": "${GROUP_NAME}"
             }
           },
           "spec": {
@@ -184,7 +186,16 @@
                   {
                     "name": "ENVIRONMENT",
                     "value": "${ENVIRONMENT}"
+                  },
+                  {
+                    "name": "SSO_JWKSURI",
+                    "value": "${SSO_JWKSURI}"
+                  },
+                  {
+                    "name": "SSO_ISSUER",
+                    "value": "${SSO_ISSUER}"
                   }
+                  
                 ],
                 "envFrom": [
                   {
@@ -309,7 +320,8 @@
           "metadata": {
             "name": "${DATABASE_SERVICE_NAME}",
             "labels": {
-              "name": "${DATABASE_SERVICE_NAME}"
+              "name": "${DATABASE_SERVICE_NAME}",
+              "app": "${GROUP_NAME}"
             }
           },
           "spec": {
@@ -392,6 +404,13 @@
       "description": "The name assigned to all of the frontend objects defined in this template.",
       "required": true,
       "value": "nrpti-api"
+    },
+    {
+      "name": "GROUP_NAME",
+      "displayName": "Group Name",
+      "description": "The name assigned to a group of objects deployed together",
+      "required": true,
+      "value": "nrpti"
     },
     {
       "name": "MONGO_IMAGE_NAMESPACE",
@@ -545,7 +564,18 @@
       "name": "PARALLEL_IMPORT_LIMIT",
       "displayName": "Maximum number of parallel import jobs to run",
       "description": "Maximum number of parallel import jobs to run",
-      "value": 1,
+      "required": false
+    },
+    {
+      "name": "SSO_JWKSURI",
+      "displayName": "Uri to sso certs",
+      "description": "Uri to sso certs",
+      "required": false
+    },
+    {
+      "name": "SSO_ISSUER",
+      "displayName": "URI to SSO realm",
+      "description": "URI to SSO realm",
       "required": false
     }
   ]
