@@ -160,11 +160,16 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
 
       if (flavourIncomingObj[entry[0]]._id) {
         let flavourUpdateObj = entry[1](args, res, next, { ...flavourIncomingObj, ...flavourIncomingObj[entry[0]] });
-        const Model = mongoose.model(entry[0]);
-        flavourUpdateObj._master = new ObjectId(masterId);
+        const Model = mongoose.model(entry[0]);        
+        flavourUpdateObj._master = new ObjectId(masterId);        
+
+        // Set flavour objectIds
+        const flavourId = flavourIncomingObj[entry[0]]._id;
+        flavourIds.push(flavourId);
+
         promises.push(
           Model.findOneAndUpdate(
-            { _id: flavourIncomingObj[entry[0]]._id, write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
+            { _id: flavourId, write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
             flavourUpdateObj,
             { new: true }
           )
@@ -260,8 +265,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
     if (incomingObj.mineGuid) {
       updateMasterObj.mineGuid = incomingObj.mineGuid;
     }
-  }
-
+  }  
 
   promises.push(
     MasterModel.findOneAndUpdate({
