@@ -20,6 +20,7 @@ const NRIS_EPD_API_ENDPOINT =
   process.env.NRIS_EPD_API_ENDPOINT || 'https://api.nrs.gov.bc.ca/nrisws-api/v1/epdInspections';
 const NRIS_username = process.env.NRIS_username || null;
 const NRIS_password = process.env.NRIS_password || null;
+const RETRY_LIMIT = 10;
 
 class NrisDataSource {
   /**
@@ -147,11 +148,12 @@ class NrisDataSource {
           const existingRecord = await this.findExistingRecord(newRecord);
 
           if (existingRecord) {
-            await this.updateRecord(newRecord, existingRecord);
             if (newRecord.documents.length === 0) {
               // create attachment if no existing document was found, if no "Final Report" is attached no document will be created
               await this.createRecordAttachments(records[i], newRecord)
-            }
+            }  
+
+            await this.updateRecord(newRecord, existingRecord);                                 
           } else {
             await this.createRecordAttachments(records[i], newRecord);
             await this.createItem(newRecord);
@@ -283,7 +285,24 @@ class NrisDataSource {
       `attachments/${inspectionId}/attachment/${attachmentId}`
     );
     try {
-      const res = await axios.get(url, { headers: { Authorization: 'Bearer ' + this.token }, responseType: 'stream' });
+      let res = null;
+
+      // Attachment download may fail with 500 error, retry up to 10 times
+      for(let i = 0; i < RETRY_LIMIT; i++) {
+        try {
+          defaultLog.info(`Downloading attachment from ${url}`);
+          res = await axios.get(url, { headers: { Authorization: 'Bearer ' + this.token }, responseType: 'stream' });
+          break;
+        } catch(err) {
+          defaultLog.info('Failed to retrieve attachment, waiting to retry');
+          // Sleep 10 seconds before retry
+          await new Promise(resolve => setTimeout(resolve, 10000));
+        }
+      }
+
+      if(res === null)
+        throw Error('Unable to retrieve attachment, retry limit reached');      
+
       const uploadDir = process.env.UPLOAD_DIRECTORY || '/tmp/';
       const tempFilePath = uploadDir + res.headers['content-disposition'].split('= ').pop();
       // Attempt to save locally and prepare for upload to S3.
@@ -364,13 +383,18 @@ class NrisDataSource {
         summary: record.description || '',
         addRole: 'public'
       };
-      return await RecordController.processPostRequest(
+      const result =  await RecordController.processPostRequest(
         { swagger: { params: { auth_payload: this.auth_payload } } },
         null,
         null,
         RECORD_TYPE.Inspection.recordControllerName,
         [createObj]
       );
+
+      if(result.length && result[0].status && result[0].status === 'failure')
+        throw Error(`processPostRequest failed: ${result[0].errorMessage}`);
+
+      return result;
     } catch (error) {
       defaultLog.error(`Failed to create Inspection record: ${error.message}`);
     }
@@ -412,13 +436,18 @@ class NrisDataSource {
         updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
       });
 
-      return await RecordController.processPutRequest(
+      const result = await RecordController.processPutRequest(
         { swagger: { params: { auth_payload: this.auth_payload } } },
         null,
         null,
         RECORD_TYPE.Inspection.recordControllerName,
         [updateObj]
       );
+
+      if(result.length && result[0].status && result[0].status === 'failure')
+        throw Error(`processPutRequest failed: ${result[0].errorMessage}`);
+
+      return result;
     } catch (error) {
       defaultLog.error(`Failed to save ${RECORD_TYPE.Inspection._schemaName} record: ${error.message}`);
     }

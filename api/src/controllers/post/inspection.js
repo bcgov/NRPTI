@@ -226,6 +226,9 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (inspectionLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj._sourceRefNrisId &&
+    ObjectId.isValid(incomingObj._sourceRefNrisId) &&
+    (inspectionLNG._sourceRefNrisId = incomingObj._sourceRefNrisId);
 
   // set permissions and meta
   inspectionLNG.read = utils.ApplicationAdminRoles;
@@ -354,6 +357,9 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (inspectionNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj._sourceRefNrisId &&
+    ObjectId.isValid(incomingObj._sourceRefNrisId) &&
+    (inspectionNRCED._sourceRefNrisId = incomingObj._sourceRefNrisId);
 
   // set permissions and meta
   inspectionNRCED.read = utils.ApplicationAdminRoles;
@@ -483,6 +489,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (inspectionBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj._sourceRefNrisId &&
+    ObjectId.isValid(incomingObj._sourceRefNrisId) &&
+    (inspectionBCMI._sourceRefNrisId = incomingObj._sourceRefNrisId);
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (inspectionBCMI.collectionId = new ObjectId(incomingObj.collectionId));
