@@ -145,7 +145,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       'activityType',
       FilterType.MultiSelect,
       'Type (Activity or Record)',
-      new MultiSelectDefinition(Object.values(Picklists.activityTypePicklist).map(item => {
+      new MultiSelectDefinition(Object.values(Picklists.bcmiRecordTypePicklist).map(item => {
         return { value: item._schemaName, displayValue: item.displayName, selected: false, display: true };
       }), 'Begin typing to filter activities...', 'Select all that apply...'),
       6
