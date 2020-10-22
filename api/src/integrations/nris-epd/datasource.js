@@ -393,6 +393,8 @@ class NrisDataSource {
 
       if(result.length && result[0].status && result[0].status === 'failure')
         throw Error(`processPostRequest failed: ${result[0].errorMessage}`);
+
+      return result;
     } catch (error) {
       defaultLog.error(`Failed to create Inspection record: ${error.message}`);
     }
