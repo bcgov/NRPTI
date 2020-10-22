@@ -47,7 +47,6 @@ exports.up = async function (db) {
             'CorrespondenceNRCED',
             'DamSafetyInspectionNRCED',
             'ReportNRCED',
-            'ActivityLNG',
             'AdministrativePenaltyLNG',
             'AdministrativeSanctionLNG',
             'AgreementLNG',
