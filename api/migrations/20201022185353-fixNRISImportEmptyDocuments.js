@@ -42,7 +42,7 @@ exports.up = async function(db) {
           documents: []
         }
       },
-      // Grab the maste record
+      // Grab the master record
       {
         $lookup: {
           from: 'nrpti',
