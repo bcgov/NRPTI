@@ -1097,11 +1097,11 @@ export class Picklists {
           }
         },
         '33': {
-          description: 'Purchase, sell or possess illegally caught fish in contravention of the act/regulations'
+          description: 'Purchase, sell or possess illegally caught fish in contravention of the Act or regulations'
         },
         '35': {
           '1': {
-            description: 'Harmful alteration, disruption of fish habitat'
+            description: 'Harmful alteration disruption of fish habitat'
           }
         },
         '36': {
@@ -1147,7 +1147,7 @@ export class Picklists {
           '22': {
             '2': {
               description:
-                'Use, construct, maintain or deactivate a road prescribed by the act in a manner not in accordance with the act'
+                'Use, construct, maintain or deactivate a road prescribed by the Act in a manner not in accordance with the Act'
             }
           }
         }
@@ -1156,7 +1156,7 @@ export class Picklists {
         '67': {
           '1': {
             description:
-              'Carry out forest harvesting and related forest practice not in accordance with act, regulation, standard, prescription or plan'
+              'Carry out forest harvesting and related forest practice not in accordance with Act, regulation, standard, prescription or plan'
           },
           '2': {
             a: {
@@ -1283,7 +1283,7 @@ export class Picklists {
               description: 'Use water without entitlement'
             },
             Q: {
-              description: 'Make change in / about stream without lawful authority'
+              description: 'Make change in or about stream without lawful authority'
             },
             r: {
               description: 'Breach the regulations'
@@ -1349,7 +1349,7 @@ export class Picklists {
         '12': {
           a: {
             i: {
-              description: 'Angles in non-tidal waters with out angling licence'
+              description: 'Angles in non-tidal waters without angling licence'
             }
           },
           A: {
@@ -1492,7 +1492,7 @@ export class Picklists {
           },
           b: {
             i: {
-              description: 'Nonresident hunts big game without guide'
+              description: 'Non-resident hunts big game without guide'
             }
           }
         },
@@ -1708,7 +1708,7 @@ export class Picklists {
           },
           '15': {
             '2': {
-              A: {
+              a: {
                 description: 'Fail to leave attached male sex organ of big game'
               }
             }
@@ -1885,6 +1885,54 @@ export class Picklists {
           description: 'Park Act Order'
         }
       },
+      'Wildfire Act': {
+        '7': {
+          '3': {
+            description: 'Fire hazard abatement order'
+          }
+        },
+        '17': {
+          '3.1': {
+            description: 'Order for no compensation for fire control costs'
+          }
+        },
+        '25': {
+          '2': {
+            description: 'Order for recovery of fire control costs and related amounts'
+          }
+        },
+        '26': {
+          description: 'Contravention order'
+        },
+        '27': {
+          '1': {
+            a: {
+              description: 'Administrative penalty for determination of contravention'
+            },
+            d: {
+              description: 'Order for recovery of government\'s costs of fire control and other amounts',
+            }
+          }
+        },
+        '28': {
+          '1': {
+            description: 'Remediation order'
+          },
+          '3': {
+            c: {
+              description: 'Order for recovery of costs incurred for remediation work carried out by minister'
+            },
+            d: {
+              description: 'Administrative penalty in lieu of remediation costs'
+            }
+          }
+        },
+        '34': {
+          '1': {
+            description: 'Stop work order'
+          }
+        }
+      },
       'Water Sustainability Act': {
         '47': {
           description: 'Water Sustainability Act Order'
@@ -1916,7 +1964,7 @@ export class Picklists {
       'Fisheries Act (Canada)': {
         '35': {
           '1': {
-            description: 'Harmful Alteration Disruption of Fish Habitat'
+            description: 'Harmful alteration disruption of fish habitat'
           }
         }
       },
@@ -1946,14 +1994,14 @@ export class Picklists {
       'Canada Shipping Act': {
         '8': {
           '1': {
-            description: 'Operate vessel without license'
+            description: 'Operate vessel without licence'
           }
         },
         '196': {
           '5': {
             b: {
               description:
-                'Failing to produce document or information to officer or inspector.  - owner, person in charge or person on board pleasure craft'
+                'Failing to produce document or information to officer or inspector - owner, person in charge or person on board pleasure craft'
             }
           }
         },
@@ -1966,7 +2014,7 @@ export class Picklists {
         },
         '204': {
           description:
-            'Operating or permitting operation of licensed pleasure craft on which licence number not marked and maintained in the specified form and manner.'
+            'Operating or permitting operation of licenced pleasure craft on which licence number not marked and maintained in the specified form and manner.'
         },
         'Boating Restriction Regulations': {
           '2': {
@@ -2334,7 +2382,7 @@ export class Picklists {
           '53': {
             '1': {
               b: {
-                description: 'Receive Bivalve Molluscs in Untagged Container'
+                description: 'Receive bivalve molluscs in untagged container'
               }
             }
           }
@@ -2499,7 +2547,7 @@ export class Picklists {
             },
             c: {
               description:
-                'Catch and retain more than the agrregate daily quota of six dungeness crab, red rock crab and king crab'
+                'Catch and retain more than the aggregate daily quota of six dungeness crab, red rock crab and king crab'
             }
           },
           '37': {
@@ -2595,7 +2643,7 @@ export class Picklists {
               description: 'Catch and retain more than the aggregate daily quota for wild and hatchery cutthroat'
             },
             d: {
-              description: 'Catch and retain more than the aggregate daily quota forwild and hatchery brown trout'
+              description: 'Catch and retain more than the aggregate daily quota for wild and hatchery brown trout'
             },
             f: {
               description: 'Catch and retain more than the aggregate daily quota for wild and hatchery dolly varden'
@@ -2685,7 +2733,7 @@ export class Picklists {
         'Timber Marketing Regulation': {
           '10': {
             '3': {
-              description: 'Documentation requirements. fail to maintain adequate records.'
+              description: 'Documentation requirements -  fail to maintain adequate records.'
             }
           }
         }
@@ -2999,7 +3047,7 @@ export class Picklists {
             }
           },
           '29': {
-            description: 'Possess migratory birds w/o taxidermy permit'
+            description: 'Possess migratory birds without taxidermy permit'
           }
         }
       },
@@ -3030,7 +3078,7 @@ export class Picklists {
         },
         '7': {
           description:
-            'Operate atv for purpose of hunting in an area and during a specified period as described in schedule 6'
+            'Operate ATV for purpose of hunting in an area and during a specified period as described in schedule 6'
         }
       },
       'Motor Vehicle Act': {
@@ -3266,13 +3314,13 @@ export class Picklists {
             '10': {
               '4': {
                 description:
-                  "Fail to display n sign in violation of driver's licence condition (section 25 (15) motor vehicle act)"
+                  "Fail to display N sign in violation of driver's licence condition (section 25 (15) motor vehicle act)"
               }
             }
           },
           '24.22': {
             description:
-              'Drives or operates an air cushion vehicle, golf cart, neighbourhood zero emission vehicle, snow vehicle, snowmobile or utility vehicle in contravention of  division 4'
+              'Drives or operates an air cushion vehicle, golf cart, neighbourhood zero emission vehicle, snow vehicle, snowmobile or utility vehicle in contravention of division 4'
           },
           '3.01': {
             description: 'Fail to display number plates and valid decal'
@@ -3635,7 +3683,7 @@ export class Picklists {
         '6': {
           '1': {
             e: {
-              description: 'Import an animal transported in contravention of a foreign state?s law'
+              description: 'Import an animal transported in contravention of a foreign state\'s law'
             }
           },
           '2': {
@@ -4222,7 +4270,7 @@ export class Picklists {
             description: 'Hunt in Fraser Valley without appropriate licenses'
           },
           '27': {
-            description: 'Hunt in Fraser valley without insurance'
+            description: 'Hunt in Fraser Valley without insurance'
           }
         },
         'Hunting Regulation': {
@@ -4282,7 +4330,7 @@ export class Picklists {
             },
             '2': {
               a: {
-                description: 'Fail to leave attached  male sex organ of big game'
+                description: 'Fail to leave attached male sex organ of big game'
               },
               b: {
                 description:
@@ -4350,7 +4398,7 @@ export class Picklists {
                 description: 'Hunt big game with a rifle using a rim-fire cartridge'
               },
               e: {
-                description: 'Hunt deer,etc.with shotgun less than 20 gauge'
+                description: 'Hunt deer, etc. with shotgun less than 20 gauge'
               },
               k: {
                 description: 'Hunt with bow with pull less than 18kg'
@@ -4432,15 +4480,15 @@ export class Picklists {
           },
           '5': {
             description:
-              'Use or operate atv or snowmobile for the purpose of hunting in closed area as described in schedule 4'
+              'Use or operate ATV or snowmobile for the purpose of hunting in closed area as described in schedule 4'
           },
           '6': {
             description:
-              'Use or operate atv or snowmobile for the purpose of hunting in closed area as described in schedule 5'
+              'Use or operate ATV or snowmobile for the purpose of hunting in closed area as described in schedule 5'
           },
           '7': {
             description:
-              'Use or operate atv for purpose of hunting in closed area and during periods specified in schedule 6'
+              'Use or operate ATV for purpose of hunting in closed area and during periods specified in schedule 6'
           },
           '7.1': {
             description: 'Use or operate snowmobile in closed area and during periods specified in schedule 7'
@@ -4514,7 +4562,7 @@ export class Picklists {
             '1': {
               'a-d': {
                 description:
-                  'Taxidermist, tanner, licensed fur trader, meat cutter or an operator of a cold storage plant fails to immediately record wildlife'
+                  'Taxidermist, tanner, licenced fur trader, meat cutter or an operator of a cold storage plant fails to immediately record wildlife'
               }
             }
           },
@@ -4532,7 +4580,7 @@ export class Picklists {
             },
             '3': {
               c: {
-                description: 'Traffick in bear paws that are separate from carcass or hide'
+                description: 'Traffic in bear paws that are separate from carcass or hide'
               }
             }
           },
@@ -4608,7 +4656,7 @@ export class Picklists {
               description: 'Fail to comply with condition - hunting licence'
             },
             b: {
-              description: 'Fail to comply with condition-species licence'
+              description: 'Fail to comply with condition - species licence'
             },
             c: {
               description: 'Fail to comply with condition - special area'
