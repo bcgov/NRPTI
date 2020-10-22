@@ -209,27 +209,17 @@ export class Picklists {
   };
 
   public static readonly bcmiRecordTypePicklist = {
-    // TODO: Commented out sections currently do not have a BCMI flavour. These need to be added
-    // TODO: before they can be created via Mine Record Add/Edit screens.
-    // AdministrativePenalty: { displayName: 'Administrative Penalty', _schemaName: 'AdministrativePenaltyBCMI' },
-    // AdministrativeSanction: { displayName: 'Administrative Sanction', _schemaName: 'AdministrativeSanctionBCMI' },
-    // Agreement: { displayName: 'Agreement', _schemaName: 'AgreementBCMI' },
     AnnualReport: { displayName: 'Annual Report', _schemaName: 'AnnualReportBCMI' },
     Certificate: { displayName: 'Certificate', _schemaName: 'CertificateBCMI' },
     CertificateAmendment: { displayName: 'Certificate Amendment', _schemaName: 'CertificateAmendmentBCMI' },
     ConstructionPlan: { displayName: 'Construction Plan', _schemaName: 'ConstructionPlanBCMI' },
     Correspondence: { displayName: 'Correspondence', _schemaName: 'CorrespondenceBCMI' },
-    // CourtConviction: { displayName: 'Court Conviction', _schemaName: 'CourtConvictionBCMI' },
     DamSafetyInspection: { displayName: 'Dam Safety Inspection', _schemaName: 'DamSafetyInspectionBCMI' },
     Inspection: { displayName: 'Inspection', _schemaName: 'InspectionBCMI' },
     ManagementPlan: { displayName: 'Management Plan', _schemaName: 'ManagementPlanBCMI' },
     Order: { displayName: 'Order', _schemaName: 'OrderBCMI' },
     Permit: { displayName: 'Permit', _schemaName: 'PermitBCMI' },
     Report: { displayName: 'Report', _schemaName: 'ReportBCMI' }
-    // RestorativeJustice: { displayName: 'Restorative Justice', _schemaName: 'RestorativeJusticeBCMI' },
-    // SelfReport: { displayName: 'Self Report', _schemaName: 'SelfReportBCMI' },
-    // Ticket: { displayName: 'Ticket', _schemaName: 'TicketBCMI' },
-    // Warning: { displayName: 'Warning', _schemaName: 'WarningBCMI' }
   };
 
   public static readonly sourceSystemRefPicklist = [
