@@ -15,14 +15,16 @@
       "metadata": {
         "creationTimestamp": null,
         "labels": {
-          "app": "${NAME}"
+          "app": "${GROUP_NAME}",
+          "name": "${NAME}"
         },
         "name": "${NAME}"
       },
       "spec": {
         "replicas": 2,
         "selector": {
-          "app": "${NAME}",
+          "app": "${GROUP_NAME}",
+          "name": "${NAME}",
           "deploymentconfig": "${NAME}"
         },
         "strategy": {
@@ -39,14 +41,15 @@
           "metadata": {
             "creationTimestamp": null,
             "labels": {
-              "app": "${NAME}",
+              "app": "${GROUP_NAME}",
+              "name": "${NAME}",
               "deploymentconfig": "${NAME}"
             }
           },
           "spec": {
             "containers": [
               {
-                "image": "${NAME}",
+                "image": "${IMAGE_NAME}",
                 "imagePullPolicy": "Always",
                 "name": "${NAME}",
                 "ports": [
@@ -127,7 +130,7 @@
               "from": {
                 "kind": "ImageStreamTag",
                 "namespace": "${IMAGE_NAMESPACE}",
-                "name": "${NAME}:${TAG_NAME}"
+                "name": "${IMAGE_NAME}:${TAG_NAME}"
               }
             }
           }
@@ -140,7 +143,8 @@
       "metadata": {
         "creationTimestamp": null,
         "labels": {
-          "app": "${NAME}"
+          "name": "${NAME}",
+          "app": "${GROUP_NAME}"
         },
         "name": "${NAME}"
       },
@@ -166,7 +170,8 @@
       "kind": "Route",
       "metadata": {
         "labels": {
-          "app": "${NAME}"
+          "name": "${NAME}",
+          "app": "${GROUP_NAME}"
         },
         "name": "${NAME}"
       },
@@ -194,6 +199,13 @@
       "name": "NAME",
       "required": true,
       "value": "public-lng"
+    },
+    {
+      "description": "The name assigned to a common set of openshift objects.",
+      "displayName": "Group Name",
+      "name": "GROUP_NAME",
+      "required": true,
+      "value": "nrpti"
     },
     {
       "description": "The namespace where to get the above image name",
@@ -231,6 +243,13 @@
       "displayName": "Env TAG name",
       "name": "TAG_NAME",
       "value": "dev"
+    },
+    {
+      "name": "IMAGE_NAME",
+      "displayName": "Application image name.",
+      "description": "Application image name.",
+      "value": "public-lng",
+      "required": true
     }
   ]
 }
