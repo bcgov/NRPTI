@@ -70,6 +70,10 @@
                   {
                     "name": "IpFilterRules",
                     "value": "${IpFilterRules}"
+                  },
+                  {
+                    "name": "CONFIG_ENDPOINT",
+                    "value": "${CONFIG_ENDPOINT}"
                   }
                 ],
                 "resources": {
@@ -249,6 +253,13 @@
       "displayName": "Application image name.",
       "description": "Application image name.",
       "value": "public-lng",
+      "required": true
+    },
+    {
+      "name": "CONFIG_ENDPOINT",
+      "displayName": "Api service URL for config serivce.",
+      "description": "Api's service URL (ip) to retrieve configuration vars",
+      "value": "http://123.4.5.6:3000",
       "required": true
     }
   ]
