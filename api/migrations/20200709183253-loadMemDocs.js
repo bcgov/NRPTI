@@ -125,7 +125,7 @@ exports.up = async function (db) {
       if (nrptiMine) {
         // Found a mine, now lets create a record and upload up the docs
         for (const collection of mine.collectionData) {
-          // console.log(`Processing collection ${collection.displayName}`);
+          console.log(`Processing collection ${collection.displayName}`);
           if (!collection.displayName) {
             console.log(`Collection missing displayName: ${JSON.stringify(collection)}`)
           }
@@ -173,9 +173,11 @@ exports.up = async function (db) {
             if (!collectionDoc.document && !collectionDoc.hasOwnProperty('displayName')) {
               console.log(`missing displayName: ${JSON.stringify(collectionDoc)}`)
             } else {
-              existingDoc = await nrpti.findOne({ mineGuid: nrptiMine._sourceRefId, recordName: collectionDoc.document.displayName });
+              // check for isBcmiPublished flag to ensure we get the flavour record
+              existingDoc = await nrpti.findOne({ mineGuid: nrptiMine._sourceRefId, recordName: collectionDoc.document.displayName, isBcmiPublished: null });
             }
             if (!existingDoc) {
+              console.log('Creating new document')
               if (collection.type && collection.type.length > 0 && !collection.isForEAO) {
                 try {
                   const newDoc = await createMineDocument(nrpti, nrptiMine, collection, collectionDoc, bcmiCollection._id);
