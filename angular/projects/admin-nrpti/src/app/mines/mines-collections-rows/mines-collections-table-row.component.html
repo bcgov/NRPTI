@@ -1,10 +1,11 @@
 <td scope="row" data-label="Collection Name" class="col-4 truncate">{{ rowData.name || '-' }}</td>
-<td scope="row" data-label="Agency" class="col-2 truncate">{{ rowData.agency || '-' }}</td>
+<td scope="row" data-label="Agency" class="col-1 truncate">{{ rowData.agency || '-' }}</td>
 <td scope="row" data-label="Type" class="col-2 truncate">{{ rowData.type || '-' }}</td>
 <td scope="row" data-label="Date" class="col-2 truncate">{{ rowData.date | date: 'mediumDate' || '-' }}</td>
 <td scope="row" data-label="# of Records" class="col-1 truncate">
   {{ (rowData.records && rowData.records.length) || 0 }}
 </td>
+<td scope="row" data-label="Source" class="col-1 truncate">{{ rowData.sourceSystemRef || '-' }}</td>
 <td scope="row" class="col-1 d-xl-flex" (click)="$event.stopPropagation()">
   <button class="btn" type="button" [disabled]="isEditingCollection" (click)="goToEdit()" title="Edit record">
     <i class="material-icons">create</i>
