@@ -190,6 +190,7 @@ exports.up = async function (db) {
             bcmiCollection.addedBy = 'nrpti';
             bcmiCollection.datePublished = collection.date;
             bcmiCollection.publishedBy = 'nrpti';
+            bcmiCollection.sourceSystemRef = 'mem-admin';
             await nrpti.insertOne(bcmiCollection);
 
             collectionsCreated += 1;
