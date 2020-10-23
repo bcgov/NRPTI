@@ -49,6 +49,7 @@ let type;
 let seed;
 
 const https = require('https');
+const { ObjectId } = require('mongoose');
 const bcmiUrl = 'https://mines.empr.gov.bc.ca'; // prod mem-admin api url
 
 /**
@@ -80,6 +81,7 @@ exports.up = async function (db) {
   let collectionsExisting = 0;
   let errors = 0;
   let documentErrorLog = "";
+  let collectionErrorLog = "";
   let documentErrorCount = 0;
   let mineErrorLog = "";
   let mineErrorCount = 0;
@@ -123,13 +125,49 @@ exports.up = async function (db) {
       if (nrptiMine) {
         // Found a mine, now lets create a record and upload up the docs
         for (const collection of mine.collectionData) {
-          console.log(`Processing collection ${collection.displayName}`);
-          // init the collection so we can pass an id
-          let bcmiCollection = new CollectionBCMI();
+          // console.log(`Processing collection ${collection.displayName}`);
+          if (!collection.displayName) {
+            console.log(`Collection missing displayName: ${JSON.stringify(collection)}`)
+          }
+          let bcmiCollection;
+          const allNewDocs = [];
+          const existingCollection = await nrpti.findOne({ _schemaName: "CollectionBCMI", name: collection.displayName });
+          if (!existingCollection) {
+            console.log(`Creating NRPTI collection for ${collection.displayName}`);
+            // init the collection so we can pass an id
+            bcmiCollection = new CollectionBCMI();
+            // Master, Meta and Documents for this collection are all created.
+            // Now, create a NRPTI collection and shove the docs into it!
+            bcmiCollection.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, 'public'];
+            bcmiCollection.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+            bcmiCollection.name = collection.displayName;
+            bcmiCollection.date = collection.date;
+            bcmiCollection.project = new ObjectID(nrptiMine._id);
+            bcmiCollection.type = collection.type;
+            bcmiCollection.agency = collection.isForMEM ? 'EMPR' : collection.isForEAO ? 'EAO' : 'ENV';
+            bcmiCollection.records = allNewDocs; // move this whole thing to the top if we remove records array
+            bcmiCollection.addedBy = 'nrpti';
+            bcmiCollection.datePublished = collection.date;
+            bcmiCollection.publishedBy = 'nrpti';
+            try {
+              const newCollection = await nrpti.insertOne(bcmiCollection);
+              if (newCollection) {
+                console.log('Collection created successfully')
+              } else {
+                throw Error('Collection failed to create: ', JSON.stringify(bcmiCollection))
+              }
+            } catch (err) {
+                console.log(err)
+            }
+            collectionsCreated += 1;
+          } else {
+            bcmiCollection = existingCollection;
+            collectionsExisting += 1;
+          }
           // prep the docs
           const allDocs = collection.mainDocuments.concat(collection.otherDocuments);
-          const allNewDocs = [];
-          console.log(`Fetched ${allDocs.length} documents. Creating NRPTI records/flavours...`);
+
+          // console.log(`Fetched ${allDocs.length} documents. Creating NRPTI records/flavours...`);
           for (const collectionDoc of allDocs) {
             let existingDoc;
             if (!collectionDoc.document && !collectionDoc.hasOwnProperty('displayName')) {
@@ -171,35 +209,29 @@ exports.up = async function (db) {
                 }
               }
             } else {
+              // check doc has valid collection
+              let docId = new ObjectID(existingDoc.collectionId);
+              let docCollId = new ObjectID(bcmiCollection._id);
+              if (!docId.equals(docCollId)) {
+                console.log(`Found document ${existingDoc._id} with a bad collection id ${existingDoc.collectionId}, adding to proper collection: ${bcmiCollection._id}`)
+                existingDoc.collectionId = bcmiCollection._id;
+                await nrpti.findOneAndUpdate({ _id: existingDoc._id }, existingDoc);
+                // duplicate prevention
+                let existingRecords = existingCollection.records;
+                // let existingId = new ObjectID(existingDoc._id);
+                // includes just not working
+                if (!existingRecords.includes(existingDoc._id)) {
+                  console.log(`Adding doc to docsArray ${existingDoc._id}`);
+                  allNewDocs.push(existingDoc._id);
+                }
+              }
               docsExisting += 1;
             }
           }
-          const existingCollection = await nrpti.findOne({ _schemaName: "CollectionBCMI", name: collection.displayName });
-          if (!existingCollection) {
-            console.log(`Creating NRPTI collection for ${collection.displayName}`);
-            // Master, Meta and Documents for this collection are all created.
-            // Now, create a NRPTI collection and shove the docs into it!
-            bcmiCollection.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, 'public'];
-            bcmiCollection.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
-            bcmiCollection.name = collection.displayName;
-            bcmiCollection.date = collection.date;
-            bcmiCollection.project = new ObjectID(nrptiMine._id);
-            bcmiCollection.type = collection.type;
-            bcmiCollection.agency = collection.isForMEM ? 'EMPR' : collection.isForEAO ? 'EAO' : 'ENV';
-            bcmiCollection.records = allNewDocs; // move this whole thing to the top if we remove records array
-            bcmiCollection.addedBy = 'nrpti';
-            bcmiCollection.datePublished = collection.date;
-            bcmiCollection.publishedBy = 'nrpti';
-            await nrpti.insertOne(bcmiCollection);
-
-            collectionsCreated += 1;
-          } else {
-            if (allNewDocs.length) {
-              existingCollection.records.concat(allNewDocs);
-              await nrpti.findOneAndUpdate({ _schemaName: "CollectionBCMI", name: collection.displayName }, existingCollection)
-              console.log(`Update existing collection ${existingCollection.name} with new documents`)
-            }
-            collectionsExisting += 1;
+          if (allNewDocs.length) {
+            console.log(`allnewDocs: ${JSON.stringify(allNewDocs)}`)
+            bcmiCollection.records = bcmiCollection.records.concat(allNewDocs);
+            await nrpti.findOneAndUpdate({ _schemaName: "CollectionBCMI", name: collection.displayName }, bcmiCollection)
           }
         }
       } else {
