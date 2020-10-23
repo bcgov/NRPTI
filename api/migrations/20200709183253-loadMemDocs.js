@@ -210,17 +210,13 @@ exports.up = async function (db) {
               }
             } else {
               // check doc has valid collection
-              let docId = new ObjectID(existingDoc.collectionId);
-              let docCollId = new ObjectID(bcmiCollection._id);
-              if (!docId.equals(docCollId)) {
+              if (!existingDoc.collectionId.equals(bcmiCollection._id)) {
                 console.log(`Found document ${existingDoc._id} with a bad collection id ${existingDoc.collectionId}, adding to proper collection: ${bcmiCollection._id}`)
                 existingDoc.collectionId = bcmiCollection._id;
                 await nrpti.findOneAndUpdate({ _id: existingDoc._id }, existingDoc);
                 // duplicate prevention
-                let existingRecords = existingCollection.records;
-                // let existingId = new ObjectID(existingDoc._id);
-                // includes just not working
-                if (!existingRecords.includes(existingDoc._id)) {
+                const arrayIncludes = existingCollection.records.some(item => item.equals(existingDoc._id))
+                if (!arrayIncludes) {
                   console.log(`Adding doc to docsArray ${existingDoc._id}`);
                   allNewDocs.push(existingDoc._id);
                 }
