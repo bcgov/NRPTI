@@ -129,7 +129,7 @@ exports.up = async function (db) {
           if (!collection.displayName) {
             console.log(`Collection missing displayName: ${JSON.stringify(collection)}`)
           }
-          let bcmiCollection;
+          let bcmiCollection = null;
           const allNewDocs = [];
           const existingCollection = await nrpti.findOne({ _schemaName: "CollectionBCMI", name: collection.displayName });
           if (!existingCollection) {
@@ -169,7 +169,7 @@ exports.up = async function (db) {
 
           // console.log(`Fetched ${allDocs.length} documents. Creating NRPTI records/flavours...`);
           for (const collectionDoc of allDocs) {
-            let existingDoc;
+            let existingDoc = null;
             if (!collectionDoc.document && !collectionDoc.hasOwnProperty('displayName')) {
               console.log(`missing displayName: ${JSON.stringify(collectionDoc)}`)
             } else {
