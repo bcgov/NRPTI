@@ -154,7 +154,7 @@ class BaseRecordUtils {
     return await masterRecordModel
       .findOne({
         _schemaName: this.recordType._schemaName,
-        _sourceRefId: nrptiRecord._sourceRefId
+        _sourceRefId: new ObjectID(nrptiRecord._sourceRefId)
       })
       .populate('_flavourRecords');
   }
