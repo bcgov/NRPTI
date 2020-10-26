@@ -105,7 +105,8 @@ exports.protectedPut = async function (args, res, next) {
         {
           $set: {
             collectionId: null,
-            isBcmiPublished: false
+            isBcmiPublished: false,
+            mineGuid: null
           },
           $pull: { read: 'public' }
         }
