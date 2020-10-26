@@ -227,7 +227,6 @@ exports.up = async function (db) {
             }
           }
           if (allNewDocs.length) {
-            console.log(`allnewDocs: ${JSON.stringify(allNewDocs)}`)
             bcmiCollection.records = bcmiCollection.records.concat(allNewDocs);
             await nrpti.findOneAndUpdate({ _schemaName: "CollectionBCMI", name: collection.displayName }, bcmiCollection)
           }
@@ -299,7 +298,7 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   document.addedBy = 'BCMI Mine Doc Import';
   document.url = `https://${OBJ_STORE_URL}/${OBJ_STORE_BUCKET}/${document._id}/${collectionDoc.document.displayName}`;
   document.key = s3Key;
-  document.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, 'public'];
+  document.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   document.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // upload to s3
@@ -385,7 +384,7 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   flavourData.sourceDateAdded = collectionDoc.document.dateAdded;
   flavourData.sourceDateUpdated = collectionDoc.document.dateUpdated;
   flavourData.sourceSystemRef = 'mem-admin';
-  flavourData.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, 'public'];
+  flavourData.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   flavourData.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   await nrpti.insertOne(flavourData);
 

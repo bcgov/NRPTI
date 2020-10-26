@@ -379,15 +379,14 @@ const checkRecordExistsInCollection = async function (records, collectionId, edi
       }
     } else {
       // Ensure the record has the collectionId set
-      // Also, if we are associating a record, we auto-publish that record
+      // Also, if we are associating a record
       promises.push(collectionDB.findOneAndUpdate(
         { _id: new ObjectID(record) },
         {
           $set: {
             collectionId: new ObjectID(collectionId),
             isBcmiPublished: true
-          },
-          $addToSet: { read: 'public' }
+          }
         }
       ));
     }
@@ -400,7 +399,6 @@ const checkRecordExistsInCollection = async function (records, collectionId, edi
 }
 
 const createCollection = async function (collectionObj, user) {
-
   let CollectionBCMI = mongoose.model(RECORD_TYPE.CollectionBCMI._schemaName);
   let collection = new CollectionBCMI();
 
@@ -433,10 +431,12 @@ const createCollection = async function (collectionObj, user) {
     }
   }
 
-  // Add 'public' role and associated meta
-  collection.read.push('public');
-  collection.datePublished = new Date();
-  collection.publishedBy = user;
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (collectionObj.addRole && collectionObj.addRole === 'public') {
+    collection.read.push('public');
+    collection.datePublished = new Date();
+    collection.publishedBy = user;
+  }
 
   // Set auditing meta
   collection.addedBy = user || collectionObj.addedBy;

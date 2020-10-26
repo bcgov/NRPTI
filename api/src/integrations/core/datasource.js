@@ -9,6 +9,7 @@ const CollectionUtils = require('./collection-utils');
 const defaultLog = require('../../utils/logger')('core-datasource');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const { getIntegrationUrl, getCoreAccessToken, getAuthHeader } = require('../integration-utils');
+const { publicGet } = require('../../controllers/record-controller');
 
 const CORE_API_BATCH_SIZE = process.env.CORE_API_BATCH_SIZE || 300;
 
@@ -372,8 +373,14 @@ class CoreDataSource {
         }
       }
 
+      // Determine if the collection should be published or not based on the mine status.
+      let addPublic = false;
+      if (mineRecord.read && mineRecord.read.includes('public')) {
+        addPublic = true;
+      }
+
       // To trigger flavour for this import.
-      const preparedPermits = newPermits.map(amendment => ({ ...amendment, PermitBCMI: {} }))
+      const preparedPermits = newPermits.map(amendment => ({ ...amendment, PermitBCMI: {}, addPublic: addPublic && 'public' }));
 
       const promises = preparedPermits.map(permit => permitUtils.createItem(permit));
       await Promise.all(promises);
@@ -492,6 +499,11 @@ class CoreDataSource {
         type: amendment.permit_amendment_type_code === 'OGP' ? 'Permit' : 'Permit Amendment',
         agency: 'EMPR',
         records: (existingPermits && existingPermits.map(permit => permit._id)) || []
+      }
+
+      // Determine if the collection should be published or not based on the mine status.
+      if (mineRecord.read && mineRecord.read.includes('public')) {
+        collection.addRole = 'public';
       }
 
       await collectionUtils.createItem(collection);
