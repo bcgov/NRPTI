@@ -1,13 +1,13 @@
 'use strict';
 
-const Certificates = require('./certificates-utils');
+const BaseRecordUtils = require('./base-record-utils');
 /**
  * Epic Certificate record handler for:
  *  - { type: 'Amendment Package', milestone: 'Amendment' }.
  *
  * @class CertificatesAmendment
  */
-class CertificatesAmendment extends Certificates {
+class CertificatesAmendment extends BaseRecordUtils {
   /**
    * Creates an instance of CertificatesAmendment.
    *
