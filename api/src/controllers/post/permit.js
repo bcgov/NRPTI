@@ -335,6 +335,6 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (permitBCMI.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (permitBCMI.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (permitBCMI.sourceSystemRef = incomingObj.sourceSystemRef);
-
+  
   return permitBCMI;
 };
