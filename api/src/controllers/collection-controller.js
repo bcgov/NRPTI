@@ -8,7 +8,7 @@ const { userHasValidRoles } = require('../utils/auth-utils');
 const utils = require('../utils/constants/misc');
 const RECORD_TYPE = require('../utils/constants/record-type-enum');
 const mongoose = require('mongoose');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = require('mongodb').ObjectId;
 const mongodb = require('../utils/mongodb');
 const PutUtils = require('../utils/put-utils');
 const { publishS3Document, unpublishS3Document } = require('../controllers/document-controller');
@@ -72,7 +72,7 @@ exports.protectedPut = async function (args, res, next) {
     // and remove their collectionid
     let recordIds = [];
     try {
-      const records = await collectionDB.find({ collectionId: new ObjectID(collectionId) }).toArray();
+      const records = await collectionDB.find({ collectionId: new ObjectId(collectionId) }).toArray();
       recordIds = records.map(({ _id }) => _id.toString())
     } catch (error) {
       defaultLog.info(`protectedPut - collection controller - error finding record with collection id: ${collectionId}`);
@@ -89,19 +89,27 @@ exports.protectedPut = async function (args, res, next) {
         // These are new records that need to be added to the collection.
         recordsToAdd.push(incomingObj.records[i]);
       }
-      arrayOfObjIds.push(new ObjectID(incomingObj.records[i]))
+      arrayOfObjIds.push(new ObjectId(incomingObj.records[i]))
     }
 
     // Add records
     if (recordsToAdd.length > 0) {
-      await checkRecordExistsInCollection(recordsToAdd, collectionId);
+      // Need to know the status of the collection in order to make sure the records match.
+      const collection = await collectionDB.findOne({ _id: new ObjectId(collectionId)});
+      if (!collection || !collection.read) {
+        defaultLog.info(`protectedPut - error locating collection`);
+        queryActions.sendResponse(res, 400, {});
+        next();
+      }
+
+      await checkRecordExistsInCollection(recordsToAdd, collectionId, collection.read, true);
     }
 
     // Remove records
     let recordsToRemove = recordIds.filter(x => incomingObj.records.indexOf(x) === -1);
     for (const record of recordsToRemove) {
       promises.push(collectionDB.findOneAndUpdate(
-        { _id: new ObjectID(record) },
+        { _id: new ObjectId(record) },
         {
           $set: {
             collectionId: null,
@@ -182,6 +190,12 @@ exports.protectedPost = async function (args, res, next) {
 
   let obj = null;
   try {
+    // Need to determine the published state of the mine and make the new collection match.
+    const minePublished = await isMinePublished(incomingObj);
+    if (minePublished) {
+      incomingObj.addRole = 'public';
+    }
+    
     obj = await createCollection(incomingObj, args.swagger.params.auth_payload.displayName);
   } catch (error) {
     defaultLog.info(`protectedPost - error inserting collection: ${incomingObj}`);
@@ -357,7 +371,7 @@ exports.publishCollections = async function (mineId, auth_payload) {
   }
 }
 
-const checkRecordExistsInCollection = async function (records, collectionId, editing = false) {
+const checkRecordExistsInCollection = async function (records, collectionId, collectionRead, editing = false) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const collectionDB = db.collection('nrpti');
   let promises = [];
@@ -368,29 +382,38 @@ const checkRecordExistsInCollection = async function (records, collectionId, edi
     const collectionCount = await collectionDB.find(
       {
         _schemaName: RECORD_TYPE.CollectionBCMI._schemaName,
-        records: { $elemMatch: { $eq: new ObjectID(record) } }
+        records: { $elemMatch: { $eq: new ObjectId(record) } }
       }
     ).toArray().length;
 
-    if (collectionCount && collectionCount > 0) {
-      if (!editing) {
-        throw new Error('Collection contains records that are already associated with another collection');
-      } else {
-        continue;
-      }
-    } else {
-      // Ensure the record has the collectionId set
-      // Also, if we are associating a record
-      promises.push(collectionDB.findOneAndUpdate(
-        { _id: new ObjectID(record) },
-        {
-          $set: {
-            collectionId: new ObjectID(collectionId),
-            isBcmiPublished: true
-          }
-        }
-      ));
+    if (collectionCount && collectionCount > 0 && !editing) {
+      throw new Error('Collection contains records that are already associated with another collection');
     }
+
+    let permissionAction = {
+      $pull: {
+        read: 'public'
+      }
+    };
+
+    if (collectionRead.includes('public')) {
+      permissionAction = {
+        $addToSet: {
+          read: 'public'
+        }
+      };
+    }
+    // Ensure the record has the collectionId set
+    // Also, if we are associating a record
+    promises.push(collectionDB.findOneAndUpdate(
+      { _id: new ObjectId(record) },
+      {
+        $set: {
+          collectionId: new ObjectId(collectionId),
+        },
+        ...permissionAction
+      }
+    ));
   }
   try {
     return await Promise.all(promises);
@@ -420,23 +443,24 @@ const createCollection = async function (collectionObj, user) {
   collectionObj.agency && (collection.agency = collectionObj.agency);
   collectionObj.records && collectionObj.records.length && (collection.records = collectionObj.records);
 
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (collectionObj.addRole && collectionObj.addRole === 'public') {
+    collection.read.push('public');
+    collection.datePublished = new Date();
+    collection.publishedBy = user;
+  }
+
   // if any values in the "records" attribute exist on any other collection, throw an error
   if (collection.records && collection.records.length > 0) {
     try {
-      await checkRecordExistsInCollection(collection.records, collection._id);
+      // Use the collection status to determine published status of the record.
+      await checkRecordExistsInCollection(collection.records, collection._id, collection.read);
     } catch (error) {
 
       defaultLog.info(`createCollection - error inserting collection: ${collection}`);
       defaultLog.debug(error);
       throw error;
     }
-  }
-
-  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
-  if (collectionObj.addRole && collectionObj.addRole === 'public') {
-    collection.read.push('public');
-    collection.datePublished = new Date();
-    collection.publishedBy = user;
   }
 
   // Set auditing meta
@@ -454,3 +478,12 @@ const createCollection = async function (collectionObj, user) {
 }
 
 exports.createCollection = createCollection;
+
+const isMinePublished = async function(incomingObj) {
+  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const nrpti = db.collection('nrpti');
+
+  const mine = await nrpti.findOne({ _id: new ObjectId(incomingObj.project) });
+
+  return mine.read.includes('public');
+};
