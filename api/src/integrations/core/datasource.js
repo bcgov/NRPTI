@@ -9,6 +9,7 @@ const CollectionUtils = require('./collection-utils');
 const defaultLog = require('../../utils/logger')('core-datasource');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const { getIntegrationUrl, getCoreAccessToken, getAuthHeader } = require('../integration-utils');
+const { publicGet } = require('../../controllers/record-controller');
 
 const CORE_API_BATCH_SIZE = process.env.CORE_API_BATCH_SIZE || 300;
 
