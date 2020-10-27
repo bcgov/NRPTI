@@ -124,7 +124,7 @@ async function run(dryRun) {
  * @param {boolean} objectKeys S3 object keys to delete.
  * @returns
  */
-async function deleteS3Objects(objectKeys) {
+function deleteS3Objects(objectKeys) {
   const params = { Bucket: OBJECT_STORE_BUCKET, Delete: { Objects: [] } };
   params.Delete.Objects = objectKeys.map(item => ({ Key: item }));
 
