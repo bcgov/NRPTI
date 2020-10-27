@@ -82,7 +82,7 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
   const updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
 
   if (flavourIds && flavourIds.length) {
-    updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
+    updateObj.$set = {...updateObj.$set, _flavourRecords: flavourIds.map(id => new ObjectID(id))};
   }
 
   return updateObj;

@@ -259,7 +259,10 @@ class CoreDocumentsDataSource {
     try {
       // Before saving we want to transform to remove anything associated with the mongoose model
       const transformedAmendment = permitUtils.transformRecord(permit);
-      await permitUtils.updateRecord(transformedAmendment, permit);
+      const result = await permitUtils.updateRecord(transformedAmendment, permit);
+
+      if(result.length && result[0].status && result[0].status === 'failure')
+        throw Error(`permitUtils.updateRecord failed: ${result[0].errorMessage}`);
     } catch (error) {
       throw new Error(`updateAmendment - unexpected error: ${error.message}`);
     }
