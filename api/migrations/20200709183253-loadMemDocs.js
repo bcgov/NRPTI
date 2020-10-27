@@ -157,7 +157,7 @@ exports.up = async function (db) {
                 throw Error('Collection failed to create: ', JSON.stringify(bcmiCollection))
               }
             } catch (err) {
-                console.log(err)
+              console.log(err)
             }
             collectionsCreated += 1;
           } else {
@@ -189,10 +189,10 @@ exports.up = async function (db) {
                   }
                 } catch (err) {
 
-                  let mineInfo = (nrptiMine._id ? nrptiMine._id : "Couldn't find mine id") + ", " +  (nrptiMine.name ? nrptiMine.name : "Couldn't find mine name");
-                  let collectionInfo = (collection._id ? collection._id : "Couldn't find collection id") + ", " +  (collection.displayName ? collection.displayName : "Couldn't find collection name");
-                  let documentInfo = (collectionDoc.document ? ( collectionDoc.document._id ? collectionDoc.document._id : "Couldn't find document id" )  : "Couldn't find document")
-                  + ", " +  (collectionDoc.document ? ( collectionDoc.document.displayName ? collectionDoc.document.displayName : "Couldn't find document display name" ) : "Couldn't find document");
+                  let mineInfo = (nrptiMine._id ? nrptiMine._id : "Couldn't find mine id") + ", " + (nrptiMine.name ? nrptiMine.name : "Couldn't find mine name");
+                  let collectionInfo = (collection._id ? collection._id : "Couldn't find collection id") + ", " + (collection.displayName ? collection.displayName : "Couldn't find collection name");
+                  let documentInfo = (collectionDoc.document ? (collectionDoc.document._id ? collectionDoc.document._id : "Couldn't find document id") : "Couldn't find document")
+                    + ", " + (collectionDoc.document ? (collectionDoc.document.displayName ? collectionDoc.document.displayName : "Couldn't find document display name") : "Couldn't find document");
 
                   let thisErrorLog = `\n#######################################`;
                   thisErrorLog += `\n## An Error Occured While Creating a Document:`;
@@ -217,7 +217,7 @@ exports.up = async function (db) {
                 existingDoc.collectionId = bcmiCollection._id;
                 await nrpti.findOneAndUpdate({ _id: existingDoc._id }, existingDoc);
                 // duplicate prevention
-                const arrayIncludes = existingCollection.records.some(item => item.equals(existingDoc._id))
+                const arrayIncludes = bcmiCollection.records.some(item => item.equals(existingDoc._id));
                 if (!arrayIncludes) {
                   console.log(`Adding doc to docsArray ${existingDoc._id}`);
                   allNewDocs.push(existingDoc._id);
