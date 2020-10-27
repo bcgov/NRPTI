@@ -113,9 +113,9 @@ async function run(dryRun) {
 
       console.log('Done');
     }
-  }
-
-  console.log('\nThere are no orphan objects in S3.');
+  } else {
+    console.log('\nThere are no orphan objects in S3.');
+  }  
 }
 
 /**
