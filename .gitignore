@@ -24,7 +24,6 @@
 
 # IDE - VSCode
 **/.vscode/*
-**/!.vscode/launch.json
 
 # misc/.sass-cache
 **/connect.lock
