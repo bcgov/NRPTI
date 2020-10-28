@@ -124,6 +124,7 @@ exports.up = async function (db) {
       }
       if (nrptiMine) {
         // Found a mine, now lets create a record and upload up the docs
+        console.log(`Current mine is ${nrptiMine.name},   id: ${nrptiMine._id}`);
         for (const collection of mine.collectionData) {
           console.log(`Processing collection ${collection.displayName}`);
           if (!collection.displayName) {
@@ -131,7 +132,8 @@ exports.up = async function (db) {
           }
           let bcmiCollection = null;
           const allNewDocs = [];
-          const existingCollection = await nrpti.findOne({ _schemaName: "CollectionBCMI", name: collection.displayName });
+          // need to use project id as well due to identical collection names in different projects
+          const existingCollection = await nrpti.findOne({ _schemaName: "CollectionBCMI", name: collection.displayName, project: nrptiMine._id });
           if (!existingCollection) {
             console.log(`Creating NRPTI collection for ${collection.displayName}`);
             // init the collection so we can pass an id
@@ -164,6 +166,7 @@ exports.up = async function (db) {
             bcmiCollection = existingCollection;
             collectionsExisting += 1;
           }
+
           // prep the docs
           const allDocs = collection.mainDocuments.concat(collection.otherDocuments);
 
@@ -213,22 +216,36 @@ exports.up = async function (db) {
             } else {
               // check doc has valid collection
               if (!existingDoc.collectionId.equals(bcmiCollection._id)) {
-                console.log(`Found document ${existingDoc._id} with a bad collection id ${existingDoc.collectionId}, adding to proper collection: ${bcmiCollection._id}`)
+                console.log(`Found record ${existingDoc._id} with a bad collection id ${existingDoc.collectionId}, adding to proper collection: ${bcmiCollection._id}`)
+
                 existingDoc.collectionId = bcmiCollection._id;
                 await nrpti.findOneAndUpdate({ _id: existingDoc._id }, existingDoc);
-                // duplicate prevention
+                // duplicate record prevention
                 const arrayIncludes = bcmiCollection.records.some(item => item.equals(existingDoc._id));
                 if (!arrayIncludes) {
-                  console.log(`Adding doc to docsArray ${existingDoc._id}`);
+                  console.log(`Adding doc ${existingDoc._id} to docsArray of ${bcmiCollection._id}`);
                   allNewDocs.push(existingDoc._id);
                 }
               }
               docsExisting += 1;
+              // Ensure that records only exist in the proper collection for their mine
+              const collectionsToFix = await nrpti.find({records: { $in: [ existingDoc._id ]}});
+              collectionsToFix.forEach( async (coll) => {
+                if (!coll.project.equals(nrptiMine._id)) {
+                  console.log(`Found a collection that constains records from another mine: ${coll._id}, existingRec: ${existingDoc._id}`)
+                  // remove record from a collection that is not actually part of this mine
+                  const filteredRecords = coll.records.filter((rec) => !rec.equals(existingDoc._id))
+                  if (filteredRecords) {
+                    coll.records = filteredRecords;
+                    await nrpti.findOneAndUpdate({ _id: coll._id }, coll);
+                  }
+                }
+              });
             }
           }
           if (allNewDocs.length) {
             bcmiCollection.records = bcmiCollection.records.concat(allNewDocs);
-            await nrpti.findOneAndUpdate({ _schemaName: "CollectionBCMI", name: collection.displayName }, bcmiCollection)
+            await nrpti.findOneAndUpdate({ _schemaName: "CollectionBCMI", name: collection.displayName, project: nrptiMine._id  }, bcmiCollection)
           }
         }
       } else {
