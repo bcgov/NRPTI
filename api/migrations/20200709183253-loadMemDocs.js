@@ -146,9 +146,9 @@ exports.up = async function (db) {
             bcmiCollection.type = collection.type;
             bcmiCollection.agency = collection.isForMEM ? 'EMPR' : collection.isForEAO ? 'EAO' : 'ENV';
             bcmiCollection.records = allNewDocs; // move this whole thing to the top if we remove records array
-            bcmiCollection.addedBy = 'nrpti';
+            bcmiCollection.addedBy = 'mem-admin';
             bcmiCollection.datePublished = collection.date;
-            bcmiCollection.publishedBy = 'nrpti';
+            bcmiCollection.publishedBy = 'mem-admin';
             try {
               const newCollection = await nrpti.insertOne(bcmiCollection);
               if (newCollection) {
