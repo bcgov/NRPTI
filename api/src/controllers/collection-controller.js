@@ -312,6 +312,7 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
  * @param {*} auth_payload 
  */
 exports.publishCollections = async function (mineId, auth_payload) {
+  mineId = ObjectId(mineId);
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const nrpti = db.collection('nrpti');
 

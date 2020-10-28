@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const ObjectId = require('mongodb').ObjectId;
 const MinePost = require('../post/mine-bcmi');
 const PutUtils = require('../../utils/put-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
@@ -67,12 +66,12 @@ exports.editMaster = async function (args, res, next, incomingObj) {
     updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
-    await collectionController.publishCollections(ObjectId(mineId), args.swagger.params.auth_payload);
+    await collectionController.publishCollections(mineId, args.swagger.params.auth_payload);
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
-    await collectionController.unpublishCollections(ObjectId(mineId), args.swagger.params.auth_payload);
+    await collectionController.unpublishCollections(mineId, args.swagger.params.auth_payload);
   }
 
   return updateObj;
