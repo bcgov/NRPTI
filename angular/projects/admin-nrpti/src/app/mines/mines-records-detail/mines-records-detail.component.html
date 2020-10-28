@@ -29,11 +29,13 @@
         <div class="flex-container mb-2">
           <label for="type" class="med mr-2">Permit Type:</label>
           <span id="type" name="type">
-            {{ (record && record.typeCode && record.typeCode === 'OGP') ?
-            'Original Permit' :
-            (record && record.typeCode && record.typeCode === 'AMD') ?
-            'Permit Amendment' :
-            '-' }}
+            {{
+              record && record.typeCode && record.typeCode === 'OGP'
+                ? 'Original Permit'
+                : record && record.typeCode && record.typeCode === 'AMD'
+                ? 'Permit Amendment'
+                : '-'
+            }}
           </span>
         </div>
       </div>
@@ -63,25 +65,28 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <app-document-authenticated-read-only [documents]="record && record.documents">
-        </app-document-authenticated-read-only>
+        <app-document-authenticated-read-only
+          [documents]="record && record.documents"
+        ></app-document-authenticated-read-only>
       </div>
     </div>
-    <div class="row">
-      <div class="col-12">
-        <span class="header-text">Collections</span>
+    <ng-container *ngIf="collections.length > 0">
+      <div class="row">
+        <div class="col-12">
+          <span class="header-text">Collections</span>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <ul class="doc-list">
-          <li *ngFor="let collection of collections">
-            <span class="cell name">
-              <a [routerLink]="['../../../', 'collections', collection._id]">{{ collection.name || '-' }}</a>
-            </span>
-          </li>
-        </ul>
+      <div class="row">
+        <div class="col-12">
+          <ul class="doc-list">
+            <li *ngFor="let collection of collections">
+              <span class="cell name">
+                <a [routerLink]="['../../../', 'collections', collection._id]">{{ collection.name || '-' }}</a>
+              </span>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </ng-container>
   </section>
 </main>
