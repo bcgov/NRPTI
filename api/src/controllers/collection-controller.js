@@ -275,7 +275,7 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
         // Unpublish all documents of all records.
         for (const record of records) {
           if (record.documents && record.documents.length) {
-            promises.push(nrpti.updateMany({ _id: { $in: record.documents }, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } }));
+            promises.push(nrpti.updateMany({ _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } }));
           }
 
           // Update the S3 object properties for each document.
@@ -346,7 +346,7 @@ exports.publishCollections = async function (mineId, auth_payload) {
         // Publish all documents of all records.
         for (const record of records) {
           if (record.documents && record.documents.length) {
-            promises.push(nrpti.updateMany({ _id: { $in: record.documents }, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } }));
+            promises.push(nrpti.updateMany({ _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } }));
             
             // Update the S3 object properties for each document.
             for (const document of record.documents) {
