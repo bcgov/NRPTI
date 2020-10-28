@@ -239,6 +239,7 @@ exports.protectedDelete = async function (args, res, next) {
  * @param {*} auth_payload - User authorization
  */
 exports.unpublishCollections = async function (mineId, auth_payload) {
+  mineId = ObjectId(mineId);
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const nrpti = db.collection('nrpti');
 
