@@ -215,13 +215,13 @@ exports.up = async function (db) {
               }
             } else {
               // check doc has valid collection
-              if (!existingDoc.collectionId.equals(bcmiCollection._id)) {
+              if (existingDoc.collectionId.toString() !== bcmiCollection._id.toString()) {
                 console.log(`Found record ${existingDoc._id} with a bad collection id ${existingDoc.collectionId}, adding to proper collection: ${bcmiCollection._id}`)
 
                 existingDoc.collectionId = bcmiCollection._id;
                 await nrpti.findOneAndUpdate({ _id: existingDoc._id }, existingDoc);
                 // duplicate record prevention
-                const arrayIncludes = bcmiCollection.records.some(item => item.equals(existingDoc._id));
+                const arrayIncludes = bcmiCollection.records.some(item => item.toString() === existingDoc._id.toString());
                 if (!arrayIncludes) {
                   console.log(`Adding doc ${existingDoc._id} to docsArray of ${bcmiCollection._id}`);
                   allNewDocs.push(existingDoc._id);
@@ -231,10 +231,10 @@ exports.up = async function (db) {
               // Ensure that records only exist in the proper collection for their mine
               const collectionsToFix = await nrpti.find({records: { $in: [ existingDoc._id ]}});
               collectionsToFix.forEach( async (coll) => {
-                if (!coll.project.equals(nrptiMine._id)) {
+                if (coll.project.toString() !== nrptiMine._id.toString()) {
                   console.log(`Found a collection that constains records from another mine: ${coll._id}, existingRec: ${existingDoc._id}`)
                   // remove record from a collection that is not actually part of this mine
-                  const filteredRecords = coll.records.filter((rec) => !rec.equals(existingDoc._id))
+                  const filteredRecords = coll.records.filter((rec) => rec.toString() !== existingDoc._id.toString())
                   if (filteredRecords) {
                     coll.records = filteredRecords;
                     await nrpti.findOneAndUpdate({ _id: coll._id }, coll);
