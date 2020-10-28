@@ -67,7 +67,10 @@ exports.protectedPut = async function (args, res, next) {
   }
 
   // if any values in the "records" attribute exist on any other collection, throw an error
-  if (incomingObj.records && incomingObj.records.length > 0) {
+  //
+  // Removed incomingObj.records.length check as of NRPT-501.  Checking for incomingObj.records.length > 0
+  // will cause this if block to be skipped when removing all records from a collection
+  if (incomingObj.records) {
     // find any records that have this collection in their collectionId, but aren't actually a part of the collection
     // and remove their collectionid
     let recordIds = [];
