@@ -98,7 +98,7 @@ exports.protectedPut = async function (args, res, next) {
     // Add records
     if (recordsToAdd.length > 0) {
       // Need to know the status of the collection in order to make sure the records match.
-      const collection = await collectionDB.findOne({ _id: new ObjectId(collectionId)});
+      const collection = await collectionDB.findOne({ _id: new ObjectId(collectionId) });
       if (!collection || !collection.read) {
         defaultLog.info(`protectedPut - error locating collection`);
         queryActions.sendResponse(res, 400, {});
@@ -198,7 +198,7 @@ exports.protectedPost = async function (args, res, next) {
     if (minePublished) {
       incomingObj.addRole = 'public';
     }
-    
+
     obj = await createCollection(incomingObj, args.swagger.params.auth_payload.displayName);
   } catch (error) {
     defaultLog.info(`protectedPost - error inserting collection: ${incomingObj}`);
@@ -262,25 +262,27 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
           },
           {
             $lookup: {
-                from: 'nrpti',
-                localField: "documents",
-                foreignField: "_id",
-                as: "documents",
+              from: 'nrpti',
+              localField: "documents",
+              foreignField: "_id",
+              as: "documents",
             }
           }
         ];
-        
+
         const records = await nrpti.aggregate(recordAggregate).toArray();
 
         // Unpublish all documents of all records.
         for (const record of records) {
           if (record.documents && record.documents.length) {
             promises.push(nrpti.updateMany({ _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } }));
-          }
 
-          // Update the S3 object properties for each document.
-          for (const document of record.documents) {
-            promises.push(unpublishS3Document(document.key));
+            // Update the S3 object properties for each document.
+            for (const document of record.documents) {
+              if (document.key) {
+                promises.push(unpublishS3Document(document.key));
+              }
+            }
           }
 
           // Unpublish the flavour record.
@@ -333,25 +335,27 @@ exports.publishCollections = async function (mineId, auth_payload) {
           },
           {
             $lookup: {
-                from: 'nrpti',
-                localField: "documents",
-                foreignField: "_id",
-                as: "documents",
+              from: 'nrpti',
+              localField: "documents",
+              foreignField: "_id",
+              as: "documents",
             }
           }
         ];
-        
+
         const records = await nrpti.aggregate(recordAggregate).toArray();
 
         // Publish all documents of all records.
         for (const record of records) {
           if (record.documents && record.documents.length) {
             promises.push(nrpti.updateMany({ _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } }));
-            
+
             // Update the S3 object properties for each document.
             for (const document of record.documents) {
-              promises.push(publishS3Document(document.key));
-            }            
+              if (document.key) {
+                promises.push(publishS3Document(document.key));
+              }
+            }
           }
 
           // Publish the flavour record.
@@ -482,7 +486,7 @@ const createCollection = async function (collectionObj, user) {
 
 exports.createCollection = createCollection;
 
-const isMinePublished = async function(incomingObj) {
+const isMinePublished = async function (incomingObj) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const nrpti = db.collection('nrpti');
 

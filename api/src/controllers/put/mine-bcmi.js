@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
+const ObjectId = require('mongodb').ObjectId;
 const MinePost = require('../post/mine-bcmi');
 const PutUtils = require('../../utils/put-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+const collectionController = require('../collection-controller');
 
 /**
  * Performs all operations necessary to edit a master Mine record and any flavours.
@@ -12,7 +14,7 @@ const RECORD_TYPE = require('../../utils/constants/record-type-enum');
  * @param {*} incomingObj
  * @returns object containing the operation's status and created records
  */
-exports.editRecord = async function(args, res, next, incomingObj) {
+exports.editRecord = async function (args, res, next, incomingObj) {
   return await PutUtils.editRecordWithFlavours(
     args,
     res,
@@ -34,7 +36,8 @@ exports.editRecord = async function(args, res, next, incomingObj) {
  * @param {*} incomingObj
  * @returns object
  */
-exports.editMaster = function(args, res, next, incomingObj) {
+exports.editMaster = async function (args, res, next, incomingObj) {
+  const mineId = incomingObj._id;
   delete incomingObj._id;
 
   // Reject any changes to permissions
@@ -64,10 +67,12 @@ exports.editMaster = function(args, res, next, incomingObj) {
     updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+    await collectionController.publishCollections(ObjectId(mineId), args.swagger.params.auth_payload);
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
+    await collectionController.unpublishCollections(ObjectId(mineId), args.swagger.params.auth_payload);
   }
 
   return updateObj;
