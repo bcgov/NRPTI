@@ -149,6 +149,7 @@ exports.up = async function (db) {
             bcmiCollection.agency = collection.isForMEM ? 'EMPR' : collection.isForEAO ? 'EAO' : 'ENV';
             bcmiCollection.records = allNewDocs; // move this whole thing to the top if we remove records array
             bcmiCollection.addedBy = 'mem-admin';
+            bcmiCollection.sourceSystemRef = 'mem-admin';
             bcmiCollection.datePublished = collection.date;
             bcmiCollection.publishedBy = 'mem-admin';
             try {

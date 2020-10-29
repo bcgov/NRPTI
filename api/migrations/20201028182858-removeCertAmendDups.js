@@ -20,7 +20,7 @@ exports.up = async function (db) {
 
   try {
     const nrpti = await mClient.collection('nrpti');
-    await nrpti.deleteMany({ _sourceRefId: "", sourceSystemRef: 'epic' });
+    await nrpti.deleteMany({ _sourceRefId: { $in: ["", null] }, sourceSystemRef: 'epic' });
   } catch (err) {
     console.error('Error removing duplicates', err);
   }
