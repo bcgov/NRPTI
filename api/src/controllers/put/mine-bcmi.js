@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const MinePost = require('../post/mine-bcmi');
 const PutUtils = require('../../utils/put-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
-const collectionController = require('../collection-controller');
 
 /**
  * Performs all operations necessary to edit a master Mine record and any flavours.
@@ -35,8 +34,7 @@ exports.editRecord = async function (args, res, next, incomingObj) {
  * @param {*} incomingObj
  * @returns object
  */
-exports.editMaster = async function (args, res, next, incomingObj) {
-  const mineId = incomingObj._id;
+exports.editMaster = function (args, res, next, incomingObj) {
   delete incomingObj._id;
 
   // Reject any changes to permissions
@@ -66,12 +64,10 @@ exports.editMaster = async function (args, res, next, incomingObj) {
     updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
-    await collectionController.publishCollections(mineId, args.swagger.params.auth_payload);
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
-    await collectionController.unpublishCollections(mineId, args.swagger.params.auth_payload);
   }
 
   return updateObj;
