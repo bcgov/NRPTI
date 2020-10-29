@@ -201,7 +201,7 @@ class BaseRecordUtils {
       });
 
       if (!hasBCMI) {
-        updateObj[nrptiRecord._schemaName + 'BCMI'] = {}
+        updateObj[nrptiRecord._schemaName + 'BCMI'] = {};
       }
 
       return await RecordController.processPutRequest(

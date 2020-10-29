@@ -1,6 +1,15 @@
 const BaseRecordUtils = require('./base-record-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
+const mongoose = require('mongoose');
+const DB_CONNECTION =
+  'mongodb://' +
+  (process.env.MONGODB_SERVICE_HOST || process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') +
+  '/' +
+  (process.env.MONGODB_DATABASE || 'nrpti-dev');
+mongoose.connect(DB_CONNECTION);
+require('../../models/bcmi/mine-bcmi');
+
 describe('BaseRecordUtils', () => {
   describe('constructor', () => {
     it('throws an error if no recordType provided', () => {
