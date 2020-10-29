@@ -3,7 +3,7 @@
 const axios = require('axios');
 const QS = require('qs');
 
-const CORE_TOKEN_ENDPOINT = process.env.CORE_TOKEN_ENDPOINT || 'https://sso.pathfinder.gov.bc.ca/auth/realms/mds/protocol/openid-connect/token';
+const CORE_TOKEN_ENDPOINT = process.env.CORE_TOKEN_ENDPOINT || 'https://oidc.gov.bc.ca/auth/realms/mds/protocol/openid-connect/token';
 
 /**
  * Performs an HTTP get request against the provided URL.
