@@ -1,4 +1,4 @@
-name: API tests
+name: Front-End linting & tests
 
 on: [pull_request]
 
@@ -17,10 +17,23 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
+    - name: npm install
       run: |
-        cd api
+        cd angular
         npm install
+        npm run lint
+      env:
+        CI: true
+    - name: lint
+      run: |
+        cd angular
+        npm run lint
+      env:
+        CI: true
+    - name: build, and test
+      run: |
+        cd angular
+        npm run build
         npm run test
       env:
         CI: true

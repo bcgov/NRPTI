@@ -1,4 +1,4 @@
-name: API linting
+name: API linting & tests
 
 on: [pull_request]
 
@@ -17,10 +17,21 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
+    - name: npm install
       run: |
         cd api
         npm install
+      env:
+        CI: true
+    - name: lint
+      run: |
+        cd api
         npm run lint
+      env:
+        CI: true
+    - name: test
+      run: |
+        cd api        
+        npm run test
       env:
         CI: true
