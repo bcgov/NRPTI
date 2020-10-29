@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const BusinessLogicManager = require('./business-logic-manager');
+const CollectionController = require('../controllers/collection-controller');
 
 exports.validateObjectAgainstModel = function (mongooseModel, incomingObj) {
   if (!incomingObj) {
@@ -160,8 +161,8 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
 
       if (flavourIncomingObj[entry[0]]._id) {
         let flavourUpdateObj = entry[1](args, res, next, { ...flavourIncomingObj, ...flavourIncomingObj[entry[0]] });
-        const Model = mongoose.model(entry[0]);        
-        flavourUpdateObj._master = new ObjectId(masterId);        
+        const Model = mongoose.model(entry[0]);
+        flavourUpdateObj._master = new ObjectId(masterId);
 
         // Set flavour objectIds
         const flavourId = flavourIncomingObj[entry[0]]._id;
@@ -265,7 +266,14 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
     if (incomingObj.mineGuid) {
       updateMasterObj.mineGuid = incomingObj.mineGuid;
     }
-  }  
+  }
+
+  // Mine publish/unpublish logic
+  if (masterSchemaName === 'MineBCMI' && incomingObj.addRole === 'public') {
+    promises.push(CollectionController.publishCollections(masterId, args.swagger.params.auth_payload));
+  } else if (masterSchemaName === 'MineBCMI' && incomingObj.removeRole === 'public') {
+    promises.push(CollectionController.unpublishCollections(masterId, args.swagger.params.auth_payload));
+  }
 
   promises.push(
     MasterModel.findOneAndUpdate({
