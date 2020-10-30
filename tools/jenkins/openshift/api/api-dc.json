@@ -570,12 +570,14 @@
       "name": "SSO_JWKSURI",
       "displayName": "Uri to sso certs",
       "description": "Uri to sso certs",
+      "value": "https://dev.oidc.gov.bc.ca/auth/realms/3l5nw6dk/protocol/openid-connect/certs",
       "required": false
     },
     {
       "name": "SSO_ISSUER",
       "displayName": "URI to SSO realm",
       "description": "URI to SSO realm",
+      "value": "https://dev.oidc.gov.bc.ca/auth/realms/3l5nw6dk",
       "required": false
     }
   ]
