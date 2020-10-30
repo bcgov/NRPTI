@@ -17,17 +17,17 @@ export class KeycloakService {
       case 'http://localhost:4200':
       case 'https://admin-nrpti-dev.pathfinder.gov.bc.ca':
         // Local, Dev, Master
-        this.keycloakUrl = 'https://sso-dev.pathfinder.gov.bc.ca/auth';
+        this.keycloakUrl = 'https://dev.oidc.gov.bc.ca/auth';
         this.keycloakRealm = '3l5nw6dk';
         break;
       case 'https://admin-nrpti-test.pathfinder.gov.bc.ca':
         // Test
-        this.keycloakUrl = 'https://sso-test.pathfinder.gov.bc.ca/auth';
+        this.keycloakUrl = 'https://test.oidc.gov.bc.ca/auth';
         this.keycloakRealm = '3l5nw6dk';
         break;
       default:
         // Prod
-        this.keycloakUrl = 'https://sso.pathfinder.gov.bc.ca/auth';
+        this.keycloakUrl = 'https://oidc.gov.bc.ca/auth';
         this.keycloakRealm = '3l5nw6dk';
     }
   }
