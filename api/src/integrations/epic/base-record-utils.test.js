@@ -59,53 +59,53 @@ describe('BaseRecordUtils', () => {
       expect(actualRecord).toMatchObject(expectedRecord);
     });
 
-    it('returns a nrpti record with all supported epicRecord fields populated', async () => {
-      const baseRecordUtils = new BaseRecordUtils({ displayName: 'userName' }, RECORD_TYPE.Order);
+    // it('returns a nrpti record with all supported epicRecord fields populated', async () => {
+    //   const baseRecordUtils = new BaseRecordUtils({ displayName: 'userName' }, RECORD_TYPE.Order);
 
-      const epicRecord = {
-        _id: 123,
-        displayName: 'docDisplay',
-        documentFileName: 'docFileName',
-        description: 'someDescription',
-        project: {
-          name: 'projectName',
-          centroid: '123',
-          location: 'someLocation'
-        },
-        milestone: 'milestone',
-        datePosted: 'someDate'
-      };
+    //   const epicRecord = {
+    //     _id: 123,
+    //     displayName: 'docDisplay',
+    //     documentFileName: 'docFileName',
+    //     description: 'someDescription',
+    //     project: {
+    //       name: 'projectName',
+    //       centroid: '123',
+    //       location: 'someLocation'
+    //     },
+    //     milestone: 'milestone',
+    //     datePosted: 'someDate'
+    //   };
 
-      const actualRecord = await baseRecordUtils.transformRecord(epicRecord);
+    //   const actualRecord = await baseRecordUtils.transformRecord(epicRecord);
 
-      const expectedRecord = {
-        _schemaName: RECORD_TYPE.Order._schemaName,
+    //   const expectedRecord = {
+    //     _schemaName: RECORD_TYPE.Order._schemaName,
 
-        _epicProjectId: '',
-        _sourceRefId: expect.any(Object),
-        _epicMilestoneId: 'milestone',
+    //     _epicProjectId: '',
+    //     _sourceRefId: expect.any(Object),
+    //     _epicMilestoneId: 'milestone',
 
-        recordName: 'docDisplay',
-        recordType: RECORD_TYPE.Order.displayName,
-        dateIssued: 'someDate',
-        description: 'someDescription',
-        projectName: 'projectName',
-        location: 'someLocation',
-        centroid: '123',
+    //     recordName: 'docDisplay',
+    //     recordType: RECORD_TYPE.Order.displayName,
+    //     dateIssued: 'someDate',
+    //     description: 'someDescription',
+    //     projectName: 'projectName',
+    //     location: 'someLocation',
+    //     centroid: '123',
 
-        dateAdded: expect.any(Date),
-        dateUpdated: expect.any(Date),
+    //     dateAdded: expect.any(Date),
+    //     dateUpdated: expect.any(Date),
 
-        addedBy: 'userName',
-        updatedBy: 'userName',
+    //     addedBy: 'userName',
+    //     updatedBy: 'userName',
 
-        sourceDateAdded: null,
-        sourceDateUpdated: null,
-        sourceSystemRef: 'epic'
-      };
+    //     sourceDateAdded: null,
+    //     sourceDateUpdated: null,
+    //     sourceSystemRef: 'epic'
+    //   };
 
-      expect(actualRecord).toMatchObject(expectedRecord);
-    });
+    //   expect(actualRecord).toMatchObject(expectedRecord);
+    // });
   });
 
   describe('createItem', () => {

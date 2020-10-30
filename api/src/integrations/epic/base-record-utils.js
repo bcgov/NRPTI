@@ -115,11 +115,22 @@ class BaseRecordUtils {
     // Apply common Epic pre-processing/transformations
     epicRecord = EpicUtils.preTransformRecord(epicRecord, this.recordType);
 
+    let mineRecord = null;
+    if (epicRecord.project) {
+      const MineBCMI = mongoose.model('MineBCMI');
+      if (ObjectID.isValid(epicRecord.project)) {
+        mineRecord = await MineBCMI.findOne({ _schemaName: 'MineBCMI', _epicProjectIds: new ObjectID(epicRecord.project) });
+      } else {
+        mineRecord = await MineBCMI.findOne({ _schemaName: 'MineBCMI', _epicProjectIds: new ObjectID(epicRecord.project._id) });
+      }
+    }
+
     return {
       _schemaName: this.recordType._schemaName,
       _epicProjectId: (epicRecord.project && epicRecord.project._id) || '',
       _sourceRefId: new ObjectID(epicRecord._id) || '',
       _epicMilestoneId: epicRecord.milestone || '',
+      mineGuid: (mineRecord && mineRecord._sourceRefId) || null,
 
       recordName: epicRecord.displayName || '',
       recordType: this.recordType.displayName,
@@ -179,9 +190,19 @@ class BaseRecordUtils {
     try {
       // build update Obj, which needs to include the flavour record ids
       const updateObj = { ...nrptiRecord, _id: existingRecord._id };
+      let hasBCMI = false;
       existingRecord._flavourRecords.forEach(flavourRecord => {
-        updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
+        if (!flavourRecord._schemaName.includes('BCMI')) {
+          updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
+        } else {
+          updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id };
+          hasBCMI = true;
+        }
       });
+
+      if (!hasBCMI) {
+        updateObj[nrptiRecord._schemaName + 'BCMI'] = {};
+      }
 
       return await RecordController.processPutRequest(
         { swagger: { params: { auth_payload: this.auth_payload } } },
