@@ -172,6 +172,10 @@
                     "value": "${API_PATH}"
                   },
                   {
+                    "name": "GEOCODER_API",
+                    "value": "${GEOCODER_API}"
+                  },
+                  {
                     "name": "API_PUBLIC_PATH",
                     "value": "${API_PUBLIC_PATH}"
                   },
@@ -451,6 +455,12 @@
       "name": "API_PATH",
       "displayName": "Root level api path",
       "value": "/api"
+    },
+    {
+      "name": "GEOCODER_API",
+      "displayName": "Geocoder API URL",
+      "value": "https://geocoder.api.gov.bc.ca",
+      "required": true
     },
     {
       "name": "API_PUBLIC_PATH",
