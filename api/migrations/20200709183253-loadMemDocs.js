@@ -135,7 +135,8 @@ exports.up = async function (db) {
           let bcmiCollection = null;
           const allNewDocs = [];
           // need to use project id as well due to identical collection names in different projects)
-          const existingCollection = await nrpti.findOne({ _schemaName: "CollectionBCMI", name: collection.displayName, project: nrptiMine._id, _sourceRefId: collection._id});
+          const existingCollection = await nrpti.findOne({ _schemaName: "CollectionBCMI", name: collection.displayName, project: new ObjectID(nrptiMine._id), _sourceRefId: collection._id});
+          // console.log(`checking for existing collection, _schemaName: "CollectionBCMI", name: ${collection.displayName}, project: ${nrptiMine._id}, _sourceRefId: ${collection._id} `)
           if (!existingCollection) {
             console.log(`Creating NRPTI collection for ${collection.displayName}`);
             // init the collection so we can pass an id
@@ -152,7 +153,7 @@ exports.up = async function (db) {
             bcmiCollection.records = allNewDocs; // move this whole thing to the top if we remove records array
             bcmiCollection.addedBy = 'mem-admin';
             bcmiCollection.sourceSystemRef = 'mem-admin';
-            bcmiCollection._sourceRefId = new ObjectID(collection._id);
+            bcmiCollection._sourceRefId = collection._id;
             bcmiCollection.datePublished = collection.date;
             bcmiCollection.publishedBy = 'mem-admin';
             try {
@@ -167,6 +168,7 @@ exports.up = async function (db) {
             }
             collectionsCreated += 1;
           } else {
+            console.log(`Found existing collection ${existingCollection._id}`)
             bcmiCollection = existingCollection;
             collectionsExisting += 1;
           }
@@ -183,8 +185,8 @@ exports.up = async function (db) {
               // check for isBcmiPublished flag to ensure we get the flavour record
               if (collectionDoc.document.documentDate) {
                 existingDoc = await nrpti.findOne({ mineGuid: nrptiMine._sourceRefId, recordName: collectionDoc.document.displayName, isBcmiPublished: null, dateIssued: collectionDoc.document.documentDate });
+                // console.log(`{ mineGuid: ${nrptiMine._sourceRefId}, recordName: ${collectionDoc.document.displayName}, isBcmiPublished: null, dateIssued: ${collectionDoc.document.documentDate} }`)
               } else {
-                console.log(`date missing in source doc: ${JSON.stringify(collection.document)}`)
                 existingDoc = await nrpti.findOne({ mineGuid: nrptiMine._sourceRefId, recordName: collectionDoc.document.displayName, isBcmiPublished: null });
               }
             }

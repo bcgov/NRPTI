@@ -4,7 +4,8 @@ module.exports = require('../../utils/model-schema-generator')(
   'CollectionBCMI',
   {
     _schemaName: { type: String, default: 'CollectionBCMI' },
-    _sourceRefId: { type: 'ObjectId', default: null, index: true },
+    // old obj id from source system, used to match docs to colls
+    _sourceRefId: { type: String, default: null, index: true },
     read: [{ type: String, trim: true, default: 'sysadmin' }],
     write: [{ type: String, trim: true, default: 'sysadmin' }],
 
