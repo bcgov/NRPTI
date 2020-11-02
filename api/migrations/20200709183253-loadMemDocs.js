@@ -85,6 +85,8 @@ exports.up = async function (db) {
   let documentErrorCount = 0;
   let mineErrorLog = "";
   let mineErrorCount = 0;
+  let permitAmdcount = 0;
+  let otherRecCount = 0;
 
   const mClient = await db.connection.connect(db.connectionString, { native_parser: true });
   try {
@@ -132,8 +134,8 @@ exports.up = async function (db) {
           }
           let bcmiCollection = null;
           const allNewDocs = [];
-          // need to use project id as well due to identical collection names in different projects
-          const existingCollection = await nrpti.findOne({ _schemaName: "CollectionBCMI", name: collection.displayName, project: nrptiMine._id });
+          // need to use project id as well due to identical collection names in different projects)
+          const existingCollection = await nrpti.findOne({ _schemaName: "CollectionBCMI", name: collection.displayName, project: nrptiMine._id, _sourceRefId: collection._id});
           if (!existingCollection) {
             console.log(`Creating NRPTI collection for ${collection.displayName}`);
             // init the collection so we can pass an id
@@ -150,6 +152,7 @@ exports.up = async function (db) {
             bcmiCollection.records = allNewDocs; // move this whole thing to the top if we remove records array
             bcmiCollection.addedBy = 'mem-admin';
             bcmiCollection.sourceSystemRef = 'mem-admin';
+            bcmiCollection._sourceRefId = new ObjectID(collection._id);
             bcmiCollection.datePublished = collection.date;
             bcmiCollection.publishedBy = 'mem-admin';
             try {
@@ -178,10 +181,14 @@ exports.up = async function (db) {
               console.log(`missing displayName: ${JSON.stringify(collectionDoc)}`)
             } else {
               // check for isBcmiPublished flag to ensure we get the flavour record
-              existingDoc = await nrpti.findOne({ mineGuid: nrptiMine._sourceRefId, recordName: collectionDoc.document.displayName, isBcmiPublished: null });
+              if (collectionDoc.document.documentDate) {
+                existingDoc = await nrpti.findOne({ mineGuid: nrptiMine._sourceRefId, recordName: collectionDoc.document.displayName, isBcmiPublished: null, dateIssued: collectionDoc.document.documentDate });
+              } else {
+                console.log(`date missing in source doc: ${JSON.stringify(collection.document)}`)
+                existingDoc = await nrpti.findOne({ mineGuid: nrptiMine._sourceRefId, recordName: collectionDoc.document.displayName, isBcmiPublished: null });
+              }
             }
             if (!existingDoc) {
-              console.log('Creating new document')
               if (collection.type && collection.type.length > 0 && !collection.isForEAO) {
                 try {
                   const newDoc = await createMineDocument(nrpti, nrptiMine, collection, collectionDoc, bcmiCollection._id);
@@ -215,8 +222,8 @@ exports.up = async function (db) {
                 }
               }
             } else {
-              // check doc has valid collection
-              if (existingDoc.collectionId.toString() !== bcmiCollection._id.toString()) {
+              // check doc has valid collection  && sourceCollectionId !== collectionIdOfDoc
+              if (existingDoc.collectionId.toString() !== bcmiCollection._id.toString() && existingDoc._sourceRefId.toString() !== bcmiCollection._sourceRefId.toString() ) {
                 console.log(`Found record ${existingDoc._id} with a bad collection id ${existingDoc.collectionId}, adding to proper collection: ${bcmiCollection._id}`)
 
                 existingDoc.collectionId = bcmiCollection._id;
@@ -224,29 +231,31 @@ exports.up = async function (db) {
                 // duplicate record prevention
                 const arrayIncludes = bcmiCollection.records.some(item => item.toString() === existingDoc._id.toString());
                 if (!arrayIncludes) {
-                  console.log(`Adding doc ${existingDoc._id} to docsArray of ${bcmiCollection._id}`);
+                  // console.log(`Adding doc ${existingDoc._id} to docsArray of ${bcmiCollection._id}`);
                   allNewDocs.push(existingDoc._id);
                 }
               }
               docsExisting += 1;
               // Ensure that records only exist in the proper collection for their mine
               const collectionsToFix = await nrpti.find({records: { $in: [ existingDoc._id ]}});
-              collectionsToFix.forEach( async (coll) => {
-                if (coll.project.toString() !== nrptiMine._id.toString()) {
-                  console.log(`Found a collection that constains records from another mine: ${coll._id}, existingRec: ${existingDoc._id}`)
+              collectionsToFix.forEach( (coll) => {
+                if (coll.project.toString() === nrptiMine._id.toString() && collection._sourceRefId.toString() !== existingDoc._sourceRefId.toString()) {
+                  console.log(`Found a collection that constains records from another mine or collection: ${coll._id}, existingRec: ${existingDoc._id}`)
                   // remove record from a collection that is not actually part of this mine
                   const filteredRecords = coll.records.filter((rec) => rec.toString() !== existingDoc._id.toString())
                   if (filteredRecords) {
                     coll.records = filteredRecords;
-                    await nrpti.findOneAndUpdate({ _id: coll._id }, coll);
+                    console.log(`updating collection ${coll._id}`)
+                    nrpti.findOneAndUpdate({ _id: coll._id }, coll);
                   }
                 }
               });
             }
           }
+          // console.log(`adding docs to collection ${bcmiCollection._id},  docs: ${JSON.stringify(allNewDocs)}`)
           if (allNewDocs.length) {
             bcmiCollection.records = bcmiCollection.records.concat(allNewDocs);
-            await nrpti.findOneAndUpdate({ _schemaName: "CollectionBCMI", name: collection.displayName, project: nrptiMine._id  }, bcmiCollection)
+            await nrpti.findOneAndUpdate({ _id: bcmiCollection._id  }, bcmiCollection)
           }
         }
       } else {
@@ -283,6 +292,9 @@ exports.up = async function (db) {
   console.log(`Process complete with ${docsCreated} records created, ${collectionsCreated} collections created, and ${errors} errors.`);
   console.log(`Process found ${docsExisting} existing documents, ${collectionsExisting} existing collections already created in NRPTI`);
 
+  console.log(`Found ${permitAmdcount} records that were possibly assigned to wrong collection`)
+  console.log(`Found ${otherRecCount} records that were possibly assigned to wrong collection`)
+  console.log(`Issues: \n ${collectionErrorLog}`)
   console.log('****************************************');
   console.log('** Finished mem-admin collection load **');
   console.log('****************************************');
@@ -402,6 +414,8 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   flavourData.sourceDateAdded = collectionDoc.document.dateAdded;
   flavourData.sourceDateUpdated = collectionDoc.document.dateUpdated;
   flavourData.sourceSystemRef = 'mem-admin';
+  // todo add new field to models for sourceCollectionId
+  flavourData._sourceRefId = collectionDoc.document.collections[0];
   flavourData.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   flavourData.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   await nrpti.insertOne(flavourData);
