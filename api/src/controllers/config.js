@@ -20,9 +20,10 @@ exports.protectedGetConfig = async function (args, res, next) {
   configurationData['API_PATH'] = process.env.API_PATH;
   configurationData['API_PUBLIC_PATH'] = process.env.API_PUBLIC_PATH;
   configurationData['KEYCLOAK_CLIENT_ID'] = process.env.KEYCLOAK_CLIENT_ID;
+  configurationData['GEOCODER_API'] = process.env.GEOCODER_API;
   configurationData['ENVIRONMENT'] = process.env.ENVIRONMENT;
   configurationData['debugMode'] = process.env.DEBUG_MODE;
-
+  
   // get project specific confguration
   if (args.swagger.params.app && args.swagger.params.app.value) {
     // fetch the latest business area specific CommunicationPackage
