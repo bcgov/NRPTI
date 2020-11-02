@@ -135,7 +135,7 @@ exports.up = async function (db) {
           let bcmiCollection = null;
           const allNewDocs = [];
           // need to use project id as well due to identical collection names in different projects)
-          const existingCollection = await nrpti.findOne({ _schemaName: "CollectionBCMI", name: collection.displayName, project: new ObjectID(nrptiMine._id), _sourceRefId: collection._id});
+          const existingCollection = await nrpti.findOne({ _schemaName: "CollectionBCMI", name: collection.displayName, project: new ObjectID(nrptiMine._id), _sourceRefId: new ObjectID(collection._id)});
           // console.log(`checking for existing collection, _schemaName: "CollectionBCMI", name: ${collection.displayName}, project: ${nrptiMine._id}, _sourceRefId: ${collection._id} `)
           if (!existingCollection) {
             console.log(`Creating NRPTI collection for ${collection.displayName}`);
@@ -225,13 +225,13 @@ exports.up = async function (db) {
               }
             } else {
               // check doc has valid collection  && sourceCollectionId !== collectionIdOfDoc
-              if (existingDoc.collectionId.toString() !== bcmiCollection._id.toString() && existingDoc._sourceRefId.toString() !== bcmiCollection._sourceRefId.toString() ) {
+              if (new ObjectID(existingDoc.collectionId) !== new ObjectID(bcmiCollection._id) && new ObjectID(existingDoc._sourceRefId) !== new ObjectID(bcmiCollection._sourceRefId) ) {
                 console.log(`Found record ${existingDoc._id} with a bad collection id ${existingDoc.collectionId}, adding to proper collection: ${bcmiCollection._id}`)
 
                 existingDoc.collectionId = bcmiCollection._id;
                 await nrpti.findOneAndUpdate({ _id: existingDoc._id }, existingDoc);
                 // duplicate record prevention
-                const arrayIncludes = bcmiCollection.records.some(item => item.toString() === existingDoc._id.toString());
+                const arrayIncludes = bcmiCollection.records.some(item => new ObjectID(item) === new ObjectID(existingDoc._id));
                 if (!arrayIncludes) {
                   // console.log(`Adding doc ${existingDoc._id} to docsArray of ${bcmiCollection._id}`);
                   allNewDocs.push(existingDoc._id);
@@ -241,10 +241,10 @@ exports.up = async function (db) {
               // Ensure that records only exist in the proper collection for their mine
               const collectionsToFix = await nrpti.find({records: { $in: [ existingDoc._id ]}});
               collectionsToFix.forEach( (coll) => {
-                if (coll.project.toString() === nrptiMine._id.toString() && collection._sourceRefId.toString() !== existingDoc._sourceRefId.toString()) {
+                if (new ObjectID(coll.project) === new ObjectID(nrptiMine._id) && new ObjectID(collection._sourceRefId) !== new ObjectID(existingDoc._sourceRefId)) {
                   console.log(`Found a collection that constains records from another mine or collection: ${coll._id}, existingRec: ${existingDoc._id}`)
                   // remove record from a collection that is not actually part of this mine
-                  const filteredRecords = coll.records.filter((rec) => rec.toString() !== existingDoc._id.toString())
+                  const filteredRecords = coll.records.filter((rec) => new ObjectID(rec) !== new ObjectID(existingDoc._id))
                   if (filteredRecords) {
                     coll.records = filteredRecords;
                     console.log(`updating collection ${coll._id}`)
@@ -316,10 +316,10 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   // fetch doc from mem-admin Minio
   // minioObject contains de-serialized data returned from the getObject request.  Body field contains the data buffer
   // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property
-  const minioObject = await minio.getObject({
-    Bucket: MINIO_BUCKET,
-    Key: collectionDoc.document.internalURL
-  }).promise();
+  // const minioObject = await minio.getObject({
+  //   Bucket: MINIO_BUCKET,
+  //   Key: collectionDoc.document.internalURL
+  // }).promise();
 
   // create a document meta
   let document = new Document();
@@ -334,12 +334,12 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   document.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // upload to s3
-  await s3.upload({
-    Bucket: OBJ_STORE_BUCKET,
-    Key: s3Key,
-    Body: minioObject.Body,
-    ACL: 'authenticated-read'
-  }).promise()
+  // await s3.upload({
+  //   Bucket: OBJ_STORE_BUCKET,
+  //   Key: s3Key,
+  //   Body: minioObject.Body,
+  //   ACL: 'authenticated-read'
+  // }).promise()
 
   // save the document meta
   await nrpti.insertOne(document);
