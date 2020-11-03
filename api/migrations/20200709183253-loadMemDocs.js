@@ -136,7 +136,6 @@ exports.up = async function (db) {
           const allNewDocs = [];
           // need to use project id as well due to identical collection names in different projects)
           const existingCollection = await nrpti.findOne({ _schemaName: "CollectionBCMI", name: collection.displayName, project: new ObjectID(nrptiMine._id), _sourceRefId: new ObjectID(collection._id)});
-          // console.log(`checking for existing collection, _schemaName: "CollectionBCMI", name: ${collection.displayName}, project: ${nrptiMine._id}, _sourceRefId: ${collection._id} `)
           if (!existingCollection) {
             console.log(`Creating NRPTI collection for ${collection.displayName}`);
             // init the collection so we can pass an id
@@ -243,7 +242,6 @@ exports.up = async function (db) {
                   console.log(`Found a collection that constains records from another mine or collection: ${coll._id}, existingRec: ${existingDoc._id}`)
                   // remove record from a collection that is not actually part of this mine
                   const filteredRecords = coll.records.filter((rec) => rec.toString() !== existingDoc._id.toString())
-                  console.log(`filtered recs: ${JSON.stringify(filteredRecords)}`)
                   if (filteredRecords) {
                     coll.records = filteredRecords;
                     console.log(`updating collection ${coll._id}`)
