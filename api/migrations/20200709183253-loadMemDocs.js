@@ -183,11 +183,9 @@ exports.up = async function (db) {
               console.log(`missing displayName: ${JSON.stringify(collectionDoc)}`)
             } else {
               // check for isBcmiPublished flag to ensure we get the flavour record
-              if (collectionDoc.document.documentDate) {
-                existingDoc = await nrpti.findOne({ mineGuid: nrptiMine._sourceRefId, recordName: collectionDoc.document.displayName, isBcmiPublished: null, dateIssued: collectionDoc.document.documentDate });
-                // console.log(`{ mineGuid: ${nrptiMine._sourceRefId}, recordName: ${collectionDoc.document.displayName}, isBcmiPublished: null, dateIssued: ${collectionDoc.document.documentDate} }`)
-              } else {
-                existingDoc = await nrpti.findOne({ mineGuid: nrptiMine._sourceRefId, recordName: collectionDoc.document.displayName, isBcmiPublished: null });
+              existingDoc = await nrpti.findOne({ mineGuid: nrptiMine._sourceRefId, recordName: collectionDoc.document.displayName, isBcmiPublished: null, _sourceRefId: new ObjectID(collectionDoc.document.collections[0]) });
+              if (!existingDoc) {
+                  existingDoc = await nrpti.findOne({ mineGuid: nrptiMine._sourceRefId, recordName: collectionDoc.document.displayName, isBcmiPublished: null, collectionId: bcmiCollection._id});
               }
             }
             if (!existingDoc) {
