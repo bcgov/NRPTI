@@ -315,10 +315,10 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   // fetch doc from mem-admin Minio
   // minioObject contains de-serialized data returned from the getObject request.  Body field contains the data buffer
   // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property
-  // const minioObject = await minio.getObject({
-  //   Bucket: MINIO_BUCKET,
-  //   Key: collectionDoc.document.internalURL
-  // }).promise();
+  const minioObject = await minio.getObject({
+    Bucket: MINIO_BUCKET,
+    Key: collectionDoc.document.internalURL
+  }).promise();
 
   // create a document meta
   let document = new Document();
@@ -333,12 +333,12 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   document.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // upload to s3
-  // await s3.upload({
-  //   Bucket: OBJ_STORE_BUCKET,
-  //   Key: s3Key,
-  //   Body: minioObject.Body,
-  //   ACL: 'authenticated-read'
-  // }).promise()
+  await s3.upload({
+    Bucket: OBJ_STORE_BUCKET,
+    Key: s3Key,
+    Body: minioObject.Body,
+    ACL: 'authenticated-read'
+  }).promise()
 
   // save the document meta
   await nrpti.insertOne(document);
