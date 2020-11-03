@@ -150,12 +150,16 @@ class NrisDataSource {
           if (existingRecord) {
             if (newRecord.documents.length === 0) {
               // create attachment if no existing document was found, if no "Final Report" is attached no document will be created
-              await this.createRecordAttachments(records[i], newRecord)
+              if (this.shouldRecordHaveAttachments(newRecord)) {
+                await this.createRecordAttachments(records[i], newRecord)
+              }
             }  
 
             await this.updateRecord(newRecord, existingRecord);                                 
           } else {
-            await this.createRecordAttachments(records[i], newRecord);
+            if (this.shouldRecordHaveAttachments(newRecord)) {
+              await this.createRecordAttachments(records[i], newRecord);
+            }
             await this.createItem(newRecord);
           }
 
@@ -187,6 +191,8 @@ class NrisDataSource {
     let newRecord = new Inspection().toObject();
     // We don't need this as we insert based on assessmentId
     delete newRecord._id;
+    
+    const legislation = this.getLegislation(record);
 
     newRecord.recordName = `Inspection - ${record.requirementSource} - ${record.assessmentId}`;
     newRecord.legislationDescription = 'Inspection to verify compliance with regulatory requirement.';
@@ -195,10 +201,7 @@ class NrisDataSource {
     newRecord.dateIssued = record.assessmentDate;
     newRecord.issuingAgency = this.stringTransformEPOtoEPD(record.resourceAgency);
     newRecord.author = 'Environmental Protection Division';
-    newRecord.legislation = {
-      act: 'Environmental Management Act',
-      section: '109'
-    };
+    newRecord.legislation = { ...legislation };
     newRecord.dateAdded = new Date();
     newRecord.dateUpdated = new Date();
 
@@ -451,6 +454,44 @@ class NrisDataSource {
     } catch (error) {
       defaultLog.error(`Failed to save ${RECORD_TYPE.Inspection._schemaName} record: ${error.message}`);
     }
+  }
+
+  getLegislation(record) {
+    if (!record || !record.requirementSource) {
+      return { 
+        act: 'Environmental Management Act',
+        section: 109,
+      };
+    }
+
+    if (record.requirementSource === 'Integrated Pest Management Act' ||
+        record.requirementSource === 'Integrated Pest Management Regulation' ||
+        record.requirementSource === 'Administrative Penalties (Integrated Pest Management Act) Regulation') {
+          return { 
+            act: 'Integrated Pest Management Act',
+            section: 17,
+          };
+    }
+
+    if (record.requirementSource === 'Greenhouse Gas Industrial Reporting and Control Act') {
+      return { 
+        act: 'Greenhouse Gas Industrial Reporting and Control Act',
+        section: 22,
+      };
+    }
+
+    return { 
+      act: 'Environmental Management Act',
+      section: 109,
+    };
+  }
+
+  shouldRecordHaveAttachments(record) {
+    if (record && record.legislation && record.legislation.act === 'Greenhouse Gas Industrial Reporting and Control Act') {
+      return false;
+    }
+
+    return true;
   }
 }
 
