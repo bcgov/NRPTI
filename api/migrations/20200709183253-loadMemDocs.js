@@ -222,8 +222,8 @@ exports.up = async function (db) {
                 }
               }
             } else {
-              // check doc has valid collection  && sourceCollectionId !== collectionIdOfDoc
-              if (new ObjectID(existingDoc.collectionId) !== new ObjectID(bcmiCollection._id) && new ObjectID(existingDoc._sourceRefId) !== new ObjectID(bcmiCollection._sourceRefId) ) {
+              // only toString comparison works, new objectid doesn't pass equality
+              if (existingDoc.collectionId.toString() !== bcmiCollection._id.toString() && existingDoc._sourceRefId.toString() !== bcmiCollection._sourceRefId.toString() ) {
                 console.log(`Found record ${existingDoc._id} with a bad collection id ${existingDoc.collectionId}, adding to proper collection: ${bcmiCollection._id}`)
 
                 existingDoc.collectionId = bcmiCollection._id;
@@ -231,7 +231,7 @@ exports.up = async function (db) {
                 // duplicate record prevention
                 const arrayIncludes = bcmiCollection.records.some(item => new ObjectID(item) === new ObjectID(existingDoc._id));
                 if (!arrayIncludes) {
-                  // console.log(`Adding doc ${existingDoc._id} to docsArray of ${bcmiCollection._id}`);
+                  console.log(`Adding doc ${existingDoc._id} to docsArray of ${bcmiCollection._id}`);
                   allNewDocs.push(existingDoc._id);
                 }
               }
@@ -242,7 +242,8 @@ exports.up = async function (db) {
                 if (new ObjectID(coll.project) === new ObjectID(nrptiMine._id) && new ObjectID(collection._sourceRefId) !== new ObjectID(existingDoc._sourceRefId)) {
                   console.log(`Found a collection that constains records from another mine or collection: ${coll._id}, existingRec: ${existingDoc._id}`)
                   // remove record from a collection that is not actually part of this mine
-                  const filteredRecords = coll.records.filter((rec) => new ObjectID(rec) !== new ObjectID(existingDoc._id))
+                  const filteredRecords = coll.records.filter((rec) => rec.toString() !== existingDoc._id.toString())
+                  console.log(`filtered recs: ${JSON.stringify(filteredRecords)}`)
                   if (filteredRecords) {
                     coll.records = filteredRecords;
                     console.log(`updating collection ${coll._id}`)
@@ -415,7 +416,7 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   flavourData.sourceDateUpdated = collectionDoc.document.dateUpdated;
   flavourData.sourceSystemRef = 'mem-admin';
   // todo add new field to models for sourceCollectionId
-  flavourData._sourceRefId = collectionDoc.document.collections[0];
+  flavourData._sourceRefId = new ObjectID(collectionDoc.document.collections[0]);
   flavourData.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   flavourData.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   await nrpti.insertOne(flavourData);
