@@ -47,6 +47,8 @@ module.exports = require('../../utils/model-schema-generator')(
     documents: [{ type: 'ObjectId', default: [], index: true }],
 
     // final Record boilerplate
+    sourceDateAdded: { type: Date, default: null },
+    sourceDateUpdated: { type: Date, default: null },
     dateAdded: { type: Date, default: Date.now() },
     dateUpdated: { type: Date, default: null },
     datePublished: { type: Date, default: null },
