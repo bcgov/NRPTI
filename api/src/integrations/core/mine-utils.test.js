@@ -25,7 +25,7 @@ describe('MineUtils', () => {
 
     it('returns transformed Core record', () => {
       const mineUtils = new MineUtils({}, RECORD_TYPE.MineBCMI);
-      const coreRecord = { 
+      const coreRecord = {
         mine_guid: 1,
         mine_name: 'test',
         mine_permit_numbers: 'test',
@@ -66,8 +66,7 @@ describe('MineUtils', () => {
         tailingsImpoundments: 2,
         region: 'TE',
         location: { type: 'Point', coordinates: [ 123, 456 ]},
-        permittee: '',
-        links: []
+        permittee: ''
       };
 
       const result = mineUtils.transformRecord(coreRecord, []);
