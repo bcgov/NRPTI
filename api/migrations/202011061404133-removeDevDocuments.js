@@ -33,10 +33,24 @@ exports.up = async function(db) {
     // Locate the records the document is used in and remove them.
     for (const doc of devDocs) {
       const records = await nrpti.find({ documents: doc._id }).toArray();
-      console.log(`Document '${doc.fileName}' is used in ${records.length} records... deleting records`);
+      console.log(`Document '${doc.fileName}' is used in ${records.length} records`);
 
-      // Delete the records
-      await nrpti.remove({ _id: records.map(record => record._id) });
+      let collectionCount = 0;
+      for (const record of records) {
+        // Find any collections the record is used in.
+        const collections = await nrpti.find({ _schemaName: 'CollectionBCMI', records: record._id }).toArray();
+
+        // If there are any collections (should only be one, but might have more) then remove the record.
+        if (collections) {
+          collectionCount += collections.length;
+          await nrpti.updateMany({ _id: { $in: collections.map(collection => collection._id) } }, { $pull: { records: record._id } });
+        }
+
+        // Delete the record.
+        await nrpti.remove({ _id: record._id });
+      }
+
+      console.log(`Records were found in ${collectionCount} collections and removed`);
 
       // Delete the document
       await nrpti.remove({ _id: doc._id });
