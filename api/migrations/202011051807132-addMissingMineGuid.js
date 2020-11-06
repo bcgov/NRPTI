@@ -33,7 +33,7 @@ exports.up = async function(db) {
         'CertificateAmendmentBCMI',
         'ManagementPlanBCMI'
       ]},
-      mineGuid: null
+      mineGuid: { $in: [null, ''] }
     },
     {  $set: { mineGuid: '739e90ee-807c-4287-91a3-7099352e1ffa' } });
 
@@ -48,7 +48,7 @@ exports.up = async function(db) {
         'CertificateAmendmentBCMI',
         'ManagementPlanBCMI'
       ]},
-      mineGuid: null
+      mineGuid: { $in: [null, ''] }
     },
     {  $set: { mineGuid: '86404595-0ac0-4489-a848-a8dce3ed1d96' } });
 
