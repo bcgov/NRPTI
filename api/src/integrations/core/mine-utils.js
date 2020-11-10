@@ -53,14 +53,13 @@ class Mines extends BaseRecordUtils {
       location : { type: 'Point', coordinates: mineRecord.coordinates },
       permittee: '',
       permitNumber: '',
-      permit: null,
-      links: []
+      permit: null
     };
   }
 
   /**
    * Gets the description of all commodities that match the mine record.
-   * 
+   *
    * @param {object} mineRecord Core mine record
    * @param {Array<object>} commodityTypes Valid commodity types
    * @returns {Array<string>} Matched commodity types
@@ -94,7 +93,7 @@ class Mines extends BaseRecordUtils {
 
   /**
    * Returns the latest mine status.
-   * 
+   *
    * @param {object} mineRecord Core mine record
    * @returns {string} Latest status
    * @memberof Mines
@@ -115,7 +114,7 @@ class Mines extends BaseRecordUtils {
 
   /**
    * Adds the permit and permittee to a Mine record.
-   * 
+   *
    * @param {*} mineRecord Transformed Mine record
    * @param {*} permitInfo Permit number and permittee
    * @returns {Mine} Mine with permit and permittee added
