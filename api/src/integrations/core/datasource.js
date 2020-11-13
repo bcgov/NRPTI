@@ -210,13 +210,12 @@ class CoreDataSource {
       if (existingRecord) {
         // Update permit.
         const permitInfo = await this.updateMinePermit(permitUtils, existingRecord);
-        savedRecord = await mineUtils.updateRecord(nrptiRecord, existingRecord);
+        savedRecord = await mineUtils.updateRecord(nrptiRecord, permitInfo, existingRecord);
 
         // Only create collection if there were new permits
         if (permitInfo.permit.permit_amendments && permitInfo.permit.permit_amendments.length) {
           await this.createCollections(collectionUtils, permitInfo.permit, savedRecord[0].object[0]);
         }
-        savedRecord = await mineUtils.updateRecord(nrptiRecord, permitInfo, existingRecord);
       } else {
         // Create the permits.
         const permitInfo = await this.createMinePermit(permitUtils, nrptiRecord);
