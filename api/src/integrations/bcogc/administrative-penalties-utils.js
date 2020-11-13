@@ -7,18 +7,18 @@ const CsvUtils = require('./utils/csv-utils');
 const { createURLDocument } = require('../../controllers/document-controller');
 
 /**
- * CORS csv Order record handler.
+ * CORS csv Administrative Penalty record handler.
  *
- * @class Orders
+ * @class AdministrativePenalty
  */
-class Orders extends BaseRecordUtils {
+class AdministrativePenalty extends BaseRecordUtils {
   /**
-   * Creates an instance of Orders.
+   * Creates an instance of AdministrativePenalty.
    *
    * @param {*} auth_payload user information for auditing
    * @param {*} recordType an item from record-type-enum.js -> RECORD_TYPE
    * @param {*} csvRow an object containing the values from a single csv row.
-   * @memberof Inspections
+   * @memberof AdministrativePenalty
    */
   constructor(auth_payload, recordType, csvRow) {
     super(auth_payload, recordType, csvRow);
@@ -28,34 +28,37 @@ class Orders extends BaseRecordUtils {
    * Convert the csv row object into the object expected by the API record post/put controllers.
    *
    * @returns an order object matching the format expected by the API record post/put controllers.
-   * @memberof Orders
+   * @memberof AdministrativePenalty
    */
   transformRecord(csvRow) {
     if (!csvRow) {
       throw Error('transformRecord - required csvRow must be non-null.');
     }
 
-    const order = { ...super.transformRecord(csvRow) };
+    const penalty = { ...super.transformRecord(csvRow) };
 
-    order['recordType'] = RECORD_TYPE.Order._schemaName;
-    order['_sourceRefOgcOrderId'] = csvRow['Title'];
-    order['author'] = 'BC Oil and Gas Commission';
-    order['recordName'] = csvRow['Title'];
-    order['dateIssued'] = new Date(csvRow['Date Issued']);
-    order['location'] = 'British Columbia';
+    penalty['recordType'] = RECORD_TYPE.AdministrativePenalty._schemaName;
+    penalty['_sourceRefOgcPenaltyId'] = csvRow['Title'];
+    penalty['author'] = 'BC Oil and Gas Commission';
+    penalty['recordName'] = csvRow['Title'];
+    penalty['dateIssued'] = new Date(csvRow['Date Issued']);
+    penalty['location'] = 'British Columbia';
+    penalty['offence'] = 'Penalty for failure to comply with the Act or associated regulations';
 
-    order['legislation'] = {
+    penalty['legislation'] = {
       act: 'Oil and Gas Activities Act',
-      section: this.getOrderSection(csvRow),
+      section: 63,
     };
 
-    order['issuedTo'] = {
+    penalty['issuedTo'] = {
       type: 'Company',
       companyName: csvRow['Proponent'] || ''
     };
 
+    penalty['penalties'] = this.getPenalties(csvRow);
+
     // Prepare for the document to be created later.
-    order['document'] = {
+    penalty['document'] = {
       fileName: csvRow['Filename'],
       url: csvRow['File URL'],
     };
@@ -63,12 +66,12 @@ class Orders extends BaseRecordUtils {
     const projectDetails = CsvUtils.getProjectNameAndEpicProjectId(csvRow);
     // Only update NRPTI project details if the csv contains known project information
     if (projectDetails) {
-      order['projectName'] = projectDetails.projectName;
-      order['_epicProjectId'] =
+      penalty['projectName'] = projectDetails.projectName;
+      penalty['_epicProjectId'] =
         (projectDetails._epicProjectId && new ObjectID(projectDetails._epicProjectId)) || null;
     }
 
-    return order;
+    return penalty;
   }
 
   /**
@@ -77,7 +80,7 @@ class Orders extends BaseRecordUtils {
    * @async
    * @param {object} nrptiRecord NRPTI record (required)
    * @returns {object} object containing the newly inserted master and flavour records
-   * @memberof Orders
+   * @memberof AdministrativePenalty
    */
   async createItem(nrptiRecord) {
     if (!nrptiRecord) {
@@ -104,10 +107,10 @@ class Orders extends BaseRecordUtils {
    *
    * @param {*} nrptiRecord
    * @returns {object} existing NRPTI master record, or null if none found
-   * @memberof Orders
+   * @memberof AdministrativePenalty
    */
   async findExistingRecord(nrptiRecord) {
-    if (!nrptiRecord._sourceRefOgcOrderId) {
+    if (!nrptiRecord._sourceRefOgcPenaltyId) {
       return null;
     }
 
@@ -116,29 +119,53 @@ class Orders extends BaseRecordUtils {
     return await masterRecordModel
       .findOne({
         _schemaName: this.recordType._schemaName,
-        _sourceRefOgcOrderId: nrptiRecord._sourceRefOgcOrderId
+        _sourceRefOgcPenaltyId: nrptiRecord._sourceRefOgcPenaltyId
       })
       .populate('_flavourRecords', '_id _schemaName');
   }
 
   /**
-   * Returns the order section based on the title.
+   * Gets the penalty based on the value amount in the CSV row.
    * 
-   * @param {Object} csvRow 
-   * @returns {number} Section number
-   * @memberof Orders
+   * @param {*} csvRow
+   * @returns {Array<Object>} Object containing the penalties 
+   * @memberof AdministrativePenalty
    */
-  getOrderSection(csvRow) {
-    if (csvRow.Title && csvRow.Title.includes('General Order')) {
-      return 49;
+  getPenalties(csvRow) {
+    // Remove the `$` at the start.
+    let penaltyAmount = csvRow['Penalty Amount (CAD)'].substr(1);
+
+    if (penaltyAmount === '') {
+      return [{
+        type: '',
+        penalty: null,
+        description: 'No contravention was found to have occurred, and no penalty was assessed. See the attached document for additional details.'
+      }];
     }
 
-    if (csvRow.Title && csvRow.Title.includes('Action Order')) {
-      return 50;
+    penaltyAmount = parseInt(penaltyAmount, 10);
+
+    if (penaltyAmount === 0) {
+      return [{
+        type: '',
+        penalty: null,
+        description: 'Although a contravention occurred, a penalty was not assessed. See the attached document for additional details.'
+      }];
+    }
+    
+    if (penaltyAmount > 0) {
+      return [{
+        type: 'Fined',
+        penalty: {
+          type: 'Dollars',
+          value: penaltyAmount
+        },
+        description: ''
+      }];
     }
 
-    return null;
+    return [];
   }
 }
 
-module.exports = Orders;
+module.exports = AdministrativePenalty;
