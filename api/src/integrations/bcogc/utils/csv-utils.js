@@ -11,11 +11,13 @@ exports.getProjectNameAndEpicProjectId = function(csvRow) {
     return null;
   }
 
-  if (csvRow['operator'] === 'Coastal GasLink Pipeline Ltd.') {
+  const company = csvRow['operator'] || csvRow['Proponent'];
+
+  if (company === 'Coastal GasLink Pipeline Ltd.') {
     return { projectName: 'Coastal Gaslink', _epicProjectId: MiscConstants.EpicProjectIds.coastalGaslinkId };
   }
 
-  if (csvRow['operator'] === 'LNG Canada Development Inc.') {
+  if (company === 'LNG Canada Development Inc.') {
     return { projectName: 'LNG Canada', _epicProjectId: MiscConstants.EpicProjectIds.lngCanadaId };
   }
 

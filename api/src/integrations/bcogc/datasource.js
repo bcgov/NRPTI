@@ -1,9 +1,12 @@
+const axios = require('axios');
+const cheerio = require('cheerio');
 const defaultLog = require('../../utils/logger')('bcogc-datasource');
 const integrationUtils = require('../integration-utils');
 const { getCsvRowsFromString } = require('../../utils/helpers');
 
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
-const BCOGC_CSV_ENDPOINT = process.env.BCOGC_CSV_ENDPOINT || 'https://reports.bcogc.ca/ogc/f?p=200:501::CSV';
+const BCOGC_INSPECTIONS_CSV_ENDPOINT = process.env.BCOGC_INSPECTIONS_CSV_ENDPOINT || 'https://reports.bcogc.ca/ogc/f?p=200:501::CSV';
+const BCOGC_ORDERS_CSV_ENDPOINT = process.env.BCOGC_ORDERS_CSV_ENDPOINT || 'https://www.bcogc.ca/data-reports/compliance-enforcement/reports/enforcement-order';
 
 class OgcCsvDataSource {
   /**
@@ -34,12 +37,12 @@ class OgcCsvDataSource {
   async run() {
     defaultLog.info('run - import bcogc');
     
-    const csvRows = await this.fetchBcogcCsv();
+    const csvs = await this.fetchAllBcogcCsvs();
 
-    this.status.itemTotal = csvRows.length;
+    this.status.itemTotal = csvs.getLength();
     await this.taskAuditRecord.updateTaskRecord({ status: 'Running', itemTotal: this.status.itemTotal});
 
-    await this.batchProcessRecords(csvRows);
+    await this.batchProcessRecords(csvs);
     
     return this.status;
   }
@@ -48,26 +51,29 @@ class OgcCsvDataSource {
    * Runs processRecord() on each csv row, in batches.
    *
    * Batch size configured by env variable `CSV_IMPORT_BATCH_SIZE` if it exists, or 100 by default.
-   * @param {Array<*>} csvRows array of objects of values for a single row
+   * @param {Object} csvRows Object containing arrays of CSV rows keyed by record type.
    * @memberof OgcCsvDataSource
    */
-  async batchProcessRecords(csvRows) {
+  async batchProcessRecords(csvs) {
     try {
       let batchSize = process.env.CSV_IMPORT_BATCH_SIZE || 100;
 
-      const recordTypeConfig = this.getRecordTypeConfig();
+      // Handle each csv type.
+      for (const recordType of csvs.types) {
+        const recordTypeConfig = this.getRecordTypeConfig(recordType);
 
-      if (!recordTypeConfig) {
-        throw Error('batchProcessRecords - failed to find matching recordTypeConfig.');
-      }
+        if (!recordTypeConfig) {
+          throw Error('batchProcessRecords - failed to find matching recordTypeConfig.');
+        }
 
-      let promises = [];
-      for (let i = 0; i < csvRows.length; i++) {
-        promises.push(this.processRecord(csvRows[i], recordTypeConfig));
+        let promises = [];
+        for (let i = 0; i < csvs[recordType].length; i++) {
+          promises.push(this.processRecord(csvs[recordType][i], recordTypeConfig));
 
-        if (i % batchSize === 0 || i === csvRows.length - 1) {
-          await Promise.all(promises);
-          promises = [];
+          if (i % batchSize === 0 || i === csvs[recordType].length - 1) {
+            await Promise.all(promises);
+            promises = [];
+          }
         }
       }
     } catch (error) {
@@ -121,6 +127,7 @@ class OgcCsvDataSource {
 
         await this.taskAuditRecord.updateTaskRecord({ itemsProcessed: this.status.itemsProcessed });
       } else {
+        console.log(csvRow)
         throw Error('processRecord - savedRecord is null.');
       }
     } catch (error) {
@@ -142,10 +149,10 @@ class OgcCsvDataSource {
    * @returns {*} object with getUtil method to create a new instance of the record type utils.
    * @memberof OgcCsvDataSource
    */
-  getRecordTypeConfig() {
+  getRecordTypeConfig(recordType) {
     return {
       getUtil: (auth_payload, csvRow) => {
-        return new (require('./inspections-utils'))(auth_payload, RECORD_TYPE.Inspection, csvRow);
+        return new (require(`./${recordType.toLowerCase()}s-utils`))(auth_payload, RECORD_TYPE[recordType], csvRow);
       }
     };
   }
@@ -153,23 +160,84 @@ class OgcCsvDataSource {
   /**
    * Gets the CSV of inspection from BCOGC
    * 
-   * @returns {Array<*>} array of objects for a processed CSV
+   * @returns {Promise<Array<*>>} array of objects for a processed CSV
    * @memberof OgcCsvDataSource
    */
-  async fetchBcogcCsv() {
+  async fetchBcogcInspectionCsv() {
     try {
-      const validUrl = new URL(BCOGC_CSV_ENDPOINT);
+      const validUrl = new URL(BCOGC_INSPECTIONS_CSV_ENDPOINT);
       
       const response = await integrationUtils.getRecords(validUrl);
       const transformedCsv = getCsvRowsFromString(response);
 
       return transformedCsv;
     } catch (error) {
-      this.status.message = 'fetchBcogcCsv - unexpected error';
+      this.status.message = 'fetchBcogcInspectionCsv - unexpected error';
       this.status.error = error.message;
 
-      defaultLog.error(`fetchBcogcCsv - unexpected error: ${error.message}`);
+      defaultLog.error(`fetchBcogcInspectionCsv - unexpected error: ${error.message}`);
     }
+  }
+
+  /**
+   * Scrapes rows of data from the BCOGC Order CSV.
+   * 
+   * @returns {Promise<Array<*>>} array of objects for a processed CSV
+   * @memberof OgcCsvDataSource
+   */
+  async fetchBcogcOrderCsv() {
+    const response = await axios.get(BCOGC_ORDERS_CSV_ENDPOINT);
+    return this.processBcogcHtml(response.data, 'export-table');
+  }
+
+  /**
+   * Fetches rows from CSVs for all types of BCOGC reports
+   *
+   * @returns {Promise<Object>} Object containing all CSV rows keyed on the record type.
+   * @memberof OgcCsvDataSource
+   */
+  async fetchAllBcogcCsvs() {
+    const inspections = await this.fetchBcogcInspectionCsv();
+    const orders = await this.fetchBcogcOrderCsv();
+
+    return {
+      [RECORD_TYPE.Inspection._schemaName]: inspections,
+      [RECORD_TYPE.Order._schemaName]: orders,
+      types: [RECORD_TYPE.Order._schemaName, RECORD_TYPE.Inspection._schemaName],
+      getLength: () => inspections.length + orders.length,
+    };
+  }
+
+  /**
+   * Turns a BCOGC HTML table into an array of records.
+   * 
+   * @param {string} html HTML to process
+   * @param {string} tableClass Class name used to identify to scrape.
+   * @returns {Array<Object>} Array of CSV row objects.
+   * @memberof OgcCsvDataSource
+   */
+  processBcogcHtml(html, tableClass) {
+    const csvRows = [];
+    const csvHeadings = [];
+    const $ = cheerio.load(html);
+
+    // BCOGC tables use the first row as the heading.
+    $(`table.${tableClass} tr`).each((index, row) => {
+      // Get the headings.
+      if (index === 0) {
+        $(row).find('th').each((index, th) => {
+          csvHeadings.push($(th).text());
+        });
+      } else {
+        const rowObject = {};
+        $(row).find('td').each((index, td) => {
+          rowObject[csvHeadings[index]] = $(td).text().trim();
+        });
+        csvRows.push(rowObject);
+      }
+    });
+
+    return csvRows;
   }
 }
 
