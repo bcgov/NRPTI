@@ -55,8 +55,7 @@ class CoreDataSource {
           defaultLog.error(`Core record: ${error.coreId}, error: ${error.error}`);
         }
       }
-    }
-    catch (error) {
+    } catch (error) {
       defaultLog.error('CoreDataSource run error:', error.message);
     }
   }
@@ -109,7 +108,7 @@ class CoreDataSource {
       await this.processRecords(utils, coreRecords);
     } catch (error) {
       defaultLog.error(`updateRecords - unexpected error: ${error.message}`);
-      throw (error);
+      throw error;
     }
   }
 
@@ -127,7 +126,7 @@ class CoreDataSource {
       return minesWithDetails;
     } catch (error) {
       defaultLog.error(`getAllRecordData - unexpected error: ${error.message}`);
-      throw (error);
+      throw error;
     }
   }
 
@@ -162,7 +161,7 @@ class CoreDataSource {
       defaultLog.error(`processRecords - unexpected error: ${error.message}`);
       // Throwing this error will stop the processing. This will only occur if there is an issue
       // getting commodities. Single record processing errors silently and won't trigger this.
-      throw (error);
+      throw error;
     }
   }
 
@@ -210,8 +209,13 @@ class CoreDataSource {
       let savedRecord = null;
       if (existingRecord) {
         // Update permit.
-        await this.updateMinePermit(permitUtils, existingRecord);
-        savedRecord = await mineUtils.updateRecord(nrptiRecord, existingRecord);
+        const permitInfo = await this.updateMinePermit(permitUtils, existingRecord);
+        savedRecord = await mineUtils.updateRecord(nrptiRecord, permitInfo, existingRecord);
+
+        // Only create collection if there were new permits
+        if (permitInfo.permit.permit_amendments && permitInfo.permit.permit_amendments.length) {
+          await this.createCollections(collectionUtils, permitInfo.permit, savedRecord[0].object[0]);
+        }
       } else {
         // Create the permits.
         const permitInfo = await this.createMinePermit(permitUtils, nrptiRecord);
@@ -268,9 +272,10 @@ class CoreDataSource {
       // Confirm that the most recent amendment is not historical, which is always the first index.
       // If 'null' then it is considered valid.
       // Otherwise, if the status is O, it's valid. (date 9999 check removed)
-      if ((permit.permit_amendments.length &&
-        !permit.permit_amendments[0].authorization_end_date) ||
-        permit.permit_status_code === 'O') {
+      if (
+        (permit.permit_amendments.length && !permit.permit_amendments[0].authorization_end_date) ||
+        permit.permit_status_code === 'O'
+      ) {
         // There should only be a single record. If there is more then we need to identify the most
         // recent permit as the official valid permit
         if (validPermit) {
@@ -282,10 +287,11 @@ class CoreDataSource {
             validPermitNo = validPermit.permit_no.split('-');
             proposedPermitNo = permit.permit_no.split('-');
 
-            validPermit = Number.parseInt(validPermitNo[validPermitNo.length - 1]) >
+            validPermit =
+              Number.parseInt(validPermitNo[validPermitNo.length - 1]) >
               Number.parseInt(proposedPermitNo[proposedPermitNo.length - 1])
-              ? validPermit
-              : permit;
+                ? validPermit
+                : permit;
           } catch (error) {
             throw new Error(`Failed to parse permit numbers [ ${validPermitNo} / ${proposedPermitNo} ]`);
           }
@@ -325,7 +331,7 @@ class CoreDataSource {
     const transformedPermits = await permitUtils.transformRecord(permit, nrptiRecord);
 
     // To trigger flavour for this import.
-    const preparedPermits = transformedPermits.map(amendment => ({ ...amendment, PermitBCMI: {} }))
+    const preparedPermits = transformedPermits.map(amendment => ({ ...amendment, PermitBCMI: {} }));
 
     const promises = preparedPermits.map(permit => permitUtils.createItem(permit));
     await Promise.all(promises);
@@ -334,7 +340,7 @@ class CoreDataSource {
       permitNumber: permit.permit_no,
       permittee: permit.current_permittee,
       permit
-    }
+    };
   }
 
   /**
@@ -353,37 +359,52 @@ class CoreDataSource {
       throw new Error('updateMinePermit - Cannot find valid permit');
     }
 
-    // Check how many documents exist on the current permit.
-    const currentDocCount = permit.permit_amendments.reduce((acc, amendment) => acc + amendment.related_documents.length, 0);
-
     // Get the current permits for the mine.
     const currentPermits = await permitUtils.getMinePermits(mineRecord._sourceRefId);
 
-    // If there are currently more documents than permits, locate the missing ones and create new permits for them.
-    if (currentDocCount > currentPermits.length) {
-      // Transform into permits.
-      const transformedPermits = permitUtils.transformRecord(permit, mineRecord);
+    // Transform into permits.
+    const transformedPermits = permitUtils.transformRecord(permit, mineRecord);
 
-      // Find the new permits that need to be created.
-      const newPermits = [];
-      for (const transformedPermit of transformedPermits) {
-        if (!currentPermits.some(current => current._sourceDocumentRefId === transformedPermit._sourceDocumentRefId)) {
-          newPermits.push(transformedPermit);
-        }
+    // NRPT-538: Removed existing vs new permit count check because CORE API permit count will almost always
+    //           be less than the existing permits in DB after mem data load.  The following for loop
+    //           will find and create new Permits.
+
+    // Find the new permits that need to be created.
+    const newPermits = [];
+    for (const transformedPermit of transformedPermits) {
+      if (!currentPermits.some(current => current._sourceDocumentRefId === transformedPermit._sourceDocumentRefId)) {
+        newPermits.push(transformedPermit);
       }
-
-      // Determine if the collection should be published or not based on the mine status.
-      let addPublic = false;
-      if (mineRecord.read && mineRecord.read.includes('public')) {
-        addPublic = true;
-      }
-
-      // To trigger flavour for this import.
-      const preparedPermits = newPermits.map(amendment => ({ ...amendment, PermitBCMI: {}, addPublic: addPublic && 'public' }));
-
-      const promises = preparedPermits.map(permit => permitUtils.createItem(permit));
-      await Promise.all(promises);
     }
+
+    // Determine if the collection should be published or not based on the mine status.
+    let addPublic = false;
+    if (mineRecord.read && mineRecord.read.includes('public')) {
+      addPublic = true;
+    }
+
+    // To trigger flavour for this import.
+    const preparedPermits = newPermits.map(amendment => ({
+      ...amendment,
+      PermitBCMI: {},
+      addPublic: addPublic && 'public'
+    }));
+
+    const promises = preparedPermits.map(permit => permitUtils.createItem(permit));
+    await Promise.all(promises);
+
+    const newPermitAmendmentsRefIds = newPermits.map(amendment => amendment._sourceRefId);
+    return {
+      permitNumber: permit.permit_no,
+      permittee: permit.current_permittee,
+      // Only include new permit amendments in the results
+      permit: {
+        ...permit,
+        permit_amendments: permit.permit_amendments.filter(amendment =>
+          newPermitAmendmentsRefIds.includes(amendment.permit_amendment_guid)
+        )
+      }
+    };
   }
 
   /**
@@ -410,14 +431,14 @@ class CoreDataSource {
         // Get Core records
         const data = await integrationUtils.getRecords(url, getAuthHeader(this.client_token));
         // Get records from response and add to total.
-        const newRecords = data && data.mines || [];
+        const newRecords = (data && data.mines) || [];
         mineRecords = [...mineRecords, ...newRecords];
 
         currentPage++;
         totalPages = data.total_pages;
 
         defaultLog.info(`Fetched page ${currentPage - 1} out of ${totalPages}`);
-      } while (currentPage <= totalPages)
+      } while (currentPage <= totalPages);
 
       // Only want mines that are not abandoned.
       const activeMines = mineRecords.filter(mine => {
@@ -437,7 +458,7 @@ class CoreDataSource {
       return activeMines;
     } catch (error) {
       defaultLog.error(`getVerifiedMines - unexpected error: ${error.message}`);
-      throw (error);
+      throw error;
     }
   }
 
@@ -458,15 +479,17 @@ class CoreDataSource {
       try {
         const mineDetails = await integrationUtils.getRecords(mineDetailsUrl, getAuthHeader(this.client_token));
 
-        const latitude = mineDetails.mine_location && mineDetails.mine_location.latitude || 0.00;
-        const longitude = mineDetails.mine_location && mineDetails.mine_location.longitude || 0.00;
+        const latitude = (mineDetails.mine_location && mineDetails.mine_location.latitude) || 0.0;
+        const longitude = (mineDetails.mine_location && mineDetails.mine_location.longitude) || 0.0;
 
         completeRecords.push({
           ...coreRecords[i],
-          coordinates: [longitude, latitude],
+          coordinates: [longitude, latitude]
         });
       } catch (error) {
-        defaultLog.error(`addMineDetails - error getting details for Core record ${coreRecords[i].mine_guid}: ${error.message} ...skipping`);
+        defaultLog.error(
+          `addMineDetails - error getting details for Core record ${coreRecords[i].mine_guid}: ${error.message} ...skipping`
+        );
       }
     }
 
@@ -489,7 +512,10 @@ class CoreDataSource {
     // For each amendment find the existing documents and create a collection.
     for (const amendment of permit.permit_amendments) {
       const PermitBCMI = mongoose.model('PermitBCMI');
-      const existingPermits = await PermitBCMI.find({ _schemaName: 'PermitBCMI', _sourceRefId: amendment.permit_amendment_guid });
+      const existingPermits = await PermitBCMI.find({
+        _schemaName: 'PermitBCMI',
+        _sourceRefId: amendment.permit_amendment_guid
+      });
 
       const collection = {
         project: mineRecord._id,
@@ -498,7 +524,7 @@ class CoreDataSource {
         type: amendment.permit_amendment_type_code === 'OGP' ? 'Permit' : 'Permit Amendment',
         agency: 'EMPR',
         records: (existingPermits && existingPermits.map(permit => permit._id)) || []
-      }
+      };
 
       // Determine if the collection should be published or not based on the mine status.
       if (mineRecord.read && mineRecord.read.includes('public')) {
