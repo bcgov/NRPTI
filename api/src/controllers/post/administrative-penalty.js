@@ -92,6 +92,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     ObjectId.isValid(incomingObj.collectionId) &&
     (administrativePenalty.collectionId = new ObjectId(incomingObj.collectionId));
 
+  incomingObj._sourceRefOgcPenaltyId && (administrativePenalty._sourceRefOgcPenaltyId = incomingObj._sourceRefOgcPenaltyId);
+
   // set permissions
   administrativePenalty.read = utils.ApplicationAdminRoles;
   administrativePenalty.write = utils.ApplicationAdminRoles;
@@ -224,6 +226,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (administrativePenaltyLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
+  incomingObj._sourceRefOgcPenaltyId && (administrativePenaltyLNG._sourceRefOgcPenaltyId = incomingObj._sourceRefOgcPenaltyId);
+
   // set permissions and meta
   administrativePenaltyLNG.read = utils.ApplicationAdminRoles;
   administrativePenaltyLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
@@ -355,6 +359,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (administrativePenaltyNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  incomingObj._sourceRefOgcPenaltyId && (administrativePenaltyNRCED._sourceRefOgcPenaltyId = incomingObj._sourceRefOgcPenaltyId);
 
   // set permissions and meta
   administrativePenaltyNRCED.read = utils.ApplicationAdminRoles;

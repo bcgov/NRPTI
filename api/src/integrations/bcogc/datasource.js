@@ -5,8 +5,10 @@ const integrationUtils = require('../integration-utils');
 const { getCsvRowsFromString } = require('../../utils/helpers');
 
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+const BCOGC_UTILS_TYPES = require('./bcogc-utils-types-enum');
 const BCOGC_INSPECTIONS_CSV_ENDPOINT = process.env.BCOGC_INSPECTIONS_CSV_ENDPOINT || 'https://reports.bcogc.ca/ogc/f?p=200:501::CSV';
 const BCOGC_ORDERS_CSV_ENDPOINT = process.env.BCOGC_ORDERS_CSV_ENDPOINT || 'https://www.bcogc.ca/data-reports/compliance-enforcement/reports/enforcement-order';
+const BCOGC_PENALTIES_CSV_ENDPOINT = process.env.BCOGC_PENALTIES_CSV_ENDPOINT || 'https://www.bcogc.ca/data-reports/compliance-enforcement/reports/contravention-decision';
 
 class OgcCsvDataSource {
   /**
@@ -60,7 +62,8 @@ class OgcCsvDataSource {
 
       // Handle each csv type.
       for (const recordType of csvs.types) {
-        const recordTypeConfig = this.getRecordTypeConfig(recordType);
+
+        const recordTypeConfig = BCOGC_UTILS_TYPES[recordType];
 
         if (!recordTypeConfig) {
           throw Error('batchProcessRecords - failed to find matching recordTypeConfig.');
@@ -144,20 +147,6 @@ class OgcCsvDataSource {
   }
 
   /**
-   * Supported bcogc record type configs.
-   *
-   * @returns {*} object with getUtil method to create a new instance of the record type utils.
-   * @memberof OgcCsvDataSource
-   */
-  getRecordTypeConfig(recordType) {
-    return {
-      getUtil: (auth_payload, csvRow) => {
-        return new (require(`./${recordType.toLowerCase()}s-utils`))(auth_payload, RECORD_TYPE[recordType], csvRow);
-      }
-    };
-  }
-
-  /**
    * Gets the CSV of inspection from BCOGC
    * 
    * @returns {Promise<Array<*>>} array of objects for a processed CSV
@@ -190,6 +179,17 @@ class OgcCsvDataSource {
     return this.processBcogcHtml(response.data, 'export-table');
   }
 
+    /**
+   * Scrapes rows of data from the BCOGC Order CSV.
+   * 
+   * @returns {Promise<Array<*>>} array of objects for a processed CSV
+   * @memberof OgcCsvDataSource
+   */
+  async fetchBcogcPenaltyCsv() {
+    const response = await axios.get(BCOGC_PENALTIES_CSV_ENDPOINT);
+    return this.processBcogcHtml(response.data, 'export-table');
+  }
+
   /**
    * Fetches rows from CSVs for all types of BCOGC reports
    *
@@ -197,14 +197,17 @@ class OgcCsvDataSource {
    * @memberof OgcCsvDataSource
    */
   async fetchAllBcogcCsvs() {
+
     const inspections = await this.fetchBcogcInspectionCsv();
     const orders = await this.fetchBcogcOrderCsv();
+    const penalties = await this.fetchBcogcPenaltyCsv();
 
     return {
       [RECORD_TYPE.Inspection._schemaName]: inspections,
       [RECORD_TYPE.Order._schemaName]: orders,
-      types: [RECORD_TYPE.Order._schemaName, RECORD_TYPE.Inspection._schemaName],
-      getLength: () => inspections.length + orders.length,
+      [RECORD_TYPE.AdministrativePenalty._schemaName]: penalties,
+      types: [RECORD_TYPE.AdministrativePenalty._schemaName, RECORD_TYPE.Order._schemaName, RECORD_TYPE.Inspection._schemaName],
+      getLength: () => orders.length + inspections.length + penalties.length,
     };
   }
 

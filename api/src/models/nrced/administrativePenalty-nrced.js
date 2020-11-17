@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 module.exports = require('../../utils/model-schema-generator')(
   'AdministrativePenaltyNRCED',
   {
+    _sourceRefOgcPenaltyId: {type: String, default: null },
     _schemaName: { type: String, default: 'AdministrativePenaltyNRCED' },
     _master: { type: 'ObjectId', default: null, index: true },
 
