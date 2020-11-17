@@ -62,6 +62,7 @@ class OgcCsvDataSource {
 
       // Handle each csv type.
       for (const recordType of csvs.types) {
+
         const recordTypeConfig = BCOGC_UTILS_TYPES[recordType];
 
         if (!recordTypeConfig) {
@@ -145,7 +146,6 @@ class OgcCsvDataSource {
     }
   }
 
-  /**
    * Gets the CSV of inspection from BCOGC
    * 
    * @returns {Promise<Array<*>>} array of objects for a processed CSV
@@ -196,16 +196,17 @@ class OgcCsvDataSource {
    * @memberof OgcCsvDataSource
    */
   async fetchAllBcogcCsvs() {
+
     // const inspections = await this.fetchBcogcInspectionCsv();
     // const orders = await this.fetchBcogcOrderCsv();
     const penalties = await this.fetchBcogcPenaltyCsv();
 
     return {
-      // [RECORD_TYPE.Inspection._schemaName]: inspections,
-      // [RECORD_TYPE.Order._schemaName]: orders,
+      [RECORD_TYPE.Inspection._schemaName]: inspections,
+      [RECORD_TYPE.Order._schemaName]: orders,
       [RECORD_TYPE.AdministrativePenalty._schemaName]: penalties,
-      types: [RECORD_TYPE.AdministrativePenalty._schemaName],
-      getLength: () => penalties.length,
+      types: [RECORD_TYPE.AdministrativePenalty._schemaName, RECORD_TYPE.Order._schemaName, RECORD_TYPE.Inspection._schemaName],
+      getLength: () => orders.length + inspections.length + penalties.length,
     };
   }
 

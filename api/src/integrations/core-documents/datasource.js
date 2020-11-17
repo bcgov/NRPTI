@@ -44,6 +44,7 @@ class CoreDocumentsDataSource {
 
       // Run main process.
       await this.updateRecords();
+      await this.taskAuditRecord.updateTaskRecord({ itemsProcessed: this.status.itemsProcessed });
 
       if (this.status.individualRecordStatus.length) {
         defaultLog.error('CoreDocumentsDataSource - error processing some records');
@@ -82,7 +83,8 @@ class CoreDocumentsDataSource {
         }
 
         if (promises.length > 0) {
-          await Promise.all(promises);
+          const reuslts = await Promise.all(promises);
+          this.status.itemsProcessed += reuslts.filter(value => value === true).length;
         }
       }
     } catch (error) {
@@ -118,12 +120,16 @@ class CoreDocumentsDataSource {
       fs.unlinkSync(tempFilePath);
 
       await this.updatePermit(permit, newDocumentId, permitUtils);
+
+      return true;
     } catch (error) {
       recordStatus.amendmentId = permit._id;
       recordStatus.error = error.message;
 
       // only add individual record status when an error occurs so that processing continues.
       this.status.individualRecordStatus.push(recordStatus);
+
+      return false;
     }
   }
 

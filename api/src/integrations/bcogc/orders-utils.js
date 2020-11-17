@@ -42,6 +42,7 @@ class Orders extends BaseRecordUtils {
     order['author'] = 'BC Oil and Gas Commission';
     order['recordName'] = csvRow['Title'];
     order['dateIssued'] = new Date(csvRow['Date Issued']);
+
     order['location'] = 'British Columbia';
 
     order['legislation'] = {
