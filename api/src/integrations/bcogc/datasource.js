@@ -146,6 +146,7 @@ class OgcCsvDataSource {
     }
   }
 
+  /**
    * Gets the CSV of inspection from BCOGC
    * 
    * @returns {Promise<Array<*>>} array of objects for a processed CSV
@@ -197,8 +198,8 @@ class OgcCsvDataSource {
    */
   async fetchAllBcogcCsvs() {
 
-    // const inspections = await this.fetchBcogcInspectionCsv();
-    // const orders = await this.fetchBcogcOrderCsv();
+    const inspections = await this.fetchBcogcInspectionCsv();
+    const orders = await this.fetchBcogcOrderCsv();
     const penalties = await this.fetchBcogcPenaltyCsv();
 
     return {
