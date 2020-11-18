@@ -84,7 +84,6 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesAddEditComponent
    */
   buildForm() {
-    console.log(this.mine)
     this.myForm = new FormGroup({
       description: new FormControl((this.mine && this.mine.description) || ''),
       summary: new FormControl((this.mine && this.mine.summary) || ''),
