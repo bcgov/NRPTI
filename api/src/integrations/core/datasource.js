@@ -212,10 +212,7 @@ class CoreDataSource {
         const permitInfo = await this.updateMinePermit(permitUtils, existingRecord);
         savedRecord = await mineUtils.updateRecord(nrptiRecord, permitInfo, existingRecord);
 
-        // Only create collection if there were new permits
-        if (permitInfo.permit.permit_amendments && permitInfo.permit.permit_amendments.length) {
-          await this.createCollections(collectionUtils, permitInfo.permit, savedRecord[0].object[0]);
-        }
+        await this.createorUpdateCollections(collectionUtils, permitInfo.permit, savedRecord[0].object[0]);
       } else {
         // Create the permits.
         const permitInfo = await this.createMinePermit(permitUtils, nrptiRecord);
@@ -225,7 +222,7 @@ class CoreDataSource {
         savedRecord = await mineUtils.createItem(recordWithPermits);
 
         // Create a new collections if possible.
-        await this.createCollections(collectionUtils, permitInfo.permit, savedRecord[0].object[0]);
+        await this.createorUpdateCollections(collectionUtils, permitInfo.permit, savedRecord[0].object[0]);
       }
 
       if (savedRecord && savedRecord.length > 0 && savedRecord[0].status === 'success') {
@@ -365,15 +362,21 @@ class CoreDataSource {
     // Transform into permits.
     const transformedPermits = permitUtils.transformRecord(permit, mineRecord);
 
-    // NRPT-538: Removed existing vs new permit count check because CORE API permit count will almost always
-    //           be less than the existing permits in DB after mem data load.  The following for loop
-    //           will find and create new Permits.
-
-    // Find the new permits that need to be created.
+    // Find the new permits that need to be created, otherwise update the permits if needed
     const newPermits = [];
+    const updatePermits = [];
     for (const transformedPermit of transformedPermits) {
       if (!currentPermits.some(current => current._sourceDocumentRefId === transformedPermit._sourceDocumentRefId)) {
         newPermits.push(transformedPermit);
+      } else {
+        // NRPT-549 Update the permit if issued date has changed
+        const existingPermit = currentPermits.find(
+          current => current._sourceDocumentRefId === transformedPermit._sourceDocumentRefId
+        );
+
+        if (Date.parse(existingPermit.dateIssued) !== Date.parse(transformedPermit.dateIssued)) {
+          updatePermits.push({ permitId: existingPermit._id, updateObj: { dateIssued: transformedPermit.dateIssued } });
+        }
       }
     }
 
@@ -391,19 +394,17 @@ class CoreDataSource {
     }));
 
     const promises = preparedPermits.map(permit => permitUtils.createItem(permit));
+
+    updatePermits.forEach(amendment => {
+      promises.push(permitUtils.updateRecord(amendment.permitId, amendment.updateObj));
+    });
+
     await Promise.all(promises);
 
-    const newPermitAmendmentsRefIds = newPermits.map(amendment => amendment._sourceRefId);
     return {
       permitNumber: permit.permit_no,
       permittee: permit.current_permittee,
-      // Only include new permit amendments in the results
-      permit: {
-        ...permit,
-        permit_amendments: permit.permit_amendments.filter(amendment =>
-          newPermitAmendmentsRefIds.includes(amendment.permit_amendment_guid)
-        )
-      }
+      permit
     };
   }
 
@@ -496,17 +497,17 @@ class CoreDataSource {
     return completeRecords;
   }
 
-  async createCollections(collectionUtils, permit, mineRecord) {
+  async createorUpdateCollections(collectionUtils, permit, mineRecord) {
     if (!collectionUtils) {
-      throw new Error('createCollections - param collectionUtils is null.');
+      throw new Error('createorUpdateCollections - param collectionUtils is null.');
     }
 
     if (!permit || !permit.permit_amendments || !permit.permit_amendments.length) {
-      throw new Error('createCollections - param permit is null.');
+      throw new Error('createorUpdateCollections - param permit is null.');
     }
 
     if (!mineRecord) {
-      throw new Error('createCollections - param mineRecord is null.');
+      throw new Error('createorUpdateCollections - param mineRecord is null.');
     }
 
     // For each amendment find the existing documents and create a collection.
@@ -517,21 +518,42 @@ class CoreDataSource {
         _sourceRefId: amendment.permit_amendment_guid
       });
 
-      const collection = {
-        project: mineRecord._id,
-        name: amendment.description,
-        date: amendment.issue_date,
-        type: amendment.permit_amendment_type_code === 'OGP' ? 'Permit' : 'Permit Amendment',
-        agency: 'EMPR',
-        records: (existingPermits && existingPermits.map(permit => permit._id)) || []
-      };
+      const existingCollection = await collectionUtils.findExistingRecord(amendment.permit_amendment_guid);
 
-      // Determine if the collection should be published or not based on the mine status.
-      if (mineRecord.read && mineRecord.read.includes('public')) {
-        collection.addRole = 'public';
+      if (!existingCollection) {
+        const collection = {
+          _sourceRefCoreCollectionId: amendment.permit_amendment_guid,
+          project: mineRecord._id,
+          name: amendment.description,
+          date: amendment.issue_date,
+          type: amendment.permit_amendment_type_code === 'OGP' ? 'Permit' : 'Permit Amendment',
+          agency: 'EMPR',
+          records: (existingPermits && existingPermits.map(permit => permit._id)) || []
+        };
+
+        // Determine if the collection should be published or not based on the mine status.
+        if (mineRecord.read && mineRecord.read.includes('public')) {
+          collection.addRole = 'public';
+        }
+
+        await collectionUtils.createItem(collection);
+      } else {
+        // NRPT-549 Update the collection if name, date and number of permits have changed
+        if (
+          existingCollection.name !== amendment.description ||
+          Date.parse(existingCollection.date) !== Date.parse(amendment.issue_date) ||
+          existingCollection.records.length != existingPermits.length
+        ) {
+          const updateCollection = {
+            _sourceRefCoreCollectionId: amendment.permit_amendment_guid,
+            name: amendment.description,
+            date: amendment.issue_date,
+            records: (existingPermits && existingPermits.map(permit => permit._id)) || []
+          };
+
+          await collectionUtils.updateItem(updateCollection, existingCollection);
+        }
       }
-
-      await collectionUtils.createItem(collection);
     }
   }
 }
