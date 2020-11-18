@@ -27,6 +27,7 @@ module.exports = require('../../utils/model-schema-generator')(
 
     name: { type: String, default: '' },
     permitNumber: { type: String, default: '' },
+    showPermitNumber: { type: Boolean, default: true },
     status: { type: String, default: '' },
     type: { type: String, default: '' },
     commodities: [{ type: String, default: '' }],

@@ -84,12 +84,14 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesAddEditComponent
    */
   buildForm() {
+    console.log(this.mine)
     this.myForm = new FormGroup({
       description: new FormControl((this.mine && this.mine.description) || ''),
       summary: new FormControl((this.mine && this.mine.summary) || ''),
       type: new FormControl((this.mine && this.mine.type) || ''),
       links: new FormArray(this.getLinksFormGroups()),
-      publish: new FormControl((this.mine && this.mine.read.includes('public')) || false)
+      publish: new FormControl((this.mine && this.mine.read.includes('public')) || false),
+      showPermitNumber: new FormControl((this.mine && this.mine.showPermitNumber ))
     });
   }
 
@@ -269,6 +271,7 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
     this.myForm.get('description').dirty && (mineItem['description'] = this.myForm.get('description').value);
     this.myForm.get('summary').dirty && (mineItem['summary'] = this.myForm.get('summary').value);
     this.myForm.get('links').dirty && (mineItem['links'] = this.parseLinksFormGroups());
+    this.myForm.get('showPermitNumber').dirty && (mineItem['showPermitNumber'] = this.myForm.get('showPermitNumber').value);
 
     if (this.myForm.get('publish').dirty && this.myForm.get('publish').value && this.canPublish) {
       mineItem['addRole'] = 'public';

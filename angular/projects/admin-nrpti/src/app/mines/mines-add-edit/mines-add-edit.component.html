@@ -130,6 +130,19 @@
           ></textarea>
         </div>
       </div>
+      <div class="flex-container mb-2">
+        <label for="showPermit" class="med mr-2">Show EMPR Permit Number:</label>
+        <div class="radio-group">
+          <div class="radio mt-0">
+            <input type="radio" id="showPermitTrue" [value]="true" formControlName="showPermitNumber" name="showPermitNumber" />
+            <label for="showPermitTrue">Yes</label>
+          </div>
+          <div class="radio mt-0">
+            <input type="radio" id="showPermitFalse" [value]="false" formControlName="showPermitNumber" name="showPermitNumber" />
+            <label for="showPermitFalse">No</label>
+          </div>
+        </div>
+      </div>
     </section>
     <section class="my-3 py-3 border-bottom">
       <div class="d-flex">
