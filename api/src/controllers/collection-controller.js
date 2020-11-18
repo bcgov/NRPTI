@@ -12,6 +12,7 @@ const ObjectId = require('mongodb').ObjectId;
 const mongodb = require('../utils/mongodb');
 const PutUtils = require('../utils/put-utils');
 const { publishS3Document, unpublishS3Document } = require('../controllers/document-controller');
+const async = require('async');
 
 exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
@@ -244,7 +245,7 @@ exports.protectedDelete = async function (args, res, next) {
 
 /**
  * Unpublishes all collections, their records and their documents for a mine.
- * 
+ *
  * @param {*} mineId - Mine to update
  * @param {*} auth_payload - User authorization
  */
@@ -254,73 +255,113 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
   const nrpti = db.collection('nrpti');
 
   const collections = await nrpti.find({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName, project: mineId, write: { $in: auth_payload.realm_access.roles } }).toArray();
-  const promises = [];
 
-  try {
-    // Unpublish every collection, their records, and their documents.
-    for (const collection of collections) {
-      if (collection.records && collection.records.length) {
-        const recordAggregate = [
-          {
-            $match: {
-              _id: {
-                $in: collection.records
-              },
-              write: {
-                $in: auth_payload.realm_access.roles
-              }
-            }
-          },
-          {
-            $lookup: {
-              from: 'nrpti',
-              localField: "documents",
-              foreignField: "_id",
-              as: "documents",
+  for (const collection of collections) {
+    if (collection.records && collection.records.length) {
+      const recordAggregate = [
+        {
+          $match: {
+            _id: {
+              $in: collection.records
+            },
+            write: {
+              $in: auth_payload.realm_access.roles
             }
           }
-        ];
-
-        const records = await nrpti.aggregate(recordAggregate).toArray();
-
-        // Unpublish all documents of all records.
-        for (const record of records) {
-          if (record.documents && record.documents.length) {
-            promises.push(nrpti.updateMany({ _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } }));
-
-            // Update the S3 object properties for each document.
-            for (const document of record.documents) {
-              if (document.key) {
-                promises.push(unpublishS3Document(document.key));
-              }
-            }
+        },
+        {
+          $lookup: {
+            from: 'nrpti',
+            localField: "documents",
+            foreignField: "_id",
+            as: "documents",
           }
-
-          // Unpublish the flavour record.
-          promises.push(nrpti.updateOne({ _id: record._id, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } }));
-
-          // Set the flag on the master record.
-          promises.push(nrpti.updateOne({ _flavourRecords: record._id, write: { $in: auth_payload.realm_access.roles } }, { $set: { isBcmiPublished: false } }));
         }
+      ];
+
+      const records = await nrpti.aggregate(recordAggregate).toArray();
+
+      for (const record of records) {
+        let error = null;
+        // runs each function, last arg is callback, others are results from previous step
+        // any error in a step should cause the rest of the steps to be skipped and log that error
+        async.waterfall([
+          // done is callback
+          async function(done) {
+            defaultLog.debug('unpulishing record: ', JSON.stringify(record._id))
+            if (record.documents && record.documents.length) {
+              try {
+                await nrpti.updateMany({ _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } })
+              } catch (err) {
+                error = `Error unpublishing record document obj: ${JSON.stringify(record._id)},  err: ${err}`;
+                defaultLog.error(error)
+              }
+            }
+            done(error)
+          },
+          async function(done) {
+            defaultLog.debug('master record')
+            try {
+              await nrpti.updateOne({ _id: record._id, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } })
+            } catch (err) {
+              error = `Error unpublishing master record: ${JSON.stringify(record._id)},  err: ${err}`;
+              defaultLog.error(error)
+            }
+            done(error)
+          },
+          async function(done) {
+            defaultLog.debug('flavour record')
+            try {
+              await nrpti.updateOne({ _flavourRecords: record._id, write: { $in: auth_payload.realm_access.roles } }, { $set: { isBcmiPublished: false } })
+            } catch (err) {
+              error = `Error unpublishing flavour record: ${JSON.stringify(record._id)},  err: ${err}`;
+              defaultLog.error(error)
+
+            }
+            done(error)
+          },
+          // the failures here cause a slowdown due to the s3 connection attempts
+          async function (done) {
+            defaultLog.debug('s3 docs');
+            if (record.documents && record.documents.length) {
+              record.documents.map(async document => {
+                if (document.key) {
+                  try {
+                    await unpublishS3Document(document.key);
+                  } catch (err) {
+                    defaultLog.error('Error unpublishing record document in S3: ', JSON.stringify(document._id))
+                    error = err.message;
+                  }
+                }
+              })
+            }
+            done(error)
+          }
+        ],
+        (err) => {
+          if (err) {
+            defaultLog.info('Error unpublishing collection records: ', err);
+          } else {
+            defaultLog.info('Mine records unpublished succesfully')
+          }
+        })
       }
 
-      // Unpublish the collection.
-      promises.push(nrpti.updateOne({ _id: collection._id, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } }));
+      try {
+        await nrpti.updateOne({ _id: collection._id, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } });
+      } catch (err) {
+        defaultLog.info('Error unpublishing collection: ', JSON.stringify(collection._id));
+        throw new Error('Error unpublishing collection');
+      }
     }
-
-    await Promise.all(promises);
-  } catch (error) {
-    defaultLog.info(`unpublishCollections - error unpublishing mine collections: ${mineId}`);
-    defaultLog.debug(error);
-    throw new Error('Error unpublishing collections');
   }
 }
 
 /**
  * Publishes all collections, their records and their documents for a mine.
- * 
- * @param {*} mineId 
- * @param {*} auth_payload 
+ *
+ * @param {*} mineId
+ * @param {*} auth_payload
  */
 exports.publishCollections = async function (mineId, auth_payload) {
   mineId = new ObjectId(mineId);
@@ -328,65 +369,103 @@ exports.publishCollections = async function (mineId, auth_payload) {
   const nrpti = db.collection('nrpti');
 
   const collections = await nrpti.find({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName, project: mineId, write: { $in: auth_payload.realm_access.roles } }).toArray();
-  const promises = [];
-
-  try {
-    // Publish every collection, their records, and their documents.
-    for (const collection of collections) {
-      if (collection.records && collection.records.length) {
-        const recordAggregate = [
-          {
-            $match: {
-              _id: {
-                $in: collection.records
-              },
-              write: {
-                $in: auth_payload.realm_access.roles
-              }
-            }
-          },
-          {
-            $lookup: {
-              from: 'nrpti',
-              localField: "documents",
-              foreignField: "_id",
-              as: "documents",
+  // Publish every collection, their records, and their documents.
+  for (const collection of collections) {
+    if (collection.records && collection.records.length) {
+      const recordAggregate = [
+        {
+          $match: {
+            _id: {
+              $in: collection.records
+            },
+            write: {
+              $in: auth_payload.realm_access.roles
             }
           }
-        ];
-
-        const records = await nrpti.aggregate(recordAggregate).toArray();
-
-        // Publish all documents of all records.
-        for (const record of records) {
-          if (record.documents && record.documents.length) {
-            promises.push(nrpti.updateMany({ _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } }));
-
-            // Update the S3 object properties for each document.
-            for (const document of record.documents) {
-              if (document.key) {
-                promises.push(publishS3Document(document.key));
-              }
-            }
+        },
+        {
+          $lookup: {
+            from: 'nrpti',
+            localField: "documents",
+            foreignField: "_id",
+            as: "documents",
           }
-
-          // Publish the flavour record.
-          promises.push(nrpti.updateOne({ _id: record._id, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } }));
-
-          // Set the flag on the master record.
-          promises.push(nrpti.updateOne({ _flavourRecords: record._id, write: { $in: auth_payload.realm_access.roles } }, { $set: { isBcmiPublished: true } }));
         }
+      ];
+
+      const records = await nrpti.aggregate(recordAggregate).toArray();
+
+      // Publish all documents of all records.
+      for (const record of records) {
+        let error = null;
+        // runs each function, last arg is callback, others are results from previous step
+        // any error in a step should cause the rest of the steps to be skipped and log that error
+        async.waterfall([
+          // Publish all record documents
+          async function(done) {
+            if (record.documents && record.documents.length) {
+              try {
+                await nrpti.updateMany({ _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } })
+              } catch (err) {
+                error = `Error publishing record document obj: ${JSON.stringify(record._id)},  err: ${err}`;
+                defaultLog.error(error)
+              }
+            }
+            done(error)
+          },
+          // Set the flag on the master record.
+          async function(done) {
+            try {
+              await nrpti.updateOne({ _flavourRecords: record._id, write: { $in: auth_payload.realm_access.roles } }, { $set: { isBcmiPublished: true } })
+            } catch (err) {
+              error = `Error publishing master record: ${JSON.stringify(record._id)},  err: ${err}`;
+              defaultLog.error(error)
+            }
+            done(error)
+          },
+          // Publish the flavour record
+          async function(done) {
+            try {
+              await nrpti.updateOne({ _id: record._id, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } })
+            } catch (err) {
+              error = `Error publishing flavour record: ${JSON.stringify(record._id)},  err: ${err}`;
+              defaultLog.error(error)
+            }
+            done(error)
+          },
+          // Update the S3 object properties for each document.
+          async function (done) {
+            if (record.documents && record.documents.length) {
+              record.documents.map(async document => {
+                if (document.key) {
+                  try {
+                    await publishS3Document(document.key);
+                  } catch (err) {
+                    defaultLog.error('Error publishing record document in S3: ', JSON.stringify(document._id))
+                    error = err.message;
+                  }
+                }
+              })
+            }
+            done(error)
+          }
+        ],
+        (err) => {
+          if (err) {
+            defaultLog.info('Error publishing collection records: ', err);
+          } else {
+            defaultLog.info('Mine records published succesfully')
+          }
+        })
       }
-
-      // Publish the collection.
-      promises.push(nrpti.updateOne({ _id: collection._id, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } }));
     }
-
-    await Promise.all(promises);
-  } catch (error) {
-    defaultLog.info(`publishCollections - error publishing mine collections: ${mineId}`);
-    defaultLog.debug(error);
-    throw new Error('Error publishing collections');
+    // Publish the collection
+    try {
+      await nrpti.updateOne({ _id: collection._id, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } });
+    } catch (error) {
+      defaultLog.info(`publishCollections - error publishing mine collections: ${mineId}`);
+      defaultLog.debug(error);
+    }
   }
 }
 
