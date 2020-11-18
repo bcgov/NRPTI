@@ -270,7 +270,8 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
     this.myForm.get('description').dirty && (mineItem['description'] = this.myForm.get('description').value);
     this.myForm.get('summary').dirty && (mineItem['summary'] = this.myForm.get('summary').value);
     this.myForm.get('links').dirty && (mineItem['links'] = this.parseLinksFormGroups());
-    this.myForm.get('showPermitNumber').dirty && (mineItem['showPermitNumber'] = this.myForm.get('showPermitNumber').value);
+    this.myForm.get('showPermitNumber').dirty &&
+      (mineItem['showPermitNumber'] = this.myForm.get('showPermitNumber').value);
 
     if (this.myForm.get('publish').dirty && this.myForm.get('publish').value && this.canPublish) {
       mineItem['addRole'] = 'public';
