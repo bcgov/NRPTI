@@ -40,6 +40,7 @@ class AdministrativePenalty extends BaseRecordUtils {
     penalty['recordType'] = RECORD_TYPE.AdministrativePenalty._schemaName;
     penalty['_sourceRefOgcPenaltyId'] = csvRow['Title'];
     penalty['author'] = 'BC Oil and Gas Commission';
+    penalty['issuingAgency'] = 'BC Oil and Gas Commission';
     penalty['recordName'] = csvRow['Title'];
     penalty['dateIssued'] = new Date(csvRow['Date Issued']);
     penalty['location'] = 'British Columbia';

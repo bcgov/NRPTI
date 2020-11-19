@@ -40,6 +40,7 @@ class Orders extends BaseRecordUtils {
     order['recordType'] = RECORD_TYPE.Order._schemaName;
     order['_sourceRefOgcOrderId'] = csvRow['Title'];
     order['author'] = 'BC Oil and Gas Commission';
+    order['issuingAgency'] = 'BC Oil and Gas Commission';
     order['recordName'] = csvRow['Title'];
     order['dateIssued'] = new Date(csvRow['Date Issued']);
 
@@ -49,6 +50,9 @@ class Orders extends BaseRecordUtils {
       act: 'Oil and Gas Activities Act',
       section: this.getOrderSection(csvRow),
     };
+
+    // Description set by the section number.
+    order['description'] = this.getOrderSection(csvRow) === 49 ? 'General Order' : 'Action Order';
 
     order['issuedTo'] = {
       type: 'Company',
