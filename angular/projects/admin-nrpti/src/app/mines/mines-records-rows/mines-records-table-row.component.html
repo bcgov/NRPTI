@@ -14,7 +14,7 @@
 <td scope="row" data-label="Type" class="col-1 truncate">{{ getAttributeValue('recordType') }}</td>
 <td scope="row" data-label="Collections" class="col-2 truncate">
   {{ rowData.collections && rowData.collections[0] ? rowData.collections[0].name : '-' }}</td>
-<td scope="row" data-label="Date" class="col-1 truncate">{{ getAttributeValue('dateIssued') }}</td>
+<td scope="row" data-label="Date" class="col-1 truncate">{{ getAttributeValue('dateIssued') | date: 'mediumDate'}}</td>
 <td scope="row" data-label="Published" class="col-1 d-xl-flex">
   <div *ngIf="isPublished(); then published; else unpublished"></div>
   <ng-template #published class="test">
