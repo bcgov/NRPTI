@@ -32,6 +32,7 @@ export class Mine {
   // attributes
   name:                 string;
   permitNumber:         string;
+  showPermitNumber:     boolean;
   status:               string;
   type:                 string;
   commodities:          string[];
@@ -62,6 +63,7 @@ export class Mine {
     // attributes
     this.name                 = (obj && obj.name)                 || '';
     this.permitNumber         = (obj && obj.permitNumber )        || '';
+    this.showPermitNumber     = (obj && obj.showPermitNumber); // Cannot have default because this is a boolean
     this.status               = (obj && obj.status)               || '';
     this.type                 = (obj && obj.type)                 || '';
     this.commodities          = (obj && obj.commodities)          || [];
