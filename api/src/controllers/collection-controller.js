@@ -65,7 +65,6 @@ exports.protectedPut = async function (args, res, next) {
 
   let obj = null;
   try {
-    // obj = await Put.updateById(collectionId, updateObj);
     obj = await updateCollection(incomingObj, collectionId, args.swagger.params.auth_payload.displayName);
   } catch (error) {
     defaultLog.info(`protectedPut - error updating collection: ${collectionId}`);
