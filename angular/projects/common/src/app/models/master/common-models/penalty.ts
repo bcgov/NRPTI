@@ -46,7 +46,7 @@ export class Penalty {
    * @memberof Penalty
    */
   public buildPenaltyValueString(): string {
-    if (!this.penalty.value) {
+    if (!this.penalty || !this.penalty.value) {
       return '';
     }
 
