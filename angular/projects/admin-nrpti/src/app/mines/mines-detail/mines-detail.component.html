@@ -108,6 +108,12 @@
       <label for="summary" class="med">Summary:</label>
       <p class="keep-whitespace" id="summary" name="summary">{{ (mine && mine.summary) || '-' }}</p>
     </div>
+    <div class="flex-container mb-2">
+      <label for="showPermit" class="med mr-2">Show EMPR Permit Number:</label>
+      <span id="showPermit" name="showPermit">
+        {{ (mine && mine.showPermitNumber) ? 'Yes' : 'No' }}
+      </span>
+    </div>
   </section>
 
   <section *ngIf="mine && mine.links && mine.links.length > 0">
