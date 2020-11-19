@@ -239,7 +239,8 @@ describe('MinesAddEditComponent', () => {
             url: new FormControl('url2')
           })
         ]),
-        publish: new FormControl(true)
+        publish: new FormControl(true),
+        showPermitNumber: new FormControl(true)
       });
 
       component.myForm.get('description').markAsDirty();
@@ -247,6 +248,7 @@ describe('MinesAddEditComponent', () => {
       component.myForm.get('type').markAsDirty();
       component.myForm.get('links').markAsDirty();
       component.myForm.get('publish').markAsDirty();
+      component.myForm.get('showPermitNumber').markAsDirty();
 
       const mineObject = component.buildMineObject();
 
@@ -284,7 +286,8 @@ describe('MinesAddEditComponent', () => {
             url: new FormControl('')
           })
         ]),
-        publish: new FormControl(true)
+        publish: new FormControl(true),
+        showPermitNumber: new FormControl(true)
       });
 
       component.myForm.get('publish').markAsDirty();
