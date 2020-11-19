@@ -42,7 +42,7 @@ class Permits extends BaseRecordUtils {
     }
 
     if (!mineRecord) {
-      throw new Error('transformRecords - required mineRecord must be non-null.')
+      throw new Error('transformRecords - required mineRecord must be non-null.');
     }
 
     const permits = [];
@@ -59,7 +59,7 @@ class Permits extends BaseRecordUtils {
           amendmentStatusCode: amendment.permit_amendment_status_code || '',
           typeCode: amendment.permit_amendment_type_code || '',
           sourceDateAdded: amendment.received_date || null,
-          dateIssued:  amendment.issue_date || null,
+          dateIssued: amendment.issue_date || null,
 
           permitNumber: permit.permit_no || '',
           permitStatusCode: permit.permit_status_code || '',
@@ -84,11 +84,23 @@ class Permits extends BaseRecordUtils {
     return permits;
   }
 
+  async findExistingRecord(sourceDocumentRefId) {
+    const masterRecordModel = mongoose.model(this.recordType._schemaName);
+    return await masterRecordModel.findOne({
+      _schemaName: this.recordType._schemaName,
+      _sourceDocumentRefId: sourceDocumentRefId
+    });
+  }
+
   async updateRecord(permitId, newPermit) {
     const Permit = mongoose.model('Permit');
-    const existingPermit = await Permit.find({ _id: permitId });
+    const existingPermit = await Permit.findOne({ _id: permitId }).populate('_flavourRecords', '_id _schemaName');
 
-    return await super.updateRecord(existingPermit, newPermit);
+    existingPermit._flavourRecords.forEach(flavourRecord => {
+      newPermit[flavourRecord._schemaName] = { _id: flavourRecord._id };
+    });
+
+    return await super.updateRecord(newPermit, existingPermit);
   }
 
   async getMinePermits(mineId) {

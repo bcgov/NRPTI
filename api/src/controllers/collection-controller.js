@@ -44,10 +44,7 @@ exports.protectedPut = async function (args, res, next) {
   // Confirm user has correct role for this type of record.
   if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
-  }
-
-  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
-  const collectionDB = db.collection('nrpti');
+  } 
 
   let collectionId = null;
   if (args.swagger.params.collectionId && args.swagger.params.collectionId.value) {
@@ -64,7 +61,24 @@ exports.protectedPut = async function (args, res, next) {
     defaultLog.info(`protectedPut - you must provide an object`);
     queryActions.sendResponse(res, 400, {});
     next();
+  }  
+
+  let obj = null;
+  try {
+    obj = await updateCollection(incomingObj, collectionId, args.swagger.params.auth_payload.displayName);
+  } catch (error) {
+    defaultLog.info(`protectedPut - error updating collection: ${collectionId}`);
+    defaultLog.debug(error);
+    return queryActions.sendResponse(res, 400, {});
   }
+
+  queryActions.sendResponse(res, 200, obj.value);
+  next();
+}
+
+const updateCollection = async function(incomingObj, collectionId, displayName) {
+  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const collectionDB = db.collection('nrpti');
 
   // if any values in the "records" attribute exist on any other collection, throw an error
   //
@@ -80,7 +94,7 @@ exports.protectedPut = async function (args, res, next) {
     } catch (error) {
       defaultLog.info(`protectedPut - collection controller - error finding record with collection id: ${collectionId}`);
       defaultLog.debug(error);
-      return queryActions.sendResponse(res, 400, error);
+      throw error;
     }
 
     let promises = [];
@@ -101,8 +115,7 @@ exports.protectedPut = async function (args, res, next) {
       const collection = await collectionDB.findOne({ _id: new ObjectId(collectionId) });
       if (!collection || !collection.read) {
         defaultLog.info(`protectedPut - error locating collection`);
-        queryActions.sendResponse(res, 400, {});
-        next();
+        throw new Error(`protectedPut - error locating collection`)
       }
 
       await checkRecordExistsInCollection(recordsToAdd, collectionId, collection.read, true);
@@ -128,7 +141,7 @@ exports.protectedPut = async function (args, res, next) {
     } catch (error) {
       defaultLog.info(`protectedPut - collection controller - error updating records with: ${collectionId}`);
       defaultLog.debug(error);
-      return queryActions.sendResponse(res, 400, error);
+      throw error;
     }
 
     incomingObj.records = arrayOfObjIds;
@@ -151,24 +164,22 @@ exports.protectedPut = async function (args, res, next) {
 
   // Set auditing meta
   sanitizedObj.dateUpdated = new Date();
-  sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
+  sanitizedObj.updatedBy = displayName;
 
   const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
 
-  const updateObj = { $set: dotNotatedObj };
+  const updateObj = { $set: dotNotatedObj };  
 
-  let obj = null;
   try {
-    obj = await Put.updateById(collectionId, updateObj);
+    return await Put.updateById(collectionId, updateObj);
   } catch (error) {
-    defaultLog.info(`protectedPut - error updating collection: ${collectionId}`);
+    defaultLog.info(`updateCollection - error updating collection: ${updateObj}`);
     defaultLog.debug(error);
-    return queryActions.sendResponse(res, 400, {});
+    throw new Error('Error updating collection');
   }
-
-  queryActions.sendResponse(res, 200, obj.value);
-  next();
 }
+
+exports.updateCollection = updateCollection;
 
 // This wrapper allows this controller to work with the record controller.
 exports.createItem = async function (args, res, next, collection) {
@@ -439,6 +450,8 @@ const createCollection = async function (collectionObj, user) {
 
   // Set parent/mine ids
   collectionObj.project && (collection.project = collectionObj.project);
+  collectionObj._sourceRefCoreCollectionId && 
+    (collection._sourceRefCoreCollectionId = collectionObj._sourceRefCoreCollectionId);
 
   // Set permissions
   collection.read = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
