@@ -5,6 +5,7 @@ module.exports = require('../../utils/model-schema-generator')(
   {
     _schemaName: { type: String, default: 'CollectionBCMI' },
     _sourceRefId: { type: 'ObjectId', default: null, index: true },
+    _sourceRefCoreCollectionId: {type: String, default: null, index: true},
     read: [{ type: String, trim: true, default: 'sysadmin' }],
     write: [{ type: String, trim: true, default: 'sysadmin' }],
 
