@@ -52,7 +52,7 @@ class Orders extends BaseRecordUtils {
     };
 
     // Description set by the section number.
-    order['description'] = this.getOrderSection(csvRow) === 49 ? 'General Order' : 'Action Order';
+    order['legislationDescription'] = this.getOrderSection(csvRow) === 49 ? 'General Order' : 'Action Order';
 
     order['issuedTo'] = {
       type: 'Company',
