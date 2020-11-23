@@ -145,6 +145,59 @@ export class CsvConstants {
   ];
 
   /**
+   * Expected headers for NRIS FLNRO NRO Inspection csv.
+   *
+   * Note: sort order and letter case of headers is not important.
+   *
+   * @static
+   * @memberof CsvConstants
+   */
+  public static readonly nroInspectionCsvRequiredHeaders = [
+    'Record ID',
+    'Date',
+    'Client / Complainant',
+    'Region',
+    'Latitude',
+    'Longitude',
+    'Function',
+    'Action Taken',
+    'Activity',
+    'Report Status',
+  ];
+
+  /**
+   * Required fields for NRIS FLNRO NRO Inspection csv.
+   *
+   * @static
+   * @memberof CsvConstants
+   */
+  public static readonly nroInspectionCsvRequiredFields = ['Record ID'];
+
+  /**
+   * Fields for NRIS FLNRO NRO Inspection csv that have a required format.
+   *
+   * Note: These fields are not necessarily required, and only have a required format if present.
+   *
+   * @static
+   * @type {IRequiredFormat[]}
+   * @memberof CsvConstants
+   */
+  public static readonly nroInspectionCsvRequiredFormats: IRequiredFormat[] = [
+    { field: 'Date', type: 'date', format: 'YYYY-MM-DD' }
+  ];
+
+  /**
+   * Fields for NRIS FLNRO NRO Inspection csv that represent dates.
+   *
+   * @static
+   * @type {IDateField[]}
+   * @memberof CsvConstants
+   */
+  public static readonly nroInspectionCsvDateFields: IDateField[] = [
+    { field: 'Date', format: 'YYYY-MM-DD' }
+  ];
+
+  /**
    * Get the array of required csv headers for the provided dataSourceType and recordType.
    *
    * @static
@@ -167,6 +220,12 @@ export class CsvConstants {
     if (dataSourceType === 'bcogc') {
       if (recordType === 'Inspection') {
         return this.ogcInspectionCsvRequiredHeaders;
+      }
+    }
+
+    if (dataSourceType === 'nro-csv') {
+      if (recordType === 'Inspection') {
+        return this.nroInspectionCsvRequiredHeaders;
       }
     }
 
@@ -199,6 +258,12 @@ export class CsvConstants {
       }
     }
 
+    if (dataSourceType === 'nro-csv') {
+      if (recordType === 'Inspection') {
+        return this.nroInspectionCsvRequiredFields;
+      }
+    }
+
     return null;
   }
 
@@ -228,6 +293,12 @@ export class CsvConstants {
       }
     }
 
+    if (dataSourceType === 'nro-csv') {
+      if (recordType === 'Inspection') {
+        return this.nroInspectionCsvRequiredFormats;
+      }
+    }
+
     return null;
   }
 
@@ -254,6 +325,12 @@ export class CsvConstants {
     if (dataSourceType === 'bcogc') {
       if (recordType === 'Inspection') {
         return this.ogcInspectionCsvDateFields;
+      }
+    }
+
+    if (dataSourceType === 'nro-csv') {
+      if (recordType === 'Inspection') {
+        return this.nroInspectionCsvDateFields;
       }
     }
 
