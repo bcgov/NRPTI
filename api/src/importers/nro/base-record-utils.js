@@ -98,7 +98,6 @@ class BaseRecordUtils {
 
       updateObj.updatedBy = (this.auth_payload && this.auth_payload.preferred_username) || '';
       updateObj.dateUpdated = new Date();
-      updateObj.sourceDateUpdated = new Date();
 
       // Only publish LNG or CGL.  They're the only ones with issueTo.type is Company
       // See https://bcmines.atlassian.net/browse/NRPT-12 for more details
