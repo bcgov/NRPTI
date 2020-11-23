@@ -5,9 +5,9 @@ const CsvUtils = require('./utils/csv-utils');
 const MiscConstants = require('../../utils/constants/misc');
 
 /**
- * NRO csv Tickets record handler.
+ * NRO csv Inspections record handler.
  *
- * @class Tickets
+ * @class Inspections
  */
 class Inspections extends BaseRecordUtils {
   /**
