@@ -81,10 +81,10 @@ exports.getOutcomeDescription = function(csvRow) {
       outcomes.push(`${actionsTaken[i].trim()} - ${stripAcronyms(actOrRegulations[i].trim())} ${sections[i].trim()}`);
     }
 
-    return `Compliant Status - ${outcomes.join('; ')}`;
+    return `${complianceStatus} - ${outcomes.join('; ')}`;
   }
 
-  return `Compliant Status - ${complianceStatus}`;
+  return `${complianceStatus} - ${csvRow['action taken']}`;
 };
 
 /**

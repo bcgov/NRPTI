@@ -138,7 +138,10 @@ describe('getProjectNameAndEpicProjectId', () => {
   it('returns "LNG Canada Development Inc." if csvRow "client no" is "170181"', async () => {
     const result = await CsvUtils.getProjectNameAndEpicProjectId({ 'client no': '170181' });
 
-    expect(result).toEqual({ "projectName": "LNG Canada Development Inc.", _epicProjectId: MiscConstants.EpicProjectIds.lngCanadaId });
+    expect(result).toEqual({
+      projectName: 'LNG Canada Development Inc.',
+      _epicProjectId: MiscConstants.EpicProjectIds.lngCanadaId
+    });
   });
 });
 
@@ -156,9 +159,12 @@ describe('getOutcomeDescription', () => {
   });
 
   it('returns "Compliant Status - compliance status" if csvRow "compliance status" is not "Compliant" or "Alleged Non-Compliance"', async () => {
-    const result = await CsvUtils.getOutcomeDescription({ 'compliance status': 'compliance status' });
+    const result = await CsvUtils.getOutcomeDescription({
+      'compliance status': 'compliance status',
+      'action taken': 'action taken'
+    });
 
-    expect(result).toEqual('Compliant Status - compliance status');
+    expect(result).toEqual('compliance status - action taken');
   });
 
   it('returns expected contraventions if csvRow "compliance status" is "Alleged Non-Compliance"', async () => {
@@ -166,9 +172,12 @@ describe('getOutcomeDescription', () => {
       'compliance status': 'Alleged Non-Compliance',
       'action taken': 'Enforcement Action; No Action',
       'act or regulation': 'Forest Act; Timber Marking & Transportation Regulation (FA)',
-      section: '84 (3) Fail to conspicuously timber mark, unscaled timber being stored or transported; 10 (2) Documentation requirements: Inadequate transport description'
+      section:
+        '84 (3) Fail to conspicuously timber mark, unscaled timber being stored or transported; 10 (2) Documentation requirements: Inadequate transport description'
     });
 
-    expect(result).toEqual('Compliant Status - Enforcement Action - Forest Act 84 (3) Fail to conspicuously timber mark, unscaled timber being stored or transported; No Action - Timber Marking & Transportation Regulation 10 (2) Documentation requirements: Inadequate transport description');
+    expect(result).toEqual(
+      'Alleged Non-Compliance - Enforcement Action - Forest Act 84 (3) Fail to conspicuously timber mark, unscaled timber being stored or transported; No Action - Timber Marking & Transportation Regulation 10 (2) Documentation requirements: Inadequate transport description'
+    );
   });
 });

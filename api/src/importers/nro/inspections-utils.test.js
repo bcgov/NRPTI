@@ -28,7 +28,7 @@ describe('transformRecord', () => {
       legislation: null,
       legislationDescription: 'Inspection to verify compliance with regulatory requirement',
       location: null,
-      outcomeDescription: 'Compliant Status - undefined',
+      outcomeDescription: 'undefined - undefined',
       recordName: '-',
       summary: '-'
     });
