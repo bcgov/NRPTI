@@ -211,6 +211,13 @@ function getDataSourceConfig(dataSourceType) {
     };
   }
 
+  if (dataSourceType === 'nro-csv') {
+    return {
+      dataSourceLabel: 'nro-csv',
+      dataSourceClass: require('../importers/nro/datasource')
+    };
+  }
+
   // dataSourceType will match the name of a directory for the given
   // integration in /src/integrations/<dataSourceType>/
   return {

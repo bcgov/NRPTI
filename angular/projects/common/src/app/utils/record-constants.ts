@@ -230,6 +230,7 @@ export class Picklists {
     'lng-csv',
     'mem-admin',
     'nris-epd',
+    'nro-inspections-csv',
     'nrpti',
     'ocers-csv'
   ];
