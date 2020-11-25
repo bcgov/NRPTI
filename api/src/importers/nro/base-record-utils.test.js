@@ -78,7 +78,7 @@ describe('BaseRecordUtils', () => {
             dateUpdated: expect.any(Date),
             flavourSchema: {
               _id: 321,
-              removeRole: 'public'
+              addRole: 'public'
             },
             issuedTo: { type: MiscConstants.IssuedToEntityTypes.Individual }
           }
@@ -120,10 +120,10 @@ describe('BaseRecordUtils', () => {
             dateAdded: expect.any(Date),
             issuedTo: { type: MiscConstants.IssuedToEntityTypes.Individual },
             InspectionLNG: {
-              removeRole: 'public'
+              addRole: 'public'
             },
             InspectionNRCED: {
-              removeRole: 'public'
+              addRole: 'public'
             }
           }
         ]

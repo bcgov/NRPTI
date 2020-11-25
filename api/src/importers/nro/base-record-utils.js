@@ -3,7 +3,6 @@
 const mongoose = require('mongoose');
 const defaultLog = require('../../utils/logger')('nro-csv-base-record-utils');
 const RecordController = require('./../../controllers/record-controller');
-const MiscConstants = require('../../utils/constants/misc');
 
 /**
  * NRO csv base record type handler that can be used directly, or extended if customizations are needed.
@@ -99,17 +98,9 @@ class BaseRecordUtils {
       updateObj.updatedBy = (this.auth_payload && this.auth_payload.preferred_username) || '';
       updateObj.dateUpdated = new Date();
 
-      // Only publish LNG or CGL.  They're the only ones with issueTo.type is Company
-      // See https://bcmines.atlassian.net/browse/NRPT-12 for more details
-      if (updateObj.issuedTo.type === MiscConstants.IssuedToEntityTypes.Company) {
-        existingRecord._flavourRecords.forEach(flavourRecord => {
-          updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
-        });
-      } else {
-        existingRecord._flavourRecords.forEach(flavourRecord => {
-          updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, removeRole: 'public' };
-        });
-      }
+      existingRecord._flavourRecords.forEach(flavourRecord => {
+        updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
+      });
 
       return await RecordController.processPutRequest(
         { swagger: { params: { auth_payload: this.auth_payload } } },
@@ -143,34 +134,18 @@ class BaseRecordUtils {
       createObj.addedBy = (this.auth_payload && this.auth_payload.preferred_username) || '';
       createObj.dateAdded = new Date();
 
-      // Only publish LNG or CGL.  They're the only ones with issueTo.type is Company
-      // See https://bcmines.atlassian.net/browse/NRPT-12 for more details
-      if (createObj.issuedTo.type === MiscConstants.IssuedToEntityTypes.Company) {
-        // publish to NRCED
-        if (this.recordType.flavours.nrced) {
-          createObj[this.recordType.flavours.nrced._schemaName] = {
-            addRole: 'public'
-          };
-        }
+      // publish to NRCED
+      if (this.recordType.flavours.nrced) {
+        createObj[this.recordType.flavours.nrced._schemaName] = {
+          addRole: 'public'
+        };
+      }
 
-        // publish to LNG
-        if (this.recordType.flavours.lng) {
-          createObj[this.recordType.flavours.lng._schemaName] = {
-            addRole: 'public'
-          };
-        }
-      } else {
-        if (this.recordType.flavours.nrced) {
-          createObj[this.recordType.flavours.nrced._schemaName] = {
-            removeRole: 'public'
-          };
-        }
-        
-        if (this.recordType.flavours.lng) {
-          createObj[this.recordType.flavours.lng._schemaName] = {
-            removeRole: 'public'
-          };
-        }
+      // publish to LNG
+      if (this.recordType.flavours.lng) {
+        createObj[this.recordType.flavours.lng._schemaName] = {
+          addRole: 'public'
+        };
       }
 
       return await RecordController.processPostRequest(
