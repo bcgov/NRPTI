@@ -19,12 +19,12 @@ describe('transformRecord', () => {
       _sourceRefNrisId: '',
 
       recordType: 'Inspection',
-      author: 'Natural Resource Officers (NRO)',
+      author: 'Natural Resource Officers',
       dateIssued: null,
-      issuedTo: { dateOfBirth: null, firstName: '', lastName: '', middleName: '', type: 'Individual' },
+      issuedTo: { dateOfBirth: expect.any(Date), firstName: '', lastName: '', middleName: '', type: 'Individual' },
       description: '-',
       sourceSystemRef: 'nro-inspections-csv',
-      issuingAgency: 'Natural Resource Officers (NRO)',
+      issuingAgency: 'Natural Resource Officers',
       legislation: null,
       legislationDescription: 'Inspection to verify compliance with regulatory requirement',
       location: null,
@@ -52,7 +52,7 @@ describe('transformRecord', () => {
 
       recordType: 'Inspection',
       recordName: 'NRO Inspection - Record 123',
-      author: 'Natural Resource Officers (NRO)',
+      author: 'Natural Resource Officers',
       description: 'Activity Inspected: Road - Maintenance',
       summary: 'Activity Inspected: Road - Maintenance',
       dateIssued: expect.any(String),
@@ -60,7 +60,7 @@ describe('transformRecord', () => {
         companyName: 'LNG Canada Development Inc.',
         type: MiscConstants.IssuedToEntityTypes.Company
       },
-      issuingAgency: 'Natural Resource Officers (NRO)',
+      issuingAgency: 'Natural Resource Officers',
       legislation: null,
       legislationDescription: 'Inspection to verify compliance with regulatory requirement',
       location: 'West Coast',

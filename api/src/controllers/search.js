@@ -432,61 +432,124 @@ let searchCollection = async function (
   // is less then 19 years old. First step to do this is calculate their
   // age
   if (!roles.some(r => constants.ApplicationAdminRoles.indexOf(r) >= 0)) {
-    searchResultAggregation.push({
-      $project: {
-        fullRecord: 1,
-        issuedToAge: {
-          $cond: {
-            if: { $ne: [{ $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }, null] },
-            then: {
-              $subtract: [
-                { $year: { date: new Date() } },
-                { $year: { date: { $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] } } }
-              ]
-            },
-            else: 0
+    searchResultAggregation.push(
+      {
+        $project: {
+          fullRecord: 1,
+          issuedToAge: {
+            $cond: {
+              if: { $ne: [{ $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }, null] },
+              then: {
+                $subtract: [
+                  { $year: { date: new Date() } },
+                  { $year: { date: { $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] } } }
+                ]
+              },
+              else: 0
+            }
+          }
+        }
+      },
+      {
+        $addFields: {
+          'fullRecord.issuedTo.firstName': {
+            $cond: {
+              if: {
+                $and: [
+                  { $lt: ['$issuedToAge', 19] },
+                  {
+                    $or: [
+                      { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] },
+                      {
+                        $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nro-inspections-csv']
+                      }
+                    ]
+                  }
+                ]
+              },
+              then: '',
+              else: { $arrayElemAt: ['$fullRecord.issuedTo.firstName', 0] }
+            }
+          },
+          'fullRecord.issuedTo.lastName': {
+            $cond: {
+              if: {
+                $and: [
+                  { $lt: ['$issuedToAge', 19] },
+                  {
+                    $or: [
+                      { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] },
+                      {
+                        $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nro-inspections-csv']
+                      }
+                    ]
+                  }
+                ]
+              },
+              then: 'Unpublished',
+              else: { $arrayElemAt: ['$fullRecord.issuedTo.lastName', 0] }
+            }
+          },
+          'fullRecord.issuedTo.middleName': {
+            $cond: {
+              if: {
+                $and: [
+                  { $lt: ['$issuedToAge', 19] },
+                  {
+                    $or: [
+                      { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] },
+                      {
+                        $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nro-inspections-csv']
+                      }
+                    ]
+                  }
+                ]
+              },
+              then: '',
+              else: { $arrayElemAt: ['$fullRecord.issuedTo.middleName', 0] }
+            }
+          },
+          'fullRecord.issuedTo.fullName': {
+            $cond: {
+              if: {
+                $and: [
+                  { $lt: ['$issuedToAge', 19] },
+                  {
+                    $or: [
+                      { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] },
+                      {
+                        $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nro-inspections-csv']
+                      }
+                    ]
+                  }
+                ]
+              },
+              then: 'Unpublished',
+              else: { $arrayElemAt: ['$fullRecord.issuedTo.fullName', 0] }
+            }
+          },
+          'fullRecord.issuedTo.dateOfBirth': {
+            $cond: {
+              if: {
+                $and: [
+                  { $lt: ['$issuedToAge', 19] },
+                  {
+                    $or: [
+                      { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] },
+                      {
+                        $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nro-inspections-csv']
+                      }
+                    ]
+                  }
+                ]
+              },
+              then: '',
+              else: { $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }
+            }
           }
         }
       }
-    }, {
-      $addFields: {
-        'fullRecord.issuedTo.firstName': {
-          $cond: {
-            if: { $and: [{ $lt: ['$issuedToAge', 19] }, { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] }] },
-            then: '',
-            else: { $arrayElemAt: ['$fullRecord.issuedTo.firstName', 0] }
-          }
-        },
-        'fullRecord.issuedTo.lastName': {
-          $cond: {
-            if: { $and: [{ $lt: ['$issuedToAge', 19] }, { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] }] },
-            then: 'Unpublished',
-            else: { $arrayElemAt: ['$fullRecord.issuedTo.lastName', 0] }
-          }
-        },
-        'fullRecord.issuedTo.middleName': {
-          $cond: {
-            if: { $and: [{ $lt: ['$issuedToAge', 19] }, { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] }] },
-            then: '',
-            else: { $arrayElemAt: ['$fullRecord.issuedTo.middleName', 0] }
-          }
-        },
-        'fullRecord.issuedTo.fullName': {
-          $cond: {
-            if: { $and: [{ $lt: ['$issuedToAge', 19] }, { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] }] },
-            then: 'Unpublished',
-            else: { $arrayElemAt: ['$fullRecord.issuedTo.fullName', 0] }
-          }
-        },
-        'fullRecord.issuedTo.dateOfBirth': {
-          $cond: {
-            if: { $and: [{ $lt: ['$issuedToAge', 19] }, { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] }] },
-            then: '',
-            else: { $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }
-          }
-        }
-      }
-    });
+    );
   }
 
   searchResultAggregation.push({

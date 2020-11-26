@@ -40,8 +40,8 @@ class Inspections extends BaseRecordUtils {
     inspection['recordType'] = 'Inspection';
     inspection['dateIssued'] = csvRow['date'] || null;
 
-    inspection['issuingAgency'] = 'Natural Resource Officers (NRO)';
-    inspection['author'] = 'Natural Resource Officers (NRO)';
+    inspection['issuingAgency'] = 'Natural Resource Officers';
+    inspection['author'] = 'Natural Resource Officers';
 
     inspection['recordName'] = (csvRow['record id'] && `NRO Inspection - Record ${csvRow['record id']}`) || '-';
     inspection['description'] = (csvRow['activity'] && `Activity Inspected: ${csvRow['activity']}`) || '-';
@@ -77,8 +77,10 @@ class Inspections extends BaseRecordUtils {
     if (entityType === MiscConstants.IssuedToEntityTypes.Individual) {
       inspection['issuedTo'] = {
         type: MiscConstants.IssuedToEntityTypes.Individual,
-        dateOfBirth: null,
-        firstName: '',
+        // Set dateOfBirth to current date so the issuedTo names are redacted on public sites
+        // This is a temporary solution until business figures out how to display client names
+        dateOfBirth: new Date(),
+        firstName: csvRow['client / complainant'] || '',
         lastName: '',
         middleName: ''
       };
