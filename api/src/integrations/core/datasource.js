@@ -525,7 +525,7 @@ class CoreDataSource {
           _sourceRefCoreCollectionId: amendment.permit_amendment_guid,
           project: mineRecord._id,
           name: amendment.description,
-          date: amendment.issue_date,
+          date: new Date(amendment.issue_date),
           type: amendment.permit_amendment_type_code === 'OGP' ? 'Permit' : 'Permit Amendment',
           agency: 'EMPR',
           records: (existingPermits && existingPermits.map(permit => permit._id)) || []
@@ -547,7 +547,7 @@ class CoreDataSource {
           const updateCollection = {
             _sourceRefCoreCollectionId: amendment.permit_amendment_guid,
             name: amendment.description,
-            date: amendment.issue_date,
+            date: new Date(amendment.issue_date),
             records: (existingPermits && existingPermits.map(permit => permit._id)) || []
           };
 
