@@ -12,7 +12,6 @@ const ObjectId = require('mongodb').ObjectId;
 const mongodb = require('../utils/mongodb');
 const PutUtils = require('../utils/put-utils');
 const { publishS3Document, unpublishS3Document } = require('../controllers/document-controller');
-const async = require('async');
 
 exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
