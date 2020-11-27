@@ -295,9 +295,10 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
                 try {
                   await unpublishS3Document(document.key);
                 } catch (err) {
-                  error = `failed to unpublish record document in S3, recordId: ${JSON.stringify(record._id)}`
+                  error = `failed to unpublish record document in S3, recordId: ${record.recordName}`
                   // log s3 sdk error
                   defaultLog.error(err.message)
+                  throw new Error(error)
                 }
               }
             }
@@ -306,8 +307,9 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
             try {
               await nrpti.updateMany({ _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } })
             } catch (err) {
-              error = `Error unpublishing record document obj: ${JSON.stringify(record._id)},  err: ${err}`;
+              error = `Could not unpublishing record document obj: ${record.recordName},  err: ${err}`;
               defaultLog.error(error)
+              throw new Error(error)
             }
           }
 
@@ -315,16 +317,18 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
           try {
             await nrpti.updateOne({ _id: record._id, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } })
           } catch (err) {
-            error = `Error unpublishing master record: ${JSON.stringify(record._id)},  err: ${err}`;
+            error = `Could not unpublishing master record: ${record.recordName},  err: ${err}`;
             defaultLog.error(error)
+            throw new Error(error)
           }
 
           defaultLog.debug('unpublishing record flavour, recordId: ', JSON.stringify(record._id))
           try {
             await nrpti.updateOne({ _flavourRecords: record._id, write: { $in: auth_payload.realm_access.roles } }, { $set: { isBcmiPublished: false } })
           } catch (err) {
-            error = `Error unpublishing flavour record: ${JSON.stringify(record._id)},  err: ${err}`;
+            error = `Could not unpublishing flavour record: ${record.recordName},  err: ${err}`;
             defaultLog.error(error)
+            throw new Error(error)
           }
         }
 
@@ -332,15 +336,16 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
         try {
           await nrpti.updateOne({ _id: collection._id, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } });
         } catch (err) {
-          error = `Error unpublishing collection:  ${JSON.stringify(collection._id)}, ${err}`
+          error = `Could not unpublishing collection:  ${collection.name}, ${err}`
           defaultLog.info(error);
+          throw new Error(error)
         }
       }
     }
   } catch (error) {
     defaultLog.info(`unpublishCollections - error unpublishing mine collections: ${mineId}`);
     defaultLog.debug(error);
-    const msg = `Error unpublishing mine collections: ${JSON.stringify(error.message)}`
+    const msg = `Error unpublishing mine collections: ${error.message}`
     throw new Error(msg);
   }
 }
@@ -397,7 +402,7 @@ exports.publishCollections = async function (mineId, auth_payload) {
                 try {
                   await publishS3Document(document.key);
                 } catch (err) {
-                  error = `Error publishing record document in S3: ${JSON.stringify(document._id)}`
+                  error = `failed to unpublish record document in S3, recordId: ${record.recordName}`
                   defaultLog.error(err.message)
                   throw new Error(error)
                 }
@@ -409,7 +414,7 @@ exports.publishCollections = async function (mineId, auth_payload) {
             try {
               await nrpti.updateMany({ _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } })
             } catch (err) {
-              error = `Error publishing record document obj: ${JSON.stringify(record._id)},  err: ${err}`;
+              error = `Could not publish record document obj: ${record.recordName},  err: ${err}`;
               defaultLog.error(error)
             }
           }
@@ -419,7 +424,7 @@ exports.publishCollections = async function (mineId, auth_payload) {
           try {
             await nrpti.updateOne({ _flavourRecords: record._id, write: { $in: auth_payload.realm_access.roles } }, { $set: { isBcmiPublished: true } })
           } catch (err) {
-            error = `Error publishing master record: ${JSON.stringify(record._id)},  err: ${err}`;
+            error = `Could not publish master record: ${record.recordName},  err: ${err}`;
             defaultLog.error(error)
           }
 
@@ -428,17 +433,16 @@ exports.publishCollections = async function (mineId, auth_payload) {
           try {
             await nrpti.updateOne({ _id: record._id, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } })
           } catch (err) {
-            error = `Error publishing flavour record: ${JSON.stringify(record._id)},  err: ${err}`;
+            error = `Could not publish flavour record: ${record.recordName},  err: ${err}`;
             defaultLog.error(error)
           }
-
         }
 
         // Publish the collection
         try {
           await nrpti.updateOne({ _id: collection._id, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } });
         } catch (err) {
-          const msg = `Error publishing mine collections: ${JSON.stringify(err.message)}`
+          const msg = `Could not publish mine collections: ${JSON.stringify(err.message)}`
           defaultLog.info(msg);
         }
       }
@@ -446,7 +450,7 @@ exports.publishCollections = async function (mineId, auth_payload) {
   } catch (error) {
     defaultLog.info(`publishCollections - error unpublishing mine collections: ${mineId}`);
     defaultLog.debug(error.message);
-    const msg = `Error unpublishing mine collections: ${JSON.stringify(error.message)}`
+    const msg = `Error unpublishing mine collections: ${error.message}`
     throw new Error(msg);
   }
 }
