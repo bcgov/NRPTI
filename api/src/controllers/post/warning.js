@@ -93,6 +93,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     ObjectId.isValid(incomingObj.collectionId) &&
     (warning.collectionId = new ObjectId(incomingObj.collectionId));
 
+  incomingObj._sourceRefOgcWarningId && (warning._sourceRefOgcWarningId = incomingObj._sourceRefOgcWarningId);
+
   // set permissions
   warning.read = utils.ApplicationAdminRoles;
   warning.write = utils.ApplicationAdminRoles;
@@ -219,6 +221,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (warningLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  incomingObj._sourceRefOgcWarningId && (warningLNG._sourceRefOgcWarningId = incomingObj._sourceRefOgcWarningId);
 
   // set permissions and meta
   warningLNG.read = utils.ApplicationAdminRoles;
@@ -348,6 +352,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (warningNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  incomingObj._sourceRefOgcWarningId && (warningNRCED._sourceRefOgcWarningId = incomingObj._sourceRefOgcWarningId);
 
   // set permissions and meta
   warningNRCED.read = utils.ApplicationAdminRoles;
