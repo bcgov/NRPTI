@@ -306,7 +306,7 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
             try {
               await nrpti.updateMany({ _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } })
             } catch (err) {
-              error = `Could not unpublishing record document obj: ${record.recordName},  err: ${err}`;
+              error = `Could not unpublish record document obj: ${record.recordName},  err: ${err}`;
               defaultLog.error(error)
               throw new Error(error)
             }
@@ -316,7 +316,7 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
           try {
             await nrpti.updateOne({ _id: record._id, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } })
           } catch (err) {
-            error = `Could not unpublishing master record: ${record.recordName},  err: ${err}`;
+            error = `Could not unpublish master record: ${record.recordName},  err: ${err}`;
             defaultLog.error(error)
             throw new Error(error)
           }
@@ -325,7 +325,7 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
           try {
             await nrpti.updateOne({ _flavourRecords: record._id, write: { $in: auth_payload.realm_access.roles } }, { $set: { isBcmiPublished: false } })
           } catch (err) {
-            error = `Could not unpublishing flavour record: ${record.recordName},  err: ${err}`;
+            error = `Could not unpublish flavour record: ${record.recordName},  err: ${err}`;
             defaultLog.error(error)
             throw new Error(error)
           }
@@ -335,7 +335,7 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
         try {
           await nrpti.updateOne({ _id: collection._id, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } });
         } catch (err) {
-          error = `Could not unpublishing collection:  ${collection.name}, ${err}`
+          error = `Could not unpublish collection:  ${collection.name}, ${err}`
           defaultLog.info(error);
           throw new Error(error)
         }
