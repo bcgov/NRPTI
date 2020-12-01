@@ -799,6 +799,15 @@ const executeQuery = async function (args, res, next) {
   if (dataset[0] === 'Item') {
     defaultLog.info('ITEM GET', { _id: args.swagger.params._id.value });
 
+    if (!args.swagger.params._id.value || !ObjectID.isValid(args.swagger.params._id.value)) {
+      defaultLog.info(`Error searching for item: ${args.swagger.params._id.value}, Error: Invalid Item ID supplied`)
+      return QueryActions.sendResponse(
+        res,
+        400,
+        `Error searching for item ${args.swagger.params._id.value}. Invalid item id supplied`
+      );
+    }
+
     let aggregation = [
       {
         $match: { _id: mongoose.Types.ObjectId(args.swagger.params._id.value) }
@@ -933,27 +942,40 @@ const executeQuery = async function (args, res, next) {
     });
 
     let data = [];
-
-    if (args.swagger.params._schemaName.value) {
-      let collectionObj = mongoose.model(args.swagger.params._schemaName.value);
-      data = await collectionObj.aggregate(aggregation);
-    } else {
-      const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
-      const collection = db.collection('nrpti');
-      data = await collection.aggregate(aggregation, {
-        allowDiskUse: true,
-        collation: {
-          locale: 'en_US',
-          alternate: 'shifted',
-          numericOrdering: true
-        }
-      })
-        .toArray();
+    try {
+      if (args.swagger.params._schemaName.value) {
+        let collectionObj = mongoose.model(args.swagger.params._schemaName.value);
+        data = await collectionObj.aggregate(aggregation);
+      } else {
+        const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+        const collection = db.collection('nrpti');
+        data = await collection.aggregate(aggregation, {
+          allowDiskUse: true,
+          collation: {
+            locale: 'en_US',
+            alternate: 'shifted',
+            numericOrdering: true
+          }
+        })
+          .toArray();
+      }
+      QueryActions.sendResponse(res, 200, data);
+    } catch (error) {
+      defaultLog.info(`search - error during lookup for item with itemId: ${_id}`);
+      defaultLog.debug(error);
+      return QueryActions.sendResponse(res, 400, {});
     }
-
-    QueryActions.sendResponse(res, 200, data);
   } else if (dataset[0] === 'CollectionDocuments') { // dataset == collection, id = collection id, flavourtype?
     defaultLog.info('COLLECTION DOCUMENTS GET', { _id: args.swagger.params._id.value });
+
+    if (!args.swagger.params._id.value || !ObjectID.isValid(args.swagger.params._id.value)) {
+      defaultLog.info(`Error searching for item: ${args.swagger.params._id.value}, Error: Invalid Item ID supplied`)
+      return QueryActions.sendResponse(
+        res,
+        400,
+        `Error searching for item ${args.swagger.params._id.value}. Invalid item id supplied`
+      );
+    }
 
     let aggregation = [
       // match on collectionBCMI schema and by supplied objectId
@@ -1027,18 +1049,25 @@ const executeQuery = async function (args, res, next) {
 
     let data = [];
 
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
-    const collection = db.collection('nrpti');
-    data = await collection.aggregate(aggregation, {
-      allowDiskUse: true,
-      collation: {
-        locale: 'en_US',
-        alternate: 'shifted',
-        numericOrdering: true
-      }
-    }).toArray();
+    try {
+      const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+      const collection = db.collection('nrpti');
+      data = await collection.aggregate(aggregation, {
+        allowDiskUse: true,
+        collation: {
+          locale: 'en_US',
+          alternate: 'shifted',
+          numericOrdering: true
+        }
+      }).toArray();
 
-    QueryActions.sendResponse(res, 200, data);
+      QueryActions.sendResponse(res, 200, data);
+    } catch (error) {
+      defaultLog.info(`search - error during lookup for collection document with documentId: ${_id}`);
+      defaultLog.debug(error);
+      return QueryActions.sendResponse(res, 400, {});
+    }
+
   } else if (dataset[0] !== 'Item' && dataset[0] !== 'CollectionDocuments') {
     defaultLog.info('Searching Dataset:', dataset);
     defaultLog.info('sortField:', sortField);
