@@ -524,7 +524,7 @@ class CoreDataSource {
         const collection = {
           _sourceRefCoreCollectionId: amendment.permit_amendment_guid,
           project: mineRecord._id,
-          name: amendment.description,
+          name: amendment.description !== null ? amendment.description : 'Permit Documents',
           date: amendment.issue_date ? new Date(amendment.issue_date) : null,
           type: amendment.permit_amendment_type_code === 'OGP' ? 'Permit' : 'Permit Amendment',
           agency: 'EMPR',
