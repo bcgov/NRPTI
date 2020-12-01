@@ -379,13 +379,19 @@ exports.uploadS3Document = uploadS3Document;
  * @returns
  */
 async function publishS3Document(s3Key) {
-  return s3
-    .putObjectAcl({
+  return new Promise(function(resolve, reject) {
+    s3.putObjectAcl({
       Bucket: process.env.OBJECT_STORE_bucket_name,
       Key: s3Key,
       ACL: 'public-read'
-    })
-    .promise();
+    }, function(err, data) {
+      if (err) {
+          reject(err);
+      } else {
+          resolve(data);
+      }
+    });
+  });
 }
 
 exports.publishS3Document = publishS3Document;
@@ -397,13 +403,19 @@ exports.publishS3Document = publishS3Document;
  * @returns
  */
 async function unpublishS3Document(s3Key) {
-  return s3
-    .putObjectAcl({
-      Bucket: process.env.OBJECT_STORE_bucket_name,
-      Key: s3Key,
-      ACL: 'authenticated-read'
-    })
-    .promise();
+    return new Promise(function(resolve, reject) {
+      s3.putObjectAcl({
+        Bucket: process.env.OBJECT_STORE_bucket_name,
+        Key: s3Key,
+        ACL: 'authenticated-read'
+      }, function(err, data) {
+        if (err) {
+            reject(err);
+        } else {
+            resolve(data);
+        }
+      });
+  });
 }
 
 exports.unpublishS3Document = unpublishS3Document;
