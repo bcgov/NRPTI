@@ -9,6 +9,7 @@ const BCOGC_UTILS_TYPES = require('./bcogc-utils-types-enum');
 const BCOGC_INSPECTIONS_CSV_ENDPOINT = process.env.BCOGC_INSPECTIONS_CSV_ENDPOINT || 'https://reports.bcogc.ca/ogc/f?p=200:501::CSV';
 const BCOGC_ORDERS_CSV_ENDPOINT = process.env.BCOGC_ORDERS_CSV_ENDPOINT || 'https://www.bcogc.ca/data-reports/compliance-enforcement/reports/enforcement-order';
 const BCOGC_PENALTIES_CSV_ENDPOINT = process.env.BCOGC_PENALTIES_CSV_ENDPOINT || 'https://www.bcogc.ca/data-reports/compliance-enforcement/reports/contravention-decision';
+const BCOGC_WARNING_CSV_ENDPOINT = process.env.BCOGC_WARNING_CSV_ENDPOINT  || 'https://www.bcogc.ca/data-reports/compliance-enforcement/reports/warning-letter';
 
 class OgcCsvDataSource {
   /**
@@ -38,14 +39,14 @@ class OgcCsvDataSource {
    */
   async run() {
     defaultLog.info('run - import bcogc');
-    
+
     const csvs = await this.fetchAllBcogcCsvs();
 
     this.status.itemTotal = csvs.getLength();
     await this.taskAuditRecord.updateTaskRecord({ status: 'Running', itemTotal: this.status.itemTotal});
 
     await this.batchProcessRecords(csvs);
-    
+
     return this.status;
   }
 
@@ -148,14 +149,14 @@ class OgcCsvDataSource {
 
   /**
    * Gets the CSV of inspection from BCOGC
-   * 
+   *
    * @returns {Promise<Array<*>>} array of objects for a processed CSV
    * @memberof OgcCsvDataSource
    */
   async fetchBcogcInspectionCsv() {
     try {
       const validUrl = new URL(BCOGC_INSPECTIONS_CSV_ENDPOINT);
-      
+
       const response = await integrationUtils.getRecords(validUrl);
       const transformedCsv = getCsvRowsFromString(response);
 
@@ -170,7 +171,7 @@ class OgcCsvDataSource {
 
   /**
    * Scrapes rows of data from the BCOGC Order CSV.
-   * 
+   *
    * @returns {Promise<Array<*>>} array of objects for a processed CSV
    * @memberof OgcCsvDataSource
    */
@@ -181,12 +182,23 @@ class OgcCsvDataSource {
 
     /**
    * Scrapes rows of data from the BCOGC Order CSV.
-   * 
+   *
    * @returns {Promise<Array<*>>} array of objects for a processed CSV
    * @memberof OgcCsvDataSource
    */
   async fetchBcogcPenaltyCsv() {
     const response = await axios.get(BCOGC_PENALTIES_CSV_ENDPOINT);
+    return this.processBcogcHtml(response.data, 'export-table');
+  }
+
+  /**
+   * Scrapes rows of data from the BCOGC Warnings CSV.
+   *
+   * @returns {Promise<Array<*>>} array of objects for a processed CSV
+   * @memberof OgcCsvDataSource
+   */
+   async fetchBcogcWarningCsv() {
+    const response = await axios.get(BCOGC_WARNING_CSV_ENDPOINT);
     return this.processBcogcHtml(response.data, 'export-table');
   }
 
@@ -201,19 +213,21 @@ class OgcCsvDataSource {
     const inspections = await this.fetchBcogcInspectionCsv();
     const orders = await this.fetchBcogcOrderCsv();
     const penalties = await this.fetchBcogcPenaltyCsv();
+    const warnings = await this.fetchBcogcWarningCsv();
 
     return {
       [RECORD_TYPE.Inspection._schemaName]: inspections,
       [RECORD_TYPE.Order._schemaName]: orders,
       [RECORD_TYPE.AdministrativePenalty._schemaName]: penalties,
-      types: [RECORD_TYPE.AdministrativePenalty._schemaName, RECORD_TYPE.Order._schemaName, RECORD_TYPE.Inspection._schemaName],
-      getLength: () => orders.length + inspections.length + penalties.length,
+      [RECORD_TYPE.Warning._schemaName]: warnings,
+      types: [RECORD_TYPE.AdministrativePenalty._schemaName, RECORD_TYPE.Order._schemaName, RECORD_TYPE.Inspection._schemaName, RECORD_TYPE.Warning._schemaName],
+      getLength: () => orders.length + inspections.length + penalties.length + warnings.length,
     };
   }
 
   /**
    * Turns a BCOGC HTML table into an array of records.
-   * 
+   *
    * @param {string} html HTML to process
    * @param {string} tableClass Class name used to identify to scrape.
    * @returns {Array<Object>} Array of CSV row objects.

@@ -18,6 +18,11 @@ const BCOGC_UTILS_TYPES = Object.freeze({
     getUtil: (auth_payload, csvRow) => {
       return new (require('./administrative-penalties-utils'))(auth_payload, RECORD_TYPE.AdministrativePenalty, csvRow);
     }
+  },
+  Warning: {
+    getUtil: (auth_payload, csvRow) => {
+      return new (require('./warnings-utils'))(auth_payload, RECORD_TYPE.Warning, csvRow);
+    }
   }
 });
 
