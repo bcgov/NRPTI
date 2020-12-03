@@ -5,6 +5,7 @@ import { filter } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { takeUntil } from 'rxjs/operators';
 import { LoadingScreenService } from 'nrpti-angular-components';
+import { KeycloakService } from '../services/keycloak.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -26,7 +27,8 @@ export class SidebarComponent implements OnDestroy {
 
   constructor(
     private router: Router,
-    private loadingScreenService: LoadingScreenService
+    private loadingScreenService: LoadingScreenService,
+    public keycloakService: KeycloakService
   ) {
     this.router.events
       .pipe(
