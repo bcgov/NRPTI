@@ -1,9 +1,6 @@
 <div class="sidebar">
-  <!-- <section class="full-nav" *ngIf="showProjectDetails === true">
 
-</section>
-   -->
-  <section class="full-nav">
+  <section class="full-nav" *ngIf='keycloakService.isMenuEnabled("All Mines")'>
     <a
       [routerLink]=""
       [ngClass]="{ active: mainRoute === 'mines' && !currentMenu }"
@@ -14,6 +11,7 @@
       All Mines
     </a>
   </section>
+
   <section class="mine-nav" *ngIf="showMineDetails">
     <a
       [ngClass]="{ active: mainRoute === 'mines' && currentMenu === 'detail' }"
@@ -41,8 +39,10 @@
       Mine Collections
     </a>
   </section>
-  <section class="full-nav">
+
+  <section id="sidebarnav" class="full-nav">
     <a
+      *ngIf='keycloakService.isMenuEnabled("All Records")'
       [routerLink]=""
       [ngClass]="{ active: mainRoute === 'records' }"
       id="records"
@@ -51,27 +51,45 @@
       <i class="material-icons mr-3 ">view_list</i>
       All Records
     </a>
-    <a [ngClass]="{ active: mainRoute === 'news' }" id="news" [routerLink]="['/news']">
+    <a
+      id="newslist"
+      *ngIf='keycloakService.isMenuEnabled("News List")'
+      [ngClass]="{ active: mainRoute === 'news' }" id="news" [routerLink]="['/news']">
       <i class="material-icons mr-3">notifications_active</i>
       News List
     </a>
-    <a [ngClass]="{ active: mainRoute === 'analytics' }" id="analytics" [routerLink]="['/analytics']">
+    <a
+      id="analytics"
+      *ngIf='keycloakService.isMenuEnabled("Analytics")'
+      [ngClass]="{ active: mainRoute === 'analytics' }" id="analytics" [routerLink]="['/analytics']">
       <i class="material-icons mr-3 ">assessment</i>
       Analytics
     </a>
-    <a [ngClass]="{ active: mainRoute === 'map' }" id="map" [routerLink]="['/map']">
+    <a
+      id="map"
+      *ngIf='keycloakService.isMenuEnabled("Map")'
+      [ngClass]="{ active: mainRoute === 'map' }" id="map" [routerLink]="['/map']">
       <i class="material-icons mr-3 ">map</i>
       Map
     </a>
-    <a [ngClass]="{ active: mainRoute === 'entities' }" id="entities" [routerLink]="['/entities']">
+    <a
+      id="entities"
+      *ngIf='keycloakService.isMenuEnabled("Entities")'
+      [ngClass]="{ active: mainRoute === 'entities' }" id="entities" [routerLink]="['/entities']">
       <i class="material-icons mr-3 ">people</i>
       Entities
     </a>
-    <a [ngClass]="{ active: mainRoute === 'imports' }" id="imports" [routerLink]="['/imports']">
+    <a
+      id="imports"
+      *ngIf='keycloakService.isMenuEnabled("Imports")'
+      [ngClass]="{ active: mainRoute === 'imports' }" id="imports" [routerLink]="['/imports']">
       <i class="material-icons mr-3">import_export</i>
       Imports
     </a>
-    <a [ngClass]="{ active: mainRoute === 'communications' }" id="communications" [routerLink]="['/communications', 'BCMI']">
+    <a
+      id="communications"
+      *ngIf='keycloakService.isMenuEnabled("Communications")'
+      [ngClass]="{ active: mainRoute === 'communications' }" id="communications" [routerLink]="['/communications', 'BCMI']">
       <em class="material-icons mr-3">chat</em>
       Communications
     </a>
