@@ -11,6 +11,7 @@ export class KeycloakService {
   private keycloakAuth: any;
   private keycloakUrl: string;
   private keycloakRealm: string;
+  private menus: {} = {};
 
   constructor(private logger: LoggerService) {
     switch (window.location.origin) {
@@ -47,6 +48,7 @@ export class KeycloakService {
 
       this.keycloakAuth.onAuthSuccess = () => {
         // console.log('onAuthSuccess');
+        this.refreshMenuCache();
       };
 
       this.keycloakAuth.onAuthError = () => {
@@ -55,6 +57,7 @@ export class KeycloakService {
 
       this.keycloakAuth.onAuthRefreshSuccess = () => {
         // console.log('onAuthRefreshSuccess');
+        this.refreshMenuCache();
       };
 
       this.keycloakAuth.onAuthRefreshError = () => {
@@ -71,6 +74,7 @@ export class KeycloakService {
           .updateToken()
           .success(refreshed => {
             this.logger.log(`KC refreshed token?: ${refreshed}`);
+            this.refreshMenuCache();
           })
           .error(err => {
             this.logger.log(`KC refresh error: ${err}`);
@@ -96,6 +100,15 @@ export class KeycloakService {
     });
   }
 
+  refreshMenuCache() {
+    const token = this.getToken();
+    if (token) {
+      const jwt = JwtUtil.decodeToken(token);
+      const roles = jwt && jwt.realm_access && jwt.realm_access.roles || [];
+      this.buildMenuCache(roles);
+    }
+  }
+
   /**
    * Check if the current user is logged in and has admin access.
    *
@@ -119,6 +132,41 @@ export class KeycloakService {
     return Object.keys(Constants.ApplicationRoles).some(role => {
       return jwt.realm_access.roles.includes(Constants.ApplicationRoles[role]);
     });
+  }
+
+  buildMenuCache(roles) {
+    // Build the menu cache
+    this.menus[Constants.Menus.ALL_MINES]
+      = roles.includes(Constants.ApplicationRoles.ADMIN)
+        || roles.includes(Constants.ApplicationRoles.ADMIN_BCMI);
+
+    this.menus[Constants.Menus.ALL_RECORDS] = true; // Everyone gets this.
+
+    this.menus[Constants.Menus.NEWS_LIST]
+      = roles.includes(Constants.ApplicationRoles.ADMIN)
+        || roles.includes(Constants.ApplicationRoles.ADMIN_LNG);
+
+    this.menus[Constants.Menus.ANALYTICS] = false; // Nobody gets this.
+
+    this.menus[Constants.Menus.MAP] = false; // Nobody gets this.
+
+    this.menus[Constants.Menus.ENTITIES] = false; // Nobody gets this.
+
+    this.menus[Constants.Menus.IMPORTS]
+      = roles.includes(Constants.ApplicationRoles.ADMIN)
+        || roles.includes(Constants.ApplicationRoles.ADMIN_LNG)
+        || roles.includes(Constants.ApplicationRoles.ADMIN_NRCED)
+        || roles.includes(Constants.ApplicationRoles.ADMIN_BCMI);
+
+    this.menus[Constants.Menus.COMMUNICATIONS]
+      = roles.includes(Constants.ApplicationRoles.ADMIN)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_LNG)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_NRCED)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_BCMI);
+  }
+
+  isMenuEnabled(menuName) {
+    return this.menus[menuName];
   }
 
   /**

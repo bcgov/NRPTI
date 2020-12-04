@@ -6,10 +6,22 @@ export class Constants {
     ADMIN_NRCED: 'admin:nrced',
     ADMIN_LNG: 'admin:lng',
     ADMIN_BCMI: 'admin:bcmi',
+    ADMIN_WF: 'admin:wf',
   };
 
   // Datepicker is off by one so add one to the desired year.
   public static readonly DatepickerMinDate = new Date('1901');
+
+  public static readonly Menus: any = {
+    ALL_MINES: 'All Mines',
+    ALL_RECORDS: 'All Records',
+    NEWS_LIST: 'News List',
+    ANALYTICS: 'Analytics',
+    MAP: 'Map',
+    ENTITIES: 'Entities',
+    IMPORTS: 'Imports',
+    COMMUNICATIONS: 'Communications'
+  };
 }
 export class MiscUtils {
   public static updateBreadcrumbLabel(mine: any, route: ActivatedRoute) {
