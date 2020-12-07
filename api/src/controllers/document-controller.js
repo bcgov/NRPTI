@@ -8,6 +8,7 @@ const queryUtils = require('../utils/query-utils');
 const businessLogicManager = require('../utils/business-logic-manager');
 const mongodb = require('../utils/mongodb');
 const defaultLog = require('../utils/logger')('record');
+const { userIsAdminWildfire } = require('../utils/auth-utils');
 
 const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
 const ep = new AWS.Endpoint(OBJ_STORE_URL);
@@ -50,9 +51,15 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
     const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
 
     // Set mongo document and s3 document roles
-    let readRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_NRCED];
+    const readRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_NRCED];
     const writeRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_NRCED];
     let s3ACLRole = null;
+
+    // Add admin:wf read/write roles if user is wildfire user
+    if (args && userIsAdminWildfire(args.swagger.params.auth_payload.realm_access.roles)) {
+      readRoles.push(utils.ApplicationRoles.ADMIN_WF);
+      writeRoles.push(utils.ApplicationRoles.ADMIN_WF);
+    }
 
     if (!businessLogicManager.isDocumentConsideredAnonymous(masterRecord)) {
       readRoles.push('public');

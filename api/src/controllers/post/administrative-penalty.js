@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
-const { userHasValidRoles } = require('../../utils/auth-utils');
+const { userHasValidRoles, userIsAdminWildfire } = require('../../utils/auth-utils');
 const utils = require('../../utils/constants/misc');
 
 /**
@@ -172,6 +172,14 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.isNrcedPublished && (administrativePenalty.isNrcedPublished = incomingObj.isNrcedPublished);
   incomingObj.isLngPublished && (administrativePenalty.isLngPublished = incomingObj.isLngPublished);
 
+  // Add admin:wf read/write roles if user is wildfire user
+  if (args && userIsAdminWildfire(args.swagger.params.auth_payload.realm_access.roles)) {
+    administrativePenalty.read.push(utils.ApplicationRoles.ADMIN_WF);
+    administrativePenalty.write.push(utils.ApplicationRoles.ADMIN_WF);
+    administrativePenalty.issuedTo.read.push(utils.ApplicationRoles.ADMIN_WF);
+    administrativePenalty.issuedTo.write.push(utils.ApplicationRoles.ADMIN_WF);
+  }
+
   return administrativePenalty;
 };
 
@@ -206,7 +214,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role to create this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -297,6 +305,14 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.sourceDateUpdated && (administrativePenaltyLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (administrativePenaltyLNG.sourceSystemRef = incomingObj.sourceSystemRef);
 
+  // Add admin:wf read/write roles if user is wildfire user
+  if (args && userIsAdminWildfire(args.swagger.params.auth_payload.realm_access.roles)) {
+    administrativePenaltyLNG.read.push(utils.ApplicationRoles.ADMIN_WF);
+    administrativePenaltyLNG.write.push(utils.ApplicationRoles.ADMIN_WF);
+    administrativePenaltyLNG.issuedTo.read.push(utils.ApplicationRoles.ADMIN_WF);
+    administrativePenaltyLNG.issuedTo.write.push(utils.ApplicationRoles.ADMIN_WF);
+  }
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     administrativePenaltyLNG.read.push('public');
@@ -340,7 +356,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role to create this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -430,6 +446,14 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (administrativePenaltyNRCED.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (administrativePenaltyNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (administrativePenaltyNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // Add admin:wf read/write roles if user is wildfire user
+  if (args && userIsAdminWildfire(args.swagger.params.auth_payload.realm_access.roles)) {
+    administrativePenaltyNRCED.read.push(utils.ApplicationRoles.ADMIN_WF);
+    administrativePenaltyNRCED.write.push(utils.ApplicationRoles.ADMIN_WF);
+    administrativePenaltyNRCED.issuedTo.read.push(utils.ApplicationRoles.ADMIN_WF);
+    administrativePenaltyNRCED.issuedTo.write.push(utils.ApplicationRoles.ADMIN_WF);
+  }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {

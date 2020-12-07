@@ -1,15 +1,27 @@
 exports.SYSTEM_USER = 'SYSTEM_USER';
 
-exports.ApplicationRoles = {
+const ApplicationRoles = {
   ADMIN: 'sysadmin',
   ADMIN_NRCED: 'admin:nrced',
   ADMIN_LNG: 'admin:lng',
   ADMIN_BCMI: 'admin:bcmi',
+  ADMIN_WF: 'admin:wf',
+  PUBLIC: 'public'
 };
 
-exports.ApplicationAdminRoles = Object.keys(this.ApplicationRoles).map(role => {
-  return this.ApplicationRoles[role];
-});
+exports.ApplicationRoles = ApplicationRoles;
+
+exports.ApplicationAdminRoles = [
+  ApplicationRoles.ADMIN,
+  ApplicationRoles.ADMIN_NRCED,
+  ApplicationRoles.ADMIN_LNG,
+  ApplicationRoles.ADMIN_BCMI
+];
+
+exports.KeycloakDefaultRoles = {
+  OFFLINE_ACCESS: 'offline_access',
+  UMA_AUTHORIZATION: 'uma_authorization'
+};
 
 exports.IssuedToEntityTypes = {
   Company: 'Company',
