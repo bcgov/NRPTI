@@ -242,10 +242,23 @@ class BaseRecordUtils {
       }
 
       if (this.recordType.flavours.nrced) {
-        createObj[this.recordType.flavours.nrced._schemaName] = {
-          summary: nrptiRecord.description || '',
-          addRole: 'public'
-        };
+        // Only EPIC records with Milestone = "Compliance and Enforcement" and
+        // Document Type = "Inspection Record" or "Order" should be auto-published to NRCED.
+        if (
+          (nrptiRecord._epicMilestoneId == '5cf00c03a266b7e1877504ef' ||
+            nrptiRecord._epicMilestoneId == '5df79dd77b5abbf7da6f5201') &&
+          (nrptiRecord._schemaName === 'Order' ||
+            nrptiRecord._schemaName === 'Inspection')
+        ) {
+          createObj[this.recordType.flavours.nrced._schemaName] = {
+            summary: nrptiRecord.description || '',
+            addRole: 'public'
+          };
+        } else {
+          createObj[this.recordType.flavours.nrced._schemaName] = {
+            summary: nrptiRecord.description || ''
+          };
+        }
       }
 
       return await RecordController.processPostRequest(
