@@ -96,7 +96,14 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   // set permissions
   administrativePenalty.read = utils.ApplicationAdminRoles;
+  if (userHasValidRoles([utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+    administrativePenalty.read.push(utils.ApplicationRoles.ADMIN_WF);
+  }
+
   administrativePenalty.write = utils.ApplicationAdminRoles;
+  if (userHasValidRoles([utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+    administrativePenalty.write.push(utils.ApplicationRoles.ADMIN_WF);
+  }
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -206,7 +213,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role to create this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -230,7 +237,13 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
   // set permissions and meta
   administrativePenaltyLNG.read = utils.ApplicationAdminRoles;
+  if (userHasValidRoles([utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+    administrativePenaltyLNG.read.push(utils.ApplicationRoles.ADMIN_WF);
+  }
   administrativePenaltyLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  if (userHasValidRoles([utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+    administrativePenaltyLNG.write.push(utils.ApplicationRoles.ADMIN_WF);
+  }
 
   administrativePenaltyLNG.addedBy = args.swagger.params.auth_payload.displayName;
   administrativePenaltyLNG.dateAdded = new Date();
@@ -340,7 +353,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role to create this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -364,7 +377,13 @@ exports.createNRCED = function (args, res, next, incomingObj) {
 
   // set permissions and meta
   administrativePenaltyNRCED.read = utils.ApplicationAdminRoles;
+  if (userHasValidRoles([utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+    administrativePenaltyNRCED.read.push(utils.ApplicationRoles.ADMIN_WF);
+  }
   administrativePenaltyNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  if (userHasValidRoles([utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+    administrativePenaltyNRCED.write.push(utils.ApplicationRoles.ADMIN_WF);
+  }
 
   administrativePenaltyNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   administrativePenaltyNRCED.dateAdded = new Date();

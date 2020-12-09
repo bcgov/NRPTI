@@ -40,7 +40,12 @@ exports.createItem = async function (args, res, next, incomingObj) {
     OrderNRCED: this.createNRCED,
     OrderBCMI: this.createBCMI
   }
-  return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
+  try {
+    return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
+  } catch (e) {
+    console.log('Could not create Record', e);
+    return
+  }
 };
 
 /**
@@ -99,7 +104,15 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   // set permissions
   order.read = utils.ApplicationAdminRoles;
+  if (userHasValidRoles([utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+    order.read.push(utils.ApplicationRoles.ADMIN_WF);
+  }
+
   order.write = utils.ApplicationAdminRoles;
+  if (userHasValidRoles([utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+    order.write.push(utils.ApplicationRoles.ADMIN_WF);
+  }
+
 
   // set forward references
   if (flavourIds && flavourIds.length) {
@@ -202,7 +215,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -226,7 +239,13 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
   // set permissions and meta
   orderLNG.read = utils.ApplicationAdminRoles;
+  if (userHasValidRoles([utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+    orderLNG.read.push(utils.ApplicationRoles.ADMIN_WF);
+  }
   orderLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  if (userHasValidRoles([utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+    orderLNG.write.push(utils.ApplicationRoles.ADMIN_WF);
+  }
 
   orderLNG.addedBy = args.swagger.params.auth_payload.displayName;
   orderLNG.dateAdded = new Date();
@@ -330,7 +349,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of role.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -354,7 +373,15 @@ exports.createNRCED = function (args, res, next, incomingObj) {
 
   // set permissions and meta
   orderNRCED.read = utils.ApplicationAdminRoles;
+  if (userHasValidRoles([utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+    orderNRCED.read.push(utils.ApplicationRoles.ADMIN_WF);
+  }
+
   orderNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  if (userHasValidRoles([utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+    orderNRCED.write.push(utils.ApplicationRoles.ADMIN_WF);
+  }
+
 
   orderNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   orderNRCED.dateAdded = new Date();
@@ -461,7 +488,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
  */
 exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of role.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -492,7 +519,13 @@ exports.createBCMI = function (args, res, next, incomingObj) {
 
   // set permissions and meta
   orderBCMI.read = utils.ApplicationAdminRoles;
+  if (userHasValidRoles([utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+    orderBCMI.read.push(utils.ApplicationRoles.ADMIN_WF);
+  }
   orderBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  if (userHasValidRoles([utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+    orderBCMI.write.push(utils.ApplicationRoles.ADMIN_WF);
+  }
 
   orderBCMI.addedBy = args.swagger.params.auth_payload.displayName;
   orderBCMI.dateAdded = new Date();

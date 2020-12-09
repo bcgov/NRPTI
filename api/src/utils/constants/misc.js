@@ -5,11 +5,21 @@ exports.ApplicationRoles = {
   ADMIN_NRCED: 'admin:nrced',
   ADMIN_LNG: 'admin:lng',
   ADMIN_BCMI: 'admin:bcmi',
+  ADMIN_WF: 'admin:wf',
 };
 
-exports.ApplicationAdminRoles = Object.keys(this.ApplicationRoles).map(role => {
-  return this.ApplicationRoles[role];
-});
+function createAdminRoleList(roles) {
+  let fullAccessRoles = [];
+  Object.keys(roles).map(roleKey => {
+    // full access is not granted to wild fire users.
+    if ( !(roleKey === 'ADMIN_WF') ) {
+      fullAccessRoles.push(roles[roleKey]);
+    }
+  });
+  return fullAccessRoles;
+}
+
+exports.ApplicationAdminRoles = createAdminRoleList(this.ApplicationRoles);
 
 exports.IssuedToEntityTypes = {
   Company: 'Company',
