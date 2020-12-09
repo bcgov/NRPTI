@@ -179,8 +179,8 @@ exports.userHasValidRoles = function(validRoles, userRoles) {
 };
 
 /**
- * Checks if a user is a wildfire user based on his/her roles.  
- * The user is a wildfire user if his/her roles only contains the admin:wf role
+ * Checks if a user is a wildfire user based on their role.  
+ * The user is a wildfire user if their role only contains the admin:wf role
  * and no other admin roles.
  * 
  * @param {Array<string>|string} userRoles Roles to match against.
