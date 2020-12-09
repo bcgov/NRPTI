@@ -1,7 +1,5 @@
 'use strict';
 
-const { MASTER_SCHEMA_NAMES } = require('../src/utils/constants/misc');
-
 /**
  * We receive the dbmigrate dependency from dbmigrate initially.
  * This enables us to not have to rely on NODE_PATH.
@@ -24,7 +22,27 @@ exports.up = async function(db) {
         {
           $match: {
             _schemaName: {
-              $in: MASTER_SCHEMA_NAMES
+              $in: [
+                'AdministrativePenalty',
+                'AdministrativeSanction',
+                'Agreement',
+                'AnnualReport',
+                'Certificate',
+                'CertificateAmendment',
+                'ConstructionPlan',
+                'Correspondence',
+                'CourtConviction',
+                'DamSafetyInspection',
+                'Inspection',
+                'ManagementPlan',
+                'Order',
+                'Permit',
+                'Report',
+                'RestorativeJustice',
+                'SelfReport',
+                'Ticket',
+                'Warning'
+              ]
             }
           }
         },
