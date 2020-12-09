@@ -1,25 +1,27 @@
 exports.SYSTEM_USER = 'SYSTEM_USER';
 
-exports.ApplicationRoles = {
+const ApplicationRoles = {
   ADMIN: 'sysadmin',
   ADMIN_NRCED: 'admin:nrced',
   ADMIN_LNG: 'admin:lng',
   ADMIN_BCMI: 'admin:bcmi',
   ADMIN_WF: 'admin:wf',
+  PUBLIC: 'public'
 };
 
-function createAdminRoleList(roles) {
-  let fullAccessRoles = [];
-  Object.keys(roles).map(roleKey => {
-    // full access is not granted to wild fire users.
-    if ( !(roleKey === 'ADMIN_WF') ) {
-      fullAccessRoles.push(roles[roleKey]);
-    }
-  });
-  return fullAccessRoles;
-}
+exports.ApplicationRoles = ApplicationRoles;
 
-exports.ApplicationAdminRoles = createAdminRoleList(this.ApplicationRoles);
+exports.ApplicationAdminRoles = [
+  ApplicationRoles.ADMIN,
+  ApplicationRoles.ADMIN_NRCED,
+  ApplicationRoles.ADMIN_LNG,
+  ApplicationRoles.ADMIN_BCMI
+];
+
+exports.KeycloakDefaultRoles = {
+  OFFLINE_ACCESS: 'offline_access',
+  UMA_AUTHORIZATION: 'uma_authorization'
+};
 
 exports.IssuedToEntityTypes = {
   Company: 'Company',
