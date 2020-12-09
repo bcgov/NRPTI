@@ -245,9 +245,10 @@ class BaseRecordUtils {
         // Only EPIC records with Milestone = "Compliance and Enforcement" and
         // Document Type = "Inspection Record" or "Order" should be auto-published to NRCED.
         if (
-          (nrptiRecord._schemaName === 'Order' && nrptiRecord._epicMilestoneId == '5cf00c03a266b7e1877504ef') ||
-          (nrptiRecord._schemaName === 'Order' && nrptiRecord._epicMilestoneId == '5df79dd77b5abbf7da6f5201') ||
-          (nrptiRecord._schemaName === 'Inspection')
+          (nrptiRecord._epicMilestoneId == '5cf00c03a266b7e1877504ef' ||
+            nrptiRecord._epicMilestoneId == '5df79dd77b5abbf7da6f5201') &&
+          (nrptiRecord._schemaName === 'Order' ||
+            nrptiRecord._schemaName === 'Inspection')
         ) {
           createObj[this.recordType.flavours.nrced._schemaName] = {
             summary: nrptiRecord.description || '',
