@@ -740,8 +740,10 @@ const generateMatchesForAggregation = async function (and, or, nor, searchProper
 const executeQuery = async function (args, res, next) {
   if (!args.swagger.params.dataset.value) {
     defaultLog.info('Bad Request');
-    QueryActions.sendResponse(res, 400, {});
+    next();
+    return QueryActions.sendResponse(res, 400, {});
   }
+
   let dataset = args.swagger.params.dataset.value;
   let _id = args.swagger.params._id ? args.swagger.params._id.value : null;
   let keywords = args.swagger.params.keywords.value;
