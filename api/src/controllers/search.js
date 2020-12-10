@@ -738,9 +738,13 @@ const generateMatchesForAggregation = async function (and, or, nor, searchProper
 };
 
 const executeQuery = async function (args, res, next) {
+  if (!args.swagger.params.dataset.value) {
+    defaultLog.info('Bad Request');
+    QueryActions.sendResponse(res, 400, {});
+  }
+  let dataset = args.swagger.params.dataset.value;
   let _id = args.swagger.params._id ? args.swagger.params._id.value : null;
   let keywords = args.swagger.params.keywords.value;
-  let dataset = args.swagger.params.dataset.value;
   let project = args.swagger.params.project.value;
   let populate = args.swagger.params.populate ? args.swagger.params.populate.value : false;
   let pageNum = args.swagger.params.pageNum.value || 0;
@@ -995,7 +999,7 @@ const executeQuery = async function (args, res, next) {
       },
       // add sort order based on collection records array positions
       {
-        $addFields: { 'populatedRecords.sortOrder': { $indexOfArray: ['$records', '$populatedRecords._id' ] } }
+        $addFields: { 'populatedRecords.sortOrder': { $indexOfArray: ['$records', '$populatedRecords._id'] } }
       },
       // only need populated records now
       {
