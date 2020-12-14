@@ -46,7 +46,7 @@ describe('transformRecord', () => {
       _sourceRefOgcWarningId: 'Warning Letter 20-111',
 
       recordType: 'Warning',
-      dateIssued: new Date('07/17/2020'),
+      dateIssued: expect.any(Date),
       document: {
         fileName: 'Warning-letter-sample.pdf',
         url: 'https://www.bcogc.ca/some/file/Warning-letter-sample.pdf'
