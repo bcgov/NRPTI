@@ -261,23 +261,25 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
           ((this.nrcedFlavour && this.nrcedFlavour.summary) ||
             (!this.nrcedFlavour && this.currentRecord.description))) ||
           '',
-        disabled: !this.factoryService.userInNrcedRole()
+        disabled: !this.factoryService.userInNrcedRole() && !this.factoryService.userInWFRole()
       }),
       publishNrced: new FormControl({
         value: (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false,
-        disabled: !this.factoryService.userInNrcedRole()
+        disabled: !this.factoryService.userInNrcedRole() && !this.factoryService.userInWFRole()
       }),
 
       // LNG
-      lngDescription: new FormControl(
+      lngDescription: new FormControl({
         // default to using the master description if the flavour record does not exist
-        (this.currentRecord &&
-          ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
-        ''
-      ),
+        value: (this.currentRecord &&
+          ((this.lngFlavour && this.lngFlavour.description) ||
+            (!this.lngFlavour && this.currentRecord.description))) ||
+          '',
+        disabled: !this.factoryService.userInLngRole() && !this.factoryService.userInWFRole()
+      }),
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
-        disabled: !this.factoryService.userInLngRole()
+        disabled: !this.factoryService.userInLngRole() && !this.factoryService.userInWFRole()
       }),
 
       association: new FormGroup({
