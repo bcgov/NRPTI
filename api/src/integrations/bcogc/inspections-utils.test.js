@@ -55,7 +55,7 @@ describe('transformRecord', () => {
       _sourceRefOgcDeficiencyId: '321',
 
       recordType: 'Inspection',
-      dateIssued: expect.any(String),
+      dateIssued: expect.any(Date),
       issuedTo: { companyName: 'Coastal GasLink Pipeline Ltd.', type: 'Company' },
       issuingAgency: 'BC Oil and Gas Commission',
       author: 'BC Oil and Gas Commission',
