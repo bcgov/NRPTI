@@ -18,6 +18,7 @@ import { SearchSubsets, Picklists } from '../../../../../common/src/app/utils/re
 
 import { SubsetsObject, SubsetOption } from '../../../../../common/src/app/search-filter-template/subset-object';
 import { FilterObject, FilterType, DateFilterDefinition, CheckOrRadioFilterDefinition, OptionItem, MultiSelectDefinition, DropdownDefinition, RadioOptionItem } from '../../../../../common/src/app/search-filter-template/filter-object';
+import { FactoryService } from '../../services/factory.service';
 
 /**
  * List page component.
@@ -94,6 +95,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   // New Search
   public filters: FilterObject[] = [];
   public subsets: SubsetsObject;
+  public showFullRecordList = true;
 
   constructor(
     public location: Location,
@@ -102,7 +104,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     public utils: Utils,
     private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
-    private _changeDetectionRef: ChangeDetectorRef
+    private _changeDetectionRef: ChangeDetectorRef,
+    public factoryService: FactoryService
   ) {
     // setup the subset configuration
     const subsetOptions = [
@@ -226,6 +229,13 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       projectFilter,
       documentsfilter
     ];
+
+    // if a user has only ADMIN_WF role, show reduced list
+    this.showFullRecordList
+      = this.factoryService.userInAdminRole()
+      || this.factoryService.userInBcmiRole()
+      || this.factoryService.userInLngRole()
+      || this.factoryService.userInNrcedRole();
   }
 
   executeSearch(searchPackage) {

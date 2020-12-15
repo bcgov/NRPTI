@@ -192,6 +192,10 @@ export class FactoryService {
     return false;
   }
 
+  userInAdminRole() {
+    return this.userInRole(Constants.ApplicationRoles.ADMIN);
+  }
+
   userInLngRole() {
     return this.userInRole(Constants.ApplicationRoles.ADMIN_LNG);
   }
@@ -202,6 +206,10 @@ export class FactoryService {
 
   userInNrcedRole() {
     return this.userInRole(Constants.ApplicationRoles.ADMIN_NRCED);
+  }
+
+  userInWFRole() {
+    return this.userInRole(Constants.ApplicationRoles.ADMIN_WF);
   }
 
   /**
