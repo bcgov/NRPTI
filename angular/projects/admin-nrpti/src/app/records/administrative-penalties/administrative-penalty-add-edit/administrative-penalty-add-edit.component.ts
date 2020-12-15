@@ -244,21 +244,21 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
       // NRCED
       nrcedSummary: new FormControl({
         value: (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.summary) || '',
-        disabled: !this.factoryService.userInNrcedRole()
+        disabled: !this.factoryService.userInNrcedRole() && !this.factoryService.userInWFRole()
       }),
       publishNrced: new FormControl({
         value: (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false,
-        disabled: !this.factoryService.userInNrcedRole()
+        disabled: !this.factoryService.userInNrcedRole() && !this.factoryService.userInWFRole()
       }),
 
       // LNG
       lngDescription: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.description) || '',
-        disabled: !this.factoryService.userInLngRole()
+        disabled: !this.factoryService.userInLngRole() && !this.factoryService.userInWFRole()
       }),
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
-        disabled: !this.factoryService.userInLngRole()
+        disabled: !this.factoryService.userInLngRole() && !this.factoryService.userInWFRole()
       })
     });
   }
