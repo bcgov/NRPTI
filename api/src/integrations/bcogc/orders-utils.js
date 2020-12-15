@@ -43,7 +43,15 @@ class Orders extends BaseRecordUtils {
     order['author'] = 'BC Oil and Gas Commission';
     order['issuingAgency'] = 'BC Oil and Gas Commission';
     order['recordName'] = csvRow['Title'];
-    order['dateIssued'] = csvRow['Date Issued'] ? moment.tz(csvRow['Date Issued'], "MM/DD/YYYY", "America/Vancouver").toDate() : null;
+    
+    try {
+      order['dateIssued'] = csvRow['Date Issued'] ? moment.tz(csvRow['Date Issued'], "MM/DD/YYYY", "America/Vancouver").toDate() : null;
+    } catch (error) {
+      defaultLog.debug(csvRow['Date Issued'] + ' is not in the expected format MM/DD/YYYY');
+      defaultLog.debug(error);
+      inspection['dateIssued'] = null;
+    }
+
     order['location'] = 'British Columbia';
 
     order['legislation'] = {

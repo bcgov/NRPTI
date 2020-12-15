@@ -42,7 +42,13 @@ class Inspections extends BaseRecordUtils {
     inspection['_sourceRefOgcDeficiencyId'] = csvRow['deficiency objectid'] || null;
 
     inspection['recordType'] = 'Inspection';
-    inspection['dateIssued'] = csvRow['inspection date'] ? moment.tz(csvRow['inspection date'], "DD-MMM-YYYY", "America/Vancouver").toDate() : null;
+    try {
+      inspection['dateIssued'] = csvRow['inspection date'] ? moment.tz(csvRow['inspection date'], "DD-MMM-YYYY", "America/Vancouver").toDate() : null;
+    } catch (error) {
+      defaultLog.debug(csvRow['inspection date'] + ' is not in the expected format DD-MMM-YYYY');
+      defaultLog.debug(error);
+      inspection['dateIssued'] = null;
+    }
     inspection['issuingAgency'] = 'BC Oil and Gas Commission';
     inspection['author'] = 'BC Oil and Gas Commission';
 

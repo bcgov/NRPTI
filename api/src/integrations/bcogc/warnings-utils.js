@@ -43,7 +43,13 @@ class Warning extends BaseRecordUtils {
     warning['author'] = 'BC Oil and Gas Commission';
     warning['issuingAgency'] = 'BC Oil and Gas Commission';
     warning['recordName'] = csvRow['Filename'];
-    warning['dateIssued'] = csvRow['Date Issued'] ? moment.tz(csvRow['Date Issued'], "MM/DD/YYYY", "America/Vancouver").toDate() : null;
+    try {
+      warning['dateIssued'] = csvRow['Date Issued'] ? moment.tz(csvRow['Date Issued'], "MM/DD/YYYY", "America/Vancouver").toDate() : null;
+    } catch (error) {
+      defaultLog.debug(csvRow['Date Issued'] + ' is not in the expected format MM/DD/YYYY');
+      defaultLog.debug(error);
+      inspection['dateIssued'] = null;
+    }
     warning['location'] = 'British Columbia';
 
     warning['issuedTo'] = {
