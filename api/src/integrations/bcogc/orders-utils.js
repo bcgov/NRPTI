@@ -49,7 +49,7 @@ class Orders extends BaseRecordUtils {
     } catch (error) {
       defaultLog.debug(csvRow['Date Issued'] + ' is not in the expected format MM/DD/YYYY');
       defaultLog.debug(error);
-      inspection['dateIssued'] = null;
+      order['dateIssued'] = null;
     }
 
     order['location'] = 'British Columbia';

@@ -2,6 +2,7 @@ const ObjectID = require('mongodb').ObjectID;
 const BaseRecordUtils = require('./base-record-utils');
 const CsvUtils = require('./utils/csv-utils');
 const moment = require('moment-timezone');
+const defaultLog = require('../../utils/logger')('bcogc-csv-orders-utils');
 
 /**
  * CORS csv Inspections record handler.

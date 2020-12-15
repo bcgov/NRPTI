@@ -48,7 +48,7 @@ class Warning extends BaseRecordUtils {
     } catch (error) {
       defaultLog.debug(csvRow['Date Issued'] + ' is not in the expected format MM/DD/YYYY');
       defaultLog.debug(error);
-      inspection['dateIssued'] = null;
+      warning['dateIssued'] = null;
     }
     warning['location'] = 'British Columbia';
 
