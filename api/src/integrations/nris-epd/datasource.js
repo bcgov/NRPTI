@@ -75,7 +75,7 @@ class NrisDataSource {
       // next month, until we reach the final stop date of December 31, 2019
       let startDate = moment('2017-10-01');
       let endDate = moment(startDate).add(1, 'M');
-      let stopDate = moment('2020-12-31');
+      let stopDate = moment();
 
       let statusObject = {
         status: 'Complete',
@@ -123,7 +123,7 @@ class NrisDataSource {
       processingObject.url = url.href;
 
       // Get records
-      defaultLog.info('NRIS Call:', url);
+      defaultLog.info('NRIS Call:', url.href);
       const records = await integrationUtils.getRecords(url, { headers: { Authorization: 'Bearer ' + this.token } });
 
       defaultLog.info('NRIS Call complete:', records.length);
@@ -434,7 +434,7 @@ class NrisDataSource {
 
     try {
       // build update Obj, which needs to include the flavour record ids
-      const updateObj = { ...newRecord, _id: existingRecord._id };
+      const updateObj = { ...newRecord, _id: existingRecord._id, dateAdded: existingRecord.dateAdded };
       existingRecord._flavourRecords.forEach(flavourRecord => {
         updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
       });
