@@ -54,6 +54,11 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
   // We have this in case there's error and we need to clean up.
   let idsToDelete = [];
 
+  // Tracker for if a flavour was published, forces the master to have public read as well.
+  let flavourPublishedCount = 0;
+  // Tracker for issuedTo in the flavour.  We need all issuedTo to match public before we turn on public.
+  let issuedToPublishedCount = 0;
+
   if (!incomingObj.documents) {
     incomingObj.documents = [];
   }
@@ -75,6 +80,7 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
     // This is to determine how we should populate the fields in master that know
     // the publish state of its flavours.
     if (incomingObj[entry[0]].addRole && incomingObj[entry[0]].addRole.includes('public')) {
+      flavourPublishedCount++;
       entry[0].includes('NRCED') && (incomingObj.isNrcedPublished = true);
       entry[0].includes('LNG') && (incomingObj.isLngPublished = true);
       entry[0].includes('BCMI') && (incomingObj.isBcmiPublished = true);
@@ -98,8 +104,13 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
 
   // Set master back ref to flavours get ready to save
   for (let i = 0; i < flavours.length; i++) {
-    flavours[i]._master = new ObjectId(masterRecord._id);
-    promises.push(flavours[i].save());
+    const flavour = flavours[i];
+    flavour._master = new ObjectId(masterRecord._id);
+    if (flavour.issuedTo && flavour.issuedTo.read.includes('public')) {
+      issuedToPublishedCount++;
+    }
+    
+    promises.push(flavour.save());
   }
 
   // Mine GUID logic
@@ -129,6 +140,21 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
 
   if (incomingObj.mineGuid) {
     masterRecord.mineGuid = incomingObj.mineGuid;
+  }
+
+  // Tracker on read property
+  if (flavourPublishedCount > 0) {
+    if (masterRecord.read && !masterRecord.read.includes('public')) {
+      masterRecord.read.push('public');
+    }
+  }
+
+  // Tracker on issuedTo property - this will be 0 on objects that don't have an issuedTo or
+  // where the issuedTo wasn't published, and < total when there's a mismatch.
+  if (issuedToPublishedCount > 0) {
+    if (masterRecord.issuedTo && !masterRecord.issuedTo.read.includes('public')) {
+      masterRecord.issuedTo.read.push('public');
+    }
   }
 
   promises.push(masterRecord.save());
