@@ -7,6 +7,7 @@ import { Component, ChangeDetectorRef, EventEmitter, Output, Input, OnInit } fro
 })
 export class DocumentEditComponent implements OnInit {
   @Input() documents = [];
+  @Input() disableDelete = false;
   @Output() documentsToDelete = new EventEmitter();
 
   private docIdsToDelete = [];
