@@ -42,15 +42,7 @@ class Inspections extends BaseRecordUtils {
     inspection['_sourceRefOgcDeficiencyId'] = csvRow['deficiency objectid'] || null;
 
     inspection['recordType'] = 'Inspection';
-    let inspectionDate = null;
-    if (csvRow['inspection date']) {
-      inspectionDate = csvRow['inspection date'].split('-');
-      const lowerCaseMonth = inspectionDate[1].toLowerCase();
-      inspectionDate[1] = lowerCaseMonth.charAt(0).toUpperCase() + lowerCaseMonth.slice(1);
-      inspection['dateIssued'] = moment.tz(`${inspectionDate[1]}/${inspectionDate[0]}/${inspectionDate[2]}`, "MMM/DD/YYYY", "America/Vancouver").toDate();
-    } else {
-      inspection['dateIssued'] = null;
-    }
+    inspection['dateIssued'] = csvRow['inspection date'] ? moment.tz(csvRow['inspection date'], "DD-MMM-YYYY", "America/Vancouver").toDate() : null;
     inspection['issuingAgency'] = 'BC Oil and Gas Commission';
     inspection['author'] = 'BC Oil and Gas Commission';
 
