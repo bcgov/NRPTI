@@ -11,6 +11,7 @@ import { Entity } from '../../../../../common/src/app/models/master/common-model
 })
 export class RecordsTableRowComponent extends TableRowComponent implements OnInit {
   public dropdownItems = ['Edit', 'Delete'];
+  public showEdit = true;
 
   public entityString = '';
 
@@ -24,6 +25,7 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
 
   ngOnInit() {
     this.populateTextFields();
+    this.disableEdit();
 
     this.changeDetectionRef.detectChanges();
   }
@@ -31,6 +33,12 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
   populateTextFields() {
     if (this.rowData && this.rowData.issuedTo) {
       this.entityString = new Entity(this.rowData.issuedTo).getEntityNameString();
+    }
+  }
+
+  private disableEdit() {
+    if (this.rowData.sourceSystemRef === 'core') {
+      this.showEdit = false;
     }
   }
 

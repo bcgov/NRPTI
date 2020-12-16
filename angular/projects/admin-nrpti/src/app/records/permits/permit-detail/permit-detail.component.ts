@@ -16,6 +16,7 @@ export class PermitDetailComponent extends RecordComponent implements OnInit, On
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   public legislationString = '';
+  public showEdit = true;
 
   constructor(public route: ActivatedRoute, public router: Router, public changeDetectionRef: ChangeDetectorRef) {
     super();
@@ -40,6 +41,7 @@ export class PermitDetailComponent extends RecordComponent implements OnInit, On
       };
 
       this.populateTextFields();
+      this.disableEdit();
 
       this.changeDetectionRef.detectChanges();
     });
@@ -48,6 +50,12 @@ export class PermitDetailComponent extends RecordComponent implements OnInit, On
   populateTextFields() {
     if (this.data && this.data._master && this.data._master.legislation) {
       this.legislationString = CommonUtils.buildLegislationString(this.data._master.legislation);
+    }
+  }
+
+  private disableEdit() {
+    if (this.data._master.sourceSystemRef === 'core') {
+      this.showEdit = false;
     }
   }
 

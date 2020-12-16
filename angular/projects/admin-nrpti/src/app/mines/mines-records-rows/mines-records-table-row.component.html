@@ -32,6 +32,6 @@
   </button>
   <mat-menu #menu="matMenu">
     <button mat-menu-item (click)="goToDetails()" title="View record details">View Record Details</button>
-    <button mat-menu-item (click)="goToEdit()" title="Edit record">Edit Record</button>
+    <button *ngIf="showEdit" mat-menu-item (click)="goToEdit()" title="Edit record">Edit Record</button>
   </mat-menu>
 </td>

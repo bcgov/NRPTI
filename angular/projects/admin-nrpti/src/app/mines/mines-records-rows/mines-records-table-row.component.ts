@@ -11,6 +11,7 @@ import { Entity } from '../../../../../common/src/app/models/master/common-model
 })
 export class MinesRecordsTableRowComponent extends TableRowComponent implements OnInit {
   public entityString = '';
+  public showEdit = true;
 
   @ViewChild('rowCheckBox') rowCheckBox: ElementRef;
 
@@ -25,8 +26,15 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
 
   ngOnInit() {
     this.populateTextFields();
+    this.disableEdit();
 
     this.changeDetectionRef.detectChanges();
+  }
+
+  private disableEdit() {
+    if (this.rowData.sourceSystemRef === 'core') {
+      this.showEdit = false;
+    }
   }
 
   public isPublished() {
