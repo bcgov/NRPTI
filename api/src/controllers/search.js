@@ -941,6 +941,17 @@ const executeQuery = async function (args, res, next) {
       aggregation = aggregation.concat(issuedToRedaction);
     }
 
+    populate &&
+      aggregation.push({
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [
+              { $arrayElemAt: ["$fullRecord", 0] },
+              "$$ROOT"]
+          }
+        }
+      });
+
     // populate flavours
     populate &&
       aggregation.push({
@@ -960,17 +971,6 @@ const executeQuery = async function (args, res, next) {
           localField: 'documents',
           foreignField: '_id',
           as: 'documents'
-        }
-      });
-
-    populate &&
-      aggregation.push({
-        $replaceRoot: {
-          newRoot: {
-            $mergeObjects: [
-              { $arrayElemAt: ["$fullRecord", 0] },
-              "$$ROOT"]
-          }
         }
       });
 
@@ -1001,7 +1001,7 @@ const executeQuery = async function (args, res, next) {
     aggregation.push({
       $project: {
         fullRecord: 0,
-        issuedtoAge: 0,
+        issuedToAge: 0,
         skipRedact: 0
       }
     });
