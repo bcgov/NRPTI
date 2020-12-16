@@ -5,6 +5,7 @@ const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const BaseRecordUtils = require('./base-record-utils');
 const CsvUtils = require('./utils/csv-utils');
 const { createURLDocument } = require('../../controllers/document-controller');
+const moment = require('moment-timezone');
 
 /**
  * CORS csv Warning record handler.
@@ -20,17 +21,17 @@ class Warning extends BaseRecordUtils {
    * @param {*} csvRow an object containing the values from a single csv row.
    * @memberof Warning
    */
-   constructor(auth_payload, recordType, csvRow) {
+  constructor(auth_payload, recordType, csvRow) {
     super(auth_payload, recordType, csvRow);
   }
 
-    /**
-   * Convert the csv row object into the object expected by the API record post/put controllers.
-   *
-   * @returns an order object matching the format expected by the API record post/put controllers.
-   * @memberof Warning
-   */
-   transformRecord(csvRow) {
+  /**
+ * Convert the csv row object into the object expected by the API record post/put controllers.
+ *
+ * @returns an order object matching the format expected by the API record post/put controllers.
+ * @memberof Warning
+ */
+  transformRecord(csvRow) {
     if (!csvRow) {
       throw Error('transformRecord - required csvRow must be non-null.');
     }
@@ -42,7 +43,13 @@ class Warning extends BaseRecordUtils {
     warning['author'] = 'BC Oil and Gas Commission';
     warning['issuingAgency'] = 'BC Oil and Gas Commission';
     warning['recordName'] = csvRow['Filename'];
-    warning['dateIssued'] = csvRow['Date Issued'] ? new Date(csvRow['Date Issued']) : null;
+    try {
+      warning['dateIssued'] = csvRow['Date Issued'] ? moment.tz(csvRow['Date Issued'], "MM/DD/YYYY", "America/Vancouver").toDate() : null;
+    } catch (error) {
+      defaultLog.debug(csvRow['Date Issued'] + ' is not in the expected format MM/DD/YYYY');
+      defaultLog.debug(error);
+      warning['dateIssued'] = null;
+    }
     warning['location'] = 'British Columbia';
 
     warning['issuedTo'] = {
@@ -75,7 +82,7 @@ class Warning extends BaseRecordUtils {
    * @returns {object} object containing the newly inserted master and flavour records
    * @memberof Warning
    */
-   async createItem(nrptiRecord) {
+  async createItem(nrptiRecord) {
     if (!nrptiRecord) {
       throw Error('createItem - required nrptiRecord must be non-null.');
     }
@@ -88,7 +95,7 @@ class Warning extends BaseRecordUtils {
 
       return super.createItem({
         ...nrptiRecord,
-        documents: [ document._id ]
+        documents: [document._id]
       });
     } catch (error) {
       defaultLog.error(`Failed to create ${this.recordType._schemaName} record: ${error.message}`);
@@ -102,7 +109,7 @@ class Warning extends BaseRecordUtils {
    * @returns {object} existing NRPTI master record, or null if none found
    * @memberof Warning
    */
-   async findExistingRecord(nrptiRecord) {
+  async findExistingRecord(nrptiRecord) {
     if (!nrptiRecord._sourceRefOgcWarningId) {
       return null;
     }

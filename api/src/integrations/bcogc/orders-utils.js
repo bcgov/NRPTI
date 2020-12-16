@@ -5,6 +5,7 @@ const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const BaseRecordUtils = require('./base-record-utils');
 const CsvUtils = require('./utils/csv-utils');
 const { createURLDocument } = require('../../controllers/document-controller');
+const moment = require('moment-timezone');
 
 /**
  * CORS csv Order record handler.
@@ -42,7 +43,14 @@ class Orders extends BaseRecordUtils {
     order['author'] = 'BC Oil and Gas Commission';
     order['issuingAgency'] = 'BC Oil and Gas Commission';
     order['recordName'] = csvRow['Title'];
-    order['dateIssued'] = new Date(csvRow['Date Issued']);
+    
+    try {
+      order['dateIssued'] = csvRow['Date Issued'] ? moment.tz(csvRow['Date Issued'], "MM/DD/YYYY", "America/Vancouver").toDate() : null;
+    } catch (error) {
+      defaultLog.debug(csvRow['Date Issued'] + ' is not in the expected format MM/DD/YYYY');
+      defaultLog.debug(error);
+      order['dateIssued'] = null;
+    }
 
     order['location'] = 'British Columbia';
 
@@ -97,7 +105,7 @@ class Orders extends BaseRecordUtils {
 
       return super.createItem({
         ...nrptiRecord,
-        documents: [ document._id ]
+        documents: [document._id]
       });
     } catch (error) {
       defaultLog.error(`Failed to create ${this.recordType._schemaName} record: ${error.message}`);
