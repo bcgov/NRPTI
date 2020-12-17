@@ -35,12 +35,12 @@
             <div class="select-badge">
               <input
                 type="checkbox"
-                name="{{ filter.displayName }}"
-                id="_{{ filter.displayName }}"
+                name="{{ filter.displayName }}_{{ filter.fieldName }}"
+                id="_{{ filter.displayName }}_{{ filter.fieldName }}"
                 (ngModelChange)="dataChanged($event, filter.fieldName, filter.displayName)"
                 [ngModel]="isEnabled(filter.fieldName, filter.displayName)"
               />
-              <label for="_{{ filter.displayName }}">{{ filter.displayName }}</label>
+              <label for="_{{ filter.displayName }}_{{ filter.fieldName }}">{{ filter.altDisplayName ? filter.altDisplayName : filter.displayName }}</label>
             </div>
           </ng-container>
         </div>

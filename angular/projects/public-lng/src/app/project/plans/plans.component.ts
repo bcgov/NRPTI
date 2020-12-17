@@ -20,7 +20,8 @@ export class PlansComponent implements OnInit {
       displayName: 'Government Agency',
       textFilters: [
         {
-          displayName: 'Environmental Assessment Office',
+          displayName: 'EAO',
+          altDisplayName: 'Environmental Assessment Office',
           fieldName: 'issuingAgency'
         },
         {
