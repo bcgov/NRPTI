@@ -6,7 +6,7 @@ const PenaltyType = 'Fined';
 const PenaltyValueType = 'Dollars';
 
 /**
- * CORS csv Tickets record handler.
+ * COORS csv Tickets record handler.
  *
  * @class Tickets
  */
@@ -41,6 +41,7 @@ class Tickets extends BaseRecordUtils {
     ticket['recordType'] = 'Ticket';
     ticket['dateIssued'] = csvRow['ticket_date'] || null;
     ticket['issuingAgency'] = CsvUtils.getIssuingAgency(csvRow) || '';
+    ticket['author'] = ticket['issuingAgency'];
 
     ticket['legislation'] = {
       act: (csvRow['act'] && BusinessLogicManager.applyBusinessLogicToAct(csvRow['act'])) || '',
@@ -51,6 +52,7 @@ class Tickets extends BaseRecordUtils {
     };
 
     ticket['offence'] = csvRow['description'] || '';
+    ticket['recordName'] = ticket['offence'];
 
     const entityType = CsvUtils.getEntityType(csvRow) || null;
 
@@ -69,6 +71,12 @@ class Tickets extends BaseRecordUtils {
         lastName: csvRow['last_name'] || '',
         dateOfBirth: csvRow['birth_date'] || null
       };
+
+      // Set dateOfBirth to current date for individuals with no names so they appear as "Unpublished" on NRCED
+      // See https://bcmines.atlassian.net/browse/NRPT-222 for details
+      if (!(ticket.issuedTo.firstName && ticket.issuedTo.middleName && ticket.issuedTo.lastName)) {
+        ticket.issuedTo.dateOfBirth = new Date();
+      }
     }
 
     ticket['location'] = csvRow['location_of_violation'] || '';
