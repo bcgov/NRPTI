@@ -17,14 +17,16 @@ describe('transformRecord', () => {
 
       recordType: 'Ticket',
       dateIssued: null,
-      issuedTo: { dateOfBirth: null, firstName: '', lastName: '', middleName: '', type: 'Individual' },
+      issuedTo: { dateOfBirth: expect.any(Date), firstName: '', lastName: '', middleName: '', type: 'Individual' },
       issuingAgency: '',
+      author: '',      
       legislation: { act: '', paragraph: '', regulation: '', section: '', subSection: '' },
       location: '',
       offence: '',
+      recordName: '',
       penalties: [{ description: '', penalty: { type: 'Dollars', value: null }, type: 'Fined' }],
 
-      sourceSystemRef: 'cors-csv'
+      sourceSystemRef: 'coors-csv'
     });
   });
 
@@ -55,6 +57,7 @@ describe('transformRecord', () => {
         type: 'Company'
       },
       issuingAgency: 'BC Parks',
+      author: 'BC Parks',
       legislation: {
         act: 'Fisheries Canada',
         paragraph: 'paragraph123',
@@ -64,6 +67,7 @@ describe('transformRecord', () => {
       },
       location: 'location123',
       offence: 'description123',
+      recordName: 'description123',
       penalties: [
         {
           description: '',
@@ -75,7 +79,7 @@ describe('transformRecord', () => {
         }
       ],
 
-      sourceSystemRef: 'cors-csv'
+      sourceSystemRef: 'coors-csv'
     });
   });
 });

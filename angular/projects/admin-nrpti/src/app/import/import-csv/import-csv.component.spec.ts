@@ -178,7 +178,7 @@ describe('ImportCSVComponent', () => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
-      component.dataSourceType = 'cors-csv';
+      component.dataSourceType = 'coors-csv';
       component.recordType = 'Ticket';
       component.csvFiles = [new File([], 'fileA', {})];
 
@@ -251,11 +251,11 @@ describe('ImportCSVComponent', () => {
     it('adds an error to the errors array if any required headers are missing', (() => {
       const { component } = testBedHelper.createComponent();
 
-      component.dataSourceType = 'cors-csv';
+      component.dataSourceType = 'coors-csv';
       component.recordType = 'Ticket';
       component.csvFiles = [new File([], 'fileA', {})];
 
-      // values found in CsvConstants.corsTicketCsvRequiredHeaders, with some removed to trigger validation errors
+      // values found in CsvConstants.coorsTicketCsvRequiredHeaders, with some removed to trigger validation errors
       component.validateRequiredHeaders([
         'CONTRAVENTION_ENFORCEMENT_ID',
         'TICKET_DATE',
@@ -285,11 +285,11 @@ describe('ImportCSVComponent', () => {
     it('adds no errors to the errors array if no required headers are missing', (() => {
       const { component } = testBedHelper.createComponent();
 
-      component.dataSourceType = 'cors-csv';
+      component.dataSourceType = 'coors-csv';
       component.recordType = 'Ticket';
       component.csvFiles = [new File([], 'fileA', {})];
 
-      component.validateRequiredHeaders(CsvConstants.corsTicketCsvRequiredHeaders);
+      component.validateRequiredHeaders(CsvConstants.coorsTicketCsvRequiredHeaders);
 
       expect(component.csvFileErrors).toEqual([]);
     }));
@@ -319,7 +319,7 @@ describe('ImportCSVComponent', () => {
     it('calls validation methods', (() => {
       const { component } = testBedHelper.createComponent();
 
-      component.dataSourceType = 'cors-csv';
+      component.dataSourceType = 'coors-csv';
       component.recordType = 'Ticket';
 
       // mock component methods
@@ -335,13 +335,13 @@ describe('ImportCSVComponent', () => {
       // calls validation methods on first row
       expect(component.validateRequiredFields).toHaveBeenCalledWith(
         ['a', 'b', 'c'],
-        CsvConstants.corsTicketCsvRequiredFields,
+        CsvConstants.coorsTicketCsvRequiredFields,
         ['headerA', 'headerB', 'headerC'],
         1
       );
       expect(component.validateRequiredFormats).toHaveBeenCalledWith(
         ['a', 'b', 'c'],
-        CsvConstants.corsTicketCsvRequiredFormats,
+        CsvConstants.coorsTicketCsvRequiredFormats,
         ['headerA', 'headerB', 'headerC'],
         1
       );
@@ -349,13 +349,13 @@ describe('ImportCSVComponent', () => {
       // calls validation methods on second row
       expect(component.validateRequiredFields).toHaveBeenCalledWith(
         ['d', 'e', 'f'],
-        CsvConstants.corsTicketCsvRequiredFields,
+        CsvConstants.coorsTicketCsvRequiredFields,
         ['headerA', 'headerB', 'headerC'],
         2
       );
       expect(component.validateRequiredFormats).toHaveBeenCalledWith(
         ['d', 'e', 'f'],
-        CsvConstants.corsTicketCsvRequiredFormats,
+        CsvConstants.coorsTicketCsvRequiredFormats,
         ['headerA', 'headerB', 'headerC'],
         2
       );
@@ -442,7 +442,7 @@ describe('ImportCSVComponent', () => {
       const { component } = testBedHelper.createComponent();
 
       // mock component methods
-      component.dataSourceType = 'cors-csv';
+      component.dataSourceType = 'coors-csv';
       component.recordType = 'Ticket';
       component.transformDateFields = jasmine.createSpy('transformDateFields');
 
@@ -455,14 +455,14 @@ describe('ImportCSVComponent', () => {
       // calls transform methods on first row
       expect(component.transformDateFields).toHaveBeenCalledWith(
         ['a', 'b', 'c'],
-        CsvConstants.corsTicketCsvDateFields,
+        CsvConstants.coorsTicketCsvDateFields,
         ['headerA', 'headerB', 'headerC']
       );
 
       // calls transform methods on second row
       expect(component.transformDateFields).toHaveBeenCalledWith(
         ['d', 'e', 'f'],
-        CsvConstants.corsTicketCsvDateFields,
+        CsvConstants.coorsTicketCsvDateFields,
         ['headerA', 'headerB', 'headerC']
       );
 

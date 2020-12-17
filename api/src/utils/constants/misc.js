@@ -29,7 +29,7 @@ exports.IssuedToEntityTypes = {
   IndividualCombined: 'IndividualCombined'
 };
 
-exports.CorsCsvIssuingAgencies = {
+exports.CoorsCsvIssuingAgencies = {
   BC_Parks: 'BC Parks',
   Conservation_Officer_Service: 'Conservation Officer Service'
 };
