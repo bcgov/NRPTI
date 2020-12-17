@@ -937,9 +937,20 @@ const executeQuery = async function (args, res, next) {
     });
 
     // Redact issued if user is only wildfire or read-only user
-    if (!roles.some(r => constants.ApplicationAdminRoles.indexOf(r) >= 0)) {
+    if (populate && !roles.some(r => constants.ApplicationAdminRoles.indexOf(r) >= 0)) {
       aggregation = aggregation.concat(issuedToRedaction);
     }
+
+    populate &&
+      aggregation.push({
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [
+              { $arrayElemAt: ["$fullRecord", 0] },
+              "$$ROOT"]
+          }
+        }
+      });
 
     // populate flavours
     populate &&
@@ -960,17 +971,6 @@ const executeQuery = async function (args, res, next) {
           localField: 'documents',
           foreignField: '_id',
           as: 'documents'
-        }
-      });
-
-    populate &&
-      aggregation.push({
-        $replaceRoot: {
-          newRoot: {
-            $mergeObjects: [
-              { $arrayElemAt: ["$fullRecord", 0] },
-              "$$ROOT"]
-          }
         }
       });
 
@@ -1001,7 +1001,7 @@ const executeQuery = async function (args, res, next) {
     aggregation.push({
       $project: {
         fullRecord: 0,
-        issuedtoAge: 0,
+        issuedToAge: 0,
         skipRedact: 0
       }
     });
