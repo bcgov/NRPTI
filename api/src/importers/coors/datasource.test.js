@@ -1,29 +1,29 @@
-const CorsCsvDataSource = require('./datasource');
+const CoorsCsvDataSource = require('./datasource');
 
-describe('CorsCsvDataSource', () => {
+describe('CoorsCsvDataSource', () => {
   describe('constructor', () => {
     it('sets taskAuditRecord', () => {
-      const dataSource = new CorsCsvDataSource('taskAuditRecord', null, null, null);
+      const dataSource = new CoorsCsvDataSource('taskAuditRecord', null, null, null);
       expect(dataSource.taskAuditRecord).toEqual('taskAuditRecord');
     });
 
     it('sets auth_payload', () => {
-      const dataSource = new CorsCsvDataSource(null, 'authPayload', null, null);
+      const dataSource = new CoorsCsvDataSource(null, 'authPayload', null, null);
       expect(dataSource.auth_payload).toEqual('authPayload');
     });
 
     it('sets recordType', () => {
-      const dataSource = new CorsCsvDataSource(null, null, 'recordType', null);
+      const dataSource = new CoorsCsvDataSource(null, null, 'recordType', null);
       expect(dataSource.recordType).toEqual('recordType');
     });
 
     it('sets recordType', () => {
-      const dataSource = new CorsCsvDataSource(null, null, null, 'csvRows');
+      const dataSource = new CoorsCsvDataSource(null, null, null, 'csvRows');
       expect(dataSource.csvRows).toEqual('csvRows');
     });
 
     it('sets default status fields', () => {
-      const dataSource = new CorsCsvDataSource();
+      const dataSource = new CoorsCsvDataSource();
       expect(dataSource.status).toEqual({
         itemsProcessed: 0,
         itemTotal: 0,
@@ -34,7 +34,7 @@ describe('CorsCsvDataSource', () => {
 
   describe('processRecord', () => {
     it('sets an error if csvRow is null', async () => {
-      const dataSource = new CorsCsvDataSource();
+      const dataSource = new CoorsCsvDataSource();
 
       await dataSource.processRecord(null, 'recordTypeConfig');
 
@@ -45,7 +45,7 @@ describe('CorsCsvDataSource', () => {
     });
 
     it('sets an error if recordTypeConfig is null', async () => {
-      const dataSource = new CorsCsvDataSource();
+      const dataSource = new CoorsCsvDataSource();
 
       await dataSource.processRecord('recordTypeConfig', null);
 
@@ -58,7 +58,7 @@ describe('CorsCsvDataSource', () => {
     it('transforms, saves, and updates the status for the new csvRow', async () => {
       const taskAuditRecord = { updateTaskRecord: jest.fn(() => {}) };
 
-      const dataSource = new CorsCsvDataSource(taskAuditRecord, null, null, null);
+      const dataSource = new CoorsCsvDataSource(taskAuditRecord, null, null, null);
 
       const csvRow = {};
 
@@ -92,7 +92,7 @@ describe('CorsCsvDataSource', () => {
     it('transforms, saves, and updates the status for the existing csvRow', async () => {
       const taskAuditRecord = { updateTaskRecord: jest.fn(() => {}) };
 
-      const dataSource = new CorsCsvDataSource(taskAuditRecord, null, null, null);
+      const dataSource = new CoorsCsvDataSource(taskAuditRecord, null, null, null);
 
       const csvRow = {};
 

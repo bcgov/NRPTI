@@ -1,7 +1,7 @@
-const defaultLog = require('../../utils/logger')('cors-csv-datasource');
+const defaultLog = require('../../utils/logger')('coors-csv-datasource');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
-class CorsCsvDataSource {
+class CoorsCsvDataSource {
   /**
    * Creates an instance of DataSource.
    *
@@ -9,7 +9,7 @@ class CorsCsvDataSource {
    * @param {*} auth_payload information about the user account that started this update
    * @param {*} recordType record type to create from the csv file
    * @param {*} csvRows array of csv row objects to import
-   * @memberof CorsCsvDataSource
+   * @memberof CoorsCsvDataSource
    */
   constructor(taskAuditRecord, auth_payload, recordType, csvRows) {
     this.taskAuditRecord = taskAuditRecord;
@@ -22,13 +22,13 @@ class CorsCsvDataSource {
   }
 
   /**
-   * Run the Cors csv importer.
+   * Run the COORS csv importer.
    *
    * @returns final status of importer
-   * @memberof CorsCsvDataSource
+   * @memberof CoorsCsvDataSource
    */
   async run() {
-    defaultLog.info('run - import cors-csv');
+    defaultLog.info('run - import coors-csv');
 
     this.status.itemTotal = this.csvRows.length;
 
@@ -44,7 +44,7 @@ class CorsCsvDataSource {
    *
    * Batch size configured by env variable `CSV_IMPORT_BATCH_SIZE` if it exists, or 100 by default.
    *
-   * @memberof CorsCsvDataSource
+   * @memberof CoorsCsvDataSource
    */
   async batchProcessRecords() {
     try {
@@ -78,7 +78,7 @@ class CorsCsvDataSource {
    *
    * @param {*} csvRow object of values for a single row
    * @param {*} recordTypeConfig object containing record type specific details
-   * @memberof CorsCsvDataSource
+   * @memberof CoorsCsvDataSource
    */
   async processRecord(csvRow, recordTypeConfig) {
     // set status defaults
@@ -131,10 +131,10 @@ class CorsCsvDataSource {
   }
 
   /**
-   * Supported cors-csv record type configs.
+   * Supported coors-csv record type configs.
    *
    * @returns {*} object with getUtil method to create a new instance of the record type utils.
-   * @memberof CorsCsvDataSource
+   * @memberof CoorsCsvDataSource
    */
   getRecordTypeConfig() {
     if (this.recordType === 'Ticket') {
@@ -149,4 +149,4 @@ class CorsCsvDataSource {
   }
 }
 
-module.exports = CorsCsvDataSource;
+module.exports = CoorsCsvDataSource;

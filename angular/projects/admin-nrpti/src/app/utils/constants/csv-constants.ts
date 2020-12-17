@@ -30,14 +30,14 @@ export interface IDateField {
  */
 export class CsvConstants {
   /**
-   * Expected headers for CORS Ticket csv.
+   * Expected headers for COORS Ticket csv.
    *
    * Note: sort order and letter case of headers is not important.
    *
    * @static
    * @memberof CsvConstants
    */
-  public static readonly corsTicketCsvRequiredHeaders = [
+  public static readonly coorsTicketCsvRequiredHeaders = [
     'CONTRAVENTION_ENFORCEMENT_ID',
     'TICKET_DATE',
     'FIRST_NAME',
@@ -59,15 +59,15 @@ export class CsvConstants {
   ];
 
   /**
-   * Required fields for CORS Ticket csv.
+   * Required fields for COORS Ticket csv.
    *
    * @static
    * @memberof CsvConstants
    */
-  public static readonly corsTicketCsvRequiredFields = ['CONTRAVENTION_ENFORCEMENT_ID'];
+  public static readonly coorsTicketCsvRequiredFields = ['CONTRAVENTION_ENFORCEMENT_ID'];
 
   /**
-   * Fields for CORS Ticket csv that have a required format.
+   * Fields for COORS Ticket csv that have a required format.
    *
    * Note: These fields are not necessarily required, and only have a required format if present.
    *
@@ -75,19 +75,19 @@ export class CsvConstants {
    * @type {IRequiredFormat[]}
    * @memberof CsvConstants
    */
-  public static readonly corsTicketCsvRequiredFormats: IRequiredFormat[] = [
+  public static readonly coorsTicketCsvRequiredFormats: IRequiredFormat[] = [
     { field: 'TICKET_DATE', type: 'date', format: 'MM/DD/YYYY' },
     { field: 'BIRTH_DATE', type: 'date', format: 'YYYY/MM/DD' }
   ];
 
   /**
-   * Fields for CORS Ticket csv that represent dates.
+   * Fields for COORS Ticket csv that represent dates.
    *
    * @static
    * @type {IDateField[]}
    * @memberof CsvConstants
    */
-  public static readonly corsTicketCsvDateFields: IDateField[] = [
+  public static readonly coorsTicketCsvDateFields: IDateField[] = [
     { field: 'TICKET_DATE', format: 'MM/DD/YYYY' },
     { field: 'BIRTH_DATE', format: 'YYYY/MM/DD' }
   ];
@@ -211,9 +211,9 @@ export class CsvConstants {
       return null;
     }
 
-    if (dataSourceType === 'cors-csv') {
+    if (dataSourceType === 'coors-csv') {
       if (recordType === 'Ticket') {
-        return this.corsTicketCsvRequiredHeaders;
+        return this.coorsTicketCsvRequiredHeaders;
       }
     }
 
@@ -246,9 +246,9 @@ export class CsvConstants {
       return null;
     }
 
-    if (dataSourceType === 'cors-csv') {
+    if (dataSourceType === 'coors-csv') {
       if (recordType === 'Ticket') {
-        return this.corsTicketCsvRequiredFields;
+        return this.coorsTicketCsvRequiredFields;
       }
     }
 
@@ -281,9 +281,9 @@ export class CsvConstants {
       return null;
     }
 
-    if (dataSourceType === 'cors-csv') {
+    if (dataSourceType === 'coors-csv') {
       if (recordType === 'Ticket') {
-        return this.corsTicketCsvRequiredFormats;
+        return this.coorsTicketCsvRequiredFormats;
       }
     }
 
@@ -316,9 +316,9 @@ export class CsvConstants {
       return null;
     }
 
-    if (dataSourceType === 'cors-csv') {
+    if (dataSourceType === 'coors-csv') {
       if (recordType === 'Ticket') {
-        return this.corsTicketCsvDateFields;
+        return this.coorsTicketCsvDateFields;
       }
     }
 

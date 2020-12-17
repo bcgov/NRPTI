@@ -25,7 +25,7 @@ import:
 
 csvImport:
 {
-  dataSourceType: cors-csv,
+  dataSourceType: coors-csv,
   taskType: import,
   recordType: ['Ticket']
 }
@@ -204,10 +204,10 @@ function getDataSourceConfig(dataSourceType) {
     return null;
   }
 
-  if (dataSourceType === 'cors-csv') {
+  if (dataSourceType === 'coors-csv') {
     return {
-      dataSourceLabel: 'cors-csv',
-      dataSourceClass: require('../importers/cors/datasource')
+      dataSourceLabel: 'coors-csv',
+      dataSourceClass: require('../importers/coors/datasource')
     };
   }
 
