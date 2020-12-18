@@ -31,8 +31,8 @@ exports.getIssuingAgency = function(csvRow) {
 
   // csv import specific business logic, see https://bcmines.atlassian.net/browse/NRPT-78
   if (csvRow['case_number'].toLowerCase().startsWith('p-')) {
-    return MiscConstants.CorsCsvIssuingAgencies.BC_Parks;
+    return MiscConstants.CoorsCsvIssuingAgencies.BC_Parks;
   }
 
-  return MiscConstants.CorsCsvIssuingAgencies.Conservation_Officer_Service;
+  return MiscConstants.CoorsCsvIssuingAgencies.Conservation_Officer_Service;
 };

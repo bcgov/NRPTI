@@ -937,7 +937,7 @@ const executeQuery = async function (args, res, next) {
     });
 
     // Redact issued if user is only wildfire or read-only user
-    if (!roles.some(r => constants.ApplicationAdminRoles.indexOf(r) >= 0)) {
+    if (populate && !roles.some(r => constants.ApplicationAdminRoles.indexOf(r) >= 0)) {
       aggregation = aggregation.concat(issuedToRedaction);
     }
 

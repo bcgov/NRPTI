@@ -28,7 +28,7 @@ describe('BaseRecordUtils', () => {
         _schemaName: 'Ticket',
         recordType: 'Ticket',
 
-        sourceSystemRef: 'cors-csv'
+        sourceSystemRef: 'coors-csv'
       };
 
       const result = baseRecordUtils.transformRecord(csvRow);
