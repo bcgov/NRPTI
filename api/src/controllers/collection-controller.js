@@ -162,6 +162,12 @@ const updateCollection = async function(incomingObj, collectionId, displayName) 
     return;
   }
 
+  // make sure date type is string
+  // TODO: move this logic to transition layer
+  if (sanitizedObj.date && typeof sanitizedObj.date !== Date) {
+    sanitizedObj.date = new Date(sanitizedObj.date)
+  }
+
   // Set auditing meta
   sanitizedObj.dateUpdated = new Date();
   sanitizedObj.updatedBy = displayName;
