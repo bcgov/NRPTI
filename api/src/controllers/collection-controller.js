@@ -162,7 +162,7 @@ const updateCollection = async function(incomingObj, collectionId, displayName) 
     return;
   }
 
-  // make sure date type is string
+  // make sure date type is not a string
   // TODO: move this logic to transition layer
   if (sanitizedObj.date && typeof sanitizedObj.date !== Date) {
     sanitizedObj.date = new Date(sanitizedObj.date)
