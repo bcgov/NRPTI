@@ -121,6 +121,7 @@
         [disableDelete] = "disableEdit"
         (documentsToDelete)="documentsToDelete = $event"></app-document-edit>
       <app-document-link-staging
+        [disableAdd] = "disableEdit"
         (linksChanged)="links = $event"
         (documentsChanged)="documents = $event"></app-document-link-staging>
     </section>

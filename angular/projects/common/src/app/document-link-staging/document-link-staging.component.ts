@@ -17,6 +17,7 @@ export class DocumentLinkStagingComponent {
 
   @Input() maxFiles = 5;
   @Output() linksChanged = new EventEmitter();
+  @Input() disableAdd = false;
   @Output() documentsChanged = new EventEmitter();
 
   @Input() params = {

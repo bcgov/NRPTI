@@ -1,5 +1,6 @@
 <div class="mb-3">
   <button
+    *ngIf="!disableAdd"
     type="button"
     class="btn btn-outline-primary"
     (click)="isCollapsed = !isCollapsed"
