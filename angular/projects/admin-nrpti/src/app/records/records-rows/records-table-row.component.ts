@@ -3,6 +3,7 @@ import { FactoryService } from '../../services/factory.service';
 import { TableRowComponent } from 'nrpti-angular-components';
 import { Router } from '@angular/router';
 import { Entity } from '../../../../../common/src/app/models/master/common-models/entity';
+import { Constants } from '../../utils/constants/misc';
 
 @Component({
   selector: 'tr[app-records-table-row]',
@@ -15,6 +16,7 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
   public entityString = '';
 
   public disableRow = false;
+  public showEdit = true;
 
   constructor(private router: Router,
               public changeDetectionRef: ChangeDetectorRef,
@@ -24,13 +26,19 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
 
   ngOnInit() {
     this.populateTextFields();
-
+    this.disableEdit();
     this.changeDetectionRef.detectChanges();
   }
 
   populateTextFields() {
     if (this.rowData && this.rowData.issuedTo) {
       this.entityString = new Entity(this.rowData.issuedTo).getEntityNameString();
+    }
+  }
+
+  private disableEdit() {
+    if (this.factoryService.userOnlyWFRole() && !this.rowData.write.includes(Constants.ApplicationRoles.ADMIN_WF)) {
+      this.showEdit = false;
     }
   }
 
