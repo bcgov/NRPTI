@@ -212,6 +212,13 @@ export class FactoryService {
     return this.userInRole(Constants.ApplicationRoles.ADMIN_WF);
   }
 
+  userOnlyWFRole() {
+    return !this.userInAdminRole()
+      || !this.userInBcmiRole()
+      || !this.userInLngRole()
+      || !this.userInNrcedRole();
+  }
+
   /**
    * Builds a welcome message based on the username in the auth token.  Returns empty string if no token found, or token
    * is invalid.
