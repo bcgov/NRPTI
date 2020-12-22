@@ -22,6 +22,7 @@ import { takeUntil } from 'rxjs/operators';
 export class DatePickerComponent implements OnInit, OnChanges, OnDestroy {
   @Input() control: FormControl;
   @Input() isValidate = false;
+  @Input() isDisabled = false;
   @Input() minDate: Date = null;
   @Input() maxDate: Date = null;
   @Input() reset: EventEmitter<any>;
@@ -51,7 +52,6 @@ export class DatePickerComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit() {
     this.ngbDate = this.control.value || null;
-
     if (this.reset) {
       this.reset.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => this.clearDate());
     }

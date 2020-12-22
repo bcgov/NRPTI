@@ -38,6 +38,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
   public documents = [];
   public links = [];
   public documentsToDelete = [];
+  public disableEdit = false;
 
   public datepickerMinDate = Constants.DatepickerMinDate;
 
@@ -59,6 +60,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
         if (res && res.record && res.record[0] && res.record[0].data) {
           this.currentRecord = res.record[0].data;
           this.populateTextFields();
+          this.disableMasterEdit();
         } else {
           alert('Error: could not load edit permit.');
           this.router.navigate(['/']);
@@ -111,6 +113,12 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         debouncedUpdateLegislationDescription();
       });
+  }
+
+  private disableMasterEdit() {
+    if (this.currentRecord.sourceSystemRef === 'core') {
+      this.disableEdit = true;
+    }
   }
 
   private updateLegislationDescription() {

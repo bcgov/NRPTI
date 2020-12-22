@@ -39,6 +39,7 @@ export class MinesRecordsEditComponent implements OnInit {
   public documents = [];
   public links = [];
   public documentsToDelete = [];
+  public disableDelete = false;
 
   // Pick lists
   public recordTypePickList = Picklists.collectionTypePicklist;
@@ -75,8 +76,10 @@ export class MinesRecordsEditComponent implements OnInit {
         this.bcmiFlavour = this.record.flavours.find(f => f._schemaName.endsWith('BCMI'));
         this.mine = res.mine[0].data;
         // if we have a current flavour, use that
-
         this.populateTextFields();
+        if (this.record.sourceSystemRef === 'core') {
+          this.disableDelete = true;
+        }
       } else {
         alert('Error: could not load record.');
         this.router.navigate(['mines']);

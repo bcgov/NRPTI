@@ -12,16 +12,19 @@
     (ngModelChange)="onDateChange($event)"
     [minDate]="minNgbDate"
     [maxDate]="maxNgbDate"
+    [disabled]="isDisabled"
   />
   <button
     class="date-input__calendar-btn form-control"
     (click)="ngbDatepicker.toggle()"
     type="button"
     title="Select a Date"
+    [disabled]="isDisabled"
+    [hidden]="isDisabled"
   >
     <i class="material-icons md-18">date_range</i>
   </button>
-  <button class="date-input__clear-btn btn btn-icon" [hidden]="!ngbDate" (click)="clearDate()" title="Clear Date">
+  <button class="date-input__clear-btn btn btn-icon" [hidden]="!ngbDate || isDisabled" (click)="clearDate()" title="Clear Date">
     <i class="material-icons md-18">close</i>
   </button>
 </div>
