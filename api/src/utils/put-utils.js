@@ -76,6 +76,18 @@ exports.fetchMasterForCreateFlavour = async function (schema, id, auth_payload) 
   return masterObj;
 };
 
+exports.fetchMasterForReference = async function (schema, id) {
+  const Model = mongoose.model(schema);
+
+  const masterRecord = await Model.findOne({ _schemaName: schema, _id: id })
+                                  .populate('_flavourRecords');;
+
+  if (!masterRecord) {
+    return {};
+  }
+
+  return masterRecord.toObject();
+};
 /**
  * Converts the obj into a flattened object who's keys are the paths of the original object.
  *
@@ -297,6 +309,64 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
     };
   }
 
+  // Check flavours, if all public add public read
+  let flavourPublishedCount = 0;
+  let issuedToPublishedCount = 0;
+
+  const masterRec = await this.fetchMasterForReference(masterSchemaName, masterId);
+  for (let x = 0; x < masterRec._flavourRecords.length; x++) {
+    if (masterRec._flavourRecords[x].read.includes('public')) {
+      flavourPublishedCount++;
+    }
+    if (masterRec._flavourRecords[x].issuedTo && masterRec._flavourRecords[x].issuedTo.read.includes('public')) {
+      issuedToPublishedCount++;
+    }
+  }
+
+  // Tracker on read property
+  if (flavourPublishedCount > 0) {
+    if (!masterRec.read.includes('public')) {
+      masterRec.read.push('public');
+    }
+  } else {
+    // Ensure removed
+    masterRec.read = masterRec.read.filter(role => role !== 'public');
+
+    // Also the issuedTo if it exists.
+    if (masterRec.issuedTo && masterRec.issuedTo.read) {
+      masterRec.issuedTo.read = masterRec.issuedTo.read.filter(role => role !== 'public');
+    }
+  }
+
+  // Tracker on issuedTo property - this will be 0 on objects that don't have an issuedTo or
+  // where the issuedTo wasn't published, and < total when there's a mismatch.
+  if (issuedToPublishedCount > 0 && masterRec.read.includes('public')) {
+    if (masterRec.issuedTo && !masterRec.issuedTo.read.includes('public')) {
+      masterRec.issuedTo.read.push('public');
+    }
+  } else {
+    // Ensure removed from issuedTo
+    if (masterRec.issuedTo && masterRec.issuedTo.read && masterRec.issuedTo.read.length >= 0) {
+      masterRec.issuedTo.read = masterRec.issuedTo.read.filter(role => role !== 'public');
+    }
+  }
+
+  // Update read elements
+  await MasterModel.updateOne({ _id: masterId },
+                           {
+                             $set: {
+                               'read': masterRec.read
+                             }
+                           },
+                           { new: true });
+  await MasterModel.updateOne({ _id: masterId },
+                            {
+                              $set: {
+                                "issuedTo.read": masterRec.issuedTo.read
+                              }
+                            },
+                            { new: true });
+ 
   let savedDocuments = null;
   try {
     savedDocuments = await BusinessLogicManager.updateDocumentRoles(

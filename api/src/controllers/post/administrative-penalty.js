@@ -38,7 +38,8 @@ exports.createItem = async function (args, res, next, incomingObj) {
   const flavourFunctions = {
     AdministrativePenaltyLNG: this.createLNG,
     AdministrativePenaltyNRCED: this.createNRCED
-  }
+  };
+
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
