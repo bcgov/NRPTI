@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 const defaultLog = require('../../utils/logger')('core-base-record-utils');
 const RecordController = require('../../controllers/record-controller');
+const MineController = require('../../controllers/mine-controller');
 
 /**
  * Core base record type handler that can be used directly, or extended if customizations are needed.
@@ -100,13 +101,33 @@ class BaseRecordUtils {
       // build update Obj, which needs to include the flavour record ids
       const updateObj = { ...nrptiRecord, _id: existingRecord._id };
 
-      return await RecordController.processPutRequest(
-        { swagger: { params: { auth_payload: this.auth_payload } } },
-        null,
-        null,
-        this.recordType.recordControllerName,
-        [updateObj]
-      );
+      if (updateObj._schemaName === 'MineBCMI') {
+        return await MineController.protectedPut(
+          {
+            swagger: {
+              params: {
+                auth_payload: this.auth_payload,
+                mine: {
+                  value: updateObj
+                },
+                mineId: {
+                  value: updateObj._id
+                }
+              }
+            }
+          },
+          null,
+          null
+        );
+      } else {
+        return await RecordController.processPutRequest(
+          { swagger: { params: { auth_payload: this.auth_payload } } },
+          null,
+          null,
+          this.recordType.recordControllerName,
+          [updateObj]
+        );
+      }
     } catch (error) {
       defaultLog.error(`Failed to save ${this.recordType._schemaName} record: ${error.message}`);
     }
@@ -126,13 +147,30 @@ class BaseRecordUtils {
     }
 
     try {
-      return await RecordController.processPostRequest(
-        { swagger: { params: { auth_payload: this.auth_payload } } },
-        null,
-        null,
-        this.recordType.recordControllerName,
-        [nrptiRecord]
-      );
+      if (nrptiRecord._schemaName === 'MineBCMI') {
+        return await MineController.protectedPost(
+          {
+            swagger: {
+              params: {
+                auth_payload: this.auth_payload,
+                mine: {
+                  value: nrptiRecord
+                }
+              }
+            }
+          },
+          null,
+          null
+        );
+      } else {
+        return await RecordController.processPostRequest(
+          { swagger: { params: { auth_payload: this.auth_payload } } },
+          null,
+          null,
+          this.recordType.recordControllerName,
+          [nrptiRecord]
+        );
+      }
     } catch (error) {
       defaultLog.error(`Failed to create ${this.recordType._schemaName} record: ${error.message}`);
     }

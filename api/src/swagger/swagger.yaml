@@ -104,6 +104,10 @@ definitions:
   NewsRequestObject:
     type: object
 
+  ### Miness Type Definitions
+  MineRequestObject:
+    type: object
+
   ### Document Type Definitions
   DocumentRequestObject:
     type: object
@@ -1177,6 +1181,250 @@ paths:
         - name: newsId
           in: path
           description: '_id of news to delete'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  ###
+  ### mine Routes
+  ###
+  /mine/:
+    x-swagger-router-controller: mine-controller
+    options:
+      tags:
+        - mine
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated mine route'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - mine
+      summary: 'Post a mine'
+      operationId: protectedPost
+      description: "Creates a mine via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
+      parameters:
+        - name: mine
+          in: body
+          description: 'mine to create'
+          required: true
+          schema:
+            $ref: '#/definitions/MineRequestObject'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /mine/{mineId}:
+    x-swagger-router-controller: mine-controller
+    options:
+      tags:
+        - mine
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated mine route'
+      parameters:
+        - name: mineId
+          in: path
+          description: '_id of mine'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - mine
+      summary: 'Get a mine'
+      operationId: protectedGet
+      description: "Get a mine via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
+      parameters:
+        - name: mineId
+          in: path
+          description: '_id of mine to get'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - mine
+      summary: 'Put a mine'
+      operationId: protectedPut
+      description: "Updates a mine via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
+      parameters:
+        - name: mineId
+          in: path
+          description: '_id of mine to update'
+          required: true
+          type: string
+        - name: mine
+          in: body
+          description: 'mine to update'
+          required: true
+          schema:
+            $ref: '#/definitions/MineRequestObject'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - mine
+      summary: 'Delete a mine'
+      operationId: protectedDelete
+      description: "Deletes a mine via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
+      parameters:
+        - name: mineId
+          in: path
+          description: '_id of mine to delete'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /mine/{mineId}/publish:
+    x-swagger-router-controller: mine-controller
+    options:
+      tags:
+        - mine
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated mine route'
+      parameters:
+        - name: mineId
+          in: path
+          description: '_id of mine'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - mine
+      summary: 'Put a mine'
+      operationId: protectedPublish
+      description: "Updates a mine via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
+      parameters:
+        - name: mineId
+          in: path
+          description: '_id of mine to update'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /mine/{mineId}/unpublish:
+    x-swagger-router-controller: mine-controller
+    options:
+      tags:
+        - mine
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated mine route'
+      parameters:
+        - name: mineId
+          in: path
+          description: '_id of mine'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - mine
+      summary: 'Put a mine'
+      operationId: protectedUnPublish
+      description: "Updates a mine via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:nrced
+        - admin:lng
+        - admin:bcmi
+      parameters:
+        - name: mineId
+          in: path
+          description: '_id of mine to update'
           required: true
           type: string
       responses:
