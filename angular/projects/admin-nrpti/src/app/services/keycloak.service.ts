@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LoggerService } from 'nrpti-angular-components';
+import { ConfigService, LoggerService } from 'nrpti-angular-components';
 import { JwtUtil } from '../utils/jwt-utils';
 import { Observable } from 'rxjs';
 import { Constants } from '../utils/constants/misc';
@@ -9,95 +9,90 @@ declare let Keycloak: any;
 @Injectable()
 export class KeycloakService {
   private keycloakAuth: any;
+  private keycloakEnabled: boolean;
   private keycloakUrl: string;
   private keycloakRealm: string;
   private menus: {} = {};
 
-  constructor(private logger: LoggerService) {
-    switch (window.location.origin) {
-      case 'http://localhost:4200':
-      case 'https://admin-nrpti-dev.pathfinder.gov.bc.ca':
-        // Local, Dev, Master
-        this.keycloakUrl = 'https://dev.oidc.gov.bc.ca/auth';
-        this.keycloakRealm = '3l5nw6dk';
-        break;
-      case 'https://admin-nrpti-test.pathfinder.gov.bc.ca':
-        // Test
-        this.keycloakUrl = 'https://test.oidc.gov.bc.ca/auth';
-        this.keycloakRealm = '3l5nw6dk';
-        break;
-      default:
-        // Prod
-        this.keycloakUrl = 'https://oidc.gov.bc.ca/auth';
-        this.keycloakRealm = '3l5nw6dk';
-    }
+  constructor(private configService: ConfigService, private logger: LoggerService) { }
+
+  isKeyCloakEnabled(): boolean {
+    return this.keycloakEnabled;
   }
 
-  init(): Promise<any> {
-    // Bootup KC
-    return new Promise((resolve, reject) => {
-      const config = {
-        url: this.keycloakUrl,
-        realm: this.keycloakRealm,
-        clientId: 'nrpti-admin'
-      };
+  async init() {
+    // Load up the config service data
+    this.keycloakEnabled = this.configService.config['KEYCLOAK_ENABLED'];
+    this.keycloakUrl = this.configService.config['KEYCLOAK_URL'];
+    this.keycloakRealm = this.configService.config['KEYCLOAK_REALM'];
 
-      // console.log('KC Auth init.');
+    if (this.keycloakEnabled) {
+      // Bootup KC
+      const keycloak_client_id = this.configService.config['KEYCLOAK_CLIENT_ID'];
 
-      this.keycloakAuth = new Keycloak(config);
+      return new Promise((resolve, reject) => {
+        const config = {
+          url: this.keycloakUrl,
+          realm: this.keycloakRealm,
+          clientId: !keycloak_client_id ? 'nrpti-admin' : keycloak_client_id
+        };
 
-      this.keycloakAuth.onAuthSuccess = () => {
-        // console.log('onAuthSuccess');
-        this.refreshMenuCache();
-      };
+        // console.log('KC Auth init.');
 
-      this.keycloakAuth.onAuthError = () => {
-        // console.log('onAuthError');
-      };
+        this.keycloakAuth = new Keycloak(config);
 
-      this.keycloakAuth.onAuthRefreshSuccess = () => {
-        // console.log('onAuthRefreshSuccess');
-        this.refreshMenuCache();
-      };
+        this.keycloakAuth.onAuthSuccess = () => {
+          // console.log('onAuthSuccess');
+          this.refreshMenuCache();
+        };
 
-      this.keycloakAuth.onAuthRefreshError = () => {
-        // console.log('onAuthRefreshError');
-      };
+        this.keycloakAuth.onAuthError = () => {
+          // console.log('onAuthError');
+        };
 
-      this.keycloakAuth.onAuthLogout = () => {
-        // console.log('onAuthLogout');
-      };
+        this.keycloakAuth.onAuthRefreshSuccess = () => {
+          // console.log('onAuthRefreshSuccess');
+          this.refreshMenuCache();
+        };
 
-      // Try to get refresh tokens in the background
-      this.keycloakAuth.onTokenExpired = () => {
-        this.keycloakAuth
-          .updateToken()
-          .success(refreshed => {
-            this.logger.log(`KC refreshed token?: ${refreshed}`);
-            this.refreshMenuCache();
+        this.keycloakAuth.onAuthRefreshError = () => {
+          // console.log('onAuthRefreshError');
+        };
+
+        this.keycloakAuth.onAuthLogout = () => {
+          // console.log('onAuthLogout');
+        };
+
+        // Try to get refresh tokens in the background
+        this.keycloakAuth.onTokenExpired = () => {
+          this.keycloakAuth
+            .updateToken()
+            .success(refreshed => {
+              this.logger.log(`KC refreshed token?: ${refreshed}`);
+              this.refreshMenuCache();
+            })
+            .error(err => {
+              this.logger.log(`KC refresh error: ${err}`);
+            });
+        };
+
+        // Initialize.
+        this.keycloakAuth.init({})
+          .success(auth => {
+            // console.log('KC Refresh Success?:', this.keycloakAuth.authServerUrl);
+            this.logger.log(`KC Success: ${auth}`);
+            if (!auth) {
+              this.keycloakAuth.login({ idpHint: 'idir' });
+            } else {
+              resolve();
+            }
           })
           .error(err => {
-            this.logger.log(`KC refresh error: ${err}`);
+            this.logger.log(`KC error: ${err}`);
+            reject();
           });
-      };
-
-      // Initialize.
-      this.keycloakAuth
-        .init({})
-        .success(auth => {
-          // console.log('KC Refresh Success?:', this.keycloakAuth.authServerUrl);
-          this.logger.log(`KC Success: ${auth}`);
-          if (!auth) {
-            this.keycloakAuth.login({ idpHint: 'idir' });
-          } else {
-            resolve();
-          }
-        })
-        .error(err => {
-          this.logger.log(`KC error: ${err}`);
-          reject();
-        });
-    });
+      });
+    }
   }
 
   refreshMenuCache() {
@@ -138,13 +133,13 @@ export class KeycloakService {
     // Build the menu cache
     this.menus[Constants.Menus.ALL_MINES]
       = roles.includes(Constants.ApplicationRoles.ADMIN)
-        || roles.includes(Constants.ApplicationRoles.ADMIN_BCMI);
+      || roles.includes(Constants.ApplicationRoles.ADMIN_BCMI);
 
     this.menus[Constants.Menus.ALL_RECORDS] = true; // Everyone gets this.
 
     this.menus[Constants.Menus.NEWS_LIST]
       = roles.includes(Constants.ApplicationRoles.ADMIN)
-        || roles.includes(Constants.ApplicationRoles.ADMIN_LNG);
+      || roles.includes(Constants.ApplicationRoles.ADMIN_LNG);
 
     this.menus[Constants.Menus.ANALYTICS] = false; // Nobody gets this.
 
@@ -154,9 +149,9 @@ export class KeycloakService {
 
     this.menus[Constants.Menus.IMPORTS]
       = roles.includes(Constants.ApplicationRoles.ADMIN)
-        || roles.includes(Constants.ApplicationRoles.ADMIN_LNG)
-        || roles.includes(Constants.ApplicationRoles.ADMIN_NRCED)
-        || roles.includes(Constants.ApplicationRoles.ADMIN_BCMI);
+      || roles.includes(Constants.ApplicationRoles.ADMIN_LNG)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_NRCED)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_BCMI);
 
     this.menus[Constants.Menus.COMMUNICATIONS]
       = roles.includes(Constants.ApplicationRoles.ADMIN)
@@ -200,7 +195,7 @@ export class KeycloakService {
           observer.error();
         });
 
-      return { unsubscribe() {} };
+      return { unsubscribe() { } };
     });
   }
 }
