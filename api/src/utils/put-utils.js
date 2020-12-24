@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const BusinessLogicManager = require('./business-logic-manager');
-const CollectionController = require('../controllers/collection-controller');
 
 exports.validateObjectAgainstModel = function (mongooseModel, incomingObj) {
   if (!incomingObj) {
@@ -278,13 +277,6 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
     if (incomingObj.mineGuid) {
       updateMasterObj.mineGuid = incomingObj.mineGuid;
     }
-  }
-
-  // Mine publish/unpublish logic
-  if (masterSchemaName === 'MineBCMI' && incomingObj.addRole === 'public') {
-    promises.push(CollectionController.publishCollections(masterId, args.swagger.params.auth_payload));
-  } else if (masterSchemaName === 'MineBCMI' && incomingObj.removeRole === 'public') {
-    promises.push(CollectionController.unpublishCollections(masterId, args.swagger.params.auth_payload));
   }
 
   promises.push(

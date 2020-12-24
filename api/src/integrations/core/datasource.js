@@ -207,31 +207,39 @@ class CoreDataSource {
       const existingRecord = await mineUtils.findExistingRecord(nrptiRecord);
 
       let savedRecord = null;
+      let permitInfo = null;
       if (existingRecord) {
         // Update permit.
-        const permitInfo = await this.updateMinePermit(permitUtils, existingRecord);
+        permitInfo = await this.updateMinePermit(permitUtils, existingRecord);
         savedRecord = await mineUtils.updateRecord(nrptiRecord, permitInfo, existingRecord);
-
-        await this.createorUpdateCollections(collectionUtils, permitInfo.permit, savedRecord[0].object[0]);
       } else {
         // Create the permits.
-        const permitInfo = await this.createMinePermit(permitUtils, nrptiRecord);
+        permitInfo = await this.createMinePermit(permitUtils, nrptiRecord);
 
         // Add permit info to the mine record.
         const recordWithPermits = mineUtils.addPermitToRecord(nrptiRecord, permitInfo);
         savedRecord = await mineUtils.createItem(recordWithPermits);
+      }
 
-        // Create a new collections if possible.
+      if (!savedRecord) {
+        throw Error('processRecord - savedRecord is null.');
+      }
+      if (!permitInfo) {
+        throw Error('processRecord - permitInfo is null.');
+      }
+
+      // Create a new collections if possible.
+      if (savedRecord._schemaName === 'MineBCMI') {
+        await this.createorUpdateCollections(collectionUtils, permitInfo.permit, savedRecord);
+      } else {
+        if (!savedRecord.length > 0 || savedRecord[0].status !== 'success') {
+          throw Error('processRecord - savedRecord is null.');
+        }
         await this.createorUpdateCollections(collectionUtils, permitInfo.permit, savedRecord[0].object[0]);
       }
 
-      if (savedRecord && savedRecord.length > 0 && savedRecord[0].status === 'success') {
-        this.status.itemsProcessed++;
-
-        await this.taskAuditRecord.updateTaskRecord({ itemsProcessed: this.status.itemsProcessed });
-      } else {
-        throw Error('processRecord - savedRecord is null.');
-      }
+      this.status.itemsProcessed++;
+      await this.taskAuditRecord.updateTaskRecord({ itemsProcessed: this.status.itemsProcessed });
     } catch (error) {
       recordStatus.coreId = coreRecord && coreRecord.mine_guid;
       recordStatus.error = error.message;
@@ -286,7 +294,7 @@ class CoreDataSource {
 
             validPermit =
               Number.parseInt(validPermitNo[validPermitNo.length - 1]) >
-              Number.parseInt(proposedPermitNo[proposedPermitNo.length - 1])
+                Number.parseInt(proposedPermitNo[proposedPermitNo.length - 1])
                 ? validPermit
                 : permit;
           } catch (error) {

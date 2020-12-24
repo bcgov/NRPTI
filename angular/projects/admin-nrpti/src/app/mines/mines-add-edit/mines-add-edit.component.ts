@@ -32,7 +32,7 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
     private factoryService: FactoryService,
     private loadingScreenService: LoadingScreenService,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadingScreenService.setLoadingState(true, 'main');
@@ -90,7 +90,7 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
       type: new FormControl((this.mine && this.mine.type) || ''),
       links: new FormArray(this.getLinksFormGroups()),
       publish: new FormControl((this.mine && this.mine.read.includes('public')) || false),
-      showPermitNumber: new FormControl((this.mine && this.mine.showPermitNumber ))
+      showPermitNumber: new FormControl((this.mine && this.mine.showPermitNumber))
     });
   }
 
@@ -292,11 +292,9 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
 
     const mineItem = this.buildMineObject();
 
-    this.factoryService.editMine(mineItem).subscribe(() => {
-      this.loadingScreenService.setLoadingState(false, 'main');
-
-      this.router.navigate(['mines', this.mine._id, 'detail']);
-    });
+    await this.factoryService.editMine(mineItem);
+    this.loadingScreenService.setLoadingState(false, 'main');
+    this.router.navigate(['mines', this.mine._id, 'detail']);
   }
 
   ngOnDestroy(): void {

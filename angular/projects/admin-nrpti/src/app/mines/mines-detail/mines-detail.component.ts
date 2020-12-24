@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { takeUntil, catchError } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
-import { Subject, of } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FactoryService } from '../../services/factory.service';
 import { LoadingScreenService } from 'nrpti-angular-components';
@@ -27,7 +27,7 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
     private factoryService: FactoryService,
     private loadingScreenService: LoadingScreenService,
     public changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadingScreenService.setLoadingState(true, 'main');
@@ -88,60 +88,47 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
       && this.mine.location.coordinates.length > 0);
   }
 
-  publish(): void {
-    this.factoryService
-      .publishRecord(this.mine)
-      .pipe(
-        takeUntil(this.ngUnsubscribe),
-        catchError(error => {
-          alert(`Failed to publish mine. ${error.error}`);
-          return of(null);
-        })
-      )
-      .subscribe(response => {
-        if (!response) {
-          return;
-        }
+  async publish() {
+    try {
+      const response = await this.factoryService.publishMine(this.mine._id);
+      if (!response) {
+        return;
+      }
 
-        if (response.code === 409) {
-          // object was already published
-          alert('Mine is already published.');
-          return;
-        }
+      if (response.code === 409) {
+        // object was already published
+        alert('Mine is already published.');
+        return;
+      }
 
-        this.mine = new Mine(response);
-        this.isPublished = this.isRecordPublished();
+      this.mine = new Mine(response);
+      this.isPublished = this.isRecordPublished();
 
-        this.changeDetectionRef.detectChanges();
-      });
+      this.changeDetectionRef.detectChanges();
+    } catch (error) {
+      alert(`Failed to publish mine. ${error.error}`);
+    }
   }
 
-  unPublish(): void {
-    this.factoryService
-      .unPublishRecord(this.mine)
-      .pipe(
-        takeUntil(this.ngUnsubscribe),
-        catchError(error => {
-          alert(`Failed to unpublish mine. ${error.error}`);
-          return of(null);
-        })
-      )
-      .subscribe(response => {
-        if (!response) {
-          return;
-        }
+  async unPublish() {
+    try {
+      const response = await this.factoryService.unPublishMine(this.mine._id);
+      if (!response) {
+        return;
+      }
 
-        if (response.code === 409) {
-          // object was already unpublished
-          alert('Mine is already unpublished.');
-          return;
-        }
+      if (response.code === 409) {
+        // object was already unpublished
+        alert('Mine is already unpublished.');
+        return;
+      }
+      this.mine = new Mine(response);
+      this.isPublished = this.isRecordPublished();
 
-        this.mine = new Mine(response);
-        this.isPublished = this.isRecordPublished();
-
-        this.changeDetectionRef.detectChanges();
-      });
+      this.changeDetectionRef.detectChanges();
+    } catch (error) {
+      alert(`Failed to unpublish mine. ${error.error}`);
+    }
   }
 
   togglePublish(): void {

@@ -11,6 +11,7 @@ import { DocumentService } from './document.service';
 import { Constants } from '../utils/constants/misc';
 import { NewsService } from './news.service';
 import { CollectionService } from './collection.service';
+import { MineService } from './mine.service';
 /**
  * Facade service for all admin-nrpti services.
  *
@@ -25,6 +26,7 @@ export class FactoryService {
   private _apiService: ApiService;
   private _searchService: SearchService;
   private _recordService: RecordService;
+  private _mineService: MineService;
   private _newsService: NewsService;
   private _collectionService: CollectionService;
   private _taskService: TaskService;
@@ -95,6 +97,13 @@ export class FactoryService {
       this._recordService = this.injector.get(RecordService);
     }
     return this._recordService;
+  }
+
+  public get mineService(): MineService {
+    if (!this._mineService) {
+      this._mineService = this.injector.get(MineService);
+    }
+    return this._mineService;
   }
 
   public get newsService(): NewsService {
@@ -371,11 +380,16 @@ export class FactoryService {
    * @returns {Observable<object>}
    * @memberof FactoryService
    */
-  public editMine(mine: any): Observable<object> {
-    const outboundObject = {
-      mines: [mine]
-    };
-    return this.recordService.editRecord(outboundObject).pipe(catchError(error => this.apiService.handleError(error)));
+  public editMine(mine: any): Promise<any> {
+    return this.mineService.editMine(mine);
+  }
+
+  public publishMine(mineId: any): Promise<any> {
+    return this.mineService.publishMine(mineId);
+  }
+
+  public unPublishMine(mineId: any): Promise<any> {
+    return this.mineService.unPublishMine(mineId);
   }
 
   /**

@@ -9,7 +9,6 @@ let queryActions = require('../utils/query-actions');
 let queryUtils = require('../utils/query-utils');
 let defaultLog = require('../utils/logger')('record');
 let documentController = require('./document-controller');
-let collectionController = require('./collection-controller');
 const businessLogicManager = require('../utils/business-logic-manager');
 
 let AddOrder = require('./post/order');
@@ -26,7 +25,6 @@ let AddWarning = require('./post/warning');
 let AddConstructionPlan = require('./post/construction-plan');
 let AddManagementPlan = require('./post/management-plan');
 let AddCourtConviction = require('./post/court-conviction');
-let AddMine = require('./post/mine-bcmi');
 let AddAnnualReport = require('./post/annual-report');
 let AddCertificateAmendment = require('./post/certificate-amendment');
 let AddCorrespondence = require('./post/correspondence');
@@ -47,7 +45,6 @@ let EditWarning = require('./put/warning');
 let EditConstructionPlan = require('./put/construction-plan');
 let EditManagementPlan = require('./put/management-plan');
 let EditCourtConviction = require('./put/court-conviction');
-let EditMine = require('./put/mine-bcmi');
 let EditAnnualReport = require('./put/annual-report');
 let EditCertificateAmendment = require('./put/certificate-amendment');
 let EditCorrespondence = require('./put/correspondence');
@@ -72,7 +69,6 @@ const ACCEPTED_DATA_TYPES = [
   { type: 'constructionPlans', add: AddConstructionPlan, edit: EditConstructionPlan, schemaName: 'ConstructionPlan' },
   { type: 'managementPlans', add: AddManagementPlan, edit: EditManagementPlan, schemaName: 'ManagementPlan' },
   { type: 'courtConvictions', add: AddCourtConviction, edit: EditCourtConviction, schemaName: 'CourtConviction' },
-  { type: 'mines', add: AddMine, edit: EditMine, schemaName: 'Mine' },
   { type: 'annualReports', add: AddAnnualReport, edit: EditAnnualReport, schemaName: 'AnnualReport' },
   { type: 'certificateAmendments', add: AddCertificateAmendment, edit: EditCertificateAmendment, schemaName: 'CertificateAmendment' },
   { type: 'correspondences', add: AddCorrespondence, edit: EditCorrespondence, schemaName: 'Correspondence' },
@@ -304,7 +300,7 @@ exports.protectedPublish = async function (args, res, next) {
       return queryActions.sendResponse(res, 404, {});
     }
 
-    const published = await queryActions.publish(record, true);
+    const published = await queryActions.publish(record, args.swagger.params.auth_payload);
     // this should also publish documents, or they may not be usable by other applications
     if (published.documents) {
       for (const docId of published.documents) {
@@ -313,11 +309,6 @@ exports.protectedPublish = async function (args, res, next) {
           await documentController.publishDocument(docId, args.swagger.params.auth_payload);
         }
       }
-    }
-
-    // This should also publish any collections and their documents.
-    if (published._schemaName === 'MineBCMI') {
-      await collectionController.publishCollections(published._id, args.swagger.params.auth_payload);
     }
 
     queryUtils.audit(args, 'Publish', record, args.swagger.params.auth_payload, record._id);
@@ -368,18 +359,13 @@ exports.protectedUnPublish = async function (args, res, next) {
       return queryActions.sendResponse(res, 404, {});
     }
 
-    const unPublished = await queryActions.unPublish(record);
+    const unPublished = await queryActions.unPublish(record, args.swagger.params.auth_payload);
 
     // this should also un-publish documents, or they may not be usable by other applications
     if (unPublished.documents) {
       for (const docId of unPublished.documents) {
         await documentController.unpublishDocument(docId, args.swagger.params.auth_payload);
       }
-    }
-
-    // This should also unpublish any collections and their documents.
-    if (unPublished._schemaName === 'MineBCMI') {
-      await collectionController.unpublishCollections(unPublished._id, args.swagger.params.auth_payload);
     }
 
     queryUtils.audit(args, 'UnPublish', record, args.swagger.params.auth_payload, record._id);
