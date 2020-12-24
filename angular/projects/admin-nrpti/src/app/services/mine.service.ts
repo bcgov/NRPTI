@@ -9,7 +9,7 @@ export class MineService {
 
   public createMine(mine: any): Promise<any> {
     if (!mine) {
-      throw Error('mineervice - createMine - missing required mine param');
+      throw Error('MineService - createMine - missing required mine param');
     }
 
     const queryString = 'mine/';
@@ -27,7 +27,7 @@ export class MineService {
 
   public deleteMine(mineId: string): Promise<any> {
     if (!mineId) {
-      throw Error('RecordService - deleteMine - missing required mineId param');
+      throw Error('MineService - deleteMine - missing required mineId param');
     }
 
     const queryString = `mine/${mineId}`;
