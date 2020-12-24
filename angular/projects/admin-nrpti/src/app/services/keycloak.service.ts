@@ -16,10 +16,6 @@ export class KeycloakService {
 
   constructor(private configService: ConfigService, private logger: LoggerService) { }
 
-  isKeyCloakEnabled(): boolean {
-    return this.keycloakEnabled;
-  }
-
   async init() {
     // Load up the config service data
     this.keycloakEnabled = this.configService.config['KEYCLOAK_ENABLED'];
