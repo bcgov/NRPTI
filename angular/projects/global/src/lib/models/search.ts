@@ -12,6 +12,16 @@ export class SearchResults {
   }
 }
 
+export class SearchResult {
+  data: any;
+  totalSearchCount: number;
+
+  constructor(search?: any, hostname?: any) {
+    this.data = (search && search.data) || 0;
+    this.totalSearchCount = (search && search.totalSearchCount) || 0;
+  }
+}
+
 export class SearchTerms {
   keywords: string; // comma- or space-delimited list
   dateStart: NgbDateStruct;

@@ -11,15 +11,13 @@
             [disabled]="showAlert['epic']"
             class="btn btn-primary"
             (click)="startJob('epic')"
-            title="Start EPIC import job"
-          >
+            title="Start EPIC import job">
             Start Job
           </button>
         </div>
         <div *ngIf="showAlert['epic']" class="input-group mt-1">
           <div class="alert alert-success" role="alert">
             <h5 class="alert-heading">Job Started!</h5>
-            <span>Please refresh the page to see the updated status.</span>
           </div>
         </div>
       </div>
@@ -31,15 +29,13 @@
             [disabled]="showAlert['nris-epd']"
             class="btn btn-primary"
             (click)="startJob('nris-epd')"
-            title="Start NRIS import job"
-          >
+            title="Start NRIS import job">
             Start Job
           </button>
         </div>
         <div *ngIf="showAlert['nris-epd']" class="input-group mt-1">
           <div class="alert alert-success" role="alert">
             <h5 class="alert-heading">Job Started!</h5>
-            <span>Please refresh the page to see the updated status.</span>
           </div>
         </div>
       </div>
@@ -51,15 +47,13 @@
             [disabled]="showAlert['core']"
             class="btn btn-primary"
             (click)="startJob('core')"
-            title="Start CORE import job"
-          >
+            title="Start CORE import job">
             Start Job
           </button>
         </div>
         <div *ngIf="showAlert['core']" class="input-group mt-1">
           <div class="alert alert-success" role="alert">
             <h5 class="alert-heading">Job Started!</h5>
-            <span>Please refresh the page to see the updated status.</span>
           </div>
         </div>
       </div>
@@ -71,15 +65,13 @@
             [disabled]="showAlert['bcogc']"
             class="btn btn-primary"
             (click)="startJob('bcogc')"
-            title="Start BCOGC import job"
-          >
+            title="Start BCOGC import job">
             Start Job
           </button>
         </div>
         <div *ngIf="showAlert['bcogc']" class="input-group mt-1">
           <div class="alert alert-success" role="alert">
             <h5 class="alert-heading">Job Started!</h5>
-            <span>Please refresh the page to see the updated status.</span>
           </div>
         </div>
       </div>
@@ -98,7 +90,6 @@
     <lib-table-template
       *ngIf="!loading && tableData.totalListItems != 0"
       [data]="tableData"
-      (messageOut)="onMessageOut($event)"
-    ></lib-table-template>
+      (messageOut)="onMessageOut($event)"></lib-table-template>
   </section>
 </main>

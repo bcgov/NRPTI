@@ -23,6 +23,9 @@ exports.protectedGetConfig = async function (args, res, next) {
   configurationData['GEOCODER_API'] = process.env.GEOCODER_API;
   configurationData['ENVIRONMENT'] = process.env.ENVIRONMENT;
   configurationData['debugMode'] = process.env.DEBUG_MODE;
+
+  configurationData['IMPORT_TABLE_INTERVAL'] = process.env.IMPORT_TABLE_INTERVAL;
+  configurationData['DEFAULT_IMPORT_TABLE_QUERY_PARAMS'] = process.env.DEFAULT_IMPORT_TABLE_QUERY_PARAMS;
   
   // get project specific confguration
   if (args.swagger.params.app && args.swagger.params.app.value) {
