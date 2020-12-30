@@ -80,18 +80,16 @@ export class ImportService {
       if (res[0].data.searchResults) {
         searchResult.data = res[0].data.searchResults;
       } else {
-        searchResult.data = [];
+        // TODO: Create error service handle errors
       }
       if (res[0].data.meta[0].searchResultsTotal) {
         searchResult.totalSearchCount = res[0].data.meta[0].searchResultsTotal;
       } else {
-        searchResult.totalSearchCount = 0;
+        // TODO: Create error service handle errors
       }
     } else {
       // TODO: Create error service handle errors
       console.log('Error: unable to get import table data.');
-      searchResult.data = [];
-      searchResult.totalSearchCount = 0;
     }
     this.setValue(searchResult);
   }
