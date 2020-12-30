@@ -56,15 +56,22 @@ export class ImportService {
       sortBy: sortBy
     };
 
-    const res = await this.factoryService.searchService.getSearchResults(
-      pathAPI,
-      keys,
-      dataset,
-      fields,
-      pageNum,
-      pageSize,
-      sortBy
-    ).toPromise();
+    let res = null;
+    try {
+      res = await this.factoryService.searchService.getSearchResults(
+        pathAPI,
+        keys,
+        dataset,
+        fields,
+        pageNum,
+        pageSize,
+        sortBy
+      ).toPromise();
+    } catch (error) {
+      // TODO: Create error service handle errors
+      console.log(error);
+    }
+
 
     // tslint:disable-next-line: prefer-const
     let searchResult = new SearchResult();
@@ -81,7 +88,8 @@ export class ImportService {
         searchResult.totalSearchCount = 0;
       }
     } else {
-      alert('Error: unable to get import table data.');
+      // TODO: Create error service handle errors
+      console.log('Error: unable to get import table data.');
       searchResult.data = [];
       searchResult.totalSearchCount = 0;
     }
