@@ -1,24 +1,27 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FactoryService } from '../services/factory.service';
-import { Subject } from 'rxjs';
 import {
   TableObject,
   TableTemplateUtils,
   IColumnObject,
   IPageSizePickerOption,
-  ITableMessage
+  ITableMessage,
+  ConfigService
 } from 'nrpti-angular-components';
 import { ImportTableRowsComponent } from '../import/import-rows/import-table-rows.component';
-import { takeUntil } from 'rxjs/operators';
-import { Router, ActivatedRoute } from '@angular/router';
+import { takeWhile } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
+import { ImportService } from '../services/import.service';
+import { SearchResult } from 'nrpti-angular-components';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-import',
   templateUrl: './import.component.html',
   styleUrls: ['./import.component.scss']
 })
-export class ImportComponent implements OnInit {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+export class ImportComponent implements OnInit, OnDestroy {
+  private alive = true;
 
   public loading = true;
   public showAlert = { epic: false, 'nris-epd': false, core: false, bcogc: false };
@@ -51,15 +54,19 @@ export class ImportComponent implements OnInit {
     }
   ];
   constructor(
-    public router: Router,
-    public route: ActivatedRoute,
+    private route: ActivatedRoute,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef,
-    public factoryService: FactoryService
-  ) {}
+    private factoryService: FactoryService,
+    private importService: ImportService,
+    private configService: ConfigService
+  ) { }
 
   ngOnInit() {
-    this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(params => {
+    // tslint:disable-next-line: no-this-assignment
+    const self = this;
+
+    this.route.params.pipe(takeWhile(() => this.alive)).subscribe(params => {
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
       this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, this.tableData);
 
@@ -68,30 +75,20 @@ export class ImportComponent implements OnInit {
       this._changeDetectionRef.detectChanges();
     });
 
-    this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
-      if (!res || !res.records) {
-        alert("Uh-oh, couldn't load NRPTI records");
-        // project not found --> navigate back to home
-        this.router.navigate(['/']);
-        return;
-      }
-
-      const records = (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || [];
-      this.tableData.items = records.map(record => {
+    this.importService.getValue().pipe(takeWhile(() => this.alive)).subscribe((searchResult: SearchResult) => {
+      const records = searchResult.data;
+      self.tableData.items = records.map(record => {
         return { rowData: record };
       });
 
-      this.tableData.totalListItems =
-        (res.records[0] &&
-          res.records[0].data &&
-          res.records[0].data.meta &&
-          res.records[0].data.meta[0] &&
-          res.records[0].data.meta[0].searchResultsTotal) ||
-        0;
+      self.tableData.totalListItems = searchResult.totalSearchCount;
+      self.tableData.columns = self.tableColumns;
+      self.loading = false;
+      self._changeDetectionRef.detectChanges();
+    });
 
-      this.tableData.columns = this.tableColumns;
-      this.loading = false;
-      this._changeDetectionRef.detectChanges();
+    interval(this.configService.config['IMPORT_TABLE_INTERVAL']).pipe(takeWhile(() => this.alive)).subscribe(() => {
+      self.importService.refreshData();
     });
   }
 
@@ -150,5 +147,9 @@ export class ImportComponent implements OnInit {
     setTimeout(() => {
       this.showAlert[dataSourceType] = false;
     }, 4000);
+  }
+
+  ngOnDestroy() {
+    this.alive = false;
   }
 }
