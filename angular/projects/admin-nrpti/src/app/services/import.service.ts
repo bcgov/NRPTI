@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SearchResult, ConfigService } from 'nrpti-angular-components';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { EventObject, EventService, EventKeywords } from './event.service';
 import { FactoryService } from './factory.service';
 
 @Injectable({
@@ -10,9 +11,13 @@ export class ImportService {
   private data: BehaviorSubject<SearchResult>;
   private fetchDataConfig: any;
 
-  constructor(private factoryService: FactoryService, configService: ConfigService) {
+  constructor(
+    private factoryService: FactoryService,
+    private configService: ConfigService,
+    private eventService: EventService
+  ) {
     this.data = new BehaviorSubject<SearchResult>(new SearchResult);
-    this.fetchDataConfig = configService.config['DEFAULT_IMPORT_TABLE_QUERY_PARAMS'];
+    this.fetchDataConfig = this.configService.config['DEFAULT_IMPORT_TABLE_QUERY_PARAMS'];
   }
 
   setValue(value): void {
@@ -68,8 +73,13 @@ export class ImportService {
         sortBy
       ).toPromise();
     } catch (error) {
-      // TODO: Create error service handle errors
-      console.log(error);
+      this.eventService.setError(
+        new EventObject(
+          EventKeywords.ERROR,
+          error,
+          'Import Service'
+        )
+      );
     }
 
 
@@ -80,16 +90,33 @@ export class ImportService {
       if (res[0].data.searchResults) {
         searchResult.data = res[0].data.searchResults;
       } else {
-        // TODO: Create error service handle errors
+        this.eventService.setError(
+          new EventObject(
+            EventKeywords.ERROR,
+            'Search results were empty.',
+            'Import Service'
+          )
+        );
       }
       if (res[0].data.meta[0].searchResultsTotal) {
         searchResult.totalSearchCount = res[0].data.meta[0].searchResultsTotal;
       } else {
-        // TODO: Create error service handle errors
+        this.eventService.setError(
+          new EventObject(
+            EventKeywords.ERROR,
+            'Total search results count was not returned.',
+            'Import Service'
+          )
+        );
       }
     } else {
-      // TODO: Create error service handle errors
-      console.log('Error: unable to get import table data.');
+      this.eventService.setError(
+        new EventObject(
+          EventKeywords.ERROR,
+          'No data was returned from the server.',
+          'Import Service'
+        )
+      );
     }
     this.setValue(searchResult);
   }
