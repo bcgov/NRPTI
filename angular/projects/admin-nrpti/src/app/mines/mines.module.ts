@@ -8,6 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatSlideToggleModule, MatCheckboxModule } from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { EditorModule } from '@tinymce/tinymce-angular';
 
 // local modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -49,7 +50,8 @@ import { MinesRecordsEditComponent } from './mines-records-edit/mines-records-ed
     MatSlideToggleModule,
     MatCheckboxModule,
     DragDropModule,
-    DocumentsModule
+    DocumentsModule,
+    EditorModule
   ],
   declarations: [
     MinesListComponent,

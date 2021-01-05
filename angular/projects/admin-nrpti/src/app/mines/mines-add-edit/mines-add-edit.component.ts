@@ -26,6 +26,18 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
 
   public mineTypes = Picklists.mineTypes;
 
+  public tinyMceSettings = {
+    base_url: '/tinymce',
+    suffix: '.min',
+    browser_spellcheck: true,
+    height: 240,
+    plugins: ['lists, advlist, link'],
+    toolbar: [ 'undo redo | formatselect | ' +
+    ' bold italic backcolor | alignleft aligncenter ' +
+    ' alignright alignjustify | bullist numlist outdent indent |' +
+    ' removeformat | help' ]
+  };
+
   constructor(
     public route: ActivatedRoute,
     public router: Router,
