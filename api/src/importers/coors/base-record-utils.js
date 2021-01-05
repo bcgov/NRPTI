@@ -56,11 +56,11 @@ class BaseRecordUtils {
    * Searches for an existing master record, and returns it if found.
    *
    * @param {*} nrptiRecord
-   * @returns {object} existing NRPTI master record, or null if none found or _sourceRefCorsId is null
+   * @returns {object} existing NRPTI master record, or null if none found or _sourceRefCoorsId is null
    * @memberof BaseRecordUtils
    */
   async findExistingRecord(nrptiRecord) {
-    if (!nrptiRecord._sourceRefCorsId) {
+    if (!nrptiRecord._sourceRefCoorsId) {
       return null;
     }
 
@@ -69,7 +69,7 @@ class BaseRecordUtils {
     return await masterRecordModel
       .findOne({
         _schemaName: this.recordType._schemaName,
-        _sourceRefCorsId: nrptiRecord._sourceRefCorsId
+        _sourceRefCoorsId: nrptiRecord._sourceRefCoorsId
       })
       .populate('_flavourRecords', '_id _schemaName');
   }
