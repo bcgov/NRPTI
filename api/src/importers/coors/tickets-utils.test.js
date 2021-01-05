@@ -13,7 +13,7 @@ describe('transformRecord', () => {
 
     expect(result).toEqual({
       _schemaName: 'Ticket',
-      _sourceRefCorsId: '',
+      _sourceRefCoorsId: '',
 
       recordType: 'Ticket',
       dateIssued: null,
@@ -48,7 +48,7 @@ describe('transformRecord', () => {
 
     expect(result).toEqual({
       _schemaName: 'Ticket',
-      _sourceRefCorsId: 123,
+      _sourceRefCoorsId: 123,
 
       recordType: 'Ticket',
       dateIssued: expect.any(String),

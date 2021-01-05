@@ -88,7 +88,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (ticket._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
-  incomingObj._sourceRefCorsId && (ticket._sourceRefCorsId = incomingObj._sourceRefCorsId);
+  incomingObj._sourceRefCoorsId && (ticket._sourceRefCoorsId = incomingObj._sourceRefCoorsId);
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (ticket.collectionId = new ObjectId(incomingObj.collectionId));
@@ -217,7 +217,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (ticketLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
-  incomingObj._sourceRefCorsId && (ticketLNG._sourceRefCorsId = incomingObj._sourceRefCorsId);
+  incomingObj._sourceRefCoorsId && (ticketLNG._sourceRefCoorsId = incomingObj._sourceRefCoorsId);
 
   // set permissions and meta
   ticketLNG.read = utils.ApplicationAdminRoles;
@@ -345,7 +345,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (ticketNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
-  incomingObj._sourceRefCorsId && (ticketNRCED._sourceRefCorsId = incomingObj._sourceRefCorsId);
+  incomingObj._sourceRefCoorsId && (ticketNRCED._sourceRefCoorsId = incomingObj._sourceRefCoorsId);
 
   // set permissions and meta
   ticketNRCED.read = utils.ApplicationAdminRoles;

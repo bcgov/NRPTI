@@ -36,7 +36,7 @@ class Tickets extends BaseRecordUtils {
 
     const ticket = { ...super.transformRecord(csvRow) };
 
-    ticket['_sourceRefCorsId'] = Number(csvRow['contravention_enforcement_id']) || '';
+    ticket['_sourceRefCoorsId'] = Number(csvRow['contravention_enforcement_id']) || '';
 
     ticket['recordType'] = 'Ticket';
     ticket['dateIssued'] = csvRow['ticket_date'] || null;
