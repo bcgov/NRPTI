@@ -120,14 +120,12 @@
       <div class="flex-container">
         <div class="label-pair lrg">
           <label class="sm" for="summary">Summary <span class="summary-label">(Text will display on the mine summary tab on BCMI)</span></label>
-          <textarea
-            name="summary"
-            id="summary"
-            type="text"
-            formControlName="summary"
-            class="form-control"
-            rows="5"
-          ></textarea>
+          <editor
+          [init]="tinyMceSettings"
+          name="summary"
+          id="summary"
+          formControlName="summary"
+        ></editor>
         </div>
       </div>
       <div class="flex-container mb-2">
