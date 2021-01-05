@@ -9,6 +9,8 @@ import { GlobalModule, LoadingScreenService, Utils } from 'nrpti-angular-compone
 import { Mine, Link } from '../../../../../common/src/app/models/bcmi';
 import { ActivatedRouteStub, TestBedHelper } from '../../../../../common/src/app/spec/spec-utils';
 import { MinesAddEditComponent } from './mines-add-edit.component';
+import { EditorModule } from '@tinymce/tinymce-angular';
+
 
 describe('MinesAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<MinesAddEditComponent>(MinesAddEditComponent);
@@ -33,6 +35,7 @@ describe('MinesAddEditComponent', () => {
         ReactiveFormsModule,
         GlobalModule,
         NgxPaginationModule,
+        EditorModule,
         NgbModule.forRoot()
       ],
       declarations: [MinesAddEditComponent],
