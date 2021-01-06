@@ -16,6 +16,7 @@ export class PermitDetailComponent extends RecordComponent implements OnInit, On
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   public legislationString = '';
+  public disableEdit = false;
 
   constructor(public route: ActivatedRoute, public router: Router, public changeDetectionRef: ChangeDetectorRef) {
     super();
@@ -31,6 +32,9 @@ export class PermitDetailComponent extends RecordComponent implements OnInit, On
 
       const record = res.records[0] && res.records[0].data;
 
+      if (record.sourceSystemRef === 'core') {
+        this.disableEdit = true;
+      }
       this.data = {
         _master: new Permit(record),
         flavourData:

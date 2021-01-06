@@ -39,7 +39,7 @@ export class MinesRecordsEditComponent implements OnInit {
   public documents = [];
   public links = [];
   public documentsToDelete = [];
-  public disableDelete = false;
+  public disableEdit = false;
 
   // Pick lists
   public recordTypePickList = Picklists.collectionTypePicklist;
@@ -78,7 +78,7 @@ export class MinesRecordsEditComponent implements OnInit {
         // if we have a current flavour, use that
         this.populateTextFields();
         if (this.record.sourceSystemRef === 'core') {
-          this.disableDelete = true;
+          this.disableEdit = true;
         }
       } else {
         alert('Error: could not load record.');
