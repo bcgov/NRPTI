@@ -17,7 +17,7 @@ describe('transformRecord', () => {
 
       recordType: 'Ticket',
       dateIssued: null,
-      issuedTo: { dateOfBirth: expect.any(Date), firstName: '', lastName: '', middleName: '', type: 'Individual' },
+      issuedTo: { dateOfBirth: null, firstName: '', lastName: '', middleName: '', type: 'Individual' },
       issuingAgency: '',
       author: '',      
       legislation: { act: '', paragraph: '', regulation: '', section: '', subSection: '' },
