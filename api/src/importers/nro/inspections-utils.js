@@ -77,9 +77,9 @@ class Inspections extends BaseRecordUtils {
     if (entityType === MiscConstants.IssuedToEntityTypes.Individual) {
       inspection['issuedTo'] = {
         type: MiscConstants.IssuedToEntityTypes.Individual,
-        // Set dateOfBirth to current date so the issuedTo names are redacted on public sites
+        // Set dateOfBirth to null so the issuedTo names are redacted on public sites
         // This is a temporary solution until business figures out how to display client names
-        dateOfBirth: new Date(),
+        dateOfBirth: null,
         firstName: csvRow['client / complainant'] || '',
         lastName: '',
         middleName: ''

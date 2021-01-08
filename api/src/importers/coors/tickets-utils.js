@@ -71,12 +71,6 @@ class Tickets extends BaseRecordUtils {
         lastName: csvRow['last_name'] || '',
         dateOfBirth: csvRow['birth_date'] || null
       };
-
-      // Set dateOfBirth to current date for individuals with no names so they appear as "Unpublished" on NRCED
-      // See https://bcmines.atlassian.net/browse/NRPT-222 for details
-      if (!(ticket.issuedTo.firstName && ticket.issuedTo.middleName && ticket.issuedTo.lastName)) {
-        ticket.issuedTo.dateOfBirth = new Date();
-      }
     }
 
     ticket['location'] = csvRow['location_of_violation'] || '';
