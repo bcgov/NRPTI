@@ -31,7 +31,8 @@ export class SearchFiltersComponent implements OnInit, OnDestroy {
   public resetControls: EventEmitter<void> = new EventEmitter<void>();
 
   public agencyOptions: IMutliSelectOption[] = Picklists.agencyPicklist.map(value => {
-    return { value: value, displayValue: value, selected: false, display: true };
+    const displayValue = (value === 'EMLI') ? 'Ministry of Energy, Mines, and Low Carbon Innovation' : value;
+    return { value: value, displayValue: displayValue, selected: false, display: true };
   });
   public activityTypeOptions: IMutliSelectOption[] = Object.values(Picklists.activityTypePicklistNRCED).map(item => {
     return { value: item._schemaName, displayValue: item.displayName, selected: false, display: true };

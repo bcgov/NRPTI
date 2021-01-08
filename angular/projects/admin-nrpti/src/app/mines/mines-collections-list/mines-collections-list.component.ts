@@ -123,7 +123,8 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
       FilterType.MultiSelect,
       'Agency',
       new MultiSelectDefinition(Picklists.collectionAgencyPicklist.map(value => {
-        return { value: value, displayValue: value, selected: false, display: true };
+        const displayValue = (value === 'EMLI') ? 'Ministry of Energy, Mines, and Low Carbon Innovation' : value;
+        return { value: value, displayValue: displayValue, selected: false, display: true };
       }), 'Begin typing to filter agencies...', '')
     );
 
