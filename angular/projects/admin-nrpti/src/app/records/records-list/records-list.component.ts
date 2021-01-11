@@ -175,7 +175,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       FilterType.MultiSelect,
       'Responsible Agency',
       new MultiSelectDefinition(Picklists.agencyPicklist.map(value => {
-        const displayValue = (value === 'EMLI') ? 'Ministry of Energy, Mines, and Low Carbon Innovation' : value;
+        const displayValue = (value === 'EMLI') ? Utils.convertAcronyms(value) : value;
         return { value: value, displayValue: displayValue, selected: false, display: true };
       }), 'Begin typing to filter agencies...', '')
     );

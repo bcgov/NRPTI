@@ -504,6 +504,10 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     this.showRecordForm = false;
   }
 
+  convertAcronyms(acronym) {
+    return Utils.convertAcronyms(acronym);
+  }
+
   ngOnDestroy(): void {
     // When the component is destroying, if collectionAddEdit state exists, but the user hadn't clicked the
     // 'addRecordsToCollection' button, then remove the collection state from the store.

@@ -171,6 +171,10 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
     this.loadingScreenService.setLoadingState(false, 'main');
   }
 
+  convertAcronyms(acronym) {
+    return Utils.convertAcronyms(acronym);
+  }
+
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
