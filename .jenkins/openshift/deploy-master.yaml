@@ -1,12 +1,19 @@
----
 apiVersion: template.openshift.io/v1
 kind: Template
-labels:
-  app: jenkins-prod
 metadata:
   creationTimestamp: null
   name: jenkins
 objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    labels:
+      shared: "true"
+    name: ${NAME}
+  spec:
+    lookupPolicy:
+      local: false
 - apiVersion: v1
   kind: Secret
   metadata:
@@ -27,19 +34,17 @@ objects:
     name: ${NAME}${SUFFIX}-github
   stringData:
     metadata.name: ${NAME}${SUFFIX}-github
-    password: ${GH_PASSWORD}
-    username: ${GH_USERNAME}
+    password: ${GITHUB_TOKEN}
+    username: ${GITHUB_USERNAME}
   type: kubernetes.io/basic-auth
 - apiVersion: v1
   kind: PersistentVolumeClaim
   metadata:
-    annotations:
-      volume.beta.kubernetes.io/storage-class: gluster-file
-      volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/glusterfs
     name: ${NAME}${SUFFIX}
   spec:
     accessModes:
     - ReadWriteOnce
+    storageClassName: netapp-file-standard
     resources:
       requests:
         storage: 1Gi
@@ -130,15 +135,15 @@ objects:
             timeoutSeconds: 240
           resources:
             limits:
-              cpu: 2000m
+              cpu: "2"
               memory: 2Gi
             requests:
               cpu: 300m
-              memory: 1Gi
+              memory: 2Gi
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           volumeMounts:
-          - mountPath: /var/lib/jenkins/jobs
+          - mountPath: /var/jenkins-data
             name: jenkins-jobs
             readOnly: false
           - mountPath: /var/run/pod
@@ -287,12 +292,13 @@ parameters:
   from: '[a-zA-Z0-9]{16}'
   generate: expression
   name: SLAVE_USER_PASSWORD
-- description: GitHub Username (Same as github secret)
-  displayName: GH_USERNAME
-  name: GH_USERNAME
+- description: GITHUB_USERNAME
+  displayName: GITHUB_USERNAME
+  name: GITHUB_USERNAME
   required: false
   value: ""
-- description: GitHub Personal Access Token (Same as github secret)
-  displayName: GH_PASSWORD
-  name: GH_PASSWORD
-  required: true
+- description: GitHub Personal Access Token
+  displayName: GITHUB_USERNAME
+  name: GITHUB_TOKEN
+  required: false
+  value: ""

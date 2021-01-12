@@ -1,0 +1,60 @@
+---
+kind: Template
+apiVersion: v1
+labels:
+  app: jenkins-prod
+metadata:
+  name: jenkins
+objects:
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    name: system:image-puller-dev
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: system:image-puller
+  subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: Group
+    name: system:serviceaccounts:${DEV}
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    name: system:image-puller-test
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: system:image-puller
+  subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: Group
+    name: system:serviceaccounts:${TEST}
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    name: system:image-puller-prod
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: system:image-puller
+  subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: Group
+    name: system:serviceaccounts:${PROD}
+parameters:
+- name: DEV
+  displayName: Dev Project Namespace
+  description: Project/Namespace for Dev. Environment
+  required: true
+  value: dev
+- name: TEST
+  displayName: Test Project Namespace
+  description: Project/Namespace for Test Environment
+  required: true
+  value: test
+- name: PROD
+  displayName: Prod Project Namespace
+  description: Project/Namespace for Prod. Environment
+  required: true
+  value: prod
