@@ -25,11 +25,11 @@ module.exports = require('../../utils/model-schema-generator')(
     // same on LNG public)
     type: { type: String, default: '' },
 
-    // EMPR can be anything we want the default
+    // EMLI can be anything we want the default
     // Ministry of Environment tag to be.  NB: Migration moves from the 3
-    // isForXXX => booleans to the respective tag (below is EMPR tag)
-    // isForMEM => EMPR, isForEAO => EAO, isForENV => ENV
-    agency: { type: String, default: 'EMPR' },
+    // isForXXX => booleans to the respective tag (below is EMLI tag)
+    // isForMEM => EMLI, isForEAO => EAO, isForENV => ENV
+    agency: { type: String, default: 'EMLI' },
 
     // Links to various record types in NRPTI.  This will
     // be treated as a sorted list.  visual will be embedded in a populated

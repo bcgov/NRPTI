@@ -76,7 +76,7 @@ class Permits extends BaseRecordUtils {
           projectName: mineRecord.name || '',
           centroid: (mineRecord.location && mineRecord.location.coordinates) || [],
 
-          issuingAgency: 'EMPR'
+          issuingAgency: 'EMLI'
         });
       }
     }

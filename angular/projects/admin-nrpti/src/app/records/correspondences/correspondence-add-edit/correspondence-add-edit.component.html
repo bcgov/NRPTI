@@ -50,7 +50,7 @@
           <label for="issuingAgency">Issuing Agency</label>
           <select name="issuingAgency" id="issuingAgency" formControlName="issuingAgency" class="form-control">
             <option *ngFor="let agency of agencies" [ngValue]="agency">
-              {{ (agency === 'EMLI') ? this.convertAcronyms(agency) : agency }}
+              {{ this.convertAcronyms(agency) }}
             </option>
           </select>
         </div>

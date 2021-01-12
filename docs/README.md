@@ -32,7 +32,7 @@ All data formerly in the Natural Resource Compliance and Enforcement Database ha
 > **Use:** db-migrate tool via npm.
 
 #### BCMI Mine Data
-Mining detail data is going to be imported from calling the [Legacy Mine EMPR Website](https://mines.empr.gov.bc.ca/api/projects/major) endpoints.  Without supplying credentials to the endpoint, this should only receive data that has already been vetted as publicly consumable.
+Mining detail data is going to be imported from calling the [Legacy Mine EMLI Website](https://mines.empr.gov.bc.ca/api/projects/major) endpoints.  Without supplying credentials to the endpoint, this should only receive data that has already been vetted as publicly consumable.
 
 > **Endpoint**: https://mines.empr.gov.bc.ca/api/projects/major
 
@@ -132,4 +132,3 @@ e.g.
 git tag -a v1.0.8 2ae61a317e6c534e782eac2323935ab6a7cee555 -m "Mad Max #3"
 git push upstream --tags
 ```
-
