@@ -10,7 +10,7 @@
             </span>
           </div>
           <div class="grid-section-header-button">
-            <button class="button-edit" (click)="navigateToEditPage()">
+            <button class="button-edit" *ngIf="!disableEdit" (click)="navigateToEditPage()">
               <i class="material-icons">edit</i>
               <span>Edit</span>
             </button>

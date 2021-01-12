@@ -40,6 +40,10 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
     if (this.factoryService.userOnlyWFRole() && !this.rowData.write.includes(Constants.ApplicationRoles.ADMIN_WF)) {
       this.showEdit = false;
     }
+
+    if (this.rowData.sourceSystemRef === 'core') {
+      this.showEdit = false;
+    }
   }
 
   private getSchemaRoute(schemaName) {

@@ -21,7 +21,7 @@ describe('transformRecord', () => {
       recordType: 'Inspection',
       author: 'Natural Resource Officers',
       dateIssued: null,
-      issuedTo: { dateOfBirth: expect.any(Date), firstName: '', lastName: '', middleName: '', type: 'Individual' },
+      issuedTo: { dateOfBirth: null, firstName: '', lastName: '', middleName: '', type: 'Individual' },
       description: '-',
       sourceSystemRef: 'nro-inspections-csv',
       issuingAgency: 'Natural Resource Officers',

@@ -59,7 +59,8 @@
           <label for="recordDate">Date Issued</label>
           <lib-date-picker
             [control]="myForm.controls.recordDate"
-            [isValidate]="true">
+            [isValidate]="true"
+            [isDisabled]="disableEdit">
           </lib-date-picker>
         </div>
         <div class="label-pair">
@@ -93,7 +94,7 @@
       <h4>Documents</h4>
       <app-document-edit
         [documents]="record ? record.documents : []"
-        [disableDelete]="disableDelete"
+        [disableDelete]="disableEdit"
         (documentsToDelete)="documentsToDelete = $event"></app-document-edit>
       <app-document-link-staging
         *ngIf="!record || (record && record.documents && record.documents.length === 0)"
