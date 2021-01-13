@@ -277,6 +277,9 @@ export class MinesRecordsEditComponent implements OnInit {
       this.router.navigate(['mines', this.mine._id, 'records', this.record._id, 'detail']);
     });
   }
+  convertAcronyms(acronym) {
+    return Utils.convertAcronyms(acronym);
+  }
 
   /**
    * Cancel editing.

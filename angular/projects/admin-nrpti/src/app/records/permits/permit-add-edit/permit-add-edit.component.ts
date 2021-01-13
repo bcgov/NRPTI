@@ -346,6 +346,10 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  convertAcronyms(acronym) {
+    return Utils.convertAcronyms(acronym);
+  }
+
   cancel() {
     const shouldCancel = confirm(
       'Leaving this page will discard unsaved changes. Are you sure you would like to continue?'

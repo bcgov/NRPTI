@@ -51,7 +51,9 @@
         <div class="label-pair">
           <label for="issuingAgencygency">Issuing Agency</label>
           <select name="issuingAgencyency" id="issuingAgency" formControlName="issuingAgency" class="form-control">
-            <option *ngFor="let issuingAgency of agencies" [ngValue]="issuingAgency">{{ issuingAgency }}</option>
+            <option *ngFor="let issuingAgency of agencies" [ngValue]="issuingAgency">
+              {{ this.convertAcronyms(issuingAgency) }}
+            </option>
           </select>
         </div>
         <div class="label-pair">

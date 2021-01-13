@@ -109,8 +109,8 @@ export class Utils {
   static convertAcronyms(acronym): string {
     if (acronym && acronym === 'EAO') {
       return 'Environmental Assessment Office';
-    } else if (acronym && acronym === 'EMPR') {
-      return 'Ministry of Energy, Mines and Petroleum Resources';
+    } else if (acronym && acronym === 'EMLI') {
+      return 'Ministry of Energy, Mines, and Low Carbon Innovation';
     } else {
       return acronym;
     }
