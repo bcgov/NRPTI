@@ -140,7 +140,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti') &&
-          !this.factoryService.userInLngRole()
+          !this.factoryService.userInLngRole() && this.disableEdit
       }),
       recordSubtype: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordSubtype) || '',
@@ -344,6 +344,10 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       this.loadingScreenService.setLoadingState(false, 'main');
       this.router.navigate(['records', 'permits', this.currentRecord._id, 'detail']);
     }
+  }
+
+  convertAcronyms(acronym) {
+    return Utils.convertAcronyms(acronym);
   }
 
   cancel() {
