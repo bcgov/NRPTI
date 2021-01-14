@@ -5,7 +5,7 @@
   "main": "app",
   "scripts": {
     "start": "node app",
-    "test": "node_modules/.bin/jest --verbose",
+    "test": "node_modules/.bin/jest --verbose --forceExit",
     "lint": "npm-run-all -l -s -c lint:*",
     "lint:1": "eslint . --ignore-pattern 'node_modules' --ext .js",
     "lint:2": "prettier ./**/*.js --warn",
