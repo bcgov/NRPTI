@@ -21,7 +21,10 @@ import org.csanchez.jenkins.plugins.kubernetes.KubernetesFolderProperty
 def repoOwner = new File('/var/run/configs/jobs/repo.owner').getText('UTF-8').trim()
 def appRepo = new File('/var/run/configs/jobs/repo.name').getText('UTF-8').trim()
 def appName = new File('/var/run/configs/jobs/app.name').getText('UTF-8').trim()
+def bcmiAppRepo = new File('/var/run/configs/jobs/bcmi.repo.name').getText('UTF-8').trim()
+def bcmiAppName = new File('/var/run/configs/jobs/bcmi.app.name').getText('UTF-8').trim()
 def name = appName.toLowerCase().replaceAll("/[^A-Za-z0-9 ]/", "").replaceAll("\\s", "-")
+def bcmiName = bcmiAppName.toLowerCase().replaceAll("/[^A-Za-z0-9 ]/", "").replaceAll("\\s", "-")
 
 def githubCredentialsId = "github-account"
 
@@ -39,23 +42,39 @@ def masterTraits = [
     new WipeWorkspaceTrait()
 ]
 
-core_jobs = [ new Expando(jobName: "${name}-cicd",
-                          displayName: "${name}-cicd",
-                          owner: repoOwner,
-                          repo: appRepo,
-                          credentialsId: githubCredentialsId,
-                          jenkinsFilePath: "Jenkinsfile.cicd",
-                          traits: pullRequestTraits,
-                          startJob: false),
-                  new Expando(jobName: "${name}-master",
-                          displayName: "${name}-master",
-                          owner: repoOwner,
-                          repo: appRepo,
-                          credentialsId: githubCredentialsId,
-                          jenkinsFilePath: "Jenkinsfile",
-                          traits: masterTraits,
-                          startJob: true)
-            ]
+def bcmiTraits = [
+    new RegexSCMHeadFilterTrait("^(BCMI-V2)"),
+    new BranchDiscoveryTrait(1),
+    new DisableStatusUpdateTrait(),
+    new WipeWorkspaceTrait()
+]
+
+core_jobs = [ 
+    new Expando(jobName: "${name}-cicd",
+            displayName: "${name}-cicd",
+            owner: repoOwner,
+            repo: appRepo,
+            credentialsId: githubCredentialsId,
+            jenkinsFilePath: "Jenkinsfile.cicd",
+            traits: pullRequestTraits,
+            startJob: false),
+    new Expando(jobName: "${name}-master",
+            displayName: "${name}-master",
+            owner: repoOwner,
+            repo: appRepo,
+            credentialsId: githubCredentialsId,
+            jenkinsFilePath: "Jenkinsfile",
+            traits: masterTraits,
+            startJob: true),
+    new Expando(jobName: "${bcmiName}",
+            displayName: "${bcmiName}",
+            owner: repoOwner,
+            repo: bcmiAppRepo,
+            credentialsId: githubCredentialsId,
+            jenkinsFilePath: "scripts/Jenkinsfile",
+            traits: bcmiTraits,
+            startJob: true)
+]
 
 
 jobs = jenkins.getAllItems()
