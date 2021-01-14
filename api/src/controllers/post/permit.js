@@ -99,7 +99,11 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.recordSubtype && (permit.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (permit.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (permit.issuingAgency = incomingObj.issuingAgency);
+  // set issued to and its r/w arrays
   incomingObj.issuedTo && (permit.issuedTo = incomingObj.issuedTo);
+  permit.issuedTo.read = utils.ApplicationAdminRoles;
+  permit.issuedTo.write = utils.ApplicationAdminRoles;
+
   incomingObj.legislation && incomingObj.legislation.act && (permit.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
     incomingObj.legislation.regulation &&
@@ -210,7 +214,11 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.recordSubtype && (permitLNG.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (permitLNG.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (permitLNG.issuingAgency = incomingObj.issuingAgency);
+  //set issued to and it's r/w arrays
   incomingObj.issuedTo && (permitLNG.issuedTo = incomingObj.issuedTo);
+  permitLNG.issuedTo.read = utils.ApplicationAdminRoles;
+  permitLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
+
   incomingObj.legislation && incomingObj.legislation.act && (permitLNG.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
     incomingObj.legislation.regulation &&
@@ -297,7 +305,11 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.recordSubtype && (permitBCMI.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (permitBCMI.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (permitBCMI.issuingAgency = incomingObj.issuingAgency);
+  // set issued to and it's r/w arrays
   incomingObj.issuedTo && (permitBCMI.issuedTo = incomingObj.issuedTo);
+  permitBCMI.issuedTo.read = utils.ApplicationAdminRoles;
+  permitBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+
   incomingObj.legislation && incomingObj.legislation.act && (permitBCMI.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
     incomingObj.legislation.regulation &&
@@ -335,6 +347,6 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (permitBCMI.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (permitBCMI.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (permitBCMI.sourceSystemRef = incomingObj.sourceSystemRef);
-  
+
   return permitBCMI;
 };
