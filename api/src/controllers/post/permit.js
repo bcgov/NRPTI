@@ -308,7 +308,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   // set issued to and it's r/w arrays
   incomingObj.issuedTo && (permitBCMI.issuedTo = incomingObj.issuedTo);
   permitBCMI.issuedTo.read = utils.ApplicationAdminRoles;
-  permitBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  permitBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   incomingObj.legislation && incomingObj.legislation.act && (permitBCMI.legislation.act = incomingObj.legislation.act);
   incomingObj.legislation &&
