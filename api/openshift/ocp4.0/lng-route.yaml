@@ -1,0 +1,62 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"route.openshift.io/v1","kind":"Route","metadata":{"annotations":{},"labels":{"app":"nrpti"},"name":"lng","namespace":"f00029-dev"},"spec":{"host":"lng-f00029-dev.apps.silver.devops.gov.bc.ca","port":{"targetPort":"8080-tcp"},"tls":{"insecureEdgeTerminationPolicy":"Redirect","termination":"edge"},"to":{"kind":"Service","name":"lng","weight":100},"wildcardPolicy":"None"}}
+  selfLink: /apis/route.openshift.io/v1/namespaces/f00029-dev/routes/lng
+  resourceVersion: '288199222'
+  name: lng
+  uid: 695d1f01-6760-4def-b8fc-8499b350c310
+  creationTimestamp: '2021-01-12T23:45:23Z'
+  managedFields:
+    - manager: oc
+      operation: Update
+      apiVersion: route.openshift.io/v1
+      time: '2021-01-12T23:45:23Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            .: {}
+            'f:kubectl.kubernetes.io/last-applied-configuration': {}
+          'f:labels':
+            .: {}
+            'f:app': {}
+        'f:spec':
+          'f:host': {}
+          'f:port':
+            .: {}
+            'f:targetPort': {}
+          'f:tls':
+            .: {}
+            'f:insecureEdgeTerminationPolicy': {}
+            'f:termination': {}
+          'f:to':
+            'f:kind': {}
+            'f:name': {}
+            'f:weight': {}
+          'f:wildcardPolicy': {}
+    - manager: openshift-router
+      operation: Update
+      apiVersion: route.openshift.io/v1
+      time: '2021-01-12T23:45:23Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:status':
+          'f:ingress': {}
+  namespace: f00029-dev
+  labels:
+    app: nrpti
+spec:
+  host: lng-f00029-dev.apps.silver.devops.gov.bc.ca
+  to:
+    kind: Service
+    name: lng
+    weight: 100
+  port:
+    targetPort: 8080-tcp
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None

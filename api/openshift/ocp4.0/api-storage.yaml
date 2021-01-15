@@ -1,0 +1,50 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  annotations:
+    volume.beta.kubernetes.io/storage-provisioner: csi.trident.netapp.io
+  selfLink: /api/v1/namespaces/f00029-dev/persistentvolumeclaims/nrpti-api-docs-pvc
+  resourceVersion: '263393509'
+  name: nrpti-api-docs-pvc
+  uid: 493566f2-f1f8-4d92-9446-165efd8c0b3b
+  creationTimestamp: '2021-01-08T21:11:55Z'
+  managedFields:
+    - manager: Mozilla
+      operation: Update
+      apiVersion: v1
+      time: '2021-01-08T21:11:55Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          'f:accessModes': {}
+          'f:resources':
+            'f:requests':
+              .: {}
+              'f:storage': {}
+          'f:storageClassName': {}
+          'f:volumeMode': {}
+        'f:status':
+          'f:phase': {}
+    - manager: kube-controller-manager
+      operation: Update
+      apiVersion: v1
+      time: '2021-01-08T21:11:55Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            .: {}
+            'f:volume.beta.kubernetes.io/storage-provisioner': {}
+  namespace: f00029-dev
+  finalizers:
+    - kubernetes.io/pvc-protection
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: netapp-file-standard
+  volumeMode: Filesystem
+status:
+  phase: Pending

@@ -1,0 +1,54 @@
+kind: Service
+apiVersion: v1
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"nrpti"},"name":"api","namespace":"f00029-dev"},"spec":{"ports":[{"name":"3000-tcp","port":3000,"protocol":"TCP","targetPort":3000}],"selector":{"app":"nrpti","deploymentconfig":"api"},"type":"ClusterIP"}}
+  selfLink: /api/v1/namespaces/f00029-dev/services/api
+  resourceVersion: '288212811'
+  name: api
+  uid: 3f0d9bdb-a297-41c7-a31e-65fbe3796d9c
+  creationTimestamp: '2021-01-12T23:45:22Z'
+  managedFields:
+    - manager: oc
+      operation: Update
+      apiVersion: v1
+      time: '2021-01-12T23:48:08Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            .: {}
+            'f:kubectl.kubernetes.io/last-applied-configuration': {}
+          'f:labels':
+            .: {}
+            'f:app': {}
+        'f:spec':
+          'f:ports':
+            .: {}
+            'k:{"port":3000,"protocol":"TCP"}':
+              .: {}
+              'f:name': {}
+              'f:port': {}
+              'f:protocol': {}
+              'f:targetPort': {}
+          'f:selector':
+            .: {}
+            'f:app': {}
+            'f:deploymentconfig': {}
+          'f:sessionAffinity': {}
+          'f:type': {}
+  namespace: f00029-dev
+  labels:
+    app: nrpti
+spec:
+  ports:
+    - name: 3000-tcp
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+  selector:
+    app: nrpti
+    deploymentconfig: nrpti-api
+  type: ClusterIP
+  sessionAffinity: None

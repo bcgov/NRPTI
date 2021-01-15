@@ -1,0 +1,268 @@
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
+metadata:
+  selfLink: >-
+    /apis/apps.openshift.io/v1/namespaces/f00029-dev/deploymentconfigs/nrced
+  resourceVersion: '299743414'
+  name: nrced
+  uid: a2656ccb-3fb5-44a4-8494-85a177252421
+  creationTimestamp: '2021-01-14T17:20:36Z'
+  generation: 3
+  managedFields:
+    - manager: oc
+      operation: Update
+      apiVersion: apps.openshift.io/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            .: {}
+            'f:kubectl.kubernetes.io/last-applied-configuration': {}
+    - manager: Mozilla
+      operation: Update
+      apiVersion: apps.openshift.io/v1
+      time: '2021-01-14T17:20:36Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:labels':
+            .: {}
+            'f:app': {}
+            'f:role': {}
+        'f:spec':
+          'f:replicas': {}
+          'f:revisionHistoryLimit': {}
+          'f:selector':
+            .: {}
+            'f:app': {}
+            'f:deploymentconfig': {}
+          'f:strategy':
+            'f:activeDeadlineSeconds': {}
+            'f:rollingParams':
+              .: {}
+              'f:intervalSeconds': {}
+              'f:maxSurge': {}
+              'f:maxUnavailable': {}
+              'f:timeoutSeconds': {}
+              'f:updatePeriodSeconds': {}
+            'f:type': {}
+          'f:template':
+            .: {}
+            'f:metadata':
+              .: {}
+              'f:creationTimestamp': {}
+              'f:labels':
+                .: {}
+                'f:app': {}
+                'f:deploymentconfig': {}
+            'f:spec':
+              .: {}
+              'f:containers':
+                .: {}
+                'k:{"name":"nrced"}':
+                  'f:terminationMessagePolicy': {}
+                  .: {}
+                  'f:resources':
+                    .: {}
+                    'f:limits':
+                      .: {}
+                      'f:cpu': {}
+                      'f:memory': {}
+                    'f:requests':
+                      .: {}
+                      'f:cpu': {}
+                      'f:memory': {}
+                  'f:livenessProbe':
+                    .: {}
+                    'f:failureThreshold': {}
+                    'f:httpGet':
+                      .: {}
+                      'f:path': {}
+                      'f:port': {}
+                      'f:scheme': {}
+                    'f:initialDelaySeconds': {}
+                    'f:periodSeconds': {}
+                    'f:successThreshold': {}
+                    'f:timeoutSeconds': {}
+                  'f:env':
+                    .: {}
+                    'k:{"name":"AdditionalRealIpFromRules"}':
+                      .: {}
+                      'f:name': {}
+                    'k:{"name":"CONFIG_ENDPOINT_HOST"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"CONFIG_ENDPOINT_PORT"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"IpFilterRules"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"RealIpFrom"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                  'f:readinessProbe':
+                    .: {}
+                    'f:failureThreshold': {}
+                    'f:httpGet':
+                      .: {}
+                      'f:path': {}
+                      'f:port': {}
+                      'f:scheme': {}
+                    'f:initialDelaySeconds': {}
+                    'f:periodSeconds': {}
+                    'f:successThreshold': {}
+                    'f:timeoutSeconds': {}
+                  'f:terminationMessagePath': {}
+                  'f:imagePullPolicy': {}
+                  'f:ports':
+                    .: {}
+                    'k:{"containerPort":8080,"protocol":"TCP"}':
+                      .: {}
+                      'f:containerPort': {}
+                      'f:protocol': {}
+                  'f:name': {}
+              'f:dnsPolicy': {}
+              'f:restartPolicy': {}
+              'f:schedulerName': {}
+              'f:securityContext': {}
+              'f:terminationGracePeriodSeconds': {}
+    - manager: openshift-controller-manager
+      operation: Update
+      apiVersion: apps.openshift.io/v1
+      time: '2021-01-14T17:33:48Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          'f:template':
+            'f:spec':
+              'f:containers':
+                'k:{"name":"nrced"}':
+                  'f:image': {}
+          'f:triggers': {}
+        'f:status':
+          'f:updatedReplicas': {}
+          'f:readyReplicas': {}
+          'f:conditions':
+            .: {}
+            'k:{"type":"Available"}':
+              .: {}
+              'f:lastTransitionTime': {}
+              'f:lastUpdateTime': {}
+              'f:message': {}
+              'f:status': {}
+              'f:type': {}
+            'k:{"type":"Progressing"}':
+              .: {}
+              'f:lastTransitionTime': {}
+              'f:lastUpdateTime': {}
+              'f:message': {}
+              'f:reason': {}
+              'f:status': {}
+              'f:type': {}
+          'f:details':
+            .: {}
+            'f:causes': {}
+            'f:message': {}
+          'f:replicas': {}
+          'f:availableReplicas': {}
+          'f:observedGeneration': {}
+          'f:unavailableReplicas': {}
+          'f:latestVersion': {}
+  namespace: f00029-dev
+  labels:
+    app: nrpti
+    role: nrced
+spec:
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+    resources: {}
+    activeDeadlineSeconds: 21600
+  triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - nrced
+        from:
+          kind: ImageStreamTag
+          namespace: f00029-tools
+          name: 'nrced:latest'
+        lastTriggeredImage: >-
+          image-registry.openshift-image-registry.svc:5000/f00029-tools/nrced@sha256:0b9996ad08028ed6a66673d134230f0956ba8b75b3d761f823f072f03b129f08
+  replicas: 1
+  revisionHistoryLimit: 10
+  test: false
+  selector:
+    app: nrpti
+    deploymentconfig: nrced
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nrpti
+        deploymentconfig: nrced
+    spec:
+      containers:
+        - resources:
+            limits:
+              cpu: 150m
+              memory: 250Mi
+            requests:
+              cpu: 75m
+              memory: 100Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
+            timeoutSeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          name: nrced
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            timeoutSeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          env:
+            - name: RealIpFrom
+              value: 172.51.0.0/16
+            - name: AdditionalRealIpFromRules
+            - name: IpFilterRules
+              value: '#allow all; deny all;'
+            - name: CONFIG_ENDPOINT_HOST
+              value: NRPTI_API_SERVICE_HOST
+            - name: CONFIG_ENDPOINT_PORT
+              value: NRPTI_API_SERVICE_PORT
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          imagePullPolicy: Always
+          terminationMessagePolicy: File
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/f00029-tools/nrced@sha256:0b9996ad08028ed6a66673d134230f0956ba8b75b3d761f823f072f03b129f08
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler

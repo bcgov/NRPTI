@@ -1,0 +1,54 @@
+kind: Service
+apiVersion: v1
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"nrpti"},"name":"nrced","namespace":"f00029-dev"},"spec":{"ports":[{"name":"8080-tcp","port":8080,"protocol":"TCP","targetPort":8080}],"selector":{"app":"nrpti","deploymentconfig":"nrced"},"type":"ClusterIP"}}
+  selfLink: /api/v1/namespaces/f00029-dev/services/nrced
+  resourceVersion: '299777547'
+  name: nrced
+  uid: d99917e1-9d1d-4337-8c76-6e41a4d65e31
+  creationTimestamp: '2021-01-14T17:41:34Z'
+  managedFields:
+    - manager: Mozilla
+      operation: Update
+      apiVersion: v1
+      time: '2021-01-14T17:41:34Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            .: {}
+            'f:kubectl.kubernetes.io/last-applied-configuration': {}
+          'f:labels':
+            .: {}
+            'f:app': {}
+        'f:spec':
+          'f:ports':
+            .: {}
+            'k:{"port":8080,"protocol":"TCP"}':
+              .: {}
+              'f:name': {}
+              'f:port': {}
+              'f:protocol': {}
+              'f:targetPort': {}
+          'f:selector':
+            .: {}
+            'f:app': {}
+            'f:deploymentconfig': {}
+          'f:sessionAffinity': {}
+          'f:type': {}
+  namespace: f00029-dev
+  labels:
+    app: nrpti
+spec:
+  ports:
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: nrpti
+    deploymentconfig: nrced
+  type: ClusterIP
+  sessionAffinity: None

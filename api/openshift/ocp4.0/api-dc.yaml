@@ -1,0 +1,366 @@
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
+metadata:
+  annotations:
+    description: Defines how to deploy the application server
+  selfLink: /apis/apps.openshift.io/v1/namespaces/f00029-dev/deploymentconfigs/nrpti-api
+  resourceVersion: '293181941'
+  name: nrpti-api
+  uid: 253028a3-c2d1-41d8-a06d-a5e5cd9ef467
+  creationTimestamp: '2021-01-08T21:09:00Z'
+  generation: 18
+  managedFields:
+    - manager: Mozilla
+      operation: Update
+      apiVersion: apps.openshift.io/v1
+      time: '2021-01-13T17:49:19Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            .: {}
+            'f:description': {}
+          'f:labels':
+            .: {}
+            'f:app': {}
+            'f:role': {}
+        'f:spec':
+          'f:replicas': {}
+          'f:selector':
+            .: {}
+            'f:app': {}
+            'f:deploymentconfig': {}
+          'f:strategy':
+            'f:activeDeadlineSeconds': {}
+            'f:recreateParams':
+              .: {}
+              'f:timeoutSeconds': {}
+            'f:type': {}
+          'f:template':
+            .: {}
+            'f:metadata':
+              .: {}
+              'f:creationTimestamp': {}
+              'f:labels':
+                .: {}
+                'f:app': {}
+                'f:deploymentconfig': {}
+                'f:name': {}
+                'f:role': {}
+              'f:name': {}
+            'f:spec':
+              .: {}
+              'f:containers':
+                .: {}
+                'k:{"name":"nrpti-api"}':
+                  'f:volumeMounts':
+                    .: {}
+                    'k:{"mountPath":"/opt/app-root/src/uploads"}':
+                      .: {}
+                      'f:mountPath': {}
+                      'f:name': {}
+                  'f:terminationMessagePolicy': {}
+                  .: {}
+                  'f:resources':
+                    .: {}
+                    'f:limits':
+                      .: {}
+                      'f:cpu': {}
+                      'f:memory': {}
+                    'f:requests':
+                      .: {}
+                      'f:cpu': {}
+                      'f:memory': {}
+                  'f:livenessProbe':
+                    .: {}
+                    'f:failureThreshold': {}
+                    'f:httpGet':
+                      .: {}
+                      'f:path': {}
+                      'f:port': {}
+                      'f:scheme': {}
+                    'f:initialDelaySeconds': {}
+                    'f:periodSeconds': {}
+                    'f:successThreshold': {}
+                    'f:timeoutSeconds': {}
+                  'f:env':
+                    'k:{"name":"NRIS_EPD_API_ENDPOINT"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"KEYCLOAK_URL"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"KEYCLOAK_CLIENT_ID"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"ENVIRONMENT"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"KEYCLOAK_REALM"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"MONGODB_USERNAME"}':
+                      .: {}
+                      'f:name': {}
+                      'f:valueFrom':
+                        .: {}
+                        'f:secretKeyRef':
+                          .: {}
+                          'f:key': {}
+                          'f:name': {}
+                    'k:{"name":"API_PUBLIC_PATH"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"MONGODB_DATABASE"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"MONGODB_PASSWORD"}':
+                      .: {}
+                      'f:name': {}
+                      'f:valueFrom':
+                        .: {}
+                        'f:secretKeyRef':
+                          .: {}
+                          'f:key': {}
+                          'f:name': {}
+                    .: {}
+                    'k:{"name":"API_PATH"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"DEBUG_MODE"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"GEOCODER_API"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"KEYCLOAK_ENABLED"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"API_HOSTNAME"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"NRIS_TOKEN_ENDPOINT"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                    'k:{"name":"API_LOCATION"}':
+                      .: {}
+                      'f:name': {}
+                      'f:value': {}
+                  'f:readinessProbe':
+                    .: {}
+                    'f:failureThreshold': {}
+                    'f:httpGet':
+                      .: {}
+                      'f:path': {}
+                      'f:port': {}
+                      'f:scheme': {}
+                    'f:initialDelaySeconds': {}
+                    'f:periodSeconds': {}
+                    'f:successThreshold': {}
+                    'f:timeoutSeconds': {}
+                  'f:terminationMessagePath': {}
+                  'f:imagePullPolicy': {}
+                  'f:ports':
+                    .: {}
+                    'k:{"containerPort":3000,"protocol":"TCP"}':
+                      .: {}
+                      'f:containerPort': {}
+                      'f:protocol': {}
+                  'f:name': {}
+              'f:dnsPolicy': {}
+              'f:restartPolicy': {}
+              'f:schedulerName': {}
+              'f:securityContext': {}
+              'f:terminationGracePeriodSeconds': {}
+              'f:volumes':
+                .: {}
+                'k:{"name":"nrpti-api-docs"}':
+                  .: {}
+                  'f:name': {}
+                  'f:persistentVolumeClaim':
+                    .: {}
+                    'f:claimName': {}
+    - manager: openshift-controller-manager
+      operation: Update
+      apiVersion: apps.openshift.io/v1
+      time: '2021-01-13T17:49:40Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          'f:template':
+            'f:spec':
+              'f:containers':
+                'k:{"name":"nrpti-api"}':
+                  'f:image': {}
+          'f:triggers': {}
+        'f:status':
+          'f:updatedReplicas': {}
+          'f:readyReplicas': {}
+          'f:conditions':
+            .: {}
+            'k:{"type":"Available"}':
+              .: {}
+              'f:lastTransitionTime': {}
+              'f:lastUpdateTime': {}
+              'f:message': {}
+              'f:status': {}
+              'f:type': {}
+            'k:{"type":"Progressing"}':
+              .: {}
+              'f:lastTransitionTime': {}
+              'f:lastUpdateTime': {}
+              'f:message': {}
+              'f:reason': {}
+              'f:status': {}
+              'f:type': {}
+          'f:details':
+            .: {}
+            'f:causes': {}
+            'f:message': {}
+          'f:replicas': {}
+          'f:availableReplicas': {}
+          'f:observedGeneration': {}
+          'f:unavailableReplicas': {}
+          'f:latestVersion': {}
+  namespace: f00029-dev
+  labels:
+    app: nrpti
+    role: api-nrpti
+spec:
+  strategy:
+    type: Recreate
+    recreateParams:
+      timeoutSeconds: 600
+    resources: {}
+    activeDeadlineSeconds: 21600
+  triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - nrpti-api
+        from:
+          kind: ImageStreamTag
+          namespace: f00029-tools
+          name: 'nrpti-api:latest'
+        lastTriggeredImage: >-
+          image-registry.openshift-image-registry.svc:5000/f00029-tools/nrpti-api@sha256:77cff5d32c11e1453ada2b3e07033da4d005d8988a0174ad12a896823f6780b5
+    - type: ConfigChange
+  replicas: 1
+  revisionHistoryLimit: 10
+  test: false
+  selector:
+    app: nrpti
+    deploymentconfig: nrpti-api
+  template:
+    metadata:
+      name: nrpti-api
+      creationTimestamp: null
+      labels:
+        app: nrpti
+        deploymentconfig: nrpti-api
+        name: nrpti-api
+        role: api-nrpti
+    spec:
+      volumes:
+        - name: nrpti-api-docs
+          persistentVolumeClaim:
+            claimName: nrpti-api-docs-pvc
+      containers:
+        - resources:
+            limits:
+              cpu: 200m
+              memory: 250Mi
+            requests:
+              cpu: 50m
+              memory: 100Mi
+          readinessProbe:
+            httpGet:
+              path: /api/docs
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 3
+            timeoutSeconds: 3000
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          name: nrpti-api
+          livenessProbe:
+            httpGet:
+              path: /api/docs
+              port: 3000
+              scheme: HTTP
+            initialDelaySeconds: 30
+            timeoutSeconds: 3000
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          env:
+            - name: MONGODB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: nrpti-mongodb
+                  key: MONGODB_USERNAME
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nrpti-mongodb
+                  key: MONGODB_PASSWORD
+            - name: API_HOSTNAME
+              value: nrpti-dev.apps.silver.devops.gov.bc.ca
+            - name: API_LOCATION
+              value: 'https://nrpti-dev.apps.silver.devops.gov.bc.ca'
+            - name: NRIS_TOKEN_ENDPOINT
+              value: >-
+                https://t1api.nrs.gov.bc.ca/oauth2/v1/oauth/token?disableDeveloperFilter=true&grant_type=client_credentials&scope=NRISWS.*
+            - name: NRIS_EPD_API_ENDPOINT
+              value: 'https://t1api.nrs.gov.bc.ca/nrisws-api/v1/epdInspections'
+            - name: API_PATH
+              value: /api
+            - name: API_PUBLIC_PATH
+              value: /api/public
+            - name: KEYCLOAK_CLIENT_ID
+              value: nrpti-admin
+            - name: KEYCLOAK_URL
+              value: 'https://dev.oidc.gov.bc.ca/auth'
+            - name: KEYCLOAK_REALM
+              value: 3l5nw6dk
+            - name: KEYCLOAK_ENABLED
+              value: 'true'
+            - name: ENVIRONMENT
+              value: dev
+            - name: DEBUG_MODE
+              value: 'true'
+            - name: GEOCODER_API
+              value: 'https://geocoder.api.gov.bc.ca'
+            - name: MONGODB_DATABASE
+              value: nrpti
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: nrpti-api-docs
+              mountPath: /opt/app-root/src/uploads
+          terminationMessagePolicy: File
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/f00029-tools/nrpti-api@sha256:77cff5d32c11e1453ada2b3e07033da4d005d8988a0174ad12a896823f6780b5
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
