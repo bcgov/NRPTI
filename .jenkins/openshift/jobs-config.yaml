@@ -12,6 +12,8 @@ objects:
     app.domain: "${APP_DOMAIN}"
     repo.name: "${REPO_NAME}"
     repo.owner: "${REPO_OWNER}"
+    bcmi.app.name: "${BCMI_APP_NAME}"
+    bcmi.repo.name: "${BCMI_REPO_NAME}"
   kind: ConfigMap
   metadata:
     name:  "${JOBS_CONFIG}"
@@ -25,13 +27,24 @@ parameters:
   displayName: Application Repository Name
   description: Name of the application repository (code to build)
   required: true
+  value: nrpti
 - name: APP_NAME
   description: Short name (one word, lowercase) of the application
   required: true
+  value: nrpti
+- name: BCMI_REPO_NAME
+  displayName: BCMI Application Repository Name
+  description: Name of the application repository (code to build)
+  required: true
+  value: mem-mmti-public
+- name: BCMI_APP_NAME
+  description: BCMI Short name (one word, lowercase) of the application
+  required: true
+  value: bcmi
 - name: APP_DOMAIN
   description: Internet domain for the application
   required: true
-  value: pathfinder.gov.bc.ca
+  value: apps.silver.devops.gov.bc.ca
 - name: JOBS_CONFIG
   displayName: Jobs Config Name
   description: A name of the jobs config for Jenkins
