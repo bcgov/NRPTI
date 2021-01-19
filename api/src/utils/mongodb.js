@@ -1,5 +1,4 @@
 // Require this function to get a pooled raw native access to MongoDB
-
 function MongoDriver(options) {
   this.connections = [];
 
@@ -21,7 +20,11 @@ function MongoDriver(options) {
       'mongodb://' + (process.env.MONGODB_SERVICE_HOST || process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost');
   }
 
-  DB_CONNECTION += '/' + (process.env.MONGODB_DATABASE || 'nrpti-dev');
+  if (process.env.NODE_ENV === 'test') {
+    DB_CONNECTION = process.env.MONGO_URI
+  } else {
+    DB_CONNECTION += '/' + (process.env.MONGODB_DATABASE || 'nrpti-dev');
+  }
 
   console.log('db conn:', DB_CONNECTION);
 

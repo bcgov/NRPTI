@@ -123,7 +123,9 @@ class CoreDocumentsDataSource {
 
       return true;
     } catch (error) {
-      recordStatus.amendmentId = permit._id;
+      if (permit) {
+        recordStatus.amendmentId = permit._id;
+      }
       recordStatus.error = error.message;
 
       // only add individual record status when an error occurs so that processing continues.

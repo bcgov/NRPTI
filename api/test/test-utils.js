@@ -1,26 +1,31 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const DatabaseCleaner = require('database-cleaner');
-const dbCleaner = new DatabaseCleaner('mongodb');
 const mongoose = require('mongoose');
 const mongooseOpts = require('./config/mongoose-options').mongooseOptions;
-const mongoDbMemoryServer = require('mongodb-memory-server');
 
 const app = express();
-let mongoServer;
+let mongoUri;
+
 mongoose.Promise = global.Promise;
 setupAppServer();
 
-jest.setTimeout(10000);
+jest.setTimeout(100000);
 
 beforeAll(async () => {
-  mongoServer = new mongoDbMemoryServer.default({
-    instance: {},
-    binary: {
-      version: '3.2.21' // Mongo Version
+  mongoUri = process.env.MONGO_URI
+  await mongoose.connect(mongoUri, mongooseOpts, err => {
+    if (err) {
+      throw Error(err);
     }
   });
-  const mongoUri = await mongoServer.getConnectionString();
+
+});
+
+afterAll(async () => {
+  await mongoose.disconnect();
+});
+
+beforeEach(async () => {
   await mongoose.connect(mongoUri, mongooseOpts, err => {
     if (err) {
       throw Error(err);
@@ -28,22 +33,20 @@ beforeAll(async () => {
   });
 });
 
-afterEach(done => {
-  if (mongoose.connection && mongoose.connection.db) {
-    dbCleaner.clean(mongoose.connection.db, () => {
-      done();
-    });
-  } else {
-    done();
-  }
-});
-
-afterAll(async () => {
+afterEach(async () => {
+  // clean up routes between tests to prevent roles persisting between tests
+  let routes = app._router.stack;
+  routes.forEach((route) => {
+    if (route.path) {
+      routes.pop()
+    }
+  })
   await mongoose.disconnect();
-  await mongoServer.stop();
-});
+})
+
 
 function setupAppServer() {
+  app.disable("x-powered-by");
   app.use(
     bodyParser.urlencoded({
       extended: true
@@ -52,8 +55,8 @@ function setupAppServer() {
   app.use(bodyParser.json());
 }
 
-function createSwaggerParams(fieldNames, additionalValues = {}, username = null) {
-  let defaultParams = defaultProtectedParams(fieldNames, username);
+function createSwaggerParams(additionalValues = {}, roles = [], username = null) {
+  let defaultParams = defaultProtectedParams(username, roles);
   let swaggerObject = {
     swagger: {
       params: { ...defaultParams, ...additionalValues },
@@ -75,23 +78,37 @@ function createPublicSwaggerParams(fieldNames, additionalValues = {}) {
   return swaggerObject;
 }
 
-function defaultProtectedParams(fieldNames, username = null) {
+function defaultProtectedParams(username = null, roles = []) {
+  const defaultRoles = [
+    'public',
+    'offline_access',
+    'uma_authorization',
+  ];
+  let userroles = defaultRoles.concat(roles);
   return {
     auth_payload: {
-      scopes: ['sysadmin', 'public'],
+      scopes: ['public'],
       // This value in the real world is pulled from the keycloak user. It will look something like
       // idir/arwhilla
-      preferred_username: username
+      preferred_username: username,
+      realm_access: {
+        roles: userroles
+      },
     },
-    fields: {
-      value: JSON.parse(JSON.stringify(fieldNames))
-    }
+    dataset: {},
+    _id: {},
+    keywords: {},
+    project: {},
+    pageNum: {},
+    pageSize: {},
+    sortBy: {}
   };
 }
+
 function defaultPublicParams(fieldNames) {
   return {
     fields: {
-      value: JSON.parse(JSON.stringify(fieldNames))
+      value: JSON.stringify(fieldNames)
     }
   };
 }
@@ -104,7 +121,16 @@ function buildParams(nameValueMapping) {
   return paramObj;
 }
 
+function createSwaggerBodyObj(paramName, bodyObj) {
+  return {
+    [paramName]: {
+      value: bodyObj
+    }
+  };
+}
+
 exports.createSwaggerParams = createSwaggerParams;
 exports.createPublicSwaggerParams = createPublicSwaggerParams;
 exports.buildParams = buildParams;
+exports.createSwaggerBodyObj = createSwaggerBodyObj;
 exports.app = app;
