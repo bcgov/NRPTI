@@ -26,7 +26,7 @@ describe('CoreDocumentsDataSource', () => {
   describe('processRecord', () => {
     it('throws error if no permit', () => {
       const dataSource = new DataSource();
-      expect(dataSource.processRecord(null, {})).rejects.toThrow('Param permit is required.');
+      expect(dataSource.processRecord(null, {})).resolves.toEqual(false)
     });
   });
 

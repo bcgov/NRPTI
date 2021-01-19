@@ -1,29 +1,10 @@
-const mongoose = require('mongoose');
-const { MongoMemoryServer } = require('mongodb-memory-server');
-
-let Order = require('./order');
-const utils = require('../../utils/constants/misc');
+let Order = require('../../../src/controllers/post/order');
+const utils = require('../../../src/utils/constants/misc');
 
 // May require additional time for downloading MongoDB binaries
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 600000;
-let mongoServer;
 
-// Setup mongoose with mongodb-memory-server
-beforeAll(async () => {
-  mongoServer = new MongoMemoryServer();
-  const mongoUri = await mongoServer.getUri();
-  await mongoose.connect(mongoUri, {}, err => {
-    if (err) console.error(err);
-  });
-
-  require('../../models');
-});
-
-afterAll(async () => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
-});
-
+require('../../../src/models');
 const wfRole = [utils.ApplicationRoles.ADMIN_WF];
 
 const args = {
