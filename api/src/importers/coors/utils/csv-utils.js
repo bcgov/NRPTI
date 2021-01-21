@@ -25,14 +25,69 @@ exports.getEntityType = function(csvRow) {
  * @returns {string} issuing agency.
  */
 exports.getIssuingAgency = function(csvRow) {
-  if (!csvRow || !csvRow['case_number']) {
+  if (!csvRow) {
     return null;
   }
 
+  let caseNum = '';
+  if (csvRow['case_number']) {
+    caseNum = csvRow['case_number'];
+  } else if (csvRow['case_no']) {
+    caseNum = csvRow['case_no'];
+  } else {
+    return null;
+  }
+
+
   // csv import specific business logic, see https://bcmines.atlassian.net/browse/NRPT-78
-  if (csvRow['case_number'].toLowerCase().startsWith('p-')) {
+  if (caseNum.toLowerCase().startsWith('p-')) {
     return MiscConstants.CoorsCsvIssuingAgencies.BC_Parks;
   }
 
   return MiscConstants.CoorsCsvIssuingAgencies.Conservation_Officer_Service;
 };
+
+
+/**
+ * Derive the penalty type
+ *
+ * @param {string} elem
+ * @returns {string} penalty type
+ */
+exports.getPenalty = function(elem) {
+  if (!elem) {
+    return null;
+  }
+
+  let penaltyType = '';
+  MiscConstants.COURT_CONVICTION_PENALTY_TYPES.forEach( item => {
+    if (elem.toLowerCase() === item.toLowerCase()) {
+      penaltyType = item;
+    } else if (elem.toLowerCase().startsWith('other'))  {
+      penaltyType = 'Other';
+    }
+  })
+
+  return penaltyType;
+}
+
+/**
+ * Derive the unit type of penalty value (eg. Dollars)
+ *
+ * @param {string} elem
+ * @returns {string} unit of penalty
+ */
+exports.getPenaltyUnits = function(elem) {
+  if (!elem) {
+    return null;
+  }
+
+  let units = '';
+  MiscConstants.PENALTY_VALUE_TYPES.forEach( item => {
+    if (elem.toLowerCase() === item.toLowerCase()) {
+      units = item;
+    }
+  })
+
+  return units;
+}

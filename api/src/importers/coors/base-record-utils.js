@@ -99,6 +99,27 @@ class BaseRecordUtils {
       updateObj.dateUpdated = new Date();
       updateObj.sourceDateUpdated = new Date();
 
+      // check if penalty needs to be appended
+      let existingPenalty = null;
+      if (updateObj.penalties && existingRecord.penalties) {
+        for (let item of existingRecord.penalties) {
+          for (let newItem of updateObj.penalties) {
+            // if type or penalty unit type don't match, this is a penalty to append
+            if (newItem.type !== item.type || newItem.penalty.type !== item.penalty.type) {
+              existingPenalty = item;
+              break;
+            };
+          }
+          if (existingPenalty) {
+            break;
+          }
+        }
+      }
+      // copy existing penalty into new obj
+      if (existingPenalty) {
+        updateObj.penalties.push(existingPenalty);
+      }
+
       existingRecord._flavourRecords.forEach(flavourRecord => {
         updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
       });

@@ -109,3 +109,20 @@ exports.BCMI_SCHEMA_NAMES = [
   'PermitBCMI',
   'ReportBCMI'
 ];
+
+exports.COURT_CONVICTION_PENALTY_TYPES = [
+  'Community Service',
+  'Court Order',
+  'Creative Sentencing',
+  'Fined',
+  'Forfeiture',
+  'Injunction',
+  'Jailed',
+  'Probation',
+  'Restitution',
+  'Restorative Justice',
+  'Suspended Sentence',
+  'Other'
+];
+
+exports.PENALTY_VALUE_TYPES = ['Years', 'Months', 'Days', 'Dollars', 'Hours', 'Other'];

@@ -7,7 +7,7 @@ import moment from 'moment';
 
 class CSVTypes {
   public static readonly csvTypes = {
-    'coors-csv': ['Ticket'],
+    'coors-csv': ['Ticket', 'Court Conviction'],
     'nro-csv': ['Inspection'],
     'mis-csv': ['Inspection']
   };

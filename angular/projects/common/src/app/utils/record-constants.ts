@@ -152,7 +152,7 @@ export class Picklists {
     'Suspended Sentence',
     'Other'
   ];
-  public static readonly penaltyTypePicklist = ['Days', 'Dollars', 'Hours', 'Other'];
+  public static readonly penaltyTypePicklist = ['Years', 'Days', 'Dollars', 'Hours', 'Other'];
 
   public static readonly agencyPicklist = [
     'Agricultural Land Commission',

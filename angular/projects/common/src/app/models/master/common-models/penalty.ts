@@ -8,6 +8,8 @@ export enum PENALTY_TYPE {
   Dollars = 'Dollars',
   Hours = 'Hours',
   Days = 'Days',
+  Years = 'Years',
+  Months = 'Months',
   Other = 'Other'
 }
 
@@ -57,6 +59,10 @@ export class Penalty {
         return `${this.penalty.value} Days`;
       case PENALTY_TYPE.Hours:
         return `${this.penalty.value} Hours`;
+      case PENALTY_TYPE.Years:
+        return `${this.penalty.value} Years`;
+      case PENALTY_TYPE.Months:
+        return `${this.penalty.value} Months`;
       default:
         return `${this.penalty.value}`;
     }

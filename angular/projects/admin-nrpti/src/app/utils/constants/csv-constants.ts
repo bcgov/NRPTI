@@ -93,6 +93,73 @@ export class CsvConstants {
   ];
 
   /**
+   * Expected headers for COORS Court Convictions csv.
+   *
+   * Note: sort order and letter case of headers is not important.
+   *
+   * @static
+   * @memberof CsvConstants
+   */
+   public static readonly coorsConvictionCsvRequiredHeaders = [
+    'CASE_CONTRAVENTION_ID',
+    'ENFORCEMENT_ACTION_ID',
+    'FINAL_DECISION_DATE',
+    'FIRST_NAME',
+    'MIDDLE_NAME',
+    'LAST_NAME',
+    'BUSINESS_NAME',
+    'LOCATION',
+    'ACT',
+    'REGULATION_DESCRIPTION',
+    'SECTION',
+    'SUB_SECTION',
+    'PARAGRAPH',
+    'PENALTY_AMOUNT',
+    'PENALTY_UNIT_CODE',
+    'DESCRIPTION',
+    'SUMMARY',
+    'CASE_NO',
+    'BIRTH_DATE'
+  ];
+
+  /**
+   * Required fields for COORS Ticket csv.
+   *
+   * @static
+   * @memberof CsvConstants
+   */
+  public static readonly coorsConvictionCsvRequiredFields = [
+    'CASE_CONTRAVENTION_ID',
+    'ENFORCEMENT_ACTION_ID'
+  ];
+
+  /**
+   * Fields for COORS Ticket csv that have a required format.
+   *
+   * Note: These fields are not necessarily required, and only have a required format if present.
+   *
+   * @static
+   * @type {IRequiredFormat[]}
+   * @memberof CsvConstants
+   */
+  public static readonly coorsConvictionCsvRequiredFormats: IRequiredFormat[] = [
+    { field: 'FINAL_DECISION_DATE', type: 'date', format: 'MM/DD/YYYY' },
+    { field: 'BIRTH_DATE', type: 'date', format: 'YYYY-MM-DD' }
+  ];
+
+  /**
+   * Fields for COORS Ticket csv that represent dates.
+   *
+   * @static
+   * @type {IDateField[]}
+   * @memberof CsvConstants
+   */
+  public static readonly coorsConvictionCsvDateFields: IDateField[] = [
+    { field: 'FINAL_DECISION_DATE', format: 'MM/DD/YYYY' },
+    { field: 'BIRTH_DATE', format: 'YYYY-MM-DD' }
+  ];
+
+  /**
    * Expected headers for OGC Inspection csv.
    *
    * Note: sort order and letter case of headers is not important.
@@ -264,6 +331,9 @@ export class CsvConstants {
       if (recordType === 'Ticket') {
         return this.coorsTicketCsvRequiredHeaders;
       }
+      if (recordType === 'Court Conviction') {
+        return this.coorsConvictionCsvRequiredHeaders;
+      }
     }
 
     if (dataSourceType === 'bcogc') {
@@ -304,6 +374,9 @@ export class CsvConstants {
     if (dataSourceType === 'coors-csv') {
       if (recordType === 'Ticket') {
         return this.coorsTicketCsvRequiredFields;
+      }
+      if (recordType === 'Court Conviction') {
+        return this.coorsConvictionCsvRequiredFields;
       }
     }
 
@@ -346,6 +419,9 @@ export class CsvConstants {
       if (recordType === 'Ticket') {
         return this.coorsTicketCsvRequiredFormats;
       }
+      if (recordType === 'Court Conviction') {
+        return this.coorsConvictionCsvRequiredFormats;
+      }
     }
 
     if (dataSourceType === 'bcogc') {
@@ -386,6 +462,9 @@ export class CsvConstants {
     if (dataSourceType === 'coors-csv') {
       if (recordType === 'Ticket') {
         return this.coorsTicketCsvDateFields;
+      }
+      if (recordType === 'Court Conviction') {
+        return this.coorsConvictionCsvDateFields;
       }
     }
 
