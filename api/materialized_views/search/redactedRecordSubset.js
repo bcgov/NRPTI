@@ -213,8 +213,6 @@ async function update(defaultLog) {
 
     aggregate.push({ $out: 'redacted_record_subset' });
 
-    defaultLog.info('done');
-
     await mainCollection.aggregate(aggregate).next();
 
   } catch (error) {
