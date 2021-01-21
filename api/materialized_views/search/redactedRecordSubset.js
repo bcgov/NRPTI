@@ -69,8 +69,6 @@ async function update(defaultLog) {
     }
   ];
 
-  // todo: add some step to populate full record
-
   const issuedToRedaction = [
     {
       $project: {
@@ -177,7 +175,7 @@ async function update(defaultLog) {
     aggregate.push({
       $project: {
         fullRecord: 0,
-        issuedtoAge: 0
+        issuedToAge: 0
       }
     });
 
@@ -185,6 +183,10 @@ async function update(defaultLog) {
     // flavours and documents, and we may need
     // to prevent some of these from being returned
     // if the user lacks the requisite role(s)
+
+    // for this case, only public users should be using this subset
+    let roles = ['public'];
+
     aggregate.push({
       $redact: {
         $cond: {
@@ -210,6 +212,8 @@ async function update(defaultLog) {
     });
 
     aggregate.push({ $out: 'redacted_record_subset' });
+
+    defaultLog.info('done');
 
     await mainCollection.aggregate(aggregate).next();
 
