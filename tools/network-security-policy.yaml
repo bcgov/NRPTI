@@ -120,7 +120,7 @@ objects:
         - - app=${GROUP_NAME}
           - role=${API_ROLE_NAME}
       destination:
-        - - ext:network=an
+        - - ext:network=any
 parameters:
   - description: A name used to group objects together to identify related objects for a set of deployments
     displayName: Group name
