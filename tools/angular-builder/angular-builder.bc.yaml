@@ -1,0 +1,79 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: ${NAME}
+objects:
+  - kind: ImageStream
+    apiVersion: image.openshift.io/v1
+    metadata:
+      name: ${NAME}
+      labels:
+        app: ${GROUP_NAME}
+        build: ${NAME}-build
+    spec:
+      lookupPolicy:
+        local: false
+  - kind: BuildConfig
+    apiVersion: build.openshift.io/v1
+    metadata:
+      name: ${NAME}-build
+      labels:
+        app: ${GROUP_NAME}
+        build: ${NAME}-build
+    spec:
+      nodeSelector: null
+      output:
+        to:
+          kind: ImageStreamTag
+          name: ${NAME}:latest
+      resources:
+        limits:
+          cpu: "2"
+          memory: 4Gi
+        requests:
+          cpu: "1"
+          memory: 2Gi
+      successfulBuildsHistoryLimit: 5
+      failedBuildsHistoryLimit: 5
+      strategy:
+        type: Source
+        sourceStrategy:
+          from:
+            kind: ImageStreamTag
+            namespace: ${SOURCE_IMAGE_NAMESPACE}
+            name: ${SOURCE_IMAGE_NAME}:${SOURCE_IMAGE_TAG}
+      source:
+        type: Git
+        git:
+          uri: ${SOURCE_REPOSITORY_URL}
+          ref: ${SOURCE_REPOSITORY_REF}
+        contextDir: angular
+      triggers:
+        - type: ConfigChange
+      runPolicy: Serial
+parameters:
+  - description: A name used for all objects
+    displayName: Name
+    name: NAME
+    required: true
+    value: angular-app
+  - description: A name used for all objects in the build or deploy group
+    displayName: Group name
+    name: GROUP_NAME
+    required: true
+    value: nrpti
+  - name: SOURCE_REPOSITORY_URL
+    required: true
+    value: https://github.com/bcgov/NRPTI
+  - name: SOURCE_REPOSITORY_REF
+    required: true
+    value: master
+  - name: SOURCE_IMAGE_NAME
+    required: true
+    value: nodejs
+  - name: SOURCE_IMAGE_TAG
+    required: true
+    value: "10"
+  - name: SOURCE_IMAGE_NAMESPACE
+    required: true
+    value: openshift
