@@ -100,6 +100,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (inspection.collectionId = new ObjectId(incomingObj.collectionId));
   incomingObj.mineGuid &&
     (inspection.mineGuid = incomingObj.mineGuid);
+  incomingObj._sourceRefAgriMisId &&
+    (inspection._sourceRefAgriMisId = incomingObj._sourceRefAgriMisId);
 
   // set permissions
   inspection.read = utils.ApplicationAdminRoles;
@@ -360,6 +362,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj._sourceRefNrisId &&
     ObjectId.isValid(incomingObj._sourceRefNrisId) &&
     (inspectionNRCED._sourceRefNrisId = incomingObj._sourceRefNrisId);
+  incomingObj._sourceRefAgriMisId &&
+    (inspectionNRCED._sourceRefAgriMisId = incomingObj._sourceRefAgriMisId);
 
   // set permissions and meta
   inspectionNRCED.read = utils.ApplicationAdminRoles;

@@ -9,6 +9,7 @@ class CSVTypes {
   public static readonly csvTypes = {
     'coors-csv': ['Ticket'],
     'nro-csv': ['Inspection'],
+    'mis-csv': ['Inspection']
   };
 
   public static getRecordTypes(dataSourceType: string): string[] {

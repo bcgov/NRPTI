@@ -223,6 +223,7 @@ export class Picklists {
   };
 
   public static readonly sourceSystemRefPicklist = [
+    'agri-mis',
     'bcogc',
     'core',
     'coors-csv',
@@ -232,7 +233,7 @@ export class Picklists {
     'nris-epd',
     'nro-inspections-csv',
     'nrpti',
-    'ocers-csv'
+    'ocers-csv',
   ];
 
   public static readonly mineTypes = ['Coal', 'Metal', 'Industrial Mineral', 'Sand & Gravel'];

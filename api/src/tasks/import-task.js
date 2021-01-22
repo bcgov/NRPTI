@@ -17,7 +17,7 @@ exports.protectedOptions = async function(args, res, next) {
 
 /*Required fields for type of task:
 
-import: 
+import:
 {
   dataSourceType: epic
   taskType: import,
@@ -216,6 +216,13 @@ function getDataSourceConfig(dataSourceType) {
       dataSourceLabel: 'nro-csv',
       dataSourceClass: require('../importers/nro/datasource')
     };
+  }
+
+  if (dataSourceType === 'mis-csv') {
+    return {
+      dataSourceLabel: 'mis-csv',
+      dataSourceClass: require('../importers/agri/datasource')
+    }
   }
 
   // dataSourceType will match the name of a directory for the given
