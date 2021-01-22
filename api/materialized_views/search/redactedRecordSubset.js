@@ -98,8 +98,8 @@ async function update(defaultLog) {
       }
     },
     // this step will replace issued to with an empty object {} for mines and collections.
-    // mines and collections don't normally have objects but this should minimize confusion
-    // TODO: remove the issued to field from mines and collections all together
+    // mines and collections don't normally have an issuedTo field, but this should minimize confusion
+    // TODO: remove the issuedTo field from mines and collections all together
     {
       $addFields: {
         'fullRecord.issuedTo': {
@@ -133,18 +133,6 @@ async function update(defaultLog) {
     // redact issued to fields based on age
     aggregate = aggregate.concat(issuedToRedaction);
 
-    // 'fullRecord.issuedTo': {
-    //   $cond: {
-    //     if: {
-    //       $in: ['$fullRecord._schemaName', ['MineBCMI', 'CollectionBCMI']]
-    //     },
-    //     then: 0,
-    //     else: '$fullRecord.issuedTo'
-    //   }
-
-
-
-
     // replace root with redacted full record
     aggregate.push(
       {
@@ -156,23 +144,6 @@ async function update(defaultLog) {
         }
       }
     });
-
-
-    //  // if this is a collection or a mine we need to trim the issued to field
-    //  aggregate.push({
-    //   $addFields: {
-    //     issuedTo: {
-    //       $cond: {
-    //         if: {
-    //           $e: ['$stripIssuedTo', 'true']
-    //         },
-    //         then: { $arrayElemAt: ['$issuedTo', 0] },
-    //         else: "$$REMOVE"
-    //       }
-    //     }
-    //   }
-    // });
-
 
     // trim out the 'fullRecord' attribute, we no longer need it
     // after re-population
