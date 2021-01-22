@@ -705,6 +705,9 @@ let searchCollection = async function (
 };
 
 exports.publicGet = async function (args, res, next) {
+  // if we are doing a public record search, we should use the redacted subset to avoid data leaks
+  // this subset cleans the data from any non publicly available information
+  args.swagger.params.subset.value = ['redactedRecord'];
   executeQuery(args, res, next);
 };
 

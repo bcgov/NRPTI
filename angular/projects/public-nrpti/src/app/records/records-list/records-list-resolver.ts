@@ -26,9 +26,6 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
       keywords = params.keywords;
     }
 
-    // points to the  redacted record materialized view made for public consumption
-    const subset = ['redactedRecord'];
-
     const filterParams = {};
 
     if (params.dateRangeFromFilter) {
@@ -69,8 +66,7 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
       tableObject.sortBy || '-dateIssued', // This needs to be common between all datasets to work properly
       {},
       false,
-      filterParams,
-      subset
+      filterParams
     );
   }
 }

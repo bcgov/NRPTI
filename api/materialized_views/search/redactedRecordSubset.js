@@ -6,64 +6,12 @@ const mongodb = require('../../src/utils/mongodb');
  * @param {*} defaultLog
  */
 async function update(defaultLog) {
+  // get all records with valid schemaNames
   let aggregate = [
     {
       $match: {
         _schemaName: {
-          $in: [
-            'AdministrativePenalty',
-            'AdministrativeSanction',
-            'Agreement',
-            'Certificate',
-            'ConstructionPlan',
-            'CourtConviction',
-            'Inspection',
-            'ManagementPlan',
-            'Order',
-            'Permit',
-            'RestorativeJustice',
-            'SelfReport',
-            'Ticket',
-            'Warning',
-            'OrderNRCED',
-            'InspectionNRCED',
-            'RestorativeJusticeNRCED',
-            'AdministrativePenaltyNRCED',
-            'AdministrativeSanctionNRCED',
-            'TicketNRCED',
-            'WarningNRCED',
-            'CourtConvictionNRCED',
-            'CorrespondenceNRCED',
-            'DamSafetyInspectionNRCED',
-            'ReportNRCED',
-            'ActivityLNG',
-            'AdministrativePenaltyLNG',
-            'AdministrativeSanctionLNG',
-            'AgreementLNG',
-            'CertificateLNG',
-            'CertificateAmendmentLNG',
-            'ConstructionPlanLNG',
-            'CourtConvictionLNG',
-            'InspectionLNG',
-            'ManagementPlanLNG',
-            'OrderLNG',
-            'PermitLNG',
-            'RestorativeJusticeLNG',
-            'SelfReportLNG',
-            'TicketLNG',
-            'WarningLNG',
-            'AnnualReportBCMI',
-            'CertificateBCMI',
-            'CertificateAmendmentBCMI',
-            'ConstructionPlanBCMI',
-            'CorrespondenceBCMI',
-            'DamSafetyInspectionBCMI',
-            'InspectionBCMI',
-            'ManagementPlanBCMI',
-            'OrderBCMI',
-            'PermitBCMI',
-            'ReportBCMI',
-          ]
+          $exists: true
         }
       }
     }
@@ -83,6 +31,19 @@ async function update(defaultLog) {
               ]
             },
             else: 0
+          }
+        }
+      }
+    },
+    {
+      $addFields: {
+        skipRedact: {
+          $cond: {
+            if: {
+              $in: [ { $arrayElemAt: ['$fullRecord._schemaName', 0] }, ['MineBCMI', 'CollectionBCMI'] ]
+            },
+            then: true,
+            else: false
           }
         }
       }
@@ -135,6 +96,20 @@ async function update(defaultLog) {
           }
         }
       }
+    },
+    // this step will replace issued to with an empty object {} for mines and collections.
+    // mines and collections don't normally have objects but this should minimize confusion
+    // TODO: remove the issued to field from mines and collections all together
+    {
+      $addFields: {
+        'fullRecord.issuedTo': {
+          $cond: {
+            if: { $eq: [ '$skipRedact', true ] },
+            then: {},
+            else: { $arrayElemAt: ['$fullRecord.issuedTo', 0] }
+          },
+        }
+      }
     }
   ];
 
@@ -158,6 +133,18 @@ async function update(defaultLog) {
     // redact issued to fields based on age
     aggregate = aggregate.concat(issuedToRedaction);
 
+    // 'fullRecord.issuedTo': {
+    //   $cond: {
+    //     if: {
+    //       $in: ['$fullRecord._schemaName', ['MineBCMI', 'CollectionBCMI']]
+    //     },
+    //     then: 0,
+    //     else: '$fullRecord.issuedTo'
+    //   }
+
+
+
+
     // replace root with redacted full record
     aggregate.push(
       {
@@ -169,6 +156,23 @@ async function update(defaultLog) {
         }
       }
     });
+
+
+    //  // if this is a collection or a mine we need to trim the issued to field
+    //  aggregate.push({
+    //   $addFields: {
+    //     issuedTo: {
+    //       $cond: {
+    //         if: {
+    //           $e: ['$stripIssuedTo', 'true']
+    //         },
+    //         then: { $arrayElemAt: ['$issuedTo', 0] },
+    //         else: "$$REMOVE"
+    //       }
+    //     }
+    //   }
+    // });
+
 
     // trim out the 'fullRecord' attribute, we no longer need it
     // after re-population
@@ -215,8 +219,10 @@ async function update(defaultLog) {
 
     await mainCollection.aggregate(aggregate).next();
 
+    defaultLog.info('Done Updating redacted_record_subset');
+
   } catch (error) {
-    defaultLog.debug('Failed to update redacted_record_subset, error: ' + error);
+    defaultLog.info('Failed to update redacted_record_subset, error: ' + error);
   }
 }
 
