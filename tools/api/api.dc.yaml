@@ -1,0 +1,413 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: ${NAME}-api
+  labels:
+    template: ${NAME}-api
+    app: ${GROUP_NAME}
+objects:
+  - kind: Secret
+    apiVersion: v1
+    metadata:
+      name: ${NAME}-mongodb
+    stringData:
+      MONGODB_ADMIN_PASSWORD: ${DATABASE_ADMIN_PASSWORD}
+      MONGODB_DATABASE: ${DATABASE_NAME}
+      MONGODB_PASSWORD: ${DATABASE_PASSWORD}
+      MONGODB_USERNAME: ${DATABASE_USER}
+    type: Opaque
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: ${NAME}-api
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      ports:
+        - name: web
+          port: 3000
+          targetPort: 3000
+      selector:
+        name: ${NAME}-api
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: ${NAME}-api
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      host: ${NAME}-api-${APPLICATION_DOMAIN}
+      to:
+        kind: Service
+        name: ${NAME}-api
+      path: ${APPLICATION_DOMAIN_PATH}
+      port:
+        targetPort: web
+      tls:
+        termination: edge
+      wildcardPolicy: None
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: ${NAME}-api
+      labels:
+        app: ${GROUP_NAME}
+        role: api
+    spec:
+      strategy:
+        type: Rolling
+      triggers:
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - ${NAME}-api
+            from:
+              kind: ImageStreamTag
+              namespace: ${APP_IMAGE_NAMESPACE}
+              name: ${APP_IMAGE_NAME}:${APP_DEPLOYMENT_TAG}
+        - type: ConfigChange
+      replicas: 1
+      selector:
+        name: ${NAME}-api
+      template:
+        metadata:
+          name: ${NAME}-api
+          labels:
+            name: ${NAME}-api
+            app: ${GROUP_NAME}
+            role: api
+        spec:
+          containers:
+            - name: ${NAME}-api
+              image: image-registry.openshift-image-registry.svc:5000/${APP_IMAGE_NAMESPACE}/${APP_IMAGE_NAME}:${APP_DEPLOYMENT_TAG}
+              ports:
+                - containerPort: 3000
+              env:
+                - name: MONGODB_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${NAME}-mongodb
+                      key: MONGODB_USERNAME
+                - name: MONGODB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${NAME}-mongodb
+                      key: MONGODB_PASSWORD
+                - name: MONGODB_DATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${NAME}-mongodb
+                      key: MONGODB_DATABASE
+                # API envs
+                - name: API_HOSTNAME
+                  value: ${APPLICATION_DOMAIN}
+                - name: API_LOCATION
+                  value: https://${NAME}-api-${APPLICATION_DOMAIN}
+                - name: API_PATH
+                  value: ${API_PATH}
+                - name: API_PUBLIC_PATH
+                  value: ${API_PUBLIC_PATH}
+                - name: ENVIRONMENT
+                  value: ${ENVIRONMENT}
+                # External resource envs
+                - name: GEOCODER_API
+                  value: ${GEOCODER_API}
+                - name: PARALLEL_IMPORT_LIMIT
+                  value: ${PARALLEL_IMPORT_LIMIT}
+                - name: NRIS_TOKEN_ENDPOINT
+                  value: ${NRIS_TOKEN_ENDPOINT}
+                - name: NRIS_EPD_API_ENDPOINT
+                  value: ${NRIS_EPD_API_ENDPOINT}
+                - name: EPIC_API_HOSTNAME
+                  value: ${EPIC_API_HOSTNAME}
+                # Keycloak envs
+                - name: SSO_JWKSURI
+                  value: ${SSO_JWKSURI}
+                - name: SSO_ISSUER
+                  value: ${SSO_ISSUER}
+                - name: KEYCLOAK_CLIENT_ID
+                  value: ${KEYCLOAK_CLIENT_ID}
+                - name: KEYCLOAK_URL
+                  value: ${KEYCLOAK_URL}
+                - name: KEYCLOAK_REALM
+                  value: ${KEYCLOAK_REALM}
+                - name: KEYCLOAK_ENABLED
+                  value: 'true'
+              envFrom:
+                - prefix: NRIS_
+                  secretRef:
+                    name: nrisws-credentials
+                - prefix: OBJECT_STORE_
+                  secretRef:
+                    name: nr-object-store-credential
+                - prefix: CORE_
+                  secretRef:
+                    name: core-api
+              readinessProbe:
+                timeoutSeconds: 3000
+                initialDelaySeconds: 3
+                httpGet:
+                  path: ${READINESS_PROBE_URL}
+                  port: 3000
+              livenessProbe:
+                timeoutSeconds: 3000
+                initialDelaySeconds: 30
+                httpGet:
+                  path: ${READINESS_PROBE_URL}
+                  port: 3000
+              resources:
+                limits:
+                  cpu: ${API_CPU_LIMITS}
+                  memory: ${API_MEMORY_LIMITS}
+                requests:
+                  cpu: ${API_CPU_REQUESTS}
+                  memory: ${API_MEMORY_REQUESTS}
+  - kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: ${NAME}-mongodb-data
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: ${DATABASE_VOLUME_CAPACITY}
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: mongodb
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      ports:
+        - name: mongodb-${NAME}
+          port: 27017
+          targetPort: 27017
+      selector:
+        name: ${NAME}-mongodb
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: ${NAME}-mongodb
+      labels:
+        app: ${GROUP_NAME}
+        role: database
+    spec:
+      strategy:
+        type: Recreate
+      triggers:
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - ${NAME}-mongodb
+            from:
+              kind: ImageStreamTag
+              namespace: ${APP_IMAGE_NAMESPACE}
+              name: mongodb:${MONGO_VER}
+        - type: ConfigChange
+      replicas: 1
+      selector:
+        name: ${NAME}-mongodb
+      template:
+        metadata:
+          name: ${NAME}-mongodb
+          labels:
+            name: ${NAME}-mongodb
+            app: ${GROUP_NAME}
+            role: database
+        spec:
+          containers:
+            - name: ${NAME}-mongodb
+              image: image-registry.openshift-image-registry.svc:5000/${APP_IMAGE_NAMESPACE}/mongodb:${MONGO_VER}
+              ports:
+                - containerPort: 27017
+              env:
+                - name: MONGODB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${NAME}-mongodb
+                      key: MONGODB_USERNAME
+                - name: MONGODB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${NAME}-mongodb
+                      key: MONGODB_PASSWORD
+                - name: MONGODB_DATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${NAME}-mongodb
+                      key: MONGODB_DATABASE
+                - name: MONGODB_ADMIN_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: ${NAME}-mongodb
+                      key: MONGODB_ADMIN_PASSWORD
+              readinessProbe:
+                timeoutSeconds: 5
+                initialDelaySeconds: 3
+                exec:
+                  command:
+                    - "/bin/sh"
+                    - "-i"
+                    - "-c"
+                    - mongo 127.0.0.1:27017/$MONGODB_DATABASE -u $MONGODB_USER -p $MONGODB_PASSWORD
+                      --eval='quit()'
+              livenessProbe:
+                timeoutSeconds: 5
+                initialDelaySeconds: 30
+                tcpSocket:
+                  port: 27017
+              resources:
+                limits:
+                  cpu: ${DATABASE_CPU_LIMITS}
+                  memory: ${DATABASE_MEMORY_LIMITS}
+                requests:
+                  cpu: ${DATABASE_CPU_REQUESTS}
+                  memory: ${DATABASE_MEMORY_REQUESTS}
+              volumeMounts:
+                - name: ${NAME}-mongodb-data
+                  mountPath: /var/lib/mongodb/data
+          volumes:
+            - name: ${NAME}-mongodb-data
+              persistentVolumeClaim:
+                claimName: ${NAME}-mongodb-data
+parameters:
+  - name: NAME
+    displayName: Name
+    description: The name assigned to all of the frontend objects defined in this template.
+    required: true
+    value: nrpti
+  - name: GROUP_NAME
+    displayName: Group Name
+    description: The name assigned to a group of objects deployed together
+    required: true
+    value: nrpti
+  - name: MONGO_IMAGE_NAMESPACE
+    displayName: mongo image namespace
+    description: The OpenShift Namespace where the mongo ImageStream resides.
+    value: openshift
+  - name: MONGO_VER
+    displayName: Mongo Version Number
+    description:
+      The version number of Mongo that matches the version in project file
+      package.json
+    value: '3.6'
+  - name: API_CPU_LIMITS
+    value: '1'
+  - name: API_MEMORY_LIMITS
+    value: 1Gi
+  - name: API_CPU_REQUESTS
+    value: 150m
+  - name: API_MEMORY_REQUESTS
+    value: 250Mi
+  - name: DATABASE_CPU_LIMITS
+    value: '1'
+  - name: DATABASE_MEMORY_LIMITS
+    value: 2Gi
+  - name: DATABASE_CPU_REQUESTS
+    value: 150m
+  - name: DATABASE_MEMORY_REQUESTS
+    value: 1Gi
+  - name: APPLICATION_DOMAIN
+    displayName: Application Hostname
+    description:
+      The exposed hostname that will route to the Node.js service, if left
+      blank a value will be defaulted.
+    value: f00029-dev.apps.silver.devops.gov.bc.ca
+  - name: API_PATH
+    displayName: Root level api path
+    value: /api
+  - name: GEOCODER_API
+    displayName: Geocoder API URL
+    value: https://geocoder.api.gov.bc.ca
+    required: true
+  - name: API_PUBLIC_PATH
+    displayName: Path to the public section of the api
+    value: /api/public
+  - name: KEYCLOAK_CLIENT_ID
+    displayName: The keycloak client id for admin
+    value: nrpti-admin
+  - name: KEYCLOAK_URL
+    value: https://dev.oidc.gov.bc.ca/auth
+  - name: KEYCLOAK_REALM
+    value: 3l5nw6dk
+  - name: ENVIRONMENT
+    displayName: Name of this environment
+    value: dev
+  - name: APPLICATION_DOMAIN_PATH
+    displayName: Application Hostname Path
+    description: The path for this service.
+    value: /api
+  - name: DATABASE_USER
+    displayName: MongoDB Username
+    description: Username for MongoDB user that will be used for accessing the database.
+    generate: expression
+    from: "user[A-Z0-9]{3}"
+  - name: DATABASE_PASSWORD
+    displayName: MongoDB Password
+    description: Password for the MongoDB user.
+    generate: expression
+    from: "[a-zA-Z0-9]{16}"
+  - name: DATABASE_NAME
+    displayName: Database Name
+    value: nrpti
+  - name: DATABASE_ADMIN_PASSWORD
+    displayName: Database Administrator Password
+    description: Password for the database admin user.
+    generate: expression
+    from: "[a-zA-Z0-9]{16}"
+  - name: PORT
+    displayName: Application port
+    description: Port that application is listening on for requests.
+    value: '3000'
+    required: true
+  - name: DATABASE_VOLUME_CAPACITY
+    displayName: Database Volume Capacity
+    description: Volume space available for mongo database, e.g. 512Mi, 2Gi.
+    value: 10Gi
+    required: true
+    required: true
+  - name: APP_IMAGE_NAME
+    displayName: Application image name.
+    description: Application image name.
+    value: nrpti-api
+    required: true
+  - name: APP_IMAGE_NAMESPACE
+    displayName: Namespace containing application images.
+    description: Namespace containing application images.
+    value: f00029-tools
+    required: true
+  - name: APP_DEPLOYMENT_TAG
+    displayName: Image tag to watch for changes and trigger deployment.
+    description: Image tag to watch for changes and trigger deployment.
+    value: latest
+    required: true
+  - name: READINESS_PROBE_URL
+    displayName: URL to watch for readiness.
+    description: URL to watch for readiness.
+    value: /api/docs
+    required: true
+  - name: PARALLEL_IMPORT_LIMIT
+    displayName: Maximum number of parallel import jobs to run
+    description: Maximum number of parallel import jobs to run
+    required: false
+  - name: SSO_JWKSURI
+    displayName: Uri to sso certs
+    description: Uri to sso certs
+    value: https://dev.oidc.gov.bc.ca/auth/realms/3l5nw6dk/protocol/openid-connect/certs
+    required: false
+  - name: SSO_ISSUER
+    displayName: URI to SSO realm
+    description: URI to SSO realm
+    value: https://dev.oidc.gov.bc.ca/auth/realms/3l5nw6dk
+    required: false
+  - name: NRIS_TOKEN_ENDPOINT
+    value: https://api.nrs.gov.bc.ca/oauth2/v1/oauth/token?disableDeveloperFilter=true&grant_type=client_credentials&scope=NRISWS.*
+  - name: NRIS_EPD_API_ENDPOINT
+    value: https://api.nrs.gov.bc.ca/nrisws-api/v1/epdInspections
+  - name: EPIC_API_HOSTNAME
+    value: projects.eao.gov.bc.ca
