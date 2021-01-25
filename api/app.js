@@ -22,8 +22,8 @@ const DB_USERNAME = process.env.MONGODB_USERNAME || '';
 const DB_PASSWORD = process.env.MONGODB_PASSWORD || '';
 
 // Increase post body sizing
-app.use(bodyParser.json({ limit: '10mb', extended: true }));
-app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
+app.use(bodyParser.json({ limit: '25mb', extended: true }));
+app.use(bodyParser.urlencoded({ limit: '25mb', extended: true }));
 
 // Enable CORS
 app.use(function (req, res, next) {
