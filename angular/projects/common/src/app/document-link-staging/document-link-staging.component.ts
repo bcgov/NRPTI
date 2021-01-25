@@ -22,7 +22,7 @@ export class DocumentLinkStagingComponent {
 
   @Input() params = {
     maxFiles: 5,
-    maxSize: 10,
+    maxSize: 25,
     showInfo: false,
     showList: false,
     hideWhenMaxFilesReached: false

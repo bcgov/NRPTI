@@ -1,0 +1,182 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+objects:
+  - kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: nrpti-${NAME}
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: ${BACKUP_PVC_SIZE}
+      storageClassName: netapp-file-backup
+      volumeMode: Filesystem
+  - kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: nrpti-${NAME}-verification
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: ${VERIFICATION_PVC_SIZE}
+      storageClassName: netapp-file-standard
+      volumeMode: Filesystem
+  - kind: ConfigMap
+    apiVersion: v1
+    metadata:
+      name: ${NAME}-conf
+      labels:
+        app: ${GROUP_NAME}
+    data:
+      backup.conf: |-
+        postgres=metabase-postgres:5432/metabase
+        0 1 * * * default ./backup.sh -s
+        0 4 * * * default ./backup.sh -s -v all
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
+    metadata:
+      name: ${NAME}
+      labels:
+        app: ${GROUP_NAME}
+        role: backup
+    spec:
+      strategy:
+        type: Recreate
+        recreateParams:
+          timeoutSeconds: 600
+        resources: {}
+        activeDeadlineSeconds: 21600
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - ${NAME}
+            from:
+              kind: ImageStreamTag
+              namespace: ${IMAGE_NAMESPACE}
+              name: ${NAME}:${IMAGE_TAG}
+      replicas: 1
+      revisionHistoryLimit: 5
+      test: false
+      selector:
+        name: ${NAME}
+      template:
+        metadata:
+          name: ${NAME}
+          labels:
+            name: ${NAME}
+            app: nrpti
+            role: backup
+        spec:
+          volumes:
+            - name: nrpti-${NAME}
+              persistentVolumeClaim:
+                claimName: nrpti-${NAME}
+            - name: nrpti-${NAME}-verification
+              persistentVolumeClaim:
+                claimName: nrpti-${NAME}-verification
+            - name: ${NAME}-config-volume
+              configMap:
+                name: ${NAME}-conf
+                items:
+                  - key: backup.conf
+                    path: backup.conf
+                defaultMode: 420
+          containers:
+            - name: ${NAME}
+              image: image-registry.openshift-image-registry.svc:5000/${IMAGE_NAMESPACE}/${NAME}:${IMAGE_TAG}
+              env:
+                - name: BACKUP_STRATEGY
+                  value: rolling
+                - name: BACKUP_DIR
+                  value: /backups/
+                - name: DAILY_BACKUPS
+                  value: "7"
+                - name: WEEKLY_BACKUPS
+                  value: "5"
+                - name: MONTHLY_BACKUPS
+                  value: "12"
+                - name: TABLE_SCHEMA
+                  value: public
+                - name: DATABASE_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: metabase-nrpti-secret
+                      key: database-user
+                - name: DATABASE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: metabase-nrpti-secret
+                      key: database-password
+                - name: ENVIRONMENT_FRIENDLY_NAME
+                  value: ${ENVIRONMENT_FRIENDLY_NAME}
+                - name: ENVIRONMENT_NAME
+                  value: ${ENVIRONMENT_NAME}
+                - name: WEBHOOK_URL
+                  valueFrom:
+                    secretKeyRef:
+                      key: webhook-url
+                      name: backup-webhook
+              resources:
+                limits:
+                  cpu: 250m
+                  memory: 500Mi
+                requests:
+                  cpu: 10m
+                  memory: 50Mi
+              volumeMounts:
+                - name: nrpti-${NAME}
+                  mountPath: /backups/
+                - name: nrpti-${NAME}-verification
+                  mountPath: /var/lib/pgsql/data
+                - name: ${NAME}-config-volume
+                  mountPath: /backup.conf
+                  subPath: backup.conf
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              imagePullPolicy: IfNotPresent
+          restartPolicy: Always
+          terminationGracePeriodSeconds: 30
+          dnsPolicy: ClusterFirst
+          securityContext: {}
+          schedulerName: default-scheduler
+parameters:
+  - name: GROUP_NAME
+    displayName: GROUP_NAME
+    required: true
+    value: nrpti-backup
+  - name: NAME
+    displayName: Name
+    description: The name assigned to all of the resources.  Use 'backup-{database name}' depending on your database provider
+    required: true
+    value: postgres-backup
+  - name: IMAGE_TAG
+    displayName: IMAGE_TAG
+    required: true
+    value: v1
+  - name: IMAGE_NAMESPACE
+    displayName: IMAGE_NAMESPACE
+    required: true
+    value: f00029-tools
+  - name: BACKUP_PVC_SIZE
+    displayName: BACKUP_PVC_SIZE
+    value: 5Gi
+  - name: VERIFICATION_PVC_SIZE
+    displayName: VERIFICATION_PVC_SIZE
+    value: 5Gi
+  - name: ENVIRONMENT_FRIENDLY_NAME
+    displayName: ENVIRONMENT_FRIENDLY_NAME
+    value: NRPTI Metabase Postgres Backup
+  - name: ENVIRONMENT_NAME
+    displayName: ENVIRONMENT_NAME
+    value: f00029-prod
