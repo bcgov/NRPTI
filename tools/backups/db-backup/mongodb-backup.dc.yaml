@@ -141,7 +141,7 @@ objects:
                 - name: nrpti-${NAME}
                   mountPath: /backups/
                 - name: nrpti-${NAME}-verification
-                  mountPath: /var/lib/pgsql/data
+                  mountPath: /var/lib/mongodb/data
                 - name: ${NAME}-config-volume
                   mountPath: /backup.conf
                   subPath: backup.conf
