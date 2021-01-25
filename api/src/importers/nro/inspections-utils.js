@@ -82,8 +82,13 @@ class Inspections extends BaseRecordUtils {
         dateOfBirth: null,
         firstName: '',
         lastName: '',
-        middleName: ''
+        middleName: '',
+        // Unset companyName if it was previously set
+        companyName: ''
       };
+
+      // Unset long/lat in case it was previously.
+      inspection['centroid'] = null;
     }
 
     return inspection;
