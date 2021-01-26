@@ -59,6 +59,12 @@ objects:
                         -d '{"taskType":"updateMaterializedView", "materializedViewSubset":"recordNameSubset"}' \
                         ${NRPTI_API_URL}/task
 
+                      echo -e "Updating recordName subset\n"
+                      curl -H "Authorization: Bearer ${TOKEN}" \
+                        -H "Content-Type: application/json" \
+                        -d '{"taskType":"updateMaterializedView", "materializedViewSubset":"redactedRecordSubset"}' \
+                        ${NRPTI_API_URL}/task
+
                       echo -e "Updating descriptionSummary subset\n"
                       curl -H "Authorization: Bearer ${TOKEN}" \
                         -H "Content-Type: application/json" \
@@ -87,7 +93,7 @@ objects:
                         curl -H "Authorization: Bearer ${TOKEN}" \
                           -H "Content-Type: application/json" \
                           -d '{"taskType":"import", "dataSourceType":"core-documents"}' \
-                          ${NRPTI_API_URL}/task 
+                          ${NRPTI_API_URL}/task
 
                       echo -e "Importing NRIS-EPD\n"
                               curl -H "Authorization: Bearer ${TOKEN}" \

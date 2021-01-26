@@ -557,6 +557,14 @@ paths:
           required: false
           description: 'Query: multiple parameter instances are supported using OR.'
           type: string
+        - in: query
+          name: subset
+          description: 'Fields that you want to filter your keyword search on.'
+          type: array
+          items:
+            type: string
+            enum: *SearchSubsetParams
+          required: false
       responses:
         '200':
           description: 'Success'
