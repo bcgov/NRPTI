@@ -115,7 +115,10 @@ exports.getProjectNameAndEpicProjectId = function(csvRow) {
   const client = csvRow['client no'];
 
   if (client === '166165') {
-    return { projectName: 'Coastal GasLink Pipeline Ltd.', _epicProjectId: MiscConstants.EpicProjectIds.coastalGaslinkId };
+    return {
+      projectName: 'Coastal GasLink Pipeline Ltd.',
+      _epicProjectId: MiscConstants.EpicProjectIds.coastalGaslinkId
+    };
   }
 
   if (client === '170181') {
@@ -136,12 +139,7 @@ exports.getEntityType = function(csvRow) {
     return null;
   }
 
-  const client = csvRow['client no'];
-
-  // only set LNG and CGL to Company
-  if (client === '166165' || client === '170181') {
-    return MiscConstants.IssuedToEntityTypes.Company;
-  }
+  if (csvRow['client / complainant']) return MiscConstants.IssuedToEntityTypes.Company;
 
   return MiscConstants.IssuedToEntityTypes.Individual;
 };

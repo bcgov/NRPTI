@@ -43,7 +43,8 @@ describe('transformRecord', () => {
       longitude: '-125',
       latitude: '50',
       'compliance status': 'Compliant',
-      'client no': '170181'
+      'client no': '170181',
+      'client / complainant': 'LNG Canada Development Inc.'
     });
 
     expect(result).toEqual({
