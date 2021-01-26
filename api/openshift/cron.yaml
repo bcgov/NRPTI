@@ -23,10 +23,14 @@ objects:
       jobTemplate:
         spec:
           template:
+            metadata:
+              labels:
+                role: cronjob
+                app: nrpti
             spec:
               containers:
                 - name: ${CRON_NAME}
-                  image: docker-registry.default.svc:5000/openshift/base-centos7:latest
+                  image: image-registry.openshift-image-registry.svc:5000/f00029-tools/base-centos7:latest
                   command:
                     - bash
                     - -c

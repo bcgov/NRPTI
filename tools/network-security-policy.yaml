@@ -134,6 +134,33 @@ objects:
           - role=${BACKUP_ROLE_NAME}
       destination:
         - - ext:network=any
+  - apiVersion: security.devops.gov.bc.ca/v1alpha1
+    kind: NetworkSecurityPolicy
+    metadata:
+      name: ${GROUP_NAME}-cronjob2api-permit
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      description: Allow the cronjob pod(s) to communicate to the API pod(s).
+      source:
+        - - app=${GROUP_NAME}
+          - role=${CRONJOB_ROLE_NAME}
+      destination:
+        - - app=${GROUP_NAME}
+          - role=${API_ROLE_NAME}
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: ${GROUP_NAME}-backup-internal-egress
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      description: Allow the cronjob pods to open connections to the Internet (for SSO).
+      source:
+        - - app=${GROUP_NAME}
+          - role=${CRONJOB_ROLE_NAME}
+      destination:
+        - - ext:network=any
 parameters:
   - description: A name used to group objects together to identify related objects for a set of deployments
     displayName: Group name
@@ -164,3 +191,7 @@ parameters:
     name: BACKUP_ROLE_NAME
     required: true
     value: backup
+  - displayName: CRONJOB_ROLE_NAME
+    name: CRONJOB_ROLE_NAME
+    required: true
+    value: cronjob
