@@ -10,6 +10,7 @@ const issuedToSubset = require('../../materialized_views/search/issuedToSubset')
 const locationSubset = require('../../materialized_views/search/locationSubset');
 const recordNameSubset = require('../../materialized_views/search/recordNameSubset');
 const descriptionSummarySubset = require('../../materialized_views/search/descriptionSummarySubset');
+const redactedRecordSubset = require('../../materialized_views/search/redactedRecordSubset');
 
 exports.protectedOptions = async function(args, res, next) {
   res.status(200).send();
@@ -118,6 +119,9 @@ exports.protectedCreateTask = async function (args, res, next) {
           break;
         case 'descriptionSummary':
           descriptionSummarySubset.update(defaultLog);
+          break;
+        case 'redactedRecordSubset':
+          redactedRecordSubset.update(defaultLog);
           break;
         default:
           defaultLog.error(`protectedCreateTask - unknown materialized view subset`);
@@ -232,4 +236,3 @@ function getDataSourceConfig(dataSourceType) {
     dataSourceClass: require(`../integrations/${dataSourceType}/datasource`)
   };
 }
-
