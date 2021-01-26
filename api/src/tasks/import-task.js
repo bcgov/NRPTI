@@ -222,6 +222,13 @@ function getDataSourceConfig(dataSourceType) {
     };
   }
 
+  if (dataSourceType === 'mis-csv') {
+    return {
+      dataSourceLabel: 'mis-csv',
+      dataSourceClass: require('../importers/agri/datasource')
+    }
+  }
+
   // dataSourceType will match the name of a directory for the given
   // integration in /src/integrations/<dataSourceType>/
   return {

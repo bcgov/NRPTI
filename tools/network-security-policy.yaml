@@ -1,0 +1,166 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+objects:
+  - apiVersion: security.devops.gov.bc.ca/v1alpha1
+    kind: NetworkSecurityPolicy
+    metadata:
+      name: ${GROUP_NAME}-int-cluster-k8s-api-comms
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      description: Allow ${NAMESPACE} pods to talk to the internal K8S api
+      source:
+        - - $namespace=${NAMESPACE}
+      destination:
+        - - int:network=internal-cluster-api-endpoint
+  - apiVersion: security.devops.gov.bc.ca/v1alpha1
+    kind: NetworkSecurityPolicy
+    metadata:
+      name: ${GROUP_NAME}-frontend2api-permit
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      description: Allow the frontend pod(s) to communicate to the API pod(s).
+      source:
+        - - app=${GROUP_NAME}
+          - role=${FRONTEND_ROLE_NAME}
+      destination:
+        - - app=${GROUP_NAME}
+          - role=${API_ROLE_NAME}
+  - apiVersion: security.devops.gov.bc.ca/v1alpha1
+    kind: NetworkSecurityPolicy
+    metadata:
+      name: ${GROUP_NAME}-api2database-permit
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      description: Allow the api pod(s) to communicate to the database pod(s).
+      source:
+        - - app=${GROUP_NAME}
+          - role=${API_ROLE_NAME}
+      destination:
+        - - app=${GROUP_NAME}
+          - role=${DATABASE_ROLE_NAME}
+  - apiVersion: security.devops.gov.bc.ca/v1alpha1
+    kind: NetworkSecurityPolicy
+    metadata:
+      name: ${GROUP_NAME}-metabase2database-permit
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      description: Allow the metabase pod(s) to communicate to the database pod(s).
+      source:
+        - - app=${GROUP_NAME}
+          - role=${METABASE_ROLE_NAME}
+      destination:
+        - - app=${GROUP_NAME}
+          - role=${DATABASE_ROLE_NAME}
+  - apiVersion: security.devops.gov.bc.ca/v1alpha1
+    kind: NetworkSecurityPolicy
+    metadata:
+      name: ${GROUP_NAME}-backup2database-permit
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      description: Allow the backup pod(s) to communicate to the database pod(s).
+      source:
+        - - app=${GROUP_NAME}
+          - role=${BACKUP_ROLE_NAME}
+      destination:
+        - - app=${GROUP_NAME}
+          - role=${DATABASE_ROLE_NAME}
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: ${GROUP_NAME}-frontend-external-ingress
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      description: Allow the frontend pods to receive connections from the Internet.
+      source:
+        - - ext:network=any
+      destination:
+        - - app=${GROUP_NAME}
+          - role=${FRONTEND_ROLE_NAME}
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: ${GROUP_NAME}-api-external-ingress
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      description: Allow the api pods to receive connections from the Internet.
+      source:
+        - - ext:network=any
+      destination:
+        - - app=${GROUP_NAME}
+          - role=${API_ROLE_NAME}
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: ${GROUP_NAME}-metabase-external-ingress
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      description: Allow the metabase pods to receive connections from the Internet.
+      source:
+        - - ext:network=any
+      destination:
+        - - app=${GROUP_NAME}
+          - role=${API_ROLE_NAME}
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: ${GROUP_NAME}-api-internal-egress
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      description: Allow the api pods to open connections to the Internet.
+      source:
+        - - app=${GROUP_NAME}
+          - role=${API_ROLE_NAME}
+      destination:
+        - - ext:network=any
+  - kind: NetworkSecurityPolicy
+    apiVersion: security.devops.gov.bc.ca/v1alpha1
+    metadata:
+      name: ${GROUP_NAME}-backup-internal-egress
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      description: Allow the backup pods to open connections to the Internet (for webhooks).
+      source:
+        - - app=${GROUP_NAME}
+          - role=${BACKUP_ROLE_NAME}
+      destination:
+        - - ext:network=any
+parameters:
+  - description: A name used to group objects together to identify related objects for a set of deployments
+    displayName: Group name
+    name: GROUP_NAME
+    required: true
+    value: nrpti
+  - displayName: NAMESPACE
+    name: NAMESPACE
+    required: true
+    value: f00029-dev
+  - displayName: API_ROLE_NAME
+    name: API_ROLE_NAME
+    required: true
+    value: api
+  - displayName: DATABASE_ROLE_NAME
+    name: DATABASE_ROLE_NAME
+    required: true
+    value: database
+  - displayName: METABASE_ROLE_NAME
+    name: METABASE_ROLE_NAME
+    required: true
+    value: metabase
+  - displayName: FRONTEND_ROLE_NAME
+    name: FRONTEND_ROLE_NAME
+    required: true
+    value: frontend
+  - displayName: BACKUP_ROLE_NAME
+    name: BACKUP_ROLE_NAME
+    required: true
+    value: backup

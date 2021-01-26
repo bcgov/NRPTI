@@ -21,7 +21,7 @@ describe('transformRecord', () => {
       recordType: 'Inspection',
       author: 'Natural Resource Officers',
       dateIssued: null,
-      issuedTo: { dateOfBirth: null, firstName: '', lastName: '', middleName: '', type: 'Individual' },
+      issuedTo: { dateOfBirth: null, firstName: '', lastName: '', middleName: '', type: 'Individual', companyName: '' },
       description: '-',
       sourceSystemRef: 'nro-inspections-csv',
       issuingAgency: 'Natural Resource Officers',
@@ -30,7 +30,8 @@ describe('transformRecord', () => {
       location: null,
       outcomeDescription: 'undefined - undefined',
       recordName: '-',
-      summary: '-'
+      summary: '-',
+      centroid: null
     });
   });
 
@@ -43,7 +44,8 @@ describe('transformRecord', () => {
       longitude: '-125',
       latitude: '50',
       'compliance status': 'Compliant',
-      'client no': '170181'
+      'client no': '170181',
+      'client / complainant': 'LNG Canada Development Inc.'
     });
 
     expect(result).toEqual({

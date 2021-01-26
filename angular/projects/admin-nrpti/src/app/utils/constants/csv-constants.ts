@@ -198,6 +198,55 @@ export class CsvConstants {
   ];
 
   /**
+   * Expected headers for AGRI MIS Inspection csv.
+   *
+   * Note: sort order and letter case of headers is not important.
+   *
+   * @static
+   * @memberof CsvConstants
+   */
+  public static readonly misInspectionCsvRequiredHeaders = [
+    'Est. Name',
+    'Region',
+    'Issue No.',
+    'Created ',
+    'Regulation'
+  ];
+
+  /**
+   * Required fields for AGRI MIS Inspection csv.
+   *
+   * @static
+   * @memberof CsvConstants
+   */
+  // todo revist make sure there aren't more required fields to add
+  public static readonly misInspectionCsvRequiredFields = ['Issue No.'];
+
+  /**
+   * Fields forAGRI MIS Inspection csv that have a required format.
+   *
+   * Note: These fields are not necessarily required, and only have a required format if present.
+   *
+   * @static
+   * @type {IRequiredFormat[]}
+   * @memberof CsvConstants
+   */
+  public static readonly misInspectionsCsvRequiredFormats: IRequiredFormat[] = [
+    { field: 'Date', type: 'date', format: 'MM/DD/YYYY' }
+  ];
+
+  /**
+   * Fields for AGRI MIS Inspection csv that represent dates.
+   *
+   * @static
+   * @type {IDateField[]}
+   * @memberof CsvConstants
+   */
+  public static readonly misInspectionsCsvDateFields: IDateField[] = [
+    { field: 'Date', format: 'MM/DD/YYYY' }
+  ];
+
+  /**
    * Get the array of required csv headers for the provided dataSourceType and recordType.
    *
    * @static
@@ -226,6 +275,12 @@ export class CsvConstants {
     if (dataSourceType === 'nro-csv') {
       if (recordType === 'Inspection') {
         return this.nroInspectionCsvRequiredHeaders;
+      }
+    }
+
+    if (dataSourceType === 'mis-csv') {
+      if (recordType === 'Inspection') {
+        return this.misInspectionCsvRequiredHeaders;
       }
     }
 
@@ -264,6 +319,12 @@ export class CsvConstants {
       }
     }
 
+    if (dataSourceType === 'mis-csv') {
+      if (recordType === 'Inspection') {
+        return this.misInspectionCsvRequiredFields;
+      }
+    }
+
     return null;
   }
 
@@ -299,6 +360,12 @@ export class CsvConstants {
       }
     }
 
+    if (dataSourceType === 'mis-csv') {
+      if (recordType === 'Inspection') {
+        return this.misInspectionsCsvRequiredFormats;
+      }
+    }
+
     return null;
   }
 
@@ -331,6 +398,12 @@ export class CsvConstants {
     if (dataSourceType === 'nro-csv') {
       if (recordType === 'Inspection') {
         return this.nroInspectionCsvDateFields;
+      }
+    }
+
+    if (dataSourceType === 'mis-csv') {
+      if (recordType === 'Inspection') {
+        return this.misInspectionsCsvDateFields;
       }
     }
 

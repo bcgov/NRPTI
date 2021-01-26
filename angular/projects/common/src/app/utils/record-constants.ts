@@ -165,7 +165,7 @@ export class Picklists {
     'Environmental Protection Division',
     'LNG Secretariat',
     'Ministry of Agriculture',
-    'EMPR',
+    'EMLI',
     'Ministry of Forests, Lands, Natural Resource Operations and Rural Development',
     'Natural Resource Officers (NRO)'
   ];
@@ -223,6 +223,7 @@ export class Picklists {
   };
 
   public static readonly sourceSystemRefPicklist = [
+    'agri-mis',
     'bcogc',
     'core',
     'coors-csv',
@@ -232,7 +233,7 @@ export class Picklists {
     'nris-epd',
     'nro-inspections-csv',
     'nrpti',
-    'ocers-csv'
+    'ocers-csv',
   ];
 
   public static readonly mineTypes = ['Coal', 'Metal', 'Industrial Mineral', 'Sand & Gravel'];
@@ -253,7 +254,7 @@ export class Picklists {
     'Report'
   ];
 
-  public static readonly collectionAgencyPicklist = ['EAO', 'EMPR', 'ENV'];
+  public static readonly collectionAgencyPicklist = ['EAO', 'EMLI', 'ENV'];
 
   /**
    * Contains a mapping of acts to regulations.

@@ -70,7 +70,7 @@ class Inspections extends BaseRecordUtils {
 
       inspection['issuedTo'] = {
         type: MiscConstants.IssuedToEntityTypes.Company,
-        companyName: projectData.projectName
+        companyName: csvRow['client / complainant']
       };
     }
 
@@ -80,10 +80,15 @@ class Inspections extends BaseRecordUtils {
         // Set dateOfBirth to null so the issuedTo names are redacted on public sites
         // This is a temporary solution until business figures out how to display client names
         dateOfBirth: null,
-        firstName: csvRow['client / complainant'] || '',
+        firstName: '',
         lastName: '',
-        middleName: ''
+        middleName: '',
+        // Unset companyName if it was previously set
+        companyName: ''
       };
+
+      // Unset long/lat in case it was previously.
+      inspection['centroid'] = null;
     }
 
     return inspection;
