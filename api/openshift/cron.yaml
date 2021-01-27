@@ -7,8 +7,8 @@ metadata:
     tags: 'cronjob'
 parameters:
   - name: CRON_SCHEDULE
-    description: 'Cron-like schedule expression. Default: Once every day at 12:00 AM'
-    value: '0 2 * * *'
+    description: 'Cron-like schedule expression. Default: Once every day at 10:00 AM UTC or 02:00 AM PST'
+    value: '0 10 * * *'
   - name: CRON_NAME
     decription: 'Name of the cronjob container.'
     value: 'nrpti-cronjob'
@@ -23,10 +23,14 @@ objects:
       jobTemplate:
         spec:
           template:
+            metadata:
+              labels:
+                role: cronjob
+                app: nrpti
             spec:
               containers:
                 - name: ${CRON_NAME}
-                  image: docker-registry.default.svc:5000/openshift/base-centos7:latest
+                  image: image-registry.openshift-image-registry.svc:5000/f00029-tools/base-centos7:latest
                   command:
                     - bash
                     - -c
