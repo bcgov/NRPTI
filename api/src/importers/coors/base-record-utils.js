@@ -1,5 +1,6 @@
 'use strict';
 
+const moment = require('moment');
 const mongoose = require('mongoose');
 const defaultLog = require('../../utils/logger')('coors-csv-base-record-utils');
 const RecordController = require('./../../controllers/record-controller');
@@ -99,6 +100,11 @@ class BaseRecordUtils {
       updateObj.dateUpdated = new Date();
       updateObj.sourceDateUpdated = new Date();
 
+      // court conviction csv format requires special handling to properly update penalties
+      if (nrptiRecord._schemaName === 'CourtConviction') {
+        updateObj.penalties = this.handleConvictionPenalties(updateObj.penalties[0], existingRecord);
+      }
+
       existingRecord._flavourRecords.forEach(flavourRecord => {
         updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
       });
@@ -153,6 +159,55 @@ class BaseRecordUtils {
     } catch (error) {
       defaultLog.error(`Failed to create ${this.recordType._schemaName} record: ${error.message}`);
     }
+  }
+
+  /**
+   * Logic to append or clear and update penalties for court convictions
+   *
+   * @param {array} updatedPenalty Array of incoming penalties parsed from the current csv row
+   * @param {object} existingRecord The existing Convition from saved record
+   * @returns {array} updated penalties array to save
+   * @memberof BaseRecordUtils
+  */
+  handleConvictionPenalties(updatedPenalty, existingRecord) {
+    // check if this record was created or updated as part of this import job
+    let createdAt = moment(existingRecord.dateAdded);
+    let lastUpdated = moment(existingRecord.dateUpdated);
+    let now = moment();
+    if (now.diff(createdAt, 'seconds') > 90  && now.diff(lastUpdated, 'seconds') > 60) {
+      // wipe penalties to ensure penalty edits in the source system aren't creating extra penalties in nrpti
+      existingRecord.penalties = []
+    }
+
+    let penaltiesObj = existingRecord.penalties;
+    let exists = false
+    // check if penalty needs to be appended
+    if (updatedPenalty && existingRecord.penalties) {
+      exists = this.penaltyExists(existingRecord.penalties, updatedPenalty)
+    }
+    // copy existing penalty into new obj
+    if (!exists) {
+      penaltiesObj.push(updatedPenalty)
+    }
+    return penaltiesObj;
+  }
+
+  /**
+   * Check if a penalty is already part of the existing record
+   *
+   * @param {array} existingPenalties Array of existing penalties from saved record
+   * @param {object} newPenalty The penalty parsed from the current csv row
+   * @returns {boolean} if the penalty alread in the penalties array
+   * @memberof BaseRecordUtils
+  */
+  penaltyExists(existingPenalties, newPenalty) {
+    for (let penalty of existingPenalties) {
+      if (newPenalty.type === penalty.type && newPenalty.penalty.type === penalty.penalty.type && newPenalty.penalty.value === penalty.penalty.value) {
+        return true;
+      }
+    }
+    // no matching penalty
+    return false;
   }
 }
 

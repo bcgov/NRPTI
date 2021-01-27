@@ -59,7 +59,7 @@ describe('BaseRecordUtils', () => {
         return Promise.resolve({ test: 'record' });
       });
 
-      const nrptiRecord = { newField: 'abc' };
+      const nrptiRecord = { newField: 'abc'};
       const existingRecord = { _id: 123, _flavourRecords: [{ _id: 321, _schemaName: 'flavourSchema' }] };
 
       const result = await baseRecordUtils.updateRecord(nrptiRecord, existingRecord);
@@ -74,6 +74,42 @@ describe('BaseRecordUtils', () => {
             _id: 123,
             newField: 'abc',
             updatedBy: '',
+            dateUpdated: expect.any(Date),
+            sourceDateUpdated: expect.any(Date),
+            flavourSchema: {
+              _id: 321,
+              addRole: 'public'
+            }
+          }
+        ]
+      );
+
+      expect(result).toEqual({ test: 'record' });
+    });
+
+    it('calls `processPutRequest` when all arguments provided - Court Conviction', async () => {
+      const baseRecordUtils = new BaseRecordUtils('authPayload', RECORD_TYPE.CourtConviction);
+
+      const processPutRequestSpy = jest.spyOn(RecordController, 'processPutRequest').mockImplementation(() => {
+        return Promise.resolve({ test: 'record' });
+      });
+
+      const nrptiRecord = { newField: 'abc', penalties: [{ type: 'Fined', penalty: { type: "Dollars", value: 100 }}]};
+      const existingRecord = { _id: 123, penalties: [{ type: 'Fined', penalty: { type: "Dollars", value: 50 }}], _flavourRecords: [{ _id: 321, _schemaName: 'flavourSchema' }] };
+
+      const result = await baseRecordUtils.updateRecord(nrptiRecord, existingRecord);
+
+      expect(processPutRequestSpy).toHaveBeenCalledWith(
+        { swagger: { params: { auth_payload: 'authPayload' } } },
+        null,
+        null,
+        RECORD_TYPE.CourtConviction.recordControllerName,
+        [
+          {
+            _id: 123,
+            newField: 'abc',
+            updatedBy: '',
+            penalties: [{ type: 'Fined', penalty: { type: "Dollars", value: 100 }}],
             dateUpdated: expect.any(Date),
             sourceDateUpdated: expect.any(Date),
             flavourSchema: {
@@ -119,6 +155,39 @@ describe('BaseRecordUtils', () => {
             dateAdded: expect.any(Date),
             sourceDateAdded: expect.any(Date),
             TicketNRCED: {
+              addRole: 'public'
+            }
+          }
+        ]
+      );
+
+      expect(result).toEqual({ test: 'record' });
+    });
+
+    it('calls `processPostRequest` when all arguments provided - Court Conviction', async () => {
+      const baseRecordUtils = new BaseRecordUtils('authPayload', RECORD_TYPE.CourtConviction);
+
+      const processPostRequestSpy = jest.spyOn(RecordController, 'processPostRequest').mockImplementation(() => {
+        return Promise.resolve({ test: 'record' });
+      });
+
+      const nrptiRecord = { newField: 'abc', penalties: []};
+
+      const result = await baseRecordUtils.createItem(nrptiRecord);
+
+      expect(processPostRequestSpy).toHaveBeenCalledWith(
+        { swagger: { params: { auth_payload: 'authPayload' } } },
+        null,
+        null,
+        RECORD_TYPE.CourtConviction.recordControllerName,
+        [
+          {
+            newField: 'abc',
+            addedBy: '',
+            dateAdded: expect.any(Date),
+            sourceDateAdded: expect.any(Date),
+            penalties: [],
+            CourtConvictionNRCED: {
               addRole: 'public'
             }
           }

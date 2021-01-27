@@ -58,11 +58,16 @@ class CoorsCsvDataSource {
 
       let promises = [];
       for (let i = 0; i < this.csvRows.length; i++) {
-        promises.push(this.processRecord(this.csvRows[i], recordTypeConfig));
-
-        if (i % batchSize === 0 || i === this.csvRows.length - 1) {
-          await Promise.all(promises);
-          promises = [];
+        // process Convictions serially so penalties can be appended to existing records propely
+        if (this.recordType === 'Court Conviction') {
+          await this.processRecord(this.csvRows[i], recordTypeConfig)
+        } else {
+          // batch process
+          promises.push(this.processRecord(this.csvRows[i], recordTypeConfig));
+          if (i % batchSize === 0 || i === this.csvRows.length - 1) {
+            await Promise.all(promises);
+            promises = [];
+          }
         }
       }
     } catch (error) {
@@ -141,6 +146,14 @@ class CoorsCsvDataSource {
       return {
         getUtil: (auth_payload, csvRow) => {
           return new (require('./tickets-utils'))(auth_payload, RECORD_TYPE.Ticket, csvRow);
+        }
+      };
+    }
+
+    if (this.recordType === 'Court Conviction') {
+      return {
+        getUtil: (auth_payload, csvRow) => {
+          return new (require('./court-conviction-utils'))(auth_payload, RECORD_TYPE.CourtConviction, csvRow);
         }
       };
     }
