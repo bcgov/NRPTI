@@ -101,7 +101,7 @@ class BaseRecordUtils {
       updateObj.sourceDateUpdated = new Date();
 
       // court conviction csv format requires special handling to properly update penalties
-      if (nrptiRecord._schemaName === 'Court Conviction') {
+      if (nrptiRecord._schemaName === 'CourtConviction') {
         updateObj.penalties = this.handleConvictionPenalties(updateObj.penalties[0], existingRecord);
       }
 
@@ -164,12 +164,12 @@ class BaseRecordUtils {
   /**
    * Logic to append or clear and update penalties for court convictions
    *
-   * @param {array} updatedPenalties Array of incoming penalties parsed from the current csv row
+   * @param {array} updatedPenalty Array of incoming penalties parsed from the current csv row
    * @param {object} existingRecord The existing Convition from saved record
    * @returns {array} updated penalties array to save
    * @memberof BaseRecordUtils
   */
-  handleConvictionPenalties(updatedPenalties, existingRecord) {
+  handleConvictionPenalties(updatedPenalty, existingRecord) {
     // check if this record was created or updated as part of this import job
     let createdAt = moment(existingRecord.dateAdded);
     let lastUpdated = moment(existingRecord.dateUpdated);
@@ -182,12 +182,12 @@ class BaseRecordUtils {
     let penaltiesObj = existingRecord.penalties;
     let exists = false
     // check if penalty needs to be appended
-    if (updatedPenalties[0] && existingRecord.penalties) {
-      exists = this.penaltyExists(existingRecord.penalties, updatedPenalties[0])
+    if (updatedPenalty && existingRecord.penalties) {
+      exists = this.penaltyExists(existingRecord.penalties, updatedPenalty)
     }
     // copy existing penalty into new obj
     if (!exists) {
-      penaltiesObj.push(updatedPenalties[0])
+      penaltiesObj.push(updatedPenalty)
     }
     return penaltiesObj;
   }
