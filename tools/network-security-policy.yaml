@@ -151,7 +151,7 @@ objects:
   - kind: NetworkSecurityPolicy
     apiVersion: security.devops.gov.bc.ca/v1alpha1
     metadata:
-      name: ${GROUP_NAME}-backup-internal-egress
+      name: ${GROUP_NAME}-cronjob-internal-egress
       labels:
         app: ${GROUP_NAME}
     spec:
