@@ -8,6 +8,7 @@ module.exports = require('../../utils/model-schema-generator')(
     _schemaName: { type: String, default: 'AdministrativeSanctionNRCED' },
     _epicProjectId: { type: 'ObjectId', default: null, index: true },
     _sourceRefId: { type: 'ObjectId', default: null, index: true },
+    _sourceRefCoorsId: { type: String, default: '', index: true },
     _epicMilestoneId: { type: 'ObjectId', default: null, index: true },
     _master: { type: 'ObjectId', default: null, index: true },
 

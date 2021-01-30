@@ -104,6 +104,11 @@ class CoorsCsvDataSource {
       // Perform any data transformations necessary to convert the csv row into a NRPTI record
       const nrptiRecord = recordTypeUtils.transformRecord(csvRow);
 
+      // Record will be null if row has business_reviewed = N, skip processing it
+      if (!nrptiRecord) {
+        defaultLog.debug('skipped record processing, not reviewed by business')
+        return Promise.resolve();
+      }
       // Check if this record already exists
       const existingRecord = await recordTypeUtils.findExistingRecord(nrptiRecord);
 
@@ -154,6 +159,14 @@ class CoorsCsvDataSource {
       return {
         getUtil: (auth_payload, csvRow) => {
           return new (require('./court-conviction-utils'))(auth_payload, RECORD_TYPE.CourtConviction, csvRow);
+        }
+      };
+    }
+
+    if (this.recordType === 'Administrative Sanction') {
+      return {
+        getUtil: (auth_payload, csvRow) => {
+          return new (require('./admin-sanction-utils'))(auth_payload, RECORD_TYPE.AdministrativeSanction, csvRow);
         }
       };
     }
