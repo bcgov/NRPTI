@@ -64,8 +64,6 @@ class DataSource {
         defaultLog.error('updateRecords - no supported record types to update');
       }
 
-      const promises = [];
-
       // for each supported type, run its update
       for (const recordType of recordTypesToUpdate) {
         await this.updateRecordType(recordType);
