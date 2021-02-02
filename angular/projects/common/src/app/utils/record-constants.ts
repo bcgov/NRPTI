@@ -877,6 +877,31 @@ export class Picklists {
         '63': {
           description: 'Penalty for failure to comply with the Act or associated regulations'
         }
+      },
+      'Wildlife Act': {
+        '27': {
+          '1': {
+            a: {
+              description: 'Administrative penalty for determination of contravention'
+            },
+            d: {
+              description: 'Order for recovery of government\'s costs of fire control and other amounts',
+            }
+          }
+        },
+        '28': {
+          '1': {
+            description: 'Remediation order'
+          },
+          '3': {
+            c: {
+              description: 'Order for recovery of costs incurred for remediation work carried out by minister'
+            },
+            d: {
+              description: 'Administrative penalty in lieu of remediation costs'
+            }
+          }
+        },
       }
     },
     AdministrativeSanction: {
