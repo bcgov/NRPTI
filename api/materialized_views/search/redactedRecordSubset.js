@@ -1,5 +1,7 @@
 const mongodb = require('../../src/utils/mongodb');
 
+const { AUTHORIZED_PUBLISH_AGENCIES } = require('../../src/utils/constants/misc');
+
 /**
  * Updates the redactedRecord subset.
  *
@@ -17,10 +19,22 @@ async function update(defaultLog) {
     }
   ];
 
+  const redactCondition = {
+    $or: [
+      { $lt: ['$issuedToAge', 19] },
+      {
+        $not: {
+          $in: ['$issuingAgency', AUTHORIZED_PUBLISH_AGENCIES]
+        }
+      }
+    ]
+  };
+
   const issuedToRedaction = [
     {
       $project: {
         fullRecord: 1,
+        issuingAgency: 1,
         issuedToAge: {
           $cond: {
             if: { $ne: [{ $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }, null] },
@@ -40,7 +54,7 @@ async function update(defaultLog) {
         skipRedact: {
           $cond: {
             if: {
-              $in: [ { $arrayElemAt: ['$fullRecord._schemaName', 0] }, ['MineBCMI', 'CollectionBCMI'] ]
+              $in: [{ $arrayElemAt: ['$fullRecord._schemaName', 0] }, ['MineBCMI', 'CollectionBCMI']]
             },
             then: true,
             else: false
@@ -52,45 +66,35 @@ async function update(defaultLog) {
       $addFields: {
         'fullRecord.issuedTo.firstName': {
           $cond: {
-            if: {
-              $lt: ['$issuedToAge', 19]
-            },
+            if: redactCondition,
             then: 'Unpublished',
             else: { $arrayElemAt: ['$fullRecord.issuedTo.firstName', 0] }
           }
         },
         'fullRecord.issuedTo.lastName': {
           $cond: {
-            if: {
-              $lt: ['$issuedToAge', 19]
-            },
+            if: redactCondition,
             then: 'Unpublished',
             else: { $arrayElemAt: ['$fullRecord.issuedTo.lastName', 0] }
           }
         },
         'fullRecord.issuedTo.middleName': {
           $cond: {
-            if: {
-              $lt: ['$issuedToAge', 19]
-            },
+            if: redactCondition,
             then: '',
             else: { $arrayElemAt: ['$fullRecord.issuedTo.middleName', 0] }
           }
         },
         'fullRecord.issuedTo.fullName': {
           $cond: {
-            if: {
-              $lt: ['$issuedToAge', 19]
-            },
+            if: redactCondition,
             then: 'Unpublished',
             else: { $arrayElemAt: ['$fullRecord.issuedTo.fullName', 0] }
           }
         },
         'fullRecord.issuedTo.dateOfBirth': {
           $cond: {
-            if: {
-               $lt: ['$issuedToAge', 19]
-            },
+            if: redactCondition,
             then: '',
             else: { $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }
           }
@@ -104,15 +108,14 @@ async function update(defaultLog) {
       $addFields: {
         'fullRecord.issuedTo': {
           $cond: {
-            if: { $eq: [ '$skipRedact', true ] },
+            if: { $eq: ['$skipRedact', true] },
             then: {},
             else: { $arrayElemAt: ['$fullRecord.issuedTo', 0] }
-          },
+          }
         }
       }
     }
   ];
-
 
   try {
     const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
@@ -134,13 +137,10 @@ async function update(defaultLog) {
     aggregate = aggregate.concat(issuedToRedaction);
 
     // replace root with redacted full record
-    aggregate.push(
-      {
+    aggregate.push({
       $replaceRoot: {
         newRoot: {
-          $mergeObjects: [
-            { $arrayElemAt: ["$fullRecord", 0] },
-            "$$ROOT"]
+          $mergeObjects: [{ $arrayElemAt: ['$fullRecord', 0] }, '$$ROOT']
         }
       }
     });
@@ -191,7 +191,6 @@ async function update(defaultLog) {
     await mainCollection.aggregate(aggregate).next();
 
     defaultLog.info('Done Updating redacted_record_subset');
-
   } catch (error) {
     defaultLog.info('Failed to update redacted_record_subset, error: ' + error);
   }

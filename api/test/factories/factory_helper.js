@@ -1,5 +1,6 @@
 const canada = require('canada');
 const _ = require('lodash');
+const moment = require('moment');
 const bsonObjectId = require('bson').ObjectId;
 const mongTypes = require('mongoose').Types;
 let faker = require('faker/locale/en');
@@ -27,7 +28,7 @@ function generateFakePerson({ firstName, middleName, lastName, genUnderAge, genA
     if (underage) {
       dateOfBirth = faker.date.past(12, today.toISOString())
     } else if (adult) {
-      dateOfBirth = faker.date.past(20, today.toISOString());
+      dateOfBirth = faker.date.between('1960-01-01', moment().subtract(20, 'years').toISOString());
     } else {
       // faker expects simple date string or isostring
       dateOfBirth = faker.date.between('1960-01-01', today.toISOString())
