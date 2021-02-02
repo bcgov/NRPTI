@@ -98,7 +98,7 @@ export class ImportService {
           )
         );
       }
-      if (res[0].data.meta[0].searchResultsTotal) {
+      if (res[0].data.meta[0] && res[0].data.meta[0].searchResultsTotal) {
         searchResult.totalSearchCount = res[0].data.meta[0].searchResultsTotal;
       } else {
         this.eventService.setError(

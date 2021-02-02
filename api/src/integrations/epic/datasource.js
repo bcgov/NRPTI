@@ -7,7 +7,7 @@ const defaultLog = require('../../utils/logger')('epic-datasource');
 const EPIC_RECORD_TYPE = require('./epic-record-type-enum');
 const MAX_PAGE_SIZE = Number.MAX_SAFE_INTEGER;
 
-const EPIC_API_HOSTNAME = process.env.EPIC_API_HOSTNAME || 'eagle-prod.pathfinder.gov.bc.ca';
+const EPIC_API_HOSTNAME = process.env.EPIC_API_HOSTNAME || 'projects.eao.gov.bc.ca';
 const EPIC_API_SEARCH_PATHNAME = process.env.EPIC_API_SEARCH_PATHNAME || '/api/public/search';
 const EPIC_API_PROJECT_PATHNAME = process.env.EPIC_API_PROJECT_PATHNAME || '/api/public/project';
 
@@ -68,10 +68,9 @@ class DataSource {
 
       // for each supported type, run its update
       for (const recordType of recordTypesToUpdate) {
-        promises.push(this.updateRecordType(recordType));
+        await this.updateRecordType(recordType);
       }
 
-      await Promise.all(promises);
     } catch (error) {
       this.status.message = 'updateRecords - unexpected error';
       this.status.error = error.message;
@@ -141,7 +140,6 @@ class DataSource {
       // After April 1, 2020, we import everything regardless of project.
       for (let z = 0; z < epicRecords.length; z++) {
         const theRecord = epicRecords[z];
-
 
         const rec = await recordTypeUtils.transformRecord(theRecord);
 
