@@ -137,7 +137,7 @@ describe('DataSource', () => {
       const status = await dataSource.updateRecordType(recordType);
 
       expect(dataSource.getIntegrationUrl).toHaveBeenCalledWith(
-        'eagle-prod.pathfinder.gov.bc.ca',
+        'projects.eao.gov.bc.ca',
         '/api/public/search',
         {
           and: { milestone: '222', param1: 1, type: '111' },

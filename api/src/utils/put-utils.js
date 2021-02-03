@@ -351,13 +351,17 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
                              }
                            },
                            { new: true });
-  await MasterModel.updateOne({ _id: masterId },
-                            {
-                              $set: {
-                                "issuedTo.read": masterRec.issuedTo.read
-                              }
-                            },
-                            { new: true });
+
+  // Not all records have an issuedTo
+  if (masterRec.issuedTo) {
+    await MasterModel.updateOne({ _id: masterId },
+                              {
+                                $set: {
+                                  "issuedTo.read": masterRec.issuedTo.read
+                                }
+                              },
+                              { new: true });
+  }
  
   let savedDocuments = null;
   try {
