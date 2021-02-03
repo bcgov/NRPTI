@@ -878,7 +878,7 @@ export class Picklists {
           description: 'Penalty for failure to comply with the Act or associated regulations'
         }
       },
-      'Wildlife Act': {
+      'Wildfire Act': {
         '27': {
           '1': {
             a: {
