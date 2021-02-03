@@ -130,22 +130,22 @@ class AdminSanctions extends BaseRecordUtils {
 
     let enforcement = '';
     if (csvRow['enforcement_licence_code'] === 'DDC') {
-      enforcement = "Director's decision to suspend licence";
+      enforcement = "Director's decision to suspend or cancel licence";
     } else if (csvRow['enforcement_licence_code' === 'AUT']) {
-      enforcement = 'Automatic licence suspension'
+      enforcement = 'Automatic licence suspension or cancellation'
     } else {
       enforcement = 'Licence action'
     }
 
     const section = csvRow['section'] || '';
-    const sub_section = (csvRow['sub_section'] && ` & Sub-Section ${csvRow['sub_section']}`)|| '';
-    const paragraph = (csvRow['paragraph'] && ` & Paragraph ${csvRow['paragraph']}`)|| '';
+    const sub_section = (csvRow['sub_section'] && ` (${csvRow['sub_section']})`)|| '';
+    const paragraph = (csvRow['paragraph'] && ` (${csvRow['paragraph']})`)|| '';
     const description = csvRow['violations_prompting_action'] || '';
     let summary = '';
     if (sectionNum === 85) {
-      summary = `Licence action resulting from an unpaid fine for an offense under the ${legislation} & Section ${section}${sub_section}${paragraph} - ${description}`;
+      summary = `Licence action resulting from an unpaid fine for an offense under the ${legislation} ${section}${sub_section}${paragraph} - ${description}`;
     } else {
-      summary = `${enforcement} due to a violation under the ${legislation} & ${section}${sub_section}${paragraph} - ${description}`;
+      summary = `${enforcement} due to a violation under the ${legislation} ${section}${sub_section}${paragraph} - ${description}`;
     }
 
     return summary;

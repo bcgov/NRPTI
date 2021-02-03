@@ -67,12 +67,11 @@ describe('transformRecord', () => {
           type: 'Other'
         }
       ],
-      summary: 'Licence action resulting from an unpaid fine for an offense under the regulation123 & Section section123 & Sub-Section subSection123 & Paragraph paragraph123 - description1234',
+      summary: 'Licence action resulting from an unpaid fine for an offense under the regulation123 section123 (subSection123) (paragraph123) - description1234',
       sourceSystemRef: 'coors-csv'
     });
   });
 
-  // todo failing
   it('transforms csv row fields into NRPTI record fields - section 24', () => {
     const result = adminSanctions.transformRecord({
       case_contravention_id: 123,
@@ -127,7 +126,7 @@ describe('transformRecord', () => {
           type: 'Other'
         }
       ],
-      summary: "Director's decision to suspend licence due to a violation under the regulation123 & section123 & Sub-Section subSection123 & Paragraph paragraph123 - violations1234",
+      summary: "Director's decision to suspend or cancel licence due to a violation under the regulation123 section123 (subSection123) (paragraph123) - violations1234",
       sourceSystemRef: 'coors-csv'
     });
   });
