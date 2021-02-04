@@ -563,7 +563,7 @@ let searchCollection = async function (
   // to finalize the facet
   searchResultAggregation.push({
     $lookup: {
-      from: 'nrpti',
+      from: subset && subset.includes('redactedRecord') ? 'redacted_record_subset' : 'nrpti',
       localField: '_id',
       foreignField: '_id',
       as: 'fullRecord'

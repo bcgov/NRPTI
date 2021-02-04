@@ -57,7 +57,7 @@ describe('Record Individual issuedTo redaction test', () => {
     expect(redacted.issuedTo.middleName).toEqual('');
     expect(redacted.issuedTo.lastName).toEqual('Unpublished');
     expect(redacted.issuedTo.fullName).toEqual('Unpublished');
-    expect(redacted.issuedTo.dateOfBirth).toEqual('');
+    expect(redacted.issuedTo.dateOfBirth).toEqual(null);
   });
 
   test('Unauthorized issuing agency and person over 19 are redacted', async () => {
@@ -75,7 +75,7 @@ describe('Record Individual issuedTo redaction test', () => {
     expect(redacted.issuedTo.middleName).toEqual('');
     expect(redacted.issuedTo.lastName).toEqual('Unpublished');
     expect(redacted.issuedTo.fullName).toEqual('Unpublished');
-    expect(redacted.issuedTo.dateOfBirth).toEqual('');
+    expect(redacted.issuedTo.dateOfBirth).toEqual(null);
   });
 
   test('Unauthorized issuing agency and person under 19 are redacted', async () => {
@@ -93,6 +93,6 @@ describe('Record Individual issuedTo redaction test', () => {
     expect(redacted.issuedTo.middleName).toEqual('');
     expect(redacted.issuedTo.lastName).toEqual('Unpublished');
     expect(redacted.issuedTo.fullName).toEqual('Unpublished');
-    expect(redacted.issuedTo.dateOfBirth).toEqual('');
+    expect(redacted.issuedTo.dateOfBirth).toEqual(null);
   });
 });
