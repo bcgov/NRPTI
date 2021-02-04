@@ -30,6 +30,75 @@ export interface IDateField {
  */
 export class CsvConstants {
   /**
+   * Expected headers for COORS Administrative Sanction csv.
+   *
+   * Note: sort order and letter case of headers is not important.
+   *
+   * @static
+   * @memberof CsvConstants
+   */
+  public static readonly coorsAdminSanctionCsvRequiredHeaders = [
+    'CASE_CONTRAVENTION_ID',
+    'ENFORCEMENT_ACTION_ID',
+    'RECORD_TYPE_CODE',
+    'BUSINESS_REVIEWED_IND',
+    'FIRST_NAME',
+    'MIDDLE_NAME',
+    'LAST_NAME',
+    'BIRTH_DATE',
+    'BUSINESS_NAME',
+    'LOCATION_OF_VIOLATION',
+    'REGULATION_DESCRIPTION',
+    'ACT',
+    'SECTION',
+    'SUB_SECTION',
+    'PARAGRAPH',
+    'VIOLATIONS_PROMPTING_ACTION',
+    'EFFECTIVE_DATE',
+    'SUMMARY',
+    'ENFORCEMENT_LICENCE_CODE'
+  ];
+
+  /**
+   * Required fields for COORS Administrative Sanction csv.
+   *
+   * @static
+   * @memberof CsvConstants
+   */
+  public static readonly coorsAdminSanctionCsvRequiredFields = [
+    'CASE_CONTRAVENTION_ID',
+    'ENFORCEMENT_ACTION_ID',
+    'RECORD_TYPE_CODE',
+    'BUSINESS_REVIEWED_IND',
+  ];
+
+  /**
+   * Fields for COORS Administrative Sanction csv that have a required format.
+   *
+   * Note: These fields are not necessarily required, and only have a required format if present.
+   *
+   * @static
+   * @type {IRequiredFormat[]}
+   * @memberof CsvConstants
+   */
+  public static readonly coorsAdminSanctionCsvRequiredFormats: IRequiredFormat[] = [
+    { field: 'EFFECTIVE_DATE', type: 'date', format: 'MM/DD/YYYY' },
+    { field: 'BIRTH_DATE', type: 'date', format: 'YYYY-MM-DD' }
+  ];
+
+  /**
+   * Fields for COORS Administrative Sanction csv that represent dates.
+   *
+   * @static
+   * @type {IDateField[]}
+   * @memberof CsvConstants
+   */
+  public static readonly coorsAdminSanctionCsvDateFields: IDateField[] = [
+    { field: 'EFFECTIVE_DATE', format: 'MM/DD/YYYY' },
+    { field: 'BIRTH_DATE', format: 'YYYY-MM-DD' }
+  ];
+
+  /**
    * Expected headers for COORS Ticket csv.
    *
    * Note: sort order and letter case of headers is not important.
@@ -334,6 +403,9 @@ export class CsvConstants {
       if (recordType === 'Court Conviction') {
         return this.coorsConvictionCsvRequiredHeaders;
       }
+      if (recordType === 'Administrative Sanction') {
+        return this.coorsAdminSanctionCsvRequiredHeaders;
+      }
     }
 
     if (dataSourceType === 'bcogc') {
@@ -377,6 +449,9 @@ export class CsvConstants {
       }
       if (recordType === 'Court Conviction') {
         return this.coorsConvictionCsvRequiredFields;
+      }
+      if (recordType === 'Administrative Sanction') {
+        return this.coorsAdminSanctionCsvRequiredFields;
       }
     }
 
@@ -422,6 +497,9 @@ export class CsvConstants {
       if (recordType === 'Court Conviction') {
         return this.coorsConvictionCsvRequiredFormats;
       }
+      if (recordType === 'Administrative Sanction') {
+        return this.coorsAdminSanctionCsvRequiredFormats;
+      }
     }
 
     if (dataSourceType === 'bcogc') {
@@ -465,6 +543,9 @@ export class CsvConstants {
       }
       if (recordType === 'Court Conviction') {
         return this.coorsConvictionCsvDateFields;
+      }
+      if (recordType === 'Administrative Sanction') {
+        return this.coorsAdminSanctionCsvDateFields;
       }
     }
 
