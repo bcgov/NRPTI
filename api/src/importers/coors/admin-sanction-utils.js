@@ -131,7 +131,7 @@ class AdminSanctions extends BaseRecordUtils {
     let enforcement = '';
     if (csvRow['enforcement_licence_code'] === 'DDC') {
       enforcement = "Director's decision to suspend or cancel licence";
-    } else if (csvRow['enforcement_licence_code' === 'AUT']) {
+    } else if (csvRow['enforcement_licence_code'] === 'AUT') {
       enforcement = 'Automatic licence suspension or cancellation'
     } else {
       enforcement = 'Licence action'
