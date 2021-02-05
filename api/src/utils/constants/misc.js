@@ -6,6 +6,7 @@ const ApplicationRoles = {
   ADMIN_LNG: 'admin:lng',
   ADMIN_BCMI: 'admin:bcmi',
   ADMIN_WF: 'admin:wf',
+  ADMIN_FLNRO: 'admin:flnro',
   PUBLIC: 'public'
 };
 
@@ -17,6 +18,11 @@ exports.ApplicationAdminRoles = [
   ApplicationRoles.ADMIN_LNG,
   ApplicationRoles.ADMIN_BCMI
 ];
+
+exports.ApplicationLimitedAdminRoles = [
+  ApplicationRoles.ADMIN_WF,
+  ApplicationRoles.ADMIN_FLNRO
+]
 
 exports.KeycloakDefaultRoles = {
   OFFLINE_ACCESS: 'offline_access',

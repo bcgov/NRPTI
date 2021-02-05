@@ -1,4 +1,7 @@
-// const PostUtils = require('./post-utils');
+const PostUtils = require('./post-utils');
+const utils = require('./constants/misc');
+
+const DEFAULT_USER_ROLES = [...Object.values(utils.KeycloakDefaultRoles), utils.ApplicationRoles.PUBLIC];
 
 // const createMaster = function (args, res, next, incomingObj, flavourIds) {
 //   const fakeId = '123456789012';
@@ -83,8 +86,57 @@
 // });
 
 describe('PostUtils', () => {
-    it('creates', async () => {
-      return true;
-    })
-  }
-);
+  it('creates', async () => {
+    return true;
+  });
+
+  test('setAdditionalRoleOnRecord does not alter record if arguments are emtpy', async () => {
+    const record = {};
+    PostUtils.setAdditionalRoleOnRecord(record, null, null);
+
+    expect(record).toEqual({});
+  });
+
+  test('setAdditionalRoleOnRecord does not alter record if user is not a limited admin such as admin:wf', async () => {
+    const record = {};
+    PostUtils.setAdditionalRoleOnRecord(record, DEFAULT_USER_ROLES, utils.ApplicationRoles.ADMIN_WF);
+
+    expect(record).toEqual({});
+  });
+
+  test('setAdditionalRoleOnRecord does not alter record if user has any other admin roles', async () => {
+    const record = {};
+    PostUtils.setAdditionalRoleOnRecord(
+      record,
+      [...DEFAULT_USER_ROLES, utils.ApplicationRoles.ADMIN],
+      utils.ApplicationRoles.ADMIN_WF
+    );
+
+    expect(record).toEqual({});
+  });
+
+  test('setAdditionalRoleOnRecord alters record correctly if user one of the limited admins', async () => {
+    const limitedAdmins = [utils.ApplicationRoles.ADMIN_WF, utils.ApplicationRoles.ADMIN_FLNRO];
+
+    for (const role of limitedAdmins) {
+      const record = {
+        read: [],
+        write: [],
+        issuedTo: {
+          read: [],
+          write: []
+        }
+      };
+      PostUtils.setAdditionalRoleOnRecord(record, [...DEFAULT_USER_ROLES, role], limitedAdmins);
+
+      expect(record).toEqual({
+        read: [role],
+        write: [role],
+        issuedTo: {
+          read: [role],
+          write: [role]
+        }
+      });
+    }
+  });
+});

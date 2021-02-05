@@ -227,6 +227,26 @@ function editableObjToJSON(documentObject) { // for consistency
 return JSON.stringify(documentObject, null, '\t');
 }
 
+function generateSwaggerParams({ userRoles }) {
+  let roles = [];
+
+  if (userRoles) {
+    if (Array.isArray(userRoles)) roles = userRoles;
+    else if (typeof userRoles === 'string') roles = [userRoles];
+  }
+
+  return {
+    swagger: {
+      params: {
+        auth_payload: {
+          displayName: faker.internet.userName,
+          realm_access: { roles: roles }
+        }
+      }
+    }
+  };
+}
+
 exports.faker = faker;
 exports.getBcCities = getBcCities;
 exports.generateFakePostal = generateFakePostal;
@@ -247,3 +267,4 @@ exports.epicAppTmpBasePath = epicAppTmpBasePath;
 exports.touchPath = touchPath;
 exports.hexaDecimal = hexaDecimal;
 exports.editableObjToJSON = editableObjToJSON;
+exports.generateSwaggerParams = generateSwaggerParams;

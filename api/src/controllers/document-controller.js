@@ -8,7 +8,7 @@ const queryUtils = require('../utils/query-utils');
 const businessLogicManager = require('../utils/business-logic-manager');
 const mongodb = require('../utils/mongodb');
 const defaultLog = require('../utils/logger')('record');
-const { userIsAdminWildfire } = require('../utils/auth-utils');
+const { userIsOnlyInRole } = require('../utils/auth-utils');
 
 const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
 const ep = new AWS.Endpoint(OBJ_STORE_URL);
@@ -51,14 +51,20 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
     const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
 
     // Set mongo document and s3 document roles
-    const readRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_NRCED];
-    const writeRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_NRCED];
+    const readRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_BCMI];
+    const writeRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_BCMI];
     let s3ACLRole = null;
 
-    // Add admin:wf read/write roles if user is wildfire user
-    if (args && userIsAdminWildfire(args.swagger.params.auth_payload.realm_access.roles)) {
-      readRoles.push(utils.ApplicationRoles.ADMIN_WF);
-      writeRoles.push(utils.ApplicationRoles.ADMIN_WF);
+    // Add limited admin roles to read/write if user is a limited admin(e.g., admin:wf or admin:flnro)
+    if (args) {
+      const roles = args.swagger.params.auth_payload.realm_access.roles;
+      for (const role of utils.ApplicationLimitedAdminRoles) {
+        if (userIsOnlyInRole(roles, role)) {
+          readRoles.push(role);
+          writeRoles.push(role);
+          break;
+        }
+      }
     }
 
     if (!businessLogicManager.isDocumentConsideredAnonymous(masterRecord)) {

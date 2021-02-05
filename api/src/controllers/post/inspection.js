@@ -5,6 +5,10 @@ const BusinessLogicManager = require('../../utils/business-logic-manager');
 const { userHasValidRoles } = require('../../utils/auth-utils');
 const utils = require('../../utils/constants/misc');
 
+// Additional admin roles that can create this record, such as admin:wf or admin:flnro
+const ADDITIONAL_ROLES = [utils.ApplicationRoles.ADMIN_FLNRO];
+exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;
+
 /**
  * Performs all operations necessary to create a master Inspection record and its associated flavour records.
  *
@@ -34,7 +38,7 @@ const utils = require('../../utils/constants/misc');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createItem = async function (args, res, next, incomingObj) {
+exports.createItem = async function(args, res, next, incomingObj) {
   const flavourFunctions = {
     InspectionLNG: this.createLNG,
     InspectionNRCED: this.createNRCED,
@@ -73,7 +77,7 @@ exports.createItem = async function (args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master inspection record
  */
-exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   let Inspection = mongoose.model('Inspection');
   let inspection = new Inspection();
 
@@ -93,15 +97,12 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (inspection._sourceRefOgcInspectionId = incomingObj._sourceRefOgcInspectionId);
   incomingObj._sourceRefOgcDeficiencyId &&
     (inspection._sourceRefOgcDeficiencyId = incomingObj._sourceRefOgcDeficiencyId);
-  incomingObj._sourceRefNrisId &&
-    (inspection._sourceRefNrisId = incomingObj._sourceRefNrisId);
+  incomingObj._sourceRefNrisId && (inspection._sourceRefNrisId = incomingObj._sourceRefNrisId);
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (inspection.collectionId = new ObjectId(incomingObj.collectionId));
-  incomingObj.mineGuid &&
-    (inspection.mineGuid = incomingObj.mineGuid);
-  incomingObj._sourceRefAgriMisId &&
-    (inspection._sourceRefAgriMisId = incomingObj._sourceRefAgriMisId);
+  incomingObj.mineGuid && (inspection.mineGuid = incomingObj.mineGuid);
+  incomingObj._sourceRefAgriMisId && (inspection._sourceRefAgriMisId = incomingObj._sourceRefAgriMisId);
 
   // set permissions
   inspection.read = utils.ApplicationAdminRoles;
@@ -175,6 +176,15 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.isNrcedPublished && (inspection.isNrcedPublished = incomingObj.isNrcedPublished);
   incomingObj.isLngPublished && (inspection.isLngPublished = incomingObj.isLngPublished);
 
+  // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+  if (args) {
+    postUtils.setAdditionalRoleOnRecord(
+      inspection,
+      args.swagger.params.auth_payload.realm_access.roles,
+      ADDITIONAL_ROLES
+    );
+  }
+
   return inspection;
 };
 
@@ -207,9 +217,14 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created lng inspection record
  */
-exports.createLNG = function (args, res, next, incomingObj) {
+exports.createLNG = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG, ...ADDITIONAL_ROLES],
+      args.swagger.params.auth_payload.realm_access.roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -297,6 +312,15 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.sourceDateUpdated && (inspectionLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (inspectionLNG.sourceSystemRef = incomingObj.sourceSystemRef);
 
+  // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+  if (args) {
+    postUtils.setAdditionalRoleOnRecord(
+      inspectionLNG,
+      args.swagger.params.auth_payload.realm_access.roles,
+      ADDITIONAL_ROLES
+    );
+  }
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     inspectionLNG.read.push('public');
@@ -338,9 +362,14 @@ exports.createLNG = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced inspection record
  */
-exports.createNRCED = function (args, res, next, incomingObj) {
+exports.createNRCED = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED, ...ADDITIONAL_ROLES],
+      args.swagger.params.auth_payload.realm_access.roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -362,8 +391,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj._sourceRefNrisId &&
     ObjectId.isValid(incomingObj._sourceRefNrisId) &&
     (inspectionNRCED._sourceRefNrisId = incomingObj._sourceRefNrisId);
-  incomingObj._sourceRefAgriMisId &&
-    (inspectionNRCED._sourceRefAgriMisId = incomingObj._sourceRefAgriMisId);
+  incomingObj._sourceRefAgriMisId && (inspectionNRCED._sourceRefAgriMisId = incomingObj._sourceRefAgriMisId);
 
   // set permissions and meta
   inspectionNRCED.read = utils.ApplicationAdminRoles;
@@ -431,6 +459,15 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.sourceDateUpdated && (inspectionNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (inspectionNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
 
+  // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+  if (args) {
+    postUtils.setAdditionalRoleOnRecord(
+      inspectionNRCED,
+      args.swagger.params.auth_payload.realm_access.roles,
+      ADDITIONAL_ROLES
+    );
+  }
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     inspectionNRCED.read.push('public');
@@ -472,9 +509,14 @@ exports.createNRCED = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created bcmi inspection record
  */
-exports.createBCMI = function (args, res, next, incomingObj) {
+exports.createBCMI = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, ...ADDITIONAL_ROLES],
+      args.swagger.params.auth_payload.realm_access.roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -502,8 +544,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj._master &&
     ObjectId.isValid(incomingObj._master) &&
     (inspectionBCMI._master = new ObjectId(incomingObj._master));
-  incomingObj.mineGuid &&
-    (inspectionBCMI.mineGuid = incomingObj.mineGuid);
+  incomingObj.mineGuid && (inspectionBCMI.mineGuid = incomingObj.mineGuid);
 
   // set permissions and meta
   inspectionBCMI.read = utils.ApplicationAdminRoles;
@@ -550,8 +591,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.lastName &&
     (inspectionBCMI.issuedTo.lastName = incomingObj.issuedTo.lastName);
-  incomingObj.issuedTo &&
-    (inspectionBCMI.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo && (inspectionBCMI.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (inspectionBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
@@ -570,6 +610,15 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (inspectionBCMI.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (inspectionBCMI.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (inspectionBCMI.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+  if (args) {
+    postUtils.setAdditionalRoleOnRecord(
+      inspectionBCMI,
+      args.swagger.params.auth_payload.realm_access.roles,
+      ADDITIONAL_ROLES
+    );
+  }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {

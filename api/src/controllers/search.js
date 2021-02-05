@@ -7,8 +7,8 @@ let qs = require('qs');
 let mongodb = require('../utils/mongodb');
 let moment = require('moment');
 let fuzzySearch = require('../utils/fuzzySearch');
-let constants = require('../utils/constants/misc');
-const AppRoles = constants.ApplicationRoles;
+const { ApplicationAdminRoles, ApplicationLimitedAdminRoles } = require('../utils/constants/misc');
+const { userIsOnlyInRole } = require('../utils/auth-utils');
 
 function isEmpty(obj) {
   for (const key in obj) {
@@ -257,143 +257,96 @@ exports.addArrayCountField = addArrayCountField;
 // of any individual where the birthdate is null or the individual
 // is less then 19 years old. First step to do this is calculate their
 // age
-const issuedToRedaction = [
-  {
-    $project: {
-      fullRecord: 1,
-      issuedToAge: {
-        $cond: {
-          if: { $ne: [{ $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }, null] },
-          then: {
-            $subtract: [
-              { $year: { date: new Date() } },
-              { $year: { date: { $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] } } }
-            ]
-          },
-          else: 0
-        }
-      }
-    }
-  },
-  {
-    $addFields: {
-      skipRedact: {
-        $cond: {
-          if: {
-            $in: [ AppRoles.ADMIN_WF, { $arrayElemAt: ['$fullRecord.write', 0] } ]
-          },
-          then: true,
-          else: false
-        }
-      }
-    }
-  },
-  {
-    $addFields: {
-      'fullRecord.issuedTo.firstName': {
-        $cond: {
-          if: {
-            $and: [
-              { $eq: ['$skipRedact', false] },
-              { $lt: ['$issuedToAge', 19] },
-              {
-                $or: [
-                  { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] },
-                  {
-                    $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nro-inspections-csv']
-                  }
-                ]
-              }
-            ]
-          },
-          then: 'Unpublished',
-          else: { $arrayElemAt: ['$fullRecord.issuedTo.firstName', 0] }
-        }
-      },
-      'fullRecord.issuedTo.lastName': {
-        $cond: {
-          if: {
-            $and: [
-              { $eq: ['$skipRedact', false] },
-              { $lt: ['$issuedToAge', 19] },
-              {
-                $or: [
-                  { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] },
-                  {
-                    $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nro-inspections-csv']
-                  }
-                ]
-              }
-            ]
-          },
-          then: 'Unpublished',
-          else: { $arrayElemAt: ['$fullRecord.issuedTo.lastName', 0] }
-        }
-      },
-      'fullRecord.issuedTo.middleName': {
-        $cond: {
-          if: {
-            $and: [
-              { $eq: ['$skipRedact', false] },
-              { $lt: ['$issuedToAge', 19] },
-              {
-                $or: [
-                  { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] },
-                  {
-                    $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nro-inspections-csv']
-                  }
-                ]
-              }
-            ]
-          },
-          then: '',
-          else: { $arrayElemAt: ['$fullRecord.issuedTo.middleName', 0] }
-        }
-      },
-      'fullRecord.issuedTo.fullName': {
-        $cond: {
-          if: {
-            $and: [
-              { $eq: ['$skipRedact', false] },
-              { $lt: ['$issuedToAge', 19] },
-              {
-                $or: [
-                  { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] },
-                  {
-                    $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nro-inspections-csv']
-                  }
-                ]
-              }
-            ]
-          },
-          then: 'Unpublished',
-          else: { $arrayElemAt: ['$fullRecord.issuedTo.fullName', 0] }
-        }
-      },
-      'fullRecord.issuedTo.dateOfBirth': {
-        $cond: {
-          if: {
-            $and: [
-              { $eq: ['$skipRedact', false] },
-              { $lt: ['$issuedToAge', 19] },
-              {
-                $or: [
-                  { $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nrpti'] },
-                  {
-                    $eq: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nro-inspections-csv']
-                  }
-                ]
-              }
-            ]
-          },
-          then: '',
-          else: { $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }
-        }
-      }
-    }
-  }
-]
+const issuedToRedaction = function(roles) {
+  // Skip redaction if the record.write array matches the limited admin user's role.
+  // Code would only reach this point if the user doesn't have any of the ApplicationAdminRoles.
+  // Only skip redact if the current user's role matches what's on the records.write.  If for
+  // some reason the user has more than 1 limited admin role then don't skip, because we don't
+  // know for sure what role the user is supposed to be in.
+  const skipRedactCondition = {
+    $or: ApplicationLimitedAdminRoles.filter(role => userIsOnlyInRole(roles, role)).map(role => {
+      return { $in: [role, { $arrayElemAt: ['$fullRecord.write', 0] }] };
+    })
+  };
 
+  const redactCondition = {
+    $and: [
+      { $eq: ['$skipRedact', false] },
+      { $lt: ['$issuedToAge', 19] },
+      { $in: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, ['nrpti', 'nro-inspections-csv']] }
+    ]
+  };
+
+  return [
+    {
+      $project: {
+        fullRecord: 1,
+        issuedToAge: {
+          $cond: {
+            if: { $ne: [{ $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }, null] },
+            then: {
+              $subtract: [
+                { $year: { date: new Date() } },
+                { $year: { date: { $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] } } }
+              ]
+            },
+            else: 0
+          }
+        }
+      }
+    },
+    {
+      $addFields: {
+        skipRedact: {
+          $cond: {
+            if: skipRedactCondition,
+            then: true,
+            else: false
+          }
+        }
+      }
+    },
+    {
+      $addFields: {
+        'fullRecord.issuedTo.firstName': {
+          $cond: {
+            if: redactCondition,
+            then: 'Unpublished',
+            else: { $arrayElemAt: ['$fullRecord.issuedTo.firstName', 0] }
+          }
+        },
+        'fullRecord.issuedTo.lastName': {
+          $cond: {
+            if: redactCondition,
+            then: 'Unpublished',
+            else: { $arrayElemAt: ['$fullRecord.issuedTo.lastName', 0] }
+          }
+        },
+        'fullRecord.issuedTo.middleName': {
+          $cond: {
+            if: redactCondition,
+            then: '',
+            else: { $arrayElemAt: ['$fullRecord.issuedTo.middleName', 0] }
+          }
+        },
+        'fullRecord.issuedTo.fullName': {
+          $cond: {
+            if: redactCondition,
+            then: 'Unpublished',
+            else: { $arrayElemAt: ['$fullRecord.issuedTo.fullName', 0] }
+          }
+        },
+        'fullRecord.issuedTo.dateOfBirth': {
+          $cond: {
+            if: redactCondition,
+            then: '',
+            else: { $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }
+          }
+        }
+      }
+    }
+  ];
+};
 
 let searchCollection = async function (
   roles,
@@ -573,8 +526,8 @@ let searchCollection = async function (
   // For read only users, we need to redact out the details
   // of any individual where the birthdate is null or the individual
   // is less then 19 years old.
-  if (!roles.some(r => constants.ApplicationAdminRoles.indexOf(r) >= 0)) {
-      searchResultAggregation = searchResultAggregation.concat(issuedToRedaction);
+  if (!roles.some(r => ApplicationAdminRoles.indexOf(r) >= 0)) {
+      searchResultAggregation = searchResultAggregation.concat(issuedToRedaction(roles));
   }
 
   searchResultAggregation.push({
@@ -942,8 +895,8 @@ const executeQuery = async function (args, res, next) {
     });
 
     // Redact issued if user is only wildfire or read-only user
-    if (populate && !roles.some(r => constants.ApplicationAdminRoles.indexOf(r) >= 0)) {
-      aggregation = aggregation.concat(issuedToRedaction);
+    if (populate && !roles.some(r => ApplicationAdminRoles.indexOf(r) >= 0)) {
+      aggregation = aggregation.concat(issuedToRedaction(roles));
     }
 
     populate &&
