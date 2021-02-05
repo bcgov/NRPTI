@@ -95,7 +95,7 @@ async function update(defaultLog) {
         'fullRecord.issuedTo.dateOfBirth': {
           $cond: {
             if: redactCondition,
-            then: '',
+            then: null,
             else: { $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }
           }
         }
