@@ -15,8 +15,6 @@ describe('Record Individual issuedTo redaction test', () => {
     const db = client.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
     nrptiCollection = db.collection('nrpti');
     redacted_record_subset = db.collection('redacted_record_subset');
-
-    // await createTestRecords(nrptiCollection);
   });
 
   beforeEach(async () => {

@@ -2,8 +2,12 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
-const { userHasValidRoles, userIsAdminWildfire } = require('../../utils/auth-utils');
+const { userHasValidRoles } = require('../../utils/auth-utils');
 const utils = require('../../utils/constants/misc');
+
+// Additional admin roles that can create this record, such as admin:wf or admin:flnro
+const ADDITIONAL_ROLES = [utils.ApplicationRoles.ADMIN_WF, utils.ApplicationRoles.ADMIN_FLNRO];
+exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;
 
 /**
  * Performs all operations necessary to create a master Order record and its associated flavour records.
@@ -34,12 +38,12 @@ const utils = require('../../utils/constants/misc');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createItem = async function (args, res, next, incomingObj) {
+exports.createItem = async function(args, res, next, incomingObj) {
   const flavourFunctions = {
     OrderLNG: this.createLNG,
     OrderNRCED: this.createNRCED,
     OrderBCMI: this.createBCMI
-  }
+  };
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
@@ -73,7 +77,7 @@ exports.createItem = async function (args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master order record
  */
-exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   let Order = mongoose.model('Order');
   let order = new Order();
 
@@ -92,10 +96,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (order.collectionId = new ObjectId(incomingObj.collectionId));
-  incomingObj._sourceRefOgcOrderId &&
-    (order._sourceRefOgcOrderId = incomingObj._sourceRefOgcOrderId);
-  incomingObj.mineGuid &&
-    (order.mineGuid = incomingObj.mineGuid);
+  incomingObj._sourceRefOgcOrderId && (order._sourceRefOgcOrderId = incomingObj._sourceRefOgcOrderId);
+  incomingObj.mineGuid && (order.mineGuid = incomingObj.mineGuid);
 
   // set permissions
   order.read = utils.ApplicationAdminRoles;
@@ -168,12 +170,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.isLngPublished && (order.isLngPublished = incomingObj.isLngPublished);
   incomingObj.isBcmiPublished && (order.isBcmiPublished = incomingObj.isBcmiPublished);
 
-  // Add admin:wf read/write roles if user is wildfire user
-  if (args && userIsAdminWildfire(args.swagger.params.auth_payload.realm_access.roles)) {
-    order.read.push(utils.ApplicationRoles.ADMIN_WF);
-    order.write.push(utils.ApplicationRoles.ADMIN_WF);
-    order.issuedTo.read.push(utils.ApplicationRoles.ADMIN_WF);
-    order.issuedTo.write.push(utils.ApplicationRoles.ADMIN_WF);
+  // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+  if (args) {
+    postUtils.setAdditionalRoleOnRecord(order, args.swagger.params.auth_payload.realm_access.roles, ADDITIONAL_ROLES);
   }
 
   return order;
@@ -208,9 +207,14 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created lng order record
  */
-exports.createLNG = function (args, res, next, incomingObj) {
+exports.createLNG = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN, ...ADDITIONAL_ROLES],
+      args.swagger.params.auth_payload.realm_access.roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -229,8 +233,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (orderLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
-  incomingObj._sourceRefOgcOrderId &&
-    (OrderLNG._sourceRefOgcOrderId = incomingObj._sourceRefOgcOrderId);
+  incomingObj._sourceRefOgcOrderId && (OrderLNG._sourceRefOgcOrderId = incomingObj._sourceRefOgcOrderId);
 
   // set permissions and meta
   orderLNG.read = utils.ApplicationAdminRoles;
@@ -295,12 +298,13 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.sourceDateUpdated && (orderLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (orderLNG.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  // Add admin:wf read/write roles if user is wildfire user
-  if (args && userIsAdminWildfire(args.swagger.params.auth_payload.realm_access.roles)) {
-    orderLNG.read.push(utils.ApplicationRoles.ADMIN_WF);
-    orderLNG.write.push(utils.ApplicationRoles.ADMIN_WF);
-    orderLNG.issuedTo.read.push(utils.ApplicationRoles.ADMIN_WF);
-    orderLNG.issuedTo.write.push(utils.ApplicationRoles.ADMIN_WF);
+  // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+  if (args) {
+    postUtils.setAdditionalRoleOnRecord(
+      orderLNG,
+      args.swagger.params.auth_payload.realm_access.roles,
+      ADDITIONAL_ROLES
+    );
   }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
@@ -344,9 +348,14 @@ exports.createLNG = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced order record
  */
-exports.createNRCED = function (args, res, next, incomingObj) {
+exports.createNRCED = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of role.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED, ...ADDITIONAL_ROLES],
+      args.swagger.params.auth_payload.realm_access.roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -365,8 +374,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (orderNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
-  incomingObj._sourceRefOgcOrderId &&
-    (orderNRCED._sourceRefOgcOrderId = incomingObj._sourceRefOgcOrderId);
+  incomingObj._sourceRefOgcOrderId && (orderNRCED._sourceRefOgcOrderId = incomingObj._sourceRefOgcOrderId);
 
   // set permissions and meta
   orderNRCED.read = utils.ApplicationAdminRoles;
@@ -433,12 +441,13 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.sourceDateUpdated && (orderNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (orderNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  // Add admin:wf read/write roles if user is wildfire user
-  if (args && userIsAdminWildfire(args.swagger.params.auth_payload.realm_access.roles)) {
-    orderNRCED.read.push(utils.ApplicationRoles.ADMIN_WF);
-    orderNRCED.write.push(utils.ApplicationRoles.ADMIN_WF);
-    orderNRCED.issuedTo.read.push(utils.ApplicationRoles.ADMIN_WF);
-    orderNRCED.issuedTo.write.push(utils.ApplicationRoles.ADMIN_WF);
+  // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+  if (args) {
+    postUtils.setAdditionalRoleOnRecord(
+      orderNRCED,
+      args.swagger.params.auth_payload.realm_access.roles,
+      ADDITIONAL_ROLES
+    );
   }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
@@ -452,7 +461,6 @@ exports.createNRCED = function (args, res, next, incomingObj) {
 
   return orderNRCED;
 };
-
 
 /**
  * Performs all operations necessary to create a NRCED Order record.
@@ -483,9 +491,14 @@ exports.createNRCED = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced order record
  */
-exports.createBCMI = function (args, res, next, incomingObj) {
+exports.createBCMI = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of role.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, ...ADDITIONAL_ROLES],
+      args.swagger.params.auth_payload.realm_access.roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -510,9 +523,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj._master &&
     ObjectId.isValid(incomingObj._master) &&
     (orderBCMI._master = new ObjectId(incomingObj._master));
-  incomingObj.mineGuid &&
-    (orderBCMI.mineGuid = incomingObj.mineGuid);
-
+  incomingObj.mineGuid && (orderBCMI.mineGuid = incomingObj.mineGuid);
 
   // set permissions and meta
   orderBCMI.read = utils.ApplicationAdminRoles;
@@ -579,12 +590,13 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.sourceDateUpdated && (orderBCMI.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (orderBCMI.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  // Add admin:wf read/write roles if user is wildfire user
-  if (args && userIsAdminWildfire(args.swagger.params.auth_payload.realm_access.roles)) {
-    orderBCMI.read.push(utils.ApplicationRoles.ADMIN_WF);
-    orderBCMI.write.push(utils.ApplicationRoles.ADMIN_WF);
-    orderBCMI.issuedTo.read.push(utils.ApplicationRoles.ADMIN_WF);
-    orderBCMI.issuedTo.write.push(utils.ApplicationRoles.ADMIN_WF);
+  // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+  if (args) {
+    postUtils.setAdditionalRoleOnRecord(
+      orderBCMI,
+      args.swagger.params.auth_payload.realm_access.roles,
+      ADDITIONAL_ROLES
+    );
   }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']

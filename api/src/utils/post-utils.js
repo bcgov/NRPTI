@@ -1,6 +1,7 @@
-
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+
+const { userIsOnlyInRole } = require('./auth-utils');
 
 /**
  * Builds the issuedTo.fullName string, based on the issuedTo.type field.
@@ -8,7 +9,7 @@ const ObjectId = mongoose.Types.ObjectId;
  * @param {*} issuedToObj
  * @returns
  */
-exports.getIssuedToFullNameValue = function (issuedToObj) {
+exports.getIssuedToFullNameValue = function(issuedToObj) {
   if (!issuedToObj || !issuedToObj.type) {
     return '';
   }
@@ -47,7 +48,7 @@ exports.getIssuedToFullNameValue = function (issuedToObj) {
   }
 };
 
-exports.createRecordWithFlavours = async function (args, res, next, incomingObj, createMaster, flavourFunctions = {}) {
+exports.createRecordWithFlavours = async function(args, res, next, incomingObj, createMaster, flavourFunctions = {}) {
   let flavours = [];
   let flavourIds = [];
   let promises = [];
@@ -86,15 +87,12 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
       entry[0].includes('BCMI') && (incomingObj.isBcmiPublished = true);
     }
 
-    incomingObj[entry[0]] &&
-      flavours.push(entry[1](args, res, next, { ...incomingObj, ...incomingObj[entry[0]] }));
+    incomingObj[entry[0]] && flavours.push(entry[1](args, res, next, { ...incomingObj, ...incomingObj[entry[0]] }));
   }
 
   // Get flavour ids for master
   if (flavours.length > 0) {
-    flavourIds = flavours.map(
-      flavour => flavour._id
-    );
+    flavourIds = flavours.map(flavour => flavour._id);
     idsToDelete = [...flavourIds];
   }
 
@@ -109,7 +107,7 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
     if (flavour.issuedTo && flavour.issuedTo.read.includes('public')) {
       issuedToPublishedCount++;
     }
-    
+
     promises.push(flavour.save());
   }
 
@@ -120,12 +118,10 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
     const Model = mongoose.model('MineBCMI');
     let mineBCMI = null;
     try {
-      mineBCMI = await Model.findOne(
-        {
-          _schemaName: 'MineBCMI',
-          _epicProjectIds: { $in: [new ObjectId(incomingObj._epicProjectId)] },
-        }
-      );
+      mineBCMI = await Model.findOne({
+        _schemaName: 'MineBCMI',
+        _epicProjectIds: { $in: [new ObjectId(incomingObj._epicProjectId)] }
+      });
     } catch (e) {
       return {
         status: 'failure',
@@ -187,4 +183,29 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
     status: 'success',
     object: result
   };
-}
+};
+
+/**
+ * Sets the read/write and issuedTo read/write arrays on the argument record
+ * if the user is identified as one of the limited admin roles such as 
+ * Wildfire or FLNRO.
+ *
+ * @param {object} record The record to modify
+ * @param {Array<string>} userRoles The user's roles
+ * @param {Array<string>} rolesToCheck The roles to check for
+ * @returns {boolean} Indication if user if wildfire user
+ */
+exports.setAdditionalRoleOnRecord = function(record, userRoles, rolesToCheck) {
+  if (!record || !userRoles || !rolesToCheck) return;
+
+  for (const role of rolesToCheck) {
+    if (userIsOnlyInRole(userRoles, role)) {
+      record.read.push(role);
+      record.write.push(role);
+      record.issuedTo.read.push(role);
+      record.issuedTo.write.push(role);
+
+      break;
+    }
+  }
+};

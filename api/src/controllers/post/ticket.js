@@ -5,6 +5,10 @@ const BusinessLogicManager = require('../../utils/business-logic-manager');
 const { userHasValidRoles } = require('../../utils/auth-utils');
 const utils = require('../../utils/constants/misc');
 
+// Additional admin roles that can create this record, such as admin:wf or admin:flnro
+const ADDITIONAL_ROLES = [utils.ApplicationRoles.ADMIN_FLNRO];
+exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;
+
 /**
  * Performs all operations necessary to create a master Ticket record and its associated flavour records.
  *
@@ -34,11 +38,11 @@ const utils = require('../../utils/constants/misc');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createItem = async function (args, res, next, incomingObj) {
+exports.createItem = async function(args, res, next, incomingObj) {
   const flavourFunctions = {
     TicketLNG: this.createLNG,
     TicketNRCED: this.createNRCED
-  }
+  };
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
@@ -72,7 +76,7 @@ exports.createItem = async function (args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master ticket record
  */
-exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   let Ticket = mongoose.model('Ticket');
   let ticket = new Ticket();
 
@@ -164,6 +168,11 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.isNrcedPublished && (ticket.isNrcedPublished = incomingObj.isNrcedPublished);
   incomingObj.isLngPublished && (ticket.isLngPublished = incomingObj.isLngPublished);
 
+  // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+  if (args) {
+    postUtils.setAdditionalRoleOnRecord(ticket, args.swagger.params.auth_payload.realm_access.roles, ADDITIONAL_ROLES);
+  }
+
   return ticket;
 };
 
@@ -196,9 +205,14 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created lng ticket record
  */
-exports.createLNG = function (args, res, next, incomingObj) {
+exports.createLNG = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG, ...ADDITIONAL_ROLES],
+      args.swagger.params.auth_payload.realm_access.roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -283,6 +297,15 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.sourceDateUpdated && (ticketLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (ticketLNG.sourceSystemRef = incomingObj.sourceSystemRef);
 
+  // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+  if (args) {
+    postUtils.setAdditionalRoleOnRecord(
+      ticketLNG,
+      args.swagger.params.auth_payload.realm_access.roles,
+      ADDITIONAL_ROLES
+    );
+  }
+
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     ticketLNG.read.push('public');
@@ -324,9 +347,14 @@ exports.createLNG = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced ticket record
  */
-exports.createNRCED = function (args, res, next, incomingObj) {
+exports.createNRCED = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED, ...ADDITIONAL_ROLES],
+      args.swagger.params.auth_payload.realm_access.roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -410,6 +438,15 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.sourceDateAdded && (ticketNRCED.sourceDateAdded = incomingObj.sourceDateAdded);
   incomingObj.sourceDateUpdated && (ticketNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (ticketNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+  if (args) {
+    postUtils.setAdditionalRoleOnRecord(
+      ticketNRCED,
+      args.swagger.params.auth_payload.realm_access.roles,
+      ADDITIONAL_ROLES
+    );
+  }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (incomingObj.addRole && incomingObj.addRole === 'public') {

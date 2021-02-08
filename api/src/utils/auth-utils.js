@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
 
 const defaultLog = require('./logger')('auth-utils');
-const utils = require('./constants/misc')
+const utils = require('./constants/misc');
 
 const SSO_ISSUER = process.env.SSO_ISSUER || 'https://dev.oidc.gov.bc.ca/auth/realms/3l5nw6dk';
 const SSO_JWKSURI =
@@ -165,7 +165,7 @@ exports.userHasValidRoles = function(validRoles, userRoles) {
     validRoles = [validRoles];
   }
 
-  if(!Array.isArray(userRoles)) {
+  if (!Array.isArray(userRoles)) {
     userRoles = [userRoles];
   }
 
@@ -183,10 +183,11 @@ exports.userHasValidRoles = function(validRoles, userRoles) {
  * The user is a wildfire user if their role only contains the admin:wf role
  * and no other admin roles.
  *
- * @param {Array<string>|string} userRoles Roles to match against.
+ * @param {Array<string>} userRoles All roles the current user has
+ * @param {string} targetRole The role to check for
  * @returns {boolean} Indication if user if wildfire user
  */
-exports.userIsAdminWildfire = function(userRoles) {
+exports.userIsOnlyInRole = function(userRoles, targetRole) {
   if (!userRoles) return false;
 
   // Remove all the default user roles first
@@ -199,13 +200,13 @@ exports.userIsAdminWildfire = function(userRoles) {
 
   if (!rolesToCheck) return false;
 
-  // Not a Wildfire user because this user has no application roles.
+  // Not a targetRole user because this user has no application roles.
   if (rolesToCheck.length === 0) return false;
 
-  // Not a Wildfire user because this user has more than 1 application role.
-  // Wildfire users should only have admin:wf in their roles
+  // Not a targetRole user because this user has more than 1 application role.
+  // targetRole users should only have targetRole in their roles
   if (rolesToCheck.length > 1) return false;
 
-  // Check if the single remaining user role is admin:wf
-  return rolesToCheck[0] === utils.ApplicationRoles.ADMIN_WF;
+  // Check if the single remaining user role is targetRole
+  return rolesToCheck[0] === targetRole;
 };

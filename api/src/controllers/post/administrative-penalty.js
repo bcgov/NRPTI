@@ -2,8 +2,12 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const postUtils = require('../../utils/post-utils');
 const BusinessLogicManager = require('../../utils/business-logic-manager');
-const { userHasValidRoles, userIsAdminWildfire } = require('../../utils/auth-utils');
+const { userHasValidRoles } = require('../../utils/auth-utils');
 const utils = require('../../utils/constants/misc');
+
+// Additional admin roles that can create this record, such as admin:wf or admin:flnro
+const ADDITIONAL_ROLES = [utils.ApplicationRoles.ADMIN_WF, utils.ApplicationRoles.ADMIN_FLNRO];
+exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;
 
 /**
  * Performs all operations necessary to create a master Administrative Penalty record and its associated flavour records.
@@ -34,7 +38,7 @@ const utils = require('../../utils/constants/misc');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createItem = async function (args, res, next, incomingObj) {
+exports.createItem = async function(args, res, next, incomingObj) {
   const flavourFunctions = {
     AdministrativePenaltyLNG: this.createLNG,
     AdministrativePenaltyNRCED: this.createNRCED
@@ -73,7 +77,7 @@ exports.createItem = async function (args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master administrativePenalty record
  */
-exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   let AdministrativePenalty = mongoose.model('AdministrativePenalty');
   let administrativePenalty = new AdministrativePenalty();
 
@@ -93,7 +97,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     ObjectId.isValid(incomingObj.collectionId) &&
     (administrativePenalty.collectionId = new ObjectId(incomingObj.collectionId));
 
-  incomingObj._sourceRefOgcPenaltyId && (administrativePenalty._sourceRefOgcPenaltyId = incomingObj._sourceRefOgcPenaltyId);
+  incomingObj._sourceRefOgcPenaltyId &&
+    (administrativePenalty._sourceRefOgcPenaltyId = incomingObj._sourceRefOgcPenaltyId);
 
   // set permissions
   administrativePenalty.read = utils.ApplicationAdminRoles;
@@ -173,12 +178,13 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.isNrcedPublished && (administrativePenalty.isNrcedPublished = incomingObj.isNrcedPublished);
   incomingObj.isLngPublished && (administrativePenalty.isLngPublished = incomingObj.isLngPublished);
 
-  // Add admin:wf read/write roles if user is wildfire user
-  if (args && userIsAdminWildfire(args.swagger.params.auth_payload.realm_access.roles)) {
-    administrativePenalty.read.push(utils.ApplicationRoles.ADMIN_WF);
-    administrativePenalty.write.push(utils.ApplicationRoles.ADMIN_WF);
-    administrativePenalty.issuedTo.read.push(utils.ApplicationRoles.ADMIN_WF);
-    administrativePenalty.issuedTo.write.push(utils.ApplicationRoles.ADMIN_WF);
+  // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+  if (args) {
+    postUtils.setAdditionalRoleOnRecord(
+      administrativePenalty,
+      args.swagger.params.auth_payload.realm_access.roles,
+      ADDITIONAL_ROLES
+    );
   }
 
   return administrativePenalty;
@@ -213,9 +219,14 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created lng administrativePenalty record
  */
-exports.createLNG = function (args, res, next, incomingObj) {
+exports.createLNG = function(args, res, next, incomingObj) {
   // Confirm user has correct role to create this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG, ...ADDITIONAL_ROLES],
+      args.swagger.params.auth_payload.realm_access.roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -235,7 +246,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (administrativePenaltyLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
-  incomingObj._sourceRefOgcPenaltyId && (administrativePenaltyLNG._sourceRefOgcPenaltyId = incomingObj._sourceRefOgcPenaltyId);
+  incomingObj._sourceRefOgcPenaltyId &&
+    (administrativePenaltyLNG._sourceRefOgcPenaltyId = incomingObj._sourceRefOgcPenaltyId);
 
   // set permissions and meta
   administrativePenaltyLNG.read = utils.ApplicationAdminRoles;
@@ -306,12 +318,13 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.sourceDateUpdated && (administrativePenaltyLNG.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (administrativePenaltyLNG.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  // Add admin:wf read/write roles if user is wildfire user
-  if (args && userIsAdminWildfire(args.swagger.params.auth_payload.realm_access.roles)) {
-    administrativePenaltyLNG.read.push(utils.ApplicationRoles.ADMIN_WF);
-    administrativePenaltyLNG.write.push(utils.ApplicationRoles.ADMIN_WF);
-    administrativePenaltyLNG.issuedTo.read.push(utils.ApplicationRoles.ADMIN_WF);
-    administrativePenaltyLNG.issuedTo.write.push(utils.ApplicationRoles.ADMIN_WF);
+  // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+  if (args) {
+    postUtils.setAdditionalRoleOnRecord(
+      administrativePenaltyLNG,
+      args.swagger.params.auth_payload.realm_access.roles,
+      ADDITIONAL_ROLES
+    );
   }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
@@ -355,9 +368,14 @@ exports.createLNG = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced administrativePenalty record
  */
-exports.createNRCED = function (args, res, next, incomingObj) {
+exports.createNRCED = function(args, res, next, incomingObj) {
   // Confirm user has correct role to create this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_WF], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED, ...ADDITIONAL_ROLES],
+      args.swagger.params.auth_payload.realm_access.roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -377,7 +395,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (administrativePenaltyNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
 
-  incomingObj._sourceRefOgcPenaltyId && (administrativePenaltyNRCED._sourceRefOgcPenaltyId = incomingObj._sourceRefOgcPenaltyId);
+  incomingObj._sourceRefOgcPenaltyId &&
+    (administrativePenaltyNRCED._sourceRefOgcPenaltyId = incomingObj._sourceRefOgcPenaltyId);
 
   // set permissions and meta
   administrativePenaltyNRCED.read = utils.ApplicationAdminRoles;
@@ -448,12 +467,13 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.sourceDateUpdated && (administrativePenaltyNRCED.sourceDateUpdated = incomingObj.sourceDateUpdated);
   incomingObj.sourceSystemRef && (administrativePenaltyNRCED.sourceSystemRef = incomingObj.sourceSystemRef);
 
-  // Add admin:wf read/write roles if user is wildfire user
-  if (args && userIsAdminWildfire(args.swagger.params.auth_payload.realm_access.roles)) {
-    administrativePenaltyNRCED.read.push(utils.ApplicationRoles.ADMIN_WF);
-    administrativePenaltyNRCED.write.push(utils.ApplicationRoles.ADMIN_WF);
-    administrativePenaltyNRCED.issuedTo.read.push(utils.ApplicationRoles.ADMIN_WF);
-    administrativePenaltyNRCED.issuedTo.write.push(utils.ApplicationRoles.ADMIN_WF);
+  // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+  if (args) {
+    postUtils.setAdditionalRoleOnRecord(
+      administrativePenaltyNRCED,
+      args.swagger.params.auth_payload.realm_access.roles,
+      ADDITIONAL_ROLES
+    );
   }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']

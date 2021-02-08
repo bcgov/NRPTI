@@ -367,6 +367,7 @@ paths:
         - admin:nrced
         - admin:bcmi
         - admin:wf
+        - admin:flnro
       parameters:
         - in: query
           name: _id
@@ -657,6 +658,7 @@ paths:
         - admin:lng
         - admin:bcmi
         - admin:wf
+        - admin:flnro
       parameters:
         - name: recordId
           in: path
@@ -711,6 +713,7 @@ paths:
         - admin:lng
         - admin:bcmi
         - admin:wf
+        - admin:flnro
       parameters:
         - name: recordId
           in: path
@@ -771,6 +774,7 @@ paths:
         - admin:lng
         - admin:bcmi
         - admin:wf
+        - admin:flnro
       parameters:
         - name: recordId
           in: path
@@ -819,6 +823,7 @@ paths:
         - admin:nrced
         - admin:bcmi
         - admin:wf
+        - admin:flnro
       parameters:
         - in: body
           name: data
@@ -849,6 +854,7 @@ paths:
         - admin:nrced
         - admin:bcmi
         - admin:wf
+        - admin:flnro
       parameters:
         - in: body
           name: data
@@ -910,6 +916,7 @@ paths:
         - admin:nrced
         - admin:bcmi
         - admin:wf
+        - admin:flnro
       consumes:
         - multipart/form-data
       parameters:
@@ -982,6 +989,7 @@ paths:
         - admin:nrced
         - admin:bcmi
         - admin:wf
+        - admin:flnro
       parameters:
         - name: recordId
           in: path
@@ -1035,6 +1043,7 @@ paths:
         - admin:nrced
         - admin:bcmi
         - admin:wf
+        - admin:flnro
       parameters:
         - name: docId
           in: path
