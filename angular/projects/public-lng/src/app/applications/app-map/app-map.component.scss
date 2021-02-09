@@ -21,7 +21,7 @@ $map-control-button-bg: #fff;
 #legend {
   position: absolute;
   top: 1rem;
-  right: 2rem;
+  left: 2rem;
   z-index: 1000;
   background: $white;
   padding: 0.75rem 0 0.75rem 0;
@@ -51,7 +51,7 @@ $map-control-button-bg: #fff;
 #legend .button {
   padding: 0.75rem;
   display: grid;
-  grid-template-columns: 2rem auto 12rem;
+  grid-template-columns: 2rem auto 8rem;
   align-items: center;
   justify-items: start;
   cursor: pointer;
@@ -66,6 +66,9 @@ $map-control-button-bg: #fff;
 #legend button {
   display: flex;
   align-items: center;
+  font-weight: bold;
+  background-color: $gold;
+  color: $primary;
   padding: 5px 10px;
 }
 
