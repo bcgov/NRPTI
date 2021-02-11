@@ -379,7 +379,7 @@ export class CsvConstants {
    * @memberof CsvConstants
    */
   public static readonly misInspectionsCsvDateFields: IDateField[] = [
-    { field: 'Date', format: 'MM/DD/YYYY' }
+    { field: 'Created ', format: 'MM/DD/YYYY' }
   ];
 
   /**
