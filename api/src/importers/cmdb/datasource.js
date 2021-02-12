@@ -1,7 +1,7 @@
 const defaultLog = require('../../utils/logger')('agri-csv-datasource');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
-class AgriCsvDataSource {
+class CmdbCsvDataSource {
   /**
    * Creates an instance of DataSource.
    *
@@ -9,7 +9,7 @@ class AgriCsvDataSource {
    * @param {*} auth_payload information about the user account that started this update
    * @param {*} recordType record type to create from the csv file
    * @param {*} csvRows array of csv row objects to import
-   * @memberof AgriCsvDataSource
+   * @memberof CmdbCsvDataSource
    */
    constructor(taskAuditRecord, auth_payload, recordType, csvRows) {
     this.taskAuditRecord = taskAuditRecord;
@@ -25,10 +25,10 @@ class AgriCsvDataSource {
    * Run the Agri csv importer.
    *
    * @returns final status of importer
-   * @memberof AgriCsvDataSource
+   * @memberof CmdbCsvDataSource
    */
    async run() {
-    defaultLog.info('run - import agri-mis-csv');
+    defaultLog.info('run - import agri-cmdb-csv');
 
     this.status.itemTotal = this.csvRows.length;
 
@@ -44,26 +44,37 @@ class AgriCsvDataSource {
    *
    * Batch size configured by env variable `CSV_IMPORT_BATCH_SIZE` if it exists, or 100 by default.
    *
-   * @memberof AgriCsvDataSource
+   * @memberof CmdbCsvDataSource
    */
    async batchProcessRecords() {
     try {
-      let batchSize = process.env.CSV_IMPORT_BATCH_SIZE || 100;
-
       const recordTypeConfig = this.getRecordTypeConfig();
 
       if (!recordTypeConfig) {
         throw Error('batchProcessRecords - failed to find matching recordTypeConfig.');
       }
 
-      let promises = [];
-      for (let i = 0; i < this.csvRows.length; i++) {
-        promises.push(this.processRecord(this.csvRows[i], recordTypeConfig));
+      let recordInspectionIds = [];
+      let recordOutcomeDescriptions = [];
 
-        if (i % batchSize === 0 || i === this.csvRows.length - 1) {
-          await Promise.all(promises);
-          promises = [];
+      // construct the outcome description by appending the regulation sections of rows with the same inspection id
+      for (let i = 0; i < this.csvRows.length; i++) {
+        let inspectionId = this.csvRows[i]['inspection id'];
+        let regulationSection = this.csvRows[i]['regulation section'];
+        let outcomeDescription = 'Compliance issue(s) identified under the following acts or regulations: ' + regulationSection;
+
+        if (recordInspectionIds.includes(inspectionId)) {
+          let index = recordInspectionIds.indexOf(inspectionId);
+          outcomeDescription = recordOutcomeDescriptions[index] + '; ' + regulationSection;
+          recordOutcomeDescriptions[index] = outcomeDescription;
+        } else {
+          recordOutcomeDescriptions.push(outcomeDescription);
+          recordInspectionIds.push(inspectionId);
         }
+
+        // need to await here because some rows are duplicate records
+        await this.processRecord(this.csvRows[i], recordTypeConfig, outcomeDescription);
+
       }
     } catch (error) {
       this.status.message = 'batchProcessRecords - unexpected error';
@@ -78,9 +89,9 @@ class AgriCsvDataSource {
    *
    * @param {*} csvRow object of values for a single row
    * @param {*} recordTypeConfig object containing record type specific details
-   * @memberof AgriCsvDataSource
+   * @memberof CmdbCsvDataSource
    */
-   async processRecord(csvRow, recordTypeConfig) {
+   async processRecord(csvRow, recordTypeConfig, outcomeDescription) {
     // set status defaults
     let recordStatus = {};
 
@@ -97,7 +108,7 @@ class AgriCsvDataSource {
       const recordTypeUtils = recordTypeConfig.getUtil(this.auth_payload, csvRow);
 
       // Perform any data transformations necessary to convert the csv row into a NRPTI record
-      const nrptiRecord = recordTypeUtils.transformRecord(csvRow);
+      const nrptiRecord = recordTypeUtils.transformRecord(csvRow, outcomeDescription);
 
       // Check if this record already exists
       const existingRecord = await recordTypeUtils.findExistingRecord(nrptiRecord);
@@ -134,7 +145,7 @@ class AgriCsvDataSource {
    * Supported Agri csv record type configs.
    *
    * @returns {*} object with getUtil method to create a new instance of the record type utils.
-   * @memberof AgriCsvDataSource
+   * @memberof CmdbCsvDataSource
    */
    getRecordTypeConfig() {
     if (this.recordType === 'Inspection') {
@@ -148,4 +159,4 @@ class AgriCsvDataSource {
   }
 }
 
-module.exports = AgriCsvDataSource;
+module.exports = CmdbCsvDataSource;

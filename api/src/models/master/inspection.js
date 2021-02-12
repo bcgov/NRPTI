@@ -8,6 +8,7 @@ module.exports = require('../../utils/model-schema-generator')(
     _sourceRefId: { type: 'ObjectId', default: null, index: true },
     _sourceRefNrisId: { type: Number, default: null, index: true },
     _sourceRefAgriMisId: { type: String, default: null, index: true },
+    _sourceRefAgriCmdbId: { type: String, default: null, index: true },
     _epicMilestoneId: { type: 'ObjectId', default: null, index: true },
     _sourceRefOgcInspectionId: { type: String, default: null, index: true },
     _sourceRefOgcDeficiencyId: { type: String, default: null, index: true },

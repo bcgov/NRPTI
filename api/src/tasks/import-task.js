@@ -225,9 +225,17 @@ function getDataSourceConfig(dataSourceType) {
   if (dataSourceType === 'mis-csv') {
     return {
       dataSourceLabel: 'mis-csv',
-      dataSourceClass: require('../importers/agri/datasource')
+      dataSourceClass: require('../importers/mis/datasource')
     }
   }
+
+  if (dataSourceType === 'cmdb-csv') {
+    return {
+      dataSourceLabel: 'cmdb-csv',
+      dataSourceClass: require('../importers/cmdb/datasource')
+    }
+  }
+
 
   // dataSourceType will match the name of a directory for the given
   // integration in /src/integrations/<dataSourceType>/
