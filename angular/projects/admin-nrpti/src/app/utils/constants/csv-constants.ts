@@ -404,7 +404,11 @@ export class CsvConstants {
    * @memberof CsvConstants
    */
   // todo revist make sure there aren't more required fields to add
-  public static readonly cmdbInspectionCsvRequiredFields = ['Inspection ID'];
+  public static readonly cmdbInspectionCsvRequiredFields = [
+    'Inspection ID',
+    'Date Issued',
+    'Company Name'
+  ];
 
   /**
    * Fields for AGRI CMDB Inspection csv that have a required format.
