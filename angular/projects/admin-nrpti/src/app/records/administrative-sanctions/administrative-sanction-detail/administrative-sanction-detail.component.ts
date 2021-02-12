@@ -3,22 +3,28 @@ import { takeUntil } from 'rxjs/operators';
 import { AdministrativeSanction } from '../../../../../../common/src/app/models/master/administrative-sanction';
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RecordComponent } from '../../utils/record-component';
+import { RecordDetailComponent } from '../../utils/record-component';
 import { RecordUtils } from '../../utils/record-utils';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
+import { FactoryService } from '../../../services/factory.service';
 
 @Component({
   selector: 'app-administrative-sanction-detail',
   templateUrl: './administrative-sanction-detail.component.html',
   styleUrls: ['./administrative-sanction-detail.component.scss']
 })
-export class AdministrativeSanctionDetailComponent extends RecordComponent implements OnInit, OnDestroy {
+export class AdministrativeSanctionDetailComponent extends RecordDetailComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   public legislationString = '';
 
-  constructor(public route: ActivatedRoute, public router: Router, public changeDetectionRef: ChangeDetectorRef) {
-    super();
+  constructor(
+    public route: ActivatedRoute,
+    public router: Router,
+    public changeDetectionRef: ChangeDetectorRef,
+    public factoryService: FactoryService
+  ) {
+    super(factoryService);
   }
 
   ngOnInit() {
@@ -40,6 +46,7 @@ export class AdministrativeSanctionDetailComponent extends RecordComponent imple
       };
 
       this.populateTextFields();
+      this.disableEdit();
 
       this.changeDetectionRef.detectChanges();
     });

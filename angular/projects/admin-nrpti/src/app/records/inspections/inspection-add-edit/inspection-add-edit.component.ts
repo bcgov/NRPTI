@@ -138,6 +138,16 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
   }
 
   private buildForm() {
+    const flavourEditRequiredRoles = Constants.FlavourEditRequiredRoles.INSPECTION;
+
+    let defaultAgency = '';
+    for (const role of Constants.ApplicationLimitedRoles) {
+      if (this.factoryService.userOnlyInLimitedRole(role)) {
+        this.agencies = Constants.RoleAgencyPickList[role];
+        defaultAgency = this.agencies[0];
+      }
+    }
+
     this.myForm = new FormGroup({
       // Master
       recordName: new FormControl({
@@ -153,7 +163,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       issuingAgency: new FormControl({
-        value: (this.currentRecord && this.currentRecord.issuingAgency) || '',
+        value: (this.currentRecord && this.currentRecord.issuingAgency) || defaultAgency,
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       author: new FormControl({
@@ -256,23 +266,23 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
           ((this.nrcedFlavour && this.nrcedFlavour.summary) ||
             (!this.nrcedFlavour && this.currentRecord.description))) ||
           '',
-        disabled: !this.factoryService.userInNrcedRole()
+          disabled: !this.factoryService.isFlavourEditEnabled(flavourEditRequiredRoles.NRCED)
       }),
       publishNrced: new FormControl({
         value: (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false,
-        disabled: !this.factoryService.userInNrcedRole()
+        disabled: !this.factoryService.isFlavourEditEnabled(flavourEditRequiredRoles.NRCED)
       }),
 
       // LNG
-      lngDescription: new FormControl(
-        // default to using the master description if the flavour record does not exist
-        (this.currentRecord &&
+      lngDescription: new FormControl({
+        value: (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
-        ''
-      ),
+        '',
+        disabled: !this.factoryService.isFlavourEditEnabled(flavourEditRequiredRoles.LNG)
+      }),
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
-        disabled: !this.factoryService.userInLngRole()
+        disabled: !this.factoryService.isFlavourEditEnabled(flavourEditRequiredRoles.LNG)
       }),
 
       association: new FormGroup({

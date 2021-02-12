@@ -17,7 +17,16 @@ import { FormGroup } from '@angular/forms';
 import { SearchSubsets, Picklists } from '../../../../../common/src/app/utils/record-constants';
 
 import { SubsetsObject, SubsetOption } from '../../../../../common/src/app/search-filter-template/subset-object';
-import { FilterObject, FilterType, DateFilterDefinition, CheckOrRadioFilterDefinition, OptionItem, MultiSelectDefinition, DropdownDefinition, RadioOptionItem } from '../../../../../common/src/app/search-filter-template/filter-object';
+import {
+  FilterObject,
+  FilterType,
+  DateFilterDefinition,
+  CheckOrRadioFilterDefinition,
+  OptionItem,
+  MultiSelectDefinition,
+  DropdownDefinition,
+  RadioOptionItem
+} from '../../../../../common/src/app/search-filter-template/filter-object';
 import { FactoryService } from '../../services/factory.service';
 
 /**
@@ -95,7 +104,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   // New Search
   public filters: FilterObject[] = [];
   public subsets: SubsetsObject;
-  public showFullRecordList = true;
 
   constructor(
     public location: Location,
@@ -129,7 +137,10 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       'entityType',
       FilterType.Checkbox,
       'Entity Type',
-      new CheckOrRadioFilterDefinition([new OptionItem('issuedToCompany', 'Company'), new OptionItem('issuedToIndividual', 'Individual')])
+      new CheckOrRadioFilterDefinition([
+        new OptionItem('issuedToCompany', 'Company'),
+        new OptionItem('issuedToIndividual', 'Individual')
+      ])
     );
 
     const publishedStatefilter = new FilterObject(
@@ -146,18 +157,26 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       'activityType',
       FilterType.MultiSelect,
       'Type (Activity or Record)',
-      new MultiSelectDefinition(Object.values(Picklists.activityTypePicklist).map(item => {
-        return { value: item._schemaName, displayValue: item.displayName, selected: false, display: true };
-      }), 'Begin typing to filter activities...', 'Select all that apply...')
+      new MultiSelectDefinition(
+        Object.values(Picklists.activityTypePicklist).map(item => {
+          return { value: item._schemaName, displayValue: item.displayName, selected: false, display: true };
+        }),
+        'Begin typing to filter activities...',
+        'Select all that apply...'
+      )
     );
 
     const issuedUnderActFilter = new FilterObject(
       'act',
       FilterType.MultiSelect,
       'Issued Under which Act',
-      new MultiSelectDefinition(Picklists.getAllActs().map(value => {
-        return { value: value, displayValue: value, selected: false, display: true };
-      }), 'Begin typing to filter acts...', '')
+      new MultiSelectDefinition(
+        Picklists.getAllActs().map(value => {
+          return { value: value, displayValue: value, selected: false, display: true };
+        }),
+        'Begin typing to filter acts...',
+        ''
+      )
     );
 
     const lngPublishedStatefilter = new FilterObject(
@@ -174,19 +193,27 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       'agency',
       FilterType.MultiSelect,
       'Responsible Agency',
-      new MultiSelectDefinition(Picklists.agencyPicklist.map(value => {
-        const displayValue = Utils.convertAcronyms(value);
-        return { value: value, displayValue: displayValue, selected: false, display: true };
-      }), 'Begin typing to filter agencies...', '')
+      new MultiSelectDefinition(
+        Picklists.agencyPicklist.map(value => {
+          const displayValue = Utils.convertAcronyms(value);
+          return { value: value, displayValue: displayValue, selected: false, display: true };
+        }),
+        'Begin typing to filter agencies...',
+        ''
+      )
     );
 
     const issuedUnderRegFilter = new FilterObject(
       'regulation',
       FilterType.MultiSelect,
       'Issued Under which Regulation',
-      new MultiSelectDefinition(Picklists.getAllRegulations().map(value => {
-        return { value: value, displayValue: value, selected: false, display: true };
-      }), 'Begin typing to filter regulations...', '')
+      new MultiSelectDefinition(
+        Picklists.getAllRegulations().map(value => {
+          return { value: value, displayValue: value, selected: false, display: true };
+        }),
+        'Begin typing to filter regulations...',
+        ''
+      )
     );
 
     const sourceSystemFilter = new FilterObject(
@@ -200,11 +227,14 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       'projects',
       FilterType.Checkbox,
       'Project',
-      new CheckOrRadioFilterDefinition([
-        new OptionItem('lngCanada', 'LNG Canada'),
-        new OptionItem('coastalGaslink', 'Coastal Gaslink'),
-        new OptionItem('otherProjects', 'Other')],
-        true)
+      new CheckOrRadioFilterDefinition(
+        [
+          new OptionItem('lngCanada', 'LNG Canada'),
+          new OptionItem('coastalGaslink', 'Coastal Gaslink'),
+          new OptionItem('otherProjects', 'Other')
+        ],
+        true
+      )
     );
 
     const documentsfilter = new FilterObject(
@@ -230,13 +260,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       projectFilter,
       documentsfilter
     ];
-
-    // if a user has only ADMIN_WF role, show reduced list
-    this.showFullRecordList
-      = this.factoryService.userInAdminRole()
-      || this.factoryService.userInBcmiRole()
-      || this.factoryService.userInLngRole()
-      || this.factoryService.userInNrcedRole();
   }
 
   executeSearch(searchPackage) {
@@ -454,6 +477,10 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   resetSortBy() {
     this.tableData.sortBy = '-dateAdded';
     this.queryParams['sortBy'] = '-dateAdded';
+  }
+
+  addEnabled(recordType) {
+    return this.factoryService.isRecordAddEditEnabled(recordType);
   }
 
   add(item) {

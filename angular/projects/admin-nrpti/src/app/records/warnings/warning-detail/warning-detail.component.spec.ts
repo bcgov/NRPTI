@@ -17,7 +17,7 @@ describe('WarningDetailComponent', () => {
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
-  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole', 'userInNrcedRole']);
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole', 'userInNrcedRole', 'userOnlyInLimitedRole']);
   mockFactoryService.userInLngRole.and.returnValue(true);
   mockFactoryService.userInNrcedRole.and.returnValue(true);
 

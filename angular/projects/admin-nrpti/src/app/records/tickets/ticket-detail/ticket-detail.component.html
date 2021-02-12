@@ -9,7 +9,7 @@
               Last Edited {{ (data && data._master.dateUpdated | date: 'mediumDate') || '-' }}
             </span>
           </div>
-          <div class="grid-section-header-button">
+          <div *ngIf="this.showEdit" class="grid-section-header-button">
             <button class="button-edit" (click)="navigateToEditPage()">
               <i class="material-icons">edit</i>
               <span>Edit</span>

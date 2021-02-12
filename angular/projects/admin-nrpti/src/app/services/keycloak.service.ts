@@ -14,7 +14,7 @@ export class KeycloakService {
   private keycloakRealm: string;
   private menus: {} = {};
 
-  constructor(private configService: ConfigService, private logger: LoggerService) { }
+  constructor(private configService: ConfigService, private logger: LoggerService) {}
 
   async init() {
     // Load up the config service data
@@ -26,7 +26,7 @@ export class KeycloakService {
       // Bootup KC
       const keycloak_client_id = this.configService.config['KEYCLOAK_CLIENT_ID'];
 
-      return new Promise((resolve, reject) => {
+      return new Promise<void>((resolve, reject) => {
         const config = {
           url: this.keycloakUrl,
           realm: this.keycloakRealm,
@@ -73,7 +73,8 @@ export class KeycloakService {
         };
 
         // Initialize.
-        this.keycloakAuth.init({})
+        this.keycloakAuth
+          .init({})
           .success(auth => {
             // console.log('KC Refresh Success?:', this.keycloakAuth.authServerUrl);
             this.logger.log(`KC Success: ${auth}`);
@@ -95,8 +96,9 @@ export class KeycloakService {
     const token = this.getToken();
     if (token) {
       const jwt = JwtUtil.decodeToken(token);
-      const roles = jwt && jwt.realm_access && jwt.realm_access.roles || [];
+      const roles = (jwt && jwt.realm_access && jwt.realm_access.roles) || [];
       this.buildMenuCache(roles);
+      this.buildAddRecordDropdownCache(roles);
     }
   }
 
@@ -127,15 +129,13 @@ export class KeycloakService {
 
   buildMenuCache(roles) {
     // Build the menu cache
-    this.menus[Constants.Menus.ALL_MINES]
-      = roles.includes(Constants.ApplicationRoles.ADMIN)
-      || roles.includes(Constants.ApplicationRoles.ADMIN_BCMI);
+    this.menus[Constants.Menus.ALL_MINES] =
+      roles.includes(Constants.ApplicationRoles.ADMIN) || roles.includes(Constants.ApplicationRoles.ADMIN_BCMI);
 
     this.menus[Constants.Menus.ALL_RECORDS] = true; // Everyone gets this.
 
-    this.menus[Constants.Menus.NEWS_LIST]
-      = roles.includes(Constants.ApplicationRoles.ADMIN)
-      || roles.includes(Constants.ApplicationRoles.ADMIN_LNG);
+    this.menus[Constants.Menus.NEWS_LIST] =
+      roles.includes(Constants.ApplicationRoles.ADMIN) || roles.includes(Constants.ApplicationRoles.ADMIN_LNG);
 
     this.menus[Constants.Menus.ANALYTICS] = false; // Nobody gets this.
 
@@ -143,21 +143,87 @@ export class KeycloakService {
 
     this.menus[Constants.Menus.ENTITIES] = false; // Nobody gets this.
 
-    this.menus[Constants.Menus.IMPORTS]
-      = roles.includes(Constants.ApplicationRoles.ADMIN)
-      || roles.includes(Constants.ApplicationRoles.ADMIN_LNG)
-      || roles.includes(Constants.ApplicationRoles.ADMIN_NRCED)
-      || roles.includes(Constants.ApplicationRoles.ADMIN_BCMI);
+    this.menus[Constants.Menus.IMPORTS] =
+      roles.includes(Constants.ApplicationRoles.ADMIN) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_LNG) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_NRCED) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_BCMI) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO);
 
-    this.menus[Constants.Menus.COMMUNICATIONS]
-      = roles.includes(Constants.ApplicationRoles.ADMIN)
-      || roles.includes(Constants.ApplicationRoles.ADMIN_LNG)
-      || roles.includes(Constants.ApplicationRoles.ADMIN_NRCED)
-      || roles.includes(Constants.ApplicationRoles.ADMIN_BCMI);
+    this.menus[Constants.Menus.COMMUNICATIONS] =
+      roles.includes(Constants.ApplicationRoles.ADMIN) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_LNG) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_NRCED) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_BCMI);
+  }
+
+  buildAddRecordDropdownCache(roles) {
+    const recordTypes = Constants.RecordTypes;
+
+    const inBaseAdminRole = role => {
+      return (
+        roles.includes(Constants.ApplicationRoles.ADMIN) ||
+        roles.includes(Constants.ApplicationRoles.ADMIN_LNG) ||
+        roles.includes(Constants.ApplicationRoles.ADMIN_NRCED) ||
+        roles.includes(Constants.ApplicationRoles.ADMIN_BCMI)
+      );
+    };
+
+    this.menus[recordTypes.ADMINISTRATIVE_PENALTY] =
+      inBaseAdminRole(roles) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_WF);
+
+    this.menus[recordTypes.ADMINISTRATIVE_SANCTION] =
+      inBaseAdminRole(roles) || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO);
+
+    this.menus[recordTypes.AGREEMENT] = inBaseAdminRole(roles);
+
+    this.menus[recordTypes.ANNUAL_REPORT] = inBaseAdminRole(roles);
+
+    this.menus[recordTypes.CERTIFICATE] = inBaseAdminRole(roles);
+
+    this.menus[recordTypes.CERTIFICATE_AMENDMENT] = inBaseAdminRole(roles);
+
+    this.menus[recordTypes.CONSTRUCTION_PLAN] = inBaseAdminRole(roles);
+
+    this.menus[recordTypes.COURT_CONVICTION] =
+      inBaseAdminRole(roles) || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO);
+
+    this.menus[recordTypes.CORRESPONDENCE] = inBaseAdminRole(roles);
+
+    this.menus[recordTypes.DAM_SAFETY_INSPECTION] = inBaseAdminRole(roles);
+
+    this.menus[recordTypes.INSPECTION] =
+      inBaseAdminRole(roles) || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO);
+
+    this.menus[recordTypes.MANAGEMENT_PLAN] = inBaseAdminRole(roles);
+
+    this.menus[recordTypes.ORDER] =
+      inBaseAdminRole(roles) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_WF);
+
+    this.menus[recordTypes.PERMIT] = inBaseAdminRole(roles);
+
+    this.menus[recordTypes.RESTORATIVE_JUSTICE] =
+      inBaseAdminRole(roles) || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO);
+
+    this.menus[recordTypes.REPORT] = inBaseAdminRole(roles);
+
+    this.menus[recordTypes.COMPLIANCE_SELF_REPORT] = inBaseAdminRole(roles);
+
+    this.menus[recordTypes.TICKET] = inBaseAdminRole(roles) || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO);
+
+    this.menus[recordTypes.WARNING] = inBaseAdminRole(roles) || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO);
   }
 
   isMenuEnabled(menuName) {
     return this.menus[menuName];
+  }
+
+  isRecordAddEditEnabled(recordAddName) {
+    return this.menus[recordAddName];
   }
 
   /**
@@ -191,7 +257,7 @@ export class KeycloakService {
           observer.error();
         });
 
-      return { unsubscribe() { } };
+      return { unsubscribe() {} };
     });
   }
 }
