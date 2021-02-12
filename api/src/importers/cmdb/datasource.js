@@ -55,7 +55,7 @@ class CmdbCsvDataSource {
       }
 
       let recordInspectionIds = [];
-      let recordReculationSections = [];
+      let recordRegulationSections = [];
       let recordOutcomeDescriptions = [];
 
       // construct the outcome description by appending the regulation sections of rows with the same inspection id
@@ -67,7 +67,7 @@ class CmdbCsvDataSource {
         if (recordInspectionIds.includes(inspectionId)) {
           let index = recordInspectionIds.indexOf(inspectionId);
           // check for duplicate regulations
-          if (recordReculationSections[index].includes(regulationSection)) {
+          if (recordRegulationSections[index].includes(regulationSection)) {
             outcomeDescription = recordOutcomeDescriptions[index];
           } else {
             outcomeDescription = recordOutcomeDescriptions[index] + '; ' + regulationSection;
@@ -75,7 +75,7 @@ class CmdbCsvDataSource {
           }
         } else {
           recordInspectionIds.push(inspectionId);
-          recordReculationSections.push([regulationSection]);
+          recordRegulationSections.push([regulationSection]);
           recordOutcomeDescriptions.push(outcomeDescription);
         }
 
