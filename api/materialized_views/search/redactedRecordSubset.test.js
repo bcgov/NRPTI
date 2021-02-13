@@ -69,11 +69,8 @@ describe('Record Individual issuedTo redaction test', () => {
     await redactedRecordSubset.update(defaultLog);
 
     const redacted = await redacted_record_subset.findOne();
-    expect(redacted.issuedTo.firstName).toEqual('Unpublished');
-    expect(redacted.issuedTo.middleName).toEqual('');
-    expect(redacted.issuedTo.lastName).toEqual('Unpublished');
-    expect(redacted.issuedTo.fullName).toEqual('Unpublished');
-    expect(redacted.issuedTo.dateOfBirth).toEqual(null);
+    // Expect undefined because entire issuedTo field is redacted
+    expect(redacted.issuedTo).toEqual(undefined);
   });
 
   test('Unauthorized issuing agency and person under 19 are redacted', async () => {
@@ -87,10 +84,7 @@ describe('Record Individual issuedTo redaction test', () => {
     await redactedRecordSubset.update(defaultLog);
 
     const redacted = await redacted_record_subset.findOne();
-    expect(redacted.issuedTo.firstName).toEqual('Unpublished');
-    expect(redacted.issuedTo.middleName).toEqual('');
-    expect(redacted.issuedTo.lastName).toEqual('Unpublished');
-    expect(redacted.issuedTo.fullName).toEqual('Unpublished');
-    expect(redacted.issuedTo.dateOfBirth).toEqual(null);
+    // Expect undefined because entire issuedTo field is redacted
+    expect(redacted.issuedTo).toEqual(undefined);
   });
 });

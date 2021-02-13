@@ -19,15 +19,14 @@ async function update(defaultLog) {
     }
   ];
 
+  const notAuthorizedCondition = {
+    $not: {
+      $in: ['$issuingAgency', AUTHORIZED_PUBLISH_AGENCIES]
+    }
+  };
+
   const redactCondition = {
-    $or: [
-      { $lt: ['$issuedToAge', 19] },
-      {
-        $not: {
-          $in: ['$issuingAgency', AUTHORIZED_PUBLISH_AGENCIES]
-        }
-      }
-    ]
+    $lt: ['$issuedToAge', 19]
   };
 
   const issuedToRedaction = [
@@ -151,6 +150,39 @@ async function update(defaultLog) {
       $project: {
         fullRecord: 0,
         issuedToAge: 0
+      }
+    });
+
+    // Remove public from issuedTo.read so the entire issuedTo field is redacted
+    // when record belongs to unauthorized issuing agency
+    aggregate.push({
+      $addFields: {
+        'issuedTo.read': {
+          $cond: {
+            if: notAuthorizedCondition,
+            then: {
+              $filter: {
+                input: '$issuedTo.read',
+                as: 'role',
+                cond: { $ne: ['$$role', 'public'] }
+              }
+            },
+            else: '$issuedTo.read'
+          }
+        }
+      }
+    });
+
+    // Remove documents from record when record belongs to unauthorized issuing agency
+    aggregate.push({
+      $addFields: {
+        documents: {
+          $cond: {
+            if: notAuthorizedCondition,
+            then: [],
+            else: '$documents'
+          }
+        }
       }
     });
 

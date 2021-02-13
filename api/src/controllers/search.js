@@ -526,7 +526,7 @@ let searchCollection = async function (
   // For read only users, we need to redact out the details
   // of any individual where the birthdate is null or the individual
   // is less then 19 years old.
-  if (!roles.some(r => ApplicationAdminRoles.indexOf(r) >= 0)) {
+  if (!roles.some(r => ApplicationAdminRoles.indexOf(r) >= 0) && !(subset && subset.includes('redactedRecord'))) {
       searchResultAggregation = searchResultAggregation.concat(issuedToRedaction(roles));
   }
 
@@ -895,7 +895,7 @@ const executeQuery = async function (args, res, next) {
     });
 
     // Redact issued if user is only wildfire or read-only user
-    if (populate && !roles.some(r => ApplicationAdminRoles.indexOf(r) >= 0)) {
+    if (populate && !roles.some(r => ApplicationAdminRoles.indexOf(r) >= 0) && !(subset && subset.includes('redactedRecord'))) {
       aggregation = aggregation.concat(issuedToRedaction(roles));
     }
 
