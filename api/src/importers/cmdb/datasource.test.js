@@ -61,6 +61,7 @@ describe('CmdbCsvDataSource', () => {
       const dataSource = new CmdbCsvDataSource(taskAuditRecord, null, null, null);
 
       const csvRow = {};
+      const outcomeDescription  = ''
 
       const recordTypeConfig = { getUtil: () => recordTypeUtils };
       const recordTypeUtils = {
@@ -78,7 +79,7 @@ describe('CmdbCsvDataSource', () => {
 
       await dataSource.processRecord(csvRow, recordTypeConfig);
 
-      expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow);
+      expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow, outcomeDescription);
 
       expect(recordTypeUtils.findExistingRecord).toHaveBeenCalledWith({ transformed: true });
 
@@ -95,6 +96,7 @@ describe('CmdbCsvDataSource', () => {
       const dataSource = new CmdbCsvDataSource(taskAuditRecord, null, null, null);
 
       const csvRow = {};
+      const outcomeDescription  = ''
 
       const recordTypeConfig = { getUtil: () => recordTypeUtils };
       const recordTypeUtils = {
@@ -114,7 +116,7 @@ describe('CmdbCsvDataSource', () => {
 
       await dataSource.processRecord(csvRow, recordTypeConfig);
 
-      expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow);
+      expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow, outcomeDescription);
 
       expect(recordTypeUtils.findExistingRecord).toHaveBeenCalledWith({ transformed: true });
 

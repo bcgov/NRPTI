@@ -42,7 +42,7 @@ describe('transformRecord', () => {
   it('transforms csv row fields into NRPTI record fields', () => {
     const result = inspections.transformRecord({
       'company name': 'Company 5',
-      'date issued ': '10-07-20',
+      'date issued': '10-07-20',
       'inspection id': '1303',
       'inspection type': 'Higher Risk Inspection',
       'location':'Test Region',

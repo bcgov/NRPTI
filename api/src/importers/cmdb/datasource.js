@@ -98,7 +98,7 @@ class CmdbCsvDataSource {
    * @param {*} recordTypeConfig object containing record type specific details
    * @memberof CmdbCsvDataSource
    */
-   async processRecord(csvRow, recordTypeConfig, outcomeDescription) {
+   async processRecord(csvRow, recordTypeConfig, outcomeDescription = '') {
     // set status defaults
     let recordStatus = {};
 

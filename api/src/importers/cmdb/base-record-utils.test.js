@@ -28,10 +28,10 @@ describe('BaseRecordUtils', () => {
         _schemaName: 'Inspection',
         recordType: 'Inspection',
 
-        sourceSystemRef: 'agri-mis'
+        sourceSystemRef: 'agri-cmdb'
       };
 
-      const result = baseRecordUtils.transformRecord(csvRow);
+      const result = baseRecordUtils.transformRecord(csvRow, '');
 
       expect(result).toEqual(expectedResult);
     });

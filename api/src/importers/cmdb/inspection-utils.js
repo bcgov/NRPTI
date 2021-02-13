@@ -27,7 +27,7 @@ const MiscConstants = require('../../utils/constants/misc');
    * @returns an inspection object matching the format expected by the API record post/put controllers.
    * @memberof Inspections
    */
-  transformRecord(csvRow, outcomeDescription) {
+  transformRecord(csvRow, outcomeDescription = '') {
 
     if (!csvRow) {
       throw Error('transformRecord - required csvRow must be non-null.');
