@@ -51,7 +51,7 @@ export class InspectionNRCEDDetailComponent extends RecordComponent implements O
   }
 
   canPublish(): boolean {
-    const requiredRoles = Constants.FlavourEditRequiredRoles.INSPECTION.LNG;
+    const requiredRoles = Constants.FlavourEditRequiredRoles.INSPECTION.NRCED;
 
     for (const role of requiredRoles) {
       if (this.factoryService.userInRole(role) && this.data.write && this.data.write.includes(role)) { return true; }
