@@ -18,9 +18,11 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
   public disableRow = false;
   public showEdit = true;
 
-  constructor(private router: Router,
-              public changeDetectionRef: ChangeDetectorRef,
-              public factoryService: FactoryService) {
+  constructor(
+    private router: Router,
+    public changeDetectionRef: ChangeDetectorRef,
+    public factoryService: FactoryService
+  ) {
     super();
   }
 
@@ -37,8 +39,11 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
   }
 
   private disableEdit() {
-    if (this.factoryService.userOnlyWFRole() && !this.rowData.write.includes(Constants.ApplicationRoles.ADMIN_WF)) {
-      this.showEdit = false;
+    // Disable edit button if user is in a limited role and record does not have the same write role
+    for (const role of Constants.ApplicationLimitedRoles) {
+      if (this.factoryService.userOnlyInLimitedRole(role) && !this.rowData.write.includes(role)) {
+        this.showEdit = false;
+      }
     }
 
     if (this.rowData.sourceSystemRef === 'core') {

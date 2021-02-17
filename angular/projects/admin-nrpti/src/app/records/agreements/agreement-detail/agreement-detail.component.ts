@@ -3,19 +3,25 @@ import { takeUntil } from 'rxjs/operators';
 import { Agreement } from '../../../../../../common/src/app/models/master/agreement';
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RecordComponent } from '../../utils/record-component';
+import { RecordDetailComponent } from '../../utils/record-component';
 import { RecordUtils } from '../../utils/record-utils';
+import { FactoryService } from '../../../services/factory.service';
 
 @Component({
   selector: 'app-agreement-detail',
   templateUrl: './agreement-detail.component.html',
   styleUrls: ['./agreement-detail.component.scss']
 })
-export class AgreementDetailComponent extends RecordComponent implements OnInit, OnDestroy {
+export class AgreementDetailComponent extends RecordDetailComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
-  constructor(public route: ActivatedRoute, public router: Router, public changeDetectionRef: ChangeDetectorRef) {
-    super();
+  constructor(
+    public route: ActivatedRoute,
+    public router: Router,
+    public changeDetectionRef: ChangeDetectorRef,
+    public factoryService: FactoryService
+  ) {
+    super(factoryService);
   }
 
   ngOnInit() {
@@ -35,6 +41,8 @@ export class AgreementDetailComponent extends RecordComponent implements OnInit,
             record.flavours.map(flavourRecord => RecordUtils.getRecordModelInstance(flavourRecord))) ||
           []
       };
+
+      this.disableEdit();
 
       this.changeDetectionRef.detectChanges();
     });

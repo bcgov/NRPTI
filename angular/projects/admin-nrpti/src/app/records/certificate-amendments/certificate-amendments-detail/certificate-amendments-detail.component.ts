@@ -3,22 +3,28 @@ import { takeUntil } from 'rxjs/operators';
 import { CertificateAmendment } from '../../../../../../common/src/app/models/master';
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RecordComponent } from '../../utils/record-component';
+import { RecordDetailComponent } from '../../utils/record-component';
 import { RecordUtils } from '../../utils/record-utils';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
+import { FactoryService } from '../../../services/factory.service';
 
 @Component({
   selector: 'app-certificate-amendment-detail',
   templateUrl: './certificate-amendments-detail.component.html',
   styleUrls: ['./certificate-amendments-detail.component.scss']
 })
-export class CertificateAmendmentDetailComponent extends RecordComponent implements OnInit, OnDestroy {
+export class CertificateAmendmentDetailComponent extends RecordDetailComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   public legislationString = '';
 
-  constructor(public route: ActivatedRoute, public router: Router, public changeDetectionRef: ChangeDetectorRef) {
-    super();
+  constructor(
+    public route: ActivatedRoute,
+    public router: Router,
+    public changeDetectionRef: ChangeDetectorRef,
+    public factoryService: FactoryService
+  ) {
+    super(factoryService);
   }
 
   ngOnInit() {
@@ -40,6 +46,7 @@ export class CertificateAmendmentDetailComponent extends RecordComponent impleme
       };
 
       this.populateTextFields();
+      this.disableEdit();
 
       this.changeDetectionRef.detectChanges();
     });

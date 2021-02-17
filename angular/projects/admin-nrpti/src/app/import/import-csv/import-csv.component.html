@@ -9,10 +9,9 @@
       [(ngModel)]="dataSourceType"
       (change)="onDataSourceTypeChange($event.target.value)"
     >
-      <option value="coors-csv">COORS</option>
-      <option value="nro-csv">NRIS-FLNR</option>
-      <option value="mis-csv">AGRI-MIS</option>
-      <option value="cmdb-csv">AGRI-CMDB</option>
+      <option *ngFor="let sourceType of dataSourceTypes" [value]="sourceType.value">
+        {{ sourceType.displayName }}
+      </option>
     </select>
   </div>
 
@@ -25,7 +24,7 @@
       [disabled]="!dataSourceType"
       (change)="onRecordTypeChange($event.target.value)"
     >
-      <option *ngFor="let record of CSVTypes.getRecordTypes(dataSourceType)" [value]="record">
+      <option *ngFor="let record of csvTypes[dataSourceType]" [value]="record">
         {{ record }}
       </option>
     </select>

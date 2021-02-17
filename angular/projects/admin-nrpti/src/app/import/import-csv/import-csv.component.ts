@@ -1,30 +1,32 @@
-import { Component } from '@angular/core';
-import { FactoryService } from '../../services/factory.service';
-import { ITaskParams } from '../../services/task.service';
-import { CsvConstants, IRequiredFormat, IDateField } from '../../utils/constants/csv-constants';
+import { Component, OnInit } from '@angular/core';
 import Papa from 'papaparse';
 import moment from 'moment';
 
-class CSVTypes {
-  public static readonly csvTypes = {
-    'coors-csv': ['Administrative Sanction', 'Court Conviction', 'Ticket'],
-    'nro-csv': ['Inspection'],
-    'mis-csv': ['Inspection'],
-    'cmdb-csv': ['Inspection']
-  };
+import { FactoryService } from '../../services/factory.service';
+import { ITaskParams } from '../../services/task.service';
+import { CsvConstants, IRequiredFormat, IDateField } from '../../utils/constants/csv-constants';
+import { Constants } from '../../utils/constants/misc';
 
-  public static getRecordTypes(dataSourceType: string): string[] {
-    return this.csvTypes[dataSourceType] || [];
-  }
-}
 
 @Component({
   selector: 'app-import-csv',
   templateUrl: './import-csv.component.html',
   styleUrls: ['./import-csv.component.scss']
 })
-export class ImportCSVComponent {
-  public CSVTypes = CSVTypes; // make available in template
+export class ImportCSVComponent implements OnInit {
+  public dataSourceTypes = [
+    { displayName: 'COORS', value: 'coors-csv' },
+    { displayName: 'NRIS-FLNR', value: 'nro-csv' },
+    { displayName: 'AGRI-CMDB', value: 'cmdb-csv' },
+    { displayName: 'AGRI-MIS', value: 'mis-csv' }
+  ];
+
+  public csvTypes: any = {
+    'coors-csv': ['Administrative Sanction', 'Court Conviction', 'Ticket'],
+    'nro-csv': ['Inspection'],
+    'mis-csv': ['Inspection'],
+    'cmdb-csv': ['Inspection']
+  };
 
   public dataSourceType = null;
   public recordType = null;
@@ -38,6 +40,19 @@ export class ImportCSVComponent {
 
   constructor(public factoryService: FactoryService) {}
 
+  ngOnInit() {
+    // Only show COORS AMP for admin:flnro
+    if (this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_FLNRO)) {
+      this.dataSourceTypes = [
+        { displayName: 'COORS', value: 'coors-csv' }
+      ];
+
+      this.csvTypes = {
+        'coors-csv': ['Administrative Sanction']
+      };
+    }
+  }
+
   /**
    * Handle data source type changes.
    *
@@ -48,7 +63,7 @@ export class ImportCSVComponent {
     this.dataSourceType = dataSourceType;
 
     // If the datasource only has 1 record type, auto select it
-    const recordTypes = CSVTypes.getRecordTypes(dataSourceType);
+    const recordTypes = this.csvTypes[dataSourceType];
     if (recordTypes && recordTypes.length === 1) {
       this.recordType = recordTypes[0];
     }

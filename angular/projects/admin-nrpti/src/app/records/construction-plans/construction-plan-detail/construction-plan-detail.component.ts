@@ -3,19 +3,25 @@ import { takeUntil } from 'rxjs/operators';
 import { ConstructionPlan } from '../../../../../../common/src/app/models/master';
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RecordComponent } from '../../utils/record-component';
+import { RecordDetailComponent } from '../../utils/record-component';
 import { RecordUtils } from '../../utils/record-utils';
+import { FactoryService } from '../../../services/factory.service';
 
 @Component({
   selector: 'app-construction-plan-detail',
   templateUrl: './construction-plan-detail.component.html',
   styleUrls: ['./construction-plan-detail.component.scss']
 })
-export class ConstructionPlanDetailComponent extends RecordComponent implements OnInit, OnDestroy {
+export class ConstructionPlanDetailComponent extends RecordDetailComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
-  constructor(public route: ActivatedRoute, public router: Router, public changeDetectionRef: ChangeDetectorRef) {
-    super();
+  constructor(
+    public route: ActivatedRoute,
+    public router: Router,
+    public changeDetectionRef: ChangeDetectorRef,
+    public factoryService: FactoryService
+  ) {
+    super(factoryService);
   }
 
   ngOnInit() {
@@ -35,6 +41,8 @@ export class ConstructionPlanDetailComponent extends RecordComponent implements 
             record.flavours.map(flavourRecord => RecordUtils.getRecordModelInstance(flavourRecord))) ||
           []
       };
+
+      this.disableEdit();
 
       this.changeDetectionRef.detectChanges();
     });
