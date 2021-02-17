@@ -1,12 +1,4 @@
-import {
-  Component,
-  AfterViewInit,
-  OnDestroy,
-  Input,
-  Output,
-  EventEmitter,
-  ElementRef,
-} from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 // import { takeUntil, map } from 'rxjs/operators';
@@ -37,11 +29,13 @@ const layers: {
   facilities: L.GeoJSON<any>;
   pipeline: L.GeoJSON<any>;
   sections: L.GeoJSON<any>;
+  labels: L.LatLng[];
 } = {
   facility: null,
   facilities: null,
   pipeline: null,
-  sections: null
+  sections: null,
+  labels: null
 };
 
 const markerIcon = L.icon({
@@ -96,7 +90,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
     private elementRef: ElementRef,
     public urlService: UrlService
   ) {
-    this.urlService.onNavEnd$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => { });
+    this.urlService.onNavEnd$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {});
   }
 
   // for creating custom cluster icon
@@ -200,15 +194,62 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
       '/assets/data/pipeline-segments-12jun2019.json'
     ];
 
+    class FacilityPoint {
+      latlng;
+      facilityName;
+      constructor(latlng, facilityName) {
+        this.latlng = latlng;
+        this.facilityName = facilityName;
+      }
+    }
+
+    const segmentLabelStyle = `
+    width: 24px;
+    height: 24px;
+    margin-top: -12px;
+    font-size: 12px;
+    border-radius: 18px;
+    border: 2px solid #FCBA19;
+    text-align: center;
+    background: lightgrey;
+    z-index: -501;
+    padding-left: 4px;
+    padding-right: 4px;
+    cursor: grab;
+    `;
+
     const displayData = data => {
       const tooltipOffset = L.point(0, 25);
       const tooltipOffset2 = L.point(0, -5);
+
+      const facilitiesOrder = [
+        'Wilde Lake M/S',
+        'Sukunka Falls C/S',
+        'Mount Bracey C/S',
+        'Racoon Lake C/S',
+        'Clear Creek C/S',
+        'Segundo Lake C/S',
+        'Goosly Falls C/S',
+        'Titanium Peak C/S',
+        'Kitimat M/S'
+      ];
+
+      let pipelineEndpoints = [];
+
       layers.facility = L.geoJSON(data.facility, {
         style: { color: '#6092ff', weight: 2 }
       }).addTo(this.map);
 
       layers.pipeline = L.geoJSON(data.pipeline, {
-        style: { color: '#6092ff', weight: 3 },
+        //style alternating segment colours
+        style: feature => {
+          switch (feature.properties.segment % 2 === 0) {
+            case true:
+              return { color: '#38598A' };
+            default:
+              return { color: '#3B99FC' };
+          }
+        },
         onEachFeature: (feature, featureLayer) => {
           featureLayer.on('click', () => {
             // Open project popup
@@ -223,7 +264,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
             $('#gas-button').css('background', '#c4f9ff');
           });
           featureLayer.on('mouseout', e => {
-            e.target.setStyle({ color: '#6092ff' });
+            e.target.setStyle({ color: e.target.feature.properties.segment % 2 === 0 ? '#38598A' : '#3B99FC' });
             $('#gas-button').css('background', '#ffffff');
           });
         }
@@ -242,7 +283,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
         radius: 4,
         stroke: true,
         weight: 2,
-        color: '#6092ff',
+        color: '#38598A',
         fill: true,
         fillColor: 'white',
         fillOpacity: 1
@@ -298,6 +339,30 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
           </a>
         </div>
       `;
+      L.geoJSON(data.facilities, {
+        pointToLayer: (geoJsonPoint, latlng) => {
+          if (
+            geoJsonPoint.properties.LABEL !== 'Wilde Lake C/S' &&
+            geoJsonPoint.properties.LABEL !== 'Vanderhoof Meter Station'
+          ) {
+            pipelineEndpoints.push(new FacilityPoint(latlng, geoJsonPoint.properties.LABEL));
+            return null;
+          }
+        }
+      });
+
+      layers.labels = this.orderFacilities(facilitiesOrder, pipelineEndpoints);
+      layers.labels.forEach((segment, index) => {
+        L.marker(segment, {
+          icon: L.divIcon({
+            iconSize: null,
+            //without a dummy class, the default leaflet icon appears
+            className: 'map-dummy-class',
+            //classes imported from other files do not currently work here
+            html: `<span style="${segmentLabelStyle}">${index + 1}</span>`
+          })
+        }).addTo(this.map);
+      });
 
       layers.facilities = L.geoJSON(data.facilities, {
         pointToLayer: (pointFeature, latlng) => {
@@ -324,7 +389,8 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
               featureLayer.setStyle({
                 radius: 8,
                 weight: 3,
-                fillColor: '#a5ff82'
+                fillColor: '#a5ff82',
+                color: '#6092ff'
               });
               const popup = L.popup(popupOptions).setContent(lngPopup);
               featureLayer.bindPopup(popup);
@@ -358,7 +424,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
           });
 
           featureLayer.on('mouseout', e => {
-            e.target.setStyle({ color: '#6092ff' }); // Unhighlight geo feature
+            e.target.setStyle({ color: '#38598A' }); // Unhighlight geo feature
             if (feature.properties.LABEL === 'Kitimat M/S') {
               // Unhighlight legend entry
               $('#lng-button').css('background', '#ffffff');
@@ -518,11 +584,11 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
     $('#gas-button').css('background', '#ffffff');
     layers.facilities.eachLayer((layer: any) => {
       if (layer.feature.properties.LABEL !== 'Kitimat M/S') {
-        layer.setStyle({ color: '#6092ff' });
+        layer.setStyle({ color: '#38598A' });
       }
     });
     layers.pipeline.eachLayer((layer: any) => {
-      layer.setStyle({ color: '#6092ff' });
+      layer.setStyle({ color: layer.feature.properties.segment % 2 === 0 ? '#38598A' : '#3B99FC' });
     });
   }
 
@@ -575,6 +641,37 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
 
     // return box parameters
     return `[[${this.latLngToCoord(south, west)},${this.latLngToCoord(north, east)}]]`;
+  }
+
+  private getSegmentMidpoint(data) {
+    let index = 1;
+    let latMid: number = null;
+    let lngMid: number = null;
+    let orderedLatLngs: L.LatLng[] = [];
+    while (index < data.length) {
+      latMid = data[index - 1].latlng.lat + (data[index].latlng.lat - data[index - 1].latlng.lat) / 2;
+      lngMid = data[index - 1].latlng.lng + (data[index].latlng.lng - data[index - 1].latlng.lng) / 2;
+      orderedLatLngs.push(new L.LatLng(latMid, lngMid));
+      index++;
+    }
+    return orderedLatLngs;
+  }
+
+  private orderFacilities(facilitiesOrder, pipelineEndpoints) {
+    let orderedFacilites = [];
+    let i = 0;
+    facilitiesOrder.forEach(facility => {
+      do {
+        if (facility === pipelineEndpoints[i].facilityName) {
+          orderedFacilites.push(pipelineEndpoints[i]);
+          pipelineEndpoints.splice(i, 1);
+          break;
+        }
+        i++;
+      } while (i < pipelineEndpoints.length);
+      i = 0;
+    });
+    return this.getSegmentMidpoint(orderedFacilites);
   }
 
   private latLngToCoord(lat: number, lng: number): string {
