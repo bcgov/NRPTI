@@ -234,14 +234,14 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
         'Kitimat M/S'
       ];
 
-      let pipelineEndpoints = [];
+      const pipelineEndpoints = [];
 
       layers.facility = L.geoJSON(data.facility, {
         style: { color: '#6092ff', weight: 2 }
       }).addTo(this.map);
 
       layers.pipeline = L.geoJSON(data.pipeline, {
-        //style alternating segment colours
+        // style alternating segment colours
         style: feature => {
           switch (feature.properties.segment % 2 === 0) {
             case true:
@@ -356,9 +356,9 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
         L.marker(segment, {
           icon: L.divIcon({
             iconSize: null,
-            //without a dummy class, the default leaflet icon appears
+            // without a dummy class, the default leaflet icon appears
             className: 'map-dummy-class',
-            //classes imported from other files do not currently work here
+            // classes imported from other files do not currently work here
             html: `<span style="${segmentLabelStyle}">${index + 1}</span>`
           })
         }).addTo(this.map);
@@ -647,7 +647,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
     let index = 1;
     let latMid: number = null;
     let lngMid: number = null;
-    let orderedLatLngs: L.LatLng[] = [];
+    const orderedLatLngs: L.LatLng[] = [];
     while (index < data.length) {
       latMid = data[index - 1].latlng.lat + (data[index].latlng.lat - data[index - 1].latlng.lat) / 2;
       lngMid = data[index - 1].latlng.lng + (data[index].latlng.lng - data[index - 1].latlng.lng) / 2;
@@ -658,7 +658,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
   }
 
   private orderFacilities(facilitiesOrder, pipelineEndpoints) {
-    let orderedFacilites = [];
+    const orderedFacilites = [];
     let i = 0;
     facilitiesOrder.forEach(facility => {
       do {
