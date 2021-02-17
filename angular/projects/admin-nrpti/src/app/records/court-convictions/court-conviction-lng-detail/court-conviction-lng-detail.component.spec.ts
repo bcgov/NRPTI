@@ -13,7 +13,7 @@ describe('CourtConvictionLNGDetailComponent', () => {
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
-  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole']);
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole', 'userInRole']);
   mockFactoryService.userInLngRole.and.returnValue(true);
 
   beforeEach((() => {

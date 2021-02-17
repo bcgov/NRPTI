@@ -18,25 +18,25 @@
           Add Record
         </button>
         <div ngbDropdownMenu>
-          <button ngbDropdownItem (click)="add('administrative-penalties')">Administrative Penalty</button>
-          <button *ngIf="showFullRecordList" ngbDropdownItem (click)="add('administrative-sanctions')">Administrative Sanction</button>
-          <button *ngIf="showFullRecordList" ngbDropdownItem (click)="add('agreements')">Agreement</button>
-          <button *ngIf="showFullRecordList" ngbDropdownItem (click)="add('annual-reports')">Annual Report</button>
-          <button *ngIf="showFullRecordList" ngbDropdownItem (click)="add('certificates')">Certificate</button>
-          <button *ngIf="showFullRecordList" ngbDropdownItem (click)="add('certificate-amendments')">Certificate Amendment</button>
-          <button *ngIf="showFullRecordList" ngbDropdownItem (click)="add('construction-plans')">Construction Plan</button>
-          <button *ngIf="showFullRecordList" ngbDropdownItem (click)="add('court-convictions')">Court Conviction</button>
-          <button *ngIf="showFullRecordList" ngbDropdownItem (click)="add('correspondences')">Correspondence</button>
-          <button *ngIf="showFullRecordList" ngbDropdownItem (click)="add('dam-safety-inspections')">Dam Safety Inspection</button>
-          <button *ngIf="showFullRecordList" ngbDropdownItem (click)="add('inspections')">Inspection</button>
-          <button *ngIf="showFullRecordList" ngbDropdownItem (click)="add('management-plans')">Management Plan</button>
-          <button ngbDropdownItem (click)="add('orders')">Order</button>
-          <button *ngIf="showFullRecordList" ngbDropdownItem (click)="add('permits')">Permit</button>
-          <button *ngIf="showFullRecordList" ngbDropdownItem (click)="add('restorative-justices')">Restorative Justice</button>
-          <button *ngIf="showFullRecordList" ngbDropdownItem (click)="add('reports')">Report</button>
-          <button *ngIf="showFullRecordList" ngbDropdownItem (click)="add('self-reports')">Compliance Self-Report</button>
-          <button *ngIf="showFullRecordList" ngbDropdownItem (click)="add('tickets')">Ticket</button>
-          <button *ngIf="showFullRecordList" ngbDropdownItem (click)="add('warnings')">Warning</button>
+          <button *ngIf="addEnabled('ADMINISTRATIVE_PENALTY')" ngbDropdownItem (click)="add('administrative-penalties')">Administrative Penalty</button>
+          <button *ngIf="addEnabled('ADMINISTRATIVE_SANCTION')" ngbDropdownItem (click)="add('administrative-sanctions')">Administrative Sanction</button>
+          <button *ngIf="addEnabled('AGREEMENT')" ngbDropdownItem (click)="add('agreements')">Agreement</button>
+          <button *ngIf="addEnabled('ANNUAL_REPORT')" ngbDropdownItem (click)="add('annual-reports')">Annual Report</button>
+          <button *ngIf="addEnabled('CERTIFICATE')" ngbDropdownItem (click)="add('certificates')">Certificate</button>
+          <button *ngIf="addEnabled('CERTIFICATE_AMENDMENT')" ngbDropdownItem (click)="add('certificate-amendments')">Certificate Amendment</button>
+          <button *ngIf="addEnabled('CONSTRUCTION_PLAN')" ngbDropdownItem (click)="add('construction-plans')">Construction Plan</button>
+          <button *ngIf="addEnabled('COURT_CONVICTION')" ngbDropdownItem (click)="add('court-convictions')">Court Conviction</button>
+          <button *ngIf="addEnabled('CORRESPONDENCE')" ngbDropdownItem (click)="add('correspondences')">Correspondence</button>
+          <button *ngIf="addEnabled('DAM_SAFETY_INSPECTION')" ngbDropdownItem (click)="add('dam-safety-inspections')">Dam Safety Inspection</button>
+          <button *ngIf="addEnabled('INSPECTION')" ngbDropdownItem (click)="add('inspections')">Inspection</button>
+          <button *ngIf="addEnabled('MANAGEMENT_PLAN')" ngbDropdownItem (click)="add('management-plans')">Management Plan</button>
+          <button *ngIf="addEnabled('ORDER')" ngbDropdownItem (click)="add('orders')">Order</button>
+          <button *ngIf="addEnabled('PERMIT')" ngbDropdownItem (click)="add('permits')">Permit</button>
+          <button *ngIf="addEnabled('RESTORATIVE_JUSTICE')" ngbDropdownItem (click)="add('restorative-justices')">Restorative Justice</button>
+          <button *ngIf="addEnabled('REPORT')" ngbDropdownItem (click)="add('reports')">Report</button>
+          <button *ngIf="addEnabled('COMPLIANCE_SELF_REPORT')" ngbDropdownItem (click)="add('self-reports')">Compliance Self-Report</button>
+          <button *ngIf="addEnabled('TICKET')" ngbDropdownItem (click)="add('tickets')">Ticket</button>
+          <button *ngIf="addEnabled('WARNING')" ngbDropdownItem (click)="add('warnings')">Warning</button>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 'use strict';
 
 const defaultLog = require('../utils/logger')('import-task');
-const { SYSTEM_USER } = require('../utils/constants/misc');
+const { SYSTEM_USER, ApplicationRoles } = require('../utils/constants/misc');
 const queryActions = require('../utils/query-actions');
 const TaskAuditRecord = require('../utils/task-audit-record');
 const { getCsvRowsFromString } = require('../utils/helpers');
@@ -167,7 +167,13 @@ exports.createTask = async function(dataSourceType) {
  * @param {*} [recordType=null] specific record types to update (optional)
  */
 async function runTask(nrptiDataSource, auth_payload, params = null, recordTypes = null) {
-  const taskAuditRecord = new TaskAuditRecord();
+  const additionalReadRoles = [];
+
+  if(nrptiDataSource.dataSourceLabel == 'coors-csv' && params == 'Administrative Sanction'){
+    additionalReadRoles.push(ApplicationRoles.ADMIN_FLNRO)
+  }
+
+  const taskAuditRecord = new TaskAuditRecord(additionalReadRoles);
 
   try {
     defaultLog.info(`runTask - ${nrptiDataSource.dataSourceLabel} - started`);
@@ -225,9 +231,17 @@ function getDataSourceConfig(dataSourceType) {
   if (dataSourceType === 'mis-csv') {
     return {
       dataSourceLabel: 'mis-csv',
-      dataSourceClass: require('../importers/agri/datasource')
+      dataSourceClass: require('../importers/mis/datasource')
     }
   }
+
+  if (dataSourceType === 'cmdb-csv') {
+    return {
+      dataSourceLabel: 'cmdb-csv',
+      dataSourceClass: require('../importers/cmdb/datasource')
+    }
+  }
+
 
   // dataSourceType will match the name of a directory for the given
   // integration in /src/integrations/<dataSourceType>/

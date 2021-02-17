@@ -14,6 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ImportService } from '../services/import.service';
 import { SearchResult } from 'nrpti-angular-components';
 import { interval } from 'rxjs';
+import { Constants } from '../utils/constants/misc';
 
 @Component({
   selector: 'app-import',
@@ -24,6 +25,7 @@ export class ImportComponent implements OnInit, OnDestroy {
   private alive = true;
 
   public loading = true;
+  public showSourceSystem = true;
   public showAlert = { epic: false, 'nris-epd': false, core: false, bcogc: false };
   public tableData: TableObject = new TableObject({ component: ImportTableRowsComponent });
   public tableColumns: IColumnObject[] = [
@@ -90,6 +92,14 @@ export class ImportComponent implements OnInit, OnDestroy {
     interval(this.configService.config['IMPORT_TABLE_INTERVAL']).pipe(takeWhile(() => this.alive)).subscribe(() => {
       self.importService.refreshData();
     });
+
+    this.disableSourceSystem();
+  }
+
+  private disableSourceSystem() {
+    if (this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_FLNRO)) {
+      this.showSourceSystem = false;
+    }
   }
 
   onMessageOut(msg: ITableMessage) {

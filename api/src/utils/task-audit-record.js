@@ -10,6 +10,16 @@ const utils = require('./constants/misc');
  */
 class TaskAuditRecord {
   /**
+   * Creates an instance of DataSource.
+   *
+   * @param {Array<string>} additionalReadRoles additional user roles to create on the record
+   * @memberof TaskAuditRecord
+   */
+  constructor(additionalReadRoles = []) {
+    this.additionalReadRoles = additionalReadRoles;
+  }
+
+  /**
    * Create/Update a Task record.
    *
    * @param {object} params params to save in the Task record.
@@ -18,7 +28,7 @@ class TaskAuditRecord {
    */
   async updateTaskRecord(params) {
     // add default sysadmin roles
-    params = { ...params, read: utils.ApplicationAdminRoles, write: [utils.ApplicationRoles.ADMIN] };
+    params = { ...params, read: [...utils.ApplicationAdminRoles, ...this.additionalReadRoles], write: [utils.ApplicationRoles.ADMIN] };
 
     const Task = mongoose.model('Task');
 

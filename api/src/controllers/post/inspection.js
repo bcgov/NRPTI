@@ -103,6 +103,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
     (inspection.collectionId = new ObjectId(incomingObj.collectionId));
   incomingObj.mineGuid && (inspection.mineGuid = incomingObj.mineGuid);
   incomingObj._sourceRefAgriMisId && (inspection._sourceRefAgriMisId = incomingObj._sourceRefAgriMisId);
+  incomingObj._sourceRefAgriCmdbId && (inspection._sourceRefAgriCmdbId = incomingObj._sourceRefAgriCmdbId);
 
   // set permissions
   inspection.read = utils.ApplicationAdminRoles;
@@ -392,6 +393,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     ObjectId.isValid(incomingObj._sourceRefNrisId) &&
     (inspectionNRCED._sourceRefNrisId = incomingObj._sourceRefNrisId);
   incomingObj._sourceRefAgriMisId && (inspectionNRCED._sourceRefAgriMisId = incomingObj._sourceRefAgriMisId);
+  incomingObj._sourceRefAgriCmdbId && (inspectionNRCED._sourceRefAgriCmdbId = incomingObj._sourceRefAgriCmdbId);
 
   // set permissions and meta
   inspectionNRCED.read = utils.ApplicationAdminRoles;

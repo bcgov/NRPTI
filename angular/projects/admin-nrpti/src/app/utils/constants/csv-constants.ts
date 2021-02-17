@@ -382,6 +382,56 @@ export class CsvConstants {
     { field: 'Created ', format: 'MM/DD/YYYY' }
   ];
 
+    /**
+     * Expected headers for AGRI CMDB Inspection csv.
+     *
+     * @static
+     * @memberof CsvConstants
+     */
+  public static readonly cmdbInspectionCsvRequiredHeaders = [
+    'Inspection ID',
+    'Inspection Type',
+    'Date Issued',
+    'Company Name',
+    'Location',
+    'Regulation Section'
+  ];
+
+  /**
+   * Required fields for AGRI CMDB Inspection csv.
+   *
+   * @static
+   * @memberof CsvConstants
+   */
+  // todo revist make sure there aren't more required fields to add
+  public static readonly cmdbInspectionCsvRequiredFields = [
+    'Inspection ID',
+    'Date Issued',
+    'Company Name'
+  ];
+
+  /**
+   * Fields for AGRI CMDB Inspection csv that have a required format.
+   *
+   * @static
+   * @type {IRequiredFormat[]}
+   * @memberof CsvConstants
+   */
+  public static readonly cmdbInspectionsCsvRequiredFormats: IRequiredFormat[] = [
+    { field: 'Date', type: 'date', format: 'MM-DD-YY' }
+  ];
+
+  /**
+   * Fields for AGRI CMDB Inspection csv that represent dates.
+   *
+   * @static
+   * @type {IDateField[]}
+   * @memberof CsvConstants
+   */
+  public static readonly cmdbInspectionsCsvDateFields: IDateField[] = [
+    { field: 'Date', format: 'MM/DD/YYYY' }
+  ];
+
   /**
    * Get the array of required csv headers for the provided dataSourceType and recordType.
    *
@@ -423,6 +473,12 @@ export class CsvConstants {
     if (dataSourceType === 'mis-csv') {
       if (recordType === 'Inspection') {
         return this.misInspectionCsvRequiredHeaders;
+      }
+    }
+
+    if (dataSourceType === 'cmdb-csv') {
+      if (recordType === 'Inspection') {
+        return this.cmdbInspectionCsvRequiredHeaders;
       }
     }
 
@@ -473,6 +529,12 @@ export class CsvConstants {
       }
     }
 
+    if (dataSourceType === 'cmdb-csv') {
+      if (recordType === 'Inspection') {
+        return this.cmdbInspectionCsvRequiredFields;
+      }
+    }
+
     return null;
   }
 
@@ -520,6 +582,12 @@ export class CsvConstants {
       }
     }
 
+    if (dataSourceType === 'cmdb-csv') {
+      if (recordType === 'Inspection') {
+        return this.cmdbInspectionsCsvRequiredFormats;
+      }
+    }
+
     return null;
   }
 
@@ -564,6 +632,12 @@ export class CsvConstants {
     if (dataSourceType === 'mis-csv') {
       if (recordType === 'Inspection') {
         return this.misInspectionsCsvDateFields;
+      }
+    }
+
+    if (dataSourceType === 'cmdb-csv') {
+      if (recordType === 'Inspection') {
+        return this.cmdbInspectionsCsvDateFields;
       }
     }
 
