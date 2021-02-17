@@ -137,6 +137,7 @@ exports.AUTHORIZED_PUBLISH_AGENCIES = [
   'BC Parks',
   'Climate Action Secretariat',
   'Conservation Officer Service',
+  'Conservation Officer Service (COS)',
   'EAO',
   'Environmental Protection Division',
 ];
