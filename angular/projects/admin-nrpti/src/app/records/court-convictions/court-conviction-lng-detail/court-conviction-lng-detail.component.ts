@@ -7,6 +7,7 @@ import { RecordComponent } from '../../utils/record-component';
 import { DatePipe } from '@angular/common';
 import { FactoryService } from '../../../services/factory.service';
 import { LoggerService } from 'nrpti-angular-components';
+import { Constants } from '../../../utils/constants/misc';
 
 @Component({
   selector: 'app-court-conviction-lng-detail',
@@ -47,6 +48,16 @@ export class CourtConvictionLNGDetailComponent extends RecordComponent implement
     }
 
     this.isPublished = this.isRecordPublished();
+  }
+
+  canPublish(): boolean {
+    const requiredRoles = Constants.FlavourEditRequiredRoles.COURT_CONVICTION.LNG;
+
+    for (const role of requiredRoles) {
+      if (this.factoryService.userInRole(role) && this.data.write && this.data.write.includes(role)) { return true; }
+    }
+
+    return false;
   }
 
   publish(): void {

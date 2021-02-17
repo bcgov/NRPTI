@@ -7,6 +7,8 @@ import { RecordComponent } from '../../utils/record-component';
 import { DatePipe } from '@angular/common';
 import { FactoryService } from '../../../services/factory.service';
 import { LoggerService } from 'nrpti-angular-components';
+import { Constants } from '../../../utils/constants/misc';
+
 @Component({
   selector: 'app-administrative-penalty-lng-detail',
   templateUrl: './administrative-penalty-lng-detail.component.html',
@@ -48,6 +50,16 @@ export class AdministrativePenaltyLNGDetailComponent extends RecordComponent imp
     }
 
     this.isPublished = this.isRecordPublished();
+  }
+
+  canPublish(): boolean {
+    const requiredRoles = Constants.FlavourEditRequiredRoles.ADMINISTRATIVE_PENALTY.LNG;
+
+    for (const role of requiredRoles) {
+      if (this.factoryService.userInRole(role) && this.data.write && this.data.write.includes(role)) { return true; }
+    }
+
+    return false;
   }
 
   publish(): void {

@@ -14,11 +14,11 @@
             <span *ngIf="isPublished" class="grid-section-header-button-sub-text grey-subtext">
               Published on {{ (data && data.datePublished | date: 'mediumDate') || '-' }}
             </span>
-            <button *ngIf="!isPublished" class="button-publish" (click)="publish()" [disabled]="!this.factoryService.userInLngRole() && !this.factoryService.userInWFRole()">
+            <button *ngIf="!isPublished" class="button-publish" (click)="publish()" [disabled]="!this.canPublish()">
               <i class="material-icons">check</i>
               <span>Publish to LNG</span>
             </button>
-            <button *ngIf="isPublished" class="button-unpublish" (click)="unPublish()" [disabled]="!this.factoryService.userInLngRole() && !this.factoryService.userInWFRole()">
+            <button *ngIf="isPublished" class="button-unpublish" (click)="unPublish()" [disabled]="!this.canPublish()">
               <i class="material-icons">close</i>
               <span>Unpublish from LNG</span>
             </button>

@@ -606,6 +606,7 @@ paths:
         - admin:lng
         - admin:nrced
         - admin:bcmi
+        - admin:flnro
       parameters:
         - name: task
           in: body

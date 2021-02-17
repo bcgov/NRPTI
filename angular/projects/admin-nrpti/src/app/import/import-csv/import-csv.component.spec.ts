@@ -13,7 +13,8 @@ import moment from 'moment';
 describe('ImportCSVComponent', () => {
   const testBedHelper = new TestBedHelper<ImportCSVComponent>(ImportCSVComponent);
 
-  const spyFactoryService = jasmine.createSpyObj<FactoryService>('FactoryService', ['startTask']);
+  const spyFactoryService = jasmine.createSpyObj<FactoryService>('FactoryService',
+    ['startTask', 'userOnlyInLimitedRole']);
 
   beforeEach((() => {
     TestBed.configureTestingModule({

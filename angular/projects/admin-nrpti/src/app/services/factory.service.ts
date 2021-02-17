@@ -217,15 +217,30 @@ export class FactoryService {
     return this.userInRole(Constants.ApplicationRoles.ADMIN_NRCED);
   }
 
-  userInWFRole() {
-    return this.userInRole(Constants.ApplicationRoles.ADMIN_WF);
+  userInLimitedRole(role: string) {
+    return this.userInRole(role);
   }
 
-  userOnlyWFRole() {
-    return !this.userInAdminRole()
-      || !this.userInBcmiRole()
-      || !this.userInLngRole()
-      || !this.userInNrcedRole();
+  userOnlyInLimitedRole(role: string) {
+    return (
+      (!this.userInAdminRole() || !this.userInBcmiRole() || !this.userInLngRole() || !this.userInNrcedRole()) &&
+      this.userInRole(role)
+    );
+  }
+
+  isFlavourEditEnabled(requiredRoles: string[]) {
+
+    for (const role of requiredRoles) {
+      if (this.userInRole(role)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  isRecordAddEditEnabled(recordAddName: string) {
+    return this.keycloakService.isRecordAddEditEnabled(recordAddName);
   }
 
   /**
@@ -574,12 +589,15 @@ export class FactoryService {
     const dataPackage = {};
     dataPackage[containerName] = [record];
 
-    return isInsert ? this.recordService
-      .createRecord(dataPackage)
-      .pipe(catchError(error => this.apiService.handleError(error))).toPromise()
+    return isInsert
+      ? this.recordService
+          .createRecord(dataPackage)
+          .pipe(catchError(error => this.apiService.handleError(error)))
+          .toPromise()
       : this.recordService
-        .editRecord(dataPackage)
-        .pipe(catchError(error => this.apiService.handleError(error))).toPromise();
+          .editRecord(dataPackage)
+          .pipe(catchError(error => this.apiService.handleError(error)))
+          .toPromise();
   }
 
   public getCommunicationPackage(application): Observable<object> {
