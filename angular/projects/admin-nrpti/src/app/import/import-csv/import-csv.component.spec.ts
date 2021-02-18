@@ -258,7 +258,8 @@ describe('ImportCSVComponent', () => {
 
       // values found in CsvConstants.coorsTicketCsvRequiredHeaders, with some removed to trigger validation errors
       component.validateRequiredHeaders([
-        'CONTRAVENTION_ENFORCEMENT_ID',
+        'CASE_CONTRAVENTION_ID',
+        'ENFORCEMENT_ACTION_ID',
         'TICKET_DATE',
         // 'FIRST_NAME',
         'MIDDLE_NAME',

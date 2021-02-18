@@ -107,7 +107,8 @@ export class CsvConstants {
    * @memberof CsvConstants
    */
   public static readonly coorsTicketCsvRequiredHeaders = [
-    'CONTRAVENTION_ENFORCEMENT_ID',
+    'ENFORCEMENT_ACTION_ID',
+    'CASE_CONTRAVENTION_ID',
     'TICKET_DATE',
     'FIRST_NAME',
     'MIDDLE_NAME',
@@ -133,7 +134,7 @@ export class CsvConstants {
    * @static
    * @memberof CsvConstants
    */
-  public static readonly coorsTicketCsvRequiredFields = ['CONTRAVENTION_ENFORCEMENT_ID'];
+  public static readonly coorsTicketCsvRequiredFields = ['ENFORCEMENT_ACTION_ID', 'CASE_CONTRAVENTION_ID'];
 
   /**
    * Fields for COORS Ticket csv that have a required format.
