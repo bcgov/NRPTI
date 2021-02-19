@@ -19,7 +19,7 @@ describe('transformRecord', () => {
       dateIssued: null,
       issuedTo: { dateOfBirth: null, firstName: '', lastName: '', middleName: '', type: 'Individual' },
       issuingAgency: '',
-      author: '',      
+      author: '',
       legislation: { act: '', paragraph: '', regulation: '', section: '', subSection: '' },
       location: '',
       offence: '',
@@ -32,7 +32,8 @@ describe('transformRecord', () => {
 
   it('transforms csv row fields into NRPTI record fields', () => {
     const result = tickets.transformRecord({
-      contravention_enforcement_id: 123,
+      case_contravention_id: 123,
+      enforcement_action_id: 123,
       ticket_date: '12/30/2019',
       case_number: 'P-123456',
       act: 'Fisheries Canada',
@@ -48,7 +49,7 @@ describe('transformRecord', () => {
 
     expect(result).toEqual({
       _schemaName: 'Ticket',
-      _sourceRefCoorsId: 123,
+      _sourceRefCoorsId: '123-123',
 
       recordType: 'Ticket',
       dateIssued: expect.any(String),

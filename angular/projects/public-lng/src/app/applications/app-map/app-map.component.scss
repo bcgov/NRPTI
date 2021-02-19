@@ -1,4 +1,4 @@
-@import "~assets/styles/base/base.scss";
+@import '~assets/styles/base/base.scss';
 
 $map-control-button-bg: #fff;
 
@@ -27,7 +27,7 @@ $map-control-button-bg: #fff;
   padding: 0.75rem 0 0.75rem 0;
   border-radius: 0.5rem;
   // background-color: #eed;
-  box-shadow: 5px 5px 5px  rgba(0, 0, 0, 0.4);
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4);
 }
 
 #legend #title {
@@ -106,4 +106,9 @@ $map-control-button-bg: #fff;
       background: #f4f4f4;
     }
   }
+}
+
+.map-dummy-class {
+  min-width: 0;
+  max-width: 0;
 }
