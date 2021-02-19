@@ -16,6 +16,11 @@ declare module 'leaflet' {
   export interface Marker<P = any> {
     dispositionId: number;
   }
+
+  // tslint:disable-next-line:interface-name
+  export interface RendererOptions {
+    tolerance: number;
+  }
 }
 
 const L = window['L'];
@@ -182,7 +187,8 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
       maxBounds: L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180)), // restrict view to "the world"
       minZoom: 2, // prevent zooming out too far
       zoomSnap: 0.1, // for greater granularity when fitting bounds
-      attributionControl: false
+      attributionControl: false,
+      renderer: L.canvas({ tolerance: 15 })
     });
 
     // identify when map has initialized with a view
