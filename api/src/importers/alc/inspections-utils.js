@@ -33,7 +33,7 @@ class Inspections extends BaseRecordUtils {
 
     const inspection = { ...super.transformRecord(csvRow) };
 
-    inspection['_sourceRefStringId'] = Number(csvRow['record id']) || '';
+    inspection['_sourceRefStringId'] = csvRow['record id'] || '';
 
     inspection['recordType'] = 'Inspection';
     inspection['dateIssued'] = csvRow['date'] || null;
