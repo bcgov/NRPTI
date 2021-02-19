@@ -242,6 +242,12 @@ function getDataSourceConfig(dataSourceType) {
     }
   }
 
+  if (dataSourceType === 'alc-csv') {
+    return {
+      dataSourceLabel: 'alc-csv',
+      dataSourceClass: require('../importers/alc/datasource')
+    }
+  }
 
   // dataSourceType will match the name of a directory for the given
   // integration in /src/integrations/<dataSourceType>/

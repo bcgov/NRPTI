@@ -15,17 +15,19 @@ import { Constants } from '../../utils/constants/misc';
 })
 export class ImportCSVComponent implements OnInit {
   public dataSourceTypes = [
-    { displayName: 'COORS', value: 'coors-csv' },
-    { displayName: 'NRIS-FLNR', value: 'nro-csv' },
+    { displayName: 'ALC', value: 'alc-csv' },
     { displayName: 'AGRI-CMDB', value: 'cmdb-csv' },
-    { displayName: 'AGRI-MIS', value: 'mis-csv' }
+    { displayName: 'AGRI-MIS', value: 'mis-csv' },
+    { displayName: 'COORS', value: 'coors-csv' },
+    { displayName: 'NRIS-FLNR', value: 'nro-csv' }
   ];
 
   public csvTypes: any = {
     'coors-csv': ['Administrative Sanction', 'Court Conviction', 'Ticket'],
     'nro-csv': ['Inspection'],
     'mis-csv': ['Inspection'],
-    'cmdb-csv': ['Inspection']
+    'cmdb-csv': ['Inspection'],
+    'alc-csv': ['Inspection']
   };
 
   public dataSourceType = null;
