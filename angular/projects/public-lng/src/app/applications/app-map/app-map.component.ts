@@ -1,12 +1,4 @@
-import {
-  Component,
-  AfterViewInit,
-  OnDestroy,
-  Input,
-  Output,
-  EventEmitter,
-  ElementRef,
-} from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 // import { takeUntil, map } from 'rxjs/operators';
@@ -23,6 +15,11 @@ declare module 'leaflet' {
   // tslint:disable-next-line:interface-name
   export interface Marker<P = any> {
     dispositionId: number;
+  }
+
+  // tslint:disable-next-line:interface-name
+  export interface RendererOptions {
+    tolerance: number;
   }
 }
 
@@ -96,7 +93,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
     private elementRef: ElementRef,
     public urlService: UrlService
   ) {
-    this.urlService.onNavEnd$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => { });
+    this.urlService.onNavEnd$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {});
   }
 
   // for creating custom cluster icon
@@ -188,7 +185,8 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
       maxBounds: L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180)), // restrict view to "the world"
       minZoom: 2, // prevent zooming out too far
       zoomSnap: 0.1, // for greater granularity when fitting bounds
-      attributionControl: false
+      attributionControl: false,
+      renderer: L.canvas({ tolerance: 15 })
     });
 
     // identify when map has initialized with a view
