@@ -104,6 +104,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.mineGuid && (inspection.mineGuid = incomingObj.mineGuid);
   incomingObj._sourceRefAgriMisId && (inspection._sourceRefAgriMisId = incomingObj._sourceRefAgriMisId);
   incomingObj._sourceRefAgriCmdbId && (inspection._sourceRefAgriCmdbId = incomingObj._sourceRefAgriCmdbId);
+  incomingObj._sourceRefStringId && (inspection._sourceRefStringId = incomingObj._sourceRefStringId);
 
   // set permissions
   inspection.read = utils.ApplicationAdminRoles;
@@ -244,9 +245,8 @@ exports.createLNG = function(args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (inspectionLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
-  incomingObj._sourceRefNrisId &&
-    ObjectId.isValid(incomingObj._sourceRefNrisId) &&
-    (inspectionLNG._sourceRefNrisId = incomingObj._sourceRefNrisId);
+  incomingObj._sourceRefNrisId && (inspectionLNG._sourceRefNrisId = incomingObj._sourceRefNrisId);
+  incomingObj._sourceRefStringId && (inspectionLNG._sourceRefStringId = incomingObj._sourceRefStringId);
 
   // set permissions and meta
   inspectionLNG.read = utils.ApplicationAdminRoles;
@@ -389,11 +389,10 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (inspectionNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
-  incomingObj._sourceRefNrisId &&
-    ObjectId.isValid(incomingObj._sourceRefNrisId) &&
-    (inspectionNRCED._sourceRefNrisId = incomingObj._sourceRefNrisId);
+  incomingObj._sourceRefNrisId && (inspectionNRCED._sourceRefNrisId = incomingObj._sourceRefNrisId);
   incomingObj._sourceRefAgriMisId && (inspectionNRCED._sourceRefAgriMisId = incomingObj._sourceRefAgriMisId);
   incomingObj._sourceRefAgriCmdbId && (inspectionNRCED._sourceRefAgriCmdbId = incomingObj._sourceRefAgriCmdbId);
+  incomingObj._sourceRefStringId && (inspectionNRCED._sourceRefStringId = incomingObj._sourceRefStringId);
 
   // set permissions and meta
   inspectionNRCED.read = utils.ApplicationAdminRoles;
@@ -537,9 +536,7 @@ exports.createBCMI = function(args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (inspectionBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
-  incomingObj._sourceRefNrisId &&
-    ObjectId.isValid(incomingObj._sourceRefNrisId) &&
-    (inspectionBCMI._sourceRefNrisId = incomingObj._sourceRefNrisId);
+    incomingObj._sourceRefNrisId && (inspectionBCMI._sourceRefNrisId = incomingObj._sourceRefNrisId);
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (inspectionBCMI.collectionId = new ObjectId(incomingObj.collectionId));

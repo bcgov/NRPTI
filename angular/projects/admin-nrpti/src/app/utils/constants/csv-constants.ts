@@ -1,3 +1,10 @@
+import {
+  alcInspectionCsvRequiredHeaders,
+  alcInspectionCsvRequiredFields,
+  alcInspectionsCsvRequiredFormats,
+  alcInspectionsCsvDateFields
+} from './alc-csv-constants';
+
 /**
  * Required format object to specify fields whose value must have a specific format.
  *
@@ -69,7 +76,7 @@ export class CsvConstants {
     'CASE_CONTRAVENTION_ID',
     'ENFORCEMENT_ACTION_ID',
     'RECORD_TYPE_CODE',
-    'BUSINESS_REVIEWED_IND',
+    'BUSINESS_REVIEWED_IND'
   ];
 
   /**
@@ -170,7 +177,7 @@ export class CsvConstants {
    * @static
    * @memberof CsvConstants
    */
-   public static readonly coorsConvictionCsvRequiredHeaders = [
+  public static readonly coorsConvictionCsvRequiredHeaders = [
     'CASE_CONTRAVENTION_ID',
     'ENFORCEMENT_ACTION_ID',
     'FINAL_DECISION_DATE',
@@ -198,10 +205,7 @@ export class CsvConstants {
    * @static
    * @memberof CsvConstants
    */
-  public static readonly coorsConvictionCsvRequiredFields = [
-    'CASE_CONTRAVENTION_ID',
-    'ENFORCEMENT_ACTION_ID'
-  ];
+  public static readonly coorsConvictionCsvRequiredFields = ['CASE_CONTRAVENTION_ID', 'ENFORCEMENT_ACTION_ID'];
 
   /**
    * Fields for COORS Ticket csv that have a required format.
@@ -299,7 +303,7 @@ export class CsvConstants {
     'Function',
     'Action Taken',
     'Activity',
-    'Report Status',
+    'Report Status'
   ];
 
   /**
@@ -330,9 +334,7 @@ export class CsvConstants {
    * @type {IDateField[]}
    * @memberof CsvConstants
    */
-  public static readonly nroInspectionCsvDateFields: IDateField[] = [
-    { field: 'Date', format: 'YYYY-MM-DD' }
-  ];
+  public static readonly nroInspectionCsvDateFields: IDateField[] = [{ field: 'Date', format: 'YYYY-MM-DD' }];
 
   /**
    * Expected headers for AGRI MIS Inspection csv.
@@ -379,16 +381,14 @@ export class CsvConstants {
    * @type {IDateField[]}
    * @memberof CsvConstants
    */
-  public static readonly misInspectionsCsvDateFields: IDateField[] = [
-    { field: 'Created ', format: 'MM/DD/YYYY' }
-  ];
+  public static readonly misInspectionsCsvDateFields: IDateField[] = [{ field: 'Created ', format: 'MM/DD/YYYY' }];
 
-    /**
-     * Expected headers for AGRI CMDB Inspection csv.
-     *
-     * @static
-     * @memberof CsvConstants
-     */
+  /**
+   * Expected headers for AGRI CMDB Inspection csv.
+   *
+   * @static
+   * @memberof CsvConstants
+   */
   public static readonly cmdbInspectionCsvRequiredHeaders = [
     'Inspection ID',
     'Inspection Type',
@@ -405,11 +405,7 @@ export class CsvConstants {
    * @memberof CsvConstants
    */
   // todo revist make sure there aren't more required fields to add
-  public static readonly cmdbInspectionCsvRequiredFields = [
-    'Inspection ID',
-    'Date Issued',
-    'Company Name'
-  ];
+  public static readonly cmdbInspectionCsvRequiredFields = ['Inspection ID', 'Date Issued', 'Company Name'];
 
   /**
    * Fields for AGRI CMDB Inspection csv that have a required format.
@@ -429,9 +425,7 @@ export class CsvConstants {
    * @type {IDateField[]}
    * @memberof CsvConstants
    */
-  public static readonly cmdbInspectionsCsvDateFields: IDateField[] = [
-    { field: 'Date', format: 'MM/DD/YYYY' }
-  ];
+  public static readonly cmdbInspectionsCsvDateFields: IDateField[] = [{ field: 'Date', format: 'MM/DD/YYYY' }];
 
   /**
    * Get the array of required csv headers for the provided dataSourceType and recordType.
@@ -480,6 +474,12 @@ export class CsvConstants {
     if (dataSourceType === 'cmdb-csv') {
       if (recordType === 'Inspection') {
         return this.cmdbInspectionCsvRequiredHeaders;
+      }
+    }
+
+    if (dataSourceType === 'alc-csv') {
+      if (recordType === 'Inspection') {
+        return alcInspectionCsvRequiredHeaders;
       }
     }
 
@@ -536,6 +536,12 @@ export class CsvConstants {
       }
     }
 
+    if (dataSourceType === 'alc-csv') {
+      if (recordType === 'Inspection') {
+        return alcInspectionCsvRequiredFields;
+      }
+    }
+
     return null;
   }
 
@@ -589,6 +595,12 @@ export class CsvConstants {
       }
     }
 
+    if (dataSourceType === 'alc-csv') {
+      if (recordType === 'Inspection') {
+        return alcInspectionsCsvRequiredFormats;
+      }
+    }
+
     return null;
   }
 
@@ -639,6 +651,12 @@ export class CsvConstants {
     if (dataSourceType === 'cmdb-csv') {
       if (recordType === 'Inspection') {
         return this.cmdbInspectionsCsvDateFields;
+      }
+    }
+
+    if (dataSourceType === 'alc-csv') {
+      if (recordType === 'Inspection') {
+        return alcInspectionsCsvDateFields;
       }
     }
 
