@@ -52,6 +52,14 @@ export class ImportCSVComponent implements OnInit {
       this.csvTypes = {
         'coors-csv': ['Administrative Sanction']
       };
+    } else if (this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_AGRI)) {
+      this.dataSourceTypes = [
+        { displayName: 'AGRI-MIS', value: 'mis-csv' }
+      ];
+
+      this.csvTypes = {
+        'mis-csv': ['Inspection']
+      };
     }
   }
 
