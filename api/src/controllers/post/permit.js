@@ -4,6 +4,10 @@ const postUtils = require('../../utils/post-utils');
 const { userHasValidRoles } = require('../../utils/auth-utils');
 const utils = require('../../utils/constants/misc');
 
+// Additional admin roles that can create this record, such as admin:wf or admin:flnro
+const ADDITIONAL_ROLES = [utils.ApplicationRoles.ADMIN_ENV_EPD];
+exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;
+
 /**
  * Performs all operations necessary to create a master Permit record and its associated flavour records.
  *
@@ -145,6 +149,15 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.isLngPublished && (permit.isLngPublished = incomingObj.isLngPublished);
   incomingObj.isBcmiPublished && (permit.isBcmiPublished = incomingObj.isBcmiPublished);
 
+ // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+ if (args) {
+  postUtils.setAdditionalRoleOnRecord(
+    permit,
+    args.swagger.params.auth_payload.realm_access.roles,
+    ADDITIONAL_ROLES
+  );
+}
+
   return permit;
 };
 
@@ -174,7 +187,10 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles(
+    [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG, ...ADDITIONAL_ROLES],
+    args.swagger.params.auth_payload.realm_access.roles)
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -266,7 +282,10 @@ exports.createLNG = function (args, res, next, incomingObj) {
  */
 exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles(
+    [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, ...ADDITIONAL_ROLES],
+    args.swagger.params.auth_payload.realm_access.roles)
+  ) {
     throw new Error('Missing valid user role.');
   }
 

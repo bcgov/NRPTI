@@ -6,7 +6,12 @@ const { userHasValidRoles } = require('../../utils/auth-utils');
 const utils = require('../../utils/constants/misc');
 
 // Additional admin roles that can create this record, such as admin:wf or admin:flnro
-const ADDITIONAL_ROLES = [utils.ApplicationRoles.ADMIN_WF, utils.ApplicationRoles.ADMIN_FLNRO, utils.ApplicationRoles.ADMIN_AGRI];
+const ADDITIONAL_ROLES = [
+  utils.ApplicationRoles.ADMIN_WF,
+  utils.ApplicationRoles.ADMIN_FLNRO,
+  utils.ApplicationRoles.ADMIN_AGRI,
+  utils.ApplicationRoles.ADMIN_ENV_EPD
+];
 exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;
 
 /**

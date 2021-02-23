@@ -35,6 +35,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
   public agencies = Picklists.agencyPicklist;
   public authors = Picklists.authorPicklist;
   public courtConvictionSubtypes = Picklists.courtConvictionSubtypePicklist;
+  private defaultAgency = '';
 
   // Documents
   public documents = [];
@@ -136,11 +137,10 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
   private buildForm() {
     const flavourEditRequiredRoles = Constants.FlavourEditRequiredRoles.COURT_CONVICTION;
 
-    let defaultAgency = '';
     for (const role of Constants.ApplicationLimitedRoles) {
       if (this.factoryService.userOnlyInLimitedRole(role)) {
         this.agencies = Constants.RoleAgencyPickList[role];
-        defaultAgency = this.agencies[0];
+        this.defaultAgency = this.agencies[0];
       }
     }
 
@@ -163,7 +163,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       issuingAgency: new FormControl({
-        value: (this.currentRecord && this.currentRecord.issuingAgency) || defaultAgency,
+        value: (this.currentRecord && this.currentRecord.issuingAgency) || this.defaultAgency,
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       author: new FormControl({
@@ -359,7 +359,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
       (courtConviction['recordSubtype'] = this.myForm.controls.recordSubtype.value);
     this.myForm.controls.dateIssued.dirty &&
       (courtConviction['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
-    this.myForm.controls.issuingAgency.dirty &&
+    (this.myForm.controls.issuingAgency.dirty || this.defaultAgency) &&
       (courtConviction['issuingAgency'] = this.myForm.controls.issuingAgency.value);
     this.myForm.controls.author.dirty && (courtConviction['author'] = this.myForm.controls.author.value);
 
