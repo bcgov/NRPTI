@@ -173,6 +173,10 @@ async function runTask(nrptiDataSource, auth_payload, params = null, recordTypes
     additionalReadRoles.push(ApplicationRoles.ADMIN_FLNRO)
   }
 
+  if(nrptiDataSource.dataSourceLabel == 'cmdb-csv' && params == 'Inspection'){
+    additionalReadRoles.push(ApplicationRoles.ADMIN_AGRI)
+  }
+
   if(nrptiDataSource.dataSourceLabel == 'mis-csv' && params == 'Inspection'){
     additionalReadRoles.push(ApplicationRoles.ADMIN_AGRI)
   }

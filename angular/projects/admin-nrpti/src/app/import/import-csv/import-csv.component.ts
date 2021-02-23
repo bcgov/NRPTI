@@ -54,10 +54,12 @@ export class ImportCSVComponent implements OnInit {
       };
     } else if (this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_AGRI)) {
       this.dataSourceTypes = [
+        { displayName: 'AGRI-CMDB', value: 'cmdb-csv' },
         { displayName: 'AGRI-MIS', value: 'mis-csv' }
       ];
 
       this.csvTypes = {
+        'cmdb-csv': ['Inspection'],
         'mis-csv': ['Inspection']
       };
     }
