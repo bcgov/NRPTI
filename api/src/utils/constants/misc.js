@@ -7,6 +7,7 @@ const ApplicationRoles = {
   ADMIN_BCMI: 'admin:bcmi',
   ADMIN_WF: 'admin:wf',
   ADMIN_FLNRO: 'admin:flnro',
+  ADMIN_AGRI: 'admin:agri',
   PUBLIC: 'public'
 };
 
@@ -21,7 +22,8 @@ exports.ApplicationAdminRoles = [
 
 exports.ApplicationLimitedAdminRoles = [
   ApplicationRoles.ADMIN_WF,
-  ApplicationRoles.ADMIN_FLNRO
+  ApplicationRoles.ADMIN_FLNRO,
+  ApplicationRoles.ADMIN_AGRI
 ]
 
 exports.KeycloakDefaultRoles = {
