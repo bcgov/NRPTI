@@ -476,7 +476,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
 
     // make geoJSON data available for the minimap
     const displayMiniMapData = data => {
-      (minimapLayers.facility = L.geoJSON(data.facility, {
+      minimapLayers.facility = L.geoJSON(data.facility, {
         style: { color: '#6092ff', weight: 2 },
         onEachFeature: (feature, featureLayer) => {
           featureLayer.on('mouseover', e => {
@@ -486,14 +486,17 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
             this.ngOnLegendLngLeave();
           });
         }
-      })),
-        (minimapLayers.facilities = L.geoJSON(data.facilities, {
-          style: { color: '#6092ff', weight: 2 }
-        })),
-        (minimapLayers.pipeline = L.geoJSON(data.pipeline, {
-          style: { color: '#38598A', weight: 2 }
-        })),
-        this.map.addControl(new MiniMapWrapper());
+      });
+
+      minimapLayers.facilities = L.geoJSON(data.facilities, {
+        style: { color: '#6092ff', weight: 2 }
+      });
+
+      minimapLayers.pipeline = L.geoJSON(data.pipeline, {
+        style: { color: '#38598A', weight: 2 }
+      });
+
+      this.map.addControl(new MiniMapWrapper());
     };
 
     // Add minimap. Modified from https://github.com/Norkart/Leaflet-MiniMap/
@@ -653,15 +656,15 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
       if (layer.feature.properties.LABEL === 'Kitimat M/S') {
         layer.setStyle({ color: '#00f6ff' });
       }
-      minimapLayers.facility.eachLayer((layer: any) => {
-        layer.setStyle({ color: '#00f6ff' });
+      minimapLayers.facility.eachLayer((minilayer: any) => {
+        minilayer.setStyle({ color: '#00f6ff' });
       });
     });
     layers.facility.eachLayer((layer: any) => {
       layer.setStyle({ color: '#00f6ff' });
     });
-    minimapLayers.facility.eachLayer((layer: any) => {
-      layer.setStyle({ color: '#00f6ff' });
+    minimapLayers.facility.eachLayer((minilayer: any) => {
+      minilayer.setStyle({ color: '#00f6ff' });
     });
   }
   public ngOnLegendLngLeave() {
@@ -670,11 +673,11 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
       if (layer.feature.properties.LABEL === 'Kitimat M/S') {
         layer.setStyle({ color: '#38598A' });
       }
-      layers.facility.eachLayer((layer: any) => {
-        layer.setStyle({ color: '#6092ff' });
+      layers.facility.eachLayer((facilitylayer: any) => {
+        facilitylayer.setStyle({ color: '#6092ff' });
       });
-      minimapLayers.facility.eachLayer((layer: any) => {
-        layer.setStyle({ color: '#6092ff' });
+      minimapLayers.facility.eachLayer((minilayer: any) => {
+        minilayer.setStyle({ color: '#6092ff' });
       });
     });
   }
