@@ -1,0 +1,101 @@
+const BaseRecordUtils = require('./base-record-utils');
+const CsvUtils = require('./utils/csv-utils');
+const MiscConstants = require('../../utils/constants/misc');
+
+/**
+ * ALC csv tickets record handler.
+ *
+ * @class tickets
+ */
+class tickets extends BaseRecordUtils {
+  /**
+   * Creates an instance of tickets.
+   *
+   * @param {*} auth_payload user information for auditing
+   * @param {*} recordType an item from record-type-enum.js -> RECORD_TYPE
+   * @param {*} csvRow an object containing the values from a single csv row.
+   * @memberof tickets
+   */
+  constructor(auth_payload, recordType, csvRow) {
+    super(auth_payload, recordType, csvRow);
+  }
+
+  /**
+   * Convert the csv row object into the object expected by the API record post/put controllers.
+   *
+   * @returns an ticket object matching the format expected by the API record post/put controllers.
+   * @memberof tickets
+   */
+  transformRecord(csvRow) {
+    if (!csvRow) {
+      throw Error('transformRecord - required csvRow must be non-null.');
+    }
+
+    const ticket = { ...super.transformRecord(csvRow) };
+
+    if (csvRow['case_contravention_id'] && csvRow['enforcement_action_id']) {
+      ticket['_sourceRefStringId'] = `${csvRow['case_contravention_id']}-${csvRow['enforcement_action_id']}`;
+    } else {
+      ticket['_sourceRefStringId'] = '';
+    }
+
+    ticket['issuingAgency'] = 'Natural Resource Officers' || '';
+    ticket['author'] = 'Natural Resource Officers' || '';
+    ticket['recordType'] = 'Ticket' || '';
+    ticket['offence'] = csvRow['article_description'] || '';
+    ticket['dateIssued'] = csvRow['service_date'] || null;
+
+    if (csvRow['region'] === '' ) {
+      if (csvRow['org_unit_name'] === '') {
+        ticket['location'] = '';
+      } else {
+        ticket['location'] = csvRow['org_unit_name'];
+      }
+    } else {
+      ticket['location'] = csvRow['region'];
+    }
+
+    ticket['penalties'] = [
+      {
+        type: 'Fined',
+        penalty: {
+          type: 'Dollars',
+          value: (csvRow['fine_amount'] && Number(csvRow['fine_amount'])) || null
+        },
+        description:'Penalty Amount (CAD)'
+      }
+    ];
+
+    ticket['legislation'] = {
+      act: csvRow['act_description'],
+      regulation: csvRow['reg_description'],
+      section: csvRow['section'],
+      subSection: csvRow['sub_section'],
+      paragraph: csvRow['paragraph']
+    };
+
+    const entityType = CsvUtils.getEntityType(csvRow);
+
+    if (entityType === MiscConstants.IssuedToEntityTypes.Company) {
+      ticket['issuedTo'] = {
+        type: MiscConstants.IssuedToEntityTypes.Company,
+        companyName: csvRow['fc_client_name']
+      };
+    }
+
+    if (entityType === MiscConstants.IssuedToEntityTypes.Individual) {
+      ticket['issuedTo'] = {
+        type: MiscConstants.IssuedToEntityTypes.Individual,
+        dateOfBirth: null,
+        fullName: csvRow['fc_client_name'],
+        firstName: '',
+        lastName: '',
+        middleName: '',
+      };
+    }
+
+    return ticket;
+  }
+}
+
+module.exports = tickets;

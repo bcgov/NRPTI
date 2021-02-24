@@ -1,4 +1,4 @@
-const defaultLog = require('../../utils/logger')('nro-csv-datasource');
+const defaultLog = require('../../utils/logger')('flnr-csv-datasource');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 class NroCsvDataSource {
@@ -19,7 +19,7 @@ class NroCsvDataSource {
     // Only process records that are 'Complete'
     if(csvRows) {
       this.csvRows = csvRows.filter(row => row['report status'] && row['report status'] === 'Complete');
-    }   
+    }
 
     // Set initial status
     this.status = { itemsProcessed: 0, itemTotal: 0, individualRecordStatus: [] };

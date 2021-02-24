@@ -37,7 +37,7 @@ const MiscConstants = require('../../utils/constants/misc');
 
     inspection['_sourceRefAgriCmdbId'] = csvRow['inspection id'] || '';
 
-    inspection['recordType'] = 'Inspection'; // TODO: check about inspection type field on csv? there is not currently a "Higher Risk Inspection" recordType
+    inspection['recordType'] = 'Inspection';
     inspection['dateIssued'] = csvRow['date issued'] || null;
 
     inspection['issuingAgency'] = 'Ministry of Agriculture';

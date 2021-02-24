@@ -221,10 +221,10 @@ function getDataSourceConfig(dataSourceType) {
     };
   }
 
-  if (dataSourceType === 'nro-csv') {
+  if (dataSourceType === 'flnr-csv') {
     return {
-      dataSourceLabel: 'nro-csv',
-      dataSourceClass: require('../importers/nro/datasource')
+      dataSourceLabel: 'flnr-csv',
+      dataSourceClass: require('../importers/flnr/datasource')
     };
   }
 
@@ -246,6 +246,13 @@ function getDataSourceConfig(dataSourceType) {
     return {
       dataSourceLabel: 'alc-csv',
       dataSourceClass: require('../importers/alc/datasource')
+    }
+  }
+
+  if (dataSourceType === 'era-csv') {
+    return {
+      dataSourceLabel: 'era-csv',
+      dataSourceClass: require('../importers/era/datasource')
     }
   }
 
