@@ -43,6 +43,8 @@ const layers: {
   labels: null
 };
 
+const minimapLayers = { ...layers };
+
 const markerIcon = L.icon({
   iconUrl: 'assets/images/baseline-location-24px.svg',
   // Retina Icon is not needed here considering we're using an SVG. Enable if you want to change to a raster asset.
@@ -85,6 +87,9 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
   // private oldZoom: number = null;
   private isMapReady = false;
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+
+  private minimapCenter = [54.014438, -128.682595];
+  private minimapZoom = 12;
 
   private mapBaseLayerName = 'World Topographic';
 
@@ -182,10 +187,22 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
       }
     );
 
+    // leaflet minimap needs its own layer to operate on to avoid "strange behaviour"
+    const Minimap_Topo_Map = L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+      {
+        attribution:
+          // tslint:disable-next-line:max-line-length
+          'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community',
+        maxZoom: 17.5,
+        noWrap: true
+      }
+    );
+
     this.map = L.map('map', {
       zoomControl: false, // will be added manually below
-      maxBounds: L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 180)), // restrict view to "the world"
-      minZoom: 2, // prevent zooming out too far
+      maxBounds: L.latLngBounds(L.latLng(63, -141), L.latLng(46, -110)), // restrict view to "the world"
+      minZoom: 5, // prevent zooming out too far
       zoomSnap: 0.1, // for greater granularity when fitting bounds
       attributionControl: false,
       renderer: L.canvas({ tolerance: 15 })
@@ -243,7 +260,15 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
       const pipelineEndpoints = [];
 
       layers.facility = L.geoJSON(data.facility, {
-        style: { color: '#6092ff', weight: 2 }
+        style: { color: '#6092ff', weight: 2 },
+        onEachFeature: (feature, featureLayer) => {
+          featureLayer.on('mouseover', e => {
+            this.ngOnLegendLngEnter();
+          });
+          featureLayer.on('mouseout', e => {
+            this.ngOnLegendLngLeave();
+          });
+        }
       }).addTo(this.map);
 
       layers.pipeline = L.geoJSON(data.pipeline, {
@@ -396,7 +421,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
                 radius: 8,
                 weight: 3,
                 fillColor: '#a5ff82',
-                color: '#6092ff'
+                color: '#38598A'
               });
               const popup = L.popup(popupOptions).setContent(lngPopup);
               featureLayer.bindPopup(popup);
@@ -449,6 +474,70 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
         .addTo(this.map);
     };
 
+    // make geoJSON data available for the minimap
+    const displayMiniMapData = data => {
+      (minimapLayers.facility = L.geoJSON(data.facility, {
+        style: { color: '#6092ff', weight: 2 },
+        onEachFeature: (feature, featureLayer) => {
+          featureLayer.on('mouseover', e => {
+            this.ngOnLegendLngEnter();
+          });
+          featureLayer.on('mouseout', e => {
+            this.ngOnLegendLngLeave();
+          });
+        }
+      })),
+        (minimapLayers.facilities = L.geoJSON(data.facilities, {
+          style: { color: '#6092ff', weight: 2 }
+        })),
+        (minimapLayers.pipeline = L.geoJSON(data.pipeline, {
+          style: { color: '#38598A', weight: 2 }
+        })),
+        this.map.addControl(new MiniMapWrapper());
+    };
+
+    // Add minimap. Modified from https://github.com/Norkart/Leaflet-MiniMap/
+    const MiniMapWrapper = L.Control.extend({
+      options: {
+        position: 'bottomleft',
+        layers: minimapLayers,
+        center: this.minimapCenter,
+        zoom: this.minimapZoom
+      },
+
+      onAdd: function(map) {
+        this._mainMap = map;
+
+        this._container = L.DomUtil.create('div', 'leaflet-custom-minimap');
+        this._container.title = 'Go to LNG Canada - Facility';
+        this._container.onclick = () => this._mainMap.flyTo(this.options.center, this.options.zoom + 1.5);
+        L.DomEvent.disableClickPropagation(this._container);
+        L.DomEvent.on(this._container, 'mousewheel', L.DomEvent.stopPropagation);
+
+        const minimapOptions = {
+          dragging: false,
+          zoomControl: false,
+          attributionControl: false,
+          doubleClickZoom: false,
+          minZoom: this.options.zoom,
+          maxZoom: this.options.zoom
+        };
+
+        this._miniMap = new L.Map(this._container, minimapOptions);
+        this.options.layers.facility.addTo(this._miniMap);
+        this.options.layers.pipeline.addTo(this._miniMap);
+        this._miniMap.addLayer(Minimap_Topo_Map);
+
+        return this._container;
+      },
+
+      addTo: function(map) {
+        L.Control.prototype.addTo.call(this, map);
+        this._miniMap.setView(this.options.center, 12);
+        return this;
+      }
+    });
+
     // Data collection function
     const getIt = (loc: string, callback: any) => {
       $.get(loc)
@@ -475,6 +564,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
       dataGeoJson.pipeline = topojson.feature(data[2], data[2].objects['pipeline-segments']);
 
       displayData(dataGeoJson);
+      displayMiniMapData(dataGeoJson);
     };
 
     // Fetch all layer data in parallel
@@ -563,14 +653,29 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
       if (layer.feature.properties.LABEL === 'Kitimat M/S') {
         layer.setStyle({ color: '#00f6ff' });
       }
+      minimapLayers.facility.eachLayer((layer: any) => {
+        layer.setStyle({ color: '#00f6ff' });
+      });
+    });
+    layers.facility.eachLayer((layer: any) => {
+      layer.setStyle({ color: '#00f6ff' });
+    });
+    minimapLayers.facility.eachLayer((layer: any) => {
+      layer.setStyle({ color: '#00f6ff' });
     });
   }
   public ngOnLegendLngLeave() {
     $('#lng-button').css('background', '#ffffff');
     layers.facilities.eachLayer((layer: any) => {
       if (layer.feature.properties.LABEL === 'Kitimat M/S') {
-        layer.setStyle({ color: '#6092ff' });
+        layer.setStyle({ color: '#38598A' });
       }
+      layers.facility.eachLayer((layer: any) => {
+        layer.setStyle({ color: '#6092ff' });
+      });
+      minimapLayers.facility.eachLayer((layer: any) => {
+        layer.setStyle({ color: '#6092ff' });
+      });
     });
   }
 
@@ -689,7 +794,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
   private fitBounds(bounds: L.LatLngBounds = null) {
     const fitBoundsOptions: L.FitBoundsOptions = {
       animate: false,
-      paddingTopLeft: [0, 100],
+      paddingTopLeft: [250, 100],
       paddingBottomRight: [0, 20]
     };
     if (bounds && bounds.isValid()) {
