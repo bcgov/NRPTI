@@ -47,7 +47,7 @@ class tickets extends BaseRecordUtils {
 
     if (csvRow['region'] && csvRow['region'] !== '' ) {
       ticket['location'] = csvRow['region'];
-    } else if (csvRow['org_unit_name'] && csvRow['org_unit_name'] === '') {
+    } else if (csvRow['org_unit_name'] && csvRow['org_unit_name'] !== '') {
       ticket['location'] = csvRow['org_unit_name'];
     } else {
       ticket['location'] = '';
