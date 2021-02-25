@@ -1,8 +1,6 @@
-// const mongoose = require('mongoose');
-// const ObjectID = require('mongodb').ObjectID;
-
 const defaultLog = require('../utils/logger')('mapLayerInfo');
 const queryActions = require('../utils/query-actions');
+const queryUtils = require('../utils/query-utils');
 const { ApplicationRoles } = require('../utils/constants/misc');
 const Post = require('../controllers/post/post');
 const Get = require('../controllers/get/get');
@@ -129,6 +127,7 @@ exports.protectedPost = async function(args, res, next) {
   let obj = null;
   try {
     obj = await Post.insert(map);
+    queryUtils.audit(args, 'POST', JSON.stringify(obj.ops[0]), args.swagger.params.auth_payload, obj.ops[0]._id);
   } catch (error) {
     errorMsg = `protectedPost - error inserting map layer info: ${map}`;
     defaultLog.info(errorMsg);
@@ -188,6 +187,8 @@ exports.protectedPut = async function(args, res, next) {
       updateObj,
       { new: true }
     );
+
+    queryUtils.audit(args, 'PUT', JSON.stringify(obj), args.swagger.params.auth_payload, obj._id);
   } catch (error) {
     errorMsg = `protectedPut - error updating map info: ${updateObj}`;
     defaultLog.info(errorMsg);
@@ -210,6 +211,7 @@ exports.protectedDelete = async function(args, res, next) {
   let obj = null;
   try {
     obj = await Delete.deleteById(mapInfoId);
+    queryUtils.audit(args, 'DELETE', JSON.stringify(obj), args.swagger.params.auth_payload, mapInfoId);
   } catch (error) {
     defaultLog.info(`protectedDelete - error deleting mapInfo: ${mapInfoId}`);
     defaultLog.debug(error);
