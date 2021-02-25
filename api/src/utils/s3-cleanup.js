@@ -92,7 +92,7 @@ async function run(dryRun) {
   if (s3Contents.length === 0) console.log('No S3 documents loaded.  Something probably went wrong, stopping here.');
 
   const s3Keys = s3Contents.map(item => item.Key);
-  const toDelete = s3Keys.filter(item => !dbKeys.includes(item));
+  const toDelete = s3Keys.filter(item => !(dbKeys.includes(item) || item.startsWith('DO_NOT_DELETE')));
 
   if (toDelete.length) {
     console.log(`\n\nThe following ${toDelete.length} documents have no references in the database:\n`);
@@ -115,7 +115,7 @@ async function run(dryRun) {
     }
   } else {
     console.log('\nThere are no orphan objects in S3.');
-  }  
+  }
 }
 
 /**
