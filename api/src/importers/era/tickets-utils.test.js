@@ -26,7 +26,7 @@ describe('transformRecord', () => {
 
       penalties: [{ description: 'Penalty Amount (CAD)', penalty: { type: 'Dollars', value: null }, type: 'Fined' }],
       legislation: { act: '', paragraph: '', regulation: '', section: '', subSection: '' },
-      issuedTo: { dateOfBirth: null, firstName: '', lastName: '', middleName: '', fullName: '', type: 'Individual' },
+      issuedTo: { dateOfBirth: null, firstName: '', lastName: '', middleName: '', type: 'Individual' },
 
       sourceSystemRef: 'era-csv',
     });
@@ -72,10 +72,9 @@ describe('transformRecord', () => {
 
       issuedTo: {
         dateOfBirth: null,
-        firstName: '',
+        firstName: 'bad guy jim',
         lastName: '',
         middleName: '',
-        fullName: 'bad guy jim',
         type: MiscConstants.IssuedToEntityTypes.Individual
       },
 

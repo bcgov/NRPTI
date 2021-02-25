@@ -86,8 +86,7 @@ class tickets extends BaseRecordUtils {
       ticket['issuedTo'] = {
         type: MiscConstants.IssuedToEntityTypes.Individual,
         dateOfBirth: null,
-        fullName: csvRow['fc_client_name'] || '',
-        firstName: '',
+        firstName: csvRow['fc_client_name'] || '',
         lastName: '',
         middleName: '',
       };
