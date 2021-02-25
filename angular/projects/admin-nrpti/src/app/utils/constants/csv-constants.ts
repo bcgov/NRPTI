@@ -533,7 +533,7 @@ export class CsvConstants {
 
     if (dataSourceType === 'flnr-csv') {
       if (recordType === 'Inspection') {
-        return this.nroInspectionCsvRequiredFields;
+        return this.flnrInspectionCsvRequiredHeaders;
       }
     }
 
