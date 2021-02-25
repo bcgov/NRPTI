@@ -79,7 +79,7 @@ async function getMapLayerInfoSegment(segment) {
 exports.protectedPost = async function(args, res, next) {
   let incomingObj = {};
   let errorMsg = null;
-  // Only accpet applicaiton: 'LNG' for now
+  // Only accpet application: 'LNG' for now
   if (args.swagger.params.mapInfo && args.swagger.params.mapInfo.value) {
     incomingObj = args.swagger.params.mapInfo.value;
   } else {
