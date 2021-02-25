@@ -88,6 +88,8 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
   private isMapReady = false;
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
+  private layersGroup = L.layerGroup();
+
   private minimapCenter = [54.014438, -128.682595];
   private minimapZoom = 12;
 
@@ -260,7 +262,9 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
       const pipelineEndpoints = [];
 
       layers.facility = L.geoJSON(data.facility, {
-        style: { color: '#6092ff', weight: 2 },
+        style: feature => {
+          return { color: '#6092ff', weight: 2 };
+        },
         onEachFeature: (feature, featureLayer) => {
           featureLayer.on('mouseover', e => {
             this.ngOnLegendLngEnter();
@@ -269,7 +273,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
             this.ngOnLegendLngLeave();
           });
         }
-      }).addTo(this.map);
+      }).addTo(this.layersGroup);
 
       layers.pipeline = L.geoJSON(data.pipeline, {
         // style alternating segment colours
@@ -299,15 +303,13 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
             $('#gas-button').css('background', '#ffffff');
           });
         }
-      })
-        .bindTooltip(
-          (layer: any) => {
-            const p = layer.feature.properties;
-            return `Segment ${p.segment}`;
-          },
-          { direction: 'center', offset: tooltipOffset, sticky: true }
-        )
-        .addTo(this.map);
+      }).bindTooltip(
+        (layer: any) => {
+          const p = layer.feature.properties;
+          return `Segment ${p.segment}`;
+        },
+        { direction: 'center', offset: tooltipOffset, sticky: true }
+      ).addTo(this.layersGroup);
 
       // Default marker style
       const markerOptions = {
@@ -392,7 +394,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
             // classes imported from other files do not currently work here
             html: `<span style="${segmentLabelStyle}">${index + 1}</span>`
           })
-        }).addTo(this.map);
+      }).addTo(this.layersGroup);
       });
 
       layers.facilities = L.geoJSON(data.facilities, {
@@ -448,7 +450,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
             e.target.setStyle({ color: '#00f6ff' }); // Highlight geo feature
             if (feature.properties.LABEL === 'Kitimat M/S') {
               // Highlight legend entry
-              $('#lng-button').css('background', '#c4f9ff');
+              this.ngOnLegendLngEnter();
             } else {
               $('#gas-button').css('background', '#c4f9ff');
             }
@@ -458,20 +460,20 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
             e.target.setStyle({ color: '#38598A' }); // Unhighlight geo feature
             if (feature.properties.LABEL === 'Kitimat M/S') {
               // Unhighlight legend entry
-              $('#lng-button').css('background', '#ffffff');
+              this.ngOnLegendLngLeave();
             } else {
               $('#gas-button').css('background', '#ffffff');
             }
           });
         }
-      })
-        .bindTooltip(
-          (layer: any) => {
-            return layer.feature.properties.LABEL;
-          },
-          { direction: 'top', offset: tooltipOffset2 }
-        )
-        .addTo(this.map);
+      }).bindTooltip(
+        (layer: any) => {
+          return layer.feature.properties.LABEL;
+        },
+        { direction: 'top', offset: tooltipOffset2 }
+      ).addTo(this.layersGroup);
+
+      this.layersGroup.addTo(this.map);
     };
 
     // make geoJSON data available for the minimap
@@ -603,6 +605,18 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
         break;
       }
     }
+
+    this.map.on('zoomstart', e => {
+      if (this.layersGroup && this.map.hasLayer(layers.facilities)) {
+        this.layersGroup.removeFrom(this.map);
+      }
+    });
+
+    this.map.on('zoomend', e => {
+      if (this.layersGroup && this.map.hasLayer(layers.facilities) === false) {
+        this.layersGroup.addTo(this.map);
+      }
+    });
 
     // save any future base layer changes
     this.map.on('baselayerchange', (e: L.LayersControlEvent) => {
