@@ -468,7 +468,7 @@ export class CsvConstants {
 
     if (dataSourceType === 'flnr-csv') {
       if (recordType === 'Inspection') {
-        return this.nroInspectionCsvRequiredHeaders;
+        return this.flnrInspectionCsvRequiredHeaders;
       }
     }
 
@@ -598,7 +598,7 @@ export class CsvConstants {
 
     if (dataSourceType === 'flnr-csv') {
       if (recordType === 'Inspection') {
-        return this.nroInspectionCsvRequiredFormats;
+        return this.flnrInspectionCsvRequiredFormats;
       }
     }
 
