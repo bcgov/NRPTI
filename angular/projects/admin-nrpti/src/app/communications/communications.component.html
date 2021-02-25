@@ -68,14 +68,19 @@
         </div>
         <!-- Add an advanced section for updating the communication package additional info json blob? -->
       </form>
+      <div class="d-flex justify-content-end mb-1">
+        <button class="btn btn-primary mr-1" (click)="cancel()" title="Cancel Popup">
+          Cancel Popup
+        </button>
+        <button class="btn btn-primary" type="submit" (click)="submit()" title="Save Popup">
+          Save Popup
+        </button>
+      </div>
     </section>
-    <div class="d-flex justify-content-end mb-1">
-      <button class="btn btn-primary mr-1" (click)="cancel()" title="Cancel Popup">
-        Cancel Popup
-      </button>
-      <button class="btn btn-primary" type="submit" (click)="submit()" title="Save Popup">
-        Save Popup
-      </button>
-    </div>
+
   </section>
+  <section *ngIf="this.selectedApplication === 'LNG'" class="my-3 py-3">
+    <app-lng-map-info [lngMapData]="lngMapInfo"></app-lng-map-info>
+  </section>
+
 </main>

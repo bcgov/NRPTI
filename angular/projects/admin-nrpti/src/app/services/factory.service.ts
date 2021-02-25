@@ -12,6 +12,8 @@ import { Constants } from '../utils/constants/misc';
 import { NewsService } from './news.service';
 import { CollectionService } from './collection.service';
 import { MineService } from './mine.service';
+import { MapLayerInfoService } from './map-layer-info.service';
+
 /**
  * Facade service for all admin-nrpti services.
  *
@@ -32,6 +34,7 @@ export class FactoryService {
   private _taskService: TaskService;
   private _documentService: DocumentService;
   private _configService: ConfigService;
+  private _mapLayerInfoService: MapLayerInfoService;
 
   constructor(private injector: Injector) {
     // The following items are loaded by a file that is only present on cluster builds.
@@ -147,6 +150,14 @@ export class FactoryService {
     }
     return this._configService;
   }
+
+  public get mapLayerInfoService(): MapLayerInfoService {
+    if (!this._mapLayerInfoService) {
+      this._mapLayerInfoService = this.injector.get(MapLayerInfoService);
+    }
+    return this._mapLayerInfoService;
+  }
+
   /**
    * True if the user is authenticated, false otherwise.
    *
@@ -606,5 +617,13 @@ export class FactoryService {
 
   public createCommunicationPackage(communicationPackage): Observable<object> {
     return this.configService.createCommunicationPackage(communicationPackage, this.apiService.pathAPI);
+  }
+
+  public getMapLayerInfo(mapInfoId): Observable<object> {
+    return this.searchService.getItem(this.apiService.pathAPI, mapInfoId, 'MapLayerInfo', false);
+  }
+
+  public updateMapLayerInfo(mapLayerInfo): Promise<any> {
+    return this.mapLayerInfoService.updateMapLayerInfo(mapLayerInfo);
   }
 }

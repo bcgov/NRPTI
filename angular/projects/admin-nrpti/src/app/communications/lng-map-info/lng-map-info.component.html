@@ -1,0 +1,43 @@
+
+<form [formGroup]="mapForm" novalidate>
+  <div class="flex-container">
+    <div class="label-pair">
+      <label for="sectionNumber">Section Number</label>
+      <select name="sectionNumber" id="sectionNumber" formControlName="sectionNumber" class="form-control" (change)="onSelectSegment($event)">
+        <option *ngFor="let section of sections" [ngValue]="section">
+          {{ section }}
+        </option>
+      </select>
+    </div>
+  </div>
+  <div class="flex-container">
+    <div class="label-pair">
+      <label for="location">Location</label>
+      <input name="location" id="location" type="text" formControlName="location" class="form-control" />
+    </div>
+    <div class="label-pair">
+      <label for="length">Length</label>
+      <input name="length" id="length" type="text" formControlName="length" class="form-control" />
+    </div>
+  </div>
+  <div class="flex-container">
+    <div class="label-pair lrg">
+      <label for="description">Recent Updates</label>
+      <editor
+        [init]="tinyMceSettings"
+        name="recentUpdates"
+        id="recentUpdates"
+        formControlName="recentUpdates"
+      ></editor>
+    </div>
+  </div>
+</form>
+
+<div class="d-flex justify-content-end mb-1">
+  <button class="btn btn-primary mr-1" (click)="cancel()" title="Cancel Popup">
+    Cancel Map Updates
+  </button>
+  <button class="btn btn-primary" type="submit" (click)="submit()" title="Save Popup">
+    Save/Publish Map Updates
+  </button>
+</div>
