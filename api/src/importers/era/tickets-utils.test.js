@@ -25,7 +25,7 @@ describe('transformRecord', () => {
 
       penalties: [{ description: 'Penalty Amount (CAD)', penalty: { type: 'Dollars', value: null }, type: 'Fined' }],
       legislation: { act: '', paragraph: '', regulation: '', section: '', subSection: '' },
-      issuedTo: { dateOfBirth: null, firstName: '', lastName: '', middleName: '', type: 'Individual' },
+      issuedTo: { dateOfBirth: null, firstName: '', lastName: '', middleName: '', fullName: '', type: 'Individual' },
 
       sourceSystemRef: 'era-csv',
     });

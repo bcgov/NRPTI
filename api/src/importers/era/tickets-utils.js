@@ -33,26 +33,24 @@ class tickets extends BaseRecordUtils {
 
     const ticket = { ...super.transformRecord(csvRow) };
 
+    ticket['_sourceRefStringId'] = '';
+
     if (csvRow['case_contravention_id'] && csvRow['enforcement_action_id']) {
       ticket['_sourceRefStringId'] = `${csvRow['case_contravention_id']}-${csvRow['enforcement_action_id']}`;
-    } else {
-      ticket['_sourceRefStringId'] = '';
     }
 
-    ticket['issuingAgency'] = 'Natural Resource Officers' || '';
-    ticket['author'] = 'Natural Resource Officers' || '';
-    ticket['recordType'] = 'Ticket' || '';
+    ticket['issuingAgency'] = 'Natural Resource Officers';
+    ticket['author'] = 'Natural Resource Officers';
+    ticket['recordType'] = 'Ticket';
     ticket['offence'] = csvRow['article_description'] || '';
     ticket['dateIssued'] = csvRow['service_date'] || null;
 
-    if (csvRow['region'] === '' ) {
-      if (csvRow['org_unit_name'] === '') {
-        ticket['location'] = '';
-      } else {
-        ticket['location'] = csvRow['org_unit_name'];
-      }
-    } else {
+    if (csvRow['region'] && csvRow['region'] !== '' ) {
       ticket['location'] = csvRow['region'];
+    } else if (csvRow['org_unit_name'] && csvRow['org_unit_name'] === '') {
+      ticket['location'] = csvRow['org_unit_name'];
+    } else {
+      ticket['location'] = '';
     }
 
     ticket['penalties'] = [
@@ -67,11 +65,11 @@ class tickets extends BaseRecordUtils {
     ];
 
     ticket['legislation'] = {
-      act: csvRow['act_description'],
-      regulation: csvRow['reg_description'],
-      section: csvRow['section'],
-      subSection: csvRow['sub_section'],
-      paragraph: csvRow['paragraph']
+      act: csvRow['act_description'] || '',
+      regulation: csvRow['reg_description'] || '',
+      section: csvRow['section'] || '',
+      subSection: csvRow['sub_section'] || '',
+      paragraph: csvRow['paragraph'] || ''
     };
 
     const entityType = CsvUtils.getEntityType(csvRow);
@@ -79,7 +77,7 @@ class tickets extends BaseRecordUtils {
     if (entityType === MiscConstants.IssuedToEntityTypes.Company) {
       ticket['issuedTo'] = {
         type: MiscConstants.IssuedToEntityTypes.Company,
-        companyName: csvRow['fc_client_name']
+        companyName: csvRow['fc_client_name'] || ''
       };
     }
 
@@ -87,7 +85,7 @@ class tickets extends BaseRecordUtils {
       ticket['issuedTo'] = {
         type: MiscConstants.IssuedToEntityTypes.Individual,
         dateOfBirth: null,
-        fullName: csvRow['fc_client_name'],
+        fullName: csvRow['fc_client_name'] || '',
         firstName: '',
         lastName: '',
         middleName: '',
