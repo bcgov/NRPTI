@@ -100,6 +100,10 @@ definitions:
   CollectionRequestObject:
     type: object
 
+  ### Map Info Type Definitions
+  MapInfoRequestObject:
+    type: object
+
   ### News Type Definitions
   NewsRequestObject:
     type: object
@@ -1603,6 +1607,169 @@ paths:
         - name: collectionId
           in: path
           description: '_id of collection to delete'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  ###
+  ### map layer info Routes
+  ###
+  /map-info:
+    x-swagger-router-controller: map-info-controller
+    options:
+      tags:
+        - map-info
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated map-info route'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - map-info
+      summary: 'Post a map info'
+      operationId: protectedPost
+      description: "Creates a new map info"
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:lng
+      parameters:
+        - name: mapInfo
+          in: body
+          description: 'Map info to create'
+          required: true
+          schema:
+            $ref: '#/definitions/MapInfoRequestObject'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'    
+  /map-info/{mapInfoId}:
+    x-swagger-router-controller: map-info-controller
+    options:
+      tags:
+        - map-info
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on authenticated map info route'
+      parameters:
+        - name: mapInfoId
+          in: path
+          description: '_id of map info'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - map-info
+      summary: 'Get map info'
+      operationId: protectedGet
+      description: "Get a map info via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:lng
+      parameters:
+        - name: mapInfoId
+          in: path
+          description: '_id of map info to get'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - map-info
+      summary: 'Put a map info'
+      operationId: protectedPut
+      description: "Updates a map info via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:lng
+      parameters:
+        - name: mapInfoId
+          in: path
+          description: '_id of map info to update'
+          required: true
+          type: string
+        - name: mapInfo
+          in: body
+          description: 'map info to update'
+          required: true
+          schema:
+            $ref: '#/definitions/MapInfoRequestObject'
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      tags:
+        - map-info
+      summary: 'Delete a map info'
+      operationId: protectedDelete
+      description: "Deletes a map info via _id."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:lng
+      parameters:
+        - name: mapInfoId
+          in: path
+          description: '_id of map info to delete'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /public/map-info/{mapInfoId}:
+    x-swagger-router-controller: map-info-controller
+    get:
+      tags:
+        - map-info
+      summary: 'Get map info'
+      operationId: publicGet
+      description: "Get a map info via _id."
+      parameters:
+        - name: mapInfoId
+          in: path
+          description: '_id of map info to get'
           required: true
           type: string
       responses:

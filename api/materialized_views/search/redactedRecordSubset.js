@@ -47,7 +47,7 @@ async function update(defaultLog) {
         skipRedact: {
           $cond: {
             if: {
-              $in: [{ $arrayElemAt: ['$fullRecord._schemaName', 0] }, ['MineBCMI', 'CollectionBCMI']]
+              $in: [{ $arrayElemAt: ['$fullRecord._schemaName', 0] }, ['MineBCMI', 'CollectionBCMI', 'MapLayerInfo']]
             },
             then: true,
             else: false
@@ -164,7 +164,7 @@ async function update(defaultLog) {
       $addFields: {
         'issuedTo.read': {
           $cond: {
-            if: notAuthorizedCondition,
+            if: { $and: [{ $eq: ['$skipRedact', false] }, notAuthorizedCondition] },
             then: {
               $filter: {
                 input: '$issuedTo.read',
@@ -184,7 +184,7 @@ async function update(defaultLog) {
       $addFields: {
         documents: {
           $cond: {
-            if: notAuthorizedCondition,
+            if: { $and: [{ $eq: ['$skipRedact', false] }, notAuthorizedCondition] },
             then: [],
             else: '$documents'
           }
