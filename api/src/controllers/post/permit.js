@@ -149,14 +149,14 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.isLngPublished && (permit.isLngPublished = incomingObj.isLngPublished);
   incomingObj.isBcmiPublished && (permit.isBcmiPublished = incomingObj.isBcmiPublished);
 
- // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
- if (args) {
-  postUtils.setAdditionalRoleOnRecord(
-    permit,
-    args.swagger.params.auth_payload.realm_access.roles,
-    ADDITIONAL_ROLES
-  );
-}
+  // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+  if (args) {
+    postUtils.setAdditionalRoleOnRecord(
+      permit,
+      args.swagger.params.auth_payload.realm_access.roles,
+      ADDITIONAL_ROLES
+    );
+  }
 
   return permit;
 };

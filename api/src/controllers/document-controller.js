@@ -14,7 +14,6 @@ const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.
 const ep = new AWS.Endpoint(OBJ_STORE_URL);
 const s3 = new AWS.S3({
   endpoint: ep,
-  sslEnabled: false,
   accessKeyId: process.env.OBJECT_STORE_user_account,
   secretAccessKey: process.env.OBJECT_STORE_password,
   signatureVersion: 'v4',
