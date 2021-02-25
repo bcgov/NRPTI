@@ -16,6 +16,7 @@ describe('transformRecord', () => {
       _schemaName: 'Ticket',
       _sourceRefStringId: '',
 
+      recordName: '',
       recordType: 'Ticket',
       issuingAgency: 'Natural Resource Officers',
       author: 'Natural Resource Officers',
@@ -52,7 +53,7 @@ describe('transformRecord', () => {
       _schemaName: 'Ticket',
       _sourceRefStringId: '123-123',
 
-
+      recordName: 'bad manners',
       offence: 'bad manners',
       location: 'somewhere',
       recordType: 'Ticket',

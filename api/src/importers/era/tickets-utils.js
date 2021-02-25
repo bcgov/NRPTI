@@ -39,6 +39,7 @@ class tickets extends BaseRecordUtils {
       ticket['_sourceRefStringId'] = `${csvRow['case_contravention_id']}-${csvRow['enforcement_action_id']}`;
     }
 
+    ticket['recordName'] = csvRow['article_description'] || '';
     ticket['issuingAgency'] = 'Natural Resource Officers';
     ticket['author'] = 'Natural Resource Officers';
     ticket['recordType'] = 'Ticket';
