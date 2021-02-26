@@ -9,7 +9,6 @@ const ApplicationRoles = {
   ADMIN_LNG: 'admin:lng',
   ADMIN_NRCED: 'admin:nrced',
   ADMIN_WF: 'admin:wf',
-  ADMIN_AGRI: 'admin:agri',
   ADMIN_ALC: 'admin:alc',
   PUBLIC: 'public'
 };
