@@ -33,6 +33,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
   // Pick lists
   public permitSubtypes = Picklists.permitSubtypePicklist;
   public agencies = Picklists.agencyPicklist;
+  private defaultAgency = '';
 
   // Documents
   public documents = [];
@@ -135,6 +136,15 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
   }
 
   private buildForm() {
+    const flavourEditRequiredRoles = Constants.FlavourEditRequiredRoles.WARNING;
+
+    for (const role of Constants.ApplicationLimitedRoles) {
+      if (this.factoryService.userOnlyInLimitedRole(role)) {
+        this.agencies = Constants.RoleAgencyPickList[role];
+        this.defaultAgency = this.agencies[0];
+      }
+    }
+
     this.myForm = new FormGroup({
       // Master
       recordName: new FormControl({
@@ -154,7 +164,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       issuingAgency: new FormControl({
-        value: (this.currentRecord && this.currentRecord.issuingAgency) || '',
+        value: (this.currentRecord && this.currentRecord.issuingAgency) || this.defaultAgency,
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       legislation: new FormGroup({
@@ -203,11 +213,11 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       // LNG
       lngDescription: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.description) || '',
-        disabled: !this.factoryService.userInLngRole()
+        disabled: !this.factoryService.isFlavourEditEnabled(flavourEditRequiredRoles.LNG)
       }),
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
-        disabled: !this.factoryService.userInLngRole()
+        disabled: !this.factoryService.isFlavourEditEnabled(flavourEditRequiredRoles.LNG)
       }),
 
       association: new FormGroup({
@@ -246,7 +256,8 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.recordSubtype.dirty && (permit['recordSubtype'] = this.myForm.controls.recordSubtype.value);
     this.myForm.controls.dateIssued.dirty &&
       (permit['dateIssued'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('dateIssued').value));
-    this.myForm.controls.issuingAgency.dirty && (permit['issuingAgency'] = this.myForm.controls.issuingAgency.value);
+    (this.myForm.controls.issuingAgency.dirty || this.defaultAgency) &&
+      (permit['issuingAgency'] = this.myForm.controls.issuingAgency.value);
 
     if (
       this.myForm.get('legislation.act').dirty ||
