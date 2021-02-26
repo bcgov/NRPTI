@@ -374,6 +374,7 @@ paths:
         - admin:flnro
         - admin:agri
         - admin:env-epd
+        - admin:alc
       parameters:
         - in: query
           name: _id
@@ -615,6 +616,7 @@ paths:
         - admin:flnro
         - admin:agri
         - admin:env-epd
+        - admin:alc
       parameters:
         - name: task
           in: body
@@ -670,6 +672,7 @@ paths:
         - admin:flnro
         - admin:agri
         - admin:env-epd
+        - admin:alc
       parameters:
         - name: recordId
           in: path
@@ -727,6 +730,7 @@ paths:
         - admin:flnro
         - admin:agri
         - admin:env-epd
+        - admin:alc
       parameters:
         - name: recordId
           in: path
@@ -790,6 +794,7 @@ paths:
         - admin:flnro
         - admin:agri
         - admin:env-epd
+        - admin:alc
       parameters:
         - name: recordId
           in: path
@@ -841,6 +846,7 @@ paths:
         - admin:flnro
         - admin:agri
         - admin:env-epd
+        - admin:alc
       parameters:
         - in: body
           name: data
@@ -874,6 +880,7 @@ paths:
         - admin:flnro
         - admin:agri
         - admin:env-epd
+        - admin:alc
       parameters:
         - in: body
           name: data
@@ -938,6 +945,7 @@ paths:
         - admin:flnro
         - admin:agri
         - admin:env-epd
+        - admin:alc
       consumes:
         - multipart/form-data
       parameters:
@@ -1013,6 +1021,7 @@ paths:
         - admin:flnro
         - admin:agri
         - admin:env-epd
+        - admin:alc
       parameters:
         - name: recordId
           in: path
@@ -1069,6 +1078,7 @@ paths:
         - admin:flnro
         - admin:agri
         - admin:env-epd
+        - admin:alc
       parameters:
         - name: docId
           in: path

@@ -26,6 +26,10 @@ export class ImportComponent implements OnInit, OnDestroy {
 
   public loading = true;
   public showSourceSystem = true;
+  public showSourceSystemEPIC = true;
+  public showSourceSystemNRIS = true;
+  public showSourceSystemCORE = true;
+  public showSourceSystemBCOGC = true;
   public showAlert = { epic: false, 'nris-epd': false, core: false, bcogc: false };
   public tableData: TableObject = new TableObject({ component: ImportTableRowsComponent });
   public tableColumns: IColumnObject[] = [
@@ -102,6 +106,13 @@ export class ImportComponent implements OnInit, OnDestroy {
       this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_AGRI)
       ) {
       this.showSourceSystem = false;
+    } else {
+      if (this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_ALC)) {
+        this.showSourceSystemEPIC = false;
+        this.showSourceSystemNRIS = true;
+        this.showSourceSystemCORE = false;
+        this.showSourceSystemBCOGC = false;
+      }
     }
   }
 
