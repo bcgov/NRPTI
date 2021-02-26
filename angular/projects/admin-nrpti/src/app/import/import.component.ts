@@ -97,7 +97,10 @@ export class ImportComponent implements OnInit, OnDestroy {
   }
 
   private disableSourceSystem() {
-    if (this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_FLNRO)) {
+    if (
+      this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_FLNRO) ||
+      this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_AGRI)
+      ) {
       this.showSourceSystem = false;
     }
   }
