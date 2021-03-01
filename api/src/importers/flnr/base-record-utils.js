@@ -1,8 +1,8 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const defaultLog = require('../../utils/logger')('nro-csv-base-record-utils');
-const RecordController = require('./../../controllers/record-controller');
+const defaultLog = require('../../utils/logger')('flnr-csv-base-record-utils');
+const RecordController = require('../../controllers/record-controller');
 
 /**
  * NRO csv base record type handler that can be used directly, or extended if customizations are needed.
@@ -29,12 +29,12 @@ class BaseRecordUtils {
   }
 
   /**
-   * Transform an nro-csv row into a NRPTI record.
+   * Transform an flnr-csv row into a NRPTI record.
    *
-   * Note: Only transforms common fields found in ALL supported nro-csv types.
+   * Note: Only transforms common fields found in ALL supported flnr-csv types.
    *       To include other values, extend this class and adjust the object returned by this function as needed.
    *
-   * @param {object} csvRow nro-csv row (required)
+   * @param {object} csvRow flnr-csv row (required)
    * @returns {object} NRPTI record.
    * @throws {Error} if record is not provided.
    * @memberof BaseRecordUtils

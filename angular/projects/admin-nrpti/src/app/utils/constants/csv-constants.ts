@@ -5,6 +5,13 @@ import {
   alcInspectionsCsvDateFields
 } from './alc-csv-constants';
 
+import {
+  eraTicketsCsvRequiredHeaders,
+  eraTicketsCsvRequiredFields,
+  eraTicketsCsvRequiredFormats,
+  eraTicketsCsvDateFields
+} from './era-csv-constants';
+
 /**
  * Required format object to specify fields whose value must have a specific format.
  *
@@ -293,7 +300,7 @@ export class CsvConstants {
    * @static
    * @memberof CsvConstants
    */
-  public static readonly nroInspectionCsvRequiredHeaders = [
+  public static readonly flnrInspectionCsvRequiredHeaders = [
     'Record ID',
     'Date',
     'Client / Complainant',
@@ -312,7 +319,7 @@ export class CsvConstants {
    * @static
    * @memberof CsvConstants
    */
-  public static readonly nroInspectionCsvRequiredFields = ['Record ID'];
+  public static readonly flnrInspectionCsvRequiredFields = ['Record ID'];
 
   /**
    * Fields for NRIS FLNRO NRO Inspection csv that have a required format.
@@ -323,7 +330,7 @@ export class CsvConstants {
    * @type {IRequiredFormat[]}
    * @memberof CsvConstants
    */
-  public static readonly nroInspectionCsvRequiredFormats: IRequiredFormat[] = [
+  public static readonly flnrInspectionCsvRequiredFormats: IRequiredFormat[] = [
     { field: 'Date', type: 'date', format: 'YYYY-MM-DD' }
   ];
 
@@ -334,7 +341,7 @@ export class CsvConstants {
    * @type {IDateField[]}
    * @memberof CsvConstants
    */
-  public static readonly nroInspectionCsvDateFields: IDateField[] = [{ field: 'Date', format: 'YYYY-MM-DD' }];
+  public static readonly flnrInspectionCsvDateFields: IDateField[] = [{ field: 'Date', format: 'YYYY-MM-DD' }];
 
   /**
    * Expected headers for AGRI MIS Inspection csv.
@@ -459,9 +466,9 @@ export class CsvConstants {
       }
     }
 
-    if (dataSourceType === 'nro-csv') {
+    if (dataSourceType === 'flnr-csv') {
       if (recordType === 'Inspection') {
-        return this.nroInspectionCsvRequiredHeaders;
+        return this.flnrInspectionCsvRequiredHeaders;
       }
     }
 
@@ -480,6 +487,12 @@ export class CsvConstants {
     if (dataSourceType === 'alc-csv') {
       if (recordType === 'Inspection') {
         return alcInspectionCsvRequiredHeaders;
+      }
+    }
+
+    if (dataSourceType === 'era-csv') {
+      if (recordType === 'Ticket') {
+        return eraTicketsCsvRequiredHeaders;
       }
     }
 
@@ -518,9 +531,9 @@ export class CsvConstants {
       }
     }
 
-    if (dataSourceType === 'nro-csv') {
+    if (dataSourceType === 'flnr-csv') {
       if (recordType === 'Inspection') {
-        return this.nroInspectionCsvRequiredFields;
+        return this.flnrInspectionCsvRequiredHeaders;
       }
     }
 
@@ -539,6 +552,12 @@ export class CsvConstants {
     if (dataSourceType === 'alc-csv') {
       if (recordType === 'Inspection') {
         return alcInspectionCsvRequiredFields;
+      }
+    }
+
+    if (dataSourceType === 'era-csv') {
+      if (recordType === 'Ticket') {
+        return eraTicketsCsvRequiredFields;
       }
     }
 
@@ -577,9 +596,9 @@ export class CsvConstants {
       }
     }
 
-    if (dataSourceType === 'nro-csv') {
+    if (dataSourceType === 'flnr-csv') {
       if (recordType === 'Inspection') {
-        return this.nroInspectionCsvRequiredFormats;
+        return this.flnrInspectionCsvRequiredFormats;
       }
     }
 
@@ -598,6 +617,12 @@ export class CsvConstants {
     if (dataSourceType === 'alc-csv') {
       if (recordType === 'Inspection') {
         return alcInspectionsCsvRequiredFormats;
+      }
+    }
+
+    if (dataSourceType === 'era-csv') {
+      if (recordType === 'Ticket') {
+        return eraTicketsCsvRequiredFormats;
       }
     }
 
@@ -636,9 +661,9 @@ export class CsvConstants {
       }
     }
 
-    if (dataSourceType === 'nro-csv') {
+    if (dataSourceType === 'flnr-csv') {
       if (recordType === 'Inspection') {
-        return this.nroInspectionCsvDateFields;
+        return this.flnrInspectionCsvDateFields;
       }
     }
 
@@ -657,6 +682,12 @@ export class CsvConstants {
     if (dataSourceType === 'alc-csv') {
       if (recordType === 'Inspection') {
         return alcInspectionsCsvDateFields;
+      }
+    }
+
+    if (dataSourceType === 'era-csv') {
+      if (recordType === 'Ticket') {
+        return eraTicketsCsvDateFields;
       }
     }
 

@@ -19,15 +19,17 @@ export class ImportCSVComponent implements OnInit {
     { displayName: 'AGRI-CMDB', value: 'cmdb-csv' },
     { displayName: 'AGRI-MIS', value: 'mis-csv' },
     { displayName: 'COORS', value: 'coors-csv' },
-    { displayName: 'NRIS-FLNR', value: 'nro-csv' }
+    { displayName: 'NRIS-FLNR', value: 'flnr-csv' },
+    { displayName: 'NRO-ERA', value: 'era-csv' }
   ];
 
   public csvTypes: any = {
     'coors-csv': ['Administrative Sanction', 'Court Conviction', 'Ticket'],
-    'nro-csv': ['Inspection'],
+    'flnr-csv': ['Inspection'],
     'mis-csv': ['Inspection'],
     'cmdb-csv': ['Inspection'],
-    'alc-csv': ['Inspection']
+    'alc-csv': ['Inspection'],
+    'era-csv': ['Ticket']
   };
 
   public dataSourceType = null;
