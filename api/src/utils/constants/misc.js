@@ -2,11 +2,14 @@ exports.SYSTEM_USER = 'SYSTEM_USER';
 
 const ApplicationRoles = {
   ADMIN: 'sysadmin',
-  ADMIN_NRCED: 'admin:nrced',
-  ADMIN_LNG: 'admin:lng',
+  ADMIN_AGRI: 'admin:agri',
   ADMIN_BCMI: 'admin:bcmi',
-  ADMIN_WF: 'admin:wf',
+  ADMIN_ENV_EPD: 'admin:env-epd',
   ADMIN_FLNRO: 'admin:flnro',
+  ADMIN_LNG: 'admin:lng',
+  ADMIN_NRCED: 'admin:nrced',
+  ADMIN_WF: 'admin:wf',
+  ADMIN_ALC: 'admin:alc',
   PUBLIC: 'public'
 };
 
@@ -21,7 +24,10 @@ exports.ApplicationAdminRoles = [
 
 exports.ApplicationLimitedAdminRoles = [
   ApplicationRoles.ADMIN_WF,
-  ApplicationRoles.ADMIN_FLNRO
+  ApplicationRoles.ADMIN_FLNRO,
+  ApplicationRoles.ADMIN_AGRI,
+  ApplicationRoles.ADMIN_ENV_EPD,
+  ApplicationRoles.ADMIN_ALC
 ]
 
 exports.KeycloakDefaultRoles = {
@@ -133,7 +139,7 @@ exports.COURT_CONVICTION_PENALTY_TYPES = [
 
 exports.PENALTY_VALUE_TYPES = ['Years', 'Months', 'Days', 'Dollars', 'Hours', 'Other'];
 
-exports.AUTHORIZED_PUBLISH_AGENCIES = [  
+exports.AUTHORIZED_PUBLISH_AGENCIES = [
   'BC Parks',
   'Climate Action Secretariat',
   'Conservation Officer Service',

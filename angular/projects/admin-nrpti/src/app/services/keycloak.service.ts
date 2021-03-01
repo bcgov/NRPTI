@@ -148,7 +148,9 @@ export class KeycloakService {
       roles.includes(Constants.ApplicationRoles.ADMIN_LNG) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_NRCED) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_BCMI) ||
-      roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO);
+      roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_AGRI) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_ALC);
 
     this.menus[Constants.Menus.COMMUNICATIONS] =
       roles.includes(Constants.ApplicationRoles.ADMIN) ||
@@ -172,10 +174,17 @@ export class KeycloakService {
     this.menus[recordTypes.ADMINISTRATIVE_PENALTY] =
       inBaseAdminRole(roles) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO) ||
-      roles.includes(Constants.ApplicationRoles.ADMIN_WF);
+      roles.includes(Constants.ApplicationRoles.ADMIN_AGRI) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_WF) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_ALC);
 
     this.menus[recordTypes.ADMINISTRATIVE_SANCTION] =
-      inBaseAdminRole(roles) || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO);
+      inBaseAdminRole(roles)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_AGRI)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_ALC);
 
     this.menus[recordTypes.AGREEMENT] = inBaseAdminRole(roles);
 
@@ -188,34 +197,59 @@ export class KeycloakService {
     this.menus[recordTypes.CONSTRUCTION_PLAN] = inBaseAdminRole(roles);
 
     this.menus[recordTypes.COURT_CONVICTION] =
-      inBaseAdminRole(roles) || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO);
+      inBaseAdminRole(roles)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_AGRI)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_ALC);
 
     this.menus[recordTypes.CORRESPONDENCE] = inBaseAdminRole(roles);
 
     this.menus[recordTypes.DAM_SAFETY_INSPECTION] = inBaseAdminRole(roles);
 
     this.menus[recordTypes.INSPECTION] =
-      inBaseAdminRole(roles) || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO);
+      inBaseAdminRole(roles)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_AGRI)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_ALC);
 
     this.menus[recordTypes.MANAGEMENT_PLAN] = inBaseAdminRole(roles);
 
     this.menus[recordTypes.ORDER] =
       inBaseAdminRole(roles) ||
-      roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO) ||
-      roles.includes(Constants.ApplicationRoles.ADMIN_WF);
+      roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_WF)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_AGRI)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_ALC);
 
-    this.menus[recordTypes.PERMIT] = inBaseAdminRole(roles);
+    this.menus[recordTypes.PERMIT] =
+      inBaseAdminRole(roles)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD);
 
     this.menus[recordTypes.RESTORATIVE_JUSTICE] =
-      inBaseAdminRole(roles) || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO);
+      inBaseAdminRole(roles)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_AGRI)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_ALC);
 
     this.menus[recordTypes.REPORT] = inBaseAdminRole(roles);
 
     this.menus[recordTypes.COMPLIANCE_SELF_REPORT] = inBaseAdminRole(roles);
 
-    this.menus[recordTypes.TICKET] = inBaseAdminRole(roles) || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO);
+    this.menus[recordTypes.TICKET] = inBaseAdminRole(roles)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_AGRI)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_ALC);
 
-    this.menus[recordTypes.WARNING] = inBaseAdminRole(roles) || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO);
+    this.menus[recordTypes.WARNING] = inBaseAdminRole(roles)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_FLNRO)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_AGRI)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD)
+      || roles.includes(Constants.ApplicationRoles.ADMIN_ALC);
   }
 
   isMenuEnabled(menuName) {

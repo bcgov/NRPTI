@@ -124,3 +124,27 @@
 .leaflet-top.leaflet-right .leaflet-control {
   margin-top: 14px;
 }
+
+.leaflet-custom-minimap{
+  box-shadow:  0 4px 8px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.5);
+  width: 250px;
+  height:250px;
+  cursor: pointer;
+  border-radius: 10px;
+  border: 5px solid #38598A;
+}
+
+
+.leaflet-bottom .leaflet-custom-minimap{
+margin-bottom:10px;
+}
+
+.leaflet-bottom{
+  margin-bottom:33px;
+}
+
+@media (max-width: 768px) {
+  .leaflet-custom-minimap {
+    display: none;
+  }
+}
