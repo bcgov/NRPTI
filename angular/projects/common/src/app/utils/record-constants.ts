@@ -223,15 +223,18 @@ export class Picklists {
   };
 
   public static readonly sourceSystemRefPicklist = [
-    'agri-mis',
+    'agri-cmdb-csv',
+    'agri-mis-csv',
+    'alc-csv',
     'bcogc',
     'core',
-    'coors-csv',
+    'coors-csv',    
     'epic',
+    'era-csv',
     'lng-csv',
     'mem-admin',
     'nris-epd',
-    'nro-inspections-csv',
+    'nris-flnr-csv',
     'nrpti',
     'ocers-csv',
   ];

@@ -48,7 +48,7 @@ class BaseRecordUtils {
       _schemaName: this.recordType._schemaName,
       recordType: this.recordType.displayName,
 
-      sourceSystemRef: 'agri-mis'
+      sourceSystemRef: 'agri-mis-csv'
     };
   }
 

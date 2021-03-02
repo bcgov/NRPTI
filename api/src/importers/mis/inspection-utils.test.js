@@ -27,7 +27,7 @@ describe('transformRecord', () => {
       },
       description: descriptionString,
       outcomeDescription: '',
-      sourceSystemRef: 'agri-mis',
+      sourceSystemRef: 'agri-mis-csv',
       issuingAgency: 'Ministry of Agriculture',
       legislation: {
         act: 'Food Safety Act',
@@ -72,7 +72,7 @@ describe('transformRecord', () => {
       location: 'Test Region',
       outcomeDescription: 'Compliance issue - MR 123 Record Requirements',
 
-      sourceSystemRef: 'agri-mis'
+      sourceSystemRef: 'agri-mis-csv'
     });
   });
 });

@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
 const { userIsOnlyInRole } = require('./auth-utils');
+const { CSV_SOURCE_DEFAULT_ROLES } = require('./constants/misc');
 
 /**
  * Builds the issuedTo.fullName string, based on the issuedTo.type field.
@@ -187,7 +188,7 @@ exports.createRecordWithFlavours = async function(args, res, next, incomingObj, 
 
 /**
  * Sets the read/write and issuedTo read/write arrays on the argument record
- * if the user is identified as one of the limited admin roles such as 
+ * if the user is identified as one of the limited admin roles such as
  * Wildfire or FLNRO.
  *
  * @param {object} record The record to modify
@@ -207,5 +208,17 @@ exports.setAdditionalRoleOnRecord = function(record, userRoles, rolesToCheck) {
 
       break;
     }
+  }
+
+  // Additionally add read and write roles if is csv import source and have matching
+  // user roles
+  if (record.sourceSystemRef && CSV_SOURCE_DEFAULT_ROLES[record.sourceSystemRef]) {
+    const roles = CSV_SOURCE_DEFAULT_ROLES[record.sourceSystemRef];
+
+    // Merge exisitng roles with default CSV roles, and de-dup using Set
+    record.read = [...new Set([...record.read, ...roles])];
+    record.write = [...new Set([...record.write, ...roles])];
+    record.issuedTo.read = [...new Set([...record.issuedTo.read, ...roles])];
+    record.issuedTo.write = [...new Set([...record.issuedTo.write, ...roles])];
   }
 };

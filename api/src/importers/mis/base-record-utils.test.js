@@ -28,7 +28,7 @@ describe('BaseRecordUtils', () => {
         _schemaName: 'Inspection',
         recordType: 'Inspection',
 
-        sourceSystemRef: 'agri-mis'
+        sourceSystemRef: 'agri-mis-csv'
       };
 
       const result = baseRecordUtils.transformRecord(csvRow);
