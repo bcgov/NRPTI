@@ -246,7 +246,7 @@ export class Constants {
     ],
     [Constants.ApplicationRoles.ADMIN_ENV_EPD]: ['Environmental Protection Division'],
     [Constants.ApplicationRoles.ADMIN_ALC]: [
-      'Agriculture Land Commission C&E division'
+      'Agriculture Land Commission'
     ]
   };
 }
