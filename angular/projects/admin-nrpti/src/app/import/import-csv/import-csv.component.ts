@@ -66,7 +66,7 @@ export class ImportCSVComponent implements OnInit {
       };
     } else if (this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_ALC)) {
       this.dataSourceTypes = [
-        { displayName: 'AGRI-ALC', value: 'alc-csv' }
+        { displayName: 'ALC', value: 'alc-csv' }
       ];
 
       this.csvTypes = {
