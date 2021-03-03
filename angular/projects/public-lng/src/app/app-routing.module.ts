@@ -15,6 +15,7 @@ import { ComplianceResolver } from './project/compliance/compliance-resolver';
 import { AuthorizationsResolver } from './project/authorizations/authorizations-resolver';
 import { PlansResolver } from './project/plans/plans-resolver';
 import { NationsResolver } from './project/nations/nations-resolver';
+import { MapLayerInfoResolver } from './applications/applications.resolver';
 
 const routes: Routes = [
   {
@@ -57,7 +58,8 @@ const routes: Routes = [
   },
   {
     path: 'map',
-    component: ApplicationsComponent
+    component: ApplicationsComponent,
+    resolve: { data: MapLayerInfoResolver }
   },
   {
     path: 'faq',
@@ -84,7 +86,7 @@ const routes: Routes = [
       onSameUrlNavigation: 'reload'
     })
   ],
-  providers: [ComplianceResolver, AuthorizationsResolver, PlansResolver, NationsResolver],
+  providers: [ComplianceResolver, AuthorizationsResolver, PlansResolver, NationsResolver, MapLayerInfoResolver],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

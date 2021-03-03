@@ -27,15 +27,39 @@
   margin-bottom: 30px; // Offset so we can see the marker
 }
 
+.leaflet-popup.map-popup-content-fixed {
+  position: fixed;
+  bottom:auto !important ;
+  top: 4.5rem !important ;
+  left: auto !important ;
+  width: 350px !important;
+  right: 0.25rem !important ;
+  transform: none !important ;
+  padding: 0.5rem;
+  
+}
+
+.map-popup-content-fixed .leaflet-popup-tip-container{
+  display: none;
+
+}
 #map .popup-header {
   background-color: $primary6;
   color: white;
-  padding: 0.35rem;
+  padding: 0.5rem;
   border-radius: 0.5rem 0.5rem 0 0;
 }
 
 #map .popup-content {
   padding: 0.5rem;
+
+}
+
+.map-popup-content-fixed .popup-content{
+  border: 3px solid $primary6;
+  padding: 0.5rem;
+  border-radius: 0 0 0.5rem 0.5rem;
+  background-color: $gray1;
 }
 
 #map .popup-hr {
@@ -49,6 +73,11 @@
 
 #map .popup-subtitle {
   font-size: 1rem;
+  font-weight: bolder;
+}
+
+#map .popup-subtext {
+  font-size: 1rem;
 }
 
 #map .popup-button button {
@@ -57,6 +86,11 @@
   align-items: center;
   padding: 5px 10px;
   margin-left: 8.4rem;
+}
+
+#map .popup-desc {
+  max-height:40vh;
+  overflow: auto;
 }
 
 #map .popup-desc-title {
@@ -70,6 +104,20 @@
   color: $primary6;
 }
 
+#map .popup-date {
+  font-weight: 600;
+  color: $gray6;
+}
+
+#map .btn-popup {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    background-color: $gold;
+    color: $primary;
+    padding: 5px 10px;
+}
+
 .leaflet-popup-content-wrapper {
   padding: 0;
   border-radius: 0.5rem;
@@ -77,8 +125,8 @@
 
 .leaflet-popup-content {
   margin: 0;
-  width: 20rem !important;
-  overflow: hidden;
+  width: auto;
+  overflow: auto;
   line-height: 1.5;
 }
 
@@ -147,4 +195,26 @@ margin-bottom:10px;
   .leaflet-custom-minimap {
     display: none;
   }
+
+  .map-popup-content-fixed .leaflet-popup-content{
+    width: auto !important;
+  }
+
+  .leaflet-popup.map-popup-content-fixed {
+    bottom:auto !important ;
+    left: 1rem !important ;
+    right: 1rem !important ;
+    width: auto !important;
+  }
+
+  .leaflet-control-zoom{
+    display: none;
+  }
+
+  
+#map .popup-desc {
+  max-height:30vh;
+  overflow: auto;
+}
+
 }
