@@ -10,6 +10,7 @@ import 'jquery';
 
 import { Application } from '../../models/application';
 import { UrlService } from '../../services/url.service';
+import { LeafletMouseEvent } from 'leaflet';
 
 declare module 'leaflet' {
   // tslint:disable-next-line:interface-name
@@ -210,6 +211,26 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
       renderer: L.canvas({ tolerance: 15 })
     });
 
+    const PopupWrapper = L.Control.extend({
+      options: {
+        position: 'topright'
+      },
+
+      onAdd: function(map) {
+        this._mainMap = map;
+        this._container = L.DomUtil.create('div', 'popup-fixed');
+        L.DomEvent.disableClickPropagation(this._container);
+        L.DomEvent.on(this._container, 'mousewheel', L.DomEvent.stopPropagation);
+
+        return this._container;
+      },
+      addTo: function(map) {
+        L.Control.prototype.addTo.call(this, map);
+      }
+    });
+
+    this.map.createPane('fixed-popup-pane', this.map.getContainer());
+
     // identify when map has initialized with a view
     this.map.whenReady(() => (this.isMapReady = true));
 
@@ -259,6 +280,53 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
         'Kitimat M/S'
       ];
 
+      const pipelinePopup = popup => {
+        return `
+        <div class="popup-header">
+          <div class="popup-title">${popup.title}</div>
+          <div class="popup-subtitle">${popup.location}</div>
+          <div class="popup-subtitle">${popup.segmentlength}</div>
+        </div>
+        <div class="popup-content">
+          ${
+            popup.desc
+              ? `
+          <div class="popup-desc-title">Recent Updates:</div>
+          <div class="popup-desc">
+            ${popup.desc}
+          </div>
+          <hr class="popup-hr">
+          `
+              : ``
+          }
+          <div class="d-flex popup-date">
+            <span>Last updated ${popup.lastupdated}</span>
+          </div>
+        </div>
+      `;
+      };
+
+      const facilityPopup = popup => {
+        return `
+        <div class="popup-header">
+          <div class="popup-title">${popup.title}</div>
+          <div class="popup-subtitle">${popup.subtitle}</div>
+        </div>
+        <div class="popup-content">
+          <div class="popup-desc-title">${popup.descTitle}</div>
+          <div class="popup-desc">${popup.desc}</div>
+          <hr class="popup-hr">
+          <div class="popup-value d-flex flex-row-reverse">
+          <a href="${popup.routerLink}">
+            <button type="button" class="btn btn-popup" routerLink="${popup.routerLink}">
+              Go to Details
+            </button>
+          </a>
+          </div>
+        </div>
+      `;
+      };
+
       const pipelineEndpoints = [];
 
       layers.facility = L.geoJSON(data.facility, {
@@ -286,30 +354,58 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
           }
         },
         onEachFeature: (feature, featureLayer) => {
-          featureLayer.on('click', () => {
-            // Open project popup
-            layers.facilities.eachLayer((layer: any) => {
-              if (layer.feature.properties.LABEL === 'Wilde Lake M/S') {
-                layer.openPopup();
-              }
-            });
+          const popupOptions = {
+            pane: 'fixed-popup-pane',
+            className: 'map-popup-content-fixed',
+          };
+
+          const popup = L.popup(popupOptions);
+          popup.setContent(
+            pipelinePopup({
+              title: 'Segment ' + feature.properties.segment,
+              location: '(pipeline segment location)',
+              segmentlength: '(pipeline length) km',
+              desc: '',
+              lastupdated: Date()
+            })
+          );
+
+          featureLayer.bindPopup(popup);
+
+          // centre map on segment when clicked on
+          featureLayer.on('click', e=> {
+            // tell the compiler to consider 'e' a LeafletMouseEvent
+            this.map.panTo((e as LeafletMouseEvent).latlng);
+          })
+
+          // restyle segment when popup closes
+          featureLayer.on('popupclose', e => {
+            e.target.setStyle({ color: e.target.feature.properties.segment % 2 === 0 ? '#38598A' : '#3B99FC' });
           });
+
+          // highlight segment when mouseover
           featureLayer.on('mouseover', e => {
             e.target.setStyle({ color: '#00f6ff' });
             $('#gas-button').css('background', '#c4f9ff');
           });
+
+          // restyle segment on mousout unless there is a popup for that segment open
           featureLayer.on('mouseout', e => {
-            e.target.setStyle({ color: e.target.feature.properties.segment % 2 === 0 ? '#38598A' : '#3B99FC' });
+            if (!popup.isOpen()) {
+              e.target.setStyle({ color: e.target.feature.properties.segment % 2 === 0 ? '#38598A' : '#3B99FC' });
+            }
             $('#gas-button').css('background', '#ffffff');
           });
         }
-      }).bindTooltip(
-        (layer: any) => {
-          const p = layer.feature.properties;
-          return `Segment ${p.segment}`;
-        },
-        { direction: 'center', offset: tooltipOffset, sticky: true }
-      ).addTo(this.layersGroup);
+      })
+        .bindTooltip(
+          (layer: any) => {
+            const p = layer.feature.properties;
+            return `Segment ${p.segment}`;
+          },
+          { direction: 'center', offset: tooltipOffset, sticky: true }
+        )
+        .addTo(this.layersGroup);
 
       // Default marker style
       const markerOptions = {
@@ -322,56 +418,6 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
         fillOpacity: 1
       };
 
-      const gasPopup = `
-        <div class="popup-header">
-          <div class="popup-title">COASTAL GASLINK PIPELINE</div>
-          <div class="popup-subtitle">Coastal Gaslink Pipeline Ltd.</div>
-        </div>
-        <div class="popup-content">
-          <div class="popup-desc-title">Application Description</div>
-          <div class="popup-desc">
-            A 670-kilometer pipeline that will supply the LNG Canada export facility
-            with gas from northeastern British Columbia.
-          </div>
-          <hr class="popup-hr">
-          <div class="popup-value"></div>
-          <a href="/project/2">
-            <div class="popup-button">
-              <button type="button" class="btn btn-primary" routerLink="/project/2">
-                <i class="material-icons mr-1">image</i>
-                <i class="material-icons mr-1">menu</i>
-                <span>Go to Details</span>
-              </button>
-            </div>
-          </a>
-        </div>
-      `;
-
-      const lngPopup = `
-        <div class="popup-header">
-          <div class="popup-title">LNG CANADA</div>
-          <div class="popup-subtitle">LNG Canada</div>
-        </div>
-        <div class="popup-content">
-          <div class="popup-desc-title">Application Description</div>
-          <div class="popup-desc">
-            A large-scale natural gas processing and export facility located in Kitimat,
-            British Columbia. After natural gas is converted into a liquid form it will
-            be shipped to Asia and other markets.
-          </div>
-          <hr class="popup-hr">
-          <div class="popup-value"></div>
-          <a href="/project/1">
-            <div class="popup-button">
-              <button type="button" class="btn btn-primary" routerLink="/project/1">
-                <i class="material-icons mr-1">image</i>
-                <i class="material-icons mr-1">menu</i>
-                <span>Go to Details</span>
-              </button>
-            </div>
-          </a>
-        </div>
-      `;
       L.geoJSON(data.facilities, {
         pointToLayer: (geoJsonPoint, latlng) => {
           if (
@@ -394,7 +440,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
             // classes imported from other files do not currently work here
             html: `<span style="${segmentLabelStyle}">${index + 1}</span>`
           })
-      }).addTo(this.layersGroup);
+        }).addTo(this.layersGroup);
       });
 
       layers.facilities = L.geoJSON(data.facilities, {
@@ -402,20 +448,54 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
           return L.circleMarker(latlng, markerOptions);
         },
         onEachFeature: (feature, featureLayer: any) => {
-          // Remove the Meter Station for now
           const popupOptions = {
             className: 'map-popup-content',
             autoPanPaddingTopLeft: L.point(40, 220),
             autoPanPaddingBottomRight: L.point(40, 20)
           };
+
+          let popup = null;
+
+          if (feature.properties.LABEL === 'Wilde Lake M/S') {
+            popup = L.popup(popupOptions).setContent(
+              facilityPopup({
+                title: 'COASTAL GASLINK PIPELINE',
+                subtitle: 'Coastal Gasline Pipeline Ltd.',
+                descTitle: 'Application Description',
+                desc:
+                  'A 970-kilometre pipeline that will supply the LNG Canada export facility with gas from northeastern British Columbia.',
+                routerLink: '/project/2'
+              })
+            );
+          }
+          if (feature.properties.LABEL === 'Kitimat M/S') {
+            popup = L.popup(popupOptions).setContent(
+              facilityPopup({
+                title: 'LNG CANADA',
+                subtitle: 'LNG Canada',
+                descTitle: 'Application Description',
+                desc:
+                  'A large-scale natural gas processing and export facility located in Kitimat, British Columbia. After natural gas is converted into a liquid form it will be shipped to Asia and other markets.',
+                routerLink: '/project/1'
+              })
+            );
+          }
+          if (popup) {
+            featureLayer.bindPopup(popup);
+
+            featureLayer.on('click', e => {
+              if (popup) {
+                popup.openOn(this.map);
+              }
+            });
+          }
+
           switch (featureLayer.feature.properties.LABEL) {
             case 'Wilde Lake M/S': {
               featureLayer.setStyle({
                 radius: 8,
                 weight: 3
               });
-              const popup = L.popup(popupOptions).setContent(gasPopup);
-              featureLayer.bindPopup(popup);
               break;
             }
             case 'Kitimat M/S': {
@@ -425,26 +505,9 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
                 fillColor: '#a5ff82',
                 color: '#38598A'
               });
-              const popup = L.popup(popupOptions).setContent(lngPopup);
-              featureLayer.bindPopup(popup);
               break;
             }
           }
-
-          featureLayer.on('click', e => {
-            // Open project popup
-            if (
-              e.target.feature.properties.LABEL === 'Kitimat M/S' ||
-              e.target.feature.properties.LABEL === 'Wilde Lake M/S'
-            ) {
-              return;
-            }
-            layers.facilities.eachLayer((layer: any) => {
-              if (layer.feature.properties.LABEL === 'Wilde Lake M/S') {
-                layer.openPopup();
-              }
-            });
-          });
 
           featureLayer.on('mouseover', e => {
             e.target.setStyle({ color: '#00f6ff' }); // Highlight geo feature
@@ -466,12 +529,14 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
             }
           });
         }
-      }).bindTooltip(
-        (layer: any) => {
-          return layer.feature.properties.LABEL;
-        },
-        { direction: 'top', offset: tooltipOffset2 }
-      ).addTo(this.layersGroup);
+      })
+        .bindTooltip(
+          (layer: any) => {
+            return layer.feature.properties.LABEL;
+          },
+          { direction: 'top', offset: tooltipOffset2 }
+        )
+        .addTo(this.layersGroup);
 
       this.layersGroup.addTo(this.map);
     };
@@ -499,6 +564,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
       });
 
       this.map.addControl(new MiniMapWrapper());
+      this.map.addControl(new PopupWrapper());
     };
 
     // Add minimap. Modified from https://github.com/Norkart/Leaflet-MiniMap/
@@ -716,7 +782,9 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
       }
     });
     layers.pipeline.eachLayer((layer: any) => {
+      if (!layer.isPopupOpen()){
       layer.setStyle({ color: layer.feature.properties.segment % 2 === 0 ? '#38598A' : '#3B99FC' });
+      }
     });
   }
 
