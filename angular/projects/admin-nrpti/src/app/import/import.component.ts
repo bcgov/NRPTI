@@ -103,16 +103,11 @@ export class ImportComponent implements OnInit, OnDestroy {
   private disableSourceSystem() {
     if (
       this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_FLNRO) ||
-      this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_AGRI)
-      ) {
+      this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_FLNR_NRO) ||
+      this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_AGRI) ||
+      this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_ALC)
+    ) {
       this.showSourceSystem = false;
-    } else {
-      if (this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_ALC)) {
-        this.showSourceSystemEPIC = false;
-        this.showSourceSystemNRIS = true;
-        this.showSourceSystemCORE = false;
-        this.showSourceSystemBCOGC = false;
-      }
     }
   }
 

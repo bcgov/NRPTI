@@ -6,6 +6,7 @@ const ApplicationRoles = {
   ADMIN_BCMI: 'admin:bcmi',
   ADMIN_ENV_EPD: 'admin:env-epd',
   ADMIN_FLNRO: 'admin:flnro',
+  ADMIN_FLNR_NRO: 'admin:flnr-nro',
   ADMIN_LNG: 'admin:lng',
   ADMIN_NRCED: 'admin:nrced',
   ADMIN_WF: 'admin:wf',
@@ -25,10 +26,11 @@ exports.ApplicationAdminRoles = [
 exports.ApplicationLimitedAdminRoles = [
   ApplicationRoles.ADMIN_WF,
   ApplicationRoles.ADMIN_FLNRO,
+  ApplicationRoles.ADMIN_FLNR_NRO,
   ApplicationRoles.ADMIN_AGRI,
   ApplicationRoles.ADMIN_ENV_EPD,
   ApplicationRoles.ADMIN_ALC
-]
+];
 
 exports.KeycloakDefaultRoles = {
   OFFLINE_ACCESS: 'offline_access',
@@ -145,5 +147,14 @@ exports.AUTHORIZED_PUBLISH_AGENCIES = [
   'Conservation Officer Service',
   'Conservation Officer Service (COS)',
   'EAO',
-  'Environmental Protection Division',
+  'Environmental Protection Division'
 ];
+
+exports.CSV_SOURCE_DEFAULT_ROLES = {
+  'coors-csv': [ApplicationRoles.ADMIN_FLNRO],
+  'era-csv': [ApplicationRoles.ADMIN_FLNR_NRO],
+  'nris-flnr-csv': [ApplicationRoles.ADMIN_FLNR_NRO],
+  'agri-cmdb-csv': [ApplicationRoles.ADMIN_AGRI],
+  'agri-mis-csv': [ApplicationRoles.ADMIN_AGRI],
+  'alc-csv': [ApplicationRoles.ADMIN_ALC]
+};
