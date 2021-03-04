@@ -4,6 +4,7 @@ import { InspectionDetailComponent } from './inspection-detail.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivatedRouteStub } from '../../../../../../common/src/app/spec/spec-utils';
 import { GlobalModule } from 'nrpti-angular-components';
+import { ProjectLinkPipe } from '../../../pipes/project-link.pipe';
 
 describe('InspectionDetailComponent', () => {
   let component: InspectionDetailComponent;
@@ -15,7 +16,7 @@ describe('InspectionDetailComponent', () => {
   beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [GlobalModule],
-      declarations: [InspectionDetailComponent],
+      declarations: [InspectionDetailComponent, ProjectLinkPipe],
       providers: [
         { provide: ActivatedRoute, useValue: activedRouteStub },
         { provide: Router, useValue: mockRouter }
