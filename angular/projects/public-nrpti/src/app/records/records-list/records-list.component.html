@@ -69,6 +69,7 @@
           </div>
 
           <div class="col text-right">
+            <app-export-csv [queryParams]="queryParams" [totalRecords]="tableData.totalListItems"></app-export-csv>
             <div ngbDropdown class="d-inline-block">
               <button class="btn btn-primary sort-button" ngbDropdownToggle>
                 Sort List By: {{ sortingDisplay[tableData.sortBy] }}
