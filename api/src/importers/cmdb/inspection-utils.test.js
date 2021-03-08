@@ -27,7 +27,7 @@ describe('transformRecord', () => {
       },
       description: descriptionString,
       outcomeDescription: '',
-      sourceSystemRef: 'agri-cmdb',
+      sourceSystemRef: 'agri-cmdb-csv',
       issuingAgency: 'Ministry of Agriculture',
       legislation: {
         act: 'Fish and Seafood Act',
@@ -73,7 +73,7 @@ describe('transformRecord', () => {
       location: 'Test Region',
       outcomeDescription: 'Compliance issue(s) identified under the following acts or regulations: FSLR-s.34',
 
-      sourceSystemRef: 'agri-cmdb'
+      sourceSystemRef: 'agri-cmdb-csv'
     });
   });
 });

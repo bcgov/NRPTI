@@ -29,7 +29,7 @@ describe('BaseRecordUtils', () => {
         _schemaName: 'Inspection',
         recordType: 'Inspection',
 
-        sourceSystemRef: 'nro-inspections-csv'
+        sourceSystemRef: 'nris-flnr-csv'
       };
 
       const result = baseRecordUtils.transformRecord(csvRow);

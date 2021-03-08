@@ -8,6 +8,7 @@ export class Constants {
     ADMIN_BCMI: 'admin:bcmi',
     ADMIN_WF: 'admin:wf',
     ADMIN_FLNRO: 'admin:flnro',
+    ADMIN_FLNR_NRO: 'admin:flnr-nro',
     ADMIN_AGRI: 'admin:agri',
     ADMIN_ENV_EPD: 'admin:env-epd',
     ADMIN_ALC: 'admin:alc'
@@ -16,6 +17,7 @@ export class Constants {
   public static readonly ApplicationLimitedRoles: string[] = [
     Constants.ApplicationRoles.ADMIN_WF,
     Constants.ApplicationRoles.ADMIN_FLNRO,
+    Constants.ApplicationRoles.ADMIN_FLNR_NRO,
     Constants.ApplicationRoles.ADMIN_AGRI,
     Constants.ApplicationRoles.ADMIN_ENV_EPD,
     Constants.ApplicationRoles.ADMIN_ALC
@@ -63,6 +65,7 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_NRCED,
         Constants.ApplicationRoles.ADMIN_WF,
         Constants.ApplicationRoles.ADMIN_FLNRO,
+        Constants.ApplicationRoles.ADMIN_FLNR_NRO,
         Constants.ApplicationRoles.ADMIN_AGRI,
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ALC
@@ -71,6 +74,7 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_LNG,
         Constants.ApplicationRoles.ADMIN_WF,
         Constants.ApplicationRoles.ADMIN_FLNRO,
+        Constants.ApplicationRoles.ADMIN_FLNR_NRO,
         Constants.ApplicationRoles.ADMIN_AGRI,
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ALC
@@ -80,6 +84,7 @@ export class Constants {
       NRCED: [
         Constants.ApplicationRoles.ADMIN_NRCED,
         Constants.ApplicationRoles.ADMIN_FLNRO,
+        Constants.ApplicationRoles.ADMIN_FLNR_NRO,
         Constants.ApplicationRoles.ADMIN_AGRI,
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ALC
@@ -87,6 +92,7 @@ export class Constants {
       LNG: [
         Constants.ApplicationRoles.ADMIN_LNG,
         Constants.ApplicationRoles.ADMIN_FLNRO,
+        Constants.ApplicationRoles.ADMIN_FLNR_NRO,
         Constants.ApplicationRoles.ADMIN_AGRI,
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ALC
@@ -116,6 +122,7 @@ export class Constants {
       NRCED: [
         Constants.ApplicationRoles.ADMIN_NRCED,
         Constants.ApplicationRoles.ADMIN_FLNRO,
+        Constants.ApplicationRoles.ADMIN_FLNR_NRO,
         Constants.ApplicationRoles.ADMIN_AGRI,
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ALC
@@ -123,6 +130,7 @@ export class Constants {
       LNG: [
         Constants.ApplicationRoles.ADMIN_LNG,
         Constants.ApplicationRoles.ADMIN_FLNRO,
+        Constants.ApplicationRoles.ADMIN_FLNR_NRO,
         Constants.ApplicationRoles.ADMIN_AGRI,
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ALC
@@ -140,6 +148,7 @@ export class Constants {
       NRCED: [
         Constants.ApplicationRoles.ADMIN_NRCED,
         Constants.ApplicationRoles.ADMIN_FLNRO,
+        Constants.ApplicationRoles.ADMIN_FLNR_NRO,
         Constants.ApplicationRoles.ADMIN_AGRI,
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ALC
@@ -147,6 +156,7 @@ export class Constants {
       LNG: [
         Constants.ApplicationRoles.ADMIN_LNG,
         Constants.ApplicationRoles.ADMIN_FLNRO,
+        Constants.ApplicationRoles.ADMIN_FLNR_NRO,
         Constants.ApplicationRoles.ADMIN_AGRI,
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ALC
@@ -161,6 +171,7 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_NRCED,
         Constants.ApplicationRoles.ADMIN_WF,
         Constants.ApplicationRoles.ADMIN_FLNRO,
+        Constants.ApplicationRoles.ADMIN_FLNR_NRO,
         Constants.ApplicationRoles.ADMIN_AGRI,
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ALC
@@ -169,6 +180,7 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_LNG,
         Constants.ApplicationRoles.ADMIN_WF,
         Constants.ApplicationRoles.ADMIN_FLNRO,
+        Constants.ApplicationRoles.ADMIN_FLNR_NRO,
         Constants.ApplicationRoles.ADMIN_AGRI,
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ALC
@@ -182,6 +194,7 @@ export class Constants {
       NRCED: [
         Constants.ApplicationRoles.ADMIN_NRCED,
         Constants.ApplicationRoles.ADMIN_FLNRO,
+        Constants.ApplicationRoles.ADMIN_FLNR_NRO,
         Constants.ApplicationRoles.ADMIN_AGRI,
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ALC
@@ -189,6 +202,7 @@ export class Constants {
       LNG: [
         Constants.ApplicationRoles.ADMIN_LNG,
         Constants.ApplicationRoles.ADMIN_FLNRO,
+        Constants.ApplicationRoles.ADMIN_FLNR_NRO,
         Constants.ApplicationRoles.ADMIN_AGRI,
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ALC
@@ -206,6 +220,7 @@ export class Constants {
       NRCED: [
         Constants.ApplicationRoles.ADMIN_NRCED,
         Constants.ApplicationRoles.ADMIN_FLNRO,
+        Constants.ApplicationRoles.ADMIN_FLNR_NRO,
         Constants.ApplicationRoles.ADMIN_AGRI,
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ALC
@@ -213,6 +228,7 @@ export class Constants {
       LNG: [
         Constants.ApplicationRoles.ADMIN_LNG,
         Constants.ApplicationRoles.ADMIN_FLNRO,
+        Constants.ApplicationRoles.ADMIN_FLNR_NRO,
         Constants.ApplicationRoles.ADMIN_AGRI,
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ALC
@@ -222,6 +238,7 @@ export class Constants {
       NRCED: [
         Constants.ApplicationRoles.ADMIN_NRCED,
         Constants.ApplicationRoles.ADMIN_FLNRO,
+        Constants.ApplicationRoles.ADMIN_FLNR_NRO,
         Constants.ApplicationRoles.ADMIN_AGRI,
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ALC
@@ -229,6 +246,7 @@ export class Constants {
       LNG: [
         Constants.ApplicationRoles.ADMIN_LNG,
         Constants.ApplicationRoles.ADMIN_FLNRO,
+        Constants.ApplicationRoles.ADMIN_FLNR_NRO,
         Constants.ApplicationRoles.ADMIN_AGRI,
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ALC
@@ -241,9 +259,8 @@ export class Constants {
     [Constants.ApplicationRoles.ADMIN_FLNRO]: [
       'Ministry of Forests, Lands, Natural Resource Operations and Rural Development'
     ],
-    [Constants.ApplicationRoles.ADMIN_AGRI]: [
-      'Ministry of Agriculture'
-    ],
+    [Constants.ApplicationRoles.ADMIN_FLNR_NRO]: ['Natural Resource Officers'],
+    [Constants.ApplicationRoles.ADMIN_AGRI]: ['Ministry of Agriculture'],
     [Constants.ApplicationRoles.ADMIN_ENV_EPD]: ['Environmental Protection Division'],
     [Constants.ApplicationRoles.ADMIN_ALC]: [
       'Agriculture Land Commission'
