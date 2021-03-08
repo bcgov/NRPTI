@@ -30,7 +30,9 @@ export class ExportCsvComponent implements OnInit {
   ngOnInit() {}
 
   showButton(): boolean {
-    if (!this.queryParams) return false;
+    if (!this.queryParams) {
+      return false;
+    }
 
     const keys = Object.keys(RecordUtils.buildFilterParams(this.queryParams));
     return this.queryParams.keywords || keys.length || this.queryParams.activityType;

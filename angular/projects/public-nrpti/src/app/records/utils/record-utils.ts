@@ -50,15 +50,16 @@ export class RecordUtils {
    * Convert URL query params to API request params
    *
    * @static
-   * @param {any} params 
+   * @param {any} params
    * @returns {any} API request params
    * @memberof RecordUtils
    */
   static buildFilterParams(params: any): any {
     const filterParams = {};
 
-    if(!params)
+    if (!params) {
       return filterParams;
+    }
 
     if (params.dateRangeFromFilter) {
       filterParams['dateRangeFromFilterdateIssued'] = params.dateRangeFromFilter;
@@ -132,8 +133,11 @@ export class RecordUtils {
 
       const issuedTo = row['issuedTo'];
       if (issuedTo) {
-        if (issuedTo['type'] === 'Company') line.push(escapeCsvString(issuedTo['companyName']));
-        else line.push(escapeCsvString(issuedTo['fullName']));
+        if (issuedTo['type'] === 'Company') {
+          line.push(escapeCsvString(issuedTo['companyName']));
+        } else {
+          line.push(escapeCsvString(issuedTo['fullName']));
+        }
       } else {
         line.push('Unpublished');
       }
@@ -158,7 +162,9 @@ export class RecordUtils {
 
       const penalties = row['penalties'];
       let penaltiesString = '';
-      if (penalties) penaltiesString = penalties.map(penalty => new Penalty(penalty).buildPenaltyString()).join('; ');
+      if (penalties) {
+        penaltiesString = penalties.map(penalty => new Penalty(penalty).buildPenaltyString()).join('; ');
+      }
       line.push(escapeCsvString(penaltiesString));
 
       line.push(escapeCsvString(row['projectName']));
@@ -188,7 +194,9 @@ export class RecordUtils {
  * @param {any} csvField A single CSV field value
  */
 function escapeCsvString(csvField: any): string {
-  if (!csvField) return '';
+  if (!csvField) {
+    return '';
+  }
 
   let str = csvField.toString();
 
@@ -199,7 +207,9 @@ function escapeCsvString(csvField: any): string {
   str = str.replace(/\"/g, '""');
 
   // Escape commas
-  if (str.indexOf(',') > -1) str = `"${str}"`;
+  if (str.indexOf(',') > -1) {
+    str = `"${str}"`;
+  }
 
   return str;
 }
@@ -213,9 +223,9 @@ function escapeCsvString(csvField: any): string {
  * @param {string} text CSV file data
  */
 function download(filename: string, text: string): void {
-  var blob = new Blob([text], { type: 'text/plain' });
-  var url = window.URL.createObjectURL(blob);
-  var a = document.createElement('a');
+  const blob = new Blob([text], { type: 'text/plain' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
   a.href = url;
   a.download = filename;
   a.click();
