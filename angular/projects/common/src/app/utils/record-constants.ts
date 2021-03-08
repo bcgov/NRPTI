@@ -223,17 +223,20 @@ export class Picklists {
   };
 
   public static readonly sourceSystemRefPicklist = [
-    'agri-mis',
+    'agri-cmdb-csv',
+    'agri-mis-csv',
+    'alc-csv',
     'bcogc',
     'core',
     'coors-csv',
     'epic',
+    'era-csv',
     'lng-csv',
     'mem-admin',
     'nris-epd',
-    'nro-inspections-csv',
+    'nris-flnr-csv',
     'nrpti',
-    'ocers-csv',
+    'ocers-csv'
   ];
 
   public static readonly mineTypes = ['Coal', 'Metal', 'Industrial Mineral', 'Sand & Gravel'];
@@ -786,7 +789,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {string[]} sorted array of acts
    */
-  public static getAllActs = function (): string[] {
+  public static getAllActs = function(): string[] {
     return Object.keys(this.legislationActsMappedToRegulations).sort();
   };
 
@@ -797,7 +800,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {string[]} sorted array of regulations
    */
-  public static getAllRegulations = function (): string[] {
+  public static getAllRegulations = function(): string[] {
     const regulations = [];
 
     Object.keys(this.legislationActsMappedToRegulations).forEach(act =>
@@ -821,7 +824,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {{ [key: string]: string[] }}
    */
-  public static getLegislationRegulationsMappedToActs = function (): { [key: string]: string[] } {
+  public static getLegislationRegulationsMappedToActs = function(): { [key: string]: string[] } {
     const regulations = {};
 
     Object.keys(this.legislationActsMappedToRegulations).forEach(act =>
@@ -885,7 +888,7 @@ export class Picklists {
               description: 'Administrative penalty for determination of contravention'
             },
             d: {
-              description: 'Order for recovery of government\'s costs of fire control and other amounts',
+              description: "Order for recovery of government's costs of fire control and other amounts"
             }
           }
         },
@@ -901,7 +904,7 @@ export class Picklists {
               description: 'Administrative penalty in lieu of remediation costs'
             }
           }
-        },
+        }
       }
     },
     AdministrativeSanction: {
@@ -1927,7 +1930,7 @@ export class Picklists {
               description: 'Administrative penalty for determination of contravention'
             },
             d: {
-              description: 'Order for recovery of government\'s costs of fire control and other amounts',
+              description: "Order for recovery of government's costs of fire control and other amounts"
             }
           }
         },
@@ -3700,7 +3703,7 @@ export class Picklists {
         '6': {
           '1': {
             e: {
-              description: 'Import an animal transported in contravention of a foreign state\'s law'
+              description: "Import an animal transported in contravention of a foreign state's law"
             }
           },
           '2': {
@@ -4711,7 +4714,7 @@ export class Picklists {
    * @static
    * @returns {string} legislation description or null
    */
-  public static getLegislationDescription = function (recordType: string, legislation: Legislation): string {
+  public static getLegislationDescription = function(recordType: string, legislation: Legislation): string {
     if (!recordType || !legislation || !legislation.act || !legislation.section) {
       return null;
     }
@@ -4766,7 +4769,7 @@ export class Picklists {
    * @param {string[]} paths properties to descend, in order, through the object.
    * @returns the value found at the end of the path, or null
    */
-  public static traverseObject = function (obj: object, paths: string[]) {
+  public static traverseObject = function(obj: object, paths: string[]) {
     if (!obj || !paths || !paths.length) {
       return null;
     }

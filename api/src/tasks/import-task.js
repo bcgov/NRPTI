@@ -1,7 +1,7 @@
 'use strict';
 
 const defaultLog = require('../utils/logger')('import-task');
-const { SYSTEM_USER, ApplicationRoles } = require('../utils/constants/misc');
+const { SYSTEM_USER, CSV_SOURCE_DEFAULT_ROLES } = require('../utils/constants/misc');
 const queryActions = require('../utils/query-actions');
 const TaskAuditRecord = require('../utils/task-audit-record');
 const { getCsvRowsFromString } = require('../utils/helpers');
@@ -36,7 +36,7 @@ updateMaterializedView:
   taskType: import,
   materializedViewSubset: descriptionSummary
 }*/
-exports.protectedCreateTask = async function (args, res, next) {
+exports.protectedCreateTask = async function(args, res, next) {
   // validate request parameters
   if (!args.swagger.params.task || !args.swagger.params.task.value) {
     defaultLog.error('protectedCreateTask - missing required request body');
@@ -167,19 +167,10 @@ exports.createTask = async function(dataSourceType) {
  * @param {*} [recordType=null] specific record types to update (optional)
  */
 async function runTask(nrptiDataSource, auth_payload, params = null, recordTypes = null) {
-  const additionalReadRoles = [];
-
-  if(nrptiDataSource.dataSourceLabel == 'coors-csv' && params == 'Administrative Sanction'){
-    additionalReadRoles.push(ApplicationRoles.ADMIN_FLNRO)
-  }
-
-  if(nrptiDataSource.dataSourceLabel == 'cmdb-csv' && params == 'Inspection'){
-    additionalReadRoles.push(ApplicationRoles.ADMIN_AGRI)
-  }
-
-  if(nrptiDataSource.dataSourceLabel == 'mis-csv' && params == 'Inspection'){
-    additionalReadRoles.push(ApplicationRoles.ADMIN_AGRI)
-  }
+  // Set default read roles for business area (e.g. admin:flnro, admin:flnr-nro)
+  const additionalReadRoles = CSV_SOURCE_DEFAULT_ROLES[nrptiDataSource.dataSourceLabel]
+    ? CSV_SOURCE_DEFAULT_ROLES[nrptiDataSource.dataSourceLabel]
+    : [];
 
   const taskAuditRecord = new TaskAuditRecord(additionalReadRoles);
 
@@ -229,39 +220,39 @@ function getDataSourceConfig(dataSourceType) {
     };
   }
 
-  if (dataSourceType === 'flnr-csv') {
+  if (dataSourceType === 'nris-flnr-csv') {
     return {
-      dataSourceLabel: 'flnr-csv',
+      dataSourceLabel: 'nris-flnr-csv',
       dataSourceClass: require('../importers/flnr/datasource')
     };
   }
 
-  if (dataSourceType === 'mis-csv') {
+  if (dataSourceType === 'agri-mis-csv') {
     return {
-      dataSourceLabel: 'mis-csv',
+      dataSourceLabel: 'agri-mis-csv',
       dataSourceClass: require('../importers/mis/datasource')
-    }
+    };
   }
 
-  if (dataSourceType === 'cmdb-csv') {
+  if (dataSourceType === 'agri-cmdb-csv') {
     return {
-      dataSourceLabel: 'cmdb-csv',
+      dataSourceLabel: 'agri-cmdb-csv',
       dataSourceClass: require('../importers/cmdb/datasource')
-    }
+    };
   }
 
   if (dataSourceType === 'alc-csv') {
     return {
       dataSourceLabel: 'alc-csv',
       dataSourceClass: require('../importers/alc/datasource')
-    }
+    };
   }
 
   if (dataSourceType === 'era-csv') {
     return {
       dataSourceLabel: 'era-csv',
       dataSourceClass: require('../importers/era/datasource')
-    }
+    };
   }
 
   // dataSourceType will match the name of a directory for the given

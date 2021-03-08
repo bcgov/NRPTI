@@ -23,7 +23,7 @@ describe('transformRecord', () => {
       dateIssued: null,
       issuedTo: { dateOfBirth: null, firstName: '', lastName: '', middleName: '', type: 'Individual', companyName: '' },
       description: '-',
-      sourceSystemRef: 'nro-inspections-csv',
+      sourceSystemRef: 'nris-flnr-csv',
       issuingAgency: 'Natural Resource Officers',
       legislation: null,
       legislationDescription: 'Inspection to verify compliance with regulatory requirement',
@@ -71,7 +71,7 @@ describe('transformRecord', () => {
       _epicProjectId: ObjectID('588511d0aaecd9001b826192'),
       centroid: [-125, 50],
 
-      sourceSystemRef: 'nro-inspections-csv'
+      sourceSystemRef: 'nris-flnr-csv'
     });
   });
 });

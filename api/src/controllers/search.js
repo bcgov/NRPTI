@@ -273,7 +273,7 @@ const issuedToRedaction = function(roles) {
     $and: [
       { $eq: ['$skipRedact', false] },
       { $lt: ['$issuedToAge', 19] },
-      { $in: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, ['nrpti', 'nro-inspections-csv']] }
+      { $in: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, ['nrpti', 'nris-flnr-csv']] }
     ]
   };
 
