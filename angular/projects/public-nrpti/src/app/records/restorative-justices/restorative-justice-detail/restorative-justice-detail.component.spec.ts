@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ActivatedRouteStub } from '../../../../../../common/src/app/spec/spec-utils';
 import { GlobalModule } from 'nrpti-angular-components';
 import { CommonModule } from '../../../../../../common/src/app/common.module';
+import { ProjectLinkPipe } from '../../../pipes/project-link.pipe';
 
 describe('RestorativeJusticeDetailComponent', () => {
   let component: RestorativeJusticeDetailComponent;
@@ -16,7 +17,7 @@ describe('RestorativeJusticeDetailComponent', () => {
   beforeEach((() => {
     TestBed.configureTestingModule({
       imports: [GlobalModule, CommonModule],
-      declarations: [RestorativeJusticeDetailComponent],
+      declarations: [RestorativeJusticeDetailComponent, ProjectLinkPipe],
       providers: [
         { provide: ActivatedRoute, useValue: activedRouteStub },
         { provide: Router, useValue: mockRouter }

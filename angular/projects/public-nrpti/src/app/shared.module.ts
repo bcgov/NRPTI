@@ -13,6 +13,7 @@ import { OrderByPipe } from './pipes/order-by.pipe';
 import { NewlinesPipe } from './pipes/newlines.pipe';
 import { ObjectFilterPipe } from './pipes/object-filter.pipe';
 import { LinkifyPipe } from './pipes/linkify.pipe';
+import { ProjectLinkPipe } from './pipes/project-link.pipe';
 
 @NgModule({
   imports: [
@@ -24,7 +25,7 @@ import { LinkifyPipe } from './pipes/linkify.pipe';
     MatSelectModule,
     MatTooltipModule
   ],
-  declarations: [OrderByPipe, NewlinesPipe, ObjectFilterPipe, LinkifyPipe],
+  declarations: [OrderByPipe, NewlinesPipe, ObjectFilterPipe, LinkifyPipe, ProjectLinkPipe],
   exports: [
     MatSlideToggleModule,
     MatSnackBarModule,
@@ -34,7 +35,8 @@ import { LinkifyPipe } from './pipes/linkify.pipe';
     MatTooltipModule,
     OrderByPipe,
     NewlinesPipe,
-    LinkifyPipe
+    LinkifyPipe,
+    ProjectLinkPipe
   ]
 })
 export class SharedModule {}

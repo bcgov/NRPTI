@@ -80,7 +80,7 @@
         <div class="grid-section section-3">
           <div class="grid-item__row">
             <label class="grid-item-name">Site/Project</label>
-            <span class="grid-item-value__col">{{ (data && data.projectName) || '-' }}</span>
+            <span class="grid-item-value__col" [innerHtml]="(data && data.projectName) || '-' | projectLink"></span>
           </div>
           <div class="grid-item__row">
             <label class="grid-item-name">Location Description</label>
