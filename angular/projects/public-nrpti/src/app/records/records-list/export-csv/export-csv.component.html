@@ -1,12 +1,12 @@
 <button *ngIf="showButton()" class="btn btn-primary export-button" (click)="exportCsv()" [disabled]="downloading">
   <span *ngIf="!downloading">
-    <i class="align-middle material-icons">
+    <em class="align-middle material-icons">
       file_download
-    </i>
+    </em>
     Export to CSV
   </span>
 
-  <i *ngIf="downloading" class="align-middle material-icons rotate">
+  <em *ngIf="downloading" class="align-middle material-icons rotate">
     autorenew
-  </i>
+  </em>
 </button>
