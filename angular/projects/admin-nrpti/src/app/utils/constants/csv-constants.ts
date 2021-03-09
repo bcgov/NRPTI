@@ -432,7 +432,7 @@ export class CsvConstants {
    * @type {IDateField[]}
    * @memberof CsvConstants
    */
-  public static readonly cmdbInspectionsCsvDateFields: IDateField[] = [{ field: 'Date', format: 'MM/DD/YYYY' }];
+  public static readonly cmdbInspectionsCsvDateFields: IDateField[] = [{ field: 'Date Issued', format: 'MM/DD/YYYY' }];
 
   /**
    * Get the array of required csv headers for the provided dataSourceType and recordType.
