@@ -106,8 +106,7 @@ export class LngMapInfoComponent implements OnInit, OnDestroy {
 
     if (
       !this.mapForm.get('location').value ||
-      !this.mapForm.get('length').value ||
-      !this.mapForm.get('recentUpdates').value
+      !this.mapForm.get('length').value
     ) {
       alert('Please ensure your updates to the Section info are complete');
       this.loadingScreenService.setLoadingState(false, 'main');

@@ -51,12 +51,6 @@ export class CommunicationsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
       this.commPackage = res.communicationsPackage.COMMUNICATIONS;
-      // if (res && res.lngMapData && res.lngMapData[0] && res.lngMapData[0].data) {
-      //   this.lngMapInfo = res.lngMapData[0].data.searchResults;
-      // } else {
-      //   alert('Error: could not load LNG Map data');
-      // }
-
       this.selectedApplication = this.route.snapshot.params.application.toUpperCase();
       this.buildForm();
     });
