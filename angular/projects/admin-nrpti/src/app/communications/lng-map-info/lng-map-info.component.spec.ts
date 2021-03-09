@@ -6,13 +6,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KeycloakService } from '../../services/keycloak.service';
 
 import { LngMapInfoComponent } from './lng-map-info.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { ActivatedRouteStub } from '../../../../../common/src/app/spec/spec-utils';
 
 describe('LngMapInfoComponent', () => {
   let component: LngMapInfoComponent;
   let fixture: ComponentFixture<LngMapInfoComponent>;
 
-  const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
+  const mockActivatedRoute = new ActivatedRouteStub();
   const mockFactoryService = jasmine.createSpyObj('FactoryService', [
     'updateMapLayerInfo',
     'userInRole',
@@ -37,7 +38,7 @@ describe('LngMapInfoComponent', () => {
       ],
       declarations: [ LngMapInfoComponent ],
       providers: [
-        { provide: Router, useValue: mockRouter },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute},
         { provide: KeycloakService, useValue: mockKeycloakService},
         { provide: FactoryService, useValue: mockFactoryService },
         { provide: LoadingScreenService, useValue: mockLoadingScreenService }

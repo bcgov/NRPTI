@@ -3,8 +3,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { FactoryService } from '../../services/factory.service';
 import { LoadingScreenService } from 'nrpti-angular-components';
 import { Constants } from '../../utils/constants/misc';
-// import { MapInfo } from './../../../../../common/src/app/models/master/common-models/map-info';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 @Component({
@@ -13,7 +12,6 @@ import { Subject } from 'rxjs';
   styleUrls: ['./lng-map-info.component.scss']
 })
 export class LngMapInfoComponent implements OnInit, OnDestroy {
-  // @Input() lngMapData: MapInfo[] = [];
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
@@ -38,14 +36,12 @@ export class LngMapInfoComponent implements OnInit, OnDestroy {
 
   constructor(
     public route: ActivatedRoute,
-    public router: Router,
     private factoryService: FactoryService,
     private loadingScreenService: LoadingScreenService,
     private _changeDetectionRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
-    this.router.onSameUrlNavigation = 'reload';
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
       if (res && res.lngMapData && res.lngMapData[0] && res.lngMapData[0].data) {
         this.lngMapData = res.lngMapData[0].data.searchResults;
@@ -130,6 +126,7 @@ export class LngMapInfoComponent implements OnInit, OnDestroy {
     if (!res || !res._id) {
       alert('Failed to update the LNG Section');
     } else {
+      // success - make sure currentSection is update so cancel restores the correct data
       this.currentSection.sectionNumber = this.mapForm.controls.sectionNumber.value;
       this.currentSection.location = this.mapForm.controls.location.value;
       this.currentSection.length = this.mapForm.controls.length.value;
