@@ -1,6 +1,16 @@
-import { Component, AfterViewInit, OnDestroy, Input, Output, EventEmitter, ElementRef } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  OnDestroy,
+  Input,
+  Output,
+  EventEmitter,
+  ElementRef,
+  OnInit,
+  ChangeDetectorRef
+} from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, takeWhile } from 'rxjs/operators';
 // import { takeUntil, map } from 'rxjs/operators';
 import 'leaflet';
 import 'leaflet.markercluster';
@@ -11,6 +21,8 @@ import 'jquery';
 import { Application } from '../../models/application';
 import { UrlService } from '../../services/url.service';
 import { LeafletMouseEvent } from 'leaflet';
+import { MapLayerInfoService } from '../../services/mapLayerInfo.service';
+import { SearchResult } from 'nrpti-angular-components';
 
 declare module 'leaflet' {
   // tslint:disable-next-line:interface-name
@@ -70,7 +82,7 @@ const markerIconLg = L.icon({
   templateUrl: './app-map.component.html',
   styleUrls: ['./app-map.component.scss']
 })
-export class AppMapComponent implements AfterViewInit, OnDestroy {
+export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() isLoading: boolean; // from applications component
   @Input() applications: Application[] = []; // from applications component
   @Input() isMapVisible: Application[] = []; // from applications component
@@ -94,6 +106,10 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
   private minimapCenter = [54.014438, -128.682595];
   private minimapZoom = 12;
 
+  private records = null;
+  private alive = true;
+  public loading = true;
+
   private mapBaseLayerName = 'World Topographic';
 
   readonly defaultBounds = L.latLngBounds([53.6, -129.5], [56.1, -120]); // all of BC
@@ -101,9 +117,22 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
   constructor(
     // private appRef: ApplicationRef,
     private elementRef: ElementRef,
-    public urlService: UrlService
+    private mapLayerInfoService: MapLayerInfoService,
+    public urlService: UrlService,
+    private _changeDetectionRef: ChangeDetectorRef
   ) {
     this.urlService.onNavEnd$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {});
+  }
+
+  ngOnInit() {
+    this.mapLayerInfoService
+      .getValue()
+      .pipe(takeWhile(() => this.alive))
+      .subscribe((searchResult: SearchResult) => {
+        this.records = searchResult.data;
+        this.loading = false;
+        this._changeDetectionRef.detectChanges();
+      });
   }
 
   // for creating custom cluster icon
@@ -284,10 +313,13 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
         return `
         <div class="popup-header">
           <div class="popup-title">${popup.title}</div>
-          <div class="popup-subtitle">${popup.location}</div>
-          <div class="popup-subtitle">${popup.segmentlength}</div>
-        </div>
-        <div class="popup-content">
+         </div>
+         <div class="popup-content">
+          <div class="popup-subtitle">Location: </div>          
+          <div class="popup-subtext">${popup.location}</div>
+          <div class="popup-subtitle">Length: </div>          
+          <div class="popup-subtext">${popup.segmentlength}</div>
+         <hr class="popup-hr">
           ${
             popup.desc
               ? `
@@ -310,7 +342,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
         return `
         <div class="popup-header">
           <div class="popup-title">${popup.title}</div>
-          <div class="popup-subtitle">${popup.subtitle}</div>
+          <div class="popup-length">${popup.subtitle}</div>
         </div>
         <div class="popup-content">
           <div class="popup-desc-title">${popup.descTitle}</div>
@@ -356,27 +388,67 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
         onEachFeature: (feature, featureLayer) => {
           const popupOptions = {
             pane: 'fixed-popup-pane',
-            className: 'map-popup-content-fixed',
+            className: 'map-popup-content-fixed'
           };
+
+          const section = {
+            segment: 'Pipeline Section',
+            location: 'British Columbia',
+            length: '',
+            desc: '',
+            lastUpdated: Date()
+          };
+
+          let index = null;
+          this.records.forEach(record => {
+            if (record.segment === 'Section ' + feature.properties.segment) {
+              index = record;
+              return;
+            }
+          });
+
+          if (index) {
+            if (index.segment) {
+              section.segment = index.segment;
+            }
+            if (index.location) {
+              section.location = index.location;
+            }
+            if (index.length) {
+              section.length = index.length;
+            }
+            if (index.description) {
+              section.desc = index.description;
+            }
+            if (index.dateUpdated) {
+              section.lastUpdated = new Date(index.dateUpdated).toDateString();
+            } else {
+              if (index.dateAdded) {
+                section.lastUpdated = new Date(index.dateAdded).toDateString();
+              }
+            }
+          }
 
           const popup = L.popup(popupOptions);
           popup.setContent(
             pipelinePopup({
-              title: 'Segment ' + feature.properties.segment,
-              location: '(pipeline segment location)',
-              segmentlength: '(pipeline length) km',
-              desc: '',
-              lastupdated: Date()
+              title: section.segment,
+              location: section.location,
+              segmentlength: section.length,
+              desc: section.desc,
+              lastupdated: section.lastUpdated
             })
           );
 
-          featureLayer.bindPopup(popup);
+          featureLayer.bindPopup(popup, {
+            maxWidth: 350,            
+          });
 
           // centre map on segment when clicked on
-          featureLayer.on('click', e=> {
+          featureLayer.on('click', e => {
             // tell the compiler to consider 'e' a LeafletMouseEvent
             this.map.panTo((e as LeafletMouseEvent).latlng);
-          })
+          });
 
           // restyle segment when popup closes
           featureLayer.on('popupclose', e => {
@@ -389,7 +461,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
             $('#gas-button').css('background', '#c4f9ff');
           });
 
-          // restyle segment on mousout unless there is a popup for that segment open
+          // restyle segment on mouseout unless there is a popup for that segment open
           featureLayer.on('mouseout', e => {
             if (!popup.isOpen()) {
               e.target.setStyle({ color: e.target.feature.properties.segment % 2 === 0 ? '#38598A' : '#3B99FC' });
@@ -782,8 +854,8 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
       }
     });
     layers.pipeline.eachLayer((layer: any) => {
-      if (!layer.isPopupOpen()){
-      layer.setStyle({ color: layer.feature.properties.segment % 2 === 0 ? '#38598A' : '#3B99FC' });
+      if (!layer.isPopupOpen()) {
+        layer.setStyle({ color: layer.feature.properties.segment % 2 === 0 ? '#38598A' : '#3B99FC' });
       }
     });
   }
@@ -807,6 +879,7 @@ export class AppMapComponent implements AfterViewInit, OnDestroy {
     }
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+    this.alive = false;
   }
 
   /**
