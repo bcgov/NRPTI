@@ -7,6 +7,30 @@ import { ITaskParams } from '../../services/task.service';
 import { CsvConstants, IRequiredFormat, IDateField } from '../../utils/constants/csv-constants';
 import { Constants } from '../../utils/constants/misc';
 
+const DEFAULT_DATA_SOURCES = [
+  { displayName: 'ALC', value: 'alc-csv' },
+  { displayName: 'AGRI-CMDB', value: 'agri-cmdb-csv' },
+  { displayName: 'AGRI-MIS', value: 'agri-mis-csv' },
+  { displayName: 'COORS', value: 'coors-csv' },
+  { displayName: 'NRIS-FLNR', value: 'nris-flnr-csv' },
+  { displayName: 'NRO-ERA', value: 'era-csv' }
+];
+
+const DEFAULT_CSV_TYPES = {
+  'coors-csv': ['Administrative Sanction', 'Court Conviction', 'Ticket'],
+  'nris-flnr-csv': ['Inspection'],
+  'agri-mis-csv': ['Inspection'],
+  'agri-cmdb-csv': ['Inspection'],
+  'alc-csv': ['Inspection'],
+  'era-csv': ['Ticket']
+};
+
+const ROLE_DATA_SOURCES = {
+  [Constants.ApplicationRoles.ADMIN_FLNRO]: ['coors-csv'],
+  [Constants.ApplicationRoles.ADMIN_FLNR_NRO]: ['era-csv', 'nris-flnr-csv'],
+  [Constants.ApplicationRoles.ADMIN_AGRI]: ['agri-cmdb-csv', 'agri-mis-csv'],
+  [Constants.ApplicationRoles.ADMIN_ALC]: ['alc-csv']
+};
 
 @Component({
   selector: 'app-import-csv',
@@ -14,23 +38,8 @@ import { Constants } from '../../utils/constants/misc';
   styleUrls: ['./import-csv.component.scss']
 })
 export class ImportCSVComponent implements OnInit {
-  public dataSourceTypes = [
-    { displayName: 'ALC', value: 'alc-csv' },
-    { displayName: 'AGRI-CMDB', value: 'cmdb-csv' },
-    { displayName: 'AGRI-MIS', value: 'mis-csv' },
-    { displayName: 'COORS', value: 'coors-csv' },
-    { displayName: 'NRIS-FLNR', value: 'flnr-csv' },
-    { displayName: 'NRO-ERA', value: 'era-csv' }
-  ];
-
-  public csvTypes: any = {
-    'coors-csv': ['Administrative Sanction', 'Court Conviction', 'Ticket'],
-    'flnr-csv': ['Inspection'],
-    'mis-csv': ['Inspection'],
-    'cmdb-csv': ['Inspection'],
-    'alc-csv': ['Inspection'],
-    'era-csv': ['Ticket']
-  };
+  public dataSourceTypes = DEFAULT_DATA_SOURCES;
+  public csvTypes: any = DEFAULT_CSV_TYPES;
 
   public dataSourceType = null;
   public recordType = null;
@@ -45,33 +54,16 @@ export class ImportCSVComponent implements OnInit {
   constructor(public factoryService: FactoryService) {}
 
   ngOnInit() {
-    // Only show COORS AMP for admin:flnro
-    if (this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_FLNRO)) {
-      this.dataSourceTypes = [
-        { displayName: 'COORS', value: 'coors-csv' }
-      ];
+    // Override the default CSV Source selection for limited admin role users
+    // It is okay to allow access to all record types for each data source
+    for (const role of Constants.ApplicationLimitedRoles) {
+      if (this.factoryService.userOnlyInLimitedRole(role)) {
+        this.dataSourceTypes = DEFAULT_DATA_SOURCES.filter(source => {
+          return ROLE_DATA_SOURCES[role].includes(source.value);
+        });
 
-      this.csvTypes = {
-        'coors-csv': ['Administrative Sanction']
-      };
-    } else if (this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_AGRI)) {
-      this.dataSourceTypes = [
-        { displayName: 'AGRI-CMDB', value: 'cmdb-csv' },
-        { displayName: 'AGRI-MIS', value: 'mis-csv' }
-      ];
-
-      this.csvTypes = {
-        'cmdb-csv': ['Inspection'],
-        'mis-csv': ['Inspection']
-      };
-    } else if (this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_ALC)) {
-      this.dataSourceTypes = [
-        { displayName: 'ALC', value: 'alc-csv' }
-      ];
-
-      this.csvTypes = {
-        'alc-csv': ['Inspection']
-      };
+        break;
+      }
     }
   }
 

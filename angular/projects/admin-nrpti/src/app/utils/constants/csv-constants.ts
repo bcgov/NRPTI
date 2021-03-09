@@ -432,7 +432,7 @@ export class CsvConstants {
    * @type {IDateField[]}
    * @memberof CsvConstants
    */
-  public static readonly cmdbInspectionsCsvDateFields: IDateField[] = [{ field: 'Date', format: 'MM/DD/YYYY' }];
+  public static readonly cmdbInspectionsCsvDateFields: IDateField[] = [{ field: 'Date Issued', format: 'MM/DD/YYYY' }];
 
   /**
    * Get the array of required csv headers for the provided dataSourceType and recordType.
@@ -466,19 +466,19 @@ export class CsvConstants {
       }
     }
 
-    if (dataSourceType === 'flnr-csv') {
+    if (dataSourceType === 'nris-flnr-csv') {
       if (recordType === 'Inspection') {
         return this.flnrInspectionCsvRequiredHeaders;
       }
     }
 
-    if (dataSourceType === 'mis-csv') {
+    if (dataSourceType === 'agri-mis-csv') {
       if (recordType === 'Inspection') {
         return this.misInspectionCsvRequiredHeaders;
       }
     }
 
-    if (dataSourceType === 'cmdb-csv') {
+    if (dataSourceType === 'agri-cmdb-csv') {
       if (recordType === 'Inspection') {
         return this.cmdbInspectionCsvRequiredHeaders;
       }
@@ -531,19 +531,19 @@ export class CsvConstants {
       }
     }
 
-    if (dataSourceType === 'flnr-csv') {
+    if (dataSourceType === 'nris-flnr-csv') {
       if (recordType === 'Inspection') {
-        return this.flnrInspectionCsvRequiredHeaders;
+        return this.flnrInspectionCsvRequiredFields;
       }
     }
 
-    if (dataSourceType === 'mis-csv') {
+    if (dataSourceType === 'agri-mis-csv') {
       if (recordType === 'Inspection') {
         return this.misInspectionCsvRequiredFields;
       }
     }
 
-    if (dataSourceType === 'cmdb-csv') {
+    if (dataSourceType === 'agri-cmdb-csv') {
       if (recordType === 'Inspection') {
         return this.cmdbInspectionCsvRequiredFields;
       }
@@ -596,19 +596,19 @@ export class CsvConstants {
       }
     }
 
-    if (dataSourceType === 'flnr-csv') {
+    if (dataSourceType === 'nris-flnr-csv') {
       if (recordType === 'Inspection') {
         return this.flnrInspectionCsvRequiredFormats;
       }
     }
 
-    if (dataSourceType === 'mis-csv') {
+    if (dataSourceType === 'agri-mis-csv') {
       if (recordType === 'Inspection') {
         return this.misInspectionsCsvRequiredFormats;
       }
     }
 
-    if (dataSourceType === 'cmdb-csv') {
+    if (dataSourceType === 'agri-cmdb-csv') {
       if (recordType === 'Inspection') {
         return this.cmdbInspectionsCsvRequiredFormats;
       }
@@ -661,19 +661,19 @@ export class CsvConstants {
       }
     }
 
-    if (dataSourceType === 'flnr-csv') {
+    if (dataSourceType === 'nris-flnr-csv') {
       if (recordType === 'Inspection') {
         return this.flnrInspectionCsvDateFields;
       }
     }
 
-    if (dataSourceType === 'mis-csv') {
+    if (dataSourceType === 'agri-mis-csv') {
       if (recordType === 'Inspection') {
         return this.misInspectionsCsvDateFields;
       }
     }
 
-    if (dataSourceType === 'cmdb-csv') {
+    if (dataSourceType === 'agri-cmdb-csv') {
       if (recordType === 'Inspection') {
         return this.cmdbInspectionsCsvDateFields;
       }
