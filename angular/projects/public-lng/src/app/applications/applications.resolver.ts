@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import 'rxjs/add/observable/forkJoin';
-import { MapLayerInfoService } from '../services/mapLayerInfo.service';
+import { MapLayerInfoService } from '../services/map-layer-info.service';
 import { ApiService } from '../services/api';
 
 @Injectable()

@@ -21,7 +21,7 @@ import 'jquery';
 import { Application } from '../../models/application';
 import { UrlService } from '../../services/url.service';
 import { LeafletMouseEvent } from 'leaflet';
-import { MapLayerInfoService } from '../../services/mapLayerInfo.service';
+import { MapLayerInfoService } from '../../services/map-layer-info.service';
 import { SearchResult } from 'nrpti-angular-components';
 
 declare module 'leaflet' {
@@ -315,9 +315,9 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
           <div class="popup-title">${popup.title}</div>
          </div>
          <div class="popup-content">
-          <div class="popup-subtitle">Location: </div>          
+          <div class="popup-subtitle">Location: </div>
           <div class="popup-subtext">${popup.location}</div>
-          <div class="popup-subtitle">Length: </div>          
+          <div class="popup-subtitle">Length: </div>
           <div class="popup-subtext">${popup.segmentlength}</div>
          <hr class="popup-hr">
           ${
@@ -329,7 +329,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
           </div>
           <hr class="popup-hr">
           `
-              : ``
+              : ''
           }
           <div class="d-flex popup-date">
             <span>Last updated ${popup.lastupdated}</span>
@@ -441,7 +441,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
           );
 
           featureLayer.bindPopup(popup, {
-            maxWidth: 350,            
+            maxWidth: 350,
           });
 
           // centre map on segment when clicked on
