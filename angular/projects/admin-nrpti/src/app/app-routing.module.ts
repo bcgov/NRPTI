@@ -51,7 +51,6 @@ const routes: Routes = [
     children: [
       {
         path: ':application',
-        runGuardsAndResolvers: 'always',
         data: {
           breadcrumb: null
         },

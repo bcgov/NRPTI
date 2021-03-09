@@ -1,21 +1,26 @@
-import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { FactoryService } from '../../services/factory.service';
 import { LoadingScreenService } from 'nrpti-angular-components';
 import { Constants } from '../../utils/constants/misc';
-import { MapInfo } from './../../../../../common/src/app/models/master/common-models/map-info';
-import { Router } from '@angular/router';
+// import { MapInfo } from './../../../../../common/src/app/models/master/common-models/map-info';
+import { ActivatedRoute, Router } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'app-lng-map-info',
   templateUrl: './lng-map-info.component.html',
   styleUrls: ['./lng-map-info.component.scss']
 })
-export class LngMapInfoComponent implements OnInit {
-  @Input() lngMapData: MapInfo[] = [];
+export class LngMapInfoComponent implements OnInit, OnDestroy {
+  // @Input() lngMapData: MapInfo[] = [];
+
+  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   public loading = true;
   public mapForm: FormGroup;
   public currentSection = null;
+  public lngMapData = [];
 
   public sections = Constants.LngSectionPickList;
 
@@ -32,6 +37,7 @@ export class LngMapInfoComponent implements OnInit {
   };
 
   constructor(
+    public route: ActivatedRoute,
     public router: Router,
     private factoryService: FactoryService,
     private loadingScreenService: LoadingScreenService,
@@ -39,6 +45,14 @@ export class LngMapInfoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.router.onSameUrlNavigation = 'reload';
+    this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
+      if (res && res.lngMapData && res.lngMapData[0] && res.lngMapData[0].data) {
+        this.lngMapData = res.lngMapData[0].data.searchResults;
+      } else {
+        alert('Error: could not load LNG Map data');
+      }
+    });
     this.currentSection = this.lngMapData[0];
     this.buildForm();
   }
@@ -100,6 +114,8 @@ export class LngMapInfoComponent implements OnInit {
       !this.mapForm.get('recentUpdates').value
     ) {
       alert('Please ensure your updates to the Section info are complete');
+      this.loadingScreenService.setLoadingState(false, 'main');
+      return;
     }
 
     const mapInfo = {};
@@ -114,10 +130,12 @@ export class LngMapInfoComponent implements OnInit {
     if (!res || !res._id) {
       alert('Failed to update the LNG Section');
     } else {
+      this.currentSection.sectionNumber = this.mapForm.controls.sectionNumber.value;
+      this.currentSection.location = this.mapForm.controls.location.value;
+      this.currentSection.length = this.mapForm.controls.length.value;
+      this.currentSection.description = this.mapForm.controls.recentUpdates.value;
       this.loadingScreenService.setLoadingState(false, 'main');
     }
-
-    this.router.navigate(['communications', 'LNG']);
   }
 
   async cancel() {
@@ -126,4 +144,8 @@ export class LngMapInfoComponent implements OnInit {
     this._changeDetectionRef.detectChanges();
   }
 
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
 }
