@@ -1,6 +1,7 @@
 'use strict';
 
 const app = require('express')();
+const compression = require('compression')
 const fs = require('fs');
 const swaggerTools = require('swagger-tools');
 const YAML = require('yamljs');
@@ -20,6 +21,9 @@ const DB_CONNECTION =
   (process.env.MONGODB_DATABASE || 'nrpti-dev');
 const DB_USERNAME = process.env.MONGODB_USERNAME || '';
 const DB_PASSWORD = process.env.MONGODB_PASSWORD || '';
+
+// Enable response compression
+app.use(compression());
 
 // Increase post body sizing
 app.use(bodyParser.json({ limit: '25mb', extended: true }));

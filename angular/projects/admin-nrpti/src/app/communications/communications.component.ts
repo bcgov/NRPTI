@@ -1,9 +1,11 @@
+import { LngMapInfoComponent } from './lng-map-info/lng-map-info.component';
 import { Component, OnInit, OnDestroy, ViewChild, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { FormGroup, FormControl } from '@angular/forms';
 import { CommunicationsPackage } from '../../../../common/src/app/models/master/common-models/communications-package';
+import { MapInfo } from './../../../../common/src/app/models/master/common-models/map-info';
 import { FactoryService } from '../services/factory.service';
 import { DatePickerComponent, LoadingScreenService, Utils } from 'nrpti-angular-components';
 
@@ -14,13 +16,16 @@ import { DatePickerComponent, LoadingScreenService, Utils } from 'nrpti-angular-
 })
 export class CommunicationsComponent implements OnInit, OnDestroy {
   @ViewChild(DatePickerComponent) DatePicker: DatePickerComponent;
+  @ViewChild(LngMapInfoComponent) LngMapInfoComponent: LngMapInfoComponent;
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
   public resetDates: EventEmitter<void> = new EventEmitter<void>();
+  public selectedApp: EventEmitter<void> = new EventEmitter<void>();
 
   public myForm: FormGroup;
 
   public commPackage: CommunicationsPackage;
+  public lngMapInfo: MapInfo;
   public selectedApplication: string;
 
   public tinyMceSettings = {
@@ -47,7 +52,6 @@ export class CommunicationsComponent implements OnInit, OnDestroy {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
       this.commPackage = res.communicationsPackage.COMMUNICATIONS;
       this.selectedApplication = this.route.snapshot.params.application.toUpperCase();
-
       this.buildForm();
     });
   }

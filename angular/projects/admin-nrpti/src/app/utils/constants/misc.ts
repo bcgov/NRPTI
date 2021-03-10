@@ -266,6 +266,17 @@ export class Constants {
       'Agriculture Land Commission'
     ]
   };
+
+  public static readonly LngSectionPickList: string[] = [
+    'Section 1',
+    'Section 2',
+    'Section 3',
+    'Section 4',
+    'Section 5',
+    'Section 6',
+    'Section 7',
+    'Section 8'
+  ];
 }
 
 export class MiscUtils {
