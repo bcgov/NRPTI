@@ -215,8 +215,8 @@ function escapeCsvString(csvField: any): string {
 }
 
 /**
- * Escape special characters in the CSV fields so the final output can be opened
- * correcly in Excel.
+ * Create a file download in the browser and save the file to the user's
+ * default download directory
  *
  * @static
  * @param {string} filename CSV filename to be saved as
