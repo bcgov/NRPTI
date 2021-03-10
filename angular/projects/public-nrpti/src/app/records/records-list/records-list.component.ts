@@ -13,6 +13,7 @@ import {
 } from 'nrpti-angular-components';
 import { RecordsTableRowComponent } from '../records-row/records-table-row.component';
 import { LoadingScreenService } from 'nrpti-angular-components';
+import { FactoryService } from '../../services/factory.service';
 
 /**
  * List page component.
@@ -87,6 +88,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     public router: Router,
     public route: ActivatedRoute,
     private loadingScreenService: LoadingScreenService,
+    public factoryService: FactoryService,
     public utils: Utils,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
 import { FactoryService } from '../../services/factory.service';
 import { SchemaLists } from '../../../../../common/src/app/utils/record-constants';
+import { RecordUtils } from '../utils/record-utils';
 
 @Injectable()
 export class RecordsListResolver implements Resolve<Observable<object>> {
@@ -26,35 +27,7 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
       keywords = params.keywords;
     }
 
-    const filterParams = {};
-
-    if (params.dateRangeFromFilter) {
-      filterParams['dateRangeFromFilterdateIssued'] = params.dateRangeFromFilter;
-    }
-
-    if (params.dateRangeToFilter) {
-      filterParams['dateRangeToFilterdateIssued'] = params.dateRangeToFilter;
-    }
-
-    if (params.issuedToCompany && params.issuedToIndividual) {
-      filterParams['issuedTo.type'] = 'Company,Individual,IndividualCombined';
-    } else if (params.issuedToCompany) {
-      filterParams['issuedTo.type'] = 'Company';
-    } else if (params.issuedToIndividual) {
-      filterParams['issuedTo.type'] = 'Individual,IndividualCombined';
-    }
-
-    if (params.agency) {
-      filterParams['issuingAgency'] = params.agency;
-    }
-
-    if (params.act) {
-      filterParams['legislation.act'] = params.act;
-    }
-
-    if (params.regulation) {
-      filterParams['legislation.regulation'] = params.regulation;
-    }
+    const filterParams = RecordUtils.buildFilterParams(params);
 
     // force-reload so we always have latest data
     return this.factoryService.getRecords(
