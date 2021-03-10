@@ -317,22 +317,24 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
          <div class="popup-content">
           <div class="popup-subtitle">Location: </div>
           <div class="popup-subtext">${popup.location}</div>
-          <div class="popup-subtitle">Length: </div>
-          <div class="popup-subtext">${popup.segmentlength}</div>
-         <hr class="popup-hr">
+          ${
+            popup.segmentlength
+              ? `
+            <div class="popup-subtitle">Length: </div>
+            <div class="popup-subtext">${popup.segmentlength}</div>`
+              : ''
+          }
+          <hr class="popup-hr">
           ${
             popup.desc
               ? `
           <div class="popup-desc-title">Recent Updates:</div>
-          <div class="popup-desc">
-            ${popup.desc}
-          </div>
-          <hr class="popup-hr">
-          `
+          <div class="popup-desc">${popup.desc}</div>
+          <hr class="popup-hr">`
               : ''
           }
           <div class="d-flex popup-date">
-            <span>Last updated ${popup.lastupdated}</span>
+            <span>Last updated: ${popup.lastupdated}</span>
           </div>
         </div>
       `;
@@ -396,16 +398,18 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
             location: 'British Columbia',
             length: '',
             desc: '',
-            lastUpdated: Date()
+            lastUpdated: 'No date available.'
           };
 
           let index = null;
-          this.records.forEach(record => {
-            if (record.segment === 'Section ' + feature.properties.segment) {
-              index = record;
-              return;
-            }
-          });
+          if (this.records) {
+            this.records.forEach(record => {
+              if (record.segment === 'Section ' + feature.properties.segment) {
+                index = record;
+                return;
+              }
+            });
+          }
 
           if (index) {
             if (index.segment) {
@@ -441,7 +445,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
           );
 
           featureLayer.bindPopup(popup, {
-            maxWidth: 350,
+            maxWidth: 350
           });
 
           // centre map on segment when clicked on
