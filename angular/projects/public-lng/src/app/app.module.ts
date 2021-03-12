@@ -30,6 +30,7 @@ import { UrlService } from './services/url.service';
 import { DataService } from './services/data.service';
 import { FaqComponent } from './faq/faq.component';
 import { SearchService, ConfigService, LoggerService } from 'nrpti-angular-components';
+import { MapLayerInfoService } from './services/map-layer-info.service';
 
 export function initConfig(configService: ConfigService) {
   return () => configService.init();
@@ -60,7 +61,7 @@ export function initConfig(configService: ConfigService) {
       deps: [ConfigService],
       multi: true
     },
-    ApiService, UrlService, DataService, SearchService, LoggerService, Utils],
+    ApiService, UrlService, DataService, SearchService, LoggerService, MapLayerInfoService, Utils],
   entryComponents: [],
   bootstrap: [AppComponent]
 })
