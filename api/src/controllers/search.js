@@ -639,6 +639,8 @@ let searchCollection = async function (
       collectionName = 'description_summary_subset';
     } else if (subset.includes('redactedRecord')) {
       collectionName = 'redacted_record_subset';
+    } else if (subset.includes('outcomeDescription')) {
+      collectionName = 'outcome_description_subset';
     }
   }
   const collection = db.collection(collectionName);

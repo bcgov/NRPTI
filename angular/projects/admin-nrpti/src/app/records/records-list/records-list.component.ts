@@ -121,7 +121,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       new SubsetOption('issuedTo', 'Issued To'),
       new SubsetOption('location', 'Location'),
       new SubsetOption('description', 'Description & Summary'),
-      new SubsetOption('recordName', 'Record Name')
+      new SubsetOption('recordName', 'Record Name'),
+      new SubsetOption('outcomeDescription', 'Outcome')
     ];
     this.subsets = new SubsetsObject(subsetOptions);
 
@@ -277,6 +278,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     // check subset
     if (searchPackage.subset) {
       this.queryParams['subset'] = [searchPackage.subset];
+      // console.log(this.queryParams, this.queryParams['subset'], searchPackage);
     }
 
     Object.keys(searchPackage.filters).forEach(filter => {
@@ -467,6 +469,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       '/records',
       { ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }
     ]);
+    console.log(this.queryParams, this.tableTemplateUtils.getNavParamsObj(this.tableData));
+
   }
 
   /**
