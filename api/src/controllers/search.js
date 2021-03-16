@@ -644,7 +644,7 @@ let searchCollection = async function (
     }
   }
   const collection = db.collection(collectionName);
-
+  
   const data = await collection
     .aggregate(aggregation, {
       allowDiskUse: true,

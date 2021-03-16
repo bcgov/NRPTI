@@ -10,13 +10,19 @@ async function update(defaultLog) {
     }
   ];
 
-  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
-  const mainCollection = db.collection('nrpti');
+  try {
+    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const mainCollection = db.collection('nrpti');
 
-  defaultLog.info('Updating outcome_description_subset');
-  aggregate.push({ $out: 'outcome_description_subset' });
+    console.log('Updating outcome_description_subset');
+    aggregate.push({ $out: 'outcome_description_subset' });
 
-  await mainCollection.aggregate(aggregate).next();
+    await mainCollection.aggregate(aggregate).next();
+    db.close();
+  } catch (error) {
+    console.log('Failed to update outcome_description_subset, error: ', error);
+    db.close();
+  }
 }
 
 exports.update = update;

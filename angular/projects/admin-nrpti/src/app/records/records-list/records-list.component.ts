@@ -469,8 +469,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       '/records',
       { ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }
     ]);
-    console.log(this.queryParams, this.tableTemplateUtils.getNavParamsObj(this.tableData));
-
   }
 
   /**
