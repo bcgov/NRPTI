@@ -105,7 +105,8 @@ export class ImportComponent implements OnInit, OnDestroy {
       this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_FLNRO) ||
       this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_FLNR_NRO) ||
       this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_AGRI) ||
-      this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_ALC)
+      this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_ALC) ||
+      this.factoryService.userOnlyInLimitedRole(Constants.ApplicationRoles.ADMIN_ENV_COS)
     ) {
       this.showSourceSystem = false;
     }

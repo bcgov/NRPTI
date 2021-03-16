@@ -27,6 +27,7 @@ const DEFAULT_CSV_TYPES = {
 
 const ROLE_DATA_SOURCES = {
   [Constants.ApplicationRoles.ADMIN_FLNRO]: ['coors-csv'],
+  [Constants.ApplicationRoles.ADMIN_ENV_COS]: ['coors-csv'],
   [Constants.ApplicationRoles.ADMIN_FLNR_NRO]: ['era-csv', 'nris-flnr-csv'],
   [Constants.ApplicationRoles.ADMIN_AGRI]: ['agri-cmdb-csv', 'agri-mis-csv'],
   [Constants.ApplicationRoles.ADMIN_ALC]: ['alc-csv']
