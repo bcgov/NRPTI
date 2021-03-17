@@ -11,6 +11,7 @@ const ADDITIONAL_ROLES = [
   utils.ApplicationRoles.ADMIN_FLNR_NRO,
   utils.ApplicationRoles.ADMIN_AGRI,
   utils.ApplicationRoles.ADMIN_ENV_EPD,
+  utils.ApplicationRoles.ADMIN_ENV_COS,
   utils.ApplicationRoles.ADMIN_ALC
 ];
 exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;

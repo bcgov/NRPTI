@@ -376,6 +376,7 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
       parameters:
         - in: query
           name: _id
@@ -619,6 +620,7 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
       parameters:
         - name: task
           in: body
@@ -676,6 +678,7 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
       parameters:
         - name: recordId
           in: path
@@ -735,6 +738,7 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
       parameters:
         - name: recordId
           in: path
@@ -800,6 +804,7 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
       parameters:
         - name: recordId
           in: path
@@ -853,6 +858,7 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
       parameters:
         - in: body
           name: data
@@ -888,6 +894,7 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
       parameters:
         - in: body
           name: data
@@ -954,6 +961,7 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
       consumes:
         - multipart/form-data
       parameters:
@@ -1031,6 +1039,7 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
       parameters:
         - name: recordId
           in: path
@@ -1089,6 +1098,7 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
       parameters:
         - name: docId
           in: path
