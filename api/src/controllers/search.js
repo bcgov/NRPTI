@@ -836,11 +836,11 @@ const executeQuery = async function (args, res, next) {
       }, {
         $addFields: {
           'collectionRecords.isLink': {
-            $cond: [
-              { $ifNull: ['$collectionRecords.documents.key', false] },
-              false,
-              true
-            ]
+            $cond:  {
+              if: { $cond: [ {$ifNull: ['$collectionRecords.documents', false]}, true, false]},
+              then: { $cond: [ {$ifNull: ['$collectionRecords.documents.key', false] }, false, true] },
+              else: false
+            }
           }
         }
       }, {
