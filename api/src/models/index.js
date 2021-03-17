@@ -7,6 +7,7 @@ exports.document = require('./document');
 exports.epicProject = require('./epicProject');
 exports.communicationPackage = require('./communicationPackage');
 exports.mapLayerInfo = require('./mapLayerInfo');
+exports.metric = require('./metric');
 
 // master
 require('./master');

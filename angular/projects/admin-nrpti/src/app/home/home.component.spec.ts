@@ -6,6 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { LoadingScreenService } from 'nrpti-angular-components';
 import { Constants } from '../utils/constants/misc';
 import { KeycloakService } from '../services/keycloak.service';
+import { MetricService } from '../services/metric.service';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -37,6 +38,12 @@ describe('HomeComponent', () => {
     }
   };
 
+  const mockMetricService = {
+    getMetric: (code) => {
+      return [];
+    }
+  };
+
   beforeEach((() => {
     TestBed.configureTestingModule({
       declarations: [HomeComponent],
@@ -44,7 +51,8 @@ describe('HomeComponent', () => {
       providers: [
         { provide: 'Router', useValue: mockRouter },
         { provide: LoadingScreenService, useValue: mockLoadingScreenService },
-        { provide: KeycloakService, useValue: mockKeyCloakService }
+        { provide: KeycloakService, useValue: mockKeyCloakService },
+        { provide: MetricService, useValue: mockMetricService }
       ]
     }).compileComponents();
   }));
