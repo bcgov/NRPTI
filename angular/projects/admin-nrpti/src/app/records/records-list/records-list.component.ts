@@ -278,7 +278,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     // check subset
     if (searchPackage.subset) {
       this.queryParams['subset'] = [searchPackage.subset];
-      // console.log(this.queryParams, this.queryParams['subset'], searchPackage);
     }
 
     Object.keys(searchPackage.filters).forEach(filter => {
