@@ -342,7 +342,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
     administrativePenaltyLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  administrativePenaltyLNG = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyLNG);
+  administrativePenaltyLNG = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyLNG, args.swagger.params.auth_payload.realm_access.roles);
 
   return administrativePenaltyLNG;
 };
@@ -491,7 +491,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     administrativePenaltyNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  administrativePenaltyNRCED = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyNRCED);
+  administrativePenaltyNRCED = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyNRCED, args.swagger.params.auth_payload.realm_access.roles);
 
   return administrativePenaltyNRCED;
 };

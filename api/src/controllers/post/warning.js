@@ -327,7 +327,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
     warningLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  warningLNG = BusinessLogicManager.applyBusinessLogicOnPost(warningLNG);
+  warningLNG = BusinessLogicManager.applyBusinessLogicOnPost(warningLNG, args.swagger.params.auth_payload.realm_access.roles);
 
   return warningLNG;
 };
@@ -474,7 +474,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     warningNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  warningNRCED = BusinessLogicManager.applyBusinessLogicOnPost(warningNRCED);
+  warningNRCED = BusinessLogicManager.applyBusinessLogicOnPost(warningNRCED, args.swagger.params.auth_payload.realm_access.roles);
 
   return warningNRCED;
 };

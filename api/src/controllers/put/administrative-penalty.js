@@ -73,7 +73,7 @@ exports.editRecord = async function (args, res, next, incomingObj, overridePutPa
  */
 exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
   delete incomingObj._id;
-  
+
   // Reject any changes to master permissions
   delete incomingObj.read;
   delete incomingObj.write;
@@ -164,7 +164,7 @@ exports.editLNG = function (args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj, args.swagger.params.auth_payload.realm_access.roles);
 
   return updateObj;
 };
@@ -200,7 +200,7 @@ exports.editLNG = function (args, res, next, incomingObj) {
  */
 exports.editNRCED = function (args, res, next, incomingObj) {
   delete incomingObj._id;
-  
+
   // Reject any changes to permissions
   // Publishing must be done via addRole or removeRole
   delete incomingObj.read;
@@ -229,7 +229,7 @@ exports.editNRCED = function (args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj, args.swagger.params.auth_payload.realm_access.roles);
 
   return updateObj;
 };

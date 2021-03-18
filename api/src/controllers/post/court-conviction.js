@@ -333,7 +333,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
     courtConvictionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  courtConvictionLNG = BusinessLogicManager.applyBusinessLogicOnPost(courtConvictionLNG);
+  courtConvictionLNG = BusinessLogicManager.applyBusinessLogicOnPost(courtConvictionLNG, args.swagger.params.auth_payload.realm_access.roles);
 
   return courtConvictionLNG;
 };
@@ -478,7 +478,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     courtConvictionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  courtConvictionNRCED = BusinessLogicManager.applyBusinessLogicOnPost(courtConvictionNRCED);
+  courtConvictionNRCED = BusinessLogicManager.applyBusinessLogicOnPost(courtConvictionNRCED, args.swagger.params.auth_payload.realm_access.roles);
 
   return courtConvictionNRCED;
 };

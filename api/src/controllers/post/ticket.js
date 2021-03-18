@@ -322,7 +322,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
     ticketLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  ticketLNG = BusinessLogicManager.applyBusinessLogicOnPost(ticketLNG);
+  ticketLNG = BusinessLogicManager.applyBusinessLogicOnPost(ticketLNG, args.swagger.params.auth_payload.realm_access.roles);
 
   return ticketLNG;
 };
@@ -465,7 +465,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     ticketNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  ticketNRCED = BusinessLogicManager.applyBusinessLogicOnPost(ticketNRCED);
+  ticketNRCED = BusinessLogicManager.applyBusinessLogicOnPost(ticketNRCED, args.swagger.params.auth_payload.realm_access.roles);
 
   return ticketNRCED;
 };

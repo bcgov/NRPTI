@@ -333,7 +333,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
     administrativeSanctionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  administrativeSanctionLNG = BusinessLogicManager.applyBusinessLogicOnPost(administrativeSanctionLNG);
+  administrativeSanctionLNG = BusinessLogicManager.applyBusinessLogicOnPost(administrativeSanctionLNG, args.swagger.params.auth_payload.realm_access.roles);
 
   return administrativeSanctionLNG;
 };
@@ -478,7 +478,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     administrativeSanctionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  administrativeSanctionNRCED = BusinessLogicManager.applyBusinessLogicOnPost(administrativeSanctionNRCED);
+  administrativeSanctionNRCED = BusinessLogicManager.applyBusinessLogicOnPost(administrativeSanctionNRCED, args.swagger.params.auth_payload.realm_access.roles);
 
   return administrativeSanctionNRCED;
 };

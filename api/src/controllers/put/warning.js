@@ -164,7 +164,7 @@ exports.editLNG = function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj, args.swagger.params.auth_payload.realm_access.roles);
 
   return updateObj;
 };
@@ -229,7 +229,7 @@ exports.editNRCED = function(args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj, args.swagger.params.auth_payload.realm_access.roles);
 
   return updateObj;
 };

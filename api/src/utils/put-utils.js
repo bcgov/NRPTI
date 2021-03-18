@@ -362,7 +362,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
                               },
                               { new: true });
   }
- 
+
   let savedDocuments = null;
   try {
     savedDocuments = await BusinessLogicManager.updateDocumentRoles(
