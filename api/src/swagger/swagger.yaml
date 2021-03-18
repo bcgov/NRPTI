@@ -74,6 +74,7 @@ definitions:
       - location
       - recordName
       - descriptionSummary
+      - outcomeDescription
   recordType:
     type: string
     description: 'Supported record types'
@@ -164,6 +165,7 @@ definitions:
       - location
       - recordName
       - issuedTo
+      - outcomeDescription
   SearchSortByFields:
     type: string
     description: 'Optional fields to sort by (prefixed with + or - for order)'

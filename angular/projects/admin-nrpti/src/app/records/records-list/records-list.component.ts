@@ -121,7 +121,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       new SubsetOption('issuedTo', 'Issued To'),
       new SubsetOption('location', 'Location'),
       new SubsetOption('description', 'Description & Summary'),
-      new SubsetOption('recordName', 'Record Name')
+      new SubsetOption('recordName', 'Record Name'),
+      new SubsetOption('outcomeDescription', 'Outcome')
     ];
     this.subsets = new SubsetsObject(subsetOptions);
 
