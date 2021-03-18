@@ -78,7 +78,7 @@ objects:
                       echo -e "Updating outcomeDescription subset\n"
                       curl -H "Authorization: Bearer ${TOKEN}" \
                         -H "Content-Type: application/json" \
-                        -d '{"taskType":"updateMaterializedView", "materializedViewSubset":"outcomeDescription"}' \
+                        -d '{"taskType":"updateMaterializedView", "materializedViewSubset":"outcomeDescriptionSubset"}' \
                         ${NRPTI_API_URL}/task
 
                       echo -e "Importing EPIC\n"

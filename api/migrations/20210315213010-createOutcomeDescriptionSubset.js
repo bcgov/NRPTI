@@ -5,7 +5,6 @@ let type;
 let seed;
 
 let outcomeDescriptionUpdate = require('../materialized_views/search/outcomeDescriptionSubset');
-//let updateViews = require('../materialized_views/updateViews');
 
 /**
  * We receive the dbmigrate dependency from dbmigrate initially.
@@ -26,8 +25,6 @@ exports.setup = function(options, seedLink) {
  */
 exports.up = async function(db) {
   const mClient = await db.connection.connect(db.connectionString, { native_parser: true });
-
-  await outcomeDescriptionUpdate.update();
 
   try {
     await mClient.createCollection('outcome_description_subset');
