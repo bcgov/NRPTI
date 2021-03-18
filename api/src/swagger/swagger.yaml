@@ -377,6 +377,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - in: query
           name: _id
@@ -679,6 +680,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - name: recordId
           in: path
@@ -739,6 +741,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - name: recordId
           in: path
@@ -805,6 +808,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - name: recordId
           in: path
@@ -859,6 +863,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - in: body
           name: data
@@ -895,6 +900,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - in: body
           name: data
@@ -962,6 +968,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       consumes:
         - multipart/form-data
       parameters:
@@ -1040,6 +1047,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - name: recordId
           in: path
@@ -1099,6 +1107,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - name: docId
           in: path

@@ -4,7 +4,8 @@ const ApplicationRoles = {
   ADMIN: 'sysadmin',
   ADMIN_AGRI: 'admin:agri',
   ADMIN_BCMI: 'admin:bcmi',
-  ADMIN_ENV_EPD: 'admin:env-epd',  
+  ADMIN_ENV_EPD: 'admin:env-epd',
+  ADMIN_ENV_BCPARKS: 'admin:env-bcparks',  
   ADMIN_ENV_COS: 'admin:env-cos',
   ADMIN_FLNRO: 'admin:flnro',
   ADMIN_FLNR_NRO: 'admin:flnr-nro',
@@ -31,6 +32,7 @@ exports.ApplicationLimitedAdminRoles = [
   ApplicationRoles.ADMIN_AGRI,
   ApplicationRoles.ADMIN_ENV_EPD,  
   ApplicationRoles.ADMIN_ENV_COS,
+  ApplicationRoles.ADMIN_ENV_BCPARKS,
   ApplicationRoles.ADMIN_ALC
 ];
 
