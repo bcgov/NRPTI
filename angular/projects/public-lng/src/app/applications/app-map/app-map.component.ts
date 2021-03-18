@@ -539,7 +539,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
                 subtitle: 'Coastal Gasline Pipeline Ltd.',
                 descTitle: 'Application Description',
                 desc:
-                  'A 970-kilometre pipeline that will supply the LNG Canada export facility with gas from northeastern British Columbia.',
+                  'A 670-kilometre pipeline that will supply the LNG Canada export facility with gas from northeastern British Columbia.',
                 routerLink: '/project/2'
               })
             );
