@@ -5,6 +5,8 @@ const ApplicationRoles = {
   ADMIN_AGRI: 'admin:agri',
   ADMIN_BCMI: 'admin:bcmi',
   ADMIN_ENV_EPD: 'admin:env-epd',
+  ADMIN_ENV_BCPARKS: 'admin:env-bcparks',  
+  ADMIN_ENV_COS: 'admin:env-cos',
   ADMIN_FLNRO: 'admin:flnro',
   ADMIN_FLNR_NRO: 'admin:flnr-nro',
   ADMIN_LNG: 'admin:lng',
@@ -28,7 +30,9 @@ exports.ApplicationLimitedAdminRoles = [
   ApplicationRoles.ADMIN_FLNRO,
   ApplicationRoles.ADMIN_FLNR_NRO,
   ApplicationRoles.ADMIN_AGRI,
-  ApplicationRoles.ADMIN_ENV_EPD,
+  ApplicationRoles.ADMIN_ENV_EPD,  
+  ApplicationRoles.ADMIN_ENV_COS,
+  ApplicationRoles.ADMIN_ENV_BCPARKS,
   ApplicationRoles.ADMIN_ALC
 ];
 
@@ -45,7 +49,7 @@ exports.IssuedToEntityTypes = {
 
 exports.CoorsCsvIssuingAgencies = {
   BC_Parks: 'BC Parks',
-  Conservation_Officer_Service: 'Conservation Officer Service'
+  Conservation_Officer_Service: 'Conservation Officer Service (COS)'
 };
 
 exports.EpicProjectIds = {
@@ -144,14 +148,13 @@ exports.PENALTY_VALUE_TYPES = ['Years', 'Months', 'Days', 'Dollars', 'Hours', 'O
 exports.AUTHORIZED_PUBLISH_AGENCIES = [
   'BC Parks',
   'Climate Action Secretariat',
-  'Conservation Officer Service',
   'Conservation Officer Service (COS)',
   'EAO',
   'Environmental Protection Division'
 ];
 
 exports.CSV_SOURCE_DEFAULT_ROLES = {
-  'coors-csv': [ApplicationRoles.ADMIN_FLNRO],
+  'coors-csv': [ApplicationRoles.ADMIN_FLNRO, ApplicationRoles.ADMIN_ENV_COS],
   'era-csv': [ApplicationRoles.ADMIN_FLNR_NRO],
   'nris-flnr-csv': [ApplicationRoles.ADMIN_FLNR_NRO],
   'agri-cmdb-csv': [ApplicationRoles.ADMIN_AGRI],

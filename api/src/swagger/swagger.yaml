@@ -378,6 +378,8 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - in: query
           name: _id
@@ -621,6 +623,7 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
       parameters:
         - name: task
           in: body
@@ -678,6 +681,8 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - name: recordId
           in: path
@@ -737,6 +742,8 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - name: recordId
           in: path
@@ -802,6 +809,8 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - name: recordId
           in: path
@@ -855,6 +864,8 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - in: body
           name: data
@@ -890,6 +901,8 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - in: body
           name: data
@@ -956,6 +969,8 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
+        - admin:env-bcparks
       consumes:
         - multipart/form-data
       parameters:
@@ -1033,6 +1048,8 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - name: recordId
           in: path
@@ -1091,6 +1108,8 @@ paths:
         - admin:env-epd
         - admin:alc
         - admin:flnr-nro
+        - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - name: docId
           in: path
