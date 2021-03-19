@@ -5,7 +5,10 @@ const ApplicationRoles = {
   ADMIN_AGRI: 'admin:agri',
   ADMIN_BCMI: 'admin:bcmi',
   ADMIN_ENV_EPD: 'admin:env-epd',
+<<<<<<< HEAD
   ADMIN_ENV_BCPARKS: 'admin:env-bcparks',  
+=======
+>>>>>>> fd022fb3... NRPT-407: migration to add issuing agency and role to historical NRCED records
   ADMIN_ENV_COS: 'admin:env-cos',
   ADMIN_FLNRO: 'admin:flnro',
   ADMIN_FLNR_NRO: 'admin:flnr-nro',
@@ -17,6 +20,22 @@ const ApplicationRoles = {
 };
 
 exports.ApplicationRoles = ApplicationRoles;
+
+const ApplicationAgencies = {
+  AGENCY_ALC: 'Agricultural Land Commission',
+  AGENCY_WF: 'BC Wildfire Service',
+  AGENCY_ENV_COS: 'Conservation Officer Service',
+  AGENCY_BCMI: 'Ministry of Energy, Mines and Low Carbon Initiatives',
+  AGENCY_BCPARKS: 'BC Parks',
+  AGENCY_OGC: 'BC Oil and Gas Commission',
+  AGENCY_ENV_EPD: 'Environmental Protection Division',
+  AGENCY_LNG: 'LNG Secretariat',
+  AGENCY_AGRI: 'Ministry of Agriculture',
+  AGENCY_FLNRO: 'Ministry of Forests, Lands, Natural Resource Operations and Rural Development',
+  AGENCY_FLNR_NRO: 'Natural Resource Officers (NRO)'
+};
+
+exports.ApplicationAgencies = ApplicationAgencies;
 
 exports.ApplicationAdminRoles = [
   ApplicationRoles.ADMIN,
@@ -30,10 +49,16 @@ exports.ApplicationLimitedAdminRoles = [
   ApplicationRoles.ADMIN_FLNRO,
   ApplicationRoles.ADMIN_FLNR_NRO,
   ApplicationRoles.ADMIN_AGRI,
+<<<<<<< HEAD
   ApplicationRoles.ADMIN_ENV_EPD,  
   ApplicationRoles.ADMIN_ENV_COS,
   ApplicationRoles.ADMIN_ENV_BCPARKS,
   ApplicationRoles.ADMIN_ALC
+=======
+  ApplicationRoles.ADMIN_ENV_EPD,
+  ApplicationRoles.ADMIN_ALC,
+  ApplicationRoles.ADMIN_ENV_COS
+>>>>>>> fd022fb3... NRPT-407: migration to add issuing agency and role to historical NRCED records
 ];
 
 exports.KeycloakDefaultRoles = {
