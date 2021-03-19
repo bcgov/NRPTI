@@ -75,6 +75,12 @@ objects:
                         -d '{"taskType":"updateMaterializedView", "materializedViewSubset":"descriptionSummary"}' \
                         ${NRPTI_API_URL}/task
 
+                      echo -e "Updating outcomeDescription subset\n"
+                      curl -H "Authorization: Bearer ${TOKEN}" \
+                        -H "Content-Type: application/json" \
+                        -d '{"taskType":"updateMaterializedView", "materializedViewSubset":"outcomeDescriptionSubset"}' \
+                        ${NRPTI_API_URL}/task
+
                       echo -e "Importing EPIC\n"
                               curl -H "Authorization: Bearer ${TOKEN}" \
                                 -H "Content-Type: application/json" \

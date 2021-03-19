@@ -639,10 +639,12 @@ let searchCollection = async function (
       collectionName = 'description_summary_subset';
     } else if (subset.includes('redactedRecord')) {
       collectionName = 'redacted_record_subset';
+    } else if (subset.includes('outcomeDescription')) {
+      collectionName = 'outcome_description_subset';
     }
   }
   const collection = db.collection(collectionName);
-
+  
   const data = await collection
     .aggregate(aggregation, {
       allowDiskUse: true,
@@ -836,11 +838,11 @@ const executeQuery = async function (args, res, next) {
       }, {
         $addFields: {
           'collectionRecords.isLink': {
-            $cond: [
-              { $ifNull: ['$collectionRecords.documents.key', false] },
-              false,
-              true
-            ]
+            $cond:  {
+              if: { $cond: [ {$ifNull: ['$collectionRecords.documents', false]}, true, false]},
+              then: { $cond: [ {$ifNull: ['$collectionRecords.documents.key', false] }, false, true] },
+              else: false
+            }
           }
         }
       }, {

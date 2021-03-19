@@ -318,7 +318,8 @@ async function createS3Document(fileName, fileContent, addedBy, readRoles = [], 
 
   document.fileName = fileName;
   document.addedBy = addedBy;
-  document.url = `https://${process.env.OBJECT_STORE_endpoint_url}/${process.env.OBJECT_STORE_bucket_name}/${document._id}/${fileName}`;
+  const fileNameEncoded = encodeURIComponent(fileName);
+  document.url = `https://${process.env.OBJECT_STORE_endpoint_url}/${process.env.OBJECT_STORE_bucket_name}/${document._id}/${fileNameEncoded}`;
   document.key = s3Key;
   document.read = [utils.ApplicationRoles.ADMIN, ...readRoles];
   document.write = [utils.ApplicationRoles.ADMIN, ...writeRoles];

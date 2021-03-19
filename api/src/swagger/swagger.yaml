@@ -74,6 +74,7 @@ definitions:
       - location
       - recordName
       - descriptionSummary
+      - outcomeDescription
   recordType:
     type: string
     description: 'Supported record types'
@@ -164,6 +165,7 @@ definitions:
       - location
       - recordName
       - issuedTo
+      - outcomeDescription
   SearchSortByFields:
     type: string
     description: 'Optional fields to sort by (prefixed with + or - for order)'
@@ -377,6 +379,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - in: query
           name: _id
@@ -679,6 +682,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - name: recordId
           in: path
@@ -739,6 +743,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - name: recordId
           in: path
@@ -805,6 +810,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - name: recordId
           in: path
@@ -859,6 +865,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - in: body
           name: data
@@ -895,6 +902,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - in: body
           name: data
@@ -962,6 +970,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       consumes:
         - multipart/form-data
       parameters:
@@ -1040,6 +1049,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - name: recordId
           in: path
@@ -1099,6 +1109,7 @@ paths:
         - admin:alc
         - admin:flnr-nro
         - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - name: docId
           in: path
