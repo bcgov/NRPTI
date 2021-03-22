@@ -37,11 +37,9 @@ exports.up = async function(db) {
       }
     );
 
-    
-
     const nrptiCollection = mClient.collection('nrpti');
 
-    nrptiCollection.dropIndex('keyword-search-text-index');
+    await nrptiCollection.dropIndex('keyword-search-text-index');
 
     await nrptiCollection.createIndex(
       {
@@ -64,7 +62,7 @@ exports.up = async function(db) {
 
     const redactedCollection = mClient.collection('redacted_record_subset');
 
-    redactedCollection.dropIndex('keyword-search-text-index');
+    await redactedCollection.dropIndex('keyword-search-text-index');
 
     await redactedCollection.createIndex(
       {
