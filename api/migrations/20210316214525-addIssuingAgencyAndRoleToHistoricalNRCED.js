@@ -97,8 +97,7 @@ exports.up = async function(db) {
               updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_COS, ApplicationRoles.ADMIN_ENV_COS);
               break;
             case LegislationActs.ACT_Park:
-              // BC Parks role not yet created
-              updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_BCPARKS);
+              updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_BCPARKS, ApplicationRoles.ADMIN_ENV_BCPARKS);
               break;
           }
           break;
@@ -114,8 +113,7 @@ exports.up = async function(db) {
               updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ALC, ApplicationRoles.ADMIN_ALC);
               break;
             case LegislationActs.ACT_Park:
-              // BC Parks role not yet created
-              updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_BCPARKS);
+              updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_BCPARKS, ApplicationRoles.ADMIN_ENV_BCPARKS);
               break;
             case LegislationActs.ACT_Env_Management:
             case LegislationActs.ACT_Int_Pest_Management:
