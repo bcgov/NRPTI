@@ -333,7 +333,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
     restorativeJusticeLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  restorativeJusticeLNG = BusinessLogicManager.applyBusinessLogicOnPost(restorativeJusticeLNG, args.swagger.params.auth_payload.realm_access.roles);
+  restorativeJusticeLNG = BusinessLogicManager.applyBusinessLogicOnPost(restorativeJusticeLNG);
 
   return restorativeJusticeLNG;
 };
@@ -479,7 +479,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     restorativeJusticeNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  restorativeJusticeNRCED = BusinessLogicManager.applyBusinessLogicOnPost(restorativeJusticeNRCED, args.swagger.params.auth_payload.realm_access.roles);
+  restorativeJusticeNRCED = BusinessLogicManager.applyBusinessLogicOnPost(restorativeJusticeNRCED);
 
   return restorativeJusticeNRCED;
 };

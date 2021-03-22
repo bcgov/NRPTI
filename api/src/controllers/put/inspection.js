@@ -165,7 +165,8 @@ exports.editLNG = function (args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj, args.swagger.params.auth_payload.realm_access.roles);
+  const flavourId = incomingObj.InspectionLNG ? incomingObj.InspectionLNG._id : null;
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj, flavourId, 'InspectionLNG');
 
   return updateObj;
 };
@@ -230,7 +231,8 @@ exports.editNRCED = function (args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj, args.swagger.params.auth_payload.realm_access.roles);
+  const flavourId = incomingObj.InspectionNRCED ? incomingObj.InspectionNRCED._id : null;
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj, flavourId, 'InspectionNRCED');
 
   return updateObj;
 };
@@ -296,7 +298,8 @@ exports.editNRCED = function (args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj, args.swagger.params.auth_payload.realm_access.roles);
+  const flavourId = incomingObj.InspectionBCMI ? incomingObj.InspectionBCMI._id : null;
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj, flavourId, 'InspectionNRCED');
 
   return updateObj;
 };

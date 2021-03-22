@@ -2,6 +2,8 @@ const QueryActions = require('./query-actions');
 const DocumentController = require('../controllers/document-controller');
 const moment = require('moment');
 const constants = require('./constants/misc');
+const ObjectID = require('mongodb').ObjectID;
+const mongoose = require('mongoose');
 
 
 /**
@@ -9,19 +11,36 @@ const constants = require('./constants/misc');
  *
  * @param {*} updateObj
  * @param {*} sanitizedObj
- * @param {*} userRoles
+ * @param {*} flavourId
+ * @param {*} schemaName
  * @returns updateObj
  */
-exports.applyBusinessLogicOnPut = function(updateObj, sanitizedObj, userRoles) {
+exports.applyBusinessLogicOnPut = async function(updateObj, sanitizedObj, flavourId, schemaName) {
   if (!sanitizedObj) {
     return updateObj;
   }
 
   // apply anonymous business logic
-  if (sanitizedObj.issuedTo) {
-    // do not update the issuedTo roles if no issuedTo fields were changed (and therefore the issuedTo object is not
-    // present in sanitizedObj)
-    if (isRecordConsideredAnonymous(sanitizedObj, userRoles)) {
+  if (!(!sanitizedObj.issuedTo && !sanitizedObj.issuingAgency)) {
+    // do not update the issuedTo roles if neither issuedTo and issuingAgency fields were changed
+    // (and therefore the issuedTo object and issuingAgency are not present in sanitizedObj)
+
+    // check if issued to or issuing agency doesn't exist
+    // we need both of these fields to make a decision on weather issuedTo can be published
+    if (!sanitizedObj.issuedTo || !sanitizedObj.issuingAgency) {
+      // lookup the existing flavour object
+      const flavourRecordModel = mongoose.model(schemaName);
+
+      const flavourObject = await flavourRecordModel
+        .findOne({
+          _id: new ObjectID(flavourId)
+        });
+
+      sanitizedObj.issuingAgency = sanitizedObj.issuingAgency ? sanitizedObj.issuingAgency : flavourObject.issuingAgency;
+      sanitizedObj.issuedTo = sanitizedObj.issuedTo ? sanitizedObj.issuedTo : flavourObject.issuedTo;
+    }
+
+    if (isRecordConsideredAnonymous(sanitizedObj)) {
       updateObj.$pull['issuedTo.read'] = 'public';
     } else {
       updateObj.$addToSet['issuedTo.read'] = 'public';
@@ -35,16 +54,15 @@ exports.applyBusinessLogicOnPut = function(updateObj, sanitizedObj, userRoles) {
  * Apply business logic changes to a record. Updates the provided record, and returns it.
  *
  * @param {*} record
- * @param {*} userRoles
  * @returns record
  */
-exports.applyBusinessLogicOnPost = function(record, userRoles) {
+exports.applyBusinessLogicOnPost = function(record) {
   if (!record) {
     return record;
   }
 
   // apply anonymous business logic
-  if (isRecordConsideredAnonymous(record, userRoles)) {
+  if (isRecordConsideredAnonymous(record)) {
     record.issuedTo && (record.issuedTo = QueryActions.removePublicReadRole(record.issuedTo));
   } else {
     record.issuedTo && (record.issuedTo = QueryActions.addPublicReadRole(record.issuedTo));
@@ -62,10 +80,9 @@ exports.applyBusinessLogicOnPost = function(record, userRoles) {
  * Note: If insufficient information is provided, must assume anonymous.
  *
  * @param {*} record
- * @param {*} userRoles
  * @returns boolean true if the record is considered anonymous, false otherwise.
  */
-function isRecordConsideredAnonymous(record, userRoles) {
+function isRecordConsideredAnonymous(record) {
   // if the record is null, assume anonymous
   if (!record) {
     return true;
@@ -74,7 +91,7 @@ function isRecordConsideredAnonymous(record, userRoles) {
   // if we don't have an 'issuedTo' attribute on the doc, it should not be
   // considered anonymous. Some record types do not include an issuedTo section
   // by default.
-  let isAnonymous = record.issuedTo ? isIssuedToConsideredAnonymous(record.issuedTo, userRoles) : false;
+  let isAnonymous = isIssuedToConsideredAnonymous(record.issuedTo, record.issuingAgency);
 
   if (record.sourceSystemRef && record.sourceSystemRef.toLowerCase() === 'ocers-csv') {
     // records imported from OCERS are not anonymous
@@ -102,12 +119,14 @@ exports.isRecordConsideredAnonymous = isRecordConsideredAnonymous;
  * Note: If insufficient information is provided, must assume anonymous.
  *
  * @param {*} issuedTo
+ * @param {*} issuingAgency
+ * @param {*} isNewRecord
  * @returns true if the issuedTo is considered anonymous, false otherwise.
  */
-function isIssuedToConsideredAnonymous(issuedTo, userRoles) {
-  if (!issuedTo) {
-    // can't determine if issuedTo is anonymous or not as it doesn't exist
-    // If we assume anonymous, then any record type that doesn't use issuedTo
+function isIssuedToConsideredAnonymous(issuedTo, issuingAgency) {
+  if (!issuedTo || !issuingAgency) {
+    // can't determine if issuedTo or issuingAgency is anonymous or not as it doesn't exist
+    // If we assume anonymous, then any record type that doesn't use issuedTo or issuingAgency
     // can never be published, so this must return false.
 
     return false;
@@ -118,19 +137,9 @@ function isIssuedToConsideredAnonymous(issuedTo, userRoles) {
     return false;
   }
 
-  // check if the user has a role with legislative authority to publish names
-  const appRolesCanPublishNames = constants.ApplicationRolesCanPublishNames
-
-  let userCanPublish = false
-
-  userRoles.forEach( role => {
-    if (appRolesCanPublishNames.includes(role)) {
-      userCanPublish = true;
-    }
-  });
-
-  if (!userCanPublish) {
-    // user does not have permission to publish names
+  // check if the issuingAgency has legislative authority to publish names
+  if (issuingAgency && !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(issuingAgency)) {
+    // name is anonymous, issuing agency cannot publish names
     return true;
   }
 

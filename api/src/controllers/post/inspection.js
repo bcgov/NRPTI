@@ -337,7 +337,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
     inspectionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  inspectionLNG = BusinessLogicManager.applyBusinessLogicOnPost(inspectionLNG, args.swagger.params.auth_payload.realm_access.roles);
+  inspectionLNG = BusinessLogicManager.applyBusinessLogicOnPost(inspectionLNG);
 
   return inspectionLNG;
 };
@@ -484,7 +484,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     inspectionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  inspectionNRCED = BusinessLogicManager.applyBusinessLogicOnPost(inspectionNRCED, args.swagger.params.auth_payload.realm_access.roles);
+  inspectionNRCED = BusinessLogicManager.applyBusinessLogicOnPost(inspectionNRCED);
 
   return inspectionNRCED;
 };
@@ -634,7 +634,7 @@ exports.createBCMI = function(args, res, next, incomingObj) {
     inspectionBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  inspectionBCMI = BusinessLogicManager.applyBusinessLogicOnPost(inspectionBCMI, args.swagger.params.auth_payload.realm_access.roles);
+  inspectionBCMI = BusinessLogicManager.applyBusinessLogicOnPost(inspectionBCMI);
 
   return inspectionBCMI;
 };

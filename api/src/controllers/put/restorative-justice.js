@@ -164,7 +164,8 @@ exports.editLNG = function (args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj, args.swagger.params.auth_payload.realm_access.roles);
+  const flavourId = incomingObj.RestorativeJusticeLNG ? incomingObj.RestorativeJusticeLNG._id : null;
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj, flavourId, 'RestorativeJusticeLNG');
 
   return updateObj;
 };
@@ -229,7 +230,8 @@ exports.editNRCED = function (args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj, args.swagger.params.auth_payload.realm_access.roles);
+  const flavourId = incomingObj.RestorativeJusticeNRCED ? incomingObj.RestorativeJusticeNRCED._id : null;
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj, flavourId, 'RestorativeJusticeNRCED');
 
   return updateObj;
 };

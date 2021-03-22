@@ -13,7 +13,6 @@ const ADDITIONAL_ROLES = [
   utils.ApplicationRoles.ADMIN_AGRI,
   utils.ApplicationRoles.ADMIN_ENV_EPD,
   utils.ApplicationRoles.ADMIN_ENV_COS,
-  utils.ApplicationRoles.ADMIN_ENV_BCPARKS,
   utils.ApplicationRoles.ADMIN_ALC
 ];
 exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;
@@ -343,7 +342,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
     administrativePenaltyLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  administrativePenaltyLNG = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyLNG, args.swagger.params.auth_payload.realm_access.roles);
+  administrativePenaltyLNG = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyLNG);
 
   return administrativePenaltyLNG;
 };
@@ -492,7 +491,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     administrativePenaltyNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  administrativePenaltyNRCED = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyNRCED, args.swagger.params.auth_payload.realm_access.roles);
+  administrativePenaltyNRCED = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyNRCED);
 
   return administrativePenaltyNRCED;
 };
