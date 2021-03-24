@@ -373,7 +373,17 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
-        - metrics:view
+        - admin:lng
+        - admin:nrced
+        - admin:bcmi
+        - admin:wf
+        - admin:flnro
+        - admin:agri
+        - admin:env-epd
+        - admin:alc
+        - admin:flnr-nro
+        - admin:env-cos
+        - admin:env-bcparks
       responses:
         '200':
           description: 'Success'
@@ -416,7 +426,17 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
-        - metrics:view
+        - admin:lng
+        - admin:nrced
+        - admin:bcmi
+        - admin:wf
+        - admin:flnro
+        - admin:agri
+        - admin:env-epd
+        - admin:alc
+        - admin:flnr-nro
+        - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - name: code
           in: path
@@ -465,7 +485,17 @@ paths:
         - Bearer: []
       x-security-scopes:
         - sysadmin
-        - metrics:view
+        - admin:lng
+        - admin:nrced
+        - admin:bcmi
+        - admin:wf
+        - admin:flnro
+        - admin:agri
+        - admin:env-epd
+        - admin:alc
+        - admin:flnr-nro
+        - admin:env-cos
+        - admin:env-bcparks
       parameters:
         - name: code
           in: path

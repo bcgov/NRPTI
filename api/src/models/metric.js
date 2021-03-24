@@ -2,7 +2,7 @@ module.exports = require('../utils/model-schema-generator')(
   'Metric',
   {
     _schemaName: { type: String, default: 'Metric', index: true },
-    code: { type: String, default: '' },
+    code: { type: String, default: '', index: true },
     description: { type: String, default: '' },
     operation: { type: String, default: '' },
 
