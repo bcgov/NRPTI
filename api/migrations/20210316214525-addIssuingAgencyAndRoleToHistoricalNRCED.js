@@ -38,13 +38,11 @@ exports.up = async function(db) {
   const mClient = await db.connection.connect(db.connectionString, { native_parser: true });
 
   try {
-    console.log('attempting migration...');
-
     const nrpti = await mClient.collection('nrpti');
 
     const ocersRecords = await nrpti.find({ sourceSystemRef: 'ocers-csv' }).toArray();
 
-    await ocersRecords.forEach(async record => {
+    for (const record of ocersRecords){
       recordCount += 1;
 
       switch (record.recordType) {
@@ -52,52 +50,52 @@ exports.up = async function(db) {
           switch (record.legislation.act) {
             case LegislationActs.ACT_Food_Safety:
             case LegislationActs.ACT_Fish_Seafood:
-              updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_AGRI, ApplicationRoles.ADMIN_AGRI);
+              await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_AGRI, ApplicationRoles.ADMIN_AGRI);
               break;
             default:
-              updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_COS, ApplicationRoles.ADMIN_ENV_COS);
+              await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_COS, ApplicationRoles.ADMIN_ENV_COS);
               break;
           }
           break;
 
         case 'Administrative Sanction':
-          updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_FLNRO, ApplicationRoles.ADMIN_FLNRO);
+          await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_FLNRO, ApplicationRoles.ADMIN_FLNRO);
           break;
 
         case 'Administrative Penalty':
           switch (record.legislation.act) {
             case LegislationActs.ACT_Env_Management:
             case LegislationActs.ACT_Int_Pest_Management:
-              updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_EPD, ApplicationRoles.ADMIN_ENV_EPD);
+              await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_EPD, ApplicationRoles.ADMIN_ENV_EPD);
               break;
             case LegislationActs.ACT_Oil_Gas_Activities:
               // BC OGC role not yet created
-              updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_OGC);
+              await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_OGC);
               break;
             case LegislationActs.ACT_Mines:
-              updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_BCMI, ApplicationRoles.ADMIN_BCMI);
+              await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_BCMI, ApplicationRoles.ADMIN_BCMI);
               break;
             case LegislationActs.ACT_Agri_Land_Commission:
-              updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ALC, ApplicationRoles.ADMIN_ALC);
+              await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ALC, ApplicationRoles.ADMIN_ALC);
               break;
           }
           break;
 
         case 'Court Conviction':
-          updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_COS, ApplicationRoles.ADMIN_ENV_COS);
+          await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_COS, ApplicationRoles.ADMIN_ENV_COS);
           break;
 
         case 'Restorative Justice':
           switch (record.legislation.act) {
             case LegislationActs.ACT_Env_Management:
-              updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_EPD, ApplicationRoles.ADMIN_ENV_EPD);
+              await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_EPD, ApplicationRoles.ADMIN_ENV_EPD);
               break;
             case LegislationActs.ACT_Wildlife:
             case LegislationActs.ACT_Fisheries:
-              updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_COS, ApplicationRoles.ADMIN_ENV_COS);
+              await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_COS, ApplicationRoles.ADMIN_ENV_COS);
               break;
             case LegislationActs.ACT_Park:
-              updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_BCPARKS, ApplicationRoles.ADMIN_ENV_BCPARKS);
+              await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_BCPARKS, ApplicationRoles.ADMIN_ENV_BCPARKS);
               break;
           }
           break;
@@ -107,22 +105,22 @@ exports.up = async function(db) {
             case LegislationActs.ACT_Water:
             case LegislationActs.ACT_Water_Sustainability:
             case LegislationActs.ACT_Dike_Maintenance:
-              updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_FLNRO, ApplicationRoles.ADMIN_FLNRO);
+              await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_FLNRO, ApplicationRoles.ADMIN_FLNRO);
               break;
             case LegislationActs.ACT_Agri_Land_Commission:
-              updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ALC, ApplicationRoles.ADMIN_ALC);
+              await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ALC, ApplicationRoles.ADMIN_ALC);
               break;
             case LegislationActs.ACT_Park:
-              updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_BCPARKS, ApplicationRoles.ADMIN_ENV_BCPARKS);
+              await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_BCPARKS, ApplicationRoles.ADMIN_ENV_BCPARKS);
               break;
             case LegislationActs.ACT_Env_Management:
             case LegislationActs.ACT_Int_Pest_Management:
-              updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_EPD, ApplicationRoles.ADMIN_ENV_EPD);
+              await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ENV_EPD, ApplicationRoles.ADMIN_ENV_EPD);
               break;
           }
           break;
       }
-    });
+    };
   } catch (error) {
     console.log('Error on migration: ', error);
     mClient.close();
@@ -133,10 +131,10 @@ exports.up = async function(db) {
     mClient.close();
   }
 
-  function updateRecord(db, record_id, agency, role) {
+  async function updateRecord(db, record_id, agency, role) {
     if (role) {
       try {
-        db.update(
+        await db.updateOne(
           { _id: record_id },
           {
             $set: {
@@ -144,7 +142,7 @@ exports.up = async function(db) {
             }
           }
         );
-        db.update(
+        await db.updateOne(
           { _id: record_id },
           {
             $addToSet: {
