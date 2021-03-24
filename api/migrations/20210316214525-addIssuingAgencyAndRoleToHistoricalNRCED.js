@@ -156,7 +156,7 @@ exports.up = async function(db) {
       }
     } else {
       try {
-        db.update(
+        await db.updateOne(
           { _id: record_id },
           {
             $set: {
