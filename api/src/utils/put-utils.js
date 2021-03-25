@@ -170,13 +170,38 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
         entry[0].includes('BCMI') && (incomingObj.isBcmiPublished = false);
       }
 
-      if (flavourIncomingObj[entry[0]]._id) {
+      const flavourId = flavourIncomingObj[entry[0]]._id;
+
+      if (flavourId) {
+        //
+        const flavourRecordModel = mongoose.model(entry[0]);
+
+        const flavourExistingObject = await flavourRecordModel
+          .findOne({
+            _id: new ObjectId(flavourId)
+          });
+
+        const flavourExistingJSONObject = flavourExistingObject.toJSON();
+
+        // check if this object has issuingAgency and issuedTo to avoid adding null values to objects that don't have these fields
+        if (flavourExistingJSONObject.issuingAgency || flavourIncomingObj.issuingAgency) {
+          flavourIncomingObj.issuingAgency = flavourIncomingObj.issuingAgency ? flavourIncomingObj.issuingAgency : flavourExistingJSONObject.issuingAgency;
+        }
+
+        if (flavourExistingJSONObject.issuedTo || flavourIncomingObj.issuedTo) {
+          flavourIncomingObj.issuedTo = flavourIncomingObj.issuedTo ? flavourIncomingObj.issuedTo : flavourExistingJSONObject.issuedTo;
+          
+          // Reject any changes to permissions
+          // Must be decided through the business logic manager
+          delete flavourIncomingObj.issuedTo.read;
+          delete flavourIncomingObj.issuedTo.write;
+        }
+
         let flavourUpdateObj = entry[1](args, res, next, { ...flavourIncomingObj, ...flavourIncomingObj[entry[0]] });
         const Model = mongoose.model(entry[0]);
         flavourUpdateObj._master = new ObjectId(masterId);
 
         // Set flavour objectIds
-        const flavourId = flavourIncomingObj[entry[0]]._id;
         flavourIds.push(flavourId);
 
         promises.push(
@@ -362,7 +387,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
                               },
                               { new: true });
   }
- 
+
   let savedDocuments = null;
   try {
     savedDocuments = await BusinessLogicManager.updateDocumentRoles(

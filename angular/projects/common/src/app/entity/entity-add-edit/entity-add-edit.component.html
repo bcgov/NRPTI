@@ -49,7 +49,9 @@
         <label for="dateOfBirth">Date of Birth</label>
         <lib-date-picker
           [control]="formGroup.controls.dateOfBirth"
-          [isValidate]="true">
+          [isValidate]="true"
+          [minDate]="datepickerMinDate"
+          [maxDate]="datepickerMaxDate">
         </lib-date-picker>
       </div>
     </ng-container>

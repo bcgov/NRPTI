@@ -60,7 +60,9 @@
           <lib-date-picker
             [control]="myForm.controls.recordDate"
             [isValidate]="true"
-            [isDisabled]="disableEdit">
+            [isDisabled]="disableEdit"
+            [minDate]="datepickerMinDate"
+            [maxDate]="datepickerMaxDate">
           </lib-date-picker>
         </div>
         <div class="label-pair">

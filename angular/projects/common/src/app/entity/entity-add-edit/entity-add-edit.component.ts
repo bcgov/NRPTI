@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ChangeDetectorRef, SimpleChanges, OnChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Picklists } from '../../utils/record-constants';
+import { Picklists, Constants } from '../../utils/record-constants';
 import { ENTITY_TYPE } from '../../models/master/common-models/entity';
 
 @Component({
@@ -19,6 +19,9 @@ export class EntityAddEditComponent implements OnInit, OnChanges {
   public UIType: ENTITY_TYPE = null;
 
   public anonymousText = '';
+
+  public datepickerMinDate = Constants.DatepickerMinDate;
+  public datepickerMaxDate = Constants.DatepickerMaxDate;
 
   constructor(public _changeDetectionRef: ChangeDetectorRef) {}
 

@@ -8,6 +8,7 @@ import { Utils } from 'nrpti-angular-components';
 import { LoadingScreenService } from 'nrpti-angular-components';
 import { News } from '../../../../../common/src/app/models/master/common-models/news';
 import { FactoryService } from '../../services/factory.service';
+import { Constants } from '../../utils/constants/misc';
 
 @Component({
   selector: 'app-news-add-edit',
@@ -29,6 +30,8 @@ export class NewsAddEditComponent implements OnInit, OnDestroy {
   public lngFlavour = null;
   public lngPublishSubtext = 'Not published';
   public nrcedPublishSubtext = 'Not published';
+
+  public datepickerMinDate = Constants.DatepickerMinDate;
 
   // Pick lists
   public projects = [{

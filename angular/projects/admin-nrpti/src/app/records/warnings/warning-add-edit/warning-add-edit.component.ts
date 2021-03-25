@@ -44,6 +44,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
   public documentsToDelete = [];
 
   public datepickerMinDate = Constants.DatepickerMinDate;
+  public datepickerMaxDate = Constants.DatepickerMaxDate;
 
   constructor(
     public route: ActivatedRoute,

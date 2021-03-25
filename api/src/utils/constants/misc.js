@@ -5,7 +5,7 @@ const ApplicationRoles = {
   ADMIN_AGRI: 'admin:agri',
   ADMIN_BCMI: 'admin:bcmi',
   ADMIN_ENV_EPD: 'admin:env-epd',
-  ADMIN_ENV_BCPARKS: 'admin:env-bcparks',  
+  ADMIN_ENV_BCPARKS: 'admin:env-bcparks',
   ADMIN_ENV_COS: 'admin:env-cos',
   ADMIN_FLNRO: 'admin:flnro',
   ADMIN_FLNR_NRO: 'admin:flnr-nro',
@@ -25,12 +25,23 @@ exports.ApplicationAdminRoles = [
   ApplicationRoles.ADMIN_BCMI
 ];
 
+/**
+ * TODO: add the following roles when created:
+ *  - "Climate Action Secretariat"
+ *  - "BC Parks"
+ */
+exports.ApplicationRolesCanPublishNames = [
+  ApplicationRoles.ADMIN,
+  ApplicationRoles.ADMIN_ENV_EPD,
+  ApplicationRoles.ADMIN_ENV_COS
+];
+
 exports.ApplicationLimitedAdminRoles = [
   ApplicationRoles.ADMIN_WF,
   ApplicationRoles.ADMIN_FLNRO,
   ApplicationRoles.ADMIN_FLNR_NRO,
   ApplicationRoles.ADMIN_AGRI,
-  ApplicationRoles.ADMIN_ENV_EPD,  
+  ApplicationRoles.ADMIN_ENV_EPD,
   ApplicationRoles.ADMIN_ENV_COS,
   ApplicationRoles.ADMIN_ENV_BCPARKS,
   ApplicationRoles.ADMIN_ALC
