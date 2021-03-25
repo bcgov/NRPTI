@@ -173,7 +173,8 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
       const flavourId = flavourIncomingObj[entry[0]]._id;
 
       if (flavourId) {
-        //
+        // Grab the existing flavour object to get the issuingAgency and issuedTo if
+        // they don't exist in the flavourIncomingObj
         const flavourRecordModel = mongoose.model(entry[0]);
 
         const flavourExistingObject = await flavourRecordModel
@@ -190,7 +191,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
 
         if (flavourExistingJSONObject.issuedTo || flavourIncomingObj.issuedTo) {
           flavourIncomingObj.issuedTo = flavourIncomingObj.issuedTo ? flavourIncomingObj.issuedTo : flavourExistingJSONObject.issuedTo;
-          
+
           // Reject any changes to permissions
           // Must be decided through the business logic manager
           delete flavourIncomingObj.issuedTo.read;

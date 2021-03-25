@@ -25,17 +25,6 @@ exports.ApplicationAdminRoles = [
   ApplicationRoles.ADMIN_BCMI
 ];
 
-/**
- * TODO: add the following roles when created:
- *  - "Climate Action Secretariat"
- *  - "BC Parks"
- */
-exports.ApplicationRolesCanPublishNames = [
-  ApplicationRoles.ADMIN,
-  ApplicationRoles.ADMIN_ENV_EPD,
-  ApplicationRoles.ADMIN_ENV_COS
-];
-
 exports.ApplicationLimitedAdminRoles = [
   ApplicationRoles.ADMIN_WF,
   ApplicationRoles.ADMIN_FLNRO,

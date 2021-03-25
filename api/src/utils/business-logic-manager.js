@@ -8,8 +8,6 @@ const constants = require('./constants/misc');
  *
  * @param {*} updateObj
  * @param {*} sanitizedObj
- * @param {*} flavourId
- * @param {*} schemaName
  * @returns updateObj
  */
 exports.applyBusinessLogicOnPut = function(updateObj, sanitizedObj) {
@@ -75,7 +73,7 @@ function isRecordConsideredAnonymous(record) {
   // if we don't have an 'issuedTo' attribute on the doc, it should not be
   // considered anonymous. Some record types do not include an issuedTo section
   // by default.
-  let isAnonymous = isIssuedToConsideredAnonymous(record.issuedTo, record.issuingAgency);
+  let isAnonymous = record.issuedTo ? isIssuedToConsideredAnonymous(record.issuedTo, record.issuingAgency) : false;
 
   if (record.sourceSystemRef && record.sourceSystemRef.toLowerCase() === 'ocers-csv') {
     // records imported from OCERS are not anonymous
@@ -98,19 +96,18 @@ exports.isRecordConsideredAnonymous = isRecordConsideredAnonymous;
  * A records issuedTo sub-object is considered anonymous if the following are true:
  * - The issuedTo.type indicates a person (Individual, IndividualCombined) AND
  * - The issuedTo.dateOfBirth is null OR the issuedTo.dateOfBirth indicates the person is less than 19 years of age. OR
- * - The user requesting publish does not have an application role with legislative authority to publish names ()
+ * - The issuingAgency does not have legislative authority to publish names
  *
  * Note: If insufficient information is provided, must assume anonymous.
  *
  * @param {*} issuedTo
  * @param {*} issuingAgency
- * @param {*} isNewRecord
  * @returns true if the issuedTo is considered anonymous, false otherwise.
  */
 function isIssuedToConsideredAnonymous(issuedTo, issuingAgency) {
   if (!issuedTo) {
     // can't determine if issuedTo is anonymous or not as it doesn't exist
-    // If we assume anonymous, then any record type that doesn't use issuedTo or issuingAgency
+    // If we assume anonymous, then any record type that doesn't use issuedTo
     // can never be published, so this must return false.
 
     return false;
