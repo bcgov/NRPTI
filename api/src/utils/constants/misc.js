@@ -22,7 +22,7 @@ const ApplicationAgencies = {
   AGENCY_ALC: 'Agricultural Land Commission',
   AGENCY_WF: 'BC Wildfire Service',
   AGENCY_ENV_COS: 'Conservation Officer Service (COS)',
-  AGENCY_EMLI: 'Ministry of Energy, Mines and Low Carbon Initiatives',
+  AGENCY_EMLI: 'EMLI',
   AGENCY_ENV_BCPARKS: 'BC Parks',
   AGENCY_OGC: 'BC Oil and Gas Commission',
   AGENCY_ENV_EPD: 'Environmental Protection Division',

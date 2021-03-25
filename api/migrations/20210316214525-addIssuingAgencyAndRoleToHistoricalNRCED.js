@@ -72,7 +72,7 @@ exports.up = async function(db) {
               await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_OGC);
               break;
             case LegislationActs.ACT_Mines:
-              await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_BCMI);
+              await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_EMLI);
               break;
             case LegislationActs.ACT_Agri_Land_Commission:
               await updateRecord(nrpti, record._id, ApplicationAgencies.AGENCY_ALC);
