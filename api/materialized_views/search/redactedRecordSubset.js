@@ -20,7 +20,11 @@ async function update(defaultLog) {
   ];
 
   const redactCondition = {
-    $lt: ['$issuedToAge', 19]
+    $and: [
+      { $lt: ['$issuedToAge', 19] },
+      { $ne: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nris-epd']}
+    ]
+
   };
 
   const issuedToRedaction = [
