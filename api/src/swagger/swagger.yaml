@@ -127,6 +127,10 @@ definitions:
   ConfigObject:
     type: object
 
+  ### Metric Definitions
+  MetricListObject:
+    type: object
+
   ### Search Definitions
   SearchObject:
     type: object
@@ -338,6 +342,171 @@ paths:
       responses:
         '201':
           description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /metric:
+    x-swagger-router-controller: metric
+    options:
+      tags:
+        - metric
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on metric Route'
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/MetricListObject'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - metric
+      summary: 'Get a list of metrics'
+      operationId: protectedList
+      description: 'Retreiving a list of metrics stored in the system.'
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:lng
+        - admin:nrced
+        - admin:bcmi
+        - admin:wf
+        - admin:flnro
+        - admin:agri
+        - admin:env-epd
+        - admin:alc
+        - admin:flnr-nro
+        - admin:env-cos
+        - admin:env-bcparks
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/MetricListObject'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /metric/{code}:
+    x-swagger-router-controller: metric
+    options:
+      tags:
+        - metric
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on metric Route'
+      parameters:
+        - name: code
+          in: path
+          description: 'code of metric'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/MetricListObject'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - metric
+      summary: 'Get a metric'
+      operationId: protectedGet
+      description: 'Retreives a metric.'
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:lng
+        - admin:nrced
+        - admin:bcmi
+        - admin:wf
+        - admin:flnro
+        - admin:agri
+        - admin:env-epd
+        - admin:alc
+        - admin:flnr-nro
+        - admin:env-cos
+        - admin:env-bcparks
+      parameters:
+        - name: code
+          in: path
+          description: 'code of metric'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/MetricListObject'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /metric/{code}/data:
+    x-swagger-router-controller: metric
+    options:
+      tags:
+        - metric
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on metric Route'
+      parameters:
+        - name: code
+          in: path
+          description: 'code of metric'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/MetricListObject'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - metric
+      summary: 'Get data associated with a metric'
+      operationId: protectedGetData
+      description: "Retreives data from a metric after it's aggregation is run."
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:lng
+        - admin:nrced
+        - admin:bcmi
+        - admin:wf
+        - admin:flnro
+        - admin:agri
+        - admin:env-epd
+        - admin:alc
+        - admin:flnr-nro
+        - admin:env-cos
+        - admin:env-bcparks
+      parameters:
+        - name: code
+          in: path
+          description: 'code of metric'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/MetricListObject'
         '403':
           description: 'Access Denied'
           schema:
