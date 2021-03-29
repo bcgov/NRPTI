@@ -182,7 +182,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
             _id: new ObjectId(flavourId)
           });
 
-        const flavourExistingJSONObject = flavourExistingObject.toJSON();
+        const flavourExistingJSONObject = flavourExistingObject.toObject();
 
         // check if this object has issuingAgency and issuedTo to avoid adding null values to objects that don't have these fields
         if (flavourExistingJSONObject.issuingAgency || flavourIncomingObj.issuingAgency) {

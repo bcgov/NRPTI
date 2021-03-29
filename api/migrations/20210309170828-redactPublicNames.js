@@ -36,15 +36,7 @@ exports.up = async function(db) {
       ...RecordTypeEnum.BCMI_SCHEMA_NAMES
     ];
 
-    const noPublishIssuingAgencies = [
-      'BC Wildfire Service',
-      'Ministry of Agriculture',
-      'Agricultural Land Commission',
-      'Ministry of Forests, Lands, and Natural Resource Operations',
-      'Natural Resource Officers',
-      'BC Oil and Gas Commission',
-      'Ministry of Energy, Mines and Low Carbon Innovation'
-    ]
+    const authorizedPublishAgencies = RecordTypeEnum.AUTHORIZED_PUBLISH_AGENCIES;
 
     const allRecords = await nrpti
     .find({
@@ -55,7 +47,7 @@ exports.up = async function(db) {
     const promises = allRecords.map(async (record) => {
 
       if ( record.issuingAgency
-        && noPublishIssuingAgencies.includes(record.issuingAgency)
+        && !authorizedPublishAgencies.includes(record.issuingAgency)
         && record.issuedTo
         && record.issuedTo.type === 'Individual'
         && record.issuedTo.read.includes('public') )
