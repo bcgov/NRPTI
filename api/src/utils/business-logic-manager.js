@@ -1,6 +1,7 @@
 const QueryActions = require('./query-actions');
 const DocumentController = require('../controllers/document-controller');
 const moment = require('moment');
+const constants = require('./constants/misc');
 
 /**
  * Apply business logic changes to a record. Updates the provided updateObj, and returns it.
@@ -15,9 +16,12 @@ exports.applyBusinessLogicOnPut = function(updateObj, sanitizedObj) {
   }
 
   // apply anonymous business logic
-  if (sanitizedObj.issuedTo) {
-    // do not update the issuedTo roles if no issuedTo fields were changed (and therefore the issuedTo object is not
-    // present in sanitizedObj)
+  if (!sanitizedObj.issuedTo) {
+    // do not update the issuedTo roles if neither issuedTo field exist
+    // some objects don't have issued to, so there is nothing to redact
+    return updateObj;
+
+  } else {
     if (isRecordConsideredAnonymous(sanitizedObj)) {
       updateObj.$pull['issuedTo.read'] = 'public';
     } else {
@@ -65,10 +69,11 @@ function isRecordConsideredAnonymous(record) {
   if (!record) {
     return true;
   }
+
   // if we don't have an 'issuedTo' attribute on the doc, it should not be
   // considered anonymous. Some record types do not include an issuedTo section
   // by default.
-  let isAnonymous = record.issuedTo ? isIssuedToConsideredAnonymous(record.issuedTo) : false;
+  let isAnonymous = record.issuedTo ? isIssuedToConsideredAnonymous(record.issuedTo, record.issuingAgency) : false;
 
   if (record.sourceSystemRef && record.sourceSystemRef.toLowerCase() === 'ocers-csv') {
     // records imported from OCERS are not anonymous
@@ -90,14 +95,16 @@ exports.isRecordConsideredAnonymous = isRecordConsideredAnonymous;
  *
  * A records issuedTo sub-object is considered anonymous if the following are true:
  * - The issuedTo.type indicates a person (Individual, IndividualCombined) AND
- * - The issuedTo.dateOfBirth is null OR the issuedTo.dateOfBirth indicates the person is less than 19 years of age.
+ * - The issuedTo.dateOfBirth is null OR the issuedTo.dateOfBirth indicates the person is less than 19 years of age. OR
+ * - The issuingAgency does not have legislative authority to publish names
  *
  * Note: If insufficient information is provided, must assume anonymous.
  *
  * @param {*} issuedTo
+ * @param {*} issuingAgency
  * @returns true if the issuedTo is considered anonymous, false otherwise.
  */
-function isIssuedToConsideredAnonymous(issuedTo) {
+function isIssuedToConsideredAnonymous(issuedTo, issuingAgency) {
   if (!issuedTo) {
     // can't determine if issuedTo is anonymous or not as it doesn't exist
     // If we assume anonymous, then any record type that doesn't use issuedTo
@@ -109,6 +116,12 @@ function isIssuedToConsideredAnonymous(issuedTo) {
   if (issuedTo.type !== 'Individual' && issuedTo.type !== 'IndividualCombined') {
     // only individuals can be anonymous
     return false;
+  }
+
+  // check if the issuingAgency has legislative authority to publish names
+  if (issuingAgency && !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(issuingAgency)) {
+    // name is anonymous, issuing agency cannot publish names
+    return true;
   }
 
   if (!issuedTo.dateOfBirth) {

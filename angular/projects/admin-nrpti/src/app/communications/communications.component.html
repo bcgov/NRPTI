@@ -54,15 +54,17 @@
             <lib-date-picker
               [control]="myForm.controls.startDate"
               [isValidate]="true"
-              [reset]="resetDates">
-            </lib-date-picker>
+              [reset]="resetDates"
+              [minDate]="datepickerMinDate">
+              </lib-date-picker>
           </div>
           <div class="label-pair">
             <label for="endDate">End Date</label>
             <lib-date-picker
               [control]="myForm.controls.endDate"
               [isValidate]="true"
-              [reset]="resetDates">
+              [reset]="resetDates"
+              [minDate]="datepickerMinDate">
             </lib-date-picker>
           </div>
         </div>

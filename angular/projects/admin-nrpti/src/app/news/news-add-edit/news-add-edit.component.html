@@ -17,7 +17,8 @@
         <label class="font-weight-bold" for="date">Date:</label>
         <lib-date-picker
           [control]="myForm.controls.date"
-          [isValidate]="true">
+          [isValidate]="true"
+          [minDate]="datepickerMinDate">
         </lib-date-picker>
       </div>
       <div class="label-pair mr-5 mt-4">

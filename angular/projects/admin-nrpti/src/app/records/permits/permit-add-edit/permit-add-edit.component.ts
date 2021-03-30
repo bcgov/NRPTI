@@ -42,6 +42,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
   public disableEdit = false;
 
   public datepickerMinDate = Constants.DatepickerMinDate;
+  public datepickerMaxDate = Constants.DatepickerMaxDate;
 
   constructor(
     public route: ActivatedRoute,

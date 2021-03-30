@@ -29,6 +29,7 @@ export class Constants {
 
   // Datepicker is off by one so add one to the desired year.
   public static readonly DatepickerMinDate = new Date('1901');
+  public static readonly DatepickerMaxDate = new Date();
 
   public static readonly Menus: any = {
     ALL_MINES: 'All Mines',

@@ -43,6 +43,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
   public documentsToDelete = [];
 
   public datepickerMinDate = Constants.DatepickerMinDate;
+  public datepickerMaxDate = Constants.DatepickerMaxDate;
 
   constructor(
     private route: ActivatedRoute,

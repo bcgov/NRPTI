@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
-import { Picklists } from '../../../../../../common/src/app/utils/record-constants';
+import { Picklists, Constants } from '../../../../../../common/src/app/utils/record-constants';
 import { IMutliSelectOption } from '../../../../../../common/src/app/autocomplete-multi-select/autocomplete-multi-select.component';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -49,6 +49,8 @@ export class SearchFiltersComponent implements OnInit, OnDestroy {
   public activityTypeCount = 0;
   public actCount = 0;
   public regulationCount = 0;
+
+  public datepickerMinDate = Constants.DatepickerMinDate;
 
   constructor(public router: Router, public route: ActivatedRoute, private _changeDetectionRef: ChangeDetectorRef) {}
 

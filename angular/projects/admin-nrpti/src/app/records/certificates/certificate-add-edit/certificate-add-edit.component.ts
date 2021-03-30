@@ -35,6 +35,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
   public agencies = Picklists.agencyPicklist;
 
   public datepickerMinDate = Constants.DatepickerMinDate;
+  public datepickerMaxDate = Constants.DatepickerMaxDate;
 
   // Documents
   public documents = [];
