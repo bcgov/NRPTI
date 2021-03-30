@@ -18,6 +18,22 @@ const ApplicationRoles = {
 
 exports.ApplicationRoles = ApplicationRoles;
 
+const ApplicationAgencies = {
+  AGENCY_ALC: 'Agricultural Land Commission',
+  AGENCY_WF: 'BC Wildfire Service',
+  AGENCY_ENV_COS: 'Conservation Officer Service (COS)',
+  AGENCY_EMLI: 'EMLI',
+  AGENCY_ENV_BCPARKS: 'BC Parks',
+  AGENCY_OGC: 'BC Oil and Gas Commission',
+  AGENCY_ENV_EPD: 'Environmental Protection Division',
+  AGENCY_LNG: 'LNG Secretariat',
+  AGENCY_AGRI: 'Ministry of Agriculture',
+  AGENCY_FLNRO: 'Ministry of Forests, Lands, Natural Resource Operations and Rural Development',
+  AGENCY_FLNR_NRO: 'Natural Resource Officers (NRO)'
+};
+
+exports.ApplicationAgencies = ApplicationAgencies;
+
 exports.ApplicationAdminRoles = [
   ApplicationRoles.ADMIN,
   ApplicationRoles.ADMIN_NRCED,
