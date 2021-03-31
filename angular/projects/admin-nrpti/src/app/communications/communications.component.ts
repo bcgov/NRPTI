@@ -8,6 +8,7 @@ import { CommunicationsPackage } from '../../../../common/src/app/models/master/
 import { MapInfo } from './../../../../common/src/app/models/master/common-models/map-info';
 import { FactoryService } from '../services/factory.service';
 import { DatePickerComponent, LoadingScreenService, Utils } from 'nrpti-angular-components';
+import { Constants } from '../utils/constants/misc';
 
 @Component({
   selector: 'communications-add',
@@ -39,6 +40,8 @@ export class CommunicationsComponent implements OnInit, OnDestroy {
     ' alignright alignjustify | bullist numlist outdent indent |' +
     ' removeformat | help' ]
   };
+
+  public datepickerMinDate = Constants.DatepickerMinDate;
 
   constructor(
     public route: ActivatedRoute,

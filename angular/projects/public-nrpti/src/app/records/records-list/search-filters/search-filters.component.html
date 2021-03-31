@@ -25,12 +25,14 @@
               id="dateIssuedStartFilter"
               [control]="formGroup.get('dateIssuedStart')"
               [reset]="resetControls"
+              [minDate]="datepickerMinDate"
             ></lib-date-picker>
             <span class="date-separator align-self-center">To</span>
             <lib-date-picker
               id="dateIssuedEndFilter"
               [control]="formGroup.get('dateIssuedEnd')"
               [reset]="resetControls"
+              [minDate]="datepickerMinDate"
             ></lib-date-picker>
           </div>
         </div>

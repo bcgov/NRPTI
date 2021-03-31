@@ -10,6 +10,7 @@ import { DialogService } from 'ng2-bootstrap-modal';
 import moment from 'moment';
 import { ConfirmComponent } from '../../confirm/confirm.component';
 import { takeUntil, catchError } from 'rxjs/operators';
+import { Constants } from '../../utils/constants/misc';
 
 @Component({
   selector: 'app-mines-records-edit',
@@ -52,6 +53,9 @@ export class MinesRecordsEditComponent implements OnInit {
 
   // record add edit state
   public recordState = null;
+
+  public datepickerMinDate = Constants.DatepickerMinDate;
+  public datepickerMaxDate = Constants.DatepickerMaxDate;
 
   constructor(
     public route: ActivatedRoute,
