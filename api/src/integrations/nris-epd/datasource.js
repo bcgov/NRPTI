@@ -4,7 +4,7 @@ const integrationUtils = require('../integration-utils');
 const defaultLog = require('../../utils/logger')('nris-datasource');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const mongoose = require('mongoose');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const axios = require('axios');
 const documentController = require('../../controllers/document-controller');
 const RecordController = require('../../controllers/record-controller');
@@ -198,7 +198,12 @@ class NrisDataSource {
     newRecord.legislationDescription = 'Inspection to verify compliance with regulatory requirement.';
     newRecord.recordType = 'Inspection';
     newRecord._sourceRefNrisId = record.assessmentId;
-    newRecord.dateIssued = record.assessmentDate;
+    try {
+      newRecord.dateIssued = record.assessmentDate ? moment.tz(record.assessmentDate, "America/Vancouver").toDate() : null;
+    } catch (error) {
+      defaultLog.debug(error);
+      newRecord.dateIssued = null;
+    }
     newRecord.issuingAgency = this.stringTransformEPOtoEPD(record.resourceAgency);
     newRecord.author = 'Environmental Protection Division';
     newRecord.legislation = { ...legislation };
@@ -438,6 +443,8 @@ class NrisDataSource {
       existingRecord._flavourRecords.forEach(flavourRecord => {
         updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
       });
+
+      delete updateObj._flavourRecords;
 
       const result = await RecordController.processPutRequest(
         { swagger: { params: { auth_payload: this.auth_payload } } },
