@@ -1,6 +1,14 @@
 import { ActivatedRoute } from '@angular/router';
 
 export class Constants {
+
+  public static readonly ToastTypes: any = {
+    SUCCESS: 0,
+    WARNING: 1,
+    INFO: 2,
+    ERROR: 3,
+  };
+
   public static readonly ApplicationRoles: any = {
     ADMIN: 'sysadmin',
     ADMIN_NRCED: 'admin:nrced',

@@ -5,6 +5,9 @@ import { FactoryService } from './services/factory.service';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { interval } from 'rxjs/internal/observable/interval';
 import { takeWhile, switchMap } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
+import { ToastService } from './services/toast.service';
+import { Constants } from './utils/constants/misc';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   mineSubscription: Subscription;
   epicProjectSubscription: Subscription;
+  toastSubscription: Subscription;
 
   public breadcrumbs: IBreadcrumb[];
   public activeBreadcrumb: IBreadcrumb;
@@ -31,7 +35,9 @@ export class AppComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private factoryService: FactoryService,
     private storeService: StoreService,
-    private _changeDetectionRef: ChangeDetectorRef
+    private _changeDetectionRef: ChangeDetectorRef,
+    private toastr: ToastrService,
+    private toastService: ToastService
   ) {
     this.breadcrumbs = [];
   }
@@ -73,6 +79,32 @@ export class AppComponent implements OnInit, OnDestroy {
     // Subscribe to updates on specific models
     this.updateMines();
     this.updateEpicProjects();
+    this.watchForToast();
+  }
+
+  private watchForToast() {
+    // tslint:disable-next-statement
+    const self = this;
+    this.toastSubscription = this.toastService.messages.subscribe(messages => {
+      messages.forEach(msg => {
+        switch (msg.type) {
+          case Constants.ToastTypes.SUCCESS: {
+            this.toastr.success(msg.body, msg.title);
+          } break;
+          case Constants.ToastTypes.WARNING: {
+            this.toastr.warning(msg.body, msg.title);
+          } break;
+          case Constants.ToastTypes.INFO: {
+            this.toastr.info(msg.body, msg.title);
+          } break;
+          case Constants.ToastTypes.ERROR: {
+            this.toastr.error(msg.body, msg.title);
+          } break;
+        }
+        // Remove message from memory
+        self.toastService.removeMessage(msg.guid);
+      });
+    });
   }
 
   private updateMines() {
@@ -184,5 +216,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.alive = false;
+    this.toastSubscription.unsubscribe();
   }
 }

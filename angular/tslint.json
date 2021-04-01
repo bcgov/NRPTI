@@ -82,6 +82,8 @@
       true,
       "ignore-params"
     ],
+    "prefer-object-spread": false,
+    "no-this-assignment": false,
     "no-shadowed-variable": true,
     "no-sparse-arrays": true,
     "no-string-literal": false,

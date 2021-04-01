@@ -8,17 +8,12 @@
         <div>
           <button
             type="button"
-            [disabled]="showAlert['epic']"
+            [disabled]="buttonActions['epic']"
             class="btn btn-primary"
             (click)="startJob('epic')"
             title="Start EPIC import job">
             Start Job
           </button>
-        </div>
-        <div *ngIf="showAlert['epic']" class="input-group mt-1">
-          <div class="alert alert-success" role="alert">
-            <h5 class="alert-heading">Job Started!</h5>
-          </div>
         </div>
       </div>
       <div *ngIf="showSourceSystemNRIS" class="col-md-3 mb-3">
@@ -26,17 +21,12 @@
         <div>
           <button
             type="button"
-            [disabled]="showAlert['nris-epd']"
+            [disabled]="buttonActions['nris-epd']"
             class="btn btn-primary"
             (click)="startJob('nris-epd')"
             title="Start NRIS import job">
             Start Job
           </button>
-        </div>
-        <div *ngIf="showAlert['nris-epd']" class="input-group mt-1">
-          <div class="alert alert-success" role="alert">
-            <h5 class="alert-heading">Job Started!</h5>
-          </div>
         </div>
       </div>
       <div *ngIf="showSourceSystemCORE" class="col-md-3 mb-3">
@@ -44,17 +34,12 @@
         <div>
           <button
             type="button"
-            [disabled]="showAlert['core']"
+            [disabled]="buttonActions['core']"
             class="btn btn-primary"
             (click)="startJob('core')"
             title="Start CORE import job">
             Start Job
           </button>
-        </div>
-        <div *ngIf="showAlert['core']" class="input-group mt-1">
-          <div class="alert alert-success" role="alert">
-            <h5 class="alert-heading">Job Started!</h5>
-          </div>
         </div>
       </div>
       <div *ngIf="showSourceSystemBCOGC" class="col-md-3 mb-3">
@@ -62,17 +47,12 @@
         <div>
           <button
             type="button"
-            [disabled]="showAlert['bcogc']"
+            [disabled]="buttonActions['bcogc']"
             class="btn btn-primary"
             (click)="startJob('bcogc')"
             title="Start BCOGC import job">
             Start Job
           </button>
-        </div>
-        <div *ngIf="showAlert['bcogc']" class="input-group mt-1">
-          <div class="alert alert-success" role="alert">
-            <h5 class="alert-heading">Job Started!</h5>
-          </div>
         </div>
       </div>
     </div>
