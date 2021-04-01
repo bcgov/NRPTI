@@ -313,14 +313,16 @@ class NrisDataSource {
       if (res === null) throw Error('Unable to retrieve attachment, retry limit reached');
 
       const uploadDir = process.env.UPLOAD_DIRECTORY || '/tmp/';
-      const tempFilePath = uploadDir + res.headers['content-disposition'].split('= ').pop();
-      // Attempt to save locally and prepare for upload to S3.
+      const fileName = res.headers['content-disposition'].split('= ').pop();
+      let tempFilePath = uploadDir + fileName;
       let tempFileName = tempFilePath.replace(/[^a-z0-9 ]/gi, '');
-      tempFileName = tempFileName.replace(/ /g, '_');
+      tempFileName = tempFileName.replace(' ', '_');
+
+      // Attempt to save locally and prepare for upload to S3.
       await new Promise(resolve => {
         res.data.pipe(fs.createWriteStream(tempFileName)).on('finish', resolve);
       });
-      return { tempFilePath: tempFileName, fileName: res.headers['content-disposition'].split('= ').pop() };
+      return { tempFilePath: tempFileName, fileName: fileName };
     } catch (e) {
       defaultLog.info(`Error getting attachment ${attachmentId}:`, e);
       return null;
