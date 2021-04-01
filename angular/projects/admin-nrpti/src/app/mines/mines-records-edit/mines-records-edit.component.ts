@@ -31,7 +31,6 @@ export class MinesRecordsEditComponent implements OnInit {
 
   // data
   public record = null;
-  public bcmiFlavour = null;
   public lastEditedSubText = null;
   // source mine
   public mine = null;
@@ -77,7 +76,6 @@ export class MinesRecordsEditComponent implements OnInit {
       if (res && res.record && res.record[0] && res.record[0].data
         && res.record[0].data.searchResults && res.record[0].data.searchResults[0]) {
         this.record = res.record[0].data.searchResults[0];
-        this.bcmiFlavour = this.record.flavours.find(f => f._schemaName.endsWith('BCMI'));
         this.mine = res.mine[0].data;
         // if we have a current flavour, use that
         this.populateTextFields();
@@ -249,20 +247,18 @@ export class MinesRecordsEditComponent implements OnInit {
     const schemaString = recordSchema[0]._schemaName;
 
     // BCMI flavour
-    record[schemaString] = {};
+    record[schemaString] = {
+      // this.record._id is actually the BCMI flavour _id.  So assign it to the flavour object _id
+      _id: this.record._id
+    };
     record['recordName'] && (record[schemaString]['recordName'] = record['recordName']);
     record['issuingAgency'] && (record[schemaString]['issuingAgency'] = record['issuingAgency']);
     if (record['recordType'] === 'Permit') {
       record[schemaString]['typeCode'] = this.myForm.get('typeCode').value;
     }
 
-    // if we have a flavour, update the flavour.
-    // if we do not, create a flavour.
-    if (this.bcmiFlavour) {
-      record[schemaString]._id = this.bcmiFlavour._id;
-    }
-
-    record['_id'] = this.record._id;
+    // Use _master id here because we want to update both the BCMI flavour and master record
+    record['_id'] = this.record._master;
     record['recordType'] = this.myForm.get('recordType').dirty ? this.myForm.get('recordType').value
       : this.record.recordType;
 
@@ -273,7 +269,7 @@ export class MinesRecordsEditComponent implements OnInit {
         this.links,
         this.documents,
         this.documentsToDelete,
-        this.record._id,
+        this.record._master, // Modify the document array on master instead of flavour
         this.factoryService
       );
 
