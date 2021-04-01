@@ -151,11 +151,11 @@ class NrisDataSource {
             if (newRecord.documents.length === 0) {
               // create attachment if no existing document was found, if no "Final Report" is attached no document will be created
               if (this.shouldRecordHaveAttachments(newRecord)) {
-                await this.createRecordAttachments(records[i], newRecord)
+                await this.createRecordAttachments(records[i], newRecord);
               }
-            }  
+            }
 
-            await this.updateRecord(newRecord, existingRecord);                                 
+            await this.updateRecord(newRecord, existingRecord);
           } else {
             if (this.shouldRecordHaveAttachments(newRecord)) {
               await this.createRecordAttachments(records[i], newRecord);
@@ -191,7 +191,7 @@ class NrisDataSource {
     let newRecord = new Inspection().toObject();
     // We don't need this as we insert based on assessmentId
     delete newRecord._id;
-    
+
     const legislation = this.getLegislation(record);
 
     newRecord.recordName = `Inspection - ${record.requirementSource} - ${record.assessmentId}`;
@@ -199,7 +199,9 @@ class NrisDataSource {
     newRecord.recordType = 'Inspection';
     newRecord._sourceRefNrisId = record.assessmentId;
     try {
-      newRecord.dateIssued = record.assessmentDate ? moment.tz(record.assessmentDate, "America/Vancouver").toDate() : null;
+      newRecord.dateIssued = record.assessmentDate
+        ? moment.tz(record.assessmentDate, 'America/Vancouver').toDate()
+        : null;
     } catch (error) {
       defaultLog.debug(error);
       newRecord.dateIssued = null;
@@ -296,28 +298,30 @@ class NrisDataSource {
       let res = null;
 
       // Attachment download may fail with 500 error, retry up to 10 times
-      for(let i = 0; i < RETRY_LIMIT; i++) {
+      for (let i = 0; i < RETRY_LIMIT; i++) {
         try {
           defaultLog.info(`Downloading attachment from ${url}`);
           res = await axios.get(url, { headers: { Authorization: 'Bearer ' + this.token }, responseType: 'stream' });
           break;
-        } catch(err) {
+        } catch (err) {
           defaultLog.info('Failed to retrieve attachment, waiting to retry');
           // Sleep 10 seconds before retry
           await new Promise(resolve => setTimeout(resolve, 10000));
         }
       }
 
-      if(res === null)
-        throw Error('Unable to retrieve attachment, retry limit reached');      
+      if (res === null) throw Error('Unable to retrieve attachment, retry limit reached');
 
       const uploadDir = process.env.UPLOAD_DIRECTORY || '/tmp/';
-      const tempFilePath = uploadDir + res.headers['content-disposition'].split('= ').pop();
+      let fileName = res.headers['content-disposition'].split('= ').pop();
+      fileName = fileName.replace(/[^a-z0-9 ]/gi, '');
+      fileName = fileName.replace(' ', '_');
+      const tempFilePath = uploadDir + fileName;
       // Attempt to save locally and prepare for upload to S3.
       await new Promise(resolve => {
         res.data.pipe(fs.createWriteStream(tempFilePath)).on('finish', resolve);
       });
-      return { tempFilePath: tempFilePath, fileName: res.headers['content-disposition'].split('= ').pop() };
+      return { tempFilePath: tempFilePath, fileName: fileName };
     } catch (e) {
       defaultLog.info(`Error getting attachment ${attachmentId}:`, e);
       return null;
@@ -330,8 +334,16 @@ class NrisDataSource {
     let s3Response = null;
 
     // Set mongo document and s3 document roles
-    let readRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_BCMI];
-    const writeRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_BCMI];
+    let readRoles = [
+      utils.ApplicationRoles.ADMIN_LNG,
+      utils.ApplicationRoles.ADMIN_NRCED,
+      utils.ApplicationRoles.ADMIN_BCMI
+    ];
+    const writeRoles = [
+      utils.ApplicationRoles.ADMIN_LNG,
+      utils.ApplicationRoles.ADMIN_NRCED,
+      utils.ApplicationRoles.ADMIN_BCMI
+    ];
     let s3ACLRole = null;
     if (!BusinessLogicManager.isDocumentConsideredAnonymous(newRecord)) {
       readRoles.push('public');
@@ -391,7 +403,7 @@ class NrisDataSource {
         summary: record.description || '',
         addRole: 'public'
       };
-      const result =  await RecordController.processPostRequest(
+      const result = await RecordController.processPostRequest(
         { swagger: { params: { auth_payload: this.auth_payload } } },
         null,
         null,
@@ -399,7 +411,7 @@ class NrisDataSource {
         [createObj]
       );
 
-      if(result.length && result[0].status && result[0].status === 'failure')
+      if (result.length && result[0].status && result[0].status === 'failure')
         throw Error(`processPostRequest failed: ${result[0].errorMessage}`);
 
       return result;
@@ -421,10 +433,9 @@ class NrisDataSource {
 
   async findExistingDocument(documentName) {
     const documentModel = mongoose.model('Document');
-    return await documentModel
-      .findOne({
-        fileName: documentName
-      })
+    return await documentModel.findOne({
+      fileName: documentName
+    });
   }
 
   // Updates an existing record with new data pulled from the API.
@@ -454,7 +465,7 @@ class NrisDataSource {
         [updateObj]
       );
 
-      if(result.length && result[0].status && result[0].status === 'failure')
+      if (result.length && result[0].status && result[0].status === 'failure')
         throw Error(`processPutRequest failed: ${result[0].errorMessage}`);
 
       return result;
@@ -465,36 +476,42 @@ class NrisDataSource {
 
   getLegislation(record) {
     if (!record || !record.requirementSource) {
-      return { 
+      return {
         act: 'Environmental Management Act',
-        section: 109,
+        section: 109
       };
     }
 
-    if (record.requirementSource === 'Integrated Pest Management Act' ||
-        record.requirementSource === 'Integrated Pest Management Regulation' ||
-        record.requirementSource === 'Administrative Penalties (Integrated Pest Management Act) Regulation') {
-          return { 
-            act: 'Integrated Pest Management Act',
-            section: 17,
-          };
+    if (
+      record.requirementSource === 'Integrated Pest Management Act' ||
+      record.requirementSource === 'Integrated Pest Management Regulation' ||
+      record.requirementSource === 'Administrative Penalties (Integrated Pest Management Act) Regulation'
+    ) {
+      return {
+        act: 'Integrated Pest Management Act',
+        section: 17
+      };
     }
 
     if (record.requirementSource === 'Greenhouse Gas Industrial Reporting and Control Act') {
-      return { 
+      return {
         act: 'Greenhouse Gas Industrial Reporting and Control Act',
-        section: 22,
+        section: 22
       };
     }
 
-    return { 
+    return {
       act: 'Environmental Management Act',
-      section: 109,
+      section: 109
     };
   }
 
   shouldRecordHaveAttachments(record) {
-    if (record && record.legislation && record.legislation.act === 'Greenhouse Gas Industrial Reporting and Control Act') {
+    if (
+      record &&
+      record.legislation &&
+      record.legislation.act === 'Greenhouse Gas Industrial Reporting and Control Act'
+    ) {
       return false;
     }
 
