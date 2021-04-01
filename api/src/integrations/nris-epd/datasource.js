@@ -314,15 +314,14 @@ class NrisDataSource {
 
       const uploadDir = process.env.UPLOAD_DIRECTORY || '/tmp/';
       const fileName = res.headers['content-disposition'].split('= ').pop();
+      fileName = fileName.replace(/[^a-z0-9 ]/gi, '');
+      fileName = fileName.replace(' ', '_');
       let tempFilePath = uploadDir + fileName;
-      let tempFileName = tempFilePath.replace(/[^a-z0-9 ]/gi, '');
-      tempFileName = tempFileName.replace(' ', '_');
-
       // Attempt to save locally and prepare for upload to S3.
       await new Promise(resolve => {
         res.data.pipe(fs.createWriteStream(tempFileName)).on('finish', resolve);
       });
-      return { tempFilePath: tempFileName, fileName: fileName };
+      return { tempFilePath: tempFilePath, fileName: fileName };
     } catch (e) {
       defaultLog.info(`Error getting attachment ${attachmentId}:`, e);
       return null;
