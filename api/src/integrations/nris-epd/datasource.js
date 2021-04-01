@@ -313,13 +313,13 @@ class NrisDataSource {
       if (res === null) throw Error('Unable to retrieve attachment, retry limit reached');
 
       const uploadDir = process.env.UPLOAD_DIRECTORY || '/tmp/';
-      const fileName = res.headers['content-disposition'].split('= ').pop();
+      let fileName = res.headers['content-disposition'].split('= ').pop();
       fileName = fileName.replace(/[^a-z0-9 ]/gi, '');
       fileName = fileName.replace(' ', '_');
-      let tempFilePath = uploadDir + fileName;
+      const tempFilePath = uploadDir + fileName;
       // Attempt to save locally and prepare for upload to S3.
       await new Promise(resolve => {
-        res.data.pipe(fs.createWriteStream(tempFileName)).on('finish', resolve);
+        res.data.pipe(fs.createWriteStream(tempFilePath)).on('finish', resolve);
       });
       return { tempFilePath: tempFilePath, fileName: fileName };
     } catch (e) {
