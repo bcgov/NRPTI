@@ -6,6 +6,8 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { ApiService } from './services/api.service';
 import { KeycloakService } from './services/keycloak.service';
+import { ToastrService } from 'ngx-toastr';
+import { ToastService } from './services/toast.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -31,6 +33,14 @@ describe('AppComponent', () => {
       stateChange: new EventEmitter()
     };
 
+    const mockToastService = {
+
+    };
+
+    const mockToastrService = {
+
+    };
+
     const mockLoadingScreenService = {
       setLoadingState: () => { }
     };
@@ -47,8 +57,12 @@ describe('AppComponent', () => {
       providers: [
         ConfigService,
         ApiService,
+        ToastService,
+        ToastrService,
         { provide: LoadingScreenService, useValue: mockLoadingScreenService },
         { provide: KeycloakService, useValue: mockKeycloakService },
+        { provide: ToastService, useValue: mockToastService },
+        { provide: ToastrService, useValue: mockToastrService },
         { provide: StoreService, useValue: mockStoreService }
       ]
     }).compileComponents();
