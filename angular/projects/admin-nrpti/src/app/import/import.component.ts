@@ -15,6 +15,7 @@ import { ImportService } from '../services/import.service';
 import { SearchResult } from 'nrpti-angular-components';
 import { interval } from 'rxjs';
 import { Constants } from '../utils/constants/misc';
+import { ToastService } from '../services/toast.service';
 
 @Component({
   selector: 'app-import',
@@ -30,7 +31,7 @@ export class ImportComponent implements OnInit, OnDestroy {
   public showSourceSystemNRIS = true;
   public showSourceSystemCORE = true;
   public showSourceSystemBCOGC = true;
-  public showAlert = { epic: false, 'nris-epd': false, core: false, bcogc: false };
+  public buttonActions = { epic: false, 'nris-epd': false, core: false, bcogc: false };
   public tableData: TableObject = new TableObject({ component: ImportTableRowsComponent });
   public tableColumns: IColumnObject[] = [
     {
@@ -65,11 +66,11 @@ export class ImportComponent implements OnInit, OnDestroy {
     private _changeDetectionRef: ChangeDetectorRef,
     private factoryService: FactoryService,
     private importService: ImportService,
+    private toastService: ToastService,
     private configService: ConfigService
   ) { }
 
   ngOnInit() {
-    // tslint:disable-next-line: no-this-assignment
     const self = this;
 
     this.route.params.pipe(takeWhile(() => this.alive)).subscribe(params => {
@@ -163,10 +164,12 @@ export class ImportComponent implements OnInit, OnDestroy {
       })
       .toPromise();
 
-    this.showAlert[dataSourceType] = true;
+    this.buttonActions[dataSourceType] = true;
     setTimeout(() => {
-      this.showAlert[dataSourceType] = false;
-    }, 4000);
+      this.buttonActions[dataSourceType] = false;
+    }, 5000);
+    // Send this notification to the toast service
+    this.toastService.addMessage(dataSourceType, 'Job Started', Constants.ToastTypes.SUCCESS);
   }
 
   ngOnDestroy() {

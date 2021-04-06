@@ -19,6 +19,7 @@ import { RecordsModule } from './records/records.module';
 import { NewsModule } from './news/news.module';
 import { MinesModule } from './mines/mines.module';
 import { CommunicationsModule } from './communications/communications.module';
+import { ToastrModule } from 'ngx-toastr';
 
 // components
 import { AppComponent } from './app.component';
@@ -101,6 +102,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     AppRoutingModule, // <-- module import order matters - https://angular.io/guide/router#module-import-order-matters
     NgbModule.forRoot(),
     NgxPaginationModule,
+    ToastrModule.forRoot(),
     BootstrapModalModule.forRoot({ container: document.body })
   ],
   providers: [
