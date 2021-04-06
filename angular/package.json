@@ -89,6 +89,7 @@
     "ngx-page-scroll-core": "~6.0.0-beta.0",
     "ngx-pagination": "~3.2.1",
     "ngx-text-overflow-clamp": "~0.0.1",
+    "ngx-toastr": "^10.0.4",
     "object-fit-images": "~3.2.4",
     "papaparse": "~5.2.0",
     "popper.js": "~1.14.7",
@@ -97,6 +98,7 @@
     "tinymce": "~5.4.1",
     "topojson-client": "~3.0.1",
     "tslib": "^1.9.0",
+    "uuid": "^8.3.2",
     "web-animations-js": "~2.3.1",
     "zone.js": "~0.8.26"
   },
