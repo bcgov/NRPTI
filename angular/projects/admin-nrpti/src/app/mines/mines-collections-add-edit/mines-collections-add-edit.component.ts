@@ -343,6 +343,39 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     this.myForm.get('collectionRecords').markAsDirty();
   }
 
+  isEnableRecordEdit(idx: number) {
+    const recordControl = (this.myForm.get('collectionRecords') as FormArray).at(idx);
+    const record = recordControl.value.record;
+
+    if (record && record.sourceSystemRef === 'core') {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Navigate to record details page.
+   *
+   * @memberof MinesCollectionsAddEditComponent
+   */
+   goToRecordDetails(idx: number) {
+    const recordControl = (this.myForm.get('collectionRecords') as FormArray).at(idx);
+    const record = recordControl.value.record;
+    window.open(`/mines/${this.mine._id}/records/${record._id}/detail`, '_blank');
+  }
+
+  /**
+   * Navigate to record details page.
+   *
+   * @memberof MinesCollectionsAddEditComponent
+   */
+   goToRecordEdit(idx: number) {
+    const recordControl = (this.myForm.get('collectionRecords') as FormArray).at(idx);
+    const record = recordControl.value.record;
+    window.open(`/mines/${this.mine._id}/records/${record._id}/edit`, '_blank');
+  }
+
   /**
    * Submit form data to API.
    *
