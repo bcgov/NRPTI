@@ -72,6 +72,15 @@ export class BreadcrumbComponent implements OnInit {
         return this.getBreadcrumbs(child, url, breadcrumbs);
       }
 
+      // If this is the Mine Details breadcrumb, replace the name with the current
+      // mine name, otherwise ignore and continue the recursive check
+      if (child.snapshot.data[ROUTE_DATA_BREADCRUMB] === 'Mine Details') {
+        const detail = child.snapshot.data;
+        if (detail.mine && detail.mine[0] && detail.mine[0].data && detail.mine[0].data.name) {
+          child.snapshot.data[ROUTE_DATA_BREADCRUMB] = detail.mine[0].data.name;
+        }
+      }
+
       // get the route's URL segment
       const routeURL: string = child.snapshot.url.map(segment => segment.path).join('/');
 
