@@ -58,7 +58,7 @@ class Orders extends BaseRecordUtils {
 
     order['issuedTo'] = {
       type: MiscConstants.IssuedToEntityTypes.Company,
-      companyName: (csvRow['clientname'] && csvRow['clientname']) || ''
+      companyName: csvRow['clientname'] || ''
     };
 
     const wasteType = csvRow['wastetype'];
