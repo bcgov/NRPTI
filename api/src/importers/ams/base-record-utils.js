@@ -1,6 +1,8 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const moment = require('moment');
+
 const defaultLog = require('../../utils/logger')('ams-csv-base-record-utils');
 const RecordController = require('../../controllers/record-controller');
 
@@ -99,7 +101,8 @@ class BaseRecordUtils {
       updateObj.dateUpdated = new Date();
 
       existingRecord._flavourRecords.forEach(flavourRecord => {
-        updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
+        // Do not modify the publish status to avoid overwriting manual changes
+        updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id };
       });
 
       return await RecordController.processPutRequest(
@@ -134,11 +137,14 @@ class BaseRecordUtils {
       createObj.addedBy = (this.auth_payload && this.auth_payload.preferred_username) || '';
       createObj.dateAdded = new Date();
 
-      // publish to NRCED
-      if (this.recordType.flavours.nrced) {
-        createObj[this.recordType.flavours.nrced._schemaName] = {
-          addRole: 'public'
-        };
+      // Only publish records from 2006-01-01 or later
+      if (moment(createObj.dateIssued).isSameOrAfter('2006-01-01')) {
+        // publish to NRCED
+        if (this.recordType.flavours.nrced) {
+          createObj[this.recordType.flavours.nrced._schemaName] = {
+            addRole: 'public'
+          };
+        }
       }
 
       return await RecordController.processPostRequest(

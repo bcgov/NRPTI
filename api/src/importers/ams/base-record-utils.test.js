@@ -77,8 +77,7 @@ describe('BaseRecordUtils', () => {
             updatedBy: '',
             dateUpdated: expect.any(Date),
             flavourSchema: {
-              _id: 321,
-              addRole: 'public'
+              _id: 321
             },
             issuedTo: { type: MiscConstants.IssuedToEntityTypes.Individual }
           }

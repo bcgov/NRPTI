@@ -536,6 +536,7 @@ exports.createBCMI = function(args, res, next, incomingObj) {
     ObjectId.isValid(incomingObj._master) &&
     (orderBCMI._master = new ObjectId(incomingObj._master));
   incomingObj.mineGuid && (orderBCMI.mineGuid = incomingObj.mineGuid);
+  incomingObj._sourceRefStringId && (orderBCMI._sourceRefStringId = incomingObj._sourceRefStringId);
 
   // set permissions and meta
   orderBCMI.read = utils.ApplicationAdminRoles;
