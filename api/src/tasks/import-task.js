@@ -259,6 +259,13 @@ function getDataSourceConfig(dataSourceType) {
     };
   }
 
+  if (dataSourceType === 'ams-csv') {
+    return {
+      dataSourceLabel: 'ams-csv',
+      dataSourceClass: require('../importers/ams/datasource')
+    };
+  }
+
   // dataSourceType will match the name of a directory for the given
   // integration in /src/integrations/<dataSourceType>/
   return {
