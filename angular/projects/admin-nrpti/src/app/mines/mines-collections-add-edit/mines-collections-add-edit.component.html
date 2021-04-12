@@ -179,6 +179,19 @@
                   <mat-menu #menu="matMenu">
                     <button
                       mat-menu-item
+                      (click)="goToRecordDetails(idx)"
+                      title="View record details">
+                      View Record Details
+                    </button>
+                    <button
+                      *ngIf="isEnableRecordEdit(idx)"
+                      mat-menu-item
+                      (click)="goToRecordEdit(idx)"
+                      title="Edit record">
+                      Edit Record
+                    </button>
+                    <button
+                      mat-menu-item
                       (click)="removeRecordFromCollection(idx)"
                       title="Remove record from collection">
                       Remove Record
