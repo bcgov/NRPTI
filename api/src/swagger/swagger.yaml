@@ -1900,30 +1900,6 @@ paths:
           description: 'Access Denied'
           schema:
             $ref: '#/definitions/Error'
-    get:
-      tags:
-        - map-info
-      summary: 'Get map info'
-      operationId: protectedGet
-      description: "Get a map info via _id."
-      security:
-        - Bearer: []
-      x-security-scopes:
-        - sysadmin
-        - admin:lng
-      parameters:
-        - name: mapInfoId
-          in: path
-          description: '_id of map info to get'
-          required: true
-          type: string
-      responses:
-        '200':
-          description: 'Success'
-        '403':
-          description: 'Access Denied'
-          schema:
-            $ref: '#/definitions/Error'
     put:
       tags:
         - map-info
@@ -1969,27 +1945,6 @@ paths:
         - name: mapInfoId
           in: path
           description: '_id of map info to delete'
-          required: true
-          type: string
-      responses:
-        '200':
-          description: 'Success'
-        '403':
-          description: 'Access Denied'
-          schema:
-            $ref: '#/definitions/Error'
-  /public/map-info/{mapInfoId}:
-    x-swagger-router-controller: map-info-controller
-    get:
-      tags:
-        - map-info
-      summary: 'Get map info'
-      operationId: publicGet
-      description: "Get a map info via _id."
-      parameters:
-        - name: mapInfoId
-          in: path
-          description: '_id of map info to get'
           required: true
           type: string
       responses:
