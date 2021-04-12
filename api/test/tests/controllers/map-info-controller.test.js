@@ -104,59 +104,6 @@ describe('Map-Info Controller Testing', () => {
       });
   });
 
-  test('Protectd get returns 404 with invalid id', async done => {
-    const roles = ['sysadmin'];
-    const invalidId = new ObjectId();
-    app.get(endpoint, (req, res) => {
-      const params = test_util.buildParams(req.query);
-      const paramsWithValues = test_util.createSwaggerParams(params, roles, testUser);
-      return mapInfo.protectedGet(paramsWithValues, res, next);
-    });
-
-    request(app)
-      .get(endpoint)
-      .query(qs.stringify({ mapInfoId: invalidId.toString() }))
-      .expect(404)
-      .end((err, res) => {
-        if (err) {
-          console.log(err);
-          return done(err);
-        }
-        expect(res.body).toMatch('protectedGet - map info not found: ');
-        return done();
-      });
-  });
-
-  test('Protectd get returns 200 with valid id', async done => {
-    const roles = ['sysadmin'];
-    app.get(endpoint, (req, res) => {
-      const params = test_util.buildParams(req.query);
-      const paramsWithValues = test_util.createSwaggerParams(params, roles, testUser);
-      return mapInfo.protectedGet(paramsWithValues, res, next);
-    });
-
-    request(app)
-      .get(endpoint)
-      .query(qs.stringify({ mapInfoId: testObjectId.toString() }))
-      .expect(200)
-      .end((err, res) => {
-        if (err) {
-          console.log(err);
-          return done(err);
-        }
-
-        expect(res.body._schemaName).toMatch('MapLayerInfo');
-        expect(res.body.location).toMatch(testObj.location);
-        expect(res.body.length).toMatch(testObj.length);
-        expect(res.body.description).toMatch(testObj.description);
-        expect(res.body.segment).toMatch(testObj.segment);
-        expect(res.body.read).toContain(ApplicationRoles.ADMIN);
-        expect(res.body.read).toContain(ApplicationRoles.ADMIN_LNG);
-        expect(res.body.read).toContain(ApplicationRoles.PUBLIC);
-        return done();
-      });
-  });
-
   test('Protectd put returns 200 and updates record values', async done => {
     const roles = ['sysadmin'];
     const updateObj = {
