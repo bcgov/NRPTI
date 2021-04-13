@@ -106,6 +106,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
     ObjectId.isValid(incomingObj.collectionId) &&
     (order.collectionId = new ObjectId(incomingObj.collectionId));
   incomingObj._sourceRefOgcOrderId && (order._sourceRefOgcOrderId = incomingObj._sourceRefOgcOrderId);
+  incomingObj._sourceRefStringId && (order._sourceRefStringId = incomingObj._sourceRefStringId);
   incomingObj.mineGuid && (order.mineGuid = incomingObj.mineGuid);
 
   // set permissions
@@ -243,6 +244,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (orderLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj._sourceRefOgcOrderId && (OrderLNG._sourceRefOgcOrderId = incomingObj._sourceRefOgcOrderId);
+  incomingObj._sourceRefStringId && (OrderLNG._sourceRefStringId = incomingObj._sourceRefStringId);
 
   // set permissions and meta
   orderLNG.read = utils.ApplicationAdminRoles;
@@ -384,6 +386,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (orderNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj._sourceRefOgcOrderId && (orderNRCED._sourceRefOgcOrderId = incomingObj._sourceRefOgcOrderId);
+  incomingObj._sourceRefStringId && (orderNRCED._sourceRefStringId = incomingObj._sourceRefStringId);
 
   // set permissions and meta
   orderNRCED.read = utils.ApplicationAdminRoles;
@@ -533,6 +536,7 @@ exports.createBCMI = function(args, res, next, incomingObj) {
     ObjectId.isValid(incomingObj._master) &&
     (orderBCMI._master = new ObjectId(incomingObj._master));
   incomingObj.mineGuid && (orderBCMI.mineGuid = incomingObj.mineGuid);
+  incomingObj._sourceRefStringId && (orderBCMI._sourceRefStringId = incomingObj._sourceRefStringId);
 
   // set permissions and meta
   orderBCMI.read = utils.ApplicationAdminRoles;

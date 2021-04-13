@@ -233,6 +233,7 @@ export class Picklists {
     'agri-cmdb-csv',
     'agri-mis-csv',
     'alc-csv',
+    'ams-csv',
     'bcogc',
     'core',
     'coors-csv',

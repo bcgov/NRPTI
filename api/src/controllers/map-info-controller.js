@@ -3,73 +3,12 @@ const queryActions = require('../utils/query-actions');
 const queryUtils = require('../utils/query-utils');
 const { ApplicationRoles } = require('../utils/constants/misc');
 const Post = require('../controllers/post/post');
-const Get = require('../controllers/get/get');
 const Delete = require('../controllers/delete/delete');
 const PutUtils = require('../utils/put-utils');
 const { mapLayerInfo: MapLayerInfo } = require('../models/index');
 
 exports.protectedOptions = function(args, res, next) {
   res.status(200).send();
-};
-
-exports.publicGet = async function(args, res, next) {
-  let mapInfoId = null;
-  let errorMsg = null;
-  if (args.swagger.params.mapInfoId && args.swagger.params.mapInfoId.value) {
-    mapInfoId = args.swagger.params.mapInfoId.value;
-  } else {
-    errorMsg = `publicGet - you must provide an id to get`;
-    defaultLog.info(errorMsg);
-    return queryActions.sendResponse(res, 400, errorMsg);
-  }
-
-  let obj = null;
-  try {
-    obj = await Get.findById(mapInfoId);
-  } catch (error) {
-    errorMsg = `publicGet - error getting map info: ${mapInfoId}`;
-    defaultLog.info(errorMsg);
-    defaultLog.debug(error);
-    return queryActions.sendResponse(res, 400, errorMsg);
-  }
-
-  if (!obj) {
-    errorMsg = `protectedGet - map info not found: ${mapInfoId}`;
-    defaultLog.info(errorMsg);
-    return queryActions.sendResponse(res, 404, errorMsg);
-  }
-
-  return queryActions.sendResponse(res, 200, obj);
-};
-
-exports.protectedGet = async function(args, res, next) {
-  let mapInfoId = null;
-  let errorMsg = null;
-  if (args.swagger.params.mapInfoId && args.swagger.params.mapInfoId.value) {
-    mapInfoId = args.swagger.params.mapInfoId.value;
-  } else {
-    errorMsg = `protectedGet - you must provide an id to get`;
-    defaultLog.info(errorMsg);
-    return queryActions.sendResponse(res, 400, errorMsg);
-  }
-
-  let obj = null;
-  try {
-    obj = await Get.findById(mapInfoId);
-  } catch (error) {
-    errorMsg = `protectedGet - error getting map info: ${mapInfoId}`;
-    defaultLog.info(errorMsg);
-    defaultLog.debug(error);
-    return queryActions.sendResponse(res, 400, errorMsg);
-  }
-
-  if (!obj) {
-    errorMsg = `protectedGet - map info not found: ${mapInfoId}`;
-    defaultLog.info(errorMsg);
-    return queryActions.sendResponse(res, 404, errorMsg);
-  }
-
-  return queryActions.sendResponse(res, 200, obj);
 };
 
 async function getMapLayerInfoSegment(segment) {
