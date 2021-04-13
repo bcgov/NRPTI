@@ -9,6 +9,7 @@ import { Constants } from '../../utils/constants/misc';
 
 const DEFAULT_DATA_SOURCES = [
   { displayName: 'ALC', value: 'alc-csv' },
+  { displayName: 'AMS', value: 'ams-csv' },
   { displayName: 'AGRI-CMDB', value: 'agri-cmdb-csv' },
   { displayName: 'AGRI-MIS', value: 'agri-mis-csv' },
   { displayName: 'COORS', value: 'coors-csv' },
@@ -22,7 +23,8 @@ const DEFAULT_CSV_TYPES = {
   'agri-mis-csv': ['Inspection'],
   'agri-cmdb-csv': ['Inspection'],
   'alc-csv': ['Inspection'],
-  'era-csv': ['Ticket']
+  'era-csv': ['Ticket'],
+  'ams-csv': ['Order']
 };
 
 const ROLE_DATA_SOURCES = {
@@ -30,7 +32,8 @@ const ROLE_DATA_SOURCES = {
   [Constants.ApplicationRoles.ADMIN_ENV_COS]: ['coors-csv'],
   [Constants.ApplicationRoles.ADMIN_FLNR_NRO]: ['era-csv', 'nris-flnr-csv'],
   [Constants.ApplicationRoles.ADMIN_AGRI]: ['agri-cmdb-csv', 'agri-mis-csv'],
-  [Constants.ApplicationRoles.ADMIN_ALC]: ['alc-csv']
+  [Constants.ApplicationRoles.ADMIN_ALC]: ['alc-csv'],
+  [Constants.ApplicationRoles.ADMIN_ENV_EPD]: ['ams-csv']
 };
 
 @Component({
