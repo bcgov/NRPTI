@@ -59,6 +59,10 @@ class Inspections extends BaseRecordUtils {
     const entityType = CsvUtils.getEntityType(csvRow);
 
     if (entityType === MiscConstants.IssuedToEntityTypes.Company) {
+      if (Number(csvRow['longitude']) && Number(csvRow['latitude'])) {
+        inspection['centroid'] = [Number(csvRow['longitude']), Number(csvRow['latitude'])];
+      }
+
       inspection['issuedTo'] = {
         type: MiscConstants.IssuedToEntityTypes.Company,
         companyName: csvRow['inspection property owner']
