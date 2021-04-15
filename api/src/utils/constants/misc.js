@@ -95,6 +95,13 @@ exports.MASTER_SCHEMA_NAMES = [
   'Warning'
 ];
 
+exports.SKIP_REDACTION_SCHEMA_NAMES = [
+  'MineBCMI',
+  'CollectionBCMI',
+  'MapLayerInfo',
+  'ActivityLNG'
+];
+
 exports.LNG_SCHEMA_NAMES = [
   'ActivityLNG',
   'AdministrativePenaltyLNG',
