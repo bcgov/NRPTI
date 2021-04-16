@@ -7,7 +7,7 @@ let qs = require('qs');
 let mongodb = require('../utils/mongodb');
 let moment = require('moment');
 let fuzzySearch = require('../utils/fuzzySearch');
-const { ApplicationAdminRoles, ApplicationLimitedAdminRoles } = require('../utils/constants/misc');
+const { ApplicationAdminRoles, ApplicationLimitedAdminRoles, SKIP_REDACTION_SCHEMA_NAMES } = require('../utils/constants/misc');
 const { userIsOnlyInRole } = require('../utils/auth-utils');
 
 function isEmpty(obj) {
@@ -257,7 +257,7 @@ exports.addArrayCountField = addArrayCountField;
 // of any individual where the birthdate is null or the individual
 // is less then 19 years old. First step to do this is calculate their
 // age
-const issuedToRedaction = function(roles) {
+const issuedToRedaction = function (roles) {
   // Skip redaction if the record.write array matches the limited admin user's role.
   // Code would only reach this point if the user doesn't have any of the ApplicationAdminRoles.
   // Only skip redact if the current user's role matches what's on the records.write.  If for
@@ -527,7 +527,7 @@ let searchCollection = async function (
   // of any individual where the birthdate is null or the individual
   // is less then 19 years old.
   if (!roles.some(r => ApplicationAdminRoles.indexOf(r) >= 0) && !(subset && subset.includes('redactedRecord'))) {
-      searchResultAggregation = searchResultAggregation.concat(issuedToRedaction(roles));
+    searchResultAggregation = searchResultAggregation.concat(issuedToRedaction(roles));
   }
 
   searchResultAggregation.push({
@@ -644,7 +644,7 @@ let searchCollection = async function (
     }
   }
   const collection = db.collection(collectionName);
-  
+
   const data = await collection
     .aggregate(aggregation, {
       allowDiskUse: true,
@@ -663,6 +663,21 @@ exports.publicGet = async function (args, res, next) {
   // if we are doing a public record search, we should use the redacted subset to avoid data leaks
   // this subset cleans the data from any non publicly available information
   args.swagger.params.subset.value = ['redactedRecord'];
+
+  // if we are searching for data that does not require redaction, we should search on the main database subset.
+  if (args.swagger.params.dataset && args.swagger.params.dataset.value) {
+    if(SKIP_REDACTION_SCHEMA_NAMES.includes(String(args.swagger.params.dataset.value))){
+      args.swagger.params.subset.value = ['nrpti'];
+      defaultLog.info(`Searching on non-redacted database despite public search query: '${args.swagger.params.dataset.value}' is not a redacted dataset. `);
+    }
+  }
+  if (args.swagger.params._schemaName && args.swagger.params._schemaName.value) { 
+    if (SKIP_REDACTION_SCHEMA_NAMES.includes(String(args.swagger.params._schemaName.value))){
+      args.swagger.params.subset.value = ['nrpti'];
+      defaultLog.info(`Searching on non-redacted database despite public search query: '${args.swagger.params._schemaName.value}' is not a redacted schema. `);
+    }
+  }
+
   executeQuery(args, res, next);
 };
 
@@ -838,9 +853,9 @@ const executeQuery = async function (args, res, next) {
       }, {
         $addFields: {
           'collectionRecords.isLink': {
-            $cond:  {
-              if: { $cond: [ {$ifNull: ['$collectionRecords.documents', false]}, true, false]},
-              then: { $cond: [ {$ifNull: ['$collectionRecords.documents.key', false] }, false, true] },
+            $cond: {
+              if: { $cond: [{ $ifNull: ['$collectionRecords.documents', false] }, true, false] },
+              then: { $cond: [{ $ifNull: ['$collectionRecords.documents.key', false] }, false, true] },
               else: false
             }
           }

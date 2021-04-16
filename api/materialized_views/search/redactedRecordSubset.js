@@ -1,6 +1,7 @@
 const mongodb = require('../../src/utils/mongodb');
 const BusinessLogicManager = require('../../src/utils/business-logic-manager');
 const { AUTHORIZED_PUBLISH_AGENCIES } = require('../../src/utils/constants/misc');
+const { SKIP_REDACTION_SCHEMA_NAMES } = require ('../../src/utils/constants/misc');
 
 
 /**
@@ -117,7 +118,7 @@ async function updateAllRecords (defaultLog) {
         skipRedact: {
           $cond: {
             if: {
-              $in: [{ $arrayElemAt: ['$fullRecord._schemaName', 0] }, ['MineBCMI', 'CollectionBCMI', 'MapLayerInfo']]
+              $in: [{ $arrayElemAt: ['$fullRecord._schemaName', 0] }, SKIP_REDACTION_SCHEMA_NAMES]
             },
             then: true,
             else: false

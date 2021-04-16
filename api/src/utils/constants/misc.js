@@ -95,6 +95,13 @@ exports.MASTER_SCHEMA_NAMES = [
   'Warning'
 ];
 
+exports.SKIP_REDACTION_SCHEMA_NAMES = [
+  'MineBCMI',
+  'CollectionBCMI',
+  'MapLayerInfo',
+  'ActivityLNG'
+];
+
 exports.LNG_SCHEMA_NAMES = [
   'ActivityLNG',
   'AdministrativePenaltyLNG',
@@ -175,5 +182,6 @@ exports.CSV_SOURCE_DEFAULT_ROLES = {
   'nris-flnr-csv': [ApplicationRoles.ADMIN_FLNR_NRO],
   'agri-cmdb-csv': [ApplicationRoles.ADMIN_AGRI],
   'agri-mis-csv': [ApplicationRoles.ADMIN_AGRI],
-  'alc-csv': [ApplicationRoles.ADMIN_ALC]
+  'alc-csv': [ApplicationRoles.ADMIN_ALC],
+  'ams-csv': [ApplicationRoles.ADMIN_ENV_EPD]
 };

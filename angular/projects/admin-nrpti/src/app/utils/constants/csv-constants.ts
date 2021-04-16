@@ -12,6 +12,13 @@ import {
   eraTicketsCsvDateFields
 } from './era-csv-constants';
 
+import {
+  amsOrdersCsvRequiredHeaders,
+  amsOrdersCsvRequiredFields,
+  amsOrdersCsvRequiredFormats,
+  amsOrdersCsvDateFields
+} from './ams-csv-constants';
+
 /**
  * Required format object to specify fields whose value must have a specific format.
  *
@@ -496,6 +503,12 @@ export class CsvConstants {
       }
     }
 
+    if (dataSourceType === 'ams-csv') {
+      if (recordType === 'Order') {
+        return amsOrdersCsvRequiredHeaders;
+      }
+    }
+
     return null;
   }
 
@@ -558,6 +571,12 @@ export class CsvConstants {
     if (dataSourceType === 'era-csv') {
       if (recordType === 'Ticket') {
         return eraTicketsCsvRequiredFields;
+      }
+    }
+
+    if (dataSourceType === 'ams-csv') {
+      if (recordType === 'Order') {
+        return amsOrdersCsvRequiredFields;
       }
     }
 
@@ -626,6 +645,12 @@ export class CsvConstants {
       }
     }
 
+    if (dataSourceType === 'ams-csv') {
+      if (recordType === 'Order') {
+        return amsOrdersCsvRequiredFormats;
+      }
+    }
+
     return null;
   }
 
@@ -688,6 +713,12 @@ export class CsvConstants {
     if (dataSourceType === 'era-csv') {
       if (recordType === 'Ticket') {
         return eraTicketsCsvDateFields;
+      }
+    }
+
+    if (dataSourceType === 'ams-csv') {
+      if (recordType === 'Order') {
+        return amsOrdersCsvDateFields;
       }
     }
 

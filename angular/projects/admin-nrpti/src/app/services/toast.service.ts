@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import {v4 as uuidv4} from 'uuid';
+import { Guid } from 'guid-typescript';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class ToastService {
       body: body,
       title: title,
       type: type,
-      guid: uuidv4(),
+      guid: Guid.create(),
       date: new Date().toISOString()
     });
     // tslint:disable-next-statement
