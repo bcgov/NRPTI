@@ -1,13 +1,79 @@
 const mongodb = require('../../src/utils/mongodb');
-
+const BusinessLogicManager = require('../../src/utils/business-logic-manager');
 const { AUTHORIZED_PUBLISH_AGENCIES } = require('../../src/utils/constants/misc');
 
+
 /**
- * Updates the redactedRecord subset.
+ * Updates or adds the record passed in, in hte redacted record subset
+ *
+ * @param {*} defaultLog
+ * @param {*} record
+ */
+async function saveOneRecord(defaultLog, record) {
+
+  let redactedRecord = record;
+  const issuedTo = record.issuedTo;
+  const issuingAgency = record.issuingAgency;
+
+  if ( BusinessLogicManager.isIssuedToConsideredAnonymous(issuedTo, issuingAgency) ) {
+    redactedRecord.issuedTo.firstName = 'Unpublished';
+    redactedRecord.issuedTo.lastName = 'Unpublished';
+    redactedRecord.issuedTo.middleName = 'Unpublished';
+    redactedRecord.issuedTo.fullName = 'Unpublished';
+    redactedRecord.issuedTo.dateOfBirth = null;
+  }
+  try {
+    defaultLog.info('Updating redacted_record_subset');
+
+    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const redactedCollection = db.collection('redacted_record_subset');
+    redactedCollection.save(record.toObject ());
+
+    defaultLog.info('Done Updating redacted_record_subset');
+
+  } catch (error) {
+    defaultLog.info('Failed to update redacted_record_subset, error: ' + error);
+  }
+}
+
+exports.saveOneRecord = saveOneRecord;
+
+
+/**
+ * Updates or adds the record passed in, in hte redacted record subset
+ *
+ * @param {*} defaultLog
+ * @param {*} record
+ */
+async function updateOneRecord(defaultLog, record) {
+
+  let redactedRecord = record;
+  const issuedTo = record.issuedTo;
+  const issuingAgency = record.issuingAgency;
+
+  if ( BusinessLogicManager.isIssuedToConsideredAnonymous(issuedTo, issuingAgency) ) {
+    redactedRecord.issuedTo.firstName = 'Unpublished';
+    redactedRecord.issuedTo.lastName = 'Unpublished';
+    redactedRecord.issuedTo.middleName = 'Unpublished';
+    redactedRecord.issuedTo.fullName = 'Unpublished';
+    redactedRecord.issuedTo.dateOfBirth = null;
+  }
+
+  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const redactedCollection = db.collection('redacted_record_subset');
+
+  redactedCollection.save(record.toObject ());
+}
+
+exports.updateOneRecord = updateOneRecord;
+
+
+/**
+ * Updates the all the records in the redactedRecord subset.
  *
  * @param {*} defaultLog
  */
-async function update(defaultLog) {
+async function updateAllRecords (defaultLog) {
   // get all records with valid schemaNames
   let aggregate = [
     {
@@ -238,4 +304,4 @@ async function update(defaultLog) {
   }
 }
 
-exports.update = update;
+exports.updateAllRecords = updateAllRecords;

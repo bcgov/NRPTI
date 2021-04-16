@@ -63,12 +63,6 @@ objects:
                         -d '{"taskType":"updateMaterializedView", "materializedViewSubset":"recordNameSubset"}' \
                         ${NRPTI_API_URL}/task
 
-                      echo -e "Updating recordName subset\n"
-                      curl -H "Authorization: Bearer ${TOKEN}" \
-                        -H "Content-Type: application/json" \
-                        -d '{"taskType":"updateMaterializedView", "materializedViewSubset":"redactedRecordSubset"}' \
-                        ${NRPTI_API_URL}/task
-
                       echo -e "Updating descriptionSummary subset\n"
                       curl -H "Authorization: Bearer ${TOKEN}" \
                         -H "Content-Type: application/json" \
