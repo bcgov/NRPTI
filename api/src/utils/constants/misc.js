@@ -99,7 +99,8 @@ exports.SKIP_REDACTION_SCHEMA_NAMES = [
   'MineBCMI',
   'CollectionBCMI',
   'MapLayerInfo',
-  'ActivityLNG'
+  'ActivityLNG',
+  'AgreementLNG'
 ];
 
 exports.LNG_SCHEMA_NAMES = [
