@@ -1,0 +1,108 @@
+---
+apiVersion: template.openshift.io/v1
+kind: Template
+labels:
+  template: ${GROUP_NAME}-network-security-policy
+metadata:
+  name: ${GROUP_NAME}-network-security-policy
+objects:
+  - kind: NetworkPolicy
+    apiVersion: networking.k8s.io/v1
+    metadata:
+      name: ${GROUP_NAME}-deny-by-default
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      # The default posture for a security first namespace is to
+      # deny all traffic. If not added this rule will be added
+      # by Platform Services during environment cut-over.
+      podSelector: {}
+      ingress: []
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: ${GROUP_NAME}-allow-from-openshift-ingress
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      # This policy allows any pod with a route & service combination
+      # to accept traffic from the OpenShift router pods. This is
+      # required for things outside of OpenShift (like the Internet)
+      # to reach your pods.
+      ingress:
+        - from:
+            - namespaceSelector:
+                matchLabels:
+                  network.openshift.io/policy-group: ingress
+      podSelector: {}
+      policyTypes:
+        - Ingress
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: ${GROUP_NAME}-allow-services-to-database
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      # Allow services to connect to the database
+      podSelector:
+        matchLabels:
+          role: database
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  role: api
+            - podSelector:
+                matchLabels:
+                  role: backup
+            - podSelector:
+                matchLabels:
+                  role: metabase
+          ports:
+            - protocol: TCP
+              port: 27017
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: ${GROUP_NAME}-allow-frontend-to-api
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      # Allow frontends to connect to API
+      podSelector:
+        matchLabels:
+          role: api
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  role: frontend
+          ports:
+            - protocol: TCP
+              port: 3000
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: ${GROUP_NAME}-allow-proxy-to-frontend
+      labels:
+        app: ${GROUP_NAME}
+    spec:
+      # Allow proxy to connect to the frontend
+      podSelector:
+        matchLabels:
+          role: frontend
+      ingress:
+        - from:
+            - podSelector:
+                matchLabels:
+                  role: proxy
+          ports:
+            - protocol: TCP
+              port: 4000 # e-guides port
+parameters:
+  - description: A name used to group objects together to identify related objects for a set of deployments
+    displayName: Group name
+    name: GROUP_NAME
+    required: true
+    value: nrpti
