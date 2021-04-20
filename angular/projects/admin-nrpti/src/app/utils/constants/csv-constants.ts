@@ -300,57 +300,6 @@ export class CsvConstants {
   ];
 
   /**
-   * Expected headers for NRIS FLNRO NRO Inspection csv.
-   *
-   * Note: sort order and letter case of headers is not important.
-   *
-   * @static
-   * @memberof CsvConstants
-   */
-  public static readonly flnrInspectionCsvRequiredHeaders = [
-    'Record ID',
-    'Date',
-    'Client / Complainant',
-    'Region',
-    'Latitude',
-    'Longitude',
-    'Function',
-    'Action Taken',
-    'Activity',
-    'Report Status'
-  ];
-
-  /**
-   * Required fields for NRIS FLNRO NRO Inspection csv.
-   *
-   * @static
-   * @memberof CsvConstants
-   */
-  public static readonly flnrInspectionCsvRequiredFields = ['Record ID'];
-
-  /**
-   * Fields for NRIS FLNRO NRO Inspection csv that have a required format.
-   *
-   * Note: These fields are not necessarily required, and only have a required format if present.
-   *
-   * @static
-   * @type {IRequiredFormat[]}
-   * @memberof CsvConstants
-   */
-  public static readonly flnrInspectionCsvRequiredFormats: IRequiredFormat[] = [
-    { field: 'Date', type: 'date', format: 'YYYY-MM-DD' }
-  ];
-
-  /**
-   * Fields for NRIS FLNRO NRO Inspection csv that represent dates.
-   *
-   * @static
-   * @type {IDateField[]}
-   * @memberof CsvConstants
-   */
-  public static readonly flnrInspectionCsvDateFields: IDateField[] = [{ field: 'Date', format: 'YYYY-MM-DD' }];
-
-  /**
    * Expected headers for AGRI MIS Inspection csv.
    *
    * Note: sort order and letter case of headers is not important.
@@ -473,12 +422,6 @@ export class CsvConstants {
       }
     }
 
-    if (dataSourceType === 'nris-flnr-csv') {
-      if (recordType === 'Inspection') {
-        return this.flnrInspectionCsvRequiredHeaders;
-      }
-    }
-
     if (dataSourceType === 'agri-mis-csv') {
       if (recordType === 'Inspection') {
         return this.misInspectionCsvRequiredHeaders;
@@ -541,12 +484,6 @@ export class CsvConstants {
     if (dataSourceType === 'bcogc') {
       if (recordType === 'Inspection') {
         return this.ogcInspectionCsvRequiredFields;
-      }
-    }
-
-    if (dataSourceType === 'nris-flnr-csv') {
-      if (recordType === 'Inspection') {
-        return this.flnrInspectionCsvRequiredFields;
       }
     }
 
@@ -615,12 +552,6 @@ export class CsvConstants {
       }
     }
 
-    if (dataSourceType === 'nris-flnr-csv') {
-      if (recordType === 'Inspection') {
-        return this.flnrInspectionCsvRequiredFormats;
-      }
-    }
-
     if (dataSourceType === 'agri-mis-csv') {
       if (recordType === 'Inspection') {
         return this.misInspectionsCsvRequiredFormats;
@@ -683,12 +614,6 @@ export class CsvConstants {
     if (dataSourceType === 'bcogc') {
       if (recordType === 'Inspection') {
         return this.ogcInspectionCsvDateFields;
-      }
-    }
-
-    if (dataSourceType === 'nris-flnr-csv') {
-      if (recordType === 'Inspection') {
-        return this.flnrInspectionCsvDateFields;
       }
     }
 
