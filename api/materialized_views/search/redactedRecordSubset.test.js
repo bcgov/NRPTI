@@ -1,4 +1,3 @@
-const defaultLog = require('../../src/utils/logger')('redactedRecordSubset.test');
 const mongoose = require('mongoose');
 const redactedRecordSubset = require('./redactedRecordSubset');
 const { generateIssuedTo } = require('../../test/factories/factory_helper');
