@@ -1,7 +1,6 @@
 let mongoose = require('mongoose');
-const defaultLog = require('./logger')('model-schema-generator');
 const redactedRecordSubset = require('../../materialized_views/search/redactedRecordSubset');
-
+const Constants = require('./constants/misc');
 
 let genSchema = function(name, definition) {
   //
@@ -89,21 +88,14 @@ let genSchema = function(name, definition) {
       definition._addedBy = { type: String, default: 'system' };
       definition._deletedBy = { type: String, default: 'system' };
 
-      if (name !== 'MineBCMI' || name !== 'CollectionBCMI' || name !== 'MapLayerInfo') {
+      if (!Constants.SKIP_REDACTION_SCHEMA_NAMES.includes(name)) {
 
         schema.post('save', async record => {
-          // redact records and push into the redacted record collection for public consumption
-          await redactedRecordSubset.saveOneRecord('post-record-save', record);
+          await redactedRecordSubset.saveOneRecord(record);
         });
 
         schema.post('findOneAndUpdate', async record => {
-          // redact records and push into the redacted record collection for public consumption
-          await redactedRecordSubset.updateOneRecord('post-record-save', record);
-        });
-
-        schema.post('deleteOne', async record => {
-          // redact records and push into the redacted record collection for public consumption
-          await redactedRecordSubset.deleteOneRecord('post-record-save', record);
+          await redactedRecordSubset.updateOneRecord(record);
         });
       }
     }
