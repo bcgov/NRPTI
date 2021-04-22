@@ -172,9 +172,9 @@ function validateFields(header, csvRows, dataSourceType, recordType) {
     // get row values array
     const csvRowValuesArray = csvRows[rowNumber];
 
-    fieldsValid = validateRequiredFields(csvRowValuesArray, requiredFieldsArray, header, rowNumber);
+    fieldsValid = validateRequiredFields(csvRowValuesArray, requiredFieldsArray, rowNumber);
 
-    formatsValid = validateRequiredFormats(csvRowValuesArray, requiredFormatsArray, header, rowNumber);
+    formatsValid = validateRequiredFormats(csvRowValuesArray, requiredFormatsArray, rowNumber);
   }
   if (!fieldsValid && !formatsValid) {
     return false;
