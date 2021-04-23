@@ -84,7 +84,7 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
    * @memberof MinesRecordsTableRowComponent
    */
   goToDetails() {
-    window.open(`${this.router.url}/${this.rowData._id}/detail`, '_blank');
+    this.router.navigate([this.rowData._id, 'detail'], {relativeTo: this.route});
   }
 
   /**
@@ -93,6 +93,7 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
    * @memberof MinesRecordsTableRowComponent
    */
   goToEdit() {
-    window.open(`${this.router.url}/${this.rowData._id}/edit`, '_blank');
+    this.router.navigate([this.rowData._id, 'edit'], {relativeTo: this.route});
+    // window.open(`${this.router.url}/${this.rowData._id}/edit`, '_blank');
   }
 }

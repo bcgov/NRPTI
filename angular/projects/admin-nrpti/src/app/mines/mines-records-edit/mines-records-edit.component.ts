@@ -274,7 +274,7 @@ export class MinesRecordsEditComponent implements OnInit {
       );
 
       this.loadingScreenService.setLoadingState(false, 'main');
-      this.router.navigate(['mines', this.mine._id, 'records', this.record._id, 'detail']);
+      this.router.navigate(['mines', this.mine._id, 'records']);
     });
   }
   convertAcronyms(acronym) {
@@ -291,7 +291,7 @@ export class MinesRecordsEditComponent implements OnInit {
       'Leaving this page will discard unsaved changes. Are you sure you would like to continue?'
     );
     if (shouldCancel) {
-      this.router.navigate(['mines', this.mine._id, 'records', this.record._id, 'detail']);
+      this.router.navigate(['mines', this.mine._id, 'records']);
     }
   }
 }
