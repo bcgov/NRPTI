@@ -12,7 +12,7 @@ describe('readAndParseCsvFile', () => {
   it('returns parsed row if csv is valid ', async () => {
     const stream = new AWS.S3().getObject('getObject').createReadStream();
     const result = await readAndParseCsvFile(stream, 'nris-flnr-csv', 'Inspection');
-    expect(result).t
+    expect(result).toBeDefined();
     expect(result).toHaveLength(1);
     expect(result[0]['section']).toBe('Mowing without a license');
     expect(result[0]['date']).toBe('2021-02-24');
