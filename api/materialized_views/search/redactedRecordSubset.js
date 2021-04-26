@@ -75,3 +75,26 @@ async function updateOneRecord(record) {
 }
 
 exports.updateOneRecord = updateOneRecord;
+
+
+
+/**
+ * Updates the record passed in, in the redacted record subset
+ *
+ * @param {*} record
+ */
+async function deleteOneRecord(record) {
+  try {
+    defaultLog.info('Updating redacted_record_subset');
+
+    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const redactedCollection = db.collection('redacted_record_subset');
+    redactedCollection.deleteOne({ _id: record._id });
+
+    defaultLog.info('Done Updating redacted_record_subset');
+  } catch (error) {
+    defaultLog.info('Failed to update redacted_record_subset, error: ' + error);
+  }
+}
+
+exports.deleteOneRecord = deleteOneRecord;

@@ -97,6 +97,10 @@ let genSchema = function(name, definition) {
         schema.post('findOneAndUpdate', async record => {
           await redactedRecordSubset.updateOneRecord(record);
         });
+
+        schema.post('findOneAndRemove', async record => {
+          await redactedRecordSubset.deleteOneRecord(record);
+        });
       }
     }
   }
