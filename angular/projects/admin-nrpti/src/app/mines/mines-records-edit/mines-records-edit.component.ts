@@ -11,6 +11,7 @@ import moment from 'moment';
 import { ConfirmComponent } from '../../confirm/confirm.component';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { Constants } from '../../utils/constants/misc';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-mines-records-edit',
@@ -65,7 +66,8 @@ export class MinesRecordsEditComponent implements OnInit {
     private utils: Utils,
     private dialogService: DialogService,
     private storeService: StoreService,
-    private _changeDetectionRef: ChangeDetectorRef
+    private _changeDetectionRef: ChangeDetectorRef,
+    private toastService: ToastService
   ) { }
 
   ngOnInit() {
@@ -274,7 +276,9 @@ export class MinesRecordsEditComponent implements OnInit {
       );
 
       this.loadingScreenService.setLoadingState(false, 'main');
-      this.router.navigate(['mines', this.mine._id, 'records']);
+      this.toastService.addMessage(this.record.recordName, 'Successfully updated', Constants.ToastTypes.SUCCESS);
+      this.router.navigate(['mines', this.mine._id, 'records', this.record._id, 'detail']);
+
     });
   }
   convertAcronyms(acronym) {
