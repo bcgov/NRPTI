@@ -16,12 +16,19 @@ export class MinesRecordDetailComponent implements OnInit, OnDestroy {
   public record: any;
   public collections: [CollectionBCMI];
   public lastEditedSubText = null;
+  public disableEdit = false;
 
   constructor(
     public route: ActivatedRoute,
     public router: Router,
     public changeDetectionRef: ChangeDetectorRef
   ) { }
+
+  isDisableEdit() {
+    if (this.record && this.record.sourceSystemRef === 'core') {
+      this.disableEdit = true;
+    }
+  }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -41,6 +48,7 @@ export class MinesRecordDetailComponent implements OnInit, OnDestroy {
         res.collections[0].data.searchResults;
 
       this.populateTextFields();
+      this.isDisableEdit();
 
       this.changeDetectionRef.detectChanges();
     });
@@ -60,7 +68,7 @@ export class MinesRecordDetailComponent implements OnInit, OnDestroy {
   }
 
   navigateToEditPage() {
-    this.router.navigate(['records', 'permits']);
+    this.router.navigate(['../edit'], {relativeTo: this.route});
   }
 
   ngOnDestroy() {
