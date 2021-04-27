@@ -40,7 +40,7 @@ async function saveOneRecord(record) {
 
     const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
     const redactedCollection = db.collection('redacted_record_subset');
-    redactedCollection.save(redactedRecord);
+    await redactedCollection.save(redactedRecord);
 
     defaultLog.info('Done Updating redacted_record_subset');
   } catch (error) {
@@ -66,7 +66,7 @@ async function updateOneRecord(record) {
 
     const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
     const redactedCollection = db.collection('redacted_record_subset');
-    redactedCollection.findOneAndUpdate({ _id: redactedRecord._id }, redactedRecord);
+    await redactedCollection.findOneAndUpdate({ _id: redactedRecord._id }, redactedRecord);
 
     defaultLog.info('Done Updating redacted_record_subset');
   } catch (error) {
@@ -89,7 +89,7 @@ async function deleteOneRecord(record) {
 
     const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
     const redactedCollection = db.collection('redacted_record_subset');
-    redactedCollection.deleteOne({ _id: record._id });
+    await redactedCollection.deleteOne({ _id: record._id });
 
     defaultLog.info('Done Updating redacted_record_subset');
   } catch (error) {
