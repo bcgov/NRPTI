@@ -111,6 +111,12 @@ objects:
                                 -d '{"taskType":"import", "dataSourceType":"nris-epd"}' \
                                 ${NRPTI_API_URL}/task
 
+                      echo -e "Importing NRIS-FLNRO-Inspections\n"
+                              curl -H "Authorization: Bearer ${TOKEN}" \
+                                -H "Content-Type: application/json" \
+                                -d '{"taskType":"fmeImport", "dataSourceType":"nris-flnr-csv", "recordTypes": ["Inspection"]}' \
+                                ${NRPTI_API_URL}/task
+
                         echo -e "-------- CRON COMPLETE --------\n"
                   env:
                     - name: KEYCLOAK_PASSWORD
