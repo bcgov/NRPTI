@@ -602,6 +602,7 @@ export class Picklists {
     ],
     'Mines Act': [
       'Administrative Penalties (Mines) Regulation',
+      'Health, Safety and Reclamation Code for Mines in British Columbia',
       'Mine Reclamation Fund Regulation',
       'Mines Fee Regulation',
       'Mines Regulation',

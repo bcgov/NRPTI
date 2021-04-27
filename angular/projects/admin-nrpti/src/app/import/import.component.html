@@ -3,7 +3,7 @@
     <h4>Import from Source System</h4>
 
     <div class="row">
-      <div *ngIf="showSourceSystemEPIC" class="col-md-3 mb-3">
+      <div *ngIf="showSourceSystemEPIC" class="col-sm mb-3">
         <label>Import from EPIC</label>
         <div>
           <button
@@ -16,7 +16,7 @@
           </button>
         </div>
       </div>
-      <div *ngIf="showSourceSystemNRIS" class="col-md-3 mb-3">
+      <div *ngIf="showSourceSystemNRIS" class="col-sm mb-3">
         <label>Import from NRIS</label>
         <div>
           <button
@@ -29,7 +29,20 @@
           </button>
         </div>
       </div>
-      <div *ngIf="showSourceSystemCORE" class="col-md-3 mb-3">
+      <div *ngIf="showSourceSystemEMLI" class="col-sm mb-3">
+        <label>Import from EMLI</label>
+        <div>
+          <button
+            type="button"
+            [disabled]="buttonActions['nris-emli']"
+            class="btn btn-primary"
+            (click)="startJob('nris-emli')"
+            title="Start EMLI import job">
+            Start Job
+          </button>
+        </div>
+      </div>
+      <div *ngIf="showSourceSystemCORE" class="col-sm mb-3">
         <label>Import from CORE</label>
         <div>
           <button
@@ -42,7 +55,7 @@
           </button>
         </div>
       </div>
-      <div *ngIf="showSourceSystemBCOGC" class="col-md-3 mb-3">
+      <div *ngIf="showSourceSystemBCOGC" class="col-sm mb-3">
         <label>Import from BCOGC</label>
         <div>
           <button
