@@ -4,13 +4,15 @@ const defaultLog = require('../utils/logger')('import-task');
 const { SYSTEM_USER, CSV_SOURCE_DEFAULT_ROLES } = require('../utils/constants/misc');
 const queryActions = require('../utils/query-actions');
 const TaskAuditRecord = require('../utils/task-audit-record');
-const { getCsvRowsFromString } = require('../utils/helpers');
+const { getCsvRowsFromString } = require('../utils/csv-helpers');
+const { getAndParseFmeCsv } = require('../utils/fme-import-utils');
 
 const issuedToSubset = require('../../materialized_views/search/issuedToSubset');
 const locationSubset = require('../../materialized_views/search/locationSubset');
 const recordNameSubset = require('../../materialized_views/search/recordNameSubset');
 const descriptionSummarySubset = require('../../materialized_views/search/descriptionSummarySubset');
 const outcomeDescriptionSubset = require('../../materialized_views/search/outcomeDescriptionSubset');
+
 
 exports.protectedOptions = async function(args, res, next) {
   res.status(200).send();
@@ -49,7 +51,8 @@ exports.protectedCreateTask = async function(args, res, next) {
 
   switch (args.swagger.params.task.value.taskType) {
     case 'import':
-    case 'csvImport': {
+    case 'csvImport':
+    case 'fmeImport': {
       if (!args.swagger.params.task.value.dataSourceType) {
         defaultLog.error('protectedCreateTask - missing required dataSourceType');
         return queryActions.sendResponse(res, 400, 'protectedCreateTask - missing required dataSourceType');
@@ -93,6 +96,36 @@ exports.protectedCreateTask = async function(args, res, next) {
             res,
             400,
             'protectedCreateTask - could not convert csvData string to csv rows array'
+          );
+        }
+
+        // run data source record updates
+        runTask(
+          nrptiDataSource,
+          args.swagger.params.auth_payload,
+          args.swagger.params.task.value.recordTypes[0],
+          csvRows
+        );
+      } else if (args.swagger.params.task.value.taskType === 'fmeImport') {
+        if (!args.swagger.params.task.value.recordTypes) {
+          defaultLog.error('protectedCreateTask - missing required recordTypes');
+          return queryActions.sendResponse(res, 400, 'protectedCreateTask - missing required recordTypes');
+        }
+
+        // fetch csv from s3, parse, validate, and transform to csvrows format expected by csv-importer
+        const csvRows = await getAndParseFmeCsv(
+          args.swagger.params.task.value.dataSourceType,
+          args.swagger.params.task.value.recordTypes[0]
+        );
+
+        if (!csvRows || !csvRows.length) {
+          defaultLog.error(
+            `protectedCreateTask - could not parse csvData for FME source ${args.swagger.params.task.value.dataSourceType}`
+          );
+          return queryActions.sendResponse(
+            res,
+            400,
+            `protectedCreateTask - could not parse csvData for FME source ${args.swagger.params.task.value.dataSourceType}`
           );
         }
 

@@ -13,13 +13,11 @@ const DEFAULT_DATA_SOURCES = [
   { displayName: 'AGRI-CMDB', value: 'agri-cmdb-csv' },
   { displayName: 'AGRI-MIS', value: 'agri-mis-csv' },
   { displayName: 'COORS', value: 'coors-csv' },
-  { displayName: 'NRIS-FLNR', value: 'nris-flnr-csv' },
   { displayName: 'NRO-ERA', value: 'era-csv' }
 ];
 
 const DEFAULT_CSV_TYPES = {
   'coors-csv': ['Administrative Sanction', 'Court Conviction', 'Ticket'],
-  'nris-flnr-csv': ['Inspection'],
   'agri-mis-csv': ['Inspection'],
   'agri-cmdb-csv': ['Inspection'],
   'alc-csv': ['Inspection'],
@@ -30,7 +28,7 @@ const DEFAULT_CSV_TYPES = {
 const ROLE_DATA_SOURCES = {
   [Constants.ApplicationRoles.ADMIN_FLNRO]: ['coors-csv'],
   [Constants.ApplicationRoles.ADMIN_ENV_COS]: ['coors-csv'],
-  [Constants.ApplicationRoles.ADMIN_FLNR_NRO]: ['era-csv', 'nris-flnr-csv'],
+  [Constants.ApplicationRoles.ADMIN_FLNR_NRO]: ['era-csv'],
   [Constants.ApplicationRoles.ADMIN_AGRI]: ['agri-cmdb-csv', 'agri-mis-csv'],
   [Constants.ApplicationRoles.ADMIN_ALC]: ['alc-csv'],
   [Constants.ApplicationRoles.ADMIN_ENV_EPD]: ['ams-csv']
