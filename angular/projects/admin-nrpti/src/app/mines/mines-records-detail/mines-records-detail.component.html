@@ -6,10 +6,18 @@
   </section>
 
   <section class="mb-3 pb-3 border-bottom">
-    <div class="row">
+    <div class="row justify-content-between">
       <div class="mb-2 col-12 col-sm-8">
         <h2 class="border-0 mb-0">Record Information</h2>
         <span class="grey-subtext">{{ lastEditedSubText }}</span>
+      </div>
+      <div class="mx-3" *ngIf="!disableEdit">
+        <button class="btn btn-primary" type="submit" (click)="navigateToEditPage()" title="Edit record">
+          <em class="material-icons mr-1">
+            create
+          </em>
+          Edit Record
+        </button>
       </div>
     </div>
   </section>

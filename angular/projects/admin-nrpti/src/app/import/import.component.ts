@@ -29,9 +29,10 @@ export class ImportComponent implements OnInit, OnDestroy {
   public showSourceSystem = true;
   public showSourceSystemEPIC = true;
   public showSourceSystemNRIS = true;
+  public showSourceSystemEMLI = true;
   public showSourceSystemCORE = true;
   public showSourceSystemBCOGC = true;
-  public buttonActions = { epic: false, 'nris-epd': false, core: false, bcogc: false };
+  public buttonActions = { epic: false, 'nris-epd': false, 'nris-emli': true, core: false, bcogc: false };
   public tableData: TableObject = new TableObject({ component: ImportTableRowsComponent });
   public tableColumns: IColumnObject[] = [
     {
