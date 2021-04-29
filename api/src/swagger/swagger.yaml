@@ -55,6 +55,7 @@ definitions:
       - core-documents
       - epic
       - nris-epd
+      - nris-emli
       - coors-csv
       - bcogc
   dataImportType:
