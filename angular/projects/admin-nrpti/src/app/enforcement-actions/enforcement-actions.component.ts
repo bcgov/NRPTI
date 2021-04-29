@@ -89,7 +89,7 @@ export class EnforcementActionsComponent implements OnInit {
 
 
   add(item) {
-    this.router.navigate(['records', item, 'add']);
+    this.router.navigate(['mines', 'enforcement-actions', item, 'add']);
   }
 
 }

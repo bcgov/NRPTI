@@ -50,7 +50,8 @@ exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;
 exports.createItem = async function(args, res, next, incomingObj) {
   const flavourFunctions = {
     AdministrativePenaltyLNG: this.createLNG,
-    AdministrativePenaltyNRCED: this.createNRCED
+    AdministrativePenaltyNRCED: this.createNRCED,
+    AdministrativePenaltyBCMI: this.createBCMI
   };
 
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
@@ -105,6 +106,8 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (administrativePenalty.collectionId = new ObjectId(incomingObj.collectionId));
+  incomingObj.mineGuid && (administrativePenalty.mineGuid = incomingObj.mineGuid);
+  incomingObj.unlistedMine && (administrativePenalty.unlistedMine = incomingObj.unlistedMine);
 
   incomingObj._sourceRefOgcPenaltyId &&
     (administrativePenalty._sourceRefOgcPenaltyId = incomingObj._sourceRefOgcPenaltyId);
@@ -403,6 +406,10 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (administrativePenaltyNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj.mineGuid && (administrativePenaltyNRCED.mineGuid = incomingObj.mineGuid);
+  incomingObj.unlistedMine && (administrativePenaltyNRCED.unlistedMine = incomingObj.unlistedMine);
+
+
 
   incomingObj._sourceRefOgcPenaltyId &&
     (administrativePenaltyNRCED._sourceRefOgcPenaltyId = incomingObj._sourceRefOgcPenaltyId);
@@ -495,4 +502,163 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   administrativePenaltyNRCED = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyNRCED);
 
   return administrativePenaltyNRCED;
+};
+
+
+/**
+ * Performs all operations necessary to create a NRCED Administrative Penalty record.
+ *
+ * Example of incomingObj
+ *
+ *  administrativePenalties: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'administrativePenalty',
+ *      ...
+ *      AdministrativePenaltyLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      AdministrativePenaltyNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      },
+ *      AdministrativePenaltyBCMI: {
+ *        summary: 'bcmi summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created nrced administrativePenalty record
+ */
+ exports.createBCMI = function(args, res, next, incomingObj) {
+  // Confirm user has correct role to create this type of record.
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, ...ADDITIONAL_ROLES],
+      args.swagger.params.auth_payload.realm_access.roles
+    )
+  ) {
+    throw new Error('Missing valid user role.');
+  }
+
+  let AdministrativePenaltyBCMI = mongoose.model('AdministrativePenaltyBCMI');
+  let administrativePenaltyBCMI = new AdministrativePenaltyBCMI();
+
+  administrativePenaltyBCMI._schemaName = 'AdministrativePenaltyBCMI';
+
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (administrativePenaltyBCMI._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (administrativePenaltyBCMI._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (administrativePenaltyBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj.mineGuid && (administrativePenaltyBCMI.mineGuid = incomingObj.mineGuid);
+  incomingObj.unlistedMine && (administrativePenaltyBCMI.unlistedMine = incomingObj.unlistedMine);
+
+
+
+  incomingObj._sourceRefOgcPenaltyId &&
+    (administrativePenaltyBCMI._sourceRefOgcPenaltyId = incomingObj._sourceRefOgcPenaltyId);
+
+  // set permissions and meta
+  administrativePenaltyBCMI.read = utils.ApplicationAdminRoles;
+  administrativePenaltyBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+
+  administrativePenaltyBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  administrativePenaltyBCMI.dateAdded = new Date();
+
+  // set master data
+  incomingObj.recordName && (administrativePenaltyBCMI.recordName = incomingObj.recordName);
+  administrativePenaltyBCMI.recordType = 'Administrative Penalty';
+  incomingObj.dateIssued && (administrativePenaltyBCMI.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (administrativePenaltyBCMI.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.author && (administrativePenaltyBCMI.author = incomingObj.author);
+
+  incomingObj.legislation &&
+    incomingObj.legislation.act &&
+    (administrativePenaltyBCMI.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (administrativePenaltyBCMI.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (administrativePenaltyBCMI.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (administrativePenaltyBCMI.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (administrativePenaltyBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
+
+  incomingObj.offence && (administrativePenaltyBCMI.offence = incomingObj.offence);
+
+  administrativePenaltyBCMI.issuedTo.read = utils.ApplicationAdminRoles;
+  administrativePenaltyBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.type &&
+    (administrativePenaltyBCMI.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
+    (administrativePenaltyBCMI.issuedTo.companyName = incomingObj.issuedTo.companyName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
+    (administrativePenaltyBCMI.issuedTo.firstName = incomingObj.issuedTo.firstName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
+    (administrativePenaltyBCMI.issuedTo.middleName = incomingObj.issuedTo.middleName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.lastName &&
+    (administrativePenaltyBCMI.issuedTo.lastName = incomingObj.issuedTo.lastName);
+  incomingObj.issuedTo &&
+    (administrativePenaltyBCMI.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
+    (administrativePenaltyBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+
+  incomingObj.projectName && (administrativePenaltyBCMI.projectName = incomingObj.projectName);
+  incomingObj.location && (administrativePenaltyBCMI.location = incomingObj.location);
+  incomingObj.centroid && (administrativePenaltyBCMI.centroid = incomingObj.centroid);
+  incomingObj.penalties && (administrativePenaltyBCMI.penalties = incomingObj.penalties);
+  incomingObj.documents && (administrativePenaltyBCMI.documents = incomingObj.documents);
+
+  // set flavour data
+  incomingObj.summary && (administrativePenaltyBCMI.summary = incomingObj.summary);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (administrativePenaltyBCMI.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (administrativePenaltyBCMI.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (administrativePenaltyBCMI.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+  if (args) {
+    postUtils.setAdditionalRoleOnRecord(
+      administrativePenaltyBCMI,
+      args.swagger.params.auth_payload.realm_access.roles,
+      ADDITIONAL_ROLES
+    );
+  }
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    administrativePenaltyBCMI.read.push('public');
+    administrativePenaltyBCMI.datePublished = new Date();
+    administrativePenaltyBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
+
+  administrativePenaltyBCMI = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyBCMI);
+
+  return administrativePenaltyBCMI;
 };

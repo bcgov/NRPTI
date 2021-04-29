@@ -883,7 +883,7 @@ export class Picklists {
       },
       'Mines Act': {
         '36.2': {
-          description: 'Unauthorized work'
+          description: 'Penalty for failure to comply with the Act or associated regulations'
         }
       },
       'Oil and Gas Activities Act': {

@@ -14,7 +14,7 @@ import { FactoryService } from '../../../services/factory.service';
   styleUrls: ['./administrative-penalty-detail.component.scss']
 })
 export class AdministrativePenaltyDetailComponent extends RecordDetailComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  protected ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   public legislationString = '';
 

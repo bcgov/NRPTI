@@ -24,6 +24,11 @@ const AdministrativePenaltyPost = require('../post/administrative-penalty');
  *        summary: 'nrced summary',
  *        addRole: 'public'
  *        ...
+ *      },
+ *      AdministrativePenaltyBCMI: {
+ *        summary: 'bcmi summary',
+ *        addRole: 'public'
+ *        ...
  *      }
  *    }
  *  ]
@@ -37,7 +42,8 @@ const AdministrativePenaltyPost = require('../post/administrative-penalty');
 exports.editRecord = async function (args, res, next, incomingObj, overridePutParams = null) {
   const flavourFunctions = {
     AdministrativePenaltyLNG: this.editLNG,
-    AdministrativePenaltyNRCED: this.editNRCED
+    AdministrativePenaltyNRCED: this.editNRCED,
+    AdministrativePenaltyBCMI: this.editBCMI
   }
   return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, AdministrativePenaltyPost, 'AdministrativePenalty', flavourFunctions, overridePutParams);
 };
@@ -59,6 +65,11 @@ exports.editRecord = async function (args, res, next, incomingObj, overridePutPa
  *      },
  *      AdministrativePenaltyNRCED: {
  *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      },
+ *      AdministrativePenaltyBCMI: {
+ *        summary: 'bcmi summary',
  *        addRole: 'public'
  *        ...
  *      }
@@ -121,6 +132,11 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
  *      },
  *      AdministrativePenaltyNRCED: {
  *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      },
+ *      AdministrativePenaltyBCMI: {
+ *        summary: 'bcmi summary',
  *        addRole: 'public'
  *        ...
  *      }
@@ -188,6 +204,11 @@ exports.editLNG = function (args, res, next, incomingObj) {
  *        summary: 'nrced summary',
  *        addRole: 'public'
  *        ...
+ *      },
+ *      AdministrativePenaltyBCMI: {
+ *        summary: 'bcmi summary',
+ *        addRole: 'public'
+ *        ...
  *      }
  *    }
  *  ]
@@ -209,6 +230,76 @@ exports.editNRCED = function (args, res, next, incomingObj) {
   let AdministrativePenaltyNRCED = mongoose.model('AdministrativePenaltyNRCED');
 
   const sanitizedObj = PutUtils.validateObjectAgainstModel(AdministrativePenaltyNRCED, incomingObj);
+
+  sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+
+  sanitizedObj.dateUpdated = new Date();
+
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  let updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
+
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    updateObj.$addToSet['read'] = 'public';
+    updateObj.$set['datePublished'] = new Date();
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
+    updateObj.$pull['read'] = 'public';
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
+  }
+
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
+
+  return updateObj;
+};
+
+/**
+ * Performs all operations necessary to edit a nrced Administrative Penalty record.
+ *
+ * Example of incomingObj
+ *
+ *  administrativePenalties: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'administrativePenalty',
+ *      ...
+ *      AdministrativePenaltyLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      AdministrativePenaltyNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      },
+ *      AdministrativePenaltyBCMI: {
+ *        summary: 'bcmi summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited nrced administrativePenalty record
+ */
+ exports.editBCMI = function (args, res, next, incomingObj) {
+  delete incomingObj._id;
+
+  // Reject any changes to permissions
+  // Publishing must be done via addRole or removeRole
+  delete incomingObj.read;
+  delete incomingObj.write;
+
+  let AdministrativePenaltyBCMI = mongoose.model('AdministrativePenaltyBCMI');
+
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(AdministrativePenaltyBCMI, incomingObj);
 
   sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
 

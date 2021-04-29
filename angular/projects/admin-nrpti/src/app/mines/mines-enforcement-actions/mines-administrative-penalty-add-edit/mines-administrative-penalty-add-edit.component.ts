@@ -1,0 +1,98 @@
+import { AdministrativePenaltyAddEditComponent } from './../../../records/administrative-penalties/administrative-penalty-add-edit/administrative-penalty-add-edit.component';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RecordUtils } from '../../../records/utils/record-utils';
+import { FactoryService } from '../../../services/factory.service';
+import { LoadingScreenService, LoggerService } from 'nrpti-angular-components';
+import { Utils, StoreService } from 'nrpti-angular-components';
+import { ChangeDetectorRef } from '@angular/core';
+// import { FormControl, FormGroup } from '@angular/forms';
+import { takeUntil } from 'rxjs/operators';
+
+
+@Component({
+  selector: 'app-mines-administrative-penalty-add-edit',
+  templateUrl: './mines-administrative-penalty-add-edit.component.html',
+  styleUrls: ['./mines-administrative-penalty-add-edit.component.scss']
+})
+export class MinesAdministrativePenaltyAddEditComponent extends AdministrativePenaltyAddEditComponent implements OnInit {
+
+  public componentTitle = 'BCMI Administrative Penalty Record';
+  public defaultAgency = 'EMLI';
+  public defaultAuthor = 'BC Government';
+
+  constructor(
+    public route: ActivatedRoute,
+    public router: Router,
+    protected recordUtils: RecordUtils,
+    protected factoryService: FactoryService,
+    protected loadingScreenService: LoadingScreenService,
+    protected logger: LoggerService,
+    protected utils: Utils,
+    protected _changeDetectionRef: ChangeDetectorRef,
+    // @ts-ignore used by record-association component
+    private storeService: StoreService,
+  ) {
+    super(
+      route,
+      router,
+      recordUtils,
+      factoryService,
+      loadingScreenService,
+      logger,
+      utils,
+      _changeDetectionRef
+    );
+   }
+
+  ngOnInit() {
+    this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
+      this.isEditing = res.breadcrumb !== 'Add Administrative Penalty';
+      if (this.isEditing) {
+        if (res && res.record && res.record[0] && res.record[0].data) {
+          this.currentRecord = res.record[0].data;
+          this.populateTextFields();
+        } else {
+          alert('Error: could not load edit mines administrative penalty.');
+          this.router.navigate([['mines', 'enforcement-actions']]);
+        }
+      } else {
+        this.currentRecord = {
+          sourceSystemRef: 'nrpti',
+          documents: [],
+          unlistedMine: ''
+        };
+      }
+    super.buildForm();
+    super.subscribeToFormControlChanges();
+    this.loading = false;
+    this._changeDetectionRef.detectChanges();
+    });
+  }
+
+  navigateToDetails() {
+    this.router.navigate(
+      ['records', 'administrative-penalties', this.currentRecord._id, 'detail']
+    );
+  }
+
+  async submit() {
+    await super.save();
+    this.router.navigate(
+      ['mines', 'enforcement-actions', 'administrative-penalties', this.currentRecord._id, 'detail']
+    );
+  }
+
+  cancel() {
+    const shouldCancel = confirm(
+      'Leaving this page will discard unsaved changes. Are you sure you would like to continue?'
+    );
+    if (shouldCancel) {
+      if (!this.isEditing) {
+        this.router.navigate(['mines', 'enforcement-actions']);
+      } else {
+        this.router.navigate(['mines', 'enforcement-actions', 'administrative-penalties', this.currentRecord._id, 'detail']);
+      }
+    }
+  }
+}

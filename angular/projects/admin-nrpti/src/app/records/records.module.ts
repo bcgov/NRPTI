@@ -70,6 +70,8 @@ import { AdministrativePenaltyAddEditComponent } from './administrative-penaltie
 import { AdministrativePenaltyDetailComponent } from './administrative-penalties/administrative-penalty-detail/administrative-penalty-detail.component';
 import { AdministrativePenaltyNRCEDDetailComponent } from './administrative-penalties/administrative-penalty-nrced-detail/administrative-penalty-nrced-detail.component';
 import { AdministrativePenaltyLNGDetailComponent } from './administrative-penalties/administrative-penalty-lng-detail/administrative-penalty-lng-detail.component';
+import { AdministrativePenaltyBCMIDetailComponent } from './administrative-penalties/administrative-penalty-bcmi-detail/administrative-penalty-bcmi-detail.component';
+
 
 // Administrative Sanctions
 import { AdministrativeSanctionAddEditComponent } from './administrative-sanctions/administrative-sanction-add-edit/administrative-sanction-add-edit.component';
@@ -194,6 +196,7 @@ import { AnnualReportBCMIDetailComponent } from './annual-reports/annual-report-
     AdministrativePenaltyDetailComponent,
     AdministrativePenaltyNRCEDDetailComponent,
     AdministrativePenaltyLNGDetailComponent,
+    AdministrativePenaltyBCMIDetailComponent,
     // administrative sanctions
     AdministrativeSanctionAddEditComponent,
     AdministrativeSanctionDetailComponent,
@@ -240,7 +243,7 @@ import { AnnualReportBCMIDetailComponent } from './annual-reports/annual-report-
     // annual report
     AnnualReportAddEditComponent,
     AnnualReportDetailComponent,
-    AnnualReportBCMIDetailComponent
+    AnnualReportBCMIDetailComponent,
   ],
   providers: [],
   entryComponents: [
@@ -285,6 +288,7 @@ import { AnnualReportBCMIDetailComponent } from './annual-reports/annual-report-
     AdministrativePenaltyDetailComponent,
     AdministrativePenaltyNRCEDDetailComponent,
     AdministrativePenaltyLNGDetailComponent,
+    AdministrativePenaltyBCMIDetailComponent,
     // administrative sanctions
     AdministrativeSanctionAddEditComponent,
     AdministrativeSanctionDetailComponent,
@@ -333,6 +337,13 @@ import { AnnualReportBCMIDetailComponent } from './annual-reports/annual-report-
     AnnualReportDetailComponent,
     AnnualReportBCMIDetailComponent
   ],
-  exports: []
+  exports: [
+    AdministrativePenaltyAddEditComponent,
+    AdministrativePenaltyDetailComponent,
+    AdministrativePenaltyNRCEDDetailComponent,
+    AdministrativePenaltyLNGDetailComponent,
+    AdministrativePenaltyBCMIDetailComponent,
+    RecordDetailDirective
+  ]
 })
 export class RecordsModule {}

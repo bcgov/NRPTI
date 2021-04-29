@@ -32,6 +32,7 @@ import { TicketNRCEDDetailComponent } from '../tickets/ticket-nrced-detail/ticke
 // administrative penalties
 import { AdministrativePenaltyNRCEDDetailComponent } from '../administrative-penalties/administrative-penalty-nrced-detail/administrative-penalty-nrced-detail.component';
 import { AdministrativePenaltyLNGDetailComponent } from '../administrative-penalties/administrative-penalty-lng-detail/administrative-penalty-lng-detail.component';
+import { AdministrativePenaltyBCMIDetailComponent } from '../administrative-penalties/administrative-penalty-bcmi-detail/administrative-penalty-bcmi-detail.component';
 
 // administrative sanctions
 import { AdministrativeSanctionNRCEDDetailComponent } from '../administrative-sanctions/administrative-sanction-nrced-detail/administrative-sanction-nrced-detail.component';
@@ -142,6 +143,8 @@ export class RecordUtils {
         return AdministrativePenaltyLNGDetailComponent;
       case 'AdministrativePenaltyNRCED':
         return AdministrativePenaltyNRCEDDetailComponent;
+      case 'AdministrativePenaltyBCMI':
+        return AdministrativePenaltyBCMIDetailComponent;
       case 'AdministrativeSanctionLNG':
         return AdministrativeSanctionLNGDetailComponent;
       case 'AdministrativeSanctionNRCED':

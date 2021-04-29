@@ -1,6 +1,6 @@
-<section class="mt-4 mb-4">
+<div class="flex-container">
   <form [formGroup]="formGroup">
-    <div class="flex-container mb-2">
+    <div *ngIf="this.epicProjects && !minesOnly" class="flex-container mb-2">
       <div class="label-pair">
         <label for="_epicProjectId">EPIC Project</label>
         <select name="_epicProjectId" id="_epicProjectId" formControlName="_epicProjectId" class="form-control">
@@ -10,7 +10,6 @@
         </select>
       </div>
     </div>
-    <div class="flex-container mb-2">
       <div class="label-pair">
         <label for="mineGuid">Mine Name</label>
         <select name="mineGuid" id="mineGuid" formControlName="mineGuid" class="form-control">
@@ -19,6 +18,19 @@
           </option>
         </select>
       </div>
-    </div>
+      <div *ngIf="minesOnly" class="label-pair">
+        <label for="unlistedMine">Mine Name (if not in BCMI)</label>
+        <input name="unlistedMine" id="unlistedMine" type="text" formControlName="unlistedMine" class="form-control" />
+      </div>
+      <div class="label-pair">
+        <label for="mineType">Mine Type</label>
+        <input
+            readonly
+            name="mineType"
+            id="mineType"
+            type="text"
+            value="{{ mineType }}"
+            class="form-control" />
+      </div>
   </form>
-</section>
+</div>

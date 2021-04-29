@@ -95,6 +95,10 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
         Constants.ApplicationRoles.ADMIN_ALC
+      ],
+      BCMI: [
+        Constants.ApplicationRoles.ADMIN_LNG,
+        Constants.ApplicationRoles.ADMIN_BCMI
       ]
     },
     ADMINISTRATIVE_SANCTION: {

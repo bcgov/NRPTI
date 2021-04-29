@@ -9,3 +9,4 @@ export * from './permit-bcmi';
 export * from './order-bcmi';
 export * from './management-plan-bcmi';
 export * from './inspection-bcmi';
+export * from './administrative-penalty-bcmi';

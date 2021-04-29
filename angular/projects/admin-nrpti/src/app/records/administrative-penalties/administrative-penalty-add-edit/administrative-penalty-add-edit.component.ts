@@ -19,24 +19,29 @@ import { Constants } from '../../../utils/constants/misc';
   styleUrls: ['./administrative-penalty-add-edit.component.scss']
 })
 export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  protected ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   public loading = true;
   public isEditing = false;
   public currentRecord = null;
   public myForm: FormGroup;
   public lastEditedSubText = null;
+  public componentTitle = 'Shared Data [Master]';
+  public unlistedMine = '';
+  public mineLocation = null;
 
   // Flavour data
   public nrcedFlavour = null;
   public lngFlavour = null;
+  public bcmiFlavour = null;
   public lngPublishSubtext = 'Not published';
   public nrcedPublishSubtext = 'Not published';
+  public bcmiPublishSubtext = 'Not published';
 
   // Pick lists
   public agencies = Picklists.agencyPicklist;
   public authors = Picklists.authorPicklist;
-  private defaultAgency = '';
+  public defaultAgency = '';
 
   // Documents
   public documents = [];
@@ -49,12 +54,12 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
   constructor(
     public route: ActivatedRoute,
     public router: Router,
-    private recordUtils: RecordUtils,
-    private factoryService: FactoryService,
-    private loadingScreenService: LoadingScreenService,
-    private logger: LoggerService,
-    private utils: Utils,
-    private _changeDetectionRef: ChangeDetectorRef
+    protected recordUtils: RecordUtils,
+    protected factoryService: FactoryService,
+    protected loadingScreenService: LoadingScreenService,
+    protected logger: LoggerService,
+    protected utils: Utils,
+    protected _changeDetectionRef: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
@@ -84,7 +89,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     });
   }
 
-  private populateTextFields() {
+  protected populateTextFields() {
     if (this.currentRecord.dateUpdated) {
       this.lastEditedSubText = `Last Edited on ${this.utils.convertJSDateToString(
         new Date(this.currentRecord.dateUpdated)
@@ -108,13 +113,20 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
               new Date(this.nrcedFlavour.datePublished)
             )}`);
           break;
+        case 'AdministrativePenaltyBCMI':
+          this.bcmiFlavour = flavour;
+          this.bcmiFlavour.read.includes('public') &&
+            (this.bcmiPublishSubtext = `Published on ${this.utils.convertJSDateToString(
+              new Date(this.bcmiFlavour.datePublished)
+            )}`);
+          break;
         default:
           break;
       }
     }
   }
 
-  private subscribeToFormControlChanges() {
+  protected subscribeToFormControlChanges() {
     // listen to legislation control changes
     const debouncedUpdateLegislationDescription = this.utils.debounced(500, () => this.updateLegislationDescription());
     this.myForm
@@ -138,7 +150,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     this.myForm.get('offence').markAsDirty();
   }
 
-  private buildForm() {
+  protected buildForm() {
     const flavourEditRequiredRoles = Constants.FlavourEditRequiredRoles.ADMINISTRATIVE_PENALTY;
 
     for (const role of Constants.ApplicationLimitedRoles) {
@@ -169,6 +181,20 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
       author: new FormControl({
         value: (this.currentRecord && this.currentRecord.author) || '',
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      association: new FormGroup({
+        _epicProjectId: new FormControl({
+          value: this.currentRecord && this.currentRecord._epicProjectId || null,
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        }),
+        mineGuid: new FormControl({
+          value: this.currentRecord && this.currentRecord.mineGuid || null,
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        }),
+        unlistedMine: new FormControl({
+          value: (this.currentRecord && this.currentRecord.unlistedMine) || '',
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        })
       }),
       legislation: new FormGroup({
         act: new FormControl({
@@ -270,6 +296,16 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
         disabled: !this.factoryService.isFlavourEditEnabled(flavourEditRequiredRoles.LNG)
+      }),
+
+      // BCMI
+      bcmiSummary: new FormControl({
+        value: (this.currentRecord && this.bcmiFlavour && this.bcmiFlavour.summary) || '',
+        disabled: !this.factoryService.isFlavourEditEnabled(flavourEditRequiredRoles.BCMI)
+      }),
+      publishBcmi: new FormControl({
+        value: (this.currentRecord && this.bcmiFlavour && this.bcmiFlavour.read.includes('public')) || false,
+        disabled: !this.factoryService.isFlavourEditEnabled(flavourEditRequiredRoles.BCMI)
       })
     });
   }
@@ -362,13 +398,16 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
       case 'nrced':
         this.myForm.controls.publishNrced.setValue(event.checked);
         break;
+        case 'bcmi':
+        this.myForm.controls.publishBcmi.setValue(event.checked);
+        break;
       default:
         break;
     }
     this._changeDetectionRef.detectChanges();
   }
 
-  async submit() {
+  async save() {
     this.loadingScreenService.setLoadingState(true, 'main');
     // TODO
     // _epicProjectId
@@ -387,6 +426,20 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     (this.myForm.controls.issuingAgency.dirty || this.defaultAgency) &&
       (administrativePenalty['issuingAgency'] = this.myForm.controls.issuingAgency.value);
     this.myForm.controls.author.dirty && (administrativePenalty['author'] = this.myForm.controls.author.value);
+
+    if (
+      this.myForm.get('association._epicProjectId').dirty
+    ) {
+      administrativePenalty['_epicProjectId'] = this.myForm.get('association._epicProjectId').value;
+    }
+
+    if (this.myForm.get('association.mineGuid').dirty) {
+      administrativePenalty['mineGuid'] = this.myForm.get('association.mineGuid').value;
+    }
+
+    if (this.myForm.get('association.unlistedMine').dirty) {
+      administrativePenalty['unlistedMine'] = this.myForm.get('association.unlistedMine').value;
+    }
 
     if (
       this.myForm.get('legislation.act').dirty ||
@@ -443,6 +496,10 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (administrativePenalty['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
+    if (this.mineLocation) {
+      administrativePenalty['centroid'] = [this.mineLocation.coordinates[0], this.mineLocation.coordinates[1]];
+    }
+
     this.myForm.get('penalties').dirty && (administrativePenalty['penalties'] = this.parsePenaltiesFormGroups());
 
     // NRCED flavour
@@ -467,6 +524,19 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
       administrativePenalty['AdministrativePenaltyLNG']['addRole'] = 'public';
     } else if (this.myForm.controls.publishLng.dirty && !this.myForm.controls.publishLng.value) {
       administrativePenalty['AdministrativePenaltyLNG']['removeRole'] = 'public';
+    }
+
+    // BCMI flavour
+    if (this.myForm.controls.bcmiSummary.dirty || this.myForm.controls.publishBcmi.dirty) {
+      administrativePenalty['AdministrativePenaltyBCMI'] = {};
+    }
+    this.myForm.controls.bcmiSummary.dirty && (
+      administrativePenalty['AdministrativePenaltyBCMI']['summary'] = this.myForm.controls.bcmiSummary.value
+      );
+    if (this.myForm.controls.publishBcmi.dirty && this.myForm.controls.publishBcmi.value) {
+      administrativePenalty['AdministrativePenaltyBCMI']['addRole'] = 'public';
+    } else if (this.myForm.controls.publishBcmi.dirty && !this.myForm.controls.publishBcmi.value) {
+      administrativePenalty['AdministrativePenaltyBCMI']['removeRole'] = 'public';
     }
 
     if (!this.isEditing) {
@@ -511,6 +581,15 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
         administrativePenalty['AdministrativePenaltyLNG']['_id'] = this.lngFlavour._id;
       }
 
+      if (this.bcmiFlavour) {
+        if (!CommonUtils.isObject(administrativePenalty['AdministrativePenaltyBCMI'])) {
+          administrativePenalty['AdministrativePenaltyBCMI'] = {};
+        }
+
+        // always update if flavour exists, regardless of flavour field changes, as fields in master might have changed
+        administrativePenalty['AdministrativePenaltyBCMI']['_id'] = this.bcmiFlavour._id;
+      }
+
       const res = await this.factoryService.writeRecord(administrativePenalty, 'administrativePenalties', false);
       this.recordUtils.parseResForErrors(res);
       const docResponse = await this.recordUtils.handleDocumentChanges(
@@ -523,8 +602,12 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
 
       this.logger.log(docResponse);
       this.loadingScreenService.setLoadingState(false, 'main');
-      this.router.navigate(['records', 'administrative-penalties', this.currentRecord._id, 'detail']);
     }
+  }
+
+  async submit() {
+    await this.save();
+    this.router.navigate(['records', 'administrative-penalties', this.currentRecord._id, 'detail']);
   }
 
   convertAcronyms(acronym) {
