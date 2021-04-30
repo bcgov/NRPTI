@@ -196,8 +196,8 @@ class NrisDataSource {
     newRecord.recordType = 'Inspection';
     newRecord._sourceRefNrisId = record.assessmentId;
     try {
-      newRecord.dateIssued = record.inspctReportSentDate
-        ? moment.tz(record.inspctReportSentDate, 'America/Vancouver').toDate()
+      newRecord.dateIssued = record.inspection.inspctReportSentDate
+        ? moment.tz(record.inspection.inspctReportSentDate, 'America/Vancouver').toDate()
         : null;
     } catch (error) {
       defaultLog.debug(error);
@@ -232,7 +232,8 @@ class NrisDataSource {
       };
     }
 
-    newRecord.recordName = `Inspection No.: ${record.assessmentId}; Inspection Type: ${record.inspection.inspectionType[0]}; Permit No.: ${record.authorization.sourceId}`;
+    newRecord.recordName = record.assessmentId;
+    newRecord.projectName = record.location.locationName;
     newRecord.description = `Inspection No.: ${record.assessmentId}; Inspection Type: ${record.inspection.inspectionType[0]}; Permit No.: ${record.authorization.sourceId}`;
 
     newRecord.location = record.location.locationDescription;
@@ -447,38 +448,6 @@ class NrisDataSource {
     } catch (error) {
       defaultLog.error(`Failed to save ${RECORD_TYPE.Inspection._schemaName} record: ${error.message}`);
     }
-  }
-
-  getLegislation(record) {
-    if (!record || !record.requirementSource) {
-      return {
-        act: 'Environmental Management Act',
-        section: 109
-      };
-    }
-
-    if (
-      record.requirementSource === 'Integrated Pest Management Act' ||
-      record.requirementSource === 'Integrated Pest Management Regulation' ||
-      record.requirementSource === 'Administrative Penalties (Integrated Pest Management Act) Regulation'
-    ) {
-      return {
-        act: 'Integrated Pest Management Act',
-        section: 17
-      };
-    }
-
-    if (record.requirementSource === 'Greenhouse Gas Industrial Reporting and Control Act') {
-      return {
-        act: 'Greenhouse Gas Industrial Reporting and Control Act',
-        section: 22
-      };
-    }
-
-    return {
-      act: 'Environmental Management Act',
-      section: 109
-    };
   }
 
   shouldRecordHaveAttachments(record) {
