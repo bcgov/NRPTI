@@ -7,7 +7,7 @@ describe('BaseRecordUtils', () => {
   describe('constructor', () => {
     it('throws an error if no recordType provided', () => {
       expect(() => {
-        new BaseRecordUtils(null);
+        return new BaseRecordUtils(null);
       }).toThrow('BaseRecordUtils - required recordType must be non-null.');
     });
   });
