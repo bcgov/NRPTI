@@ -1,0 +1,189 @@
+---
+kind: Template
+apiVersion: v1
+metadata:
+  name: metabase-postgres-dc
+objects:
+  - kind: Secret
+    apiVersion: v1
+    metadata:
+      name: ${NAME}
+    stringData:
+      database-admin-password: ${DATABASE_ADMIN_PASSWORD}
+      database-name: ${DATABASE_NAME}
+      database-password: ${DATABASE_PASSWORD}
+      database-user: ${DATABASE_USER}
+    type: Opaque
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
+    metadata:
+      name: ${NAME}
+      labels:
+        app.kubernetes.io/part-of: metabase
+      annotations:
+        description: Defines how to deploy the database
+    spec:
+      strategy:
+        type: Recreate
+      triggers:
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - ${NAME}
+            from:
+              kind: ImageStreamTag
+              namespace: "${IMAGE_NAMESPACE}"
+              name: "${IMAGE_NAME}:${IMAGE_TAG}"
+        - type: ConfigChange
+      replicas: 1
+      selector:
+        name: ${NAME}
+        app: ${NAME}
+      template:
+        metadata:
+          name: ${NAME}
+          labels:
+            name: ${NAME}
+            app: ${NAME}
+            role: database
+        spec:
+          containers:
+            - name: ${NAME}
+              image: " "
+              ports:
+                - containerPort: ${{DATABASE_PORT}}
+                  protocol: TCP
+              env:
+                - name: POSTGRESQL_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: "${NAME}"
+                      key: database-user
+                - name: POSTGRESQL_DATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      name: "${NAME}"
+                      key: database-name
+                - name: POSTGRESQL_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: "${NAME}"
+                      key: database-password
+                - name: POSTGRESQL_ADMIN_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: "${NAME}"
+                      key: database-admin-password
+              readinessProbe:
+                exec:
+                  command:
+                    - "/bin/bash"
+                    - "-c"
+                    - pg_isready -h localhost -p 5432
+                initialDelaySeconds: 20
+                timeoutSeconds: 15
+              livenessProbe:
+                initialDelaySeconds: 30
+                tcpSocket:
+                  port: ${{DATABASE_PORT}}
+                timeoutSeconds: 10
+              volumeMounts:
+                - mountPath: "/var/lib/pgsql/data"
+                  name: "${NAME}-data"
+              resources:
+                requests:
+                  cpu: "${DB_CPU_REQUEST}"
+                  memory: "${DB_MEMORY_REQUEST}"
+                limits:
+                  cpu: "${DB_CPU_LIMIT}"
+                  memory: "${DB_MEMORY_LIMIT}"
+              terminationMessagePath: "/dev/termination-log"
+              imagePullPolicy: IfNotPresent
+              capabilities: {}
+          volumes:
+            - name: "${NAME}-data"
+              persistentVolumeClaim:
+                claimName: ${NAME}
+          restartPolicy: Always
+          dnsPolicy: ClusterFirst
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: ${NAME}
+    spec:
+      ports:
+        - name: ${NAME}
+          port: ${{DATABASE_PORT}}
+          protocol: TCP
+          targetPort: ${{DATABASE_PORT}}
+      selector:
+        name: ${NAME}
+        app: ${NAME}
+      sessionAffinity: None
+      type: ClusterIP
+    status:
+      loadBalancer: {}
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: ${NAME}
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: "${DATABASE_PVC_SIZE}"
+parameters:
+  - name: DB_CPU_LIMIT
+    value: "1"
+  - name: DB_MEMORY_LIMIT
+    value: 2Gi
+  - name: DB_CPU_REQUEST
+    value: 500m
+  - name: DB_MEMORY_REQUEST
+    value: 250Mi
+  - name: NAME
+    displayName: Object names
+    description: The name of the OpenShift objects.
+    value: metabase-postgres
+    required: true
+  - name: IMAGE_NAME
+    value: postgresql
+    required: true
+  - name: IMAGE_TAG
+    displayName: Build Image Stream tag
+    description: The tag of the image stream that this corresponds to
+    value: "12"
+    required: true
+  - name: IMAGE_NAMESPACE
+    displayName: Tools Namespace
+    description: The OpenShift project namespace containing the builds and images
+    value: f00029-tools
+    required: true
+  - name: DATABASE_PVC_SIZE
+    value: 5Gi
+    required: true
+  - name: DATABASE_PORT
+    displayName: Database Port
+    description: Port used to conncet to Postgres backend DB.
+    value: "5432"
+    required: true
+  - name: DATABASE_USER
+    displayName: Database Username
+    description: Username that will be used for accessing the database.
+    generate: expression
+    from: "user[A-Z0-9]{3}"
+  - name: DATABASE_PASSWORD
+    displayName: Database Password
+    description: Password for the database user.
+    generate: expression
+    from: "[a-zA-Z0-9]{16}"
+  - name: DATABASE_NAME
+    displayName: Database Name
+    value: metabase
+  - name: DATABASE_ADMIN_PASSWORD
+    displayName: Database Administrator Password
+    description: Password for the database admin user.
+    generate: expression
+    from: "[a-zA-Z0-9]{16}"
