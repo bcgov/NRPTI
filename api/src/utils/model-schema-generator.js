@@ -1,4 +1,6 @@
 let mongoose = require('mongoose');
+const redactedRecordSubset = require('../../materialized_views/search/redactedRecordSubset');
+const Constants = require('./constants/misc');
 
 let genSchema = function(name, definition) {
   //
@@ -86,9 +88,20 @@ let genSchema = function(name, definition) {
       definition._addedBy = { type: String, default: 'system' };
       definition._deletedBy = { type: String, default: 'system' };
 
-      schema.post('save', doc => {
-        // empty func. Audit moved.
-      });
+      if (!Constants.SKIP_REDACTION_SCHEMA_NAMES.includes(name)) {
+
+        schema.post('save', async record => {
+          await redactedRecordSubset.saveOneRecord(record);
+        });
+
+        schema.post('findOneAndUpdate', async record => {
+          await redactedRecordSubset.updateOneRecord(record);
+        });
+
+        schema.post('findOneAndRemove', async record => {
+          await redactedRecordSubset.deleteOneRecord(record);
+        });
+      }
     }
   }
   if (indexes && indexes.length) {

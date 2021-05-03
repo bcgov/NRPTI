@@ -1,239 +1,46 @@
 const mongodb = require('../../src/utils/mongodb');
+const defaultLog = require('../../src/utils/logger')('redacted-record-subset');
+const BusinessLogicManager = require('../../src/utils/business-logic-manager');
 
-const { AUTHORIZED_PUBLISH_AGENCIES } = require('../../src/utils/constants/misc');
-const { SKIP_REDACTION_SCHEMA_NAMES } = require ('../../src/utils/constants/misc');
 
 /**
- * Updates the redactedRecord subset.
+ * Updates or adds the record passed in, in hte redacted record subset
  *
- * @param {*} defaultLog
+ * @param {*} record
  */
-async function update(defaultLog) {
-  // get all records with valid schemaNames
-  let aggregate = [
-    {
-      $match: {
-        _schemaName: {
-          $exists: true
-        }
-      }
-    }
-  ];
+function redactRecord(record) {
+  let redactedRecord = record.toObject();
+  const issuedTo = record.issuedTo;
+  const issuingAgency = record.issuingAgency;
 
-  const redactCondition = {
-    $and: [
-      { $lt: ['$issuedToAge', 19] },
-      { $ne: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'nris-epd'] },
-      // NRPT-744 ignore ocers-csv records because they have no birthdates.  All ocers-csv
-      // records are pre-redacted
-      { $ne: [{ $arrayElemAt: ['$fullRecord.sourceSystemRef', 0] }, 'ocers-csv'] }
-    ]
-  };
+  if ( BusinessLogicManager.isIssuedToConsideredAnonymous(issuedTo, issuingAgency) ) {
+    // Remove the issuedTo completely so that it shows up as "Unpublished" on NRCED public.
+    delete redactedRecord.issuedTo;
 
-  const issuedToRedaction = [
-    {
-      $project: {
-        fullRecord: 1,
-        issuingAgency: 1,
-        issuedToAge: {
-          $cond: {
-            if: { $ne: [{ $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }, null] },
-            then: {
-              $subtract: [
-                { $year: { date: new Date() } },
-                { $year: { date: { $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] } } }
-              ]
-            },
-            else: 0
-          }
-        }
-      }
-    },
-    {
-      $addFields: {
-        skipRedact: {
-          $cond: {
-            if: {
-              $in: [{ $arrayElemAt: ['$fullRecord._schemaName', 0] }, SKIP_REDACTION_SCHEMA_NAMES]
-            },
-            then: true,
-            else: false
-          }
-        }
-      }
-    },
-    {
-      $addFields: {
-        'fullRecord.issuedTo.firstName': {
-          $cond: {
-            if: redactCondition,
-            then: 'Unpublished',
-            else: { $arrayElemAt: ['$fullRecord.issuedTo.firstName', 0] }
-          }
-        },
-        'fullRecord.issuedTo.lastName': {
-          $cond: {
-            if: redactCondition,
-            then: 'Unpublished',
-            else: { $arrayElemAt: ['$fullRecord.issuedTo.lastName', 0] }
-          }
-        },
-        'fullRecord.issuedTo.middleName': {
-          $cond: {
-            if: redactCondition,
-            then: '',
-            else: { $arrayElemAt: ['$fullRecord.issuedTo.middleName', 0] }
-          }
-        },
-        'fullRecord.issuedTo.fullName': {
-          $cond: {
-            if: redactCondition,
-            then: 'Unpublished',
-            else: { $arrayElemAt: ['$fullRecord.issuedTo.fullName', 0] }
-          }
-        },
-        'fullRecord.issuedTo.dateOfBirth': {
-          $cond: {
-            if: redactCondition,
-            then: null,
-            else: { $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }
-          }
-        }
-      }
-    },
-    // this step will replace issued to with an empty object {} for mines and collections.
-    // mines and collections don't normally have an issuedTo field, but this should minimize confusion
-    // TODO: remove the issuedTo field from mines and collections all together
-    {
-      $addFields: {
-        'fullRecord.issuedTo': {
-          $cond: {
-            if: { $eq: ['$skipRedact', true] },
-            then: {},
-            else: { $arrayElemAt: ['$fullRecord.issuedTo', 0] }
-          }
-        }
-      }
-    }
-  ];
+    // Make sure that no documents are publicly available either.
+    redactedRecord.documents = [];
+  }
+
+  return redactedRecord;
+}
+
+
+
+/**
+ * adds the record passed in to the redacted record subset
+ *
+ * @param {*} record
+ */
+async function saveOneRecord(record) {
+
+  const redactedRecord = redactRecord(record);
 
   try {
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
-    const mainCollection = db.collection('nrpti');
-
     defaultLog.info('Updating redacted_record_subset');
 
-    // lookup by id for each object in the match array and populate the fullRecord field
-    aggregate.push({
-      $lookup: {
-        from: 'nrpti',
-        localField: '_id',
-        foreignField: '_id',
-        as: 'fullRecord'
-      }
-    });
-
-    // redact issued to fields based on age
-    aggregate = aggregate.concat(issuedToRedaction);
-
-    // replace root with redacted full record
-    aggregate.push({
-      $replaceRoot: {
-        newRoot: {
-          $mergeObjects: [{ $arrayElemAt: ['$fullRecord', 0] }, '$$ROOT']
-        }
-      }
-    });
-
-    // trim out the 'fullRecord' attribute, we no longer need it
-    // after re-population
-    aggregate.push({
-      $project: {
-        fullRecord: 0,
-        issuedToAge: 0
-      }
-    });
-
-    const notAuthorizedCondition = {
-      $and: [
-        {
-          $not: {
-            $in: ['$issuingAgency', AUTHORIZED_PUBLISH_AGENCIES]
-          }
-        },
-        { $ne: ['$issuedTo.type', 'Company'] }
-      ]
-    };
-
-    // Remove public from issuedTo.read so the entire issuedTo field is redacted
-    // when record belongs to unauthorized issuing agency and is not a company
-    aggregate.push({
-      $addFields: {
-        'issuedTo.read': {
-          $cond: {
-            if: { $and: [{ $eq: ['$skipRedact', false] }, notAuthorizedCondition] },
-            then: {
-              $filter: {
-                input: '$issuedTo.read',
-                as: 'role',
-                cond: { $ne: ['$$role', 'public'] }
-              }
-            },
-            else: '$issuedTo.read'
-          }
-        }
-      }
-    });
-
-    // Remove documents from record when record belongs to unauthorized issuing agency
-    // and is not a company
-    aggregate.push({
-      $addFields: {
-        documents: {
-          $cond: {
-            if: { $and: [{ $eq: ['$skipRedact', false] }, notAuthorizedCondition] },
-            then: [],
-            else: '$documents'
-          }
-        }
-      }
-    });
-
-    // Redaction. We've imported details from
-    // flavours and documents, and we may need
-    // to prevent some of these from being returned
-    // if the user lacks the requisite role(s)
-
-    // for this case, only public users should be using this subset
-    let roles = ['public'];
-
-    aggregate.push({
-      $redact: {
-        $cond: {
-          if: {
-            $cond: {
-              if: '$read',
-              then: {
-                $anyElementTrue: {
-                  $map: {
-                    input: '$read',
-                    as: 'fieldTag',
-                    in: { $setIsSubset: [['$$fieldTag'], roles] }
-                  }
-                }
-              },
-              else: true
-            }
-          },
-          then: '$$DESCEND',
-          else: '$$PRUNE'
-        }
-      }
-    });
-
-    aggregate.push({ $out: 'redacted_record_subset' });
-
-    await mainCollection.aggregate(aggregate).next();
+    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const redactedCollection = db.collection('redacted_record_subset');
+    await redactedCollection.save(redactedRecord);
 
     defaultLog.info('Done Updating redacted_record_subset');
   } catch (error) {
@@ -241,4 +48,53 @@ async function update(defaultLog) {
   }
 }
 
-exports.update = update;
+exports.saveOneRecord = saveOneRecord;
+
+
+
+/**
+ * Updates the record passed in, in the redacted record subset
+ *
+ * @param {*} record
+ */
+async function updateOneRecord(record) {
+
+  const redactedRecord = redactRecord(record);
+
+  try {
+    defaultLog.info('Updating redacted_record_subset');
+
+    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const redactedCollection = db.collection('redacted_record_subset');
+    await redactedCollection.findOneAndUpdate({ _id: redactedRecord._id }, redactedRecord);
+
+    defaultLog.info('Done Updating redacted_record_subset');
+  } catch (error) {
+    defaultLog.info('Failed to update redacted_record_subset, error: ' + error);
+  }
+}
+
+exports.updateOneRecord = updateOneRecord;
+
+
+
+/**
+ * Updates the record passed in, in the redacted record subset
+ *
+ * @param {*} record
+ */
+async function deleteOneRecord(record) {
+  try {
+    defaultLog.info('Updating redacted_record_subset');
+
+    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const redactedCollection = db.collection('redacted_record_subset');
+    await redactedCollection.deleteOne({ _id: record._id });
+
+    defaultLog.info('Done Updating redacted_record_subset');
+  } catch (error) {
+    defaultLog.info('Failed to update redacted_record_subset, error: ' + error);
+  }
+}
+
+exports.deleteOneRecord = deleteOneRecord;
