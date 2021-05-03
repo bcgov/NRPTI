@@ -49,6 +49,7 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
     }
 
     const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
+    const masterModel = mongoose.model(masterRecord._schemaName);
 
     // Set mongo document and s3 document roles
     const readRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_BCMI];
@@ -121,7 +122,7 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
     let recordResponse = null;
     try {
       // add to master record
-      recordResponse = await collection.findOneAndUpdate(
+      recordResponse = await masterModel.findOneAndUpdate(
         { _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
         { $addToSet: { documents: new ObjectID(docResponse._id) } },
         { new: true }
@@ -141,10 +142,10 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
 
     // Add to flavour records
     let observables = [];
-    if (recordResponse && recordResponse.value && recordResponse.value._flavourRecords) {
-      recordResponse.value._flavourRecords.forEach(id => {
+    if (recordResponse && recordResponse._flavourRecords) {
+      recordResponse._flavourRecords.forEach(id => {
         observables.push(
-          collection.findOneAndUpdate(
+          masterModel.findOneAndUpdate(
             { _id: new ObjectID(id), write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
             { $addToSet: { documents: new ObjectID(docResponse._id) } },
             { new: true }
@@ -220,11 +221,14 @@ exports.protectedDelete = async function(args, res, next) {
     const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
     const collection = db.collection('nrpti');
 
+    const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
+    const masterModel = mongoose.model(masterRecord._schemaName);
+
     // Then we want to remove the document's id from the record it's attached to.
     let recordResponse = null;
     try {
       // remove from master record
-      recordResponse = await collection.findOneAndUpdate(
+      recordResponse = await masterModel.findOneAndUpdate(
         { _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
         { $pull: { documents: new ObjectID(docResponse._id) } },
         { new: true }
@@ -246,7 +250,7 @@ exports.protectedDelete = async function(args, res, next) {
     if (recordResponse && recordResponse.value && recordResponse.value._flavourRecords) {
       recordResponse.value._flavourRecords.forEach(id => {
         observables.push(
-          collection.findOneAndUpdate(
+          masterModel.findOneAndUpdate(
             { _id: new ObjectID(id), write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
             { $pull: { documents: new ObjectID(docResponse._id) } },
             { new: true }
