@@ -2,7 +2,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const defaultLog = require('../../utils/logger')('bcogc-datasource');
 const integrationUtils = require('../integration-utils');
-const { getCsvRowsFromString } = require('../../utils/helpers');
+const { getCsvRowsFromString } = require('../../utils/csv-helpers');
 
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const BCOGC_UTILS_TYPES = require('./bcogc-utils-types-enum');

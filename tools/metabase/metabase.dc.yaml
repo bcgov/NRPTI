@@ -1,0 +1,162 @@
+---
+kind: Template
+apiVersion: v1
+metadata:
+  name: ${NAME}
+objects:
+  - kind: ImageStream
+    apiVersion: image.openshift.io/v1
+    metadata:
+      name: ${NAME}
+      namespace: ${IMAGE_NAMESPACE}
+    spec:
+      lookupPolicy:
+        local: false
+      tags:
+        - name: latest
+          from:
+            kind: DockerImage
+            name: docker-remote.artifacts.developer.gov.bc.ca/metabase/metabase
+          referencePolicy:
+            type: Local
+  - kind: DeploymentConfig
+    apiVersion: apps.openshift.io/v1
+    metadata:
+      name: ${NAME}
+      labels:
+        app.kubernetes.io/part-of: metabase
+    spec:
+      strategy:
+        type: Rolling
+        activeDeadlineSeconds: 21600
+      triggers:
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - ${NAME}
+            from:
+              kind: ImageStreamTag
+              namespace: "${IMAGE_NAMESPACE}"
+              name: "${IMAGE_NAME}:${IMAGE_TAG}"
+        - type: ConfigChange
+      replicas: 1
+      revisionHistoryLimit: 3
+      selector:
+        app: ${NAME}
+      template:
+        metadata:
+          creationTimestamp: null
+          labels:
+            app: ${NAME}
+            role: ${NAME}
+        spec:
+          containers:
+            - name: ${NAME}
+              image: " "
+              ports:
+                - containerPort: ${{APPLICATION_PORT}}
+                  protocol: TCP
+              env:
+                - name: MB_PASSWORD_COMPLEXITY
+                  value: strong
+                - name: MB_DB_TYPE
+                  value: postgres
+                - name: MB_DB_DBNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: metabase-postgres
+                      key: database-name
+                - name: MB_DB_PORT
+                  value: "5432"
+                - name: MB_DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: metabase-postgres
+                      key: database-user
+                - name: MB_DB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: metabase-postgres
+                      key: database-password
+                - name: MB_DB_HOST
+                  value: metabase-postgres
+                - name: MB_ENCRYPTION_SECRET_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: metabase-postgres
+                      key: database-password
+              resources:
+                limits:
+                  cpu: ${CPU_LIMIT}
+                  memory: ${MEMORY_LIMIT}
+                requests:
+                  cpu: ${CPU_REQUEST}
+                  memory: ${MEMORY_REQUEST}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: ${NAME}
+    spec:
+      ports:
+        - name: ${NAME}
+          port: ${{APPLICATION_PORT}}
+          protocol: TCP
+          targetPort: ${{APPLICATION_PORT}}
+      selector:
+        app: ${NAME}
+      type: ClusterIP
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: ${NAME}
+    spec:
+      host: ${NAME}-${DEPLOY_NAMESPACE}.apps.silver.devops.gov.bc.ca
+      to:
+        kind: Service
+        name: ${NAME}
+      path: /
+      port:
+        targetPort: ${NAME}
+      tls:
+        termination: edge
+        insecureEdgeTerminationPolicy: Redirect
+      wildcardPolicy: None
+parameters:
+  - name: CPU_LIMIT
+    value: "1"
+  - name: MEMORY_LIMIT
+    value: 1Gi
+  - name: CPU_REQUEST
+    value: 100m
+  - name: MEMORY_REQUEST
+    value: 250Mi
+  - name: NAME
+    displayName: Object names
+    description: The name of the OpenShift objects.
+    value: metabase
+    required: true
+  - name: IMAGE_NAMESPACE
+    displayName: Object names
+    description: The name of the OpenShift objects.
+    value: f00029-tools
+    required: true
+  - name: IMAGE_NAME
+    displayName: Object names
+    description: The name of the OpenShift objects.
+    value: metabase
+    required: true
+  - name: IMAGE_TAG
+    displayName: Object names
+    description: The name of the OpenShift objects.
+    value: latest
+    required: true
+  - name: APPLICATION_PORT
+    value: "3000"
+    required: true
+  - name: APPLICATION_DOMAIN
+    value: apps.silver.devops.gov.bc.ca
+    required: true
+  - name: DEPLOY_NAMESPACE
+    value: f00029-prod
+    required: true
