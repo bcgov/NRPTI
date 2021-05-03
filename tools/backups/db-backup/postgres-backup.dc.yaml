@@ -4,7 +4,7 @@ objects:
   - kind: PersistentVolumeClaim
     apiVersion: v1
     metadata:
-      name: nrpti-${NAME}
+      name: ${APP_NAME}-${JOB_NAME}
       labels:
         app: ${GROUP_NAME}
     spec:
@@ -15,168 +15,471 @@ objects:
           storage: ${BACKUP_PVC_SIZE}
       storageClassName: netapp-file-backup
       volumeMode: Filesystem
-  - kind: PersistentVolumeClaim
-    apiVersion: v1
-    metadata:
-      name: nrpti-${NAME}-verification
-      labels:
-        app: ${GROUP_NAME}
-    spec:
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: ${VERIFICATION_PVC_SIZE}
-      storageClassName: netapp-file-standard
-      volumeMode: Filesystem
   - kind: ConfigMap
     apiVersion: v1
     metadata:
-      name: ${NAME}-conf
+      name: "${JOB_NAME}-config"
       labels:
-        app: ${GROUP_NAME}
+        template: "${JOB_NAME}-config-template"
+        cronjob: "${JOB_NAME}"
     data:
-      backup.conf: |-
-        postgres=metabase-postgres:5432/metabase
-        0 1 * * * default ./backup.sh -s
-        0 4 * * * default ./backup.sh -s -v all
-  - kind: DeploymentConfig
-    apiVersion: apps.openshift.io/v1
+      backup.conf: "${DATABASE_TYPE}=${DATABASE_SERVICE_NAME}:${DATABASE_DEFAULT_PORT}/${DATABASE_NAME}"
+      BACKUP_STRATEGY: "rolling"
+      BACKUP_DIR: "${BACKUP_DIR}"
+      RETENTION.NUM_BACKUPS: "${NUM_BACKUPS}"
+      RETENTION.DAILY_BACKUPS: "${DAILY_BACKUPS}"
+      RETENTION.WEEKLY_BACKUPS: "${WEEKLY_BACKUPS}"
+      RETENTION.MONTHLY_BACKUPS: "${MONTHLY_BACKUPS}"
+      ENVIRONMENT_FRIENDLY_NAME: "${ENVIRONMENT_FRIENDLY_NAME}"
+      ENVIRONMENT_NAME: "${ENVIRONMENT_NAME}"
+      TABLE_SCHEMA: "public"
+  # Backup job
+  - kind: "CronJob"  
+    apiVersion: "batch/v1beta1"
     metadata:
-      name: ${NAME}
+      name: "${JOB_NAME}"
       labels:
+        template: "${JOB_NAME}-cronjob"
+        cronjob: "${JOB_NAME}"
         app: ${GROUP_NAME}
         role: backup
     spec:
-      strategy:
-        type: Recreate
-        recreateParams:
-          timeoutSeconds: 600
-        resources: {}
-        activeDeadlineSeconds: 21600
-      triggers:
-        - type: ConfigChange
-        - type: ImageChange
-          imageChangeParams:
-            automatic: true
-            containerNames:
-              - ${NAME}
-            from:
-              kind: ImageStreamTag
-              namespace: ${IMAGE_NAMESPACE}
-              name: ${NAME}:${IMAGE_TAG}
-      replicas: 1
-      revisionHistoryLimit: 5
-      test: false
-      selector:
-        name: ${NAME}
-      template:
+      schedule: "${SCHEDULE}"
+      concurrencyPolicy: "Forbid"
+      successfulJobsHistoryLimit: "${{SUCCESS_JOBS_HISTORY_LIMIT}}"
+      failedJobsHistoryLimit: "${{FAILED_JOBS_HISTORY_LIMIT}}"
+      jobTemplate:
         metadata:
-          name: ${NAME}
           labels:
-            name: ${NAME}
-            app: nrpti
+            template: "${JOB_NAME}-job"
+            cronjob: "${JOB_NAME}"
+            app: ${GROUP_NAME}
             role: backup
         spec:
-          volumes:
-            - name: nrpti-${NAME}
-              persistentVolumeClaim:
-                claimName: nrpti-${NAME}
-            - name: nrpti-${NAME}-verification
-              persistentVolumeClaim:
-                claimName: nrpti-${NAME}-verification
-            - name: ${NAME}-config-volume
-              configMap:
-                name: ${NAME}-conf
-                items:
-                  - key: backup.conf
-                    path: backup.conf
-                defaultMode: 420
-          containers:
-            - name: ${NAME}
-              image: image-registry.openshift-image-registry.svc:5000/${IMAGE_NAMESPACE}/${NAME}:${IMAGE_TAG}
-              env:
-                - name: BACKUP_STRATEGY
-                  value: rolling
-                - name: BACKUP_DIR
-                  value: /backups/
-                - name: DAILY_BACKUPS
-                  value: "7"
-                - name: WEEKLY_BACKUPS
-                  value: "5"
-                - name: MONTHLY_BACKUPS
-                  value: "12"
-                - name: TABLE_SCHEMA
-                  value: public
-                - name: DATABASE_USER
-                  valueFrom:
-                    secretKeyRef:
-                      name: metabase-nrpti-secret
-                      key: database-user
-                - name: DATABASE_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: metabase-nrpti-secret
-                      key: database-password
-                - name: ENVIRONMENT_FRIENDLY_NAME
-                  value: ${ENVIRONMENT_FRIENDLY_NAME}
-                - name: ENVIRONMENT_NAME
-                  value: ${ENVIRONMENT_NAME}
-                - name: WEBHOOK_URL
-                  valueFrom:
-                    secretKeyRef:
-                      key: webhook-url
-                      name: backup-webhook
-              resources:
-                limits:
-                  cpu: 250m
-                  memory: 500Mi
-                requests:
-                  cpu: 10m
-                  memory: 50Mi
-              volumeMounts:
-                - name: nrpti-${NAME}
-                  mountPath: /backups/
-                - name: nrpti-${NAME}-verification
-                  mountPath: /var/lib/pgsql/data
-                - name: ${NAME}-config-volume
-                  mountPath: /backup.conf
-                  subPath: backup.conf
-              terminationMessagePath: /dev/termination-log
-              terminationMessagePolicy: File
-              imagePullPolicy: IfNotPresent
-          restartPolicy: Always
-          terminationGracePeriodSeconds: 30
-          dnsPolicy: ClusterFirst
-          securityContext: {}
-          schedulerName: default-scheduler
+          backoffLimit: ${{JOB_BACKOFF_LIMIT}}
+          template:
+            metadata:
+              labels:
+                template: "${JOB_NAME}-job"
+                cronjob: "${JOB_NAME}"
+                app: ${GROUP_NAME}
+                role: backup
+            spec:
+              containers:
+                - name: "${JOB_NAME}-cronjob"
+                  image: "${IMAGE_REGISTRY}/${IMAGE_NAMESPACE}/${SOURCE_IMAGE_NAME}:${TAG_NAME}"
+                  resources:
+                    requests:
+                      cpu: ${CPU_REQUEST}
+                      memory: ${MEMORY_REQUEST}
+                    limits:
+                      cpu: ${CPU_LIMIT}
+                      memory: ${MEMORY_LIMIT}
+                  # image: backup
+                  command:
+                    - "/bin/bash"
+                    - "-c"
+                    - "/backup.sh -1"
+                  volumeMounts:
+                    - mountPath: "${BACKUP_DIR}"
+                      name: "backup"
+                    - name: ${JOB_NAME}-config-volume
+                      mountPath: /backup.conf
+                      subPath: backup.conf
+                  env:
+                    - name: BACKUP_DIR
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: BACKUP_DIR
+                    - name: BACKUP_STRATEGY
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: BACKUP_STRATEGY
+                    - name: NUM_BACKUPS
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: RETENTION.NUM_BACKUPS
+                          optional: true
+                    - name: DAILY_BACKUPS
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: RETENTION.DAILY_BACKUPS
+                          optional: true
+                    - name: WEEKLY_BACKUPS
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: RETENTION.WEEKLY_BACKUPS
+                          optional: true
+                    - name: MONTHLY_BACKUPS
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: RETENTION.MONTHLY_BACKUPS
+                          optional: true
+                    - name: DATABASE_USER
+                      valueFrom:
+                        secretKeyRef:
+                          name: "${DATABASE_DEPLOYMENT_NAME}"
+                          key: "${DATABASE_USER_KEY_NAME}"
+                    - name: DATABASE_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                          name: "${DATABASE_DEPLOYMENT_NAME}"
+                          key: "${DATABASE_PASSWORD_KEY_NAME}"
+                    - name: ENVIRONMENT_FRIENDLY_NAME
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: ENVIRONMENT_FRIENDLY_NAME
+                          optional: true
+                    - name: ENVIRONMENT_NAME
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: ENVIRONMENT_NAME
+                          optional: true
+                    - name: TABLE_SCHEMA
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: TABLE_SCHEMA
+                          optional: true
+                    - name: WEBHOOK_URL
+                      valueFrom:
+                        secretKeyRef:
+                          name: backup-webhook
+                          key: webhook-url
+              volumes:
+                - name: backup
+                  persistentVolumeClaim:
+                    claimName: "${APP_NAME}-${JOB_NAME}"
+                - name: ${JOB_NAME}-config-volume
+                  configMap:
+                    name: ${JOB_NAME}-config
+                    items:
+                      - key: backup.conf
+                        path: backup.conf
+                    defaultMode: 420
+              restartPolicy: "Never"
+              terminationGracePeriodSeconds: 30
+              activeDeadlineSeconds: 1600
+              dnsPolicy: "ClusterFirst"
+              serviceAccountName: "${JOB_SERVICE_ACCOUNT}"
+              serviceAccount: "${JOB_SERVICE_ACCOUNT}"
+  # Verification job
+  - kind: "CronJob"
+    apiVersion: "batch/v1beta1"
+    metadata:
+      name: "${VERIFICATION_JOB_NAME}"
+      labels:
+        template: "${VERIFICATION_JOB_NAME}-cronjob"
+        cronjob: "${VERIFICATION_JOB_NAME}"
+        app: ${GROUP_NAME}
+        role: backup
+    spec:
+      schedule: "${VERIFICATION_SCHEDULE}"
+      concurrencyPolicy: "Forbid"
+      successfulJobsHistoryLimit: "${{SUCCESS_JOBS_HISTORY_LIMIT}}"
+      failedJobsHistoryLimit: "${{FAILED_JOBS_HISTORY_LIMIT}}"
+      jobTemplate:
+        metadata:
+          labels:
+            template: "${VERIFICATION_JOB_NAME}-job"
+            cronjob: "${VERIFICATION_JOB_NAME}"
+            app: ${GROUP_NAME}
+            role: backup
+        spec:
+          backoffLimit: ${{JOB_BACKOFF_LIMIT}}
+          template:
+            metadata:
+              labels:
+                template: "${VERIFICATION_JOB_NAME}-job"
+                cronjob: "${VERIFICATION_JOB_NAME}"
+                app: ${GROUP_NAME}
+                role: backup
+            spec:
+              containers:
+                - name: "${VERIFICATION_JOB_NAME}-cronjob"
+                  image: "${IMAGE_REGISTRY}/${IMAGE_NAMESPACE}/${SOURCE_IMAGE_NAME}:${TAG_NAME}"
+                  resources:
+                    requests:
+                      cpu: ${CPU_REQUEST}
+                      memory: ${MEMORY_REQUEST}
+                    limits:
+                      cpu: ${CPU_LIMIT}
+                      memory: ${MEMORY_LIMIT}
+                  # image: backup
+                  command:
+                    - "/bin/bash"
+                    - "-c"
+                    - "sleep 30 && /backup.sh -1 -v all"
+                  volumeMounts:
+                    - mountPath: "${BACKUP_DIR}"
+                      name: "backup"
+                    - name: ${JOB_NAME}-config-volume
+                      mountPath: /backup.conf
+                      subPath: backup.conf
+                  env:
+                    - name: BACKUP_DIR
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: BACKUP_DIR
+                    - name: BACKUP_STRATEGY
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: BACKUP_STRATEGY
+                    - name: NUM_BACKUPS
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: RETENTION.NUM_BACKUPS
+                          optional: true
+                    - name: DAILY_BACKUPS
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: RETENTION.DAILY_BACKUPS
+                          optional: true
+                    - name: WEEKLY_BACKUPS
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: RETENTION.WEEKLY_BACKUPS
+                          optional: true
+                    - name: MONTHLY_BACKUPS
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: RETENTION.MONTHLY_BACKUPS
+                          optional: true
+                    - name: DATABASE_USER
+                      valueFrom:
+                        secretKeyRef:
+                          name: "${DATABASE_DEPLOYMENT_NAME}"
+                          key: "${DATABASE_USER_KEY_NAME}"
+                    - name: DATABASE_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                          name: "${DATABASE_DEPLOYMENT_NAME}"
+                          key: "${DATABASE_PASSWORD_KEY_NAME}"
+                    - name: ENVIRONMENT_FRIENDLY_NAME
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: ENVIRONMENT_FRIENDLY_NAME
+                          optional: true
+                    - name: ENVIRONMENT_NAME
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: ENVIRONMENT_NAME
+                          optional: true
+                    - name: TABLE_SCHEMA
+                      valueFrom:
+                        configMapKeyRef:
+                          name: "${JOB_NAME}-config"
+                          key: TABLE_SCHEMA
+                          optional: true
+                    - name: WEBHOOK_URL
+                      valueFrom:
+                        secretKeyRef:
+                          name: backup-webhook
+                          key: webhook-url
+              volumes:
+                - name: backup
+                  persistentVolumeClaim:
+                    claimName: "${APP_NAME}-${JOB_NAME}"
+                - name: ${JOB_NAME}-config-volume
+                  configMap:
+                    name: ${JOB_NAME}-config
+                    items:
+                      - key: backup.conf
+                        path: backup.conf
+                    defaultMode: 420
+              restartPolicy: "Never"
+              terminationGracePeriodSeconds: 30
+              activeDeadlineSeconds: 1600
+              dnsPolicy: "ClusterFirst"
+              serviceAccountName: "${JOB_SERVICE_ACCOUNT}"
+              serviceAccount: "${JOB_SERVICE_ACCOUNT}"
 parameters:
   - name: GROUP_NAME
     displayName: GROUP_NAME
     required: true
     value: nrpti-backup
-  - name: NAME
-    displayName: Name
-    description: The name assigned to all of the resources.  Use 'backup-{database name}' depending on your database provider
+  - name: APP_NAME
+    displayName: APP_NAME
     required: true
-    value: postgres-backup
-  - name: IMAGE_TAG
-    displayName: IMAGE_TAG
-    required: true
-    value: v1
-  - name: IMAGE_NAMESPACE
-    displayName: IMAGE_NAMESPACE
-    required: true
-    value: f00029-tools
+    value: "nrpti-metabase"
   - name: BACKUP_PVC_SIZE
     displayName: BACKUP_PVC_SIZE
     value: 5Gi
-  - name: VERIFICATION_PVC_SIZE
-    displayName: VERIFICATION_PVC_SIZE
-    value: 5Gi
   - name: ENVIRONMENT_FRIENDLY_NAME
     displayName: ENVIRONMENT_FRIENDLY_NAME
-    value: NRPTI Metabase Postgres Backup
+    value: Eagle Prod Postgres Backup
   - name: ENVIRONMENT_NAME
     displayName: ENVIRONMENT_NAME
     value: f00029-prod
+  - name: "JOB_NAME"
+    displayName: "Job Name"
+    description: "Name of the Scheduled Job to Create."
+    value: "postgres-backup"
+    required: true
+  - name: "VERIFICATION_JOB_NAME"
+    displayName: "Verfication Job Name"
+    description: "Name of the Scheduled Verfication Job to Create."
+    value: "postgres-backup-verification"
+    required: true
+  - name: "SCHEDULE"
+    displayName: "Cron Schedule"
+    description: "Cron Schedule to Execute the Job (using local cluster system TZ)"
+    # Currently targeting 8:00 AM UTC Daily
+    value: "0 8 * * *"
+    required: true
+  - name: "VERIFICATION_SCHEDULE"
+    displayName: "Verfication Cron Schedule"
+    description: "Verfication Cron Schedule to Execute the Job (using local cluster system TZ)"
+    # Currently targeting 9:00 AM UTC Daily
+    value: "0 9 * * *"
+    required: true
+  - name: "SOURCE_IMAGE_NAME"
+    displayName: "Source Image Name"
+    description: "The name of the image to use for this resource."
+    required: true
+    value: "postgres-backup"
+  - name: "IMAGE_REGISTRY"
+    description: "The base OpenShift docker registry"
+    displayName: "Docker Image Registry"
+    required: true
+    value: "image-registry.openshift-image-registry.svc:5000"
+  - name: "IMAGE_NAMESPACE"
+    displayName: "Image Namespace"
+    description: "The namespace of the OpenShift project containing the imagestream for the application."
+    required: true
+    value: "f00029-tools"
+  - name: "TAG_NAME"
+    displayName: "Environment TAG name"
+    description: "The TAG name for this environment, e.g., dev, test, prod"
+    required: true
+    value: "v1"
+  - name: "DATABASE_TYPE"
+    displayName: "Database Type"
+    description: "The type of the database service."
+    required: true
+    value: "postgres"
+  - name: "DATABASE_SERVICE_NAME"
+    displayName: "Database Service Name"
+    description: "The name of the database service."
+    required: true
+    value: "metabase-postgres"
+  - name: "DATABASE_DEFAULT_PORT"
+    displayName: "Database Service Port"
+    description: "The configured port for the database service"
+    required: true
+    value: "5432"
+  - name: "DATABASE_NAME"
+    displayName: "Database Name"
+    description: "The name of the database."
+    required: true
+    value: "metabase"
+  - name: "DATABASE_DEPLOYMENT_NAME"
+    displayName: "Database Deployment Name"
+    description: "The name associated to the database deployment resources.  In particular, this is used to wire up the credentials associated to the database."
+    required: true
+    value: "metabase-postgres"
+  - name: DATABASE_USER_KEY_NAME
+    displayName: Database User Key Name
+    description:
+      The database user key name stored in database deployment resources specified
+      by DATABASE_DEPLOYMENT_NAME.
+    required: true
+    value: "database-user"
+  - name: DATABASE_PASSWORD_KEY_NAME
+    displayName: Database Password Key Name
+    description:
+      The database password key name stored in database deployment resources
+      specified by DATABASE_DEPLOYMENT_NAME.
+    required: true
+    value: "database-password"
+  - name: "BACKUP_STRATEGY"
+    displayName: "Backup Strategy"
+    description: "The strategy to use for backups; for example daily, or rolling."
+    required: true
+    value: "rolling"
+  - name: "BACKUP_DIR"
+    displayName: "The root backup directory"
+    description: "The name of the root backup directory"
+    required: true
+    value: "/backups/"
+  - name: "VERFICATION_DIR"
+    displayName: "The root verfication directory"
+    description: "The name of the root verfication directory"
+    required: true
+    value: "/var/lib/mongodb/data/"
+  - name: "NUM_BACKUPS"
+    displayName: "The number of backup files to be retained"
+    description: "The number of backup files to be retained.  Used for the `daily` backup strategy.  Ignored when using the `rolling` backup strategy."
+    required: false
+    value: "5"
+  - name: "DAILY_BACKUPS"
+    displayName: "Number of Daily Backups to Retain"
+    description: "The number of daily backup files to be retained.  Used for the `rolling` backup strategy."
+    required: false
+    value: "7"
+  - name: "WEEKLY_BACKUPS"
+    displayName: "Number of Weekly Backups to Retain"
+    description: "The number of weekly backup files to be retained.  Used for the `rolling` backup strategy."
+    required: false
+    value: "4"
+  - name: "MONTHLY_BACKUPS"
+    displayName: "Number of Monthly Backups to Retain"
+    description: "The number of monthly backup files to be retained.  Used for the `rolling` backup strategy."
+    required: false
+    value: "1"
+  - name: "JOB_SERVICE_ACCOUNT"
+    displayName: "Service Account Name"
+    description: "Name of the Service Account To Exeucte the Job As."
+    value: "default"
+    required: true
+  - name: "SUCCESS_JOBS_HISTORY_LIMIT"
+    displayName: "Successful Job History Limit"
+    description: "The number of successful jobs that will be retained"
+    value: "5"
+    required: true
+  - name: "FAILED_JOBS_HISTORY_LIMIT"
+    displayName: "Failed Job History Limit"
+    description: "The number of failed jobs that will be retained"
+    value: "2"
+    required: true
+  - name: "JOB_BACKOFF_LIMIT"
+    displayName: "Job Backoff Limit"
+    description: "The number of attempts to try for a successful job outcome"
+    value: "0"
+    required: false
+  - name: CPU_REQUEST
+    displayName: Resources CPU Request
+    description: The resources CPU request (in cores) for this build.
+    required: true
+    value: "250m"
+  - name: CPU_LIMIT
+    displayName: Resources CPU Limit
+    description: The resources CPU limit (in cores) for this build.
+    required: true
+    value: "1"
+  - name: MEMORY_REQUEST
+    displayName: Resources Memory Request
+    description: The resources Memory request (in Mi, Gi, etc) for this build.
+    required: true
+    value: "500Mi"
+  - name: MEMORY_LIMIT
+    displayName: Resources Memory Limit
+    description: The resources Memory limit (in Mi, Gi, etc) for this build.
+    required: true
+    value: "2Gi"
