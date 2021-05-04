@@ -22,6 +22,7 @@ import { MinesRecordCollectionResolver } from './mines-record-collection-resolve
 import { MinesRecordsEditComponent } from './mines-records-edit/mines-records-edit.component';
 // other
 import { Utils } from 'nrpti-angular-components';
+import { EnforcementActionsComponent } from '../enforcement-actions/enforcement-actions.component';
 
 const routes: Routes = [
   {
@@ -39,6 +40,14 @@ const routes: Routes = [
         canActivate: [CanActivateGuard],
         resolve: {
           mines: MinesListResolver
+        }
+      },
+      {
+        path: 'enforcement-actions',
+        pathMatch: 'full',
+        component: EnforcementActionsComponent,
+        data: {
+          breadcrumb: 'Enforcement Actions'
         }
       },
       {
@@ -225,4 +234,4 @@ const routes: Routes = [
     Utils
   ]
 })
-export class MinesRoutingModule {}
+export class MinesRoutingModule { }
