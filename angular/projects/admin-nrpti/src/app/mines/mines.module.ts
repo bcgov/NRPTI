@@ -33,6 +33,10 @@ import { MinesRecordDetailComponent } from './mines-records-detail/mines-records
 import { MinesRecordAddComponent } from './mines-record-add/mines-record-add.component';
 import { MinesRecordsEditComponent } from './mines-records-edit/mines-records-edit.component';
 import { EnforcementActionsComponent } from '../enforcement-actions/enforcement-actions.component';
+import { EnforcementActionsTableComponent } from '../enforcement-actions/enforcement-actions-table/enforcement-actions-table.component';
+import { EnforcementActionsTableRowComponent } from '../enforcement-actions/enforcement-actions-table/enforcement-actions-table-row/enforcement-actions-table-row.component';
+import { EnforcementActionsResolver } from '../enforcement-actions/enforcement-actions-resolver';
+
 
 @NgModule({
   imports: [
@@ -69,15 +73,20 @@ import { EnforcementActionsComponent } from '../enforcement-actions/enforcement-
     MinesRecordAddComponent,
     MinesRecordDetailComponent,
     MinesRecordsEditComponent,
-    EnforcementActionsComponent
+    EnforcementActionsComponent,
+    EnforcementActionsTableRowComponent,
+    EnforcementActionsTableComponent
 
   ],
-  providers: [],
+  providers: [
+    EnforcementActionsResolver
+  ],
   entryComponents: [
     MinesTableRowComponent,
     MinesRecordsTableRowComponent,
     MinesCollectionsTableRowComponent,
     MinesCollectionRecordTableRowComponent,
+    EnforcementActionsTableRowComponent,
   ],
   exports: [
     MinesRecordAddComponent
