@@ -53,17 +53,7 @@ export class SidebarComponent implements OnDestroy {
     this.currentMenu = currentMenu && currentMenu.split(';')[0];
 
     if (mainRoute === 'mines') {
-      if (mainRouteId) {
-        this.showMineDetails = true;
-      } else {
-        this.showMineDetails = false;
-      }
-    } else {
-      this.showMineDetails = false;
-    }
-
-    if ( mainRoute === 'mines' ) {
-      if (mainRouteId) {
+      if (mainRouteId && mainRouteId !== 'enforcement-actions') {
         this.currentMineId = mainRouteId;
         try {
           this.currentMenu = currentMenu;
@@ -72,9 +62,11 @@ export class SidebarComponent implements OnDestroy {
           // When coming from search, it's blank.
         }
         this.showMineDetails = true;
+      } else {
+        this.currentMineId = mainRoute;
+        this.showMineDetails = false;
       }
     } else {
-      this.currentMineId = mainRoute;
       this.showMineDetails = false;
     }
   }
