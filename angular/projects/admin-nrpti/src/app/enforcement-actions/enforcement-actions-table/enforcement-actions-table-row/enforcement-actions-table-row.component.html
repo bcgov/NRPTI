@@ -1,0 +1,25 @@
+<td scope="row" data-label="Record Name" class="col-5">{{ getAttributeValue('recordName')}}</td>
+<td scope="row" data-label="Record Type" class="col-2">{{ getAttributeValue('recordType')}}</td>
+<td scope="row" data-label="Date" class="col-2">{{(getAttributeValue('dateIssued') === '-') ? '-' :
+  (getAttributeValue('dateIssued') | date: 'mediumDate')}}</td>
+
+<td scope="row" data-label="Published State" class="col-2 d-flex">
+  <div *ngIf="isPublished; else unpublished">
+    <em class="material-icons published-green">check_circle</em>
+    <span class="publish-label pl-1 published-green">Published</span>
+  </div>
+  <ng-template #unpublished>
+    <em class="material-icons ">cancel</em>
+    <span class="publish-label pl-1">Unpublished</span>
+  </ng-template>
+</td>
+
+<td scope="row" class="col-1 d-xl-flex justify-content-end" (click)="$event.stopPropagation()">
+  <button mat-icon-button class="btn" [matMenuTriggerFor]="menu" title="More options" aria-label="More options menu">
+    <em class="material-icons">more_vert</em>
+  </button>
+  <mat-menu #menu='matMenu'>
+    <button mat-menu-item (click)="goToDetails()" title='View record details'>View Record Details</button>
+    <button mat-menu-item (click)="goToEdit()" title='Edit record'>Edit Record</button>
+  </mat-menu>
+</td>

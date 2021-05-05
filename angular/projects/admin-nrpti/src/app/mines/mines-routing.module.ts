@@ -23,6 +23,7 @@ import { MinesRecordsEditComponent } from './mines-records-edit/mines-records-ed
 // other
 import { Utils } from 'nrpti-angular-components';
 import { EnforcementActionsComponent } from '../enforcement-actions/enforcement-actions.component';
+import { EnforcementActionsResolver } from '../enforcement-actions/enforcement-actions-resolver';
 
 const routes: Routes = [
   {
@@ -46,6 +47,9 @@ const routes: Routes = [
         path: 'enforcement-actions',
         pathMatch: 'full',
         component: EnforcementActionsComponent,
+        resolve: {
+          records: EnforcementActionsResolver,
+        },
         data: {
           breadcrumb: 'Enforcement Actions'
         }
