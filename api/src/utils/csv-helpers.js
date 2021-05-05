@@ -1,5 +1,5 @@
 const csvToJson = require('csvtojson');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const flnrCsv = require('./constants/csv/flnro-inspections-csv');
 const defaultLog = require('./logger')('csv-import');
 
@@ -137,6 +137,8 @@ function validateRequiredHeaders(csvHeaderRowValuesArray, dataSourceType, record
     defaultLog.info(`CSV file for ${dataSourceType} - ${recordType} is missing required column headers: ${missingHeaders}`);
     return null;
   }
+
+  return true;
 }
 
 /**
@@ -305,7 +307,12 @@ function transformDateFields(
     }
 
     // transform dates into iso strings
-    transformedCsvRowValuesArray[dateField.field] = moment(csvRowValuesArray[dateField.field], dateField.format).toISOString();
+    try {
+      transformedCsvRowValuesArray[dateField.field] = moment.tz(csvRowValuesArray[dateField.field], "America/Vancouver").toDate()
+    } catch (err) {
+      defaultLog.debug(`Error transforming csv date field: ${err}`)
+      transformedCsvRowValuesArray[dateField.field] = null;
+    }
   }
 
   return transformedCsvRowValuesArray;

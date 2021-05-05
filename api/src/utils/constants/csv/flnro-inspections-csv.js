@@ -35,7 +35,7 @@ exports.flnrInspectionCsvRequiredFields = ['Record ID'];
   * @memberof CsvConstants
   */
 exports.flnrInspectionCsvRequiredFormats = [
-  { field: 'Date', type: 'date', format: 'YYYY-MM-DD' }
+  { field: 'date', type: 'date', format: 'YYYY-MM-DD' }
 ];
 
 /**
@@ -44,4 +44,4 @@ exports.flnrInspectionCsvRequiredFormats = [
   * @static
   * @memberof CsvConstants
   */
-exports.flnrInspectionCsvDateFields = [{ field: 'Date', format: 'YYYY-MM-DD' }];
+exports.flnrInspectionCsvDateFields = [{ field: 'date', format: 'YYYY-MM-DD' }];
