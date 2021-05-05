@@ -102,7 +102,6 @@ export class RecordUtils {
    */
   static exportToCsv(data: any[]): void {
     const csvHeaders = [
-      'Record Name',
       'Record Type',
       'Issued On',
       'Issued To',
@@ -127,7 +126,6 @@ export class RecordUtils {
 
     for (const row of data) {
       let line = [];
-      line.push(escapeCsvString(row['recordName']));
       line.push(escapeCsvString(row['recordType']));
       line.push(moment(row['dateIssued']).format('YYYY-MM-DD'));
 

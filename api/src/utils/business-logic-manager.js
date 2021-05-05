@@ -85,6 +85,11 @@ function isRecordConsideredAnonymous(record) {
     isAnonymous = false;
   }
 
+  if (record.sourceSystemRef && record.sourceSystemRef.toLowerCase() === 'nris-emli') {
+    // records imported from NRIS-EMLI are not anonymous
+    isAnonymous = false;
+  }
+
   return isAnonymous;
 }
 

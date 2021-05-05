@@ -1,0 +1,12 @@
+@import "assets/styles/base/base.scss";
+
+.published-green {
+  color: $mine-published-font-color;
+}
+
+:host-context(tr) {
+  &:hover {
+    background-color: $table-row-hover-bg;
+    cursor: pointer;
+  }
+}
