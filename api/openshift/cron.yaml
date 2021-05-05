@@ -105,6 +105,12 @@ objects:
                                 -d '{"taskType":"import", "dataSourceType":"nris-epd"}' \
                                 ${NRPTI_API_URL}/task
 
+                      echo -e "Importing NRIS-EMLI\n"
+                              curl -H "Authorization: Bearer ${TOKEN}" \
+                                -H "Content-Type: application/json" \
+                                -d '{"taskType":"import", "dataSourceType":"nris-emli"}' \
+                                ${NRPTI_API_URL}/task
+
                       echo -e "Importing NRIS-FLNRO-Inspections\n"
                               curl -H "Authorization: Bearer ${TOKEN}" \
                                 -H "Content-Type: application/json" \

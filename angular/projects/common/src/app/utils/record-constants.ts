@@ -242,6 +242,7 @@ export class Picklists {
     'lng-csv',
     'mem-admin',
     'nris-epd',
+    'nris-emli',
     'nris-flnr-csv',
     'nrpti',
     'ocers-csv'
