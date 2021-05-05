@@ -244,6 +244,7 @@ Each record has an attribute called sourceSystemRef. We currently have the follo
 
 - nrpti
 - nris-epd
+- nris-emli
 - ocers-csv
 - epic
 - core
