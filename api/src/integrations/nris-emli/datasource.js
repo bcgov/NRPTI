@@ -232,7 +232,7 @@ class NrisDataSource {
       };
     }
 
-    newRecord.recordName = record.assessmentId;
+    newRecord.recordName = `EMLI Inspection - ${record.assessmentId}`;
     newRecord.projectName = record.location.locationName;
     newRecord.description = `Inspection No.: ${record.assessmentId}; Inspection Type: ${record.inspection.inspectionType[0]}; Permit No.: ${record.authorization.sourceId}`;
 
