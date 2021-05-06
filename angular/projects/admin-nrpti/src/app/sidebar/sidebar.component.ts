@@ -53,7 +53,7 @@ export class SidebarComponent implements OnDestroy {
     this.currentMenu = currentMenu && currentMenu.split(';')[0];
 
     if (mainRoute === 'mines') {
-      if (mainRouteId && mainRouteId !== 'enforcement-actions') {
+      if (mainRouteId && !mainRouteId.includes('enforcement-actions')) {
         this.currentMineId = mainRouteId;
         try {
           this.currentMenu = currentMenu;
