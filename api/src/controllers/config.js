@@ -7,6 +7,7 @@ const BcmiConfig = require('./config/bcmi');
 const NrcedConfig = require('./config/nrced');
 const LngConfig = require('./config/lng');
 const NrptiConfig = require('./config/nrpti');
+const { featureFlag: FeatureFlag } = require('../models/index');
 
 const CheckRole = function (roles, roleName, includeSysadmin = false) {
   if (includeSysadmin) {
@@ -31,7 +32,7 @@ exports.protectedOptions = function (args, res, next) {
  * @returns {object}
  */
 exports.publicGetConfig = async function (args, res, next) {
-  console.log("Got configuration data");
+  console.log("Sent configuration data");
   let configurationData = {};
 
   configurationData['API_LOCATION'] = process.env.API_LOCATION;
@@ -47,6 +48,10 @@ exports.publicGetConfig = async function (args, res, next) {
 
   configurationData['IMPORT_TABLE_INTERVAL'] = process.env.IMPORT_TABLE_INTERVAL;
   configurationData['DEFAULT_IMPORT_TABLE_QUERY_PARAMS'] = process.env.DEFAULT_IMPORT_TABLE_QUERY_PARAMS;
+
+  // TODO: Put this in each respective application sub-section so we can feature-flag for each app
+  // independently.
+  configurationData['FEATURE_FLAG'] = await FeatureFlag.findOne({ _schemaName: 'FeatureFlag' });
 
   // get project specific confguration
   // fetch the latest business area specific CommunicationPackage

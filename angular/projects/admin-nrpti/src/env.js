@@ -18,6 +18,9 @@
     
     // This is a hardcoded variable that does not come from the backend
     window.__env.APPLICATION = 'NRPTI';
+    window.__env.FEATURE_FLAG = {
+      "nris-emli-importer": false
+    };
 
     // Import component defaults
     window.__env.IMPORT_TABLE_INTERVAL = 15000;
