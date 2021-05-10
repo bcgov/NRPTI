@@ -1,7 +1,25 @@
 const QueryActions = require('../utils/query-actions');
-const defaultLog   = require('../utils/logger')('record');
-const utils        = require('../utils/constants/misc');
-const { communicationPackage: CommunicationPackage }  = require('../models/index');
+const defaultLog = require('../utils/logger')('record');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
+const ConfigConsts = require('../utils/constants/config');
+const BcmiConfig = require('./config/bcmi');
+const NrcedConfig = require('./config/nrced');
+const LngConfig = require('./config/lng');
+const NrptiConfig = require('./config/nrpti');
+
+const CheckRole = function (roles, roleName, includeSysadmin = false) {
+  if (includeSysadmin) {
+    if (!roles.includes('sysadmin') &&
+      !roles.includes(roleName)) {
+      throw new Error('Permission Denied. You are not an administrator for' + roleName);
+    }
+  } else {
+    if (!roles.includes(roleName)) {
+      throw new Error('Permission Denied. You are not an administrator for' + roleName);
+    }
+  }
+}
 
 exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
@@ -12,7 +30,7 @@ exports.protectedOptions = function (args, res, next) {
  *
  * @returns {object}
  */
-exports.protectedGetConfig = async function (args, res, next) {
+exports.publicGetConfig = async function (args, res, next) {
   console.log("Got configuration data");
   let configurationData = {};
 
@@ -29,70 +47,139 @@ exports.protectedGetConfig = async function (args, res, next) {
 
   configurationData['IMPORT_TABLE_INTERVAL'] = process.env.IMPORT_TABLE_INTERVAL;
   configurationData['DEFAULT_IMPORT_TABLE_QUERY_PARAMS'] = process.env.DEFAULT_IMPORT_TABLE_QUERY_PARAMS;
-  
+
   // get project specific confguration
-  if (args.swagger.params.app && args.swagger.params.app.value) {
-    // fetch the latest business area specific CommunicationPackage
-    // attach it to the configuration data under "COMMUNICATIONS"
-    const commPackage = await CommunicationPackage.findOne({ _schemaName: 'CommunicationPackage', application: args.swagger.params.app.value.toUpperCase() });
-    configurationData['COMMUNICATIONS'] = commPackage;
+  // fetch the latest business area specific CommunicationPackage
+  // attach it to the configuration data under "COMMUNICATIONS"
+  const ConfigData = mongoose.model('ConfigData');
+  switch (args.swagger.params.app.value) {
+    case ConfigConsts.CONFIG_APPS.BCMI:
+      configurationData['ENFORCEMENT_ACTION_TEXT'] = await ConfigData.findOne({
+        _schemaName: 'ConfigData',
+        configApplication: ConfigConsts.CONFIG_APPS.BCMI,
+        configType: ConfigConsts.CONFIG_TYPES.enforcementActionText
+      });
+      configurationData['COMMUNICATIONS'] = await ConfigData.findOne({
+        _schemaName: 'ConfigData',
+        configApplication: ConfigConsts.CONFIG_APPS.BCMI,
+        configType: ConfigConsts.CONFIG_TYPES.communicationPackage
+      });
+      break;
+    case ConfigConsts.CONFIG_APPS.NRCED:
+      configurationData['COMMUNICATIONS'] = await ConfigData.findOne({
+        _schemaName: 'ConfigData',
+        configApplication: ConfigConsts.CONFIG_APPS.NRCED,
+        configType: ConfigConsts.CONFIG_TYPES.communicationPackage
+      });
+      break;
+    case ConfigConsts.CONFIG_APPS.LNG:
+      configurationData['COMMUNICATIONS'] = await ConfigData.findOne({
+        _schemaName: 'ConfigData',
+        configApplication: ConfigConsts.CONFIG_APPS.LNG,
+        configType: ConfigConsts.CONFIG_TYPES.communicationPackage
+      });
+      break;
+    case ConfigConsts.CONFIG_APPS.NRPTI:
+      configurationData['ENFORCEMENT_ACTION_TEXT'] = await ConfigData.findOne({
+        _schemaName: 'ConfigData',
+        configApplication: ConfigConsts.CONFIG_APPS.BCMI,
+        configType: ConfigConsts.CONFIG_TYPES.enforcementActionText
+      });
+      configurationData['COMMUNICATIONS_BCMI'] = await ConfigData.findOne({
+        _schemaName: 'ConfigData',
+        configApplication: ConfigConsts.CONFIG_APPS.BCMI,
+        configType: ConfigConsts.CONFIG_TYPES.communicationPackage
+      });
+      configurationData['COMMUNICATIONS_NRCED'] = await ConfigData.findOne({
+        _schemaName: 'ConfigData',
+        configApplication: ConfigConsts.CONFIG_APPS.NRCED,
+        configType: ConfigConsts.CONFIG_TYPES.communicationPackage
+      });
+      configurationData['COMMUNICATIONS_LNG'] = await ConfigData.findOne({
+        _schemaName: 'ConfigData',
+        configApplication: ConfigConsts.CONFIG_APPS.LNG,
+        configType: ConfigConsts.CONFIG_TYPES.communicationPackage
+      });
+      break;
+    default:
+      break;
   }
 
   QueryActions.sendResponse(res, 200, configurationData);
 };
 
-exports.communicationPackageCreate = async function (args, res, next) {
-  defaultLog.debug(' >> communicationPackageCreate');
-  let communicationPackage = null;
+exports.protectedPostConfig = async function (args, res, next) {
+  defaultLog.debug(' >> protectedPostConfig');
+  let newObj = {};
 
   try {
-    if (args.swagger.params.communicationPackage && args.swagger.params.communicationPackage.value) {
-      communicationPackage = args.swagger.params.communicationPackage.value
-    } else {
-      throw new Error('Invalid body');
+    if (!args.swagger.params.data.value.configType) {
+      throw new Error('You must specify a configType in data.');
     }
-
-    // check roles. User must have the admin role for the application
-    if (!args.swagger.params.auth_payload.realm_access.roles.includes('sysadmin') &&
-        args.swagger.params.app.value === 'BCMI' &&
-        !args.swagger.params.auth_payload.realm_access.roles.includes('admin:bcmi')) {
-      throw new Error('Permission Denied. You are not an administrator for BCMI');
-    } else if (!args.swagger.params.auth_payload.realm_access.roles.includes('sysadmin') &&
-                args.swagger.params.app.value === 'NRCED' &&
-                !args.swagger.params.auth_payload.realm_access.roles.includes('admin:nrced')) {
-      throw new Error('Permission Denied. You are not an administrator for NRCED');
-    } else if (!args.swagger.params.auth_payload.realm_access.roles.includes('sysadmin') &&
-                args.swagger.params.app.value === 'LNG' &&
-                !args.swagger.params.auth_payload.realm_access.roles.includes('admin:lng')) {
-      throw new Error('Permission Denied. You are not an administrator for LNG');
+    switch (args.swagger.params.app.value) {
+      case ConfigConsts.CONFIG_APPS.BCMI:
+        CheckRole(args.swagger.params.auth_payload.realm_access.roles, 'admin:bcmi', true);
+        newObj = await BcmiConfig.CreateBCMIConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
+        break;
+      case ConfigConsts.CONFIG_APPS.NRCED:
+        CheckRole(args.swagger.params.auth_payload.realm_access.roles, 'admin:nrced', true);
+        newObj = await NrcedConfig.CreateNRCEDConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
+        break;
+      case ConfigConsts.CONFIG_APPS.LNG:
+        CheckRole(args.swagger.params.auth_payload.realm_access.roles, 'admin:lng', true);
+        newObj = await LngConfig.CreateLNGConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
+        break;
+      case ConfigConsts.CONFIG_APPS.NRPTI:
+        CheckRole(args.swagger.params.auth_payload.realm_access.roles, 'admin:nrpti', true);
+        newObj = await NrptiConfig.CreateLNGConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
+        break;
+      default:
+        throw new Error('You did not provide a valid app.')
     }
-
-    let newCommPackage = new CommunicationPackage(communicationPackage);
-
-    newCommPackage._schemaName = 'CommunicationPackage';
-    newCommPackage.application = args.swagger.params.app.value.toUpperCase();
-    newCommPackage.addedBy = args.swagger.params.auth_payload.displayName;
-    newCommPackage.dateAdded = new Date();
-    newCommPackage.write = utils.ApplicationAdminRoles;
-    newCommPackage.read = utils.ApplicationAdminRoles;
-    newCommPackage.read.push('public');
-
-    // remove any existing communication pacakges for this business area
-    // Future Enhancement: Don't do this. Allow users to create multiples so they can
-    // queue up a series of messages. Support for multiple messages, etc.
-    await CommunicationPackage.deleteMany({ _schemaName: 'CommunicationPackage', application: args.swagger.params.app.value });
-
-    // write the communication package to the DB
-    communicationPackage = await newCommPackage.save();
   } catch (error) {
-    defaultLog.info(`error creating Communication Package: ${communicationPackage}`);
+    defaultLog.info(`Error creating Config Package: ${error}`);
     defaultLog.debug(error);
     return QueryActions.sendResponse(res, 400, {});
   }
 
-  QueryActions.sendResponse(res, 201, communicationPackage);
+  QueryActions.sendResponse(res, 201, newObj);
   next();
-
-  defaultLog.debug(' << communicationPackageCreate');
+  defaultLog.debug(' << protectedPostConfig');
 }
 
+exports.protectedPutConfig = async function (args, res, next) {
+  defaultLog.debug(' >> protectedPutConfig');
+  let editedObj = {};
+
+  try {
+    if (!args.swagger.params.data.value.configType) {
+      throw new Error('You must specify a configType in data.');
+    }
+    const _id = new ObjectId(args.swagger.params.configId.value);
+    switch (args.swagger.params.app.value) {
+      case ConfigConsts.CONFIG_APPS.BCMI:
+        CheckRole(args.swagger.params.auth_payload.realm_access.roles, 'admin:bcmi', true);
+        editedObj = await BcmiConfig.EditBCMIConfig(_id, args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
+        break;
+      case ConfigConsts.CONFIG_APPS.NRCED:
+        CheckRole(args.swagger.params.auth_payload.realm_access.roles, 'admin:nrced', true);
+        break;
+      case ConfigConsts.CONFIG_APPS.LNG:
+        CheckRole(args.swagger.params.auth_payload.realm_access.roles, 'admin:lng', true);
+        break;
+      case ConfigConsts.CONFIG_APPS.NRPTI:
+        CheckRole(args.swagger.params.auth_payload.realm_access.roles, 'admin:nrpti', true);
+        break;
+      default:
+        throw new Error('You did not provide a valid app.')
+    }
+  } catch (error) {
+    defaultLog.info(`Error editing Config Package: ${error}`);
+    defaultLog.debug(error);
+    return QueryActions.sendResponse(res, 400, {});
+  }
+
+  QueryActions.sendResponse(res, 200, editedObj);
+  next();
+  defaultLog.debug(' << protectedPutConfig');
+}

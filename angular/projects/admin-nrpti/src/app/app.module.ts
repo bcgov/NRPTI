@@ -48,7 +48,6 @@ import { NewsService } from './services/news.service';
 import { ImportListResolver } from './import/import-list-resolver';
 import { NewsResolver } from './news/news-resolver';
 import { NewsListResolver } from './news/news-list.resolver';
-import { CommunicationsResolver } from './communications/communications.resolver';
 
 // guards
 import { CanActivateGuard } from './guards/can-activate-guard.service';
@@ -135,7 +134,6 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     ImportListResolver,
     NewsResolver,
     NewsListResolver,
-    CommunicationsResolver,
     CanActivateGuard,
     CanDeactivateGuard,
     RecordUtils,

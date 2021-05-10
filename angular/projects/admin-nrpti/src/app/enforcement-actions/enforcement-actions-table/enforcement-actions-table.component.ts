@@ -89,7 +89,8 @@ export class EnforcementActionsTableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadingScreenService.setLoadingState(true, 'body');
-
+    this.tableData.options.showPageSizePicker = false;
+    this.tableData.options.showPageCountDisplay = false;
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params: Params) => {
       this.queryParams = { ...params };
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.

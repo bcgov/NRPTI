@@ -187,8 +187,8 @@ definitions:
       - +documentType
       - -documentType
 
-  ### Communication Package Definition
-  CommunicationPackage:
+  ### Config Data Definition
+  ConfigData:
     type: object
 
   ### Task Definitions
@@ -260,7 +260,7 @@ paths:
       tags:
         - config
       summary: 'Get the app configuration'
-      operationId: protectedGetConfig
+      operationId: publicGetConfig
       description: 'Retrieves configuration data.'
       responses:
         '200':
@@ -298,7 +298,7 @@ paths:
       tags:
         - config
       summary: 'Get the app configuration'
-      operationId: protectedGetConfig
+      operationId: publicGetConfig
       description: 'Retrieves configuration data.'
       parameters:
         - name: app
@@ -319,7 +319,7 @@ paths:
       tags:
         - config
       summary: 'Create an app communication package (note: this will remove any existing package)'
-      operationId: communicationPackageCreate
+      operationId: protectedPostConfig
       description: 'Authenticated access to create a communication package'
       security:
         - Bearer: []
@@ -334,15 +334,82 @@ paths:
           description: 'Specific application/business area you want to fetch configurations for'
           required: true
           type: string
-        - name: communicationPackage
+        - name: data
           in: body
-          description: 'Create comm package body'
+          description: 'Create config data body'
           required: true
           schema:
-            $ref: '#/definitions/CommunicationPackage'
+            $ref: '#/definitions/ConfigData'
       responses:
         '201':
           description: 'Success'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+  /config/{app}/{configId}:
+    x-swagger-router-controller: config
+    options:
+      tags:
+        - config
+      summary: 'Pre-flight request'
+      operationId: protectedOptions
+      description: 'Options on config Route'
+      parameters:
+        - name: app
+          in: path
+          description: 'Specific application/business area you want to fetch configurations for'
+          required: true
+          type: string
+        - name: configId
+          in: path
+          description: 'Id of config'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/ConfigObject'
+        '403':
+          description: 'Access Denied'
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - config
+      summary: 'Get the app configuration'
+      operationId: protectedPutConfig
+      description: 'Retrieves configuration data.'
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:lng
+        - admin:nrced
+        - admin:bcmi
+      parameters:
+        - name: app
+          in: path
+          description: 'Specific application/business area you want to fetch configurations for'
+          required: true
+          type: string
+        - name: configId
+          in: path
+          description: 'Id of config'
+          required: true
+          type: string
+        - name: data
+          in: body
+          description: 'Create config data body'
+          required: true
+          schema:
+            $ref: '#/definitions/ConfigData'
+      responses:
+        '200':
+          description: 'Success'
+          schema:
+            $ref: '#/definitions/ConfigObject'
         '403':
           description: 'Access Denied'
           schema:
