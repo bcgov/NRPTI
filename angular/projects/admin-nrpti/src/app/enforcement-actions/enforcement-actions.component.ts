@@ -8,7 +8,7 @@ import { Constants } from '../utils/constants/misc';
 @Component({
   selector: 'app-enforcement-actions',
   templateUrl: './enforcement-actions.component.html',
-  styleUrls: ['./enforcement-actions.component.css']
+  styleUrls: ['./enforcement-actions.component.scss']
 })
 export class EnforcementActionsComponent implements OnInit {
   public pageText = '';
