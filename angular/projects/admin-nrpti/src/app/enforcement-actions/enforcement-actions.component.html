@@ -11,7 +11,7 @@
             Page Text
         </h5>
         <p *ngIf="!pageTextExists"><span>There is currently no enforcement action text.</span></p>
-        <div [innerHTML]="pageText"></div>
+        <div *ngIf="!pageTextEditing" [innerHTML]="pageText"></div>
         <span *ngIf="pageTextEditing">
             <editor [init]="tinyMceSettings"
                 name="pageTextDraft"
