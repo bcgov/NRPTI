@@ -10,7 +10,7 @@
         <h5>
             Page Text
         </h5>
-        <p *ngIf="!pageTextExists"><i>There is currently no enforcement action text.</i></p>
+        <p *ngIf="!pageTextExists"><span>There is currently no enforcement action text.</span></p>
         <div [innerHTML]="pageText"></div>
         <span *ngIf="pageTextEditing">
             <editor [init]="tinyMceSettings"
