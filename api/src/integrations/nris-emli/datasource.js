@@ -12,7 +12,7 @@ const BusinessLogicManager = require('../../utils/business-logic-manager');
 const utils = require('../../utils/constants/misc');
 
 const fs = require('fs');
-
+const NRIS_EMLI_DOCUMENT_BINARIES_ENABLED = process.env.NRIS_EMLI_DOCUMENT_BINARIES_ENABLED || false;
 const NRIS_TOKEN_ENDPOINT =
   process.env.NRIS_TOKEN_ENDPOINT ||
   'https://api.nrs.gov.bc.ca/oauth2/v1/oauth/token?disableDeveloperFilter=true&grant_type=client_credentials&scope=NRISWS.*';
@@ -150,14 +150,14 @@ class NrisDataSource {
           if (existingRecord) {
             if (newRecord.documents.length === 0) {
               // create attachment if no existing document was found, if no "Final Report" is attached no document will be created
-              if (this.shouldRecordHaveAttachments(newRecord)) {
+              if (NRIS_EMLI_DOCUMENT_BINARIES_ENABLED === true) {
                 await this.createRecordAttachments(records[i], newRecord);
               }
             }
 
             await this.updateRecord(newRecord, existingRecord);
           } else {
-            if (this.shouldRecordHaveAttachments(newRecord)) {
+            if (NRIS_EMLI_DOCUMENT_BINARIES_ENABLED === true) {
               await this.createRecordAttachments(records[i], newRecord);
             }
             await this.createItem(newRecord);
@@ -214,12 +214,14 @@ class NrisDataSource {
 
     newRecord.sourceSystemRef = 'nris-emli';
 
-    // check if document exists already in the system but is orphaned
-    for (let i = 0; i < record.attachment.length; i++) {
-      if (record.attachment[i].fileType === 'Final Report') {
-        const existingDocument = await this.findExistingDocument(record.attachment[i].filePath);
-        if (existingDocument && existingDocument._id && !newRecord.documents.includes(existingDocument._id)) {
-          newRecord.documents.push(existingDocument._id);
+    if (NRIS_EMLI_DOCUMENT_BINARIES_ENABLED === true) {
+      // check if document exists already in the system but is orphaned
+      for (let i = 0; i < record.attachment.length; i++) {
+        if (record.attachment[i].fileType === 'Final Report') {
+          const existingDocument = await this.findExistingDocument(record.attachment[i].filePath);
+          if (existingDocument && existingDocument._id && !newRecord.documents.includes(existingDocument._id)) {
+            newRecord.documents.push(existingDocument._id);
+          }
         }
       }
     }
@@ -448,18 +450,6 @@ class NrisDataSource {
     } catch (error) {
       defaultLog.error(`Failed to save ${RECORD_TYPE.Inspection._schemaName} record: ${error.message}`);
     }
-  }
-
-  shouldRecordHaveAttachments(record) {
-    if (
-      record &&
-      record.legislation &&
-      record.legislation.act === 'Greenhouse Gas Industrial Reporting and Control Act'
-    ) {
-      return false;
-    }
-
-    return true;
   }
 }
 
