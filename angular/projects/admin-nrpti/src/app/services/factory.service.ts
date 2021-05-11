@@ -602,21 +602,20 @@ export class FactoryService {
 
     return isInsert
       ? this.recordService
-          .createRecord(dataPackage)
-          .pipe(catchError(error => this.apiService.handleError(error)))
-          .toPromise()
+        .createRecord(dataPackage)
+        .pipe(catchError(error => this.apiService.handleError(error)))
+        .toPromise()
       : this.recordService
-          .editRecord(dataPackage)
-          .pipe(catchError(error => this.apiService.handleError(error)))
-          .toPromise();
+        .editRecord(dataPackage)
+        .pipe(catchError(error => this.apiService.handleError(error)))
+        .toPromise();
   }
 
-  public getCommunicationPackage(application): Observable<object> {
-    return this.configService.getCommunicationPackage(application, this.apiService.pathAPI);
+  public createConfigData(configData, application): Promise<object> {
+    return this.configService.createConfigData(configData, application, this.apiService.pathAPI).toPromise();
   }
-
-  public createCommunicationPackage(communicationPackage): Observable<object> {
-    return this.configService.createCommunicationPackage(communicationPackage, this.apiService.pathAPI);
+  public editConfigData(configData, configId, application): Promise<object> {
+    return this.configService.editConfigData(configData, configId, application, this.apiService.pathAPI).toPromise();
   }
 
   public getMapLayerInfo(mapInfoId): Observable<object> {

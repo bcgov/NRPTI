@@ -5,7 +5,7 @@ exports.audit = require('./audit');
 exports.task = require('./task');
 exports.document = require('./document');
 exports.epicProject = require('./epicProject');
-exports.communicationPackage = require('./communicationPackage');
+exports.configData = require('./configData');
 exports.mapLayerInfo = require('./mapLayerInfo');
 exports.metric = require('./metric');
 

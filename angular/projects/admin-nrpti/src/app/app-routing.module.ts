@@ -7,7 +7,6 @@ import { ImportListResolver } from './import/import-list-resolver';
 import { NewsResolver } from './news/news-resolver';
 import { NewsListComponent } from './news/news-list.component';
 import { CommunicationsComponent } from './communications/communications.component';
-import { CommunicationsResolver } from './communications/communications.resolver';
 import { LngMapInfoResolver } from './communications/lng-map-info/lng-map-info-resolver';
 
 const routes: Routes = [
@@ -56,7 +55,6 @@ const routes: Routes = [
         },
         component: CommunicationsComponent,
         resolve: {
-          communicationsPackage: CommunicationsResolver,
           lngMapData: LngMapInfoResolver
         }
       }
@@ -75,4 +73,4 @@ const routes: Routes = [
   exports: [RouterModule],
   providers: []
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

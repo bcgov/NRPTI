@@ -6,25 +6,30 @@
             </div>
         </div>
     </section>
-    <!-- <section>
+    <section>
         <h5>
             Page Text
         </h5>
-        <span *ngIf="!pageTextEditing">
-            {{pageText}}
-        </span>
+        <p *ngIf="!pageTextExists"><span>There is currently no enforcement action text.</span></p>
+        <div *ngIf="!pageTextEditing" [innerHTML]="pageText"></div>
         <span *ngIf="pageTextEditing">
             <editor [init]="tinyMceSettings"
                 name="pageTextDraft"
                 id="pageTextDraft"
-                [ngModel]="pageTextDraft"></editor>
+                [(ngModel)]="pageTextDraft"></editor>
         </span>
     </section>
+
     <section class="d-flex justify-content-end"
         *ngIf="!pageTextEditing">
         <button class="btn btn-primary"
             (click)="setEditingMode()">
-            Edit
+            <span *ngIf="!pageTextExists">
+                Add
+            </span>
+            <span *ngIf="pageTextExists">
+                Edit
+            </span>
         </button>
     </section>
     <section class="d-flex justify-content-end"
@@ -33,10 +38,32 @@
             (click)="cancelEditing()">
             Cancel
         </button>
-        <button class="btn btn-primary">
+        <button class="btn btn-primary"
+            (click)="saveText()">
             Save & Publish
         </button>
-    </section> -->
+    </section>
+
+    <section class="add-record mt-3">
+        <div class="row mt-3 mb-3">
+            <div class="col-12 text-right">
+                <div ngbDropdown
+                    placement="bottom-right">
+                    <button class="btn btn-primary"
+                        ngbDropdownToggle>
+                        Add Record
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button ngbDropdownItem
+                            (click)="add('administrative-penalties')">Administrative Penalty</button>
+                        <button ngbDropdownItem
+                            (click)="add('court-convictions')">Court Conviction</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section>
         <app-enforcement-actions-table></app-enforcement-actions-table>
     </section>
