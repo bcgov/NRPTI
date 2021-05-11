@@ -13,7 +13,7 @@
     window.__env.API_PUBLIC_PATH = '/api/public';
 
     // This is a hardcoded variable that does not come from the backend
-    window.__env.APPLICATION = 'NRPTI';
+    window.__env.APPLICATION = 'NRCED';
 
     // Add any feature-toggles
     // window.__env.coolFeatureActive = false;
