@@ -41,7 +41,7 @@ exports.CreateLNGConfig = async function (data, author) {
                 comPackageData['startDate'] = null;
             }
             try {
-                if (!data.startDate) throw 'endDate is null or undefined.';
+                if (!data.endDate) throw 'endDate is null or undefined.';
                 comPackageData['endDate'] = new Date(data.endDate);
             } catch (error) {
                 comPackageData['endDate'] = null;
