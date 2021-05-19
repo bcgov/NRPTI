@@ -99,6 +99,9 @@ export class ImportComponent implements OnInit, OnDestroy {
       self.importService.refreshData();
     });
 
+    // Feature flagging
+    this.buttonActions['nris-emli'] = this.configService.config['FEATURE_FLAG']['nris-emli-importer'];
+
     this.disableSourceSystem();
   }
 
