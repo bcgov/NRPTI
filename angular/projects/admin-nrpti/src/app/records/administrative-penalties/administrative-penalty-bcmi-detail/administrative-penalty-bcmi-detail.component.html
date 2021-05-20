@@ -15,11 +15,11 @@
               Published on {{ (data && data.datePublished | date: 'mediumDate') || '-' }}
             </span>
             <button *ngIf="!isPublished" class="button-publish" (click)="publish()" [disabled]="!this.canPublish()">
-              <i class="material-icons">check</i>
+              <em class="material-icons">check</em>
               <span>Publish to BCMI</span>
             </button>
             <button *ngIf="isPublished" class="button-unpublish" (click)="unPublish()" [disabled]="!this.canPublish()">
-              <i class="material-icons">close</i>
+              <em class="material-icons">close</em>
               <span>Unpublish from BCMI</span>
             </button>
           </div>
