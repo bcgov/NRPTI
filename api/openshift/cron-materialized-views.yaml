@@ -8,10 +8,10 @@ metadata:
 parameters:
   - name: CRON_SCHEDULE
     description: 'Cron-like schedule expression. Default: Once every day at 10:00 AM UTC or 02:00 AM PST'
-    value: '0 10 * * *'
+    value: '*/30 * * * *'
   - name: CRON_NAME
     decription: 'Name of the cronjob container.'
-    value: 'nrpti-cronjob'
+    value: 'nrpti-materializedviewsubset'
 objects:
   - apiVersion: batch/v1beta1
     kind: CronJob
@@ -44,49 +44,36 @@ objects:
                         -d "client_id=${KEYCLOAK_CLIENT_ID}" \
                         -d "client_secret=${KEYCLOAK_CLIENT_SECRET}" | python -c "import sys, json; print json.load(sys.stdin)['access_token']")
 
-                      echo -e "-------- RUNNING IMPORTERS --------\n"
+                      echo -e "-------- UPDATING SUBSETS --------\n"
+                      echo -e "Updating issuedTo subset\n"
+                      curl -H "Authorization: Bearer ${TOKEN}" \
+                        -H "Content-Type: application/json" \
+                        -d '{"taskType":"updateMaterializedView", "materializedViewSubset":"issuedTo"}' \
+                        ${NRPTI_API_URL}/task
 
-                      echo -e "Importing EPIC\n"
-                              curl -H "Authorization: Bearer ${TOKEN}" \
-                                -H "Content-Type: application/json" \
-                                -d '{"taskType":"import", "dataSourceType":"epic"}' \
-                                ${NRPTI_API_URL}/task
+                      echo -e "Updating location subset\n"
+                      curl -H "Authorization: Bearer ${TOKEN}" \
+                        -H "Content-Type: application/json" \
+                        -d '{"taskType":"updateMaterializedView", "materializedViewSubset":"location"}' \
+                        ${NRPTI_API_URL}/task
 
-                      echo -e "Importing BCOGC\n"
-                              curl -H "Authorization: Bearer ${TOKEN}" \
-                                -H "Content-Type: application/json" \
-                                -d '{"taskType":"import", "dataSourceType":"bcogc"}' \
-                                ${NRPTI_API_URL}/task
+                      echo -e "Updating recordName subset\n"
+                      curl -H "Authorization: Bearer ${TOKEN}" \
+                        -H "Content-Type: application/json" \
+                        -d '{"taskType":"updateMaterializedView", "materializedViewSubset":"recordNameSubset"}' \
+                        ${NRPTI_API_URL}/task
 
-                      echo -e "Importing CORE\n"
-                        curl -H "Authorization: Bearer ${TOKEN}" \
-                          -H "Content-Type: application/json" \
-                          -d '{"taskType":"import", "dataSourceType":"core"}' \
-                          ${NRPTI_API_URL}/task
+                      echo -e "Updating descriptionSummary subset\n"
+                      curl -H "Authorization: Bearer ${TOKEN}" \
+                        -H "Content-Type: application/json" \
+                        -d '{"taskType":"updateMaterializedView", "materializedViewSubset":"descriptionSummary"}' \
+                        ${NRPTI_API_URL}/task
 
-                      echo -e "Importing CORE documents\n"
-                        curl -H "Authorization: Bearer ${TOKEN}" \
-                          -H "Content-Type: application/json" \
-                          -d '{"taskType":"import", "dataSourceType":"core-documents"}' \
-                          ${NRPTI_API_URL}/task
-
-                      echo -e "Importing NRIS-EPD\n"
-                              curl -H "Authorization: Bearer ${TOKEN}" \
-                                -H "Content-Type: application/json" \
-                                -d '{"taskType":"import", "dataSourceType":"nris-epd"}' \
-                                ${NRPTI_API_URL}/task
-
-                      echo -e "Importing NRIS-EMLI\n"
-                              curl -H "Authorization: Bearer ${TOKEN}" \
-                                -H "Content-Type: application/json" \
-                                -d '{"taskType":"import", "dataSourceType":"nris-emli"}' \
-                                ${NRPTI_API_URL}/task
-
-                      echo -e "Importing NRIS-FLNRO-Inspections\n"
-                              curl -H "Authorization: Bearer ${TOKEN}" \
-                                -H "Content-Type: application/json" \
-                                -d '{"taskType":"fmeImport", "dataSourceType":"nris-flnr-csv", "recordTypes": ["Inspection"]}' \
-                                ${NRPTI_API_URL}/task
+                      echo -e "Updating outcomeDescription subset\n"
+                      curl -H "Authorization: Bearer ${TOKEN}" \
+                        -H "Content-Type: application/json" \
+                        -d '{"taskType":"updateMaterializedView", "materializedViewSubset":"outcomeDescriptionSubset"}' \
+                        ${NRPTI_API_URL}/task
 
                         echo -e "-------- CRON COMPLETE --------\n"
                   env:
