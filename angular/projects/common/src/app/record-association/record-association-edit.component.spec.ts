@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { RecordAssociationEditComponent } from './record-association-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TestBedHelper } from '../spec/spec-utils';
-import { StoreService } from 'nrpti-angular-components';
+import { StoreService, Utils } from 'nrpti-angular-components';
 import { EventEmitter } from '@angular/core';
 
 describe('RecordAssociationEditComponent', () => {
@@ -19,6 +19,7 @@ describe('RecordAssociationEditComponent', () => {
       declarations: [RecordAssociationEditComponent],
       imports: [FormsModule, ReactiveFormsModule, NgbModule.forRoot()],
       providers: [
+        Utils,
         { provide: StoreService, useValue: mockStoreService }
       ]
     }).compileComponents();
@@ -26,6 +27,12 @@ describe('RecordAssociationEditComponent', () => {
 
   it('should create', () => {
     const { component, fixture } = testBedHelper.createComponent(false);
+
+    const _epicProjectId = new FormControl({});
+    const mineGuid = new FormControl({});
+    const unlistedMine = new FormControl({});
+    component.formGroup = new FormGroup({ _epicProjectId, mineGuid, unlistedMine });
+    component.mines = [];
 
     fixture.detectChanges();
 

@@ -39,6 +39,8 @@ export class RecordAssociationEditComponent implements OnInit {
     this.storeService.stateChange.subscribe((state: object) => {
       if (state && state.hasOwnProperty('mines')) {
         this.mines = state['mines'];
+      } else {
+        this.mines = [];
       }
 
       if (state && state.hasOwnProperty('epicProjects')) {

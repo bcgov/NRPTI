@@ -31,7 +31,7 @@ export class MinesAdministrativePenaltyAddEditComponent extends AdministrativePe
     protected utils: Utils,
     protected _changeDetectionRef: ChangeDetectorRef,
     // @ts-ignore used by record-association component
-    private storeService: StoreService,
+    protected storeService: StoreService,
   ) {
     super(
       route,
@@ -41,7 +41,8 @@ export class MinesAdministrativePenaltyAddEditComponent extends AdministrativePe
       loadingScreenService,
       logger,
       utils,
-      _changeDetectionRef
+      _changeDetectionRef,
+      storeService
     );
    }
 

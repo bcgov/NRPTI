@@ -29,7 +29,9 @@ describe('OrderAddEditComponent', () => {
   mockFactoryService.userInNrcedRole.and.returnValue(true);
 
   const mockStoreService = {
-    getItem: () => { },
+    getItem: () => {
+      return ['item'];
+     },
     stateChange: new EventEmitter()
   };
 

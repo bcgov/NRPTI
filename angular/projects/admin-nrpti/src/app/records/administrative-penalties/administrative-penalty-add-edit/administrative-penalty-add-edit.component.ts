@@ -9,7 +9,7 @@ import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
-import { LoadingScreenService, LoggerService } from 'nrpti-angular-components';
+import { LoadingScreenService, LoggerService, StoreService } from 'nrpti-angular-components';
 import { Constants } from '../../../utils/constants/misc';
 
 
@@ -60,6 +60,8 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     protected logger: LoggerService,
     protected utils: Utils,
     protected _changeDetectionRef: ChangeDetectorRef,
+    // @ts-ignore used by record-association component
+    protected storeService: StoreService,
   ) { }
 
   ngOnInit() {
