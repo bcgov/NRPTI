@@ -40,7 +40,7 @@ export class PermitDetailComponent extends RecordDetailComponent implements OnIn
       }
 
       const record = res.records[0] && res.records[0].data;
-      const mines = this.storeService.getItem('mines')
+      const mines = this.storeService.getItem('mines');
       this.data = {
         _master: new Permit(record),
         flavourData:
