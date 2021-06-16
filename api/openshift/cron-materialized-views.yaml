@@ -7,7 +7,7 @@ metadata:
     tags: 'cronjob'
 parameters:
   - name: CRON_SCHEDULE
-    description: 'Cron-like schedule expression. Default: Once every day at 10:00 AM UTC or 02:00 AM PST'
+    description: 'Cron-like schedule expression. Default: Once every 30th minute, eg. 10:00AM PST & 10:30AM PST '
     value: '*/30 * * * *'
   - name: CRON_NAME
     decription: 'Name of the cronjob container.'
