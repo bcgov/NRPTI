@@ -51,7 +51,10 @@ exports.publicGetConfig = async function (args, res, next) {
 
   // TODO: Put this in each respective application sub-section so we can feature-flag for each app
   // independently.
-  configurationData['FEATURE_FLAG'] = await FeatureFlag.findOne({ _schemaName: 'FeatureFlag' });
+  const featureFlags = await FeatureFlag.findOne({ _schemaName: 'FeatureFlag' });
+  if (featureFlags && featureFlags.data) {
+    configurationData['FEATURE_FLAG'] = featureFlags.data;  
+  }
 
   // get project specific confguration
   // fetch the latest business area specific CommunicationPackage
