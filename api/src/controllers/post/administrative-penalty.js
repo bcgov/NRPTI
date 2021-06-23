@@ -575,7 +575,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
 
   // set permissions and meta
   administrativePenaltyBCMI.read = utils.ApplicationAdminRoles;
-  administrativePenaltyBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  administrativePenaltyBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   administrativePenaltyBCMI.addedBy = args.swagger.params.auth_payload.displayName;
   administrativePenaltyBCMI.dateAdded = new Date();
@@ -606,7 +606,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   incomingObj.offence && (administrativePenaltyBCMI.offence = incomingObj.offence);
 
   administrativePenaltyBCMI.issuedTo.read = utils.ApplicationAdminRoles;
-  administrativePenaltyBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  administrativePenaltyBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (administrativePenaltyBCMI.issuedTo.type = incomingObj.issuedTo.type);
