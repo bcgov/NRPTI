@@ -100,20 +100,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.recordSubtype && (certificate.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (certificate.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (certificate.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation && incomingObj.legislation.act && (certificate.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (certificate.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (certificate.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (certificate.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (certificate.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (certificate.legislationDescription = incomingObj.legislationDescription);
+
+  certificate.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (certificate.projectName = incomingObj.projectName);
   incomingObj.location && (certificate.location = incomingObj.location);
   incomingObj.centroid && (certificate.centroid = incomingObj.centroid);
@@ -198,22 +187,9 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.recordSubtype && (certificateLNG.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (certificateLNG.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (certificateLNG.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation &&
-    incomingObj.legislation.act &&
-    (certificateLNG.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (certificateLNG.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (certificateLNG.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (certificateLNG.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (certificateLNG.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (certificateLNG.legislationDescription = incomingObj.legislationDescription);
+
+  certificateLNG.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (certificateLNG.projectName = incomingObj.projectName);
   incomingObj.location && (certificateLNG.location = incomingObj.location);
   incomingObj.centroid && (certificateLNG.centroid = incomingObj.centroid);
@@ -273,22 +249,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.recordSubtype && (certificateBCMI.recordSubtype = incomingObj.recordSubtype);
   incomingObj.dateIssued && (certificateBCMI.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (certificateBCMI.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation &&
-    incomingObj.legislation.act &&
-    (certificateBCMI.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (certificateBCMI.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (certificateBCMI.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (certificateBCMI.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (certificateBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (certificateBCMI.legislationDescription = incomingObj.legislationDescription);
+
+  certificateBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (certificateBCMI.projectName = incomingObj.projectName);
   incomingObj.location && (certificateBCMI.location = incomingObj.location);
   incomingObj.centroid && (certificateBCMI.centroid = incomingObj.centroid);
