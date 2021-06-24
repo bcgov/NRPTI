@@ -24,6 +24,11 @@ import { MinesRecordsEditComponent } from './mines-records-edit/mines-records-ed
 import { Utils } from 'nrpti-angular-components';
 import { EnforcementActionsComponent } from '../enforcement-actions/enforcement-actions.component';
 import { EnforcementActionsResolver } from '../enforcement-actions/enforcement-actions-resolver';
+import { MinesAdministrativePenaltyResolver } from './mines-enforcement-actions/mines-administrative-penalty-resolver';
+
+import { MinesAdministrativePenaltyAddEditComponent } from './mines-enforcement-actions/mines-administrative-penalty-add-edit/mines-administrative-penalty-add-edit.component';
+import { MinesAdministrativePenaltyDetailComponent } from './mines-enforcement-actions/mines-administrative-penalty-detail/mines-administrative-penalty-detail.component';
+
 
 const routes: Routes = [
   {
@@ -45,14 +50,79 @@ const routes: Routes = [
       },
       {
         path: 'enforcement-actions',
-        pathMatch: 'full',
-        component: EnforcementActionsComponent,
-        resolve: {
-          records: EnforcementActionsResolver,
-        },
         data: {
           breadcrumb: 'Enforcement Actions'
-        }
+        },
+        children: [
+          {
+            path: '',
+            data: {
+              breadcrumb: null
+            },
+            component: EnforcementActionsComponent,
+            resolve: {
+              records: EnforcementActionsResolver,
+            },
+          },
+          {
+            path: 'administrative-penalties',
+            data: {
+              breadcrumb: 'Administrative Penalty'
+            },
+            children: [
+              {
+                path: 'add',
+                pathMatch: 'full',
+                component: MinesAdministrativePenaltyAddEditComponent,
+                canActivate: [CanActivateGuard],
+                data: {
+                  breadcrumb: 'Add Administrative Penalty'
+                },
+                resolve: {
+                  mines: MinesListResolver,
+                  record: MinesAdministrativePenaltyResolver
+                }
+              },
+              {
+                path: ':recordId',
+                data: {
+                  breadcrumb: 'Record Detail'
+                },
+                children: [
+                  {
+                    path: '',
+                    redirectTo: 'detail',
+                    pathMatch: 'full'
+                  },
+                  {
+                    path: 'detail',
+                    component: MinesAdministrativePenaltyDetailComponent,
+                    canActivate: [CanActivateGuard],
+                    data: {
+                      breadcrumb: null
+                    },
+                    resolve: {
+                      mines: MinesListResolver,
+                      record: MinesAdministrativePenaltyResolver
+                    }
+                  },
+                  {
+                    path: 'edit',
+                    component: MinesAdministrativePenaltyAddEditComponent,
+                    canActivate: [CanActivateGuard],
+                    data: {
+                      breadcrumb: 'Edit Administrative Penalty'
+                    },
+                    resolve: {
+                      mines: MinesListResolver,
+                      record: MinesAdministrativePenaltyResolver
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       {
         path: ':mineId',
@@ -235,6 +305,7 @@ const routes: Routes = [
     MinesCollectionResolver,
     MinesRecordResolver,
     MinesRecordCollectionResolver,
+    MinesAdministrativePenaltyResolver,
     Utils
   ]
 })

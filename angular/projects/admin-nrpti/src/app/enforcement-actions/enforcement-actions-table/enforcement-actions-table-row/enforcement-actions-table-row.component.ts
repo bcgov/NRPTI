@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { TableRowComponent } from 'nrpti-angular-components';
 import { FactoryService } from '../../../services/factory.service';
 
@@ -12,6 +13,7 @@ export class EnforcementActionsTableRowComponent extends TableRowComponent imple
   public factoryService: FactoryService;
 
   constructor(
+    private router: Router,
     public changeDetectionRef: ChangeDetectorRef
   ) {
     super();
@@ -26,12 +28,24 @@ export class EnforcementActionsTableRowComponent extends TableRowComponent imple
     return this.rowData[attribute] || '-';
   }
 
+  private getSchemaRoute(schemaName) {
+    switch (schemaName) {
+      case 'AdministrativePenalty':
+        return 'administrative-penalties';
+      case 'CourtConviction':
+        return 'court-convictions';
+    }
+  }
   goToDetails() {
-    // to be implemented
+    this.router.navigate(
+      ['mines', 'enforcement-actions', this.getSchemaRoute(this.rowData._schemaName), this.rowData._id]
+    );
   }
 
   goToEdit() {
-    // to be implemented
+    this.router.navigate(
+      ['mines', 'enforcement-actions', this.getSchemaRoute(this.rowData._schemaName), this.rowData._id, 'edit']
+    );
   }
 
   publish() {

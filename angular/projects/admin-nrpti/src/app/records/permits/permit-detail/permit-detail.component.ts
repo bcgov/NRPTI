@@ -7,6 +7,8 @@ import { RecordDetailComponent } from '../../utils/record-component';
 import { RecordUtils } from '../../utils/record-utils';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { FactoryService } from '../../../services/factory.service';
+import { StoreService } from 'nrpti-angular-components';
+
 
 @Component({
   selector: 'app-permit-detail',
@@ -17,12 +19,14 @@ export class PermitDetailComponent extends RecordDetailComponent implements OnIn
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   public legislationString = '';
+  public mine = [];
 
   constructor(
     public route: ActivatedRoute,
     public router: Router,
     public changeDetectionRef: ChangeDetectorRef,
-    public factoryService: FactoryService
+    public factoryService: FactoryService,
+    private storeService: StoreService,
   ) {
     super(factoryService);
   }
@@ -36,7 +40,7 @@ export class PermitDetailComponent extends RecordDetailComponent implements OnIn
       }
 
       const record = res.records[0] && res.records[0].data;
-
+      const mines = this.storeService.getItem('mines');
       this.data = {
         _master: new Permit(record),
         flavourData:
@@ -45,6 +49,7 @@ export class PermitDetailComponent extends RecordDetailComponent implements OnIn
           []
       };
 
+      this.mine = mines.filter(elem => elem._sourceRefId === this.data._master.mineGuid);
       this.populateTextFields();
       this.disableEdit();
 

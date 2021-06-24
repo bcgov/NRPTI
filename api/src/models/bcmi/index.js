@@ -11,3 +11,4 @@ exports.reportBCMI = require('./report-bcmi');
 exports.orderBCMI = require('./order-bcmi');
 exports.inspectionBCMI = require('./inspection-bcmi');
 exports.managementPlanBCMI = require('./managementPlan-bcmi');
+exports.administrativePenaltyBCMI = require('./administrativePenalty-bcmi');

@@ -1,32 +1,44 @@
 import { TestBed } from '@angular/core/testing';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { OrderAddEditComponent } from './order-add-edit.component';
+import { MinesAdministrativePenaltyAddEditComponent } from './mines-administrative-penalty-add-edit.component';
 import { TestBedHelper, ActivatedRouteStub } from '../../../../../../common/src/app/spec/spec-utils';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router, ActivatedRoute } from '@angular/router';
-import { GlobalModule } from 'nrpti-angular-components';
+import { GlobalModule, StoreService } from 'nrpti-angular-components';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Utils } from 'nrpti-angular-components';
-import { RecordUtils } from '../../utils/record-utils';
+import { RecordUtils } from '../../../records/utils/record-utils';
 import { CommonModule } from '../../../../../../common/src/app/common.module';
 import { MatSlideToggleModule } from '@angular/material';
-import { LoadingScreenService, StoreService } from 'nrpti-angular-components';
+import { LoadingScreenService } from 'nrpti-angular-components';
 import { FactoryService } from '../../../services/factory.service';
 import { EventEmitter } from '@angular/core';
 
-describe('OrderAddEditComponent', () => {
-  const testBedHelper = new TestBedHelper<OrderAddEditComponent>(OrderAddEditComponent);
+describe('MinesAdministrativePenaltyAddEditComponent', () => {
+  const testBedHelper = new TestBedHelper<MinesAdministrativePenaltyAddEditComponent>
+    (MinesAdministrativePenaltyAddEditComponent);
+
+  const mockFactoryService = jasmine.createSpyObj(
+    'FactoryService',
+    [
+      'userInLngRole',
+      'userInBcmiRole',
+      'userInNrcedRole',
+      'userOnlyInLimitedRole',
+      'userInRole',
+      'isFlavourEditEnabled'
+    ]
+  );
+  mockFactoryService.userInLngRole.and.returnValue(true);
+  mockFactoryService.userInBcmiRole.and.returnValue(true);
+  mockFactoryService.userInNrcedRole.and.returnValue(true);
 
   // component constructor mocks
   const mockLocation = jasmine.createSpyObj('Location', ['go']);
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
-  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole', 'userInBcmiRole', 'userInNrcedRole', 'userOnlyInLimitedRole', 'userInRole', 'isFlavourEditEnabled']);
-  mockFactoryService.userInLngRole.and.returnValue(true);
-  mockFactoryService.userInBcmiRole.and.returnValue(true);
-  mockFactoryService.userInNrcedRole.and.returnValue(true);
 
   const mockStoreService = {
     getItem: () => {
@@ -54,7 +66,7 @@ describe('OrderAddEditComponent', () => {
         NgxPaginationModule,
         NgbModule.forRoot()
       ],
-      declarations: [OrderAddEditComponent],
+      declarations: [MinesAdministrativePenaltyAddEditComponent],
       providers: [
         Utils,
         RecordUtils,

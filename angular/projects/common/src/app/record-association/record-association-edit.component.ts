@@ -1,7 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { FactoryService } from '../../../../admin-nrpti/src/app/services/factory.service';
 import { StoreService} from 'nrpti-angular-components';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Utils } from 'nrpti-angular-components';
+
 
 /**
  * Handles editing the Record Association form section.
@@ -18,26 +22,55 @@ export class RecordAssociationEditComponent implements OnInit {
   @Input() formGroup: FormGroup;
   @Input() mines: any[];
   @Input() epicProjects: any[];
+  @Input() minesOnly: false;
+  @Output() mineLocation = new EventEmitter();
+
+
+  public mineType: '';
+  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     public factoryService: FactoryService,
-    private storeService: StoreService
-    ) {
-      this.formGroup = new FormGroup({
-        _epicProjectId: new FormControl({}),
-        mineGuid: new FormControl({})
-      });
-    }
+    private storeService: StoreService,
+    private utils: Utils
+    ) {}
 
   ngOnInit() {
     this.storeService.stateChange.subscribe((state: object) => {
       if (state && state.hasOwnProperty('mines')) {
         this.mines = state['mines'];
+      } else {
+        this.mines = [];
       }
 
       if (state && state.hasOwnProperty('epicProjects')) {
-        this.mines = state['epicProjects'];
+        this.epicProjects = state['epicProjects'];
       }
     });
+    this.updateMineMeta();
+    this.subscribeToFormControlChanges();
    }
+
+  private subscribeToFormControlChanges() {
+    const debouncedMineMeta = this.utils.debounced(500, () => this.updateMineMeta());
+    this.formGroup
+      .get('mineGuid')
+      .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(() => {
+        debouncedMineMeta();
+      });
+  }
+
+  private updateMineMeta() {
+    const mine = this.mines.filter( elem => {
+      if (elem._sourceRefId === this.formGroup.get('mineGuid').value ) {
+        return elem;
+    } });
+    if (mine.length === 0) {
+      this.mineType = '';
+    } else {
+      this.mineType = mine[0].type;
+      this.mineLocation.emit(mine[0].location);
+    }
+  }
 }

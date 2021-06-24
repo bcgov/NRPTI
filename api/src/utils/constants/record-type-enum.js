@@ -12,7 +12,11 @@ const RECORD_TYPE = Object.freeze({
     _schemaName: 'AdministrativePenalty',
     displayName: 'Administrative Penalty',
     recordControllerName: 'administrativePenalties',
-    flavours: { lng: { _schemaName: 'AdministrativePenaltyLNG' }, nrced: { _schemaName: 'AdministrativePenaltyNRCED' } }
+    flavours: {
+      lng: { _schemaName: 'AdministrativePenaltyLNG' },
+      nrced: { _schemaName: 'AdministrativePenaltyNRCED' },
+      bcmi: { _schemaName: 'AdministrativePenaltyBCMI'}
+    }
   },
   AdministrativeSanction: {
     _schemaName: 'AdministrativeSanction',

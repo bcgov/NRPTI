@@ -30,7 +30,9 @@ describe('AdministrativePenaltyAddEditComponent', () => {
   const mockActivatedRoute = new ActivatedRouteStub();
 
   const mockStoreService = {
-    getItem: () => { },
+    getItem: () => {
+      return ['item'];
+    },
     stateChange: new EventEmitter()
   };
 

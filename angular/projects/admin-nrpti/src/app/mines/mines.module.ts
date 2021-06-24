@@ -16,6 +16,7 @@ import { CommonModule as NrptiCommonModule } from '../../../../common/src/app/co
 import { SharedModule } from '../shared/shared.module';
 import { MinesRoutingModule } from './mines-routing.module';
 import { DocumentsModule } from '../documents/documents.module';
+import { RecordsModule } from '../records/records.module';
 
 // mines
 import { MinesTableRowComponent } from './mines-rows/mines-table-row.component';
@@ -36,7 +37,8 @@ import { EnforcementActionsComponent } from '../enforcement-actions/enforcement-
 import { EnforcementActionsTableComponent } from '../enforcement-actions/enforcement-actions-table/enforcement-actions-table.component';
 import { EnforcementActionsTableRowComponent } from '../enforcement-actions/enforcement-actions-table/enforcement-actions-table-row/enforcement-actions-table-row.component';
 import { EnforcementActionsResolver } from '../enforcement-actions/enforcement-actions-resolver';
-
+import { MinesAdministrativePenaltyAddEditComponent } from './mines-enforcement-actions/mines-administrative-penalty-add-edit/mines-administrative-penalty-add-edit.component';
+import { MinesAdministrativePenaltyDetailComponent } from './mines-enforcement-actions/mines-administrative-penalty-detail/mines-administrative-penalty-detail.component';
 
 @NgModule({
   imports: [
@@ -56,7 +58,8 @@ import { EnforcementActionsResolver } from '../enforcement-actions/enforcement-a
     MatCheckboxModule,
     DragDropModule,
     DocumentsModule,
-    EditorModule
+    EditorModule,
+    RecordsModule
   ],
   declarations: [
     MinesListComponent,
@@ -75,8 +78,9 @@ import { EnforcementActionsResolver } from '../enforcement-actions/enforcement-a
     MinesRecordsEditComponent,
     EnforcementActionsComponent,
     EnforcementActionsTableRowComponent,
-    EnforcementActionsTableComponent
-
+    EnforcementActionsTableComponent,
+    MinesAdministrativePenaltyAddEditComponent,
+    MinesAdministrativePenaltyDetailComponent
   ],
   providers: [
     EnforcementActionsResolver
@@ -87,6 +91,7 @@ import { EnforcementActionsResolver } from '../enforcement-actions/enforcement-a
     MinesCollectionsTableRowComponent,
     MinesCollectionRecordTableRowComponent,
     EnforcementActionsTableRowComponent,
+    MinesAdministrativePenaltyDetailComponent
   ],
   exports: [
     MinesRecordAddComponent
