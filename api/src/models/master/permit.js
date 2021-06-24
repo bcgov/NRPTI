@@ -33,14 +33,14 @@ module.exports = require('../../utils/model-schema-generator')(
       fullName: { type: String, default: '' },
       dateOfBirth: { type: Date, default: null }
     },
-    legislation: {
+    legislation: [{
       act: { type: String, default: '' },
       regulation: { type: String, default: '' },
       section: { type: String, default: '' },
       subSection: { type: String, default: '' },
-      paragraph: { type: String, default: '' }
-    },
-    legislationDescription: { type: String, default: '' },
+      paragraph: { type: String, default: '' },
+      legislationDescription: { type: String, default: '' }
+    }],
     projectName: { type: String, default: '' },
     location: { type: String, default: '' },
     centroid: [{ type: Number, default: 0.0 }],
