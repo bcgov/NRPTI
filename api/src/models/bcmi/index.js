@@ -5,6 +5,7 @@ exports.annualReportBCMI = require('./annualReport-bcmi');
 exports.certificateBCMI = require('./certificate-bcmi');
 exports.certificateAmendmentBCMI = require('./certificateAmendment-bcmi');
 exports.constructionPlanBCMI = require('./constructionPlan-bcmi');
+exports.courtConvictionBCMI = require('./courtConviction-bcmi');
 exports.correspondenceBCMI = require('./correspondence-bcmi');
 exports.damSafetyInspectionBCMI = require('./damSafetyInspection-bcmi');
 exports.reportBCMI = require('./report-bcmi');

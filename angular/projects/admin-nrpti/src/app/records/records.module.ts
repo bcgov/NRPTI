@@ -100,6 +100,7 @@ import { CourtConvictionAddEditComponent } from './court-convictions/court-convi
 import { CourtConvictionDetailComponent } from './court-convictions/court-conviction-detail/court-conviction-detail.component';
 import { CourtConvictionNRCEDDetailComponent } from './court-convictions/court-conviction-nrced-detail/court-conviction-nrced-detail.component';
 import { CourtConvictionLNGDetailComponent } from './court-convictions/court-conviction-lng-detail/court-conviction-lng-detail.component';
+import { CourtConvictionBCMIDetailComponent } from './court-convictions/court-conviction-bcmi-detail/court-conviction-bcmi-detail.component';
 
 // certificate amendments
 import { CertificateAmendmentAddEditComponent } from './certificate-amendments/certificate-amendments-add-edit/certificate-amendments-add-edit.component';
@@ -220,6 +221,7 @@ import { AnnualReportBCMIDetailComponent } from './annual-reports/annual-report-
     CourtConvictionDetailComponent,
     CourtConvictionNRCEDDetailComponent,
     CourtConvictionLNGDetailComponent,
+    CourtConvictionBCMIDetailComponent,
     // certificate amendments
     CertificateAmendmentAddEditComponent,
     CertificateAmendmentDetailComponent,
@@ -312,6 +314,7 @@ import { AnnualReportBCMIDetailComponent } from './annual-reports/annual-report-
     CourtConvictionDetailComponent,
     CourtConvictionNRCEDDetailComponent,
     CourtConvictionLNGDetailComponent,
+    CourtConvictionBCMIDetailComponent,
     // certificate amendments
     CertificateAmendmentAddEditComponent,
     CertificateAmendmentDetailComponent,

@@ -1,0 +1,18 @@
+// base scss found in record-details.scss
+
+.section-1 {
+    grid-template-columns: 1fr;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .section-1 {
+      grid-template-columns: none;
+    }
+  
+    .grid-item__row {
+      grid-template-rows: none;
+      grid-template-columns: 1fr 2fr;
+      grid-gap: 0.625rem;
+    }
+  }
+  

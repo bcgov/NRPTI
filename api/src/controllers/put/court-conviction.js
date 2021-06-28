@@ -37,7 +37,8 @@ const CourtConvictionPost = require('../post/court-conviction');
 exports.editRecord = async function (args, res, next, incomingObj, overridePutParams = null) {
   const flavourFunctions = {
     CourtConvictionLNG: this.editLNG,
-    CourtConvictionNRCED: this.editNRCED
+    CourtConvictionNRCED: this.editNRCED,
+    CourtConvictionBCMI: this.editBCMI
   }
   return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, CourtConvictionPost, 'CourtConviction', flavourFunctions, overridePutParams);
 };
@@ -123,6 +124,11 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
  *        summary: 'nrced summary',
  *        addRole: 'public'
  *        ...
+ *      },
+ *      CourtConvictionBCMI: {
+ *        summary: 'bcmi summary',
+ *        addRole: 'public'
+ *        ...
  *      }
  *    }
  *  ]
@@ -188,6 +194,11 @@ exports.editLNG = function (args, res, next, incomingObj) {
  *        summary: 'nrced summary',
  *        addRole: 'public'
  *        ...
+ *      },
+ *      CourtConvictionBCMI: {
+ *        summary: 'bcmi summary',
+ *        addRole: 'public'
+ *        ...
  *      }
  *    }
  *  ]
@@ -209,6 +220,76 @@ exports.editNRCED = function (args, res, next, incomingObj) {
   let CourtConvictionNRCED = mongoose.model('CourtConvictionNRCED');
 
   const sanitizedObj = PutUtils.validateObjectAgainstModel(CourtConvictionNRCED, incomingObj);
+
+  sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+
+  sanitizedObj.dateUpdated = new Date();
+
+  const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  let updateObj = { $set: dotNotatedObj, $addToSet: {}, $pull: {} };
+
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    updateObj.$addToSet['read'] = 'public';
+    updateObj.$set['datePublished'] = new Date();
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+  } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
+    updateObj.$pull['read'] = 'public';
+    updateObj.$set['datePublished'] = null;
+    updateObj.$set['publishedBy'] = '';
+  }
+
+  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
+
+  return updateObj;
+};
+
+/**
+ * Performs all operations necessary to edit a bcmi Court Conviction record.
+ *
+ * Example of incomingObj
+ *
+ *  courtConvictions: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'CourtConviction',
+ *      ...
+ *      CourtConvictionLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      CourtConvictionNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      },
+ *      CourtConvictionBCMI: {
+ *        summary: 'bcmi summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns edited nrced CourtConviction record
+ */
+ exports.editBCMI = function (args, res, next, incomingObj) {
+  delete incomingObj._id;
+
+  // Reject any changes to permissions
+  // Publishing must be done via addRole or removeRole
+  delete incomingObj.read;
+  delete incomingObj.write;
+
+  let CourtConvictionBCMI = mongoose.model('CourtConvictionBCMI');
+
+  const sanitizedObj = PutUtils.validateObjectAgainstModel(CourtConvictionBCMI, incomingObj);
 
   sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
 

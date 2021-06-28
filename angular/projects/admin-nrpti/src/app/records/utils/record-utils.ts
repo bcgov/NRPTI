@@ -49,6 +49,7 @@ import { ConstructionPlanLNGDetailComponent } from '../construction-plans/constr
 import { ManagementPlanLNGDetailComponent } from '../management-plans/management-plan-lng-detail/management-plan-lng-detail.component';
 
 // court convictions
+import { CourtConvictionBCMIDetailComponent } from '../court-convictions/court-conviction-bcmi-detail/court-conviction-bcmi-detail.component';
 import { CourtConvictionLNGDetailComponent } from '../court-convictions/court-conviction-lng-detail/court-conviction-lng-detail.component';
 import { CourtConvictionNRCEDDetailComponent } from '../court-convictions/court-conviction-nrced-detail/court-conviction-nrced-detail.component';
 
@@ -157,6 +158,8 @@ export class RecordUtils {
         return ConstructionPlanLNGDetailComponent;
       case 'ManagementPlanLNG':
         return ManagementPlanLNGDetailComponent;
+      case 'CourtConvictionBCMI':
+        return CourtConvictionBCMIDetailComponent;
       case 'CourtConvictionLNG':
         return CourtConvictionLNGDetailComponent;
       case 'CourtConvictionNRCED':

@@ -561,7 +561,6 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
 
       this.logger.log(docResponse);
       this.loadingScreenService.setLoadingState(false, 'main');
-      this.router.navigate(['records']);
     } else {
       administrativePenalty['_id'] = this.currentRecord._id;
 
@@ -609,7 +608,12 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
 
   async submit() {
     await this.save();
-    this.router.navigate(['records', 'administrative-penalties', this.currentRecord._id, 'detail']);
+
+    if (!this.isEditing) {
+      this.router.navigate(['records']);
+    } else {
+      this.router.navigate(['records', 'administrative-penalties', this.currentRecord._id, 'detail']);
+    }
   }
 
   convertAcronyms(acronym) {

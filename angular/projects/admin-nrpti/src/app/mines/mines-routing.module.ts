@@ -24,11 +24,14 @@ import { MinesRecordsEditComponent } from './mines-records-edit/mines-records-ed
 import { Utils } from 'nrpti-angular-components';
 import { EnforcementActionsComponent } from '../enforcement-actions/enforcement-actions.component';
 import { EnforcementActionsResolver } from '../enforcement-actions/enforcement-actions-resolver';
-import { MinesAdministrativePenaltyResolver } from './mines-enforcement-actions/mines-administrative-penalty-resolver';
 
 import { MinesAdministrativePenaltyAddEditComponent } from './mines-enforcement-actions/mines-administrative-penalty-add-edit/mines-administrative-penalty-add-edit.component';
 import { MinesAdministrativePenaltyDetailComponent } from './mines-enforcement-actions/mines-administrative-penalty-detail/mines-administrative-penalty-detail.component';
+import { MinesAdministrativePenaltyResolver } from './mines-enforcement-actions/mines-administrative-penalty-resolver';
 
+import { MinesCourtConvictionsAddEditComponent } from './mines-enforcement-actions/mines-court-convictions/mines-court-convictions-add-edit/mines-court-convictions-add-edit.component';
+import { MinesCourtConvictionsDetailComponent } from './mines-enforcement-actions/mines-court-convictions/mines-court-convictions-detail/mines-court-convictions-detail.component';
+import { MinesCourtConvictionResolver } from './mines-enforcement-actions/mines-court-convictions/mines-court-convictions-resolver';
 
 const routes: Routes = [
   {
@@ -61,8 +64,8 @@ const routes: Routes = [
             },
             component: EnforcementActionsComponent,
             resolve: {
-              records: EnforcementActionsResolver,
-            },
+              records: EnforcementActionsResolver
+            }
           },
           {
             path: 'administrative-penalties',
@@ -79,7 +82,6 @@ const routes: Routes = [
                   breadcrumb: 'Add Administrative Penalty'
                 },
                 resolve: {
-                  mines: MinesListResolver,
                   record: MinesAdministrativePenaltyResolver
                 }
               },
@@ -102,7 +104,6 @@ const routes: Routes = [
                       breadcrumb: null
                     },
                     resolve: {
-                      mines: MinesListResolver,
                       record: MinesAdministrativePenaltyResolver
                     }
                   },
@@ -114,8 +115,62 @@ const routes: Routes = [
                       breadcrumb: 'Edit Administrative Penalty'
                     },
                     resolve: {
-                      mines: MinesListResolver,
                       record: MinesAdministrativePenaltyResolver
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            path: 'court-convictions',
+            data: {
+              breadcrumb: 'Court Conviction'
+            },
+            children: [
+              {
+                path: 'add',
+                pathMatch: 'full',
+                component: MinesCourtConvictionsAddEditComponent,
+                canActivate: [CanActivateGuard],
+                data: {
+                  breadcrumb: 'Add Court Conviction'
+                },
+                resolve: {
+                  record: MinesCourtConvictionResolver
+                }
+              },
+              {
+                path: ':recordId',
+                data: {
+                  breadcrumb: 'Record Detail'
+                },
+                children: [
+                  {
+                    path: '',
+                    redirectTo: 'detail',
+                    pathMatch: 'full'
+                  },
+                  {
+                    path: 'detail',
+                    component: MinesCourtConvictionsDetailComponent,
+                    canActivate: [CanActivateGuard],
+                    data: {
+                      breadcrumb: null
+                    },
+                    resolve: {
+                      record: MinesCourtConvictionResolver
+                    }
+                  },
+                  {
+                    path: 'edit',
+                    component: MinesCourtConvictionsAddEditComponent,
+                    canActivate: [CanActivateGuard],
+                    data: {
+                      breadcrumb: 'Edit Court Conviction'
+                    },
+                    resolve: {
+                      record: MinesCourtConvictionResolver
                     }
                   }
                 ]
@@ -173,7 +228,7 @@ const routes: Routes = [
                 canActivate: [CanActivateGuard],
                 resolve: {
                   records: MinesRecordsListResolver
-                },
+                }
               },
               {
                 path: 'add',
@@ -203,7 +258,7 @@ const routes: Routes = [
                     },
                     resolve: {
                       record: MinesRecordResolver,
-                      collections: MinesRecordCollectionResolver,
+                      collections: MinesRecordCollectionResolver
                     }
                   },
                   {
@@ -306,7 +361,8 @@ const routes: Routes = [
     MinesRecordResolver,
     MinesRecordCollectionResolver,
     MinesAdministrativePenaltyResolver,
+    MinesCourtConvictionResolver,
     Utils
   ]
 })
-export class MinesRoutingModule { }
+export class MinesRoutingModule {}

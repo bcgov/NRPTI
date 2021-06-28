@@ -1,19 +1,18 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AdministrativePenalty } from '../../../../../../common/src/app/models/master/administrative-penalty';
+import { CourtConviction } from '../../../../../../../common/src/app/models/master/court-conviction';
 import { takeUntil } from 'rxjs/operators';
-import { AdministrativePenaltyDetailComponent } from '../../../records/administrative-penalties/administrative-penalty-detail/administrative-penalty-detail.component';
-import { RecordUtils } from '../../../records/utils/record-utils';
-import { FactoryService } from '../../../services/factory.service';
+import { CourtConvictionDetailComponent } from '../../../../records/court-convictions/court-conviction-detail/court-conviction-detail.component';
+import { RecordUtils } from '../../../../records/utils/record-utils';
+import { FactoryService } from '../../../../services/factory.service';
 import { StoreService } from 'nrpti-angular-components';
 
 @Component({
-  selector: 'app-mines-administrative-penalty-detail',
-  templateUrl: './mines-administrative-penalty-detail.component.html',
-  styleUrls: ['../../../records/administrative-penalties/administrative-penalty-detail/administrative-penalty-detail.component.scss']
+  selector: 'app-mines-court-convictions-detail',
+  templateUrl: './mines-court-convictions-detail.component.html',
+  styleUrls: ['../../../../records/court-convictions/court-conviction-detail/court-conviction-detail.component.scss']
 })
-export class MinesAdministrativePenaltyDetailComponent extends AdministrativePenaltyDetailComponent implements OnInit {
-
+export class MinesCourtConvictionsDetailComponent extends CourtConvictionDetailComponent implements OnInit {
   public mine = [];
 
   constructor(
@@ -29,7 +28,7 @@ export class MinesAdministrativePenaltyDetailComponent extends AdministrativePen
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
       if (!res || !res.record) {
-        alert("Uh-oh, couldn't load mines AdministrativePenalty");
+        alert("Uh-oh, couldn't load mines CourtConviction");
         this.router.navigate(['mines', 'enforcement-actions']);
         return;
       }
@@ -37,7 +36,7 @@ export class MinesAdministrativePenaltyDetailComponent extends AdministrativePen
       const record = res.record[0] && res.record[0].data;
 
       this.data = {
-        _master: new AdministrativePenalty(record),
+        _master: new CourtConviction(record),
         flavourData:
           (record.flavours &&
             record.flavours.map(flavourRecord => RecordUtils.getRecordModelInstance(flavourRecord))) ||
@@ -55,6 +54,6 @@ export class MinesAdministrativePenaltyDetailComponent extends AdministrativePen
   }
 
   navigateToEditPage() {
-    this.router.navigate(['mines', 'enforcement-actions', 'administrative-penalties', this.data._master._id, 'edit']);
+    this.router.navigate(['mines', 'enforcement-actions', 'court-convictions', this.data._master._id, 'edit']);
   }
 }

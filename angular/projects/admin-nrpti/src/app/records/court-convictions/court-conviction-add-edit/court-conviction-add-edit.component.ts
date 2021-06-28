@@ -6,7 +6,7 @@ import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { Picklists, EpicProjectIds } from '../../../../../../common/src/app/utils/record-constants';
 import { Legislation } from '../../../../../../common/src/app/models/master/common-models/legislation';
 import { FactoryService } from '../../../services/factory.service';
-import { Utils } from 'nrpti-angular-components';
+import { Utils, LoadingScreenService, LoggerService, StoreService } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { RecordUtils } from '../../utils/record-utils';
 import { Constants } from '../../../utils/constants/misc';
@@ -17,7 +17,7 @@ import { Constants } from '../../../utils/constants/misc';
   styleUrls: ['./court-conviction-add-edit.component.scss']
 })
 export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  protected ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   public loading = true;
   public isEditing = false;
@@ -28,14 +28,16 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
   // Flavour data
   public nrcedFlavour = null;
   public lngFlavour = null;
+  public bcmiFlavour = null;
   public lngPublishSubtext = 'Not published';
   public nrcedPublishSubtext = 'Not published';
+  public bcmiPublishSubtext = 'Not published';
 
   // Pick lists
   public agencies = Picklists.agencyPicklist;
   public authors = Picklists.authorPicklist;
   public courtConvictionSubtypes = Picklists.courtConvictionSubtypePicklist;
-  private defaultAgency = '';
+  protected defaultAgency = '';
 
   // Documents
   public documents = [];
@@ -46,12 +48,16 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
   public datepickerMaxDate = Constants.DatepickerMaxDate;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private recordUtils: RecordUtils,
-    private factoryService: FactoryService,
-    private utils: Utils,
-    private _changeDetectionRef: ChangeDetectorRef
+    protected route: ActivatedRoute,
+    protected router: Router,
+    protected recordUtils: RecordUtils,
+    protected factoryService: FactoryService,
+    protected loadingScreenService: LoadingScreenService,
+    protected logger: LoggerService,
+    protected utils: Utils,
+    protected _changeDetectionRef: ChangeDetectorRef,
+    // @ts-ignore used by record-association component
+    protected storeService: StoreService,
   ) { }
 
   ngOnInit() {
@@ -81,7 +87,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  private populateTextFields() {
+  protected populateTextFields() {
     if (this.currentRecord.dateUpdated) {
       this.lastEditedSubText = `Last Edited on ${this.utils.convertJSDateToString(
         new Date(this.currentRecord.dateUpdated)
@@ -105,13 +111,20 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
               new Date(this.nrcedFlavour.datePublished)
             )}`);
           break;
+        case 'CourtConvictionBCMI':
+          this.bcmiFlavour = flavour;
+          this.bcmiFlavour.read.includes('public') &&
+            (this.bcmiPublishSubtext = `Published on ${this.utils.convertJSDateToString(
+              new Date(this.bcmiFlavour.datePublished)
+            )}`);
+          break;
         default:
           break;
       }
     }
   }
 
-  private subscribeToFormControlChanges() {
+  protected subscribeToFormControlChanges() {
     // listen to legislation control changes
     const debouncedUpdateLegislationDescription = this.utils.debounced(500, () => this.updateLegislationDescription());
     this.myForm
@@ -135,7 +148,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     this.myForm.get('offence').markAsDirty();
   }
 
-  private buildForm() {
+  protected buildForm() {
     const flavourEditRequiredRoles = Constants.FlavourEditRequiredRoles.COURT_CONVICTION;
 
     for (const role of Constants.ApplicationLimitedRoles) {
@@ -170,6 +183,20 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
       author: new FormControl({
         value: (this.currentRecord && this.currentRecord.author) || '',
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+      }),
+      association: new FormGroup({
+        _epicProjectId: new FormControl({
+          value: this.currentRecord && this.currentRecord._epicProjectId || null,
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        }),
+        mineGuid: new FormControl({
+          value: this.currentRecord && this.currentRecord.mineGuid || null,
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        }),
+        unlistedMine: new FormControl({
+          value: (this.currentRecord && this.currentRecord.unlistedMine) || '',
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        })
       }),
       legislation: new FormGroup({
         act: new FormControl({
@@ -253,6 +280,11 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
       }),
       penalties: new FormArray(this.getPenaltiesFormGroups()),
 
+      convictionInfoType: new FormControl({
+        value: '',
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+      }),
+
       // NRCED
       nrcedSummary: new FormControl({
         value: (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.summary) || '',
@@ -271,6 +303,16 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
         disabled: !this.factoryService.isFlavourEditEnabled(flavourEditRequiredRoles.NRCED)
+      }),
+
+      // BCMI
+      bcmiDescription: new FormControl({
+        value: (this.currentRecord && this.bcmiFlavour && this.bcmiFlavour.description) || '',
+        disabled: !this.factoryService.isFlavourEditEnabled(flavourEditRequiredRoles.BCMI)
+      }),
+      publishBcmi: new FormControl({
+        value: (this.currentRecord && this.bcmiFlavour && this.bcmiFlavour.read.includes('public')) || false,
+        disabled: !this.factoryService.isFlavourEditEnabled(flavourEditRequiredRoles.BCMI)
       })
     });
   }
@@ -347,13 +389,16 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
       case 'nrced':
         this.myForm.controls.publishNrced.setValue(event.checked);
         break;
+      case 'bcmi':
+        this.myForm.controls.publishBcmi.setValue(event.checked);
+        break;
       default:
         break;
     }
     this._changeDetectionRef.detectChanges();
   }
 
-  async submit() {
+  async save() {
     const courtConviction = {};
     this.myForm.controls.recordName.dirty && (courtConviction['recordName'] = this.myForm.controls.recordName.value);
     this.myForm.controls.recordSubtype.dirty &&
@@ -363,6 +408,20 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     (this.myForm.controls.issuingAgency.dirty || this.defaultAgency) &&
       (courtConviction['issuingAgency'] = this.myForm.controls.issuingAgency.value);
     this.myForm.controls.author.dirty && (courtConviction['author'] = this.myForm.controls.author.value);
+
+    if (
+      this.myForm.get('association._epicProjectId').dirty
+    ) {
+      courtConviction['_epicProjectId'] = this.myForm.get('association._epicProjectId').value;
+    }
+
+    if (this.myForm.get('association.mineGuid').dirty) {
+      courtConviction['mineGuid'] = this.myForm.get('association.mineGuid').value;
+    }
+
+    if (this.myForm.get('association.unlistedMine').dirty) {
+      courtConviction['unlistedMine'] = this.myForm.get('association.unlistedMine').value;
+    }
 
     if (
       this.myForm.get('legislation.act').dirty ||
@@ -445,6 +504,18 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
       courtConviction['CourtConvictionLNG']['removeRole'] = 'public';
     }
 
+    // BCMI flavour
+    if (this.myForm.controls.bcmiDescription.dirty || this.myForm.controls.publishBcmi.dirty) {
+      courtConviction['CourtConvictionBCMI'] = {};
+    }
+    this.myForm.controls.bcmiDescription.dirty &&
+      (courtConviction['CourtConvictionBCMI']['description'] = this.myForm.controls.bcmiDescription.value);
+    if (this.myForm.controls.publishBcmi.dirty && this.myForm.controls.publishBcmi.value) {
+      courtConviction['CourtConvictionBCMI']['addRole'] = 'public';
+    } else if (this.myForm.controls.publishBcmi.dirty && !this.myForm.controls.publishBcmi.value) {
+      courtConviction['CourtConvictionBCMI']['removeRole'] = 'public';
+    }
+
     if (!this.isEditing) {
       const res = await this.factoryService.writeRecord(courtConviction, 'courtConvictions', true);
       this.recordUtils.parseResForErrors(res);
@@ -462,8 +533,6 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
         _id,
         this.factoryService
       );
-
-      this.router.navigate(['records']);
     } else {
       courtConviction['_id'] = this.currentRecord._id;
 
@@ -485,6 +554,15 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
         courtConviction['CourtConvictionLNG']['_id'] = this.lngFlavour._id;
       }
 
+      if (this.bcmiFlavour) {
+        if (!CommonUtils.isObject(courtConviction['CourtConvictionBCMI'])) {
+          courtConviction['CourtConvictionBCMI'] = {};
+        }
+
+        // always update if flavour exists, regardless of flavour field changes, as fields in master might have changed
+        courtConviction['CourtConvictionBCMI']['_id'] = this.bcmiFlavour._id;
+      }
+
       const res = await this.factoryService.writeRecord(courtConviction, 'courtConvictions', false);
       this.recordUtils.parseResForErrors(res);
       await this.recordUtils.handleDocumentChanges(
@@ -494,7 +572,15 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
         this.currentRecord._id,
         this.factoryService
       );
+    }
+  }
 
+  async submit() {
+    await this.save();
+
+    if (!this.isEditing) {
+      this.router.navigate(['records']);
+    } else {
       this.router.navigate(['records', 'court-convictions', this.currentRecord._id, 'detail']);
     }
   }
