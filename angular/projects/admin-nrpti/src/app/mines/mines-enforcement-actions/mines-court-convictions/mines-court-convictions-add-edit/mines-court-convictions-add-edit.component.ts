@@ -55,7 +55,7 @@ export class MinesCourtConvictionsAddEditComponent extends CourtConvictionAddEdi
           this.currentRecord = res.record[0].data;
           this.populateTextFields();
         } else {
-          alert('Error: could not load edit mines cournt conviction.');
+          alert('Error: could not load edit mines court conviction.');
           this.router.navigate([['mines', 'enforcement-actions']]);
         }
       } else {
