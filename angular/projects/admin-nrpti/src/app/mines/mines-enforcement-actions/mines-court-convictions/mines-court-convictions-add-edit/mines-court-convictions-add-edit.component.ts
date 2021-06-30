@@ -118,6 +118,16 @@ export class MinesCourtConvictionsAddEditComponent extends CourtConvictionAddEdi
           this.selectedConvictionInfoType = val;
         }
       });
+
+    // Set long/lat when mine value updates
+    this.myForm
+      .get('association.mineGuid')
+      .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(val => {
+        const selectedMine = this.storeService.getItem('mines').find(mine => mine._sourceRefId === val);
+        this.myForm.get('latitude').setValue(selectedMine.location.coordinates[1]);
+        this.myForm.get('longitude').setValue(selectedMine.location.coordinates[0]);
+      });
   }
 
   private resetStagedLinks() {
@@ -127,12 +137,8 @@ export class MinesCourtConvictionsAddEditComponent extends CourtConvictionAddEdi
   }
 
   private resetStagedProsecutionText() {
-    this.myForm.get('bcmiDescription').setValue('');
-    this.myForm.get('nrcedSummary').setValue('');
-
-    if (this.currentRecord && this.bcmiFlavour && this.bcmiFlavour.description) {
-      this.myForm.controls.bcmiDescription.markAsDirty();
-    }
+    this.myForm.controls['bcmiDescription'].reset((this.bcmiFlavour && this.bcmiFlavour.description) || '');
+    this.myForm.controls['nrcedSummary'].reset((this.nrcedFlavour && this.nrcedFlavour.summary) || '');
   }
 
   navigateToDetails() {
@@ -140,9 +146,9 @@ export class MinesCourtConvictionsAddEditComponent extends CourtConvictionAddEdi
   }
 
   async submit() {
-    this.myForm.get('nrcedSummary').setValue(this.myForm.controls.bcmiDescription.value);
-
+    // Set NRCED summary equal to BCMI description and mark it dirty if necessary
     if (this.myForm.controls.bcmiDescription.dirty) {
+      this.myForm.get('nrcedSummary').setValue(this.myForm.controls.bcmiDescription.value);
       this.myForm.controls.nrcedSummary.markAsDirty();
     }
 
