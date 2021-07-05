@@ -49,7 +49,8 @@ exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;
 exports.createItem = async function(args, res, next, incomingObj) {
   const flavourFunctions = {
     CourtConvictionLNG: this.createLNG,
-    CourtConvictionNRCED: this.createNRCED
+    CourtConvictionNRCED: this.createNRCED,
+    CourtConvictionBCMI: this.createBCMI
   };
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
@@ -71,6 +72,11 @@ exports.createItem = async function(args, res, next, incomingObj) {
  *      },
  *      CourtConvictionNRCED: {
  *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      },
+ *      CourtConvictionBCMI: {
+ *        summary: 'bcmi summary',
  *        addRole: 'public'
  *        ...
  *      }
@@ -102,7 +108,9 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
     (courtConviction._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
-    (courtConviction.collectionId = new ObjectId(incomingObj.collectionId));
+    (courtConviction.collectionId = new ObjectId(incomingObj.collectionId));    
+  incomingObj.mineGuid && (courtConviction.mineGuid = incomingObj.mineGuid);
+  incomingObj.unlistedMine && (courtConviction.unlistedMine = incomingObj.unlistedMine);
 
   // set permissions
   courtConviction.read = utils.ApplicationAdminRoles;
@@ -211,6 +219,11 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
  *      },
  *      CourtConvictionNRCED: {
  *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      },
+ *      CourtConvictionBCMI: {
+ *        summary: 'bcmi summary',
  *        addRole: 'public'
  *        ...
  *      }
@@ -358,6 +371,11 @@ exports.createLNG = function(args, res, next, incomingObj) {
  *        summary: 'nrced summary',
  *        addRole: 'public'
  *        ...
+ *      },
+ *      CourtConvictionBCMI: {
+ *        summary: 'bcmi summary',
+ *        addRole: 'public'
+ *        ...
  *      }
  *    }
  *  ]
@@ -482,4 +500,155 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   courtConvictionNRCED = BusinessLogicManager.applyBusinessLogicOnPost(courtConvictionNRCED);
 
   return courtConvictionNRCED;
+};
+
+
+/**
+ * Performs all operations necessary to create a BCMI Court Conviction record.
+ *
+ * Example of incomingObj
+ *
+ *  courtConvictions: [
+ *    {
+ *      recordName: 'test abc',
+ *      recordType: 'courtConviction',
+ *      ...
+ *      CourtConvictionLNG: {
+ *        description: 'lng description'
+ *        addRole: 'public',
+ *        ...
+ *      },
+ *      CourtConvictionNRCED: {
+ *        summary: 'nrced summary',
+ *        addRole: 'public'
+ *        ...
+ *      },
+ *      CourtConvictionBCMI: {
+ *        summary: 'bcmi summary',
+ *        addRole: 'public'
+ *        ...
+ *      }
+ *    }
+ *  ]
+ *
+ * @param {*} args
+ * @param {*} res
+ * @param {*} next
+ * @param {*} incomingObj see example
+ * @returns created nrced courtConviction record
+ */
+ exports.createBCMI = function(args, res, next, incomingObj) {
+  // Confirm user has correct role for this type of record.
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN_BCMI, utils.ApplicationRoles.ADMIN, ...ADDITIONAL_ROLES],
+      args.swagger.params.auth_payload.realm_access.roles
+    )
+  ) {
+    throw new Error('Missing valid user role.');
+  }
+
+  let CourtConvictionBCMI = mongoose.model('CourtConvictionBCMI');
+  let courtConvictionBCMI = new CourtConvictionBCMI();
+
+  courtConvictionBCMI._schemaName = 'CourtConvictionBCMI';
+
+  // set integration references
+  incomingObj._epicProjectId &&
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (courtConvictionBCMI._epicProjectId = new ObjectId(incomingObj._epicProjectId));
+  incomingObj._sourceRefId &&
+    ObjectId.isValid(incomingObj._sourceRefId) &&
+    (courtConvictionBCMI._sourceRefId = new ObjectId(incomingObj._sourceRefId));
+  incomingObj._epicMilestoneId &&
+    ObjectId.isValid(incomingObj._epicMilestoneId) &&
+    (courtConvictionBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+
+  // set permissions and meta
+  courtConvictionBCMI.read = utils.ApplicationAdminRoles;
+  courtConvictionBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+
+  courtConvictionBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  courtConvictionBCMI.dateAdded = new Date();
+
+  // set master data
+  incomingObj.recordName && (courtConvictionBCMI.recordName = incomingObj.recordName);
+  courtConvictionBCMI.recordType = 'Court Conviction';
+  incomingObj.recordSubtype && (courtConvictionBCMI.recordSubtype = incomingObj.recordSubtype);
+  incomingObj.dateIssued && (courtConvictionBCMI.dateIssued = incomingObj.dateIssued);
+  incomingObj.issuingAgency && (courtConvictionBCMI.issuingAgency = incomingObj.issuingAgency);
+  incomingObj.author && (courtConvictionBCMI.author = incomingObj.author);
+
+  incomingObj.legislation &&
+    incomingObj.legislation.act &&
+    (courtConvictionBCMI.legislation.act = incomingObj.legislation.act);
+  incomingObj.legislation &&
+    incomingObj.legislation.regulation &&
+    (courtConvictionBCMI.legislation.regulation = incomingObj.legislation.regulation);
+  incomingObj.legislation &&
+    incomingObj.legislation.section &&
+    (courtConvictionBCMI.legislation.section = incomingObj.legislation.section);
+  incomingObj.legislation &&
+    incomingObj.legislation.subSection &&
+    (courtConvictionBCMI.legislation.subSection = incomingObj.legislation.subSection);
+  incomingObj.legislation &&
+    incomingObj.legislation.paragraph &&
+    (courtConvictionBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
+
+  incomingObj.offence && (courtConvictionBCMI.offence = incomingObj.offence);
+
+  courtConvictionBCMI.issuedTo.read = utils.ApplicationAdminRoles;
+  courtConvictionBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  incomingObj.issuedTo && incomingObj.issuedTo.type && (courtConvictionBCMI.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
+    (courtConvictionBCMI.issuedTo.companyName = incomingObj.issuedTo.companyName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
+    (courtConvictionBCMI.issuedTo.firstName = incomingObj.issuedTo.firstName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
+    (courtConvictionBCMI.issuedTo.middleName = incomingObj.issuedTo.middleName);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.lastName &&
+    (courtConvictionBCMI.issuedTo.lastName = incomingObj.issuedTo.lastName);
+  incomingObj.issuedTo &&
+    (courtConvictionBCMI.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
+    (courtConvictionBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
+
+  incomingObj.projectName && (courtConvictionBCMI.projectName = incomingObj.projectName);
+  incomingObj.location && (courtConvictionBCMI.location = incomingObj.location);
+  incomingObj.centroid && (courtConvictionBCMI.centroid = incomingObj.centroid);
+  incomingObj.penalties && (courtConvictionBCMI.penalties = incomingObj.penalties);
+  incomingObj.documents && (courtConvictionBCMI.documents = incomingObj.documents);
+
+  // set flavour data
+  incomingObj.description && (courtConvictionBCMI.description = incomingObj.description);
+
+  // set data source references
+  incomingObj.sourceDateAdded && (courtConvictionBCMI.sourceDateAdded = incomingObj.sourceDateAdded);
+  incomingObj.sourceDateUpdated && (courtConvictionBCMI.sourceDateUpdated = incomingObj.sourceDateUpdated);
+  incomingObj.sourceSystemRef && (courtConvictionBCMI.sourceSystemRef = incomingObj.sourceSystemRef);
+
+  // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
+  if (args) {
+    postUtils.setAdditionalRoleOnRecord(
+      courtConvictionBCMI,
+      args.swagger.params.auth_payload.realm_access.roles,
+      ADDITIONAL_ROLES
+    );
+  }
+
+  // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
+  if (incomingObj.addRole && incomingObj.addRole === 'public') {
+    courtConvictionBCMI.read.push('public');
+    courtConvictionBCMI.datePublished = new Date();
+    courtConvictionBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+  }
+
+  courtConvictionBCMI = BusinessLogicManager.applyBusinessLogicOnPost(courtConvictionBCMI);
+
+  return courtConvictionBCMI;
 };

@@ -71,7 +71,11 @@ const RECORD_TYPE = Object.freeze({
     _schemaName: 'CourtConviction',
     displayName: 'Court Conviction',
     recordControllerName: 'courtConvictions',
-    flavours: { lng: { _schemaName: 'CourtConvictionLNG' }, nrced: { _schemaName: 'CourtConvictionNRCED' } }
+    flavours: {
+      lng: { _schemaName: 'CourtConvictionLNG' },
+      nrced: { _schemaName: 'CourtConvictionNRCED' },
+      bcmi: { _schemaName: 'CourtConvictionBCMI' }
+    }
   },
   DamSafetyInspection: {
     _schemaName: 'DamSafetyInspection',

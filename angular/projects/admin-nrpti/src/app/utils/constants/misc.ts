@@ -1,12 +1,11 @@
 import { ActivatedRoute } from '@angular/router';
 
 export class Constants {
-
   public static readonly ToastTypes: any = {
     SUCCESS: 0,
     WARNING: 1,
     INFO: 2,
-    ERROR: 3,
+    ERROR: 3
   };
 
   public static readonly ApplicationRoles: any = {
@@ -96,10 +95,7 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
         Constants.ApplicationRoles.ADMIN_ALC
       ],
-      BCMI: [
-        Constants.ApplicationRoles.ADMIN_LNG,
-        Constants.ApplicationRoles.ADMIN_BCMI
-      ]
+      BCMI: [Constants.ApplicationRoles.ADMIN_LNG, Constants.ApplicationRoles.ADMIN_BCMI]
     },
     ADMINISTRATIVE_SANCTION: {
       NRCED: [
@@ -163,7 +159,8 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
         Constants.ApplicationRoles.ADMIN_ALC
-      ]
+      ],
+      BCMI: [Constants.ApplicationRoles.ADMIN_BCMI]
     },
     CORRESPONDENCE: {
       NRCED: [Constants.ApplicationRoles.ADMIN_NRCED],

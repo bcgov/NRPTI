@@ -39,6 +39,9 @@ import { EnforcementActionsTableRowComponent } from '../enforcement-actions/enfo
 import { EnforcementActionsResolver } from '../enforcement-actions/enforcement-actions-resolver';
 import { MinesAdministrativePenaltyAddEditComponent } from './mines-enforcement-actions/mines-administrative-penalty-add-edit/mines-administrative-penalty-add-edit.component';
 import { MinesAdministrativePenaltyDetailComponent } from './mines-enforcement-actions/mines-administrative-penalty-detail/mines-administrative-penalty-detail.component';
+import { MinesCourtConvictionsAddEditComponent } from './mines-enforcement-actions/mines-court-convictions/mines-court-convictions-add-edit/mines-court-convictions-add-edit.component';
+import { MinesCourtConvictionsDetailComponent } from './mines-enforcement-actions/mines-court-convictions/mines-court-convictions-detail/mines-court-convictions-detail.component';
+
 
 @NgModule({
   imports: [
@@ -80,7 +83,9 @@ import { MinesAdministrativePenaltyDetailComponent } from './mines-enforcement-a
     EnforcementActionsTableRowComponent,
     EnforcementActionsTableComponent,
     MinesAdministrativePenaltyAddEditComponent,
-    MinesAdministrativePenaltyDetailComponent
+    MinesAdministrativePenaltyDetailComponent,
+    MinesCourtConvictionsAddEditComponent,
+    MinesCourtConvictionsDetailComponent
   ],
   providers: [
     EnforcementActionsResolver
@@ -91,7 +96,7 @@ import { MinesAdministrativePenaltyDetailComponent } from './mines-enforcement-a
     MinesCollectionsTableRowComponent,
     MinesCollectionRecordTableRowComponent,
     EnforcementActionsTableRowComponent,
-    MinesAdministrativePenaltyDetailComponent
+    MinesAdministrativePenaltyDetailComponent,
   ],
   exports: [
     MinesRecordAddComponent

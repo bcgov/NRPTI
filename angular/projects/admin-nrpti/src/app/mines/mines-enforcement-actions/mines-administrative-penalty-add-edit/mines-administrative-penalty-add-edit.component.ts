@@ -9,15 +9,13 @@ import { ChangeDetectorRef } from '@angular/core';
 // import { FormControl, FormGroup } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
-
 @Component({
   selector: 'app-mines-administrative-penalty-add-edit',
   templateUrl: './mines-administrative-penalty-add-edit.component.html',
   styleUrls: ['./mines-administrative-penalty-add-edit.component.scss']
 })
-export class MinesAdministrativePenaltyAddEditComponent extends
- AdministrativePenaltyAddEditComponent implements OnInit {
-
+export class MinesAdministrativePenaltyAddEditComponent extends AdministrativePenaltyAddEditComponent
+  implements OnInit {
   public componentTitle = 'BCMI Administrative Penalty Record';
   public defaultAgency = 'EMLI';
   public defaultAuthor = 'BC Government';
@@ -32,7 +30,7 @@ export class MinesAdministrativePenaltyAddEditComponent extends
     protected utils: Utils,
     protected _changeDetectionRef: ChangeDetectorRef,
     // @ts-ignore used by record-association component
-    protected storeService: StoreService,
+    protected storeService: StoreService
   ) {
     super(
       route,
@@ -45,7 +43,7 @@ export class MinesAdministrativePenaltyAddEditComponent extends
       _changeDetectionRef,
       storeService
     );
-   }
+  }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -65,24 +63,31 @@ export class MinesAdministrativePenaltyAddEditComponent extends
           unlistedMine: ''
         };
       }
-    super.buildForm();
-    super.subscribeToFormControlChanges();
-    this.loading = false;
-    this._changeDetectionRef.detectChanges();
+      super.buildForm();
+      super.subscribeToFormControlChanges();
+      this.loading = false;
+      this._changeDetectionRef.detectChanges();
     });
   }
 
   navigateToDetails() {
-    this.router.navigate(
-      ['records', 'administrative-penalties', this.currentRecord._id, 'detail']
-    );
+    this.router.navigate(['records', 'administrative-penalties', this.currentRecord._id, 'detail']);
   }
 
   async submit() {
     await super.save();
-    this.router.navigate(
-      ['mines', 'enforcement-actions', 'administrative-penalties', this.currentRecord._id, 'detail']
-    );
+
+    if (!this.isEditing) {
+      this.router.navigate(['mines', 'enforcement-actions']);
+    } else {
+      this.router.navigate([
+        'mines',
+        'enforcement-actions',
+        'administrative-penalties',
+        this.currentRecord._id,
+        'detail'
+      ]);
+    }
   }
 
   cancel() {
@@ -93,7 +98,13 @@ export class MinesAdministrativePenaltyAddEditComponent extends
       if (!this.isEditing) {
         this.router.navigate(['mines', 'enforcement-actions']);
       } else {
-        this.router.navigate(['mines', 'enforcement-actions', 'administrative-penalties', this.currentRecord._id, 'detail']);
+        this.router.navigate([
+          'mines',
+          'enforcement-actions',
+          'administrative-penalties',
+          this.currentRecord._id,
+          'detail'
+        ]);
       }
     }
   }
