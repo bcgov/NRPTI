@@ -60,11 +60,16 @@ export class MinesAdministrativePenaltyAddEditComponent extends AdministrativePe
         this.currentRecord = {
           sourceSystemRef: 'nrpti',
           documents: [],
-          unlistedMine: ''
+          unlistedMine: '',
+          legislation: {
+            act: 'Mines Act',
+            section: '36.2'
+          }
         };
       }
       super.buildForm();
       super.subscribeToFormControlChanges();
+      super.updateLegislationDescription();
       this.loading = false;
       this._changeDetectionRef.detectChanges();
     });

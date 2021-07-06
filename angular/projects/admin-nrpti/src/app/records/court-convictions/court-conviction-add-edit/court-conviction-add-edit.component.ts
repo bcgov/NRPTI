@@ -196,6 +196,10 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
         unlistedMine: new FormControl({
           value: (this.currentRecord && this.currentRecord.unlistedMine) || '',
           disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        }),
+        unlistedMineType: new FormControl({
+          value: (this.currentRecord && this.currentRecord.unlistedMineType) || '',
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         })
       }),
       legislation: new FormGroup({
@@ -416,11 +420,20 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (this.myForm.get('association.mineGuid').dirty) {
+      if (!this.myForm.get('association.mineGuid').value) {
+        courtConviction['mineGuid'] = '';
+      } else {
+        courtConviction['mineGuid'] = this.myForm.get('association.mineGuid').value;
+      }
       courtConviction['mineGuid'] = this.myForm.get('association.mineGuid').value;
     }
 
     if (this.myForm.get('association.unlistedMine').dirty) {
       courtConviction['unlistedMine'] = this.myForm.get('association.unlistedMine').value;
+    }
+
+    if (this.myForm.get('association.unlistedMineType').dirty) {
+      courtConviction['unlistedMineType'] = this.myForm.get('association.unlistedMineType').value;
     }
 
     if (

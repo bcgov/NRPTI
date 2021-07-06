@@ -14,6 +14,7 @@ export class AdministrativePenaltyBCMI extends RecordModel {
   _epicMilestoneId: string;
   mineGuid: string;
   unlistedMine: string;
+  unlistedMineType: string;
 
   dateIssued: Date;
   issuingAgency: string;

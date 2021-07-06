@@ -14,6 +14,7 @@ export class CourtConvictionBCMI extends RecordModel {
   _epicMilestoneId: string;
   mineGuid: string;
   unlistedMine: string;
+  unlistedMineType: string;
 
   recordSubtype: string;
   dateIssued: Date;

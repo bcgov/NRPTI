@@ -11,6 +11,7 @@ module.exports = require('../../utils/model-schema-generator')(
 
     mineGuid: { type: String, default: null, index: true },
     unlistedMine: { type: String, default: '', index: true},
+    unlistedMineType: { type: String, default: '' },
 
     read: [{ type: String, trim: true, default: 'sysadmin' }],
     write: [{ type: String, trim: true, default: 'sysadmin' }],

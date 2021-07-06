@@ -108,6 +108,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
     (administrativePenalty.collectionId = new ObjectId(incomingObj.collectionId));
   incomingObj.mineGuid && (administrativePenalty.mineGuid = incomingObj.mineGuid);
   incomingObj.unlistedMine && (administrativePenalty.unlistedMine = incomingObj.unlistedMine);
+  incomingObj.unlistedMineType && (administrativePenalty.unlistedMineType = incomingObj.unlistedMineType);
 
   incomingObj._sourceRefOgcPenaltyId &&
     (administrativePenalty._sourceRefOgcPenaltyId = incomingObj._sourceRefOgcPenaltyId);
@@ -567,6 +568,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     (administrativePenaltyBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj.mineGuid && (administrativePenaltyBCMI.mineGuid = incomingObj.mineGuid);
   incomingObj.unlistedMine && (administrativePenaltyBCMI.unlistedMine = incomingObj.unlistedMine);
+  incomingObj.unlistedMineType && (administrativePenaltyBCMI.unlistedMineType = incomingObj.unlistedMineType);
 
 
 

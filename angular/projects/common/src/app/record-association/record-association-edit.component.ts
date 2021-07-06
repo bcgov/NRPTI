@@ -62,12 +62,16 @@ export class RecordAssociationEditComponent implements OnInit {
   }
 
   private updateMineMeta() {
+    const mineGuid = this.formGroup.get('mineGuid').value;
+    const unlistedMineType = this.formGroup.get('unlistedMineType').value;
     const mine = this.mines.filter( elem => {
-      if (elem._sourceRefId === this.formGroup.get('mineGuid').value ) {
+      if (elem._sourceRefId === mineGuid ) {
         return elem;
     } });
-    if (mine.length === 0) {
+    if (!mineGuid && !unlistedMineType) {
       this.mineType = '';
+    } else if (!mineGuid && unlistedMineType) {
+      this.mineType = unlistedMineType;
     } else {
       this.mineType = mine[0].type;
       this.mineLocation.emit(mine[0].location);
