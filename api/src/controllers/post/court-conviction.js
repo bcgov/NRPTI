@@ -108,7 +108,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
     (courtConviction._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
-    (courtConviction.collectionId = new ObjectId(incomingObj.collectionId));    
+    (courtConviction.collectionId = new ObjectId(incomingObj.collectionId));
   incomingObj.mineGuid && (courtConviction.mineGuid = incomingObj.mineGuid);
   incomingObj.unlistedMine && (courtConviction.unlistedMine = incomingObj.unlistedMine);
 
@@ -502,7 +502,6 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   return courtConvictionNRCED;
 };
 
-
 /**
  * Performs all operations necessary to create a BCMI Court Conviction record.
  *
@@ -537,7 +536,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced courtConviction record
  */
- exports.createBCMI = function(args, res, next, incomingObj) {
+exports.createBCMI = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (
     !userHasValidRoles(
@@ -563,6 +562,8 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (courtConvictionBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
+  incomingObj.mineGuid && (courtConvictionBCMI.mineGuid = incomingObj.mineGuid);
+  incomingObj.unlistedMine && (courtConvictionBCMI.unlistedMine = incomingObj.unlistedMine);
 
   // set permissions and meta
   courtConvictionBCMI.read = utils.ApplicationAdminRoles;
