@@ -42,7 +42,7 @@ class Inspections extends BaseRecordUtils {
     inspection['_sourceRefOgcInspectionId'] = csvRow['inspection number'] || null;
     inspection['_sourceRefOgcDeficiencyId'] = csvRow['deficiency objectid'] || null;
 
-    inspection['recordType'] = 'Inspection';
+    inspection['recordType'] = RECORD_TYPE.Inspection.displayName;
     try {
       inspection['dateIssued'] = csvRow['inspection date'] ? moment.tz(csvRow['inspection date'], "DD-MMM-YYYY", "America/Vancouver").toDate() : null;
     } catch (error) {

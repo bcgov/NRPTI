@@ -38,7 +38,7 @@ class Warning extends BaseRecordUtils {
 
     const warning = { ...super.transformRecord(csvRow) };
 
-    warning['recordType'] = RECORD_TYPE.Warning._schemaName;
+    warning['recordType'] = RECORD_TYPE.Warning.displayName;
     warning['_sourceRefOgcWarningId'] = csvRow['Title'];
     warning['author'] = 'BC Oil and Gas Commission';
     warning['issuingAgency'] = 'BC Oil and Gas Commission';
