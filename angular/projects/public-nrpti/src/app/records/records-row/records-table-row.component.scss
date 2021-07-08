@@ -24,7 +24,7 @@
       display: grid;
       grid-gap: 0.25rem;
       // TODO enable this extra column when documents are available
-      grid-template-columns: minmax(100px, 2fr) minmax(100px, 1fr) minmax(100px, 2fr) minmax(100px, 3fr) minmax(100px, 1fr);
+      grid-template-columns: minmax(100px, 2fr) minmax(100px, 1fr) minmax(100px, 2fr) minmax(100px, 3fr) minmax(100px, 1fr) minmax(20px, 0.1fr);
 
       .card-col {
         display: grid;

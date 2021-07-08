@@ -42,6 +42,11 @@
             {{ (rowData.dateIssued | date: 'mediumDate') || '-' }}
           </div>
         </div>
+        <div class="card-col align-content-center">
+          <div *ngIf="rowData?.documents" class="truncate">
+            <i class='material-icons'>attach_file</i>
+          </div>
+        </div>
       </div>
     </div>
   </div>
