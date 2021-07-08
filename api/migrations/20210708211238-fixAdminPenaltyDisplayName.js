@@ -4,9 +4,9 @@
   * We receive the dbmigrate dependency from dbmigrate initially.
   * This enables us to not have to rely on NODE_PATH.
   */
-exports.setup = function(options, seedLink) {};
+exports.setup = function (options, seedLink) { };
 
-exports.up = async function(db) {
+exports.up = async function (db) {
   console.log('**** Renaming BCOGC Administrative Penalty Display Names ****');
 
   const mClient = await db.connection.connect(db.connectionString, {
@@ -17,10 +17,12 @@ exports.up = async function(db) {
     const nrpti = await mClient.collection('nrpti');
 
     await nrpti.updateMany(
-      { $and: [
-        {_schemaName: 'AdministrativePenalty'},
-        {sourceSystemRef: 'bcogc'}
-    ]},
+      {
+        $and: [
+          { _schemaName: 'AdministrativePenalty' },
+          { sourceSystemRef: 'bcogc' }
+        ]
+      },
       { $set: { recordType: 'Administrative Penalty' } }
     );
 
@@ -34,7 +36,7 @@ exports.up = async function(db) {
   return null;
 };
 
-exports.down = function(db) {
+exports.down = function (db) {
   return null;
 };
 
