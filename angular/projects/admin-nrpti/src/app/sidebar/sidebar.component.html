@@ -15,8 +15,9 @@
     *ngIf="mainRoute === 'mines'">
     <span>
       <a [ngClass]="{ active: mainRoute === 'mines' && currentMenu === 'enforcement-actions' }"
-        class="dropdown-btn"
+        class="mines-menu"
         [routerLink]="['mines', 'enforcement-actions']">
+        <em class="material-icons mr-3 mines-menu-icon">description</em>
         Enforcement Actions
       </a>
     </span>
