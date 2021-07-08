@@ -15,7 +15,7 @@ import { LoggerService } from 'nrpti-angular-components';
 export class EnforcementActionsTableRowComponent extends TableRowComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
-  private bcmiFlavour: any;
+  public bcmiFlavour: any;
   public isPublished = false;
 
   constructor(
