@@ -22,7 +22,7 @@
   <mat-menu #menu="matMenu">
     <button mat-menu-item (click)="goToDetails()" title="View record details">View Record Details</button>
     <button mat-menu-item (click)="goToEdit()" title="Edit record">Edit Record</button>
-    <button mat-menu-item *ngIf="!isPublished && bcmiFlavour" (click)="publish()" title="Publish">Publish</button>
-    <button mat-menu-item *ngIf="isPublished && bcmiFlavour" (click)="unPublish()" title="Un-Publish">Un-Publish</button>
+    <button mat-menu-item *ngIf="!isPublished" (click)="publish()" title="Publish">Publish</button>
+    <button mat-menu-item *ngIf="isPublished" (click)="unPublish()" title="Un-Publish">Un-Publish</button>
   </mat-menu>
 </td>
