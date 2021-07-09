@@ -38,7 +38,7 @@ class Orders extends BaseRecordUtils {
 
     const order = { ...super.transformRecord(csvRow) };
 
-    order['recordType'] = RECORD_TYPE.Order._schemaName;
+    order['recordType'] = RECORD_TYPE.Order.displayName;
     order['_sourceRefOgcOrderId'] = csvRow['Title'];
     order['author'] = 'BC Oil and Gas Commission';
     order['issuingAgency'] = 'BC Oil and Gas Commission';
