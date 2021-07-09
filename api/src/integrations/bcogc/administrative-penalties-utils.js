@@ -37,7 +37,7 @@ class AdministrativePenalty extends BaseRecordUtils {
 
     const penalty = { ...super.transformRecord(csvRow) };
 
-    penalty['recordType'] = RECORD_TYPE.AdministrativePenalty._schemaName;
+    penalty['recordType'] = RECORD_TYPE.AdministrativePenalty.displayName;
     penalty['_sourceRefOgcPenaltyId'] = csvRow['Title'];
     penalty['author'] = 'BC Oil and Gas Commission';
     penalty['issuingAgency'] = 'BC Oil and Gas Commission';
