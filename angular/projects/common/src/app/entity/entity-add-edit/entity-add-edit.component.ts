@@ -10,6 +10,7 @@ import { ENTITY_TYPE } from '../../models/master/common-models/entity';
 })
 export class EntityAddEditComponent implements OnInit, OnChanges {
   @Input() formGroup: FormGroup;
+  @Input() entityTypeLabel = 'Entity Type';
 
   public loading = true;
 

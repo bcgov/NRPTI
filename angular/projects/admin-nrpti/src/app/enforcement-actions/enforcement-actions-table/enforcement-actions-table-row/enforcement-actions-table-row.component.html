@@ -1,7 +1,8 @@
-<td scope="row" data-label="Record Name" class="col-5">{{ getAttributeValue('recordName')}}</td>
-<td scope="row" data-label="Record Type" class="col-2">{{ getAttributeValue('recordType')}}</td>
-<td scope="row" data-label="Date" class="col-2">{{(getAttributeValue('dateIssued') === '-') ? '-' :
-  (getAttributeValue('dateIssued') | date: 'mediumDate')}}</td>
+<td scope="row" data-label="Record Name" class="col-5">{{ getAttributeValue('recordName') }}</td>
+<td scope="row" data-label="Record Type" class="col-2">{{ getAttributeValue('recordType') }}</td>
+<td scope="row" data-label="Date" class="col-2">
+  {{ getAttributeValue('dateIssued') === '-' ? '-' : (getAttributeValue('dateIssued') | date: 'mediumDate') }}
+</td>
 
 <td scope="row" data-label="Published State" class="col-2 d-flex">
   <div *ngIf="isPublished; else unpublished">
@@ -18,8 +19,10 @@
   <button mat-icon-button class="btn" [matMenuTriggerFor]="menu" title="More options" aria-label="More options menu">
     <em class="material-icons">more_vert</em>
   </button>
-  <mat-menu #menu='matMenu'>
-    <button mat-menu-item (click)="goToDetails()" title='View record details'>View Record Details</button>
-    <button mat-menu-item (click)="goToEdit()" title='Edit record'>Edit Record</button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="goToDetails()" title="View record details">View Record Details</button>
+    <button mat-menu-item (click)="goToEdit()" title="Edit record">Edit Record</button>
+    <button mat-menu-item *ngIf="!isPublished" (click)="publish()" title="Publish">Publish</button>
+    <button mat-menu-item *ngIf="isPublished" (click)="unPublish()" title="Un-Publish">Un-Publish</button>
   </mat-menu>
 </td>
