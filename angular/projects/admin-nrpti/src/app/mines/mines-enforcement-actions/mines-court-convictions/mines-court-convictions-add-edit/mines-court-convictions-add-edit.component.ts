@@ -127,6 +127,8 @@ export class MinesCourtConvictionsAddEditComponent extends CourtConvictionAddEdi
         const selectedMine = this.storeService.getItem('mines').find(mine => mine._sourceRefId === val);
         this.myForm.get('latitude').setValue(selectedMine.location.coordinates[1]);
         this.myForm.get('longitude').setValue(selectedMine.location.coordinates[0]);
+        this.myForm.controls.latitude.markAsDirty();
+        this.myForm.controls.longitude.markAsDirty();
       });
   }
 

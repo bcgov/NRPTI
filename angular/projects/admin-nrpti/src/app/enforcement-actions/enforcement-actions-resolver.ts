@@ -30,7 +30,7 @@ export class EnforcementActionsResolver implements Resolve<Observable<object>> {
       tableObject.pageSize,
       tableObject.sortBy || '-dateAdded',
       and,
-      false,
+      true,
       {},
       []
     );
