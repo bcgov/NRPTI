@@ -190,6 +190,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.sourceSystemRef && (administrativePenalty.sourceSystemRef = incomingObj.sourceSystemRef);
   incomingObj.isNrcedPublished && (administrativePenalty.isNrcedPublished = incomingObj.isNrcedPublished);
   incomingObj.isLngPublished && (administrativePenalty.isLngPublished = incomingObj.isLngPublished);
+  incomingObj.isBcmiPublished && (administrativePenalty.isBcmiPublished = incomingObj.isBcmiPublished);
 
   // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
   if (args) {

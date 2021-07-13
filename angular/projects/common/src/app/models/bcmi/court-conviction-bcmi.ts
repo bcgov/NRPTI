@@ -43,6 +43,7 @@ export class CourtConvictionBCMI extends RecordModel {
     this._epicMilestoneId = (obj && obj._epicMilestoneId) || null;
     this.mineGuid = (obj && obj.mineGuid) || '';
     this.unlistedMine = (obj && obj.unlistedMine) || '';
+    this.unlistedMineType = (obj && obj.unlistedMineType) || '';
 
     this.recordSubtype = (obj && obj.recordSubtype) || null;
     this.dateIssued = (obj && obj.dateIssued) || null;
