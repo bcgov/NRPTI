@@ -186,6 +186,10 @@ class NrisDataSource {
     return agency === 'Environmental Protection Office' ? 'Environmental Protection Division' : agency;
   }
 
+  stringTransformExpandAMP(inspctResponse) {
+    return inspctResponse === 'AMP' ? 'Recommended for administrative monetary penalty' : inspctResponse;
+  }
+
   async transformRecord(record) {
     const Inspection = mongoose.model(RECORD_TYPE.Inspection._schemaName);
     let newRecord = new Inspection().toObject();
@@ -199,8 +203,8 @@ class NrisDataSource {
     newRecord.recordType = 'Inspection';
     newRecord._sourceRefNrisId = record.assessmentId;
     try {
-      newRecord.dateIssued = record.assessmentDate
-        ? moment.tz(record.assessmentDate, 'America/Vancouver').toDate()
+      newRecord.dateIssued = record.completionDate
+        ? moment.tz(record.completionDate, 'America/Vancouver').toDate()
         : null;
     } catch (error) {
       defaultLog.debug(error);
@@ -252,6 +256,11 @@ class NrisDataSource {
             `Could not create issuedTo for unexpected clientType: ${clientType} - assessmentId: ${record.assessmentId}`
           );
       }
+
+      const clientId = record.client[0].clientId;
+      if (clientId === 73892147 || clientId === 84725321) {
+        newRecord._epicProjectId = new mongoose.Types.ObjectId(utils.EpicProjectIds.lngCanadaId);
+      }
     }
 
     newRecord.location = record.location.locationDescription;
@@ -265,8 +274,29 @@ class NrisDataSource {
     }
 
     if (record.inspection && record.inspection.inspctResponse) {
-      newRecord.outcomeDescription += ' - ' + record.inspection.inspctResponse;
+      newRecord.outcomeDescription += ' - ' + this.stringTransformExpandAMP(record.inspection.inspctResponse);
     }
+
+    const descriptions = [
+      `Trigger or reason for inspection: ${
+        record.reason === 'DGIR' ? 'Dangerous Goods Inspection Report' : record.reason
+      }`,
+      `Source of inspected requirement(s): ${record.requirementSource}`
+    ];
+
+    if (record.requirementSource === 'Greenhouse Gas Industrial Reporting and Control Act') {
+      newRecord.issuingAgency = 'Climate Action Secretariat';
+    } else {
+      if (record.authorization && record.authorization.sourceId) {
+        descriptions.splice(1, 0, `Authorization Number: ${record.authorization.sourceId}`);
+      }
+
+      if (record.wasteType && record.wasteType.length > 0) {
+        descriptions.splice(1, 0, `Waste Discharge Type: ${record.wasteType.join(', ')}`);
+      }
+    }
+
+    newRecord.description = descriptions.join('; ');
 
     defaultLog.info('Processed:', record.assessmentId);
     return newRecord;
@@ -314,8 +344,8 @@ class NrisDataSource {
 
       const uploadDir = process.env.UPLOAD_DIRECTORY || '/tmp/';
       let fileName = res.headers['content-disposition'].split('= ').pop();
-      fileName = fileName.replace(/[^a-z0-9 ]/gi, '');
-      fileName = fileName.replace(' ', '_');
+      // Replace any characters outside of a-z, A-Z, -, _, ., *, ', (, and ) with _
+      fileName = fileName.replace(/[^a-z0-9\-_.*'()]/gi, '_');
       const tempFilePath = uploadDir + fileName;
       // Attempt to save locally and prepare for upload to S3.
       await new Promise(resolve => {
@@ -453,6 +483,10 @@ class NrisDataSource {
       const updateObj = { ...newRecord, _id: existingRecord._id, dateAdded: existingRecord.dateAdded };
       existingRecord._flavourRecords.forEach(flavourRecord => {
         updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id, addRole: 'public' };
+
+        if (flavourRecord._schemaName === RECORD_TYPE.Inspection.flavours.nrced._schemaName) {
+          updateObj[flavourRecord._schemaName]['summary'] = updateObj.description || '';
+        }
       });
 
       delete updateObj._flavourRecords;
