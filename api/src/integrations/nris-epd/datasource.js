@@ -292,7 +292,7 @@ class NrisDataSource {
       }
 
       if (record.wasteType && record.wasteType.length > 0) {
-        descriptions.splice(1, 0, `Waste Discharge Type: ${record.wasteType.join(', ')}`);
+        descriptions.push(`Waste Discharge Type: ${record.wasteType.join(', ')}`);
       }
     }
 
