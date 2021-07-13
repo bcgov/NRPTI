@@ -118,18 +118,6 @@ export class MinesCourtConvictionsAddEditComponent extends CourtConvictionAddEdi
           this.selectedConvictionInfoType = val;
         }
       });
-
-    // Set long/lat when mine value updates
-    this.myForm
-      .get('association.mineGuid')
-      .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(val => {
-        const selectedMine = this.storeService.getItem('mines').find(mine => mine._sourceRefId === val);
-        this.myForm.get('latitude').setValue(selectedMine.location.coordinates[1]);
-        this.myForm.get('longitude').setValue(selectedMine.location.coordinates[0]);
-        this.myForm.controls.latitude.markAsDirty();
-        this.myForm.controls.longitude.markAsDirty();
-      });
   }
 
   private resetStagedLinks() {

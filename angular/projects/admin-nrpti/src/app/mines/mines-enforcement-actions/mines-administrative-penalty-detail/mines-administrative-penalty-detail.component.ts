@@ -15,6 +15,7 @@ import { StoreService } from 'nrpti-angular-components';
 export class MinesAdministrativePenaltyDetailComponent extends AdministrativePenaltyDetailComponent implements OnInit {
 
   public mine = [];
+  public mineType = '';
 
   constructor(
     public route: ActivatedRoute,
@@ -46,6 +47,15 @@ export class MinesAdministrativePenaltyDetailComponent extends AdministrativePen
 
       const mines = this.storeService.getItem('mines') || [];
       this.mine = mines.filter(elem => elem._sourceRefId === this.data._master.mineGuid);
+
+      const unlistedType = this.data._master.unlistedMineType;
+      if (this.mine.length === 0 && !unlistedType) {
+        this.mineType = '';
+      } else if (this.mine.length === 0 && unlistedType) {
+        this.mineType = unlistedType;
+      } else {
+        this.mineType = this.mine[0].type;
+      }
 
       this.populateTextFields();
       this.disableEdit();

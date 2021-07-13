@@ -12,6 +12,7 @@ module.exports = require('../../utils/model-schema-generator')(
     _epicMilestoneId: { type: 'ObjectId', default: null, index: true },
     mineGuid: { type: String, default: null, index: true },
     unlistedMine: { type: String, default: '', index: true},
+    unlistedMineType: { type: String, default: '' },
 
     read: [{ type: String, trim: true, default: 'sysadmin' }],
     write: [{ type: String, trim: true, default: 'sysadmin' }],
