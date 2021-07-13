@@ -1,6 +1,7 @@
 const ObjectID = require('mongodb').ObjectID;
 const BaseRecordUtils = require('./base-record-utils');
 const CsvUtils = require('./utils/csv-utils');
+const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const moment = require('moment-timezone');
 const defaultLog = require('../../utils/logger')('bcogc-csv-orders-utils');
 
@@ -42,7 +43,7 @@ class Inspections extends BaseRecordUtils {
     inspection['_sourceRefOgcInspectionId'] = csvRow['inspection number'] || null;
     inspection['_sourceRefOgcDeficiencyId'] = csvRow['deficiency objectid'] || null;
 
-    inspection['recordType'] = 'Inspection';
+    inspection['recordType'] = RECORD_TYPE.Inspection.displayName;
     try {
       inspection['dateIssued'] = csvRow['inspection date'] ? moment.tz(csvRow['inspection date'], "DD-MMM-YYYY", "America/Vancouver").toDate() : null;
     } catch (error) {

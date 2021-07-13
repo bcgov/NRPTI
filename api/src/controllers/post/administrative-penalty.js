@@ -108,6 +108,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
     (administrativePenalty.collectionId = new ObjectId(incomingObj.collectionId));
   incomingObj.mineGuid && (administrativePenalty.mineGuid = incomingObj.mineGuid);
   incomingObj.unlistedMine && (administrativePenalty.unlistedMine = incomingObj.unlistedMine);
+  incomingObj.unlistedMineType && (administrativePenalty.unlistedMineType = incomingObj.unlistedMineType);
 
   incomingObj._sourceRefOgcPenaltyId &&
     (administrativePenalty._sourceRefOgcPenaltyId = incomingObj._sourceRefOgcPenaltyId);
@@ -189,6 +190,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.sourceSystemRef && (administrativePenalty.sourceSystemRef = incomingObj.sourceSystemRef);
   incomingObj.isNrcedPublished && (administrativePenalty.isNrcedPublished = incomingObj.isNrcedPublished);
   incomingObj.isLngPublished && (administrativePenalty.isLngPublished = incomingObj.isLngPublished);
+  incomingObj.isBcmiPublished && (administrativePenalty.isBcmiPublished = incomingObj.isBcmiPublished);
 
   // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
   if (args) {
@@ -567,6 +569,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     (administrativePenaltyBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj.mineGuid && (administrativePenaltyBCMI.mineGuid = incomingObj.mineGuid);
   incomingObj.unlistedMine && (administrativePenaltyBCMI.unlistedMine = incomingObj.unlistedMine);
+  incomingObj.unlistedMineType && (administrativePenaltyBCMI.unlistedMineType = incomingObj.unlistedMineType);
 
 
 

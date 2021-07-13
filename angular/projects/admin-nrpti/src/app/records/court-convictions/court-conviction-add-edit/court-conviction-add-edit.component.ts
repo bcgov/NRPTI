@@ -57,8 +57,8 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     protected utils: Utils,
     protected _changeDetectionRef: ChangeDetectorRef,
     // @ts-ignore used by record-association component
-    protected storeService: StoreService,
-  ) { }
+    protected storeService: StoreService
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -133,6 +133,23 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         debouncedUpdateLegislationDescription();
       });
+
+    // Set long/lat when mine value updates
+    this.myForm
+      .get('association.mineGuid')
+      .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(val => {
+        const selectedMine = this.storeService.getItem('mines').find(mine => mine._sourceRefId === val);
+        if (selectedMine.name !== 'None') {
+          this.myForm.get('latitude').setValue(selectedMine.location.coordinates[1]);
+          this.myForm.get('longitude').setValue(selectedMine.location.coordinates[0]);
+        } else {
+          this.myForm.get('latitude').setValue('');
+          this.myForm.get('longitude').setValue('');
+        }
+        this.myForm.controls.latitude.markAsDirty();
+        this.myForm.controls.longitude.markAsDirty();
+      });
   }
 
   private updateLegislationDescription() {
@@ -162,121 +179,130 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti') &&
-          !this.factoryService.userInLngRole()
+        disabled:
+          this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti' && !this.factoryService.userInLngRole()
       }),
       recordSubtype: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordSubtype) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       dateIssued: new FormControl({
-        value: (this.currentRecord &&
-          this.currentRecord.dateIssued &&
-          this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
+        value:
+          (this.currentRecord &&
+            this.currentRecord.dateIssued &&
+            this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
           '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       issuingAgency: new FormControl({
         value: (this.currentRecord && this.currentRecord.issuingAgency) || this.defaultAgency,
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       author: new FormControl({
         value: (this.currentRecord && this.currentRecord.author) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       association: new FormGroup({
         _epicProjectId: new FormControl({
-          value: this.currentRecord && this.currentRecord._epicProjectId || null,
+          value: (this.currentRecord && this.currentRecord._epicProjectId) || null,
           disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         mineGuid: new FormControl({
-          value: this.currentRecord && this.currentRecord.mineGuid || null,
+          value: (this.currentRecord && this.currentRecord.mineGuid) || null,
           disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         unlistedMine: new FormControl({
           value: (this.currentRecord && this.currentRecord.unlistedMine) || '',
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        }),
+        unlistedMineType: new FormControl({
+          value: (this.currentRecord && this.currentRecord.unlistedMineType) || '',
           disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         })
       }),
       legislation: new FormGroup({
         act: new FormControl({
           value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.act) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         regulation: new FormControl({
-          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.regulation) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          value:
+            (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.regulation) || '',
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         section: new FormControl({
           value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.section) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         subSection: new FormControl({
-          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.subSection) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          value:
+            (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.subSection) || '',
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         paragraph: new FormControl({
-          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          value:
+            (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || '',
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         })
       }),
       offence: new FormControl({
         value: (this.currentRecord && this.currentRecord.offence) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       issuedTo: new FormGroup({
         type: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.type) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         companyName: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.companyName) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         firstName: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.firstName) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         middleName: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.middleName) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         lastName: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.lastName) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         fullName: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.fullName) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         dateOfBirth: new FormControl({
-          value: (this.currentRecord &&
-            this.currentRecord.issuedTo &&
-            this.currentRecord.issuedTo.dateOfBirth &&
-            this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
+          value:
+            (this.currentRecord &&
+              this.currentRecord.issuedTo &&
+              this.currentRecord.issuedTo.dateOfBirth &&
+              this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
             '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         anonymous: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         })
       }),
       projectName: new FormControl({
         value: (this.currentRecord && this.currentRecord.projectName) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       location: new FormControl({
         value: (this.currentRecord && this.currentRecord.location) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       latitude: new FormControl({
         value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       longitude: new FormControl({
         value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       penalties: new FormArray(this.getPenaltiesFormGroups()),
 
@@ -409,18 +435,24 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
       (courtConviction['issuingAgency'] = this.myForm.controls.issuingAgency.value);
     this.myForm.controls.author.dirty && (courtConviction['author'] = this.myForm.controls.author.value);
 
-    if (
-      this.myForm.get('association._epicProjectId').dirty
-    ) {
+    if (this.myForm.get('association._epicProjectId').dirty) {
       courtConviction['_epicProjectId'] = this.myForm.get('association._epicProjectId').value;
     }
 
     if (this.myForm.get('association.mineGuid').dirty) {
-      courtConviction['mineGuid'] = this.myForm.get('association.mineGuid').value;
+      if (!this.myForm.get('association.mineGuid').value) {
+        courtConviction['mineGuid'] = '';
+      } else {
+        courtConviction['mineGuid'] = this.myForm.get('association.mineGuid').value;
+      }
     }
 
     if (this.myForm.get('association.unlistedMine').dirty) {
       courtConviction['unlistedMine'] = this.myForm.get('association.unlistedMine').value;
+    }
+
+    if (this.myForm.get('association.unlistedMineType').dirty) {
+      courtConviction['unlistedMineType'] = this.myForm.get('association.unlistedMineType').value;
     }
 
     if (

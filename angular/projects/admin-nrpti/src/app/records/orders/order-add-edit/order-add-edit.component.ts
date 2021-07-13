@@ -301,6 +301,10 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
         mineGuid: new FormControl({
           value: this.currentRecord && this.currentRecord.mineGuid || null,
           disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        }),
+        unlistedMineType: new FormControl({
+          value: (this.currentRecord && this.currentRecord.unlistedMineType) || '',
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         })
       })
     });
