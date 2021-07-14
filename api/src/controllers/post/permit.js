@@ -108,20 +108,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   permit.issuedTo.read = utils.ApplicationAdminRoles;
   permit.issuedTo.write = utils.ApplicationAdminRoles;
 
-  incomingObj.legislation && incomingObj.legislation.act && (permit.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (permit.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (permit.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (permit.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (permit.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (permit.legislationDescription = incomingObj.legislationDescription);
+  permit.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (permit.projectName = incomingObj.projectName);
   incomingObj.location && (permit.location = incomingObj.location);
   incomingObj.centroid && (permit.centroid = incomingObj.centroid);
@@ -235,20 +223,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
   permitLNG.issuedTo.read = utils.ApplicationAdminRoles;
   permitLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
-  incomingObj.legislation && incomingObj.legislation.act && (permitLNG.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (permitLNG.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (permitLNG.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (permitLNG.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (permitLNG.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (permitLNG.legislationDescription = incomingObj.legislationDescription);
+  permitLNG.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (permitLNG.projectName = incomingObj.projectName);
   incomingObj.location && (permitLNG.location = incomingObj.location);
   incomingObj.centroid && (permitLNG.centroid = incomingObj.centroid);
@@ -338,20 +314,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   permitBCMI.issuedTo.read = utils.ApplicationAdminRoles;
   permitBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
-  incomingObj.legislation && incomingObj.legislation.act && (permitBCMI.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (permitBCMI.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (permitBCMI.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (permitBCMI.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (permitBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (permitBCMI.legislationDescription = incomingObj.legislationDescription);
+  permitBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (permitBCMI.projectName = incomingObj.projectName);
   incomingObj.location && (permitBCMI.location = incomingObj.location);
   incomingObj.centroid && (permitBCMI.centroid = incomingObj.centroid);

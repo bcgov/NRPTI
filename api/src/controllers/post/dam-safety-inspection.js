@@ -114,20 +114,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (damSafetyInspection.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.dateIssued && (damSafetyInspection.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (damSafetyInspection.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation && incomingObj.legislation.act && (damSafetyInspection.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (damSafetyInspection.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (damSafetyInspection.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (damSafetyInspection.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (damSafetyInspection.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (damSafetyInspection.legislationDescription = incomingObj.legislationDescription);
+
+  damSafetyInspection.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (damSafetyInspection.projectName = incomingObj.projectName);
   incomingObj.location && (damSafetyInspection.location = incomingObj.location);
   incomingObj.centroid && (damSafetyInspection.centroid = incomingObj.centroid);
@@ -231,20 +220,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
     (damSafetyInspectionBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.dateIssued && (damSafetyInspectionBCMI.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (damSafetyInspectionBCMI.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation && incomingObj.legislation.act && (damSafetyInspectionBCMI.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (damSafetyInspectionBCMI.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (damSafetyInspectionBCMI.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (damSafetyInspectionBCMI.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (damSafetyInspectionBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (damSafetyInspectionBCMI.legislationDescription = incomingObj.legislationDescription);
+
+  damSafetyInspectionBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (damSafetyInspectionBCMI.projectName = incomingObj.projectName);
   incomingObj.location && (damSafetyInspectionBCMI.location = incomingObj.location);
   incomingObj.centroid && (damSafetyInspectionBCMI.centroid = incomingObj.centroid);
@@ -340,20 +318,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
     (damSafetyInspectionNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.dateIssued && (damSafetyInspectionNRCED.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (damSafetyInspectionNRCED.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation && incomingObj.legislation.act && (damSafetyInspectionNRCED.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (damSafetyInspectionNRCED.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (damSafetyInspectionNRCED.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (damSafetyInspectionNRCED.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (damSafetyInspectionNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (damSafetyInspectionNRCED.legislationDescription = incomingObj.legislationDescription);
+
+  damSafetyInspectionNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (damSafetyInspectionNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (damSafetyInspectionNRCED.location = incomingObj.location);
   incomingObj.centroid && (damSafetyInspectionNRCED.centroid = incomingObj.centroid);

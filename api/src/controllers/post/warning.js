@@ -128,21 +128,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.issuingAgency && (warning.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (warning.author = incomingObj.author);
 
-  incomingObj.legislation && incomingObj.legislation.act && (warning.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (warning.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (warning.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (warning.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (warning.legislation.paragraph = incomingObj.legislation.paragraph);
-
-  incomingObj.legislationDescription && (warning.legislationDescription = incomingObj.legislationDescription);
+  warning.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   warning.issuedTo.read = utils.ApplicationAdminRoles;
   warning.issuedTo.write = utils.ApplicationAdminRoles;
@@ -261,21 +247,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   incomingObj.issuingAgency && (warningLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (warningLNG.author = incomingObj.author);
 
-  incomingObj.legislation && incomingObj.legislation.act && (warningLNG.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (warningLNG.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (warningLNG.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (warningLNG.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (warningLNG.legislation.paragraph = incomingObj.legislation.paragraph);
-
-  incomingObj.legislationDescription && (warningLNG.legislationDescription = incomingObj.legislationDescription);
+  warningLNG.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   warningLNG.issuedTo.read = utils.ApplicationAdminRoles;
   warningLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
@@ -406,23 +378,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   incomingObj.issuingAgency && (warningNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (warningNRCED.author = incomingObj.author);
 
-  incomingObj.legislation &&
-    incomingObj.legislation.act &&
-    (warningNRCED.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (warningNRCED.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (warningNRCED.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (warningNRCED.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (warningNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
-
-  incomingObj.legislationDescription && (warningNRCED.legislationDescription = incomingObj.legislationDescription);
+  warningNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   warningNRCED.issuedTo.read = utils.ApplicationAdminRoles;
   warningNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];

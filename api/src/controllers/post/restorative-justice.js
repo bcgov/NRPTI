@@ -124,23 +124,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.issuingAgency && (restorativeJustice.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (restorativeJustice.author = incomingObj.author);
 
-  incomingObj.legislation &&
-    incomingObj.legislation.act &&
-    (restorativeJustice.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (restorativeJustice.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (restorativeJustice.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (restorativeJustice.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (restorativeJustice.legislation.paragraph = incomingObj.legislation.paragraph);
-
-  incomingObj.offence && (restorativeJustice.offence = incomingObj.offence);
+  restorativeJustice.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   restorativeJustice.issuedTo.read = utils.ApplicationAdminRoles;
   restorativeJustice.issuedTo.write = utils.ApplicationAdminRoles;
@@ -262,23 +246,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   incomingObj.issuingAgency && (restorativeJusticeLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (restorativeJusticeLNG.author = incomingObj.author);
 
-  incomingObj.legislation &&
-    incomingObj.legislation.act &&
-    (restorativeJusticeLNG.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (restorativeJusticeLNG.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (restorativeJusticeLNG.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (restorativeJusticeLNG.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (restorativeJusticeLNG.legislation.paragraph = incomingObj.legislation.paragraph);
-
-  incomingObj.offence && (restorativeJusticeLNG.offence = incomingObj.offence);
+  restorativeJusticeLNG.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   restorativeJusticeLNG.issuedTo.read = utils.ApplicationAdminRoles;
   restorativeJusticeLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
@@ -408,23 +376,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   incomingObj.issuingAgency && (restorativeJusticeNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (restorativeJusticeNRCED.author = incomingObj.author);
 
-  incomingObj.legislation &&
-    incomingObj.legislation.act &&
-    (restorativeJusticeNRCED.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (restorativeJusticeNRCED.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (restorativeJusticeNRCED.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (restorativeJusticeNRCED.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (restorativeJusticeNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
-
-  incomingObj.offence && (restorativeJusticeNRCED.offence = incomingObj.offence);
+  restorativeJusticeNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   restorativeJusticeNRCED.issuedTo.read = utils.ApplicationAdminRoles;
   restorativeJusticeNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];

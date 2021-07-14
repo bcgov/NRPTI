@@ -119,20 +119,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (correspondence.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.dateIssued && (correspondence.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (correspondence.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation && incomingObj.legislation.act && (correspondence.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (correspondence.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (correspondence.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (correspondence.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (correspondence.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (correspondence.legislationDescription = incomingObj.legislationDescription);
+
+  correspondence.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (correspondence.projectName = incomingObj.projectName);
   incomingObj.location && (correspondence.location = incomingObj.location);
   incomingObj.centroid && (correspondence.centroid = incomingObj.centroid);
@@ -242,20 +231,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
     (correspondenceBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.dateIssued && (correspondenceBCMI.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (correspondenceBCMI.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation && incomingObj.legislation.act && (correspondenceBCMI.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (correspondenceBCMI.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (correspondenceBCMI.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (correspondenceBCMI.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (correspondenceBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (correspondenceBCMI.legislationDescription = incomingObj.legislationDescription);
+
+  correspondenceBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (correspondenceBCMI.projectName = incomingObj.projectName);
   incomingObj.location && (correspondenceBCMI.location = incomingObj.location);
   incomingObj.centroid && (correspondenceBCMI.centroid = incomingObj.centroid);
@@ -358,20 +336,9 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (correspondenceNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.dateIssued && (correspondenceNRCED.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (correspondenceNRCED.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation && incomingObj.legislation.act && (correspondenceNRCED.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (correspondenceNRCED.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (correspondenceNRCED.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (correspondenceNRCED.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (correspondenceNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (correspondenceNRCED.legislationDescription = incomingObj.legislationDescription);
+
+  correspondenceNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (correspondenceNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (correspondenceNRCED.location = incomingObj.location);
   incomingObj.centroid && (correspondenceNRCED.centroid = incomingObj.centroid);

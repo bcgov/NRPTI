@@ -124,23 +124,8 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.issuingAgency && (administrativeSanction.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (administrativeSanction.author = incomingObj.author);
 
-  incomingObj.legislation &&
-    incomingObj.legislation.act &&
-    (administrativeSanction.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (administrativeSanction.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (administrativeSanction.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (administrativeSanction.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (administrativeSanction.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription &&
-    (administrativeSanction.legislationDescription = incomingObj.legislationDescription);
+  administrativeSanction.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   administrativeSanction.issuedTo.read = utils.ApplicationAdminRoles;
   administrativeSanction.issuedTo.write = utils.ApplicationAdminRoles;
   incomingObj.issuedTo &&
@@ -264,23 +249,8 @@ exports.createLNG = function(args, res, next, incomingObj) {
   incomingObj.issuingAgency && (administrativeSanctionLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (administrativeSanctionLNG.author = incomingObj.author);
 
-  incomingObj.legislation &&
-    incomingObj.legislation.act &&
-    (administrativeSanctionLNG.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (administrativeSanctionLNG.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (administrativeSanctionLNG.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (administrativeSanctionLNG.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (administrativeSanctionLNG.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription &&
-    (administrativeSanctionLNG.legislationDescription = incomingObj.legislationDescription);
+  administrativeSanctionLNG.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   administrativeSanctionLNG.issuedTo.read = utils.ApplicationAdminRoles;
   administrativeSanctionLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
   incomingObj.issuedTo &&
@@ -409,23 +379,8 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   incomingObj.issuingAgency && (administrativeSanctionNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (administrativeSanctionNRCED.author = incomingObj.author);
 
-  incomingObj.legislation &&
-    incomingObj.legislation.act &&
-    (administrativeSanctionNRCED.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (administrativeSanctionNRCED.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (administrativeSanctionNRCED.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (administrativeSanctionNRCED.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (administrativeSanctionNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription &&
-    (administrativeSanctionNRCED.legislationDescription = incomingObj.legislationDescription);
+  administrativeSanctionNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   administrativeSanctionNRCED.issuedTo.read = utils.ApplicationAdminRoles;
   administrativeSanctionNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
   incomingObj.issuedTo &&

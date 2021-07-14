@@ -113,20 +113,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (annualReport.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.dateIssued && (annualReport.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (annualReport.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation && incomingObj.legislation.act && (annualReport.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (annualReport.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (annualReport.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (annualReport.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (annualReport.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (annualReport.legislationDescription = incomingObj.legislationDescription);
+
+  annualReport.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (annualReport.projectName = incomingObj.projectName);
   incomingObj.location && (annualReport.location = incomingObj.location);
   incomingObj.centroid && (annualReport.centroid = incomingObj.centroid);
@@ -229,20 +218,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
     (annualReportBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.dateIssued && (annualReportBCMI.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (annualReportBCMI.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation && incomingObj.legislation.act && (annualReportBCMI.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (annualReportBCMI.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (annualReportBCMI.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (annualReportBCMI.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (annualReportBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (annualReportBCMI.legislationDescription = incomingObj.legislationDescription);
+
+  annualReportBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (annualReportBCMI.projectName = incomingObj.projectName);
   incomingObj.location && (annualReportBCMI.location = incomingObj.location);
   incomingObj.centroid && (annualReportBCMI.centroid = incomingObj.centroid);
