@@ -14,6 +14,7 @@ export class AdministrativePenaltyBCMI extends RecordModel {
   _epicMilestoneId: string;
   mineGuid: string;
   unlistedMine: string;
+  unlistedMineType: string;
 
   dateIssued: Date;
   issuingAgency: string;
@@ -39,6 +40,7 @@ export class AdministrativePenaltyBCMI extends RecordModel {
     this._epicMilestoneId = (obj && obj._epicMilestoneId) || '';
     this.mineGuid = (obj && obj.mineGuid) || '';
     this.unlistedMine = (obj && obj.unlistedMine) || '';
+    this.unlistedMineType = (obj && obj.unlistedMineType) || '';
 
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || '';

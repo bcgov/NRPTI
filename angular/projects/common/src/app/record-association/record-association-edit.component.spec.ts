@@ -31,7 +31,12 @@ describe('RecordAssociationEditComponent', () => {
     const _epicProjectId = new FormControl({});
     const mineGuid = new FormControl({});
     const unlistedMine = new FormControl({});
-    component.formGroup = new FormGroup({ _epicProjectId, mineGuid, unlistedMine });
+    const unlistedMineType = new FormControl({});
+
+    mineGuid.setValue(null);
+    unlistedMineType.setValue('');
+
+    component.formGroup = new FormGroup({ _epicProjectId, mineGuid, unlistedMine, unlistedMineType });
     component.mines = [];
 
     fixture.detectChanges();

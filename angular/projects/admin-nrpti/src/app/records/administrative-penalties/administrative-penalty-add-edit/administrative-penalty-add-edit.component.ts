@@ -137,9 +137,26 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
       .subscribe(() => {
         debouncedUpdateLegislationDescription();
       });
+
+    // Set long/lat when mine value updates
+    this.myForm
+      .get('association.mineGuid')
+      .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(val => {
+        const selectedMine = this.storeService.getItem('mines').find(mine => mine._sourceRefId === val);
+        if (selectedMine.name !== 'None') {
+          this.myForm.get('latitude').setValue(selectedMine.location.coordinates[1]);
+          this.myForm.get('longitude').setValue(selectedMine.location.coordinates[0]);
+        } else {
+          this.myForm.get('latitude').setValue('');
+          this.myForm.get('longitude').setValue('');
+        }
+        this.myForm.controls.latitude.markAsDirty();
+        this.myForm.controls.longitude.markAsDirty();
+      });
   }
 
-  private updateLegislationDescription() {
+  protected updateLegislationDescription() {
     const legislation = new Legislation({
       act: this.myForm.get('legislation.act').value,
       regulation: this.myForm.get('legislation.regulation').value,
@@ -195,6 +212,10 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
         }),
         unlistedMine: new FormControl({
           value: (this.currentRecord && this.currentRecord.unlistedMine) || '',
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
+        }),
+        unlistedMineType: new FormControl({
+          value: (this.currentRecord && this.currentRecord.unlistedMineType) || '',
           disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         })
       }),
@@ -436,11 +457,19 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     }
 
     if (this.myForm.get('association.mineGuid').dirty) {
-      administrativePenalty['mineGuid'] = this.myForm.get('association.mineGuid').value;
+      if (!this.myForm.get('association.mineGuid').value) {
+        administrativePenalty['mineGuid'] = '';
+      } else {
+        administrativePenalty['mineGuid'] = this.myForm.get('association.mineGuid').value;
+      }
     }
 
     if (this.myForm.get('association.unlistedMine').dirty) {
       administrativePenalty['unlistedMine'] = this.myForm.get('association.unlistedMine').value;
+    }
+
+    if (this.myForm.get('association.unlistedMineType').dirty) {
+      administrativePenalty['unlistedMineType'] = this.myForm.get('association.unlistedMineType').value;
     }
 
     if (

@@ -111,6 +111,8 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
     (courtConviction.collectionId = new ObjectId(incomingObj.collectionId));
   incomingObj.mineGuid && (courtConviction.mineGuid = incomingObj.mineGuid);
   incomingObj.unlistedMine && (courtConviction.unlistedMine = incomingObj.unlistedMine);
+  incomingObj.unlistedMineType && (courtConviction.unlistedMineType = incomingObj.unlistedMineType);
+  
 
   // set permissions
   courtConviction.read = utils.ApplicationAdminRoles;
@@ -189,6 +191,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj._sourceRefCoorsId && (courtConviction._sourceRefCoorsId = incomingObj._sourceRefCoorsId);
   incomingObj.isNrcedPublished && (courtConviction.isNrcedPublished = incomingObj.isNrcedPublished);
   incomingObj.isLngPublished && (courtConviction.isLngPublished = incomingObj.isLngPublished);
+  incomingObj.isBcmiPublished && (courtConviction.isBcmiPublished = incomingObj.isBcmiPublished);
 
   // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
   if (args) {
@@ -564,6 +567,7 @@ exports.createBCMI = function(args, res, next, incomingObj) {
     (courtConvictionBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj.mineGuid && (courtConvictionBCMI.mineGuid = incomingObj.mineGuid);
   incomingObj.unlistedMine && (courtConvictionBCMI.unlistedMine = incomingObj.unlistedMine);
+  incomingObj.unlistedMineType && (courtConvictionBCMI.unlistedMineType = incomingObj.unlistedMineType);
 
   // set permissions and meta
   courtConvictionBCMI.read = utils.ApplicationAdminRoles;
