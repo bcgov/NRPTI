@@ -253,6 +253,10 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
     }
   }
 
+  // Remove _flavourRecords from updateObject.  New flavours are added through flavourIds.
+  // This is to prevent update object having _flavourRecords in both $set and $addToSet
+  delete incomingObj._flavourRecords;
+
   const MasterModel = mongoose.model(masterSchemaName);
   const updateMasterObj = editMaster(args, res, next, incomingObj, flavourIds);
 
