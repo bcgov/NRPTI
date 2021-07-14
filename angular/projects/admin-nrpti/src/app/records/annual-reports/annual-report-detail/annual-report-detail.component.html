@@ -36,7 +36,7 @@
         <div class="grid-section section-2">
           <div class="grid-item__row">
             <label class="grid-item-name">Issuing Agency</label>
-            <span class="grid-item-value">{{ (data && data._master.issuingAgency) || '-' }}</span>
+            <span class="grid-item-value">{{ (data && this.displayName(data._master.issuingAgency)) || '-' }}</span>
           </div>
           <div class="grid-item__row">
             <label class="grid-item-name">Legislation</label>

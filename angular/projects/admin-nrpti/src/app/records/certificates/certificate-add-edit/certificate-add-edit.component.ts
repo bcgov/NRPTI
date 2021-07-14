@@ -379,6 +379,10 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  displayName(agency) {
+    return Utils.displayNameFull(agency);
+  }
+
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();

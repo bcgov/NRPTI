@@ -53,7 +53,7 @@
           <label for="issuingAgencygency">Issuing Agency</label>
           <select name="issuingAgencyency" id="issuingAgency" formControlName="issuingAgency" class="form-control">
             <option *ngFor="let issuingAgency of agencies" [ngValue]="issuingAgency">
-              {{ this.convertAcronyms(issuingAgency) }}
+              {{ this.displayName(issuingAgency) }}
             </option>
           </select>
         </div>

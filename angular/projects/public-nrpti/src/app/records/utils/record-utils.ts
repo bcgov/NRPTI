@@ -9,6 +9,7 @@ import { TicketDetailComponent } from '../tickets/ticket-detail/ticket-detail.co
 import { WarningDetailComponent } from '../warnings/warning-detail/warning-detail.component';
 import { CourtConvictionDetailComponent } from '../court-convictions/court-conviction-detail/court-conviction-detail.component';
 import { Penalty } from '../../../../../common/src/app/models/master/common-models/penalty';
+import { Utils } from 'nrpti-angular-components';
 
 export class RecordUtils {
   /**
@@ -141,7 +142,7 @@ export class RecordUtils {
       }
 
       line.push(escapeCsvString(row['summary']));
-      line.push(escapeCsvString(row['issuingAgency']));
+      line.push(escapeCsvString(Utils.displayNameFull(row['issuingAgency'])));
 
       const legislation = row['legislation'];
 

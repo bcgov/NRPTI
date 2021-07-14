@@ -21,15 +21,17 @@ exports.ApplicationRoles = ApplicationRoles;
 const ApplicationAgencies = {
   AGENCY_ALC: 'Agricultural Land Commission',
   AGENCY_WF: 'BC Wildfire Service',
-  AGENCY_ENV_COS: 'Conservation Officer Service (COS)',
-  AGENCY_EMLI: 'EMLI',
+  AGENCY_ENV_COS: 'Conservation Officer Service',
+  AGENCY_EAO: 'Environmental Assessment Office',
+  AGENCY_EMLI: 'Ministry of Energy Mines and Low Carbon Innovation',
+  AGENCY_ENV: 'Ministry of Environment and Climate Change Strategy',
   AGENCY_ENV_BCPARKS: 'BC Parks',
   AGENCY_OGC: 'BC Oil and Gas Commission',
   AGENCY_ENV_EPD: 'Environmental Protection Division',
   AGENCY_LNG: 'LNG Secretariat',
-  AGENCY_AGRI: 'Ministry of Agriculture',
-  AGENCY_FLNRO: 'Ministry of Forests, Lands, Natural Resource Operations and Rural Development',
-  AGENCY_FLNR_NRO: 'Natural Resource Officers (NRO)'
+  AGENCY_AGRI: 'Ministry of Agriculture Food and Fisheries',
+  AGENCY_FLNRO: 'Ministry of Forests Lands Natural Resource Operations and Rural Development',
+  AGENCY_FLNR_NRO: 'Natural Resource Officers'
 };
 
 exports.ApplicationAgencies = ApplicationAgencies;
@@ -65,7 +67,7 @@ exports.IssuedToEntityTypes = {
 
 exports.CoorsCsvIssuingAgencies = {
   BC_Parks: 'BC Parks',
-  Conservation_Officer_Service: 'Conservation Officer Service (COS)'
+  Conservation_Officer_Service: 'Conservation Officer Service'
 };
 
 exports.EpicProjectIds = {
@@ -172,8 +174,8 @@ exports.PENALTY_VALUE_TYPES = ['Years', 'Months', 'Days', 'Dollars', 'Hours', 'O
 exports.AUTHORIZED_PUBLISH_AGENCIES = [
   'BC Parks',
   'Climate Action Secretariat',
-  'Conservation Officer Service (COS)',
-  'EAO',
+  'Conservation Officer Service',
+  'Environmental Assessment Office',
   'Environmental Protection Division'
 ];
 

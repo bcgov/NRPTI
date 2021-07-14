@@ -26,6 +26,11 @@ export class AuthorizationsTableRowsComponent extends TableRowComponent implemen
     this.ngUnsubscribe.complete();
   }
 
+  displayName(agency) {
+    console.log(agency);
+    return GlobalUtils.displayNameFull(agency);
+  }
+
   convertAcronyms(acronym) {
     return GlobalUtils.convertAcronyms(acronym);
   }
