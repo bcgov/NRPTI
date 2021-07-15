@@ -59,7 +59,7 @@ export class AdministrativePenaltyDetailComponent extends RecordDetailComponent 
     }
   }
 
-  displayName(agency){
+  displayName(agency) {
     return Utils.displayNameFull(agency);
   }
 

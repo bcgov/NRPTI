@@ -132,7 +132,7 @@ export class Utils {
     }
   }
 
-    
+
   static displayNameFull(agency): string {
     switch (agency) {
       case ApplicationAgencies.AGENCY_AGRI:
