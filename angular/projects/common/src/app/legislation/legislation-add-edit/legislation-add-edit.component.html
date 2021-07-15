@@ -59,5 +59,43 @@
       <label for="paragraph">Paragraph</label>
       <input name="paragraph" id="paragraph" formControlName="paragraph" type="text" class="form-control" />
     </div>
+    <div class="flex-container">
+      <div *ngIf="hasOffence" class="label-pair">
+        <label for="offence">Offence</label>
+        <input readonly name="offence" id="offence" formControlName="offence" class="form-control" />
+        <span
+          *ngIf="this.formGroup.controls.act.value && !this.formGroup.controls.offence.value"
+          class="grey-subtext"
+        >
+          No description available for the selected combination of act, regulation, section, subsection and paragraph.
+          Please double-check that you have filled out those fields correctly; if they are correct, please contact the
+          system administrator at
+          <a href="mailto:nrced@gov.bc.ca">nrced@gov.bc.ca</a>
+          to request a new description be added to the system.
+        </span>
+      </div>
+      <!-- If a legislation doesn't have an offence, we can assume it has a legislationDescription -->
+      <div *ngIf="!hasOffence" class="label-pair">
+        <label for="legislationDescription">Description</label>
+        <input
+          readonly
+          name="legislationDescription"
+          id="legislationDescription"
+          type="text"
+          formControlName="legislationDescription"
+          class="form-control"
+        />
+        <span
+          *ngIf="this.formGroup.controls.act.value && !this.formGroup.controls.legislationDescription.value"
+          class="grey-subtext"
+        >
+          No description available for the selected combination of act, regulation, section, subsection and paragraph.
+          Please double-check that you have filled out those fields correctly; if they are correct, please contact the
+          system administrator at
+          <a href="mailto:nrced@gov.bc.ca">nrced@gov.bc.ca</a>
+          to request a new description be added to the system.
+        </span>
+      </div>
+    </div>
   </div>
 </form>

@@ -12,8 +12,7 @@ export class AnnualReport extends RecordModel {
   issuedTo: Entity;
   dateIssued: Date;
   issuingAgency: string;
-  legislation: Legislation;
-  legislationDescription: string;
+  legislation: Legislation[];
   documents: object[];
   description: string;
   dateAdded: Date;
@@ -29,9 +28,10 @@ export class AnnualReport extends RecordModel {
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || '';
     this.issuedTo = (obj && obj.issuedTo) || '';
-    this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
-    this.legislationDescription = (obj && obj.legislationDescription) || '';
-    this.documents = (obj && obj.documents) || [];
+    this.legislation = (obj && obj.legislation && obj.legislation.length &&
+      obj.legislation.map(legislation => new Legislation(legislation))) || null;
+
+      this.documents = (obj && obj.documents) || [];
 
     this.description = (obj && obj.description) || null;
 

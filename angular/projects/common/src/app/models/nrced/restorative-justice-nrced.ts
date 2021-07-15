@@ -16,8 +16,7 @@ export class RestorativeJusticeNRCED extends RecordModel {
   dateIssued: Date;
   issuingAgency: string;
   author: string;
-  legislation: Legislation;
-  offence: string;
+  legislation: Legislation[];
   issuedTo: Entity;
   penalties: Penalty;
   documents: object[];
@@ -38,8 +37,8 @@ export class RestorativeJusticeNRCED extends RecordModel {
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || '';
     this.author = (obj && obj.author) || '';
-    this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
-    this.offence = (obj && obj.offence) || '';
+    this.legislation = (obj && obj.legislation && obj.legislation.length &&
+      obj.legislation.map(legislation => new Legislation(legislation))) || null;
     this.issuedTo = (obj && obj.issuedTo && new Entity(obj.issuedTo)) || null;
     this.penalties =
       (obj && obj.penalties && obj.penalties.length && obj.penalties.map(penalty => new Penalty(penalty))) || null;

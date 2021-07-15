@@ -6,7 +6,6 @@ import { FactoryService } from '../../../services/factory.service';
 import { LoadingScreenService, LoggerService } from 'nrpti-angular-components';
 import { Utils, StoreService } from 'nrpti-angular-components';
 import { ChangeDetectorRef } from '@angular/core';
-// import { FormControl, FormGroup } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -67,12 +66,13 @@ export class MinesAdministrativePenaltyAddEditComponent extends AdministrativePe
           }
         };
       }
-      super.buildForm();
-      super.subscribeToFormControlChanges();
-      super.updateLegislationDescription();
-      this.loading = false;
-      this._changeDetectionRef.detectChanges();
+    super.buildForm();
+    this.loading = false;
+    this._changeDetectionRef.detectChanges();
     });
+
+    const someVar = this.myForm.get('legislations');
+    console.log(someVar);
   }
 
   navigateToDetails() {

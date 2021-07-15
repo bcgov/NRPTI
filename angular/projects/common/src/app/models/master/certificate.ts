@@ -16,8 +16,7 @@ export class Certificate extends RecordModel {
   issuingAgency: string;
   author: string;
   description: string;
-  legislation: Legislation;
-  legislationDescription: string;
+  legislation: Legislation[];
   documents: object[];
 
   // Fields for saving flavour in API.
@@ -36,8 +35,8 @@ export class Certificate extends RecordModel {
     this.issuingAgency = (obj && obj.issuingAgency) || null;
     this.author = (obj && obj.author) || null;
     this.description = (obj && obj.description) || null;
-    this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
-    this.legislationDescription = (obj && obj.legislationDescription) || null;
+    this.legislation = (obj && obj.legislation && obj.legislation.length &&
+      obj.legislation.map(legislation => new Legislation(legislation))) || null;
     this.documents = (obj && obj.documents) || null;
   }
 }
