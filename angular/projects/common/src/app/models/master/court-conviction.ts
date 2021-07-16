@@ -13,6 +13,7 @@ export class CourtConviction extends RecordModel {
   _epicProjectId: string;
   _epicMilestoneId: string;
   unlistedMine: string;
+  unlistedMineType: string;
 
   recordSubtype: string;
   dateIssued: Date;
@@ -35,6 +36,7 @@ export class CourtConviction extends RecordModel {
     this._epicProjectId = (obj && obj._epicProjectId) || null;
     this._epicMilestoneId = (obj && obj._epicMilestoneId) || null;
     this.unlistedMine = (obj && obj.unlistedMine) || '';
+    this.unlistedMineType = (obj && obj.unlistedMineType) || '';
 
     this.recordSubtype = (obj && obj.recordSubtype) || null;
     this.dateIssued = (obj && obj.dateIssued) || null;

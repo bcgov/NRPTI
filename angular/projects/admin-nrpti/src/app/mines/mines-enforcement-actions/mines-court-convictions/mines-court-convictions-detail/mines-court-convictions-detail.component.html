@@ -44,7 +44,7 @@
           </div>
           <div class="grid-item__row">
             <label class="grid-item-name">Mine Type</label>
-            <span class="grid-item-value">{{ (mine[0] && mine[0].type) || '-' }}</span>
+            <span class="grid-item-value">{{ (mineType && mineType) || '-' }}</span>
           </div>
           <div class="grid-item__row">
             <label class="grid-item-name">Unlisted Mine Name</label>
@@ -77,6 +77,11 @@
             [data]="data && data._master.penalties"
           ></app-penalty-detail-admin>
         </div>
+        <div class="grid-section-border"></div>
+        <div class="grid-section-sub-header">
+          <span class="grid-section-sub-header-text">Party</span>
+        </div>
+        <app-entity-detail class="grid-section" [data]="data && data._master.issuedTo"></app-entity-detail>
         <div class="grid-section-border"></div>
         <div class="grid-section-sub-header">
           <span class="grid-section-sub-header-text">Location Details</span>

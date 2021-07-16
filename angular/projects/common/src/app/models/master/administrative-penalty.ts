@@ -22,6 +22,7 @@ export class AdministrativePenalty extends RecordModel {
   penalties: Penalty[];
   documents: object[];
   unlistedMine: string;
+  unlistedMineType: string;
 
   AdministrativePenaltyNRCED: object;
   AdministrativePenaltyLNG: object;
@@ -34,6 +35,7 @@ export class AdministrativePenalty extends RecordModel {
     this._epicProjectId = (obj && obj._epicProjectId) || null;
     this._epicMilestoneId = (obj && obj._epicMilestoneId) || null;
     this.unlistedMine = (obj && obj.unlistedMine) || '';
+    this.unlistedMineType = (obj && obj.unlistedMineType) || '';
 
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || null;
