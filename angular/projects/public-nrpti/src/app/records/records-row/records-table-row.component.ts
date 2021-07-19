@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ViewContainerRef, ComponentRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ViewContainerRef, ComponentRef } from '@angular/core';
 
 import { TableRowComponent } from 'nrpti-angular-components';
 import { Subject } from 'rxjs';
@@ -13,7 +13,7 @@ import { Entity } from '../../../../../common/src/app/models/master/common-model
   templateUrl: './records-table-row.component.html',
   styleUrls: ['./records-table-row.component.scss']
 })
-export class RecordsTableRowComponent extends TableRowComponent implements OnInit, OnDestroy {
+export class RecordsTableRowComponent extends TableRowComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('detailsComponentContainer', { read: ViewContainerRef }) toggleView: ViewContainerRef;
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
@@ -54,6 +54,16 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
     this.populateTextFields();
   }
 
+  ngAfterViewInit() {
+    if (this.rowData.autofocus) {
+      this.insertDetailsComponent();
+      // Small delay on the scroll to let DOM load
+      setTimeout(() => {
+        document.getElementById(this.rowData._id).scrollIntoView();
+      }, 10);
+    }
+  }
+
   populateTextFields() {
     if (this.rowData && this.rowData.issuedTo) {
       this.entityString = new Entity(this.rowData.issuedTo).getEntityNameString();
@@ -62,7 +72,7 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
     }
   }
 
-  downloadDocument() { }
+  downloadDocument() {}
 
   rowClicked() {
     this.messageOut.emit({ label: 'rowClicked', data: this.rowData });
