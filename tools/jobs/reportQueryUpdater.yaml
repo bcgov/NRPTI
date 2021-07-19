@@ -1,0 +1,62 @@
+kind: CronJob
+apiVersion: batch/v1beta1
+metadata:
+  name: nrpti-cronjob
+  namespace: f00029-dev
+  creationTimestamp: '2021-07-16T20:08:47Z'
+spec:
+  schedule: 15 8 * * *
+  concurrencyPolicy: Forbid
+  suspend: false
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+          labels:
+            app: nrpti
+            role: cronjob
+        spec:
+          containers:
+            - name: nrpti-cronjob
+              image: >-
+                image-registry.openshift-image-registry.svc:5000/f00029-tools/mongodb:latest
+              command:
+                - bash
+                - '-c'
+                - >-
+                  echo -e "-------- STARTING CRON --------\n"
+
+                  echo -e "Running Metric Updater\n"
+
+                  export STARTTIME=`echo $(date --date="365 days ago" +"%Y-%m-%d")`
+                  export ENDTIME=`echo $(date '+%Y-%m-%d')`
+                  echo "db.nrpti.update({'_schemaName': 'Metric', 'code': 'IssuingAgencyPublished365'}, { \$set: { 'operation': \"[{\$project:{'_schemaName':'\$_schemaName','datePublished':'\$datePublished','issuingAgency':'\$issuingAgency','dateIssued~~~day':{\$let:{'vars':{'column':'\$dateIssued'},'in':{'___date':{'\$dateToString':{'format':'%Y-%m-%d','date':'\$\$column'}}}}}}},{\$match:{\$and:[{\$or:[{'_schemaName':{\$eq:'AdministrativePenaltyNRCED'}},{'_schemaName':{\$eq:'AdministrativeSanctionNRCED'}},{'_schemaName':{\$eq:'CourtConvictionNRCED'}},{'_schemaName':{\$eq:'InspectionNRCED'}},{'_schemaName':{\$eq:'OrderNRCED'}},{'_schemaName':{\$eq:'RestorativeJusticeNRCED'}},{'_schemaName':{\$eq:'TicketNRCED'}}]},{'datePublished':{\$ne:null}},{'issuingAgency':{\$ne:null}},{'dateIssued~~~day':{\$gte:{'___date':'STARTTIME'},\$lte:{'___date':'ENDTIME'}}}]}},{\$project:{'_id':'\$_id','___group':{'issuingAgency':'\$issuingAgency'}}},{\$group:{'_id':'\$___group','count':{\$sum:1}}},{\$sort:{'_id':1}},{\$project:{'_id':false,'issuingAgency':'$_id.issuingAgency','count':true}},{\$sort:{'count':-1,'issuingAgency':1}}]\" }})" | sed -e 's|STARTTIME|'$STARTTIME'|g' | sed -e 's|ENDTIME|'$ENDTIME'|g' > scriptRunner.js
+
+                  mongo --authenticationDatabase=admin --password $MONGODB_ADMIN_PASSWORD --username admin $MONGODB_SERVICE_HOST:27017/nrpti scriptRunner.js
+
+                  echo -e "-------- CRON COMPLETE --------\n"
+              env:
+                - name: MONGODB_DATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      name: nrpti-mongodb
+                      key: MONGODB_DATABASE
+                - name: MONGODB_ADMIN_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: nrpti-mongodb
+                      key: MONGODB_ADMIN_PASSWORD
+              resources: {}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              imagePullPolicy: Always
+          restartPolicy: Never
+          terminationGracePeriodSeconds: 30
+          dnsPolicy: ClusterFirst
+          securityContext: {}
+          schedulerName: default-scheduler
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
