@@ -11,7 +11,7 @@ class CmdbCsvDataSource {
    * @param {*} csvRows array of csv row objects to import
    * @memberof CmdbCsvDataSource
    */
-   constructor(taskAuditRecord, auth_payload, recordType, csvRows) {
+  constructor(taskAuditRecord, auth_payload, recordType, csvRows) {
     this.taskAuditRecord = taskAuditRecord;
     this.auth_payload = auth_payload;
     this.recordType = recordType;
@@ -27,7 +27,7 @@ class CmdbCsvDataSource {
    * @returns final status of importer
    * @memberof CmdbCsvDataSource
    */
-   async run() {
+  async run() {
     defaultLog.info('run - import agri-cmdb-csv');
 
     this.status.itemTotal = this.csvRows.length;
@@ -46,7 +46,7 @@ class CmdbCsvDataSource {
    *
    * @memberof CmdbCsvDataSource
    */
-   async batchProcessRecords() {
+  async batchProcessRecords() {
     try {
       const recordTypeConfig = this.getRecordTypeConfig();
 
@@ -79,6 +79,10 @@ class CmdbCsvDataSource {
           recordOutcomeDescriptions.push(outcomeDescription);
         }
 
+        if (regulationSection === '' || !regulationSection) {
+          outcomeDescription = 'No compliance issues identified.';
+        }
+
         // need to await here because some rows are duplicate records
         await this.processRecord(this.csvRows[i], recordTypeConfig, outcomeDescription);
 
@@ -91,14 +95,14 @@ class CmdbCsvDataSource {
     }
   }
 
-    /**
-   * Perform all steps necessary to process and save a single row of the csv file.
-   *
-   * @param {*} csvRow object of values for a single row
-   * @param {*} recordTypeConfig object containing record type specific details
-   * @memberof CmdbCsvDataSource
-   */
-   async processRecord(csvRow, recordTypeConfig, outcomeDescription = '') {
+  /**
+ * Perform all steps necessary to process and save a single row of the csv file.
+ *
+ * @param {*} csvRow object of values for a single row
+ * @param {*} recordTypeConfig object containing record type specific details
+ * @memberof CmdbCsvDataSource
+ */
+  async processRecord(csvRow, recordTypeConfig, outcomeDescription = '') {
     // set status defaults
     let recordStatus = {};
 
@@ -148,13 +152,13 @@ class CmdbCsvDataSource {
     }
   }
 
-    /**
-   * Supported Agri csv record type configs.
-   *
-   * @returns {*} object with getUtil method to create a new instance of the record type utils.
-   * @memberof CmdbCsvDataSource
-   */
-   getRecordTypeConfig() {
+  /**
+ * Supported Agri csv record type configs.
+ *
+ * @returns {*} object with getUtil method to create a new instance of the record type utils.
+ * @memberof CmdbCsvDataSource
+ */
+  getRecordTypeConfig() {
     if (this.recordType === 'Inspection') {
       return {
         getUtil: (auth_payload, csvRow) => {
