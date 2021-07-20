@@ -1,7 +1,7 @@
 'use strict';
 
 // list all collections that require this migration
-const collections = ['nrpti']
+const collections = ['nrpti', 'redacted_record_subset']
 
 /**
   * We receive the dbmigrate dependency from dbmigrate initially.

@@ -266,7 +266,7 @@ export class Picklists {
     'Report'
   ];
 
-  public static readonly collectionAgencyPicklist = ['EAO', 'EMLI', 'ENV'];
+  public static readonly collectionAgencyPicklist = ['Environmental Assessment Office', 'Ministry of Energy Mines and Low Carbon Innovation', 'Ministry of Environment and Climate Change Strategy'];
 
   /**
    * Contains a mapping of acts to regulations.
