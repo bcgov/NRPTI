@@ -58,6 +58,9 @@ objects:
                   role: backup
             - podSelector:
                 matchLabels:
+                  role: cronjob
+            - podSelector:
+                matchLabels:
                   role: metabase
           ports:
             - protocol: TCP
