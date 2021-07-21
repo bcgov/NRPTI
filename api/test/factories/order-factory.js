@@ -18,7 +18,7 @@ const agencyPicklist = [
   'Environmental Protection Division',
   'LNG Secretariat',
   'Ministry of Agriculture Food and Fisheries',
-  'EMPR',
+  'Ministry of Energy Mines and Low Carbon Innovation',
   'Ministry of Forests Lands Natural Resource Operations and Rural Development',
   'Natural Resource Officers'
 ];

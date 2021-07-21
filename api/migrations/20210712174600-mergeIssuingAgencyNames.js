@@ -77,6 +77,23 @@ exports.up = async function (db) {
         { $set: { issuingAgency: 'Ministry of Agriculture Food and Fisheries' } }
       );
 
+      // We have to change 'agency' fields for _schemaName = CollectionBCMI as well - 'agency' fields only exist within the CollectionBCMI schema.
+
+      await currentCollection.updateMany(
+        { agency: 'EMLI' },
+        { $set: { agency: 'Ministry of Energy Mines and Low Carbon Innovation' } }
+      );
+
+      await currentCollection.updateMany(
+        { agency: 'EAO' },
+        { $set: { agency: 'Environmental Assessment Office' } }
+      );
+
+      await currentCollection.updateMany(
+        { agency: 'ENV' },
+        { $set: { agency: 'Ministry of Environment and Climate Change Strategy' } }
+      );
+
       console.log(`Finished collection: ${collection}`);
 
     } catch (err) {

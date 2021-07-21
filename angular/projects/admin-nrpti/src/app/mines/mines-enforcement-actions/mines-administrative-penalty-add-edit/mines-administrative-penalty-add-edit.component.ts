@@ -17,7 +17,7 @@ import { takeUntil } from 'rxjs/operators';
 export class MinesAdministrativePenaltyAddEditComponent extends AdministrativePenaltyAddEditComponent
   implements OnInit {
   public componentTitle = 'BCMI Administrative Penalty Record';
-  public defaultAgency = 'EMLI';
+  public defaultAgency = 'Ministry of Energy Mines and Low Carbon Innovation';
   public defaultAuthor = 'BC Government';
 
   constructor(
