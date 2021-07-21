@@ -94,6 +94,10 @@ export class WarningDetailComponent implements OnInit, OnChanges, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
+  displayName(agency) {
+    return GlobalUtils.displayNameFull(agency);
+  }
+
   convertAcronyms(acronym) {
     return GlobalUtils.convertAcronyms(acronym);
   }

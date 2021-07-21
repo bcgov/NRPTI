@@ -1,3 +1,19 @@
+const ApplicationAgencies = {
+  AGENCY_ALC: 'Agricultural Land Commission',
+  AGENCY_WF: 'BC Wildfire Service',
+  AGENCY_ENV_COS: 'Conservation Officer Service',
+  AGENCY_EAO: 'Environmental Assessment Office',
+  AGENCY_EMLI: 'Ministry of Energy Mines and Low Carbon Innovation',
+  AGENCY_ENV: 'Ministry of Environment and Climate Change Strategy',
+  AGENCY_ENV_BCPARKS: 'BC Parks',
+  AGENCY_OGC: 'BC Oil and Gas Commission',
+  AGENCY_ENV_EPD: 'Environmental Protection Division',
+  AGENCY_LNG: 'LNG Secretariat',
+  AGENCY_AGRI: 'Ministry of Agriculture Food and Fisheries',
+  AGENCY_FLNRO: 'Ministry of Forests Lands Natural Resource Operations and Rural Development',
+  AGENCY_FLNR_NRO: 'Natural Resource Officers'
+};
+
 /**
  * General purpose utils.
  *
@@ -113,6 +129,35 @@ export class Utils {
       return 'Ministry of Energy, Mines, and Low Carbon Innovation';
     } else {
       return acronym;
+    }
+  }
+
+
+  static displayNameFull(agency): string {
+    switch (agency) {
+      case ApplicationAgencies.AGENCY_AGRI:
+        return 'Ministry of Agriculture, Food and Fisheries';
+      case ApplicationAgencies.AGENCY_EMLI:
+        return 'Ministry of Energy, Mines, and Low Carbon Innovation';
+      case ApplicationAgencies.AGENCY_FLNRO:
+        return 'Ministry of Forests, Lands, Natural Resource Operations and Rural Development';
+      default:
+        return agency;
+    }
+  }
+
+  static displayNameAcronym(agency): string {
+    switch (agency) {
+      case ApplicationAgencies.AGENCY_EAO:
+        return 'EAO';
+      case ApplicationAgencies.AGENCY_EMLI:
+        return 'EMLI';
+      case ApplicationAgencies.AGENCY_FLNRO:
+        return 'FLNRO';
+      case ApplicationAgencies.AGENCY_ENV:
+        return 'ENV';
+      default:
+        return agency;
     }
   }
 }

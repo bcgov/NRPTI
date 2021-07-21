@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
 import { CollectionBCMI } from '../../../../../common/src/app/models/bcmi';
+import { Utils } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-mines-records-detail',
@@ -69,6 +70,10 @@ export class MinesRecordDetailComponent implements OnInit, OnDestroy {
 
   navigateToEditPage() {
     this.router.navigate(['../edit'], {relativeTo: this.route});
+  }
+
+  displayName(agency) {
+    return Utils.displayNameAcronym(agency);
   }
 
   ngOnDestroy() {

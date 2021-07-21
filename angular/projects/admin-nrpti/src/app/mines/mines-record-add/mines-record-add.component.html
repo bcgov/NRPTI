@@ -10,7 +10,7 @@
           <label for="recordAgency">Agency <span class="red-asterisk">*</span></label>
           <select name="recordAgency" id="recordAgency" formControlName="recordAgency" class="form-control">
             <option *ngFor="let agency of recordAgencies" [ngValue]="agency">
-              {{ this.convertAcronyms(agency) }}
+              {{ this.displayName(agency) }}
             </option>
           </select>
         </div>

@@ -26,6 +26,10 @@ export class PlansTableRowsComponent extends TableRowComponent implements OnInit
     this.ngUnsubscribe.complete();
   }
 
+  displayName(agency) {
+    return GlobalUtils.displayNameFull(agency);
+  }
+
   convertAcronyms(acronym) {
     return GlobalUtils.convertAcronyms(acronym);
   }

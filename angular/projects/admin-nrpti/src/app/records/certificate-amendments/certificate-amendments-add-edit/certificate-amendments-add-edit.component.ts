@@ -471,6 +471,10 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
     return Utils.convertAcronyms(acronym);
   }
 
+  displayName(agency) {
+    return Utils.displayNameFull(agency);
+  }
+
   cancel() {
     const shouldCancel = confirm(
       'Leaving this page will discard unsaved changes. Are you sure you would like to continue?'

@@ -175,6 +175,10 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
     return Utils.convertAcronyms(acronym);
   }
 
+  displayName(agency) {
+    return Utils.displayNameFull(agency);
+  }
+
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();

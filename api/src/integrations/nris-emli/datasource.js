@@ -203,7 +203,7 @@ class NrisDataSource {
       defaultLog.debug(error);
       newRecord.dateIssued = null;
     }
-    newRecord.issuingAgency = 'EMLI';
+    newRecord.issuingAgency = 'Ministry of Energy Mines and Low Carbon Innovation';
     newRecord.author = 'EMLI';
     newRecord.legislation = { ...legislation };
     newRecord.dateAdded = new Date();

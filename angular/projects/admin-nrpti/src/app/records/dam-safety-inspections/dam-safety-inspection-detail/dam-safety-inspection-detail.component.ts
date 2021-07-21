@@ -7,6 +7,7 @@ import { RecordDetailComponent } from '../../utils/record-component';
 import { RecordUtils } from '../../utils/record-utils';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { FactoryService } from '../../../services/factory.service';
+import { Utils } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-dam-safety-inspection-detail',
@@ -60,6 +61,10 @@ export class DamSafetyInspectionDetailComponent extends RecordDetailComponent im
 
   navigateToEditPage() {
     this.router.navigate(['records', 'dam-safety-inspections', this.data._master._id, 'edit']);
+  }
+
+  displayName(agency) {
+    return Utils.displayNameFull(agency);
   }
 
   ngOnDestroy() {

@@ -156,7 +156,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       FilterType.MultiSelect,
       'Responsible Agency',
       new MultiSelectDefinition(Picklists.agencyPicklist.map(value => {
-        const displayValue = Utils.convertAcronyms(value);
+        const displayValue = Utils.displayNameFull(value);
         return { value: value, displayValue: displayValue, selected: false, display: true };
       }), 'Begin typing to filter agencies...', '')
     );

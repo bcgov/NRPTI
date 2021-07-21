@@ -13,14 +13,14 @@ const agencyPicklist = [
   'BC Parks',
   'BC Wildfire Service',
   'Climate Action Secretariat',
-  'Conservation Officer Service (COS)',
-  'EAO',
+  'Conservation Officer Service',
+  'Environmental Assessment Office',
   'Environmental Protection Division',
   'LNG Secretariat',
-  'Ministry of Agriculture',
-  'EMPR',
-  'Ministry of Forests, Lands, Natural Resource Operations and Rural Development',
-  'Natural Resource Officers (NRO)'
+  'Ministry of Agriculture Food and Fisheries',
+  'Ministry of Energy Mines and Low Carbon Innovation',
+  'Ministry of Forests Lands Natural Resource Operations and Rural Development',
+  'Natural Resource Officers'
 ];
 
 const authorPicklist = ['BC Government', 'Proponent', 'Other'];
