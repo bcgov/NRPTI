@@ -1,0 +1,1 @@
+All FME workspace files used to generate CSV files for automated imports are stored in the team's Confluence page: [FME Workspace files](https://apps.nrs.gov.bc.ca/int/confluence/display/DEVGUILD/NRPTI+-+FME+Workspace+Files)
