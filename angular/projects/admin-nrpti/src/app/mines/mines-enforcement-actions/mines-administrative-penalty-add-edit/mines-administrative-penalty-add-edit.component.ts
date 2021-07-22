@@ -6,7 +6,6 @@ import { FactoryService } from '../../../services/factory.service';
 import { LoadingScreenService, LoggerService } from 'nrpti-angular-components';
 import { Utils, StoreService } from 'nrpti-angular-components';
 import { ChangeDetectorRef } from '@angular/core';
-// import { FormControl, FormGroup } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -19,6 +18,7 @@ export class MinesAdministrativePenaltyAddEditComponent extends AdministrativePe
   public componentTitle = 'BCMI Administrative Penalty Record';
   public defaultAgency = 'Ministry of Energy Mines and Low Carbon Innovation';
   public defaultAuthor = 'BC Government';
+  public currentRecord = null;
 
   constructor(
     public route: ActivatedRoute,
@@ -67,11 +67,9 @@ export class MinesAdministrativePenaltyAddEditComponent extends AdministrativePe
           }
         };
       }
-      super.buildForm();
-      super.subscribeToFormControlChanges();
-      super.updateLegislationDescription();
-      this.loading = false;
-      this._changeDetectionRef.detectChanges();
+    super.buildForm();
+    this.loading = false;
+    this._changeDetectionRef.detectChanges();
     });
   }
 

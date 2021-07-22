@@ -16,8 +16,7 @@ export class PermitBCMI extends RecordModel {
   dateIssued: Date;
   issuingAgency: string;
   issuedTo: Entity;
-  legislation: Legislation;
-  legislationDescription: string;
+  legislation: Legislation[];
   documents: object[];
 
   description: string;
@@ -41,8 +40,8 @@ export class PermitBCMI extends RecordModel {
     this.recordSubtype = (obj && obj.recordSubtype) || '';
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || '';
-    this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
-    this.legislationDescription = (obj && obj.legislationDescription) || '';
+    this.legislation = (obj && obj.legislation && obj.legislation.length &&
+      obj.legislation.map(legislation => new Legislation(legislation))) || null;
     this.documents = (obj && obj.documents) || [];
 
     this.description = (obj && obj.description) || null;

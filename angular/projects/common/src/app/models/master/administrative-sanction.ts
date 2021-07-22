@@ -16,8 +16,7 @@ export class AdministrativeSanction extends RecordModel {
   dateIssued: Date;
   issuingAgency: string;
   author: string;
-  legislation: Legislation;
-  legislationDescription: string;
+  legislation: Legislation[];
   issuedTo: Entity;
   penalties: Penalty[];
   documents: object[];
@@ -35,8 +34,9 @@ export class AdministrativeSanction extends RecordModel {
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || null;
     this.author = (obj && obj.author) || null;
-    this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
-    this.legislationDescription = (obj && obj.legislationDescription) || '';
+    this.legislation = (obj && obj.legislation && obj.legislation.length &&
+      obj.legislation.map(legislation => new Legislation(legislation))) || null;
+
     this.issuedTo = (obj && obj.issuedTo && new Entity(obj.issuedTo)) || null;
     this.penalties =
       (obj && obj.penalties && obj.penalties.length && obj.penalties.map(penalty => new Penalty(penalty))) || null;

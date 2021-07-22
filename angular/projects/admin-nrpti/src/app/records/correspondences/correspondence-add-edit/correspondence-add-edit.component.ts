@@ -2,9 +2,8 @@ import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, FormArray} from '@angular/forms';
 import { Picklists, EpicProjectIds } from '../../../../../../common/src/app/utils/record-constants';
-import { Legislation } from '../../../../../../common/src/app/models/master/common-models/legislation';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
@@ -74,8 +73,6 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
 
       this.buildForm();
 
-      this.subscribeToFormControlChanges();
-
       this.loading = false;
       this._changeDetectionRef.detectChanges();
     });
@@ -111,31 +108,6 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  private subscribeToFormControlChanges() {
-    // listen to legislation control changes
-    const debouncedUpdateLegislationDescription = this.utils.debounced(500, () => this.updateLegislationDescription());
-    this.myForm
-      .get('legislation')
-      .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(() => {
-        debouncedUpdateLegislationDescription();
-      });
-  }
-
-  private updateLegislationDescription() {
-    const legislation = new Legislation({
-      act: this.myForm.get('legislation.act').value,
-      regulation: this.myForm.get('legislation.regulation').value,
-      section: this.myForm.get('legislation.section').value,
-      subSection: this.myForm.get('legislation.subSection').value,
-      paragraph: this.myForm.get('legislation.paragraph').value
-    });
-
-    this.myForm.get('legislationDescription').setValue(Picklists.
-      getLegislationDescription('Correspondence', legislation));
-    this.myForm.get('legislationDescription').markAsDirty();
-  }
-
   private buildForm() {
     this.myForm = new FormGroup({
       // Master
@@ -153,32 +125,6 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
       }),
       issuingAgency: new FormControl({
         value: (this.currentRecord && this.currentRecord.issuingAgency) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
-      }),
-      legislation: new FormGroup({
-        act: new FormControl({
-          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.act) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
-        }),
-        regulation: new FormControl({
-          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.regulation) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
-        }),
-        section: new FormControl({
-          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.section) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
-        }),
-        subSection: new FormControl({
-          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.subSection) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
-        }),
-        paragraph: new FormControl({
-          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
-        })
-      }),
-      legislationDescription: new FormControl({
-        value: (this.currentRecord && this.currentRecord.legislationDescription) || '',
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       issuedTo: new FormGroup({
@@ -236,6 +182,8 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
 
+      legislations: new FormArray(this.getLegislationsFormGroups()),
+
       // NRCED
       nrcedDescription: new FormControl(
         // default to using the master description if the flavour record does not exist
@@ -273,6 +221,81 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
         })
       })
     });
+  }
+  /**
+   * Builds an array of legislations FormGroups, each with its own set of FormControls.
+   *
+   * @returns {FormGroup[]} array of legislations FormGroup elements
+   * @memberof CorrespondenceAddEditComponent
+   */
+  getLegislationsFormGroups(): FormGroup[] {
+    if (!this.currentRecord || !this.currentRecord.legislation || !this.currentRecord.legislation.length) {
+      return [];
+    }
+
+    const legislations: FormGroup[] = [];
+
+    this.currentRecord.legislation.forEach(leg => {
+      legislations.push(
+        new FormGroup({
+          act: new FormControl({
+            value: leg.act || '',
+            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          }),
+          regulation: new FormControl({
+            value: leg.regulation || '',
+            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          }),
+          section: new FormControl({
+            value: leg.section || '',
+            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          }),
+          subSection: new FormControl({
+            value: leg.subSection || '',
+            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          }),
+          paragraph: new FormControl({
+            value: leg.paragraph || '',
+            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          }),
+          legislationDescription: new FormControl({
+            value: leg.legislationDescription || '',
+            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          })
+        })
+      );
+    });
+    return legislations;
+  }
+
+
+  /**
+   * Parses an array of legislations FormGroups into objects expected by the API.
+   *
+   * @returns {object[]} array of legislations objects
+   * @memberof CorrespondenceAddEditComponent
+   */
+  parseLegislationsFormGroups(): object[] {
+    const legislationsFormArray = this.myForm.get('legislations');
+
+    if (!legislationsFormArray || !legislationsFormArray.value || !legislationsFormArray.value.length) {
+      return [];
+    }
+
+    const legislations: object[] = [];
+
+    legislationsFormArray.value.forEach(legislationsFormGroup => {
+      legislations.push({
+        act: legislationsFormGroup.act,
+        regulation: legislationsFormGroup.regulation,
+        section: legislationsFormGroup.section,
+        subSection: legislationsFormGroup.subSection,
+        paragraph: legislationsFormGroup.paragraph,
+        legislationDescription: legislationsFormGroup.legislationDescription
+      });
+    });
+
+    return legislations;
   }
 
   navigateToDetails() {
@@ -312,25 +335,6 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
       (correspondence['issuingAgency'] = this.myForm.controls.issuingAgency.value);
 
     if (
-      this.myForm.get('legislation.act').dirty ||
-      this.myForm.get('legislation.regulation').dirty ||
-      this.myForm.get('legislation.section').dirty ||
-      this.myForm.get('legislation.subSection').dirty ||
-      this.myForm.get('legislation.paragraph').dirty
-    ) {
-      correspondence['legislation'] = {
-        act: this.myForm.get('legislation.act').value,
-        regulation: this.myForm.get('legislation.regulation').value,
-        section: this.myForm.get('legislation.section').value,
-        subSection: this.myForm.get('legislation.subSection').value,
-        paragraph: this.myForm.get('legislation.paragraph').value
-      };
-    }
-
-    this.myForm.controls.legislationDescription.dirty &&
-      (correspondence['legislationDescription'] = this.myForm.controls.legislationDescription.value);
-
-    if (
       this.myForm.get('issuedTo.type').dirty ||
       this.myForm.get('issuedTo.companyName').dirty ||
       this.myForm.get('issuedTo.firstName').dirty ||
@@ -365,6 +369,9 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.location.dirty && (correspondence['location'] = this.myForm.controls.location.value);
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (correspondence['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
+
+    // tslint:disable-next-line:max-line-length
+    this.myForm.get('legislations').dirty && (correspondence['legislation'] = this.parseLegislationsFormGroups());
 
     // nrced flavour
     if (this.myForm.controls.nrcedDescription.dirty || this.myForm.controls.publishNrced.dirty) {

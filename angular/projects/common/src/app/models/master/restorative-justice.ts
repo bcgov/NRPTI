@@ -16,9 +16,8 @@ export class RestorativeJustice extends RecordModel {
   dateIssued: Date;
   issuingAgency: string;
   author: string;
-  legislation: Legislation;
+  legislation: Legislation[];
   issuedTo: Entity;
-  offence: string;
   penalties: Penalty[];
   documents: object[];
 
@@ -35,9 +34,9 @@ export class RestorativeJustice extends RecordModel {
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || null;
     this.author = (obj && obj.author) || null;
-    this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
+    this.legislation = (obj && obj.legislation && obj.legislation.length &&
+      obj.legislation.map(legislation => new Legislation(legislation))) || null;
     this.issuedTo = (obj && obj.issuedTo && new Entity(obj.issuedTo)) || null;
-    this.offence = (obj && obj.offence) || null;
     this.penalties =
       (obj && obj.penalties && obj.penalties.length && obj.penalties.map(penalty => new Penalty(penalty))) || null;
     this.documents = (obj && obj.documents) || null;

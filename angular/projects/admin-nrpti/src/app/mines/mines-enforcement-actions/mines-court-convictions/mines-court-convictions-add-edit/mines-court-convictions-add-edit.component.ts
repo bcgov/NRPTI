@@ -19,6 +19,7 @@ export class MinesCourtConvictionsAddEditComponent extends CourtConvictionAddEdi
   public componentTitle = 'BCMI Administrative Penalty Record';
   public defaultAgency = 'Ministry of Energy Mines and Low Carbon Innovation';
   public defaultAuthor = 'BC Government';
+  public currentRecord = null;
 
   private selectedConvictionInfoType = '';
 
@@ -85,8 +86,6 @@ export class MinesCourtConvictionsAddEditComponent extends CourtConvictionAddEdi
   }
 
   protected subscribeToFormControlChanges() {
-    super.subscribeToFormControlChanges();
-
     this.myForm
       .get('convictionInfoType')
       .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
