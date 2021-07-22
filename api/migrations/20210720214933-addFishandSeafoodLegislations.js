@@ -34,8 +34,8 @@ exports.up = async function (db) {
       await currentCollection.updateMany(
         {
           $and: [
-            {'legislation.act': 'Fish and Seafood Act'},
-            {'legislation.section': '3'},
+            { 'legislation.act': 'Fish and Seafood Act' },
+            { 'legislation.section': '3' },
           ]
         },
         { $set: { offence: 'Fail to ensure fish or aquatic plants safe for, or not to be distributed for, human consumption' } }
@@ -44,8 +44,18 @@ exports.up = async function (db) {
       await currentCollection.updateMany(
         {
           $and: [
-            {'legislation.act': 'Fish and Seafood Act'},
-            {'legislation.section': '14'},
+            { 'legislation.act': 'Fish and Seafood Act' },
+            { 'legislation.section': '4' },
+          ]
+        },
+        { $set: { offence: 'Fail to be licensed' } }
+      );
+
+      await currentCollection.updateMany(
+        {
+          $and: [
+            { 'legislation.act': 'Fish and Seafood Act' },
+            { 'legislation.section': '14' },
           ]
         },
         { $set: { offence: 'Fail to comply with Act, regulations or licence' } }
@@ -54,9 +64,9 @@ exports.up = async function (db) {
       await currentCollection.updateMany(
         {
           $and: [
-            {'legislation.act': 'Fish and Seafood Act'},
-            {'legislation.section': '15'},
-            {'legislation.subSection': '2'},
+            { 'legislation.act': 'Fish and Seafood Act' },
+            { 'legislation.section': '15' },
+            { 'legislation.subSection': '2' },
           ]
         },
         { $set: { offence: 'Fail to conduct prescribed analyses or monitoring' } }
@@ -65,8 +75,8 @@ exports.up = async function (db) {
       await currentCollection.updateMany(
         {
           $and: [
-            {'legislation.act': 'Fish and Seafood Act'},
-            {'legislation.section': '16'},
+            { 'legislation.act': 'Fish and Seafood Act' },
+            { 'legislation.section': '16' },
           ]
         },
         { $set: { offence: 'Fail to meet requirements respecting facilities, vehicles or equipment' } }
@@ -77,9 +87,9 @@ exports.up = async function (db) {
       await currentCollection.updateMany(
         {
           $and: [
-            {'legislation.act': 'Fish and Seafood Act'},
-            {'legislation.section': '17'},
-            {'legislation.subSection': '1'},
+            { 'legislation.act': 'Fish and Seafood Act' },
+            { 'legislation.section': '17' },
+            { 'legislation.subSection': '1' },
           ]
         },
         { $set: { offence: 'Fail to keep or produce records' } }
@@ -88,9 +98,9 @@ exports.up = async function (db) {
       await currentCollection.updateMany(
         {
           $and: [
-            {'legislation.act': 'Fish and Seafood Act'},
-            {'legislation.section': '17'},
-            {'legislation.subSection': '2'},
+            { 'legislation.act': 'Fish and Seafood Act' },
+            { 'legislation.section': '17' },
+            { 'legislation.subSection': '2' },
           ]
         },
         { $set: { offence: 'Fail to make reports' } }
@@ -99,8 +109,24 @@ exports.up = async function (db) {
       await currentCollection.updateMany(
         {
           $and: [
-            {'legislation.act': 'Fish and Seafood Act'},
-            {'legislation.section': '19'},
+            { 'legislation.act': 'Fish and Seafood Act' },
+            { 'legislation.section': '19' },
+          ]
+        },
+        { $set: { offence: 'Fail to meet traceability requirements' } }
+      );
+
+      // There are no entries in either table under Fish and Seafood Act section 21, though there are entries in the database
+
+      // No records exist under Fish and Seafood Act Section 54(2)(a) but we will check just in case
+
+      await currentCollection.updateMany(
+        {
+          $and: [
+            { 'legislation.act': 'Fish and Seafood Act' },
+            { 'legislation.section': '54' },
+            { 'legislation.subSection': '2' },
+            { 'legislation.paragraph': 'a' },
           ]
         },
         { $set: { offence: 'Fail to meet traceability requirements' } }
@@ -111,27 +137,136 @@ exports.up = async function (db) {
       await currentCollection.updateMany(
         {
           $and: [
-            {'legislation.act': 'Fish and Seafood Act'},
-            {'legislation.section': '54'},
-            {'legislation.subSection': '2'},
-            {'legislation.paragraph': 'a'},
-          ]
-        },
-        { $set: { offence: 'Fail to meet traceability requirements' } }
-      );
-
-      // No records exist under Fish and Seafood Act Section 54(2)(a) but we will check just in case
-
-      await currentCollection.updateMany(
-        {
-          $and: [
-            {'legislation.regulation': 'Fish and Seafood Licensing Regulation'},
-            {'legislation.section': '53'},
-            {'legislation.subSection': '1'},
-            {'legislation.paragraph': 'b'},
+            { 'legislation.regulation': 'Fish and Seafood Licensing Regulation' },
+            { 'legislation.section': '53' },
+            { 'legislation.subSection': '1' },
+            { 'legislation.paragraph': 'b' },
           ]
         },
         { $set: { offence: 'Receive bivalves in improperly tagged containers' } }
+      );
+
+      await currentCollection.updateMany(
+        {
+          $and: [
+            { 'legislation.regulation': 'Fish and Seafood Licensing Regulation' },
+            { 'legislation.section': '16' },
+          ]
+        },
+        {
+          $set: {
+            offence: 'Operate as fish vendor without licence',
+            'legislation.subSection': '1',
+            'legislation.paragraph': 'a'
+          },
+        }
+      );
+
+      await currentCollection.updateMany(
+        {
+          $and: [
+            { 'legislation.regulation': 'Fish and Seafood Licensing Regulation' },
+            { 'legislation.section': '21' },
+          ]
+        },
+        {
+          $set: {
+            offence: 'Operate as fish receiver without licence',
+            'legislation.subSection': '1',
+            'legislation.paragraph': 'a'
+          },
+        }
+      );
+
+      await currentCollection.updateMany(
+        {
+          $and: [
+            { 'legislation.regulation': 'Fish and Seafood Licensing Regulation' },
+            { 'legislation.section': '25' },
+          ]
+        },
+        {
+          $set: {
+            offence: 'Fail to keep records',
+            'legislation.subSection': '1',
+          },
+        }
+      );
+
+      await currentCollection.updateMany(
+        {
+          $and: [
+            { 'legislation.regulation': 'Fish and Seafood Licensing Regulation' },
+            { 'legislation.section': '27' },
+          ]
+        },
+        {
+          $set: {
+            offence: 'Operate as seafood processor without licence',
+            'legislation.subSection': '',
+            'legislation.paragraph': 'a',
+          },
+        }
+      );
+
+      await currentCollection.updateMany(
+        {
+          $and: [
+            { 'legislation.regulation': 'Fish and Seafood Licensing Regulation' },
+            { 'legislation.section': '54' },
+            { 'legislation.subSection': '2' },
+          ]
+        },
+        {
+          $set: {
+            offence: 'Fail to properly label sport caught fish container',
+          },
+        }
+      );
+
+      await currentCollection.updateMany(
+        {
+          $and: [
+            { 'legislation.regulation': 'Fish and Seafood Licensing Regulation' },
+            { 'legislation.section': '56' },
+            { 'legislation.subSection': '2' },
+          ]
+        },
+        {
+          $set: {
+            offence: 'Fail to keep complete records',
+          },
+        }
+      );
+
+      await currentCollection.updateMany(
+        {
+          $and: [
+            { 'legislation.regulation': 'Fish and Seafood Licensing Regulation' },
+            { 'legislation.section': '59' },
+            { 'legislation.subSection': '1' },
+          ]
+        },
+        {
+          $set: {
+            offence: 'Fail to meet temperature requirements',
+          },
+        }
+      );
+
+      await currentCollection.updateMany(
+        {
+          $and: [
+            { 'legislation.regulation': 'Fish and Seafood Licensing Regulation' },
+            { 'legislation.section': '66' },
+          ]
+        },
+        {
+          $set: {
+            offence: 'Fail to submit report',
+            'legislation.subSection': '1',
+          },
+        }
       );
 
     } catch (err) {
