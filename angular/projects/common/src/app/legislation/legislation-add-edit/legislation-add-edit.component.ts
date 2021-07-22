@@ -1,6 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Picklists } from '../utils/record-constants';
+import { Picklists } from '../../utils/record-constants';
+import { Legislation } from '../../models/master/common-models/legislation';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { Utils } from 'nrpti-angular-components';
 
 @Component({
@@ -10,11 +13,14 @@ import { Utils } from 'nrpti-angular-components';
 })
 export class LegislationAddEditComponent implements OnInit {
   @Input() formGroup: FormGroup;
+  @Input() hasOffence: boolean;
 
   @Input() hideSection = false;
   @Input() hideSubSection = false;
   @Input() hideParagraph = false;
   @Input() renderColumns = false;
+
+  protected ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   // cache acts
   public readonly actsMappedToRegulations: { [key: string]: string[] } = Picklists.legislationActsMappedToRegulations;
@@ -32,7 +38,12 @@ export class LegislationAddEditComponent implements OnInit {
   public debouncedFilterActsPicklist = this.utils.debounced(200, args => this.filterActsPicklist(args));
   public debouncedFilterRegulationsPicklist = this.utils.debounced(200, args => this.filterRegulationsPicklist(args));
 
-  constructor(public utils: Utils) {}
+
+
+  constructor(
+    public utils: Utils,
+    protected _changeDetectionRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     if (this.formGroup.controls.act.value && this.formGroup.controls.regulation.value) {
@@ -59,6 +70,41 @@ export class LegislationAddEditComponent implements OnInit {
     // no existing act or regulation, default to all acts and regulations
     this.filteredActs = this.allActs;
     this.filteredRegulations = this.allRegulations;
+
+    this.subscribeToFormControlChanges();
+    this._changeDetectionRef.detectChanges();
+  }
+
+  protected subscribeToFormControlChanges() {
+    // listen to legislation control changes
+    const debouncedUpdateLegislationDescription = this.utils.debounced(500, () => this.updateLegislationDescription());
+    this.formGroup
+      .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(() => {
+        debouncedUpdateLegislationDescription();
+      });
+  }
+
+  private updateLegislationDescription() {
+    const legislation = new Legislation({
+      act: this.formGroup.get('act').value,
+      regulation: this.formGroup.get('regulation').value,
+      section: this.formGroup.get('section').value,
+      subSection: this.formGroup.get('subSection').value,
+      paragraph: this.formGroup.get('paragraph').value
+    });
+
+    if ( this.hasOffence ) {
+      this.formGroup.get('offence').setValue(
+        Picklists.getLegislationDescription('AdministrativePenalty', legislation)
+      );
+      this.formGroup.get('offence').markAsDirty();
+    } else {
+      this.formGroup.get('legislationDescription').setValue(
+        Picklists.getLegislationDescription('AdministrativePenalty', legislation)
+      );
+      this.formGroup.get('legislationDescription').markAsDirty();
+    }
   }
 
   /**

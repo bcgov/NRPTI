@@ -26,6 +26,10 @@ export class ComplianceTableRowsComponent extends TableRowComponent implements O
     this.ngUnsubscribe.complete();
   }
 
+  displayName(agency) {
+    return GlobalUtils.displayNameFull(agency);
+  }
+
   convertAcronyms(acronym) {
     return GlobalUtils.convertAcronyms(acronym);
   }

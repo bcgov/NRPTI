@@ -7,6 +7,7 @@ import { RecordDetailComponent } from '../../utils/record-component';
 import { RecordUtils } from '../../utils/record-utils';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { FactoryService } from '../../../services/factory.service';
+import { Utils } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-warning-detail',
@@ -60,6 +61,10 @@ export class WarningDetailComponent extends RecordDetailComponent implements OnI
 
   navigateToEditPage() {
     this.router.navigate(['records', 'warnings', this.data._master._id, 'edit']);
+  }
+
+  displayName(agency) {
+    return Utils.displayNameFull(agency);
   }
 
   ngOnDestroy() {

@@ -257,8 +257,8 @@ class NrisDataSource {
           );
       }
 
-      const clientId = record.client[0].clientId;
-      if (clientId === 73892147 || clientId === 84725321) {
+      const clientNumber = record.client[0].clientNumber;
+      if (clientNumber === '73892147' || clientNumber === '84725321' || clientNumber === 'PA6006') {
         newRecord._epicProjectId = new mongoose.Types.ObjectId(utils.EpicProjectIds.lngCanadaId);
       }
     }

@@ -57,7 +57,7 @@
           <label for="issuingAgency">Issuing Agency</label>
           <select name="issuingAgency" id="issuingAgency" formControlName="issuingAgency" class="form-control">
             <option *ngFor="let agency of agencies" [ngValue]="agency">
-              {{ this.convertAcronyms(agency) }}
+              {{ this.displayName(agency) }}
             </option>
           </select>
         </div>
@@ -76,22 +76,14 @@
 
     <section>
       <h4>Contravention</h4>
-      <app-legislation-add-edit [formGroup]="this.myForm.get('legislation')"></app-legislation-add-edit>
-      <div class="flex-container">
-        <div class="label-pair">
-          <label for="offence">Offence</label>
-          <input readonly name="offence" id="offence" formControlName="offence" class="form-control" />
-          <span
-            *ngIf="this.myForm.get('legislation.act').value && !this.myForm.get('offence').value"
-            class="grey-subtext">
-            No description available for the selected combination of act, regulation, section, subsection and paragraph.
-            Please double-check that you have filled out those fields correctly; if they are correct, please contact the
-            system administrator at
-            <a href="mailto:nrced@gov.bc.ca">nrced@gov.bc.ca</a>
-            to request a new description be added to the system.
-          </span>
-        </div>
-      </div>
+      <app-legislation-list-add-edit
+        [formArray]="this.myForm.controls.legislations"
+        [sourceSystemRef]="this.currentRecord && this.currentRecord.sourceSystemRef"
+        [hasOffence]="true"
+      ></app-legislation-list-add-edit>
+    </section>
+
+    <section>
       <h4>Penalties</h4>
       <app-penalty-add-edit [formArray]="this.myForm.controls.penalties"></app-penalty-add-edit>
     </section>

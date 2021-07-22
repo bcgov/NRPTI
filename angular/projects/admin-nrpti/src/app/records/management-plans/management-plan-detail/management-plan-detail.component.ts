@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecordComponent } from '../../utils/record-component';
 import { RecordUtils } from '../../utils/record-utils';
+import { Utils } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-management-plan-detail',
@@ -42,6 +43,10 @@ export class ManagementPlanDetailComponent extends RecordComponent implements On
 
   navigateToEditPage() {
     this.router.navigate(['records', 'management-plans', this.data._master._id, 'edit']);
+  }
+
+  displayName(agency) {
+    return Utils.displayNameFull(agency);
   }
 
   ngOnDestroy() {

@@ -7,6 +7,7 @@ import { RecordDetailComponent } from '../../utils/record-component';
 import { RecordUtils } from '../../utils/record-utils';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { FactoryService } from '../../../services/factory.service';
+import { Utils } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-court-conviction-detail',
@@ -60,6 +61,10 @@ export class CourtConvictionDetailComponent extends RecordDetailComponent implem
 
   navigateToEditPage() {
     this.router.navigate(['records', 'court-convictions', this.data._master._id, 'edit']);
+  }
+
+  displayName(agency) {
+    return Utils.displayNameFull(agency);
   }
 
   ngOnDestroy() {

@@ -9,7 +9,7 @@
 <td scope="row" data-label="Name" class="col-2">
   {{ getAttributeValue('recordName') }}
 </td>
-<td scope="row" data-label="Agency" class="col-2 truncate">{{ getAttributeValue('issuingAgency') }}</td>
+<td scope="row" data-label="Agency" class="col-2 truncate">{{ this.displayName(getAttributeValue('issuingAgency')) }}</td>
 <td scope="row" data-label="Source" class="col-1 truncate">{{ getAttributeValue('sourceSystemRef') }}</td>
 <td scope="row" data-label="Type" class="col-1 truncate">{{ getAttributeValue('recordType') }}</td>
 <td scope="row" data-label="Collections" class="col-2 truncate">

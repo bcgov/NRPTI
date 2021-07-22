@@ -89,6 +89,10 @@ export class AdministrativePenaltyDetailComponent implements OnInit, OnChanges, 
     return this.activeTab === tabLabel;
   }
 
+  displayName(agency) {
+    return GlobalUtils.displayNameFull(agency);
+  }
+
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();

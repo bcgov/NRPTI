@@ -42,35 +42,20 @@
           </div>
           <div class="grid-item__row">
             <label class="grid-item-name">Issuing Agency</label>
-            <span class="grid-item-value__col">{{ data && data.issuingAgency ? convertAcronyms(data.issuingAgency) : '-' }}</span>
-          </div>
-          <div class="grid-item__row">
-            <label class="grid-item-name">Legislation</label>
-            <div class="grid-item-value__flex__row">
-              <div class="grid-item__flex">
-                <label class="grid-item-name">Act</label>
-                <span class="grid-item-value ml-1">
-                  {{ (data && data.legislation && data.legislation.act) || '-' }}
-                </span>
-              </div>
-              <div class="grid-item__flex">
-                <label class="grid-item-name">Regulation</label>
-                <span class="grid-item-value ml-1">
-                  {{ (data && data.legislation && data.legislation.regulation) || '-' }}
-                </span>
-              </div>
-              <div class="grid-item__row">
-                <label class="grid-item-name">Section (Sub-Section) (Paragraph)</label>
-                <span class="grid-item-value">
-                  {{ (data && data.legislation && data.legislation.section) || '-' }}
-                  ({{ (data && data.legislation && data.legislation.subSection) || '-' }}) ({{
-                    (data && data.legislation && data.legislation.paragraph) || '-'
-                  }})
-                </span>
-              </div>
-            </div>
+            <span class="grid-item-value__col">{{ data && data.issuingAgency ? displayName(data.issuingAgency) : '-' }}</span>
           </div>
         </div>
+
+        <div class="grid-section section-3">
+          <app-legislation-list-detail-public
+            [data]="data && data.legislation"
+            firstSectionLabel="Authorizing Legislation"
+            subsequentSectionLabels="Contravention"
+            firstDescriptionLabel="Description"
+            subsequentDescriptionLabel="Offence"
+          ></app-legislation-list-detail-public>
+        </div>
+
         <div class="grid-section section-3">
           <app-penalty-detail-public [data]="data && data.penalties"></app-penalty-detail-public>
         </div>

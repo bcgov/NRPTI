@@ -40,20 +40,26 @@
         <div class="grid-section section-2">
           <div class="grid-item__row">
             <label class="grid-item-name">Issuing Agency</label>
-            <span class="grid-item-value">{{ (data && data._master.issuingAgency) || '-' }}</span>
-          </div>
-          <div class="grid-item__row">
-            <label class="grid-item-name">Legislation</label>
-            <span class="grid-item-value">{{ legislationString || '-' }}</span>
-          </div>
-          <div class="grid-item__row">
-            <label class="grid-item-name">Offence</label>
-            <span class="grid-item-value">{{ (data && data._master.offence) || '-' }}</span>
+            <span class="grid-item-value">{{ (data && this.displayName(data._master.issuingAgency)) || '-' }}</span>
           </div>
           <div class="grid-item__row">
             <label class="grid-item-name">Source System</label>
             <span class="grid-item-value">{{ (data && data._master && data._master.sourceSystemRef) || '-' }}</span>
           </div>
+        </div>
+        <div class="grid-section-border"></div>
+        <div class="grid-section-sub-header">
+          <span class="grid-section-sub-header-text">Legislation</span>
+        </div>
+        <div class="grid-section section-3">
+          <app-legislation-list-detail-admin
+            class="grid-section"
+            [data]="data && data._master.legislation"
+            firstSectionLabel="Authorizing Legislation"
+            subsequentSectionLabels="Contravention"
+            firstDescriptionLabel="Description"
+            subsequentDescriptionLabel="Offence"
+          ></app-legislation-list-detail-admin>
         </div>
         <div class="grid-section-border"></div>
         <div class="grid-section-sub-header">

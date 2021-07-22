@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material';
-import { TestBedHelper } from '../spec/spec-utils';
+import { TestBedHelper } from '../../spec/spec-utils';
 import { LegislationAddEditComponent } from './legislation-add-edit.component';
 import { Utils } from 'nrpti-angular-components';
 
@@ -24,8 +24,9 @@ describe('LegislationAddEditComponent', () => {
     const section = new FormControl();
     const subSection = new FormControl();
     const paragraph = new FormControl();
+    const legislationDescription = new FormControl();
 
-    component.formGroup = new FormGroup({ act, regulation, section, subSection, paragraph });
+    component.formGroup = new FormGroup({ act, regulation, section, subSection, paragraph, legislationDescription });
 
     fixture.detectChanges();
 
