@@ -135,23 +135,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.issuingAgency && (courtConviction.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (courtConviction.author = incomingObj.author);
 
-  incomingObj.legislation &&
-    incomingObj.legislation.act &&
-    (courtConviction.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (courtConviction.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (courtConviction.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (courtConviction.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (courtConviction.legislation.paragraph = incomingObj.legislation.paragraph);
-
-  incomingObj.offence && (courtConviction.offence = incomingObj.offence);
+  courtConviction.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   courtConviction.issuedTo.read = utils.ApplicationAdminRoles;
   courtConviction.issuedTo.write = utils.ApplicationAdminRoles;
@@ -281,23 +265,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   incomingObj.issuingAgency && (courtConvictionLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (courtConvictionLNG.author = incomingObj.author);
 
-  incomingObj.legislation &&
-    incomingObj.legislation.act &&
-    (courtConvictionLNG.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (courtConvictionLNG.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (courtConvictionLNG.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (courtConvictionLNG.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (courtConvictionLNG.legislation.paragraph = incomingObj.legislation.paragraph);
-
-  incomingObj.offence && (courtConvictionLNG.offence = incomingObj.offence);
+  courtConvictionLNG.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   courtConvictionLNG.issuedTo.read = utils.ApplicationAdminRoles;
   courtConvictionLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
@@ -431,23 +399,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   incomingObj.issuingAgency && (courtConvictionNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (courtConvictionNRCED.author = incomingObj.author);
 
-  incomingObj.legislation &&
-    incomingObj.legislation.act &&
-    (courtConvictionNRCED.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (courtConvictionNRCED.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (courtConvictionNRCED.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (courtConvictionNRCED.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (courtConvictionNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
-
-  incomingObj.offence && (courtConvictionNRCED.offence = incomingObj.offence);
+  courtConvictionNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   courtConvictionNRCED.issuedTo.read = utils.ApplicationAdminRoles;
   courtConvictionNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];

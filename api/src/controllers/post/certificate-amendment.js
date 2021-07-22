@@ -121,20 +121,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (certificateAmendment.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.dateIssued && (certificateAmendment.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (certificateAmendment.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation && incomingObj.legislation.act && (certificateAmendment.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (certificateAmendment.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (certificateAmendment.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (certificateAmendment.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (certificateAmendment.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (certificateAmendment.legislationDescription = incomingObj.legislationDescription);
+
+  certificateAmendment.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (certificateAmendment.projectName = incomingObj.projectName);
   incomingObj.location && (certificateAmendment.location = incomingObj.location);
   incomingObj.centroid && (certificateAmendment.centroid = incomingObj.centroid);
@@ -239,20 +228,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (certificateAmendmentLNG.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.dateIssued && (certificateAmendmentLNG.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (certificateAmendmentLNG.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation && incomingObj.legislation.act && (certificateAmendmentLNG.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (certificateAmendmentLNG.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (certificateAmendmentLNG.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (certificateAmendmentLNG.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (certificateAmendmentLNG.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (certificateAmendmentLNG.legislationDescription = incomingObj.legislationDescription);
+
+  certificateAmendmentLNG.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (certificateAmendmentLNG.projectName = incomingObj.projectName);
   incomingObj.location && (certificateAmendmentLNG.location = incomingObj.location);
   incomingObj.centroid && (certificateAmendmentLNG.centroid = incomingObj.centroid);
@@ -362,20 +340,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
     (certificateAmendmentBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.dateIssued && (certificateAmendmentBCMI.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (certificateAmendmentBCMI.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation && incomingObj.legislation.act && (certificateAmendmentBCMI.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (certificateAmendmentBCMI.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (certificateAmendmentBCMI.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (certificateAmendmentBCMI.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (certificateAmendmentBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (certificateAmendmentBCMI.legislationDescription = incomingObj.legislationDescription);
+
+  certificateAmendmentBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (certificateAmendmentBCMI.projectName = incomingObj.projectName);
   incomingObj.location && (certificateAmendmentBCMI.location = incomingObj.location);
   incomingObj.centroid && (certificateAmendmentBCMI.centroid = incomingObj.centroid);

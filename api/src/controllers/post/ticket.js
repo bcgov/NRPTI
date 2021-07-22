@@ -126,21 +126,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.issuingAgency && (ticket.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (ticket.author = incomingObj.author);
 
-  incomingObj.legislation && incomingObj.legislation.act && (ticket.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (ticket.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (ticket.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (ticket.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (ticket.legislation.paragraph = incomingObj.legislation.paragraph);
-
-  incomingObj.offence && (ticket.offence = incomingObj.offence);
+  ticket.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   ticket.issuedTo.read = utils.ApplicationAdminRoles;
   ticket.issuedTo.write = utils.ApplicationAdminRoles;
@@ -257,21 +243,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   incomingObj.issuingAgency && (ticketLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (ticketLNG.author = incomingObj.author);
 
-  incomingObj.legislation && incomingObj.legislation.act && (ticketLNG.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (ticketLNG.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (ticketLNG.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (ticketLNG.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (ticketLNG.legislation.paragraph = incomingObj.legislation.paragraph);
-
-  incomingObj.offence && (ticketLNG.offence = incomingObj.offence);
+  ticketLNG.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   ticketLNG.issuedTo.read = utils.ApplicationAdminRoles;
   ticketLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
@@ -400,21 +372,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   incomingObj.issuingAgency && (ticketNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (ticketNRCED.author = incomingObj.author);
 
-  incomingObj.legislation && incomingObj.legislation.act && (ticketNRCED.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (ticketNRCED.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (ticketNRCED.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (ticketNRCED.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (ticketNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
-
-  incomingObj.offence && (ticketNRCED.offence = incomingObj.offence);
+  ticketNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   ticketNRCED.issuedTo.read = utils.ApplicationAdminRoles;
   ticketNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];

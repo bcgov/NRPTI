@@ -127,20 +127,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (report.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.dateIssued && (report.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (report.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation && incomingObj.legislation.act && (report.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (report.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (report.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (report.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (report.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (report.legislationDescription = incomingObj.legislationDescription);
+
+  report.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (report.projectName = incomingObj.projectName);
   incomingObj.location && (report.location = incomingObj.location);
   incomingObj.centroid && (report.centroid = incomingObj.centroid);
@@ -249,20 +238,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
     (reportBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.dateIssued && (reportBCMI.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (reportBCMI.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation && incomingObj.legislation.act && (reportBCMI.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (reportBCMI.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (reportBCMI.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (reportBCMI.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (reportBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (reportBCMI.legislationDescription = incomingObj.legislationDescription);
+
+  reportBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (reportBCMI.projectName = incomingObj.projectName);
   incomingObj.location && (reportBCMI.location = incomingObj.location);
   incomingObj.centroid && (reportBCMI.centroid = incomingObj.centroid);
@@ -364,20 +342,9 @@ exports.createNRCED = function (args, res, next, incomingObj) {
     (reportNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
   incomingObj.dateIssued && (reportNRCED.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (reportNRCED.issuingAgency = incomingObj.issuingAgency);
-  incomingObj.legislation && incomingObj.legislation.act && (reportNRCED.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (reportNRCED.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (reportNRCED.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (reportNRCED.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (reportNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (reportNRCED.legislationDescription = incomingObj.legislationDescription);
+
+  reportNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation);
+
   incomingObj.projectName && (reportNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (reportNRCED.location = incomingObj.location);
   incomingObj.centroid && (reportNRCED.centroid = incomingObj.centroid);
