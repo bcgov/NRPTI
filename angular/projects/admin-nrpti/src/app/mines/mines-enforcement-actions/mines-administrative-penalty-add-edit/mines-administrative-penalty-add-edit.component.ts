@@ -70,9 +70,6 @@ export class MinesAdministrativePenaltyAddEditComponent extends AdministrativePe
     this.loading = false;
     this._changeDetectionRef.detectChanges();
     });
-
-    const someVar = this.myForm.get('legislations');
-    console.log(someVar);
   }
 
   navigateToDetails() {

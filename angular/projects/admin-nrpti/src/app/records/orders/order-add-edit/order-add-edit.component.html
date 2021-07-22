@@ -76,7 +76,11 @@
 
     <section>
       <h4>Legislation</h4>
-      <app-legislation-list-add-edit [formArray]="this.myForm.controls.legislations" [hasOffence]="false"></app-legislation-list-add-edit>
+      <app-legislation-list-add-edit
+        [formArray]="this.myForm.controls.legislations"
+        [sourceSystemRef]="this.currentRecord.sourceSystemRef"
+        [hasOffence]="false"
+      ></app-legislation-list-add-edit>
     </section>
 
     <section>

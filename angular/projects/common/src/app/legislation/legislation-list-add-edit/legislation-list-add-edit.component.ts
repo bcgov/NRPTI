@@ -8,6 +8,7 @@ import { FormArray, FormGroup, FormControl } from '@angular/forms';
 })
 export class LegislationListAddEditComponent implements OnInit {
   @Input() formArray: FormArray;
+  @Input() sourceSystemRef: string;
   @Input() hasOffence: boolean;
 
   ngOnInit(): void {}

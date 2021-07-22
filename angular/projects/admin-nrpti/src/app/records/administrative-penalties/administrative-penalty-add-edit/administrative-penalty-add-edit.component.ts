@@ -314,10 +314,10 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
 
 
   /**
-   * Parses an array of penalties FormGroups into objects expected by the API.
+   * Parses an array of legislations FormGroups into objects expected by the API.
    *
-   * @returns {object[]} array of penalties objects
-   * @memberof CourtConvictionAddEditComponent
+   * @returns {object[]} array of legislations objects
+   * @memberof AdministrativePenaltyAddEditComponent
    */
   parseLegislationsFormGroups(): object[] {
     const legislationsFormArray = this.myForm.get('legislations');

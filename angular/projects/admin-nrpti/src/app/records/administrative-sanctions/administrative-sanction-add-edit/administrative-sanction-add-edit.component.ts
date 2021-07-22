@@ -227,7 +227,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
    * Builds an array of legislations FormGroups, each with its own set of FormControls.
    *
    * @returns {FormGroup[]} array of legislations FormGroup elements
-   * @memberof AdministrativePenaltyAddEditComponent
+   * @memberof AdministrativeSanctionAddEditComponent
    */
   getLegislationsFormGroups(): FormGroup[] {
     if (!this.currentRecord || !this.currentRecord.legislation || !this.currentRecord.legislation.length) {
@@ -270,10 +270,10 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
   }
 
   /**
-   * Parses an array of penalties FormGroups into objects expected by the API.
+   * Parses an array of legislations FormGroups into objects expected by the API.
    *
-   * @returns {object[]} array of penalties objects
-   * @memberof CourtConvictionAddEditComponent
+   * @returns {object[]} array of legislations objects
+   * @memberof AdministrativeSanctionAddEditComponent
    */
    parseLegislationsFormGroups(): object[] {
     const legislationsFormArray = this.myForm.get('legislations');

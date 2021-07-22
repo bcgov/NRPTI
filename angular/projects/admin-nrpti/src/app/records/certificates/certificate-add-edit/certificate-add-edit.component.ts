@@ -4,7 +4,6 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { Picklists, EpicProjectIds } from '../../../../../../common/src/app/utils/record-constants';
-// import { Legislation } from '../../../../../../common/src/app/models/master/common-models/legislation';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
@@ -169,7 +168,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
    * Builds an array of legislations FormGroups, each with its own set of FormControls.
    *
    * @returns {FormGroup[]} array of legislations FormGroup elements
-   * @memberof AdministrativePenaltyAddEditComponent
+   * @memberof CertificateAddEditComponent
    */
   getLegislationsFormGroups(): FormGroup[] {
     if (!this.currentRecord || !this.currentRecord.legislation || !this.currentRecord.legislation.length) {
@@ -212,10 +211,10 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Parses an array of penalties FormGroups into objects expected by the API.
+   * Parses an array of legislations FormGroups into objects expected by the API.
    *
-   * @returns {object[]} array of penalties objects
-   * @memberof CourtConvictionAddEditComponent
+   * @returns {object[]} array of legislations objects
+   * @memberof CertificateAddEditComponent
    */
   parseLegislationsFormGroups(): object[] {
     const legislationsFormArray = this.myForm.get('legislations');
