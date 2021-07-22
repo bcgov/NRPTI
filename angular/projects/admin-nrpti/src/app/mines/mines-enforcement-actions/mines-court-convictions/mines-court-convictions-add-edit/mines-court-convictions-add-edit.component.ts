@@ -19,6 +19,7 @@ export class MinesCourtConvictionsAddEditComponent extends CourtConvictionAddEdi
   public componentTitle = 'BCMI Administrative Penalty Record';
   public defaultAgency = 'Ministry of Energy Mines and Low Carbon Innovation';
   public defaultAuthor = 'BC Government';
+  public currentRecord = null;
 
   private selectedConvictionInfoType = '';
 

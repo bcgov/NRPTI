@@ -92,7 +92,7 @@
       <h4>Contravention</h4>
       <app-legislation-list-add-edit
         [formArray]="this.myForm.controls.legislations"
-        [sourceSystemRef]="this.currentRecord.sourceSystemRef"
+        [sourceSystemRef]="this.currentRecord && this.currentRecord.sourceSystemRef"
         [hasOffence]="true"
       ></app-legislation-list-add-edit>
     </section>

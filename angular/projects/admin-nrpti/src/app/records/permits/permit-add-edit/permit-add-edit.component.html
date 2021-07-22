@@ -68,7 +68,7 @@
       <h4>Legislation</h4>
       <app-legislation-list-add-edit
         [formArray]="this.myForm.controls.legislations"
-        [sourceSystemRef]="this.currentRecord.sourceSystemRef"
+        [sourceSystemRef]="this.currentRecord && this.currentRecord.sourceSystemRef"
         [hasOffence]="false"
       ></app-legislation-list-add-edit>
     </section>

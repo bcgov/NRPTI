@@ -18,6 +18,7 @@ export class MinesAdministrativePenaltyAddEditComponent extends AdministrativePe
   public componentTitle = 'BCMI Administrative Penalty Record';
   public defaultAgency = 'Ministry of Energy Mines and Low Carbon Innovation';
   public defaultAuthor = 'BC Government';
+  public currentRecord = null;
 
   constructor(
     public route: ActivatedRoute,
