@@ -139,12 +139,14 @@ exports.NRCED_SCHEMA_NAMES = [
 ];
 
 exports.BCMI_SCHEMA_NAMES = [
+  'AdministrativePenaltyBCMI',
   'AnnualReportBCMI',
   'CertificateBCMI',
   'CertificateAmendmentBCMI',
-  'ConstructionPlanBCMI',
   'CollectionBCMI',
+  'ConstructionPlanBCMI',
   'CorrespondenceBCMI',
+  'CourtConvictionBCMI',
   'DamSafetyInspectionBCMI',
   'InspectionBCMI',
   'ManagementPlanBCMI',
