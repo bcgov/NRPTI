@@ -8,6 +8,7 @@ import { TestBedHelper, ActivatedRouteStub } from '../../../../../../common/src/
 import { SharedModule } from '../../../shared.module';
 import { CommonModule } from '../../../../../../common/src/app/common.module';
 import { GlobalModule, Utils } from 'nrpti-angular-components';
+import { ShareRecordButtonComponent } from '../../share-record-button/share-record-button.component';
 
 describe('SearchFiltersComponent', () => {
   const testBedHelper = new TestBedHelper<SearchFiltersComponent>(SearchFiltersComponent);
@@ -28,7 +29,7 @@ describe('SearchFiltersComponent', () => {
         FormsModule,
         ReactiveFormsModule
       ],
-      declarations: [SearchFiltersComponent],
+      declarations: [SearchFiltersComponent, ShareRecordButtonComponent],
       providers: [
         { provide: Location, useValue: mockLocation },
         { provide: Router, useValue: mockRouter },

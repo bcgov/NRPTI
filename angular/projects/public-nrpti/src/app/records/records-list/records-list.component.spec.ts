@@ -9,6 +9,7 @@ import { SharedModule } from '../../shared.module';
 import { CommonModule } from '../../../../../common/src/app/common.module';
 import { SearchFiltersComponent } from './search-filters/search-filters.component';
 import { ExportCsvComponent } from './export-csv/export-csv.component';
+import { ShareRecordButtonComponent } from '../share-record-button/share-record-button.component';
 import {
   GlobalModule,
   TableTemplateUtils,
@@ -39,7 +40,7 @@ describe('RecordsListComponent', () => {
         FormsModule,
         ReactiveFormsModule
       ],
-      declarations: [RecordsListComponent, SearchFiltersComponent, ExportCsvComponent],
+      declarations: [RecordsListComponent, SearchFiltersComponent, ExportCsvComponent, ShareRecordButtonComponent],
       providers: [
         { provide: LoadingScreenService, useValue: mockLoadingScreenService },
         { provide: Location, useValue: mockLocation },
