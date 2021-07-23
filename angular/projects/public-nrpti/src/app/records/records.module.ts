@@ -25,6 +25,7 @@ import { TicketDetailComponent } from './tickets/ticket-detail/ticket-detail.com
 import { WarningDetailComponent } from './warnings/warning-detail/warning-detail.component';
 import { CourtConvictionDetailComponent } from './court-convictions/court-conviction-detail/court-conviction-detail.component';
 import { ExportCsvComponent } from './records-list/export-csv/export-csv.component';
+import { ShareRecordButtonComponent } from './share-record-button/share-record-button.component';
 
 // resolvers
 import { RecordsListResolver } from './records-list/records-list-resolver';
@@ -54,7 +55,8 @@ import { RecordsListResolver } from './records-list/records-list-resolver';
     TicketDetailComponent,
     WarningDetailComponent,
     CourtConvictionDetailComponent,
-    ExportCsvComponent
+    ExportCsvComponent,
+    ShareRecordButtonComponent
   ],
   providers: [RecordsListResolver],
   entryComponents: [

@@ -123,6 +123,10 @@ export class RecordsListComponent implements OnInit, OnDestroy {
 
       const records = (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || [];
       this.tableData.items = records.map(record => {
+        // Set autofocus to auto open record card
+        if (this.queryParams.autofocus && this.queryParams.autofocus === record._id) {
+          record.autofocus = true;
+        }
         return { rowData: record };
       });
 
@@ -317,6 +321,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       } else {
         delete this.queryParams['regulation'];
       }
+
+      delete this.queryParams['autofocus'];
 
       this.router.navigate(['/records', this.queryParams]);
     });

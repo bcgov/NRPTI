@@ -1,4 +1,4 @@
-<td class="table-card-outer">
+<td class="table-card-outer" [id]="rowData._id">
   <div (click)="rowClicked()" title="Show record details">
     <div *ngIf="!displayDetailsComponent" class="table-card">
       <div class="table-card-inner">
@@ -44,19 +44,23 @@
         </div>
         <div class="card-col align-content-center">
           <div *ngIf="rowData?.documents?.length" class="truncate">
-            <i class='material-icons'>attach_file</i>
+            <i class="material-icons">attach_file</i>
           </div>
         </div>
       </div>
     </div>
   </div>
   <ng-container #detailsComponentContainer></ng-container>
-  <button
-    *ngIf="displayDetailsComponent"
-    class="closeDetailsContainerButton"
-    type="submit"
-    title="Close record details"
-    (click)="removeDetailsComponent()">
-    <i class="material-icons">close</i>
-  </button>
+  <div *ngIf="displayDetailsComponent" class="detailsContainerButtons">
+    <app-share-record-button [recordId]="rowData._id"></app-share-record-button>
+
+    <button
+      class="closeDetailsContainerButton"
+      type="submit"
+      title="Close record details"
+      (click)="removeDetailsComponent()"
+    >
+      <i class="material-icons">close</i>
+    </button>
+  </div>
 </td>
