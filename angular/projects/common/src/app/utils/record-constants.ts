@@ -2383,18 +2383,33 @@ export class Picklists {
       },
       'Fish and Seafood Act': {
         '3': {
-          description: 'Fail to ensure fish safe for human consumption'
+          description: 'Fail to ensure fish or aquatic plants safe for, or not to be distributed for, human consumption'
+        },
+        '4': {
+          description: 'Fail to be licensed'
+        },
+        '5': {
+          description: 'Possess or distribute fish or aquatic plants from unlawful source'
+        },
+        '6': {
+          description: 'Possess or distribute restricted fish or aquatic plants'
         },
         '14': {
-          description: 'Fail to comply with Act'
+          description: 'Fail to comply with Act, regulations or licence'
         },
         '15': {
+          '1': {
+            description: 'Fail to take preventative measures when processing fish or aquatic plants'
+          },
           '2': {
-            description: 'Fail to conduct prescribed monitoring'
+            description: 'Fail to conduct prescribed analyses or monitoring'
+          },
+          '3': {
+            description: 'Fail to adequately train or sufficiently equip employees'
           }
         },
         '16': {
-          description: 'Fail to meet facility requirements'
+          description: 'Fail to meet requirements respecting facilities, vehicles or equipment'
         },
         '17': {
           '1': {
@@ -2404,23 +2419,397 @@ export class Picklists {
             description: 'Fail to make reports'
           }
         },
+        '18': {
+          description: 'Fail to take measures with respect to, or report, unsafe food'
+        },
         '19': {
           description: 'Fail to meet traceability requirements'
+        },
+        '20': {
+          a: {
+            description: 'Fail to be certified'
+          },
+          b: {
+            description: 'Fail to meet prescribed standards'
+          }
+        },
+        '35': {
+          description: 'Fail to comply with order'
+        },
+        '36': {
+          description: 'Unlawful removal, defacement or alteration of order, notice, mark or tag'
         },
         '54': {
           '2': {
             a: {
-              description: 'Knowingly provide false information'
+              description: 'Knowingly provide false or misleading information'
+            },
+            b: {
+              description: 'Interfere with or obstruct person exercising power and duties under the Act'
             }
           }
         },
         'Fish and Seafood Licensing Regulation': {
-          '53': {
+          '16': {
             '1': {
-              b: {
-                description: 'Receive bivalve molluscs in untagged container'
+              a: {
+                description: 'Operate as fisher vendor without licence'
               }
             }
+          },
+          '19': {
+            '1': {
+              description: 'Fail to comply with requirements'
+            }
+          },
+          '20': {
+            description: 'Fail to keep records'
+          },
+          '21': {
+            '1': {
+              a: {
+                description: 'Operate as fish receiver without licence'
+              }
+            }
+          },
+          '24': {
+            '1': {
+              description: 'Fail to comply with  requirements'
+            }
+          },
+          '25': {
+            '1': {
+              description: 'Fail to keep records'
+            },
+            '2': {
+              description: 'Fail to keep complete records'
+            }
+          },
+          '27': {
+            a: {
+              description: 'Operate as seafood processor without licence'
+            }
+          },
+          '29': {
+            description: 'Exempt person fail to maintain/submit records'
+          },
+          '30': {
+            '1': {
+              description: 'Fail to submit proper fee'
+            },
+            '2': {
+              description: 'Fail to submit construction plans'
+            },
+            '3': {
+              description: 'Fail to submit separate fee'
+            },
+          },
+          '32': {
+            '1': {
+              a: {
+                description: 'Fail to design facility to produce safe food'
+              },
+              b: {
+                description: 'Fail to construct facility with suitable materials'
+              },
+              c: {
+                description: 'Allow access between facility and inappropriate areas'
+              },
+              d: {
+                description: 'Fail to ensure facility is of sound construction'
+              },
+            },
+            '2': {
+              a: {
+                description: 'Fail to have adequate lighting'
+              },
+              b: {
+                description: 'Fail to have adequate ventilation'
+              },
+            },
+            '3': {
+              description: 'Fail to have appropriate waste disposal system'
+            }
+          },
+          '33': {
+            description: 'Fail to provide adequate washrooms/hand washing stations'
+          },
+          '34': {
+            description: 'Fail to maintain facility'
+          },
+          '35': {
+            description: 'Fail to maintain facility to be free of pests'
+          },
+          '36': {
+            description: 'Fail to use/maintain suitable equipment'
+          },
+          '37': {
+            description: 'Fail to have/maintain adequate cold storage equipment',
+            '2': {
+              description: 'Fail to record temperatures daily'
+            }
+          },
+          '38': {
+            description: 'Conduct activities that lead to unsafe food'
+          },
+          '39': {
+            '2': {
+              a: {
+                description: 'Fail to develop/maintain a food safety plan'
+              },
+              b: {
+                description: 'Fail to implement a food safety plan'
+              },
+              c: {
+                  description: 'Fail to keep records of monitoring activities or corrective actions'
+              },
+              d: {
+                  description: 'Fail to keep food safety plan in a conspicuous location'
+              },
+              e: {
+                  description: 'Fail to make food safety plan available'
+              },
+              f: {
+                  description: 'Fail to review food safety plan annually or if required'
+              },
+            },
+            '3': {
+              description: 'Fail to have a food safety plan in writing',
+              a: {
+                description: 'Fail to identify hazards'
+              },
+              b: {
+                description: 'Fail to include hazard analysis'
+              },
+              c: {
+                description: 'Fail to identify critical control points, critical limit or monitoring procedures'
+              },
+              d: {
+                description: 'Fail to identify corrective actions'
+              },
+              e: {
+                description: 'Fail to identify verification procedures'
+              },
+              f: {
+                description: 'Fail to keep appropriate records'
+              },
+            },
+            '4': {
+              description: 'Fail to change food safety plan as directed'
+            }
+          },
+          '40': {
+            '1': {
+              description: 'Fail to meet temperature requirements'
+            },
+            '2': {
+              description: 'Fail to use water/ice of adequate quality'
+            }
+          },
+          '41': {
+            '1': {
+              a: {
+                description: 'Fail to develop/maintain sanitation plan'
+              },
+              b: {
+                description: 'Fail to implement sanitation plan'
+              },
+              c: {
+                description: 'Fail to keep records'
+              },
+              d: {
+                description: 'Fail to make sanitation plan/records available'
+              },
+            },
+            '2': {
+              description: 'Fail to have sanitation plan in writing',
+              a: {
+                description: 'Fail to identify cleaning/sanitizing requirements'
+              },
+              b: {
+                description: 'Fail to identify cleaning/sanitizing agents and pesticides used'
+              },
+            }
+          },
+          '42': {
+            description: 'Fail to maintain facility/equipment',
+            a: {
+              description: 'Fail to sanitize equipment'
+            },
+            b: {
+              description: 'Fail to have pest proof containers'
+            },
+          },
+          '43': {
+            '1': {
+              a: {
+                description: 'Fail to ensure employees wear clean clothing'
+              },
+              b: {
+                description: 'Fail to ensure employees exhibit cleanliness'
+              },
+              c: {
+                description: 'Conduct activities that lead to unsafe food'
+              },
+            },
+            '2': {
+              description: 'Fail to ensure handwashing'
+            },
+            '3': {
+              description: 'Fail to ensure tobacco/vapour products not used in facility'
+            },
+          },
+          '44': {
+            description: 'Permit food contact by ill persons'
+          },
+          '45': {
+            a: {
+              description: 'Permit animals in facility'
+            },
+            b: {
+              description: 'Fail to keep fish as permitted by inspector'
+            },
+          },
+          '46': {
+            a: {
+              description: 'Fail to properly store chemicals/cleaners'
+            },
+            b: {
+              description: 'Fail to label chemicals/cleaners'
+            },
+          },
+          '47': {
+            description: 'Fail to properly store/label'
+          },
+          '48': {
+            description: 'Fail to properly store/label unsafe food/offal'
+          },
+          '49': {
+            description: 'Fail to keep facility free of unnecessary items'
+          },
+          '50': {
+            '1': {
+              description: 'Process seafood from unacceptable source'
+            },
+            '2': {
+              description: 'Receive marine cultured fish from unacceptable source'
+            },
+          },
+          '51': {
+            description: 'Process dead lobster/crab'
+          },
+          '52': {
+            '2': {
+              description: 'Fail to comply with Fish Inspection Regulation (Canada)'
+            }
+          },
+          '53': {
+            '1': {
+              a: {
+                description: 'Receive bivalves from unapproved source'
+              },
+              b: {
+                description: 'Receive bivalves in improperly tagged containers'
+              }
+            },
+            '2': {
+              description: 'Fail to ensure containers are tamper proof'
+            }
+          },
+          '54': {
+            '1': {
+              description: 'Fail to ensure labels are legible, visible and permanent'
+            },
+            '2': {
+              description: 'Fail to properly label sport caught fish container'
+            },
+            '3': {
+              description: 'Fail to properly label carton of sport caught fish'
+            },
+          }
+        },
+        '55': {
+          '1': {
+            description: 'Fail to properly distribute sport caught fish'
+          },
+          '2': {
+            a: {
+              description: 'Fail to have system that identifies fish to sport fisher'
+            },
+            b: {
+              description: 'Fail to have system that maintains identification'
+            },
+            c: {
+              description: 'Fail to have system that verifies fish returned to sport fisher'
+            },
+          }
+        },
+        '56': {
+          '1': {
+            description: 'Fail to keep records for delivery/distribution of seafood'
+          },
+          '2': {
+            description: 'Fail to keep complete records'
+          },
+          '3': {
+            b: {
+              description: 'Fail to provide transporter with bivalve records'
+            }
+          }
+        },
+        '57': {
+          '2': {
+            description: 'Fail to keep records'
+          },
+          '3': {
+            description: 'Fail to maintain complete employment records'
+          },
+          '4': {
+            description: 'Fail to maintain custom processing records'
+          }
+        },
+        '58': {
+          '1': {
+            description: 'Fail to use/maintain suitable equipment'
+          },
+          '2': {
+            description: 'Fail to ensure equipment will prevent unsafe food'
+          }
+        },
+        '59': {
+          '1': {
+            description: 'Fail to meet temperature requirements'
+          },
+          '2': {
+            description: 'Fail to use water/ice of adequate quality'
+          }
+        },
+        '60': {
+          description: 'Fail to carry/provide required bivalve records'
+        },
+        '61': {
+          a: {
+            description: 'Fail to record the date bivalves received'
+          },
+          b: {
+            description: 'Fail to keep bivalve records for one year'
+          }
+        },
+        '62': {
+          description: 'Distribute aquatic plants from unlawful source'
+        },
+        '63': {
+          description: 'Fail to record quantity of fish/aquatic plants properly'
+        },
+        '64': {
+          description: 'Fail to express records in Canadian dollars'
+        },
+        '65': {
+          description: 'Fail to keep records for 3 years'
+        },
+        '66': {
+          '1': {
+            description: 'Fail to submit report'
           }
         }
       },
