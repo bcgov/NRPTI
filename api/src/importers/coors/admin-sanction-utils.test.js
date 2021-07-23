@@ -46,8 +46,8 @@ describe('transformRecord', () => {
         companyName: 'businessName123',
         type: 'Company'
       },
-      issuingAgency: 'Ministry of Forests, Lands and Natural Resource Operations',
-      author: 'Ministry of Forests, Lands and Natural Resource Operations',
+      issuingAgency: 'Ministry of Forests Lands Natural Resource Operations and Rural Development',
+      author: 'Ministry of Forests Lands Natural Resource Operations and Rural Development',
       legislation: {
         act: 'Wildlife Act',
         paragraph: '',
@@ -105,8 +105,8 @@ describe('transformRecord', () => {
         companyName: 'businessName123',
         type: 'Company'
       },
-      issuingAgency: 'Ministry of Forests, Lands and Natural Resource Operations',
-      author: 'Ministry of Forests, Lands and Natural Resource Operations',
+      issuingAgency: 'Ministry of Forests Lands Natural Resource Operations and Rural Development',
+      author: 'Ministry of Forests Lands Natural Resource Operations and Rural Development',
       legislation: {
         act: 'Wildlife Act',
         paragraph: '',

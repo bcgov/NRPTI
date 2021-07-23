@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RecordDetailComponent } from '../../utils/record-component';
 import { RecordUtils } from '../../utils/record-utils';
 import { FactoryService } from '../../../services/factory.service';
+import { Utils } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-construction-plan-detail',
@@ -50,6 +51,10 @@ export class ConstructionPlanDetailComponent extends RecordDetailComponent imple
 
   navigateToEditPage() {
     this.router.navigate(['records', 'construction-plans', this.data._master._id, 'edit']);
+  }
+
+  displayName(agency) {
+    return Utils.displayNameFull(agency);
   }
 
   ngOnDestroy() {

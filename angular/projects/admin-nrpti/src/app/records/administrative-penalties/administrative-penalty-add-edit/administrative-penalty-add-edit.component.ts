@@ -4,7 +4,6 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { Picklists, EpicProjectIds } from '../../../../../../common/src/app/utils/record-constants';
-import { Legislation } from '../../../../../../common/src/app/models/master/common-models/legislation';
 import { FactoryService } from '../../../services/factory.service';
 import { Utils } from 'nrpti-angular-components';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
@@ -84,8 +83,6 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
 
       this.buildForm();
 
-      this.subscribeToFormControlChanges();
-
       this.loading = false;
       this._changeDetectionRef.detectChanges();
     });
@@ -128,48 +125,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     }
   }
 
-  protected subscribeToFormControlChanges() {
-    // listen to legislation control changes
-    const debouncedUpdateLegislationDescription = this.utils.debounced(500, () => this.updateLegislationDescription());
-    this.myForm
-      .get('legislation')
-      .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(() => {
-        debouncedUpdateLegislationDescription();
-      });
-
-    // Set long/lat when mine value updates
-    this.myForm
-      .get('association.mineGuid')
-      .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(val => {
-        const selectedMine = this.storeService.getItem('mines').find(mine => mine._sourceRefId === val);
-        if (selectedMine.name !== 'None') {
-          this.myForm.get('latitude').setValue(selectedMine.location.coordinates[1]);
-          this.myForm.get('longitude').setValue(selectedMine.location.coordinates[0]);
-        } else {
-          this.myForm.get('latitude').setValue('');
-          this.myForm.get('longitude').setValue('');
-        }
-        this.myForm.controls.latitude.markAsDirty();
-        this.myForm.controls.longitude.markAsDirty();
-      });
-  }
-
-  protected updateLegislationDescription() {
-    const legislation = new Legislation({
-      act: this.myForm.get('legislation.act').value,
-      regulation: this.myForm.get('legislation.regulation').value,
-      section: this.myForm.get('legislation.section').value,
-      subSection: this.myForm.get('legislation.subSection').value,
-      paragraph: this.myForm.get('legislation.paragraph').value
-    });
-
-    this.myForm.get('offence').setValue(Picklists.getLegislationDescription('AdministrativePenalty', legislation));
-    this.myForm.get('offence').markAsDirty();
-  }
-
-  protected buildForm() {
+  public buildForm() {
     const flavourEditRequiredRoles = Constants.FlavourEditRequiredRoles.ADMINISTRATIVE_PENALTY;
 
     for (const role of Constants.ApplicationLimitedRoles) {
@@ -218,32 +174,6 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
           value: (this.currentRecord && this.currentRecord.unlistedMineType) || '',
           disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         })
-      }),
-      legislation: new FormGroup({
-        act: new FormControl({
-          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.act) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
-        }),
-        regulation: new FormControl({
-          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.regulation) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
-        }),
-        section: new FormControl({
-          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.section) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
-        }),
-        subSection: new FormControl({
-          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.subSection) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
-        }),
-        paragraph: new FormControl({
-          value: (this.currentRecord && this.currentRecord.legislation && this.currentRecord.legislation.paragraph) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
-        })
-      }),
-      offence: new FormControl({
-        value: (this.currentRecord && this.currentRecord.offence) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
       issuedTo: new FormGroup({
         type: new FormControl({
@@ -299,6 +229,9 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
         value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || '',
         disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
       }),
+
+      legislations: new FormArray(this.getLegislationsFormGroups()),
+
       penalties: new FormArray(this.getPenaltiesFormGroups()),
 
       // NRCED
@@ -331,6 +264,82 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
         disabled: !this.factoryService.isFlavourEditEnabled(flavourEditRequiredRoles.BCMI)
       })
     });
+  }
+
+  /**
+   * Builds an array of legislations FormGroups, each with its own set of FormControls.
+   *
+   * @returns {FormGroup[]} array of legislations FormGroup elements
+   * @memberof AdministrativePenaltyAddEditComponent
+   */
+  getLegislationsFormGroups(): FormGroup[] {
+    if (!this.currentRecord || !this.currentRecord.legislation || !this.currentRecord.legislation.length) {
+      return [];
+    }
+
+    const legislations: FormGroup[] = [];
+
+    this.currentRecord.legislation.forEach(leg => {
+      legislations.push(
+        new FormGroup({
+          act: new FormControl({
+            value: leg.act || '',
+            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          }),
+          regulation: new FormControl({
+            value: leg.regulation || '',
+            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          }),
+          section: new FormControl({
+            value: leg.section || '',
+            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          }),
+          subSection: new FormControl({
+            value: leg.subSection || '',
+            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          }),
+          paragraph: new FormControl({
+            value: leg.paragraph || '',
+            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          }),
+          offence: new FormControl({
+            value: leg.offence || '',
+            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          })
+        })
+      );
+    });
+    return legislations;
+  }
+
+
+  /**
+   * Parses an array of legislations FormGroups into objects expected by the API.
+   *
+   * @returns {object[]} array of legislations objects
+   * @memberof AdministrativePenaltyAddEditComponent
+   */
+  parseLegislationsFormGroups(): object[] {
+    const legislationsFormArray = this.myForm.get('legislations');
+
+    if (!legislationsFormArray || !legislationsFormArray.value || !legislationsFormArray.value.length) {
+      return [];
+    }
+
+    const legislations: object[] = [];
+
+    legislationsFormArray.value.forEach(legislationsFormGroup => {
+      legislations.push({
+        act: legislationsFormGroup.act,
+        regulation: legislationsFormGroup.regulation,
+        section: legislationsFormGroup.section,
+        subSection: legislationsFormGroup.subSection,
+        paragraph: legislationsFormGroup.paragraph,
+        offence: legislationsFormGroup.offence
+      });
+    });
+
+    return legislations;
   }
 
   /**
@@ -473,24 +482,6 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     }
 
     if (
-      this.myForm.get('legislation.act').dirty ||
-      this.myForm.get('legislation.regulation').dirty ||
-      this.myForm.get('legislation.section').dirty ||
-      this.myForm.get('legislation.subSection').dirty ||
-      this.myForm.get('legislation.paragraph').dirty
-    ) {
-      administrativePenalty['legislation'] = {
-        act: this.myForm.get('legislation.act').value,
-        regulation: this.myForm.get('legislation.regulation').value,
-        section: this.myForm.get('legislation.section').value,
-        subSection: this.myForm.get('legislation.subSection').value,
-        paragraph: this.myForm.get('legislation.paragraph').value
-      };
-    }
-
-    this.myForm.controls.offence.dirty && (administrativePenalty['offence'] = this.myForm.controls.offence.value);
-
-    if (
       this.myForm.get('issuedTo.type').dirty ||
       this.myForm.get('issuedTo.companyName').dirty ||
       this.myForm.get('issuedTo.firstName').dirty ||
@@ -530,6 +521,9 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     if (this.mineLocation) {
       administrativePenalty['centroid'] = [this.mineLocation.coordinates[0], this.mineLocation.coordinates[1]];
     }
+
+    // tslint:disable-next-line:max-line-length
+    this.myForm.get('legislations').dirty && (administrativePenalty['legislation'] = this.parseLegislationsFormGroups());
 
     this.myForm.get('penalties').dirty && (administrativePenalty['penalties'] = this.parsePenaltiesFormGroups());
 
@@ -647,6 +641,10 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
 
   convertAcronyms(acronym) {
     return Utils.convertAcronyms(acronym);
+  }
+
+  displayName(agency) {
+    return Utils.displayNameFull(agency);
   }
 
   cancel() {

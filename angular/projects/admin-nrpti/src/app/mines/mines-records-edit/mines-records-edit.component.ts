@@ -285,6 +285,10 @@ export class MinesRecordsEditComponent implements OnInit {
     return Utils.convertAcronyms(acronym);
   }
 
+  displayName(agency) {
+    return Utils.displayNameFull(agency);
+  }
+
   /**
    * Cancel editing.
    *

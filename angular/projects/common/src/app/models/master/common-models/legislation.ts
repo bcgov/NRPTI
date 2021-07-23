@@ -11,6 +11,8 @@ export class Legislation {
   section: string;
   subSection: string;
   paragraph: string;
+  offence: string;
+  legislationDescription: string;
 
   constructor(obj?: any) {
     this.act = (obj && obj.act) || null;
@@ -18,5 +20,7 @@ export class Legislation {
     this.section = (obj && obj.section) || null;
     this.subSection = (obj && obj.subSection) || null;
     this.paragraph = (obj && obj.paragraph) || null;
+    this.offence = (obj && obj.offence) || null;
+    this.legislationDescription = (obj && obj.legislationDescription) || null;
   }
 }

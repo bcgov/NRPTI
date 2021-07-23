@@ -14,8 +14,7 @@ export class CorrespondenceNRCED extends RecordModel {
   issuedTo: Entity;
   dateIssued: Date;
   issuingAgency: string;
-  legislation: Legislation;
-  legislationDescription: string;
+  legislation: Legislation[];
   documents: object[];
   description: string;
   datePublished: Date;
@@ -32,8 +31,8 @@ export class CorrespondenceNRCED extends RecordModel {
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || '';
     this.issuedTo = (obj && obj.issuedTo) || '';
-    this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
-    this.legislationDescription = (obj && obj.legislationDescription) || '';
+    this.legislation = (obj && obj.legislation && obj.legislation.length &&
+      obj.legislation.map(legislation => new Legislation(legislation))) || null;
     this.documents = (obj && obj.documents) || [];
 
     this.description = (obj && obj.description) || null;

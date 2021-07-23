@@ -130,20 +130,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.issuingAgency && (order.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (order.author = incomingObj.author);
 
-  incomingObj.legislation && incomingObj.legislation.act && (order.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (order.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (order.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (order.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (order.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (order.legislationDescription = incomingObj.legislationDescription);
+  order.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   order.issuedTo.read = utils.ApplicationAdminRoles;
   order.issuedTo.write = utils.ApplicationAdminRoles;
@@ -261,20 +248,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   incomingObj.issuingAgency && (orderLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (orderLNG.author = incomingObj.author);
 
-  incomingObj.legislation && incomingObj.legislation.act && (orderLNG.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (orderLNG.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (orderLNG.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (orderLNG.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (orderLNG.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (orderLNG.legislationDescription = incomingObj.legislationDescription);
+  orderLNG.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   orderLNG.issuedTo.read = utils.ApplicationAdminRoles;
   orderLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
@@ -403,20 +377,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   incomingObj.issuingAgency && (orderNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (orderNRCED.author = incomingObj.author);
 
-  incomingObj.legislation && incomingObj.legislation.act && (orderNRCED.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (orderNRCED.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (orderNRCED.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (orderNRCED.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (orderNRCED.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (orderNRCED.legislationDescription = incomingObj.legislationDescription);
+  orderNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   orderNRCED.issuedTo.read = utils.ApplicationAdminRoles;
   orderNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
@@ -553,20 +514,7 @@ exports.createBCMI = function(args, res, next, incomingObj) {
   incomingObj.issuingAgency && (orderBCMI.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (orderBCMI.author = incomingObj.author);
 
-  incomingObj.legislation && incomingObj.legislation.act && (orderBCMI.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (orderBCMI.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (orderBCMI.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (orderBCMI.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (orderBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
-  incomingObj.legislationDescription && (orderBCMI.legislationDescription = incomingObj.legislationDescription);
+  orderBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   orderBCMI.issuedTo.read = utils.ApplicationAdminRoles;
   orderBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];

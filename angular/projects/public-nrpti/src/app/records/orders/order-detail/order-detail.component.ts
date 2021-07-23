@@ -89,6 +89,10 @@ export class OrderDetailComponent implements OnInit, OnChanges, OnDestroy {
     return this.activeTab === tabLabel;
   }
 
+  displayName(agency) {
+    return GlobalUtils.displayNameFull(agency);
+  }
+
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();

@@ -15,7 +15,7 @@ export class EnforcementActionsResolver implements Resolve<Observable<object>> {
 
     const schemaList = ['CourtConviction', 'AdministrativePenalty'];
 
-    and['issuingAgency'] = 'EMLI';
+    and['issuingAgency'] = 'Ministry of Energy Mines and Low Carbon Innovation';
 
     let keywords = '';
     if (params && params.keywords) {

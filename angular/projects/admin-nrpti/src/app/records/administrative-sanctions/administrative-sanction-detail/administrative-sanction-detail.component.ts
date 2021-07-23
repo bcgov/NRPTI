@@ -7,6 +7,7 @@ import { RecordDetailComponent } from '../../utils/record-component';
 import { RecordUtils } from '../../utils/record-utils';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { FactoryService } from '../../../services/factory.service';
+import { Utils } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-administrative-sanction-detail',
@@ -56,6 +57,10 @@ export class AdministrativeSanctionDetailComponent extends RecordDetailComponent
     if (this.data && this.data._master && this.data._master.legislation) {
       this.legislationString = CommonUtils.buildLegislationString(this.data._master.legislation);
     }
+  }
+
+  displayName(agency) {
+    return Utils.displayNameFull(agency);
   }
 
   navigateToEditPage() {

@@ -8,7 +8,7 @@ import { RecordUtils } from '../../utils/record-utils';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { FactoryService } from '../../../services/factory.service';
 import { StoreService } from 'nrpti-angular-components';
-
+import { Utils } from 'nrpti-angular-components';
 
 @Component({
   selector: 'app-permit-detail',
@@ -65,6 +65,10 @@ export class PermitDetailComponent extends RecordDetailComponent implements OnIn
 
   navigateToEditPage() {
     this.router.navigate(['records', 'permits', this.data._master._id, 'edit']);
+  }
+
+  displayName(agency) {
+    return Utils.displayNameFull(agency);
   }
 
   ngOnDestroy() {

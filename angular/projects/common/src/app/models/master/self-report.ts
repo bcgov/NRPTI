@@ -14,8 +14,7 @@ export class SelfReport extends RecordModel {
   dateIssued: Date;
   issuingAgency: string;
   author: string;
-  legislation: Legislation;
-  legislationDescription: string;
+  legislation: Legislation[];
   documents: object[];
 
   // Fields for saving flavour in API.
@@ -31,8 +30,8 @@ export class SelfReport extends RecordModel {
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || null;
     this.author = (obj && obj.author) || null;
-    this.legislation = (obj && obj.legislation && new Legislation(obj.legislation)) || null;
-    this.legislationDescription = (obj && obj.legislationDescription) || null;
+    this.legislation = (obj && obj.legislation && obj.legislation.length &&
+      obj.legislation.map(legislation => new Legislation(legislation))) || null;
     this.documents = (obj && obj.documents) || null;
   }
 }

@@ -51,7 +51,7 @@ class Inspections extends BaseRecordUtils {
 
     return {
       ...(await super.transformRecord(epicRecord)),
-      issuingAgency: 'EAO',
+      issuingAgency: 'Environmental Assessment Office',
       author: epicRecord.documentAuthor || '',
       legislation: legislation,
       legislationDescription: 'Inspection to verify compliance with regulatory requirement',

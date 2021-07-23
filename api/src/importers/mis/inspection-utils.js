@@ -39,7 +39,7 @@ const MiscConstants = require('../../utils/constants/misc');
     inspection['recordType'] = 'Inspection';
     inspection['dateIssued'] = csvRow['created '] || null;
 
-    inspection['issuingAgency'] = 'Ministry of Agriculture';
+    inspection['issuingAgency'] = 'Ministry of Agriculture Food and Fisheries';
     inspection['author'] = 'Ministry of Agriculture';
 
     inspection['recordName'] = (csvRow['issue no.'] && `Compliance issue ${csvRow['issue no.']}`) || '';
