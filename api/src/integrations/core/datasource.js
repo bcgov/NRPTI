@@ -281,6 +281,12 @@ class CoreDataSource {
         (permit.permit_amendments.length && !permit.permit_amendments[0].authorization_end_date) ||
         permit.permit_status_code === 'O'
       ) {
+        // Do not use 'G-4-352' for Lumby
+        // https://bcmines.atlassian.net/browse/NRPT-684
+        if (nrptiRecord.name === 'Lumby Mine' && permit.permit_no === 'G-4-352') {
+          continue;
+        }
+
         // There should only be a single record. If there is more then we need to identify the most
         // recent permit as the official valid permit
         if (validPermit) {
