@@ -10,6 +10,7 @@ export class LegislationListAddEditComponent implements OnInit {
   @Input() formArray: FormArray;
   @Input() sourceSystemRef: string;
   @Input() hasOffence: boolean;
+  @Input() recordType: string;
 
   ngOnInit(): void {}
 

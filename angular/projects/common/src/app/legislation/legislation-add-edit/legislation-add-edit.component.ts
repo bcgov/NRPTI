@@ -14,6 +14,7 @@ import { Utils } from 'nrpti-angular-components';
 export class LegislationAddEditComponent implements OnInit {
   @Input() formGroup: FormGroup;
   @Input() hasOffence: boolean;
+  @Input() recordType: string;
 
   @Input() hideSection = false;
   @Input() hideSubSection = false;
@@ -43,7 +44,7 @@ export class LegislationAddEditComponent implements OnInit {
   constructor(
     public utils: Utils,
     protected _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     if (this.formGroup.controls.act.value && this.formGroup.controls.regulation.value) {
@@ -94,14 +95,14 @@ export class LegislationAddEditComponent implements OnInit {
       paragraph: this.formGroup.get('paragraph').value
     });
 
-    if ( this.hasOffence ) {
+    if (this.hasOffence) {
       this.formGroup.get('offence').setValue(
-        Picklists.getLegislationDescription('AdministrativePenalty', legislation)
+        Picklists.getLegislationDescription(this.recordType, legislation)
       );
       this.formGroup.get('offence').markAsDirty();
     } else {
       this.formGroup.get('legislationDescription').setValue(
-        Picklists.getLegislationDescription('AdministrativePenalty', legislation)
+        Picklists.getLegislationDescription(this.recordType, legislation)
       );
       this.formGroup.get('legislationDescription').markAsDirty();
     }

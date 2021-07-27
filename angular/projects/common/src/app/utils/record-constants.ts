@@ -799,7 +799,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {string[]} sorted array of acts
    */
-  public static getAllActs = function(): string[] {
+  public static getAllActs = function (): string[] {
     return Object.keys(this.legislationActsMappedToRegulations).sort();
   };
 
@@ -810,7 +810,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {string[]} sorted array of regulations
    */
-  public static getAllRegulations = function(): string[] {
+  public static getAllRegulations = function (): string[] {
     const regulations = [];
 
     Object.keys(this.legislationActsMappedToRegulations).forEach(act =>
@@ -834,7 +834,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {{ [key: string]: string[] }}
    */
-  public static getLegislationRegulationsMappedToActs = function(): { [key: string]: string[] } {
+  public static getLegislationRegulationsMappedToActs = function (): { [key: string]: string[] } {
     const regulations = {};
 
     Object.keys(this.legislationActsMappedToRegulations).forEach(act =>
@@ -2561,16 +2561,16 @@ export class Picklists {
                 description: 'Fail to implement a food safety plan'
               },
               c: {
-                  description: 'Fail to keep records of monitoring activities or corrective actions'
+                description: 'Fail to keep records of monitoring activities or corrective actions'
               },
               d: {
-                  description: 'Fail to keep food safety plan in a conspicuous location'
+                description: 'Fail to keep food safety plan in a conspicuous location'
               },
               e: {
-                  description: 'Fail to make food safety plan available'
+                description: 'Fail to make food safety plan available'
               },
               f: {
-                  description: 'Fail to review food safety plan annually or if required'
+                description: 'Fail to review food safety plan annually or if required'
               },
             },
             '3': {
@@ -5119,8 +5119,9 @@ export class Picklists {
    * @static
    * @returns {string} legislation description or null
    */
-  public static getLegislationDescription = function(recordType: string, legislation: Legislation): string {
-    if (!recordType || !legislation || !legislation.act || !legislation.section) {
+  public static getLegislationDescription = function (recordType: string, legislation: Legislation): string {
+
+    if (!recordType || (!legislation && !legislation.act && !legislation.section)) {
       return null;
     }
 
@@ -5174,7 +5175,7 @@ export class Picklists {
    * @param {string[]} paths properties to descend, in order, through the object.
    * @returns the value found at the end of the path, or null
    */
-  public static traverseObject = function(obj: object, paths: string[]) {
+  public static traverseObject = function (obj: object, paths: string[]) {
     if (!obj || !paths || !paths.length) {
       return null;
     }

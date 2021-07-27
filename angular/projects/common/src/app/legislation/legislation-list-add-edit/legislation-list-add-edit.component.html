@@ -12,6 +12,7 @@
   <app-legislation-add-edit
     [formGroup]="formGroup"
     [hasOffence]="hasOffence"
+    [recordType]="recordType"
   ></app-legislation-add-edit>
   <button *ngIf="sourceSystemRef==='nrpti' && idx !== 0 && hasOffence" class="btn btn-outline-primary delete-btn" type="button" title="Delete this contravention" (click)="removeLegislation(idx)">
     <i class="material-icons"></i>
