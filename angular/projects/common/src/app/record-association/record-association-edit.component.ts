@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FactoryService } from '../../../../admin-nrpti/src/app/services/factory.service';
-import { StoreService} from 'nrpti-angular-components';
+import { StoreService } from 'nrpti-angular-components';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Utils } from 'nrpti-angular-components';
@@ -33,7 +33,7 @@ export class RecordAssociationEditComponent implements OnInit {
     public factoryService: FactoryService,
     private storeService: StoreService,
     private utils: Utils
-    ) {}
+  ) { }
 
   ngOnInit() {
     this.storeService.stateChange.subscribe((state: object) => {
@@ -49,7 +49,7 @@ export class RecordAssociationEditComponent implements OnInit {
     });
     this.updateMineMeta();
     this.subscribeToFormControlChanges();
-   }
+  }
 
   private subscribeToFormControlChanges() {
     const debouncedMineMeta = this.utils.debounced(500, () => this.updateMineMeta());
@@ -64,11 +64,15 @@ export class RecordAssociationEditComponent implements OnInit {
   private updateMineMeta() {
     const mineGuid = this.formGroup.get('mineGuid').value;
     const unlistedMineType = this.formGroup.get('unlistedMineType').value;
+    let mine = null;
 
-    const mine = this.mines.filter( elem => {
-      if (elem._sourceRefId === mineGuid ) {
-        return elem;
-    } });
+    if (this.mines) {
+      mine = this.mines.filter(elem => {
+        if (elem._sourceRefId === mineGuid) {
+          return elem;
+        }
+      });
+    }
 
     if (!mineGuid && !unlistedMineType) {
       this.mineType = '';
