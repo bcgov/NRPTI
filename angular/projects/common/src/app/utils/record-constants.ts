@@ -2726,92 +2726,92 @@ export class Picklists {
             '3': {
               description: 'Fail to properly label carton of sport caught fish'
             },
-          }
-        },
-        '55': {
-          '1': {
-            description: 'Fail to properly distribute sport caught fish'
           },
-          '2': {
+          '55': {
+            '1': {
+              description: 'Fail to properly distribute sport caught fish'
+            },
+            '2': {
+              a: {
+                description: 'Fail to have system that identifies fish to sport fisher'
+              },
+              b: {
+                description: 'Fail to have system that maintains identification'
+              },
+              c: {
+                description: 'Fail to have system that verifies fish returned to sport fisher'
+              },
+            }
+          },
+          '56': {
+            '1': {
+              description: 'Fail to keep records for delivery/distribution of seafood'
+            },
+            '2': {
+              description: 'Fail to keep complete records'
+            },
+            '3': {
+              b: {
+                description: 'Fail to provide transporter with bivalve records'
+              }
+            }
+          },
+          '57': {
+            '2': {
+              description: 'Fail to keep records'
+            },
+            '3': {
+              description: 'Fail to maintain complete employment records'
+            },
+            '4': {
+              description: 'Fail to maintain custom processing records'
+            }
+          },
+          '58': {
+            '1': {
+              description: 'Fail to use/maintain suitable equipment'
+            },
+            '2': {
+              description: 'Fail to ensure equipment will prevent unsafe food'
+            }
+          },
+          '59': {
+            '1': {
+              description: 'Fail to meet temperature requirements'
+            },
+            '2': {
+              description: 'Fail to use water/ice of adequate quality'
+            }
+          },
+          '60': {
+            description: 'Fail to carry/provide required bivalve records'
+          },
+          '61': {
             a: {
-              description: 'Fail to have system that identifies fish to sport fisher'
+              description: 'Fail to record the date bivalves received'
             },
             b: {
-              description: 'Fail to have system that maintains identification'
-            },
-            c: {
-              description: 'Fail to have system that verifies fish returned to sport fisher'
-            },
-          }
-        },
-        '56': {
-          '1': {
-            description: 'Fail to keep records for delivery/distribution of seafood'
+              description: 'Fail to keep bivalve records for one year'
+            }
           },
-          '2': {
-            description: 'Fail to keep complete records'
+          '62': {
+            description: 'Distribute aquatic plants from unlawful source'
           },
-          '3': {
-            b: {
-              description: 'Fail to provide transporter with bivalve records'
+          '63': {
+            description: 'Fail to record quantity of fish/aquatic plants properly'
+          },
+          '64': {
+            description: 'Fail to express records in Canadian dollars'
+          },
+          '65': {
+            description: 'Fail to keep records for 3 years'
+          },
+          '66': {
+            '1': {
+              description: 'Fail to submit report'
             }
           }
         },
-        '57': {
-          '2': {
-            description: 'Fail to keep records'
-          },
-          '3': {
-            description: 'Fail to maintain complete employment records'
-          },
-          '4': {
-            description: 'Fail to maintain custom processing records'
-          }
-        },
-        '58': {
-          '1': {
-            description: 'Fail to use/maintain suitable equipment'
-          },
-          '2': {
-            description: 'Fail to ensure equipment will prevent unsafe food'
-          }
-        },
-        '59': {
-          '1': {
-            description: 'Fail to meet temperature requirements'
-          },
-          '2': {
-            description: 'Fail to use water/ice of adequate quality'
-          }
-        },
-        '60': {
-          description: 'Fail to carry/provide required bivalve records'
-        },
-        '61': {
-          a: {
-            description: 'Fail to record the date bivalves received'
-          },
-          b: {
-            description: 'Fail to keep bivalve records for one year'
-          }
-        },
-        '62': {
-          description: 'Distribute aquatic plants from unlawful source'
-        },
-        '63': {
-          description: 'Fail to record quantity of fish/aquatic plants properly'
-        },
-        '64': {
-          description: 'Fail to express records in Canadian dollars'
-        },
-        '65': {
-          description: 'Fail to keep records for 3 years'
-        },
-        '66': {
-          '1': {
-            description: 'Fail to submit report'
-          }
-        }
       },
       'Fisheries Act (Canada)': {
         'Fishing (General) Regulations': {
