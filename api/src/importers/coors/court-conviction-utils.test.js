@@ -2,7 +2,7 @@ const CourtConvictions = require('./court-conviction-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 describe('transformRecord', () => {
-  const courtConvictions = new CourtConvictions('authPayload', RECORD_TYPE.CourtConviction , null);
+  const courtConvictions = new CourtConvictions('authPayload', RECORD_TYPE.CourtConviction, null);
 
   it('throws an error if null csvRow parameter provided', () => {
     expect(() => courtConvictions.transformRecord(null)).toThrow('transformRecord - required csvRow must be non-null.');
@@ -20,9 +20,8 @@ describe('transformRecord', () => {
       issuedTo: { dateOfBirth: null, firstName: '', lastName: '', middleName: '', type: 'Individual' },
       issuingAgency: '',
       author: '',
-      legislation: { act: '', paragraph: '', regulation: '', section: '', subSection: '' },
+      legislation: [{ act: '', paragraph: '', regulation: '', section: '', subSection: '', offence: '' }],
       location: '',
-      offence: '',
       recordName: '',
       penalties: [{ description: '', penalty: { type: null, value: null }, type: null }],
 
@@ -61,15 +60,17 @@ describe('transformRecord', () => {
       },
       issuingAgency: 'BC Parks',
       author: 'BC Parks',
-      legislation: {
-        act: 'Fisheries Canada',
-        paragraph: 'paragraph123',
-        regulation: 'regulation123',
-        section: 'section123',
-        subSection: 'subSection123'
-      },
+      legislation: [
+        {
+          act: 'Fisheries Canada',
+          paragraph: 'paragraph123',
+          regulation: 'regulation123',
+          section: 'section123',
+          subSection: 'subSection123',
+          offence: 'description123'
+        }
+      ],
       location: 'location123',
-      offence: 'description123',
       recordName: 'Case Number P-123456',
       penalties: [
         {

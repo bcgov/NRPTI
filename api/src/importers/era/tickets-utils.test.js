@@ -21,14 +21,13 @@ describe('transformRecord', () => {
       issuingAgency: 'Natural Resource Officers',
       author: 'Natural Resource Officers',
       location: '',
-      offence: '',
       dateIssued: null,
 
       penalties: [{ description: 'Penalty Amount (CAD)', penalty: { type: 'Dollars', value: null }, type: 'Fined' }],
-      legislation: { act: '', paragraph: '', regulation: '', section: '', subSection: '' },
+      legislation: [{ act: '', paragraph: '', regulation: '', section: '', subSection: '', offence: '' }],
       issuedTo: { dateOfBirth: null, firstName: '', lastName: '', middleName: '', type: 'Individual' },
 
-      sourceSystemRef: 'era-csv',
+      sourceSystemRef: 'era-csv'
     });
   });
 
@@ -54,21 +53,22 @@ describe('transformRecord', () => {
       _sourceRefStringId: '123-123',
 
       recordName: 'bad manners',
-      offence: 'bad manners',
       location: 'somewhere',
       recordType: 'Ticket',
       issuingAgency: 'Natural Resource Officers',
       author: 'Natural Resource Officers',
       dateIssued: '02/24/2021',
 
-      penalties: [{
-        description: 'Penalty Amount (CAD)',
-        penalty: {
-          type: 'Dollars',
-          value: 1000000
-        },
-        type: 'Fined'
-      }],
+      penalties: [
+        {
+          description: 'Penalty Amount (CAD)',
+          penalty: {
+            type: 'Dollars',
+            value: 1000000
+          },
+          type: 'Fined'
+        }
+      ],
 
       issuedTo: {
         dateOfBirth: null,
@@ -78,13 +78,17 @@ describe('transformRecord', () => {
         type: MiscConstants.IssuedToEntityTypes.Individual
       },
 
-      legislation: {
-        act: 'very rude act',
-        regulation: 'asdfasdf',
-        section: '123',
-        subSection: '1234',
-        paragraph: '12'
-      },
+      legislation: [
+        {
+          act: 'very rude act',
+          regulation: 'asdfasdf',
+          section: '123',
+          subSection: '1234',
+          paragraph: '12',
+
+          offence: 'bad manners'
+        }
+      ],
 
       sourceSystemRef: 'era-csv'
     });

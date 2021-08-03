@@ -5,12 +5,12 @@ const mongoose = require('mongoose');
 module.exports = require('../../utils/model-schema-generator')(
   'AdministrativePenaltyBCMI',
   {
-    _sourceRefOgcPenaltyId: {type: String, default: null },
+    _sourceRefOgcPenaltyId: { type: String, default: null },
     _schemaName: { type: String, default: 'AdministrativePenaltyBCMI' },
     _master: { type: 'ObjectId', default: null, index: true },
 
     mineGuid: { type: String, default: null, index: true },
-    unlistedMine: { type: String, default: '', index: true},
+    unlistedMine: { type: String, default: '', index: true },
     unlistedMineType: { type: String, default: '' },
 
     read: [{ type: String, trim: true, default: 'sysadmin' }],
@@ -21,14 +21,16 @@ module.exports = require('../../utils/model-schema-generator')(
     dateIssued: { type: Date, default: null },
     issuingAgency: { type: String, default: '' },
     author: { type: String, default: '' },
-    legislation: {
-      act: { type: String, default: '' },
-      regulation: { type: String, default: '' },
-      section: { type: String, default: '' },
-      subSection: { type: String, default: '' },
-      paragraph: { type: String, default: '' }
-    },
-    offence: { type: String, default: '' },
+    legislation: [
+      {
+        act: { type: String, default: '' },
+        regulation: { type: String, default: '' },
+        section: { type: String, default: '' },
+        subSection: { type: String, default: '' },
+        paragraph: { type: String, default: '' },
+        offence: { type: String, default: '' }
+      }
+    ],
     issuedTo: {
       write: [{ type: String, trim: true, default: 'sysadmin' }],
       read: [{ type: String, trim: true, default: 'sysadmin' }],
@@ -65,7 +67,7 @@ module.exports = require('../../utils/model-schema-generator')(
 
     sourceDateAdded: { type: Date, default: null },
     sourceDateUpdated: { type: Date, default: null },
-    sourceSystemRef: { type: String, default: 'nrpti' },
+    sourceSystemRef: { type: String, default: 'nrpti' }
   },
   'nrpti'
 );

@@ -69,21 +69,21 @@ class Orders extends BaseRecordUtils {
     }
 
     const authorizationType = csvRow['authorizationtype'];
-    order['legislation'] = {
+    const legislation = {
       act: 'Environmental Management Act'
     };
     if (authorizationType === 'Information') {
-      order['legislation']['section'] = 77;
-      order['legislationDescription'] = 'Information Order';
+      legislation['section'] = 77;
+      legislation['legislationDescription'] = 'Information Order';
     } else if (authorizationType === 'Pollution Prevention') {
-      order['legislation']['section'] = 81;
-      order['legislationDescription'] = 'Pollution Prevention Order';
+      legislation['section'] = 81;
+      legislation['legislationDescription'] = 'Pollution Prevention Order';
     } else if (authorizationType === 'Pollution Abatement') {
-      order['legislation']['section'] = 83;
-      order['legislationDescription'] = 'Pollution Abatement Order';
+      legislation['section'] = 83;
+      legislation['legislationDescription'] = 'Pollution Abatement Order';
     }
 
-    
+    order['legislation'] = [legislation];
 
     return order;
   }

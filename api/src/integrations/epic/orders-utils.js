@@ -47,12 +47,13 @@ class Orders extends BaseRecordUtils {
         break;
     }
 
+    legislation['legislationDescription'] = 'Order to cease or remedy.';
+
     return {
       ...(await super.transformRecord(epicRecord)),
       issuingAgency: 'Environmental Assessment Office',
       author: epicRecord.documentAuthor || '',
-      legislation: legislation,
-      legislationDescription: 'Order to cease or remedy.',
+      legislation: [legislation],
       issuedTo: {
         // Epic doesn't support `Individual` proponents
         type: 'Company',

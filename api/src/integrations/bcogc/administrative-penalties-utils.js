@@ -44,12 +44,14 @@ class AdministrativePenalty extends BaseRecordUtils {
     penalty['recordName'] = csvRow['Title'];
     penalty['dateIssued'] = new Date(csvRow['Date Issued']);
     penalty['location'] = 'British Columbia';
-    penalty['offence'] = 'Penalty for failure to comply with the Act or associated regulations';
 
-    penalty['legislation'] = {
-      act: 'Oil and Gas Activities Act',
-      section: 63,
-    };
+    penalty['legislation'] = [
+      {
+        act: 'Oil and Gas Activities Act',
+        section: 63,
+        offence: 'Penalty for failure to comply with the Act or associated regulations'
+      }
+    ];
 
     penalty['issuedTo'] = {
       type: 'Company',

@@ -74,7 +74,7 @@ describe('NrisDataSource', () => {
       mockingoose('Inspection').toReturn(_nrisInspectionDocument, 'findOne');
       const doc = await dataSource.transformRecord(_nrisInspectionDocument);
       expect(doc.fileName).toEqual(_nrisInspectionDocument.fileName);
-      expect(doc.legislationDescription).toEqual('Inspection to verify compliance with regulatory requirements.');
+      expect(doc.legislation[0].legislationDescription).toEqual('Inspection to verify compliance with regulatory requirements.');
     });
   });
 });

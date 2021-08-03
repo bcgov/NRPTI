@@ -35,9 +35,11 @@ class CertificatesAmendment extends BaseRecordUtils {
     return {
       ...(await super.transformRecord(epicRecord)),
       issuingAgency: 'Environmental Assessment Office',
-      legislation: {
-        act: (epicRecord.project && epicRecord.project.legislation) || ''
-      }
+      legislation: [
+        {
+          act: (epicRecord.project && epicRecord.project.legislation) || ''
+        }
+      ]
     };
   }
 }

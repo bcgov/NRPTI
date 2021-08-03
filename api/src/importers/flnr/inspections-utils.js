@@ -49,8 +49,12 @@ class Inspections extends BaseRecordUtils {
 
     inspection['location'] = csvRow['region'] || null;
 
-    inspection['legislation'] = CsvUtils.getLegislation(csvRow);
-    inspection['legislationDescription'] = 'Inspection to verify compliance with regulatory requirement';
+    inspection['legislation'] = [
+      {
+        ...CsvUtils.getLegislation(csvRow),
+        legislationDescription: 'Inspection to verify compliance with regulatory requirement'
+      }
+    ];
 
     inspection['outcomeDescription'] = CsvUtils.getOutcomeDescription(csvRow);
 

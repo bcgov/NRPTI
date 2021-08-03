@@ -43,10 +43,9 @@ class tickets extends BaseRecordUtils {
     ticket['issuingAgency'] = 'Natural Resource Officers';
     ticket['author'] = 'Natural Resource Officers';
     ticket['recordType'] = 'Ticket';
-    ticket['offence'] = csvRow['article_description'] || '';
     ticket['dateIssued'] = csvRow['service_date'] || null;
 
-    if (csvRow['region'] && csvRow['region'] !== '' ) {
+    if (csvRow['region'] && csvRow['region'] !== '') {
       ticket['location'] = csvRow['region'];
     } else if (csvRow['org_unit_name'] && csvRow['org_unit_name'] !== '') {
       ticket['location'] = csvRow['org_unit_name'];
@@ -61,17 +60,21 @@ class tickets extends BaseRecordUtils {
           type: 'Dollars',
           value: (csvRow['fine_amount'] && Number(csvRow['fine_amount'])) || null
         },
-        description:'Penalty Amount (CAD)'
+        description: 'Penalty Amount (CAD)'
       }
     ];
 
-    ticket['legislation'] = {
-      act: csvRow['act_description'] || '',
-      regulation: csvRow['reg_description'] || '',
-      section: csvRow['section'] || '',
-      subSection: csvRow['sub_section'] || '',
-      paragraph: csvRow['paragraph'] || ''
-    };
+    ticket['legislation'] = [
+      {
+        act: csvRow['act_description'] || '',
+        regulation: csvRow['reg_description'] || '',
+        section: csvRow['section'] || '',
+        subSection: csvRow['sub_section'] || '',
+        paragraph: csvRow['paragraph'] || '',
+
+        offence: csvRow['article_description'] || ''
+      }
+    ];
 
     const entityType = CsvUtils.getEntityType(csvRow);
 
@@ -88,7 +91,7 @@ class tickets extends BaseRecordUtils {
         dateOfBirth: null,
         firstName: csvRow['fc_client_name'] || '',
         lastName: '',
-        middleName: '',
+        middleName: ''
       };
     }
 

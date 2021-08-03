@@ -38,7 +38,7 @@ class Tickets extends BaseRecordUtils {
 
     let sourceRefId = '';
     if (csvRow['case_contravention_id'] && csvRow['enforcement_action_id']) {
-      sourceRefId = `${csvRow['case_contravention_id']}-${csvRow['enforcement_action_id']}`
+      sourceRefId = `${csvRow['case_contravention_id']}-${csvRow['enforcement_action_id']}`;
     }
     ticket['_sourceRefCoorsId'] = sourceRefId;
 
@@ -47,16 +47,20 @@ class Tickets extends BaseRecordUtils {
     ticket['issuingAgency'] = CsvUtils.getIssuingAgency(csvRow) || '';
     ticket['author'] = ticket['issuingAgency'];
 
-    ticket['legislation'] = {
-      act: (csvRow['act'] && BusinessLogicManager.applyBusinessLogicToAct(csvRow['act'])) || '',
-      regulation: csvRow['regulation_description'] || '',
-      section: csvRow['section'] || '',
-      subSection: csvRow['sub_section'] || '',
-      paragraph: csvRow['paragraph'] || ''
-    };
+    const offence = csvRow['description'] || '';
 
-    ticket['offence'] = csvRow['description'] || '';
-    ticket['recordName'] = ticket['offence'];
+    ticket['legislation'] = [
+      {
+        act: (csvRow['act'] && BusinessLogicManager.applyBusinessLogicToAct(csvRow['act'])) || '',
+        regulation: csvRow['regulation_description'] || '',
+        section: csvRow['section'] || '',
+        subSection: csvRow['sub_section'] || '',
+        paragraph: csvRow['paragraph'] || '',
+        offence: offence
+      }
+    ];
+
+    ticket['recordName'] = offence;
 
     const entityType = CsvUtils.getEntityType(csvRow) || null;
 

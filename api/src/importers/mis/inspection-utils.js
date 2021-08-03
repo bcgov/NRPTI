@@ -8,7 +8,7 @@ const MiscConstants = require('../../utils/constants/misc');
  * @class Inspections
  */
 
- class Inspections extends BaseRecordUtils {
+class Inspections extends BaseRecordUtils {
   /**
    * Creates an instance of Inspections.
    *
@@ -48,18 +48,20 @@ const MiscConstants = require('../../utils/constants/misc');
 
     inspection['location'] = csvRow['region'] || null;
 
-    inspection['legislation'] = {
-      act: 'Food Safety Act',
-      section: 9
-    }
-    inspection['legislationDescription'] = 'Inspection to verify compliance with regulatory requirement';
+    inspection['legislation'] = [
+      {
+        act: 'Food Safety Act',
+        section: 9,
+        legislationDescription: 'Inspection to verify compliance with regulatory requirement'
+      }
+    ];
 
     inspection['issuedTo'] = {
       type: MiscConstants.IssuedToEntityTypes.Company,
       companyName: (csvRow['est'] && csvRow['est'][' name']) || ''
-    }
+    };
     return inspection;
   }
- }
+}
 
- module.exports = Inspections;
+module.exports = Inspections;
