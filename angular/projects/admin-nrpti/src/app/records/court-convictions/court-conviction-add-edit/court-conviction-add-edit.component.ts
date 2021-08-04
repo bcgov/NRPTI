@@ -78,6 +78,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
       }
 
       this.buildForm();
+      this.subscribeToFormControlChanges();
 
       this.loading = false;
       this._changeDetectionRef.detectChanges();
@@ -119,6 +120,25 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
           break;
       }
     }
+  }
+
+  protected subscribeToFormControlChanges() {
+    // Set long/lat when mine value updates
+    this.myForm
+      .get('association.mineGuid')
+      .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(val => {
+        const selectedMine = this.storeService.getItem('mines').find(mine => mine._sourceRefId === val);
+        if (selectedMine.name !== 'None') {
+          this.myForm.get('latitude').setValue(selectedMine.location.coordinates[1]);
+          this.myForm.get('longitude').setValue(selectedMine.location.coordinates[0]);
+        } else {
+          this.myForm.get('latitude').setValue('');
+          this.myForm.get('longitude').setValue('');
+        }
+        this.myForm.controls.latitude.markAsDirty();
+        this.myForm.controls.longitude.markAsDirty();
+      });
   }
 
   public buildForm() {
