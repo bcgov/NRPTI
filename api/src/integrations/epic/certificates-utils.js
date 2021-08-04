@@ -35,9 +35,9 @@ class Certificates extends BaseRecordUtils {
     return {
       ...(await super.transformRecord(epicRecord)),
       issuingAgency: 'Environmental Assessment Office',
-      legislation: {
+      legislation: [{
         act: (epicRecord.project && epicRecord.project.legislation) || ''
-      }
+      }]
     };
   }
 }

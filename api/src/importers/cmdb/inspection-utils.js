@@ -8,7 +8,7 @@ const MiscConstants = require('../../utils/constants/misc');
  * @class Inspections
  */
 
- class Inspections extends BaseRecordUtils {
+class Inspections extends BaseRecordUtils {
   /**
    * Creates an instance of Inspections.
    *
@@ -28,7 +28,6 @@ const MiscConstants = require('../../utils/constants/misc');
    * @memberof Inspections
    */
   transformRecord(csvRow, outcomeDescription = '') {
-
     if (!csvRow) {
       throw Error('transformRecord - required csvRow must be non-null.');
     }
@@ -43,24 +42,26 @@ const MiscConstants = require('../../utils/constants/misc');
     inspection['issuingAgency'] = 'Ministry of Agriculture Food and Fisheries';
     inspection['author'] = 'Ministry of Agriculture';
 
-    inspection['recordName'] = (csvRow['inspection type']) || '';
+    inspection['recordName'] = csvRow['inspection type'] || '';
 
     inspection['description'] = 'Inspection to verify compliance with regulatory requirements';
-    inspection['outcomeDescription'] = (outcomeDescription || '');
+    inspection['outcomeDescription'] = outcomeDescription || '';
     inspection['location'] = csvRow['location'] || null;
 
-    inspection['legislation'] = {
-      act: 'Fish and Seafood Act',
-      section: 22
-    }
-    inspection['legislationDescription'] = 'Inspection to verify compliance with regulatory requirements';
+    inspection['legislation'] = [
+      {
+        act: 'Fish and Seafood Act',
+        section: 22,
+        legislationDescription: 'Inspection to verify compliance with regulatory requirements'
+      }
+    ];
 
     inspection['issuedTo'] = {
       type: MiscConstants.IssuedToEntityTypes.Company,
-      companyName: (csvRow['company name']) || ''
-    }
+      companyName: csvRow['company name'] || ''
+    };
     return inspection;
   }
- }
+}
 
- module.exports = Inspections;
+module.exports = Inspections;

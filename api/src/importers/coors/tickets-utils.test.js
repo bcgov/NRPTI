@@ -20,9 +20,8 @@ describe('transformRecord', () => {
       issuedTo: { dateOfBirth: null, firstName: '', lastName: '', middleName: '', type: 'Individual' },
       issuingAgency: '',
       author: '',
-      legislation: { act: '', paragraph: '', regulation: '', section: '', subSection: '' },
+      legislation: [{ act: '', paragraph: '', regulation: '', section: '', subSection: '', offence: '' }],
       location: '',
-      offence: '',
       recordName: '',
       penalties: [{ description: '', penalty: { type: 'Dollars', value: null }, type: 'Fined' }],
 
@@ -59,15 +58,17 @@ describe('transformRecord', () => {
       },
       issuingAgency: 'BC Parks',
       author: 'BC Parks',
-      legislation: {
-        act: 'Fisheries Canada',
-        paragraph: 'paragraph123',
-        regulation: 'regulation123',
-        section: 'section123',
-        subSection: 'subSection123'
-      },
+      legislation: [
+        {
+          act: 'Fisheries Canada',
+          paragraph: 'paragraph123',
+          regulation: 'regulation123',
+          section: 'section123',
+          subSection: 'subSection123',
+          offence: 'description123'
+        }
+      ],
       location: 'location123',
-      offence: 'description123',
       recordName: 'description123',
       penalties: [
         {

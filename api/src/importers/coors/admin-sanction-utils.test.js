@@ -2,7 +2,7 @@ const AdminSanctions = require('./admin-sanction-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
 describe('transformRecord', () => {
-  const adminSanctions = new AdminSanctions('authPayload', RECORD_TYPE.AdministrativeSanction , null);
+  const adminSanctions = new AdminSanctions('authPayload', RECORD_TYPE.AdministrativeSanction, null);
 
   it('throws an error if null csvRow parameter provided', () => {
     expect(() => adminSanctions.transformRecord(null)).toThrow('transformRecord - required csvRow must be non-null.');
@@ -48,14 +48,16 @@ describe('transformRecord', () => {
       },
       issuingAgency: 'Ministry of Forests Lands Natural Resource Operations and Rural Development',
       author: 'Ministry of Forests Lands Natural Resource Operations and Rural Development',
-      legislation: {
-        act: 'Wildlife Act',
-        paragraph: '',
-        regulation: '',
-        section: 85,
-        subSection: ''
-      },
-      legislationDescription: 'Angling, hunting and/or Limited Entry Hunting licence action for failure to pay fine',
+      legislation: [
+        {
+          act: 'Wildlife Act',
+          paragraph: '',
+          regulation: '',
+          section: 85,
+          subSection: '',
+          legislationDescription: 'Angling, hunting and/or Limited Entry Hunting licence action for failure to pay fine'
+        }
+      ],
       location: 'location123',
       penalties: [
         {
@@ -67,7 +69,8 @@ describe('transformRecord', () => {
           type: 'Other'
         }
       ],
-      summary: 'Licence action resulting from an unpaid fine for an offense under the regulation123 section123 (subSection123) (paragraph123) - description1234',
+      summary:
+        'Licence action resulting from an unpaid fine for an offense under the regulation123 section123 (subSection123) (paragraph123) - description1234',
       sourceSystemRef: 'coors-csv'
     });
   });
@@ -107,14 +110,16 @@ describe('transformRecord', () => {
       },
       issuingAgency: 'Ministry of Forests Lands Natural Resource Operations and Rural Development',
       author: 'Ministry of Forests Lands Natural Resource Operations and Rural Development',
-      legislation: {
-        act: 'Wildlife Act',
-        paragraph: '',
-        regulation: '',
-        section: 24,
-        subSection: ''
-      },
-      legislationDescription: 'Angling, hunting, firearm and/or LEH licence action prompted by violations',
+      legislation: [
+        {
+          act: 'Wildlife Act',
+          paragraph: '',
+          regulation: '',
+          section: 24,
+          subSection: '',
+          legislationDescription: 'Angling, hunting, firearm and/or LEH licence action prompted by violations'
+        }
+      ],
       location: 'location456',
       penalties: [
         {
@@ -126,7 +131,8 @@ describe('transformRecord', () => {
           type: 'Other'
         }
       ],
-      summary: "Director's decision to suspend or cancel licence due to a violation under the regulation123 section123 (subSection123) (paragraph123) - violations1234",
+      summary:
+        "Director's decision to suspend or cancel licence due to a violation under the regulation123 section123 (subSection123) (paragraph123) - violations1234",
       sourceSystemRef: 'coors-csv'
     });
   });

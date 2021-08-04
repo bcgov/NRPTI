@@ -22,7 +22,7 @@ describe('transformRecord', () => {
       issuedTo: { type: MiscConstants.IssuedToEntityTypes.Company, companyName: '' },
       sourceSystemRef: 'ams-csv',
       issuingAgency: 'Environmental Protection Division',
-      legislation: { act: 'Environmental Management Act' },
+      legislation: [{ act: 'Environmental Management Act' }],
       location: 'British Columbia',
       recordName: '-',
       summary: 'Authorization Number: undefined',
@@ -55,11 +55,13 @@ describe('transformRecord', () => {
         type: MiscConstants.IssuedToEntityTypes.Company
       },
       issuingAgency: 'Environmental Protection Division',
-      legislation: {
-        act: 'Environmental Management Act',
-        section: 83
-      },
-      legislationDescription: 'Pollution Abatement Order',
+      legislation: [
+        {
+          act: 'Environmental Management Act',
+          section: 83,
+          legislationDescription: 'Pollution Abatement Order'
+        }
+      ],
       location: 'North Region',
       centroid: [-125, 50],
 

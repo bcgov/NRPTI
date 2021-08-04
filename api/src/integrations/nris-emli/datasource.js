@@ -189,10 +189,10 @@ class NrisDataSource {
 
     const legislation = {
       act: 'Mines Act',
-      section: 15
+      section: 15,
+      legislationDescription: 'Inspection to verify compliance with regulatory requirements.'
     };
-
-    newRecord.legislationDescription = 'Inspection to verify compliance with regulatory requirements.';
+    
     newRecord.recordType = 'Inspection';
     newRecord._sourceRefNrisId = record.assessmentId;
     try {
@@ -205,7 +205,7 @@ class NrisDataSource {
     }
     newRecord.issuingAgency = 'Ministry of Energy Mines and Low Carbon Innovation';
     newRecord.author = 'EMLI';
-    newRecord.legislation = { ...legislation };
+    newRecord.legislation = [{ ...legislation }];
     newRecord.dateAdded = new Date();
     newRecord.dateUpdated = new Date();
 

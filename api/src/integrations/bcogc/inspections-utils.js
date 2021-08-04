@@ -57,11 +57,14 @@ class Inspections extends BaseRecordUtils {
     inspection['recordName'] =
       (csvRow['inspection number'] && `Inspection Number ${csvRow['inspection number']}`) || '-';
 
-    inspection['legislation'] = {
-      act: 'Oil and Gas Activities Act',
-      section: '57',
-      subSection: '4'
-    };
+    inspection['legislation'] = [
+      {
+        act: 'Oil and Gas Activities Act',
+        section: '57',
+        subSection: '4',
+        legislationDescription: 'Inspection to verify compliance with regulatory requirement'
+      }
+    ];
 
     inspection['issuedTo'] = {
       type: 'Company',
@@ -77,8 +80,6 @@ class Inspections extends BaseRecordUtils {
     }
 
     inspection['location'] = 'British Columbia';
-
-    inspection['legislationDescription'] = 'Inspection to verify compliance with regulatory requirement';
 
     inspection['outcomeDescription'] = CsvUtils.getOutcomeDescription(csvRow);
 
