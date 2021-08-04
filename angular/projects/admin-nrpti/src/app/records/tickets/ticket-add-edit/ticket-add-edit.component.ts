@@ -447,6 +447,11 @@ export class TicketAddEditComponent implements OnInit, OnDestroy {
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (ticket['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
+    // Properly unset centroid if lon/lat are deleted
+    if (!ticket['centroid'][0] || !ticket['centroid'][1]) {
+      ticket['centroid'] = [];
+    }
+
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (ticket['legislation'] = this.parseLegislationsFormGroups());
 

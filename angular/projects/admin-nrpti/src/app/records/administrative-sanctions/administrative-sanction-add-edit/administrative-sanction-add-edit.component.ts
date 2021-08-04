@@ -452,6 +452,11 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
         this.myForm.controls.latitude.value
       ]);
 
+    // Properly unset centroid if lon/lat are deleted
+    if (!administrativeSanction['centroid'][0] || !administrativeSanction['centroid'][1]) {
+      administrativeSanction['centroid'] = [];
+    }
+
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (administrativeSanction['legislation'] = this.parseLegislationsFormGroups());
 

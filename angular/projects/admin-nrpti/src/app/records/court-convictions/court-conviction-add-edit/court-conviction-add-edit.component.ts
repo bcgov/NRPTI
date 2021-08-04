@@ -519,6 +519,11 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (courtConviction['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
+    // Properly unset centroid if lon/lat are deleted
+    if (!courtConviction['centroid'][0] || !courtConviction['centroid'][1]) {
+      courtConviction['centroid'] = [];
+    }
+
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (courtConviction['legislation'] = this.parseLegislationsFormGroups());
 

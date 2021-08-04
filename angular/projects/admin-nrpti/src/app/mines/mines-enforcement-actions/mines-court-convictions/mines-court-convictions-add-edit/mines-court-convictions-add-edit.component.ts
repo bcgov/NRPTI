@@ -87,7 +87,7 @@ export class MinesCourtConvictionsAddEditComponent extends CourtConvictionAddEdi
 
   protected subscribeToFormControlChanges() {
     super.subscribeToFormControlChanges();
-    
+
     this.myForm
       .get('convictionInfoType')
       .valueChanges.pipe(takeUntil(this.ngUnsubscribe))

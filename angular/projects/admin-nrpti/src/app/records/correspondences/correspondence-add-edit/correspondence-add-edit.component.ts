@@ -370,6 +370,11 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (correspondence['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
+    // Properly unset centroid if lon/lat are deleted
+    if (!correspondence['centroid'][0] || !correspondence['centroid'][1]) {
+      correspondence['centroid'] = [];
+    }
+
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (correspondence['legislation'] = this.parseLegislationsFormGroups());
 

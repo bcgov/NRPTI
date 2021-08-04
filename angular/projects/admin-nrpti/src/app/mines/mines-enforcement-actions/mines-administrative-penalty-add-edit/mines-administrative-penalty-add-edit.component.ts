@@ -70,7 +70,7 @@ export class MinesAdministrativePenaltyAddEditComponent extends AdministrativePe
           ]
         };
       }
-      super.buildForm();      
+      super.buildForm();
       super.subscribeToFormControlChanges();
       this.loading = false;
       this._changeDetectionRef.detectChanges();
@@ -83,7 +83,7 @@ export class MinesAdministrativePenaltyAddEditComponent extends AdministrativePe
 
   async submit() {
     // Mark legislation dirty on Add because of default legislation
-    if(!this.isEditing) {
+    if (!this.isEditing) {
       this.myForm.controls.legislations.markAsDirty();
     }
 

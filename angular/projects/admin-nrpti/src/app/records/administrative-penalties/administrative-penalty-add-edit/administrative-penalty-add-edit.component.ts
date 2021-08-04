@@ -79,7 +79,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
           documents: []
         };
       }
-      
+
       this.buildForm();
       this.subscribeToFormControlChanges();
 
@@ -131,7 +131,6 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
       .get('association.mineGuid')
       .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(val => {
-        console.log(val)
         const selectedMine = this.storeService.getItem('mines').find(mine => mine._sourceRefId === val);
         if (selectedMine.name !== 'None') {
           this.myForm.get('latitude').setValue(selectedMine.location.coordinates[1]);
@@ -537,6 +536,11 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     this.myForm.controls.location.dirty && (administrativePenalty['location'] = this.myForm.controls.location.value);
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (administrativePenalty['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
+
+    // Properly unset centroid if lon/lat are deleted
+    if (!administrativePenalty['centroid'][0] || !administrativePenalty['centroid'][1]) {
+      administrativePenalty['centroid'] = [];
+    }
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (administrativePenalty['legislation'] = this.parseLegislationsFormGroups());
