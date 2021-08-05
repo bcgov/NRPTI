@@ -1,39 +1,29 @@
-<div class="my-3">
-  <section>
-    <div class="filter-header justify-content-between">
-      <h3>Filter</h3>
-      <button class="filter-header__button btn btn-primary align-self-start ml-3" (click)="closeButton.emit()">
-        Minimize Advanced Filters
-      </button>
-    </div>
-    <div>
-      <p>
-        The results list below will update instantly as you select criteria to filter. The URL will also update with
-        your unique criteria. If you want to return to your exact criteria, you can bookmark this page after you have
-        filtered (note that results may not be identical as content is updated).
-      </p>
-    </div>
-  </section>
-  <section>
+<div>
+  <div class=" filter-header justify-content-center text-center p-3 ">
+    <p class="mb-0">
+      Filter your results by name or company, dates, laws, and availablilty of documents.
+    </p>
+  </div>
+</div>
+
+<div>
+  <div class="p-3">
+    <p>
+      The results list below will update instantly as you select criteria to filter. The URL will also update with
+      your unique criteria.
+    </p>
+
     <form *ngIf="!loading" [formGroup]="formGroup" novalidate>
       <div class="flex-container">
         <div class="label-pair">
           <label for="dateIssuedStartFilter dateIssuedEndFilter">Issued Date</label>
           <span class="grey-subtext ml-2">(YYYY-MM-DD)</span>
           <div class="date-container">
-            <lib-date-picker
-              id="dateIssuedStartFilter"
-              [control]="formGroup.get('dateIssuedStart')"
-              [reset]="resetControls"
-              [minDate]="datepickerMinDate"
-            ></lib-date-picker>
+            <lib-date-picker id="dateIssuedStartFilter" [control]="formGroup.get('dateIssuedStart')"
+              [reset]="resetControls" [minDate]="datepickerMinDate"></lib-date-picker>
             <span class="date-separator align-self-center">To</span>
-            <lib-date-picker
-              id="dateIssuedEndFilter"
-              [control]="formGroup.get('dateIssuedEnd')"
-              [reset]="resetControls"
-              [minDate]="datepickerMinDate"
-            ></lib-date-picker>
+            <lib-date-picker id="dateIssuedEndFilter" [control]="formGroup.get('dateIssuedEnd')" [reset]="resetControls"
+              [minDate]="datepickerMinDate"></lib-date-picker>
           </div>
         </div>
       </div>
@@ -52,16 +42,11 @@
       </div>
       <div class="flex-container">
         <div class="label-pair">
-          <label for="activityTypeFilter">Type (Activity or Record)</label>
+          <label for="activityTypeFilter">Type</label>
           <span *ngIf="activityTypeCount" class="grey-subtext ml-2">({{ activityTypeCount }} selected)</span>
-          <app-autocomplete-multi-select
-            id="activityTypeFilter"
-            [control]="formGroup.get('activityType')"
-            [options]="activityTypeOptions"
-            [reset]="resetControls"
-            [placeholderText]="'Pick one or more'"
-            (numSelected)="activityTypeCount = $event"
-          ></app-autocomplete-multi-select>
+          <app-autocomplete-multi-select id="activityTypeFilter" [control]="formGroup.get('activityType')"
+            [options]="activityTypeOptions" [reset]="resetControls" [placeholderText]="'Pick one or more'"
+            (numSelected)="activityTypeCount = $event"></app-autocomplete-multi-select>
         </div>
       </div>
       <!-- temporarily hidden as per https://bcmines.atlassian.net/browse/PTI-513 -->
@@ -69,52 +54,42 @@
         <div class="label-pair">
           <label for="agencyFilter">Responsible Agency</label>
           <span *ngIf="agencyCount" class="grey-subtext ml-2">({{ agencyCount }} selected)</span>
-          <app-autocomplete-multi-select
-            id="agencyFilter"
-            [control]="formGroup.get('agency')"
-            [options]="agencyOptions"
-            [reset]="resetControls"
-            [placeholderText]="'Pick one or more'"
-            (numSelected)="agencyCount = $event"
-          ></app-autocomplete-multi-select>
+          <app-autocomplete-multi-select id="agencyFilter" [control]="formGroup.get('agency')" [options]="agencyOptions"
+            [reset]="resetControls" [placeholderText]="'Pick one or more'" (numSelected)="agencyCount = $event">
+          </app-autocomplete-multi-select>
         </div>
       </div>
       <div>
         <div class="label-pair">
           <label for="actFilter">Issued under which Act</label>
           <span *ngIf="actCount" class="grey-subtext ml-2">({{ actCount }} selected)</span>
-          <app-autocomplete-multi-select
-            id="actFilter"
-            [control]="formGroup.get('act')"
-            [options]="actOptions"
-            [reset]="resetControls"
-            [placeholderText]="'Pick one or more'"
-            (numSelected)="actCount = $event"
-          ></app-autocomplete-multi-select>
+          <app-autocomplete-multi-select id="actFilter" [control]="formGroup.get('act')" [options]="actOptions"
+            [reset]="resetControls" [placeholderText]="'Pick one or more'" (numSelected)="actCount = $event">
+          </app-autocomplete-multi-select>
         </div>
       </div>
       <div>
         <div class="label-pair">
           <label for="regulationFilter">Issued under which Regulation</label>
           <span *ngIf="regulationCount" class="grey-subtext ml-2">({{ regulationCount }} selected)</span>
-          <app-autocomplete-multi-select
-            id="regulationFilter"
-            [control]="formGroup.get('regulation')"
-            [options]="regulationOptions"
-            [reset]="resetControls"
-            [placeholderText]="'Pick one or more'"
-            (numSelected)="regulationCount = $event"
-          ></app-autocomplete-multi-select>
+          <app-autocomplete-multi-select id="regulationFilter" [control]="formGroup.get('regulation')"
+            [options]="regulationOptions" [reset]="resetControls" [placeholderText]="'Pick one or more'"
+            (numSelected)="regulationCount = $event"></app-autocomplete-multi-select>
         </div>
       </div>
     </form>
     <div class="filter-footer">
-      <button class="filter-footer__button btn btn-secondary align-self-end" (click)="clearSearchFilters()">
-        Clear Filters
-      </button>
-      <div class="align-self-end mr-1">
-        <app-share-record-button buttonText="Share Filtered Results"></app-share-record-button>
+      <div class="row px-3">
+        <button class="filter-footer__button m-1 btn btn-primary" (click)="closeButton.emit()">
+          Minimize Advanced Filters
+        </button>
+        <div class="align-self-end m-1 ">
+          <app-share-record-button buttonText="Share Filtered Results"></app-share-record-button>
+        </div>
+        <button class="filter-footer__button btn btn-secondary align-self-end m-1" (click)="clearSearchFilters()">
+          Clear Filters
+        </button>
       </div>
     </div>
-  </section>
+  </div>
 </div>

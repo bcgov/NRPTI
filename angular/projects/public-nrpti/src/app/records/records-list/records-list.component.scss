@@ -2,6 +2,7 @@
 @import "assets/styles/components/add-edit.scss";
 
 .search-filter {
+
   &__header {
     .keyword-help {
       font-size: 1.25rem;
@@ -54,4 +55,9 @@
 .grey-subtext_no-italics {
   color: $gray6;
   font-size: 15px;
+}
+
+.sticky-search{
+  position: sticky;
+  top: 0;
 }
