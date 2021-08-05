@@ -51,6 +51,11 @@ class CoorsCsvDataSource {
       let batchSize = process.env.CSV_IMPORT_BATCH_SIZE || 100;
 
       const recordTypeConfig = this.getRecordTypeConfig();
+      const courtConvictionTypeConfig = {
+        getUtil: (auth_payload, csvRow) => {
+          return new (require('./court-conviction-utils'))(auth_payload, RECORD_TYPE.CourtConviction, csvRow);
+        }
+      };
 
       if (!recordTypeConfig) {
         throw Error('batchProcessRecords - failed to find matching recordTypeConfig.');
@@ -58,12 +63,21 @@ class CoorsCsvDataSource {
 
       let promises = [];
       for (let i = 0; i < this.csvRows.length; i++) {
+        const csvRow = this.csvRows[i];
+
         // process Convictions serially so penalties can be appended to existing records propely
-        if (this.recordType === 'Court Conviction') {
-          await this.processRecord(this.csvRows[i], recordTypeConfig)
+        //
+        // Rows with enforcemnt_outcome === 'GTYJ' should be treated as Court Conviction regardless
+        // of the selected import type.  This is due to limitation on COORS export query.
+        // https://bcmines.atlassian.net/browse/NRPT-798
+        if (
+          this.recordType === 'Court Conviction' ||
+          (csvRow['enforcement_outcome'] && csvRow['enforcement_outcome'] === 'GTYJ')
+        ) {
+          await this.processRecord(csvRow, courtConvictionTypeConfig);
         } else {
           // batch process
-          promises.push(this.processRecord(this.csvRows[i], recordTypeConfig));
+          promises.push(this.processRecord(csvRow, recordTypeConfig));
           if (i % batchSize === 0 || i === this.csvRows.length - 1) {
             await Promise.all(promises);
             promises = [];
@@ -106,7 +120,7 @@ class CoorsCsvDataSource {
 
       // Record will be null if row has business_reviewed = N, skip processing it
       if (!nrptiRecord) {
-        defaultLog.debug('skipped record processing, not reviewed by business')
+        defaultLog.debug('skipped record processing, not reviewed by business');
         return Promise.resolve();
       }
       // Check if this record already exists
