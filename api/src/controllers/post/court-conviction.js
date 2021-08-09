@@ -536,23 +536,7 @@ exports.createBCMI = function(args, res, next, incomingObj) {
   incomingObj.issuingAgency && (courtConvictionBCMI.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (courtConvictionBCMI.author = incomingObj.author);
 
-  incomingObj.legislation &&
-    incomingObj.legislation.act &&
-    (courtConvictionBCMI.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (courtConvictionBCMI.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (courtConvictionBCMI.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (courtConvictionBCMI.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (courtConvictionBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
-
-  incomingObj.offence && (courtConvictionBCMI.offence = incomingObj.offence);
+  courtConvictionBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   courtConvictionBCMI.issuedTo.read = utils.ApplicationAdminRoles;
   courtConvictionBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];

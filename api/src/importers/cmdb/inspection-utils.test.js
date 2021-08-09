@@ -29,26 +29,29 @@ describe('transformRecord', () => {
       outcomeDescription: '',
       sourceSystemRef: 'agri-cmdb-csv',
       issuingAgency: 'Ministry of Agriculture Food and Fisheries',
-      legislation: {
-        act: 'Fish and Seafood Act',
-        section: 22
-      },
-      legislationDescription: descriptionString,
+      legislation: [
+        {
+          act: 'Fish and Seafood Act',
+          section: 22,
+          legislationDescription: descriptionString
+        }
+      ],
       location: null,
-      recordName: '',
+      recordName: ''
     });
   });
 
   it('transforms csv row fields into NRPTI record fields', () => {
-    const result = inspections.transformRecord({
-      'company name': 'Company 5',
-      'date issued': '10-07-20',
-      'inspection id': '1303',
-      'inspection type': 'Higher Risk Inspection',
-      'location':'Test Region',
-      'regulation section': 'FSLR-s.34'
-    },
-    'Compliance issue(s) identified under the following acts or regulations: FSLR-s.34'
+    const result = inspections.transformRecord(
+      {
+        'company name': 'Company 5',
+        'date issued': '10-07-20',
+        'inspection id': '1303',
+        'inspection type': 'Higher Risk Inspection',
+        location: 'Test Region',
+        'regulation section': 'FSLR-s.34'
+      },
+      'Compliance issue(s) identified under the following acts or regulations: FSLR-s.34'
     );
 
     expect(result).toEqual({
@@ -65,11 +68,13 @@ describe('transformRecord', () => {
         type: MiscConstants.IssuedToEntityTypes.Company
       },
       issuingAgency: 'Ministry of Agriculture Food and Fisheries',
-      legislation: {
-        act: 'Fish and Seafood Act',
-        section: 22
-      },
-      legislationDescription: descriptionString,
+      legislation: [
+        {
+          act: 'Fish and Seafood Act',
+          section: 22,
+          legislationDescription: descriptionString
+        }
+      ],
       location: 'Test Region',
       outcomeDescription: 'Compliance issue(s) identified under the following acts or regulations: FSLR-s.34',
 

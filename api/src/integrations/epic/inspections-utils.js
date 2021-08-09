@@ -49,12 +49,13 @@ class Inspections extends BaseRecordUtils {
         break;
     }
 
+    legislation['legislationDescription'] = 'Inspection to verify compliance with regulatory requirement';
+
     return {
       ...(await super.transformRecord(epicRecord)),
       issuingAgency: 'Environmental Assessment Office',
       author: epicRecord.documentAuthor || '',
-      legislation: legislation,
-      legislationDescription: 'Inspection to verify compliance with regulatory requirement',
+      legislation: [legislation],
       issuedTo: {
         // Epic doesn't support `Individual` proponents
         type: 'Company',

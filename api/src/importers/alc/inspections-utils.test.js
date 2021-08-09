@@ -23,12 +23,14 @@ describe('transformRecord', () => {
       description: '-',
       sourceSystemRef: 'alc-csv',
       issuingAgency: 'Agricultural Land Commission',
-      legislation: {
-        act: 'Agricultural Land Commission Act',
-        section: '49',
-        subSection: '1'
-      },
-      legislationDescription: 'Inspection to verify compliance with regulatory requirements',
+      legislation: [
+        {
+          act: 'Agricultural Land Commission Act',
+          section: '49',
+          subSection: '1',
+          legislationDescription: 'Inspection to verify compliance with regulatory requirements'
+        }
+      ],
       location: null,
       outcomeDescription: 'undefined - undefined',
       recordName: '-',
@@ -65,15 +67,18 @@ describe('transformRecord', () => {
         type: MiscConstants.IssuedToEntityTypes.Individual
       },
       issuingAgency: 'Agricultural Land Commission',
-      legislation: {
-        act: 'Agricultural Land Commission Act',
-        section: '49',
-        subSection: '1'
-      },
-      legislationDescription:
-        'Inspection to verify compliance with regulatory requirements',
+      legislation: [
+        {
+          act: 'Agricultural Land Commission Act',
+          section: '49',
+          subSection: '1',
+          legislationDescription: 'Inspection to verify compliance with regulatory requirements'
+        }
+      ],
+
       location: 'West Coast',
-      outcomeDescription: 'Alleged Non-Compliance - Notice of Contravention; Alleged Contravention: 20 (1) Non-farm use of land without authority',
+      outcomeDescription:
+        'Alleged Non-Compliance - Notice of Contravention; Alleged Contravention: 20 (1) Non-farm use of land without authority',
       sourceSystemRef: 'alc-csv'
     });
   });

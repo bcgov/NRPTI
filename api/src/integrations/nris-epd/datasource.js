@@ -197,9 +197,9 @@ class NrisDataSource {
     delete newRecord._id;
 
     const legislation = this.getLegislation(record);
+    legislation.legislationDescription = 'Inspection to verify compliance with regulatory requirement.';
 
     newRecord.recordName = `Inspection - ${record.requirementSource} - ${record.assessmentId}`;
-    newRecord.legislationDescription = 'Inspection to verify compliance with regulatory requirement.';
     newRecord.recordType = 'Inspection';
     newRecord._sourceRefNrisId = record.assessmentId;
     try {
@@ -212,7 +212,7 @@ class NrisDataSource {
     }
     newRecord.issuingAgency = this.stringTransformEPOtoEPD(record.resourceAgency);
     newRecord.author = 'Environmental Protection Division';
-    newRecord.legislation = { ...legislation };
+    newRecord.legislation = [{ ...legislation }];
     newRecord.dateAdded = new Date();
     newRecord.dateUpdated = new Date();
 
@@ -544,7 +544,8 @@ class NrisDataSource {
     if (
       record &&
       record.legislation &&
-      record.legislation.act === 'Greenhouse Gas Industrial Reporting and Control Act'
+      record.legislation[0] &&
+      record.legislation[0].act === 'Greenhouse Gas Industrial Reporting and Control Act'
     ) {
       return false;
     }

@@ -35,7 +35,7 @@ class CourtConvictions extends BaseRecordUtils {
 
     let sourceRefId = '';
     if (csvRow['case_contravention_id'] && csvRow['enforcement_action_id']) {
-      sourceRefId = `${csvRow['case_contravention_id']}-${csvRow['enforcement_action_id']}`
+      sourceRefId = `${csvRow['case_contravention_id']}-${csvRow['enforcement_action_id']}`;
     }
     conviction['_sourceRefCoorsId'] = sourceRefId;
 
@@ -44,15 +44,17 @@ class CourtConvictions extends BaseRecordUtils {
     conviction['issuingAgency'] = CsvUtils.getIssuingAgency(csvRow) || '';
     conviction['author'] = conviction['issuingAgency'];
 
-    conviction['legislation'] = {
-      act: (csvRow['act'] && BusinessLogicManager.applyBusinessLogicToAct(csvRow['act'])) || '',
-      regulation: csvRow['regulation_description'] || '',
-      section: csvRow['section'] || '',
-      subSection: csvRow['sub_section'] || '',
-      paragraph: csvRow['paragraph'] || ''
-    };
+    conviction['legislation'] = [
+      {
+        act: (csvRow['act'] && BusinessLogicManager.applyBusinessLogicToAct(csvRow['act'])) || '',
+        regulation: csvRow['regulation_description'] || '',
+        section: csvRow['section'] || '',
+        subSection: csvRow['sub_section'] || '',
+        paragraph: csvRow['paragraph'] || '',
+        offence: csvRow['description'] || ''
+      }
+    ];
 
-    conviction['offence'] = csvRow['description'] || '';
     conviction['recordName'] = (csvRow['case_no'] && `Case Number ${csvRow['case_no']}`) || '';
 
     const entityType = CsvUtils.getEntityType(csvRow) || null;
@@ -77,7 +79,7 @@ class CourtConvictions extends BaseRecordUtils {
     conviction['location'] = csvRow['location'] || '';
 
     const penaltyType = CsvUtils.getPenalty(csvRow['summary']);
-    const penaltyUnits = CsvUtils.getPenaltyUnits(csvRow['penalty_unit_code'])
+    const penaltyUnits = CsvUtils.getPenaltyUnits(csvRow['penalty_unit_code']);
     conviction['penalties'] = [
       {
         type: penaltyType,

@@ -25,8 +25,7 @@ describe('transformRecord', () => {
       description: '-',
       sourceSystemRef: 'nris-flnr-csv',
       issuingAgency: 'Natural Resource Officers',
-      legislation: null,
-      legislationDescription: 'Inspection to verify compliance with regulatory requirement',
+      legislation: [{ legislationDescription: 'Inspection to verify compliance with regulatory requirement' }],
       location: null,
       outcomeDescription: 'undefined - undefined',
       recordName: '-',
@@ -63,8 +62,11 @@ describe('transformRecord', () => {
         type: MiscConstants.IssuedToEntityTypes.Company
       },
       issuingAgency: 'Natural Resource Officers',
-      legislation: null,
-      legislationDescription: 'Inspection to verify compliance with regulatory requirement',
+      legislation: [
+        {
+          legislationDescription: 'Inspection to verify compliance with regulatory requirement'
+        }
+      ],
       location: 'West Coast',
       outcomeDescription: 'Compliant',
       projectName: 'LNG Canada Development Inc.',

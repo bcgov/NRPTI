@@ -29,13 +29,16 @@ describe('transformRecord', () => {
       outcomeDescription: '',
       sourceSystemRef: 'agri-mis-csv',
       issuingAgency: 'Ministry of Agriculture Food and Fisheries',
-      legislation: {
-        act: 'Food Safety Act',
-        section: 9
-      },
-      legislationDescription: descriptionString,
+      legislation: [
+        {
+          act: 'Food Safety Act',
+          section: 9,
+
+          legislationDescription: descriptionString
+        }
+      ],
       location: null,
-      recordName: '',
+      recordName: ''
     });
   });
 
@@ -64,11 +67,14 @@ describe('transformRecord', () => {
         type: MiscConstants.IssuedToEntityTypes.Company
       },
       issuingAgency: 'Ministry of Agriculture Food and Fisheries',
-      legislation: {
-        act: 'Food Safety Act',
-        section: 9
-      },
-      legislationDescription: descriptionString,
+      legislation: [
+        {
+          act: 'Food Safety Act',
+          section: 9,
+
+          legislationDescription: descriptionString
+        }
+      ],
       location: 'Test Region',
       outcomeDescription: 'Compliance issue - MR 123 Record Requirements',
 

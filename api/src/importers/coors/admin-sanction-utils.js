@@ -36,17 +36,16 @@ class AdminSanctions extends BaseRecordUtils {
     //common fields
     let sourceRefId = '';
     if (csvRow['case_contravention_id'] && csvRow['enforcement_action_id']) {
-      sourceRefId = `${csvRow['case_contravention_id']}-${csvRow['enforcement_action_id']}`
+      sourceRefId = `${csvRow['case_contravention_id']}-${csvRow['enforcement_action_id']}`;
     }
     adminSanction['_sourceRefCoorsId'] = sourceRefId;
     adminSanction['recordType'] = 'Administrative Sanction';
     adminSanction['recordName'] = (csvRow['case_no'] && `Case No. ${csvRow['case_no']}`) || '';
 
-    const ministry = 'Ministry of Forests Lands Natural Resource Operations and Rural Development'
+    const ministry = 'Ministry of Forests Lands Natural Resource Operations and Rural Development';
     adminSanction['issuingAgency'] = ministry;
     adminSanction['author'] = ministry;
     adminSanction['dateIssued'] = csvRow['effective_date'] || null;
-
 
     const entityType = CsvUtils.getEntityType(csvRow) || null;
     if (entityType === 'Company') {
@@ -70,14 +69,16 @@ class AdminSanctions extends BaseRecordUtils {
 
     // Section 85 specific fields
     if (csvRow['record_type_code'] === 'S85' && csvRow['business_reviewed_ind'] === 'Y') {
-      adminSanction['legislation'] = {
-        act: 'Wildlife Act',
-        regulation: '',
-        section: 85,
-        subSection: '',
-        paragraph: ''
-      };
-      adminSanction['legislationDescription'] = 'Angling, hunting and/or Limited Entry Hunting licence action for failure to pay fine';
+      adminSanction['legislation'] = [
+        {
+          act: 'Wildlife Act',
+          regulation: '',
+          section: 85,
+          subSection: '',
+          paragraph: '',
+          legislationDescription: 'Angling, hunting and/or Limited Entry Hunting licence action for failure to pay fine'
+        }
+      ];
 
       adminSanction['penalties'] = [
         {
@@ -90,16 +91,18 @@ class AdminSanctions extends BaseRecordUtils {
         }
       ];
       adminSanction['summary'] = this.buildSummary(csvRow, 85);
-    // Section 24 specific fields
+      // Section 24 specific fields
     } else if (csvRow['record_type_code'] === 'S24' && csvRow['business_reviewed_ind'] === 'Y') {
-      adminSanction['legislation'] = {
-        act: 'Wildlife Act',
-        regulation: '',
-        section: 24,
-        subSection: '',
-        paragraph: ''
-      };
-      adminSanction['legislationDescription'] = 'Angling, hunting, firearm and/or LEH licence action prompted by violations';
+      adminSanction['legislation'] = [
+        {
+          act: 'Wildlife Act',
+          regulation: '',
+          section: 24,
+          subSection: '',
+          paragraph: '',
+          legislationDescription: 'Angling, hunting, firearm and/or LEH licence action prompted by violations'
+        }
+      ];
 
       adminSanction['penalties'] = [
         {
@@ -123,23 +126,23 @@ class AdminSanctions extends BaseRecordUtils {
   buildSummary(csvRow, sectionNum) {
     let legislation;
     if (!csvRow['regulation_description']) {
-      legislation = csvRow['act']
+      legislation = csvRow['act'];
     } else {
-      legislation = csvRow['regulation_description']
+      legislation = csvRow['regulation_description'];
     }
 
     let enforcement = '';
     if (csvRow['enforcement_licence_code'] === 'DDC') {
       enforcement = "Director's decision to suspend or cancel licence";
     } else if (csvRow['enforcement_licence_code'] === 'AUT') {
-      enforcement = 'Automatic licence suspension or cancellation'
+      enforcement = 'Automatic licence suspension or cancellation';
     } else {
-      enforcement = 'Licence action'
+      enforcement = 'Licence action';
     }
 
     const section = csvRow['section'] || '';
-    const sub_section = (csvRow['sub_section'] && ` (${csvRow['sub_section']})`)|| '';
-    const paragraph = (csvRow['paragraph'] && ` (${csvRow['paragraph']})`)|| '';
+    const sub_section = (csvRow['sub_section'] && ` (${csvRow['sub_section']})`) || '';
+    const paragraph = (csvRow['paragraph'] && ` (${csvRow['paragraph']})`) || '';
     const description = csvRow['violations_prompting_action'] || '';
     let summary = '';
     if (sectionNum === 85) {

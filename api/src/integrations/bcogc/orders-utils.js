@@ -54,13 +54,13 @@ class Orders extends BaseRecordUtils {
 
     order['location'] = 'British Columbia';
 
-    order['legislation'] = {
-      act: 'Oil and Gas Activities Act',
-      section: this.getOrderSection(csvRow),
-    };
-
-    // Description set by the section number.
-    order['legislationDescription'] = this.getOrderSection(csvRow) === 49 ? 'General Order' : 'Action Order';
+    order['legislation'] = [
+      {
+        act: 'Oil and Gas Activities Act',
+        section: this.getOrderSection(csvRow),
+        legislationDescription: this.getOrderSection(csvRow) === 49 ? 'General Order' : 'Action Order'
+      }
+    ];
 
     order['issuedTo'] = {
       type: 'Company',

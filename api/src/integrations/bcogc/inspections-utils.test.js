@@ -23,9 +23,8 @@ describe('transformRecord', () => {
       issuingAgency: 'BC Oil and Gas Commission',
       author: 'BC Oil and Gas Commission',
       recordName: '-',
-      legislation: { act: 'Oil and Gas Activities Act', section: '57', subSection: '4' },
+      legislation: [{ act: 'Oil and Gas Activities Act', section: '57', subSection: '4', legislationDescription: 'Inspection to verify compliance with regulatory requirement' }],
       location: 'British Columbia',
-      legislationDescription: 'Inspection to verify compliance with regulatory requirement',
       description:
         'Inspection to verify compliance with regulatory requirements. Activities Inspected: -; Inspection Result: -',
       summary: '-',
@@ -60,15 +59,17 @@ describe('transformRecord', () => {
       issuingAgency: 'BC Oil and Gas Commission',
       author: 'BC Oil and Gas Commission',
       recordName: 'Inspection Number 123456',
-      legislation: {
-        act: 'Oil and Gas Activities Act',
-        section: '57',
-        subSection: '4'
-      },
+      legislation: [
+        {
+          act: 'Oil and Gas Activities Act',
+          section: '57',
+          subSection: '4',
+          legislationDescription: 'Inspection to verify compliance with regulatory requirement'
+        }
+      ],
       location: 'British Columbia',
       projectName: 'Coastal Gaslink',
-      _epicProjectId: new ObjectID('588511c4aaecd9001b825604'),
-      legislationDescription: 'Inspection to verify compliance with regulatory requirement',
+      _epicProjectId: new ObjectID('588511c4aaecd9001b825604'),      
       description:
         'Inspection to verify compliance with regulatory requirements. Activities Inspected: activitiesInspection123; Inspection Result: statusCancelled',
       summary: 'Inspection Number 123456',

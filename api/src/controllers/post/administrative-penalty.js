@@ -543,23 +543,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   incomingObj.issuingAgency && (administrativePenaltyBCMI.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (administrativePenaltyBCMI.author = incomingObj.author);
 
-  incomingObj.legislation &&
-    incomingObj.legislation.act &&
-    (administrativePenaltyBCMI.legislation.act = incomingObj.legislation.act);
-  incomingObj.legislation &&
-    incomingObj.legislation.regulation &&
-    (administrativePenaltyBCMI.legislation.regulation = incomingObj.legislation.regulation);
-  incomingObj.legislation &&
-    incomingObj.legislation.section &&
-    (administrativePenaltyBCMI.legislation.section = incomingObj.legislation.section);
-  incomingObj.legislation &&
-    incomingObj.legislation.subSection &&
-    (administrativePenaltyBCMI.legislation.subSection = incomingObj.legislation.subSection);
-  incomingObj.legislation &&
-    incomingObj.legislation.paragraph &&
-    (administrativePenaltyBCMI.legislation.paragraph = incomingObj.legislation.paragraph);
-
-  incomingObj.offence && (administrativePenaltyBCMI.offence = incomingObj.offence);
+  administrativePenaltyBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
 
   administrativePenaltyBCMI.issuedTo.read = utils.ApplicationAdminRoles;
   administrativePenaltyBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];

@@ -47,12 +47,14 @@ class Inspections extends BaseRecordUtils {
 
     inspection['location'] = csvRow['local government'] || null;
 
-    inspection['legislation'] = {
-      act: 'Agricultural Land Commission Act',
-      section: '49',
-      subSection: '1'
-    };
-    inspection['legislationDescription'] = 'Inspection to verify compliance with regulatory requirements';
+    inspection['legislation'] = [
+      {
+        act: 'Agricultural Land Commission Act',
+        section: '49',
+        subSection: '1',
+        legislationDescription: 'Inspection to verify compliance with regulatory requirements'
+      }
+    ];
 
     inspection['outcomeDescription'] = CsvUtils.getOutcomeDescription(csvRow);
 
@@ -75,7 +77,7 @@ class Inspections extends BaseRecordUtils {
         dateOfBirth: null,
         firstName: '',
         lastName: '',
-        middleName: '',
+        middleName: ''
       };
     }
 
