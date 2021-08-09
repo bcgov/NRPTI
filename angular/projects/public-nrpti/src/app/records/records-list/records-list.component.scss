@@ -57,7 +57,22 @@
   font-size: 15px;
 }
 
+.fixed-search{
+  flex: 0 0 600px;
+  padding: 0px !important;
+}
+
 .sticky-search{
   position: sticky;
   top: 0;
+}
+
+@media screen and (max-width: 1239px){
+  .sticky-search {
+    position: relative;
+  }
+
+  .fixed-search{
+    flex: 0 0 auto;
+  }
 }
