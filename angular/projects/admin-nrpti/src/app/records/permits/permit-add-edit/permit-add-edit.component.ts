@@ -290,6 +290,10 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (permit['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
+    // Properly unset centroid if lon/lat are deleted
+    if (!permit['centroid'][0] || !permit['centroid'][1]) {
+      permit['centroid'] = [];
+    }
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (permit['legislation'] = this.parseLegislationsFormGroups());

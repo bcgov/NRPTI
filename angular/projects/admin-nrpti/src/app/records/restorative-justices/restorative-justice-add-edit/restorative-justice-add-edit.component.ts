@@ -450,6 +450,11 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (restorativeJustice['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
+    // Properly unset centroid if lon/lat are deleted
+    if (!restorativeJustice['centroid'][0] || !restorativeJustice['centroid'][1]) {
+      restorativeJustice['centroid'] = [];
+    }
+
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (restorativeJustice['legislation'] = this.parseLegislationsFormGroups());
 

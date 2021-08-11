@@ -61,15 +61,19 @@ export class MinesAdministrativePenaltyAddEditComponent extends AdministrativePe
           sourceSystemRef: 'nrpti',
           documents: [],
           unlistedMine: '',
-          legislation: {
-            act: 'Mines Act',
-            section: '36.2'
-          }
+          legislation: [
+            {
+              act: 'Mines Act',
+              section: '36.2',
+              offence: 'Penalty for failure to comply with the Act or associated regulations'
+            }
+          ]
         };
       }
-    super.buildForm();
-    this.loading = false;
-    this._changeDetectionRef.detectChanges();
+      super.buildForm();
+      super.subscribeToFormControlChanges();
+      this.loading = false;
+      this._changeDetectionRef.detectChanges();
     });
   }
 
@@ -78,6 +82,11 @@ export class MinesAdministrativePenaltyAddEditComponent extends AdministrativePe
   }
 
   async submit() {
+    // Mark legislation dirty on Add because of default legislation
+    if (!this.isEditing) {
+      this.myForm.controls.legislations.markAsDirty();
+    }
+
     await super.save();
 
     if (!this.isEditing) {

@@ -372,6 +372,11 @@ export class ReportAddEditComponent implements OnInit, OnDestroy {
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (report['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
+    // Properly unset centroid if lon/lat are deleted
+    if (!report['centroid'][0] || !report['centroid'][1]) {
+      report['centroid'] = [];
+    }
+
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (report['legislation'] = this.parseLegislationsFormGroups());
 

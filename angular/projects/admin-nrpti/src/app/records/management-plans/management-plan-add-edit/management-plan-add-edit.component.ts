@@ -215,6 +215,11 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (managementPlan['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
+    // Properly unset centroid if lon/lat are deleted
+    if (!managementPlan['centroid'][0] || !managementPlan['centroid'][1]) {
+      managementPlan['centroid'] = [];
+    }
+
     // LNG flavour
     if (
       this.myForm.controls.lngDescription.dirty ||
