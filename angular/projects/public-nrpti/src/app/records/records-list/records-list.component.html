@@ -1,119 +1,105 @@
 <main class="container-fluid-padding">
   <div *ngIf="!loading">
-    <div class="row">
-      <div class="col-xl-3 col-lg-4 order-lg-1 order-2 mb-3">
-        <div class="search-filter__header">
-          <div>
-            <h5 class="d-inline-block">Keyword Search</h5>
-            <i
-              class="keyword-help material-icons grey-subtext_no-italics d-inline-block align-text-bottom ml-2"
-              matTooltip="Summary, description, location, outcome, and issued to name fields"
-              aria-label="Icon that displays a tooltip when focused or hovered over">
-              help_outline
-            </i>
-          </div>
-          <div class="keyword-search mb-3">
-            <input
-              class="keyword-search__input py-0 px-2 border-0"
-              (keyup.enter)="keywordSearch()"
-              placeholder="Type keyword search words..."
-              [(ngModel)]="keywordSearchWords" />
-            <button (click)="keywordSearch()" class="keyword-search__button border-0">
-              <i class="material-icons align-middle">search</i>
-            </button>
-          </div>
-          <button
-            [hidden]="showAdvancedFilters"
-            class="open-advanced-filters btn btn-primary float-right"
-            (click)="openAdvancedFilters()">
-            Open Advanced Filters
-          </button>
-        </div>
-      </div>
 
-      <div class="col-xl-9 col-lg-8 order-lg-2 order-1 mt-0">
-        <h1>
-          Natural Resources Compliance and Enforcement Database
-        </h1>
+    <div class="row mt-0 px-4 justify-content-center">
+      <h1>
+        Natural Resources Compliance and Enforcement Database
+      </h1>
 
-        <p>
-          This site can be used to search for compliance and enforcement actions issued by the natural resource
-          agencies. Where available, view Inspections, Orders, and other reports. Types of actions include
-          administrative penalties, orders, court convictions, violation tickets, and restorative justice. Filter your
-          results by name or company, dates, laws, and availability of documents.
-        </p>
+      <p>
+        This site can be used to search for compliance and enforcement actions taken by natural resource agencies
+        including inspections, orders, violation tickets, administrative penalties, court convictions, and more. Use the
+        keyword search bar or filter your resultes for more specific records.
+      </p>
 
-        <p>
-          Although new compliance and enforcement activities from natural resource agencies are being added
-          regularly, some data from some agencies are not published here at this time. Additional compliance
-          and enforcement data sources can be found <a [routerLink]="['', 'moreInfo']">here</a>.
-        </p>
-      </div>
     </div>
 
-    <div class="row">
-      <div class="mb-lg-0 mb-3" [ngClass]="{ 'col-xl-3 col-lg-4 show-advanced-filters': showAdvancedFilters }">
-        <div class="px-3 search-filter__content" [hidden]="!showAdvancedFilters">
-          <app-search-filters
-            [formGroup]="searchFiltersForm"
-            (closeButton)="closeAdvancedFilters()"></app-search-filters>
-        </div>
-      </div>
-
-      <div [ngClass]="showAdvancedFilters ? 'col-xl-9 col-lg-8' : 'col-xl col-lg'">
-        <div class="row mb-3">
-          <div class="col text-left">
-            <span class="mr-2 align-middle font-weight-bold">
-              Click on a row in the list below to view more details about the item.
-            </span>
-          </div>
-
-          <div class="col text-right">
-            <app-export-csv [queryParams]="queryParams" [totalRecords]="tableData.totalListItems"></app-export-csv>
-            <div ngbDropdown class="d-inline-block">
-              <button class="btn btn-primary sort-button ml-1" ngbDropdownToggle>
-                Sort List By: {{ sortingDisplay[tableData.sortBy] }}
+      <div class="d-flex row">
+        <div class="mb-3 col fixed-search">
+          <div class="sticky-search d-flex flex-column">
+            <div class="search-filter__header pt-3 order-2 order-lg-1 col">
+              <div>
+                <h5 class="d-inline-block">Keyword Search</h5>
+                <i class="keyword-help material-icons grey-subtext_no-italics d-inline-block align-text-bottom ml-2"
+                  matTooltip="Summary, description, location, outcome, and issued to name fields"
+                  aria-label="Icon that displays a tooltip when focused or hovered over">
+                  help_outline
+                </i>
+              </div>
+              <div class="keyword-search mb-3">
+                <input class="keyword-search__input py-0 px-2 border-0" (keyup.enter)="keywordSearch()"
+                  placeholder="Type keyword search words..." [(ngModel)]="keywordSearchWords" />
+                <button (click)="keywordSearch()" class="keyword-search__button border-0">
+                  <i class="material-icons align-middle">search</i>
+                </button>
+              </div>
+              <button [hidden]="showAdvancedFilters" class="open-advanced-filters btn btn-primary float-right"
+                (click)="openAdvancedFilters()">
+                Open Advanced Filters
               </button>
-              <div ngbDropdownMenu>
-                <button ngbDropdownItem (click)="changeSort('-dateIssued')">
-                  {{ sortingDisplay['-dateIssued'] }}
-                  <i *ngIf="tableData.sortBy === '-dateIssued'" class="align-middle material-icons">
-                    check_circle
-                  </i>
-                </button>
-                <button ngbDropdownItem (click)="changeSort('+recordType')">
-                  {{ sortingDisplay['+recordType'] }}
-                  <i *ngIf="tableData.sortBy === '+recordType'" class="align-middle material-icons">
-                    check_circle
-                  </i>
-                </button>
-                <button ngbDropdownItem (click)="changeSort('+issuedTo.fullName')">
-                  {{ sortingDisplay['+issuedTo.fullName'] }}
-                  <i *ngIf="tableData.sortBy === '+issuedTo.fullName'" class="align-middle material-icons">
-                    check_circle
-                  </i>
-                </button>
-                <button ngbDropdownItem (click)="changeSort('+location')">
-                  {{ sortingDisplay['+location'] }}
-                  <i *ngIf="tableData.sortBy === '+location'" class="align-middle material-icons">
-                    check_circle
-                  </i>
-                </button>
+            </div>
+
+            <div class="order-1 order-lg-2" [ngClass]="{ 'col show-advanced-filters': showAdvancedFilters }">
+              <div class="search-filter__content" [hidden]="!showAdvancedFilters">
+                <app-search-filters [formGroup]="searchFiltersForm" (closeButton)="closeAdvancedFilters()">
+                </app-search-filters>
               </div>
             </div>
           </div>
         </div>
 
-        <div *ngIf="!loading && tableData.totalListItems <= 0">
-          No Records found.
-        </div>
+        <div class="col">
+          <div class="row mb-3">
+            <div class="col text-left">
+              <span class="mr-2 align-middle font-weight-bold">
+                Click on a row in the list below to view more details about the item.
+              </span>
+            </div>
 
-        <lib-table-template
-          *ngIf="!loading && tableData.totalListItems > 0"
-          [data]="tableData"
-          [messageIn]="messageIn"
-          (messageOut)="onMessageOut($event)"></lib-table-template>
+            <div class="col text-right">
+              <app-export-csv [queryParams]="queryParams" [totalRecords]="tableData.totalListItems"></app-export-csv>
+              <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-primary sort-button ml-1" ngbDropdownToggle>
+                  Sort List By: {{ sortingDisplay[tableData.sortBy] }}
+                </button>
+                <div ngbDropdownMenu>
+                  <button ngbDropdownItem (click)="changeSort('-dateIssued')">
+                    {{ sortingDisplay['-dateIssued'] }}
+                    <i *ngIf="tableData.sortBy === '-dateIssued'" class="align-middle material-icons">
+                      check_circle
+                    </i>
+                  </button>
+                  <button ngbDropdownItem (click)="changeSort('+recordType')">
+                    {{ sortingDisplay['+recordType'] }}
+                    <i *ngIf="tableData.sortBy === '+recordType'" class="align-middle material-icons">
+                      check_circle
+                    </i>
+                  </button>
+                  <button ngbDropdownItem (click)="changeSort('+issuedTo.fullName')">
+                    {{ sortingDisplay['+issuedTo.fullName'] }}
+                    <i *ngIf="tableData.sortBy === '+issuedTo.fullName'" class="align-middle material-icons">
+                      check_circle
+                    </i>
+                  </button>
+                  <button ngbDropdownItem (click)="changeSort('+location')">
+                    {{ sortingDisplay['+location'] }}
+                    <i *ngIf="tableData.sortBy === '+location'" class="align-middle material-icons">
+                      check_circle
+                    </i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="!loading && tableData.totalListItems <= 0">
+            No Records found.
+          </div>
+          <div class="list-scrollable">
+            <lib-table-template *ngIf="!loading && tableData.totalListItems > 0" [data]="tableData"
+              [messageIn]="messageIn" (messageOut)="onMessageOut($event)"></lib-table-template>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 </main>
