@@ -214,6 +214,11 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (constructionPlan['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
+    // Properly unset centroid if lon/lat are deleted
+    if (!constructionPlan['centroid'][0] || !constructionPlan['centroid'][1]) {
+      constructionPlan['centroid'] = [];
+    }
+
     // LNG flavour
     if (
       this.myForm.controls.lngDescription.dirty ||

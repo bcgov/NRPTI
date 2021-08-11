@@ -375,6 +375,10 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (certificateAmendment['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
+    // Properly unset centroid if lon/lat are deleted
+    if (!certificateAmendment['centroid'][0] || !certificateAmendment['centroid'][1]) {
+      certificateAmendment['centroid'] = [];
+    }
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (certificateAmendment['legislation'] = this.parseLegislationsFormGroups());

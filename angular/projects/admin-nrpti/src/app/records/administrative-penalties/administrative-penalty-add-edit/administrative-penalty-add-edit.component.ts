@@ -27,7 +27,6 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
   public lastEditedSubText = null;
   public componentTitle = 'Shared Data [Master]';
   public unlistedMine = '';
-  public mineLocation = null;
 
   // Flavour data
   public nrcedFlavour = null;
@@ -82,6 +81,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
       }
 
       this.buildForm();
+      this.subscribeToFormControlChanges();
 
       this.loading = false;
       this._changeDetectionRef.detectChanges();
@@ -123,6 +123,25 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
           break;
       }
     }
+  }
+
+  protected subscribeToFormControlChanges() {
+    // Set long/lat when mine value updates
+    this.myForm
+      .get('association.mineGuid')
+      .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(val => {
+        const selectedMine = this.storeService.getItem('mines').find(mine => mine._sourceRefId === val);
+        if (selectedMine.name !== 'None') {
+          this.myForm.get('latitude').setValue(selectedMine.location.coordinates[1]);
+          this.myForm.get('longitude').setValue(selectedMine.location.coordinates[0]);
+        } else {
+          this.myForm.get('latitude').setValue('');
+          this.myForm.get('longitude').setValue('');
+        }
+        this.myForm.controls.latitude.markAsDirty();
+        this.myForm.controls.longitude.markAsDirty();
+      });
   }
 
   public buildForm() {
@@ -518,8 +537,9 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (administrativePenalty['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
-    if (this.mineLocation) {
-      administrativePenalty['centroid'] = [this.mineLocation.coordinates[0], this.mineLocation.coordinates[1]];
+    // Properly unset centroid if lon/lat are deleted
+    if (!administrativePenalty['centroid'][0] || !administrativePenalty['centroid'][1]) {
+      administrativePenalty['centroid'] = [];
     }
 
     // tslint:disable-next-line:max-line-length

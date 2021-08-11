@@ -400,6 +400,12 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.location.dirty && (inspection['location'] = this.myForm.controls.location.value);
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (inspection['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
+
+    // Properly unset centroid if lon/lat are deleted
+    if (!inspection['centroid'][0] || !inspection['centroid'][1]) {
+      inspection['centroid'] = [];
+    }
+
     this.myForm.controls.outcomeStatus.dirty &&
       (inspection['outcomeStatus'] = this.myForm.controls.outcomeStatus.value);
     this.myForm.controls.outcomeDescription.dirty &&

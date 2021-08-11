@@ -408,6 +408,12 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.location.dirty && (order['location'] = this.myForm.controls.location.value);
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (order['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
+
+    // Properly unset centroid if lon/lat are deleted
+    if (!order['centroid'][0] || !order['centroid'][1]) {
+      order['centroid'] = [];
+    }
+
     this.myForm.controls.outcomeStatus.dirty && (order['outcomeStatus'] = this.myForm.controls.outcomeStatus.value);
     this.myForm.controls.outcomeDescription.dirty &&
       (order['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);

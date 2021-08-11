@@ -331,6 +331,11 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
     (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
       (annualReport['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
+    // Properly unset centroid if lon/lat are deleted
+    if (!annualReport['centroid'][0] || !annualReport['centroid'][1]) {
+      annualReport['centroid'] = [];
+    }
+
     // BCMI flavour
     if (this.myForm.controls.bcmiDescription.dirty || this.myForm.controls.publishBcmi.dirty) {
       annualReport['AnnualReportBCMI'] = {};
