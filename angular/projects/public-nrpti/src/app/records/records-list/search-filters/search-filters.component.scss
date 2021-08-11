@@ -2,8 +2,10 @@
 @import "assets/styles/components/add-edit.scss";
 
 .filter-header {
-  @include flex-box();
-  @include flex-direction(row);
+  background-color: #003366;
+  color: #ffffff;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 
   &__button {
     background-color: $primary;
