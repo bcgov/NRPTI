@@ -74,7 +74,7 @@ class NrisDataSource {
       // if we set a range larger than a few months.  After which, increment both the startDate and endDate to get the
       // next month, until we reach the final stop date
       let startDate = moment('2020-01-01');
-      let endDate = moment(startDate).add(1, 'M');
+      let endDate = moment(startDate).add(2, 'w');
       let stopDate = moment();
 
       let statusObject = {
@@ -102,7 +102,7 @@ class NrisDataSource {
           itemsProcessed: statusObject.itemsProcessed
         });
         startDate = endDate;
-        endDate = moment(startDate).add(1, 'M');
+        endDate = moment(startDate).add(1, 'w');
       }
 
       await this.taskAuditRecord.updateTaskRecord({ status: statusObject.status });
@@ -140,10 +140,7 @@ class NrisDataSource {
 
       for (let i = 0; i < records.length; i++) {
         // Make sure these are completed, and >= 7 days before we bring in the record.
-        if (
-          records[i].assessmentStatus === 'Complete' &&
-          moment().diff(moment(records[i].completionDate), 'days') > 7
-        ) {
+        if (this.shouldProcessRecord(records[i])) {
           const newRecord = await this.transformRecord(records[i]);
           const existingRecord = await this.findExistingRecord(newRecord);
 
@@ -181,6 +178,27 @@ class NrisDataSource {
     return processingObject;
   }
 
+  shouldProcessRecord(record) {
+    if (!record) return false;
+
+    const validassessmentSubStatus = ['Closed', 'Response Received', 'Report Sent'];
+    const reportDateAge = moment().diff(moment(record.inspection.inspctReportSentDate), 'days');
+
+    // Only import assessmentSubStatus in 'Closed', 'Response Received' or 'Report Sent'
+    if (!validassessmentSubStatus.includes(record.assessmentSubStatus)) return false;
+
+    // For 'Response Received' and 'Report Sent' only import records that are 45 days old
+    if (validassessmentSubStatus.slice(1).includes(record.assessmentSubStatus) && reportDateAge < 45) return false;
+
+    if (record.inspection.inspectionSubType !== 'Mine Inspection') return false;
+
+    if (record.assessmentSubType !== 'Compliance Review' && record.assessmentSubType !== 'Inspection') return false;
+
+    if (record.inspection.inspectionType[0] === 'Audit') return false;
+
+    return true;
+  }
+
   async transformRecord(record) {
     const Inspection = mongoose.model(RECORD_TYPE.Inspection._schemaName);
     let newRecord = new Inspection().toObject();
@@ -192,7 +210,7 @@ class NrisDataSource {
       section: 15,
       legislationDescription: 'Inspection to verify compliance with regulatory requirements.'
     };
-    
+
     newRecord.recordType = 'Inspection';
     newRecord._sourceRefNrisId = record.assessmentId;
     try {
@@ -236,15 +254,22 @@ class NrisDataSource {
 
     newRecord.recordName = `EMLI Inspection - ${record.assessmentId}`;
     newRecord.projectName = record.location.locationName;
-    newRecord.description = `Inspection No.: ${record.assessmentId}; Inspection Type: ${record.inspection.inspectionType[0]}; Permit No.: ${record.authorization.sourceId}`;
+    const permitNo =
+      record.authorization && record.authorization.sourceId ? `; Permit No.: ${record.authorization.sourceId}` : '';
+    newRecord.description = `Inspection No.: ${record.assessmentId}; Inspection Type: ${record.inspection.inspectionType[0]}${permitNo}`;
 
-    newRecord.location = record.location.locationDescription;
+    // Unset the location field. See https://bcmines.atlassian.net/browse/NRPT-777
+    newRecord.location = '';
 
     if (record.location && Number(record.location.latitude) && Number(record.location.longitude)) {
       newRecord.centroid = [Number(record.location.longitude), Number(record.location.latitude)];
     }
 
-    newRecord.outcomeDescription = 'Inspection report closed. Any orders were addressed to the satisfaction of the inspector or escalated for enforcement.';
+    if (record.assessmentSubStatus === 'Closed') {
+      newRecord.outcomeDescription = 'Inspection status: Closed';
+    } else {
+      newRecord.outcomeDescription = 'Inspection status: Open';
+    }
 
     defaultLog.info('Processed:', record.assessmentId);
     return newRecord;
@@ -292,8 +317,7 @@ class NrisDataSource {
 
       const uploadDir = process.env.UPLOAD_DIRECTORY || '/tmp/';
       let fileName = res.headers['content-disposition'].split('= ').pop();
-      fileName = fileName.replace(/[^a-z0-9 ]/gi, '');
-      fileName = fileName.replace(' ', '_');
+      fileName = fileName.replace(/[^a-z0-9\-_.*'()]/gi, '_');
       const tempFilePath = uploadDir + fileName;
       // Attempt to save locally and prepare for upload to S3.
       await new Promise(resolve => {

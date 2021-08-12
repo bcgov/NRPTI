@@ -1,5 +1,7 @@
-const NrisDataSource = require('./datasource');
 const mockingoose = require('mockingoose');
+const moment = require('moment');
+
+const NrisDataSource = require('./datasource');
 
 const _nrisInspectionDocument = {
   _id: '507f191e810c19729de860ea',
@@ -74,7 +76,155 @@ describe('NrisDataSource', () => {
       mockingoose('Inspection').toReturn(_nrisInspectionDocument, 'findOne');
       const doc = await dataSource.transformRecord(_nrisInspectionDocument);
       expect(doc.fileName).toEqual(_nrisInspectionDocument.fileName);
-      expect(doc.legislation[0].legislationDescription).toEqual('Inspection to verify compliance with regulatory requirements.');
+      expect(doc.legislation[0].legislationDescription).toEqual(
+        'Inspection to verify compliance with regulatory requirements.'
+      );
+    });
+
+    it('should not process null record', async () => {
+      const dataSource = new NrisDataSource();
+
+      const result = dataSource.shouldProcessRecord();
+      expect(result).toEqual(false);
+    });
+
+    it('should process valid report sent or response received record', async () => {
+      const dataSource = new NrisDataSource();
+
+      const assessmentSubStatusList = ['Response Received', 'Report Sent'];
+
+      for (const assessmentSubStatus of assessmentSubStatusList) {
+        const record = {
+          assessmentSubType: 'Inspection',
+          assessmentSubStatus: assessmentSubStatus,
+          inspection: {
+            inspectionType: ['Health and Safety'],
+            inspctReportSentDate: '2020-01-27 00:00',
+            inspectionSubType: 'Mine Inspection'
+          }
+        };
+
+        const result = dataSource.shouldProcessRecord(record);
+        expect(result).toEqual(true);
+      }
+    });
+
+    it('should not process report sent or response received record newer than 45 days', async () => {
+      const dataSource = new NrisDataSource();
+
+      const assessmentSubStatusList = ['Response Received', 'Report Sent'];
+
+      for (const assessmentSubStatus of assessmentSubStatusList) {
+        const record = {
+          assessmentSubType: 'Inspection',
+          assessmentSubStatus: assessmentSubStatus,
+          inspection: {
+            inspectionType: ['Health and Safety'],
+            inspctReportSentDate: moment()
+              .subtract(43, 'days')
+              .format(),
+            inspectionSubType: 'Mine Inspection'
+          }
+        };
+
+        const result = dataSource.shouldProcessRecord(record);
+        expect(result).toEqual(false);
+      }
+    });
+
+    it('should process closed record', async () => {
+      const dataSource = new NrisDataSource();
+
+      const record = {
+        assessmentSubType: 'Inspection',
+        assessmentSubStatus: 'Closed',
+        inspection: {
+          inspectionType: ['Health and Safety'],
+          inspctReportSentDate: moment()
+            .subtract(43, 'days')
+            .format(),
+          inspectionSubType: 'Mine Inspection'
+        }
+      };
+
+      const result = dataSource.shouldProcessRecord(record);
+      expect(result).toEqual(true);
+    });
+
+    it('should not process audit record', async () => {
+      const dataSource = new NrisDataSource();
+
+      const record = {
+        assessmentSubType: 'Inspection',
+        assessmentSubStatus: 'Closed',
+        inspection: {
+          inspectionType: ['Audit'],
+          inspctReportSentDate: moment()
+            .subtract(43, 'days')
+            .format(),
+          inspectionSubType: 'Mine Inspection'
+        }
+      };
+
+      const result = dataSource.shouldProcessRecord(record);
+      expect(result).toEqual(false);
+    });
+
+    it('should not process non Mine Inspection record', async () => {
+      const dataSource = new NrisDataSource();
+
+      const record = {
+        assessmentSubType: 'Inspection',
+        assessmentSubStatus: 'Closed',
+        inspection: {
+          inspectionType: ['Health and Safety'],
+          inspctReportSentDate: moment()
+            .subtract(43, 'days')
+            .format(),
+          inspectionSubType: 'inspectionSubType'
+        }
+      };
+
+      const result = dataSource.shouldProcessRecord(record);
+      expect(result).toEqual(false);
+    });
+
+    it('should process Compliance Review OR Inspection assessmentSubType record', async () => {
+      const dataSource = new NrisDataSource();
+
+      const assessmentSubTypeList = ['Compliance Review', 'Inspection'];
+
+      for (const assessmentSubType of assessmentSubTypeList) {
+        const record = {
+          assessmentSubType: assessmentSubType,
+          assessmentSubStatus: 'Response Received',
+          inspection: {
+            inspectionType: ['Health and Safety'],
+            inspctReportSentDate: '2020-01-27 00:00',
+            inspectionSubType: 'Mine Inspection'
+          }
+        };
+
+        const result = dataSource.shouldProcessRecord(record);
+        expect(result).toEqual(true);
+      }
+    });
+
+    it('should not process other assessmentSubType record', async () => {
+      const dataSource = new NrisDataSource();
+      
+      const record = {
+        assessmentSubType: 'assessmentSubType',
+        assessmentSubStatus: 'Response Received',
+        inspection: {
+          inspectionType: ['Health and Safety'],
+          inspctReportSentDate: '2020-01-27 00:00',
+          inspectionSubType: 'Mine Inspection'
+        }
+      };
+
+      const result = dataSource.shouldProcessRecord(record);
+      expect(result).toEqual(false);
     });
   });
 });

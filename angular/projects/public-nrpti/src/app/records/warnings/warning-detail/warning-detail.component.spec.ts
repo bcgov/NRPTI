@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { WarningDetailComponent } from './warning-detail.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,7 +16,7 @@ describe('WarningDetailComponent', () => {
 
   beforeEach((() => {
     TestBed.configureTestingModule({
-      imports: [GlobalModule],
+      imports: [GlobalModule, HttpClientTestingModule],
       declarations: [WarningDetailComponent, ProjectLinkPipe],
       providers: [
         { provide: ActivatedRoute, useValue: activedRouteStub },

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { RestorativeJusticeDetailComponent } from './restorative-justice-detail.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,7 +17,7 @@ describe('RestorativeJusticeDetailComponent', () => {
 
   beforeEach((() => {
     TestBed.configureTestingModule({
-      imports: [GlobalModule, CommonModule],
+      imports: [GlobalModule, CommonModule, HttpClientTestingModule],
       declarations: [RestorativeJusticeDetailComponent, ProjectLinkPipe],
       providers: [
         { provide: ActivatedRoute, useValue: activedRouteStub },

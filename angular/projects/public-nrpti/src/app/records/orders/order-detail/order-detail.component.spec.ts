@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { OrderDetailComponent } from './order-detail.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,7 +19,8 @@ describe('OrderDetailComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         GlobalModule,
-        CommonModule
+        CommonModule,
+        HttpClientTestingModule
       ],
       declarations: [OrderDetailComponent, ProjectLinkPipe],
       providers: [

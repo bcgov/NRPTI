@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { IBreadcrumb, LoadingScreenService } from 'nrpti-angular-components';
+import { IBreadcrumb, LoadingScreenService, StoreService } from 'nrpti-angular-components';
+import { FactoryService } from './services/factory.service';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,8 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     private loadingScreenService: LoadingScreenService,
+    private factoryService: FactoryService,
+    private storeService: StoreService,
     private _changeDetectionRef: ChangeDetectorRef
   ) {
     this.breadcrumbs = [];
@@ -39,6 +42,24 @@ export class AppComponent implements OnInit {
           break;
       }
       this._changeDetectionRef.detectChanges();
+
+      this.updateMines();
     });
+  }
+
+  private updateMines() {
+    this.factoryService.getMines().subscribe((mineResults: any[]) => {
+      this.setStoreServiceItem('mines', mineResults[0].data.searchResults);
+    });
+  }
+
+  // Sets a store service list item, but unshifts a null-based element first.
+  private setStoreServiceItem(key, list) {
+    // First unshift an item into the list.
+    list.unshift({ _id: null, name: 'None' });
+
+    // Set the object in the store service
+    const newObject = { [key]: list };
+    this.storeService.setItem(newObject);
   }
 }
