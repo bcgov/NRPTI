@@ -203,9 +203,18 @@ class NrisDataSource {
     newRecord.recordType = 'Inspection';
     newRecord._sourceRefNrisId = record.assessmentId;
     try {
-      newRecord.dateIssued = record.completionDate
-        ? moment.tz(record.completionDate, 'America/Vancouver').toDate()
-        : null;
+      if (
+        record.requirementSource &&
+        record.requirementSource === 'Greenhouse Gas Industrial Reporting and Control Act'
+      ) {
+        newRecord.dateIssued = record.inspection.inspctSiteVisitedDate
+          ? moment.tz(record.inspection.inspctSiteVisitedDate, 'America/Vancouver').toDate()
+          : null;
+      } else {
+        newRecord.dateIssued = record.completionDate
+          ? moment.tz(record.completionDate, 'America/Vancouver').toDate()
+          : null;
+      }
     } catch (error) {
       defaultLog.debug(error);
       newRecord.dateIssued = null;
