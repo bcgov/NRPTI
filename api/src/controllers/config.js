@@ -56,6 +56,11 @@ exports.publicGetConfig = async function (args, res, next) {
     configurationData['FEATURE_FLAG'] = featureFlags.data;  
   }
 
+  const appUrls = await FeatureFlag.findOne({ _schemaName: 'ApplicationUrl' });
+  if (appUrls && appUrls.data) {
+    configurationData['APPLICATION_URLS'] = appUrls.data;  
+  }
+
   // get project specific confguration
   // fetch the latest business area specific CommunicationPackage
   // attach it to the configuration data under "COMMUNICATIONS"
