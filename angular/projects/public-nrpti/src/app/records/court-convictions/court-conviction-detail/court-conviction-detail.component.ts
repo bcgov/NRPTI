@@ -25,7 +25,7 @@ export class CourtConvictionDetailComponent implements OnInit, OnDestroy {
     public router: Router,
     public factoryService: FactoryService,
     public _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     if (this.data) {
