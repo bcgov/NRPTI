@@ -167,7 +167,7 @@ export class CsvConstants {
    * @memberof CsvConstants
    */
   public static readonly coorsTicketCsvRequiredFormats: IRequiredFormat[] = [
-    { field: 'TICKET_DATE', type: 'date', format: 'MM/DD/YYYY' },
+    { field: 'TICKET_DATE', type: 'date', format: 'YY-MM-DD' },
     { field: 'BIRTH_DATE', type: 'date', format: 'YYYY/MM/DD' }
   ];
 
@@ -179,7 +179,7 @@ export class CsvConstants {
    * @memberof CsvConstants
    */
   public static readonly coorsTicketCsvDateFields: IDateField[] = [
-    { field: 'TICKET_DATE', format: 'MM/DD/YYYY' },
+    { field: 'TICKET_DATE', format: 'YY-MM-DD' },
     { field: 'BIRTH_DATE', format: 'YYYY/MM/DD' }
   ];
 
