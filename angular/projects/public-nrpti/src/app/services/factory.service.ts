@@ -148,6 +148,16 @@ export class FactoryService {
     });
   }
 
+  /**
+   * Get list of BCMI Mines
+   *
+   * @returns {Observable<any[]>}
+   * @memberof FactoryService
+   */
+  public getMines(): Observable<any[]> {
+    return this.getRecords(null, ['MineBCMI'], null, null, 1000, null, null, null, null);
+  }
+
   // public getFullList(schema: string): Observable<Record[]> {
   //   return this.searchService.getFullList(schema);
   // }
