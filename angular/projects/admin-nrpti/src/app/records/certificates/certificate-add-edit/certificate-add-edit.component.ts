@@ -290,7 +290,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       (certificate['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
     // Properly unset centroid if lon/lat are deleted
-    if (!certificate['centroid'][0] || !certificate['centroid'][1]) {
+    if (!certificate['centroid'] || !certificate['centroid'][0] || !certificate['centroid'][1]) {
       certificate['centroid'] = [];
     }
 

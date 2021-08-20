@@ -371,7 +371,7 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
       (correspondence['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
     // Properly unset centroid if lon/lat are deleted
-    if (!correspondence['centroid'][0] || !correspondence['centroid'][1]) {
+    if (!correspondence['centroid'] || !correspondence['centroid'][0] || !correspondence['centroid'][1]) {
       correspondence['centroid'] = [];
     }
 

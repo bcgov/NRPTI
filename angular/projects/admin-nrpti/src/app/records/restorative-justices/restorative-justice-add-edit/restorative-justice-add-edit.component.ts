@@ -451,7 +451,7 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
       (restorativeJustice['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
     // Properly unset centroid if lon/lat are deleted
-    if (!restorativeJustice['centroid'][0] || !restorativeJustice['centroid'][1]) {
+    if (!restorativeJustice['centroid'] || !restorativeJustice['centroid'][0] || !restorativeJustice['centroid'][1]) {
       restorativeJustice['centroid'] = [];
     }
 

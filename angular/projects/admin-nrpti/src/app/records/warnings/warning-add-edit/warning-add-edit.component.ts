@@ -379,7 +379,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
       (warning['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
     // Properly unset centroid if lon/lat are deleted
-    if (!warning['centroid'][0] || !warning['centroid'][1]) {
+    if (!warning['centroid'] || !warning['centroid'][0] || !warning['centroid'][1]) {
       warning['centroid'] = [];
     }
 

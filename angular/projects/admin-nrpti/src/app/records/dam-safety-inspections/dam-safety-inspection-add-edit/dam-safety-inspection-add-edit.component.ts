@@ -373,7 +373,11 @@ export class DamSafetyInspectionAddEditComponent implements OnInit, OnDestroy {
       (damSafetyInspection['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
     // Properly unset centroid if lon/lat are deleted
-    if (!damSafetyInspection['centroid'][0] || !damSafetyInspection['centroid'][1]) {
+    if (
+      !damSafetyInspection['centroid'] ||
+      !damSafetyInspection['centroid'][0] ||
+      !damSafetyInspection['centroid'][1]
+    ) {
       damSafetyInspection['centroid'] = [];
     }
 

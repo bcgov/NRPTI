@@ -332,7 +332,7 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
       (annualReport['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
     // Properly unset centroid if lon/lat are deleted
-    if (!annualReport['centroid'][0] || !annualReport['centroid'][1]) {
+    if (!annualReport['centroid'] || !annualReport['centroid'][0] || !annualReport['centroid'][1]) {
       annualReport['centroid'] = [];
     }
 
