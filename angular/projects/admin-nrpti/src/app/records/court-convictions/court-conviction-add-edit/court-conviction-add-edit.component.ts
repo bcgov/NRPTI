@@ -57,7 +57,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     protected _changeDetectionRef: ChangeDetectorRef,
     // @ts-ignore used by record-association component
     protected storeService: StoreService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -516,12 +516,9 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     }
 
     this.myForm.controls.location.dirty && (courtConviction['location'] = this.myForm.controls.location.value);
-    (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
+    courtConviction['centroid'] = [];
+    if (this.myForm.controls.latitude.value && this.myForm.controls.longitude.value) {
       (courtConviction['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
-
-    // Properly unset centroid if lon/lat are deleted
-    if (!courtConviction['centroid'][0] || !courtConviction['centroid'][1]) {
-      courtConviction['centroid'] = [];
     }
 
     // tslint:disable-next-line:max-line-length

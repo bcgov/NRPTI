@@ -446,15 +446,12 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
     }
 
     this.myForm.controls.location.dirty && (administrativeSanction['location'] = this.myForm.controls.location.value);
-    (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
+    administrativeSanction['centroid'] = [];
+    if (this.myForm.controls.latitude.value && this.myForm.controls.longitude.value) {
       (administrativeSanction['centroid'] = [
         this.myForm.controls.longitude.value,
         this.myForm.controls.latitude.value
       ]);
-
-    // Properly unset centroid if lon/lat are deleted
-    if (!administrativeSanction['centroid'][0] || !administrativeSanction['centroid'][1]) {
-      administrativeSanction['centroid'] = [];
     }
 
     // tslint:disable-next-line:max-line-length

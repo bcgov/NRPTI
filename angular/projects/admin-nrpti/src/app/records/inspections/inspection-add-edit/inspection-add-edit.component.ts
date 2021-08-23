@@ -216,7 +216,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
           ((this.nrcedFlavour && this.nrcedFlavour.summary) ||
             (!this.nrcedFlavour && this.currentRecord.description))) ||
           '',
-          disabled: !this.factoryService.isFlavourEditEnabled(flavourEditRequiredRoles.NRCED)
+        disabled: !this.factoryService.isFlavourEditEnabled(flavourEditRequiredRoles.NRCED)
       }),
       publishNrced: new FormControl({
         value: (this.currentRecord && this.nrcedFlavour && this.nrcedFlavour.read.includes('public')) || false,
@@ -227,7 +227,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
       lngDescription: new FormControl({
         value: (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
-        '',
+          '',
         disabled: !this.factoryService.isFlavourEditEnabled(flavourEditRequiredRoles.LNG)
       }),
       publishLng: new FormControl({
@@ -398,12 +398,9 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
     }
 
     this.myForm.controls.location.dirty && (inspection['location'] = this.myForm.controls.location.value);
-    (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
+    inspection['centroid'] = [];
+    if (this.myForm.controls.latitude.value && this.myForm.controls.longitude.value) {
       (inspection['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
-
-    // Properly unset centroid if lon/lat are deleted
-    if (!inspection['centroid'][0] || !inspection['centroid'][1]) {
-      inspection['centroid'] = [];
     }
 
     this.myForm.controls.outcomeStatus.dirty &&

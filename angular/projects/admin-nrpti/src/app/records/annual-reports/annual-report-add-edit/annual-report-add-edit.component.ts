@@ -202,7 +202,7 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
    * @returns {FormGroup[]} array of legislations FormGroup elements
    * @memberof AnnualReportAddEditComponent
    */
-   getLegislationsFormGroups(): FormGroup[] {
+  getLegislationsFormGroups(): FormGroup[] {
     if (!this.currentRecord || !this.currentRecord.legislation || !this.currentRecord.legislation.length) {
       return [];
     }
@@ -248,7 +248,7 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
    * @returns {object[]} array of legislations objects
    * @memberof AnnualReportAddEditComponent
    */
-   parseLegislationsFormGroups(): object[] {
+  parseLegislationsFormGroups(): object[] {
     const legislationsFormArray = this.myForm.get('legislations');
 
     if (!legislationsFormArray || !legislationsFormArray.value || !legislationsFormArray.value.length) {
@@ -328,12 +328,9 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
     }
 
     this.myForm.controls.location.dirty && (annualReport['location'] = this.myForm.controls.location.value);
-    (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
+    annualReport['centroid'] = [];
+    if (this.myForm.controls.latitude.value && this.myForm.controls.longitude.value) {
       (annualReport['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
-
-    // Properly unset centroid if lon/lat are deleted
-    if (!annualReport['centroid'][0] || !annualReport['centroid'][1]) {
-      annualReport['centroid'] = [];
     }
 
     // BCMI flavour
