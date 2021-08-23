@@ -275,7 +275,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
    * @returns {object[]} array of legislations objects
    * @memberof AdministrativeSanctionAddEditComponent
    */
-   parseLegislationsFormGroups(): object[] {
+  parseLegislationsFormGroups(): object[] {
     const legislationsFormArray = this.myForm.get('legislations');
 
     if (!legislationsFormArray || !legislationsFormArray.value || !legislationsFormArray.value.length) {
@@ -453,7 +453,11 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
       ]);
 
     // Properly unset centroid if lon/lat are deleted
-    if (!administrativeSanction['centroid'][0] || !administrativeSanction['centroid'][1]) {
+    if (
+      !administrativeSanction['centroid'] ||
+      !administrativeSanction['centroid'][0] ||
+      !administrativeSanction['centroid'][1]
+    ) {
       administrativeSanction['centroid'] = [];
     }
 

@@ -376,7 +376,11 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
       (certificateAmendment['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
     // Properly unset centroid if lon/lat are deleted
-    if (!certificateAmendment['centroid'][0] || !certificateAmendment['centroid'][1]) {
+    if (
+      !certificateAmendment['centroid'] ||
+      !certificateAmendment['centroid'][0] ||
+      !certificateAmendment['centroid'][1]
+    ) {
       certificateAmendment['centroid'] = [];
     }
 

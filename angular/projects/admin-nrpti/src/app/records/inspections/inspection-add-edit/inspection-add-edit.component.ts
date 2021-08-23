@@ -402,7 +402,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
       (inspection['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
     // Properly unset centroid if lon/lat are deleted
-    if (!inspection['centroid'][0] || !inspection['centroid'][1]) {
+    if (!inspection['centroid'] || !inspection['centroid'][0] || !inspection['centroid'][1]) {
       inspection['centroid'] = [];
     }
 

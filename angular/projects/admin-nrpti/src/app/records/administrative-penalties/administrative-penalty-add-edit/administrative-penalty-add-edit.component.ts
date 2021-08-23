@@ -449,7 +449,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
       case 'nrced':
         this.myForm.controls.publishNrced.setValue(event.checked);
         break;
-        case 'bcmi':
+      case 'bcmi':
         this.myForm.controls.publishBcmi.setValue(event.checked);
         break;
       default:
@@ -538,7 +538,11 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
       (administrativePenalty['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
     // Properly unset centroid if lon/lat are deleted
-    if (!administrativePenalty['centroid'][0] || !administrativePenalty['centroid'][1]) {
+    if (
+      !administrativePenalty['centroid'] ||
+      !administrativePenalty['centroid'][0] ||
+      !administrativePenalty['centroid'][1]
+    ) {
       administrativePenalty['centroid'] = [];
     }
 
@@ -577,7 +581,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     }
     this.myForm.controls.bcmiSummary.dirty && (
       administrativePenalty['AdministrativePenaltyBCMI']['summary'] = this.myForm.controls.bcmiSummary.value
-      );
+    );
     if (this.myForm.controls.publishBcmi.dirty && this.myForm.controls.publishBcmi.value) {
       administrativePenalty['AdministrativePenaltyBCMI']['addRole'] = 'public';
     } else if (this.myForm.controls.publishBcmi.dirty && !this.myForm.controls.publishBcmi.value) {

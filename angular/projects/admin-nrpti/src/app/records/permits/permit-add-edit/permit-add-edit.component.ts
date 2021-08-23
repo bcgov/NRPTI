@@ -291,7 +291,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       (permit['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
     // Properly unset centroid if lon/lat are deleted
-    if (!permit['centroid'][0] || !permit['centroid'][1]) {
+    if (!permit['centroid'] || !permit['centroid'][0] || !permit['centroid'][1]) {
       permit['centroid'] = [];
     }
 

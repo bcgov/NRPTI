@@ -215,7 +215,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
       (constructionPlan['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
     // Properly unset centroid if lon/lat are deleted
-    if (!constructionPlan['centroid'][0] || !constructionPlan['centroid'][1]) {
+    if (!constructionPlan['centroid'] || !constructionPlan['centroid'][0] || !constructionPlan['centroid'][1]) {
       constructionPlan['centroid'] = [];
     }
 

@@ -448,7 +448,7 @@ export class TicketAddEditComponent implements OnInit, OnDestroy {
       (ticket['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
     // Properly unset centroid if lon/lat are deleted
-    if (!ticket['centroid'][0] || !ticket['centroid'][1]) {
+    if (!ticket['centroid'] || !ticket['centroid'][0] || !ticket['centroid'][1]) {
       ticket['centroid'] = [];
     }
 

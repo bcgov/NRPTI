@@ -520,7 +520,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
       (courtConviction['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
 
     // Properly unset centroid if lon/lat are deleted
-    if (!courtConviction['centroid'][0] || !courtConviction['centroid'][1]) {
+    if (!courtConviction['centroid'] || !courtConviction['centroid'][0] || !courtConviction['centroid'][1]) {
       courtConviction['centroid'] = [];
     }
 
