@@ -40,7 +40,12 @@ class CourtConvictions extends BaseRecordUtils {
     conviction['_sourceRefCoorsId'] = sourceRefId;
 
     conviction['recordType'] = 'Court Conviction';
-    conviction['dateIssued'] = csvRow['final_decision_date'] || null;
+    if (csvRow['enforcement_outcome'] === 'GTYJ') {
+      conviction['dateIssued'] = csvRow['ticket_date'] || null;
+    } else {
+      conviction['dateIssued'] = csvRow['final_decision_date'] || null;
+    }
+
     conviction['issuingAgency'] = CsvUtils.getIssuingAgency(csvRow) || '';
     conviction['author'] = conviction['issuingAgency'];
 
@@ -78,18 +83,34 @@ class CourtConvictions extends BaseRecordUtils {
 
     conviction['location'] = csvRow['location'] || '';
 
-    const penaltyType = CsvUtils.getPenalty(csvRow['summary']);
-    const penaltyUnits = CsvUtils.getPenaltyUnits(csvRow['penalty_unit_code']);
-    conviction['penalties'] = [
-      {
-        type: penaltyType,
-        penalty: {
-          type: penaltyUnits,
-          value: (csvRow['penalty_amount'] && Number(csvRow['penalty_amount'])) || null
-        },
-        description: ''
-      }
-    ];
+    if (csvRow['enforcement_outcome'] === 'GTYJ') {
+      const PenaltyType = 'Fined';
+      const PenaltyValueType = 'Dollars';
+
+      conviction['penalties'] = [
+        {
+          type: PenaltyType,
+          penalty: {
+            type: PenaltyValueType,
+            value: (csvRow['penalty'] && Number(csvRow['penalty'])) || null
+          },
+          description: ''
+        }
+      ];
+    } else {
+      const penaltyType = CsvUtils.getPenalty(csvRow['summary']);
+      const penaltyUnits = CsvUtils.getPenaltyUnits(csvRow['penalty_unit_code']);
+      conviction['penalties'] = [
+        {
+          type: penaltyType,
+          penalty: {
+            type: penaltyUnits,
+            value: (csvRow['penalty_amount'] && Number(csvRow['penalty_amount'])) || null
+          },
+          description: ''
+        }
+      ];
+    }
 
     return conviction;
   }
