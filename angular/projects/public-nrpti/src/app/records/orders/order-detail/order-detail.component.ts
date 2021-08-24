@@ -19,17 +19,23 @@ export class OrderDetailComponent implements OnInit, OnChanges, OnDestroy {
 
   public loading = true;
   public activeTab = 'detail';
+  public legislationDescription = '-';
 
   constructor(
     public route: ActivatedRoute,
     public router: Router,
     public factoryService: FactoryService,
     public _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     if (!this.data) {
       return;
+    }
+
+    // preserve legislationDescription since this field is lost on conversion to OrderNRCED
+    if (this.data.legislationDescription) {
+      this.legislationDescription = this.data.legislationDescription;
     }
 
     this.updateComponent();

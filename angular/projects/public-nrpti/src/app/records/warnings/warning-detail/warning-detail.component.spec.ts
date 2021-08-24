@@ -5,6 +5,7 @@ import { WarningDetailComponent } from './warning-detail.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivatedRouteStub } from '../../../../../../common/src/app/spec/spec-utils';
 import { GlobalModule } from 'nrpti-angular-components';
+import { CommonModule } from '../../../../../../common/src/app/common.module';
 import { ProjectLinkPipe } from '../../../pipes/project-link.pipe';
 
 describe('WarningDetailComponent', () => {
@@ -16,7 +17,7 @@ describe('WarningDetailComponent', () => {
 
   beforeEach((() => {
     TestBed.configureTestingModule({
-      imports: [GlobalModule, HttpClientTestingModule],
+      imports: [GlobalModule, HttpClientTestingModule, CommonModule],
       declarations: [WarningDetailComponent, ProjectLinkPipe],
       providers: [
         { provide: ActivatedRoute, useValue: activedRouteStub },
