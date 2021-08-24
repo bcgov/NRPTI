@@ -25,7 +25,7 @@ export class RestorativeJusticeDetailComponent implements OnInit, OnChanges, OnD
     public router: Router,
     public factoryService: FactoryService,
     public _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     if (!this.data) {

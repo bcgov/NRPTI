@@ -22,6 +22,7 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
 
   public displayDetailsComponent = false;
   public componentRef: ComponentRef<any>;
+  public dynamicDescriptionLabel = 'Description';
 
   public entityString = '';
   public description = '';
@@ -40,18 +41,49 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
       }
     });
 
-    if (
-      this.rowData._schemaName === 'AdministrativePenaltyNRCED' ||
-      this.rowData._schemaName === 'CourtConvictionNRCED' ||
-      this.rowData._schemaName === 'RestorativeJusticeNRCED' ||
-      this.rowData._schemaName === 'TicketNRCED'
-    ) {
-      this.description = this.rowData.offence || '-';
-    } else {
-      this.description = this.rowData.legislationDescription || '-';
-    }
-
     this.populateTextFields();
+  }
+
+  setDynamicDescriptionText() {
+    // change Description field text if different from defaults
+    if (this.rowData) {
+      // change field label
+      if (this.rowData.recordType === 'Order') {
+        this.dynamicDescriptionLabel = 'Order Type';
+      } else if (
+        this.rowData.recordType === 'Administrative Penalty' ||
+        this.rowData.recordType === 'Court Conviction' ||
+        this.rowData.recordType === 'Restorative Justice' ||
+        this.rowData.recordType === 'Ticket'
+      ) {
+        this.dynamicDescriptionLabel = 'Offence';
+      } else {
+        this.dynamicDescriptionLabel = this.tableData.columns[3].name;
+      }
+
+      // change field text
+      if (
+        this.rowData._schemaName === 'AdministrativePenaltyNRCED' ||
+        this.rowData._schemaName === 'CourtConvictionNRCED' ||
+        this.rowData._schemaName === 'RestorativeJusticeNRCED' ||
+        this.rowData._schemaName === 'TicketNRCED'
+      ) {
+        if (this.rowData.legislation && this.rowData.legislation[0] && this.rowData.legislation[0].offence) {
+          this.description = this.rowData.legislation[0].offence || '-';
+        }
+      } else if (
+        this.rowData._schemaName === 'AdministrativeSanctionNRCED'
+      ) {
+        this.description = '-';
+      } else {
+        if (this.rowData.legislation &&
+          this.rowData.legislation[0] &&
+          this.rowData.legislation[0].legislationDescription
+        ) {
+          this.description = this.rowData.legislation[0].legislationDescription || '-';
+        }
+      }
+    }
   }
 
   ngAfterViewInit() {
@@ -70,9 +102,10 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
     } else {
       this.entityString = 'Unpublished'; // if the issuedTo object is completely missing (redacted) show 'Unpublished'
     }
+    this.setDynamicDescriptionText();
   }
 
-  downloadDocument() {}
+  downloadDocument() { }
 
   rowClicked() {
     this.messageOut.emit({ label: 'rowClicked', data: this.rowData });

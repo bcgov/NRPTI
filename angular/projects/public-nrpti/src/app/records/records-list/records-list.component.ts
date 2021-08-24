@@ -69,7 +69,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       width: 'col-1'
     },
     {
-      name: 'Location Description',
+      name: 'Location',
       value: 'location',
       width: 'col-2'
     },
@@ -79,7 +79,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       width: 'col-2'
     },
     {
-      name: 'Issued On',
+      name: 'Date Issued',
       value: 'dateIssued'
     }
   ];
