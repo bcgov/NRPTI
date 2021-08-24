@@ -281,12 +281,9 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
     }
 
     this.myForm.controls.location.dirty && (selfReport['location'] = this.myForm.controls.location.value);
-    (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
+    selfReport['centroid'] = [];
+    if (this.myForm.controls.latitude.value && this.myForm.controls.longitude.value) {
       (selfReport['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
-
-    // Properly unset centroid if lon/lat are deleted
-    if (!selfReport['centroid'][0] || !selfReport['centroid'][1]) {
-      selfReport['centroid'] = [];
     }
 
     // LNG flavour

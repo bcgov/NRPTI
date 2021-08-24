@@ -229,7 +229,7 @@ export class ReportAddEditComponent implements OnInit, OnDestroy {
    * @returns {FormGroup[]} array of legislations FormGroup elements
    * @memberof ReportAddEditComponent
    */
-   getLegislationsFormGroups(): FormGroup[] {
+  getLegislationsFormGroups(): FormGroup[] {
     if (!this.currentRecord || !this.currentRecord.legislation || !this.currentRecord.legislation.length) {
       return [];
     }
@@ -369,12 +369,9 @@ export class ReportAddEditComponent implements OnInit, OnDestroy {
     }
 
     this.myForm.controls.location.dirty && (report['location'] = this.myForm.controls.location.value);
-    (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
+    report['centroid'] = [];
+    if (this.myForm.controls.latitude.value && this.myForm.controls.longitude.value) {
       (report['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
-
-    // Properly unset centroid if lon/lat are deleted
-    if (!report['centroid'][0] || !report['centroid'][1]) {
-      report['centroid'] = [];
     }
 
     // tslint:disable-next-line:max-line-length

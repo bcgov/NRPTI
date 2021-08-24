@@ -369,12 +369,9 @@ export class DamSafetyInspectionAddEditComponent implements OnInit, OnDestroy {
     }
 
     this.myForm.controls.location.dirty && (damSafetyInspection['location'] = this.myForm.controls.location.value);
-    (this.myForm.controls.latitude.dirty || this.myForm.controls.longitude.dirty) &&
+    damSafetyInspection['centroid'] = [];
+    if (this.myForm.controls.latitude.value && this.myForm.controls.longitude.value) {
       (damSafetyInspection['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
-
-    // Properly unset centroid if lon/lat are deleted
-    if (!damSafetyInspection['centroid'][0] || !damSafetyInspection['centroid'][1]) {
-      damSafetyInspection['centroid'] = [];
     }
 
     // tslint:disable-next-line:max-line-length
