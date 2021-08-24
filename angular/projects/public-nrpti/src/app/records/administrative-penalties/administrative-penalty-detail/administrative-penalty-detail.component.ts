@@ -19,13 +19,14 @@ export class AdministrativePenaltyDetailComponent implements OnInit, OnChanges, 
 
   public loading = true;
   public activeTab = 'detail';
+  public siteName = '-';
 
   constructor(
     public route: ActivatedRoute,
     public router: Router,
     public factoryService: FactoryService,
     public _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     if (!this.data) {
@@ -45,11 +46,24 @@ export class AdministrativePenaltyDetailComponent implements OnInit, OnChanges, 
     }
   }
 
+  setProjectName() {
+    if (this.data) {
+      if (this.data.projectName) {
+        this.siteName = this.data.projectName;
+      } else if (this.data._master && this.data._master.unlistedMine) {
+        this.siteName = this.data._master.unlistedMine;
+      } else {
+        this.siteName = '-';
+      }
+    }
+  }
+
   updateComponent() {
     this.data = new AdministrativePenaltyNRCED(this.data);
 
     // populate documents
     this.getDocuments();
+    this.setProjectName();
 
     this.loading = false;
     this._changeDetectionRef.detectChanges();
