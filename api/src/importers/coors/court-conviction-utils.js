@@ -40,7 +40,7 @@ class CourtConvictions extends BaseRecordUtils {
     conviction['_sourceRefCoorsId'] = sourceRefId;
 
     conviction['recordType'] = 'Court Conviction';
-    if (csvRow['enforcement_outcome'] === 'GTYJ') {
+    if (csvRow['enforcement_outcome'] && csvRow['enforcement_outcome'] === 'GTYJ') {
       conviction['dateIssued'] = csvRow['ticket_date'] || null;
     } else {
       conviction['dateIssued'] = csvRow['final_decision_date'] || null;
@@ -83,7 +83,7 @@ class CourtConvictions extends BaseRecordUtils {
 
     conviction['location'] = csvRow['location'] || '';
 
-    if (csvRow['enforcement_outcome'] === 'GTYJ') {
+    if (csvRow['enforcement_outcome'] && csvRow['enforcement_outcome'] === 'GTYJ') {
       const PenaltyType = 'Fined';
       const PenaltyValueType = 'Dollars';
 

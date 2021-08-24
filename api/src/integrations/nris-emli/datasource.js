@@ -266,9 +266,9 @@ class NrisDataSource {
     }
 
     if (record.assessmentSubStatus === 'Closed') {
-      newRecord.outcomeDescription = 'Inspection status: Closed';
+      newRecord.outcomeDescription = 'Inspection Status: Closed';
     } else {
-      newRecord.outcomeDescription = 'Inspection status: Open';
+      newRecord.outcomeDescription = 'Inspection Status: Open';
     }
 
     defaultLog.info('Processed:', record.assessmentId);
