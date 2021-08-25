@@ -43,6 +43,8 @@ module.exports = require('../../utils/model-schema-generator')(
     projectName: { type: String, default: '' },
     location: { type: String, default: '' },
     centroid: [{ type: Number, default: 0.0 }],
+    unlistedMine: {type: String, default: ''},
+    unlistedMineType: {type: String, default: ''},
     penalties: [
       {
         type: { type: String, default: '' },

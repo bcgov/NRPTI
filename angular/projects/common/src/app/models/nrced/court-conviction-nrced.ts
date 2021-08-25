@@ -12,6 +12,8 @@ import { RecordModel } from '../record-model-abstract';
 export class CourtConvictionNRCED extends RecordModel {
   _epicProjectId: string;
   _epicMilestoneId: string;
+  unlistedMine: string;
+  unlistedMineType: string;
 
   recordSubtype: string;
   dateIssued: Date;
@@ -31,6 +33,9 @@ export class CourtConvictionNRCED extends RecordModel {
     super(obj);
 
     this._schemaName = 'CourtConvictionNRCED';
+
+    this.unlistedMine = (obj && obj.unlistedMine) || '';
+    this.unlistedMineType = (obj && obj.unlistedMineType) || '';
 
     this.recordSubtype = (obj && obj.recordSubtype) || null;
     this.dateIssued = (obj && obj.dateIssued) || null;

@@ -12,6 +12,8 @@ import { RecordModel } from '../record-model-abstract';
 export class AdministrativePenaltyNRCED extends RecordModel {
   _epicProjectId: string;
   _epicMilestoneId: string;
+  unlistedMine: string;
+  unlistedMineType: string;
 
   dateIssued: Date;
   issuingAgency: string;
@@ -33,6 +35,8 @@ export class AdministrativePenaltyNRCED extends RecordModel {
 
     this._epicProjectId = (obj && obj._epicProjectId) || '';
     this._epicMilestoneId = (obj && obj._epicMilestoneId) || '';
+    this.unlistedMine = (obj && obj.unlistedMine) || '';
+    this.unlistedMineType = (obj && obj.unlistedMineType) || '';
 
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || '';

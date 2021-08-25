@@ -19,6 +19,7 @@ export class CourtConvictionDetailComponent implements OnInit, OnDestroy {
 
   public loading = true;
   public activeTab = 'detail';
+  public siteName = '-';
 
   constructor(
     public route: ActivatedRoute,
@@ -33,6 +34,7 @@ export class CourtConvictionDetailComponent implements OnInit, OnDestroy {
 
       // populate documents
       this.getDocuments();
+      this.setProjectName();
 
       this.loading = false;
       this._changeDetectionRef.detectChanges();
@@ -82,6 +84,19 @@ export class CourtConvictionDetailComponent implements OnInit, OnDestroy {
         });
       });
   }
+
+  setProjectName() {
+    if (this.data) {
+      if (this.data.projectName) {
+        this.siteName = this.data.projectName;
+      } else if (this.data.unlistedMine) {
+        this.siteName = this.data.unlistedMine;
+      } else {
+        this.siteName = '-';
+      }
+    }
+  }
+
 
   activateTab(tabLabel: string): void {
     this.activeTab = tabLabel;
