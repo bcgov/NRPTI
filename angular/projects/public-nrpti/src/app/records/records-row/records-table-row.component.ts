@@ -51,7 +51,6 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
       if (this.rowData.recordType === 'Order') {
         this.dynamicDescriptionLabel = 'Order Type';
       } else if (
-        this.rowData.recordType === 'Administrative Penalty' ||
         this.rowData.recordType === 'Court Conviction' ||
         this.rowData.recordType === 'Restorative Justice' ||
         this.rowData.recordType === 'Ticket'
