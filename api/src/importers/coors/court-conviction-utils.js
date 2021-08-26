@@ -40,11 +40,6 @@ class CourtConvictions extends BaseRecordUtils {
     conviction['_sourceRefCoorsId'] = sourceRefId;
 
     conviction['recordType'] = 'Court Conviction';
-    if (csvRow['enforcement_outcome'] && csvRow['enforcement_outcome'] === 'GTYJ') {
-      conviction['dateIssued'] = csvRow['ticket_date'] || null;
-    } else {
-      conviction['dateIssued'] = csvRow['final_decision_date'] || null;
-    }
 
     conviction['issuingAgency'] = CsvUtils.getIssuingAgency(csvRow) || '';
     conviction['author'] = conviction['issuingAgency'];
@@ -59,8 +54,6 @@ class CourtConvictions extends BaseRecordUtils {
         offence: csvRow['description'] || ''
       }
     ];
-
-    conviction['recordName'] = (csvRow['case_no'] && `Case Number ${csvRow['case_no']}`) || '';
 
     const entityType = CsvUtils.getEntityType(csvRow) || null;
 
@@ -81,9 +74,11 @@ class CourtConvictions extends BaseRecordUtils {
       };
     }
 
-    conviction['location'] = csvRow['location'] || '';
-
     if (csvRow['enforcement_outcome'] && csvRow['enforcement_outcome'] === 'GTYJ') {
+      conviction['dateIssued'] = csvRow['ticket_date'] || null;
+      conviction['recordName'] = (csvRow['case_number'] && `Case Number ${csvRow['case_number']}`) || '';
+      conviction['location'] = csvRow['location_of_violation'] || '';
+
       const PenaltyType = 'Fined';
       const PenaltyValueType = 'Dollars';
 
@@ -98,6 +93,10 @@ class CourtConvictions extends BaseRecordUtils {
         }
       ];
     } else {
+      conviction['dateIssued'] = csvRow['final_decision_date'] || null;
+      conviction['recordName'] = (csvRow['case_no'] && `Case Number ${csvRow['case_no']}`) || '';
+      conviction['location_of_violation'] = csvRow['location'] || '';
+
       const penaltyType = CsvUtils.getPenalty(csvRow['summary']);
       const penaltyUnits = CsvUtils.getPenaltyUnits(csvRow['penalty_unit_code']);
       conviction['penalties'] = [
