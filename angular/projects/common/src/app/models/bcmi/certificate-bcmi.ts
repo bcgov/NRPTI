@@ -3,7 +3,7 @@ import { Entity } from '../master/common-models/entity';
 import { RecordModel } from '../record-model-abstract';
 
 /**
- * Certificate Amendment BCMI data model.
+ * Certificate BCMI data model.
  *
  * @export
  * @class CertificateBCMI
@@ -28,6 +28,7 @@ export class CertificateBCMI extends RecordModel {
 
     this._epicProjectId = (obj && obj._epicProjectId) || '';
     this._epicMilestoneId = (obj && obj._epicMilestoneId) || '';
+    this._sourceRefId = (obj && obj._sourceRefId) || '';
 
     this.recordSubtype = (obj && obj.recordSubtype) || '';
     this.dateIssued = (obj && obj.dateIssued) || null;
