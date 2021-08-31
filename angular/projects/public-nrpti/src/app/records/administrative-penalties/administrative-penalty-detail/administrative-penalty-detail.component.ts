@@ -50,8 +50,8 @@ export class AdministrativePenaltyDetailComponent implements OnInit, OnChanges, 
     if (this.data) {
       if (this.data.projectName) {
         this.siteName = this.data.projectName;
-      } else if (this.data._master && this.data._master.unlistedMine) {
-        this.siteName = this.data._master.unlistedMine;
+      } else if (this.data.unlistedMine) {
+        this.siteName = this.data.unlistedMine;
       } else {
         this.siteName = '-';
       }

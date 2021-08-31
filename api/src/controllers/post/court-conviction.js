@@ -427,6 +427,8 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   incomingObj.centroid && (courtConvictionNRCED.centroid = incomingObj.centroid);
   incomingObj.penalties && (courtConvictionNRCED.penalties = incomingObj.penalties);
   incomingObj.documents && (courtConvictionNRCED.documents = incomingObj.documents);
+  incomingObj.unlistedMine && (courtConvictionNRCED.unlistedMine = incomingObj.unlistedMine);
+  incomingObj.unlistedMineType && (courtConvictionNRCED.unlistedMineType = incomingObj.unlistedMineType);
 
   // set flavour data
   incomingObj.summary && (courtConvictionNRCED.summary = incomingObj.summary);

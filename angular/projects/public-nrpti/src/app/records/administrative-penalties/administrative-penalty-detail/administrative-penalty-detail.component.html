@@ -47,7 +47,7 @@
           </div>
           <div class="grid-item__row">
             <label class="grid-item-name">Site/Project</label>
-            <span class="grid-item-value__col" [innerHtml]="( data && data.projectName ) || '-' | projectLink"></span>
+            <span class="grid-item-value__col" [innerHtml]="siteName | projectLink"></span>
           </div>
           <div class="grid-item__row">
             <label class="grid-item-name">Lat/Long</label>
