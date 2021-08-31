@@ -296,6 +296,7 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
    * @memberof AutoCompleteMultiSelectComponent
    */
   public resetComponent() {
+    this.updatedPaceholderText = this.placeholderText;
     this.control.reset();
 
     this.options = this.options.map(option => {
