@@ -25,6 +25,7 @@ export class SearchFiltersComponent implements OnInit, OnDestroy {
   @Input() reset: EventEmitter<any>;
 
   @Output() closeButton: EventEmitter<void> = new EventEmitter<void>();
+  @Output() clearKeywordSearch: EventEmitter<void> = new EventEmitter<void>();
 
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
@@ -52,7 +53,7 @@ export class SearchFiltersComponent implements OnInit, OnDestroy {
 
   public datepickerMinDate = Constants.DatepickerMinDate;
 
-  constructor(public router: Router, public route: ActivatedRoute, private _changeDetectionRef: ChangeDetectorRef) {}
+  constructor(public router: Router, public route: ActivatedRoute, private _changeDetectionRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.loading = false;
@@ -66,7 +67,7 @@ export class SearchFiltersComponent implements OnInit, OnDestroy {
 
   clearSearchFilters() {
     this.resetControls.emit();
-
+    this.clearKeywordSearch.emit();
     this.formGroup.reset();
   }
 

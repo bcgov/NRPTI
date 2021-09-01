@@ -14,7 +14,7 @@ import {
 import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MatAutocompleteTrigger} from '@angular/material';
+import { MatAutocompleteTrigger } from '@angular/material';
 
 export interface IMutliSelectOption {
   /**
@@ -296,6 +296,7 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
    * @memberof AutoCompleteMultiSelectComponent
    */
   public resetComponent() {
+    this.multiAutocompleteFilter.nativeElement.value = '';
     this.updatedPaceholderText = this.placeholderText;
     this.control.reset();
 
@@ -322,6 +323,6 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
 
   // for callback pipe filter
   filterOptions(option) {
-   return option.selected;
+    return option.selected;
   }
 }
