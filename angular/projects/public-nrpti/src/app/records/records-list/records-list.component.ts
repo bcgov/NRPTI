@@ -270,6 +270,14 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     this.submit();
   }
 
+  clearKeywordSearch() {
+    this.keywordSearchWords = '';
+    if (this.queryParams['keywords']) {
+      delete this.queryParams['keywords'];
+      this.submit();
+    }
+  }
+
   subscribeToSearchFilterChanges() {
     this.searchFiltersForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe)).subscribe(changes => {
       if (changes.dateIssuedStart) {

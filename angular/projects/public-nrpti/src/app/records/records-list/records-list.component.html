@@ -41,7 +41,7 @@
 
             <div class="order-1 order-lg-2" [ngClass]="{ 'col show-advanced-filters': showAdvancedFilters }">
               <div class="search-filter__content" [hidden]="!showAdvancedFilters">
-                <app-search-filters [formGroup]="searchFiltersForm" (closeButton)="closeAdvancedFilters()">
+                <app-search-filters (clearKeywordSearch)="clearKeywordSearch()" [formGroup]="searchFiltersForm" (closeButton)="closeAdvancedFilters()">
                 </app-search-filters>
               </div>
             </div>
