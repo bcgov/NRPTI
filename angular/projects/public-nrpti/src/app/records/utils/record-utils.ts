@@ -144,7 +144,7 @@ export class RecordUtils {
       line.push(escapeCsvString(row['summary']));
       line.push(escapeCsvString(Utils.displayNameFull(row['issuingAgency'])));
 
-      const legislation = row['legislation'];
+      const legislation = (Array.isArray(row['legislation'])) ? row['legislation'][0] : row['legislation'];
 
       if (legislation) {
         line.push(escapeCsvString(legislation['act']));
@@ -156,7 +156,7 @@ export class RecordUtils {
         line = line.concat(['', '', '', '', '', '']);
       }
 
-      line.push(escapeCsvString(row['legislationDescription']));
+      line.push(escapeCsvString(row['summary']));
       line.push(escapeCsvString(row['offence']));
 
       const penalties = row['penalties'];
