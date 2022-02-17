@@ -157,10 +157,6 @@ export class RecordUtils {
         line = line.concat(['', '', '', '', '', '', '']);
       }
 
-<<<<<<< HEAD
-=======
-      line.push(escapeCsvString(row['summary']));
->>>>>>> origin
       line.push(escapeCsvString(row['offence']));
 
       const penalties = row['penalties'];
