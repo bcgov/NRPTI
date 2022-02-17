@@ -154,7 +154,7 @@ export class RecordUtils {
         line.push(escapeCsvString(legislation['paragraph']));
         line.push(escapeCsvString(legislation['legislationDescription']));
       } else {
-        line = line.concat(['', '', '', '', '', '', '']);
+        line = line.concat(['', '', '', '', '', '']);
       }
 
       line.push(escapeCsvString(row['offence']));
