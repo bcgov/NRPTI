@@ -27,6 +27,13 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
       keywords = params.keywords;
     }
 
+    // This checks for the search parameter that was put in above along with an equal, for example q= or s=
+    if (params.keywords) {
+      window.snowplow('trackSiteSearch',
+          [decodeURIComponent(params.keywords)]
+      );
+    }
+
     const filterParams = RecordUtils.buildFilterParams(params);
 
     // force-reload so we always have latest data
