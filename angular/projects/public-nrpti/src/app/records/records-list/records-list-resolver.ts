@@ -6,6 +6,8 @@ import { FactoryService } from '../../services/factory.service';
 import { SchemaLists } from '../../../../../common/src/app/utils/record-constants';
 import { RecordUtils } from '../utils/record-utils';
 
+declare var window: any;
+
 @Injectable()
 export class RecordsListResolver implements Resolve<Observable<object>> {
   constructor(public factoryService: FactoryService, public tableTemplateUtils: TableTemplateUtils) { }
@@ -25,6 +27,13 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
     let keywords = '';
     if (params.keywords) {
       keywords = params.keywords;
+    }
+
+    // This checks for the search parameter that was put in above along with an equal, for example q= or s=
+    if (params.keywords) {
+      window.snowplow('trackSiteSearch',
+          [decodeURIComponent(params.keywords)]
+      );
     }
 
     const filterParams = RecordUtils.buildFilterParams(params);
