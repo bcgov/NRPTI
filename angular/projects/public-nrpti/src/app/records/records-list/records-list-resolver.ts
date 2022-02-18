@@ -6,6 +6,8 @@ import { FactoryService } from '../../services/factory.service';
 import { SchemaLists } from '../../../../../common/src/app/utils/record-constants';
 import { RecordUtils } from '../utils/record-utils';
 
+declare var window: any;
+
 @Injectable()
 export class RecordsListResolver implements Resolve<Observable<object>> {
   constructor(public factoryService: FactoryService, public tableTemplateUtils: TableTemplateUtils) { }
