@@ -7,10 +7,10 @@ const ApplicationAgencies = {
   AGENCY_ENV: 'Ministry of Environment and Climate Change Strategy',
   AGENCY_ENV_BCPARKS: 'BC Parks',
   AGENCY_OGC: 'BC Oil and Gas Commission',
-  AGENCY_ENV_EPD: 'Environmental Protection Division',
+  AGENCY_ENV_EPD: 'Ministry of Environment and Climate Change Strategy',
   AGENCY_LNG: 'LNG Secretariat',
-  AGENCY_AGRI: 'Ministry of Agriculture Food and Fisheries',
-  AGENCY_FLNRO: 'Ministry of Forests Lands Natural Resource Operations and Rural Development',
+  AGENCY_AGRI: 'Ministry of Agriculture and Food',
+  AGENCY_FLNRO: 'Ministry of Forests',
   AGENCY_FLNR_NRO: 'Natural Resource Officers'
 };
 
@@ -136,11 +136,11 @@ export class Utils {
   static displayNameFull(agency): string {
     switch (agency) {
       case ApplicationAgencies.AGENCY_AGRI:
-        return 'Ministry of Agriculture, Food and Fisheries';
+        return 'Ministry of Agriculture and Food';
       case ApplicationAgencies.AGENCY_EMLI:
         return 'Ministry of Energy, Mines, and Low Carbon Innovation';
       case ApplicationAgencies.AGENCY_FLNRO:
-        return 'Ministry of Forests, Lands, Natural Resource Operations and Rural Development';
+        return 'Ministry of Forests';
       default:
         return agency;
     }

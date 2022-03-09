@@ -27,10 +27,10 @@ const ApplicationAgencies = {
   AGENCY_ENV: 'Ministry of Environment and Climate Change Strategy',
   AGENCY_ENV_BCPARKS: 'BC Parks',
   AGENCY_OGC: 'BC Oil and Gas Commission',
-  AGENCY_ENV_EPD: 'Environmental Protection Division',
+  AGENCY_ENV_EPD: 'Ministry of Environment and Climate Change Strategy',
   AGENCY_LNG: 'LNG Secretariat',
-  AGENCY_AGRI: 'Ministry of Agriculture Food and Fisheries',
-  AGENCY_FLNRO: 'Ministry of Forests Lands Natural Resource Operations and Rural Development',
+  AGENCY_AGRI: 'Ministry of Agriculture and Food',
+  AGENCY_FLNRO: 'Ministry of Forests',
   AGENCY_FLNR_NRO: 'Natural Resource Officers'
 };
 
@@ -178,7 +178,7 @@ exports.AUTHORIZED_PUBLISH_AGENCIES = [
   'Climate Action Secretariat',
   'Conservation Officer Service',
   'Environmental Assessment Office',
-  'Environmental Protection Division'
+  'Ministry of Environment and Climate Change Strategy'
 ];
 
 exports.CSV_SOURCE_DEFAULT_ROLES = {

@@ -181,9 +181,9 @@ class NrisDataSource {
     return processingObject;
   }
 
-  // Re-write the issuing agency from Environmental Protection Office => Environmental Protection Division
+  // Re-write the issuing agency from Environmental Protection Office => Ministry of Environment and Climate Change Strategy
   stringTransformEPOtoEPD(agency) {
-    return agency === 'Environmental Protection Office' ? 'Environmental Protection Division' : agency;
+    return agency === 'Environmental Protection Office' ? 'Ministry of Environment and Climate Change Strategy' : agency;
   }
 
   stringTransformExpandAMP(inspctResponse) {
@@ -220,7 +220,7 @@ class NrisDataSource {
       newRecord.dateIssued = null;
     }
     newRecord.issuingAgency = this.stringTransformEPOtoEPD(record.resourceAgency);
-    newRecord.author = 'Environmental Protection Division';
+    newRecord.author = 'Ministry of Environment and Climate Change Strategy';
     newRecord.legislation = [{ ...legislation }];
     newRecord.dateAdded = new Date();
     newRecord.dateUpdated = new Date();
