@@ -38,8 +38,8 @@ class Orders extends BaseRecordUtils {
     order['recordType'] = 'Order';
     order['dateIssued'] = csvRow['issuedate'] || null;
 
-    order['issuingAgency'] = 'Environmental Protection Division';
-    order['author'] = 'Environmental Protection Division';
+    order['issuingAgency'] = 'Ministry of Environment and Climate Change Strategy';
+    order['author'] = 'Ministry of Environment and Climate Change Strategy';
 
     order['recordName'] = (csvRow['authnumber'] && `AMS Authorization # ${csvRow['authnumber']}`) || '-';
 

@@ -28,7 +28,7 @@ describe('transformRecord', () => {
       description: descriptionString,
       outcomeDescription: '',
       sourceSystemRef: 'agri-mis-csv',
-      issuingAgency: 'Ministry of Agriculture Food and Fisheries',
+      issuingAgency: 'Ministry of Agriculture and Food',
       legislation: [
         {
           act: 'Food Safety Act',
@@ -66,7 +66,7 @@ describe('transformRecord', () => {
         companyName: 'ACME Meat',
         type: MiscConstants.IssuedToEntityTypes.Company
       },
-      issuingAgency: 'Ministry of Agriculture Food and Fisheries',
+      issuingAgency: 'Ministry of Agriculture and Food',
       legislation: [
         {
           act: 'Food Safety Act',

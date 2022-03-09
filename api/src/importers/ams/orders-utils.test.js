@@ -17,11 +17,11 @@ describe('transformRecord', () => {
       _sourceRefStringId: '',
 
       recordType: 'Order',
-      author: 'Environmental Protection Division',
+      author: 'Ministry of Environment and Climate Change Strategy',
       dateIssued: null,
       issuedTo: { type: MiscConstants.IssuedToEntityTypes.Company, companyName: '' },
       sourceSystemRef: 'ams-csv',
-      issuingAgency: 'Environmental Protection Division',
+      issuingAgency: 'Ministry of Environment and Climate Change Strategy',
       legislation: [{ act: 'Environmental Management Act' }],
       location: 'British Columbia',
       recordName: '-',
@@ -47,14 +47,14 @@ describe('transformRecord', () => {
 
       recordType: 'Order',
       recordName: 'AMS Authorization # 123',
-      author: 'Environmental Protection Division',
+      author: 'Ministry of Environment and Climate Change Strategy',
       summary: 'Authorization Number: 123',
       dateIssued: expect.any(String),
       issuedTo: {
         companyName: 'ABC Company',
         type: MiscConstants.IssuedToEntityTypes.Company
       },
-      issuingAgency: 'Environmental Protection Division',
+      issuingAgency: 'Ministry of Environment and Climate Change Strategy',
       legislation: [
         {
           act: 'Environmental Management Act',

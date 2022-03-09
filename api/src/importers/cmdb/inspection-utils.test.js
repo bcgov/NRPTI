@@ -28,7 +28,7 @@ describe('transformRecord', () => {
       description: descriptionString,
       outcomeDescription: '',
       sourceSystemRef: 'agri-cmdb-csv',
-      issuingAgency: 'Ministry of Agriculture Food and Fisheries',
+      issuingAgency: 'Ministry of Agriculture and Food',
       legislation: [
         {
           act: 'Fish and Seafood Act',
@@ -67,7 +67,7 @@ describe('transformRecord', () => {
         companyName: 'Company 5',
         type: MiscConstants.IssuedToEntityTypes.Company
       },
-      issuingAgency: 'Ministry of Agriculture Food and Fisheries',
+      issuingAgency: 'Ministry of Agriculture and Food',
       legislation: [
         {
           act: 'Fish and Seafood Act',

@@ -42,7 +42,7 @@ class AdminSanctions extends BaseRecordUtils {
     adminSanction['recordType'] = 'Administrative Sanction';
     adminSanction['recordName'] = (csvRow['case_no'] && `Case No. ${csvRow['case_no']}`) || '';
 
-    const ministry = 'Ministry of Forests Lands Natural Resource Operations and Rural Development';
+    const ministry = 'Ministry of Forests';
     adminSanction['issuingAgency'] = ministry;
     adminSanction['author'] = ministry;
     adminSanction['dateIssued'] = csvRow['effective_date'] || null;

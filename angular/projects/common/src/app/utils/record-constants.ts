@@ -169,11 +169,11 @@ export class Picklists {
     'Climate Action Secretariat',
     'Conservation Officer Service',
     'Environmental Assessment Office',
-    'Environmental Protection Division',
     'LNG Secretariat',
-    'Ministry of Agriculture Food and Fisheries',
+    'Ministry of Agriculture and Food',
     'Ministry of Energy Mines and Low Carbon Innovation',
-    'Ministry of Forests Lands Natural Resource Operations and Rural Development',
+    'Ministry of Environment and Climate Change Strategy',
+    'Ministry of Forests',
     'Natural Resource Officers'
   ];
 
