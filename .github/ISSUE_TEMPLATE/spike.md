@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Problem Description** 
-**In order to** <achieve some goal> <a system or persona> **needs to** <some action>.
+**In order to** (achieve some goal), (a system or persona) **needs to** (some action).
 
 **Solution Needs**
 - Enter the non-negotiables of the solution (what are the needs vs. what are the wants)
