@@ -16,6 +16,11 @@ assignees: ''
 **Timebox**
 - How much effort are we committing to this research?
 
+**Outcome**
+Details describing the outcome of the research 
+- Was it successful? What direction should the work go? 
+- Was it unsuccessful? Discuss next steps with team
+
 **Additional Context**
 - enter text here
 - enter text here
