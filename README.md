@@ -41,6 +41,10 @@ Natural Resources Public Transparency Initiative monorepo.  This supports the LN
 ### ClamAV
 All documents uploaded to the NRPTI system are first checked by the ClamAV anti-virus service and rejected if they do not pass.  See [ClamAV BCGov Repo](https://github.com/bcgov/clamav) for more information.
 
+# Running it locally
+
+Please see the READMEs in the `angular/` and `api/` subdirectories.
+
 # VSCode Extensions
 
 A list of recommended/helpful VS Code extensions.
