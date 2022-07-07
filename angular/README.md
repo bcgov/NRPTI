@@ -23,13 +23,6 @@ _Note: This app also requires [`bcgov/nrpti/api`](https://github.com/bcgov/NRPTI
 
 _Note: NVM can be used to install and manage multiple versions of NodeJS and npm ([Windows version]((https://github.com/coreybutler/nvm-windows)), [Unix / Linux / macOS version](https://github.com/nvm-sh/nvm))._
 
-## Install [Angular CLI](https://cli.angular.io/)
-
-_Note: Use `@angular/cli`. Do not use `@angular/angular-cli`._
-
-```
-npm install -g @angular/cli
-```
 
 ## Install [Yarn](https://yarnpkg.com/lang/en/docs/install/#alternatives-tab)
 
