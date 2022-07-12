@@ -10,18 +10,18 @@ Angular front-ends for the Natural Resources Public Transparency Interface (NRPT
 
 # Prerequisites
 
-| Technology | Version | Website                 | Description                               |
-| ---------- | ------- | ----------------------- | ----------------------------------------- |
-| node       | 10.x.x  | https://nodejs.org/en/  | JavaScript Runtime                        |
-| npm        | 6.x.x   | https://www.npmjs.com/  | Node Package Manager                      |
-| ng         | 7.x.x   | https://cli.angular.io/ | Angular CLI                               |
-| yarn       | latest  | https://yarnpkg.com/en/ | Package Manager (more efficient than npm) |
+| Technology | Version         | Website                 | Description                               |
+| ---------- | --------------- | ----------------------- | ----------------------------------------- |
+| node       | 10.x.x - 14.x.x | https://nodejs.org/en/  | JavaScript Runtime                        |
+| npm        | latest          | https://www.npmjs.com/  | Node Package Manager                      |
+| ng         | 7.x.x           | https://cli.angular.io/ | Angular CLI                               |
+| yarn       | latest          | https://yarnpkg.com/en/ | Package Manager (more efficient than npm) |
 
-_Note: This app also requires [bcgov/nrpti/api](https://github.com/bcgov/nrpti/api) to handle its requests and authentication._
+_Note: This app also requires [`bcgov/nrpti/api`](https://github.com/bcgov/NRPTI/tree/master/api) to handle its requests and authentication._
 
 ## Install [Node + NPM](https://nodejs.org/en/)
 
-_Note: Windows users can use [NVM Windows](https://github.com/coreybutler/nvm-windows) to install and manage multiple versions of Node+Npm._
+_Note: NVM can be used to install and manage multiple versions of NodeJS and npm ([Windows version]((https://github.com/coreybutler/nvm-windows)), [Unix / Linux / macOS version](https://github.com/nvm-sh/nvm))._
 
 ## Install [Angular CLI](https://cli.angular.io/)
 
@@ -33,7 +33,12 @@ npm install -g @angular/cli
 
 ## Install [Yarn](https://yarnpkg.com/lang/en/docs/install/#alternatives-tab)
 
+Newer versions of NodeJS (14.9.x and 16.9.x) come bundled with Yarn. To enable:
+```sh
+corepack enable
 ```
+Otherwise:
+```sh
 npm install -g yarn
 ```
 
