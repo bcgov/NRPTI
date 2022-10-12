@@ -6,24 +6,29 @@ API for the Natural Resources Public Transparency Interface (NRPTI).
 
 # Prerequisites
 
-| Technology | Version | Website                                     | Description                               |
-|------------|---------|---------------------------------------------|-------------------------------------------|
-| node       | 10.x.x  | https://nodejs.org/en/                      | JavaScript Runtime                        |
-| npm        | 6.x.x   | https://www.npmjs.com/                      | Node Package Manager                      |
-| yarn       | latest  | https://yarnpkg.com/en/                     | Package Manager (more efficient than npm) |
-| mongodb    | 3.4+    | https://docs.mongodb.com/v3.2/installation/ | NoSQL database                            |
+| Technology | Version         | Website                                     | Description                               |
+|------------|-----------------|---------------------------------------------|-------------------------------------------|
+| node       | 10.x.x - 14.x.x | https://nodejs.org/en/                      | JavaScript Runtime                        |
+| npm        | latest          | https://www.npmjs.com/                      | Node Package Manager                      |
+| yarn       | latest          | https://yarnpkg.com/en/                     | Package Manager (more efficient than npm) |
+| mongodb    | 3.4 - 3.6       | https://docs.mongodb.com/v3.6/installation/ | NoSQL database                            |
 
-## Install [Node + NPM](https://nodejs.org/en/)
+## Install [NodeJS](https://nodejs.org/download/release/latest-v14.x/)
 
-_Note: Windows users can use [NVM Windows](https://github.com/coreybutler/nvm-windows) to install and manage multiple versions of Node+Npm._
+_Note: NVM can be used to install anad manage multiple versions of NodeJS and npm ([Windows version]((https://github.com/coreybutler/nvm-windows)), [Unix / Linux / macOS version](https://github.com/nvm-sh/nvm))._
 
 ## Install [Yarn](https://yarnpkg.com/lang/en/docs/install/#alternatives-tab)
 
+Newer versions of NodeJS (14.9.x and 16.9.x) come bundled with Yarn. To enable:
+```sh
+corepack enable
 ```
+Otherwise:
+```sh
 npm install -g yarn
 ```
 
-## Install [MongoDB](https://docs.mongodb.com/v3.2/installation/)
+## Install [MongoDB](https://docs.mongodb.com/v3.6/installation/)
 
 ## Environment Variables
 
@@ -43,11 +48,12 @@ For Core
 ```
 yarn install
 ```
-2. Run the app
+2. Start MongoDB
+3. Run the app
 ```
 npm start
 ```
-3. Go to http://localhost:3000/api/docs to verify that the application is running.
+4. Go to http://localhost:3000/api/docs to verify that the application is running.
 
     _Note: To change the default port edit `swagger.yaml`._
 
