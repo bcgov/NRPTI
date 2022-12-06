@@ -540,7 +540,7 @@ async function getS3SignedURL(s3Key) {
   return s3.getSignedUrl('getObject', {
     Bucket: process.env.OBJECT_STORE_bucket_name,
     Key: s3Key,
-    Expires: 300000 // 5 minutes
+    Expires: 300 // 5 minutes
   });
 }
 

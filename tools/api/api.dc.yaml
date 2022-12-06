@@ -134,6 +134,11 @@ objects:
                   value: ${KEYCLOAK_REALM}
                 - name: KEYCLOAK_ENABLED
                   value: 'true'
+                # Toggle to enable NRIS-EMLI importer
+                - name: NRIS_EMLI_DOCUMENT_BINARIES_ENABLED
+                  value: 'false'
+                - name: NRIS_EMLI_API_ENDPOINT
+                  value: 'https://api.nrs.gov.bc.ca/nrisws-api/v1/emprInspections'
               envFrom:
                 - prefix: NRIS_
                   secretRef:
