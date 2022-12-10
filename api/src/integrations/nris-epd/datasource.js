@@ -39,7 +39,7 @@ class NrisDataSource {
 
   // Start running the task.
   async run() {
-     await this.taskAuditRecord.updateTaskRecord({ status: 'Running' });
+    await this.taskAuditRecord.updateTaskRecord({ status: 'Running' });
 
     // First perform authentication against this datasource
     // We should login using env var creds - get a token from our configured endpoint.
