@@ -52,7 +52,7 @@
     "csvtojson": "2.0.10",
     "db-migrate": "0.11.6",
     "db-migrate-mongodb": "1.5.0",
-    "express": "4.17.1",
+    "express": "4.17.3",
     "jwks-rsa": "1.6.0",
     "moment": "2.24.0",
     "moment-timezone": "^0.5.32",
