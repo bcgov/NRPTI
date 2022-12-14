@@ -124,8 +124,26 @@ class NrisDataSource {
 
       // Get records
       defaultLog.info('NRIS Call:', url.href);
-      const records = await integrationUtils.getRecords(url, { headers: { Authorization: 'Bearer ' + this.token } });
+      let records = null;
+      const delaySeconds = 10;
 
+      for (let i = 1 ;; i++) {
+        try {
+          defaultLog.info(`Getting NRIS records: attempt ${i}`);
+          records = await integrationUtils.getRecords(url, { headers: { Authorization: 'Bearer ' + this.token } });
+          break;
+        } catch (error) {
+          if( i < RETRY_LIMIT){
+          defaultLog.info(`Failed to retrieve data from NRIS. error: ${error}`);
+          defaultLog.info(`Waiting ${delaySeconds} seconds before retry`);
+          await new Promise(resolve => setTimeout(resolve, delaySeconds*1000));
+          } else {
+            //re-throw the last error to handle at the higher level
+            throw error;
+          }
+        }
+      }
+   
       defaultLog.info('NRIS Call complete:', records.length);
       if (!records || records.length === 0) {
         return {
