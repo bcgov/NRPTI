@@ -1,4 +1,4 @@
-name: Front-End linti
+name: Front-End lint
 
 on: [pull_request]
 
