@@ -129,6 +129,7 @@ class NrisDataSource {
       for (let i = 1 ;; i++) {
         try {
           defaultLog.info(`Getting NRIS records: attempt ${i}`);
+          defaultLog.info(`NRIS Url: ${url}`);
           records = await integrationUtils.getRecords(url, { headers: { Authorization: 'Bearer ' + this.token } });
           break;
         } catch (error) {
