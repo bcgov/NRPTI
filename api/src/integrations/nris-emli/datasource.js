@@ -135,7 +135,7 @@ class NrisDataSource {
           if( i < RETRY_LIMIT){
           defaultLog.info(`Failed to retrieve data from NRIS. error: ${error}`);
           defaultLog.info(`Waiting ${delaySeconds} seconds before retry`);
-          await new Promise(resolve => setTimeout(resolve, delaySeconds*1000));
+          await new Promise(resolve => setTimeout(resolve, delaySeconds*1000*i));
           } else {
             //re-throw the last error to handle at the higher level
             throw error;
