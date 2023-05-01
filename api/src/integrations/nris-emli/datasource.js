@@ -135,7 +135,7 @@ class NrisDataSource {
           if( i < RETRY_LIMIT){
           defaultLog.info(`Failed to retrieve data from NRIS. error: ${error}`);
           defaultLog.info(`Waiting ${delaySeconds} seconds before retry`);
-          await new Promise(resolve => setTimeout(resolve, delaySeconds*1000));
+          await new Promise(resolve => setTimeout(resolve, delaySeconds*1000*i));
           } else {
             //re-throw the last error to handle at the higher level
             throw error;
@@ -249,7 +249,7 @@ class NrisDataSource {
 
     newRecord.sourceSystemRef = 'nris-emli';
 
-    if (NRIS_EMLI_DOCUMENT_BINARIES_ENABLED === true) {
+    if (NRIS_EMLI_DOCUMENT_BINARIES_ENABLED === 'true') {
       // check if document exists already in the system but is orphaned
       for (let i = 0; i < record.attachment.length; i++) {
         if (record.attachment[i].fileType === 'Final Report') {
