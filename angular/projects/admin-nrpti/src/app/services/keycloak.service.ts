@@ -3,7 +3,7 @@ import { ConfigService, LoggerService } from 'nrpti-angular-components';
 import { JwtUtil } from '../utils/jwt-utils';
 import { Observable } from 'rxjs';
 import { Constants } from '../utils/constants/misc';
-import * as cryptoJS from 'crypto-js';
+// import * as cryptoJS from 'crypto-js';
 
 declare let Keycloak: any;
 
@@ -27,47 +27,6 @@ export class KeycloakService {
     if (this.keycloakEnabled) {
       // Bootup KC
       const keycloak_client_id = this.configService.config['KEYCLOAK_CLIENT_ID'];
-
-
-      // New Functions
-      // TODO: Move to helper/utils
-
-      const getRandomString = (): string => {
-        const randomBytes = cryptoJS.lib.WordArray.random(16);
-        return cryptoJS.enc.Base64.stringify(randomBytes);
-      }
-
-      const encryptStringWithSHA256 = (str: string) => {
-        const PROTOCOL = 'SHA-256';
-        const textEncoder = new TextEncoder();
-        const encodedData = textEncoder.encode(str);
-        return crypto.subtle.digest(PROTOCOL, encodedData);
-      };
-
-      const hashToBase64url = (arrayBuffer: Iterable<number>) => {
-        const items = new Uint8Array(arrayBuffer);
-        const stringifiedArrayHash = items.reduce((acc, i) => `${acc}${String.fromCharCode(i)}`, '');
-        const decodedHash = btoa(stringifiedArrayHash);
-      
-        return decodedHash.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-      };
-
-      //  ****************
-
-      // Create random "state"
-      const state = getRandomString();
-      const nonce = getRandomString();
-      sessionStorage.setItem('oauth_state', state);
-      sessionStorage.setItem('oidc_nonce', nonce);
-    
-      // Create PKCE code verifier
-      const code_verifier = getRandomString();
-      sessionStorage.setItem('code_verifier', code_verifier);
-    
-      // Create code challenge
-      const arrayHash: any = await encryptStringWithSHA256(code_verifier);
-      const code_challenge = hashToBase64url(arrayHash);
-      sessionStorage.setItem('code_challenge', code_challenge);
 
       return new Promise<void>((resolve, reject) => {
         const config = {
@@ -123,7 +82,6 @@ export class KeycloakService {
             pkceMethod: 'S256',
           })
           .success(auth => {
-            console.log('auth:', auth);
             this.logger.log(`KC Success: ${auth}`);
             if (!auth) {
               this.keycloakAuth.login({ idpHint: 'idir' });
@@ -170,7 +128,7 @@ export class KeycloakService {
 
     // Make sure they have at least one instance of including a role in the ROLE array
     return Object.keys(Constants.ApplicationRoles).some(role => {
-      return jwt.realm_access.roles.includes(Constants.ApplicationRoles[role]);
+      return jwt.client_roles.includes(Constants.ApplicationRoles[role]);
     });
   }
 
