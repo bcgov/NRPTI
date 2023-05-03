@@ -143,7 +143,7 @@ export class KeycloakService {
     const token = this.getToken();
     if (token) {
       const jwt = JwtUtil.decodeToken(token);
-      const roles = (jwt && jwt.realm_access && jwt.realm_access.roles) || [];
+      const roles = (jwt && jwt.client_roles) || [];
       this.buildMenuCache(roles);
       this.buildAddRecordDropdownCache(roles);
     }
@@ -164,7 +164,7 @@ export class KeycloakService {
 
     const jwt = JwtUtil.decodeToken(token);
 
-    if (!(jwt && jwt.realm_access && jwt.realm_access.roles)) {
+    if (!(jwt && jwt.client_roles)) {
       return false;
     }
 
