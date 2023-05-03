@@ -3,6 +3,7 @@ import { ConfigService, LoggerService } from 'nrpti-angular-components';
 import { JwtUtil } from '../utils/jwt-utils';
 import { Observable } from 'rxjs';
 import { Constants } from '../utils/constants/misc';
+import * as cryptoJS from 'crypto-js';
 
 declare let Keycloak: any;
 
@@ -21,16 +22,59 @@ export class KeycloakService {
     this.keycloakEnabled = this.configService.config['KEYCLOAK_ENABLED'];
     this.keycloakUrl = this.configService.config['KEYCLOAK_URL'];
     this.keycloakRealm = this.configService.config['KEYCLOAK_REALM'];
+    
 
     if (this.keycloakEnabled) {
       // Bootup KC
       const keycloak_client_id = this.configService.config['KEYCLOAK_CLIENT_ID'];
 
+
+      // New Functions
+      // TODO: Move to helper/utils
+
+      const getRandomString = (): string => {
+        const randomBytes = cryptoJS.lib.WordArray.random(16);
+        return cryptoJS.enc.Base64.stringify(randomBytes);
+      }
+
+      const encryptStringWithSHA256 = (str: string) => {
+        const PROTOCOL = 'SHA-256';
+        const textEncoder = new TextEncoder();
+        const encodedData = textEncoder.encode(str);
+        return crypto.subtle.digest(PROTOCOL, encodedData);
+      };
+
+      const hashToBase64url = (arrayBuffer: Iterable<number>) => {
+        const items = new Uint8Array(arrayBuffer);
+        const stringifiedArrayHash = items.reduce((acc, i) => `${acc}${String.fromCharCode(i)}`, '');
+        const decodedHash = btoa(stringifiedArrayHash);
+      
+        return decodedHash.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      };
+
+      //  ****************
+
+      // Create random "state"
+      const state = getRandomString();
+      const nonce = getRandomString();
+      sessionStorage.setItem('oauth_state', state);
+      sessionStorage.setItem('oidc_nonce', nonce);
+    
+      // Create PKCE code verifier
+      const code_verifier = getRandomString();
+      sessionStorage.setItem('code_verifier', code_verifier);
+    
+      // Create code challenge
+      const arrayHash: any = await encryptStringWithSHA256(code_verifier);
+      const code_challenge = hashToBase64url(arrayHash);
+      sessionStorage.setItem('code_challenge', code_challenge);
+
       return new Promise<void>((resolve, reject) => {
         const config = {
           url: this.keycloakUrl,
           realm: this.keycloakRealm,
-          clientId: !keycloak_client_id ? 'nrpti-admin' : keycloak_client_id
+          clientId: keycloak_client_id,
+          publicClient: true,
         };
 
         // console.log('KC Auth init.');
@@ -72,11 +116,14 @@ export class KeycloakService {
             });
         };
 
+        console.log("this", this.keycloakAuth)
         // Initialize.
         this.keycloakAuth
-          .init({})
+          .init({
+            pkceMethod: 'S256',
+          })
           .success(auth => {
-            // console.log('KC Refresh Success?:', this.keycloakAuth.authServerUrl);
+            console.log('auth:', auth);
             this.logger.log(`KC Success: ${auth}`);
             if (!auth) {
               this.keycloakAuth.login({ idpHint: 'idir' });
