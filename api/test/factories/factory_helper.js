@@ -240,7 +240,7 @@ function generateSwaggerParams({ userRoles }) {
       params: {
         auth_payload: {
           displayName: faker.internet.userName,
-          realm_access: { roles: roles }
+          client_roles: { roles: roles }
         }
       }
     }

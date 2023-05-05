@@ -91,9 +91,7 @@ function defaultProtectedParams(username = null, roles = []) {
       // This value in the real world is pulled from the keycloak user. It will look something like
       // idir/arwhilla
       preferred_username: username,
-      realm_access: {
-        roles: userroles
-      },
+      client_roles: userroles
     },
     dataset: {},
     _id: {},

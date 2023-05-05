@@ -22,9 +22,7 @@ describe('import-task', () => {
         swagger: {
           params: {
             auth_payload: {
-              realm_access: {
-                roles: 'sysadmin'
-              }
+              client_access: 'sysadmin'
             },
             task: null
           }
@@ -42,8 +40,8 @@ describe('import-task', () => {
         swagger: {
           params: {
             auth_payload: {
-              realm_access: {
-                roles: 'sysadmin'
+              auth_payload: {
+                client_access: 'sysadmin'
               }
             },
             task: {
@@ -64,8 +62,8 @@ describe('import-task', () => {
         swagger: {
           params: {
             auth_payload: {
-              realm_access: {
-                roles: 'sysadmin'
+              auth_payload: {
+                client_access: 'sysadmin'
               }
             },
             task: {
@@ -89,8 +87,8 @@ describe('import-task', () => {
         swagger: {
           params: {
             auth_payload: {
-              realm_access: {
-                roles: 'sysadmin'
+              auth_payload: {
+                client_access: 'sysadmin'
               }
             },
             task: {

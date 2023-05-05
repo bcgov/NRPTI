@@ -39,9 +39,7 @@
 //       swagger: {
 //         params: {
 //           auth_payload: {
-//             realm_access: {
-//               roles: 'sysadmin'
-//             }
+//             client_roles: 'sysadmin'
 //           }
 //         }
 //       }
