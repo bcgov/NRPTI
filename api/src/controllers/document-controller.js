@@ -80,7 +80,7 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
       try {
         docResponse = await createURLDocument(
           args.swagger.params.fileName.value,
-          (args.swagger.params.auth_payload && args.swagger.params.auth_payload.preferred_username) || '',
+          (args.swagger.params.auth_payload && args.swagger.params.auth_payload.display_name) || '',
           args.swagger.params.url.value,
           readRoles,
           writeRoles
@@ -101,7 +101,7 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
         ({ docResponse, s3Response } = await createS3Document(
           args.swagger.params.fileName.value,
           args.swagger.params.upfile.value.buffer,
-          (args.swagger.params.auth_payload && args.swagger.params.auth_payload.preferred_username) || '',
+          (args.swagger.params.auth_payload && args.swagger.params.auth_payload.display_name) || '',
           readRoles,
           writeRoles,
           s3ACLRole

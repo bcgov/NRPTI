@@ -97,7 +97,7 @@ class BaseRecordUtils {
       // build update Obj, which needs to include the flavour record ids
       const updateObj = { ...nrptiRecord, _id: existingRecord._id };
 
-      updateObj.updatedBy = (this.auth_payload && this.auth_payload.preferred_username) || '';
+      updateObj.updatedBy = (this.auth_payload && this.auth_payload.display_name) || '';
       updateObj.dateUpdated = new Date();
 
       existingRecord._flavourRecords.forEach(flavourRecord => {
@@ -134,7 +134,7 @@ class BaseRecordUtils {
       // build create Obj, which should include the flavour record details
       const createObj = { ...nrptiRecord };
 
-      createObj.addedBy = (this.auth_payload && this.auth_payload.preferred_username) || '';
+      createObj.addedBy = (this.auth_payload && this.auth_payload.display_name) || '';
       createObj.dateAdded = new Date();
 
       // Only publish records from 2006-01-01 or later
