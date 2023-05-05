@@ -127,7 +127,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
     (permit.originalPermit = new ObjectId(incomingObj.originalPermit));
 
   // set meta
-  permit.addedBy = args.swagger.params.auth_payload.displayName;
+  permit.addedBy = args.swagger.params.auth_payload.display_name;
   permit.dateAdded = new Date();
 
   // set data source references
@@ -206,10 +206,10 @@ exports.createLNG = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     permitLNG.read.push('public');
     permitLNG.datePublished = new Date();
-    permitLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+    permitLNG.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
-  permitLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  permitLNG.addedBy = args.swagger.params.auth_payload.display_name;
   permitLNG.dateAdded = new Date();
 
   // set master data
@@ -297,10 +297,10 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     permitBCMI.read.push('public');
     permitBCMI.datePublished = new Date();
-    permitBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+    permitBCMI.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
-  permitBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  permitBCMI.addedBy = args.swagger.params.auth_payload.display_name;
   permitBCMI.dateAdded = new Date();
 
   // set master data

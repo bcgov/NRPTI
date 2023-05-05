@@ -154,7 +154,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.documents && (restorativeJustice.documents = incomingObj.documents);
 
   // set meta
-  restorativeJustice.addedBy = args.swagger.params.auth_payload.displayName;
+  restorativeJustice.addedBy = args.swagger.params.auth_payload.display_name;
   restorativeJustice.dateAdded = new Date();
 
   // set data source references
@@ -236,7 +236,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   restorativeJusticeLNG.read = utils.ApplicationAdminRoles;
   restorativeJusticeLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
-  restorativeJusticeLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  restorativeJusticeLNG.addedBy = args.swagger.params.auth_payload.display_name;
   restorativeJusticeLNG.dateAdded = new Date();
 
   // set master data
@@ -298,7 +298,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     restorativeJusticeLNG.read.push('public');
     restorativeJusticeLNG.datePublished = new Date();
-    restorativeJusticeLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+    restorativeJusticeLNG.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   restorativeJusticeLNG = BusinessLogicManager.applyBusinessLogicOnPost(restorativeJusticeLNG);
@@ -366,7 +366,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   restorativeJusticeNRCED.read = utils.ApplicationAdminRoles;
   restorativeJusticeNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
 
-  restorativeJusticeNRCED.addedBy = args.swagger.params.auth_payload.displayName;
+  restorativeJusticeNRCED.addedBy = args.swagger.params.auth_payload.display_name;
   restorativeJusticeNRCED.dateAdded = new Date();
 
   // set master data
@@ -428,7 +428,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     restorativeJusticeNRCED.read.push('public');
     restorativeJusticeNRCED.datePublished = new Date();
-    restorativeJusticeNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+    restorativeJusticeNRCED.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   restorativeJusticeNRCED = BusinessLogicManager.applyBusinessLogicOnPost(restorativeJusticeNRCED);

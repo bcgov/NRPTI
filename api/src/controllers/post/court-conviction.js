@@ -165,7 +165,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.documents && (courtConviction.documents = incomingObj.documents);
 
   // set meta
-  courtConviction.addedBy = args.swagger.params.auth_payload.displayName;
+  courtConviction.addedBy = args.swagger.params.auth_payload.display_name;
   courtConviction.dateAdded = new Date();
 
   // set data source references
@@ -254,7 +254,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   courtConvictionLNG.read = utils.ApplicationAdminRoles;
   courtConvictionLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
-  courtConvictionLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  courtConvictionLNG.addedBy = args.swagger.params.auth_payload.display_name;
   courtConvictionLNG.dateAdded = new Date();
 
   // set master data
@@ -315,7 +315,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     courtConvictionLNG.read.push('public');
     courtConvictionLNG.datePublished = new Date();
-    courtConvictionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+    courtConvictionLNG.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   courtConvictionLNG = BusinessLogicManager.applyBusinessLogicOnPost(courtConvictionLNG);
@@ -388,7 +388,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   courtConvictionNRCED.read = utils.ApplicationAdminRoles;
   courtConvictionNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
 
-  courtConvictionNRCED.addedBy = args.swagger.params.auth_payload.displayName;
+  courtConvictionNRCED.addedBy = args.swagger.params.auth_payload.display_name;
   courtConvictionNRCED.dateAdded = new Date();
 
   // set master data
@@ -451,7 +451,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     courtConvictionNRCED.read.push('public');
     courtConvictionNRCED.datePublished = new Date();
-    courtConvictionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+    courtConvictionNRCED.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   courtConvictionNRCED = BusinessLogicManager.applyBusinessLogicOnPost(courtConvictionNRCED);
@@ -527,7 +527,7 @@ exports.createBCMI = function(args, res, next, incomingObj) {
   courtConvictionBCMI.read = utils.ApplicationAdminRoles;
   courtConvictionBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
-  courtConvictionBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  courtConvictionBCMI.addedBy = args.swagger.params.auth_payload.display_name;
   courtConvictionBCMI.dateAdded = new Date();
 
   // set master data
@@ -588,7 +588,7 @@ exports.createBCMI = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     courtConvictionBCMI.read.push('public');
     courtConvictionBCMI.datePublished = new Date();
-    courtConvictionBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+    courtConvictionBCMI.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   courtConvictionBCMI = BusinessLogicManager.applyBusinessLogicOnPost(courtConvictionBCMI);

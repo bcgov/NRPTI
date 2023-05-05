@@ -153,7 +153,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.documents && (ticket.documents = incomingObj.documents);
 
   // set meta
-  ticket.addedBy = args.swagger.params.auth_payload.displayName;
+  ticket.addedBy = args.swagger.params.auth_payload.display_name;
   ticket.dateAdded = new Date();
 
   // set data source references
@@ -233,7 +233,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   ticketLNG.read = utils.ApplicationAdminRoles;
   ticketLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
-  ticketLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  ticketLNG.addedBy = args.swagger.params.auth_payload.display_name;
   ticketLNG.dateAdded = new Date();
 
   // set master data
@@ -292,7 +292,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     ticketLNG.read.push('public');
     ticketLNG.datePublished = new Date();
-    ticketLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+    ticketLNG.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   ticketLNG = BusinessLogicManager.applyBusinessLogicOnPost(ticketLNG);
@@ -362,7 +362,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   ticketNRCED.read = utils.ApplicationAdminRoles;
   ticketNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
 
-  ticketNRCED.addedBy = args.swagger.params.auth_payload.displayName;
+  ticketNRCED.addedBy = args.swagger.params.auth_payload.display_name;
   ticketNRCED.dateAdded = new Date();
 
   // set master data
@@ -421,7 +421,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     ticketNRCED.read.push('public');
     ticketNRCED.datePublished = new Date();
-    ticketNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+    ticketNRCED.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   ticketNRCED = BusinessLogicManager.applyBusinessLogicOnPost(ticketNRCED);

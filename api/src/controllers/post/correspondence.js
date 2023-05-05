@@ -129,7 +129,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.description && (correspondence.description = incomingObj.description);
 
   // set meta
-  correspondence.addedBy = args.swagger.params.auth_payload.displayName;
+  correspondence.addedBy = args.swagger.params.auth_payload.display_name;
   correspondence.dateAdded = new Date();
 
   // set data source references
@@ -204,7 +204,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     correspondenceBCMI.read.push('public');
     correspondenceBCMI.datePublished = new Date();
-    correspondenceBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+    correspondenceBCMI.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   // set data
@@ -241,7 +241,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.description && (correspondenceBCMI.description = incomingObj.description);
 
   // set meta
-  correspondenceBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  correspondenceBCMI.addedBy = args.swagger.params.auth_payload.display_name;
   correspondenceBCMI.dateAdded = new Date();
 
   // set data source references
@@ -309,7 +309,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     correspondenceNRCED.read.push('public');
     correspondenceNRCED.datePublished = new Date();
-    correspondenceNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+    correspondenceNRCED.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   // set data
@@ -346,7 +346,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.description && (correspondenceNRCED.description = incomingObj.description);
 
   // set meta
-  correspondenceNRCED.addedBy = args.swagger.params.auth_payload.displayName;
+  correspondenceNRCED.addedBy = args.swagger.params.auth_payload.display_name;
   correspondenceNRCED.dateAdded = new Date();
 
   // set data source references

@@ -108,7 +108,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.documents && (selfReport.documents = incomingObj.documents);
 
   // set meta
-  selfReport.addedBy = args.swagger.params.auth_payload.displayName;
+  selfReport.addedBy = args.swagger.params.auth_payload.display_name;
   selfReport.dateAdded = new Date();
 
   // set data source references
@@ -174,10 +174,10 @@ exports.createLNG = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     selfReportLNG.read.push('public');
     selfReportLNG.datePublished = new Date();
-    selfReportLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+    selfReportLNG.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
-  selfReportLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  selfReportLNG.addedBy = args.swagger.params.auth_payload.display_name;
   selfReportLNG.dateAdded = new Date();
 
   // set master data

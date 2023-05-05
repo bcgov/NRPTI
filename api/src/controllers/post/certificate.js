@@ -109,7 +109,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.documents && (certificate.documents = incomingObj.documents);
 
   // set meta
-  certificate.addedBy = args.swagger.params.auth_payload.displayName;
+  certificate.addedBy = args.swagger.params.auth_payload.display_name;
   certificate.dateAdded = new Date();
 
   // set data source references
@@ -175,10 +175,10 @@ exports.createLNG = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     certificateLNG.read.push('public');
     certificateLNG.datePublished = new Date();
-    certificateLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+    certificateLNG.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
-  certificateLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  certificateLNG.addedBy = args.swagger.params.auth_payload.display_name;
   certificateLNG.dateAdded = new Date();
 
   // set master data
@@ -237,10 +237,10 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     certificateBCMI.read.push('public');
     certificateBCMI.datePublished = new Date();
-    certificateBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+    certificateBCMI.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
-  certificateBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  certificateBCMI.addedBy = args.swagger.params.auth_payload.display_name;
   certificateBCMI.dateAdded = new Date();
 
   // set master data

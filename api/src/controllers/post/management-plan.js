@@ -107,7 +107,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.documents && (managementPlan.documents = incomingObj.documents);
 
   // set meta
-  managementPlan.addedBy = args.swagger.params.auth_payload.displayName;
+  managementPlan.addedBy = args.swagger.params.auth_payload.display_name;
   managementPlan.dateAdded = new Date();
 
   // set data source references
@@ -175,10 +175,10 @@ exports.createLNG = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     managementPlanLNG.read.push('public');
     managementPlanLNG.datePublished = new Date();
-    managementPlanLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+    managementPlanLNG.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
-  managementPlanLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  managementPlanLNG.addedBy = args.swagger.params.auth_payload.display_name;
   managementPlanLNG.dateAdded = new Date();
 
   // set master data
@@ -264,10 +264,10 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     managementPlanBCMI.read.push('public');
     managementPlanBCMI.datePublished = new Date();
-    managementPlanBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+    managementPlanBCMI.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
-  managementPlanBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  managementPlanBCMI.addedBy = args.swagger.params.auth_payload.display_name;
   managementPlanBCMI.dateAdded = new Date();
 
   // set master data

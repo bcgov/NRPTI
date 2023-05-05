@@ -53,7 +53,7 @@ class BaseRecordUtils {
 
       const savedDocument = await DocumentController.createURLDocument(
         epicRecord.documentFileName,
-        (this.auth_payload && this.auth_payload.displayName) || '',
+        (this.auth_payload && this.auth_payload.display_name) || '',
         `${EPIC_PUBLIC_HOSTNAME}/api/document/${epicRecord._id}/fetch/${encodeURIComponent(
           epicRecord.documentFileName
         )}`,
@@ -142,8 +142,8 @@ class BaseRecordUtils {
       dateAdded: new Date(),
       dateUpdated: new Date(),
 
-      addedBy: (this.auth_payload && this.auth_payload.displayName) || '',
-      updatedBy: (this.auth_payload && this.auth_payload.displayName) || '',
+      addedBy: (this.auth_payload && this.auth_payload.display_name) || '',
+      updatedBy: (this.auth_payload && this.auth_payload.display_name) || '',
 
       sourceDateAdded: epicRecord.dateAdded || epicRecord._createdDate || null,
       sourceDateUpdated: epicRecord.dateUpdated || epicRecord._updatedDate || null,

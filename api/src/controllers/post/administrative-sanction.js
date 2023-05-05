@@ -156,7 +156,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.documents && (administrativeSanction.documents = incomingObj.documents);
 
   // set meta
-  administrativeSanction.addedBy = args.swagger.params.auth_payload.displayName;
+  administrativeSanction.addedBy = args.swagger.params.auth_payload.display_name;
   administrativeSanction.dateAdded = new Date();
 
   // set data source references
@@ -239,7 +239,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   administrativeSanctionLNG.read = utils.ApplicationAdminRoles;
   administrativeSanctionLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
-  administrativeSanctionLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  administrativeSanctionLNG.addedBy = args.swagger.params.auth_payload.display_name;
   administrativeSanctionLNG.dateAdded = new Date();
 
   // set master data
@@ -301,7 +301,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     administrativeSanctionLNG.read.push('public');
     administrativeSanctionLNG.datePublished = new Date();
-    administrativeSanctionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+    administrativeSanctionLNG.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   administrativeSanctionLNG = BusinessLogicManager.applyBusinessLogicOnPost(administrativeSanctionLNG);
@@ -369,7 +369,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   administrativeSanctionNRCED.read = utils.ApplicationAdminRoles;
   administrativeSanctionNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
 
-  administrativeSanctionNRCED.addedBy = args.swagger.params.auth_payload.displayName;
+  administrativeSanctionNRCED.addedBy = args.swagger.params.auth_payload.display_name;
   administrativeSanctionNRCED.dateAdded = new Date();
 
   // set master data
@@ -431,7 +431,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     administrativeSanctionNRCED.read.push('public');
     administrativeSanctionNRCED.datePublished = new Date();
-    administrativeSanctionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+    administrativeSanctionNRCED.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   administrativeSanctionNRCED = BusinessLogicManager.applyBusinessLogicOnPost(administrativeSanctionNRCED);

@@ -80,7 +80,7 @@ exports.protectedPut = async function (args, res, next) {
   sanitizedObj.dateUpdated = new Date();
   // If there are args it means this is an API request and has a user. If not, this is carried out by the system so
   // use the system user.
-  sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
+  sanitizedObj.updatedBy = args.swagger.params.auth_payload.display_name;
 
   const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
 
@@ -89,7 +89,7 @@ exports.protectedPut = async function (args, res, next) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
-    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.display_name;
     try {
       await CollectionController.publishCollections(masterId, args.swagger.params.auth_payload)
     } catch (error) {
@@ -175,8 +175,8 @@ exports.protectedPost = async function (args, res, next) {
 
   // Set meta. If the args exist then use the auth otherwise check the incoming object. This occurs if 
   // the system is creating the record.
-  mine.addedBy = args && args.swagger.params.auth_payload.displayName || incomingObj.addedBy;
-  mine.updatedBy = args && args.swagger.params.auth_payload.displayName || incomingObj.updatedBy;
+  mine.addedBy = args && args.swagger.params.auth_payload.display_name || incomingObj.addedBy;
+  mine.updatedBy = args && args.swagger.params.auth_payload.display_name || incomingObj.updatedBy;
   mine.dateAdded = new Date();
   mine.dateUpdated = new Date();
 

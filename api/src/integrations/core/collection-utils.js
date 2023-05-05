@@ -60,7 +60,7 @@ class Collections extends BaseRecordUtils {
     }
 
     try {
-      return await CollectionController.createCollection(nrptiRecord, this.auth_payload.displayName);
+      return await CollectionController.createCollection(nrptiRecord, this.auth_payload.display_name);
     } catch (error) {
       defaultLog.error(`Failed to create ${this.recordType._schemaName} record: ${error.message}`);
     }
@@ -75,7 +75,7 @@ class Collections extends BaseRecordUtils {
       throw Error('updateRecord - required existingRecord must be non-null.');
     }
     try {
-      return await CollectionController.updateCollection(updateObj, existingRecord._id, this.auth_payload.displayName);
+      return await CollectionController.updateCollection(updateObj, existingRecord._id, this.auth_payload.display_name);
     } catch (error) {
       defaultLog.error(`Failed to save ${this.recordType._schemaName} record: ${error.message}`);
     }

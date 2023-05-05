@@ -166,7 +166,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.documents && (administrativePenalty.documents = incomingObj.documents);
 
   // set meta
-  administrativePenalty.addedBy = args.swagger.params.auth_payload.displayName;
+  administrativePenalty.addedBy = args.swagger.params.auth_payload.display_name;
   administrativePenalty.dateAdded = new Date();
 
   // set data source references
@@ -252,7 +252,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   administrativePenaltyLNG.read = utils.ApplicationAdminRoles;
   administrativePenaltyLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
-  administrativePenaltyLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  administrativePenaltyLNG.addedBy = args.swagger.params.auth_payload.display_name;
   administrativePenaltyLNG.dateAdded = new Date();
 
   // set master data
@@ -314,7 +314,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     administrativePenaltyLNG.read.push('public');
     administrativePenaltyLNG.datePublished = new Date();
-    administrativePenaltyLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+    administrativePenaltyLNG.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   administrativePenaltyLNG = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyLNG);
@@ -389,7 +389,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   administrativePenaltyNRCED.read = utils.ApplicationAdminRoles;
   administrativePenaltyNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
 
-  administrativePenaltyNRCED.addedBy = args.swagger.params.auth_payload.displayName;
+  administrativePenaltyNRCED.addedBy = args.swagger.params.auth_payload.display_name;
   administrativePenaltyNRCED.dateAdded = new Date();
 
   // set master data
@@ -453,7 +453,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     administrativePenaltyNRCED.read.push('public');
     administrativePenaltyNRCED.datePublished = new Date();
-    administrativePenaltyNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+    administrativePenaltyNRCED.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   administrativePenaltyNRCED = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyNRCED);
@@ -535,7 +535,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   administrativePenaltyBCMI.read = utils.ApplicationAdminRoles;
   administrativePenaltyBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
-  administrativePenaltyBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  administrativePenaltyBCMI.addedBy = args.swagger.params.auth_payload.display_name;
   administrativePenaltyBCMI.dateAdded = new Date();
 
   // set master data
@@ -597,7 +597,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     administrativePenaltyBCMI.read.push('public');
     administrativePenaltyBCMI.datePublished = new Date();
-    administrativePenaltyBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+    administrativePenaltyBCMI.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   administrativePenaltyBCMI = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyBCMI);

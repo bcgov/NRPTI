@@ -131,7 +131,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.description && (certificateAmendment.description = incomingObj.description);
 
   // set meta
-  certificateAmendment.addedBy = args.swagger.params.auth_payload.displayName;
+  certificateAmendment.addedBy = args.swagger.params.auth_payload.display_name;
   certificateAmendment.dateAdded = new Date();
 
   // set data source references
@@ -200,7 +200,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     certificateAmendmentLNG.read.push('public');
     certificateAmendmentLNG.datePublished = new Date();
-    certificateAmendmentLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+    certificateAmendmentLNG.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   // set data
@@ -239,7 +239,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.description && (certificateAmendmentLNG.description = incomingObj.description);
 
   // set meta
-  certificateAmendmentLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  certificateAmendmentLNG.addedBy = args.swagger.params.auth_payload.display_name;
   certificateAmendmentLNG.dateAdded = new Date();
 
   // set data source references
@@ -312,7 +312,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     certificateAmendmentBCMI.read.push('public');
     certificateAmendmentBCMI.datePublished = new Date();
-    certificateAmendmentBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+    certificateAmendmentBCMI.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   // set data
@@ -351,7 +351,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.description && (certificateAmendmentBCMI.description = incomingObj.description);
 
   // set meta
-  certificateAmendmentBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  certificateAmendmentBCMI.addedBy = args.swagger.params.auth_payload.display_name;
   certificateAmendmentBCMI.dateAdded = new Date();
 
   // set data source references

@@ -61,7 +61,7 @@ exports.protectedPost = async function(args, res, next) {
 
   map.dateAdded = Date.now();
   map.dateUpdated = Date.now();
-  map.updatedBy = args.swagger.params.auth_payload.displayName;
+  map.updatedBy = args.swagger.params.auth_payload.display_name;
 
   let obj = null;
   try {
@@ -112,7 +112,7 @@ exports.protectedPut = async function(args, res, next) {
   }
 
   sanitizedObj.dateUpdated = new Date();
-  sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
+  sanitizedObj.updatedBy = args.swagger.params.auth_payload.display_name;
   const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
   const updateObj = { $set: dotNotatedObj };
 

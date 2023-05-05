@@ -132,19 +132,19 @@ exports.protectedPostConfig = async function (args, res, next) {
     switch (args.swagger.params.app.value) {
       case ConfigConsts.CONFIG_APPS.BCMI:
         CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:bcmi', true);
-        newObj = await BcmiConfig.CreateBCMIConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
+        newObj = await BcmiConfig.CreateBCMIConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.display_name);
         break;
       case ConfigConsts.CONFIG_APPS.NRCED:
         CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:nrced', true);
-        newObj = await NrcedConfig.CreateNRCEDConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
+        newObj = await NrcedConfig.CreateNRCEDConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.display_name);
         break;
       case ConfigConsts.CONFIG_APPS.LNG:
         CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:lng', true);
-        newObj = await LngConfig.CreateLNGConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
+        newObj = await LngConfig.CreateLNGConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.display_name);
         break;
       case ConfigConsts.CONFIG_APPS.NRPTI:
         CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:nrpti', true);
-        newObj = await NrptiConfig.CreateLNGConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
+        newObj = await NrptiConfig.CreateLNGConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.display_name);
         break;
       default:
         throw new Error('You did not provide a valid app.')
@@ -172,7 +172,7 @@ exports.protectedPutConfig = async function (args, res, next) {
     switch (args.swagger.params.app.value) {
       case ConfigConsts.CONFIG_APPS.BCMI:
         CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:bcmi', true);
-        editedObj = await BcmiConfig.EditBCMIConfig(_id, args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
+        editedObj = await BcmiConfig.EditBCMIConfig(_id, args.swagger.params.data.value, args.swagger.params.auth_payload.display_name);
         break;
       case ConfigConsts.CONFIG_APPS.NRCED:
         CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:nrced', true);

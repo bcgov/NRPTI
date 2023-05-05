@@ -156,7 +156,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.documents && (warning.documents = incomingObj.documents);
 
   // set meta
-  warning.addedBy = args.swagger.params.auth_payload.displayName;
+  warning.addedBy = args.swagger.params.auth_payload.display_name;
   warning.dateAdded = new Date();
 
   // set data source references
@@ -236,7 +236,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   warningLNG.read = utils.ApplicationAdminRoles;
   warningLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
-  warningLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  warningLNG.addedBy = args.swagger.params.auth_payload.display_name;
   warningLNG.dateAdded = new Date();
 
   // set master data
@@ -297,7 +297,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     warningLNG.read.push('public');
     warningLNG.datePublished = new Date();
-    warningLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+    warningLNG.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   warningLNG = BusinessLogicManager.applyBusinessLogicOnPost(warningLNG);
@@ -367,7 +367,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   warningNRCED.read = utils.ApplicationAdminRoles;
   warningNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
 
-  warningNRCED.addedBy = args.swagger.params.auth_payload.displayName;
+  warningNRCED.addedBy = args.swagger.params.auth_payload.display_name;
   warningNRCED.dateAdded = new Date();
 
   // set master data
@@ -428,7 +428,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     warningNRCED.read.push('public');
     warningNRCED.datePublished = new Date();
-    warningNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+    warningNRCED.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   warningNRCED = BusinessLogicManager.applyBusinessLogicOnPost(warningNRCED);

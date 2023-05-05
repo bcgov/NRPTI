@@ -91,7 +91,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     report.read.push('public');
     report.datePublished = new Date();
-    report.publishedBy = args.swagger.params.auth_payload.displayName;
+    report.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   // set forward references
@@ -137,7 +137,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.description && (report.description = incomingObj.description);
 
   // set meta
-  report.addedBy = args.swagger.params.auth_payload.displayName;
+  report.addedBy = args.swagger.params.auth_payload.display_name;
   report.dateAdded = new Date();
 
   // set data source references
@@ -211,7 +211,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     reportBCMI.read.push('public');
     reportBCMI.datePublished = new Date();
-    reportBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+    reportBCMI.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   // set data
@@ -248,7 +248,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.description && (reportBCMI.description = incomingObj.description);
 
   // set meta
-  reportBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  reportBCMI.addedBy = args.swagger.params.auth_payload.display_name;
   reportBCMI.dateAdded = new Date();
 
   // set data source references
@@ -315,7 +315,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     reportNRCED.read.push('public');
     reportNRCED.datePublished = new Date();
-    reportNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+    reportNRCED.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   // set data
@@ -352,7 +352,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.description && (reportNRCED.description = incomingObj.description);
 
   // set meta
-  reportNRCED.addedBy = args.swagger.params.auth_payload.displayName;
+  reportNRCED.addedBy = args.swagger.params.auth_payload.display_name;
   reportNRCED.dateAdded = new Date();
 
   // set data source references

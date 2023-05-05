@@ -227,8 +227,8 @@ class NrisDataSource {
     newRecord.dateAdded = new Date();
     newRecord.dateUpdated = new Date();
 
-    newRecord.addedBy = (this.auth_payload && this.auth_payload.displayName) || '';
-    newRecord.updatedBy = (this.auth_payload && this.auth_payload.displayName) || '';
+    newRecord.addedBy = (this.auth_payload && this.auth_payload.display_name) || '';
+    newRecord.updatedBy = (this.auth_payload && this.auth_payload.display_name) || '';
 
     newRecord.sourceSystemRef = 'nris-emli';
 
@@ -355,7 +355,7 @@ class NrisDataSource {
       ({ docResponse, s3Response } = await documentController.createS3Document(
         fileName,
         file,
-        (this.auth_payload && this.auth_payload.displayName) || '',
+        (this.auth_payload && this.auth_payload.display_name) || '',
         readRoles,
         writeRoles,
         s3ACLRole

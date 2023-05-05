@@ -65,7 +65,7 @@ exports.protectedPut = async function (args, res, next) {
 
   let obj = null;
   try {
-    obj = await updateCollection(incomingObj, collectionId, args.swagger.params.auth_payload.displayName);
+    obj = await updateCollection(incomingObj, collectionId, args.swagger.params.auth_payload.display_name);
   } catch (error) {
     defaultLog.info(`protectedPut - error updating collection: ${collectionId}`);
     defaultLog.debug(error);
@@ -189,7 +189,7 @@ exports.updateCollection = updateCollection;
 
 // This wrapper allows this controller to work with the record controller.
 exports.createItem = async function (args, res, next, collection) {
-  return await createCollection(collection, args.swagger.params.auth_payload.displayName);
+  return await createCollection(collection, args.swagger.params.auth_payload.display_name);
 }
 
 exports.protectedPost = async function (args, res, next) {
@@ -215,7 +215,7 @@ exports.protectedPost = async function (args, res, next) {
       incomingObj.addRole = 'public';
     }
 
-    obj = await createCollection(incomingObj, args.swagger.params.auth_payload.displayName);
+    obj = await createCollection(incomingObj, args.swagger.params.auth_payload.display_name);
   } catch (error) {
     defaultLog.info(`protectedPost - error inserting collection: ${incomingObj}`);
     defaultLog.debug(error);

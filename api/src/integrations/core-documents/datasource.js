@@ -236,7 +236,7 @@ class CoreDocumentsDataSource {
       const { docResponse } = await DocumentController.createS3Document(
         fileName,
         fileContent,
-        (this.auth_payload && this.auth_payload.displayName) || ''
+        (this.auth_payload && this.auth_payload.display_name) || ''
       );
 
       return docResponse && docResponse._id;

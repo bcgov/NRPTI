@@ -123,7 +123,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.description && (annualReport.description = incomingObj.description);
 
   // set meta
-  annualReport.addedBy = args.swagger.params.auth_payload.displayName;
+  annualReport.addedBy = args.swagger.params.auth_payload.display_name;
   annualReport.dateAdded = new Date();
 
   // set data source references
@@ -191,7 +191,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     annualReportBCMI.read.push('public');
     annualReportBCMI.datePublished = new Date();
-    annualReportBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+    annualReportBCMI.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   // set data
@@ -228,7 +228,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.description && (annualReportBCMI.description = incomingObj.description);
 
   // set meta
-  annualReportBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  annualReportBCMI.addedBy = args.swagger.params.auth_payload.display_name;
   annualReportBCMI.dateAdded = new Date();
 
   // set data source references

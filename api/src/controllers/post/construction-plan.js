@@ -106,7 +106,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.documents && (constructionPlan.documents = incomingObj.documents);
 
   // set meta
-  constructionPlan.addedBy = args.swagger.params.auth_payload.displayName;
+  constructionPlan.addedBy = args.swagger.params.auth_payload.display_name;
   constructionPlan.dateAdded = new Date();
 
   // set data source references
@@ -177,10 +177,10 @@ exports.createLNG = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     constructionPlanLNG.read.push('public');
     constructionPlanLNG.datePublished = new Date();
-    constructionPlanLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+    constructionPlanLNG.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
-  constructionPlanLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  constructionPlanLNG.addedBy = args.swagger.params.auth_payload.display_name;
   constructionPlanLNG.dateAdded = new Date();
 
   // set master data
@@ -241,10 +241,10 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     constructionPlanBCMI.read.push('public');
     constructionPlanBCMI.datePublished = new Date();
-    constructionPlanBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+    constructionPlanBCMI.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
-  constructionPlanBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  constructionPlanBCMI.addedBy = args.swagger.params.auth_payload.display_name;
   constructionPlanBCMI.dateAdded = new Date();
 
   // set master data

@@ -51,8 +51,8 @@ class BaseRecordUtils {
     return {
       _schemaName: this.recordType._schemaName,
 
-      addedBy: this.auth_payload.displayName,
-      updatedBy: this.auth_payload.displayName,
+      addedBy: this.auth_payload.display_name,
+      updatedBy: this.auth_payload.display_name,
 
       dateAdded: new Date(),
       dateUpdated: new Date(),

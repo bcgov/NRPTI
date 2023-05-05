@@ -102,7 +102,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.documents && (agreement.documents = incomingObj.documents);
 
   // set meta
-  agreement.addedBy = args.swagger.params.auth_payload.displayName;
+  agreement.addedBy = args.swagger.params.auth_payload.display_name;
   agreement.dateAdded = new Date();
 
   // set data source references
@@ -167,10 +167,10 @@ exports.createLNG = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     agreementLNG.read.push('public');
     agreementLNG.datePublished = new Date();
-    agreementLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+    agreementLNG.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
-  agreementLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  agreementLNG.addedBy = args.swagger.params.auth_payload.display_name;
   agreementLNG.dateAdded = new Date();
 
   // set master data

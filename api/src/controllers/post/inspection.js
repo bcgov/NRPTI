@@ -164,7 +164,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.documents && (inspection.documents = incomingObj.documents);
 
   // set meta
-  inspection.addedBy = args.swagger.params.auth_payload.displayName;
+  inspection.addedBy = args.swagger.params.auth_payload.display_name;
   inspection.dateAdded = new Date();
 
   // set data source references
@@ -248,7 +248,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   inspectionLNG.read = utils.ApplicationAdminRoles;
   inspectionLNG.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
 
-  inspectionLNG.addedBy = args.swagger.params.auth_payload.displayName;
+  inspectionLNG.addedBy = args.swagger.params.auth_payload.display_name;
   inspectionLNG.dateAdded = new Date();
 
   // set master data
@@ -308,7 +308,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     inspectionLNG.read.push('public');
     inspectionLNG.datePublished = new Date();
-    inspectionLNG.publishedBy = args.swagger.params.auth_payload.displayName;
+    inspectionLNG.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   inspectionLNG = BusinessLogicManager.applyBusinessLogicOnPost(inspectionLNG);
@@ -380,7 +380,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   inspectionNRCED.read = utils.ApplicationAdminRoles;
   inspectionNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
 
-  inspectionNRCED.addedBy = args.swagger.params.auth_payload.displayName;
+  inspectionNRCED.addedBy = args.swagger.params.auth_payload.display_name;
   inspectionNRCED.dateAdded = new Date();
 
   // set master data
@@ -441,7 +441,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     inspectionNRCED.read.push('public');
     inspectionNRCED.datePublished = new Date();
-    inspectionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+    inspectionNRCED.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   inspectionNRCED = BusinessLogicManager.applyBusinessLogicOnPost(inspectionNRCED);
@@ -517,7 +517,7 @@ exports.createBCMI = function(args, res, next, incomingObj) {
   inspectionBCMI.read = utils.ApplicationAdminRoles;
   inspectionBCMI.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
-  inspectionBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  inspectionBCMI.addedBy = args.swagger.params.auth_payload.display_name;
   inspectionBCMI.dateAdded = new Date();
 
   // set master data
@@ -577,7 +577,7 @@ exports.createBCMI = function(args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     inspectionBCMI.read.push('public');
     inspectionBCMI.datePublished = new Date();
-    inspectionBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+    inspectionBCMI.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   inspectionBCMI = BusinessLogicManager.applyBusinessLogicOnPost(inspectionBCMI);

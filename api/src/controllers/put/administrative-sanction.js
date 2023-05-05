@@ -90,7 +90,7 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
   sanitizedObj.issuedTo && (sanitizedObj.issuedTo.fullName = PostUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
 
   sanitizedObj.dateUpdated = new Date();
-  sanitizedObj.updatedBy = args.swagger.params.auth_payload.displayName;
+  sanitizedObj.updatedBy = args.swagger.params.auth_payload.display_name;
 
   const dotNotatedObj = PutUtils.getDotNotation(sanitizedObj);
 
@@ -157,7 +157,7 @@ exports.editLNG = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
-    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.display_name;
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;
@@ -222,7 +222,7 @@ exports.editNRCED = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     updateObj.$addToSet['read'] = 'public';
     updateObj.$set['datePublished'] = new Date();
-    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
+    updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.display_name;
   } else if (incomingObj.removeRole && incomingObj.removeRole === 'public') {
     updateObj.$pull['read'] = 'public';
     updateObj.$set['datePublished'] = null;

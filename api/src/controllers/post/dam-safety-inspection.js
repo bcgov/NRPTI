@@ -124,7 +124,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.description && (damSafetyInspection.description = incomingObj.description);
 
   // set meta
-  damSafetyInspection.addedBy = args.swagger.params.auth_payload.displayName;
+  damSafetyInspection.addedBy = args.swagger.params.auth_payload.display_name;
   damSafetyInspection.dateAdded = new Date();
 
   // set data source references
@@ -193,7 +193,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     damSafetyInspectionBCMI.read.push('public');
     damSafetyInspectionBCMI.datePublished = new Date();
-    damSafetyInspectionBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
+    damSafetyInspectionBCMI.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   // set data
@@ -230,7 +230,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.description && (damSafetyInspectionBCMI.description = incomingObj.description);
 
   // set meta
-  damSafetyInspectionBCMI.addedBy = args.swagger.params.auth_payload.displayName;
+  damSafetyInspectionBCMI.addedBy = args.swagger.params.auth_payload.display_name;
   damSafetyInspectionBCMI.dateAdded = new Date();
 
   // set data source references
@@ -291,7 +291,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   if (incomingObj.addRole && incomingObj.addRole === 'public') {
     damSafetyInspectionNRCED.read.push('public');
     damSafetyInspectionNRCED.datePublished = new Date();
-    damSafetyInspectionNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
+    damSafetyInspectionNRCED.publishedBy = args.swagger.params.auth_payload.display_name;
   }
 
   // set data
@@ -328,7 +328,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.description && (damSafetyInspectionNRCED.description = incomingObj.description);
 
   // set meta
-  damSafetyInspectionNRCED.addedBy = args.swagger.params.auth_payload.displayName;
+  damSafetyInspectionNRCED.addedBy = args.swagger.params.auth_payload.display_name;
   damSafetyInspectionNRCED.dateAdded = new Date();
 
   // set data source references
