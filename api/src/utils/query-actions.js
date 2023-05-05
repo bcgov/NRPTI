@@ -25,13 +25,13 @@ exports.publish = async function(obj, auth_payload) {
       obj.datePublished = date;
       obj.markModified('datePublished');
 
-      obj.publishedBy = auth_payload && auth_payload.idir_userid;
+      obj.publishedBy = auth_payload && auth_payload.idir_user_guid;
       obj.markModified('publishedBy');
 
       obj.dateUpdated = date;
       obj.markModified('dateUpdated');
 
-      obj.updatedBy = auth_payload && auth_payload.idir_userid;
+      obj.updatedBy = auth_payload && auth_payload.idir_user_guid;
       obj.markModified('updatedBy');
 
       // save and return
@@ -98,7 +98,7 @@ exports.unPublish = async function(obj, auth_payload) {
       obj.dateUpdated = new Date();
       obj.markModified('dateUpdated');
 
-      obj.updatedBy = auth_payload && auth_payload.idir_userid;
+      obj.updatedBy = auth_payload && auth_payload.idir_user_guid;
       obj.markModified('updatedBy');
 
       // save and return
