@@ -141,7 +141,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   if (args) {
     postUtils.setAdditionalRoleOnRecord(
       permit,
-      args.swagger.params.auth_payload.realm_access.roles,
+      args.swagger.params.auth_payload.client_roles,
       ADDITIONAL_ROLES
     );
   }
@@ -177,7 +177,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (!userHasValidRoles(
     [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG, ...ADDITIONAL_ROLES],
-    args.swagger.params.auth_payload.realm_access.roles)
+    args.swagger.params.auth_payload.client_roles)
   ) {
     throw new Error('Missing valid user role.');
   }
@@ -248,7 +248,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
   if (args) {
     postUtils.setAdditionalRoleOnRecord(
       permitLNG,
-      args.swagger.params.auth_payload.realm_access.roles,
+      args.swagger.params.auth_payload.client_roles,
       ADDITIONAL_ROLES
     );
   }
@@ -269,7 +269,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (!userHasValidRoles(
     [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, ...ADDITIONAL_ROLES],
-    args.swagger.params.auth_payload.realm_access.roles)
+    args.swagger.params.auth_payload.client_roles)
   ) {
       throw new Error('Missing valid user role.');
   }
@@ -344,7 +344,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   if (args) {
     postUtils.setAdditionalRoleOnRecord(
       permitBCMI,
-      args.swagger.params.auth_payload.realm_access.roles,
+      args.swagger.params.auth_payload.client_roles,
       ADDITIONAL_ROLES
     );
   }

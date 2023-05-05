@@ -42,7 +42,7 @@ exports.protectedGet = async function (args, res, next) {
 
 exports.protectedPut = async function (args, res, next) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.client_roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -194,7 +194,7 @@ exports.createItem = async function (args, res, next, collection) {
 
 exports.protectedPost = async function (args, res, next) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.realm_access.roles)) {
+  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.client_roles)) {
     throw new Error('Missing valid user role.');
   }
 
@@ -259,7 +259,7 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const nrpti = db.collection('nrpti');
 
-  const collections = await nrpti.find({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName, project: mineId, write: { $in: auth_payload.realm_access.roles } }).toArray();
+  const collections = await nrpti.find({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName, project: mineId, write: { $in: auth_payload.client_roles } }).toArray();
 
   try {
     for (const collection of collections) {
@@ -272,7 +272,7 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
                 $in: collection.records
               },
               write: {
-                $in: auth_payload.realm_access.roles
+                $in: auth_payload.client_roles
               }
             }
           },
@@ -310,7 +310,7 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
 
             defaultLog.debug('unpulishing record doc objs, recordId: ', JSON.stringify(record._id))
             try {
-              await nrpti.updateMany({ _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } })
+              await nrpti.updateMany({ _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.client_roles } }, { $pull: { read: 'public' } })
             } catch (err) {
               error = `Could not unpublish record document obj: ${record.recordName},  err: ${err}`;
               defaultLog.error(error)
@@ -320,7 +320,7 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
 
           defaultLog.debug('unpublishing record master, recordId: ', JSON.stringify(record._id))
           try {
-            await nrpti.updateOne({ _id: record._id, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } })
+            await nrpti.updateOne({ _id: record._id, write: { $in: auth_payload.client_roles } }, { $pull: { read: 'public' } })
           } catch (err) {
             error = `Could not unpublish master record: ${record.recordName},  err: ${err}`;
             defaultLog.error(error)
@@ -329,7 +329,7 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
 
           defaultLog.debug('unpublishing record flavour, recordId: ', JSON.stringify(record._id))
           try {
-            await nrpti.updateOne({ _flavourRecords: record._id, write: { $in: auth_payload.realm_access.roles } }, { $set: { isBcmiPublished: false } })
+            await nrpti.updateOne({ _flavourRecords: record._id, write: { $in: auth_payload.client_roles } }, { $set: { isBcmiPublished: false } })
           } catch (err) {
             error = `Could not unpublish flavour record: ${record.recordName},  err: ${err}`;
             defaultLog.error(error)
@@ -339,7 +339,7 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
 
         // unpublish collection
         try {
-          await nrpti.updateOne({ _id: collection._id, write: { $in: auth_payload.realm_access.roles } }, { $pull: { read: 'public' } });
+          await nrpti.updateOne({ _id: collection._id, write: { $in: auth_payload.client_roles } }, { $pull: { read: 'public' } });
         } catch (err) {
           error = `Could not unpublish collection:  ${collection.name}, ${err}`
           defaultLog.info(error);
@@ -366,7 +366,7 @@ exports.publishCollections = async function (mineId, auth_payload) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const nrpti = db.collection('nrpti');
 
-  const collections = await nrpti.find({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName, project: mineId, write: { $in: auth_payload.realm_access.roles } }).toArray();
+  const collections = await nrpti.find({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName, project: mineId, write: { $in: auth_payload.client_roles } }).toArray();
 
   // Publish every collection, their records, and their documents.
   try {
@@ -380,7 +380,7 @@ exports.publishCollections = async function (mineId, auth_payload) {
                 $in: collection.records
               },
               write: {
-                $in: auth_payload.realm_access.roles
+                $in: auth_payload.client_roles
               }
             }
           },
@@ -417,7 +417,7 @@ exports.publishCollections = async function (mineId, auth_payload) {
             // Publish all record documents
             defaultLog.debug('pulishing record doc objs, recordId: ', JSON.stringify(record._id))
             try {
-              await nrpti.updateMany({ _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } })
+              await nrpti.updateMany({ _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.client_roles } }, { $addToSet: { read: 'public' } })
             } catch (err) {
               error = `Could not publish record document obj: ${record.recordName},  err: ${err}`;
               defaultLog.error(error)
@@ -427,7 +427,7 @@ exports.publishCollections = async function (mineId, auth_payload) {
           // Set the flag on the master record.
           defaultLog.debug('publishing record master, recordId: ', JSON.stringify(record._id))
           try {
-            await nrpti.updateOne({ _flavourRecords: record._id, write: { $in: auth_payload.realm_access.roles } }, { $set: { isBcmiPublished: true } })
+            await nrpti.updateOne({ _flavourRecords: record._id, write: { $in: auth_payload.client_roles } }, { $set: { isBcmiPublished: true } })
           } catch (err) {
             error = `Could not publish master record: ${record.recordName},  err: ${err}`;
             defaultLog.error(error)
@@ -436,7 +436,7 @@ exports.publishCollections = async function (mineId, auth_payload) {
         // Publish the flavour record
           defaultLog.debug('publishing record flavour, recordId: ', JSON.stringify(record._id))
           try {
-            await nrpti.updateOne({ _id: record._id, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } })
+            await nrpti.updateOne({ _id: record._id, write: { $in: auth_payload.client_roles } }, { $addToSet: { read: 'public' } })
           } catch (err) {
             error = `Could not publish flavour record: ${record.recordName},  err: ${err}`;
             defaultLog.error(error)
@@ -445,7 +445,7 @@ exports.publishCollections = async function (mineId, auth_payload) {
 
         // Publish the collection
         try {
-          await nrpti.updateOne({ _id: collection._id, write: { $in: auth_payload.realm_access.roles } }, { $addToSet: { read: 'public' } });
+          await nrpti.updateOne({ _id: collection._id, write: { $in: auth_payload.client_roles } }, { $addToSet: { read: 'public' } });
         } catch (err) {
           const msg = `Could not publish mine collections: ${JSON.stringify(err.message)}`
           defaultLog.info(msg);

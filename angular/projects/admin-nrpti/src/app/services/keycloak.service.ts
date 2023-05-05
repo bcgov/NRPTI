@@ -3,7 +3,6 @@ import { ConfigService, LoggerService } from 'nrpti-angular-components';
 import { JwtUtil } from '../utils/jwt-utils';
 import { Observable } from 'rxjs';
 import { Constants } from '../utils/constants/misc';
-// import * as cryptoJS from 'crypto-js';
 
 declare let Keycloak: any;
 

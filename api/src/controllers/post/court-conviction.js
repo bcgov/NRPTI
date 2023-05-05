@@ -181,7 +181,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   if (args) {
     postUtils.setAdditionalRoleOnRecord(
       courtConviction,
-      args.swagger.params.auth_payload.realm_access.roles,
+      args.swagger.params.auth_payload.client_roles,
       ADDITIONAL_ROLES
     );
   }
@@ -228,7 +228,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   if (
     !userHasValidRoles(
       [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG, ...ADDITIONAL_ROLES],
-      args.swagger.params.auth_payload.realm_access.roles
+      args.swagger.params.auth_payload.client_roles
     )
   ) {
     throw new Error('Missing valid user role.');
@@ -306,7 +306,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   if (args) {
     postUtils.setAdditionalRoleOnRecord(
       courtConvictionLNG,
-      args.swagger.params.auth_payload.realm_access.roles,
+      args.swagger.params.auth_payload.client_roles,
       ADDITIONAL_ROLES
     );
   }
@@ -362,7 +362,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   if (
     !userHasValidRoles(
       [utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN, ...ADDITIONAL_ROLES],
-      args.swagger.params.auth_payload.realm_access.roles
+      args.swagger.params.auth_payload.client_roles
     )
   ) {
     throw new Error('Missing valid user role.');
@@ -442,7 +442,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   if (args) {
     postUtils.setAdditionalRoleOnRecord(
       courtConvictionNRCED,
-      args.swagger.params.auth_payload.realm_access.roles,
+      args.swagger.params.auth_payload.client_roles,
       ADDITIONAL_ROLES
     );
   }
@@ -498,7 +498,7 @@ exports.createBCMI = function(args, res, next, incomingObj) {
   if (
     !userHasValidRoles(
       [utils.ApplicationRoles.ADMIN_BCMI, utils.ApplicationRoles.ADMIN, ...ADDITIONAL_ROLES],
-      args.swagger.params.auth_payload.realm_access.roles
+      args.swagger.params.auth_payload.client_roles
     )
   ) {
     throw new Error('Missing valid user role.');
@@ -579,7 +579,7 @@ exports.createBCMI = function(args, res, next, incomingObj) {
   if (args) {
     postUtils.setAdditionalRoleOnRecord(
       courtConvictionBCMI,
-      args.swagger.params.auth_payload.realm_access.roles,
+      args.swagger.params.auth_payload.client_roles,
       ADDITIONAL_ROLES
     );
   }

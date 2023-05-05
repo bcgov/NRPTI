@@ -6,9 +6,9 @@ const jwksClient = require('jwks-rsa');
 const defaultLog = require('./logger')('auth-utils');
 const utils = require('./constants/misc');
 
-const SSO_ISSUER = process.env.SSO_ISSUER || 'https://test.oidc.gov.bc.ca/auth/realms/standard';
+const SSO_ISSUER = process.env.SSO_ISSUER || 'https://test.loginproxy.gov.bc.ca/auth/realms/standard';
 const SSO_JWKSURI =
-  process.env.SSO_JWKSURI || 'https://test.oidc.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs';
+  process.env.SSO_JWKSURI || 'https://test.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs';
 const JWT_SIGN_EXPIRY = process.env.JWT_SIGN_EXPIRY || '1440'; // 24 hours in minutes.
 const SECRET = process.env.SECRET || 'defaultSecret';
 
@@ -112,19 +112,19 @@ exports.issueToken = function(user, deviceId, scopes) {
 function verifySecret(currentScopes, tokenString, secret, req, callback, sendError) {
   jwt.verify(tokenString, secret, function(verificationError, decodedToken) {
     // check if the JWT was verified correctly
-    if (verificationError == null && Array.isArray(currentScopes) && decodedToken && decodedToken.realm_access.roles) {
+    if (verificationError == null && Array.isArray(currentScopes) && decodedToken && decodedToken.client_roles) {
       defaultLog.info('JWT decoded');
 
       defaultLog.debug('currentScopes', JSON.stringify(currentScopes));
       defaultLog.debug('decoded token:', decodedToken);
 
       defaultLog.debug('decodedToken.iss', decodedToken.iss);
-      defaultLog.debug('decodedToken.realm_access.roles', decodedToken.realm_access.roles);
+      defaultLog.debug('decodedToken.client_roles', decodedToken.client_roles);
 
       defaultLog.debug('SSO_ISSUER', SSO_ISSUER);
 
       // check if the role is valid for this endpoint
-      let roleMatch = currentScopes.some(role => decodedToken.realm_access.roles.indexOf(role) >= 0);
+      let roleMatch = currentScopes.some(role => decodedToken.client_roles.indexOf(role) >= 0);
 
       defaultLog.debug('role match', roleMatch);
 

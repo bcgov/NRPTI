@@ -58,7 +58,7 @@ function isObject(item) {
  */
 exports.fetchMasterForCreateFlavour = async function (schema, id, auth_payload) {
   const Model = mongoose.model(schema);
-  const masterRecord = await Model.findOne({ _schemaName: schema, _id: id, write: { $in: auth_payload.realm_access.roles } });
+  const masterRecord = await Model.findOne({ _schemaName: schema, _id: id, write: { $in: auth_payload.client_roles } });
 
   if (!masterRecord) {
     return {};
@@ -207,7 +207,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
 
         promises.push(
           Model.findOneAndUpdate(
-            { _id: flavourId, write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
+            { _id: flavourId, write: { $in: args.swagger.params.auth_payload.client_roles } },
             flavourUpdateObj,
             { new: true }
           )
@@ -312,7 +312,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
   promises.push(
     MasterModel.findOneAndUpdate({
       _id: masterId,
-      write: { $in: args.swagger.params.auth_payload.realm_access.roles }
+      write: { $in: args.swagger.params.auth_payload.client_roles }
     },
       updateMasterObj,
       { new: true }
