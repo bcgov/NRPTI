@@ -274,7 +274,7 @@ export class FactoryService {
       return '';
     }
 
-    return `Hello ${jwt.displayName}`;
+    return `Hello ${jwt.name}`;
   }
 
   /**
