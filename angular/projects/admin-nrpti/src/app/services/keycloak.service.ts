@@ -74,7 +74,9 @@ export class KeycloakService {
 
         // Initialize.
         this.keycloakAuth
-          .init({})
+          .init({
+            pkceMethod: 'S256',
+          })
           .success(auth => {
             // console.log('KC Refresh Success?:', this.keycloakAuth.authServerUrl);
             this.logger.log(`KC Success: ${auth}`);
@@ -96,7 +98,7 @@ export class KeycloakService {
     const token = this.getToken();
     if (token) {
       const jwt = JwtUtil.decodeToken(token);
-      const roles = (jwt && jwt.realm_access && jwt.realm_access.roles) || [];
+      const roles = (jwt && jwt.client_roles) || [];
       this.buildMenuCache(roles);
       this.buildAddRecordDropdownCache(roles);
     }
@@ -117,13 +119,13 @@ export class KeycloakService {
 
     const jwt = JwtUtil.decodeToken(token);
 
-    if (!(jwt && jwt.realm_access && jwt.realm_access.roles)) {
+    if (!(jwt && jwt.client_roles)) {
       return false;
     }
 
     // Make sure they have at least one instance of including a role in the ROLE array
     return Object.keys(Constants.ApplicationRoles).some(role => {
-      return jwt.realm_access.roles.includes(Constants.ApplicationRoles[role]);
+      return jwt.client+r.includes(Constants.ApplicationRoles[role]);
     });
   }
 
