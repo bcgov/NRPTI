@@ -125,7 +125,7 @@ export class KeycloakService {
 
     // Make sure they have at least one instance of including a role in the ROLE array
     return Object.keys(Constants.ApplicationRoles).some(role => {
-      return jwt.client+r.includes(Constants.ApplicationRoles[role]);
+      return jwt.client_roles.includes(Constants.ApplicationRoles[role]);
     });
   }
 
