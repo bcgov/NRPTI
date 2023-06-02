@@ -276,23 +276,23 @@ exports.protectedPublish = async function (args, res, next) {
 
     const model = require('mongoose').model(recordData._schemaName);
 
-    const record = await model.findOne({ _id: recordData._id, write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
+    const record = await model.findOne({ _id: recordData._id, write: { $in: args.swagger.params.auth_payload.client_roles } });
 
     // If we are updating a flavour, we have to make sure we update master as well
     if (recordData._schemaName.includes('NRCED')) {
       const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 5);
       const masterModel = require('mongoose').model(masterSchema);
-      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isNrcedPublished: true });
+      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } }, { isNrcedPublished: true });
     }
     else if (recordData._schemaName.includes('LNG')) {
       const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 3);
       const masterModel = require('mongoose').model(masterSchema);
-      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isLngPublished: true });
+      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } }, { isLngPublished: true });
     }
     else if (!['CollectionBCMI', 'MineBCMI'].includes(recordData._schemaName) && recordData._schemaName.includes('BCMI')) {
       const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 4);
       const masterModel = require('mongoose').model(masterSchema);
-      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isBcmiPublished: true });
+      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } }, { isBcmiPublished: true });
     }
 
     if (!record) {
@@ -335,23 +335,23 @@ exports.protectedUnPublish = async function (args, res, next) {
 
     const model = require('mongoose').model(recordData._schemaName);
 
-    const record = await model.findOne({ _id: recordData._id, write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
+    const record = await model.findOne({ _id: recordData._id, write: { $in: args.swagger.params.auth_payload.client_roles } });
     // If we are updating a flavour, we have to make sure we update master as well
     if (recordData._schemaName.includes('NRCED')) {
       const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 5);
       const masterModel = require('mongoose').model(masterSchema);
-      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isNrcedPublished: false });
+      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } }, { isNrcedPublished: false });
     }
     else if (recordData._schemaName.includes('LNG')) {
       const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 3);
       const masterModel = require('mongoose').model(masterSchema);
-      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isLngPublished: false });
+      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } }, { isLngPublished: false });
     }
     // Mines are a special case where they have no master and only exist as the BCMI flavour.
     else if (recordData._schemaName.includes('BCMI') && recordData._schemaName !== 'MineBCMI') {
       const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 4);
       const masterModel = require('mongoose').model(masterSchema);
-      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.realm_access.roles } }, { isBcmiPublished: false });
+      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } }, { isBcmiPublished: false });
     }
 
     if (!record) {

@@ -114,19 +114,19 @@ exports.issueToken = function(user, deviceId, scopes) {
 function verifySecret(currentScopes, tokenString, secret, req, callback, sendError) {
   jwt.verify(tokenString, secret, function(verificationError, decodedToken) {
     // check if the JWT was verified correctly
-    if (verificationError == null && Array.isArray(currentScopes) && decodedToken && decodedToken.realm_access.roles) {
+    if (verificationError == null && Array.isArray(currentScopes) && decodedToken && decodedToken.client_roles) {
       defaultLog.info('JWT decoded');
 
       defaultLog.debug('currentScopes', JSON.stringify(currentScopes));
       defaultLog.debug('decoded token:', decodedToken);
 
       defaultLog.debug('decodedToken.iss', decodedToken.iss);
-      defaultLog.debug('decodedToken.realm_access.roles', decodedToken.realm_access.roles);
+      defaultLog.debug('decodedToken.client_roles', decodedToken.client_roles);
 
       defaultLog.debug('SSO_ISSUER', SSO_ISSUER);
 
       // check if the role is valid for this endpoint
-      let roleMatch = currentScopes.some(role => decodedToken.realm_access.roles.indexOf(role) >= 0);
+      let roleMatch = currentScopes.some(role => decodedToken.client_roles.indexOf(role) >= 0);
 
       defaultLog.debug('role match', roleMatch);
 

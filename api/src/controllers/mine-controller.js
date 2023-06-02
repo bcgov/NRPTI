@@ -112,7 +112,7 @@ exports.protectedPut = async function (args, res, next) {
   try {
     obj = await MineBCMI.findOneAndUpdate({
       _id: masterId,
-      write: { $in: args.swagger.params.auth_payload.realm_access.roles }
+      write: { $in: args.swagger.params.auth_payload.client_roles }
     },
       updateObj,
       { new: true }
@@ -173,7 +173,7 @@ exports.protectedPost = async function (args, res, next) {
   // Not checking value as it could be 0 which would fail the falsey check.
   mine.tailingImpoundments = incomingObj.tailingImpoundments;
 
-  // Set meta. If the args exist then use the auth otherwise check the incoming object. This occurs if 
+  // Set meta. If the args exist then use the auth otherwise check the incoming object. This occurs if
   // the system is creating the record.
   mine.addedBy = args && args.swagger.params.auth_payload.displayName || incomingObj.addedBy;
   mine.updatedBy = args && args.swagger.params.auth_payload.displayName || incomingObj.updatedBy;
@@ -240,7 +240,7 @@ exports.protectedPublish = async function (args, res, next) {
 
   const MineBCMI = require('mongoose').model('MineBCMI');
   try {
-    const mine = await MineBCMI.findOne({ _id: mineId, write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
+    const mine = await MineBCMI.findOne({ _id: mineId, write: { $in: args.swagger.params.auth_payload.client_roles } });
     const published = await queryActions.publish(mine, args.swagger.params.auth_payload);
     // This should also publish any collections and their documents.
     if (published._schemaName === 'MineBCMI') {
@@ -267,7 +267,7 @@ exports.protectedUnPublish = async function (args, res, next) {
 
   const MineBCMI = require('mongoose').model('MineBCMI');
   try {
-    const mine = await MineBCMI.findOne({ _id: mineId, write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
+    const mine = await MineBCMI.findOne({ _id: mineId, write: { $in: args.swagger.params.auth_payload.client_roles } });
     const unpublished = await queryActions.unPublish(mine, args.swagger.params.auth_payload);
     // This should also unpublish any collections and their documents.
     if (unpublished._schemaName === 'MineBCMI') {

@@ -165,7 +165,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
 
   // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
   if (args) {
-    postUtils.setAdditionalRoleOnRecord(ticket, args.swagger.params.auth_payload.realm_access.roles, ADDITIONAL_ROLES);
+    postUtils.setAdditionalRoleOnRecord(ticket, args.swagger.params.auth_payload.client_roles, ADDITIONAL_ROLES);
   }
 
   return ticket;
@@ -205,7 +205,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   if (
     !userHasValidRoles(
       [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG, ...ADDITIONAL_ROLES],
-      args.swagger.params.auth_payload.realm_access.roles
+      args.swagger.params.auth_payload.client_roles
     )
   ) {
     throw new Error('Missing valid user role.');
@@ -283,7 +283,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
   if (args) {
     postUtils.setAdditionalRoleOnRecord(
       ticketLNG,
-      args.swagger.params.auth_payload.realm_access.roles,
+      args.swagger.params.auth_payload.client_roles,
       ADDITIONAL_ROLES
     );
   }
@@ -334,7 +334,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   if (
     !userHasValidRoles(
       [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED, ...ADDITIONAL_ROLES],
-      args.swagger.params.auth_payload.realm_access.roles
+      args.swagger.params.auth_payload.client_roles
     )
   ) {
     throw new Error('Missing valid user role.');
@@ -412,7 +412,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   if (args) {
     postUtils.setAdditionalRoleOnRecord(
       ticketNRCED,
-      args.swagger.params.auth_payload.realm_access.roles,
+      args.swagger.params.auth_payload.client_roles,
       ADDITIONAL_ROLES
     );
   }

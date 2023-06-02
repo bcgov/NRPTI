@@ -48,7 +48,7 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
       );
     }
 
-    const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
+    const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.client_roles } });
     const masterModel = mongoose.model(masterRecord._schemaName);
 
     // Set mongo document and s3 document roles
@@ -58,7 +58,7 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
 
     // Add limited admin roles to read/write if user is a limited admin(e.g., admin:wf or admin:flnro)
     if (args) {
-      const roles = args.swagger.params.auth_payload.realm_access.roles;
+      const roles = args.swagger.params.auth_payload.client_roles;
       for (const role of utils.ApplicationLimitedAdminRoles) {
         if (userIsOnlyInRole(roles, role)) {
           readRoles.push(role);
@@ -123,7 +123,7 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
     try {
       // add to master record
       recordResponse = await masterModel.findOneAndUpdate(
-        { _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
+        { _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.client_roles } },
         { $addToSet: { documents: new ObjectID(docResponse._id) } },
         { new: true }
       );
@@ -146,7 +146,7 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
       recordResponse._flavourRecords.forEach(id => {
         observables.push(
           masterModel.findOneAndUpdate(
-            { _id: new ObjectID(id), write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
+            { _id: new ObjectID(id), write: { $in: args.swagger.params.auth_payload.client_roles } },
             { $addToSet: { documents: new ObjectID(docResponse._id) } },
             { new: true }
           )
@@ -189,7 +189,7 @@ exports.protectedDelete = async function(args, res, next) {
     let docResponse = null;
     let s3Response = null;
     try {
-      docResponse = await Document.findOneAndRemove({ _id: new ObjectID(args.swagger.params.docId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
+      docResponse = await Document.findOneAndRemove({ _id: new ObjectID(args.swagger.params.docId.value), write: { $in: args.swagger.params.auth_payload.client_roles } });
       queryUtils.audit(args, 'DELETE', JSON.stringify(docResponse), args.swagger.params.auth_payload, docResponse._id);
     } catch (e) {
       defaultLog.info(`Error removing document meta ${args.swagger.params.docId.value} from the database: ${e}`);
@@ -221,7 +221,7 @@ exports.protectedDelete = async function(args, res, next) {
     const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
     const collection = db.collection('nrpti');
 
-    const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
+    const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.client_roles } });
     const masterModel = mongoose.model(masterRecord._schemaName);
 
     // Then we want to remove the document's id from the record it's attached to.
@@ -229,7 +229,7 @@ exports.protectedDelete = async function(args, res, next) {
     try {
       // remove from master record
       recordResponse = await masterModel.findOneAndUpdate(
-        { _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
+        { _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.client_roles } },
         { $pull: { documents: new ObjectID(docResponse._id) } },
         { new: true }
       );
@@ -251,7 +251,7 @@ exports.protectedDelete = async function(args, res, next) {
       recordResponse.value._flavourRecords.forEach(id => {
         observables.push(
           masterModel.findOneAndUpdate(
-            { _id: new ObjectID(id), write: { $in: args.swagger.params.auth_payload.realm_access.roles } },
+            { _id: new ObjectID(id), write: { $in: args.swagger.params.auth_payload.client_roles } },
             { $pull: { documents: new ObjectID(docResponse._id) } },
             { new: true }
           )
@@ -452,7 +452,7 @@ async function publishDocument(docId, auth_payload) {
   }
 
   const Document = require('mongoose').model('Document');
-  const document = await Document.findOne({ _id: new ObjectID(docId), write: { $in: auth_payload.realm_access.roles } });
+  const document = await Document.findOne({ _id: new ObjectID(docId), write: { $in: auth_payload.client_roles } });
 
   if (!document) {
     defaultLog.info(`publishDocument - couldn't find document for docId: ${docId}`);
@@ -482,7 +482,7 @@ async function unpublishDocument(docId, auth_payload) {
   }
 
   const Document = require('mongoose').model('Document');
-  const document = await Document.findOne({ _id: new ObjectID(docId), write: { $in: auth_payload.realm_access.roles } });
+  const document = await Document.findOne({ _id: new ObjectID(docId), write: { $in: auth_payload.client_roles } });
 
   if (!document) {
     defaultLog.info(`unpublishDocument - couldn't find document for docId: ${docId}`);
@@ -513,7 +513,7 @@ exports.protectedGetS3SignedURL = async function(args, res, next) {
   }
 
   const Document = mongoose.model('Document');
-  const document = await Document.findOne({ _id: new ObjectID(args.swagger.params.docId.value), write: { $in: args.swagger.params.auth_payload.realm_access.roles } });
+  const document = await Document.findOne({ _id: new ObjectID(args.swagger.params.docId.value), write: { $in: args.swagger.params.auth_payload.client_roles } });
 
   if (!document) {
     defaultLog.info(`protectedGetS3SignedURL - couldn't find document for docId: ${args.swagger.params.docId.value}`);

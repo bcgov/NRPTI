@@ -121,7 +121,7 @@ exports.protectedPut = async function(args, res, next) {
     obj = await MapLayerInfo.findOneAndUpdate(
       {
         _id: mapInfoId,
-        write: { $in: args.swagger.params.auth_payload.realm_access.roles }
+        write: { $in: args.swagger.params.auth_payload.client_roles }
       },
       updateObj,
       { new: true }

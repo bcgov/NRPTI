@@ -53,12 +53,12 @@ exports.publicGetConfig = async function (args, res, next) {
   // independently.
   const featureFlags = await FeatureFlag.findOne({ _schemaName: 'FeatureFlag' });
   if (featureFlags && featureFlags.data) {
-    configurationData['FEATURE_FLAG'] = featureFlags.data;  
+    configurationData['FEATURE_FLAG'] = featureFlags.data;
   }
 
   const appUrls = await FeatureFlag.findOne({ _schemaName: 'ApplicationUrl' });
   if (appUrls && appUrls.data) {
-    configurationData['APPLICATION_URLS'] = appUrls.data;  
+    configurationData['APPLICATION_URLS'] = appUrls.data;
   }
 
   // get project specific confguration
@@ -131,19 +131,19 @@ exports.protectedPostConfig = async function (args, res, next) {
     }
     switch (args.swagger.params.app.value) {
       case ConfigConsts.CONFIG_APPS.BCMI:
-        CheckRole(args.swagger.params.auth_payload.realm_access.roles, 'admin:bcmi', true);
+        CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:bcmi', true);
         newObj = await BcmiConfig.CreateBCMIConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
         break;
       case ConfigConsts.CONFIG_APPS.NRCED:
-        CheckRole(args.swagger.params.auth_payload.realm_access.roles, 'admin:nrced', true);
+        CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:nrced', true);
         newObj = await NrcedConfig.CreateNRCEDConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
         break;
       case ConfigConsts.CONFIG_APPS.LNG:
-        CheckRole(args.swagger.params.auth_payload.realm_access.roles, 'admin:lng', true);
+        CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:lng', true);
         newObj = await LngConfig.CreateLNGConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
         break;
       case ConfigConsts.CONFIG_APPS.NRPTI:
-        CheckRole(args.swagger.params.auth_payload.realm_access.roles, 'admin:nrpti', true);
+        CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:nrpti', true);
         newObj = await NrptiConfig.CreateLNGConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
         break;
       default:
@@ -171,17 +171,17 @@ exports.protectedPutConfig = async function (args, res, next) {
     const _id = new ObjectId(args.swagger.params.configId.value);
     switch (args.swagger.params.app.value) {
       case ConfigConsts.CONFIG_APPS.BCMI:
-        CheckRole(args.swagger.params.auth_payload.realm_access.roles, 'admin:bcmi', true);
+        CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:bcmi', true);
         editedObj = await BcmiConfig.EditBCMIConfig(_id, args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
         break;
       case ConfigConsts.CONFIG_APPS.NRCED:
-        CheckRole(args.swagger.params.auth_payload.realm_access.roles, 'admin:nrced', true);
+        CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:nrced', true);
         break;
       case ConfigConsts.CONFIG_APPS.LNG:
-        CheckRole(args.swagger.params.auth_payload.realm_access.roles, 'admin:lng', true);
+        CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:lng', true);
         break;
       case ConfigConsts.CONFIG_APPS.NRPTI:
-        CheckRole(args.swagger.params.auth_payload.realm_access.roles, 'admin:nrpti', true);
+        CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:nrpti', true);
         break;
       default:
         throw new Error('You did not provide a valid app.')

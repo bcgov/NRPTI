@@ -147,7 +147,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
   if (
     !userHasValidRoles(
       [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG],
-      args.swagger.params.auth_payload.realm_access.roles
+      args.swagger.params.auth_payload.client_roles
     )
   ) {
     throw new Error('Missing valid user role.');
@@ -211,7 +211,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   if (
     !userHasValidRoles(
       [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI],
-      args.swagger.params.auth_payload.realm_access.roles
+      args.swagger.params.auth_payload.client_roles
     )
   ) {
     throw new Error('Missing valid user role.');
