@@ -335,11 +335,11 @@ parameters:
     value: /api/public
   - name: KEYCLOAK_CLIENT_ID
     displayName: The keycloak client id for admin
-    value: nrpti-admin
+    value: nrpti-4869
   - name: KEYCLOAK_URL
-    value: https://dev.oidc.gov.bc.ca/auth
+    value: https://dev.loginproxy.gov.bc.ca/auth
   - name: KEYCLOAK_REALM
-    value: 3l5nw6dk
+    value: standard
   - name: ENVIRONMENT
     displayName: Name of this environment
     value: dev
@@ -403,12 +403,12 @@ parameters:
   - name: SSO_JWKSURI
     displayName: Uri to sso certs
     description: Uri to sso certs
-    value: https://dev.oidc.gov.bc.ca/auth/realms/3l5nw6dk/protocol/openid-connect/certs
+    value: https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs
     required: false
   - name: SSO_ISSUER
     displayName: URI to SSO realm
     description: URI to SSO realm
-    value: https://dev.oidc.gov.bc.ca/auth/realms/3l5nw6dk
+    value: https://dev.loginproxy.gov.bc.ca/auth/realms/standard
     required: false
   - name: NRIS_TOKEN_ENDPOINT
     value: https://api.nrs.gov.bc.ca/oauth2/v1/oauth/token?disableDeveloperFilter=true&grant_type=client_credentials&scope=NRISWS.*

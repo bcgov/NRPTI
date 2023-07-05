@@ -6,9 +6,9 @@ const jwksClient = require('jwks-rsa');
 const defaultLog = require('./logger')('auth-utils');
 const utils = require('./constants/misc');
 
-const SSO_ISSUER = process.env.SSO_ISSUER || 'https://dev.oidc.gov.bc.ca/auth/realms/3l5nw6dk';
+const SSO_ISSUER = process.env.SSO_ISSUER || 'https://dev.loginproxy.gov.bc.ca/auth/realms/standard';
 const SSO_JWKSURI =
-  process.env.SSO_JWKSURI || 'https://dev.oidc.gov.bc.ca/auth/realms/3l5nw6dk/protocol/openid-connect/certs';
+  process.env.SSO_JWKSURI || 'https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs';
 const JWT_SIGN_EXPIRY = process.env.JWT_SIGN_EXPIRY || '1440'; // 24 hours in minutes.
 const SECRET = process.env.SECRET || 'defaultSecret';
 
