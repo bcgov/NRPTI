@@ -3,7 +3,7 @@
     "Construction, development and operation activities are subject to oversight by the provincial government and strict compliance procedures.",
     "Industry is expected to operate in compliance with all conditions and requirements identified by the provincial government. These conditions and requirements are set out in the environmental assessment certificate or individual permit.",
     "Compliance and enforcement actions vary, and often depend on the severity of the situation requiring attention or correction. When non-compliances are identified the goal is always the same: to bring the company back into compliance.",
-    "The list below includes compliance actions imposed to date by the BC Oil and Gas Commission and British Columbia’s Environmental Assessment Office. Some compliance actions of the BC Oil & Gas Commission are not included at this time, but will be added to the site soon. For a complete up-to-date list of BC Oil & Gas Commission compliance actions, please go to the [BC Oil and Gas Commission website](https://www.bcogc.ca/data-reports/compliance-enforcement/).",
+    "The list below includes compliance actions imposed to date by the BC Energy Regulator and British Columbia’s Environmental Assessment Office. Some compliance actions of the BC Oil & Gas Commission are not included at this time, but will be added to the site soon. For a complete up-to-date list of BC Oil & Gas Commission compliance actions, please go to the [BC Energy Regulator website](https://www.bcogc.ca/data-reports/compliance-enforcement/).",
     "For a full list of all authorizations and their associated requirements, please visit the [Authorizations](/project/2/authorizations) page."
   ],
   "documents": {
@@ -26,10 +26,10 @@
             "documentFieldValues": ["Environmental Assessment Office"]
           },
           {
-            "displayName": "BC Oil and Gas Commission",
+            "displayName": "BC Energy Regulator",
             "fieldName": "agencyBCOGC",
             "documentFieldName": "agency",
-            "documentFieldValues": ["BC Oil and Gas Commission"]
+            "documentFieldValues": ["BC Energy Regulator"]
           }
         ]
       },
@@ -49,10 +49,10 @@
             "documentFieldValues": ["Coastal GasLink"]
           },
           {
-            "displayName": "BC Oil and Gas Commission",
+            "displayName": "BC Energy Regulator",
             "fieldName": "authorBCOGC",
             "documentFieldName": "author",
-            "documentFieldValues": ["BC Oil and Gas Commission"]
+            "documentFieldValues": ["BC Energy Regulator"]
           }
         ]
       },
@@ -521,10 +521,10 @@
       },
       {
         "url": "https://www.bcogc.ca/node/15618/download",
-        "description": "The BC Oil and Gas Commission issued an order  as a result of cutting activity that occurred without a completed archaeological impact assessment. The order identifies four actions required to be taken by Coastal GasLink.",
+        "description": "The BC Energy Regulator issued an order  as a result of cutting activity that occurred without a completed archaeological impact assessment. The order identifies four actions required to be taken by Coastal GasLink.",
         "name": "General Order 2019-09",
         "date": "13-09-19",
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "category": "Compliance",
         "complianceDocumentType": "Enforcement Action",
         "complianceDocumentSubtype": "",
@@ -533,7 +533,7 @@
         "lat": "",
         "long": "",
         "nation": "",
-        "author": "BC Oil and Gas Commission"
+        "author": "BC Energy Regulator"
       },
       {
         "url": "https://projects.eao.gov.bc.ca/api/document/5d4362d94cb2c7001b137bbe/fetch/CGL4703-CGP-SE-RPT-0001%20SEEMP%20STATUS%20REPORT%201.pdf",
@@ -636,7 +636,7 @@
         "description": "Warning letter issued to Coastal Gaslink Pipeline Ltd for failing to provide notice of construction start to the Oil and Gas commission a minimum of 48 hours prior to the commencement of activities.",
         "name": "Warning Letter 2019-001TE CGL",
         "date": "07-02-2019",
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "category": "Compliance",
         "complianceDocumentType": "Warning Letter",
         "complianceDocumentSubtype": "",
@@ -645,7 +645,7 @@
         "lat": "",
         "long": "",
         "nation": "",
-        "author": "BC Oil and Gas Commission"
+        "author": "BC Energy Regulator"
       },
       {
         "url": "https://projects.eao.gov.bc.ca/api/document/5bf73809cfbe8f00249a10ed/fetch",

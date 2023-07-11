@@ -26,7 +26,7 @@ export class AuthorizationsComponent implements OnInit {
           fieldName: 'issuingAgency'
         },
         {
-          displayName: 'BC Oil and Gas Commission',
+          displayName: 'BC Energy Regulator',
           fieldName: 'issuingAgency'
         }
       ]

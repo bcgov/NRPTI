@@ -163,7 +163,7 @@ export class Picklists {
 
   public static readonly agencyPicklist = [
     'Agricultural Land Commission',
-    'BC Oil and Gas Commission',
+    'BC Energy Regulator',
     'BC Parks',
     'BC Wildfire Service',
     'Climate Action Secretariat',

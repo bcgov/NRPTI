@@ -11,9 +11,9 @@
     window.__env.API_LOCATION = 'http://localhost:3000';
     window.__env.API_PATH = '/api';
     window.__env.API_PUBLIC_PATH = '/api/public';
-    window.__env.KEYCLOAK_CLIENT_ID = 'nrpti-admin';
-    window.__env.KEYCLOAK_URL = 'https://dev.oidc.gov.bc.ca/auth';
-    window.__env.KEYCLOAK_REALM = '3l5nw6dk';
+    window.__env.KEYCLOAK_CLIENT_ID = 'nrpti-4869';
+    window.__env.KEYCLOAK_URL = 'https://dev.loginproxy.gov.bc.ca/auth';
+    window.__env.KEYCLOAK_REALM = 'standard';
     window.__env.KEYCLOAK_ENABLED = true;
     
     // This is a hardcoded variable that does not come from the backend

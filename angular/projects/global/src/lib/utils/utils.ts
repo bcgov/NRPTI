@@ -6,7 +6,7 @@ const ApplicationAgencies = {
   AGENCY_EMLI: 'Ministry of Energy Mines and Low Carbon Innovation',
   AGENCY_ENV: 'Ministry of Environment and Climate Change Strategy',
   AGENCY_ENV_BCPARKS: 'BC Parks',
-  AGENCY_OGC: 'BC Oil and Gas Commission',
+  AGENCY_OGC: 'BC Energy Regulator',
   AGENCY_ENV_EPD: 'Ministry of Environment and Climate Change Strategy',
   AGENCY_LNG: 'LNG Secretariat',
   AGENCY_AGRI: 'Ministry of Agriculture and Food',

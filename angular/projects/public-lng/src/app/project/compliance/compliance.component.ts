@@ -25,7 +25,7 @@ export class ComplianceComponent implements OnInit {
           fieldName: 'issuingAgency'
         },
         {
-          displayName: 'BC Oil and Gas Commission',
+          displayName: 'BC Energy Regulator',
           fieldName: 'issuingAgency'
         }
       ]
@@ -42,7 +42,7 @@ export class ComplianceComponent implements OnInit {
           fieldName: 'author'
         },
         {
-          displayName: 'BC Oil and Gas Commission',
+          displayName: 'BC Energy Regulator',
           fieldName: 'author'
         }
       ]

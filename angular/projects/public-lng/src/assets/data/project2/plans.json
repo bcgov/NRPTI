@@ -23,10 +23,10 @@
             "documentFieldValues": ["Environmental Assessment Office"]
           },
           {
-            "displayName": "BC Oil and Gas Commission",
+            "displayName": "BC Energy Regulator",
             "fieldName": "agencyBCOGC",
             "documentFieldName": "agency",
-            "documentFieldValues": ["BC Oil and Gas Commission"]
+            "documentFieldValues": ["BC Energy Regulator"]
           }
         ]
       },
@@ -51,8 +51,8 @@
     "docs": [
       {
         "num": 8,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "24-06-2014",
         "description": "Sketch plan Compressor Facility Wilde Lake",
         "complianceDocumentType": "Permit",
@@ -63,8 +63,8 @@
       },
       {
         "num": 10,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "05-02-2015",
         "description": "Construction Plans Section 8",
         "complianceDocumentType": "Permit",
@@ -75,8 +75,8 @@
       },
       {
         "num": 11,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "20-10-2014",
         "description": "Map - Pipeline right of way Section 8",
         "complianceDocumentType": "Permit",
@@ -87,8 +87,8 @@
       },
       {
         "num": 12,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "20-10-2014",
         "description": "Map - Pipeline right of way Section 8",
         "complianceDocumentType": "Permit",
@@ -99,8 +99,8 @@
       },
       {
         "num": 14,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "20-11-2014",
         "description": "Construction Plans Section 7",
         "complianceDocumentType": "Permit",
@@ -111,8 +111,8 @@
       },
       {
         "num": 15,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "20-10-2015",
         "description": "Map - Pipeline right of way Section 7",
         "complianceDocumentType": "Permit",
@@ -123,8 +123,8 @@
       },
       {
         "num": 16,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "20-10-2015",
         "description": "Map - Pipeline right of way Section 7",
         "complianceDocumentType": "Permit",
@@ -135,8 +135,8 @@
       },
       {
         "num": 18,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "20-11-2014",
         "description": "Construction Plans Section 6",
         "complianceDocumentType": "Permit",
@@ -147,8 +147,8 @@
       },
       {
         "num": 19,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "20-10-2014",
         "description": "Map - Pipeline right of way Section 6",
         "complianceDocumentType": "Permit",
@@ -159,8 +159,8 @@
       },
       {
         "num": 20,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "20-10-2014",
         "description": "Map - Pipeline right of way Section 6",
         "complianceDocumentType": "Permit",
@@ -171,8 +171,8 @@
       },
       {
         "num": 22,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "08-10-2014",
         "description": "Construction Plans Section 5",
         "complianceDocumentType": "Permit",
@@ -183,8 +183,8 @@
       },
       {
         "num": 23,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "08-10-2014",
         "description": "Map - Pipeline right of way Section 5",
         "complianceDocumentType": "Permit",
@@ -195,8 +195,8 @@
       },
       {
         "num": 24,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "08-10-2014",
         "description": "Map - Pipeline right of way Section 5",
         "complianceDocumentType": "Permit",
@@ -207,8 +207,8 @@
       },
       {
         "num": 26,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "14-11-2014",
         "description": "Construction Plans Section 4",
         "complianceDocumentType": "Permit",
@@ -219,8 +219,8 @@
       },
       {
         "num": 27,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "08-10-2014",
         "description": "Map - Pipeline right of way Section 4",
         "complianceDocumentType": "Permit",
@@ -231,8 +231,8 @@
       },
       {
         "num": 29,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "14-11-2014",
         "description": "Construction Plans Section 3",
         "complianceDocumentType": "Permit",
@@ -243,8 +243,8 @@
       },
       {
         "num": 31,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "14-11-2014",
         "description": "Construction Plans Section 2",
         "complianceDocumentType": "Permit",
@@ -255,8 +255,8 @@
       },
       {
         "num": 33,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "14-11-2014",
         "description": "Construction Plans Section 1",
         "complianceDocumentType": "Permit",
@@ -604,7 +604,7 @@
         "url": ""
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100082211",
         "authorizationUrl": "https://www.bcogc.ca/node/13189/download",
         "conditionNumber": null,
@@ -617,7 +617,7 @@
         "url": "https://www.bcogc.ca/node/13914/download"
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100084230",
         "authorizationUrl": "https://www.bcogc.ca/node/13188/download",
         "conditionNumber": null,
@@ -630,7 +630,7 @@
         "url": "https://www.bcogc.ca/node/13911/download"
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100084230",
         "authorizationUrl": "https://www.bcogc.ca/node/13188/download",
         "conditionNumber": null,
@@ -643,7 +643,7 @@
         "url": "https://www.bcogc.ca/node/13912/download"
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100084230",
         "authorizationUrl": "https://www.bcogc.ca/node/13188/download",
         "conditionNumber": null,
@@ -656,7 +656,7 @@
         "url": "https://www.bcogc.ca/node/13913/download"
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100082423",
         "authorizationUrl": "https://www.bcogc.ca/node/12646/download",
         "conditionNumber": null,
@@ -669,7 +669,7 @@
         "url": "https://www.bcogc.ca/node/13908/download"
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100082423",
         "authorizationUrl": "https://www.bcogc.ca/node/12646/download",
         "conditionNumber": null,
@@ -682,7 +682,7 @@
         "url": "https://www.bcogc.ca/node/13909/download"
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100082423",
         "authorizationUrl": "https://www.bcogc.ca/node/12646/download",
         "conditionNumber": null,
@@ -695,7 +695,7 @@
         "url": "https://www.bcogc.ca/node/13910/download"
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100082422",
         "authorizationUrl": "https://www.bcogc.ca/node/12645/download",
         "conditionNumber": null,
@@ -708,7 +708,7 @@
         "url": "https://www.bcogc.ca/node/13905/download"
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100082422",
         "authorizationUrl": "https://www.bcogc.ca/node/12645/download",
         "conditionNumber": null,
@@ -721,7 +721,7 @@
         "url": "https://www.bcogc.ca/node/13906/download"
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100082422",
         "authorizationUrl": "https://www.bcogc.ca/node/12645/download",
         "conditionNumber": null,
@@ -734,7 +734,7 @@
         "url": "https://www.bcogc.ca/node/13907/download"
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100082251",
         "authorizationUrl": "https://www.bcogc.ca/node/12644/download",
         "conditionNumber": null,
@@ -747,7 +747,7 @@
         "url": "https://www.bcogc.ca/node/13902/download"
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100082251",
         "authorizationUrl": "https://www.bcogc.ca/node/12644/download",
         "conditionNumber": null,
@@ -760,7 +760,7 @@
         "url": "https://www.bcogc.ca/node/13903/download"
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100082251",
         "authorizationUrl": "https://www.bcogc.ca/node/12644/download",
         "conditionNumber": null,
@@ -773,7 +773,7 @@
         "url": "https://www.bcogc.ca/node/13904/download"
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100082252",
         "authorizationUrl": "https://www.bcogc.ca/node/13890/download",
         "conditionNumber": null,
@@ -786,7 +786,7 @@
         "url": "https://www.bcogc.ca/node/13900/download"
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100082252",
         "authorizationUrl": "https://www.bcogc.ca/node/13890/download",
         "conditionNumber": null,
@@ -799,7 +799,7 @@
         "url": "https://www.bcogc.ca/node/13901/download"
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100082299",
         "authorizationUrl": "https://www.bcogc.ca/node/13889/download",
         "conditionNumber": null,
@@ -812,7 +812,7 @@
         "url": "https://www.bcogc.ca/node/13899/download"
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100082292",
         "authorizationUrl": "https://www.bcogc.ca/node/13888/download",
         "conditionNumber": null,
@@ -825,7 +825,7 @@
         "url": "https://www.bcogc.ca/node/13898/download"
       },
       {
-        "agency": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
         "authorizationId": "100082293",
         "authorizationUrl": "https://www.bcogc.ca/node/13887/download",
         "conditionNumber": null,

@@ -30,7 +30,7 @@ export class KeycloakService {
         const config = {
           url: this.keycloakUrl,
           realm: this.keycloakRealm,
-          clientId: !keycloak_client_id ? 'nrpti-admin' : keycloak_client_id
+          clientId: !keycloak_client_id ? 'nrpti-4869' : keycloak_client_id
         };
 
         // console.log('KC Auth init.');
