@@ -20,8 +20,8 @@ describe('transformRecord', () => {
       recordType: 'Inspection',
       dateIssued: null,
       issuedTo: { companyName: '', type: 'Company' },
-      issuingAgency: 'BC Oil and Gas Commission',
-      author: 'BC Oil and Gas Commission',
+      issuingAgency: 'BC Energy Regulator',
+      author: 'BC Energy Regulator',
       recordName: '-',
       legislation: [{ act: 'Oil and Gas Activities Act', section: '57', subSection: '4', legislationDescription: 'Inspection to verify compliance with regulatory requirement' }],
       location: 'British Columbia',
@@ -56,8 +56,8 @@ describe('transformRecord', () => {
       recordType: 'Inspection',
       dateIssued: expect.any(Date),
       issuedTo: { companyName: 'Coastal GasLink Pipeline Ltd.', type: 'Company' },
-      issuingAgency: 'BC Oil and Gas Commission',
-      author: 'BC Oil and Gas Commission',
+      issuingAgency: 'BC Energy Regulator',
+      author: 'BC Energy Regulator',
       recordName: 'Inspection Number 123456',
       legislation: [
         {

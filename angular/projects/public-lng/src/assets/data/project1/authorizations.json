@@ -3,7 +3,7 @@
     "All Major Projects require layers of approval from the provincial government.",
     "A company must apply for all the permits and other forms of authorization they require. These applications are then reviewed by the appropriate government agency. If approved, these authorizations allow industry to move forward with construction, development and/or operations. Associated activities, such as the use of resource roads to haul equipment around, are all subject to review and approval as well.",
     "The provincial government often imposes a set of conditions, or requirements, on these authorizations to increase public safety or strengthen environment protection.",
-    "The list below includes permits and other related documents by the BC Oil and Gas Commission and British Columbia’s Environmental Assessment Office. Additional, ancillary forms of authorizations will be included over time."
+    "The list below includes permits and other related documents by the BC Energy Regulator and British Columbia’s Environmental Assessment Office. Additional, ancillary forms of authorizations will be included over time."
   ],
   "documents": {
     "headers": [
@@ -25,10 +25,10 @@
             "documentFieldValues": ["Environmental Assessment Office"]
           },
           {
-            "displayName": "BC Oil and Gas Commission",
+            "displayName": "BC Energy Regulator",
             "fieldName": "agencyBCOGC",
             "documentFieldName": "agency",
-            "documentFieldValues": ["BC Oil and Gas Commission"]
+            "documentFieldValues": ["BC Energy Regulator"]
           }
         ]
       },
@@ -175,8 +175,8 @@
       },
       {
         "num": 6,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "03-02-2017",
         "description": "Authorization to discharge effluent subject to conditions.",
         "complianceDocumentType": "Permit",
@@ -187,8 +187,8 @@
       },
       {
         "num": 7,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "17-12-2018",
         "description": "Permit permissions under sections of the Oil & Gas Activities Act.",
         "complianceDocumentType": "Permit",
@@ -199,8 +199,8 @@
       },
       {
         "num": 8,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "15-05-2015",
         "description": "Mapping construction plan.",
         "complianceDocumentType": "Permit",
@@ -211,8 +211,8 @@
       },
       {
         "num": 9,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "25-10-2016",
         "description": "Permit to construct, maintain and operate an oil and gas road with conditions.",
         "complianceDocumentType": "Permit",
@@ -223,8 +223,8 @@
       },
       {
         "num": 10,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "12-08-2016",
         "description": "Amendment to permit and associated authorizations.",
         "complianceDocumentType": "Permit",
@@ -235,8 +235,8 @@
       },
       {
         "num": 11,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "12-08-2016",
         "description": "Amendment to permit and associated authorizations.",
         "complianceDocumentType": "Permit",
@@ -247,8 +247,8 @@
       },
       {
         "num": 12,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "23-02-2016",
         "description": "Authorization under section 9 of Water Act.",
         "complianceDocumentType": "Permit",
@@ -259,8 +259,8 @@
       },
       {
         "num": 13,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "26-02-2016",
         "description": "Authorization under section 9 of Water Act.",
         "complianceDocumentType": "Permit",
@@ -271,8 +271,8 @@
       },
       {
         "num": 14,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "27-11-2015",
         "description": "Approval for short term water use.",
         "complianceDocumentType": "Permit",
@@ -283,8 +283,8 @@
       },
       {
         "num": 15,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "29-07-2015",
         "description": "Authorization under section 9 of Water Act.",
         "complianceDocumentType": "Permit",
@@ -295,8 +295,8 @@
       },
       {
         "num": 16,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "24-06-2016",
         "description": "Authorization under Water Sustainability Act with conditions.",
         "complianceDocumentType": "Permit",
@@ -307,8 +307,8 @@
       },
       {
         "num": 17,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "20-03-2014",
         "description": "Authorization under section 9 of Water Act.",
         "complianceDocumentType": "Permit",
@@ -319,8 +319,8 @@
       },
       {
         "num": 18,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "16-10-2018",
         "description": "Authorization under Water Sustainability Act with conditions.",
         "complianceDocumentType": "Permit",
@@ -331,8 +331,8 @@
       },
       {
         "num": 19,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "31-10-2018",
         "description": "Authorization under Water Sustainability Act with conditions.",
         "complianceDocumentType": "Permit",
@@ -343,8 +343,8 @@
       },
       {
         "num": 20,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "26-05-2018",
         "description": "Authorization under Water Sustainability Act with conditions.",
         "complianceDocumentType": "Permit",
@@ -355,8 +355,8 @@
       },
       {
         "num": 21,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "26-05-2018",
         "description": "Authorization under Water Sustainability Act with conditions.",
         "complianceDocumentType": "Permit",
@@ -367,8 +367,8 @@
       },
       {
         "num": 22,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "26-05-2018",
         "description": "Authorization under Water Sustainability Act with conditions.",
         "complianceDocumentType": "Permit",
@@ -379,8 +379,8 @@
       },
       {
         "num": 23,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "11-04-2018",
         "description": "Authorization under Water Sustainability Act with conditions.",
         "complianceDocumentType": "Permit",
@@ -391,8 +391,8 @@
       },
       {
         "num": 24,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "17-12-2017",
         "description": "Correction to amendment.",
         "complianceDocumentType": "Permit",
@@ -403,8 +403,8 @@
       },
       {
         "num": 25,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "19-09-2016",
         "description": "Authorization for water us.",
         "complianceDocumentType": "Permit",
@@ -415,8 +415,8 @@
       },
       {
         "num": 26,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "26-06-2014",
         "description": "Authorization to occupy Crown land to conduct appraisals, inspections, analyses, etc.",
         "complianceDocumentType": "Permit",
@@ -427,8 +427,8 @@
       },
       {
         "num": 27,
-        "agency": "BC Oil and Gas Commission",
-        "author": "BC Oil and Gas Commission",
+        "agency": "BC Energy Regulator",
+        "author": "BC Energy Regulator",
         "date": "26-06-2013",
         "description": "Authorization to occupy Crown land to conduct appraisals, inspections, analyses, etc.",
         "complianceDocumentType": "Permit",

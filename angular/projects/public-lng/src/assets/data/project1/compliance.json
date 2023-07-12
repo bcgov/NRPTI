@@ -3,7 +3,7 @@
     "Construction, development and operation activities are subject to oversight by the provincial government and strict compliance procedures.",
     "Industry is expected to operate in compliance with all conditions and requirements identified by the provincial government. These conditions and requirements are set out in the environmental assessment certificate or individual permit.",
     "Compliance and enforcement actions vary, and often depend on the severity of the situation requiring attention or correction. When non-compliances are identified the goal is always the same: to bring the company back into compliance.",
-    "The list below includes compliance actions imposed to date by the BC Oil and Gas Commission and British Columbia’s Environmental Assessment Office. Some compliance actions of the BC Oil & Gas Commission are not included at this time, but will be added to the site soon. For a complete up-to-date list of BC Oil & Gas Commission compliance actions, please go to the [BC Oil and Gas Commission website](https://www.bcogc.ca/data-reports/compliance-enforcement/).",
+    "The list below includes compliance actions imposed to date by the BC Energy Regulator and British Columbia’s Environmental Assessment Office. Some compliance actions of the BC Oil & Gas Commission are not included at this time, but will be added to the site soon. For a complete up-to-date list of BC Oil & Gas Commission compliance actions, please go to the [BC Energy Regulator website](https://www.bcogc.ca/data-reports/compliance-enforcement/).",
     "For a full list of all authorizations and their associated requirements, please visit the [Authorizations](/project/1/authorizations) page."
   ],
   "documents": {
@@ -26,10 +26,10 @@
             "documentFieldValues": ["Environmental Assessment Office"]
           },
           {
-            "displayName": "BC Oil and Gas Commission",
+            "displayName": "BC Energy Regulator",
             "fieldName": "agencyBCOGC",
             "documentFieldName": "agency",
-            "documentFieldValues": ["BC Oil and Gas Commission"]
+            "documentFieldValues": ["BC Energy Regulator"]
           }
         ]
       },
@@ -49,10 +49,10 @@
             "documentFieldValues": ["LNG Canada"]
           },
           {
-            "displayName": "BC Oil and Gas Commission",
+            "displayName": "BC Energy Regulator",
             "fieldName": "authorBCOGC",
             "documentFieldName": "author",
-            "documentFieldValues": ["BC Oil and Gas Commission"]
+            "documentFieldValues": ["BC Energy Regulator"]
           }
         ]
       },

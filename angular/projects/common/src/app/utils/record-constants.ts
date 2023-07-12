@@ -163,7 +163,7 @@ export class Picklists {
 
   public static readonly agencyPicklist = [
     'Agricultural Land Commission',
-    'BC Oil and Gas Commission',
+    'BC Energy Regulator',
     'BC Parks',
     'BC Wildfire Service',
     'Climate Action Secretariat',
@@ -800,7 +800,7 @@ export class Picklists {
    * @returns {string[]} sorted array of acts
    */
   public static getAllActs = function (): string[] {
-    return Object.keys(this.legislationActsMappedToRegulations).sort();
+    return Object.keys(this.legislationActsMappedToRegulations).sort((a, b) => a.localeCompare(b));
   };
 
   /**
@@ -817,7 +817,7 @@ export class Picklists {
       regulations.push(...this.legislationActsMappedToRegulations[act])
     );
 
-    return Array.from(new Set<string>(regulations)).sort();
+    return Array.from(new Set<string>(regulations)).sort((a, b) => a.localeCompare(b));
   };
 
   /**

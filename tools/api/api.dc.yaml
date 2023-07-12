@@ -335,7 +335,7 @@ parameters:
     value: /api/public
   - name: KEYCLOAK_CLIENT_ID
     displayName: The keycloak client id for admin
-    value: nrpti-admin
+    value: nrpti-4869
   - name: KEYCLOAK_URL
     value: https://dev.oidc.gov.bc.ca/auth
   - name: KEYCLOAK_REALM

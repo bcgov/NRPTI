@@ -9,7 +9,7 @@ const CONSTANTS = require('../../src/utils/constants/misc.js');
 // TODO move to utils constants or something
 const agencyPicklist = [
   'Agricultural Land Commission',
-  'BC Oil and Gas Commission',
+  'BC Energy Regulator',
   'BC Parks',
   'BC Wildfire Service',
   'Climate Action Secretariat',

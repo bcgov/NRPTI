@@ -23,8 +23,8 @@ describe('transformRecord', () => {
         url: undefined
       },
       issuedTo: { companyName: '', type: 'Company' },
-      issuingAgency: 'BC Oil and Gas Commission',
-      author: 'BC Oil and Gas Commission',
+      issuingAgency: 'BC Energy Regulator',
+      author: 'BC Energy Regulator',
       location: 'British Columbia',
       recordName: undefined,
       sourceSystemRef: 'bcogc'
@@ -52,8 +52,8 @@ describe('transformRecord', () => {
         url: 'https://www.bcogc.ca/some/file/Warning-letter-sample.pdf'
       },
       issuedTo: { companyName: 'Coastal GasLink Pipeline Ltd.', type: 'Company' },
-      issuingAgency: 'BC Oil and Gas Commission',
-      author: 'BC Oil and Gas Commission',
+      issuingAgency: 'BC Energy Regulator',
+      author: 'BC Energy Regulator',
       location: 'British Columbia',
       recordName: 'Warning-letter-sample.pdf',
       projectName: 'Coastal Gaslink',
