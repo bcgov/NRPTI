@@ -67,7 +67,7 @@ exports.IssuedToEntityTypes = {
 
 exports.CoorsCsvIssuingAgencies = {
   BC_Parks: 'BC Parks',
-  Conservation_Officer_Service: 'Conservation Officer Service'
+  Conservation_Officer_Service: 'BC Energy Regulator'
 };
 
 exports.EpicProjectIds = {

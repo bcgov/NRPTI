@@ -65,7 +65,6 @@ exports.up = async function (db) {
         { $set: { author: 'Ministry of Forests' } }
       );
 
-
       await currentCollection.updateMany(
         { issuingAgency: 'Ministry of Agriculture Food and Fisheries' },
         { $set: { issuingAgency: 'Ministry of Agriculture and Food' }, }
@@ -76,7 +75,6 @@ exports.up = async function (db) {
         { $set: { author: 'Ministry of Agriculture and Food' } }
       );
 
-
       await currentCollection.updateMany(
         { issuingAgency: 'Ministry of Forests Lands Natural Resource Operations and Rural Development' },
         { $set: { issuingAgency: 'Ministry of Forests' }, }
@@ -86,8 +84,6 @@ exports.up = async function (db) {
         { author: 'Ministry of Forests Lands Natural Resource Operations and Rural Development' },
         { $set: { author: 'Ministry of Forests' } }
       );
-
-
     
       console.log(`Finished collection: ${collection}`);
 
