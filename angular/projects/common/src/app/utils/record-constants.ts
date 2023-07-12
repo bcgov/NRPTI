@@ -800,7 +800,7 @@ export class Picklists {
    * @returns {string[]} sorted array of acts
    */
   public static getAllActs = function (): string[] {
-    return Object.keys(this.legislationActsMappedToRegulations).sort();
+    return Object.keys(this.legislationActsMappedToRegulations).sort((a, b) => a.localeCompare(b));
   };
 
   /**
@@ -817,7 +817,7 @@ export class Picklists {
       regulations.push(...this.legislationActsMappedToRegulations[act])
     );
 
-    return Array.from(new Set<string>(regulations)).sort();
+    return Array.from(new Set<string>(regulations)).sort((a, b) => a.localeCompare(b));
   };
 
   /**
