@@ -20,7 +20,8 @@ export class Constants {
     ADMIN_ENV_EPD: 'admin:env-epd',
     ADMIN_ENV_COS: 'admin:env-cos',
     ADMIN_ENV_BCPARKS: 'admin:env-bcparks',
-    ADMIN_ALC: 'admin:alc'
+    ADMIN_ALC: 'admin:alc',
+    ADMIN_WLRS: 'admin:wlrs'
   };
 
   public static readonly ApplicationLimitedRoles: string[] = [
@@ -31,7 +32,8 @@ export class Constants {
     Constants.ApplicationRoles.ADMIN_ENV_EPD,
     Constants.ApplicationRoles.ADMIN_ENV_COS,
     Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
-    Constants.ApplicationRoles.ADMIN_ALC
+    Constants.ApplicationRoles.ADMIN_ALC,
+    Constants.ApplicationRoles.ADMIN_WLRS
   ];
 
   // Datepicker is off by one so add one to the desired year.
@@ -82,7 +84,8 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
-        Constants.ApplicationRoles.ADMIN_ALC
+        Constants.ApplicationRoles.ADMIN_ALC,
+        Constants.ApplicationRoles.ADMIN_WLRS
       ],
       LNG: [
         Constants.ApplicationRoles.ADMIN_LNG,
@@ -93,7 +96,8 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
-        Constants.ApplicationRoles.ADMIN_ALC
+        Constants.ApplicationRoles.ADMIN_ALC,
+        Constants.ApplicationRoles.ADMIN_WLRS
       ],
       BCMI: [Constants.ApplicationRoles.ADMIN_LNG, Constants.ApplicationRoles.ADMIN_BCMI]
     },
@@ -106,7 +110,8 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
-        Constants.ApplicationRoles.ADMIN_ALC
+        Constants.ApplicationRoles.ADMIN_ALC,
+        Constants.ApplicationRoles.ADMIN_WLRS
       ],
       LNG: [
         Constants.ApplicationRoles.ADMIN_LNG,
@@ -116,7 +121,8 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
-        Constants.ApplicationRoles.ADMIN_ALC
+        Constants.ApplicationRoles.ADMIN_ALC,
+        Constants.ApplicationRoles.ADMIN_WLRS
       ]
     },
     AGREEMENT: {
@@ -148,7 +154,8 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
-        Constants.ApplicationRoles.ADMIN_ALC
+        Constants.ApplicationRoles.ADMIN_ALC,
+        Constants.ApplicationRoles.ADMIN_WLRS
       ],
       LNG: [
         Constants.ApplicationRoles.ADMIN_LNG,
@@ -158,7 +165,8 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
-        Constants.ApplicationRoles.ADMIN_ALC
+        Constants.ApplicationRoles.ADMIN_ALC,
+        Constants.ApplicationRoles.ADMIN_WLRS
       ],
       BCMI: [Constants.ApplicationRoles.ADMIN_BCMI]
     },
@@ -179,7 +187,8 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
-        Constants.ApplicationRoles.ADMIN_ALC
+        Constants.ApplicationRoles.ADMIN_ALC,
+        Constants.ApplicationRoles.ADMIN_WLRS
       ],
       LNG: [
         Constants.ApplicationRoles.ADMIN_LNG,
@@ -189,7 +198,8 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
-        Constants.ApplicationRoles.ADMIN_ALC
+        Constants.ApplicationRoles.ADMIN_ALC,
+        Constants.ApplicationRoles.ADMIN_WLRS
       ]
     },
     MANAGEMENT_PLAN: {
@@ -206,7 +216,8 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
-        Constants.ApplicationRoles.ADMIN_ALC
+        Constants.ApplicationRoles.ADMIN_ALC,
+        Constants.ApplicationRoles.ADMIN_WLRS
       ],
       LNG: [
         Constants.ApplicationRoles.ADMIN_LNG,
@@ -217,7 +228,8 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
-        Constants.ApplicationRoles.ADMIN_ALC
+        Constants.ApplicationRoles.ADMIN_ALC,
+        Constants.ApplicationRoles.ADMIN_WLRS
       ]
     },
     PERMIT: {
@@ -233,7 +245,8 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
-        Constants.ApplicationRoles.ADMIN_ALC
+        Constants.ApplicationRoles.ADMIN_ALC,
+        Constants.ApplicationRoles.ADMIN_WLRS
       ],
       LNG: [
         Constants.ApplicationRoles.ADMIN_LNG,
@@ -243,7 +256,8 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
-        Constants.ApplicationRoles.ADMIN_ALC
+        Constants.ApplicationRoles.ADMIN_ALC,
+        Constants.ApplicationRoles.ADMIN_WLRS
       ]
     },
     REPORT: {
@@ -263,7 +277,8 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
-        Constants.ApplicationRoles.ADMIN_ALC
+        Constants.ApplicationRoles.ADMIN_ALC,
+        Constants.ApplicationRoles.ADMIN_WLRS
       ],
       LNG: [
         Constants.ApplicationRoles.ADMIN_LNG,
@@ -273,7 +288,8 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
-        Constants.ApplicationRoles.ADMIN_ALC
+        Constants.ApplicationRoles.ADMIN_ALC,
+        Constants.ApplicationRoles.ADMIN_WLRS
       ]
     },
     WARNING: {
@@ -285,7 +301,8 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
-        Constants.ApplicationRoles.ADMIN_ALC
+        Constants.ApplicationRoles.ADMIN_ALC,
+        Constants.ApplicationRoles.ADMIN_WLRS
       ],
       LNG: [
         Constants.ApplicationRoles.ADMIN_LNG,
@@ -295,7 +312,8 @@ export class Constants {
         Constants.ApplicationRoles.ADMIN_ENV_EPD,
         Constants.ApplicationRoles.ADMIN_ENV_COS,
         Constants.ApplicationRoles.ADMIN_ENV_BCPARKS,
-        Constants.ApplicationRoles.ADMIN_ALC
+        Constants.ApplicationRoles.ADMIN_ALC,
+        Constants.ApplicationRoles.ADMIN_WLRS
       ]
     }
   };
@@ -310,7 +328,8 @@ export class Constants {
     [Constants.ApplicationRoles.ADMIN_ENV_EPD]: ['Ministry of Environment and Climate Change Strategy'],
     [Constants.ApplicationRoles.ADMIN_ENV_COS]: ['Conservation Officer Service'],
     [Constants.ApplicationRoles.ADMIN_ENV_BCPARKS]: ['BC Parks'],
-    [Constants.ApplicationRoles.ADMIN_ALC]: ['Agriculture Land Commission']
+    [Constants.ApplicationRoles.ADMIN_ALC]: ['Agriculture Land Commission'],
+    [Constants.ApplicationRoles.ADMIN_WLRS]: ['Ministry of Water, Land and Resource Stewardship']
   };
 
   public static readonly LngSectionPickList: string[] = [
