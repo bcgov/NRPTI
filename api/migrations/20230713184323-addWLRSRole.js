@@ -17,9 +17,9 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = async function (db) {
-  // Add wildfire role to the read array and write array of records that issuing agency = BC Wildfire Service
-  // Add wildfire to issued to read if type is individual
-  console.log('**** Adding wildfire role ****');
+  // Add wlrs role to the read array and write array of records that issuing agency = Ministry of Water, Land and Resource Stewardship
+  // Add wlrs to issued to read if type is individual
+  console.log('**** Adding wlrs role ****');
   const mClient = await db.connection.connect(db.connectionString, { native_parser: true });
   const nrpti = await mClient.collection('nrpti');
 
@@ -102,7 +102,7 @@ exports.up = async function (db) {
       { $addToSet: { read: 'admin:wlrs' } }
     );
   } catch (error) {
-    console.log('Error updating records read array with wildfire role');
+    console.log('Error updating records read array with wlrs role');
   }
 
   mClient.close();
