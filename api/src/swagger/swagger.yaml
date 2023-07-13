@@ -328,6 +328,7 @@ paths:
         - admin:lng
         - admin:nrced
         - admin:bcmi
+        - admin:wlrs
       parameters:
         - name: app
           in: path
@@ -388,6 +389,7 @@ paths:
         - admin:lng
         - admin:nrced
         - admin:bcmi
+        - admin:wlrs
       parameters:
         - name: app
           in: path
@@ -444,6 +446,7 @@ paths:
         - admin:lng
         - admin:nrced
         - admin:bcmi
+        - admin:wlrs
         - admin:wf
         - admin:flnro
         - admin:agri
@@ -497,6 +500,7 @@ paths:
         - admin:lng
         - admin:nrced
         - admin:bcmi
+        - admin:wlrs
         - admin:wf
         - admin:flnro
         - admin:agri
@@ -556,6 +560,7 @@ paths:
         - admin:lng
         - admin:nrced
         - admin:bcmi
+        - admin:wlrs
         - admin:wf
         - admin:flnro
         - admin:agri
@@ -609,6 +614,7 @@ paths:
         - admin:lng
         - admin:nrced
         - admin:bcmi
+        - admin:wlrs
         - admin:wf
         - admin:flnro
         - admin:agri
@@ -855,6 +861,7 @@ paths:
         - admin:lng
         - admin:nrced
         - admin:bcmi
+        - admin:wlrs
         - admin:flnro
         - admin:agri
         - admin:env-epd
@@ -912,6 +919,7 @@ paths:
         - admin:nrced
         - admin:lng
         - admin:bcmi
+        - admin:wlrs
         - admin:wf
         - admin:flnro
         - admin:agri
@@ -973,6 +981,7 @@ paths:
         - admin:nrced
         - admin:lng
         - admin:bcmi
+        - admin:wlrs
         - admin:wf
         - admin:flnro
         - admin:agri
@@ -1040,6 +1049,7 @@ paths:
         - admin:nrced
         - admin:lng
         - admin:bcmi
+        - admin:wlrs
         - admin:wf
         - admin:flnro
         - admin:agri
@@ -1095,6 +1105,7 @@ paths:
         - admin:lng
         - admin:nrced
         - admin:bcmi
+        - admin:wlrs
         - admin:wf
         - admin:flnro
         - admin:agri
@@ -1132,6 +1143,7 @@ paths:
         - admin:lng
         - admin:nrced
         - admin:bcmi
+        - admin:wlrs
         - admin:wf
         - admin:flnro
         - admin:agri
@@ -1200,6 +1212,7 @@ paths:
         - admin:lng
         - admin:nrced
         - admin:bcmi
+        - admin:wlrs
         - admin:wf
         - admin:flnro
         - admin:agri
@@ -1279,6 +1292,7 @@ paths:
         - admin:lng
         - admin:nrced
         - admin:bcmi
+        - admin:wlrs
         - admin:wf
         - admin:flnro
         - admin:agri
@@ -1339,6 +1353,7 @@ paths:
         - admin:lng
         - admin:nrced
         - admin:bcmi
+        - admin:wlrs
         - admin:wf
         - admin:flnro
         - admin:agri
@@ -1391,6 +1406,7 @@ paths:
         - admin:nrced
         - admin:lng
         - admin:bcmi
+        - admin:wlrs
       parameters:
         - name: news
           in: body
@@ -1439,6 +1455,7 @@ paths:
         - admin:nrced
         - admin:lng
         - admin:bcmi
+        - admin:wlrs
       parameters:
         - name: newsId
           in: path
@@ -1465,6 +1482,7 @@ paths:
         - admin:nrced
         - admin:lng
         - admin:bcmi
+        - admin:wlrs
       parameters:
         - name: newsId
           in: path
@@ -1497,6 +1515,7 @@ paths:
         - admin:nrced
         - admin:lng
         - admin:bcmi
+        - admin:wlrs
       parameters:
         - name: newsId
           in: path
@@ -1541,6 +1560,7 @@ paths:
         - admin:nrced
         - admin:lng
         - admin:bcmi
+        - admin:wlrs
       parameters:
         - name: mine
           in: body
@@ -1589,6 +1609,7 @@ paths:
         - admin:nrced
         - admin:lng
         - admin:bcmi
+        - admin:wlrs
       parameters:
         - name: mineId
           in: path
@@ -1615,6 +1636,7 @@ paths:
         - admin:nrced
         - admin:lng
         - admin:bcmi
+        - admin:wlrs
       parameters:
         - name: mineId
           in: path
@@ -1647,6 +1669,7 @@ paths:
         - admin:nrced
         - admin:lng
         - admin:bcmi
+        - admin:wlrs
       parameters:
         - name: mineId
           in: path
@@ -1694,6 +1717,7 @@ paths:
         - admin:nrced
         - admin:lng
         - admin:bcmi
+        - admin:wlrs
       parameters:
         - name: mineId
           in: path
@@ -1741,6 +1765,7 @@ paths:
         - admin:nrced
         - admin:lng
         - admin:bcmi
+        - admin:wlrs
       parameters:
         - name: mineId
           in: path
@@ -1785,6 +1810,7 @@ paths:
         - admin:nrced
         - admin:lng
         - admin:bcmi
+        - admin:wlrs
       parameters:
         - name: collection
           in: body
@@ -1833,6 +1859,7 @@ paths:
         - admin:nrced
         - admin:lng
         - admin:bcmi
+        - admin:wlrs
       parameters:
         - name: collectionId
           in: path
@@ -1859,6 +1886,7 @@ paths:
         - admin:nrced
         - admin:lng
         - admin:bcmi
+        - admin:wlrs
       parameters:
         - name: collectionId
           in: path
@@ -1891,6 +1919,7 @@ paths:
         - admin:nrced
         - admin:lng
         - admin:bcmi
+        - admin:wlrs
       parameters:
         - name: collectionId
           in: path
@@ -1933,6 +1962,7 @@ paths:
       x-security-scopes:
         - sysadmin
         - admin:lng
+        - admin:wlrs
       parameters:
         - name: mapInfo
           in: body
@@ -1979,6 +2009,7 @@ paths:
       x-security-scopes:
         - sysadmin
         - admin:lng
+        - admin:wlrs
       parameters:
         - name: mapInfoId
           in: path
@@ -2009,6 +2040,7 @@ paths:
       x-security-scopes:
         - sysadmin
         - admin:lng
+        - admin:wlrs
       parameters:
         - name: mapInfoId
           in: path

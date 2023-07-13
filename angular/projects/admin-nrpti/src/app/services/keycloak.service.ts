@@ -184,7 +184,8 @@ export class KeycloakService {
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_COS) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_BCPARKS) ||
-      roles.includes(Constants.ApplicationRoles.ADMIN_ALC);
+      roles.includes(Constants.ApplicationRoles.ADMIN_ALC) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_WLRS);
 
     this.menus[recordTypes.ADMINISTRATIVE_SANCTION] =
       inBaseAdminRole(roles) ||
@@ -194,7 +195,8 @@ export class KeycloakService {
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_COS) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_BCPARKS) ||
-      roles.includes(Constants.ApplicationRoles.ADMIN_ALC);
+      roles.includes(Constants.ApplicationRoles.ADMIN_ALC) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_WLRS);
 
     this.menus[recordTypes.AGREEMENT] = inBaseAdminRole(roles);
 
@@ -214,7 +216,8 @@ export class KeycloakService {
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_COS) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_BCPARKS) ||
-      roles.includes(Constants.ApplicationRoles.ADMIN_ALC);
+      roles.includes(Constants.ApplicationRoles.ADMIN_ALC) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_WLRS);
 
     this.menus[recordTypes.CORRESPONDENCE] = inBaseAdminRole(roles);
 
@@ -228,7 +231,8 @@ export class KeycloakService {
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_COS) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_BCPARKS) ||
-      roles.includes(Constants.ApplicationRoles.ADMIN_ALC);
+      roles.includes(Constants.ApplicationRoles.ADMIN_ALC) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_WLRS);
 
     this.menus[recordTypes.MANAGEMENT_PLAN] = inBaseAdminRole(roles);
 
@@ -241,9 +245,13 @@ export class KeycloakService {
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_COS) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_BCPARKS) ||
-      roles.includes(Constants.ApplicationRoles.ADMIN_ALC);
+      roles.includes(Constants.ApplicationRoles.ADMIN_ALC) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_WLRS);
 
-    this.menus[recordTypes.PERMIT] = inBaseAdminRole(roles) || roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD);
+    this.menus[recordTypes.PERMIT] =
+      inBaseAdminRole(roles) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_WLRS);
 
     this.menus[recordTypes.RESTORATIVE_JUSTICE] =
       inBaseAdminRole(roles) ||
@@ -253,7 +261,8 @@ export class KeycloakService {
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_COS) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_BCPARKS) ||
-      roles.includes(Constants.ApplicationRoles.ADMIN_ALC);
+      roles.includes(Constants.ApplicationRoles.ADMIN_ALC) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_WLRS);
 
     this.menus[recordTypes.REPORT] = inBaseAdminRole(roles);
 
@@ -267,7 +276,8 @@ export class KeycloakService {
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_COS) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_BCPARKS) ||
-      roles.includes(Constants.ApplicationRoles.ADMIN_ALC);
+      roles.includes(Constants.ApplicationRoles.ADMIN_ALC) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_WLRS);
 
     this.menus[recordTypes.WARNING] =
       inBaseAdminRole(roles) ||
@@ -277,7 +287,8 @@ export class KeycloakService {
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_EPD) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_COS) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_ENV_BCPARKS) ||
-      roles.includes(Constants.ApplicationRoles.ADMIN_ALC);
+      roles.includes(Constants.ApplicationRoles.ADMIN_ALC) ||
+      roles.includes(Constants.ApplicationRoles.ADMIN_WLRS);
   }
 
   isMenuEnabled(menuName) {

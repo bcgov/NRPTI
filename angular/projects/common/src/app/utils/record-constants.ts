@@ -174,7 +174,8 @@ export class Picklists {
     'Ministry of Energy Mines and Low Carbon Innovation',
     'Ministry of Environment and Climate Change Strategy',
     'Ministry of Forests',
-    'Natural Resource Officers'
+    'Ministry of Water, Land and Resource Stewardship',
+    'Natural Resource Officers',
   ];
 
   public static readonly entityTypePicklist = ['Company', 'Individual'];

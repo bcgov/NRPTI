@@ -11,7 +11,8 @@ const ApplicationAgencies = {
   AGENCY_LNG: 'LNG Secretariat',
   AGENCY_AGRI: 'Ministry of Agriculture and Food',
   AGENCY_FLNRO: 'Ministry of Forests',
-  AGENCY_FLNR_NRO: 'Natural Resource Officers'
+  AGENCY_FLNR_NRO: 'Natural Resource Officers',
+  AGENCY_WLRS: 'Ministry of Water, Land and Resource Stewardship',
 };
 
 /**
