@@ -66,7 +66,10 @@ async function updateOneRecord(record) {
 
     const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
     const redactedCollection = db.collection('redacted_record_subset');
-    await redactedCollection.findOneAndUpdate({ _id: redactedRecord._id }, redactedRecord);
+    await redactedCollection.findOneAndUpdate(
+      { _id: redactedRecord._id },
+      { $set: redactedRecord }
+    );
 
     defaultLog.info('Done Updating redacted_record_subset');
   } catch (error) {

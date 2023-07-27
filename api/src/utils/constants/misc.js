@@ -181,7 +181,8 @@ exports.AUTHORIZED_PUBLISH_AGENCIES = [
   'Climate Action Secretariat',
   'Conservation Officer Service',
   'Environmental Assessment Office',
-  'Ministry of Environment and Climate Change Strategy'
+  'Ministry of Environment and Climate Change Strategy',
+  'Ministry of Forests'
 ];
 
 exports.CSV_SOURCE_DEFAULT_ROLES = {
