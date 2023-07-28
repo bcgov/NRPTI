@@ -42,22 +42,24 @@ exports.up = async function(db) {
         record.issuedTo.type === 'Individual'
       ) {
         // Save the "issuedTo" object in the "nrpti" collection
+        // Add "public" to the "read" array in the "issuedTo" object
         await nrpti.updateOne({ _id: record._id }, { $set: { issuedTo: record.issuedTo } });
+        const issuedToWithPublic = { ...record.issuedTo, read: [...record.issuedTo.read, 'public'] };
 
         // Make sure the "_flavourRecords" ID exists on the master record
+        // Check if the corresponding "_flavourRecords" ID exists in the "redacted_record_subset" collection
         if (record._flavourRecords && record._flavourRecords.length > 0) {
-          // Check if the corresponding "_flavourRecords" ID exists in the "redacted_record_subset" collection
           const redactedRecordSubsetDocument = await redactedRecordSubset.findOne({ _id: record._flavourRecords[0] });
-        
+
+          // Update the "issuedTo" object in the "redacted_record_subset" collection
+          // Otherwise, insert the "issuedTo" data in the "redacted_record_subset" collection
           if (redactedRecordSubsetDocument) {
-            // Update the "issuedTo" object in the "redacted_record_subset" collection
             await redactedRecordSubset.updateOne(
               { _id: record._flavourRecords[0] },
-              { $set: { issuedTo: record.issuedTo } }
+              { $set: { issuedTo: issuedToWithPublic } }
             );
           } else {
-            // Insert the "issuedTo" data in the "redacted_record_subset" collection
-            await redactedRecordSubset.insertOne({ _id: record._flavourRecords[0], issuedTo: record.issuedTo });
+            await redactedRecordSubset.insertOne({ _id: record._flavourRecords[0], issuedTo: issuedToWithPublic });
           }
         } else {
           console.error(`Skipping record ${record._id} because _flavourRecords is undefined or empty.`);
