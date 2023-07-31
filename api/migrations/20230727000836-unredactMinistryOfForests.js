@@ -83,7 +83,6 @@ exports.up = async function(db) {
       }
     });
       
-
     await Promise.all(promises);
 
     console.log('**** Finished saving "issuedTo" object and updating "redacted_record_subset" collection ****');
