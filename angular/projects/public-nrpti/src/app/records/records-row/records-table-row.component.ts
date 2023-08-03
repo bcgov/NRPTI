@@ -70,11 +70,7 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
         if (this.rowData.legislation && this.rowData.legislation[0] && this.rowData.legislation[0].offence) {
           this.description = this.rowData.legislation[0].offence || '-';
         }
-      } else if (
-        this.rowData._schemaName === 'AdministrativeSanctionNRCED'
-      ) {
-        this.description = '-';
-      } else {
+      }else {
         if (this.rowData.legislation &&
           this.rowData.legislation[0] &&
           this.rowData.legislation[0].legislationDescription
