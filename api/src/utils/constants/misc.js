@@ -27,7 +27,7 @@ const ApplicationAgencies = {
   AGENCY_EMLI: 'Ministry of Energy Mines and Low Carbon Innovation',
   AGENCY_ENV: 'Ministry of Environment and Climate Change Strategy',
   AGENCY_ENV_BCPARKS: 'BC Parks',
-  AGENCY_OGC: 'Conservation Officer Service',
+  AGENCY_OGC: 'BC Energy Regulator',
   AGENCY_ENV_EPD: 'Ministry of Environment and Climate Change Strategy',
   AGENCY_LNG: 'LNG Secretariat',
   AGENCY_AGRI: 'Ministry of Agriculture and Food',
@@ -70,7 +70,8 @@ exports.IssuedToEntityTypes = {
 
 exports.CoorsCsvIssuingAgencies = {
   BC_Parks: 'BC Parks',
-  Conservation_Officer_Service: 'BC Energy Regulator'
+  Conservation_Officer_Service: 'Conservation Officer Service',
+  Water_Sustainability_Act: 'BC Energy Regulator'
 };
 
 exports.EpicProjectIds = {
