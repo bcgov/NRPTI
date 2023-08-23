@@ -19,7 +19,7 @@
     // This is a hardcoded variable that does not come from the backend
     window.__env.APPLICATION = 'NRPTI';
     window.__env.FEATURE_FLAG = {
-      "nris-emli-importer": false
+      "nris-emli-importer": true
     };
 
     // Import component defaults
