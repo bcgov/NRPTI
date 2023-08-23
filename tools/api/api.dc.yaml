@@ -136,7 +136,7 @@ objects:
                   value: 'true'
                 # Toggle to enable NRIS-EMLI importer
                 - name: NRIS_EMLI_DOCUMENT_BINARIES_ENABLED
-                  value: 'false'
+                  value: 'true'
                 - name: NRIS_EMLI_API_ENDPOINT
                   value: 'https://api.nrs.gov.bc.ca/nrisws-api/v1/emprInspections'
               envFrom:
