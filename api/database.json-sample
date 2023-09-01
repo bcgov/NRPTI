@@ -1,0 +1,8 @@
+{
+  "defaultEnv": "local",
+  "local": {
+    "driver": "mongodb",
+        "database": "dbname",
+        "host": "localhost"
+  }
+}
