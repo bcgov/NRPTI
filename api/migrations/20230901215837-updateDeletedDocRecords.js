@@ -4,6 +4,7 @@ var dbm;
 var type;
 var seed;
 
+
 /**
   * We receive the dbmigrate dependency from dbmigrate initially.
   * This enables us to not have to rely on NODE_PATH.
@@ -14,20 +15,24 @@ exports.setup = function(options, seedLink) {
   seed = seedLink;
 };
 
+
 exports.up = async function(db) {
   console.log('**** Updating Records with Deleted Attachments ****');
-
-  // Collection Names
-  const collectionName = 'redacted_record_subset';
-  const nrptiCollectionName = 'nrpti';
-
   const mClient = await db.connection.connect(db.connectionString, {
     native_parser: true
   });
+  try {
+  // Collection Names
+  const redactedCollectionName = 'redacted_record_subset';
+  const nrptiCollectionName = 'nrpti';
+
+ 
   
 
-  const collection = await mClient.collection(collectionName);
+  const redactedCollection = await mClient.collection(redactedCollectionName);
   const nrptiCollection = await mClient.collection(nrptiCollectionName);
+
+
 
   // Subquery to find _id values with schema 'Document' in both collections
   const subquery = [
@@ -35,34 +40,61 @@ exports.up = async function(db) {
     { _schemaName: 'Document' }
   ];
 
-  Promise.all([
-    collection.find({ $or: subquery }, { _id: 1 }).toArray(),
-    nrptiCollection.find({ $or: subquery }, { _id: 1 }).toArray()
-  ])
-  .then(([collectionResults, nrptiResults]) => {
+  const collectionResults = await redactedCollection.find({ $or: subquery }, { _id: 1 }).toArray();
+
+  const nrptiResults = await nrptiCollection.find({ $or: subquery }, { _id: 1 }).toArray();
+
+
+
+    console.log('inthen>>>>>')
     // Extract _id values from the subquery results
-    const validIds = [...new Set([...collectionResults, ...nrptiResults].map(item => item._id))];
+  const validIds = [...new Set([...collectionResults, ...nrptiResults].map(item => item._id))];
 
-    // Update documents to an empty array where _id is not in validIds
-    const updateQuery = {
-      _id: { $nin: validIds }
-    };
+  let redactedDocumentsIds =  await redactedCollection.find({_schemaName: 'Document'}).toArray();
+  redactedDocumentsIds=redactedDocumentsIds.map(item => item._id);
 
-    const updateOperation = {
-      $set: {
-        documents: []
+   console.log('validIds= ' + validIds.length)
+
+ 
+   const cursor =  redactedCollection.find({
+      "documents": { "$exists": true, "$not": { "$size": 0 } }
+   }); // You can specify a filter to narrow down the documents
+
+
+console.log('before_cursor')
+let ct = 0;
+  await cursor.forEach(record => {   
+      if(!redactedDocumentsIds.includes(record['documents'][0]))
+      {
+        console.log('in_if' + ct)
+        redactedCollection.updateOne(
+              {_id: record._id},
+              {$set: {documents: []}}
+            )
       }
-    };
+       else{
+      console.log('in_else' + ct)
+    }
+    
+ct++;
+    
 
-    return collection.updateMany(updateQuery, updateOperation);
-  })
-  .then(updateResult => {
-    console.log(`Updated ${updateResult.modifiedCount} documents in the ${collectionName} collection.`);
-  })
-  .catch(err => {
-  });
+  },
+  () => {
+    console.log('in_completion')
+    // This is the completion callback, called when the iteration is complete
+    mClient.close(); // Close the MongoDB client connection
+    console.log('Done.');
+  }
+  );
 
-  mClient.close();
+
+  //mClient.close();
+  } catch (err) {
+    console.log('Error:', err);
+  }
+  
+  // return null;
 
 }
 
