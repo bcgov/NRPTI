@@ -30,7 +30,7 @@ exports.getOutcomeDescription = function(csvRow) {
  */
 exports.getEntityType = function(csvRow) {
 
-  let options = ["Ltd.", "Ltd", "Inc.", "Inc", "Corp.", "Corp"];
+  let options = [" Ltd.", " Ltd", " Inc.", " Inc", " Corp.", " Corp"];
 
 
   function endsWithBusinessType(value, endings){
