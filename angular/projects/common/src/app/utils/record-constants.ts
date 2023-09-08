@@ -1920,7 +1920,12 @@ export class Picklists {
       'Park Act': {
         '17': {
           description: 'Park Act Order'
+        },  // nrpti-1085: Add new legislation description for orders
+        'Park, Conservancy and Recreation Area Regulation' : {
+        '9': {
+          description: 'Order to leave a park, conservancy or recreation area'
         }
+      }
       },
       'Wildfire Act': {
         '7': {

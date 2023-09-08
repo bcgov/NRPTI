@@ -38,12 +38,24 @@ exports.getIssuingAgency = function(csvRow) {
     return null;
   }
 
-
   // csv import specific business logic, see https://bcmines.atlassian.net/browse/NRPT-78
   if (caseNum.toLowerCase().startsWith('p-')) {
     return MiscConstants.CoorsCsvIssuingAgencies.BC_Parks;
   }
+  
+  let act = '';
+  if (csvRow['act']) {
+    act = csvRow['act'];
+  } else {
+    return null;
+  }
 
+  // Act == Water Sustainability Act, in which case Issuing Agency = BC Energy Regulator
+  if (act.toLowerCase() == 'water sustainability act') {
+    return MiscConstants.CoorsCsvIssuingAgencies.Water_Sustainability_Act;
+  }
+
+  // Otherwise the issuing agency defaults to Conservation Officer Service
   return MiscConstants.CoorsCsvIssuingAgencies.Conservation_Officer_Service;
 };
 
