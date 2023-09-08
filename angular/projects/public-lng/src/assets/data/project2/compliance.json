@@ -3,7 +3,7 @@
     "Construction, development and operation activities are subject to oversight by the provincial government and strict compliance procedures.",
     "Industry is expected to operate in compliance with all conditions and requirements identified by the provincial government. These conditions and requirements are set out in the environmental assessment certificate or individual permit.",
     "Compliance and enforcement actions vary, and often depend on the severity of the situation requiring attention or correction. When non-compliances are identified the goal is always the same: to bring the company back into compliance.",
-    "The list below includes compliance actions imposed to date by the BC Energy Regulator and British Columbia’s Environmental Assessment Office. Some compliance actions of the BC Oil & Gas Commission are not included at this time, but will be added to the site soon. For a complete up-to-date list of BC Oil & Gas Commission compliance actions, please go to the [BC Energy Regulator website](https://www.bcogc.ca/data-reports/compliance-enforcement/).",
+    "The list below includes compliance actions imposed to date by the BC Energy Regulator and British Columbia’s Environmental Assessment Office. Some compliance actions of the BC Energy Regulator are not included at this time, but will be added to the site soon. For a complete up-to-date list of BC Energy Regulator compliance actions, please go to the [BC Energy Regulator website](https://www.bc-er.ca/data-reports/compliance-enforcement/).",
     "For a full list of all authorizations and their associated requirements, please visit the [Authorizations](/project/2/authorizations) page."
   ],
   "documents": {
@@ -520,7 +520,7 @@
         "author": "Environmental Assessment Office"
       },
       {
-        "url": "https://www.bcogc.ca/node/15618/download",
+        "url": "https://www.bc-er.ca/node/15618/download",
         "description": "The BC Energy Regulator issued an order  as a result of cutting activity that occurred without a completed archaeological impact assessment. The order identifies four actions required to be taken by Coastal GasLink.",
         "name": "General Order 2019-09",
         "date": "13-09-19",
@@ -632,8 +632,8 @@
         "author": "Coastal GasLink"
       },
       {
-        "url": "https://www.bcogc.ca/node/15344/download",
-        "description": "Warning letter issued to Coastal Gaslink Pipeline Ltd for failing to provide notice of construction start to the Oil and Gas commission a minimum of 48 hours prior to the commencement of activities.",
+        "url": "https://www.bc-er.ca/node/15344/download",
+        "description": "Warning letter issued to Coastal Gaslink Pipeline Ltd for failing to provide notice of construction start to the Energy Regulator a minimum of 48 hours prior to the commencement of activities.",
         "name": "Warning Letter 2019-001TE CGL",
         "date": "07-02-2019",
         "agency": "BC Energy Regulator",
