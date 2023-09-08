@@ -1,9 +1,10 @@
 'use strict';
 
+const { ObjectId } = require('mongodb');
+
 var dbm;
 var type;
 var seed;
-
 
 /**
   * We receive the dbmigrate dependency from dbmigrate initially.
@@ -15,100 +16,78 @@ exports.setup = function(options, seedLink) {
   seed = seedLink;
 };
 
-
 exports.up = async function(db) {
-  console.log('**** Updating Records with Deleted Attachments ****');
+
   const mClient = await db.connection.connect(db.connectionString, {
     native_parser: true
   });
+
   try {
-  // Collection Names
-  const redactedCollectionName = 'redacted_record_subset';
-  const nrptiCollectionName = 'nrpti';
+    console.log('**** Started tracking all documents in redacted_record_subset ****');
 
- 
-  
+    const nrptiCollection = await mClient.collection('nrpti');
+    const redactedRecordSubsetCollection = await mClient.collection('redacted_record_subset');
 
-  const redactedCollection = await mClient.collection(redactedCollectionName);
-  //const nrptiCollection = await mClient.collection(nrptiCollectionName);
+    // Find all documents with an existing, non-empty "documents" array in redacted_record_subset collection
+    const matchingDocuments = await redactedRecordSubsetCollection
+      .find({
+        "documents": { $ne: [], $exists: true }
+      })
+      .toArray();
 
+    console.log('**** Found ' + matchingDocuments.length + ' documents with an existing, non-empty "documents" array in redacted_record_subset collection ****');
 
+    // Take all ObjectIDs from these "documents" arrays and put them in a new array
+    const objectIDsArray = matchingDocuments.reduce((acc, doc) => {
+      acc.push(...doc.documents.map(id => new ObjectId(id)));
+      return acc;
+    }, []);
 
-  // Subquery to find _id values with schema 'Document' in both collections
-  // const subquery = [
-  //   { _schemaName: 'Document' },
-  //   { _schemaName: 'Document' }
-  // ];
+    console.log('**** Found ' + objectIDsArray.length + ' ObjectIDs in the "documents" arrays ****');
 
-  // const collectionResults = await redactedCollection.find({ $or: subquery }, { _id: 1 }).toArray();
+    // Check if each ObjectID exists in the "nrpti" or "redacted_record_subset" collection
+    const matchingObjectIDs = [];
+    const nonMatchingObjectIDs = [];
 
-  // const nrptiResults = await nrptiCollection.find({ $or: subquery }, { _id: 1 }).toArray();
+    console.log('**** Checking if each ObjectID exists in the "nrpti" or "redacted_record_subset" collection ****');
 
+    for (const objectID of objectIDsArray) {
+      // Check in the nrpti collection
+      const nrptiDocument = await nrptiCollection.findOne({ _id: objectID, _schemaName: 'Document' });
 
+      // Check in the redacted_record_subset collection
+      const redactedRecordSubsetDocument = await redactedRecordSubsetCollection.findOne({ _id: objectID, _schemaName: 'Document' });
 
-    //console.log('inthen>>>>>')
-    // Extract _id values from the subquery results
-  //const validIds = [...new Set([...collectionResults, ...nrptiResults].map(item => item._id))];
-
-  let redactedDocumentsIds =  await redactedCollection.find({_schemaName: 'Document'}).toArray();
-  redactedDocumentsIds=redactedDocumentsIds.map(item => item._id);
-
-   //console.log('validIdsCount= ' + validIds.length)
-
-   console.log('redactedCount= ' + redactedDocumentsIds.length)
-
-   console.log('redacted1=' + redactedDocumentsIds[0]);
-   console.log('redacted2=' + redactedDocumentsIds[1]);
- 
-   const cursor =  redactedCollection.find({
-      "documents": { "$exists": true, "$not": { "$size": 0 } }
-   }); // You can specify a filter to narrow down the documents
-
-
-console.log('before_cursor')
-let ct = 0;
-  await cursor.forEach(record => {   
-      if(!redactedDocumentsIds.includes(record['documents'][0]))
-      {
-       console.log('in_if' + ct + 'documentid=' + record['documents'][0])
-        // redactedCollection.updateOne(
-        //       {_id: record._id},
-        //       {$set: {documents: []}}
-        //     )
+      if (nrptiDocument || redactedRecordSubsetDocument) {
+        matchingObjectIDs.push(objectID);
+      } else {
+        nonMatchingObjectIDs.push(objectID);
       }
-       else{
-     console.log('in_else' + ct)
     }
-//     const foundElement = redactedDocumentsIds.some(item => item === record['documents'][0]);
-//     if (foundElement === undefined) {
-//   // Element not found
-//  // console.log('in_if' + ct + 'documentid=' + record['documents'][0])
-// }
-// else{
-//   console.log('in_else' + ct + 'documentid=' + record['documents'][0])
-// }
-ct++;
-    
 
-  },
-  () => {
-    console.log('in_completion')
-    // This is the completion callback, called when the iteration is complete
-    mClient.close(); // Close the MongoDB client connection
-    console.log('Done.');
-  }
-  );
+  console.log('**** Found ' + matchingObjectIDs.length + ' matching ObjectIDs ****');
+  console.log('**** Found ' + nonMatchingObjectIDs.length + ' non-matching ObjectIDs ****');
 
+  console.log('**** Updating "documents" arrays in redacted_record_subset collection ****');
 
-  //mClient.close();
-  } catch (err) {
-    console.log('Error:', err);
-  }
+  // Remove all non-matching ObjectIDs from the "documents" array in the redacted_record_subset collection
+  for (const nonMatchingObjectID of nonMatchingObjectIDs) {
+    // Update documents in the "redacted_record_subset" collection
+    const result = await redactedRecordSubsetCollection.updateMany(
+      { "documents": nonMatchingObjectID },
+      { "$pull": { "documents": nonMatchingObjectID } }
+    );
   
-  // return null;
-
-}
-
+    console.log(`Removed ${result.modifiedCount} instances of ${nonMatchingObjectID} from "redacted_record_subset" collection.`);
+  }
+      
+  } catch (error) {
+    console.error(`Migration did not complete. Error processing: ${error.message}`);
+  } finally {
+    mClient.close();
+  }
+};
+  
 exports.down = function(db) {
   return null;
 };
