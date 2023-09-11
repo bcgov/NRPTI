@@ -102,5 +102,13 @@
       <em class="material-icons mr-3">chat</em>
       Communications
     </a>
+    <a id="update-issuing-agency"
+      *ngIf='keycloakService.isMenuEnabled("Update Issuing Agency")'
+      [ngClass]="{ active: mainRoute === 'update-issuing-agency' }"
+      id="update-issuing-agency"
+      [routerLink]="['/update-issuing-agency']">
+      <i class="material-icons mr-3">notifications_active</i>
+      Update Issuing Agency
+    </a>
   </section>
 </div>

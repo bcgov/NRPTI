@@ -161,6 +161,9 @@ export class KeycloakService {
       roles.includes(Constants.ApplicationRoles.ADMIN_LNG) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_NRCED) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_BCMI);
+
+    this.menus[Constants.Menus.UPDATE_ISSUING_AGENCY] =
+      roles.includes(Constants.ApplicationRoles.ADMIN)
   }
 
   buildAddRecordDropdownCache(roles) {

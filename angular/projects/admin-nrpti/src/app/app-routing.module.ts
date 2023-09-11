@@ -8,6 +8,8 @@ import { NewsResolver } from './news/news-resolver';
 import { NewsListComponent } from './news/news-list.component';
 import { CommunicationsComponent } from './communications/communications.component';
 import { LngMapInfoResolver } from './communications/lng-map-info/lng-map-info-resolver';
+import { UpdateIssuingAgencyComponent } from './update-issuing-agency/update-issuing-agency.component';
+import { UpdateIssuingAgencyResolver } from './update-issuing-agency/update-issuing-agency.resolver';
 
 const routes: Routes = [
   {
@@ -59,6 +61,17 @@ const routes: Routes = [
         }
       }
     ]
+  },
+  {
+    path: 'update-issuing-agency',
+    pathMatch: 'full',
+    component: UpdateIssuingAgencyComponent,
+    resolve: {
+      records: UpdateIssuingAgencyResolver
+    },
+    data: {
+      breadcrumb: 'Update Issuing Agency'
+    }
   },
   {
     // wildcard default route

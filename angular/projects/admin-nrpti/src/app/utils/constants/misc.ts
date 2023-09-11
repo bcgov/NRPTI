@@ -48,7 +48,8 @@ export class Constants {
     MAP: 'Map',
     ENTITIES: 'Entities',
     IMPORTS: 'Imports',
-    COMMUNICATIONS: 'Communications'
+    COMMUNICATIONS: 'Communications',
+    UPDATE_ISSUING_AGENCY: 'Update Issuing Agency'
   };
 
   public static readonly RecordTypes: any = {
