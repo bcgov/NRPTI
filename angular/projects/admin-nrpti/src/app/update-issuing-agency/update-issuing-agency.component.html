@@ -1,3 +1,25 @@
-<main class="container-fluid-padding">
-  <h1>Hello</h1>
-</main>
+<div class="container">
+  <h1>Update Issuing Agency</h1>
+
+  <!-- Dropdown for selecting an agency -->
+  <div class="dropDownArea">
+    <label>Select The Agency You Would Like to Update: </label><br>
+    <select [(ngModel)]="selectedAgency" (change)="onSelected(selectedAgency)">
+      <option *ngFor="let keyValuePair of agencies | keyvalue" [value]="keyValuePair.key">{{ keyValuePair.value }}</option>
+    </select>
+  </div>
+
+  <!-- Text field for entering a new agency -->
+  <div class="form-group">
+    <label for="newAgency">Updated Agency Name:</label>
+    <input type="text" id="newAgency" [(ngModel)]="newAgency" class="form-control">
+  </div>
+
+  <!-- Submit button to update the selected agency -->
+  <button (click)="updateSelectedAgency()">Update Selected Agency</button>
+
+  <!-- Display the current selection -->
+  <div *ngIf="choiceMade">
+    <p>Selected Agency: {{ agencies[selectedAgency] }}</p>
+  </div>
+</div>
