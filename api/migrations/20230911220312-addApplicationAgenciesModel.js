@@ -40,7 +40,14 @@ exports.up = async function (db) {
   
     // Create and insert documents for each agency
     const agencyInsertPromises = Object.entries(agencies).map(([code, name]) =>
-      ApplicationAgency.create({ agencyCode: code, agencyName: name })
+      ApplicationAgency.create(
+        { 
+          agencyCode: code,
+          agencyName: name,
+          read: ['sysadmin'],
+          write: ['sysadmin'],
+         }
+        )
         .catch(error => {
           console.error(`Error inserting agency ${code}:`, error);
         })
@@ -51,10 +58,16 @@ exports.up = async function (db) {
       console.log('Migration completed successfully');
     } catch (error) {
       console.error('Migration failed:', error);
+    } finally {
+      mongoose.connection.close(() => {
+        mongoose.connection.close();
+        console.log('Database connection closed');
+        process.exit(0);
+      });
+
+      return null
     }
   });
-
-  mongoose.connection.close();
 };
 
 exports.down = function(db) {
