@@ -47,7 +47,7 @@ exports.up = async function (db) {
     );
   
     try {
-      // await Promise.all(agencyInsertPromises);
+      await Promise.all(agencyInsertPromises);
       console.log('Migration completed successfully');
     } catch (error) {
       console.error('Migration failed:', error);
