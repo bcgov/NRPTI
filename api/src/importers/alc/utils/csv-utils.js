@@ -29,11 +29,27 @@ exports.getOutcomeDescription = function(csvRow) {
  * @returns {string} the entity type.
  */
 exports.getEntityType = function(csvRow) {
+
+  let options = [" Ltd.", " Ltd", " Inc.", " Inc", " Corp.", " Corp"];
+
+
+  function endsWithBusinessType(value, endings){
+    for (const ending of endings) {
+      const pattern = new RegExp(`${ending}$`, 'i');
+      if (pattern.test(value)) {
+        return true;
+      }
+  }
+    return false
+  }
+
+
   if (!csvRow) {
     return null;
   }
-
-  if (csvRow['inspection property owner']) return MiscConstants.IssuedToEntityTypes.Company;
+  if (endsWithBusinessType(csvRow['inspection property owner'], options)){
+    return MiscConstants.IssuedToEntityTypes.Company;
+  }
 
   return MiscConstants.IssuedToEntityTypes.Individual;
 };
