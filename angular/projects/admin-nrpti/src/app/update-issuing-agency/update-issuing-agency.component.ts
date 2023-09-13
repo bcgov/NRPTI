@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import utils from 'esri/widgets/smartMapping/support/utils';
+//import utils from 'esri/widgets/smartMapping/support/utils';
 import { ApplicationAgencyList } from '../../../../global/src/lib/utils/utils';
 @Component({
   selector: 'app-update-issuing-agency',

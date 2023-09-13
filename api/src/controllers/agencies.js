@@ -1,66 +1,27 @@
 const QueryActions = require('../utils/query-actions');
-const { metric: Metric }  = require('../models/index');
-
-exports.protectedOptions = function (args, res, next) {
-  res.status(200).send();
-};
+const mongodb = require('../utils/mongodb');
+const RECORD_TYPE = require('../utils/constants/record-type-enum');
 
 exports.publicGetConfig = async function (args, res, next) {
-  // protected by swagger route by the scope
-//   const agg = [
-//     {
-//       $match: {
-//         _schemaName: "Metric"
-//       }
-//     },
-//     {
-//       $project: {
-//         code: 1
-//       }
-//     }
-//   ];
 
-//   const metrics = await Metric.aggregate(agg);
-let metrics = 'hello from publicGet'
+const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+const collectionDB = db.collection('nrpti');
 
-  QueryActions.sendResponse(res, 200, metrics);
-};
-
-exports.protectedGet = async function (args, res, next) {
-//   if (!args.swagger.params.code) {
-//     return QueryActions.sendResponse(res, 400, {});
-//   }
-
-//   const query = {
-//     _schemaName: "Metric",
-//     code: args.swagger.params.code.value
-//   };
-
-//   const metric = await Metric.find(query);
-
-  QueryActions.sendResponse(res, 200, 'hello from protectedGet');
-};
-
-exports.protectedGetData = async function (args, res, next) {
-  const query = {
-    _schemaName: "Metric",
-    code: args.swagger.params.code.value
-  };
-
-  // Future: Set read/write roles on metric, guard against execution at this point.
-  const metric = await Metric.findOne(query);
-
-  if (!metric.operation) {
-    return QueryActions.sendResponse(res, 400, {});
-  }
+  let agencyList;
 
   try {
-    const aggregateOperation = JSON.parse(metric.operation);
-
-    const data = await Metric.aggregate(aggregateOperation);
-
-    QueryActions.sendResponse(res, 200, data);
-  } catch (e) {
-    QueryActions.sendResponse(res, 400, e);
+    //Obtain documents with Application Agency Schema
+     let agencyDocuments = await collectionDB.find({_schemaName: RECORD_TYPE.ApplicationAgency._schemaName}).toArray();
+    //Using map function to iterate through the original array and creates a new array with objects containing only the _id, agencyCode, and agencyName properties. 
+     agencyList = agencyDocuments.map(item => ({
+      _id: item._id,
+      agencyCode: item.agencyCode,
+      agencyName: item.agencyName
+    }));
+  } catch (error) {
+    console.log(error)
+    throw error;
   }
+
+  QueryActions.sendResponse(res, 200, agencyList);
 };
