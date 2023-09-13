@@ -2060,7 +2060,7 @@ paths:
       tags:
         - agencies-list
       summary: 'list agencies'
-      operationId: publicGetConfig
+      operationId: publicGet
       responses:
         '200':
           description: "Success"
