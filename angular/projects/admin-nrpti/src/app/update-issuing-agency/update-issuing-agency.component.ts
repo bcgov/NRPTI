@@ -27,7 +27,9 @@ export class UpdateIssuingAgencyComponent implements OnInit {
     this.selectedAgency = value;
     this.choiceMade = true;
   }
-
+  putRecords(agencyCode: any, agencyName: any){
+    this.issuingAgencyService.updateAgency(agencyCode, agencyName)
+  }
   updateSelectedAgency(): void {
     if (this.newAgency.trim() !== '') {
       // Find the agency code that matches the selected agency name
@@ -54,9 +56,11 @@ export class UpdateIssuingAgencyComponent implements OnInit {
           "agencyCode": matchingCode,
           "agencyName": this.selectedAgency
         });
+        this.putRecords(this.updatedData.agencies["agencyCode"], this.updatedData.agencies["agencyName"])
+        alert(JSON.stringify(this.updatedData))
+        this.updatedData.agencies = []
       }
     }
-    alert(JSON.stringify(this.updatedData))
   }
 
   ngOnInit(): void {

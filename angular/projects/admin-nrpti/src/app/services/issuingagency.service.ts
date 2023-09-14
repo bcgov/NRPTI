@@ -16,4 +16,17 @@ export class IssuingAgencyService {
       throw error; // Rethrow the error to propagate it further
     });
   }
+
+  public updateAgency(agencyCode: string, agencyName: any): Promise<any> {
+    const apiUrl = `${this.apiService.pathAPI}/update-agencies`;
+    let updatedAgency = { "agencies": [{"agencyCode": agencyCode, "agencyName": agencyName}]}
+    console.log(updatedAgency)
+    alert(updatedAgency)
+    return this.http.put<any>(apiUrl, updatedAgency)
+      .toPromise()
+      .catch((error) => {
+        console.error('API call error:', error);
+        throw error; // Rethrow the error to propagate it further
+      });
+}
 }
