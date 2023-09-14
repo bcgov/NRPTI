@@ -5,7 +5,7 @@
   <div class="dropDownArea">
     <label>Select The Agency You Would Like to Update: </label><br>
     <select [(ngModel)]="selectedAgency" (change)="onSelected(selectedAgency)">
-      <option *ngFor="let keyValuePair of agencies | keyvalue" [value]="keyValuePair.key">{{ keyValuePair.value }}</option>
+      <option *ngFor="let key of Object.keys(agencies)" [value]="key">{{ agencies[key] }}</option>
     </select>
   </div>
 
@@ -21,5 +21,12 @@
   <!-- Display the current selection -->
   <div *ngIf="choiceMade">
     <p>Selected Agency: {{ agencies[selectedAgency] }}</p>
+  </div>
+<!-- This div is just for debugging, Trying other ways to display the agencies-->
+  <div class="container">
+    <h1>Agencies</h1>
+    <p *ngFor="let key of Object.keys(agencies)">
+      {{ key }}: {{ agencies[key] }}
+    </p>
   </div>
 </div>

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-//import utils from 'esri/widgets/smartMapping/support/utils';
-import { ApplicationAgencyList } from '../../../../global/src/lib/utils/utils';
+import { IssuingAgencyService } from '../services/issuingagency.service';
+import { LoggerService } from 'nrpti-angular-components';
+import { Observable, of } from 'rxjs';
+
 @Component({
   selector: 'app-update-issuing-agency',
   templateUrl: './update-issuing-agency.component.html',
@@ -8,11 +10,15 @@ import { ApplicationAgencyList } from '../../../../global/src/lib/utils/utils';
 })
 export class UpdateIssuingAgencyComponent implements OnInit {
   public loading = false;
-  selectedAgency = 'Select an Agency'; // Set the initial selected value
+  selectedAgency: string = ''; // Initialize the selectedAgency
   choiceMade = false;
-  newAgency = ''; // Initialize the new agency input field
+  newAgency: string = ''; // Initialize the new agency input field
+  agencies$: Observable<{ [key: string]: string }> = of({"Kyle": "Williams"}); // Initialize agencies as an Observable
 
-  agencies: {} = ApplicationAgencyList;
+  constructor(
+    private issuingAgencyService: IssuingAgencyService,
+    private logger: LoggerService
+  ) {}
 
   onSelected(value: string): void {
     this.selectedAgency = value;
@@ -22,14 +28,31 @@ export class UpdateIssuingAgencyComponent implements OnInit {
   updateSelectedAgency(): void {
     if (this.newAgency.trim() !== '') {
       // Only update the selected agency if the new agency input is not empty
-      this.agencies[this.selectedAgency] = this.newAgency;
-      this.selectedAgency = this.newAgency; // Update the selected value
-      this.newAgency = ''; // Clear the input field
-      this.choiceMade = true;
+      this.agencies$.subscribe(agencies => {
+        agencies[this.selectedAgency] = this.newAgency;
+        this.selectedAgency = this.newAgency; // Update the selected value
+        this.newAgency = ''; // Clear the input field
+        this.choiceMade = true;
+      });
     }
   }
 
   ngOnInit(): void {
-    console.log('UpdateIssuingAgencyComponent.ngOnInit()');
+    this.issuingAgencyService.getIssuingAgencies()
+      .then(response => {
+        const agencies = {};
+        if (response && Array.isArray(response)) {
+          response.forEach(agency => {
+            agencies[agency._id] = agency.agencyName;
+          });
+        }
+        this.agencies$ = of(agencies); // Assign the agencies object as an Observable
+        console.log("IS IT IN THE CONSOLE?")
+        alert(JSON.stringify(this.agencies$))
+      })
+      .catch(error => {
+        console.error('API call error:', error);
+      });
+    this.logger.level = 0;
   }
 }
