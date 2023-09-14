@@ -1,0 +1,24 @@
+name: Openshift Test Deployment on Demand
+on:
+    workflow_dispatch:
+      inputs:
+        token:
+          description: 'Openshift Token'
+          required: true
+jobs:
+    deploy:
+      runs-on: ubuntu-latest
+      steps:
+        - run: |
+            oc login --token=$TOKEN --server=https://api.silver.devops.gov.bc.ca:6443
+            oc project f00029-tools 
+            oc tag nrpti-api:test nrpti-api:test-backup  
+            oc tag nrpti-api:latest nrpti-api:test
+            oc tag nrpti:test nrpti:test-backup 
+            oc tag nrpti:latest nrpti:test
+            oc tag public-nrced:test public-nrced:test-backup  
+            oc tag public-nrced:latest public-nrced:test 
+            echo "Test deployment completed"
+          env:
+            TOKEN: ${{ inputs.token }}
+            
