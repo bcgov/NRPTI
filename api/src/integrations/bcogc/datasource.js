@@ -6,10 +6,10 @@ const { getCsvRowsFromString } = require('../../utils/csv-helpers');
 
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const BCOGC_UTILS_TYPES = require('./bcogc-utils-types-enum');
-const BCOGC_INSPECTIONS_CSV_ENDPOINT = process.env.BCOGC_INSPECTIONS_CSV_ENDPOINT || 'https://reports.bcogc.ca/ogc/f?p=200:501::CSV';
-const BCOGC_ORDERS_CSV_ENDPOINT = process.env.BCOGC_ORDERS_CSV_ENDPOINT || 'https://www.bcogc.ca/data-reports/compliance-enforcement/reports/enforcement-order';
-const BCOGC_PENALTIES_CSV_ENDPOINT = process.env.BCOGC_PENALTIES_CSV_ENDPOINT || 'https://www.bcogc.ca/data-reports/compliance-enforcement/reports/contravention-decision';
-const BCOGC_WARNING_CSV_ENDPOINT = process.env.BCOGC_WARNING_CSV_ENDPOINT  || 'https://www.bcogc.ca/data-reports/compliance-enforcement/reports/warning-letter';
+const BCOGC_INSPECTIONS_CSV_ENDPOINT = process.env.BCOGC_INSPECTIONS_CSV_ENDPOINT || 'https://reports.bc-er.ca/ogc/f?p=200:501::CSV';
+const BCOGC_ORDERS_CSV_ENDPOINT = process.env.BCOGC_ORDERS_CSV_ENDPOINT || 'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/enforcement-order';
+const BCOGC_PENALTIES_CSV_ENDPOINT = process.env.BCOGC_PENALTIES_CSV_ENDPOINT || 'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/contravention-decision';
+const BCOGC_WARNING_CSV_ENDPOINT = process.env.BCOGC_WARNING_CSV_ENDPOINT  || 'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/warning-letter';
 
 class OgcCsvDataSource {
   /**

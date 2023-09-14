@@ -37,7 +37,7 @@ describe('transformRecord', () => {
       'Date Issued': '07/17/2020',
       Proponent: 'Coastal GasLink Pipeline Ltd.',
       Filename: 'Warning-letter-sample.pdf',
-      'File URL': 'https://www.bcogc.ca/some/file/Warning-letter-sample.pdf'
+      'File URL': 'https://www.bc-er.ca/some/file/Warning-letter-sample.pdf'
 
     });
 
@@ -49,7 +49,7 @@ describe('transformRecord', () => {
       dateIssued: expect.any(Date),
       document: {
         fileName: 'Warning-letter-sample.pdf',
-        url: 'https://www.bcogc.ca/some/file/Warning-letter-sample.pdf'
+        url: 'https://www.bc-er.ca/some/file/Warning-letter-sample.pdf'
       },
       issuedTo: { companyName: 'Coastal GasLink Pipeline Ltd.', type: 'Company' },
       issuingAgency: 'BC Energy Regulator',
