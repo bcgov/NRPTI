@@ -36,28 +36,23 @@ export class UpdateIssuingAgencyComponent implements OnInit {
       const matchingCode = Object.keys(this.agencies).find(
         key => this.agencies[key] === this.selectedAgency
       );
-
       if (matchingCode) {
         // Update the agencyList with the new value at the same index
         const index = this.agencyList.indexOf(this.selectedAgency);
         if (index !== -1) {
           this.agencyList[index] = this.newAgency;
         }
-
         // Update the selectedAgency with the new value
         this.selectedAgency = this.newAgency;
-
         // Clear the input field
         this.newAgency = '';
         this.choiceMade = true;
-
         // Update the updatedData object to match the desired layout
         this.updatedData.agencies.push({
           "agencyCode": matchingCode,
           "agencyName": this.selectedAgency
         });
-        this.putRecords(this.updatedData.agencies["agencyCode"], this.updatedData.agencies["agencyName"])
-        alert(JSON.stringify(this.updatedData))
+        this.putRecords(matchingCode, this.selectedAgency);
         this.updatedData.agencies = []
       }
     }
@@ -73,15 +68,11 @@ export class UpdateIssuingAgencyComponent implements OnInit {
           });
         }
         this.agencies = agencies; // Assign the agencies object as an Observable
-        alert(JSON.stringify(this.agencies));
-
         for (const key in agencies) {
           if (agencies.hasOwnProperty(key)) {
             this.agencyList.push(agencies[key]);
           }
         }
-        alert(this.agencyList);
-
       })
       .catch(error => {
         console.error('API call error:', error);

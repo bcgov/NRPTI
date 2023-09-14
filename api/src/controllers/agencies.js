@@ -44,23 +44,31 @@ exports.publicGet = async function(args, res, next) {
 */
 
 exports.protectedPut = async function(args, res, next) {
+
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   let promises = [];
   let result = null;
   let incomingObj = args.swagger.params.data.value;
-  const collectionDB = db.collection('nrpti');
-  for (let agency of incomingObj['agencies']) {
-    promises.push(
-      collectionDB.findOneAndUpdate(
-        { agencyCode: agency['agencyCode'] },
-        {
-          $set: {
-            agencyName: agency['agencyName']
-          }
+  console.log("iiiiiiiiiiiiiiiiiiiii ---->" + JSON.stringify(incomingObj))
+
+  const agencies = incomingObj['agencies'];
+  if (agencies && agencies.length > 0) {
+    const agencyCode = agencies[0]['agencyCode'];
+    const agencyName = agencies[0]['agencyName'];
+
+
+    const collectionDB = db.collection('nrpti');
+
+  promises.push(
+    collectionDB.findOneAndUpdate(
+      { agencyCode: agencyCode },
+      {
+        $set: {
+          agencyName: agencyName
         }
-      )
-    );
-  }
+      }
+    )
+  );}
   try {
     await Promise.all(promises);
     result = 'Success';
