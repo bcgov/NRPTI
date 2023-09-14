@@ -2058,8 +2058,18 @@ paths:
           schema:
             $ref: '#/definitions/Error'
   /list-agencies:
+    x-swagger-router-controller: agencies
+    options:
+      tags:
+        - agencies-list
+      summary: 'list agencies'
+      operationId: publicGet
+      responses:
+        '200':
+          description: "Success"
+        '403':
+          description: 'Access Denied'
     get:
-      x-swagger-router-controller: agencies
       tags:
         - agencies-list
       summary: 'list agencies'
@@ -2070,8 +2080,31 @@ paths:
         '403':
           description: 'Access Denied'
   /update-agencies:
+    x-swagger-router-controller: agencies
+    options:
+      tags:
+        - agencies-update
+      summary: 'update agencies'
+      # security:
+      #   - Bearer: []
+      # x-security-scopes:
+      #   - sysadmin
+      #   - admin:lng
+      #   - admin:wlrs
+      operationId: protectedPut
+      parameters:
+        - in: body
+          name: data
+          description: 'Agency info to be updated'
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateAgencyObject'
+      responses:
+        '200':
+          description: "Success"
+        '403':
+          description: 'Access Denied'
     put:
-      x-swagger-router-controller: agencies
       tags:
         - agencies-update
       summary: 'update agencies'
