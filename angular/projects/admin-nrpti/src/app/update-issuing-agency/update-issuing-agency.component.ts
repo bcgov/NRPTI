@@ -14,8 +14,10 @@ export class UpdateIssuingAgencyComponent implements OnInit {
   choiceMade = false;
   newAgency: string = ''; // Initialize the new agency input field
   agencies: { [key: string]: string } = {"Kyle": "Williams"};
-  agencyList = []
-
+  agencyList: string[] = ["-Select-"]; // Use a string array for agencyList
+  updatedData: any = {
+    "agencies": []
+  };
   constructor(
     private issuingAgencyService: IssuingAgencyService,
     private logger: LoggerService
@@ -28,15 +30,34 @@ export class UpdateIssuingAgencyComponent implements OnInit {
 
   updateSelectedAgency(): void {
     if (this.newAgency.trim() !== '') {
+      // Find the agency code that matches the selected agency name
+      const matchingCode = Object.keys(this.agencies).find(
+        key => this.agencies[key] === this.selectedAgency
+      );
 
-        this.agencies[this.selectedAgency] = this.newAgency;
-        this.selectedAgency = this.newAgency; // Update the selected value
-        this.newAgency = ''; // Clear the input field
+      if (matchingCode) {
+        // Update the agencyList with the new value at the same index
+        const index = this.agencyList.indexOf(this.selectedAgency);
+        if (index !== -1) {
+          this.agencyList[index] = this.newAgency;
+        }
+
+        // Update the selectedAgency with the new value
+        this.selectedAgency = this.newAgency;
+
+        // Clear the input field
+        this.newAgency = '';
         this.choiceMade = true;
-      };
-      alert(this.agencies)
-    }
 
+        // Update the updatedData object to match the desired layout
+        this.updatedData.agencies.push({
+          "agencyCode": matchingCode,
+          "agencyName": this.selectedAgency
+        });
+      }
+    }
+    alert(JSON.stringify(this.updatedData))
+  }
 
   ngOnInit(): void {
     this.issuingAgencyService.getIssuingAgencies()
@@ -44,19 +65,18 @@ export class UpdateIssuingAgencyComponent implements OnInit {
         const agencies = {};
         if (response && Array.isArray(response)) {
           response.forEach(agency => {
-            agencies[agency._id] = agency.agencyName;
+            agencies[agency.agencyCode] = agency.agencyName;
           });
         }
         this.agencies = agencies; // Assign the agencies object as an Observable
-        console.log("IS IT IN THE CONSOLE?")
-        alert(JSON.stringify(this.agencies))
+        alert(JSON.stringify(this.agencies));
 
         for (const key in agencies) {
           if (agencies.hasOwnProperty(key)) {
             this.agencyList.push(agencies[key]);
           }
         }
-        alert(this.agencyList)
+        alert(this.agencyList);
 
       })
       .catch(error => {
