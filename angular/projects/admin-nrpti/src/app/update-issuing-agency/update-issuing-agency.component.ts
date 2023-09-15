@@ -60,6 +60,12 @@ export class UpdateIssuingAgencyComponent implements OnInit {
         this.updatedData.agencies = []
       }
       this.toastService.addMessage('Agency Successfully Updated', 'Success Updated', Constants.ToastTypes.SUCCESS);
+    }else{
+      this.toastService.addMessage(
+        'Updated Agency Name Cannot be Empty',
+        'Save unsuccessful',
+        Constants.ToastTypes.ERROR
+      );
     }
   }
 catch (error) {
