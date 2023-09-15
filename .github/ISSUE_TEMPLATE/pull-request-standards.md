@@ -1,6 +1,6 @@
 ---
 name: Pull Request Standards
-about: Describe this issue template's purpose here.
+about: Used for consistency in pull requests
 title: ''
 labels: Pull Request
 assignees: ''
