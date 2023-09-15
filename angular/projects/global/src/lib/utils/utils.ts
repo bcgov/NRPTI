@@ -1,4 +1,4 @@
-const ApplicationAgencies = {
+const ApplicationAgencies: any = {
   AGENCY_ALC: 'Agricultural Land Commission',
   AGENCY_WF: 'BC Wildfire Service',
   AGENCY_ENV_COS: 'Conservation Officer Service',
@@ -150,17 +150,9 @@ export class Utils {
   }
 
 
-  static displayNameFull(agency): string {
-    switch (agency) {
-      case ApplicationAgencies.AGENCY_AGRI:
-        return 'Ministry of Agriculture and Food';
-      case ApplicationAgencies.AGENCY_EMLI:
-        return 'Ministry of Energy, Mines, and Low Carbon Innovation';
-      case ApplicationAgencies.AGENCY_FLNRO:
-        return 'Ministry of Forests';
-      default:
-        return agency;
-    }
+  static displayNameFull(agencyCode): string {
+    const agencyList = ApplicationAgencyList;
+    return agencyList[agencyCode] || agencyCode;
   }
 
   static displayNameAcronym(agency): string {

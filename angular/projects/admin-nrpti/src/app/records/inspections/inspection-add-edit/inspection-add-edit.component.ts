@@ -514,8 +514,8 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
     return Utils.convertAcronyms(acronym);
   }
 
-  displayName(agency) {
-    return Utils.displayNameFull(agency);
+  displayName(agencyCode) {
+    return Utils.displayNameFull(agencyCode);
   }
 
   cancel() {

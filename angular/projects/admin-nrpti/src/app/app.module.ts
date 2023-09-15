@@ -44,6 +44,7 @@ import { RecordService } from './services/record.service';
 import { TaskService } from './services/task.service';
 import { ConfigService, LoggerService } from 'nrpti-angular-components';
 import { NewsService } from './services/news.service';
+import { ApplicationAgencyService } from './services/applicationAgency.service';
 
 // resolvers
 import { ImportListResolver } from './import/import-list-resolver';
@@ -60,12 +61,13 @@ import { RecordUtils } from './records/utils/record-utils';
 import { CollectionService } from './services/collection.service';
 
 
-export function initConfig(configService: ConfigService, keycloakService: KeycloakService) {
+export function initConfig(configService: ConfigService, keycloakService: KeycloakService, applicationAgency: ApplicationAgencyService) {
   return async () => {
     await configService.init();
     await keycloakService.init();
-  };
-}
+    await applicationAgency.init();
+  }
+};
 
 export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrategy {
   return () => overlay.scrollStrategies.close();
@@ -110,7 +112,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     {
       provide: APP_INITIALIZER,
       useFactory: initConfig,
-      deps: [ConfigService, KeycloakService],
+      deps: [ConfigService, KeycloakService, ApplicationAgencyService],
       multi: true
     },
     {
@@ -131,6 +133,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     NewsService,
     CollectionService,
     KeycloakService,
+    ApplicationAgencyService,
     LoggerService,
     TaskService,
     ImportListResolver,

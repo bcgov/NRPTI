@@ -13,6 +13,7 @@ import { NewsService } from './news.service';
 import { CollectionService } from './collection.service';
 import { MineService } from './mine.service';
 import { MapLayerInfoService } from './map-layer-info.service';
+import { ApplicationAgencyService } from './applicationAgency.service';
 
 /**
  * Facade service for all admin-nrpti services.
@@ -35,6 +36,7 @@ export class FactoryService {
   private _documentService: DocumentService;
   private _configService: ConfigService;
   private _mapLayerInfoService: MapLayerInfoService;
+  private _applicationAgencyService: ApplicationAgencyService;
 
   constructor(private injector: Injector) {
     // The following items are loaded by a file that is only present on cluster builds.
@@ -625,4 +627,19 @@ export class FactoryService {
   public updateMapLayerInfo(mapLayerInfo): Promise<any> {
     return this.mapLayerInfoService.updateMapLayerInfo(mapLayerInfo);
   }
+
+  /**
+   * Inject agencies service if it hasn't already been injected.
+   *
+   * @readonly
+   * @type {ApplicationAgencyService}
+   * @memberof FactoryService
+   */
+    public get applicationAgencyService(): ApplicationAgencyService {
+      if (!this._applicationAgencyService) {
+        this._applicationAgencyService = this.injector.get(ApplicationAgencyService);
+      }
+  
+      return this._applicationAgencyService;
+    }
 }
