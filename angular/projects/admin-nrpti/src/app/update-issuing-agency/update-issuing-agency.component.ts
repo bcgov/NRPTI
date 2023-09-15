@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { IssuingAgencyService } from '../services/issuingagency.service';
 import { LoggerService } from 'nrpti-angular-components';
+import { Constants } from '../utils/constants/misc';
+import { ToastService } from '../services/toast.service';
 // import { Observable, of } from 'rxjs';
 
 @Component({
@@ -20,7 +22,8 @@ export class UpdateIssuingAgencyComponent implements OnInit {
   };
   constructor(
     private issuingAgencyService: IssuingAgencyService,
-    private logger: LoggerService
+    private logger: LoggerService,
+    private toastService: ToastService
   ) {}
 
   onSelected(value: string): void {
@@ -31,6 +34,7 @@ export class UpdateIssuingAgencyComponent implements OnInit {
     this.issuingAgencyService.updateAgency(agencyCode, agencyName)
   }
   updateSelectedAgency(): void {
+    try{
     if (this.newAgency.trim() !== '') {
       // Find the agency code that matches the selected agency name
       const matchingCode = Object.keys(this.agencies).find(
@@ -55,7 +59,16 @@ export class UpdateIssuingAgencyComponent implements OnInit {
         this.putRecords(matchingCode, this.selectedAgency);
         this.updatedData.agencies = []
       }
+      this.toastService.addMessage('Agency Successfully Updated', 'Success Updated', Constants.ToastTypes.SUCCESS);
     }
+  }
+catch (error) {
+  this.toastService.addMessage(
+    'An error has occured while saving',
+    'Save unsuccessful',
+    Constants.ToastTypes.ERROR
+  );
+}
   }
 
   ngOnInit(): void {
