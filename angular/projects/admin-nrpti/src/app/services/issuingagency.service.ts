@@ -21,7 +21,6 @@ export class IssuingAgencyService {
     const apiUrl = `${this.apiService.pathAPI}/update-agencies`;
     let updatedAgency = { "agencies": [{"agencyCode": agencyCode, "agencyName": agencyName}]}; // Wrap the array in an object
     console.log(JSON.stringify(updatedAgency));
-    alert(updatedAgency);
     return this.http.put<any>(apiUrl, updatedAgency)
       .toPromise()
       .catch((error) => {

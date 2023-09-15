@@ -2085,12 +2085,6 @@ paths:
       tags:
         - agencies-update
       summary: 'update agencies'
-      # security:
-      #   - Bearer: []
-      # x-security-scopes:
-      #   - sysadmin
-      #   - admin:lng
-      #   - admin:wlrs
       operationId: protectedPut
       parameters:
         - in: body
@@ -2108,12 +2102,12 @@ paths:
       tags:
         - agencies-update
       summary: 'update agencies'
-      # security:
-      #   - Bearer: []
-      # x-security-scopes:
-      #   - sysadmin
-      #   - admin:lng
-      #   - admin:wlrs
+      security:
+        - Bearer: []
+      x-security-scopes:
+        - sysadmin
+        - admin:lng
+        - admin:wlrs
       operationId: protectedPut
       parameters:
         - in: body

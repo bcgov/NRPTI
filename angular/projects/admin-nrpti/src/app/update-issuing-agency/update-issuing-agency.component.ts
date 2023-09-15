@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IssuingAgencyService } from '../services/issuingagency.service';
 import { LoggerService } from 'nrpti-angular-components';
-import { Observable, of } from 'rxjs';
+// import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-update-issuing-agency',
