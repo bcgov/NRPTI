@@ -4,9 +4,14 @@
   <!-- Dropdown for selecting an agency -->
   <div class="dropDownArea">
     <label>Select The Agency You Would Like to Update: </label><br>
-    <select (change)="onSelected($event.target.value)">
+    <!-- <select (change)="onSelected($event.target.value)">
+      <option *ngFor="let agency of agencyList" [value]="agency">{{ agency }}</option>
+    </select> -->
+    
+    <select _ngcontent-ity-c12="" class="form-control ng-pristine ng-valid ng-touched" (change)="onSelected($event.target.value)">
       <option *ngFor="let agency of agencyList" [value]="agency">{{ agency }}</option>
     </select>
+
   </div>
 
   <!-- Text field for entering a new agency -->
