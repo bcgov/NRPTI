@@ -53,8 +53,8 @@ export class InspectionDetailComponent extends RecordDetailComponent implements 
       this.disableEdit();
 
       this.changeDetectionRef.detectChanges();
-      this.getIssuingAgencyList();
     });
+    this.getIssuingAgencyMap();
   }
 
   populateTextFields() {
@@ -75,20 +75,11 @@ export class InspectionDetailComponent extends RecordDetailComponent implements 
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
-
-  getIssuingAgencyList = () => {
-    this.issuingAgencyService
-      .getIssuingAgencies()
-      .then(response => {
-        if (response && Array.isArray(response)) {
-          this.issuingAgencyMap = response.reduce((result, item) => {
-            result[item.agencyCode] = item.agencyName;
-            return result;
-          }, {});
-        }
-      })
-      .catch(error => {
-        console.error('API call error:', error);
-      });
+  getIssuingAgencyMap = async () => {
+    try {
+      this.issuingAgencyMap = await this.issuingAgencyService.getIssuingAgencyMap();
+    } catch (error) {
+      console.error(' getIssuingAgencyMap() API call error');
+    }
   };
 }
