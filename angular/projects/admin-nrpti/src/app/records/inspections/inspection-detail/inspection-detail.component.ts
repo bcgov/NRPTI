@@ -7,7 +7,7 @@ import { RecordDetailComponent } from '../../utils/record-component';
 import { RecordUtils } from '../../utils/record-utils';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { FactoryService } from '../../../services/factory.service';
-import { Utils } from 'nrpti-angular-components';
+import { IssuingAgencyService } from '../../../services/issuingagency.service';
 
 @Component({
   selector: 'app-inspection-detail',
@@ -19,11 +19,14 @@ export class InspectionDetailComponent extends RecordDetailComponent implements 
 
   public legislationString = '';
 
+  public issuingAgencyMap = {};
+
   constructor(
     public route: ActivatedRoute,
     public router: Router,
     public changeDetectionRef: ChangeDetectorRef,
-    public factoryService: FactoryService
+    public factoryService: FactoryService,
+    private issuingAgencyService: IssuingAgencyService
   ) {
     super(factoryService);
   }
@@ -50,6 +53,7 @@ export class InspectionDetailComponent extends RecordDetailComponent implements 
       this.disableEdit();
 
       this.changeDetectionRef.detectChanges();
+      this.getIssuingAgencyList();
     });
   }
 
@@ -64,11 +68,27 @@ export class InspectionDetailComponent extends RecordDetailComponent implements 
   }
 
   displayName(agency) {
-    return Utils.displayNameFull(agency);
+    return this.issuingAgencyMap[agency];
   }
 
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
+
+  getIssuingAgencyList = () => {
+    this.issuingAgencyService
+      .getIssuingAgencies()
+      .then(response => {
+        if (response && Array.isArray(response)) {
+          this.issuingAgencyMap = response.reduce((result, item) => {
+            result[item.agencyCode] = item.agencyName;
+            return result;
+          }, {});
+        }
+      })
+      .catch(error => {
+        console.error('API call error:', error);
+      });
+  };
 }
