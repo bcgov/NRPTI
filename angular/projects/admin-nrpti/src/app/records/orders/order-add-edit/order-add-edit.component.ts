@@ -10,6 +10,7 @@ import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/uti
 import { RecordUtils } from '../../utils/record-utils';
 import { LoadingScreenService, StoreService, LoggerService } from 'nrpti-angular-components';
 import { Constants } from '../../../utils/constants/misc';
+import { IssuingAgencyService } from '../../../services/issuingagency.service';
 
 @Component({
   selector: 'app-order-add-edit',
@@ -33,7 +34,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
 
   // Pick lists
   public orderSubtypePicklist = Picklists.orderSubtypePicklist;
-  public agencies = Picklists.agencyPicklist;
+  public agencies = Picklists.agencyCodePicklist;
   public authors = Picklists.authorPicklist;
   public outcomeStatuses = Picklists.outcomeStatusPicklist;
   private defaultAgency = '';
@@ -45,6 +46,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
 
   public datepickerMinDate = Constants.DatepickerMinDate;
   public datepickerMaxDate = Constants.DatepickerMaxDate;
+  public issuingAgencyMap = {};
 
   constructor(
     public route: ActivatedRoute,
@@ -55,7 +57,8 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     private logger: LoggerService,
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
-    private _changeDetectionRef: ChangeDetectorRef
+    private _changeDetectionRef: ChangeDetectorRef,
+    private issuingAgencyService: IssuingAgencyService
   ) { }
 
   ngOnInit() {
@@ -81,6 +84,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
       this.loading = false;
       this._changeDetectionRef.detectChanges();
     });
+    this.getIssuingAgencyMap();
   }
 
   private populateTextFields() {
@@ -522,8 +526,16 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
   }
 
   displayName(agency) {
-    return Utils.displayNameFull(agency);
+    return this.issuingAgencyMap[agency] || agency;
   }
+
+  getIssuingAgencyMap = async () => {
+    try {
+      this.issuingAgencyMap = await this.issuingAgencyService.getIssuingAgencyMap();
+    } catch (error) {
+      console.error(' getIssuingAgencyMap() API call error');
+    }
+  };
 
   cancel() {
     const shouldCancel = confirm(

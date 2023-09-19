@@ -333,6 +333,20 @@ export class Constants {
     [Constants.ApplicationRoles.ADMIN_WLRS]: ['Ministry of Water, Land and Resource Stewardship']
   };
 
+  public static readonly RoleAgencyCodePickList: any = {
+    [Constants.ApplicationRoles.ADMIN_WF]: ['AGENCY_WF'],
+    [Constants.ApplicationRoles.ADMIN_FLNRO]: [
+      'AGENCY_ENV'
+    ],
+    [Constants.ApplicationRoles.ADMIN_FLNR_NRO]: ['AGENCY_FLNR_NRO'],
+    [Constants.ApplicationRoles.ADMIN_AGRI]: ['AGENCY_AGRI'],
+    [Constants.ApplicationRoles.ADMIN_ENV_EPD]: ['AGENCY_ENV_EPD'],
+    [Constants.ApplicationRoles.ADMIN_ENV_COS]: ['AGENCY_ENV_COS'],
+    [Constants.ApplicationRoles.ADMIN_ENV_BCPARKS]: ['AGENCY_ENV_BCPARKS'],
+    [Constants.ApplicationRoles.ADMIN_ALC]: ['AGENCY_ALC'],
+    [Constants.ApplicationRoles.ADMIN_WLRS]: ['AGENCY_WLRS']
+  };
+
   public static readonly LngSectionPickList: string[] = [
     'Section 1',
     'Section 2',

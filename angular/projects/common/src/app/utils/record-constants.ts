@@ -178,6 +178,25 @@ export class Picklists {
     'Natural Resource Officers',
   ];
 
+  public static readonly agencyCodePicklist = [
+    'AGENCY_ALC',
+    'AGENCY_OGC',
+    'AGENCY_ENV_BCPARKS',
+    'AGENCY_WF',
+    'Climate Action Secretariat',
+    'AGENCY_ENV_COS',
+    'AGENCY_EAO',
+    'AGENCY_LNG',
+    'AGENCY_AGRI',
+    'AGENCY_EMLI',
+    'AGENCY_ENV',
+    'AGENCY_FLNRO',
+    'AGENCY_WLRS',
+    'AGENCY_FLNR_NRO',
+  ];
+
+  
+
   public static readonly entityTypePicklist = ['Company', 'Individual'];
 
   public static readonly authorPicklist = ['BC Government', 'Proponent', 'Other'];
