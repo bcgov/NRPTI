@@ -35,6 +35,7 @@ exports.up = async function (db) {
     { agencyCode: "AGENCY_FLNRO", agencyName: 'Ministry of Forests' },
     { agencyCode: "AGENCY_FLNR_NRO", agencyName: 'Natural Resource Officers' },
     { agencyCode: "AGENCY_WLRS", agencyName: 'Ministry of Water, Land and Resource Stewardship' },
+    { agencyCode: "AGENCY_CAS", agencyName: 'Climate Action Secretariat' },
   ]
 
   try {
