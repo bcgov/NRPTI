@@ -36,7 +36,7 @@ export class FactoryService {
   private _documentService: DocumentService;
   private _configService: ConfigService;
   private _mapLayerInfoService: MapLayerInfoService;
-  private _applicationAgencyService: ApplicationAgencyService;
+  private agencies: { [key: string]: string } = {};
 
   constructor(private injector: Injector) {
     // The following items are loaded by a file that is only present on cluster builds.
@@ -629,17 +629,21 @@ export class FactoryService {
   }
 
   /**
-   * Inject agencies service if it hasn't already been injected.
+   * Get agency data. If data is not cached, fetch it from the ApplicationAgencyService.
    *
    * @readonly
-   * @type {ApplicationAgencyService}
+   * @type {{ [key: string]: string }}
    * @memberof FactoryService
    */
-    public get applicationAgencyService(): ApplicationAgencyService {
-      if (!this._applicationAgencyService) {
-        this._applicationAgencyService = this.injector.get(ApplicationAgencyService);
-      }
-  
-      return this._applicationAgencyService;
+  public get agencyData(): { [key: string]: string } {
+    if (Object.keys(this.agencies).length === 0) {
+      // Data is not in the cache, fetch it from the ApplicationAgencyService.
+      const applicationAgencyService = this.injector.get(ApplicationAgencyService);
+      applicationAgencyService.refreshAgencies().subscribe(() => {
+        // Once data is fetched and updated in the service, retrieve it and store it in the cache.
+        this.agencies = applicationAgencyService.getAgencies();
+      });
     }
+    return this.agencies;
+  }
 }

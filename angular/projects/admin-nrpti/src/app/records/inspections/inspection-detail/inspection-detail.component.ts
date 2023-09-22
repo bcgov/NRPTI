@@ -7,7 +7,7 @@ import { RecordDetailComponent } from '../../utils/record-component';
 import { RecordUtils } from '../../utils/record-utils';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { FactoryService } from '../../../services/factory.service';
-import { IssuingAgencyService } from '../../../services/issuingagency.service';
+import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
   selector: 'app-inspection-detail',
@@ -19,14 +19,11 @@ export class InspectionDetailComponent extends RecordDetailComponent implements 
 
   public legislationString = '';
 
-  public issuingAgencyMap = {};
-
   constructor(
     public route: ActivatedRoute,
     public router: Router,
     public changeDetectionRef: ChangeDetectorRef,
     public factoryService: FactoryService,
-    private issuingAgencyService: IssuingAgencyService
   ) {
     super(factoryService);
   }
@@ -54,7 +51,6 @@ export class InspectionDetailComponent extends RecordDetailComponent implements 
 
       this.changeDetectionRef.detectChanges();
     });
-    this.getIssuingAgencyMap();
   }
 
   populateTextFields() {
@@ -68,18 +64,12 @@ export class InspectionDetailComponent extends RecordDetailComponent implements 
   }
 
   displayName(agency) {
-    return this.issuingAgencyMap[agency];
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
-  getIssuingAgencyMap = async () => {
-    try {
-      this.issuingAgencyMap = await this.issuingAgencyService.getIssuingAgencyMap();
-    } catch (error) {
-      console.error(' getIssuingAgencyMap() API call error');
-    }
-  };
 }
