@@ -61,7 +61,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     protected storeService: StoreService,
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
       this.isEditing = res.breadcrumb !== 'Add Administrative Penalty';
       if (this.isEditing) {
@@ -85,20 +85,6 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
 
       this.loading = false;
       this._changeDetectionRef.detectChanges();
-
-      this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe(async (res: any) => {
-        this.agencies = await this.fetchAgencies();
-        this.buildForm();
-      });
-    });
-  }
-
-  private async fetchAgencies(): Promise<any[]> {
-    return new Promise<any[]>((resolve) => {
-      setTimeout(() => {
-        const agenciesData = Picklists.getAgencyNames(this.factoryService);
-        resolve(agenciesData);
-      }, 1000);
     });
   }
 
