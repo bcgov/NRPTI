@@ -11,7 +11,6 @@ import { RecordUtils } from '../../utils/record-utils';
 import { LoadingScreenService, LoggerService, StoreService } from 'nrpti-angular-components';
 import { Constants } from '../../../utils/constants/misc';
 
-
 @Component({
   selector: 'app-administrative-penalty-add-edit',
   templateUrl: './administrative-penalty-add-edit.component.html',
@@ -37,7 +36,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
   public bcmiPublishSubtext = 'Not published';
 
   // Pick lists
-  public agencies = Picklists.agencyPicklist;
+  public agencies = Picklists.getAgencyNames(this.factoryService);
   public authors = Picklists.authorPicklist;
   public defaultAgency = '';
 

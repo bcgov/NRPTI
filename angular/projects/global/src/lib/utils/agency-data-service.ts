@@ -10,4 +10,14 @@ export class AgencyDataService {
     const agencyList = this.factoryService.agencyData;
     return agencyList[agencyCode] || agencyCode;
   }
+
+  getAgencyCodes(): string[] {
+    const agencyList = this.factoryService.agencyData;
+    return Object.keys(agencyList);
+  }
+
+  getAgencyNames(): string[] {
+    const agencyList = this.factoryService.agencyData;
+    return Object.values(agencyList);
+  }
 }
