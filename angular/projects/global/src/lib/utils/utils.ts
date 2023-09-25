@@ -15,7 +15,7 @@ const ApplicationAgencies: any = {
   AGENCY_WLRS: 'Ministry of Water, Land and Resource Stewardship',
 };
 
-export var ApplicationAgencyList = {
+export const ApplicationAgencyList = {
   AGENCY_ALC: 'Agricultural Land Commission',
   AGENCY_WF: 'BC Wildfire Service',
   AGENCY_ENV_COS: 'Conservation Officer Service',

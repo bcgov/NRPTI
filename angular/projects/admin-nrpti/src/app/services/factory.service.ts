@@ -13,7 +13,7 @@ import { NewsService } from './news.service';
 import { CollectionService } from './collection.service';
 import { MineService } from './mine.service';
 import { MapLayerInfoService } from './map-layer-info.service';
-import { ApplicationAgencyService } from './applicationAgency.service';
+import { ApplicationAgencyService } from './application-agency.service';
 
 /**
  * Facade service for all admin-nrpti services.

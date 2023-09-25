@@ -44,7 +44,7 @@ import { RecordService } from './services/record.service';
 import { TaskService } from './services/task.service';
 import { ConfigService, LoggerService } from 'nrpti-angular-components';
 import { NewsService } from './services/news.service';
-import { ApplicationAgencyService } from './services/applicationAgency.service';
+import { ApplicationAgencyService } from './services/application-agency.service';
 
 // resolvers
 import { ImportListResolver } from './import/import-list-resolver';
