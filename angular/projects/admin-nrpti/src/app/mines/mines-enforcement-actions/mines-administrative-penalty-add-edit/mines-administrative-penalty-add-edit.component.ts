@@ -45,7 +45,7 @@ export class MinesAdministrativePenaltyAddEditComponent extends AdministrativePe
     );
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
       this.isEditing = res.breadcrumb !== 'Add Administrative Penalty';
       if (this.isEditing) {

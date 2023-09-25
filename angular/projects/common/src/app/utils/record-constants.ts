@@ -177,7 +177,7 @@ export class Picklists {
     'Ministry of Energy Mines and Low Carbon Innovation 1',
     'Ministry of Environment and Climate Change Strategy 1',
     'Ministry of Forests 1',
-    'Ministry of Wate 1r, Land and Resource Stewardship 1',
+    'Ministry of Water, Land and Resource Stewardship 1',
     'Natural Resource Officers 1',
   ];
 
