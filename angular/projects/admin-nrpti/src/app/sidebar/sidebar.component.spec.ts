@@ -38,7 +38,7 @@ describe('SidebarComponent', () => {
         case Constants.Menus.ENTITIES: retVal = false; break;
         case Constants.Menus.IMPORTS: retVal = true; break;
         case Constants.Menus.COMMUNICATIONS: retVal = true; break;
-        case Constants.Menus.UPDATE_ISSUING_AGENCY: retVal = true; break;
+        case Constants.Menus.AGENCIES: retVal = true; break;
       }
       return retVal;
     }
@@ -71,7 +71,7 @@ describe('SidebarComponent', () => {
     expect(component.keycloakService.isMenuEnabled(Constants.Menus.ENTITIES)).toEqual(false);
     expect(component.keycloakService.isMenuEnabled(Constants.Menus.IMPORTS)).toEqual(true);
     expect(component.keycloakService.isMenuEnabled(Constants.Menus.COMMUNICATIONS)).toEqual(true);
-    expect(component.keycloakService.isMenuEnabled(Constants.Menus.UPDATE_ISSUING_AGENCY)).toEqual(true);
+    expect(component.keycloakService.isMenuEnabled(Constants.Menus.AGENCIES)).toEqual(true);
     expect(component.keycloakService.isMenuEnabled('Something Not Here')).toEqual(false);
 
     expect(component).toBeTruthy();

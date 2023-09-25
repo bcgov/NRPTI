@@ -49,7 +49,7 @@ export class Constants {
     ENTITIES: 'Entities',
     IMPORTS: 'Imports',
     COMMUNICATIONS: 'Communications',
-    UPDATE_ISSUING_AGENCY: 'Update Issuing Agency'
+    AGENCIES: 'Agencies'
   };
 
   public static readonly RecordTypes: any = {
