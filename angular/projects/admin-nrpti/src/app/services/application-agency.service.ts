@@ -25,7 +25,9 @@ export class ApplicationAgencyService {
           // Data transformation to make the data easier to work with
           const agencyList = {};
           for (const record in response) {
-            agencyList[response[record]['agencyCode']] = response[record]['agencyName'];
+            if (response.hasOwnProperty(record)) {
+              agencyList[response[record]['agencyCode']] = response[record]['agencyName'];
+            }
           }
           this.agencies = agencyList;
           observer.next();
