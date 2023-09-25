@@ -31,7 +31,6 @@ export class ApplicationAgencyService {
                         agencyList[response[record]["agencyCode"]] = response[record]["agencyName"]
                     }
                     this.agencies = agencyList;
-
                     observer.next();
                     observer.complete();
                 },

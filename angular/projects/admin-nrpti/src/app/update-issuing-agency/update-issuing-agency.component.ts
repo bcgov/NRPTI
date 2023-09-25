@@ -3,7 +3,7 @@ import { IssuingAgencyService } from '../services/issuingagency.service';
 import { LoggerService } from 'nrpti-angular-components';
 import { Constants } from '../utils/constants/misc';
 import { ToastService } from '../services/toast.service';
-// import { Observable, of } from 'rxjs';
+import { FactoryService } from '../../../../admin-nrpti/src/app/services/factory.service';
 
 @Component({
   selector: 'app-update-issuing-agency',
@@ -23,15 +23,23 @@ export class UpdateIssuingAgencyComponent implements OnInit {
   constructor(
     private issuingAgencyService: IssuingAgencyService,
     private logger: LoggerService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private factoryService: FactoryService,
   ) {}
 
   onSelected(value: string): void {
     this.selectedAgency = value;
     this.choiceMade = true;
   }
-  putRecords(agencyCode: any, agencyName: any){
+  putRecords(agencyCode: any, agencyName: any) {
     this.issuingAgencyService.updateAgency(agencyCode, agencyName)
+      .then(() => {
+        // Once record is updated, refresh the agencies
+        this.refreshAgencies();
+      });
+  }
+  refreshAgencies (){
+    this.factoryService.applicationAgencyService.refreshAgencies().subscribe();
   }
   updateSelectedAgency(): void {
     try{
