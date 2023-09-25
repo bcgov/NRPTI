@@ -36,7 +36,7 @@ export class FactoryService {
   private _documentService: DocumentService;
   private _configService: ConfigService;
   private _mapLayerInfoService: MapLayerInfoService;
-  private _applicationAgencyService: ApplicationAgencyService
+  private _applicationAgencyService: ApplicationAgencyService;
 
   constructor(private injector: Injector) {
     // The following items are loaded by a file that is only present on cluster builds.
@@ -256,7 +256,6 @@ export class FactoryService {
   }
 
   isFlavourEditEnabled(requiredRoles: string[]) {
-
     for (const role of requiredRoles) {
       if (this.userInRole(role)) {
         return true;
@@ -618,13 +617,13 @@ export class FactoryService {
 
     return isInsert
       ? this.recordService
-        .createRecord(dataPackage)
-        .pipe(catchError(error => this.apiService.handleError(error)))
-        .toPromise()
+          .createRecord(dataPackage)
+          .pipe(catchError(error => this.apiService.handleError(error)))
+          .toPromise()
       : this.recordService
-        .editRecord(dataPackage)
-        .pipe(catchError(error => this.apiService.handleError(error)))
-        .toPromise();
+          .editRecord(dataPackage)
+          .pipe(catchError(error => this.apiService.handleError(error)))
+          .toPromise();
   }
 
   public createConfigData(configData, application): Promise<object> {
@@ -650,11 +649,11 @@ export class FactoryService {
    * @memberof FactoryService
    */
   public getApplicationAgencyService(): Observable<void> {
-      if (Object.keys(this.applicationAgencyService.getAgencies).length === 0) {
-        this.applicationAgencyService.refreshAgencies().subscribe(() => {
-          this.applicationAgencyService.getAgencies();
-        });
-      }
-      return this.applicationAgencyService.refreshAgencies();
+    if (Object.keys(this.applicationAgencyService.getAgencies).length === 0) {
+      this.applicationAgencyService.refreshAgencies().subscribe(() => {
+        this.applicationAgencyService.getAgencies();
+      });
+    }
+    return this.applicationAgencyService.refreshAgencies();
   }
 }

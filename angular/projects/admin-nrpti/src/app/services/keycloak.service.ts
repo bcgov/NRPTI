@@ -163,7 +163,7 @@ export class KeycloakService {
       roles.includes(Constants.ApplicationRoles.ADMIN_BCMI);
 
     this.menus[Constants.Menus.AGENCIES] =
-      roles.includes(Constants.ApplicationRoles.ADMIN)
+      roles.includes(Constants.ApplicationRoles.ADMIN);
   }
 
   buildAddRecordDropdownCache(roles) {

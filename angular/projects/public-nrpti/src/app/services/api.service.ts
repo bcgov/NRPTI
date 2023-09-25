@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 
 import { Document } from '../../../../common/src/app/models/document';
-import { Utils, ConfigService , LoggerService} from 'nrpti-angular-components';
+import { Utils, ConfigService, LoggerService } from 'nrpti-angular-components';
 
 /**
  * TODO: populate this documentation
@@ -19,17 +19,12 @@ export class ApiService {
   pathAPI: string;
   env: 'local' | 'dev' | 'test' | 'prod';
 
-  constructor(
-    public http: HttpClient,
-    private configService: ConfigService,
-    private logger: LoggerService
-    ) {
-      this.isMS = window.navigator.msSaveOrOpenBlob ? true : false;
+  constructor(public http: HttpClient, private configService: ConfigService, private logger: LoggerService) {
+    this.isMS = window.navigator.msSaveOrOpenBlob ? true : false;
 
-      this.env     = this.configService.config['ENVIRONMENT'];
+    this.env = this.configService.config['ENVIRONMENT'];
 
-      this.pathAPI = this.configService.config['API_LOCATION']
-                     + this.configService.config['API_PUBLIC_PATH'];
+    this.pathAPI = this.configService.config['API_LOCATION'] + this.configService.config['API_PUBLIC_PATH'];
   }
 
   /**

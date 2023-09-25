@@ -12,7 +12,6 @@ import { CommonModule as NrptiCommonModule } from '../../../../common/src/app/co
 import { AgenciesComponent } from './agencies.component';
 import { AgenciesResolver } from './agencies.resolver';
 
-
 @NgModule({
   imports: [
     BrowserModule,
@@ -23,17 +22,11 @@ import { AgenciesResolver } from './agencies.resolver';
     GlobalModule,
     NrptiCommonModule,
     RouterModule,
-    NgbModule,
+    NgbModule
   ],
-  declarations: [
-    AgenciesComponent
-  ],
-  providers: [
-    AgenciesResolver
-  ],
-  entryComponents: [
-    AgenciesComponent
-  ],
+  declarations: [AgenciesComponent],
+  providers: [AgenciesResolver],
+  entryComponents: [AgenciesComponent],
   exports: []
 })
 export class AgenciesModule {}

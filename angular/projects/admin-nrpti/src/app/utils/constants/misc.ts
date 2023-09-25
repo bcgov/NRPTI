@@ -321,9 +321,7 @@ export class Constants {
 
   public static readonly RoleAgencyPickList: any = {
     [Constants.ApplicationRoles.ADMIN_WF]: ['BC Wildfire Service'],
-    [Constants.ApplicationRoles.ADMIN_FLNRO]: [
-      'Ministry of Environment and Climate Change Strategy'
-    ],
+    [Constants.ApplicationRoles.ADMIN_FLNRO]: ['Ministry of Environment and Climate Change Strategy'],
     [Constants.ApplicationRoles.ADMIN_FLNR_NRO]: ['Natural Resource Officers'],
     [Constants.ApplicationRoles.ADMIN_AGRI]: ['Ministry of Agriculture and Food'],
     [Constants.ApplicationRoles.ADMIN_ENV_EPD]: ['Ministry of Environment and Climate Change Strategy'],
@@ -335,9 +333,7 @@ export class Constants {
 
   public static readonly RoleAgencyCodePickList: any = {
     [Constants.ApplicationRoles.ADMIN_WF]: ['AGENCY_WF'],
-    [Constants.ApplicationRoles.ADMIN_FLNRO]: [
-      'AGENCY_ENV'
-    ],
+    [Constants.ApplicationRoles.ADMIN_FLNRO]: ['AGENCY_ENV'],
     [Constants.ApplicationRoles.ADMIN_FLNR_NRO]: ['AGENCY_FLNR_NRO'],
     [Constants.ApplicationRoles.ADMIN_AGRI]: ['AGENCY_AGRI'],
     [Constants.ApplicationRoles.ADMIN_ENV_EPD]: ['AGENCY_ENV_EPD'],

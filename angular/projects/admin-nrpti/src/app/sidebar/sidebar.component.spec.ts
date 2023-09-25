@@ -16,7 +16,7 @@ describe('SidebarComponent', () => {
 
   const mockStoreService = {
     change: of(),
-    toggleSideNave: () => { }
+    toggleSideNave: () => {}
   };
 
   const mockLoadingScreenService = {
@@ -27,24 +27,42 @@ describe('SidebarComponent', () => {
   };
 
   const mockKeyCloakService = {
-    isMenuEnabled: (menuName) => {
+    isMenuEnabled: menuName => {
       let retVal = false;
       switch (menuName) {
-        case Constants.Menus.ALL_MINES: retVal = true; break;
-        case Constants.Menus.ALL_RECORDS: retVal = true; break;
-        case Constants.Menus.NEWS_LIST: retVal = true; break;
-        case Constants.Menus.ANALYTICS: retVal = false; break;
-        case Constants.Menus.MAP: retVal = false; break;
-        case Constants.Menus.ENTITIES: retVal = false; break;
-        case Constants.Menus.IMPORTS: retVal = true; break;
-        case Constants.Menus.COMMUNICATIONS: retVal = true; break;
-        case Constants.Menus.AGENCIES: retVal = true; break;
+        case Constants.Menus.ALL_MINES:
+          retVal = true;
+          break;
+        case Constants.Menus.ALL_RECORDS:
+          retVal = true;
+          break;
+        case Constants.Menus.NEWS_LIST:
+          retVal = true;
+          break;
+        case Constants.Menus.ANALYTICS:
+          retVal = false;
+          break;
+        case Constants.Menus.MAP:
+          retVal = false;
+          break;
+        case Constants.Menus.ENTITIES:
+          retVal = false;
+          break;
+        case Constants.Menus.IMPORTS:
+          retVal = true;
+          break;
+        case Constants.Menus.COMMUNICATIONS:
+          retVal = true;
+          break;
+        case Constants.Menus.AGENCIES:
+          retVal = true;
+          break;
       }
       return retVal;
     }
   };
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
       declarations: [SidebarComponent],
@@ -55,7 +73,7 @@ describe('SidebarComponent', () => {
         { provide: KeycloakService, useValue: mockKeyCloakService }
       ]
     }).compileComponents();
-  }));
+  });
 
   it('sidebar menu should render properly', () => {
     const routerMock = TestBed.get(Router);

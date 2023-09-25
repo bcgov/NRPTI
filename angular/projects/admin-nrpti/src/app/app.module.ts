@@ -60,14 +60,17 @@ import { TokenInterceptor } from './utils/token-interceptor';
 import { RecordUtils } from './records/utils/record-utils';
 import { CollectionService } from './services/collection.service';
 
-
-export function initConfig(configService: ConfigService, keycloakService: KeycloakService, applicationAgency: ApplicationAgencyService) {
+export function initConfig(
+  configService: ConfigService,
+  keycloakService: KeycloakService,
+  applicationAgency: ApplicationAgencyService
+) {
   return async () => {
     await configService.init();
     await keycloakService.init();
     await applicationAgency.init();
-  }
-};
+  };
+}
 
 export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrategy {
   return () => overlay.scrollStrategies.close();
@@ -141,7 +144,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     NewsListResolver,
     CanActivateGuard,
     CanDeactivateGuard,
-    RecordUtils,
+    RecordUtils
   ],
   entryComponents: [ConfirmComponent, HomeComponent, ImportComponent, ImportTableRowsComponent],
   bootstrap: [AppComponent]

@@ -23,11 +23,9 @@ export class SearchSubsets {
 }
 
 export class Constants {
-
   // Datepicker is off by one so add one to the desired year.
   public static readonly DatepickerMinDate = new Date('1901');
   public static readonly DatepickerMaxDate = new Date();
-
 }
 /**
  * Schema lists for search.
@@ -138,7 +136,6 @@ export enum StateStatus {
  * @class Picklists
  */
 export class Picklists {
-
   public static readonly orderSubtypePicklist = ['None', 'Cease', 'Remedy', 'Stop Work', 'Other'];
   public static readonly permitSubtypePicklist = ['Ancillary Site', 'General', 'Investigative Use', 'Road', 'Water'];
   public static readonly certificateSubtypePicklist = [
@@ -178,7 +175,7 @@ export class Picklists {
     'Ministry of Environment and Climate Change Strategy 1',
     'Ministry of Forests 1',
     'Ministry of Water, Land and Resource Stewardship 1',
-    'Natural Resource Officers 1',
+    'Natural Resource Officers 1'
   ];
 
   public static getAgencyNames(factoryService: FactoryService) {
@@ -205,10 +202,8 @@ export class Picklists {
     'AGENCY_ENV',
     'AGENCY_FLNRO',
     'AGENCY_WLRS',
-    'AGENCY_FLNR_NRO',
+    'AGENCY_FLNR_NRO'
   ];
-
-  
 
   public static readonly entityTypePicklist = ['Company', 'Individual'];
 
@@ -299,7 +294,11 @@ export class Picklists {
     'Report'
   ];
 
-  public static readonly collectionAgencyPicklist = ['Environmental Assessment Office', 'Ministry of Energy Mines and Low Carbon Innovation', 'Ministry of Environment and Climate Change Strategy'];
+  public static readonly collectionAgencyPicklist = [
+    'Environmental Assessment Office',
+    'Ministry of Energy Mines and Low Carbon Innovation',
+    'Ministry of Environment and Climate Change Strategy'
+  ];
 
   /**
    * Contains a mapping of acts to regulations.
@@ -832,7 +831,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {string[]} sorted array of acts
    */
-  public static getAllActs = function (): string[] {
+  public static getAllActs = function(): string[] {
     return Object.keys(this.legislationActsMappedToRegulations).sort((a, b) => a.localeCompare(b));
   };
 
@@ -843,7 +842,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {string[]} sorted array of regulations
    */
-  public static getAllRegulations = function (): string[] {
+  public static getAllRegulations = function(): string[] {
     const regulations = [];
 
     Object.keys(this.legislationActsMappedToRegulations).forEach(act =>
@@ -867,7 +866,7 @@ export class Picklists {
    * @memberof Picklists
    * @returns {{ [key: string]: string[] }}
    */
-  public static getLegislationRegulationsMappedToActs = function (): { [key: string]: string[] } {
+  public static getLegislationRegulationsMappedToActs = function(): { [key: string]: string[] } {
     const regulations = {};
 
     Object.keys(this.legislationActsMappedToRegulations).forEach(act =>
@@ -1274,8 +1273,7 @@ export class Picklists {
       'Park Act': {
         '9': {
           '1': {
-            description:
-              'For use of natural resource without valid park permit'
+            description: 'For use of natural resource without valid park permit'
           }
         },
         '16': {
@@ -1952,12 +1950,12 @@ export class Picklists {
       'Park Act': {
         '17': {
           description: 'Park Act Order'
-        },  // nrpti-1085: Add new legislation description for orders
-        'Park, Conservancy and Recreation Area Regulation' : {
-        '9': {
-          description: 'Order to leave a park, conservancy or recreation area'
+        }, // nrpti-1085: Add new legislation description for orders
+        'Park, Conservancy and Recreation Area Regulation': {
+          '9': {
+            description: 'Order to leave a park, conservancy or recreation area'
+          }
         }
-      }
       },
       'Wildfire Act': {
         '7': {
@@ -2540,7 +2538,7 @@ export class Picklists {
             },
             '3': {
               description: 'Fail to submit separate fee'
-            },
+            }
           },
           '32': {
             '1': {
@@ -2555,7 +2553,7 @@ export class Picklists {
               },
               d: {
                 description: 'Fail to ensure facility is of sound construction'
-              },
+              }
             },
             '2': {
               a: {
@@ -2563,7 +2561,7 @@ export class Picklists {
               },
               b: {
                 description: 'Fail to have adequate ventilation'
-              },
+              }
             },
             '3': {
               description: 'Fail to have appropriate waste disposal system'
@@ -2609,7 +2607,7 @@ export class Picklists {
               },
               f: {
                 description: 'Fail to review food safety plan annually or if required'
-              },
+              }
             },
             '3': {
               description: 'Fail to have a food safety plan in writing',
@@ -2630,7 +2628,7 @@ export class Picklists {
               },
               f: {
                 description: 'Fail to keep appropriate records'
-              },
+              }
             },
             '4': {
               description: 'Fail to change food safety plan as directed'
@@ -2657,7 +2655,7 @@ export class Picklists {
               },
               d: {
                 description: 'Fail to make sanitation plan/records available'
-              },
+              }
             },
             '2': {
               description: 'Fail to have sanitation plan in writing',
@@ -2666,7 +2664,7 @@ export class Picklists {
               },
               b: {
                 description: 'Fail to identify cleaning/sanitizing agents and pesticides used'
-              },
+              }
             }
           },
           '42': {
@@ -2676,7 +2674,7 @@ export class Picklists {
             },
             b: {
               description: 'Fail to have pest proof containers'
-            },
+            }
           },
           '43': {
             '1': {
@@ -2688,14 +2686,14 @@ export class Picklists {
               },
               c: {
                 description: 'Conduct activities that lead to unsafe food'
-              },
+              }
             },
             '2': {
               description: 'Fail to ensure handwashing'
             },
             '3': {
               description: 'Fail to ensure tobacco/vapour products not used in facility'
-            },
+            }
           },
           '44': {
             description: 'Permit food contact by ill persons'
@@ -2706,7 +2704,7 @@ export class Picklists {
             },
             b: {
               description: 'Fail to keep fish as permitted by inspector'
-            },
+            }
           },
           '46': {
             a: {
@@ -2714,7 +2712,7 @@ export class Picklists {
             },
             b: {
               description: 'Fail to label chemicals/cleaners'
-            },
+            }
           },
           '47': {
             description: 'Fail to properly store/label'
@@ -2731,7 +2729,7 @@ export class Picklists {
             },
             '2': {
               description: 'Receive marine cultured fish from unacceptable source'
-            },
+            }
           },
           '51': {
             description: 'Process dead lobster/crab'
@@ -2763,7 +2761,7 @@ export class Picklists {
             },
             '3': {
               description: 'Fail to properly label carton of sport caught fish'
-            },
+            }
           },
           '55': {
             '1': {
@@ -2778,7 +2776,7 @@ export class Picklists {
               },
               c: {
                 description: 'Fail to have system that verifies fish returned to sport fisher'
-              },
+              }
             }
           },
           '56': {
@@ -2849,7 +2847,7 @@ export class Picklists {
               description: 'Fail to submit report'
             }
           }
-        },
+        }
       },
       'Fisheries Act (Canada)': {
         'Fishing (General) Regulations': {
@@ -5157,8 +5155,7 @@ export class Picklists {
    * @static
    * @returns {string} legislation description or null
    */
-  public static getLegislationDescription = function (recordType: string, legislation: Legislation): string {
-
+  public static getLegislationDescription = function(recordType: string, legislation: Legislation): string {
     if (!recordType || (!legislation && !legislation.act && !legislation.section)) {
       return null;
     }
@@ -5213,7 +5210,7 @@ export class Picklists {
    * @param {string[]} paths properties to descend, in order, through the object.
    * @returns the value found at the end of the path, or null
    */
-  public static traverseObject = function (obj: object, paths: string[]) {
+  public static traverseObject = function(obj: object, paths: string[]) {
     if (!obj || !paths || !paths.length) {
       return null;
     }

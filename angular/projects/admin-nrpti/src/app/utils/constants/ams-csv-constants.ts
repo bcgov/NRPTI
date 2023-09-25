@@ -20,12 +20,7 @@ export const amsOrdersCsvRequiredHeaders = [
  * Required fields for AMS Order  csv.
  *
  */
-export const amsOrdersCsvRequiredFields = [
-  'AuthNumber',
-  'ClientName',
-  'IssueDate',
-  'AuthorizationType',
-];
+export const amsOrdersCsvRequiredFields = ['AuthNumber', 'ClientName', 'IssueDate', 'AuthorizationType'];
 
 /**
  * Fields for AMS Order  csv that have a required format.
