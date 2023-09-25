@@ -20,4 +20,13 @@ export class AgencyDataService {
     const agencyList = this.factoryService.applicationAgencyService.getAgencies();
     return Object.values(agencyList);
   }
+
+  getAgencyCode(agencyName: string): string {
+    const agencyList = this.factoryService.applicationAgencyService.getAgencies();
+    for (const key in agencyList) {
+      if (agencyList.hasOwnProperty(key) && agencyList[key] === agencyName) {
+        return key; // Return the key if the value matches
+      }
+    }
+  }
 }

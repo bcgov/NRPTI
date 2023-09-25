@@ -186,6 +186,11 @@ export class Picklists {
     return agencyDataService.getAgencyNames();
   }
 
+  public static getAgencyCode(factoryService: FactoryService, agencyName) {
+    const agencyDataService = new AgencyDataService(factoryService);
+    return agencyDataService.getAgencyCode(agencyName);
+  }
+
   public static readonly agencyCodePicklist = [
     'AGENCY_ALC',
     'AGENCY_OGC',

@@ -86,7 +86,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
       this.loading = false;
       this._changeDetectionRef.detectChanges();
     });
-  }
+   }
 
   protected populateTextFields() {
     if (this.currentRecord.dateUpdated) {
@@ -475,7 +475,8 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
         this.myForm.get('dateIssued').value
       ));
     (this.myForm.controls.issuingAgency.dirty || this.defaultAgency) &&
-      (administrativePenalty['issuingAgency'] = this.myForm.controls.issuingAgency.value);
+    (administrativePenalty['issuingAgency'] = Picklists.getAgencyCode(this.factoryService, this.myForm.controls.issuingAgency.value));
+      //(administrativePenalty['issuingAgency'] = this.myForm.controls.issuingAgency.value);
     this.myForm.controls.author.dirty && (administrativePenalty['author'] = this.myForm.controls.author.value);
 
     if (
