@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 
 
 @Injectable()
-export class UpdateIssuingAgencyResolver implements Resolve<Observable<object>> {
+export class AgenciesResolver implements Resolve<Observable<object>> {
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     return null;
   }

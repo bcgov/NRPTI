@@ -102,11 +102,11 @@
       <em class="material-icons mr-3">chat</em>
       Communications
     </a>
-    <a id="update-issuing-agency"
+    <a id="agencies"
       *ngIf='keycloakService.isMenuEnabled("Agencies")'
-      [ngClass]="{ active: mainRoute === 'update-issuing-agency' }"
-      id="update-issuing-agency"
-      [routerLink]="['/update-issuing-agency']">
+      [ngClass]="{ active: mainRoute === 'agencies' }"
+      id="agencies"
+      [routerLink]="['/agencies']">
       <i class="material-icons mr-3">edit</i>
       Agencies
     </a>

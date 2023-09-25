@@ -9,8 +9,8 @@ import { EditorModule } from '@tinymce/tinymce-angular';
 import { GlobalModule } from 'nrpti-angular-components';
 
 import { CommonModule as NrptiCommonModule } from '../../../../common/src/app/common.module';
-import { UpdateIssuingAgencyComponent } from './update-issuing-agency.component';
-import { UpdateIssuingAgencyResolver } from './update-issuing-agency.resolver';
+import { AgenciesComponent } from './agencies.component';
+import { AgenciesResolver } from './agencies.resolver';
 
 
 @NgModule({
@@ -26,14 +26,14 @@ import { UpdateIssuingAgencyResolver } from './update-issuing-agency.resolver';
     NgbModule,
   ],
   declarations: [
-    UpdateIssuingAgencyComponent
+    AgenciesComponent
   ],
   providers: [
-    UpdateIssuingAgencyResolver
+    AgenciesResolver
   ],
   entryComponents: [
-    UpdateIssuingAgencyComponent
+    AgenciesComponent
   ],
   exports: []
 })
-export class UpdateIssuingAgencyModule {}
+export class AgenciesModule {}

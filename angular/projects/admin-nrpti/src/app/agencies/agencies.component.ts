@@ -3,14 +3,14 @@ import { IssuingAgencyService } from '../services/issuingagency.service';
 import { LoggerService } from 'nrpti-angular-components';
 import { Constants } from '../utils/constants/misc';
 import { ToastService } from '../services/toast.service';
-import { FactoryService } from '../../../../admin-nrpti/src/app/services/factory.service';
+import { FactoryService } from '../services/factory.service';
 
 @Component({
-  selector: 'app-update-issuing-agency',
-  templateUrl: './update-issuing-agency.component.html',
-  styleUrls: ['./update-issuing-agency.component.scss']
+  selector: 'app-agencies',
+  templateUrl: './agencies.component.html',
+  styleUrls: ['./agencies.component.scss']
 })
-export class UpdateIssuingAgencyComponent implements OnInit {
+export class AgenciesComponent implements OnInit {
   public loading = false;
   selectedAgency: string = ''; // Initialize the selectedAgency
   choiceMade = false;
