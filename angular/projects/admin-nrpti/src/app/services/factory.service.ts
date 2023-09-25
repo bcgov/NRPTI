@@ -36,7 +36,7 @@ export class FactoryService {
   private _documentService: DocumentService;
   private _configService: ConfigService;
   private _mapLayerInfoService: MapLayerInfoService;
-  private agencies: { [key: string]: string } = {};
+  private _applicationAgencyService: ApplicationAgencyService
 
   constructor(private injector: Injector) {
     // The following items are loaded by a file that is only present on cluster builds.
@@ -88,6 +88,20 @@ export class FactoryService {
       this._apiService = this.injector.get(ApiService);
     }
     return this._apiService;
+  }
+
+  /**
+   * Inject agency service if it hasn't already been injected.
+   *
+   * @readonly
+   * @type {ApiService}
+   * @memberof FactoryService
+   */
+  public get applicationAgencyService(): ApplicationAgencyService {
+    if (!this._applicationAgencyService) {
+      this._applicationAgencyService = this.injector.get(ApplicationAgencyService);
+    }
+    return this._applicationAgencyService;
   }
 
   /**
@@ -635,15 +649,12 @@ export class FactoryService {
    * @type {{ [key: string]: string }}
    * @memberof FactoryService
    */
-  public get agencyData(): { [key: string]: string } {
-    if (Object.keys(this.agencies).length === 0) {
-      // Data is not in the cache, fetch it from the ApplicationAgencyService.
-      const applicationAgencyService = this.injector.get(ApplicationAgencyService);
-      applicationAgencyService.refreshAgencies().subscribe(() => {
-        // Once data is fetched and updated in the service, retrieve it and store it in the cache.
-        this.agencies = applicationAgencyService.getAgencies();
-      });
-    }
-    return this.agencies;
+  public getApplicationAgencyService(): Observable<void> {
+      if (Object.keys(this.applicationAgencyService.getAgencies).length === 0) {
+        this.applicationAgencyService.refreshAgencies().subscribe(() => {
+          this.applicationAgencyService.getAgencies();
+        });
+      }
+      return this.applicationAgencyService.refreshAgencies();
   }
 }

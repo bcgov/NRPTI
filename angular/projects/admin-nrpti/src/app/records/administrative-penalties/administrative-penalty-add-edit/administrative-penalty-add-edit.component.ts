@@ -79,6 +79,8 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
         };
       }
 
+      this.buildForm();
+
       this.subscribeToFormControlChanges();
 
       this.loading = false;
