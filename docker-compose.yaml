@@ -1,0 +1,52 @@
+version: "3.7"
+services:
+  #############################################################################################
+  ###                                       Mongo                                           ###
+  #############################################################################################
+  mongo:
+    image: mongo:3.6
+    container_name: nrpti-mongo
+    tty: true
+    restart: always
+    volumes: 
+      - ./mongoSeed/init:/docker-entrypoint-initdb.d
+    ports:
+      - 27017:27017
+    networks:
+      - nrpti
+    healthcheck:
+      test: echo 'db.runCommand({serverStatus:1}).ok' | mongo admin -u nrpti-admin -p nrpti-admin --quiet | grep 1
+      interval: 20s
+      timeout: 30s
+      retries: 5
+      start_period: 120s
+  #############################################################################################
+  ###                                         API                                           ###
+  #############################################################################################
+  api:
+    container_name: nrpti-api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    networks:
+      - nrpti
+    environment:
+      - MONGODB_SERVICE_HOST=mongo
+    ports: 
+      - 3000:3000
+    # healthcheck:
+    #   test: curl localhost:${PORT:-3000}/api/health | grep 'API is healthy and ready'
+    #   interval: 20s
+    #   timeout: 30s
+    #   retries: 5
+    #   start_period: 20s
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+#############################################################################################
+###                                       Network                                         ###
+#############################################################################################
+networks:
+  nrpti:
+    driver: "bridge"
