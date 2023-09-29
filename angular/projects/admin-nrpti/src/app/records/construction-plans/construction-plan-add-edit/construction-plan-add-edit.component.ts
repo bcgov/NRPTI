@@ -10,6 +10,7 @@ import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/uti
 import { RecordUtils } from '../../utils/record-utils';
 import { LoadingScreenService, StoreService, LoggerService } from 'nrpti-angular-components';
 import { Constants } from '../../../utils/constants/misc';
+import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
   selector: 'app-construction-plan-add-edit',
@@ -30,7 +31,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
   public lngPublishSubtext = 'Not published';
 
   // Pick lists
-  public agencies = Picklists.agencyPicklist;
+  public agencies = Picklists.agencyCodePicklist;
 
   // Documents
   public documents = [];
@@ -305,7 +306,8 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
   }
 
   displayName(agency) {
-    return Utils.displayNameFull(agency);
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   cancel() {

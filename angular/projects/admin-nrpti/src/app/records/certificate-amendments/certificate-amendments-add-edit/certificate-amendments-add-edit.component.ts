@@ -10,6 +10,7 @@ import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/uti
 import { RecordUtils } from '../../utils/record-utils';
 import { LoadingScreenService, StoreService } from 'nrpti-angular-components';
 import { Constants } from '../../../utils/constants/misc';
+import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
   selector: 'app-certificate-amendment-add-edit',
@@ -33,7 +34,7 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
 
   // Pick lists
   public certificateSubtypes = Picklists.certificateSubtypePicklist;
-  public agencies = Picklists.agencyPicklist;
+  public agencies = Picklists.agencyCodePicklist;
 
   public datepickerMinDate = Constants.DatepickerMinDate;
   public datepickerMaxDate = Constants.DatepickerMaxDate;
@@ -482,7 +483,8 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
   }
 
   displayName(agency) {
-    return Utils.displayNameFull(agency);
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   cancel() {
