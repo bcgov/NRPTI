@@ -327,7 +327,7 @@ export class Constants {
     [Constants.ApplicationRoles.ADMIN_ENV_EPD]: ['Ministry of Environment and Climate Change Strategy'],
     [Constants.ApplicationRoles.ADMIN_ENV_COS]: ['Conservation Officer Service'],
     [Constants.ApplicationRoles.ADMIN_ENV_BCPARKS]: ['BC Parks'],
-    [Constants.ApplicationRoles.ADMIN_ALC]: ['Agriculture Land Commission'],
+    [Constants.ApplicationRoles.ADMIN_ALC]: ['Agricultural Land Commission'],
     [Constants.ApplicationRoles.ADMIN_WLRS]: ['Ministry of Water, Land and Resource Stewardship']
   };
 
