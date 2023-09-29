@@ -1,28 +1,30 @@
 'use strict';
 
 var dbm;
-var type;
 var seed;
 
 /**
-  * We receive the dbmigrate dependency from dbmigrate initially.
-  * This enables us to not have to rely on NODE_PATH.
-  */
-exports.setup = function(options, seedLink) {
+ * We receive the dbmigrate dependency from dbmigrate initially.
+ * This enables us to not have to rely on NODE_PATH.
+ */
+exports.setup = function (options, seedLink) {
   dbm = options.dbmigrate;
-  type = dbm.dataType;
   seed = seedLink;
 };
-
 
 exports.up = async function (db) {
   const mClient = await db.connection.connect(db.connectionString, {
     native_parser: true,
   });
 
+  const LegislationActs = {
+    ACT_Env_Management: 'Environmental Management Act',
+    ACT_Int_Pest_Management: 'Integrated Pest Management Act',
+  };
+
   const agencies = [
-    { agencyCode: "AGENCY_ALC", agencyName: 'Agricultural Land Commission' },
-    { agencyCode: "AGENCY_WF", agencyName: 'BC Wildfire Service' },
+    { agencyCode: 'AGENCY_ALC', agencyName: 'Agricultural Land Commission' },
+    { agencyCode: 'AGENCY_WF', agencyName: 'BC Wildfire Service' },
     { agencyCode: "AGENCY_ENV_COS", agencyName: 'Conservation Officer Service' },
     { agencyCode: "AGENCY_EAO", agencyName: 'Environmental Assessment Office' },
     { agencyCode: "AGENCY_EMLI", agencyName: 'Ministry of Energy Mines and Low Carbon Innovation' },
@@ -36,27 +38,49 @@ exports.up = async function (db) {
     { agencyCode: "AGENCY_FLNR_NRO", agencyName: 'Natural Resource Officers' },
     { agencyCode: "AGENCY_WLRS", agencyName: 'Ministry of Water, Land and Resource Stewardship' },
     { agencyCode: "AGENCY_CAS", agencyName: 'Climate Action Secretariat' }
-  ]
+  ];
 
   const collections = ['nrpti', 'redacted_record_subset'];
 
   try {
     for (let collection of collections) {
       console.log(`***** Collection: ${collection} *****`);
+      console.log(`***** Updating ocers-csv records *****`);
 
-      for (const agency of agencies) {
-        try {
-          let currentCollection = await mClient.collection(collection);
+      try {
+        let currentCollection = await mClient.collection(collection);
 
-          await currentCollection.updateMany(
-            { issuingAgency: agency['agencyName'] },
-            { $set: { issuingAgency: agency['agencyCode'] } }
-          );
+        // Update issuingAgency to 'AGENCY_ENV_EPD' for specific records
+        await currentCollection.updateMany(
+          {
+            $and: [
+              { issuingAgency: 'Ministry of Environment and Climate Change Strategy' },
+              { 'legislation.act': { $in: [LegislationActs.ACT_Env_Management, LegislationActs.ACT_Int_Pest_Management] } }
+            ]
+          },
+          { $set: { issuingAgency: 'AGENCY_ENV_EPD' } }
+        );
 
-          console.log(` ***** Updated collection: ${collection} for agency: ${agency['agencyName']} *****`);
-        } catch (err) {
-          console.log(` ***** Error updating collection: ${collection} for agency: ${agency['agencyName']} *****`, err);
-        }
+        console.log(` ***** Updated records in collection: ${collection} *****`);
+      } catch (err) {
+        console.error(` ***** Error updating collection: ${collection} *****`, err);
+      }
+
+      console.log(`***** Updating all other records records *****`);
+      try {
+        let currentCollection = await mClient.collection(collection);
+
+        for (const agency of agencies) {
+            // Update issuingAgency and author fields for the agency
+            await currentCollection.updateMany(
+              { issuingAgency: agency['agencyName'] },
+              { $set: { issuingAgency: agency['agencyCode'] } }
+            );
+
+            console.log(` ***** Updated collection: ${collection} for agency: ${agency['agencyName']} *****`);
+        } 
+      } catch (err) {
+        console.error(` ***** Error updating collection: ${collection} for agency: ${agency['agencyName']} *****`, err);
       }
     }
   } catch (err) {
@@ -70,10 +94,23 @@ exports.up = async function (db) {
   return null;
 };
 
-exports.down = function(db) {
+exports.down = function (db) {
   return null;
 };
 
 exports._meta = {
-  "version": 1
+  version: 1
 };
+
+/**
+ * Update a record in the collection with a new agency code.
+ * @param {Collection} collection - MongoDB collection.
+ * @param {string} recordId - The ID of the record to update.
+ * @param {string} newAgencyCode - The new agency code.
+ */
+async function updateRecord(collection, recordId, newAgencyCode) {
+  await collection.updateOne(
+    { _id: recordId },
+    { $set: { 'legislation.act': newAgencyCode } }
+  );
+}
