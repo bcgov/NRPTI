@@ -55,10 +55,11 @@ exports.up = async function (db) {
           {
             $and: [
               { issuingAgency: 'Ministry of Environment and Climate Change Strategy' },
+              { author: 'Ministry of Environment and Climate Change Strategy' },
               { 'legislation.act': { $in: [LegislationActs.ACT_Env_Management, LegislationActs.ACT_Int_Pest_Management] } }
             ]
           },
-          { $set: { issuingAgency: 'AGENCY_ENV_EPD' } }
+          { $set: { issuingAgency: 'AGENCY_ENV_EPD', author: 'AGENCY_ENV_EPD' } }
         );
 
         console.log(` ***** Updated records in collection: ${collection} *****`);
@@ -73,8 +74,13 @@ exports.up = async function (db) {
         for (const agency of agencies) {
             // Update issuingAgency and author fields for the agency
             await currentCollection.updateMany(
-              { issuingAgency: agency['agencyName'] },
-              { $set: { issuingAgency: agency['agencyCode'] } }
+              {
+                $and: [
+                  { issuingAgency: agency['agencyName'] },
+                  { author: agency['agencyName'] }
+                ]
+              },
+              { $set: { issuingAgency: agency['agencyCode'], author: agency['agencyCode'] } }
             );
 
             console.log(` ***** Updated collection: ${collection} for agency: ${agency['agencyName']} *****`);
