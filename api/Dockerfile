@@ -9,7 +9,7 @@ COPY . .
 ##################
 ### PROD IMAGE ###
 ##################
-FROM node:18.15.0-alpine as prod
+FROM node:18.15.0-alpine AS prod
 ENV NODE_ENV=production
 
 # Add curl for health check
