@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { ApiService } from './api.service';
-
+/*
+Service Layer for agencies component. Used for fetching issuing agencies and storing them in database
+*/
 @Injectable({ providedIn: 'root' })
 export class IssuingAgencyService {
   constructor(public apiService: ApiService, public http: HttpClient) {}
@@ -28,21 +30,5 @@ export class IssuingAgencyService {
         console.error('API call error:', error);
         throw error; // Rethrow the error to propagate it further
       });
-  }
-
-  public async getIssuingAgencyMap() {
-    try {
-      const response = await this.getIssuingAgencies();
-      const issuingAgencyMap: { [key: string]: string } = {};
-      if (response && Array.isArray(response)) {
-        response.forEach(agency => {
-          issuingAgencyMap[agency.agencyCode] = agency.agencyName;
-        });
-      }
-      return issuingAgencyMap;
-    } catch (error) {
-      console.error('getIssuingAgencyMap() API call error:', error);
-      throw error;
-    }
   }
 }

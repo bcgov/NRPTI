@@ -3,6 +3,10 @@ import { ConfigService } from 'nrpti-angular-components';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
+/*
+Service Layer for fetching issuing agencies and storing them in app_initializer
+*/
+
 @Injectable()
 export class ApplicationAgencyService {
   private api: string;

@@ -3,6 +3,11 @@ const mongodb = require('../utils/mongodb');
 const RECORD_TYPE = require('../utils/constants/record-type-enum');
 const defaultLog = require('../utils/logger')('record');
 
+/*
+APIs for Update Issuing Agency page
+Includes Get and Put apis to load and update agency names from the database
+*/
+
 exports.publicGet = async function(args, res, next) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const collectionDB = db.collection('nrpti');

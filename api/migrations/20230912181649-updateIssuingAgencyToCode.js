@@ -4,8 +4,7 @@ var dbm;
 var seed;
 
 /**
- * We receive the dbmigrate dependency from dbmigrate initially.
- * This enables us to not have to rely on NODE_PATH.
+ * Migration file for updating all existing records to use agency code instead of agency value
  */
 exports.setup = function (options, seedLink) {
   dbm = options.dbmigrate;

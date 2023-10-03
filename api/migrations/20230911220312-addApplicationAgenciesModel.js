@@ -6,6 +6,10 @@ var dbm;
 var type;
 var seed;
 
+/*
+Migration file for adding agency codes and agency values to the nrpti collection
+*/
+
 exports.setup = function(options, seedLink) {
   dbm = options.dbmigrate;
   type = dbm.dataType;
