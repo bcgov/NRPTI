@@ -58,3 +58,4 @@ export class ManagementPlanDetailComponent extends RecordComponent implements On
     this.ngUnsubscribe.complete();
   }
 }
+
