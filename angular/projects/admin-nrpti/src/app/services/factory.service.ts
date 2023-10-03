@@ -13,6 +13,7 @@ import { NewsService } from './news.service';
 import { CollectionService } from './collection.service';
 import { MineService } from './mine.service';
 import { MapLayerInfoService } from './map-layer-info.service';
+import { ApplicationAgencyService } from './application-agency.service';
 
 /**
  * Facade service for all admin-nrpti services.
@@ -35,6 +36,7 @@ export class FactoryService {
   private _documentService: DocumentService;
   private _configService: ConfigService;
   private _mapLayerInfoService: MapLayerInfoService;
+  private _applicationAgencyService: ApplicationAgencyService;
 
   constructor(private injector: Injector) {
     // The following items are loaded by a file that is only present on cluster builds.
@@ -86,6 +88,20 @@ export class FactoryService {
       this._apiService = this.injector.get(ApiService);
     }
     return this._apiService;
+  }
+
+  /**
+   * Inject agency service if it hasn't already been injected.
+   *
+   * @readonly
+   * @type {ApiService}
+   * @memberof FactoryService
+   */
+  public get applicationAgencyService(): ApplicationAgencyService {
+    if (!this._applicationAgencyService) {
+      this._applicationAgencyService = this.injector.get(ApplicationAgencyService);
+    }
+    return this._applicationAgencyService;
   }
 
   /**
@@ -240,7 +256,6 @@ export class FactoryService {
   }
 
   isFlavourEditEnabled(requiredRoles: string[]) {
-
     for (const role of requiredRoles) {
       if (this.userInRole(role)) {
         return true;
@@ -602,13 +617,13 @@ export class FactoryService {
 
     return isInsert
       ? this.recordService
-        .createRecord(dataPackage)
-        .pipe(catchError(error => this.apiService.handleError(error)))
-        .toPromise()
+          .createRecord(dataPackage)
+          .pipe(catchError(error => this.apiService.handleError(error)))
+          .toPromise()
       : this.recordService
-        .editRecord(dataPackage)
-        .pipe(catchError(error => this.apiService.handleError(error)))
-        .toPromise();
+          .editRecord(dataPackage)
+          .pipe(catchError(error => this.apiService.handleError(error)))
+          .toPromise();
   }
 
   public createConfigData(configData, application): Promise<object> {
@@ -624,5 +639,21 @@ export class FactoryService {
 
   public updateMapLayerInfo(mapLayerInfo): Promise<any> {
     return this.mapLayerInfoService.updateMapLayerInfo(mapLayerInfo);
+  }
+
+  /**
+   * Get agency data. If data is not cached, fetch it from the ApplicationAgencyService.
+   *
+   * @readonly
+   * @type {{ [key: string]: string }}
+   * @memberof FactoryService
+   */
+  public getApplicationAgencyService(): Observable<void> {
+    if (Object.keys(this.applicationAgencyService.getAgencies).length === 0) {
+      this.applicationAgencyService.refreshAgencies().subscribe(() => {
+        this.applicationAgencyService.getAgencies();
+      });
+    }
+    return this.applicationAgencyService.refreshAgencies();
   }
 }

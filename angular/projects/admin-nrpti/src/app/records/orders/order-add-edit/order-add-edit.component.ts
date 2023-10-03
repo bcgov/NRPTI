@@ -10,6 +10,7 @@ import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/uti
 import { RecordUtils } from '../../utils/record-utils';
 import { LoadingScreenService, StoreService, LoggerService } from 'nrpti-angular-components';
 import { Constants } from '../../../utils/constants/misc';
+import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
   selector: 'app-order-add-edit',
@@ -33,7 +34,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
 
   // Pick lists
   public orderSubtypePicklist = Picklists.orderSubtypePicklist;
-  public agencies = Picklists.agencyPicklist;
+  public agencies = Picklists.agencyCodePicklist;
   public authors = Picklists.authorPicklist;
   public outcomeStatuses = Picklists.outcomeStatusPicklist;
   private defaultAgency = '';
@@ -55,7 +56,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     private logger: LoggerService,
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
-    private _changeDetectionRef: ChangeDetectorRef
+    private _changeDetectionRef: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
@@ -522,7 +523,8 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
   }
 
   displayName(agency) {
-    return Utils.displayNameFull(agency);
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   cancel() {

@@ -5,7 +5,8 @@ import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecordComponent } from '../../utils/record-component';
 import { RecordUtils } from '../../utils/record-utils';
-import { Utils } from 'nrpti-angular-components';
+import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
+import { FactoryService } from '../../../services/factory.service';
 
 @Component({
   selector: 'app-management-plan-detail',
@@ -15,7 +16,8 @@ import { Utils } from 'nrpti-angular-components';
 export class ManagementPlanDetailComponent extends RecordComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
-  constructor(public route: ActivatedRoute, public router: Router, public changeDetectionRef: ChangeDetectorRef) {
+  constructor(public route: ActivatedRoute, public router: Router, public changeDetectionRef: ChangeDetectorRef
+    , public factoryService: FactoryService) {
     super();
   }
 
@@ -46,7 +48,8 @@ export class ManagementPlanDetailComponent extends RecordComponent implements On
   }
 
   displayName(agency) {
-    return Utils.displayNameFull(agency);
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   ngOnDestroy() {
@@ -54,3 +57,4 @@ export class ManagementPlanDetailComponent extends RecordComponent implements On
     this.ngUnsubscribe.complete();
   }
 }
+

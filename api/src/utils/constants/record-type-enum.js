@@ -142,6 +142,12 @@ const RECORD_TYPE = Object.freeze({
     displayName: 'Warning',
     recordControllerName: 'warnings',
     flavours: { lng: { _schemaName: 'WarningLNG' }, nrced: { _schemaName: 'WarningNRCED' } }
+  },
+  ApplicationAgency: {
+    _schemaName: 'ApplicationAgency',
+    displayName: 'ApplicationAgency',
+    recordControllerName: 'agencies',
+    flavours: {}
   }
 });
 module.exports = RECORD_TYPE;

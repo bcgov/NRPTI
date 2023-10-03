@@ -8,6 +8,8 @@ import { NewsResolver } from './news/news-resolver';
 import { NewsListComponent } from './news/news-list.component';
 import { CommunicationsComponent } from './communications/communications.component';
 import { LngMapInfoResolver } from './communications/lng-map-info/lng-map-info-resolver';
+import { AgenciesComponent } from './agencies/agencies.component';
+import { AgenciesResolver } from './agencies/agencies.resolver';
 
 const routes: Routes = [
   {
@@ -59,6 +61,17 @@ const routes: Routes = [
         }
       }
     ]
+  },
+  {
+    path: 'agencies',
+    pathMatch: 'full',
+    component: AgenciesComponent,
+    resolve: {
+      records: AgenciesResolver
+    },
+    data: {
+      breadcrumb: 'Agencies'
+    }
   },
   {
     // wildcard default route

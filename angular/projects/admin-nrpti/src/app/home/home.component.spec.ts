@@ -33,6 +33,7 @@ describe('HomeComponent', () => {
         case Constants.Menus.ENTITIES: retVal = false; break;
         case Constants.Menus.IMPORTS: retVal = true; break;
         case Constants.Menus.COMMUNICATIONS: retVal = true; break;
+        case Constants.Menus.AGENCIES: retVal = true; break;
       }
       return retVal;
     }
