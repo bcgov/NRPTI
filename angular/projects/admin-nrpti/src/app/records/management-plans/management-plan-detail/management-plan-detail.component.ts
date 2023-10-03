@@ -17,9 +17,8 @@ export class ManagementPlanDetailComponent extends RecordComponent implements On
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   constructor(public route: ActivatedRoute, public router: Router, public changeDetectionRef: ChangeDetectorRef
-    ,public factoryService: FactoryService) {
+    , public factoryService: FactoryService) {
     super();
-    
   }
 
   ngOnInit() {
