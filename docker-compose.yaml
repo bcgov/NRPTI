@@ -8,6 +8,10 @@ services:
     container_name: nrpti-mongo
     tty: true
     restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME:-nrpti-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD:-nrpti-admin}
+      - MONGO_DATABASE_NAME=${MONGO_DATABASE:-nrpti-dev}
     volumes: 
       - ./mongoSeed/init:/docker-entrypoint-initdb.d
     ports:
@@ -15,7 +19,7 @@ services:
     networks:
       - nrpti
     healthcheck:
-      test: echo 'db.runCommand({serverStatus:1}).ok' | mongo admin -u nrpti-admin -p nrpti-admin --quiet | grep 1
+      test: echo 'db.runCommand({serverStatus:1}).ok' | mongo admin -u ${MONGO_USERNAME:-nrpti-admin} -p ${MONGO_PASSWORD:-nrpti-admin} --quiet | grep 1
       interval: 20s
       timeout: 30s
       retries: 5
