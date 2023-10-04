@@ -33,7 +33,6 @@ exports.up = async function (db) {
     { agencyCode: "AGENCY_ENV", agencyName: 'Ministry of Environment and Climate Change Strategy' },
     { agencyCode: "AGENCY_ENV_BCPARKS", agencyName: 'BC Parks' },
     { agencyCode: "AGENCY_OGC", agencyName: 'BC Energy Regulator' },
-    { agencyCode: "AGENCY_ENV_EPD", agencyName: 'Ministry of Environment and Climate Change Strategy' },
     { agencyCode: "AGENCY_LNG", agencyName: 'LNG Secretariat' },
     { agencyCode: "AGENCY_AGRI", agencyName: 'Ministry of Agriculture and Food' },
     { agencyCode: "AGENCY_FLNRO", agencyName: 'Ministry of Forests' },

@@ -19,6 +19,8 @@ import { FilterObject, FilterType, DateFilterDefinition, CheckOrRadioFilterDefin
 import { SubsetsObject, SubsetOption } from '../../../../../common/src/app/search-filter-template/subset-object';
 import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
 import { MiscUtils } from '../../utils/constants/misc';
+import { FactoryService } from '../../services/factory.service';
+import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
 
 /**
  * Mine list page component.
@@ -121,7 +123,8 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
     public storeService: StoreService,
     private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
-    private _changeDetectionRef: ChangeDetectorRef
+    private _changeDetectionRef: ChangeDetectorRef,
+    private factoryService: FactoryService
   ) {
     // setup the subset configuration
     const subsetOptions = [
@@ -155,10 +158,16 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       'agency',
       FilterType.MultiSelect,
       'Responsible Agency',
-      new MultiSelectDefinition(Picklists.agencyPicklist.map(value => {
-        const displayValue = Utils.displayNameFull(value);
-        return { value: value, displayValue: displayValue, selected: false, display: true };
-      }), 'Begin typing to filter agencies...', '')
+      new MultiSelectDefinition(
+        Picklists.getAgencyNames(this.factoryService).map(value => {
+          const agencyDataService = new AgencyDataService(this.factoryService);
+          const displayValue = agencyDataService.displayNameFull(value);
+          const picklistCodes = Picklists.getAgencyCode(this.factoryService, value)
+          return { value: picklistCodes, displayValue: displayValue, selected: false, display: true };
+        }),
+        'Begin typing to filter agencies...',
+        ''
+      )
     );
 
     const sourceSystemFilter = new FilterObject(

@@ -30,7 +30,6 @@ exports.up = async function (db) {
     { agencyCode: "AGENCY_ENV", agencyName: 'Ministry of Environment and Climate Change Strategy' },
     { agencyCode: "AGENCY_ENV_BCPARKS", agencyName: 'BC Parks' },
     { agencyCode: "AGENCY_OGC", agencyName: 'BC Energy Regulator' },
-    { agencyCode: "AGENCY_ENV_EPD", agencyName: 'Ministry of Environment and Climate Change Strategy' },
     { agencyCode: "AGENCY_LNG", agencyName: 'LNG Secretariat' },
     { agencyCode: "AGENCY_AGRI", agencyName: 'Ministry of Agriculture and Food' },
     { agencyCode: "AGENCY_FLNRO", agencyName: 'Ministry of Forests' },
@@ -44,29 +43,6 @@ exports.up = async function (db) {
   try {
     for (let collection of collections) {
       console.log(`***** Collection: ${collection} *****`);
-      console.log(`***** Updating ocers-csv records *****`);
-
-      try {
-        let currentCollection = await mClient.collection(collection);
-
-        // Update issuingAgency to 'AGENCY_ENV_EPD' for specific records
-        await currentCollection.updateMany(
-          {
-            $and: [
-              { issuingAgency: 'Ministry of Environment and Climate Change Strategy' },
-              { author: 'Ministry of Environment and Climate Change Strategy' },
-              { 'legislation.act': { $in: [LegislationActs.ACT_Env_Management, LegislationActs.ACT_Int_Pest_Management] } }
-            ]
-          },
-          { $set: { issuingAgency: 'AGENCY_ENV_EPD', author: 'AGENCY_ENV_EPD' } }
-        );
-
-        console.log(` ***** Updated records in collection: ${collection} *****`);
-      } catch (err) {
-        console.error(` ***** Error updating collection: ${collection} *****`, err);
-      }
-
-      console.log(`***** Updating all other records records *****`);
       try {
         let currentCollection = await mClient.collection(collection);
 
