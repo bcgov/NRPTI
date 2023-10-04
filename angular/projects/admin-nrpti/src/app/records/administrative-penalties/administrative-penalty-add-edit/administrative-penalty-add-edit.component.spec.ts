@@ -19,7 +19,14 @@ import { EventEmitter } from '@angular/core';
 describe('AdministrativePenaltyAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<AdministrativePenaltyAddEditComponent>(AdministrativePenaltyAddEditComponent);
 
-  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole', 'userInBcmiRole', 'userInNrcedRole', 'userOnlyInLimitedRole', 'userInRole', 'isFlavourEditEnabled']);
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', [
+    'userInLngRole',
+    'userInBcmiRole',
+    'userInNrcedRole',
+    'userOnlyInLimitedRole',
+    'userInRole',
+    'isFlavourEditEnabled'
+  ]);
   mockFactoryService.userInLngRole.and.returnValue(true);
   mockFactoryService.userInBcmiRole.and.returnValue(true);
   mockFactoryService.userInNrcedRole.and.returnValue(true);
@@ -43,7 +50,7 @@ describe('AdministrativePenaltyAddEditComponent', () => {
     }
   };
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
@@ -68,7 +75,7 @@ describe('AdministrativePenaltyAddEditComponent', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

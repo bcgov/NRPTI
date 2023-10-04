@@ -19,6 +19,7 @@ import { RecordsModule } from './records/records.module';
 import { NewsModule } from './news/news.module';
 import { MinesModule } from './mines/mines.module';
 import { CommunicationsModule } from './communications/communications.module';
+import { AgenciesModule } from './agencies/agencies.module';
 import { ToastrModule } from 'ngx-toastr';
 
 // components
@@ -43,6 +44,7 @@ import { RecordService } from './services/record.service';
 import { TaskService } from './services/task.service';
 import { ConfigService, LoggerService } from 'nrpti-angular-components';
 import { NewsService } from './services/news.service';
+import { ApplicationAgencyService } from './services/application-agency.service';
 
 // resolvers
 import { ImportListResolver } from './import/import-list-resolver';
@@ -58,11 +60,15 @@ import { TokenInterceptor } from './utils/token-interceptor';
 import { RecordUtils } from './records/utils/record-utils';
 import { CollectionService } from './services/collection.service';
 
-
-export function initConfig(configService: ConfigService, keycloakService: KeycloakService) {
+export function initConfig(
+  configService: ConfigService,
+  keycloakService: KeycloakService,
+  applicationAgency: ApplicationAgencyService
+) {
   return async () => {
     await configService.init();
     await keycloakService.init();
+    await applicationAgency.init();
   };
 }
 
@@ -98,6 +104,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     NewsModule,
     MinesModule,
     CommunicationsModule,
+    AgenciesModule,
     AppRoutingModule, // <-- module import order matters - https://angular.io/guide/router#module-import-order-matters
     NgbModule.forRoot(),
     NgxPaginationModule,
@@ -108,7 +115,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     {
       provide: APP_INITIALIZER,
       useFactory: initConfig,
-      deps: [ConfigService, KeycloakService],
+      deps: [ConfigService, KeycloakService, ApplicationAgencyService],
       multi: true
     },
     {
@@ -129,6 +136,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     NewsService,
     CollectionService,
     KeycloakService,
+    ApplicationAgencyService,
     LoggerService,
     TaskService,
     ImportListResolver,
@@ -136,7 +144,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     NewsListResolver,
     CanActivateGuard,
     CanDeactivateGuard,
-    RecordUtils,
+    RecordUtils
   ],
   entryComponents: [ConfirmComponent, HomeComponent, ImportComponent, ImportTableRowsComponent],
   bootstrap: [AppComponent]

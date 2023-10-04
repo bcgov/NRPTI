@@ -10,6 +10,7 @@ import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/uti
 import { RecordUtils } from '../../utils/record-utils';
 import { LoadingScreenService, LoggerService } from 'nrpti-angular-components';
 import { Constants } from '../../../utils/constants/misc';
+import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
   selector: 'app-administrative-sanction-add-edit',
@@ -32,7 +33,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
   public nrcedPublishSubtext = 'Not published';
 
   // Pick lists
-  public agencies = Picklists.agencyPicklist;
+  public agencies = Picklists.agencyCodePicklist;
   public authors = Picklists.authorPicklist;
   private defaultAgency = '';
 
@@ -546,7 +547,8 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
   }
 
   displayName(agency) {
-    return Utils.displayNameFull(agency);
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   cancel() {

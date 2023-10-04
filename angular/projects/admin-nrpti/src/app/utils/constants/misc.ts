@@ -48,7 +48,8 @@ export class Constants {
     MAP: 'Map',
     ENTITIES: 'Entities',
     IMPORTS: 'Imports',
-    COMMUNICATIONS: 'Communications'
+    COMMUNICATIONS: 'Communications',
+    AGENCIES: 'Agencies'
   };
 
   public static readonly RecordTypes: any = {
@@ -320,9 +321,7 @@ export class Constants {
 
   public static readonly RoleAgencyPickList: any = {
     [Constants.ApplicationRoles.ADMIN_WF]: ['BC Wildfire Service'],
-    [Constants.ApplicationRoles.ADMIN_FLNRO]: [
-      'Ministry of Environment and Climate Change Strategy'
-    ],
+    [Constants.ApplicationRoles.ADMIN_FLNRO]: ['Ministry of Environment and Climate Change Strategy'],
     [Constants.ApplicationRoles.ADMIN_FLNR_NRO]: ['Natural Resource Officers'],
     [Constants.ApplicationRoles.ADMIN_AGRI]: ['Ministry of Agriculture and Food'],
     [Constants.ApplicationRoles.ADMIN_ENV_EPD]: ['Ministry of Environment and Climate Change Strategy'],
@@ -330,6 +329,18 @@ export class Constants {
     [Constants.ApplicationRoles.ADMIN_ENV_BCPARKS]: ['BC Parks'],
     [Constants.ApplicationRoles.ADMIN_ALC]: ['Agricultural Land Commission'],
     [Constants.ApplicationRoles.ADMIN_WLRS]: ['Ministry of Water, Land and Resource Stewardship']
+  };
+
+  public static readonly RoleAgencyCodePickList: any = {
+    [Constants.ApplicationRoles.ADMIN_WF]: ['AGENCY_WF'],
+    [Constants.ApplicationRoles.ADMIN_FLNRO]: ['AGENCY_ENV'],
+    [Constants.ApplicationRoles.ADMIN_FLNR_NRO]: ['AGENCY_FLNR_NRO'],
+    [Constants.ApplicationRoles.ADMIN_AGRI]: ['AGENCY_AGRI'],
+    [Constants.ApplicationRoles.ADMIN_ENV_EPD]: ['AGENCY_ENV_EPD'],
+    [Constants.ApplicationRoles.ADMIN_ENV_COS]: ['AGENCY_ENV_COS'],
+    [Constants.ApplicationRoles.ADMIN_ENV_BCPARKS]: ['AGENCY_ENV_BCPARKS'],
+    [Constants.ApplicationRoles.ADMIN_ALC]: ['AGENCY_ALC'],
+    [Constants.ApplicationRoles.ADMIN_WLRS]: ['AGENCY_WLRS']
   };
 
   public static readonly LngSectionPickList: string[] = [

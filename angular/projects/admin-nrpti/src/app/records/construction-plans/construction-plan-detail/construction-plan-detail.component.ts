@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RecordDetailComponent } from '../../utils/record-component';
 import { RecordUtils } from '../../utils/record-utils';
 import { FactoryService } from '../../../services/factory.service';
-import { Utils } from 'nrpti-angular-components';
+import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
   selector: 'app-construction-plan-detail',
@@ -54,7 +54,8 @@ export class ConstructionPlanDetailComponent extends RecordDetailComponent imple
   }
 
   displayName(agency) {
-    return Utils.displayNameFull(agency);
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   ngOnDestroy() {
