@@ -19,12 +19,12 @@ describe('transformRecord', () => {
       _sourceRefNrisId: '',
 
       recordType: 'Inspection',
-      author: 'Natural Resource Officers',
+      author: 'AGENCY_FLNR_NRO',
       dateIssued: null,
       issuedTo: { dateOfBirth: null, firstName: '', lastName: '', middleName: '', type: 'Individual', companyName: '' },
       description: '-',
       sourceSystemRef: 'nris-flnr-csv',
-      issuingAgency: 'Natural Resource Officers',
+      issuingAgency: 'AGENCY_FLNR_NRO',
       legislation: [{ legislationDescription: 'Inspection to verify compliance with regulatory requirement' }],
       location: null,
       outcomeDescription: 'undefined - undefined',
@@ -53,7 +53,7 @@ describe('transformRecord', () => {
 
       recordType: 'Inspection',
       recordName: 'NRO Inspection - Record 123',
-      author: 'Natural Resource Officers',
+      author: 'AGENCY_FLNR_NRO',
       description: 'Activity Inspected: Road - Maintenance',
       summary: 'Activity Inspected: Road - Maintenance',
       dateIssued: expect.any(String),
@@ -61,7 +61,7 @@ describe('transformRecord', () => {
         companyName: 'LNG Canada Development Inc.',
         type: MiscConstants.IssuedToEntityTypes.Company
       },
-      issuingAgency: 'Natural Resource Officers',
+      issuingAgency: 'AGENCY_FLNR_NRO',
       legislation: [
         {
           legislationDescription: 'Inspection to verify compliance with regulatory requirement'

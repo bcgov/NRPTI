@@ -19,7 +19,7 @@ describe('transformRecord', () => {
       _sourceRefAgriCmdbId: '',
 
       recordType: 'Inspection',
-      author: 'Ministry of Agriculture',
+      author: 'AGENCY_AGRI',
       dateIssued: null,
       issuedTo: {
         type: MiscConstants.IssuedToEntityTypes.Company,
@@ -28,7 +28,7 @@ describe('transformRecord', () => {
       description: descriptionString,
       outcomeDescription: '',
       sourceSystemRef: 'agri-cmdb-csv',
-      issuingAgency: 'Ministry of Agriculture and Food',
+      issuingAgency: 'AGENCY_AGRI',
       legislation: [
         {
           act: 'Fish and Seafood Act',
@@ -67,7 +67,7 @@ describe('transformRecord', () => {
         companyName: 'Company 5',
         type: MiscConstants.IssuedToEntityTypes.Company
       },
-      issuingAgency: 'Ministry of Agriculture and Food',
+      issuingAgency: 'AGENCY_AGRI',
       legislation: [
         {
           act: 'Fish and Seafood Act',
