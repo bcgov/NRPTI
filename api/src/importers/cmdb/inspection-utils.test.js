@@ -60,7 +60,7 @@ describe('transformRecord', () => {
 
       recordType: 'Inspection',
       recordName: 'Higher Risk Inspection',
-      author: 'Ministry of Agriculture',
+      author: 'AGENCY_AGRI',
       description: descriptionString,
       dateIssued: expect.any(String),
       issuedTo: {

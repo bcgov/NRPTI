@@ -19,7 +19,7 @@ describe('transformRecord', () => {
       _sourceRefAgriMisId: '',
 
       recordType: 'Inspection',
-      author: 'Ministry of Agriculture',
+      author: 'AGENCY_AGRI',
       dateIssued: null,
       issuedTo: {
         type: MiscConstants.IssuedToEntityTypes.Company,
@@ -59,7 +59,7 @@ describe('transformRecord', () => {
 
       recordType: 'Inspection',
       recordName: 'Compliance issue 123.4',
-      author: 'Ministry of Agriculture',
+      author: 'AGENCY_AGRI',
       description: descriptionString,
       dateIssued: expect.any(String),
       issuedTo: {
