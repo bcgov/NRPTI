@@ -14,6 +14,7 @@ import { ConfirmComponent } from '../../confirm/confirm.component';
 import { FactoryService } from '../../services/factory.service';
 import { RecordUtils } from '../../records/utils/record-utils';
 import { Constants } from '../../utils/constants/misc';
+import { AgencyDataService } from '../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
   selector: 'app-mines-collections-add-edit',
@@ -39,7 +40,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
 
   // Pick lists
   public collectionTypes = Picklists.collectionTypePicklist;
-  public collectionAgencies = Picklists.collectionAgencyPicklist;
+  public collectionAgencies = Picklists.collectionAgencyCodePicklist;
 
   // collection add edit state
   public collectionState = null;
@@ -539,6 +540,11 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
 
   convertAcronyms(acronym) {
     return Utils.convertAcronyms(acronym);
+  }
+
+  displayName(agency) {
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   ngOnDestroy(): void {
