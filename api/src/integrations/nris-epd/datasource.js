@@ -201,7 +201,7 @@ class NrisDataSource {
 
   // Re-write the issuing agency from Environmental Protection Office => Ministry of Environment and Climate Change Strategy
   stringTransformEPOtoEPD(agency) {
-    return agency === 'Environmental Protection Office' ? 'Ministry of Environment and Climate Change Strategy' : agency;
+    return agency === 'Environmental Protection Office' ? 'AGENCY_ENV' : agency;
   }
 
   stringTransformExpandAMP(inspctResponse) {

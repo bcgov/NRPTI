@@ -51,8 +51,8 @@ class Inspections extends BaseRecordUtils {
       defaultLog.debug(error);
       inspection['dateIssued'] = null;
     }
-    inspection['issuingAgency'] = 'BC Energy Regulator';
-    inspection['author'] = 'BC Energy Regulator';
+    inspection['issuingAgency'] = 'AGENCY_OGC';
+    inspection['author'] = 'AGENCY_OGC';
 
     inspection['recordName'] =
       (csvRow['inspection number'] && `Inspection Number ${csvRow['inspection number']}`) || '-';

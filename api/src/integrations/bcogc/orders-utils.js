@@ -40,8 +40,8 @@ class Orders extends BaseRecordUtils {
 
     order['recordType'] = RECORD_TYPE.Order.displayName;
     order['_sourceRefOgcOrderId'] = csvRow['Title'];
-    order['author'] = 'BC Energy Regulator';
-    order['issuingAgency'] = 'BC Energy Regulator';
+    order['author'] = 'AGENCY_OGC';
+    order['issuingAgency'] = 'AGENCY_OGC';
     order['recordName'] = csvRow['Title'];
     
     try {
