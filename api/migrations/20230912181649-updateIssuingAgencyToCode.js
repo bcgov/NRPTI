@@ -1,25 +1,15 @@
-'use strict';
-
-var dbm;
-var seed;
+/**
+ * @summary Updates existing records in nrpti and redacted_record_subset to use agency/ministry codes instead of names.
+ */
 
 /**
- * Migration file for updating all existing records to use agency code instead of agency value
+ * @param {Object} db - Database connection object.
+ * @description Updates records in specified collections to use agency codes instead of agency values.
  */
-exports.setup = function (options, seedLink) {
-  dbm = options.dbmigrate;
-  seed = seedLink;
-};
-
 exports.up = async function (db) {
   const mClient = await db.connection.connect(db.connectionString, {
     native_parser: true,
   });
-
-  const LegislationActs = {
-    ACT_Env_Management: 'Environmental Management Act',
-    ACT_Int_Pest_Management: 'Integrated Pest Management Act',
-  };
 
   const agencies = [
     { agencyCode: 'AGENCY_ALC', agencyName: 'Agricultural Land Commission' },
@@ -70,23 +60,18 @@ exports.up = async function (db) {
   return null;
 };
 
+/**
+ * @param {Object} db - Database connection object.
+ * @description Performs the reverse migration (not implemented in this script).
+ */
 exports.down = function (db) {
   return null;
 };
 
+/**
+ * @property {Object} _meta
+ * @property {number} _meta.version - The version of the migration script.
+ */
 exports._meta = {
   version: 1
 };
-
-/**
- * Update a record in the collection with a new agency code.
- * @param {Collection} collection - MongoDB collection.
- * @param {string} recordId - The ID of the record to update.
- * @param {string} newAgencyCode - The new agency code.
- */
-async function updateRecord(collection, recordId, newAgencyCode) {
-  await collection.updateOne(
-    { _id: recordId },
-    { $set: { 'legislation.act': newAgencyCode } }
-  );
-}

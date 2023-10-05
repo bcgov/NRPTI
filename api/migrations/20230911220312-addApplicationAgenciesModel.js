@@ -1,21 +1,22 @@
-'use strict';
-const ApplicationAgency = require('../src/models/master/applicationAgency');
-const mongoose = require('mongoose');
+/**
+ * @summary Adds agency/ministry codes and names as ApplicationAgency constants to the nrpti collection in the database.
+ */
 
-var dbm;
-var type;
-var seed;
-
-/*
-Migration file for adding agency codes and agency values to the nrpti collection
-*/
-
+/**
+ * @param {Object} options - Migration options.
+ * @param {string} seedLink - Seed link.
+ * @description Sets up the migration by initializing variables.
+ */
 exports.setup = function(options, seedLink) {
   dbm = options.dbmigrate;
   type = dbm.dataType;
   seed = seedLink;
 };
 
+/**
+ * @param {Object} db - Database connection object.
+ * @description Adds _schemaName:ApplicationAgency constants to the nrpti collection in the database.
+ */
 exports.up = async function (db) {
   console.log('**** Adding ApplicationAgencies constants to nrpti collection ****');
   
@@ -78,10 +79,18 @@ exports.up = async function (db) {
   return null;
 };
 
+/**
+ * @param {Object} db - Database connection object.
+ * @description Performs the reverse migration (not implemented in this script).
+ */
 exports.down = function(db) {
   return null;
 };
 
+/**
+ * @property {Object} _meta
+ * @property {number} _meta.version - The version of the migration script.
+ */
 exports._meta = {
   "version": 1
 };

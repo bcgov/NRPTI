@@ -643,9 +643,7 @@ export class FactoryService {
 
   /**
    * Get agency data. If data is not cached, fetch it from the ApplicationAgencyService.
-   *
-   * @readonly
-   * @type {{ [key: string]: string }}
+   * @returns {Observable<void>} An observable that resolves when agency data is fetched.
    * @memberof FactoryService
    */
   public getApplicationAgencyService(): Observable<void> {
