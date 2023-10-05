@@ -34,7 +34,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
   public bcmiPublishSubtext = 'Not published';
 
   // Pick lists
-  public agencies = Picklists.agencyCodePicklist;
+  public agencies = Picklists.getAgencyCodes(this.factoryService);
   public authors = Picklists.authorPicklist;
   public courtConvictionSubtypes = Picklists.courtConvictionSubtypePicklist;
   protected defaultAgency = '';

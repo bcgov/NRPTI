@@ -31,7 +31,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
   public lngPublishSubtext = 'Not published';
 
   // Pick lists
-  public agencies = Picklists.agencyCodePicklist;
+  public agencies = Picklists.getAgencyCodes(this.factoryService);
 
   // Documents
   public documents = [];

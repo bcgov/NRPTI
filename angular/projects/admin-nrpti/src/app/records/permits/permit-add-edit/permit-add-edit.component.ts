@@ -32,7 +32,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
 
   // Pick lists
   public permitSubtypes = Picklists.permitSubtypePicklist;
-  public agencies = Picklists.agencyCodePicklist;
+  public agencies = Picklists.getAgencyCodes(this.factoryService);
   private defaultAgency = '';
 
   // Documents

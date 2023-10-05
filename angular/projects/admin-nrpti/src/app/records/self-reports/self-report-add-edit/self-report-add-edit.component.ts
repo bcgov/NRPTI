@@ -31,7 +31,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
   public lngPublishSubtext = 'Not published';
 
   // Pick lists
-  public agencies = Picklists.agencyCodePicklist;
+  public agencies = Picklists.getAgencyCodes(this.factoryService);
   public authors = Picklists.authorPicklist;
 
   // Documents
