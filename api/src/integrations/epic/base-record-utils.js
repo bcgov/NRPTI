@@ -130,6 +130,7 @@ class BaseRecordUtils {
       _sourceRefId: new ObjectID(epicRecord._id) || '',
       _epicMilestoneId: epicRecord.milestone || '',
       mineGuid: (mineRecord && mineRecord._sourceRefId) || null,
+      issuingAgency: 'AGENCY_EAO',
 
       recordName: epicRecord.displayName || '',
       recordType: this.recordType.displayName,

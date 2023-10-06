@@ -44,7 +44,7 @@ describe('Record Individual issuedTo redaction test', () => {
     const testRecord = new TestModel({
         issuedTo: generateIssuedTo( false, true, false ),
         _schemaName: 'Schema',
-        issuingAgency: 'BC Parks'
+        issuingAgency: 'AGENCY_ENV_BCPARKS'
       });
 
     await nrptiCollection.insertOne(testRecord);
@@ -62,7 +62,7 @@ describe('Record Individual issuedTo redaction test', () => {
     const testRecord = new TestModel({
       issuedTo: generateIssuedTo( true, false, false ),
       _schemaName: 'Schema',
-      issuingAgency: 'BC Parks'
+      issuingAgency: 'AGENCY_ENV_BCPARKS'
     });
 
     await nrptiCollection.insertOne(testRecord);
