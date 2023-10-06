@@ -228,28 +228,28 @@ describe('Search Controller Testing', () => {
         return done();
       })
   })
-  // todo this passes when run in debugger, but not with npm run test?
-  // test('Lookup by dataset returns items', async (done) => {
-  //   const roles = ['sysadmin','admin:nrced'];
-  //   app.get(searchEndpoint, (req, res) => {
-  //     const params = test_util.buildParams(req.query)
-  //     const paramsWithValues = test_util.createSwaggerParams(params, roles, testUser);
-  //     return search.protectedGet(paramsWithValues, res, next)
-  //   });
 
-  //   request(app)
-  //     .get(searchEndpoint)
-  //     .query({ dataset: ['Order','Inspection']})
-  //     .expect(200)
-  //     .expect('Content-Type', 'application/json')
-  //     .end((err, res) => {
-  //       if (err) {
-  //         console.log(err)
-  //         return done(err)
-  //       }
-  //       console.log(JSON.stringify(res.body))
-  //       expect(res.body[0].searchResults.length).toBe(11)
-  //       return done();
-  //     })
-  // })
+  test('Lookup by dataset returns items', async (done) => {
+    const roles = ['sysadmin','admin:nrced'];
+    app.get(searchEndpoint, (req, res) => {
+      const params = test_util.buildParams(req.query)
+      const paramsWithValues = test_util.createSwaggerParams(params, roles, testUser);
+      return search.protectedGet(paramsWithValues, res, next)
+    });
+
+    request(app)
+      .get(searchEndpoint)
+      .query({ dataset: ['Order','Inspection']})
+      .expect(200)
+      .expect('Content-Type', 'application/json')
+      .end((err, res) => {
+        if (err) {
+          console.log(err)
+          return done(err)
+        }
+        console.log(JSON.stringify(res.body))
+        expect(res.body[0].searchResults.length).toBe(11)
+        return done();
+      })
+  })
 })
