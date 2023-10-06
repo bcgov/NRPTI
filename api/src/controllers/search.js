@@ -12,7 +12,7 @@ const { userIsOnlyInRole } = require('../utils/auth-utils');
 
 function isEmpty(obj) {
   for (const key in obj) {
-    if (Object.prototype.hasOwn(obj, key)) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
       return false;
     }
   }
@@ -387,7 +387,7 @@ let searchCollection = async function (
   // flag it for addition later and remove the check from the "or" variable
   let hasCollectionTest = false;
   let hasCollection = null;
-  if (or && Object.prototype.hasOwn(or, 'hasCollection')) {
+  if (or && Object.prototype.hasOwnProperty.call(or, 'hasCollection')) {
     hasCollectionTest = true;
     hasCollection = or.hasCollection === 'true';
     delete or.hasCollection;
@@ -516,7 +516,7 @@ let searchCollection = async function (
   // to finalize the facet
   searchResultAggregation.push({
     $lookup: {
-      from: subset && subset.includes('redactedRecord') ? 'redacted_record_subset' : 'nrpti',
+      from: subset && subset?.includes('redactedRecord') ? 'redacted_record_subset' : 'nrpti',
       localField: '_id',
       foreignField: '_id',
       as: 'fullRecord'
@@ -758,7 +758,7 @@ const executeQuery = async function (args, res, next) {
   let or = args.swagger.params.or ? args.swagger.params.or.value : '';
   let nor = args.swagger.params.nor ? args.swagger.params.nor.value : '';
   let _in = args.swagger.params._in ? args.swagger.params._in.value : '';
-  let subset = args.swagger.params.subset ? args.swagger.params.subset.value : null;
+  let subset = args.swagger.params.subset ? args.swagger.params.subset.value : [];
   defaultLog.info('Searching keywords:', keywords);
   defaultLog.info('Searching datasets:', dataset);
   defaultLog.info('Searching project:', project);
