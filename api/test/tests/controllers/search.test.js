@@ -26,7 +26,7 @@ let generated_Company;
 describe('Search Controller Testing', () => {
   const testUser = 'testUser';
 
-  beforeAll( async () => {
+  beforeAll(async () => {
     generated_things = await generate_helper.generateSingleFactory(
       'Order',
       5,
@@ -47,12 +47,12 @@ describe('Search Controller Testing', () => {
       {},
       { genAdult: true }
     ),
-    generated_Company = await generate_helper.generateSingleFactory(
-      'Order',
-      2,
-      { },
-      { genCompany: true }
-    )
+      generated_Company = await generate_helper.generateSingleFactory(
+        'Order',
+        2,
+        {},
+        { genCompany: true }
+      )
   });
 
   test('Invalid ObjectId returns 400 error', async (done) => {
@@ -89,7 +89,7 @@ describe('Search Controller Testing', () => {
 
     request(app)
       .get(searchEndpoint)
-      .query(qs.stringify({ dataset: ['Item'], _schemaName: 'Order', _id: orderId}))
+      .query(qs.stringify({ dataset: ['Item'], _schemaName: 'Order', _id: orderId }))
       .expect(200)
       .expect('Content-Type', 'application/json')
       .end((err, res) => {
@@ -114,7 +114,7 @@ describe('Search Controller Testing', () => {
 
     request(app)
       .get(searchEndpoint)
-      .query(qs.stringify({ dataset: ['Item'], _schemaName: 'Order', _id: orderId, populate: true}))
+      .query(qs.stringify({ dataset: ['Item'], _schemaName: 'Order', _id: orderId, populate: true }))
       .expect(200)
       .expect('Content-Type', 'application/json')
       .end((err, res) => {
@@ -146,7 +146,7 @@ describe('Search Controller Testing', () => {
 
     request(app)
       .get(searchEndpoint)
-      .query(qs.stringify({ dataset: ['Item'], _schemaName: 'Order', _id: orderId, populate: true}))
+      .query(qs.stringify({ dataset: ['Item'], _schemaName: 'Order', _id: orderId, populate: true }))
       .expect(200)
       .expect('Content-Type', 'application/json')
       .end((err, res) => {
@@ -177,7 +177,7 @@ describe('Search Controller Testing', () => {
 
     request(app)
       .get(searchEndpoint)
-      .query(qs.stringify({ dataset: ['Item'], _schemaName: 'Order', _id: orderId, populate: true}))
+      .query(qs.stringify({ dataset: ['Item'], _schemaName: 'Order', _id: orderId, populate: true }))
       .expect(200)
       .expect('Content-Type', 'application/json')
       .end((err, res) => {
@@ -200,6 +200,8 @@ describe('Search Controller Testing', () => {
     const roles = ['admin:nrced'];
     const orderId = generated_Company[0]._id.toString();
     const expected = generated_Company[0];
+    const redactExpectation = 'Unpublished';
+
     app.get(searchEndpoint, (req, res) => {
       const params = test_util.buildParams(req.query)
       const paramsWithValues = test_util.createSwaggerParams(params, roles, testUser);
@@ -208,7 +210,7 @@ describe('Search Controller Testing', () => {
 
     request(app)
       .get(searchEndpoint)
-      .query(qs.stringify({ dataset: ['Item'], _schemaName: 'Order', _id: orderId, populate: true}))
+      .query(qs.stringify({ dataset: ['Item'], _schemaName: 'Order', _id: orderId, populate: true }))
       .expect(200)
       .expect('Content-Type', 'application/json')
       .end((err, res) => {
@@ -221,16 +223,16 @@ describe('Search Controller Testing', () => {
         expect(record._id).toMatch(orderId)
         expect(record.issuedTo.type).toBe(CONSTANTS.IssuedToEntityTypes.Company)
         expect(record.issuedTo.companyName).toBe(expected.issuedTo.companyName)
-        expect(record.issuedTo.firstName).toBe('')
-        expect(record.issuedTo.lastName).toBe('')
-        expect(record.issuedTo.fullName).toBe('')
+        expect(record.issuedTo.firstName).toBe(redactExpectation || '')
+        expect(record.issuedTo.lastName).toBe(redactExpectation || '')
+        expect(record.issuedTo.fullName).toBe(redactExpectation || '')
         expect(record.issuedTo.dateOfBirth).toBeFalsy()
         return done();
       })
   })
 
   test('Lookup by dataset returns items', async (done) => {
-    const roles = ['sysadmin','admin:nrced'];
+    const roles = ['sysadmin', 'admin:nrced'];
     app.get(searchEndpoint, (req, res) => {
       const params = test_util.buildParams(req.query)
       const paramsWithValues = test_util.createSwaggerParams(params, roles, testUser);
@@ -239,7 +241,7 @@ describe('Search Controller Testing', () => {
 
     request(app)
       .get(searchEndpoint)
-      .query({ dataset: ['Order','Inspection']})
+      .query({ dataset: ['Order', 'Inspection'] })
       .expect(200)
       .expect('Content-Type', 'application/json')
       .end((err, res) => {

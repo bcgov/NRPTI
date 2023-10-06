@@ -355,23 +355,23 @@ let searchCollection = async function (
   pageNum,
   pageSize,
   project,
+  sortField = undefined,
+  sortDirection = undefined,
   caseSensitive,
+  populate = false,
   and,
   or,
   nor,
   subset,
-  _in,
-  populate = false,
-  sortField = undefined,
-  sortDirection = undefined,
+  _in
 ) {
-  let properties;
+  let properties = undefined;
   if (project) {
     properties = { project: mongoose.Types.ObjectId(project) };
   }
 
   // optional search keys
-  let searchProperties;
+  let searchProperties = undefined;
   if (keywords) {
     // for now, limit fuzzy search to the mine search only. We can expand to all searches
     // later if desired
@@ -389,7 +389,7 @@ let searchCollection = async function (
   let hasCollection = null;
   if (or && Object.prototype.hasOwnProperty.call(or, 'hasCollection')) {
     hasCollectionTest = true;
-    hasCollection = or.hasCollection === 'true';
+    hasCollection = or.hasCollection === 'true' ? true : false;
     delete or.hasCollection;
   }
 
@@ -516,7 +516,7 @@ let searchCollection = async function (
   // to finalize the facet
   searchResultAggregation.push({
     $lookup: {
-      from: subset && subset?.includes('redactedRecord') ? 'redacted_record_subset' : 'nrpti',
+      from: subset && subset.includes('redactedRecord') ? 'redacted_record_subset' : 'nrpti',
       localField: '_id',
       foreignField: '_id',
       as: 'fullRecord'
@@ -758,7 +758,7 @@ const executeQuery = async function (args, res, next) {
   let or = args.swagger.params.or ? args.swagger.params.or.value : '';
   let nor = args.swagger.params.nor ? args.swagger.params.nor.value : '';
   let _in = args.swagger.params._in ? args.swagger.params._in.value : '';
-  let subset = args.swagger.params.subset ? args.swagger.params.subset.value : [];
+  let subset = args.swagger.params.subset ? args.swagger.params.subset.value : null;
   defaultLog.info('Searching keywords:', keywords);
   defaultLog.info('Searching datasets:', dataset);
   defaultLog.info('Searching project:', project);
