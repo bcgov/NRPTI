@@ -7,7 +7,6 @@ let faker = require('faker/locale/en');
 const fs = require('fs');
 const path = require('path');
 const shell = require('shelljs');
-// const HummusRecipe = require('hummus-recipe');
 const CONSTANTS = require('../../src/utils/constants/misc.js');
 
 let bcCities = [];
@@ -15,11 +14,11 @@ loadBcCities();
 
 
 function generateFakePerson({ firstName, middleName, lastName, genUnderAge, genAdult }) {
-    let first = (firstName) ? firstName : faker.name.firstName();
-    let middle = (middleName) ? middleName : faker.random.arrayElement(["", faker.name.firstName()]);
-    let last = (lastName) ? lastName : faker.name.lastName();
-    let underage = (genUnderAge) ? genUnderAge : false;
-    let adult = (genAdult) ? genAdult : false;
+    let first = firstName || faker.name.firstName();
+    let middle = middleName || faker.random.arrayElement(["", faker.name.firstName()]);
+    let last = lastName || faker.name.lastName();
+    let underage = genUnderAge || false;
+    let adult = genAdult || false;
 
     let full = first + " " + (("" == middle) ? "" : faker.random.arrayElement(["", middle.charAt(0) + ". "])) + last;
 
@@ -86,7 +85,7 @@ function loadBcCities() {
     if (0 < bcCities.length) return;
     for (let i = 0; i < canada.cities.length; i++) {
         if ("bc" == canada.cities[i][1].toLowerCase()) bcCities.push(_.startCase(canada.cities[i][0].toLowerCase()).replace(/^([0-9a-zA-Z]+\s)*Mc([0-9a-zA-Z]*)(.*)/gi, function (original, before, mcSecondPart, theRest) {
-            return (before) ? before : "" + "Mc" + _.startCase(mcSecondPart) + theRest;
+            return before || "" + "Mc" + _.startCase(mcSecondPart) + theRest;
         }));
     }
 }
@@ -157,7 +156,7 @@ function hexaDecimal(count) {
 
 function generateSeededObjectId(value) {
     let oid = (typeof value === "undefined") ? hexaDecimal(24).toLocaleLowerCase() : value;
-    if (!bsonObjectId.isValid(oid)) throw "Invalid attempt to generate an ObjectID: '" + oid + "'";
+    if (!bsonObjectId.isValid(oid)) throw new Error("Invalid attempt to generate an ObjectID: '" + oid + "'");
     return mongTypes.ObjectId(oid);
 }
 
@@ -231,8 +230,12 @@ function generateSwaggerParams({ userRoles }) {
   let roles = [];
 
   if (userRoles) {
-    if (Array.isArray(userRoles)) roles = userRoles;
-    else if (typeof userRoles === 'string') roles = [userRoles];
+    if (Array.isArray(userRoles)) {
+      roles = userRoles;
+    }
+    else if (typeof userRoles === 'string') {
+      roles = [userRoles];
+    }
   }
 
   return {
@@ -240,10 +243,11 @@ function generateSwaggerParams({ userRoles }) {
       params: {
         auth_payload: {
           displayName: faker.internet.userName,
-          realm_access: { roles: roles }
-        }
-      }
-    }
+          realm_access: { roles: roles },
+          client_roles: roles,
+        },
+      },
+    },
   };
 }
 
