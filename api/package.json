@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node app",
     "test": "node_modules/.bin/jest --verbose --forceExit",
+    "test-mac": "env MONGOMS_ARCH=x64 npm run test --detectOpenHandles",
+    "test-conviction": "env MONGOMS_ARCH=x64 jest -t createBCMI",
     "lint": "npm-run-all -l -s -c lint:*",
     "lint:1": "eslint . --ignore-pattern 'node_modules' --ext .js",
     "lint:2": "prettier ./**/*.js --warn",
