@@ -774,7 +774,7 @@ const executeQuery = async function (args, res, next) {
   defaultLog.info('populate:', populate);
   defaultLog.info('subset:', subset);
 
-  let roles = args.swagger.params.auth_payload.client_roles || ['public'];
+  let roles = args.swagger.params.auth_payload?.client_roles || ['public'];
 
   defaultLog.info('Searching Collection:', dataset);
 
