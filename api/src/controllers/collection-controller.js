@@ -102,7 +102,7 @@ const updateCollection = async function(incomingObj, collectionId, displayName) 
     let arrayOfObjIds = [];
 
     for(const record of incomingObj.records){
-      if(recordIds.includes(record)){
+      if(!recordIds.includes(record)){
         recordsToAdd.push(record);
         arrayOfObjIds.push(new ObjectId(record));
       }
