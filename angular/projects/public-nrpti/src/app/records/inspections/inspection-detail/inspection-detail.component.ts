@@ -6,7 +6,7 @@ import { InspectionNRCED, Document } from '../../../../../../common/src/app/mode
 import { FactoryService } from '../../../services/factory.service';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { Utils as GlobalUtils } from 'nrpti-angular-components';
-
+import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service-nrced';
 @Component({
   selector: 'app-inspection-detail',
   templateUrl: './inspection-detail.component.html',
@@ -90,7 +90,9 @@ export class InspectionDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   displayName(agency) {
-    return GlobalUtils.displayNameFull(agency);
+    //return GlobalUtils.displayNameFull(agency);
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   ngOnDestroy() {

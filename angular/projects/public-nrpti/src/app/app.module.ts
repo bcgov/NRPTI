@@ -29,12 +29,14 @@ import { ApiService } from './services/api.service';
 import { DocumentService } from './services/document.service';
 import { FactoryService } from './services/factory.service';
 import { ConfigService, LoggerService } from 'nrpti-angular-components';
+import { ApplicationAgencyService } from './services/application-agency.service';
 
 export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrategy {
   return () => overlay.scrollStrategies.close();
 }
 
-export function initConfig(configService: ConfigService) {
+export function initConfig(configService: ConfigService,
+  applicationAgency: ApplicationAgencyService) {
   return () => configService.init();
 }
 
@@ -60,7 +62,7 @@ export function initConfig(configService: ConfigService) {
     {
       provide: APP_INITIALIZER,
       useFactory: initConfig,
-      deps: [ConfigService],
+      deps: [ConfigService, ApplicationAgencyService],
       multi: true
     },
     {
@@ -72,7 +74,8 @@ export function initConfig(configService: ConfigService) {
     ApiService,
     DocumentService,
     FactoryService,
-    LoggerService
+    LoggerService,
+    ApplicationAgencyService
   ],
   entryComponents: [ConfirmComponent, HomeComponent],
   bootstrap: [AppComponent]
