@@ -21,7 +21,7 @@ describe('transformRecord', () => {
       issuingAgency: '',
       author: '',
       legislation: [{ act: '', paragraph: '', regulation: '', section: '', subSection: '', offence: '' }],
-      location: '',
+      location_of_violation: '',
       recordName: '',
       penalties: [{ description: '', penalty: { type: null, value: null }, type: null }],
 

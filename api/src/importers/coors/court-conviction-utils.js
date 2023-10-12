@@ -74,7 +74,7 @@ class CourtConvictions extends BaseRecordUtils {
       };
     }
 
-    if (csvRow['enforcement_outcome'] && csvRow['enforcement_outcome'] === 'GTYJ') {
+    if (csvRow?.enforcement_outcome === 'GTYJ') {
       conviction['dateIssued'] = csvRow['ticket_date'] || null;
       conviction['recordName'] = (csvRow['case_number'] && `Case Number ${csvRow['case_number']}`) || '';
       conviction['location'] = csvRow['location_of_violation'] || '';
