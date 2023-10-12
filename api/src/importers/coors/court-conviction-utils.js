@@ -95,7 +95,7 @@ class CourtConvictions extends BaseRecordUtils {
     } else {
       conviction['dateIssued'] = csvRow['final_decision_date'] || null;
       conviction['recordName'] = (csvRow['case_no'] && `Case Number ${csvRow['case_no']}`) || '';
-      conviction['location_of_violation'] = csvRow['location'] || '';
+      conviction['location'] = csvRow['location'] || '';
 
       const penaltyType = CsvUtils.getPenalty(csvRow['summary']);
       const penaltyUnits = CsvUtils.getPenaltyUnits(csvRow['penalty_unit_code']);
