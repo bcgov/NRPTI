@@ -33,14 +33,11 @@ const expectedOutput = `Record Type,Issued On,Issued To,Summary,Issuing Agency,L
 describe('RecordUtils', () => {
   describe('exportToCsv', () => {
     it('should call the download function with the expected data', () => {
-      // Defining mocks
-      const urlMock = window.URL.createObjectURL(new Blob([expectedOutput], { type: 'text/plain' }));
-
       // Defining spies
       const downloadSpy = jasmine.createSpyObj('a', ['click']);
       spyOn(moment.prototype, 'format').and.returnValue('this-is-the-time');
       spyOn(document, 'createElement').and.returnValue(downloadSpy);
-      spyOn(window.URL, 'createObjectURL').and.returnValue(urlMock);
+      spyOn(window.URL, 'createObjectURL').and.callThrough();
 
       // Executing export function
       RecordUtils.exportToCsv(mockData);
@@ -49,7 +46,7 @@ describe('RecordUtils', () => {
       expect(document.createElement).toHaveBeenCalledTimes(1);
       expect(document.createElement).toHaveBeenCalledWith('a');
 
-      expect(downloadSpy.href).toBe(urlMock);
+      expect(window.URL.createObjectURL).toHaveBeenCalledWith(new Blob([expectedOutput], { type: 'text/plain' }))
       expect(downloadSpy.download).toContain('nrced-export-this-is-the-time.csv');
     });
   });
