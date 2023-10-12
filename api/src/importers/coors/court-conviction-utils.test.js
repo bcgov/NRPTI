@@ -29,61 +29,114 @@ describe('transformRecord', () => {
     });
   });
 
-  it('transforms csv row fields into NRPTI record fields', () => {
-    const result = courtConvictions.transformRecord({
-      case_contravention_id: 123,
-      enforcement_action_id: 456,
-      final_decision_date: '12/30/2019',
-      case_no: 'P-123456',
-      act: 'Fisheries Canada',
-      regulation_description: 'regulation123',
-      section: 'section123',
-      sub_section: 'subSection123',
-      paragraph: 'paragraph123',
-      description: 'description123',
-      business_name: 'businessName123',
-      location: 'location123',
+  it('transforms CSV row fields into NRPTI record fields for non GTYJ enforcement outcomes', () => {
+    const mockRecord = {
+      case_contravention_id: 1,
+      enforcement_action_id: 2,
+      final_decision_date: '12/31/3000',
+      case_no: 'p-TestNumber1',
+      act: 'Test Acts',
+      regulation_description: 'This is a lil description of the regulation',
+      section: 'Section1',
+      sub_section: 'SubSection2',
+      paragraph: 'Paragraph3',
+      description: 'This is a lil description of the thing',
+      business_name: 'A Great Business',
+      location: 'Mars',
       summary: 'Fined',
-      penalty_amount: '10000',
-      penalty_unit_code: 'Dollars'
-    });
+      penalty_amount: '10000000',
+      penalty_unit_code: 'Dollars',
+    }
 
-    expect(result).toEqual({
+    expect(courtConvictions.transformRecord(mockRecord)).toEqual({
       _schemaName: 'CourtConviction',
-      _sourceRefCoorsId: '123-456',
-
+      _sourceRefCoorsId: `${mockRecord.case_contravention_id}-${mockRecord.enforcement_action_id}`,
       recordType: 'Court Conviction',
-      dateIssued: "12/30/2019",
+      dateIssued: mockRecord.final_decision_date,
       issuedTo: {
-        companyName: 'businessName123',
+        companyName: mockRecord.business_name,
         type: 'Company'
       },
       issuingAgency: 'BC Parks',
       author: 'BC Parks',
       legislation: [
         {
-          act: 'Fisheries Canada',
-          paragraph: 'paragraph123',
-          regulation: 'regulation123',
-          section: 'section123',
-          subSection: 'subSection123',
-          offence: 'description123'
+          act: mockRecord.act,
+          paragraph: mockRecord.paragraph,
+          regulation: mockRecord.regulation_description,
+          section: mockRecord.section,
+          subSection: mockRecord.sub_section,
+          offence: mockRecord.description,
         }
       ],
-      location_of_violation: 'location123',
-      recordName: 'Case Number P-123456',
+      location: mockRecord.location,
+      recordName: `Case Number ${mockRecord.case_no}`,
+      penalties: [
+        {
+          description: '',
+          penalty: {
+            type: mockRecord.penalty_unit_code,
+            value: Number(mockRecord.penalty_amount),
+          },
+          type: mockRecord.summary
+        }
+      ],
+      sourceSystemRef: 'coors-csv'
+    })
+  })
+
+  it('transforms CSV row fields into NRPTI record fields for GTYJ enforcement outcomes', () => {
+    const mockRecord = {
+      case_contravention_id: 1,
+      enforcement_action_id: 2,
+      enforcement_outcome: 'GTYJ',
+      ticket_date: '12/31/3000',
+      case_number: 'p-TestNumber1',
+      act: 'Test Acts',
+      regulation_description: 'This is a lil description of the regulation',
+      section: 'Section1',
+      sub_section: 'SubSection2',
+      paragraph: 'Paragraph3',
+      description: 'This is a lil description of the thing',
+      business_name: 'A Great Business',
+      location_of_violation: 'Mars',
+      penalty: '10000000',
+    }
+
+    expect(courtConvictions.transformRecord(mockRecord)).toEqual({
+      _schemaName: 'CourtConviction',
+      _sourceRefCoorsId: `${mockRecord.case_contravention_id}-${mockRecord.enforcement_action_id}`,
+      recordType: 'Court Conviction',
+      dateIssued: mockRecord.ticket_date,
+      issuedTo: {
+        companyName: mockRecord.business_name,
+        type: 'Company'
+      },
+      issuingAgency: 'BC Parks',
+      author: 'BC Parks',
+      legislation: [
+        {
+          act: mockRecord.act,
+          paragraph: mockRecord.paragraph,
+          regulation: mockRecord.regulation_description,
+          section: mockRecord.section,
+          subSection: mockRecord.sub_section,
+          offence: mockRecord.description,
+        }
+      ],
+      location: mockRecord.location_of_violation,
+      recordName: `Case Number ${mockRecord.case_number}`,
       penalties: [
         {
           description: '',
           penalty: {
             type: 'Dollars',
-            value: 10000
+            value: Number(mockRecord.penalty),
           },
           type: 'Fined'
         }
       ],
-
       sourceSystemRef: 'coors-csv'
-    });
-  });
+    })
+  })
 });
