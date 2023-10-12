@@ -21,7 +21,7 @@ describe('transformRecord', () => {
       issuingAgency: '',
       author: '',
       legislation: [{ act: '', paragraph: '', regulation: '', section: '', subSection: '', offence: '' }],
-      location: '',
+      location_of_violation: '',
       recordName: '',
       penalties: [{ description: '', penalty: { type: null, value: null }, type: null }],
 
@@ -53,7 +53,7 @@ describe('transformRecord', () => {
       _sourceRefCoorsId: '123-456',
 
       recordType: 'Court Conviction',
-      dateIssued: expect.any(String),
+      dateIssued: "12/30/2019",
       issuedTo: {
         companyName: 'businessName123',
         type: 'Company'
@@ -70,7 +70,7 @@ describe('transformRecord', () => {
           offence: 'description123'
         }
       ],
-      location: 'location123',
+      location_of_violation: 'location123',
       recordName: 'Case Number P-123456',
       penalties: [
         {

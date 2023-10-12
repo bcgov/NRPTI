@@ -46,8 +46,6 @@ exports.getIssuingAgency = function(csvRow) {
   let act = '';
   if (csvRow['act']) {
     act = csvRow['act'];
-  } else {
-    return null;
   }
 
   // Act == Water Sustainability Act, in which case Issuing Agency = BC Energy Regulator

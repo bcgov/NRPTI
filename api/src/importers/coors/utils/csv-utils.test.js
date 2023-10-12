@@ -48,7 +48,7 @@ describe('getIssuingAgency', () => {
 
   it('returns "Conservation Officer Service" if csvRow "case_number" does not start with a "P-"', async () => {
     const result = await CsvUtils.getIssuingAgency({ case_number: '123123' });
-
+    
     expect(result).toEqual(MiscConstants.CoorsCsvIssuingAgencies.Conservation_Officer_Service);
   });
 });

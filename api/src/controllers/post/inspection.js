@@ -120,7 +120,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   inspection.write = utils.ApplicationAdminRoles;
 
   // set forward references
-  if (flavourIds && flavourIds.length) {
+  if (flavourIds?.length) {
     flavourIds.forEach(id => {
       if (ObjectId.isValid(id)) {
         inspection._flavourRecords.push(new ObjectId(id));
@@ -263,22 +263,22 @@ exports.createLNG = function(args, res, next, incomingObj) {
 
   inspectionLNG.issuedTo.read = utils.ApplicationAdminRoles;
   inspectionLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
-  incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionLNG.issuedTo.type = incomingObj.issuedTo.type);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.companyName &&
+  incomingObj.issuedTo?.type && (inspectionLNG.issuedTo.type = incomingObj.issuedTo.type);
+
+    incomingObj.issuedTo?.companyName &&
     (inspectionLNG.issuedTo.companyName = incomingObj.issuedTo.companyName);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.firstName &&
+
+    incomingObj.issuedTo?.firstName &&
     (inspectionLNG.issuedTo.firstName = incomingObj.issuedTo.firstName);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.middleName &&
+
+    incomingObj.issuedTo?.middleName &&
     (inspectionLNG.issuedTo.middleName = incomingObj.issuedTo.middleName);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.lastName &&
+
+    incomingObj.issuedTo?.lastName &&
     (inspectionLNG.issuedTo.lastName = incomingObj.issuedTo.lastName);
   incomingObj.issuedTo && (inspectionLNG.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.dateOfBirth &&
+
+    incomingObj.issuedTo?.dateOfBirth &&
     (inspectionLNG.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
 
   incomingObj.projectName && (inspectionLNG.projectName = incomingObj.projectName);
@@ -354,7 +354,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
       args.swagger.params.auth_payload.client_roles
     )
   ) {
-    throw new Error('Missing valid user role.');
+    throw new Error('@func createNRCED: Missing valid user role.');
   }
 
   let InspectionNRCED = mongoose.model('InspectionNRCED');
@@ -395,23 +395,25 @@ exports.createNRCED = function(args, res, next, incomingObj) {
 
   inspectionNRCED.issuedTo.read = utils.ApplicationAdminRoles;
   inspectionNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
-  incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionNRCED.issuedTo.type = incomingObj.issuedTo.type);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.companyName &&
+
+  incomingObj?.issuedTo?.type && (inspectionNRCED.issuedTo.type = incomingObj.issuedTo.type);
+  
+    incomingObj?.issuedTo?.companyName &&
     (inspectionNRCED.issuedTo.companyName = incomingObj.issuedTo.companyName);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.firstName &&
+  
+    incomingObj?.issuedTo?.firstName &&
     (inspectionNRCED.issuedTo.firstName = incomingObj.issuedTo.firstName);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.middleName &&
+  
+    incomingObj?.issuedTo?.middleName &&
     (inspectionNRCED.issuedTo.middleName = incomingObj.issuedTo.middleName);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.lastName &&
+
+    incomingObj?.issuedTo?.lastName &&
     (inspectionNRCED.issuedTo.lastName = incomingObj.issuedTo.lastName);
-  incomingObj.issuedTo &&
+  
+    incomingObj.issuedTo &&
     (inspectionNRCED.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.dateOfBirth &&
+  
+    incomingObj?.issuedTo?.dateOfBirth &&
     (inspectionNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
 
   incomingObj.projectName && (inspectionNRCED.projectName = incomingObj.projectName);
@@ -487,7 +489,7 @@ exports.createBCMI = function(args, res, next, incomingObj) {
       args.swagger.params.auth_payload.client_roles
     )
   ) {
-    throw new Error('Missing valid user role.');
+    throw new Error('@func inspection.js createBCMI: Missing valid user role.');
   }
 
   let InspectionNRCED = mongoose.model('InspectionBCMI');
@@ -532,22 +534,22 @@ exports.createBCMI = function(args, res, next, incomingObj) {
 
   inspectionBCMI.issuedTo.read = utils.ApplicationAdminRoles;
   inspectionBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
-  incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionBCMI.issuedTo.type = incomingObj.issuedTo.type);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.companyName &&
+  incomingObj.issuedTo?.type && (inspectionBCMI.issuedTo.type = incomingObj.issuedTo.type);
+
+  incomingObj.issuedTo?.companyName &&
     (inspectionBCMI.issuedTo.companyName = incomingObj.issuedTo.companyName);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.firstName &&
+
+  incomingObj.issuedTo?.firstName &&
     (inspectionBCMI.issuedTo.firstName = incomingObj.issuedTo.firstName);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.middleName &&
+
+  incomingObj.issuedTo?.middleName &&
     (inspectionBCMI.issuedTo.middleName = incomingObj.issuedTo.middleName);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.lastName &&
+
+  incomingObj.issuedTo?.lastName &&
     (inspectionBCMI.issuedTo.lastName = incomingObj.issuedTo.lastName);
   incomingObj.issuedTo && (inspectionBCMI.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.dateOfBirth &&
+
+  incomingObj.issuedTo?.dateOfBirth &&
     (inspectionBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
 
   incomingObj.projectName && (inspectionBCMI.projectName = incomingObj.projectName);
