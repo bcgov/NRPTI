@@ -39,14 +39,15 @@ describe('RecordUtils', () => {
       spyOn(document, 'createElement').and.returnValue(downloadSpy);
       spyOn(window.URL, 'createObjectURL').and.callThrough();
 
-      // Executing export function
+      // Executing exportToCsv function
       RecordUtils.exportToCsv(mockData);
 
-      // Ensuring expected output
+      // Ensuring expected behaviour
       expect(document.createElement).toHaveBeenCalledTimes(1);
       expect(document.createElement).toHaveBeenCalledWith('a');
 
       expect(window.URL.createObjectURL).toHaveBeenCalledWith(new Blob([expectedOutput], { type: 'text/plain' }))
+      expect(downloadSpy.href).toBeDefined()
       expect(downloadSpy.download).toContain('nrced-export-this-is-the-time.csv');
     });
   });
