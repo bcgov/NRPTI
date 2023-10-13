@@ -1,4 +1,62 @@
 const NrisDataSource = require('./datasource');
+const mockingoose = require('mockingoose');
+
+const _nrisInspectionDocument = {
+  _id: '507f191e810c19729de860ea',
+  attachment: [],
+  assessmentId: 1234,
+  requirementSource: 'Greenhouse Gas Industrial Reporting and Control Act',
+  authorization: {
+    sourceId: 1234
+  },
+  inspection: {
+    inspctReportSentDate: new Date(),
+    inspectionType: ['Electrical']
+  },
+  location: {
+    locationName: 'My location',
+    latitude: 48.407326,
+    longitude: -123.329773
+  }
+};
+
+const _nrisInspectionDocument_FLNRO = {
+  _id: '507f191e810c19729de860ea',
+  attachment: [],
+  assessmentId: 1234,
+  issuingAgency: 'FLNRO',
+  authorization: {
+    sourceId: 1234
+  },
+  inspection: {
+    inspctReportSentDate: new Date(),
+    inspectionType: ['Electrical']
+  },
+  location: {
+    locationName: 'My location',
+    latitude: 48.407326,
+    longitude: -123.329773
+  }
+};
+
+const _nrisInspectionDocument_EAO = {
+  _id: '507f191e810c19729de860ea',
+  attachment: [],
+  assessmentId: 1234,
+  issuingAgency: 'Environmental Assessment Office',
+  authorization: {
+    sourceId: 1234
+  },
+  inspection: {
+    inspctReportSentDate: new Date(),
+    inspectionType: ['Electrical']
+  },
+  location: {
+    locationName: 'My location',
+    latitude: 48.407326,
+    longitude: -123.329773
+  }
+};
 
 describe('NrisDataSource', () => {
   describe('constructor', () => {
@@ -22,4 +80,22 @@ describe('NrisDataSource', () => {
       expect(dataSource).toEqual({ auth_payload: undefined, params: {} });
     });
   });
+
+  describe('transformRecord', () => {
+    it.each([
+      [_nrisInspectionDocument, 'AGENCY_CAS'],
+      [_nrisInspectionDocument_FLNRO, 'AGENCY_FLNRO'],
+      [_nrisInspectionDocument_EAO, 'AGENCY_EAO']
+    ])('should return the appropriate agency code', async (record, expectedAgency) => {
+      dataSource = new NrisDataSource();
+      // eslint-disable-next-line no-unused-vars
+      Inspection = require('../../models/master/inspection');
+
+      mockingoose('Inspection').toReturn(record, 'findOne');
+      const doc = await dataSource.transformRecord(record);
+      expect(doc.fileName).toEqual(record.fileName);
+      expect(doc.issuingAgency).toEqual(expectedAgency);
+    });
+  });
+  
 });

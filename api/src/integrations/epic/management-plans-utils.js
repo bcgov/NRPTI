@@ -35,7 +35,6 @@ class ManagementPlans extends BaseRecordUtils {
 
     return {
       ...(await super.transformRecord(epicRecord)),
-      issuingAgency: 'AGENCY_EAO',
       author: epicRecord.documentAuthor || ''
     };
   }

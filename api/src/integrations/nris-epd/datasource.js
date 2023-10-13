@@ -312,7 +312,7 @@ class NrisDataSource {
     ];
 
     if (record.requirementSource === 'Greenhouse Gas Industrial Reporting and Control Act') {
-      newRecord.issuingAgency = 'Climate Action Secretariat';
+      newRecord.issuingAgency = 'AGENCY_CAS';
     } else {
       if (record.authorization && record.authorization.sourceId) {
         descriptions.splice(1, 0, `Authorization Number: ${record.authorization.sourceId}`);
@@ -322,9 +322,20 @@ class NrisDataSource {
         descriptions.push(`Waste Discharge Type: ${record.wasteType.join(', ')}`);
       }
     }
-
+    
     newRecord.description = descriptions.join('; ');
+    
+    // Catch any other issuing agencies that haven't been transformed.
+    // Update the issuing agency based on the mapping.
+    const agencyMapping = {
+      'FLNRO': 'AGENCY_FLNRO',
+      'Environmental Assessment Office': 'AGENCY_EAO'
+    };
 
+    if (newRecord.issuingAgency in agencyMapping || record.issuingAgency in agencyMapping) {
+      newRecord.issuingAgency = agencyMapping[record.issuingAgency];
+    }
+    
     defaultLog.info('Processed:', record.assessmentId);
     return newRecord;
   }
