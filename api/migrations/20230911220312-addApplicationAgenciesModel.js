@@ -9,8 +9,6 @@
  */
 exports.setup = function(options, seedLink) {
   let dbm = options.dbmigrate;
-  let type = dbm.dataType;
-  let seed = seedLink;
 };
 
 /**
