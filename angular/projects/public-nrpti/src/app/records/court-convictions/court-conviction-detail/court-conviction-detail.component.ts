@@ -6,6 +6,7 @@ import { CourtConvictionNRCED, Document } from '../../../../../../common/src/app
 import { FactoryService } from '../../../services/factory.service';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { Utils as GlobalUtils } from 'nrpti-angular-components';
+import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service-nrced';
 
 @Component({
   selector: 'app-court-conviction-detail',
@@ -107,7 +108,8 @@ export class CourtConvictionDetailComponent implements OnInit, OnDestroy {
   }
 
   displayName(agency) {
-    return GlobalUtils.displayNameFull(agency);
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   ngOnDestroy() {
