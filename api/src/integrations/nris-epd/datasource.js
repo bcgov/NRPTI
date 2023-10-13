@@ -332,7 +332,9 @@ class NrisDataSource {
       'Environmental Assessment Office': 'AGENCY_EAO'
     };
 
-    if (newRecord.issuingAgency in agencyMapping || record.issuingAgency in agencyMapping) {
+    if (newRecord.issuingAgency in agencyMapping) {
+      newRecord.issuingAgency = agencyMapping[newRecord.issuingAgency];
+    } else if (record.issuingAgency in agencyMapping) {
       newRecord.issuingAgency = agencyMapping[record.issuingAgency];
     }
     
