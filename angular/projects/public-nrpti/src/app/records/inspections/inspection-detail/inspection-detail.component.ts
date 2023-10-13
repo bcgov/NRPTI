@@ -90,7 +90,6 @@ export class InspectionDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   displayName(agency) {
-    //return GlobalUtils.displayNameFull(agency);
     const agencyDataService = new AgencyDataService(this.factoryService);
     return agencyDataService.displayNameFull(agency);
   }

@@ -35,9 +35,14 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
   return () => overlay.scrollStrategies.close();
 }
 
-export function initConfig(configService: ConfigService,
-  applicationAgency: ApplicationAgencyService) {
-  return () => configService.init();
+export function initConfig(
+  configService: ConfigService,
+  applicationAgency: ApplicationAgencyService
+) {
+  return async () => {
+    await configService.init();
+    await applicationAgency.init();
+  };
 }
 
 @NgModule({

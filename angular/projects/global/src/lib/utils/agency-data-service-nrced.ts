@@ -4,7 +4,6 @@
  * @class AgencyDataService
  */
 
-// import { Console } from 'console';
 import { FactoryService } from '../../../../public-nrpti/src/app/services/factory.service';
 
 /**
@@ -30,8 +29,6 @@ export class AgencyDataService {
     // Access cached agency data from FactoryService
     const agencyService = this.factoryService.applicationAgencyService;
     const agencyList = agencyService ? agencyService.getAgencies() : null;
-    console.log("agency>>>" + agencyCode);
-    console.log("agencyList>>>" + JSON.stringify(agencyList));
     return agencyList && agencyList[agencyCode] ? agencyList[agencyCode] : agencyCode;
   }
 

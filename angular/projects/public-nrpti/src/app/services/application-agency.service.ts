@@ -45,12 +45,10 @@ export class ApplicationAgencyService {
       getAgencies.subscribe(
         response => {
           // Data transformation to make the data easier to work with
-          console.log('response>>>>>>' + JSON.stringify(response));
           const agencyList = {};
           for (const record in response) {
             if (response.hasOwnProperty(record)) {
               agencyList[response[record]['agencyCode']] = response[record]['agencyName'];
-              console.log('agencylist>>>>>>' + JSON.stringify(agencyList));
             }
           }
           this.agencies = agencyList;

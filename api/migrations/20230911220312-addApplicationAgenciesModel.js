@@ -8,9 +8,9 @@
  * @description Sets up the migration by initializing variables.
  */
 exports.setup = function(options, seedLink) {
-  dbm = options.dbmigrate;
-  type = dbm.dataType;
-  seed = seedLink;
+  let dbm = options.dbmigrate;
+  let type = dbm.dataType;
+  let seed = seedLink;
 };
 
 /**
