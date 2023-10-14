@@ -87,9 +87,9 @@ describe('NrisDataSource', () => {
       [_nrisInspectionDocument_FLNRO, 'AGENCY_FLNRO'],
       [_nrisInspectionDocument_EAO, 'AGENCY_EAO']
     ])('should return the appropriate agency code', async (record, expectedAgency) => {
-      dataSource = new NrisDataSource();
+      const dataSource = new NrisDataSource();
       // eslint-disable-next-line no-unused-vars
-      Inspection = require('../../models/master/inspection');
+      const Inspection = require('../../models/master/inspection');
 
       mockingoose('Inspection').toReturn(record, 'findOne');
       const doc = await dataSource.transformRecord(record);

@@ -5,7 +5,8 @@ import { takeUntil } from 'rxjs/operators';
 import { AdministrativePenaltyDetailComponent } from '../../../records/administrative-penalties/administrative-penalty-detail/administrative-penalty-detail.component';
 import { RecordUtils } from '../../../records/utils/record-utils';
 import { FactoryService } from '../../../services/factory.service';
-import { StoreService, Utils } from 'nrpti-angular-components';
+import { StoreService } from 'nrpti-angular-components';
+import { AgencyDataService } from '../../../../../../global/src/lib/utils/agency-data-service';
 
 @Component({
   selector: 'app-mines-administrative-penalty-detail',
@@ -65,7 +66,8 @@ export class MinesAdministrativePenaltyDetailComponent extends AdministrativePen
   }
 
   displayName(agency) {
-    return Utils.displayNameFull(agency);
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   navigateToEditPage() {

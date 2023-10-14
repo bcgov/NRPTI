@@ -7,6 +7,7 @@ import { LoadingScreenService, LoggerService } from 'nrpti-angular-components';
 import { Utils, StoreService } from 'nrpti-angular-components';
 import { ChangeDetectorRef } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
+import { AgencyDataService } from '../../../../../../../global/src/lib/utils/agency-data-service';
 
 @Component({
   selector: 'app-mines-court-convictions-add-edit',
@@ -17,7 +18,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class MinesCourtConvictionsAddEditComponent extends CourtConvictionAddEditComponent implements OnInit {
   public componentTitle = 'BCMI Administrative Penalty Record';
-  public defaultAgency = 'Ministry of Energy Mines and Low Carbon Innovation';
+  public defaultAgency = 'AGENCY_EMLI';
   public defaultAuthor = 'BC Government';
   public currentRecord = null;
 
@@ -150,6 +151,11 @@ export class MinesCourtConvictionsAddEditComponent extends CourtConvictionAddEdi
     } else {
       this.router.navigate(['mines', 'enforcement-actions', 'court-convictions', this.currentRecord._id, 'detail']);
     }
+  }
+
+  displayName(agency) {
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   cancel() {
