@@ -136,6 +136,7 @@ describe('transformRecord', () => {
           type: 'Fined'
         }
       ],
+      summary: 'Referred to Provincial Court as a disputed violation ticket.',
       sourceSystemRef: 'coors-csv'
     })
   })
