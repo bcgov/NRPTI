@@ -42,9 +42,11 @@ exports.getIssuingAgency = function(csvRow) {
   if (caseNum.toLowerCase().startsWith('p-')) {
     return MiscConstants.CoorsCsvIssuingAgencies.BC_Parks;
   }
-
-  // Provide a default value ('') if 'act' is missing.
-  let act = csvRow['act'] || '';
+  
+  let act = '';
+  if (csvRow['act']) {
+    act = csvRow['act'];
+  }
 
   // Act == Water Sustainability Act, in which case Issuing Agency = BC Energy Regulator
   if (act.toLowerCase() == 'water sustainability act') {

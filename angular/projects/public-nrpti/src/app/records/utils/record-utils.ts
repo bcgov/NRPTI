@@ -119,7 +119,8 @@ export class RecordUtils {
       'Site/Project',
       'Location',
       'Latitude',
-      'Longitude'
+      'Longitude',
+      'Outcome Description'
     ];
 
     let output = '';
@@ -144,7 +145,7 @@ export class RecordUtils {
       line.push(escapeCsvString(row['summary']));
       line.push(escapeCsvString(Utils.displayNameFull(row['issuingAgency'])));
 
-      const legislation = (Array.isArray(row['legislation'])) ? row['legislation'][0] : row['legislation'];
+      const legislation = Array.isArray(row['legislation']) ? row['legislation'][0] : row['legislation'];
 
       if (legislation) {
         line.push(escapeCsvString(legislation['act']));
@@ -177,6 +178,8 @@ export class RecordUtils {
       } else {
         line = line.concat(['', '']);
       }
+
+      line.push(escapeCsvString(row['outcomeDescription']));
 
       output += `${line.join(',')}\n`;
     }

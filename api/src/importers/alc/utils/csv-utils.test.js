@@ -8,8 +8,8 @@ describe('getEntityType', () => {
     expect(result).toBe(null);
   });
 
-  it('returns "Company" if csvRow "Inspection Property Owner" is not empty', async () => {
-    const result = await CsvUtils.getEntityType({ 'inspection property owner': 'test' });
+  it('returns "Company" if csvRow "Inspection Property Owner" ends with Ltd, Corp, Inc, etc', async () => {
+    const result = await CsvUtils.getEntityType({ 'inspection property owner': 'test Ltd.' });
 
     expect(result).toEqual(MiscConstants.IssuedToEntityTypes.Company);
   });

@@ -74,7 +74,7 @@ class CourtConvictions extends BaseRecordUtils {
       };
     }
 
-    if (csvRow['enforcement_outcome'] && csvRow['enforcement_outcome'] === 'GTYJ') {
+    if (csvRow?.enforcement_outcome === 'GTYJ') {
       conviction['dateIssued'] = csvRow['ticket_date'] || null;
       conviction['recordName'] = (csvRow['case_number'] && `Case Number ${csvRow['case_number']}`) || '';
       conviction['location'] = csvRow['location_of_violation'] || '';
@@ -92,10 +92,11 @@ class CourtConvictions extends BaseRecordUtils {
           description: ''
         }
       ];
+      conviction['summary'] = 'Referred to Provincial Court as a disputed violation ticket.'
     } else {
       conviction['dateIssued'] = csvRow['final_decision_date'] || null;
       conviction['recordName'] = (csvRow['case_no'] && `Case Number ${csvRow['case_no']}`) || '';
-      conviction['location_of_violation'] = csvRow['location'] || '';
+      conviction['location'] = csvRow['location'] || '';
 
       const penaltyType = CsvUtils.getPenalty(csvRow['summary']);
       const penaltyUnits = CsvUtils.getPenaltyUnits(csvRow['penalty_unit_code']);
