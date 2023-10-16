@@ -6,6 +6,7 @@ import { Picklists } from '../../../../../common/src/app/utils/record-constants'
 import { FactoryService } from '../../services/factory.service';
 import { RecordUtils } from '../../records/utils/record-utils';
 import { Constants } from '../../utils/constants/misc';
+import { AgencyDataService } from '../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
   selector: 'app-mines-record-add',
@@ -38,7 +39,7 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
   );
 
   // Pick lists
-  public recordAgencies = Picklists.collectionAgencyPicklist;
+  public recordAgencies = Picklists.collectionAgencyCodePicklist;
   public recordTypeNamesBCMI = Object.values(Picklists.bcmiRecordTypePicklist).map(item => {
     return item.displayName;
   }).sort();
@@ -176,7 +177,8 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
   }
 
   displayName(agency) {
-    return Utils.displayNameFull(agency);
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   ngOnDestroy(): void {

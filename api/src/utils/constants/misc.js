@@ -69,9 +69,9 @@ exports.IssuedToEntityTypes = {
 };
 
 exports.CoorsCsvIssuingAgencies = {
-  BC_Parks: 'BC Parks',
-  Conservation_Officer_Service: 'Conservation Officer Service',
-  Water_Sustainability_Act: 'BC Energy Regulator'
+  BC_Parks: 'AGENCY_ENV_BCPARKS',
+  Conservation_Officer_Service: 'AGENCY_ENV_COS',
+  Water_Sustainability_Act: 'AGENCY_OGC'
 };
 
 exports.EpicProjectIds = {

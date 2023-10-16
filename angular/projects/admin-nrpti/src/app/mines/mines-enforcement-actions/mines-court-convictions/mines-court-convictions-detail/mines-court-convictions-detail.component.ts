@@ -5,7 +5,8 @@ import { takeUntil } from 'rxjs/operators';
 import { CourtConvictionDetailComponent } from '../../../../records/court-convictions/court-conviction-detail/court-conviction-detail.component';
 import { RecordUtils } from '../../../../records/utils/record-utils';
 import { FactoryService } from '../../../../services/factory.service';
-import { StoreService, Utils } from 'nrpti-angular-components';
+import { StoreService } from 'nrpti-angular-components';
+import { AgencyDataService } from '../../../../../../../global/src/lib/utils/agency-data-service';
 
 @Component({
   selector: 'app-mines-court-convictions-detail',
@@ -64,7 +65,8 @@ export class MinesCourtConvictionsDetailComponent extends CourtConvictionDetailC
   }
 
   displayName(agency) {
-    return Utils.displayNameFull(agency);
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   navigateToEditPage() {

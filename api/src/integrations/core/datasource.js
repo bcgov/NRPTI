@@ -541,7 +541,7 @@ class CoreDataSource {
           name: amendment.description !== null ? amendment.description : 'Permit Documents',
           date: amendment.issue_date ? new Date(amendment.issue_date) : null,
           type: amendment.permit_amendment_type_code === 'OGP' ? 'Permit' : 'Permit Amendment',
-          agency: 'Ministry of Energy Mines and Low Carbon Innovation',
+          agency: 'AGENCY_EMLI',
           records: (existingPermits && existingPermits.map(permit => permit._id)) || []
         };
 

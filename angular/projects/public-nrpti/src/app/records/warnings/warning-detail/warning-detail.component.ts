@@ -6,6 +6,7 @@ import { WarningNRCED, Document } from '../../../../../../common/src/app/models'
 import { FactoryService } from '../../../services/factory.service';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { Utils as GlobalUtils } from 'nrpti-angular-components';
+import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service-nrced';
 
 @Component({
   selector: 'app-warning-detail',
@@ -95,8 +96,10 @@ export class WarningDetailComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   displayName(agency) {
-    return GlobalUtils.displayNameFull(agency);
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
+
 
   convertAcronyms(acronym) {
     return GlobalUtils.convertAcronyms(acronym);

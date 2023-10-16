@@ -28,6 +28,7 @@ import {
   RadioOptionItem
 } from '../../../../../common/src/app/search-filter-template/filter-object';
 import { FactoryService } from '../../services/factory.service';
+import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
 
 /**
  * List page component.
@@ -113,7 +114,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef,
-    public factoryService: FactoryService
+    private factoryService: FactoryService,
   ) {
     // setup the subset configuration
     const subsetOptions = [
@@ -195,9 +196,11 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       FilterType.MultiSelect,
       'Responsible Agency',
       new MultiSelectDefinition(
-        Picklists.agencyPicklist.map(value => {
-          const displayValue = Utils.displayNameFull(value);
-          return { value: value, displayValue: displayValue, selected: false, display: true };
+        Picklists.getAgencyNames(this.factoryService).map(value => {
+          const agencyDataService = new AgencyDataService(this.factoryService);
+          const displayValue = agencyDataService.displayNameFull(value);
+          const picklistCodes = Picklists.getAgencyCode(this.factoryService, value)
+          return { value: picklistCodes, displayValue: displayValue, selected: false, display: true };
         }),
         'Begin typing to filter agencies...',
         ''

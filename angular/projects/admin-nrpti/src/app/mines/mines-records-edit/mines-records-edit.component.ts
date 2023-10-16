@@ -12,6 +12,7 @@ import { ConfirmComponent } from '../../confirm/confirm.component';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { Constants } from '../../utils/constants/misc';
 import { ToastService } from '../../services/toast.service';
+import { AgencyDataService } from '../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
   selector: 'app-mines-records-edit',
@@ -49,7 +50,7 @@ export class MinesRecordsEditComponent implements OnInit {
   }).sort();
   public permitTypes = ['OGP', 'AMD'];
 
-  public recordAgencies = Picklists.collectionAgencyPicklist;
+  public recordAgencies = Picklists.collectionAgencyCodePicklist;;
 
   // record add edit state
   public recordState = null;
@@ -286,7 +287,8 @@ export class MinesRecordsEditComponent implements OnInit {
   }
 
   displayName(agency) {
-    return Utils.displayNameFull(agency);
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   /**

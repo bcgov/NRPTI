@@ -3,7 +3,7 @@ import { FactoryService } from '../../services/factory.service';
 import { TableRowComponent } from 'nrpti-angular-components';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Entity } from '../../../../../common/src/app/models/master/common-models/entity';
-import { Utils } from 'nrpti-angular-components';
+import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
 
 @Component({
   selector: 'tr[app-mines-records-table-row]',
@@ -39,7 +39,8 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
   }
 
   displayName(agency) {
-    return Utils.displayNameAcronym(agency);
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   private isDisableEdit() {

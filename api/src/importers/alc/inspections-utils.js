@@ -38,8 +38,8 @@ class Inspections extends BaseRecordUtils {
     inspection['recordType'] = 'Inspection';
     inspection['dateIssued'] = csvRow['date'] || null;
 
-    inspection['issuingAgency'] = 'Agricultural Land Commission';
-    inspection['author'] = 'Agricultural Land Commission';
+    inspection['issuingAgency'] = 'AGENCY_ALC';
+    inspection['author'] = 'AGENCY_ALC';
 
     inspection['recordName'] = (csvRow['record id'] && `ALC Inspection - Record ${csvRow['record id']}`) || '-';
     inspection['description'] = (csvRow['reason'] && `Activity Inspected: ${csvRow['reason']}`) || '-';

@@ -34,7 +34,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
 
   // Pick lists
   public orderSubtypePicklist = Picklists.orderSubtypePicklist;
-  public agencies = Picklists.agencyCodePicklist;
+  public agencies = Picklists.getAgencyCodes(this.factoryService);
   public authors = Picklists.authorPicklist;
   public outcomeStatuses = Picklists.outcomeStatusPicklist;
   private defaultAgency = '';

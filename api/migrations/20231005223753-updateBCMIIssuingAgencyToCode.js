@@ -39,8 +39,8 @@ exports.up = async function (db) {
         for (const agency of agencies) {
             // Update issuingAgency and author fields for the agency
             await currentCollection.updateMany(
-              { issuingAgency: agency['agencyName']  },
-              { $set: { issuingAgency: agency['agencyCode'] } }
+              { agency: agency['agencyName']  },
+              { $set: { agency: agency['agencyCode'] } }
             );
 
             console.log(` ***** Updated collection: ${collection} for agency: ${agency['agencyName']} *****`);

@@ -17,12 +17,12 @@ describe('transformRecord', () => {
       _sourceRefStringId: '',
 
       recordType: 'Inspection',
-      author: 'Agricultural Land Commission',
+      author: 'AGENCY_ALC',
       dateIssued: null,
       issuedTo: { dateOfBirth: null, firstName: '', lastName: '', middleName: '', type: 'Individual' },
       description: '-',
       sourceSystemRef: 'alc-csv',
-      issuingAgency: 'Agricultural Land Commission',
+      issuingAgency: 'AGENCY_ALC',
       legislation: [
         {
           act: 'Agricultural Land Commission Act',
@@ -55,7 +55,7 @@ describe('transformRecord', () => {
 
       recordType: 'Inspection',
       recordName: 'ALC Inspection - Record 123',
-      author: 'Agricultural Land Commission',
+      author: 'AGENCY_ALC',
       description: 'Activity Inspected: reason',
       summary: 'Activity Inspected: reason',
       dateIssued: expect.any(String),
@@ -66,7 +66,7 @@ describe('transformRecord', () => {
         middleName: '',
         type: MiscConstants.IssuedToEntityTypes.Individual
       },
-      issuingAgency: 'Agricultural Land Commission',
+      issuingAgency: 'AGENCY_ALC',
       legislation: [
         {
           act: 'Agricultural Land Commission Act',

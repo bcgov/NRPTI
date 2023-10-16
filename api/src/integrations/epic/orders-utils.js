@@ -51,7 +51,7 @@ class Orders extends BaseRecordUtils {
 
     return {
       ...(await super.transformRecord(epicRecord)),
-      issuingAgency: 'Environmental Assessment Office',
+      issuingAgency: 'AGENCY_EAO',
       author: epicRecord.documentAuthor || '',
       legislation: [legislation],
       issuedTo: {

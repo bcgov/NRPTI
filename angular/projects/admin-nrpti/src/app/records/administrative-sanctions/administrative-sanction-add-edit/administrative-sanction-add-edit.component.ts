@@ -33,7 +33,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
   public nrcedPublishSubtext = 'Not published';
 
   // Pick lists
-  public agencies = Picklists.agencyCodePicklist;
+  public agencies = Picklists.getAgencyCodes(this.factoryService);
   public authors = Picklists.authorPicklist;
   private defaultAgency = '';
 

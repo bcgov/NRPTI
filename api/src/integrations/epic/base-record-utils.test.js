@@ -36,6 +36,7 @@ describe('BaseRecordUtils', () => {
         _epicProjectId: '',
         _sourceRefId: expect.any(Object),
         _epicMilestoneId: '',
+        issuingAgency: 'AGENCY_EAO',
 
         recordName: '',
         recordType: RECORD_TYPE.Order.displayName,

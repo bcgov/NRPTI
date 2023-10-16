@@ -18,8 +18,8 @@ describe('transformRecord', () => {
 
       recordName: '',
       recordType: 'Ticket',
-      issuingAgency: 'Natural Resource Officers',
-      author: 'Natural Resource Officers',
+      issuingAgency: 'AGENCY_FLNR_NRO',
+      author: 'AGENCY_FLNR_NRO',
       location: '',
       dateIssued: null,
 
@@ -55,8 +55,8 @@ describe('transformRecord', () => {
       recordName: 'bad manners',
       location: 'somewhere',
       recordType: 'Ticket',
-      issuingAgency: 'Natural Resource Officers',
-      author: 'Natural Resource Officers',
+      issuingAgency: 'AGENCY_FLNR_NRO',
+      author: 'AGENCY_FLNR_NRO',
       dateIssued: '02/24/2021',
 
       penalties: [

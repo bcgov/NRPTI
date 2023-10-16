@@ -46,8 +46,8 @@ describe('transformRecord', () => {
         companyName: 'businessName123',
         type: 'Company'
       },
-      issuingAgency: 'Ministry of Forests',
-      author: 'Ministry of Forests',
+      issuingAgency: 'AGENCY_FLNRO',
+      author: 'AGENCY_FLNRO',
       legislation: [
         {
           act: 'Wildlife Act',
@@ -108,8 +108,8 @@ describe('transformRecord', () => {
         companyName: 'businessName123',
         type: 'Company'
       },
-      issuingAgency: 'Ministry of Forests',
-      author: 'Ministry of Forests',
+      issuingAgency: 'AGENCY_FLNRO',
+      author: 'AGENCY_FLNRO',
       legislation: [
         {
           act: 'Wildlife Act',

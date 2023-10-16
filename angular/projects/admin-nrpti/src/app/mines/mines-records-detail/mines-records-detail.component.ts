@@ -4,8 +4,8 @@ import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
 import { CollectionBCMI } from '../../../../../common/src/app/models/bcmi';
-import { Utils } from 'nrpti-angular-components';
-
+import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
+import { FactoryService } from '../../services/factory.service';
 @Component({
   selector: 'app-mines-records-detail',
   templateUrl: './mines-records-detail.component.html',
@@ -22,7 +22,8 @@ export class MinesRecordDetailComponent implements OnInit, OnDestroy {
   constructor(
     public route: ActivatedRoute,
     public router: Router,
-    public changeDetectionRef: ChangeDetectorRef
+    public changeDetectionRef: ChangeDetectorRef,
+    public factoryService: FactoryService
   ) { }
 
   isDisableEdit() {
@@ -73,7 +74,8 @@ export class MinesRecordDetailComponent implements OnInit, OnDestroy {
   }
 
   displayName(agency) {
-    return Utils.displayNameAcronym(agency);
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   ngOnDestroy() {

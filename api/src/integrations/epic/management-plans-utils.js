@@ -35,7 +35,6 @@ class ManagementPlans extends BaseRecordUtils {
 
     return {
       ...(await super.transformRecord(epicRecord)),
-      issuingAgency: 'Environmental Assessment Office',
       author: epicRecord.documentAuthor || ''
     };
   }

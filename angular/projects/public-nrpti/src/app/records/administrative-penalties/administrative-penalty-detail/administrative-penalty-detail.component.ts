@@ -6,6 +6,7 @@ import { AdministrativePenaltyNRCED, Document } from '../../../../../../common/s
 import { FactoryService } from '../../../services/factory.service';
 import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/utils';
 import { Utils as GlobalUtils } from 'nrpti-angular-components';
+import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service-nrced';
 
 @Component({
   selector: 'app-administrative-penalty-detail',
@@ -104,7 +105,8 @@ export class AdministrativePenaltyDetailComponent implements OnInit, OnChanges, 
   }
 
   displayName(agency) {
-    return GlobalUtils.displayNameFull(agency);
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   ngOnDestroy() {

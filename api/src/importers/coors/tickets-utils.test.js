@@ -56,8 +56,8 @@ describe('transformRecord', () => {
         companyName: 'businessName123',
         type: 'Company'
       },
-      issuingAgency: 'BC Parks',
-      author: 'BC Parks',
+      issuingAgency: 'AGENCY_ENV_BCPARKS',
+      author: 'AGENCY_ENV_BCPARKS',
       legislation: [
         {
           act: 'Fisheries Canada',

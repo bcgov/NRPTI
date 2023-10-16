@@ -40,13 +40,13 @@ describe('getIssuingAgency', () => {
     expect(result).toBe(null);
   });
 
-  it('returns "BC Parks" if csvRow "case_number" starts with a "P-"', async () => {
+  it('returns "AGENCY_ENV_BCPARKS" if csvRow "case_number" starts with a "P-"', async () => {
     const result = await CsvUtils.getIssuingAgency({ case_number: 'P-123123' });
 
     expect(result).toEqual(MiscConstants.CoorsCsvIssuingAgencies.BC_Parks);
   });
 
-  it('returns "Conservation Officer Service" if csvRow "case_number" does not start with a "P-"', async () => {
+  it('returns "AGENCY_ENV_COS" if csvRow "case_number" does not start with a "P-"', async () => {
     const result = await CsvUtils.getIssuingAgency({ case_number: '123123' });
     
     expect(result).toEqual(MiscConstants.CoorsCsvIssuingAgencies.Conservation_Officer_Service);

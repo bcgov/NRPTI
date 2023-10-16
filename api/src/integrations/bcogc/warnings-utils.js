@@ -40,8 +40,8 @@ class Warning extends BaseRecordUtils {
 
     warning['recordType'] = RECORD_TYPE.Warning.displayName;
     warning['_sourceRefOgcWarningId'] = csvRow['Title'];
-    warning['author'] = 'BC Energy Regulator';
-    warning['issuingAgency'] = 'BC Energy Regulator';
+    warning['author'] = 'AGENCY_OGC';
+    warning['issuingAgency'] = 'AGENCY_OGC';
     warning['recordName'] = csvRow['Filename'];
     try {
       warning['dateIssued'] = csvRow['Date Issued'] ? moment.tz(csvRow['Date Issued'], "MM/DD/YYYY", "America/Vancouver").toDate() : null;

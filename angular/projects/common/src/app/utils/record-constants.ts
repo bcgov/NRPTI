@@ -188,6 +188,11 @@ export class Picklists {
     return agencyDataService.getAgencyCode(agencyName);
   }
 
+  public static getAgencyCodes(factoryService: FactoryService) {
+    const agencyDataService = new AgencyDataService(factoryService);
+    return agencyDataService.getAgencyCodes();
+  }
+
   public static readonly agencyCodePicklist = [
     'AGENCY_ALC',
     'AGENCY_OGC',
@@ -295,9 +300,15 @@ export class Picklists {
   ];
 
   public static readonly collectionAgencyPicklist = [
-    'Environmental Assessment Office',
-    'Ministry of Energy Mines and Low Carbon Innovation',
-    'Ministry of Environment and Climate Change Strategy'
+    'Environmental Assessment Office 2',
+    'Ministry of Energy Mines and Low Carbon Innovation 2',
+    'Ministry of Environment and Climate Change Strategy 2'
+  ];
+
+  public static readonly collectionAgencyCodePicklist = [
+    'AGENCY_EAO',
+    'AGENCY_EMLI',
+    'AGENCY_ENV'
   ];
 
   /**

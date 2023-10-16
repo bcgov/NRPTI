@@ -40,8 +40,8 @@ class tickets extends BaseRecordUtils {
     }
 
     ticket['recordName'] = csvRow['article_description'] || '';
-    ticket['issuingAgency'] = 'Natural Resource Officers';
-    ticket['author'] = 'Natural Resource Officers';
+    ticket['issuingAgency'] = 'AGENCY_FLNR_NRO';
+    ticket['author'] = 'AGENCY_FLNR_NRO';
     ticket['recordType'] = 'Ticket';
     ticket['dateIssued'] = csvRow['service_date'] || null;
 

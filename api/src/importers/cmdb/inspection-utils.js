@@ -39,8 +39,8 @@ class Inspections extends BaseRecordUtils {
     inspection['recordType'] = 'Inspection';
     inspection['dateIssued'] = csvRow['date issued'] || null;
 
-    inspection['issuingAgency'] = 'Ministry of Agriculture and Food';
-    inspection['author'] = 'Ministry of Agriculture';
+    inspection['issuingAgency'] = 'AGENCY_AGRI';
+    inspection['author'] = 'AGENCY_AGRI';
 
     inspection['recordName'] = csvRow['inspection type'] || '';
 

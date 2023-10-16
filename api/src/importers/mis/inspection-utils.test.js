@@ -19,7 +19,7 @@ describe('transformRecord', () => {
       _sourceRefAgriMisId: '',
 
       recordType: 'Inspection',
-      author: 'Ministry of Agriculture',
+      author: 'AGENCY_AGRI',
       dateIssued: null,
       issuedTo: {
         type: MiscConstants.IssuedToEntityTypes.Company,
@@ -28,7 +28,7 @@ describe('transformRecord', () => {
       description: descriptionString,
       outcomeDescription: '',
       sourceSystemRef: 'agri-mis-csv',
-      issuingAgency: 'Ministry of Agriculture and Food',
+      issuingAgency: 'AGENCY_AGRI',
       legislation: [
         {
           act: 'Food Safety Act',
@@ -59,14 +59,14 @@ describe('transformRecord', () => {
 
       recordType: 'Inspection',
       recordName: 'Compliance issue 123.4',
-      author: 'Ministry of Agriculture',
+      author: 'AGENCY_AGRI',
       description: descriptionString,
       dateIssued: expect.any(String),
       issuedTo: {
         companyName: 'ACME Meat',
         type: MiscConstants.IssuedToEntityTypes.Company
       },
-      issuingAgency: 'Ministry of Agriculture and Food',
+      issuingAgency: 'AGENCY_AGRI',
       legislation: [
         {
           act: 'Food Safety Act',

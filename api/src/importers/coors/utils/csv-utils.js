@@ -53,7 +53,7 @@ exports.getIssuingAgency = function(csvRow) {
     return MiscConstants.CoorsCsvIssuingAgencies.Water_Sustainability_Act;
   }
 
-  // Otherwise the issuing agency defaults to Conservation Officer Service
+  // Otherwise, the issuing agency defaults to Conservation Officer Service
   return MiscConstants.CoorsCsvIssuingAgencies.Conservation_Officer_Service;
 };
 
