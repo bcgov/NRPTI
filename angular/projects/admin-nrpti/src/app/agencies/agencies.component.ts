@@ -65,6 +65,9 @@ export class AgenciesComponent implements OnInit {
           this.updatedData.agencies = [];
         }
         this.toastService.addMessage('Agency Successfully Updated', 'Success Updated', Constants.ToastTypes.SUCCESS);
+        setTimeout(() => {
+          location.reload();
+        }, 1 * 1000);
       } else {
         this.toastService.addMessage(
           'Updated Agency Name Cannot be Empty',
