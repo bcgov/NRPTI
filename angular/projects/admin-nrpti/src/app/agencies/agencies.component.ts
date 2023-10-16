@@ -41,13 +41,13 @@ export class AgenciesComponent implements OnInit {
     this.factoryService.applicationAgencyService.refreshAgencies().subscribe();
   }
   updateSelectedAgency(): void {
+    const index = this.agencyList.indexOf(this.selectedAgency);
     try {
-      if (this.newAgency.trim() !== '') {
+      if (this.newAgency.trim() !== '' && index !== -1) {
         // Find the agency code that matches the selected agency name
         const matchingCode = Object.keys(this.agencies).find(key => this.agencies[key] === this.selectedAgency);
         if (matchingCode) {
           // Update the agencyList with the new value at the same index
-          const index = this.agencyList.indexOf(this.selectedAgency);
           if (index !== -1) {
             this.agencyList[index] = this.newAgency;
           }
@@ -67,10 +67,10 @@ export class AgenciesComponent implements OnInit {
         this.toastService.addMessage('Agency Successfully Updated', 'Success Updated', Constants.ToastTypes.SUCCESS);
         setTimeout(() => {
           location.reload();
-        }, 1 * 1000);
+        }, 1500);
       } else {
         this.toastService.addMessage(
-          'Updated Agency Name Cannot be Empty',
+          'Updating/Updated Agency Name Cannot be Empty',
           'Save unsuccessful',
           Constants.ToastTypes.ERROR
         );
