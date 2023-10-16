@@ -21,7 +21,7 @@ describe('transformRecord', () => {
       issuingAgency: '',
       author: '',
       legislation: [{ act: '', paragraph: '', regulation: '', section: '', subSection: '', offence: '' }],
-      location_of_violation: '',
+      location: '',
       recordName: '',
       penalties: [{ description: '', penalty: { type: null, value: null }, type: null }],
 
@@ -136,7 +136,6 @@ describe('transformRecord', () => {
           type: 'Fined'
         }
       ],
-      summary: 'Referred to Provincial Court as a disputed violation ticket.',
       sourceSystemRef: 'coors-csv'
     })
   })

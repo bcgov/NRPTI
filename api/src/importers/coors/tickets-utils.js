@@ -94,6 +94,10 @@ class Tickets extends BaseRecordUtils {
       }
     ];
 
+    if (csvRow['enforcement_outcome'] === 'GTYJ') {
+      ticket['summary'] = 'Referred to Provincial Court as a disputed violation ticket.'
+    }
+
     return ticket;
   }
 }

@@ -84,4 +84,12 @@ describe('transformRecord', () => {
       sourceSystemRef: 'coors-csv'
     });
   });
+
+  it('should correctly label ticket summary fields based on the enforcement outcome field', () => {
+    const resultGTYJ = tickets.transformRecord({ enforcement_outcome: 'GTYJ' });
+    const resultNonGTYJ = tickets.transformRecord({});
+    
+    expect(resultGTYJ.summary).toBe('Referred to Provincial Court as a disputed violation ticket.')
+    expect(resultNonGTYJ.summary).toBe(undefined)
+  })
 });
