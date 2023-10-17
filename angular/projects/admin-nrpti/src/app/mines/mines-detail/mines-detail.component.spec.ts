@@ -17,26 +17,18 @@ describe('MinesDetailComponent', () => {
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        GlobalModule,
-        CommonModule,
-        MatSlideToggleModule
-      ],
-      declarations: [
-        MinesDetailComponent,
-        RecordDetailDirective
-      ],
+      imports: [RouterTestingModule, GlobalModule, CommonModule, MatSlideToggleModule],
+      declarations: [MinesDetailComponent, RecordDetailDirective],
       providers: [
         DatePipe,
         DialogService,
         { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute }
       ]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

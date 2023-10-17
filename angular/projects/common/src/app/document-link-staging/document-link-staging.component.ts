@@ -28,7 +28,7 @@ export class DocumentLinkStagingComponent {
     hideWhenMaxFilesReached: false
   };
 
-  constructor(private _changeDetectionRef: ChangeDetectorRef) { }
+  constructor(private _changeDetectionRef: ChangeDetectorRef) {}
 
   public addDocuments(files) {
     if (files) {
@@ -97,9 +97,7 @@ export class DocumentLinkStagingComponent {
   }
 
   private checkIfMaxFilesReached() {
-    this.maxFilesReached = (
-      this.params.hideWhenMaxFilesReached &&
-      this.documents.length + this.links.length === Number(this.params.maxFiles)
-    );
+    this.maxFilesReached =
+      this.params.hideWhenMaxFilesReached && this.documents.length + this.links.length === Number(this.params.maxFiles);
   }
 }

@@ -88,18 +88,26 @@ export class AppComponent implements OnInit, OnDestroy {
     this.toastSubscription = this.toastService.messages.subscribe(messages => {
       messages.forEach(msg => {
         switch (msg.type) {
-          case Constants.ToastTypes.SUCCESS: {
-            this.toastr.success(msg.body, msg.title);
-          } break;
-          case Constants.ToastTypes.WARNING: {
-            this.toastr.warning(msg.body, msg.title);
-          } break;
-          case Constants.ToastTypes.INFO: {
-            this.toastr.info(msg.body, msg.title);
-          } break;
-          case Constants.ToastTypes.ERROR: {
-            this.toastr.error(msg.body, msg.title);
-          } break;
+          case Constants.ToastTypes.SUCCESS:
+            {
+              this.toastr.success(msg.body, msg.title);
+            }
+            break;
+          case Constants.ToastTypes.WARNING:
+            {
+              this.toastr.warning(msg.body, msg.title);
+            }
+            break;
+          case Constants.ToastTypes.INFO:
+            {
+              this.toastr.info(msg.body, msg.title);
+            }
+            break;
+          case Constants.ToastTypes.ERROR:
+            {
+              this.toastr.error(msg.body, msg.title);
+            }
+            break;
         }
         // Remove message from memory
         self.toastService.removeMessage(msg.guid);
@@ -109,76 +117,68 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private updateMines() {
     // Fetch initially
-    const minesSub = this.factoryService.searchService.getSearchResults(
-      this.factoryService.apiService.pathAPI,
-      '',
-      ['MineBCMI'],
-      [],
-      1,
-      100000,
-      '+name'
-    ).subscribe((mineResults: any[]) => {
-      this.setStoreServiceItem('mines', mineResults[0].data.searchResults);
-      minesSub.unsubscribe();
-    });
+    const minesSub = this.factoryService.searchService
+      .getSearchResults(this.factoryService.apiService.pathAPI, '', ['MineBCMI'], [], 1, 100000, '+name')
+      .subscribe((mineResults: any[]) => {
+        this.setStoreServiceItem('mines', mineResults[0].data.searchResults);
+        minesSub.unsubscribe();
+      });
 
     // Update every 4 hours
     this.mineSubscription = interval(1000 * 60 * 60 * 4)
-    .pipe(
-      takeWhile(() => this.alive),
-      switchMap(() => this.factoryService.searchService.getSearchResults(
-        this.factoryService.apiService.pathAPI,
-        '',
-        ['MineBCMI'],
-        [],
-        1,
-        100000,
-        '+name'
-      )),
-    )
-    .subscribe((mineResults: any[]) => {
-      this.setStoreServiceItem('mines', mineResults[0].data.searchResults);
-    });
+      .pipe(
+        takeWhile(() => this.alive),
+        switchMap(() =>
+          this.factoryService.searchService.getSearchResults(
+            this.factoryService.apiService.pathAPI,
+            '',
+            ['MineBCMI'],
+            [],
+            1,
+            100000,
+            '+name'
+          )
+        )
+      )
+      .subscribe((mineResults: any[]) => {
+        this.setStoreServiceItem('mines', mineResults[0].data.searchResults);
+      });
   }
 
   private updateEpicProjects() {
     // Fetch initially
-    const epicSub = this.factoryService.searchService.getSearchResults(
-      this.factoryService.apiService.pathAPI,
-      '',
-      ['EPICProject'],
-      [],
-      1,
-      100000,
-      '+name'
-    ).subscribe((epicProjectResults: any[]) => {
-      this.setStoreServiceItem('epicProjects', epicProjectResults[0].data.searchResults);
-      epicSub.unsubscribe();
-    });
+    const epicSub = this.factoryService.searchService
+      .getSearchResults(this.factoryService.apiService.pathAPI, '', ['EPICProject'], [], 1, 100000, '+name')
+      .subscribe((epicProjectResults: any[]) => {
+        this.setStoreServiceItem('epicProjects', epicProjectResults[0].data.searchResults);
+        epicSub.unsubscribe();
+      });
 
     // Update every 4 hours
     this.epicProjectSubscription = interval(1000 * 60 * 60 * 4)
-    .pipe(
-      takeWhile(() => this.alive),
-      switchMap(() => this.factoryService.searchService.getSearchResults(
-        this.factoryService.apiService.pathAPI,
-        '',
-        ['EPICProject'],
-        [],
-        1,
-        100000,
-        '+name'
-      )),
-    )
-    .subscribe((epicProjectResults: any[]) => {
-      this.setStoreServiceItem('epicProjects', epicProjectResults[0].data.searchResults);
-    });
+      .pipe(
+        takeWhile(() => this.alive),
+        switchMap(() =>
+          this.factoryService.searchService.getSearchResults(
+            this.factoryService.apiService.pathAPI,
+            '',
+            ['EPICProject'],
+            [],
+            1,
+            100000,
+            '+name'
+          )
+        )
+      )
+      .subscribe((epicProjectResults: any[]) => {
+        this.setStoreServiceItem('epicProjects', epicProjectResults[0].data.searchResults);
+      });
   }
 
   // Sets a store service list item, but unshifts a null-based element first.
   private setStoreServiceItem(key, list) {
     // First unshift an item into the list.
-    list.unshift({_id: null, name: 'None'});
+    list.unshift({ _id: null, name: 'None' });
 
     // Set the object in the store service
     const newObject = { [key]: list };

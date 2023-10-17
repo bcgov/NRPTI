@@ -9,8 +9,8 @@
 <div>
   <div class="p-3">
     <p>
-      The results list below will update instantly as you select criteria to filter. The URL will also update with
-      your unique criteria.
+      The results list below will update instantly as you select criteria to filter. The URL will also update with your
+      unique criteria.
     </p>
 
     <form *ngIf="!loading" [formGroup]="formGroup" novalidate>
@@ -19,11 +19,19 @@
           <label for="dateIssuedStartFilter dateIssuedEndFilter">Issued Date</label>
           <span class="grey-subtext ml-2">(YYYY-MM-DD)</span>
           <div class="date-container">
-            <lib-date-picker id="dateIssuedStartFilter" [control]="formGroup.get('dateIssuedStart')"
-              [reset]="resetControls" [minDate]="datepickerMinDate"></lib-date-picker>
+            <lib-date-picker
+              id="dateIssuedStartFilter"
+              [control]="formGroup.get('dateIssuedStart')"
+              [reset]="resetControls"
+              [minDate]="datepickerMinDate"
+            ></lib-date-picker>
             <span class="date-separator align-self-center">To</span>
-            <lib-date-picker id="dateIssuedEndFilter" [control]="formGroup.get('dateIssuedEnd')" [reset]="resetControls"
-              [minDate]="datepickerMinDate"></lib-date-picker>
+            <lib-date-picker
+              id="dateIssuedEndFilter"
+              [control]="formGroup.get('dateIssuedEnd')"
+              [reset]="resetControls"
+              [minDate]="datepickerMinDate"
+            ></lib-date-picker>
           </div>
         </div>
       </div>
@@ -44,9 +52,14 @@
         <div class="label-pair">
           <label for="activityTypeFilter">Type</label>
           <span *ngIf="activityTypeCount" class="grey-subtext ml-2">({{ activityTypeCount }} selected)</span>
-          <app-autocomplete-multi-select id="activityTypeFilter" [control]="formGroup.get('activityType')"
-            [options]="activityTypeOptions" [reset]="resetControls" [placeholderText]="'Pick one or more'"
-            (numSelected)="activityTypeCount = $event"></app-autocomplete-multi-select>
+          <app-autocomplete-multi-select
+            id="activityTypeFilter"
+            [control]="formGroup.get('activityType')"
+            [options]="activityTypeOptions"
+            [reset]="resetControls"
+            [placeholderText]="'Pick one or more'"
+            (numSelected)="activityTypeCount = $event"
+          ></app-autocomplete-multi-select>
         </div>
       </div>
       <!-- temporarily hidden as per https://bcmines.atlassian.net/browse/PTI-513 -->
@@ -54,27 +67,42 @@
         <div class="label-pair">
           <label for="agencyFilter">Responsible Agency</label>
           <span *ngIf="agencyCount" class="grey-subtext ml-2">({{ agencyCount }} selected)</span>
-          <app-autocomplete-multi-select id="agencyFilter" [control]="formGroup.get('agency')" [options]="agencyOptions"
-            [reset]="resetControls" [placeholderText]="'Pick one or more'" (numSelected)="agencyCount = $event">
-          </app-autocomplete-multi-select>
+          <app-autocomplete-multi-select
+            id="agencyFilter"
+            [control]="formGroup.get('agency')"
+            [options]="agencyOptions"
+            [reset]="resetControls"
+            [placeholderText]="'Pick one or more'"
+            (numSelected)="agencyCount = $event"
+          ></app-autocomplete-multi-select>
         </div>
       </div>
       <div>
         <div class="label-pair">
           <label for="actFilter">Issued under which Act</label>
           <span *ngIf="actCount" class="grey-subtext ml-2">({{ actCount }} selected)</span>
-          <app-autocomplete-multi-select id="actFilter" [control]="formGroup.get('act')" [options]="actOptions"
-            [reset]="resetControls" [placeholderText]="'Pick one or more'" (numSelected)="actCount = $event">
-          </app-autocomplete-multi-select>
+          <app-autocomplete-multi-select
+            id="actFilter"
+            [control]="formGroup.get('act')"
+            [options]="actOptions"
+            [reset]="resetControls"
+            [placeholderText]="'Pick one or more'"
+            (numSelected)="actCount = $event"
+          ></app-autocomplete-multi-select>
         </div>
       </div>
       <div>
         <div class="label-pair">
           <label for="regulationFilter">Issued under which Regulation</label>
           <span *ngIf="regulationCount" class="grey-subtext ml-2">({{ regulationCount }} selected)</span>
-          <app-autocomplete-multi-select id="regulationFilter" [control]="formGroup.get('regulation')"
-            [options]="regulationOptions" [reset]="resetControls" [placeholderText]="'Pick one or more'"
-            (numSelected)="regulationCount = $event"></app-autocomplete-multi-select>
+          <app-autocomplete-multi-select
+            id="regulationFilter"
+            [control]="formGroup.get('regulation')"
+            [options]="regulationOptions"
+            [reset]="resetControls"
+            [placeholderText]="'Pick one or more'"
+            (numSelected)="regulationCount = $event"
+          ></app-autocomplete-multi-select>
         </div>
       </div>
     </form>

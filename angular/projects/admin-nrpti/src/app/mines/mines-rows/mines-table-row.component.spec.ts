@@ -8,13 +8,13 @@ import { GlobalModule } from 'nrpti-angular-components';
 describe('MinesTableRowComponent', () => {
   const testBedHelper = new TestBedHelper<MinesTableRowComponent>(MinesTableRowComponent);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, CommonModule, GlobalModule],
       declarations: [MinesTableRowComponent],
       providers: []
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component, fixture } = testBedHelper.createComponent(false);

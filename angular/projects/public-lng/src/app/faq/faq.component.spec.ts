@@ -6,11 +6,11 @@ describe('FaqComponent', () => {
   let component: FaqComponent;
   let fixture: ComponentFixture<FaqComponent>;
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [FaqComponent]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FaqComponent);

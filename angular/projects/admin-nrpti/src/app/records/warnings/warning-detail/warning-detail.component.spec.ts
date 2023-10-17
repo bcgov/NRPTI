@@ -17,11 +17,15 @@ describe('WarningDetailComponent', () => {
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
-  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole', 'userInNrcedRole', 'userOnlyInLimitedRole']);
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', [
+    'userInLngRole',
+    'userInNrcedRole',
+    'userOnlyInLimitedRole'
+  ]);
   mockFactoryService.userInLngRole.and.returnValue(true);
   mockFactoryService.userInNrcedRole.and.returnValue(true);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, GlobalModule, CommonModule],
       declarations: [
@@ -37,7 +41,7 @@ describe('WarningDetailComponent', () => {
         { provide: FactoryService, useValue: mockFactoryService }
       ]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

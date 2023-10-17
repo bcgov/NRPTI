@@ -21,11 +21,16 @@ describe('CourtConvictionAddEditComponent', () => {
   const mockLocation = jasmine.createSpyObj('Location', ['go']);
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
-  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole', 'userInNrcedRole', 'isFlavourEditEnabled', 'userOnlyInLimitedRole']);
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', [
+    'userInLngRole',
+    'userInNrcedRole',
+    'isFlavourEditEnabled',
+    'userOnlyInLimitedRole'
+  ]);
   mockFactoryService.userInLngRole.and.returnValue(true);
   mockFactoryService.userInNrcedRole.and.returnValue(true);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
@@ -48,7 +53,7 @@ describe('CourtConvictionAddEditComponent', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

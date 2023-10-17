@@ -10,15 +10,11 @@ export class ApiService {
   public apiPath: string;
   public env: 'local' | 'dev' | 'test' | 'prod';
 
-  constructor(
-    private configService: ConfigService,
-    private logger: LoggerService
-    ) {
-      this.isMS = window.navigator.msSaveOrOpenBlob ? true : false;
+  constructor(private configService: ConfigService, private logger: LoggerService) {
+    this.isMS = window.navigator.msSaveOrOpenBlob ? true : false;
 
-      this.env      = this.configService.config['ENVIRONMENT'];
-      this.apiPath  = this.configService.config['API_LOCATION']
-                      + this.configService.config['API_PUBLIC_PATH'];
+    this.env = this.configService.config['ENVIRONMENT'];
+    this.apiPath = this.configService.config['API_LOCATION'] + this.configService.config['API_PUBLIC_PATH'];
   }
 
   getProjectObjectId(value: string) {

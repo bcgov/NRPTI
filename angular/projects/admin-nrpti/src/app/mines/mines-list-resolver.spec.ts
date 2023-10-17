@@ -12,23 +12,23 @@ describe('MinesListResolver', () => {
     'updateTableObjectWithUrlParams'
   ]);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         { provide: FactoryService, useValue: spyFactoryService },
         { provide: TableTemplateUtils, useValue: spyTableTemplateUtils }
       ]
     }).compileComponents();
-  }));
+  });
 
-  it('should create', (() => {
+  it('should create', () => {
     const factoryService = TestBed.get(FactoryService);
     const tableTemplateUtils = TestBed.get(TableTemplateUtils);
 
     const minesListResolver = new MinesListResolver(factoryService, tableTemplateUtils);
 
     expect(minesListResolver).toBeTruthy();
-  }));
+  });
 
   describe('resolve', () => {
     let factoryServiceSpy: jasmine.SpyObj<FactoryService>;
@@ -53,7 +53,7 @@ describe('MinesListResolver', () => {
         queryParamMap: null
       };
 
-      beforeAll((() => {
+      beforeAll(() => {
         factoryServiceSpy = TestBed.get(FactoryService);
         tableTemplateUtilsSpy = TestBed.get(TableTemplateUtils);
 
@@ -64,7 +64,7 @@ describe('MinesListResolver', () => {
         const minesListResolver = new MinesListResolver(factoryServiceSpy, tableTemplateUtilsSpy);
 
         minesListResolver.resolve(mockActivatedRouteSnapshot);
-      }));
+      });
 
       it('calls tableTemplateUtils.updateTableObjectWithUrlParams', () => {
         expect(tableTemplateUtilsSpy.updateTableObjectWithUrlParams).toHaveBeenCalledWith(
@@ -74,8 +74,18 @@ describe('MinesListResolver', () => {
       });
 
       it('calls factoryService.getRecords', () => {
-        expect(factoryServiceSpy.getRecords)
-          .toHaveBeenCalledWith('', ['MineBCMI'], [], 1, 25, '+name', {}, false, {}, []);
+        expect(factoryServiceSpy.getRecords).toHaveBeenCalledWith(
+          '',
+          ['MineBCMI'],
+          [],
+          1,
+          25,
+          '+name',
+          {},
+          false,
+          {},
+          []
+        );
       });
     });
   });

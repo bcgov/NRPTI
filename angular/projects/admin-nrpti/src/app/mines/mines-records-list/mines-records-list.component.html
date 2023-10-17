@@ -10,7 +10,7 @@
   <section>
     <search-filter-template
       #explorePanel
-      (searchEvent)='executeSearch($event)'
+      (searchEvent)="executeSearch($event)"
       title="Keyword Search"
       tooltip="Summary, description, location, and issued to name fields"
       [subsets]="subsets"
@@ -18,8 +18,8 @@
       [showAdvancedFilters]="showAdvancedFilters"
       [searchOnFilterChange]="true"
       filterItemPanelSize="3"
-      [filters]="filters">
-    </search-filter-template>
+      [filters]="filters"
+    ></search-filter-template>
   </section>
 
   <section class="d-flex justify-content-end">
@@ -28,7 +28,8 @@
         class="btn btn-primary"
         [disabled]="!anySelectedRecords"
         (click)="submitAddEditCollectionRecords()"
-        title="Add to new collection">
+        title="Add to new collection"
+      >
         <em class="material-icons mr-1 align-middle">add</em>
         <span class="align-middle">Add to new Collection</span>
       </button>
@@ -37,19 +38,20 @@
         class="btn btn-primary"
         [disabled]="!anySelectedRecords"
         (click)="submitAddToExistingCollection()"
-        title="Add to existing collection">
+        title="Add to existing collection"
+      >
         <em class="material-icons mr-1 align-middle">add</em>
         <span class="align-middle">Add to existing Collection</span>
       </button>
       &nbsp;
       <button
         class="btn"
-        [ngClass]="{'btn-primary' : !showRecordForm, 'btn-secondary' : showRecordForm}"
+        [ngClass]="{ 'btn-primary': !showRecordForm, 'btn-secondary': showRecordForm }"
         (click)="showRecordForm = !showRecordForm"
-        title="Add new record">
+        title="Add new record"
+      >
         <span class="align-middle">Add New Record</span>
-        <em
-          class="material-icons align-middle">{{showRecordForm ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</em>
+        <em class="material-icons align-middle">{{ showRecordForm ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</em>
       </button>
     </div>
   </section>
@@ -57,8 +59,8 @@
   <app-mines-record-add
     *ngIf="mine && showRecordForm"
     [mine]="mine"
-    (addedRecord)="updateRecordList($event)">
-  </app-mines-record-add>
+    (addedRecord)="updateRecordList($event)"
+  ></app-mines-record-add>
 
   <section *ngIf="collectionState">
     <div class="d-flex justify-content-end mb-1">
@@ -67,14 +69,16 @@
           type="button"
           class="btn btn-link"
           (click)="cancelAddEditCollectionRecords()"
-          title="Cancel adding records to collection">
+          title="Cancel adding records to collection"
+        >
           Cancel
         </button>
         <button
           class="btn add-records-btn border-0"
           type="submit"
           (click)="submitAddEditCollectionRecords()"
-          title="Update collection with the selected records">
+          title="Update collection with the selected records"
+        >
           Add Record(s) to Collection
         </button>
         <span class="grey-subtext text-right d-block">
@@ -92,6 +96,7 @@
     <lib-table-template
       *ngIf="tableData.totalListItems > 0"
       [data]="tableData"
-      (messageOut)="onMessageOut($event)"></lib-table-template>
+      (messageOut)="onMessageOut($event)"
+    ></lib-table-template>
   </section>
 </main>

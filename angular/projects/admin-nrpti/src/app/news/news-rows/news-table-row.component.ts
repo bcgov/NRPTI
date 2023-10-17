@@ -15,8 +15,7 @@ export class NewsTableRowComponent extends TableRowComponent implements OnInit {
     super();
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   @HostListener('click') onItemClicked() {
     const type = this.rowData._schemaName.split('Activity')[1].toLowerCase();

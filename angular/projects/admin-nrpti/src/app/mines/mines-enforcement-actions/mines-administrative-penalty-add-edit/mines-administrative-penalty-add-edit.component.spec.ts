@@ -17,20 +17,18 @@ import { FactoryService } from '../../../services/factory.service';
 import { EventEmitter } from '@angular/core';
 
 describe('MinesAdministrativePenaltyAddEditComponent', () => {
-  const testBedHelper = new TestBedHelper<MinesAdministrativePenaltyAddEditComponent>
-    (MinesAdministrativePenaltyAddEditComponent);
-
-  const mockFactoryService = jasmine.createSpyObj(
-    'FactoryService',
-    [
-      'userInLngRole',
-      'userInBcmiRole',
-      'userInNrcedRole',
-      'userOnlyInLimitedRole',
-      'userInRole',
-      'isFlavourEditEnabled'
-    ]
+  const testBedHelper = new TestBedHelper<MinesAdministrativePenaltyAddEditComponent>(
+    MinesAdministrativePenaltyAddEditComponent
   );
+
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', [
+    'userInLngRole',
+    'userInBcmiRole',
+    'userInNrcedRole',
+    'userOnlyInLimitedRole',
+    'userInRole',
+    'isFlavourEditEnabled'
+  ]);
   mockFactoryService.userInLngRole.and.returnValue(true);
   mockFactoryService.userInBcmiRole.and.returnValue(true);
   mockFactoryService.userInNrcedRole.and.returnValue(true);
@@ -43,7 +41,7 @@ describe('MinesAdministrativePenaltyAddEditComponent', () => {
   const mockStoreService = {
     getItem: () => {
       return ['item'];
-     },
+    },
     stateChange: new EventEmitter()
   };
 
@@ -54,7 +52,7 @@ describe('MinesAdministrativePenaltyAddEditComponent', () => {
     }
   };
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
@@ -79,7 +77,7 @@ describe('MinesAdministrativePenaltyAddEditComponent', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

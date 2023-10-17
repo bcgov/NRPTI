@@ -15,7 +15,7 @@ export class AgenciesComponent implements OnInit {
   selectedAgency = ''; // Initialize the selectedAgency
   choiceMade = false;
   newAgency = ''; // Initialize the new agency input field
-  agencies: { [key: string]: string } = { 'Kyle': 'Williams' };
+  agencies: { [key: string]: string } = { Kyle: 'Williams' };
   agencyList: string[] = ['-Select-']; // Use a string array for agencyList
   updatedData: any = {
     agencies: []

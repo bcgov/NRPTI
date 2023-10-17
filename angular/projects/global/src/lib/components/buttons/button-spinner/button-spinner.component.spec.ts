@@ -5,11 +5,11 @@ import { TestBedHelper } from '../../../../../../common/src/app/spec/spec-utils'
 describe('ButtonSpinnerComponent', () => {
   const testBedHelper = new TestBedHelper<ButtonSpinnerComponent>(ButtonSpinnerComponent);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ButtonSpinnerComponent]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

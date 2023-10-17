@@ -12,7 +12,6 @@ import { Subject } from 'rxjs';
   styleUrls: ['./lng-map-info.component.scss']
 })
 export class LngMapInfoComponent implements OnInit, OnDestroy {
-
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   public loading = true;
@@ -28,10 +27,12 @@ export class LngMapInfoComponent implements OnInit, OnDestroy {
     browser_spellcheck: true,
     height: 240,
     plugins: ['lists, advlist, link'],
-    toolbar: [ 'undo redo | formatselect | ' +
-    ' bold italic backcolor | alignleft aligncenter ' +
-    ' alignright alignjustify | bullist numlist outdent indent |' +
-    ' removeformat | help' ]
+    toolbar: [
+      'undo redo | formatselect | ' +
+        ' bold italic backcolor | alignleft aligncenter ' +
+        ' alignright alignjustify | bullist numlist outdent indent |' +
+        ' removeformat | help'
+    ]
   };
 
   constructor(
@@ -39,7 +40,7 @@ export class LngMapInfoComponent implements OnInit, OnDestroy {
     private factoryService: FactoryService,
     private loadingScreenService: LoadingScreenService,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -104,10 +105,7 @@ export class LngMapInfoComponent implements OnInit, OnDestroy {
   async submit() {
     this.loadingScreenService.setLoadingState(true, 'main');
 
-    if (
-      !this.mapForm.get('location').value ||
-      !this.mapForm.get('length').value
-    ) {
+    if (!this.mapForm.get('location').value || !this.mapForm.get('length').value) {
       alert('Please ensure your updates to the Section info are complete');
       this.loadingScreenService.setLoadingState(false, 'main');
       return;

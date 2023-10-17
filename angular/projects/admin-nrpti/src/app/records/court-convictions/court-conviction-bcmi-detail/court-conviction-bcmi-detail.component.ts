@@ -25,7 +25,7 @@ export class CourtConvictionBCMIDetailComponent extends RecordComponent implemen
     public factoryService: FactoryService,
     private logger: LoggerService,
     public changeDetectionRef: ChangeDetectorRef,
-    public datePipe: DatePipe,
+    public datePipe: DatePipe
   ) {
     super();
   }
@@ -54,7 +54,9 @@ export class CourtConvictionBCMIDetailComponent extends RecordComponent implemen
     const requiredRoles = Constants.FlavourEditRequiredRoles.COURT_CONVICTION.BCMI;
 
     for (const role of requiredRoles) {
-      if (this.factoryService.userInRole(role) && this.data.write && this.data.write.includes(role)) { return true; }
+      if (this.factoryService.userInRole(role) && this.data.write && this.data.write.includes(role)) {
+        return true;
+      }
     }
 
     return false;

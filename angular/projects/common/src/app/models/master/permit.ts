@@ -24,7 +24,6 @@ export class Permit extends RecordModel {
   typeCode: string;
   originalPermit: string;
 
-
   // Fields for saving flavour in API.
   PermitLNG: object;
   isBcmiPublished: boolean;
@@ -40,8 +39,12 @@ export class Permit extends RecordModel {
     this.recordSubtype = (obj && obj.recordSubtype) || null;
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || null;
-    this.legislation = (obj && obj.legislation && obj.legislation.length &&
-      obj.legislation.map(legislation => new Legislation(legislation))) || null;
+    this.legislation =
+      (obj &&
+        obj.legislation &&
+        obj.legislation.length &&
+        obj.legislation.map(legislation => new Legislation(legislation))) ||
+      null;
     this.documents = (obj && obj.documents) || null;
 
     this.permitStatusCode = (obj && obj.permitStatusCode) || null;

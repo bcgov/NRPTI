@@ -5,11 +5,11 @@ import { TestBedHelper } from '../../../../../common/src/app/spec/spec-utils';
 describe('PageSizePickerComponent', () => {
   const testBedHelper = new TestBedHelper<PageSizePickerComponent>(PageSizePickerComponent);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [PageSizePickerComponent]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

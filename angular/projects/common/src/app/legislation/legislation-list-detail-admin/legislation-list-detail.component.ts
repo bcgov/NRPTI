@@ -1,6 +1,6 @@
 import { Legislation } from './../../models/master/common-models/legislation';
 import { Component, Input, OnInit, ChangeDetectorRef, SimpleChanges, OnChanges } from '@angular/core';
-import {Utils as CommonUtils} from './../../utils/utils';
+import { Utils as CommonUtils } from './../../utils/utils';
 
 @Component({
   selector: 'app-legislation-list-detail-admin',
@@ -13,7 +13,6 @@ export class LegislationListDetailComponent implements OnInit, OnChanges {
   @Input() subsequentSectionLabels: string;
   @Input() firstDescriptionLabel: string;
   @Input() subsequentDescriptionLabel: string;
-
 
   public preparedData = [];
 

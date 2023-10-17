@@ -8,8 +8,9 @@ import { DatePipe } from '@angular/common';
 import { FactoryService } from '../../../services/factory.service';
 
 describe('CorrespondenceNRCEDDetailComponent', () => {
-  const testBedHelper = new TestBedHelper<DamSafetyInspectionNRCEDDetailComponent>
-    (DamSafetyInspectionNRCEDDetailComponent);
+  const testBedHelper = new TestBedHelper<DamSafetyInspectionNRCEDDetailComponent>(
+    DamSafetyInspectionNRCEDDetailComponent
+  );
 
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
@@ -17,7 +18,7 @@ describe('CorrespondenceNRCEDDetailComponent', () => {
   const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInNrcedRole']);
   mockFactoryService.userInNrcedRole.and.returnValue(true);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, GlobalModule],
       declarations: [DamSafetyInspectionNRCEDDetailComponent],
@@ -28,7 +29,7 @@ describe('CorrespondenceNRCEDDetailComponent', () => {
         { provide: FactoryService, useValue: mockFactoryService }
       ]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

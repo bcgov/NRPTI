@@ -39,12 +39,7 @@ export class LegislationAddEditComponent implements OnInit {
   public debouncedFilterActsPicklist = this.utils.debounced(200, args => this.filterActsPicklist(args));
   public debouncedFilterRegulationsPicklist = this.utils.debounced(200, args => this.filterRegulationsPicklist(args));
 
-
-
-  constructor(
-    public utils: Utils,
-    protected _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  constructor(public utils: Utils, protected _changeDetectionRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     if (this.formGroup.controls.act.value && this.formGroup.controls.regulation.value) {
@@ -79,11 +74,9 @@ export class LegislationAddEditComponent implements OnInit {
   protected subscribeToFormControlChanges() {
     // listen to legislation control changes
     const debouncedUpdateLegislationDescription = this.utils.debounced(500, () => this.updateLegislationDescription());
-    this.formGroup
-      .valueChanges.pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(() => {
-        debouncedUpdateLegislationDescription();
-      });
+    this.formGroup.valueChanges.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
+      debouncedUpdateLegislationDescription();
+    });
   }
 
   private updateLegislationDescription() {
@@ -96,14 +89,12 @@ export class LegislationAddEditComponent implements OnInit {
     });
 
     if (this.hasOffence) {
-      this.formGroup.get('offence').setValue(
-        Picklists.getLegislationDescription(this.recordType, legislation)
-      );
+      this.formGroup.get('offence').setValue(Picklists.getLegislationDescription(this.recordType, legislation));
       this.formGroup.get('offence').markAsDirty();
     } else {
-      this.formGroup.get('legislationDescription').setValue(
-        Picklists.getLegislationDescription(this.recordType, legislation)
-      );
+      this.formGroup
+        .get('legislationDescription')
+        .setValue(Picklists.getLegislationDescription(this.recordType, legislation));
       this.formGroup.get('legislationDescription').markAsDirty();
     }
   }

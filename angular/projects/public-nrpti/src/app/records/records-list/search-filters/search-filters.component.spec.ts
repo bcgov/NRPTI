@@ -18,7 +18,7 @@ describe('SearchFiltersComponent', () => {
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
@@ -37,7 +37,7 @@ describe('SearchFiltersComponent', () => {
         Utils
       ]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const formGroup = new FormGroup({

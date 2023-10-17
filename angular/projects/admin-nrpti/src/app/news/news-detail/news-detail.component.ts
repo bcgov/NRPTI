@@ -17,12 +17,13 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
 
   public record = null;
 
-  constructor(public route: ActivatedRoute,
+  constructor(
+    public route: ActivatedRoute,
     public router: Router,
     private factoryService: FactoryService,
     public changeDetectionRef: ChangeDetectorRef,
-    private dialogService: DialogService) {
-  }
+    private dialogService: DialogService
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -39,27 +40,29 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
   }
 
   delete() {
-    this.dialogService.addDialog(ConfirmComponent,
-      {
-        title: 'Confirm Deletion',
-        message: 'Do you really want to delete this News Item?',
-        okOnly: false
-      }, {
-      backdropColor: 'rgba(0, 0, 0, 0.5)'
-    })
+    this.dialogService
+      .addDialog(
+        ConfirmComponent,
+        {
+          title: 'Confirm Deletion',
+          message: 'Do you really want to delete this News Item?',
+          okOnly: false
+        },
+        {
+          backdropColor: 'rgba(0, 0, 0, 0.5)'
+        }
+      )
       .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(
-        async isConfirmed => {
-          if (isConfirmed) {
-            try {
-              await this.factoryService.deleteNews(this.record._id);
-              this.router.navigate(['news']);
-            } catch (e) {
-              alert('Could not delete News Item');
-            }
+      .subscribe(async isConfirmed => {
+        if (isConfirmed) {
+          try {
+            await this.factoryService.deleteNews(this.record._id);
+            this.router.navigate(['news']);
+          } catch (e) {
+            alert('Could not delete News Item');
           }
         }
-      );
+      });
   }
 
   navigateToEditPage() {

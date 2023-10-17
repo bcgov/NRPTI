@@ -33,17 +33,9 @@ import { NewsDetailComponent } from './news-detail/news-detail.component';
     InlineSVGModule.forRoot(),
     NewsRoutingModule
   ],
-  declarations: [
-    NewsListComponent,
-    NewsAddEditComponent,
-    NewsTableRowComponent,
-    NewsDetailComponent
-  ],
+  declarations: [NewsListComponent, NewsAddEditComponent, NewsTableRowComponent, NewsDetailComponent],
   providers: [],
-  entryComponents: [
-    NewsTableRowComponent,
-    NewsDetailComponent
-  ],
+  entryComponents: [NewsTableRowComponent, NewsDetailComponent],
   exports: []
 })
 export class NewsModule {}

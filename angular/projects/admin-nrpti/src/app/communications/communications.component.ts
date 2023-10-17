@@ -36,10 +36,12 @@ export class CommunicationsComponent implements OnInit, OnDestroy {
     browser_spellcheck: true,
     height: 240,
     plugins: ['lists, advlist, link'],
-    toolbar: ['undo redo | formatselect | ' +
-      ' bold italic backcolor | alignleft aligncenter ' +
-      ' alignright alignjustify | bullist numlist outdent indent |' +
-      ' removeformat | help']
+    toolbar: [
+      'undo redo | formatselect | ' +
+        ' bold italic backcolor | alignleft aligncenter ' +
+        ' alignright alignjustify | bullist numlist outdent indent |' +
+        ' removeformat | help'
+    ]
   };
 
   public datepickerMinDate = Constants.DatepickerMinDate;
@@ -54,7 +56,7 @@ export class CommunicationsComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private configService: ConfigService,
     private toastService: ToastService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -106,16 +108,18 @@ export class CommunicationsComponent implements OnInit, OnDestroy {
         disabled: !this.checkRoles()
       }),
       startDate: new FormControl({
-        value: (this.commPackage &&
-          this.commPackage.startDate &&
-          this.utils.convertJSDateToNGBDate(new Date(this.commPackage.startDate))) ||
+        value:
+          (this.commPackage &&
+            this.commPackage.startDate &&
+            this.utils.convertJSDateToNGBDate(new Date(this.commPackage.startDate))) ||
           '',
         disabled: !this.checkRoles()
       }),
       endDate: new FormControl({
-        value: (this.commPackage &&
-          this.commPackage.endDate &&
-          this.utils.convertJSDateToNGBDate(new Date(this.commPackage.endDate))) ||
+        value:
+          (this.commPackage &&
+            this.commPackage.endDate &&
+            this.utils.convertJSDateToNGBDate(new Date(this.commPackage.endDate))) ||
           '',
         disabled: !this.checkRoles()
       })
@@ -126,10 +130,7 @@ export class CommunicationsComponent implements OnInit, OnDestroy {
     // save the popup
     this.loadingScreenService.setLoadingState(true, 'main');
 
-    if (
-      !this.myForm.get('popupTitle').value ||
-      !this.myForm.get('description').value
-    ) {
+    if (!this.myForm.get('popupTitle').value || !this.myForm.get('description').value) {
       alert('Please ensure your Communication Package includes a title and a description.');
       return;
     }
@@ -189,7 +190,6 @@ export class CommunicationsComponent implements OnInit, OnDestroy {
     this.resetDates.emit();
     this.loadingScreenService.setLoadingState(false, 'main');
   }
-
 
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();

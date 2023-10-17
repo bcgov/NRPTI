@@ -12,7 +12,7 @@ const ApplicationAgencies: any = {
   AGENCY_AGRI: 'Ministry of Agriculture and Food',
   AGENCY_FLNRO: 'Ministry of Forests',
   AGENCY_FLNR_NRO: 'Natural Resource Officers',
-  AGENCY_WLRS: 'Ministry of Water, Land and Resource Stewardship',
+  AGENCY_WLRS: 'Ministry of Water, Land and Resource Stewardship'
 };
 
 export const ApplicationAgencyList = {
@@ -29,7 +29,7 @@ export const ApplicationAgencyList = {
   AGENCY_AGRI: 'Ministry of Agriculture and Food',
   AGENCY_FLNRO: 'Ministry of Forests',
   AGENCY_FLNR_NRO: 'Natural Resource Officers',
-  AGENCY_WLRS: 'Ministry of Water, Land and Resource Stewardship',
+  AGENCY_WLRS: 'Ministry of Water, Land and Resource Stewardship'
 };
 /**
  * General purpose utils.
@@ -148,7 +148,6 @@ export class Utils {
       return acronym;
     }
   }
-
 
   static displayNameFull(agencyCode): string {
     const agencyList = ApplicationAgencyList;

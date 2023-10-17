@@ -27,7 +27,7 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
     private factoryService: FactoryService,
     private loadingScreenService: LoadingScreenService,
     public changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.loadingScreenService.setLoadingState(true, 'main');
@@ -67,25 +67,26 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-
   isRecordPublished(): boolean {
     return this.mine && this.mine.read && this.mine.read.includes('public');
   }
 
   checkCanPublish(): boolean {
-    return (this.mine
-      && this.mine.name
-      && this.mine.description
-      && this.mine.summary
-      && this.mine.type
-      && this.mine.status
-      && this.mine.permitNumber
-      && this.mine.commodities
-      && this.mine.commodities.length > 0
-      && this.mine.permittee
-      && this.mine.location
-      && this.mine.location.coordinates
-      && this.mine.location.coordinates.length > 0);
+    return (
+      this.mine &&
+      this.mine.name &&
+      this.mine.description &&
+      this.mine.summary &&
+      this.mine.type &&
+      this.mine.status &&
+      this.mine.permitNumber &&
+      this.mine.commodities &&
+      this.mine.commodities.length > 0 &&
+      this.mine.permittee &&
+      this.mine.location &&
+      this.mine.location.coordinates &&
+      this.mine.location.coordinates.length > 0
+    );
   }
 
   async publish() {

@@ -6,25 +6,15 @@ import { LegislationListAddEditComponent } from './legislation-list-add-edit.com
 import { LegislationAddEditComponent } from './../legislation-add-edit/legislation-add-edit.component';
 import { Utils } from 'nrpti-angular-components';
 
-
-
 describe('LegislationListAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<LegislationListAddEditComponent>(LegislationListAddEditComponent);
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        LegislationListAddEditComponent,
-        LegislationAddEditComponent
-      ],
-      imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        MatAutocompleteModule,
-      ],
+      declarations: [LegislationListAddEditComponent, LegislationAddEditComponent],
+      imports: [FormsModule, ReactiveFormsModule, MatAutocompleteModule],
       providers: [Utils]
-    })
-    .compileComponents();
+    }).compileComponents();
   });
 
   it('should create', () => {

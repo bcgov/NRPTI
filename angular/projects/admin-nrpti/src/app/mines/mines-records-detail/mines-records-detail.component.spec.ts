@@ -12,16 +12,13 @@ import { S3SignedUrlAnchorComponent } from '../../documents/s3-signed-url-anchor
 describe('MinesRecordDetailComponent', () => {
   const testBedHelper = new TestBedHelper<MinesRecordDetailComponent>(MinesRecordDetailComponent);
 
-
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, GlobalModule, CommonModule, MatSlideToggleModule],
       declarations: [MinesRecordDetailComponent, DocumentAuthenticatedReadOnlyComponent, S3SignedUrlAnchorComponent],
-      providers: [
-        DatePipe,
-      ]
+      providers: [DatePipe]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

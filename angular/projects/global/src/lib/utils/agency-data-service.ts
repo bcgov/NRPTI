@@ -15,9 +15,7 @@ export class AgencyDataService {
    * @constructor
    * @param {FactoryService} factoryService - the factory service for accessing application agency data.
    */
-  constructor(
-    private factoryService: FactoryService,
-  ) {}
+  constructor(private factoryService: FactoryService) {}
 
   /**
    * Get the full name of the agency based on the agency's code
@@ -74,5 +72,4 @@ export class AgencyDataService {
     // Return a default value or handle the case where agencyList is undefined or empty
     return '';
   }
-
 }

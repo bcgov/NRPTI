@@ -11,10 +11,11 @@ import { AgencyDataService } from '../../../../../../global/src/lib/utils/agency
 @Component({
   selector: 'app-mines-administrative-penalty-detail',
   templateUrl: './mines-administrative-penalty-detail.component.html',
-  styleUrls: ['../../../records/administrative-penalties/administrative-penalty-detail/administrative-penalty-detail.component.scss']
+  styleUrls: [
+    '../../../records/administrative-penalties/administrative-penalty-detail/administrative-penalty-detail.component.scss'
+  ]
 })
 export class MinesAdministrativePenaltyDetailComponent extends AdministrativePenaltyDetailComponent implements OnInit {
-
   public mine = [];
   public mineType = '';
 

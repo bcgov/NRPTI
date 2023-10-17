@@ -15,17 +15,23 @@ describe('AgreementLNGDetailComponent', () => {
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
 
-  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole', 'userInBcmiRole', 'userInNrcedRole', 'userOnlyInLimitedRole', 'userInRole']);
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', [
+    'userInLngRole',
+    'userInBcmiRole',
+    'userInNrcedRole',
+    'userOnlyInLimitedRole',
+    'userInRole'
+  ]);
   mockFactoryService.userInLngRole.and.returnValue(true);
   mockFactoryService.userInBcmiRole.and.returnValue(true);
   mockFactoryService.userInNrcedRole.and.returnValue(true);
 
   const mockStoreService = {
-    getItem: () => { },
+    getItem: () => {},
     stateChange: new EventEmitter()
   };
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, GlobalModule],
       declarations: [AgreementLNGDetailComponent],
@@ -37,7 +43,7 @@ describe('AgreementLNGDetailComponent', () => {
         { provide: FactoryService, useValue: mockFactoryService }
       ]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

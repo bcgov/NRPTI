@@ -62,7 +62,7 @@ export class EnforcementActionsTableComponent implements OnInit, OnDestroy {
       value: '',
       width: 'col-1',
       nosort: true
-    },
+    }
   ];
 
   public queryParams: Params;
@@ -79,7 +79,7 @@ export class EnforcementActionsTableComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   /**
    * Component init

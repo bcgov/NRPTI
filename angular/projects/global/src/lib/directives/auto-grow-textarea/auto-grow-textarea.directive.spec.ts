@@ -14,12 +14,12 @@ class TestComponent {}
 describe('AutoGrowTextAreaDirective', () => {
   const testBedHelper = new TestBedHelper<TestComponent>(TestComponent);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [Utils],
       declarations: [AutoGrowTextAreaDirective, TestComponent]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

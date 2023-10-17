@@ -69,7 +69,7 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
 
   public updatedPaceholderText = '';
 
-  constructor(public _changeDetectionRef: ChangeDetectorRef) { }
+  constructor(public _changeDetectionRef: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.updatedPaceholderText = this.placeholderText;

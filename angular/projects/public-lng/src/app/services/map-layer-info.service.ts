@@ -9,10 +9,8 @@ export class MapLayerInfoService {
   private data: BehaviorSubject<SearchResult>;
   private fetchDataConfig: any;
 
-  constructor(
-    private configService: ConfigService, private searchService: SearchService
-  ) {
-    this.data = new BehaviorSubject<SearchResult>(new SearchResult);
+  constructor(private configService: ConfigService, private searchService: SearchService) {
+    this.data = new BehaviorSubject<SearchResult>(new SearchResult());
     this.fetchDataConfig = this.configService.config['DEFAULT_IMPORT_TABLE_QUERY_PARAMS'];
   }
 
@@ -45,7 +43,6 @@ export class MapLayerInfoService {
     pageSize: number = 20,
     sortBy: string = null
   ) {
-
     // Caching for later
     this.fetchDataConfig = {
       pathAPI: pathAPI,
@@ -59,19 +56,12 @@ export class MapLayerInfoService {
 
     let res = null;
     try {
-      res = await this.searchService.getSearchResults(
-        pathAPI,
-        keys,
-        dataset,
-        fields,
-        pageNum,
-        pageSize,
-        sortBy
-      ).toPromise();
+      res = await this.searchService
+        .getSearchResults(pathAPI, keys, dataset, fields, pageNum, pageSize, sortBy)
+        .toPromise();
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-
 
     // tslint:disable-next-line: prefer-const
     let searchResult = new SearchResult();
@@ -81,14 +71,14 @@ export class MapLayerInfoService {
         searchResult.data = res[0].data.searchResults;
       } else {
         console.log('Search results were empty.', res);
-    }
+      }
       if (res[0].data.meta[0] && res[0].data.meta[0].searchResultsTotal) {
         searchResult.totalSearchCount = res[0].data.meta[0].searchResultsTotal;
       } else {
         console.log('Search results count was not returned.', res, searchResult.totalSearchCount);
       }
     } else {
-        console.log('No data was returned from the server', res);
+      console.log('No data was returned from the server', res);
     }
     this.setValue(searchResult);
   }

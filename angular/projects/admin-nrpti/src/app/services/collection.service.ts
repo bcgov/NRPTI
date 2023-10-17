@@ -5,7 +5,7 @@ import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class CollectionService {
-  constructor(public apiService: ApiService, public http: HttpClient) { }
+  constructor(public apiService: ApiService, public http: HttpClient) {}
 
   public createCollection(collection: any): Promise<any> {
     if (!collection) {
