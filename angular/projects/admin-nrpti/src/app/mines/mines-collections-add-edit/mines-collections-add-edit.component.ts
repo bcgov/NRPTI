@@ -69,7 +69,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private storeService: StoreService,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.loadingScreenService.setLoadingState(true, 'main');
@@ -172,27 +172,26 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
         (this.collectionState && this.collectionState.collectionName) || (this.collection && this.collection.name) || ''
       ),
       collectionDate: new FormControl(
-        (this.collectionState &&
-          this.collectionState.collectionDate) ||
-        (this.collection &&
-          this.collection.date &&
-          this.utils.convertJSDateToNGBDate(new Date(this.collection.date))) ||
-        '' ||
-        null
+        (this.collectionState && this.collectionState.collectionDate) ||
+          (this.collection &&
+            this.collection.date &&
+            this.utils.convertJSDateToNGBDate(new Date(this.collection.date))) ||
+          '' ||
+          null
       ),
       collectionType: new FormControl(
         (this.collectionState && this.collectionState.collectionType) || (this.collection && this.collection.type) || ''
       ),
       collectionAgency: new FormControl(
         (this.collectionState && this.collectionState.collectionAgency) ||
-        (this.collection && this.collection.agency) ||
-        ''
+          (this.collection && this.collection.agency) ||
+          ''
       ),
       collectionRecords: new FormArray(
         // If editing and have selected records then combine them with existing collection records.
         (this.collectionState && this.getRecordsFormGroups(this.getUniqueRecords())) ||
-        (this.collection && this.getRecordsFormGroups(this.collection.collectionRecords)) ||
-        []
+          (this.collection && this.getRecordsFormGroups(this.collection.collectionRecords)) ||
+          []
       )
     });
 
@@ -216,9 +215,9 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    * @returns {obejct[]} Unique records.
    */
   getUniqueRecords() {
-    const records = this.collection && this.collection.collectionRecords || [];
-    const stateRecords = this.collectionState && this.collectionState.collectionRecords || [];
-    const collectionRecords = this.collection && this.collection.collectionRecords || [];
+    const records = (this.collection && this.collection.collectionRecords) || [];
+    const stateRecords = (this.collectionState && this.collectionState.collectionRecords) || [];
+    const collectionRecords = (this.collection && this.collection.collectionRecords) || [];
 
     for (const stateRecord of stateRecords) {
       if (!collectionRecords.find(collectionRecord => stateRecord._id === collectionRecord._id)) {
@@ -333,7 +332,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     // This is a flag set by mines-record-add component
     // If it is set, this is not a record in the DB
     if (recordControl.value.record.savePending) {
-      this.pendingRecords = this.pendingRecords.filter((obj) => {
+      this.pendingRecords = this.pendingRecords.filter(obj => {
         return obj.recordName !== recordControl.value.record.recordName;
       });
     } else {
@@ -360,7 +359,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    *
    * @memberof MinesCollectionsAddEditComponent
    */
-   goToRecordDetails(idx: number) {
+  goToRecordDetails(idx: number) {
     const recordControl = (this.myForm.get('collectionRecords') as FormArray).at(idx);
     const record = recordControl.value.record;
     window.open(`/mines/${this.mine._id}/records/${record._id}/detail`, '_blank');
@@ -371,7 +370,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    *
    * @memberof MinesCollectionsAddEditComponent
    */
-   goToRecordEdit(idx: number) {
+  goToRecordEdit(idx: number) {
     const recordControl = (this.myForm.get('collectionRecords') as FormArray).at(idx);
     const record = recordControl.value.record;
     window.open(`/mines/${this.mine._id}/records/${record._id}/edit`, '_blank');
@@ -384,7 +383,9 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    */
   async submit() {
     const message = this.myForm.get('collectionRecords').value.length
-      ? `This will publish the current collection and ${this.myForm.get('collectionRecords').value.length} record(s), do you want to proceed?`
+      ? `This will publish the current collection and ${
+          this.myForm.get('collectionRecords').value.length
+        } record(s), do you want to proceed?`
       : 'There are no records in this collection, it will not display on BCMI, do you want to proceed?';
     this.dialogService
       .addDialog(
@@ -433,7 +434,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
               createdRecord[1]._id,
               this.factoryService
             );
-            const updatedRecordList = this.myForm.get('collectionRecords').value.map((item) => {
+            const updatedRecordList = this.myForm.get('collectionRecords').value.map(item => {
               return item.record.recordName === createdRecord[0].recordName ? { record: createdRecord[0] } : item;
             });
             this.myForm.get('collectionRecords').patchValue(updatedRecordList);
@@ -530,9 +531,11 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     recordToAdd.record.isLink = recordToAdd.links.length > 0 ? true : false;
 
     const formArray = this.myForm.get('collectionRecords') as FormArray;
-    formArray.push(new FormGroup({
-      record: new FormControl(recordToAdd.record || null)
-    }));
+    formArray.push(
+      new FormGroup({
+        record: new FormControl(recordToAdd.record || null)
+      })
+    );
 
     this.myForm.get('collectionRecords').markAsDirty();
     this.showRecordForm = false;

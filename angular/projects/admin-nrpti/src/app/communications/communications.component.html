@@ -6,17 +6,33 @@
       <div role="navigation">
         <ul class="nav nav-tabs nav-fill pl-2" role="tablist">
           <li class="nav-item" role="presentation">
-            <a class="nav-link" role="tab" routerLink="/communications/BCMI" [class.active]="selectedApplication === 'BCMI'">
+            <a
+              class="nav-link"
+              role="tab"
+              routerLink="/communications/BCMI"
+              [class.active]="selectedApplication === 'BCMI'"
+            >
               BCMI
             </a>
           </li>
           <li class="nav-item" role="presentation">
-            <a class="nav-link" role="tab" routerLink="/communications/NRCED" [class.active]="selectedApplication === 'NRCED'">
+            <a
+              class="nav-link"
+              role="tab"
+              routerLink="/communications/NRCED"
+              [class.active]="selectedApplication === 'NRCED'"
+            >
               NRCED
             </a>
           </li>
           <li class="nav-item" role="presentation">
-            <a class="nav-link" role="tab" routerLink="/communications/LNG" routerLinkActive [class.active]="selectedApplication === 'LNG'">
+            <a
+              class="nav-link"
+              role="tab"
+              routerLink="/communications/LNG"
+              routerLinkActive
+              [class.active]="selectedApplication === 'LNG'"
+            >
               LNG
             </a>
           </li>
@@ -25,9 +41,10 @@
     </section>
 
     <!-- popup edit section-->
-    <p>With this form you can supply details for a popup message that will be displayed to users of BCMI, LNG or NRCED.
-       Enter a popup title and description, and supply a date range when the popup will display. You can only have one
-       popup active at a time, so any edits here will replace the existing popup.
+    <p>
+      With this form you can supply details for a popup message that will be displayed to users of BCMI, LNG or NRCED.
+      Enter a popup title and description, and supply a date range when the popup will display. You can only have one
+      popup active at a time, so any edits here will replace the existing popup.
     </p>
     <section class="my-3 py-3 border-bottom">
       <form [formGroup]="myForm" novalidate>
@@ -40,12 +57,7 @@
         <div class="flex-container">
           <div class="label-pair lrg">
             <label for="description">Description</label>
-            <editor
-              [init]="tinyMceSettings"
-              name="description"
-              id="description"
-              formControlName="description"
-            ></editor>
+            <editor [init]="tinyMceSettings" name="description" id="description" formControlName="description"></editor>
           </div>
         </div>
         <div class="flex-container">
@@ -55,8 +67,8 @@
               [control]="myForm.controls.startDate"
               [isValidate]="true"
               [reset]="resetDates"
-              [minDate]="datepickerMinDate">
-              </lib-date-picker>
+              [minDate]="datepickerMinDate"
+            ></lib-date-picker>
           </div>
           <div class="label-pair">
             <label for="endDate">End Date</label>
@@ -64,8 +76,8 @@
               [control]="myForm.controls.endDate"
               [isValidate]="true"
               [reset]="resetDates"
-              [minDate]="datepickerMinDate">
-            </lib-date-picker>
+              [minDate]="datepickerMinDate"
+            ></lib-date-picker>
           </div>
         </div>
         <!-- Add an advanced section for updating the communication package additional info json blob? -->
@@ -79,10 +91,8 @@
         </button>
       </div>
     </section>
-
   </section>
   <section *ngIf="this.selectedApplication === 'LNG'" class="my-3 py-3">
     <app-lng-map-info></app-lng-map-info>
   </section>
-
 </main>

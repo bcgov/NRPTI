@@ -11,23 +11,23 @@ describe('MinesRecordsListResolver', () => {
     'updateTableObjectWithUrlParams'
   ]);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         { provide: FactoryService, useValue: spyFactoryService },
         { provide: TableTemplateUtils, useValue: spyTableTemplateUtils }
       ]
     }).compileComponents();
-  }));
+  });
 
-  it('should create', (() => {
+  it('should create', () => {
     const factoryService = TestBed.get(FactoryService);
     const tableTemplateUtils = TestBed.get(TableTemplateUtils);
 
     const minesRecordsListResolver = new MinesRecordsListResolver(factoryService, tableTemplateUtils);
 
     expect(minesRecordsListResolver).toBeTruthy();
-  }));
+  });
 
   describe('resolve', () => {
     let factoryServiceSpy: jasmine.SpyObj<FactoryService>;
@@ -52,7 +52,7 @@ describe('MinesRecordsListResolver', () => {
         queryParamMap: null
       };
 
-      beforeAll((() => {
+      beforeAll(() => {
         factoryServiceSpy = TestBed.get(FactoryService);
         tableTemplateUtilsSpy = TestBed.get(TableTemplateUtils);
 
@@ -63,7 +63,7 @@ describe('MinesRecordsListResolver', () => {
         const minesRecordsListResolver = new MinesRecordsListResolver(factoryServiceSpy, tableTemplateUtilsSpy);
 
         minesRecordsListResolver.resolve(activatedRouteSnapshot);
-      }));
+      });
 
       it('calls tableTemplateUtils.updateTableObjectWithUrlParams', () => {
         expect(tableTemplateUtilsSpy.updateTableObjectWithUrlParams).toHaveBeenCalledWith(
@@ -122,7 +122,7 @@ describe('MinesRecordsListResolver', () => {
         queryParamMap: null
       };
 
-      beforeAll((() => {
+      beforeAll(() => {
         factoryServiceSpy = TestBed.get(FactoryService);
         tableTemplateUtilsSpy = TestBed.get(TableTemplateUtils);
 
@@ -133,7 +133,7 @@ describe('MinesRecordsListResolver', () => {
         const minesRecordsListResolver = new MinesRecordsListResolver(factoryServiceSpy, tableTemplateUtilsSpy);
 
         minesRecordsListResolver.resolve(activatedRouteSnapshot);
-      }));
+      });
 
       it('calls tableTemplateUtils.updateTableObjectWithUrlParams', () => {
         expect(tableTemplateUtilsSpy.updateTableObjectWithUrlParams).toHaveBeenCalledWith(

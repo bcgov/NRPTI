@@ -2,18 +2,18 @@
   <div class="legislation-divider"></div>
   <div class="grid-section section-1">
     <div class="grid-item__row">
-      <label *ngIf="idx === 0" class="grid-item-name">{{firstSectionLabel}}</label>
-      <label *ngIf="idx !== 0" class="grid-item-name">{{subsequentSectionLabels}}</label>
+      <label *ngIf="idx === 0" class="grid-item-name">{{ firstSectionLabel }}</label>
+      <label *ngIf="idx !== 0" class="grid-item-name">{{ subsequentSectionLabels }}</label>
       <span class="grid-item-value">{{ this.populateTextField(legislation) || '-' }}</span>
     </div>
     <div *ngIf="legislation && legislation.offence" class="grid-item__row">
-      <label *ngIf="idx === 0" class="grid-item-name">{{firstDescriptionLabel}}</label>
-      <label *ngIf="idx !== 0" class="grid-item-name">{{subsequentDescriptionLabel}}</label>
+      <label *ngIf="idx === 0" class="grid-item-name">{{ firstDescriptionLabel }}</label>
+      <label *ngIf="idx !== 0" class="grid-item-name">{{ subsequentDescriptionLabel }}</label>
       <span class="grid-item-value">{{ legislation.offence }}</span>
     </div>
     <div *ngIf="legislation && legislation.legislationDescription" class="grid-item__row">
-      <label *ngIf="idx === 0" class="grid-item-name">{{firstDescriptionLabel}}</label>
-      <label *ngIf="idx !== 0"class="grid-item-name">{{subsequentDescriptionLabel}}</label>
+      <label *ngIf="idx === 0" class="grid-item-name">{{ firstDescriptionLabel }}</label>
+      <label *ngIf="idx !== 0" class="grid-item-name">{{ subsequentDescriptionLabel }}</label>
       <span class="grid-item-value">{{ legislation.legislationDescription }}</span>
     </div>
   </div>

@@ -34,7 +34,7 @@ describe('MinesCollectionsAddEditComponent', () => {
     }
   };
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
@@ -59,11 +59,11 @@ describe('MinesCollectionsAddEditComponent', () => {
         { provide: FactoryService, useValue: mockFactoryService }
       ]
     }).compileComponents();
-  }));
+  });
 
-  it('should create', (() => {
+  it('should create', () => {
     const { component } = testBedHelper.createComponent();
 
     expect(component).toBeTruthy();
-  }));
+  });
 });

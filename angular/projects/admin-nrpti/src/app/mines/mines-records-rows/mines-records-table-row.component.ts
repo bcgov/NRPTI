@@ -90,7 +90,7 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
    * @memberof MinesRecordsTableRowComponent
    */
   goToDetails() {
-    this.router.navigate([this.rowData._id, 'detail'], {relativeTo: this.route});
+    this.router.navigate([this.rowData._id, 'detail'], { relativeTo: this.route });
   }
 
   /**
@@ -99,6 +99,6 @@ export class MinesRecordsTableRowComponent extends TableRowComponent implements 
    * @memberof MinesRecordsTableRowComponent
    */
   goToEdit() {
-    this.router.navigate([this.rowData._id, 'edit'], {relativeTo: this.route});
+    this.router.navigate([this.rowData._id, 'edit'], { relativeTo: this.route });
   }
 }

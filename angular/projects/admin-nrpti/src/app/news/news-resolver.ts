@@ -16,19 +16,23 @@ export class NewsResolver implements Resolve<Observable<object>> {
     let schemaName = '';
 
     switch (newsType) {
-      case 'lng': {
-        schemaName = 'ActivityLNG';
-      } break;
-      case 'nrced': {
-        // TODO
-        schemaName = 'ActivityNRCED';
-      } break;
+      case 'lng':
+        {
+          schemaName = 'ActivityLNG';
+        }
+        break;
+      case 'nrced':
+        {
+          // TODO
+          schemaName = 'ActivityNRCED';
+        }
+        break;
       default: {
         // TODO
       }
     }
     if (newsId === null) {
-      return of(new News({_schemaName: schemaName, system: newsType}));
+      return of(new News({ _schemaName: schemaName, system: newsType }));
     }
 
     return this.factoryService.getRecord(newsId, schemaName);

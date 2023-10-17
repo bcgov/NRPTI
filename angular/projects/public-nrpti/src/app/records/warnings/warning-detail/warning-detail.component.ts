@@ -100,7 +100,6 @@ export class WarningDetailComponent implements OnInit, OnChanges, OnDestroy {
     return agencyDataService.displayNameFull(agency);
   }
 
-
   convertAcronyms(acronym) {
     return GlobalUtils.convertAcronyms(acronym);
   }

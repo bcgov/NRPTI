@@ -41,9 +41,9 @@ export class EventService {
   private debugEvent: BehaviorSubject<EventObject>;
 
   constructor() {
-    this.errorEvent = new BehaviorSubject<EventObject>(new EventObject);
-    this.infoEvent = new BehaviorSubject<EventObject>(new EventObject);
-    this.debugEvent = new BehaviorSubject<EventObject>(new EventObject);
+    this.errorEvent = new BehaviorSubject<EventObject>(new EventObject());
+    this.infoEvent = new BehaviorSubject<EventObject>(new EventObject());
+    this.debugEvent = new BehaviorSubject<EventObject>(new EventObject());
   }
 
   setError(value: EventObject): void {

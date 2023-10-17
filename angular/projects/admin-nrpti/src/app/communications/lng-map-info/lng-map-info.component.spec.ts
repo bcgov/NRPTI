@@ -29,23 +29,18 @@ describe('LngMapInfoComponent', () => {
     }
   };
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        EditorModule
-      ],
-      declarations: [ LngMapInfoComponent ],
+      imports: [FormsModule, ReactiveFormsModule, EditorModule],
+      declarations: [LngMapInfoComponent],
       providers: [
-        { provide: ActivatedRoute, useValue: mockActivatedRoute},
-        { provide: KeycloakService, useValue: mockKeycloakService},
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: KeycloakService, useValue: mockKeycloakService },
         { provide: FactoryService, useValue: mockFactoryService },
         { provide: LoadingScreenService, useValue: mockLoadingScreenService }
       ]
-    })
-    .compileComponents();
-  }));
+    }).compileComponents();
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LngMapInfoComponent);

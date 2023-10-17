@@ -7,12 +7,12 @@ import { TestBedHelper } from '../../../../common/src/app/spec/spec-utils';
 describe('LinkAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<LinkAddEditComponent>(LinkAddEditComponent);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [LinkAddEditComponent],
       imports: [FormsModule, ReactiveFormsModule, NgbModule.forRoot()]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component, fixture } = testBedHelper.createComponent(false);

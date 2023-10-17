@@ -6,10 +6,7 @@ export class ConfigService {
   // defaults
   private configuration = {};
 
-  constructor(
-    private httpClient: HttpClient,
-    public http: HttpClient
-  ) { }
+  constructor(private httpClient: HttpClient, public http: HttpClient) {}
 
   /**
    * Initialize the Config Service.  Get configuration data from front-end build, or back-end if nginx
@@ -31,7 +28,9 @@ export class ConfigService {
       try {
         // This try is to attempt to get config in your local environment.
         // It will try and do a get on localhost:3000/api/config...
-        const res = await this.http.get<any>(`${window['__env']['API_LOCATION']}${window['__env']['API_PATH']}/config/${application}`).toPromise();
+        const res = await this.http
+          .get<any>(`${window['__env']['API_LOCATION']}${window['__env']['API_PATH']}/config/${application}`)
+          .toPromise();
         this.configuration = window['__env'];
         this.configuration = { ...this.configuration, ...res };
       } catch (error) {

@@ -39,13 +39,20 @@
             [control]="myForm.controls.dateIssued"
             [isValidate]="true"
             [minDate]="datepickerMinDate"
-            [maxDate]="datepickerMaxDate">
-          </lib-date-picker>
+            [maxDate]="datepickerMaxDate"
+          ></lib-date-picker>
         </div>
         <div class="label-pair">
           <label for="recordType">Type</label>
           <span class="grey-subtext ml-2">(This value cannot be changed)</span>
-          <input readonly name="recordType" id="recordType" type="text" value="Dam Safety Inspection" class="form-control" />
+          <input
+            readonly
+            name="recordType"
+            id="recordType"
+            type="text"
+            value="Dam Safety Inspection"
+            class="form-control"
+          />
         </div>
         <div class="label-pair">
           <label for="issuingAgency">Issuing Agency</label>
@@ -80,8 +87,7 @@
         [formGroup]="this.myForm.get('association')"
         [mines]="this.storeService.getItem('mines')"
         [epicProjects]="this.storeService.getItem('epicProjects')"
-      >
-      </record-association-edit>
+      ></record-association-edit>
     </section>
 
     <section>
@@ -106,10 +112,12 @@
       <h4>Documents</h4>
       <app-document-edit
         [documents]="currentRecord ? currentRecord.documents : []"
-        (documentsToDelete)="documentsToDelete = $event"></app-document-edit>
+        (documentsToDelete)="documentsToDelete = $event"
+      ></app-document-edit>
       <app-document-link-staging
         (linksChanged)="links = $event"
-        (documentsChanged)="documents = $event"></app-document-link-staging>
+        (documentsChanged)="documents = $event"
+      ></app-document-link-staging>
     </section>
 
     <section>
@@ -125,7 +133,8 @@
             formControlName="publishNrced"
             (change)="togglePublish($event, 'nrced')"
             [checked]="myForm.controls.publishNrced.value"
-            ngDefaultControl>
+            ngDefaultControl
+          >
             {{ myForm.controls.publishNrced.value ? 'Published' : 'Unpublished' }}
           </mat-slide-toggle>
           <span class="grey-subtext d-block">*Changes made will take effect once you click "Update Record"</span>
@@ -140,7 +149,8 @@
             type="text"
             formControlName="nrcedDescription"
             class="form-control"
-            rows="5"></textarea>
+            rows="5"
+          ></textarea>
         </div>
       </div>
     </section>
@@ -157,7 +167,8 @@
             formControlName="publishBcmi"
             (change)="togglePublish($event, 'bcmi')"
             [checked]="myForm.controls.publishBcmi.value"
-            ngDefaultControl>
+            ngDefaultControl
+          >
             {{ myForm.controls.publishBcmi.value ? 'Published' : 'Unpublished' }}
           </mat-slide-toggle>
           <span class="grey-subtext d-block">*Changes made will take effect once you click "Update Record"</span>
@@ -172,7 +183,8 @@
             type="text"
             formControlName="bcmiDescription"
             class="form-control"
-            rows="5"></textarea>
+            rows="5"
+          ></textarea>
         </div>
       </div>
     </section>

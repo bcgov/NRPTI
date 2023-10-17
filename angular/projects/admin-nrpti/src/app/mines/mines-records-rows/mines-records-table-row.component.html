@@ -1,20 +1,24 @@
 <td scope="row" class="col-1" (click)="updateCheckbox(rowData); $event.stopPropagation()">
-  <mat-checkbox #rowCheckBox
-                *ngIf="!rowData.collections || rowData.collections.length === 0"
-                [(ngModel)]="rowData.rowSelected"
-                (click)="$event.stopPropagation()"
-                (change)="rowSelectionChange(rowData)">
-  </mat-checkbox>
+  <mat-checkbox
+    #rowCheckBox
+    *ngIf="!rowData.collections || rowData.collections.length === 0"
+    [(ngModel)]="rowData.rowSelected"
+    (click)="$event.stopPropagation()"
+    (change)="rowSelectionChange(rowData)"
+  ></mat-checkbox>
 </td>
 <td scope="row" data-label="Name" class="col-2">
   {{ getAttributeValue('recordName') }}
 </td>
-<td scope="row" data-label="Agency" class="col-2 truncate">{{ this.displayName(getAttributeValue('issuingAgency')) }}</td>
+<td scope="row" data-label="Agency" class="col-2 truncate">
+  {{ this.displayName(getAttributeValue('issuingAgency')) }}
+</td>
 <td scope="row" data-label="Source" class="col-1 truncate">{{ getAttributeValue('sourceSystemRef') }}</td>
 <td scope="row" data-label="Type" class="col-1 truncate">{{ getAttributeValue('recordType') }}</td>
 <td scope="row" data-label="Collections" class="col-2 truncate">
-  {{ rowData.collections && rowData.collections[0] ? rowData.collections[0].name : '-' }}</td>
-<td scope="row" data-label="Date" class="col-1 truncate">{{ getAttributeValue('dateIssued') | date: 'mediumDate'}}</td>
+  {{ rowData.collections && rowData.collections[0] ? rowData.collections[0].name : '-' }}
+</td>
+<td scope="row" data-label="Date" class="col-1 truncate">{{ getAttributeValue('dateIssued') | date: 'mediumDate' }}</td>
 <td scope="row" data-label="Published" class="col-1 d-xl-flex">
   <div *ngIf="isPublished(); then published; else unpublished"></div>
   <ng-template #published class="test">

@@ -8,13 +8,13 @@ import { Utils } from 'nrpti-angular-components';
 describe('LegislationAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<LegislationAddEditComponent>(LegislationAddEditComponent);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [LegislationAddEditComponent],
       imports: [ReactiveFormsModule, MatAutocompleteModule],
       providers: [Utils]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component, fixture } = testBedHelper.createComponent(false);

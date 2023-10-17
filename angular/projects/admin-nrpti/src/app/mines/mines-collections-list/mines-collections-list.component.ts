@@ -11,7 +11,7 @@ import {
   TableObject,
   TableTemplateUtils,
   Utils,
-  StoreService,
+  StoreService
 } from 'nrpti-angular-components';
 import { MinesCollectionsTableRowComponent } from '../mines-collections-rows/mines-collections-table-row.component';
 import {
@@ -25,7 +25,6 @@ import {
 import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
 import { StateIDs, StateStatus, Picklists } from '../../../../../common/src/app/utils/record-constants';
 import { MiscUtils } from '../../utils/constants/misc';
-
 
 /**
  * Mine list page component.
@@ -113,28 +112,40 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
       'type',
       FilterType.MultiSelect,
       'Collection Type',
-      new MultiSelectDefinition(Picklists.collectionTypePicklist.map(item => {
-        return { value: item, displayValue: item, selected: false, display: true };
-      }), 'Begin typing to filter collection types...', 'Select all that apply...')
+      new MultiSelectDefinition(
+        Picklists.collectionTypePicklist.map(item => {
+          return { value: item, displayValue: item, selected: false, display: true };
+        }),
+        'Begin typing to filter collection types...',
+        'Select all that apply...'
+      )
     );
 
     const responsibleAgencyFilter = new FilterObject(
       'agency',
       FilterType.MultiSelect,
       'Agency',
-      new MultiSelectDefinition(Picklists.collectionAgencyPicklist.map(value => {
-        const displayValue = Utils.convertAcronyms(value);
-        return { value: value, displayValue: displayValue, selected: false, display: true };
-      }), 'Begin typing to filter agencies...', '')
+      new MultiSelectDefinition(
+        Picklists.collectionAgencyPicklist.map(value => {
+          const displayValue = Utils.convertAcronyms(value);
+          return { value: value, displayValue: displayValue, selected: false, display: true };
+        }),
+        'Begin typing to filter agencies...',
+        ''
+      )
     );
 
     const bcmiTabFilter = new FilterObject(
       'bcmiTabType',
       FilterType.MultiSelect,
       'Tab on BCMI',
-      new MultiSelectDefinition(['Authorizations', 'Compliance Oversight', 'Other'].map(item => {
-        return { value: item, displayValue: item, selected: false, display: true };
-      }), 'Begin typing to filter BCMI tab types...', '')
+      new MultiSelectDefinition(
+        ['Authorizations', 'Compliance Oversight', 'Other'].map(item => {
+          return { value: item, displayValue: item, selected: false, display: true };
+        }),
+        'Begin typing to filter BCMI tab types...',
+        ''
+      )
     );
 
     const recordsFilter = new FilterObject(
@@ -147,13 +158,7 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
       ])
     );
 
-    this.filters = [
-      dateFilter,
-      collectionTypeFilter,
-      responsibleAgencyFilter,
-      bcmiTabFilter,
-      recordsFilter
-    ];
+    this.filters = [dateFilter, collectionTypeFilter, responsibleAgencyFilter, bcmiTabFilter, recordsFilter];
   }
 
   /**
@@ -313,12 +318,9 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
 
     this.loadingScreenService.setLoadingState(true, 'body');
 
-    this.router.navigate(
-      ['./', { ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }],
-      {
-        relativeTo: this.route
-      }
-    );
+    this.router.navigate(['./', { ...this.queryParams, ...this.tableTemplateUtils.getNavParamsObj(this.tableData) }], {
+      relativeTo: this.route
+    });
   }
 
   /**

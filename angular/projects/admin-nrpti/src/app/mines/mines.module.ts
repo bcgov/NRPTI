@@ -42,7 +42,6 @@ import { MinesAdministrativePenaltyDetailComponent } from './mines-enforcement-a
 import { MinesCourtConvictionsAddEditComponent } from './mines-enforcement-actions/mines-court-convictions/mines-court-convictions-add-edit/mines-court-convictions-add-edit.component';
 import { MinesCourtConvictionsDetailComponent } from './mines-enforcement-actions/mines-court-convictions/mines-court-convictions-detail/mines-court-convictions-detail.component';
 
-
 @NgModule({
   imports: [
     BrowserModule,
@@ -87,19 +86,15 @@ import { MinesCourtConvictionsDetailComponent } from './mines-enforcement-action
     MinesCourtConvictionsAddEditComponent,
     MinesCourtConvictionsDetailComponent
   ],
-  providers: [
-    EnforcementActionsResolver
-  ],
+  providers: [EnforcementActionsResolver],
   entryComponents: [
     MinesTableRowComponent,
     MinesRecordsTableRowComponent,
     MinesCollectionsTableRowComponent,
     MinesCollectionRecordTableRowComponent,
     EnforcementActionsTableRowComponent,
-    MinesAdministrativePenaltyDetailComponent,
+    MinesAdministrativePenaltyDetailComponent
   ],
-  exports: [
-    MinesRecordAddComponent
-  ]
+  exports: [MinesRecordAddComponent]
 })
-export class MinesModule { }
+export class MinesModule {}

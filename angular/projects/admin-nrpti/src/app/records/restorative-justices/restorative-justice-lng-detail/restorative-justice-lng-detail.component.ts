@@ -54,7 +54,9 @@ export class RestorativeJusticeLNGDetailComponent extends RecordComponent implem
     const requiredRoles = Constants.FlavourEditRequiredRoles.RESTORATIVE_JUSTICE.LNG;
 
     for (const role of requiredRoles) {
-      if (this.factoryService.userInRole(role) && this.data.write && this.data.write.includes(role)) { return true; }
+      if (this.factoryService.userInRole(role) && this.data.write && this.data.write.includes(role)) {
+        return true;
+      }
     }
 
     return false;

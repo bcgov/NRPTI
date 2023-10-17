@@ -11,7 +11,7 @@ import { IMutliSelectOption } from '../autocomplete-multi-select/autocomplete-mu
  * @export
  * @class FilterObject
  */
- export class FilterObject {
+export class FilterObject {
   /**
    * Creates an instance of FilterObject.
    * @param {string} id ID for the filter object
@@ -30,7 +30,7 @@ import { IMutliSelectOption } from '../autocomplete-multi-select/autocomplete-mu
     public name: string,
     public filterDefinition: any,
     public itemPanelSize: number = null
-  ) { }
+  ) {}
 }
 
 /**
@@ -62,7 +62,7 @@ export abstract class FilterDefinition {
    * Creates an instance of FilterDefinition.
    * @memberof FilterDefinition
    */
-  constructor() { }
+  constructor() {}
 }
 /**
  * DateFiterDefinition defines mappings to IDs used in date filters
@@ -71,7 +71,7 @@ export abstract class FilterDefinition {
  * @class DateFilterDefinition
  * @extends {FilterDefinition}
  */
- export class DateFilterDefinition extends FilterDefinition {
+export class DateFilterDefinition extends FilterDefinition {
   /**
    * Creates an instance of DateFilterDefinition.
    * @param {string} startDateId id for the start date item
@@ -89,7 +89,9 @@ export abstract class FilterDefinition {
     public endDateLabel: string = 'End Date',
     public minDate = new Date('01-01-1900'),
     public maxDate = new Date()
-  ) { super(); }
+  ) {
+    super();
+  }
 }
 
 /**
@@ -118,7 +120,9 @@ export class CheckOrRadioFilterDefinition extends FilterDefinition {
   constructor(
     public options: OptionItem[] = [],
     public grouped: boolean = false // note, radio buttons are grouped by default
-  ) { super(); }
+  ) {
+    super();
+  }
 }
 
 /**
@@ -136,11 +140,7 @@ export class OptionItem {
    * @param {boolean} [isChecked=false] Is this checkbox checked by default?
    * @memberof OptionItem
    */
-  constructor(
-    public id: string,
-    public label: string,
-    public isChecked: boolean = false
-  ) { }
+  constructor(public id: string, public label: string, public isChecked: boolean = false) {}
 }
 
 /**
@@ -162,12 +162,9 @@ export class RadioOptionItem extends OptionItem {
    * @param {boolean} [isChecked=false] Is this option selected by default
    * @memberof RadioOptionItem
    */
-  constructor(
-    public id: string,
-    public label: string,
-    public value: string,
-    public isChecked: boolean = false
-  ) { super(id, label, isChecked); }
+  constructor(public id: string, public label: string, public value: string, public isChecked: boolean = false) {
+    super(id, label, isChecked);
+  }
 }
 
 /**
@@ -194,7 +191,9 @@ export class MultiSelectDefinition extends FilterDefinition {
     public placeholder: string = 'Begin typing to filter',
     public subtext: string = 'Select all that apply...',
     public useChips: boolean = true
-  ) { super(); }
+  ) {
+    super();
+  }
 }
 
 /**
@@ -211,10 +210,9 @@ export class DropdownDefinition extends FilterDefinition {
    * @param {boolean} [multiselect=true] Should this dropdown allow for multiselection?
    * @memberof DropdownDefinition
    */
-  constructor(
-    public options: string[] = [],
-    public multiselect: boolean = true
-  ) { super(); }
+  constructor(public options: string[] = [], public multiselect: boolean = true) {
+    super();
+  }
 }
 
 /**
@@ -232,8 +230,7 @@ export class SliderToggleFilterDefinition extends FilterDefinition {
    * @param {OptionItem} onOption an ID and label for the on postition
    * @memberof SliderToggleFilterDefinition
    */
-  constructor(
-    public offOption: OptionItem,
-    public onOption: OptionItem
-  ) { super(); }
+  constructor(public offOption: OptionItem, public onOption: OptionItem) {
+    super();
+  }
 }

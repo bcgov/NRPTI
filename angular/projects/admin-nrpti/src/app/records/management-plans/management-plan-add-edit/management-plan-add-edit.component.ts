@@ -51,7 +51,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -147,7 +147,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
-        ''
+          ''
       ),
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
@@ -215,7 +215,7 @@ export class ManagementPlanAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.location.dirty && (managementPlan['location'] = this.myForm.controls.location.value);
     managementPlan['centroid'] = [];
     if (this.myForm.controls.latitude.value && this.myForm.controls.longitude.value) {
-      (managementPlan['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
+      managementPlan['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
 
     // LNG flavour

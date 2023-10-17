@@ -72,7 +72,6 @@ import { AdministrativePenaltyNRCEDDetailComponent } from './administrative-pena
 import { AdministrativePenaltyLNGDetailComponent } from './administrative-penalties/administrative-penalty-lng-detail/administrative-penalty-lng-detail.component';
 import { AdministrativePenaltyBCMIDetailComponent } from './administrative-penalties/administrative-penalty-bcmi-detail/administrative-penalty-bcmi-detail.component';
 
-
 // Administrative Sanctions
 import { AdministrativeSanctionAddEditComponent } from './administrative-sanctions/administrative-sanction-add-edit/administrative-sanction-add-edit.component';
 import { AdministrativeSanctionDetailComponent } from './administrative-sanctions/administrative-sanction-detail/administrative-sanction-detail.component';
@@ -245,7 +244,7 @@ import { AnnualReportBCMIDetailComponent } from './annual-reports/annual-report-
     // annual report
     AnnualReportAddEditComponent,
     AnnualReportDetailComponent,
-    AnnualReportBCMIDetailComponent,
+    AnnualReportBCMIDetailComponent
   ],
   providers: [],
   entryComponents: [

@@ -22,30 +22,48 @@ describe('HomeComponent', () => {
   };
 
   const mockKeyCloakService = {
-    isMenuEnabled: (menuName) => {
+    isMenuEnabled: menuName => {
       let retVal = false;
       switch (menuName) {
-        case Constants.Menus.ALL_MINES: retVal = true; break;
-        case Constants.Menus.ALL_RECORDS: retVal = true; break;
-        case Constants.Menus.NEWS_LIST: retVal = true; break;
-        case Constants.Menus.ANALYTICS: retVal = false; break;
-        case Constants.Menus.MAP: retVal = false; break;
-        case Constants.Menus.ENTITIES: retVal = false; break;
-        case Constants.Menus.IMPORTS: retVal = true; break;
-        case Constants.Menus.COMMUNICATIONS: retVal = true; break;
-        case Constants.Menus.AGENCIES: retVal = true; break;
+        case Constants.Menus.ALL_MINES:
+          retVal = true;
+          break;
+        case Constants.Menus.ALL_RECORDS:
+          retVal = true;
+          break;
+        case Constants.Menus.NEWS_LIST:
+          retVal = true;
+          break;
+        case Constants.Menus.ANALYTICS:
+          retVal = false;
+          break;
+        case Constants.Menus.MAP:
+          retVal = false;
+          break;
+        case Constants.Menus.ENTITIES:
+          retVal = false;
+          break;
+        case Constants.Menus.IMPORTS:
+          retVal = true;
+          break;
+        case Constants.Menus.COMMUNICATIONS:
+          retVal = true;
+          break;
+        case Constants.Menus.AGENCIES:
+          retVal = true;
+          break;
       }
       return retVal;
     }
   };
 
   const mockMetricService = {
-    getMetric: (code) => {
+    getMetric: code => {
       return [];
     }
   };
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [HomeComponent],
       imports: [RouterTestingModule],
@@ -56,7 +74,7 @@ describe('HomeComponent', () => {
         { provide: MetricService, useValue: mockMetricService }
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(HomeComponent);

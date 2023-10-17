@@ -43,7 +43,9 @@
         <div class="grid-section section-2">
           <div class="grid-item__row">
             <label class="grid-item-name">Issuing Agency</label>
-            <span class="grid-item-value__col">{{ data && data.issuingAgency ? displayName(data.issuingAgency) : '-' }}</span>
+            <span class="grid-item-value__col">
+              {{ data && data.issuingAgency ? displayName(data.issuingAgency) : '-' }}
+            </span>
           </div>
           <div class="grid-item__row">
             <label class="grid-item-name">Site/Project</label>
@@ -51,7 +53,9 @@
           </div>
           <div class="grid-item__row">
             <label class="grid-item-name">Lat/Long</label>
-            <span class="grid-item-value__col">{{ data && data.centroid ? data.centroid[1] + '/' + data.centroid[0]: '-' }}</span>
+            <span class="grid-item-value__col">
+              {{ data && data.centroid ? data.centroid[1] + '/' + data.centroid[0] : '-' }}
+            </span>
           </div>
           <div class="grid-item__row">
             <label class="grid-item-name">Summary</label>

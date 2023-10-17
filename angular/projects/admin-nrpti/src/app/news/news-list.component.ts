@@ -60,7 +60,7 @@ export class NewsListComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   /**
    * Component init.
@@ -90,7 +90,7 @@ export class NewsListComponent implements OnInit, OnDestroy {
       this.tableData.items = records.map(record => {
         // On the fly, create a conversion of the schema to reflect system name.
         // tslint:disable-next-line: prefer-const
-        let data = {...record};
+        let data = { ...record };
         data.system = data._schemaName.split('Activity')[1];
         return { rowData: data };
       });
@@ -189,7 +189,7 @@ export class NewsListComponent implements OnInit, OnDestroy {
     this.tableTemplateUtils.navigateUsingParams(this.tableData, ['news']);
   }
 
-  checkChange() { }
+  checkChange() {}
 
   add(type) {
     this.router.navigate(['news', type, 'add']);

@@ -8,12 +8,12 @@ describe('DocumentLinkStagingComponent', () => {
   let component: DocumentLinkStagingComponent;
   let fixture: ComponentFixture<DocumentLinkStagingComponent>;
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [DocumentLinkStagingComponent, FileUploadComponent],
       imports: [FormsModule, NgbModule]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DocumentLinkStagingComponent);

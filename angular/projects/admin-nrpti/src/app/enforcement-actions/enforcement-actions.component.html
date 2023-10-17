@@ -1,70 +1,58 @@
 <main class="container-fluid-padding">
-    <section>
-        <div class="d-flex heading-bar">
-            <div>
-                <h4 class="m-0">Enforcement Actions</h4>
-            </div>
+  <section>
+    <div class="d-flex heading-bar">
+      <div>
+        <h4 class="m-0">Enforcement Actions</h4>
+      </div>
+    </div>
+  </section>
+  <section>
+    <h5>
+      Page Text
+    </h5>
+    <p *ngIf="!pageTextExists"><span>There is currently no enforcement action text.</span></p>
+    <div *ngIf="!pageTextEditing" [innerHTML]="pageText"></div>
+    <span *ngIf="pageTextEditing">
+      <editor [init]="tinyMceSettings" name="pageTextDraft" id="pageTextDraft" [(ngModel)]="pageTextDraft"></editor>
+    </span>
+  </section>
+
+  <section class="d-flex justify-content-end" *ngIf="!pageTextEditing">
+    <button class="btn btn-primary" (click)="setEditingMode()">
+      <span *ngIf="!pageTextExists">
+        Add
+      </span>
+      <span *ngIf="pageTextExists">
+        Edit
+      </span>
+    </button>
+  </section>
+  <section class="d-flex justify-content-end" *ngIf="pageTextEditing">
+    <button class="btn btn-primary mr-2" (click)="cancelEditing()">
+      Cancel
+    </button>
+    <button class="btn btn-primary" (click)="saveText()">
+      Save & Publish
+    </button>
+  </section>
+
+  <section class="add-record mt-3">
+    <div class="row mt-3 mb-3">
+      <div class="col-12 text-right">
+        <div ngbDropdown placement="bottom-right">
+          <button class="btn btn-primary" ngbDropdownToggle>
+            Add a New Action
+          </button>
+          <div ngbDropdownMenu>
+            <button ngbDropdownItem (click)="add('administrative-penalties')">Administrative Penalty</button>
+            <button ngbDropdownItem (click)="add('court-convictions')">Court Conviction</button>
+          </div>
         </div>
-    </section>
-    <section>
-        <h5>
-            Page Text
-        </h5>
-        <p *ngIf="!pageTextExists"><span>There is currently no enforcement action text.</span></p>
-        <div *ngIf="!pageTextEditing" [innerHTML]="pageText"></div>
-        <span *ngIf="pageTextEditing">
-            <editor [init]="tinyMceSettings"
-                name="pageTextDraft"
-                id="pageTextDraft"
-                [(ngModel)]="pageTextDraft"></editor>
-        </span>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <section class="d-flex justify-content-end"
-        *ngIf="!pageTextEditing">
-        <button class="btn btn-primary"
-            (click)="setEditingMode()">
-            <span *ngIf="!pageTextExists">
-                Add
-            </span>
-            <span *ngIf="pageTextExists">
-                Edit
-            </span>
-        </button>
-    </section>
-    <section class="d-flex justify-content-end"
-        *ngIf="pageTextEditing">
-        <button class="btn btn-primary mr-2"
-            (click)="cancelEditing()">
-            Cancel
-        </button>
-        <button class="btn btn-primary"
-            (click)="saveText()">
-            Save & Publish
-        </button>
-    </section>
-
-    <section class="add-record mt-3">
-        <div class="row mt-3 mb-3">
-            <div class="col-12 text-right">
-                <div ngbDropdown
-                    placement="bottom-right">
-                    <button class="btn btn-primary"
-                        ngbDropdownToggle>
-                        Add a New Action
-                    </button>
-                    <div ngbDropdownMenu>
-                        <button ngbDropdownItem
-                            (click)="add('administrative-penalties')">Administrative Penalty</button>
-                        <button ngbDropdownItem
-                            (click)="add('court-convictions')">Court Conviction</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section>
-        <app-enforcement-actions-table></app-enforcement-actions-table>
-    </section>
+  <section>
+    <app-enforcement-actions-table></app-enforcement-actions-table>
+  </section>
 </main>

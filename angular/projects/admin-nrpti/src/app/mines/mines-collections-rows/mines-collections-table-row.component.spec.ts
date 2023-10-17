@@ -15,16 +15,17 @@ describe('MinesCollectionsTableRowComponent', () => {
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
   const mockActivatedRoute = new ActivatedRouteStub();
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, SharedModule, CommonModule, GlobalModule],
       declarations: [MinesCollectionsTableRowComponent],
       providers: [
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        DialogService]
+        DialogService
+      ]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component, fixture } = testBedHelper.createComponent(false);

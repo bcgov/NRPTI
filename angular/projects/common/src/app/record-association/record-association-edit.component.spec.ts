@@ -10,20 +10,17 @@ describe('RecordAssociationEditComponent', () => {
   const testBedHelper = new TestBedHelper<RecordAssociationEditComponent>(RecordAssociationEditComponent);
 
   const mockStoreService = {
-    getItem: () => { },
+    getItem: () => {},
     stateChange: new EventEmitter()
   };
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [RecordAssociationEditComponent],
       imports: [FormsModule, ReactiveFormsModule, NgbModule.forRoot()],
-      providers: [
-        Utils,
-        { provide: StoreService, useValue: mockStoreService }
-      ]
+      providers: [Utils, { provide: StoreService, useValue: mockStoreService }]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component, fixture } = testBedHelper.createComponent(false);

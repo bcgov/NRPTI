@@ -8,12 +8,12 @@ import { Penalty } from '../../models/master/common-models/penalty';
 describe('PenaltyDetailComponent', () => {
   const testBedHelper = new TestBedHelper<PenaltyDetailComponent>(PenaltyDetailComponent);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [PenaltyDetailComponent],
       imports: [ReactiveFormsModule, MatAutocompleteModule]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component, fixture } = testBedHelper.createComponent(false);

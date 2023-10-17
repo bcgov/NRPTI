@@ -2,7 +2,7 @@ import { Legislation } from './../../models/master/common-models/legislation';
 import { Component, OnInit, ChangeDetectorRef, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import {Utils as CommonUtils} from './../../utils/utils';
+import { Utils as CommonUtils } from './../../utils/utils';
 
 @Component({
   selector: 'app-legislation-list-detail-public',

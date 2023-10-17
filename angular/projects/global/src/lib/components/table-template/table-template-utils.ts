@@ -4,12 +4,12 @@ import {
   TableObject,
   DEFAULT_TABLE_PAGE_SIZE,
   DEFAULT_TABLE_CURRENT_PAGE,
-  DEFAULT_TABLE_SORT_BY,
+  DEFAULT_TABLE_SORT_BY
 } from './table-object';
 
 @Injectable()
 export class TableTemplateUtils {
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   public updateTableObjectWithUrlParams(routeParams: Params, tableObject: TableObject) {
     Object.keys(routeParams).forEach(item => {

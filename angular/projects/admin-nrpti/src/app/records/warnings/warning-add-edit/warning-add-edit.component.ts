@@ -55,7 +55,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -126,85 +126,87 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti') &&
-          !this.factoryService.userInLngRole()
+        disabled:
+          this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti' && !this.factoryService.userInLngRole()
       }),
       dateIssued: new FormControl({
-        value: (this.currentRecord &&
-          this.currentRecord.dateIssued &&
-          this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
+        value:
+          (this.currentRecord &&
+            this.currentRecord.dateIssued &&
+            this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
           '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       issuingAgency: new FormControl({
         value: (this.currentRecord && this.currentRecord.issuingAgency) || this.defaultAgency,
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       author: new FormControl({
         value: (this.currentRecord && this.currentRecord.author) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       issuedTo: new FormGroup({
         type: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.type) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         companyName: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.companyName) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         firstName: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.firstName) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         middleName: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.middleName) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         lastName: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.lastName) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         fullName: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.fullName) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         dateOfBirth: new FormControl({
-          value: (this.currentRecord &&
-            this.currentRecord.issuedTo &&
-            this.currentRecord.issuedTo.dateOfBirth &&
-            this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
+          value:
+            (this.currentRecord &&
+              this.currentRecord.issuedTo &&
+              this.currentRecord.issuedTo.dateOfBirth &&
+              this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.issuedTo.dateOfBirth))) ||
             '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         anonymous: new FormControl({
           value: (this.currentRecord && this.currentRecord.issuedTo && this.currentRecord.issuedTo.anonymous) || '',
-          disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+          disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         })
       }),
       projectName: new FormControl({
         value: (this.currentRecord && this.currentRecord.projectName) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       location: new FormControl({
         value: (this.currentRecord && this.currentRecord.location) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       latitude: new FormControl({
         value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       longitude: new FormControl({
         value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       outcomeStatus: new FormControl({
         value: (this.currentRecord && this.currentRecord.outcomeStatus) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       outcomeDescription: new FormControl({
         value: (this.currentRecord && this.currentRecord.outcomeDescription) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
 
       legislations: new FormArray(this.getLegislationsFormGroups()),
@@ -249,34 +251,33 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
         new FormGroup({
           act: new FormControl({
             value: leg.act || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           regulation: new FormControl({
             value: leg.regulation || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           section: new FormControl({
             value: leg.section || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           subSection: new FormControl({
             value: leg.subSection || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           paragraph: new FormControl({
             value: leg.paragraph || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           legislationDescription: new FormControl({
             value: leg.legislationDescription || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           })
         })
       );
     });
     return legislations;
   }
-
 
   /**
    * Parses an array of legislations FormGroups into objects expected by the API.
@@ -378,7 +379,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.location.dirty && (warning['location'] = this.myForm.controls.location.value);
     warning['centroid'] = [];
     if (this.myForm.controls.latitude.value && this.myForm.controls.longitude.value) {
-      (warning['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
+      warning['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
 
     this.myForm.controls.outcomeStatus.dirty && (warning['outcomeStatus'] = this.myForm.controls.outcomeStatus.value);

@@ -11,23 +11,23 @@ describe('MinesCollectionsListResolver', () => {
     'updateTableObjectWithUrlParams'
   ]);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         { provide: FactoryService, useValue: spyFactoryService },
         { provide: TableTemplateUtils, useValue: spyTableTemplateUtils }
       ]
     }).compileComponents();
-  }));
+  });
 
-  it('should create', (() => {
+  it('should create', () => {
     const factoryService = TestBed.get(FactoryService);
     const tableTemplateUtils = TestBed.get(TableTemplateUtils);
 
     const minesCollectionsListResolver = new MinesCollectionsListResolver(factoryService, tableTemplateUtils);
 
     expect(minesCollectionsListResolver).toBeTruthy();
-  }));
+  });
 
   describe('resolve', () => {
     let factoryServiceSpy: jasmine.SpyObj<FactoryService>;
@@ -52,7 +52,7 @@ describe('MinesCollectionsListResolver', () => {
         queryParamMap: null
       };
 
-      beforeAll((() => {
+      beforeAll(() => {
         factoryServiceSpy = TestBed.get(FactoryService);
         tableTemplateUtilsSpy = TestBed.get(TableTemplateUtils);
 
@@ -62,8 +62,8 @@ describe('MinesCollectionsListResolver', () => {
 
         const minesCollectionsListResolver = new MinesCollectionsListResolver(factoryServiceSpy, tableTemplateUtilsSpy);
 
-      minesCollectionsListResolver.resolve(activatedRouteSnapshot);
-      }));
+        minesCollectionsListResolver.resolve(activatedRouteSnapshot);
+      });
 
       it('calls tableTemplateUtils.updateTableObjectWithUrlParams', () => {
         expect(tableTemplateUtilsSpy.updateTableObjectWithUrlParams).toHaveBeenCalledWith(

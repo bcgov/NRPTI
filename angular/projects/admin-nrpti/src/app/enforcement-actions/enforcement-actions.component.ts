@@ -21,10 +21,12 @@ export class EnforcementActionsComponent implements OnInit {
     browser_spellcheck: true,
     height: 240,
     plugins: ['lists, advlist, link'],
-    toolbar: ['undo redo | formatselect | ' +
-      ' bold italic backcolor | alignleft aligncenter ' +
-      ' alignright alignjustify | bullist numlist outdent indent |' +
-      ' removeformat | help']
+    toolbar: [
+      'undo redo | formatselect | ' +
+        ' bold italic backcolor | alignleft aligncenter ' +
+        ' alignright alignjustify | bullist numlist outdent indent |' +
+        ' removeformat | help'
+    ]
   };
 
   // If there is no existing page text, we set the page to post mode
@@ -87,9 +89,7 @@ export class EnforcementActionsComponent implements OnInit {
     this.pageTextEditing = false;
   }
 
-
   add(item) {
     this.router.navigate(['mines', 'enforcement-actions', item, 'add']);
   }
-
 }
