@@ -114,7 +114,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef,
-    private factoryService: FactoryService,
+    private factoryService: FactoryService
   ) {
     // setup the subset configuration
     const subsetOptions = [
@@ -199,7 +199,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         Picklists.getAgencyNames(this.factoryService).map(value => {
           const agencyDataService = new AgencyDataService(this.factoryService);
           const displayValue = agencyDataService.displayNameFull(value);
-          const picklistCodes = Picklists.getAgencyCode(this.factoryService, value)
+          const picklistCodes = Picklists.getAgencyCode(this.factoryService, value);
           return { value: picklistCodes, displayValue: displayValue, selected: false, display: true };
         }),
         'Begin typing to filter agencies...',

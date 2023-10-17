@@ -13,7 +13,13 @@ describe('AdministrativeSanctionNRCEDDetailComponent', () => {
     AdministrativeSanctionNRCEDDetailComponent
   );
 
-  const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole', 'userInBcmiRole', 'userInNrcedRole', 'userOnlyInLimitedRole', 'userInRole']);
+  const mockFactoryService = jasmine.createSpyObj('FactoryService', [
+    'userInLngRole',
+    'userInBcmiRole',
+    'userInNrcedRole',
+    'userOnlyInLimitedRole',
+    'userInRole'
+  ]);
   mockFactoryService.userInLngRole.and.returnValue(true);
   mockFactoryService.userInBcmiRole.and.returnValue(true);
   mockFactoryService.userInNrcedRole.and.returnValue(true);
@@ -23,11 +29,11 @@ describe('AdministrativeSanctionNRCEDDetailComponent', () => {
   const mockActivatedRoute = new ActivatedRouteStub();
 
   const mockStoreService = {
-    getItem: () => { },
+    getItem: () => {},
     stateChange: new EventEmitter()
   };
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, GlobalModule],
       declarations: [AdministrativeSanctionNRCEDDetailComponent],
@@ -39,7 +45,7 @@ describe('AdministrativeSanctionNRCEDDetailComponent', () => {
         { provide: FactoryService, useValue: mockFactoryService }
       ]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

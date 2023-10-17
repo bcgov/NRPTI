@@ -54,7 +54,9 @@ export class AdministrativePenaltyNRCEDDetailComponent extends RecordComponent i
     const requiredRoles = Constants.FlavourEditRequiredRoles.ADMINISTRATIVE_PENALTY.NRCED;
 
     for (const role of requiredRoles) {
-      if (this.factoryService.userInRole(role) && this.data.write && this.data.write.includes(role)) { return true; }
+      if (this.factoryService.userInRole(role) && this.data.write && this.data.write.includes(role)) {
+        return true;
+      }
     }
 
     return false;

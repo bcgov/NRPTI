@@ -54,7 +54,9 @@ export class OrderNRCEDDetailComponent extends RecordComponent implements OnInit
     const requiredRoles = Constants.FlavourEditRequiredRoles.ORDER.NRCED;
 
     for (const role of requiredRoles) {
-      if (this.factoryService.userInRole(role) && this.data.write && this.data.write.includes(role)) { return true; }
+      if (this.factoryService.userInRole(role) && this.data.write && this.data.write.includes(role)) {
+        return true;
+      }
     }
 
     return false;

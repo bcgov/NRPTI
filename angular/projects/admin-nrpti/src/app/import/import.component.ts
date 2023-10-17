@@ -69,7 +69,7 @@ export class ImportComponent implements OnInit, OnDestroy {
     private importService: ImportService,
     private toastService: ToastService,
     private configService: ConfigService
-  ) { }
+  ) {}
 
   ngOnInit() {
     const self = this;
@@ -83,21 +83,26 @@ export class ImportComponent implements OnInit, OnDestroy {
       this._changeDetectionRef.detectChanges();
     });
 
-    this.importService.getValue().pipe(takeWhile(() => this.alive)).subscribe((searchResult: SearchResult) => {
-      const records = searchResult.data;
-      self.tableData.items = records.map(record => {
-        return { rowData: record };
+    this.importService
+      .getValue()
+      .pipe(takeWhile(() => this.alive))
+      .subscribe((searchResult: SearchResult) => {
+        const records = searchResult.data;
+        self.tableData.items = records.map(record => {
+          return { rowData: record };
+        });
+
+        self.tableData.totalListItems = searchResult.totalSearchCount;
+        self.tableData.columns = self.tableColumns;
+        self.loading = false;
+        self._changeDetectionRef.detectChanges();
       });
 
-      self.tableData.totalListItems = searchResult.totalSearchCount;
-      self.tableData.columns = self.tableColumns;
-      self.loading = false;
-      self._changeDetectionRef.detectChanges();
-    });
-
-    interval(this.configService.config['IMPORT_TABLE_INTERVAL']).pipe(takeWhile(() => this.alive)).subscribe(() => {
-      self.importService.refreshData();
-    });
+    interval(this.configService.config['IMPORT_TABLE_INTERVAL'])
+      .pipe(takeWhile(() => this.alive))
+      .subscribe(() => {
+        self.importService.refreshData();
+      });
 
     // Feature flagging
     this.buttonActions['nris-emli'] = this.configService.config['FEATURE_FLAG']['nris-emli-importer'];

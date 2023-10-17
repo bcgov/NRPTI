@@ -16,7 +16,7 @@ describe('HeaderComponent', () => {
 
   const mockRouter = jasmine.createSpyObj('Router', ['navigate', 'events']);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [BrowserAnimationsModule],
       declarations: [HeaderComponent],
@@ -25,7 +25,7 @@ describe('HeaderComponent', () => {
         { provide: Router, useValue: mockRouter }
       ]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const routerMock = TestBed.get(Router);

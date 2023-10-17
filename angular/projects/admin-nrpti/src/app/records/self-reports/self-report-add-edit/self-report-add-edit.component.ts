@@ -51,7 +51,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -106,39 +106,40 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti') &&
-          !this.factoryService.userInLngRole()
+        disabled:
+          this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti' && !this.factoryService.userInLngRole()
       }),
       dateIssued: new FormControl({
-        value: (this.currentRecord &&
-          this.currentRecord.dateIssued &&
-          this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
+        value:
+          (this.currentRecord &&
+            this.currentRecord.dateIssued &&
+            this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
           '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       issuingAgency: new FormControl({
         value: (this.currentRecord && this.currentRecord.issuingAgency) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       author: new FormControl({
         value: (this.currentRecord && this.currentRecord.author) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       projectName: new FormControl({
         value: (this.currentRecord && this.currentRecord.projectName) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       location: new FormControl({
         value: (this.currentRecord && this.currentRecord.location) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       latitude: new FormControl({
         value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       longitude: new FormControl({
         value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
 
       legislations: new FormArray(this.getLegislationsFormGroups()),
@@ -174,34 +175,33 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
         new FormGroup({
           act: new FormControl({
             value: leg.act || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           regulation: new FormControl({
             value: leg.regulation || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           section: new FormControl({
             value: leg.section || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           subSection: new FormControl({
             value: leg.subSection || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           paragraph: new FormControl({
             value: leg.paragraph || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           legislationDescription: new FormControl({
             value: leg.legislationDescription || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           })
         })
       );
     });
     return legislations;
   }
-
 
   /**
    * Parses an array of legislations FormGroups into objects expected by the API.
@@ -231,7 +231,6 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
 
     return legislations;
   }
-
 
   navigateToDetails() {
     this.router.navigate(['records', 'self-reports', this.currentRecord._id, 'detail']);
@@ -284,7 +283,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.location.dirty && (selfReport['location'] = this.myForm.controls.location.value);
     selfReport['centroid'] = [];
     if (this.myForm.controls.latitude.value && this.myForm.controls.longitude.value) {
-      (selfReport['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
+      selfReport['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
 
     // LNG flavour

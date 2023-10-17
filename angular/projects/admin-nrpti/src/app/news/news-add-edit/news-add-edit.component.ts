@@ -34,14 +34,16 @@ export class NewsAddEditComponent implements OnInit, OnDestroy {
   public datepickerMinDate = Constants.DatepickerMinDate;
 
   // Pick lists
-  public projects = [{
-    id: '588511d0aaecd9001b826192',
-    name: 'LNG Canada'
-  },
-  {
-    id: '588511c4aaecd9001b825604',
-    name: 'Coastal Gaslink'
-  }];
+  public projects = [
+    {
+      id: '588511d0aaecd9001b826192',
+      name: 'LNG Canada'
+    },
+    {
+      id: '588511c4aaecd9001b825604',
+      name: 'Coastal Gaslink'
+    }
+  ];
 
   constructor(
     public route: ActivatedRoute,
@@ -50,7 +52,7 @@ export class NewsAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -89,11 +91,8 @@ export class NewsAddEditComponent implements OnInit, OnDestroy {
       title: new FormControl(this.record.title),
       url: new FormControl((this.record && this.record.url) || ''),
       date: new FormControl(
-        (this.record &&
-          this.record.date &&
-          this.utils.convertJSDateToNGBDate(new Date(this.record.date))) ||
-        ''
-      ),
+        (this.record && this.record.date && this.utils.convertJSDateToNGBDate(new Date(this.record.date))) || ''
+      )
     });
   }
 
@@ -123,7 +122,8 @@ export class NewsAddEditComponent implements OnInit, OnDestroy {
     newsItem['type'] = this.myForm.controls.type.value;
     newsItem['title'] = this.myForm.controls.title.value;
     newsItem['url'] = this.myForm.controls.url.value;
-    newsItem['date'] = this.myForm.controls.date.value && this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('date').value);
+    newsItem['date'] =
+      this.myForm.controls.date.value && this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('date').value);
     newsItem['_id'] = this.record._id;
     newsItem['_schemaName'] = this.record._schemaName;
 

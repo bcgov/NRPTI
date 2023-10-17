@@ -1,4 +1,15 @@
-import { ViewEncapsulation, ChangeDetectionStrategy, OnInit, OnDestroy, Component, Input, EventEmitter, Output, Inject, AfterViewInit } from '@angular/core';
+import {
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+  OnInit,
+  OnDestroy,
+  Component,
+  Input,
+  EventEmitter,
+  Output,
+  Inject,
+  AfterViewInit
+} from '@angular/core';
 import { FilterObject, FilterType } from './filter-object';
 import { Router } from '@angular/router';
 import { SubsetsObject } from './subset-object';
@@ -70,12 +81,9 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
    * @param {Utils} utils Utils class for date conversion
    * @memberof SearchFilterTemplateComponent
    */
-  constructor(
-    private router: Router,
-    public utils: Utils,
-    @Inject(DOCUMENT) document) { }
+  constructor(private router: Router, public utils: Utils, @Inject(DOCUMENT) document) {}
 
-  ngOnDestroy(): void { }
+  ngOnDestroy(): void {}
 
   ngOnInit() {
     const urlValues: object = {}; // Storage for the URL params
@@ -90,15 +98,14 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
           const val = filterVal.split('=')[1];
 
           if (val) {
-
             // we know how to handle keyword and subset, but everything
             // else will be dynamic
             if (filterName === 'keywords') {
               this.keywordSearchWords = val;
             } else if (filterName === 'subset') {
               if (this.subsets) {
-                this.subsets.selectedSubset = this.subsets.options.find(subset => subset.subset === val) ||
-                                              this.subsets.options[0];
+                this.subsets.selectedSubset =
+                  this.subsets.options.find(subset => subset.subset === val) || this.subsets.options[0];
               }
             } else {
               // add all remaining kvp's onto the urlValues object.
@@ -150,15 +157,21 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
         if (defaultFormValues[filter.filterDefinition.startDateId]) {
           const date = new Date(defaultFormValues[filter.filterDefinition.startDateId]);
 
-          groupControls[filter.filterDefinition.startDateId]
-            .setValue({year: date.getFullYear(), day: date.getDay(), month: date.getMonth()});
+          groupControls[filter.filterDefinition.startDateId].setValue({
+            year: date.getFullYear(),
+            day: date.getDay(),
+            month: date.getMonth()
+          });
         }
 
         if (defaultFormValues[filter.filterDefinition.endDateId]) {
           const date = new Date(defaultFormValues[filter.filterDefinition.endDateId]);
 
-          groupControls[filter.filterDefinition.endDateId]
-            .setValue({year: date.getFullYear(), day: date.getDay(), month: date.getMonth()});
+          groupControls[filter.filterDefinition.endDateId].setValue({
+            year: date.getFullYear(),
+            day: date.getDay(),
+            month: date.getMonth()
+          });
         }
       } else if (filter.type === FilterType.Checkbox) {
         if (!filter.filterDefinition.grouped) {
@@ -250,13 +263,15 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
         const dateFilter = filter.filterDefinition;
 
         if (this.formGroup.get(dateFilter.startDateId).value) {
-          searchPackage.filters[dateFilter.startDateId] =
-            this.utils.convertFormGroupNGBDateToJSDate(this.formGroup.get(dateFilter.startDateId).value).toISOString();
+          searchPackage.filters[dateFilter.startDateId] = this.utils
+            .convertFormGroupNGBDateToJSDate(this.formGroup.get(dateFilter.startDateId).value)
+            .toISOString();
         }
 
         if (this.formGroup.get(dateFilter.endDateId).value) {
-          searchPackage.filters[dateFilter.endDateId] =
-            this.utils.convertFormGroupNGBDateToJSDate(this.formGroup.get(dateFilter.endDateId).value).toISOString();
+          searchPackage.filters[dateFilter.endDateId] = this.utils
+            .convertFormGroupNGBDateToJSDate(this.formGroup.get(dateFilter.endDateId).value)
+            .toISOString();
         }
       } else if (filter.type === FilterType.Checkbox) {
         if (!filter.filterDefinition.grouped) {
@@ -297,7 +312,7 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
   // Emits an event on the toggleFiltersPanelEvent emitter
   toggleAdvancedFilters() {
     this.showAdvancedFilters = !this.showAdvancedFilters;
-    this.toggleFiltersPanelEvent.emit({ showPanel: this.showAdvancedFilters});
+    this.toggleFiltersPanelEvent.emit({ showPanel: this.showAdvancedFilters });
   }
 
   /**

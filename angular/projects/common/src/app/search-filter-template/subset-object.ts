@@ -47,8 +47,5 @@ export class SubsetOption {
    * @param {string} subsetLabel The label to display in the subset menu
    * @memberof SubsetOption
    */
-  constructor(
-    public subset: string,
-    public subsetLabel: string
-  ) { }
+  constructor(public subset: string, public subsetLabel: string) {}
 }

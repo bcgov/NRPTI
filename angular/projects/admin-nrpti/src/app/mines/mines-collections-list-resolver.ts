@@ -66,7 +66,8 @@ export class MinesCollectionsListResolver implements Resolve<Observable<object>>
       }
 
       if (params.bcmiTabType.includes('Other')) {
-        or['type'] += 'Report,Annual Report,Letter of Assurance,Dam Safety Inspection,Management Plan, Compliance Self Report';
+        or['type'] +=
+          'Report,Annual Report,Letter of Assurance,Dam Safety Inspection,Management Plan, Compliance Self Report';
       }
 
       if (or['type'] === '') {

@@ -15,7 +15,7 @@ describe('AdministrativeSanctionDetailComponent', () => {
   const activedRouteStub = new ActivatedRouteStub();
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [GlobalModule, CommonModule, HttpClientTestingModule],
       declarations: [AdministrativeSanctionDetailComponent, ProjectLinkPipe],
@@ -24,7 +24,7 @@ describe('AdministrativeSanctionDetailComponent', () => {
         { provide: Router, useValue: mockRouter }
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AdministrativeSanctionDetailComponent);

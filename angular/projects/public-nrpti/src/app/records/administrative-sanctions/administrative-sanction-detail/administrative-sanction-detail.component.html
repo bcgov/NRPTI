@@ -2,8 +2,12 @@
   <div>
     <section class="nav-section">
       <ul class="nav-items">
-        <li class="nav-item" [ngClass]="{ active: isTabActive('detail') }" (click)="activateTab('detail')"
-          title="Administrative sanction activity details">
+        <li
+          class="nav-item"
+          [ngClass]="{ active: isTabActive('detail') }"
+          (click)="activateTab('detail')"
+          title="Administrative sanction activity details"
+        >
           <i class="nav-item-icon material-icons">info</i>
           <a class="nav-item-value">Activity Details</a>
         </li>
@@ -16,9 +20,9 @@
             <label class="grid-item-name">Issued To</label>
             <span class="grid-item-value__col">
               {{
-              (data &&
-              ((data.issuedTo && data.issuedTo.getEntityNameString()) || (!data.issuedTo && 'Unpublished'))) ||
-              '-'
+                (data &&
+                  ((data.issuedTo && data.issuedTo.getEntityNameString()) || (!data.issuedTo && 'Unpublished'))) ||
+                  '-'
               }}
             </span>
           </div>
@@ -39,8 +43,9 @@
         <div class="grid-section section-2">
           <div class="grid-item__row">
             <label class="grid-item-name">Issuing Agency</label>
-            <span class="grid-item-value__col">{{ data && data.issuingAgency ? displayName(data.issuingAgency) : '-'
-              }}</span>
+            <span class="grid-item-value__col">
+              {{ data && data.issuingAgency ? displayName(data.issuingAgency) : '-' }}
+            </span>
           </div>
           <div class="grid-item__row">
             <label class="grid-item-name">Site/Project</label>
@@ -48,8 +53,9 @@
           </div>
           <div class="grid-item__row">
             <label class="grid-item-name">Lat/Long</label>
-            <span class="grid-item-value__col">{{ data && data.centroid ? data.centroid[1] + '/' + data.centroid[0]: '-'
-              }}</span>
+            <span class="grid-item-value__col">
+              {{ data && data.centroid ? data.centroid[1] + '/' + data.centroid[0] : '-' }}
+            </span>
           </div>
           <div class="grid-item__row">
             <label class="grid-item-name">Summary</label>
@@ -57,10 +63,13 @@
           </div>
         </div>
         <div class="grid-section section-3">
-          <app-legislation-list-detail-public [data]="data && data.legislation"
-            firstSectionLabel="Authorizing Legislation" subsequentSectionLabels="Contravention"
-            firstDescriptionLabel="Description" subsequentDescriptionLabel="Offence">
-          </app-legislation-list-detail-public>
+          <app-legislation-list-detail-public
+            [data]="data && data.legislation"
+            firstSectionLabel="Authorizing Legislation"
+            subsequentSectionLabels="Contravention"
+            firstDescriptionLabel="Description"
+            subsequentDescriptionLabel="Offence"
+          ></app-legislation-list-detail-public>
         </div>
         <div class="grid-section section-3">
           <app-penalty-detail-public [data]="data && data.penalties"></app-penalty-detail-public>

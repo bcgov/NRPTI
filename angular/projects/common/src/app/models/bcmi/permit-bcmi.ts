@@ -40,8 +40,12 @@ export class PermitBCMI extends RecordModel {
     this.recordSubtype = (obj && obj.recordSubtype) || '';
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || '';
-    this.legislation = (obj && obj.legislation && obj.legislation.length &&
-      obj.legislation.map(legislation => new Legislation(legislation))) || null;
+    this.legislation =
+      (obj &&
+        obj.legislation &&
+        obj.legislation.length &&
+        obj.legislation.map(legislation => new Legislation(legislation))) ||
+      null;
     this.documents = (obj && obj.documents) || [];
 
     this.description = (obj && obj.description) || null;

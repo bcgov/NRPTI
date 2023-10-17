@@ -8,18 +8,6 @@ export class LngMapInfoResolver implements Resolve<Observable<object>> {
   constructor(private factoryService: FactoryService) {}
 
   resolve(): Observable<object> {
-    return this.factoryService.getRecords(
-      '',
-      ['MapLayerInfo'],
-      [],
-      1,
-      10,
-      '-dateAdded',
-      {},
-      false,
-      {},
-      [],
-      {}
-    );
+    return this.factoryService.getRecords('', ['MapLayerInfo'], [], 1, 10, '-dateAdded', {}, false, {}, [], {});
   }
 }

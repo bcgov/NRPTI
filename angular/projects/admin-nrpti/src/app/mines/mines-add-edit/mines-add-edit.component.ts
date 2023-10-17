@@ -32,10 +32,12 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
     browser_spellcheck: true,
     height: 240,
     plugins: ['lists, advlist, link'],
-    toolbar: [ 'undo redo | formatselect | ' +
-    ' bold italic backcolor | alignleft aligncenter ' +
-    ' alignright alignjustify | bullist numlist outdent indent |' +
-    ' removeformat | help' ]
+    toolbar: [
+      'undo redo | formatselect | ' +
+        ' bold italic backcolor | alignleft aligncenter ' +
+        ' alignright alignjustify | bullist numlist outdent indent |' +
+        ' removeformat | help'
+    ]
   };
 
   constructor(
@@ -44,7 +46,7 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
     private factoryService: FactoryService,
     private loadingScreenService: LoadingScreenService,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.loadingScreenService.setLoadingState(true, 'main');
@@ -102,7 +104,7 @@ export class MinesAddEditComponent implements OnInit, OnDestroy {
       type: new FormControl((this.mine && this.mine.type) || ''),
       links: new FormArray(this.getLinksFormGroups()),
       publish: new FormControl((this.mine && this.mine.read.includes('public')) || false),
-      showPermitNumber: new FormControl((this.mine && this.mine.showPermitNumber))
+      showPermitNumber: new FormControl(this.mine && this.mine.showPermitNumber)
     });
   }
 

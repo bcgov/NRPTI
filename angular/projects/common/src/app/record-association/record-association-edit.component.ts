@@ -6,7 +6,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Utils } from 'nrpti-angular-components';
 
-
 /**
  * Handles editing the Record Association form section.
  *
@@ -25,15 +24,10 @@ export class RecordAssociationEditComponent implements OnInit {
   @Input() minesOnly: false;
   @Output() mineLocation = new EventEmitter();
 
-
   public mineType: '';
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
-  constructor(
-    public factoryService: FactoryService,
-    private storeService: StoreService,
-    private utils: Utils
-  ) { }
+  constructor(public factoryService: FactoryService, private storeService: StoreService, private utils: Utils) {}
 
   ngOnInit() {
     this.storeService.stateChange.subscribe((state: object) => {

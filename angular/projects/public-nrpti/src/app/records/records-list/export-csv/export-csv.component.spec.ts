@@ -8,9 +8,8 @@ describe('ExportCsvComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ExportCsvComponent ]
-    })
-    .compileComponents();
+      declarations: [ExportCsvComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

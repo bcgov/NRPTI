@@ -54,7 +54,9 @@ export class CourtConvictionNRCEDDetailComponent extends RecordComponent impleme
     const requiredRoles = Constants.FlavourEditRequiredRoles.COURT_CONVICTION.NRCED;
 
     for (const role of requiredRoles) {
-      if (this.factoryService.userInRole(role) && this.data.write && this.data.write.includes(role)) { return true; }
+      if (this.factoryService.userInRole(role) && this.data.write && this.data.write.includes(role)) {
+        return true;
+      }
     }
 
     return false;

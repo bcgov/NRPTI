@@ -20,7 +20,6 @@ import { AgencyDataService } from '../../../../../../projects/global/src/lib/uti
   styleUrls: ['./mines-records-edit.component.scss']
 })
 export class MinesRecordsEditComponent implements OnInit {
-
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   // flags
@@ -45,12 +44,14 @@ export class MinesRecordsEditComponent implements OnInit {
 
   // Pick lists
   public recordTypePickList = Picklists.collectionTypePicklist;
-  public recordTypeNamesBCMI = Object.values(Picklists.bcmiRecordTypePicklist).map(item => {
-    return item.displayName;
-  }).sort();
+  public recordTypeNamesBCMI = Object.values(Picklists.bcmiRecordTypePicklist)
+    .map(item => {
+      return item.displayName;
+    })
+    .sort();
   public permitTypes = ['OGP', 'AMD'];
 
-  public recordAgencies = Picklists.collectionAgencyCodePicklist;;
+  public recordAgencies = Picklists.collectionAgencyCodePicklist;
 
   // record add edit state
   public recordState = null;
@@ -69,15 +70,21 @@ export class MinesRecordsEditComponent implements OnInit {
     private storeService: StoreService,
     private _changeDetectionRef: ChangeDetectorRef,
     private toastService: ToastService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.loadingScreenService.setLoadingState(true, 'main');
 
     this.setOrRemoveRecordAddEditState();
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
-      if (res && res.record && res.record[0] && res.record[0].data
-        && res.record[0].data.searchResults && res.record[0].data.searchResults[0]) {
+      if (
+        res &&
+        res.record &&
+        res.record[0] &&
+        res.record[0].data &&
+        res.record[0].data.searchResults &&
+        res.record[0].data.searchResults[0]
+      ) {
         this.record = res.record[0].data.searchResults[0];
         this.mine = res.mine[0].data;
         // if we have a current flavour, use that
@@ -143,33 +150,39 @@ export class MinesRecordsEditComponent implements OnInit {
     this.myForm = new FormGroup({
       recordName: new FormControl({
         value: (this.recordState && this.recordState.recordName) || (this.record && this.record.recordName) || '',
-        disabled: (this.record && this.record.sourceSystemRef !== 'nrpti')
+        disabled: this.record && this.record.sourceSystemRef !== 'nrpti'
       }),
       recordDate: new FormControl({
-        value: (this.recordState &&
-          this.recordState.dateIssued &&
-          this.utils.convertJSDateToNGBDate(new Date(this.recordState.dateIssued.date))) ||
-          (this.record && this.record.dateIssued &&
+        value:
+          (this.recordState &&
+            this.recordState.dateIssued &&
+            this.utils.convertJSDateToNGBDate(new Date(this.recordState.dateIssued.date))) ||
+          (this.record &&
+            this.record.dateIssued &&
             this.utils.convertJSDateToNGBDate(new Date(this.record.dateIssued))) ||
-          '' || null,
-        disabled: (this.record && this.record.sourceSystemRef !== 'nrpti')
+          '' ||
+          null,
+        disabled: this.record && this.record.sourceSystemRef !== 'nrpti'
       }),
       recordType: new FormControl({
-        value: (this.recordState && this.recordState.recordType)
-          || (this.record && this.record.recordType) || '',
-        disabled: (this.record && this.record.sourceSystemRef !== 'nrpti')
+        value: (this.recordState && this.recordState.recordType) || (this.record && this.record.recordType) || '',
+        disabled: this.record && this.record.sourceSystemRef !== 'nrpti'
       }),
       typeCode: new FormControl({
-        value: (this.recordState && this.recordState.recordType === 'Permit' && this.recordState.typeCode)
-          || (this.record && this.record.recordType === 'Permit' && this.record.typeCode) || '',
-        disabled: (this.record && this.record.sourceSystemRef !== 'nrpti')
+        value:
+          (this.recordState && this.recordState.recordType === 'Permit' && this.recordState.typeCode) ||
+          (this.record && this.record.recordType === 'Permit' && this.record.typeCode) ||
+          '',
+        disabled: this.record && this.record.sourceSystemRef !== 'nrpti'
       }),
       recordAgency: new FormControl({
-        value: (this.recordState && this.recordState.recordAgency) ||
+        value:
+          (this.recordState && this.recordState.recordAgency) ||
           (this.record && this.record.agency) ||
-          (this.record && this.record.issuingAgency) || '',
-        disabled: (this.record && this.record.sourceSystemRef !== 'nrpti')
-      }),
+          (this.record && this.record.issuingAgency) ||
+          '',
+        disabled: this.record && this.record.sourceSystemRef !== 'nrpti'
+      })
     });
 
     this.myForm.get('recordType').disable();
@@ -262,7 +275,8 @@ export class MinesRecordsEditComponent implements OnInit {
 
     // Use _master id here because we want to update both the BCMI flavour and master record
     record['_id'] = this.record._master;
-    record['recordType'] = this.myForm.get('recordType').dirty ? this.myForm.get('recordType').value
+    record['recordType'] = this.myForm.get('recordType').dirty
+      ? this.myForm.get('recordType').value
       : this.record.recordType;
 
     this.factoryService.editMineRecord(record).subscribe(async res => {
@@ -279,7 +293,6 @@ export class MinesRecordsEditComponent implements OnInit {
       this.loadingScreenService.setLoadingState(false, 'main');
       this.toastService.addMessage(this.record.recordName, 'Successfully updated', Constants.ToastTypes.SUCCESS);
       this.router.navigate(['mines', this.mine._id, 'records', this.record._id, 'detail']);
-
     });
   }
   convertAcronyms(acronym) {

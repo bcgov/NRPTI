@@ -30,8 +30,12 @@ export class SelfReport extends RecordModel {
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || null;
     this.author = (obj && obj.author) || null;
-    this.legislation = (obj && obj.legislation && obj.legislation.length &&
-      obj.legislation.map(legislation => new Legislation(legislation))) || null;
+    this.legislation =
+      (obj &&
+        obj.legislation &&
+        obj.legislation.length &&
+        obj.legislation.map(legislation => new Legislation(legislation))) ||
+      null;
     this.documents = (obj && obj.documents) || null;
   }
 }

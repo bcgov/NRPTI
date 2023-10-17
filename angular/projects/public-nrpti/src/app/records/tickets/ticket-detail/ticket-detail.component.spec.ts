@@ -15,7 +15,7 @@ describe('TicketDetailComponent', () => {
   const activedRouteStub = new ActivatedRouteStub();
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [GlobalModule, CommonModule, HttpClientTestingModule],
       declarations: [TicketDetailComponent, ProjectLinkPipe],
@@ -24,7 +24,7 @@ describe('TicketDetailComponent', () => {
         { provide: Router, useValue: mockRouter }
       ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TicketDetailComponent);

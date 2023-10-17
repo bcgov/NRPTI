@@ -27,22 +27,22 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
   public resetDocStaging = false;
 
   // form
-  public myForm = new FormGroup(
-    {
-      recordName: new FormControl(''),
-      recordAgency: new FormControl(''),
-      dateIssued: new FormControl(''),
-      recordType: new FormControl(''),
-      typeCode: new FormControl(''),
-      documents: new FormControl('')
-    }
-  );
+  public myForm = new FormGroup({
+    recordName: new FormControl(''),
+    recordAgency: new FormControl(''),
+    dateIssued: new FormControl(''),
+    recordType: new FormControl(''),
+    typeCode: new FormControl(''),
+    documents: new FormControl('')
+  });
 
   // Pick lists
   public recordAgencies = Picklists.collectionAgencyCodePicklist;
-  public recordTypeNamesBCMI = Object.values(Picklists.bcmiRecordTypePicklist).map(item => {
-    return item.displayName;
-  }).sort();
+  public recordTypeNamesBCMI = Object.values(Picklists.bcmiRecordTypePicklist)
+    .map(item => {
+      return item.displayName;
+    })
+    .sort();
   public permitTypes = ['OGP', 'AMD'];
 
   // Documents
@@ -57,7 +57,7 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
     private recordUtils: RecordUtils,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.loading = false;
@@ -73,10 +73,7 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (
-      this.myForm.get('recordType').value === 'Permit' &&
-      !this.myForm.get('typeCode').value
-    ) {
+    if (this.myForm.get('recordType').value === 'Permit' && !this.myForm.get('typeCode').value) {
       alert('You must select a permit type.');
       return;
     }
@@ -120,8 +117,9 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
       type: 'Company'
     };
     record['sourceSystemRef'] = 'nrpti';
-    record['centroid'] = this.mine.location ?
-      [this.mine.location.coordinates[0], this.mine.location.coordinates[1]] : [0, 0];
+    record['centroid'] = this.mine.location
+      ? [this.mine.location.coordinates[0], this.mine.location.coordinates[1]]
+      : [0, 0];
 
     // lookup appropriate schemaName from type value
     const recordSchema = Object.values(Picklists.bcmiRecordTypePicklist).filter(item => {

@@ -10,7 +10,7 @@ declare var window: any;
 
 @Injectable()
 export class RecordsListResolver implements Resolve<Observable<object>> {
-  constructor(public factoryService: FactoryService, public tableTemplateUtils: TableTemplateUtils) { }
+  constructor(public factoryService: FactoryService, public tableTemplateUtils: TableTemplateUtils) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const params = { ...route.params };
@@ -31,9 +31,7 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
 
     // This checks for the search parameter that was put in above along with an equal, for example q= or s=
     if (params.keywords) {
-      window.snowplow('trackSiteSearch',
-          [decodeURIComponent(params.keywords)]
-      );
+      window.snowplow('trackSiteSearch', [decodeURIComponent(params.keywords)]);
     }
 
     const filterParams = RecordUtils.buildFilterParams(params);

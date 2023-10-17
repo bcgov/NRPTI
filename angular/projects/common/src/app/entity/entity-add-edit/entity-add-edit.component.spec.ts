@@ -9,13 +9,13 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 describe('EntityAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<EntityAddEditComponent>(EntityAddEditComponent);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, MatSlideToggleModule, NgbModule.forRoot()],
       declarations: [EntityAddEditComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component, fixture } = testBedHelper.createComponent(false);

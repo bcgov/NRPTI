@@ -5,11 +5,11 @@ import { TestBedHelper } from '../../../../../common/src/app/spec/spec-utils';
 describe('PageCountDisplayComponent', () => {
   const testBedHelper = new TestBedHelper<PageCountDisplayComponent>(PageCountDisplayComponent);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [PageCountDisplayComponent]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

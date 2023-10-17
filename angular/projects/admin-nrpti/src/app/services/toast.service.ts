@@ -6,7 +6,6 @@ import { Guid } from 'guid-typescript';
   providedIn: 'root'
 })
 export class ToastService {
-
   private _messages = new BehaviorSubject<any[]>([]);
   private dataStore: { messages: any[] } = { messages: [] };
 

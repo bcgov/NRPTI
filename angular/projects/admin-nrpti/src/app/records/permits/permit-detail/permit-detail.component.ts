@@ -26,7 +26,7 @@ export class PermitDetailComponent extends RecordDetailComponent implements OnIn
     public router: Router,
     public changeDetectionRef: ChangeDetectorRef,
     public factoryService: FactoryService,
-    private storeService: StoreService,
+    private storeService: StoreService
   ) {
     super(factoryService);
   }

@@ -69,19 +69,19 @@ export class FactoryService {
     return this._injectComponentService;
   }
 
-    /**
+  /**
    * Inject agency service if it hasn't already been injected.
    *
    * @readonly
    * @type {ApiService}
    * @memberof FactoryService
    */
-    public get applicationAgencyService(): ApplicationAgencyService {
-      if (!this._applicationAgencyService) {
-        this._applicationAgencyService = this.injector.get(ApplicationAgencyService);
-      }
-      return this._applicationAgencyService;
+  public get applicationAgencyService(): ApplicationAgencyService {
+    if (!this._applicationAgencyService) {
+      this._applicationAgencyService = this.injector.get(ApplicationAgencyService);
     }
+    return this._applicationAgencyService;
+  }
 
   /**
    * Return the record for the given _id.
@@ -220,17 +220,17 @@ export class FactoryService {
     return this.injectComponentService.injectComponentIntoView(viewContainerRef, comonentToInject);
   }
 
-    /**
+  /**
    * Get agency data. If data is not cached, fetch it from the ApplicationAgencyService.
    * @returns {Observable<void>} An observable that resolves when agency data is fetched.
    * @memberof FactoryService
    */
-    public getApplicationAgencyService(): Observable<void> {
-      if (Object.keys(this.applicationAgencyService.getAgencies).length === 0) {
-        this.applicationAgencyService.refreshAgencies().subscribe(() => {
-          this.applicationAgencyService.getAgencies();
-        });
-      }
-      return this.applicationAgencyService.refreshAgencies();
+  public getApplicationAgencyService(): Observable<void> {
+    if (Object.keys(this.applicationAgencyService.getAgencies).length === 0) {
+      this.applicationAgencyService.refreshAgencies().subscribe(() => {
+        this.applicationAgencyService.getAgencies();
+      });
     }
+    return this.applicationAgencyService.refreshAgencies();
+  }
 }

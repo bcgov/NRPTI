@@ -19,15 +19,13 @@ export class AdministrativePenaltyLNGDetailComponent extends RecordComponent imp
 
   public isPublished: boolean;
 
-
-
   constructor(
     public route: ActivatedRoute,
     public router: Router,
     public factoryService: FactoryService,
     private logger: LoggerService,
     public changeDetectionRef: ChangeDetectorRef,
-    public datePipe: DatePipe,
+    public datePipe: DatePipe
   ) {
     super();
   }
@@ -56,7 +54,9 @@ export class AdministrativePenaltyLNGDetailComponent extends RecordComponent imp
     const requiredRoles = Constants.FlavourEditRequiredRoles.ADMINISTRATIVE_PENALTY.LNG;
 
     for (const role of requiredRoles) {
-      if (this.factoryService.userInRole(role) && this.data.write && this.data.write.includes(role)) { return true; }
+      if (this.factoryService.userInRole(role) && this.data.write && this.data.write.includes(role)) {
+        return true;
+      }
     }
 
     return false;

@@ -15,7 +15,15 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MinesRecordsTableRowComponent } from '../mines-records-rows/mines-records-table-row.component';
 import { SearchSubsets, Picklists, StateIDs, StateStatus } from '../../../../../common/src/app/utils/record-constants';
-import { FilterObject, FilterType, DateFilterDefinition, CheckOrRadioFilterDefinition, RadioOptionItem, MultiSelectDefinition, DropdownDefinition } from '../../../../../common/src/app/search-filter-template/filter-object';
+import {
+  FilterObject,
+  FilterType,
+  DateFilterDefinition,
+  CheckOrRadioFilterDefinition,
+  RadioOptionItem,
+  MultiSelectDefinition,
+  DropdownDefinition
+} from '../../../../../common/src/app/search-filter-template/filter-object';
 import { SubsetsObject, SubsetOption } from '../../../../../common/src/app/search-filter-template/subset-object';
 import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
 import { MiscUtils } from '../../utils/constants/misc';
@@ -148,9 +156,13 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       'activityType',
       FilterType.MultiSelect,
       'Type (Activity or Record)',
-      new MultiSelectDefinition(Object.values(Picklists.bcmiRecordTypePicklist).map(item => {
-        return { value: item._schemaName, displayValue: item.displayName, selected: false, display: true };
-      }), 'Begin typing to filter activities...', 'Select all that apply...'),
+      new MultiSelectDefinition(
+        Object.values(Picklists.bcmiRecordTypePicklist).map(item => {
+          return { value: item._schemaName, displayValue: item.displayName, selected: false, display: true };
+        }),
+        'Begin typing to filter activities...',
+        'Select all that apply...'
+      ),
       6
     );
 
@@ -162,7 +174,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
         Picklists.getAgencyNames(this.factoryService).map(value => {
           const agencyDataService = new AgencyDataService(this.factoryService);
           const displayValue = agencyDataService.displayNameFull(value);
-          const picklistCodes = Picklists.getAgencyCode(this.factoryService, value)
+          const picklistCodes = Picklists.getAgencyCode(this.factoryService, value);
           return { value: picklistCodes, displayValue: displayValue, selected: false, display: true };
         }),
         'Begin typing to filter agencies...',
@@ -203,7 +215,8 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       responsibleAgencyFilter,
       sourceSystemFilter,
       bcmiPublishedStatefilter,
-      hasCollectionsStatefilter];
+      hasCollectionsStatefilter
+    ];
   }
 
   executeSearch(searchPackage) {
@@ -415,7 +428,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       default:
         break;
     }
-    this.rowSelectedCount > 0 ? this.anySelectedRecords = true : this.anySelectedRecords = false;
+    this.rowSelectedCount > 0 ? (this.anySelectedRecords = true) : (this.anySelectedRecords = false);
   }
 
   /**

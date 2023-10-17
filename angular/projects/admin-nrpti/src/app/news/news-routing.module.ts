@@ -88,9 +88,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [
-    NewsResolver,
-    Utils
-  ]
+  providers: [NewsResolver, Utils]
 })
-export class NewsRoutingModule { }
+export class NewsRoutingModule {}

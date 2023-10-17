@@ -6,15 +6,13 @@ import { FactoryService } from '../services/factory.service';
 
 @Injectable()
 export class NewsListResolver implements Resolve<Observable<object>> {
-  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) { }
+  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
     const tableObject = this.tableTemplateUtils.updateTableObjectWithUrlParams(route.params, new TableObject());
 
-    let schemaList = [
-      'ActivityLNG'
-    ];
+    let schemaList = ['ActivityLNG'];
 
     // If _schemaName was filter criteria, use that instead of the default list.
     const filterParams = { ...route.params };

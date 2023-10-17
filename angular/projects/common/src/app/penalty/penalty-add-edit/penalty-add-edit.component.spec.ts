@@ -8,13 +8,13 @@ import { GlobalModule, Utils } from 'nrpti-angular-components';
 describe('PenaltyAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<PenaltyAddEditComponent>(PenaltyAddEditComponent);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, MatAutocompleteModule, GlobalModule],
       providers: [Utils],
       declarations: [PenaltyAddEditComponent]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component, fixture } = testBedHelper.createComponent(false);

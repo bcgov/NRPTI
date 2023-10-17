@@ -8,12 +8,12 @@ describe('DocumentEditComponent', () => {
   let component: DocumentEditComponent;
   let fixture: ComponentFixture<DocumentEditComponent>;
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [DocumentEditComponent, FileUploadComponent],
       imports: [FormsModule, NgbModule]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DocumentEditComponent);

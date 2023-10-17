@@ -10,14 +10,14 @@
   <section>
     <search-filter-template
       #explorePanel
-      (searchEvent)='executeSearch($event)'
+      (searchEvent)="executeSearch($event)"
       title="Keyword Search"
       tooltip="Search collection name"
       [advancedFilters]="true"
       [showAdvancedFilters]="showAdvancedFilters"
       [searchOnFilterChange]="true"
-      [filters]="filters">
-    </search-filter-template>
+      [filters]="filters"
+    ></search-filter-template>
   </section>
 
   <section>
@@ -40,5 +40,4 @@
       (messageOut)="onMessageOut($event)"
     ></lib-table-template>
   </section>
-
 </main>

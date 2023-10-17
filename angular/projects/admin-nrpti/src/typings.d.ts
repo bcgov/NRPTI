@@ -4,7 +4,7 @@ interface NodeModule {
   id: string;
 }
 
-declare module "ApplicationRoles" {
+declare module 'ApplicationRoles' {
   const ApplicationRoles: any;
   export = ApplicationRoles;
 }

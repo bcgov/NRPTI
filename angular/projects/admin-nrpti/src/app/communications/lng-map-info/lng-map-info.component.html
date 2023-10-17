@@ -1,9 +1,14 @@
-
 <form [formGroup]="mapForm" novalidate>
   <div class="flex-container">
     <div class="label-pair">
       <label for="sectionNumber">Section Number</label>
-      <select name="sectionNumber" id="sectionNumber" formControlName="sectionNumber" class="form-control" (change)="onSelectSegment($event)">
+      <select
+        name="sectionNumber"
+        id="sectionNumber"
+        formControlName="sectionNumber"
+        class="form-control"
+        (change)="onSelectSegment($event)"
+      >
         <option *ngFor="let section of sections" [ngValue]="section">
           {{ section }}
         </option>
@@ -23,12 +28,7 @@
   <div class="flex-container">
     <div class="label-pair lrg">
       <label for="description">Recent Updates</label>
-      <editor
-        [init]="tinyMceSettings"
-        name="recentUpdates"
-        id="recentUpdates"
-        formControlName="recentUpdates"
-      ></editor>
+      <editor [init]="tinyMceSettings" name="recentUpdates" id="recentUpdates" formControlName="recentUpdates"></editor>
     </div>
   </div>
 </form>

@@ -12,16 +12,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
-import {
-  ConfigService,
-  StoreService,
-  GlobalModule,
-  LoadingScreenService
-} from 'nrpti-angular-components';
+import { ConfigService, StoreService, GlobalModule, LoadingScreenService } from 'nrpti-angular-components';
 import { EventEmitter } from 'events';
 
 describe('AppComponent', () => {
-  beforeEach((() => {
+  beforeEach(() => {
     const mockKeycloakService = {
       isValidForSite: () => {
         return true;
@@ -29,30 +24,20 @@ describe('AppComponent', () => {
     };
 
     const mockStoreService = {
-      getItem: () => { },
+      getItem: () => {},
       stateChange: new EventEmitter()
     };
 
-    const mockToastService = {
+    const mockToastService = {};
 
-    };
-
-    const mockToastrService = {
-
-    };
+    const mockToastrService = {};
 
     const mockLoadingScreenService = {
-      setLoadingState: () => { }
+      setLoadingState: () => {}
     };
 
     TestBed.configureTestingModule({
-      declarations: [
-        AppComponent,
-        HeaderComponent,
-        FooterComponent,
-        SidebarComponent,
-        ToggleButtonComponent
-      ],
+      declarations: [AppComponent, HeaderComponent, FooterComponent, SidebarComponent, ToggleButtonComponent],
       imports: [GlobalModule, RouterTestingModule, HttpClientTestingModule, BrowserAnimationsModule],
       providers: [
         ConfigService,
@@ -66,11 +51,11 @@ describe('AppComponent', () => {
         { provide: StoreService, useValue: mockStoreService }
       ]
     }).compileComponents();
-  }));
+  });
 
-  it('should create the app', (() => {
+  it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
-  }));
+  });
 });

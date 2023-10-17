@@ -24,9 +24,9 @@ export class TableTemplateComponent implements OnInit, OnChanges, OnDestroy {
   @Input() messageIn: EventEmitter<ITableMessage> = new EventEmitter<ITableMessage>();
   @Output() messageOut: EventEmitter<ITableMessage> = new EventEmitter<ITableMessage>();
 
-  constructor(public injector: Injector) { }
+  constructor(public injector: Injector) {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   ngOnChanges(changes: SimpleChanges) {
     // only run when property "data" changed
@@ -59,5 +59,5 @@ export class TableTemplateComponent implements OnInit, OnChanges, OnDestroy {
     this.messageOut.emit({ label: 'pageSize', data: pageSize });
   }
 
-  ngOnDestroy() { }
+  ngOnDestroy() {}
 }

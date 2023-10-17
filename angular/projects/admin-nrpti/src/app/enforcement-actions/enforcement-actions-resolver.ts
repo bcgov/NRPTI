@@ -10,7 +10,7 @@ export class EnforcementActionsResolver implements Resolve<Observable<object>> {
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const tableObject = this.tableTemplateUtils.updateTableObjectWithUrlParams(route.params, new TableObject());
-    const params = { ...route.params};
+    const params = { ...route.params };
     const and = {};
 
     const schemaList = ['CourtConviction', 'AdministrativePenalty'];

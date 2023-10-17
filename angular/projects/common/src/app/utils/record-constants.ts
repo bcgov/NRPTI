@@ -305,11 +305,7 @@ export class Picklists {
     'Ministry of Environment and Climate Change Strategy 2'
   ];
 
-  public static readonly collectionAgencyCodePicklist = [
-    'AGENCY_EAO',
-    'AGENCY_EMLI',
-    'AGENCY_ENV'
-  ];
+  public static readonly collectionAgencyCodePicklist = ['AGENCY_EAO', 'AGENCY_EMLI', 'AGENCY_ENV'];
 
   /**
    * Contains a mapping of acts to regulations.

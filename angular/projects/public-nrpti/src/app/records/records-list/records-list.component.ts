@@ -92,7 +92,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     public utils: Utils,
     private tableTemplateUtils: TableTemplateUtils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   /**
    * Component init.
@@ -156,13 +156,13 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         (this.queryParams &&
           this.queryParams.dateRangeFromFilter &&
           this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeFromFilter))) ||
-        null
+          null
       ),
       dateIssuedEnd: new FormControl(
         (this.queryParams &&
           this.queryParams.dateRangeToFilter &&
           this.utils.convertJSDateToNGBDate(new Date(this.queryParams.dateRangeToFilter))) ||
-        null
+          null
       ),
       issuedToCompany: new FormControl((this.queryParams && this.queryParams.issuedToCompany) || null),
       issuedToIndividual: new FormControl((this.queryParams && this.queryParams.issuedToIndividual) || null),
@@ -222,7 +222,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * @param {ITableMessage} msg
    * @memberof RecordsListComponent
    */
-  rowSelected(msg: ITableMessage) { }
+  rowSelected(msg: ITableMessage) {}
 
   /**
    * Column sorting handler.
@@ -281,15 +281,17 @@ export class RecordsListComponent implements OnInit, OnDestroy {
   subscribeToSearchFilterChanges() {
     this.searchFiltersForm.valueChanges.pipe(takeUntil(this.ngUnsubscribe)).subscribe(changes => {
       if (changes.dateIssuedStart) {
-        this.queryParams['dateRangeFromFilter'] =
-          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedStart).toISOString();
+        this.queryParams['dateRangeFromFilter'] = this.utils
+          .convertFormGroupNGBDateToJSDate(changes.dateIssuedStart)
+          .toISOString();
       } else {
         delete this.queryParams['dateRangeFromFilter'];
       }
 
       if (changes.dateIssuedEnd) {
-        this.queryParams['dateRangeToFilter'] =
-          this.utils.convertFormGroupNGBDateToJSDate(changes.dateIssuedEnd).toISOString();
+        this.queryParams['dateRangeToFilter'] = this.utils
+          .convertFormGroupNGBDateToJSDate(changes.dateIssuedEnd)
+          .toISOString();
       } else {
         delete this.queryParams['dateRangeToFilter'];
       }

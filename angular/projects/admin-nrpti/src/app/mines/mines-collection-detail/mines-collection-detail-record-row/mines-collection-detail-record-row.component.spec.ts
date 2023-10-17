@@ -10,13 +10,13 @@ describe('MinesTableRowComponent', () => {
     MinesCollectionRecordTableRowComponent
   );
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, CommonModule, GlobalModule],
       declarations: [MinesCollectionRecordTableRowComponent],
       providers: []
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component, fixture } = testBedHelper.createComponent(false);

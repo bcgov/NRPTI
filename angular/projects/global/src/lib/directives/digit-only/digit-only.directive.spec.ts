@@ -13,11 +13,11 @@ class TestComponent {}
 describe('DigitOnlyDirective', () => {
   const testBedHelper = new TestBedHelper<TestComponent>(TestComponent);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [DigitOnlyDirective, TestComponent]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

@@ -10,27 +10,28 @@
         </select>
       </div>
     </div>
-      <div class="label-pair">
-        <label for="mineGuid">Mine Name</label>
-        <select name="mineGuid" id="mineGuid" formControlName="mineGuid" class="form-control">
-          <option *ngFor="let mine of mines" [ngValue]="mine._sourceRefId">
-            {{ mine.name }}
-          </option>
-        </select>
-      </div>
-      <div *ngIf="minesOnly" class="label-pair">
-        <label for="unlistedMine">Mine Name (if not in BCMI)</label>
-        <input name="unlistedMine" id="unlistedMine" type="text" formControlName="unlistedMine" class="form-control" />
-      </div>
-      <div class="label-pair">
-        <label for="mineType">Mine Type</label>
-        <input
-            name="mineType"
-            id="mineType"
-            type="text"
-            formControlName="unlistedMineType"
-            value="{{ mineType }}"
-            class="form-control" />
-      </div>
+    <div class="label-pair">
+      <label for="mineGuid">Mine Name</label>
+      <select name="mineGuid" id="mineGuid" formControlName="mineGuid" class="form-control">
+        <option *ngFor="let mine of mines" [ngValue]="mine._sourceRefId">
+          {{ mine.name }}
+        </option>
+      </select>
+    </div>
+    <div *ngIf="minesOnly" class="label-pair">
+      <label for="unlistedMine">Mine Name (if not in BCMI)</label>
+      <input name="unlistedMine" id="unlistedMine" type="text" formControlName="unlistedMine" class="form-control" />
+    </div>
+    <div class="label-pair">
+      <label for="mineType">Mine Type</label>
+      <input
+        name="mineType"
+        id="mineType"
+        type="text"
+        formControlName="unlistedMineType"
+        value="{{ mineType }}"
+        class="form-control"
+      />
+    </div>
   </form>
 </div>
