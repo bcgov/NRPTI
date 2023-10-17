@@ -178,12 +178,12 @@ exports.COURT_CONVICTION_PENALTY_TYPES = [
 exports.PENALTY_VALUE_TYPES = ['Years', 'Months', 'Days', 'Dollars', 'Hours', 'Other'];
 
 exports.AUTHORIZED_PUBLISH_AGENCIES = [
-  'BC Parks',
-  'Climate Action Secretariat',
-  'Conservation Officer Service',
-  'Environmental Assessment Office',
-  'Ministry of Environment and Climate Change Strategy',
-  'Ministry of Forests'
+  'AGENCY_ENV_BCPARKS',
+  'AGENCY_CAS',
+  'AGENCY_ENV_COS',
+  'AGENCY_EAO',
+  'AGENCY_ENV',
+  'AGENCY_FLNRO'
 ];
 
 exports.CSV_SOURCE_DEFAULT_ROLES = {
