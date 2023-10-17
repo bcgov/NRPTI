@@ -12,13 +12,12 @@ setupAppServer();
 jest.setTimeout(100000);
 
 beforeAll(async () => {
-  mongoUri = process.env.MONGO_URI
+  mongoUri = process.env.MONGO_URI;
   await mongoose.connect(mongoUri, mongooseOpts, err => {
     if (err) {
       throw Error(err);
     }
   });
-
 });
 
 afterAll(async () => {
@@ -36,17 +35,16 @@ beforeEach(async () => {
 afterEach(async () => {
   // clean up routes between tests to prevent roles persisting between tests
   let routes = app._router.stack;
-  routes.forEach((route) => {
+  routes.forEach(route => {
     if (route.path) {
-      routes.pop()
+      routes.pop();
     }
-  })
+  });
   await mongoose.disconnect();
-})
-
+});
 
 function setupAppServer() {
-  app.disable("x-powered-by");
+  app.disable('x-powered-by');
   app.use(
     bodyParser.urlencoded({
       extended: true
@@ -79,11 +77,7 @@ function createPublicSwaggerParams(fieldNames, additionalValues = {}) {
 }
 
 function defaultProtectedParams(username = null, roles = []) {
-  const defaultRoles = [
-    'public',
-    'offline_access',
-    'uma_authorization',
-  ];
+  const defaultRoles = ['public', 'offline_access', 'uma_authorization'];
   let userroles = defaultRoles.concat(roles);
   return {
     auth_payload: {
@@ -93,7 +87,7 @@ function defaultProtectedParams(username = null, roles = []) {
       preferred_username: username,
       realm_access: {
         roles: userroles
-      },
+      }
     },
     dataset: {},
     _id: {},

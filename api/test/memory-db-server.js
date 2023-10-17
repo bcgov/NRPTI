@@ -1,16 +1,15 @@
 const mongoMemoryServer = require('mongodb-memory-server');
 
 class MemoryDatabaseServer {
-
   constructor() {
     this.mongoServer = new mongoMemoryServer.default({
       instance: {
-        dbName: 'nrpti-dev',
+        dbName: 'nrpti-dev'
       },
       binary: {
-        version: '3.6.3',
+        version: '3.6.3'
       },
-      autoStart: false,
+      autoStart: false
     });
   }
 

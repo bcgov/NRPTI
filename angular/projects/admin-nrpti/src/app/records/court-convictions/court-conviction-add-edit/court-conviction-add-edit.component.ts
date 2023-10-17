@@ -58,7 +58,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     protected _changeDetectionRef: ChangeDetectorRef,
     // @ts-ignore used by record-association component
     protected storeService: StoreService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -312,34 +312,33 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
         new FormGroup({
           act: new FormControl({
             value: leg.act || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           regulation: new FormControl({
             value: leg.regulation || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           section: new FormControl({
             value: leg.section || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           subSection: new FormControl({
             value: leg.subSection || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           paragraph: new FormControl({
             value: leg.paragraph || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           offence: new FormControl({
             value: leg.offence || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           })
         })
       );
     });
     return legislations;
   }
-
 
   /**
    * Parses an array of legislations FormGroups into objects expected by the API.
@@ -369,7 +368,6 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
 
     return legislations;
   }
-
 
   /**
    * Builds an array of penalties FormGroups, each with its own set of FormControls.
@@ -519,7 +517,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.location.dirty && (courtConviction['location'] = this.myForm.controls.location.value);
     courtConviction['centroid'] = [];
     if (this.myForm.controls.latitude.value && this.myForm.controls.longitude.value) {
-      (courtConviction['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
+      courtConviction['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
 
     // tslint:disable-next-line:max-line-length

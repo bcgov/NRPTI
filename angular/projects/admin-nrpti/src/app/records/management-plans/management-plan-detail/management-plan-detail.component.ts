@@ -16,8 +16,12 @@ import { FactoryService } from '../../../services/factory.service';
 export class ManagementPlanDetailComponent extends RecordComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
-  constructor(public route: ActivatedRoute, public router: Router, public changeDetectionRef: ChangeDetectorRef
-    , public factoryService: FactoryService) {
+  constructor(
+    public route: ActivatedRoute,
+    public router: Router,
+    public changeDetectionRef: ChangeDetectorRef,
+    public factoryService: FactoryService
+  ) {
     super();
   }
 
@@ -57,4 +61,3 @@ export class ManagementPlanDetailComponent extends RecordComponent implements On
     this.ngUnsubscribe.complete();
   }
 }
-

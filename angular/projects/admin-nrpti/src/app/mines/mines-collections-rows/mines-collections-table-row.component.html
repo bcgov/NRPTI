@@ -10,8 +10,14 @@
   <button class="btn" type="button" [disabled]="isEditingCollection" (click)="goToEdit()" title="Edit record">
     <i class="material-icons">create</i>
   </button>
-  <button mat-icon-button class="btn" [disabled]="isEditingCollection" [matMenuTriggerFor]="menu" title="More options"
-    aria-label="More options menu">
+  <button
+    mat-icon-button
+    class="btn"
+    [disabled]="isEditingCollection"
+    [matMenuTriggerFor]="menu"
+    title="More options"
+    aria-label="More options menu"
+  >
     <i class="material-icons">more_vert</i>
   </button>
   <mat-menu #menu="matMenu">

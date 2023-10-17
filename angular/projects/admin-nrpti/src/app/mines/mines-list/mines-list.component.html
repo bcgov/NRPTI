@@ -3,11 +3,11 @@
   <br />
   <search-filter-template
     #explorePanel
-    (searchEvent)='executeSearch($event)'
+    (searchEvent)="executeSearch($event)"
     [title]="'Keyword Search'"
     [tooltip]="'Enter a Mine Name or Permit Number to search for'"
-    [advancedFilters]="false">
-  </search-filter-template>
+    [advancedFilters]="false"
+  ></search-filter-template>
 
   <div *ngIf="!tableData.totalListItems">
     No Mines found.

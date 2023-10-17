@@ -11,7 +11,7 @@ export class ImportListResolver implements Resolve<void> {
     public tableTemplateUtils: TableTemplateUtils,
     private importService: ImportService,
     private factoryService: FactoryService
-  ) { }
+  ) {}
 
   async resolve(route: ActivatedRouteSnapshot) {
     // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.

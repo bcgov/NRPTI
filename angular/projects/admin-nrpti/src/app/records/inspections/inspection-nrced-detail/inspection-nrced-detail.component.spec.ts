@@ -16,7 +16,7 @@ describe('InspectionNRCEDDetailComponent', () => {
   const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInNrcedRole', 'userInRole']);
   mockFactoryService.userInNrcedRole.and.returnValue(true);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, GlobalModule],
       declarations: [InspectionNRCEDDetailComponent],
@@ -27,7 +27,7 @@ describe('InspectionNRCEDDetailComponent', () => {
         { provide: FactoryService, useValue: mockFactoryService }
       ]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

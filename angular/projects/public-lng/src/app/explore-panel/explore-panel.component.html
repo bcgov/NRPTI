@@ -40,7 +40,9 @@
                 (ngModelChange)="dataChanged($event, filter.fieldName, filter.displayName)"
                 [ngModel]="isEnabled(filter.fieldName, filter.displayName)"
               />
-              <label for="_{{ filter.displayName }}_{{ filter.fieldName }}">{{ filter.altDisplayName ? filter.altDisplayName : filter.displayName }}</label>
+              <label for="_{{ filter.displayName }}_{{ filter.fieldName }}">
+                {{ filter.altDisplayName ? filter.altDisplayName : filter.displayName }}
+              </label>
             </div>
           </ng-container>
         </div>

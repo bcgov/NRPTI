@@ -61,7 +61,14 @@ export function initConfig(configService: ConfigService) {
       deps: [ConfigService],
       multi: true
     },
-    ApiService, UrlService, DataService, SearchService, LoggerService, MapLayerInfoService, Utils],
+    ApiService,
+    UrlService,
+    DataService,
+    SearchService,
+    LoggerService,
+    MapLayerInfoService,
+    Utils
+  ],
   entryComponents: [],
   bootstrap: [AppComponent]
 })

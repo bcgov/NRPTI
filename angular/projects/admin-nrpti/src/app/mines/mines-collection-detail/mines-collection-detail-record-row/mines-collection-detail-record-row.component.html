@@ -1,7 +1,8 @@
-<td scope="row" data-label="Name" class="col-6 d-flex">{{ rowData.recordName || '-' }}
+<td scope="row" data-label="Name" class="col-6 d-flex">
+  {{ rowData.recordName || '-' }}
   <em *ngIf="rowData.isLink" class="material-icons ml-2">link</em>
 </td>
-<td scope="row" data-label="Source System" class="col-2">{{ rowData && rowData.sourceSystemRef || '-' }}</td>
+<td scope="row" data-label="Source System" class="col-2">{{ (rowData && rowData.sourceSystemRef) || '-' }}</td>
 <td scope="row" data-label="Date" class="col-2">{{ (rowData.dateIssued && formatDate(rowData.dateIssued)) || '-' }}</td>
 <td scope="row" data-label="Published State" class="col-2 d-lg-flex">
   <div *ngIf="isPublished(); then published; else unpublished"></div>

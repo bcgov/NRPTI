@@ -40,7 +40,6 @@ export class LegislationListAddEditComponent implements OnInit {
       );
     }
 
-
     this.formArray.markAsDirty();
   }
 

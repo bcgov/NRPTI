@@ -11,7 +11,8 @@
             [disabled]="buttonActions['epic']"
             class="btn btn-primary"
             (click)="startJob('epic')"
-            title="Start EPIC import job">
+            title="Start EPIC import job"
+          >
             Start Job
           </button>
         </div>
@@ -24,7 +25,8 @@
             [disabled]="buttonActions['nris-epd']"
             class="btn btn-primary"
             (click)="startJob('nris-epd')"
-            title="Start NRIS import job">
+            title="Start NRIS import job"
+          >
             Start Job
           </button>
         </div>
@@ -37,7 +39,8 @@
             [disabled]="buttonActions['nris-emli-importer']"
             class="btn btn-primary"
             (click)="startJob('nris-emli')"
-            title="Start EMLI import job">
+            title="Start EMLI import job"
+          >
             Start Job
           </button>
         </div>
@@ -50,7 +53,8 @@
             [disabled]="buttonActions['core']"
             class="btn btn-primary"
             (click)="startJob('core')"
-            title="Start CORE import job">
+            title="Start CORE import job"
+          >
             Start Job
           </button>
         </div>
@@ -63,7 +67,8 @@
             [disabled]="buttonActions['bcogc']"
             class="btn btn-primary"
             (click)="startJob('bcogc')"
-            title="Start BCOGC import job">
+            title="Start BCOGC import job"
+          >
             Start Job
           </button>
         </div>
@@ -83,6 +88,7 @@
     <lib-table-template
       *ngIf="!loading && tableData.totalListItems != 0"
       [data]="tableData"
-      (messageOut)="onMessageOut($event)"></lib-table-template>
+      (messageOut)="onMessageOut($event)"
+    ></lib-table-template>
   </section>
 </main>

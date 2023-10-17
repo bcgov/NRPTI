@@ -42,9 +42,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
     this.activities = [];
 
     // Subscribe to project changes
-    this.route.parent.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(
-      () => {
-        this._searchService
+    this.route.parent.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
+      this._searchService
         .getSearchResults(
           this._apiService.apiPath,
           '',
@@ -66,7 +65,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
             this._changeDetectionRef.detectChanges();
           }
         });
-      });
+    });
   }
 
   ngOnDestroy() {

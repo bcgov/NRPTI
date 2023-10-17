@@ -21,7 +21,7 @@ describe('CourtConvictionDetailComponent', () => {
   mockFactoryService.userInLngRole.and.returnValue(true);
   mockFactoryService.userInNrcedRole.and.returnValue(true);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, GlobalModule, CommonModule],
       declarations: [
@@ -37,7 +37,7 @@ describe('CourtConvictionDetailComponent', () => {
         { provide: FactoryService, useValue: mockFactoryService }
       ]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component, fixture } = testBedHelper.createComponent(false);

@@ -53,7 +53,7 @@ export class SearchFiltersComponent implements OnInit, OnDestroy {
 
   public datepickerMinDate = Constants.DatepickerMinDate;
 
-  constructor(public router: Router, public route: ActivatedRoute, private _changeDetectionRef: ChangeDetectorRef) { }
+  constructor(public router: Router, public route: ActivatedRoute, private _changeDetectionRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loading = false;

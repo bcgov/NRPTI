@@ -24,7 +24,7 @@ export class MinesRecordDetailComponent implements OnInit, OnDestroy {
     public router: Router,
     public changeDetectionRef: ChangeDetectorRef,
     public factoryService: FactoryService
-  ) { }
+  ) {}
 
   isDisableEdit() {
     if (this.record && this.record.sourceSystemRef === 'core') {
@@ -40,14 +40,10 @@ export class MinesRecordDetailComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.record = res.record[0] &&
-        res.record[0].data &&
-        res.record[0].data.searchResults &&
-        res.record[0].data.searchResults[0];
+      this.record =
+        res.record[0] && res.record[0].data && res.record[0].data.searchResults && res.record[0].data.searchResults[0];
 
-      this.collections = res.collections[0] &&
-        res.collections[0].data &&
-        res.collections[0].data.searchResults;
+      this.collections = res.collections[0] && res.collections[0].data && res.collections[0].data.searchResults;
 
       this.populateTextFields();
       this.isDisableEdit();
@@ -70,7 +66,7 @@ export class MinesRecordDetailComponent implements OnInit, OnDestroy {
   }
 
   navigateToEditPage() {
-    this.router.navigate(['../edit'], {relativeTo: this.route});
+    this.router.navigate(['../edit'], { relativeTo: this.route });
   }
 
   displayName(agency) {

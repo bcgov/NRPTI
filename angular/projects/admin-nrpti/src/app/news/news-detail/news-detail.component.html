@@ -6,34 +6,34 @@
       <button class="btn btn-primary" (click)="navigateToEditPage()">Edit</button>
     </div>
   </div>
-  <hr>
+  <hr />
   <div class="row label-pair ml-1 mb-2">
     <label class="font-weight-bold mr-1">Date:</label>
-    <div>{{record.date | date:'medium' || '-'}}</div>
+    <div>{{ record.date | date: 'medium' || '-' }}</div>
   </div>
   <div class="row label-pair ml-1 mb-2">
     <label class="font-weight-bold mr-1">Title:</label>
-    <div>{{record.title || '-'}}</div>
+    <div>{{ record.title || '-' }}</div>
   </div>
   <div class="row label-pair ml-1 mb-2">
     <label class="font-weight-bold mr-1">Content:</label>
-    <div>{{record.description || '-'}}</div>
+    <div>{{ record.description || '-' }}</div>
   </div>
   <div class="row label-pair ml-1 mb-2">
     <label class="font-weight-bold mr-1">Type:</label>
-    <div>{{record.type || '-'}}</div>
+    <div>{{ record.type || '-' }}</div>
   </div>
   <div class="row label-pair ml-1 mb-2">
     <label class="font-weight-bold mr-1">Project:</label>
-    <div>{{record.projectName || 'None'}}</div>
+    <div>{{ record.projectName || 'None' }}</div>
   </div>
   <div class="row label-pair ml-1 mb-2">
     <label class="font-weight-bold mr-1">System:</label>
-    <div>{{record.system | uppercase }}</div>
+    <div>{{ record.system | uppercase }}</div>
   </div>
   <div class="row label-pair ml-1 mb-2">
     <label class="font-weight-bold mr-1">URL:</label>
-    <div>{{record.url || '-'}}</div>
+    <div>{{ record.url || '-' }}</div>
   </div>
   <div class="row ml-1 mt-5">
     <button class="btn btn-outline-primary mr-1" (click)="delete()">Delete</button>

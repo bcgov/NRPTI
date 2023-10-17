@@ -51,7 +51,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -106,36 +106,37 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti') &&
-          !this.factoryService.userInLngRole()
+        disabled:
+          this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti' && !this.factoryService.userInLngRole()
       }),
       recordSubtype: new FormControl((this.currentRecord && this.currentRecord.recordSubtype) || ''),
       dateIssued: new FormControl({
-        value: (this.currentRecord &&
-          this.currentRecord.dateIssued &&
-          this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
+        value:
+          (this.currentRecord &&
+            this.currentRecord.dateIssued &&
+            this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
           '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       issuingAgency: new FormControl({
         value: (this.currentRecord && this.currentRecord.issuingAgency) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       projectName: new FormControl({
         value: (this.currentRecord && this.currentRecord.projectName) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       location: new FormControl({
         value: (this.currentRecord && this.currentRecord.location) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       latitude: new FormControl({
         value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[1]) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       longitude: new FormControl({
         value: (this.currentRecord && this.currentRecord.centroid && this.currentRecord.centroid[0]) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
 
       legislations: new FormArray(this.getLegislationsFormGroups()),
@@ -145,7 +146,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         // default to using the master description if the flavour record does not exist
         (this.currentRecord &&
           ((this.lngFlavour && this.lngFlavour.description) || (!this.lngFlavour && this.currentRecord.description))) ||
-        ''
+          ''
       ),
       publishLng: new FormControl({
         value: (this.currentRecord && this.lngFlavour && this.lngFlavour.read.includes('public')) || false,
@@ -154,11 +155,11 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
 
       association: new FormGroup({
         _epicProjectId: new FormControl({
-          value: this.currentRecord && this.currentRecord._epicProjectId || null,
+          value: (this.currentRecord && this.currentRecord._epicProjectId) || null,
           disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         }),
         mineGuid: new FormControl({
-          value: this.currentRecord && this.currentRecord.mineGuid || null,
+          value: (this.currentRecord && this.currentRecord.mineGuid) || null,
           disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
         })
       })
@@ -183,27 +184,27 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
         new FormGroup({
           act: new FormControl({
             value: leg.act || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           regulation: new FormControl({
             value: leg.regulation || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           section: new FormControl({
             value: leg.section || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           subSection: new FormControl({
             value: leg.subSection || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           paragraph: new FormControl({
             value: leg.paragraph || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           legislationDescription: new FormControl({
             value: leg.legislationDescription || '',
-            disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+            disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           })
         })
       );
@@ -289,7 +290,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.location.dirty && (certificate['location'] = this.myForm.controls.location.value);
     certificate['centroid'] = [];
     if (this.myForm.controls.latitude.value && this.myForm.controls.longitude.value) {
-      (certificate['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
+      certificate['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
 
     // tslint:disable-next-line:max-line-length

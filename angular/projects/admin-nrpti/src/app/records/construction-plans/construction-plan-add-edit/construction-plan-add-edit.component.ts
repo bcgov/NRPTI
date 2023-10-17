@@ -51,7 +51,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -214,7 +214,7 @@ export class ConstructionPlanAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.location.dirty && (constructionPlan['location'] = this.myForm.controls.location.value);
     constructionPlan['centroid'] = [];
     if (this.myForm.controls.latitude.value && this.myForm.controls.longitude.value) {
-      (constructionPlan['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value]);
+      constructionPlan['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
 
     // LNG flavour

@@ -4,11 +4,11 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FactoryService } from './factory.service';
 
 describe('FactoryService', () => {
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule]
     }).compileComponents();
-  }));
+  });
 
   it('should be created', () => {
     const service: FactoryService = TestBed.get(FactoryService);

@@ -16,23 +16,25 @@
       *ngFor="let option of options | callback: filterOptions"
       [selectable]="true"
       [removable]="true"
-      (removed)="removeChip(option)">
-      <span class="chip-text-style">{{option.displayValue}}</span>
+      (removed)="removeChip(option)"
+    >
+      <span class="chip-text-style">{{ option.displayValue }}</span>
       <mat-icon matChipRemove>cancel</mat-icon>
     </mat-chip>
   </div>
 </mat-chip-list>
-<input *ngIf="!useChips"
-    #multiAutocompleteFilter
-    name="multiAutocompleteFilter"
-    type="text"
-    class="form-control"
-    placeholder="{{ updatedPaceholderText }}"
-    matInput
-    (keyup)="filterPicklist($event)"
-    (keydown)="handleEnter($event)"
-    [matAutocomplete]="multiAutocomplete"
-  />
+<input
+  *ngIf="!useChips"
+  #multiAutocompleteFilter
+  name="multiAutocompleteFilter"
+  type="text"
+  class="form-control"
+  placeholder="{{ updatedPaceholderText }}"
+  matInput
+  (keyup)="filterPicklist($event)"
+  (keydown)="handleEnter($event)"
+  [matAutocomplete]="multiAutocomplete"
+/>
 <mat-autocomplete #multiAutocomplete="matAutocomplete">
   <mat-option (click)="selectNone()" title="Select none" value="Clear Selected">Clear Selected</mat-option>
   <ng-container *ngFor="let option of options">

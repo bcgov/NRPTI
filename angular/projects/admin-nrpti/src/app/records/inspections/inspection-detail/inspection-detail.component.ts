@@ -23,7 +23,7 @@ export class InspectionDetailComponent extends RecordDetailComponent implements 
     public route: ActivatedRoute,
     public router: Router,
     public changeDetectionRef: ChangeDetectorRef,
-    public factoryService: FactoryService,
+    public factoryService: FactoryService
   ) {
     super(factoryService);
   }

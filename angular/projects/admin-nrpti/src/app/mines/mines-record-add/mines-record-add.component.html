@@ -3,11 +3,17 @@
     <div class="add-record-section">
       <div class="flex-container">
         <div class="label-pair">
-          <label for="recordName">Record Name <span class="red-asterisk">*</span></label>
+          <label for="recordName">
+            Record Name
+            <span class="red-asterisk">*</span>
+          </label>
           <input name="recordName" id="recordName" type="text" formControlName="recordName" class="form-control" />
         </div>
         <div class="label-pair">
-          <label for="recordAgency">Agency <span class="red-asterisk">*</span></label>
+          <label for="recordAgency">
+            Agency
+            <span class="red-asterisk">*</span>
+          </label>
           <select name="recordAgency" id="recordAgency" formControlName="recordAgency" class="form-control">
             <option *ngFor="let agency of recordAgencies" [ngValue]="agency">
               {{ this.displayName(agency) }}
@@ -19,11 +25,14 @@
           <lib-date-picker
             [control]="myForm.controls.dateIssued"
             [isValidate]="true"
-            [minDate]="datepickerMinDate">
-          </lib-date-picker>
+            [minDate]="datepickerMinDate"
+          ></lib-date-picker>
         </div>
         <div class="label-pair">
-          <label for="recordType">Type <span class="red-asterisk">*</span></label>
+          <label for="recordType">
+            Type
+            <span class="red-asterisk">*</span>
+          </label>
           <select name="recordType" id="recordType" formControlName="recordType" class="form-control">
             <option *ngFor="let recordType of recordTypeNamesBCMI" [ngValue]="recordType">
               {{ recordType }}
@@ -31,7 +40,10 @@
           </select>
         </div>
         <div class="label-pair" *ngIf="myForm.get('recordType').value === 'Permit'">
-          <label for="typeCode">Permit Type <span class="red-asterisk">*</span></label>
+          <label for="typeCode">
+            Permit Type
+            <span class="red-asterisk">*</span>
+          </label>
           <select name="typeCode" id="typeCode" formControlName="typeCode" class="form-control">
             <option *ngFor="let typeCode of permitTypes" [ngValue]="typeCode">
               {{ typeCode === 'OGP' ? 'Original Permit' : 'Permit Amendment' }}
@@ -39,10 +51,13 @@
           </select>
         </div>
       </div>
-      <app-document-link-staging *ngIf="!resetDocStaging" [params]="{ maxFiles: 1 , hideWhenMaxFilesReached: true }"
-        (linksChanged)="links = $event" (documentsChanged)="documents = $event">
-      </app-document-link-staging>
-      <div *ngIf="collectionId else recordSave" class="d-flex justify-content-end mb-1">
+      <app-document-link-staging
+        *ngIf="!resetDocStaging"
+        [params]="{ maxFiles: 1, hideWhenMaxFilesReached: true }"
+        (linksChanged)="links = $event"
+        (documentsChanged)="documents = $event"
+      ></app-document-link-staging>
+      <div *ngIf="collectionId; else recordSave" class="d-flex justify-content-end mb-1">
         <button class="btn btn-primary" type="submit" (click)="submit()" title="Save record">
           Add to Collection
         </button>

@@ -1,9 +1,18 @@
-
 <div class="label-pair">
-  <button *ngIf="sourceSystemRef==='nrpti' && hasOffence" type="button" class="btn btn-outline-primary" (click)="addLegislation()">
+  <button
+    *ngIf="sourceSystemRef === 'nrpti' && hasOffence"
+    type="button"
+    class="btn btn-outline-primary"
+    (click)="addLegislation()"
+  >
     Add New Contravention
   </button>
-  <button *ngIf="sourceSystemRef==='nrpti' && !hasOffence" type="button" class="btn btn-outline-primary" (click)="addLegislation()">
+  <button
+    *ngIf="sourceSystemRef === 'nrpti' && !hasOffence"
+    type="button"
+    class="btn btn-outline-primary"
+    (click)="addLegislation()"
+  >
     Add New Legislation
   </button>
 </div>
@@ -14,11 +23,23 @@
     [hasOffence]="hasOffence"
     [recordType]="recordType"
   ></app-legislation-add-edit>
-  <button *ngIf="sourceSystemRef==='nrpti' && idx !== 0 && hasOffence" class="btn btn-outline-primary delete-btn" type="button" title="Delete this contravention" (click)="removeLegislation(idx)">
+  <button
+    *ngIf="sourceSystemRef === 'nrpti' && idx !== 0 && hasOffence"
+    class="btn btn-outline-primary delete-btn"
+    type="button"
+    title="Delete this contravention"
+    (click)="removeLegislation(idx)"
+  >
     <i class="material-icons"></i>
     Delete Above Contravention
   </button>
-  <button *ngIf="sourceSystemRef==='nrpti' && idx !== 0 && !hasOffence" class="btn btn-outline-primary delete-btn" type="button" title="Delete this contravention" (click)="removeLegislation(idx)">
+  <button
+    *ngIf="sourceSystemRef === 'nrpti' && idx !== 0 && !hasOffence"
+    class="btn btn-outline-primary delete-btn"
+    type="button"
+    title="Delete this contravention"
+    (click)="removeLegislation(idx)"
+  >
     <i class="material-icons"></i>
     Delete Above Legislation
   </button>

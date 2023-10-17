@@ -4,9 +4,7 @@ import { LoggerService } from './logger.service';
 describe('LoggerService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        LoggerService
-      ],
+      providers: [LoggerService],
       declarations: [],
       imports: []
     });

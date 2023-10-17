@@ -35,8 +35,12 @@ export class Certificate extends RecordModel {
     this.issuingAgency = (obj && obj.issuingAgency) || null;
     this.author = (obj && obj.author) || null;
     this.description = (obj && obj.description) || null;
-    this.legislation = (obj && obj.legislation && obj.legislation.length &&
-      obj.legislation.map(legislation => new Legislation(legislation))) || null;
+    this.legislation =
+      (obj &&
+        obj.legislation &&
+        obj.legislation.length &&
+        obj.legislation.map(legislation => new Legislation(legislation))) ||
+      null;
     this.documents = (obj && obj.documents) || null;
   }
 }

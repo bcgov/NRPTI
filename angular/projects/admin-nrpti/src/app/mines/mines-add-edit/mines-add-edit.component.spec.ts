@@ -11,7 +11,6 @@ import { ActivatedRouteStub, TestBedHelper } from '../../../../../common/src/app
 import { MinesAddEditComponent } from './mines-add-edit.component';
 import { EditorModule } from '@tinymce/tinymce-angular';
 
-
 describe('MinesAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<MinesAddEditComponent>(MinesAddEditComponent);
 
@@ -27,7 +26,7 @@ describe('MinesAddEditComponent', () => {
     }
   };
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
@@ -48,7 +47,7 @@ describe('MinesAddEditComponent', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent(false);

@@ -23,11 +23,11 @@ describe('InspectionDetailComponent', () => {
   mockFactoryService.userInNrcedRole.and.returnValue(true);
 
   const mockStoreService = {
-    getItem: () => { },
+    getItem: () => {},
     stateChange: new EventEmitter()
   };
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, GlobalModule, CommonModule],
       declarations: [
@@ -44,7 +44,7 @@ describe('InspectionDetailComponent', () => {
         { provide: FactoryService, useValue: mockFactoryService }
       ]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

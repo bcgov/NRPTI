@@ -13,7 +13,6 @@ import { CommonModule as NrptiCommonModule } from '../../../../common/src/app/co
 import { CommunicationsComponent } from './communications.component';
 import { LngMapInfoResolver } from './lng-map-info/lng-map-info-resolver';
 
-
 @NgModule({
   imports: [
     BrowserModule,
@@ -24,18 +23,11 @@ import { LngMapInfoResolver } from './lng-map-info/lng-map-info-resolver';
     GlobalModule,
     NrptiCommonModule,
     RouterModule,
-    NgbModule,
+    NgbModule
   ],
-  declarations: [
-    CommunicationsComponent,
-    LngMapInfoComponent
-  ],
-  providers: [
-    LngMapInfoResolver
-  ],
-  entryComponents: [
-    CommunicationsComponent
-  ],
+  declarations: [CommunicationsComponent, LngMapInfoComponent],
+  providers: [LngMapInfoResolver],
+  entryComponents: [CommunicationsComponent],
   exports: []
 })
 export class CommunicationsModule {}

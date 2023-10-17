@@ -16,7 +16,7 @@ describe('ConstructionPlanLNGDetailComponent', () => {
   const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole']);
   mockFactoryService.userInLngRole.and.returnValue(true);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, GlobalModule],
       declarations: [ConstructionPlanLNGDetailComponent],
@@ -27,7 +27,7 @@ describe('ConstructionPlanLNGDetailComponent', () => {
         { provide: FactoryService, useValue: mockFactoryService }
       ]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

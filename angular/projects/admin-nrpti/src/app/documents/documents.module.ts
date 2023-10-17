@@ -7,15 +7,8 @@ import { DocumentAuthenticatedReadOnlyComponent } from '../documents/document-au
 import { S3SignedUrlAnchorComponent } from '../documents/s3-signed-url-anchor/s3-signed-url-anchor.component';
 
 @NgModule({
-  imports: [
-    FormsModule,
-    CommonModule,
-    ReactiveFormsModule,
-  ],
-  declarations: [
-    DocumentAuthenticatedReadOnlyComponent,
-    S3SignedUrlAnchorComponent,
-  ],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule],
+  declarations: [DocumentAuthenticatedReadOnlyComponent, S3SignedUrlAnchorComponent],
   providers: [],
   exports: [DocumentAuthenticatedReadOnlyComponent]
 })

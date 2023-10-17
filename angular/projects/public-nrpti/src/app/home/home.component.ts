@@ -12,8 +12,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ngOnInit() {}
 
   ngAfterViewInit() {
-    this.route.params
-    .subscribe((params) => {
+    this.route.params.subscribe(params => {
       // scroll to the div specified in the 'div' param
       if (params && params.div) {
         this.scrollTo(params.div);

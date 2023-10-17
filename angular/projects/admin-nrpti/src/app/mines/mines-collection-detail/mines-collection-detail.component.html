@@ -51,8 +51,6 @@
   </section>
 
   <section class="my-3 py-3">
-    <lib-table-template
-      *ngIf="tableData.totalListItems > 0"
-      [data]="tableData"></lib-table-template>
+    <lib-table-template *ngIf="tableData.totalListItems > 0" [data]="tableData"></lib-table-template>
   </section>
 </main>

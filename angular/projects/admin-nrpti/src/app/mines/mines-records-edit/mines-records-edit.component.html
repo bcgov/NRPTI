@@ -23,11 +23,7 @@
         <div class="col-6 col-lg-4 col-xl-3">
           <div class="d-flex justify-content-end mb-1">
             <button type="button" class="btn btn-link" (click)="cancel()" title="Cancel">Cancel</button>
-            <button
-              class="btn btn-primary"
-              type="submit"
-              (click)="submit()"
-              title="Update record">
+            <button class="btn btn-primary" type="submit" (click)="submit()" title="Update record">
               <em class="material-icons mr-1">
                 save
               </em>
@@ -48,12 +44,7 @@
       <div class="flex-container">
         <div class="label-pair">
           <label for="recordName">Record Name</label>
-          <input
-            name="recordName"
-            id="recordName"
-            type="text"
-            formControlName="recordName"
-            class="form-control" />
+          <input name="recordName" id="recordName" type="text" formControlName="recordName" class="form-control" />
         </div>
         <div class="label-pair" *ngIf="myForm && myForm.controls.recordDate">
           <label for="recordDate">Date Issued</label>
@@ -62,8 +53,8 @@
             [isValidate]="true"
             [isDisabled]="disableEdit"
             [minDate]="datepickerMinDate"
-            [maxDate]="datepickerMaxDate">
-          </lib-date-picker>
+            [maxDate]="datepickerMaxDate"
+          ></lib-date-picker>
         </div>
         <div class="label-pair">
           <label for="recordType">Record Type</label>
@@ -97,12 +88,14 @@
       <app-document-edit
         [documents]="record ? record.documents : []"
         [disableDelete]="disableEdit"
-        (documentsToDelete)="documentsToDelete = $event"></app-document-edit>
+        (documentsToDelete)="documentsToDelete = $event"
+      ></app-document-edit>
       <app-document-link-staging
         *ngIf="!record || (record && record.documents && record.documents.length === 0)"
-        [maxFiles]=1
+        [maxFiles]="1"
         (linksChanged)="links = $event"
-        (documentsChanged)="documents = $event"></app-document-link-staging>
+        (documentsChanged)="documents = $event"
+      ></app-document-link-staging>
     </section>
   </form>
 

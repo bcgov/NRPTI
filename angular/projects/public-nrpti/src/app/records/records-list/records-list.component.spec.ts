@@ -10,12 +10,7 @@ import { CommonModule } from '../../../../../common/src/app/common.module';
 import { SearchFiltersComponent } from './search-filters/search-filters.component';
 import { ExportCsvComponent } from './export-csv/export-csv.component';
 import { ShareRecordButtonComponent } from '../share-record-button/share-record-button.component';
-import {
-  GlobalModule,
-  TableTemplateUtils,
-  Utils,
-  LoadingScreenService
-} from 'nrpti-angular-components';
+import { GlobalModule, TableTemplateUtils, Utils, LoadingScreenService } from 'nrpti-angular-components';
 
 describe('RecordsListComponent', () => {
   const testBedHelper = new TestBedHelper<RecordsListComponent>(RecordsListComponent);
@@ -26,10 +21,10 @@ describe('RecordsListComponent', () => {
   const mockActivatedRoute = new ActivatedRouteStub();
 
   const mockLoadingScreenService = {
-    setLoadingState: () => { }
+    setLoadingState: () => {}
   };
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
@@ -50,7 +45,7 @@ describe('RecordsListComponent', () => {
         Utils
       ]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

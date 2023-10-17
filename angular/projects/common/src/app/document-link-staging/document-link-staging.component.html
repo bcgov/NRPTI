@@ -15,7 +15,13 @@
       <div class="card-body">
         <div class="row">
           <div class="col-6">
-            <label>Upload Document <span class="helper-text">(The name of the document is what will show publicly, please ensure your document is named appropriately prior to uploading.)</span></label>
+            <label>
+              Upload Document
+              <span class="helper-text">
+                (The name of the document is what will show publicly, please ensure your document is named appropriately
+                prior to uploading.)
+              </span>
+            </label>
             <app-file-upload
               [maxFiles]="params.maxFiles ? params.maxFiles : 5"
               [maxSize]="params.maxSize ? params.maxSize : 400"
@@ -43,7 +49,12 @@
             </ul>
           </div>
           <div class="col-6">
-            <label>Add Link <span class="helper-text">(The file name will show up publicly, please ensure it is named appropriately.)</span></label>
+            <label>
+              Add Link
+              <span class="helper-text">
+                (The file name will show up publicly, please ensure it is named appropriately.)
+              </span>
+            </label>
             <div class="flex-container addLink" *ngIf="!maxFilesReached">
               <div class="label-pair mr-3">
                 <input type="text" placeholder="Enter file name" [(ngModel)]="linkFileName" />

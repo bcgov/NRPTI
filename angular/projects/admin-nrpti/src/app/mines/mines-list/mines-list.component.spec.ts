@@ -22,7 +22,7 @@ describe('MinesListComponent', () => {
     setLoadingState: () => {}
   };
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, CommonModule, GlobalModule, NgxPaginationModule, FormsModule],
       declarations: [MinesListComponent],
@@ -35,7 +35,7 @@ describe('MinesListComponent', () => {
         Utils
       ]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

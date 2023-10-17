@@ -75,7 +75,7 @@ export class KeycloakService {
         // Initialize.
         this.keycloakAuth
           .init({
-            pkceMethod: 'S256',
+            pkceMethod: 'S256'
           })
           .success(auth => {
             // console.log('KC Refresh Success?:', this.keycloakAuth.authServerUrl);
@@ -162,8 +162,7 @@ export class KeycloakService {
       roles.includes(Constants.ApplicationRoles.ADMIN_NRCED) ||
       roles.includes(Constants.ApplicationRoles.ADMIN_BCMI);
 
-    this.menus[Constants.Menus.AGENCIES] =
-      roles.includes(Constants.ApplicationRoles.ADMIN);
+    this.menus[Constants.Menus.AGENCIES] = roles.includes(Constants.ApplicationRoles.ADMIN);
   }
 
   buildAddRecordDropdownCache(roles) {

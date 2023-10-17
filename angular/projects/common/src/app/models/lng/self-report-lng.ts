@@ -33,8 +33,12 @@ export class SelfReportLNG extends RecordModel {
     this.dateIssued = (obj && obj.dateIssued) || null;
     this.issuingAgency = (obj && obj.issuingAgency) || '';
     this.author = (obj && obj.author) || '';
-    this.legislation = (obj && obj.legislation && obj.legislation.length &&
-      obj.legislation.map(legislation => new Legislation(legislation))) || null;
+    this.legislation =
+      (obj &&
+        obj.legislation &&
+        obj.legislation.length &&
+        obj.legislation.map(legislation => new Legislation(legislation))) ||
+      null;
     this.documents = (obj && obj.documents) || [];
 
     this.description = (obj && obj.description) || null;

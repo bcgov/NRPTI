@@ -9,8 +9,9 @@ import { FactoryService } from '../../../services/factory.service';
 import { EventEmitter } from '@angular/core';
 
 describe('CorrespondenceBCMIDetailComponent', () => {
-  const testBedHelper = new TestBedHelper<DamSafetyInspectionBCMIDetailComponent>
-    (DamSafetyInspectionBCMIDetailComponent);
+  const testBedHelper = new TestBedHelper<DamSafetyInspectionBCMIDetailComponent>(
+    DamSafetyInspectionBCMIDetailComponent
+  );
 
   // component constructor mocks
   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
@@ -19,11 +20,11 @@ describe('CorrespondenceBCMIDetailComponent', () => {
   mockFactoryService.userInBcmiRole.and.returnValue(true);
 
   const mockStoreService = {
-    getItem: () => { },
+    getItem: () => {},
     stateChange: new EventEmitter()
   };
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, GlobalModule],
       declarations: [DamSafetyInspectionBCMIDetailComponent],
@@ -35,7 +36,7 @@ describe('CorrespondenceBCMIDetailComponent', () => {
         { provide: FactoryService, useValue: mockFactoryService }
       ]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

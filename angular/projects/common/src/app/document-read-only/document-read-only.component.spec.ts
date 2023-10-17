@@ -7,12 +7,12 @@ describe('DocumentEditComponent', () => {
   let component: DocumentReadOnlyComponent;
   let fixture: ComponentFixture<DocumentReadOnlyComponent>;
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [DocumentReadOnlyComponent],
       imports: [FormsModule, NgbModule]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(DocumentReadOnlyComponent);

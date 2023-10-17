@@ -7,12 +7,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 describe('EntityDetailComponent', () => {
   const testBedHelper = new TestBedHelper<EntityDetailComponent>(EntityDetailComponent);
 
-  beforeEach((() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatSlideToggleModule, NgbModule.forRoot()],
       declarations: [EntityDetailComponent]
     }).compileComponents();
-  }));
+  });
 
   it('should create', () => {
     const { component } = testBedHelper.createComponent();

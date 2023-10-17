@@ -4,23 +4,23 @@
  * @interface
  */
 export interface IRecordModel {
-  _id:               string;
-  _schemaName:       string;
-  _sourceRefId:      string;
-  mineGuid:          string;
-  collectionId:      string;
-  read:              string[];
-  write:             string[];
-  recordName:        string;
-  recordType:        string;
-  projectName:       string;
-  location:          string;
-  centroid:          number[];
-  dateAdded:         Date;
-  dateUpdated:       Date;
-  addedBy:           string;
-  updatedBy:         string;
-  sourceDateAdded:   Date;
+  _id: string;
+  _schemaName: string;
+  _sourceRefId: string;
+  mineGuid: string;
+  collectionId: string;
+  read: string[];
+  write: string[];
+  recordName: string;
+  recordType: string;
+  projectName: string;
+  location: string;
+  centroid: number[];
+  dateAdded: Date;
+  dateUpdated: Date;
+  addedBy: string;
+  updatedBy: string;
+  sourceDateAdded: Date;
   sourceDateUpdated: Date;
-  sourceSystemRef:   string;
+  sourceSystemRef: string;
 }

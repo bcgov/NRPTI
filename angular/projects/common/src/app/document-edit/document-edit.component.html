@@ -10,7 +10,13 @@
       </span>
     </span>
     <span class="cell actions">
-      <button *ngIf="!disableDelete" class="btn btn-icon" type="button" title="Delete this document" (click)="toggleDeleteDoc(document)">
+      <button
+        *ngIf="!disableDelete"
+        class="btn btn-icon"
+        type="button"
+        title="Delete this document"
+        (click)="toggleDeleteDoc(document)"
+      >
         <i *ngIf="!document.toDelete" class="material-icons">delete</i>
         <div *ngIf="document.toDelete">Undo</div>
       </button>

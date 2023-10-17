@@ -46,7 +46,7 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
@@ -100,23 +100,24 @@ export class AgreementAddEditComponent implements OnInit, OnDestroy {
       // Master
       recordName: new FormControl({
         value: (this.currentRecord && this.currentRecord.recordName) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti') &&
-          !this.factoryService.userInLngRole()
+        disabled:
+          this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti' && !this.factoryService.userInLngRole()
       }),
       dateIssued: new FormControl({
-        value: (this.currentRecord &&
-          this.currentRecord.dateIssued &&
-          this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
+        value:
+          (this.currentRecord &&
+            this.currentRecord.dateIssued &&
+            this.utils.convertJSDateToNGBDate(new Date(this.currentRecord.dateIssued))) ||
           '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       nationName: new FormControl({
         value: (this.currentRecord && this.currentRecord.nationName) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
       projectName: new FormControl({
         value: (this.currentRecord && this.currentRecord.projectName) || '',
-        disabled: (this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti')
+        disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
       }),
 
       // LNG

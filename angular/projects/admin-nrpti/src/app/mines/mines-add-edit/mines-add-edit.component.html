@@ -106,7 +106,10 @@
       </div>
       <div class="flex-container">
         <div class="label-pair lrg">
-          <label class="sm" for="description">Description <span class="summary-label">(Text will display in the blue banner on BCMI)</span></label>
+          <label class="sm" for="description">
+            Description
+            <span class="summary-label">(Text will display in the blue banner on BCMI)</span>
+          </label>
           <textarea
             name="description"
             id="description"
@@ -119,24 +122,34 @@
       </div>
       <div class="flex-container">
         <div class="label-pair lrg">
-          <label class="sm" for="summary">Summary <span class="summary-label">(Text will display on the mine summary tab on BCMI)</span></label>
-          <editor
-          [init]="tinyMceSettings"
-          name="summary"
-          id="summary"
-          formControlName="summary"
-        ></editor>
+          <label class="sm" for="summary">
+            Summary
+            <span class="summary-label">(Text will display on the mine summary tab on BCMI)</span>
+          </label>
+          <editor [init]="tinyMceSettings" name="summary" id="summary" formControlName="summary"></editor>
         </div>
       </div>
       <div class="flex-container mb-2">
         <label for="showPermit" class="med mr-2">Show EMLI Permit Number:</label>
         <div class="radio-group">
           <div class="radio mt-0">
-            <input type="radio" id="showPermitTrue" [value]="true" formControlName="showPermitNumber" name="showPermitNumber" />
+            <input
+              type="radio"
+              id="showPermitTrue"
+              [value]="true"
+              formControlName="showPermitNumber"
+              name="showPermitNumber"
+            />
             <label for="showPermitTrue">Yes</label>
           </div>
           <div class="radio mt-0">
-            <input type="radio" id="showPermitFalse" [value]="false" formControlName="showPermitNumber" name="showPermitNumber" />
+            <input
+              type="radio"
+              id="showPermitFalse"
+              [value]="false"
+              formControlName="showPermitNumber"
+              name="showPermitNumber"
+            />
             <label for="showPermitFalse">No</label>
           </div>
         </div>

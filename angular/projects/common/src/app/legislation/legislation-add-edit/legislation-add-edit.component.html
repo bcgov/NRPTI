@@ -63,10 +63,7 @@
       <div *ngIf="hasOffence" class="label-pair">
         <label for="offence">Offence</label>
         <input readonly name="offence" id="offence" formControlName="offence" class="form-control" />
-        <span
-          *ngIf="this.formGroup.controls.act.value && !this.formGroup.controls.offence.value"
-          class="grey-subtext"
-        >
+        <span *ngIf="this.formGroup.controls.act.value && !this.formGroup.controls.offence.value" class="grey-subtext">
           No description available for the selected combination of act, regulation, section, subsection and paragraph.
           Please double-check that you have filled out those fields correctly; if they are correct, please contact the
           system administrator at

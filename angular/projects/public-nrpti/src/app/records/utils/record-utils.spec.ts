@@ -46,8 +46,8 @@ describe('RecordUtils', () => {
       expect(document.createElement).toHaveBeenCalledTimes(1);
       expect(document.createElement).toHaveBeenCalledWith('a');
 
-      expect(window.URL.createObjectURL).toHaveBeenCalledWith(new Blob([expectedOutput], { type: 'text/plain' }))
-      expect(downloadSpy.href).toBeDefined()
+      expect(window.URL.createObjectURL).toHaveBeenCalledWith(new Blob([expectedOutput], { type: 'text/plain' }));
+      expect(downloadSpy.href).toBeDefined();
       expect(downloadSpy.download).toContain('nrced-export-this-is-the-time.csv');
     });
   });

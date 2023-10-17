@@ -54,7 +54,9 @@ export class WarningNRCEDDetailComponent extends RecordComponent implements OnIn
     const requiredRoles = Constants.FlavourEditRequiredRoles.WARNING.NRCED;
 
     for (const role of requiredRoles) {
-      if (this.factoryService.userInRole(role) && this.data.write && this.data.write.includes(role)) { return true; }
+      if (this.factoryService.userInRole(role) && this.data.write && this.data.write.includes(role)) {
+        return true;
+      }
     }
 
     return false;

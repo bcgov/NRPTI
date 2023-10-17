@@ -22,16 +22,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     private _searchService: SearchService,
     private route: ActivatedRoute,
     private _changeDetectionRef: ChangeDetectorRef,
-    private _apiService: ApiService) {}
+    private _apiService: ApiService
+  ) {}
 
   ngOnInit() {
-
     this.activities = [];
 
     // Subscribe to project changes
-    this.route.parent.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(
-      () => {
-        this._searchService
+    this.route.parent.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => {
+      this._searchService
         .getSearchResults(
           this._apiService.apiPath,
           '',
@@ -50,7 +49,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             this._changeDetectionRef.detectChanges();
           }
         });
-      });
+    });
   }
 
   ngOnDestroy(): void {
