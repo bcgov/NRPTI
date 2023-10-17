@@ -4,7 +4,14 @@ import { LoadingScreenService } from 'nrpti-angular-components';
 import { KeycloakService } from '../services/keycloak.service';
 import { Chart } from 'chart.js';
 import { MetricService } from '../services/metric.service';
+import { AgencyDataService } from '../../../../global/src/lib/utils/agency-data-service';
+import { FactoryService } from '../services/factory.service';
 
+/**
+ * Represents the home component of the application.
+ * This component displays charts for various metrics.
+ * @module HomeComponent
+ */
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -22,20 +29,23 @@ export class HomeComponent implements OnInit {
     public keycloakService: KeycloakService,
     private metricService: MetricService,
     private router: Router,
-    private loadingScreenService: LoadingScreenService
+    private loadingScreenService: LoadingScreenService,
+    private factoryService: FactoryService
   ) { }
 
+  /**
+   * Angular's lifecycle hook that is called after the component has been initialized.
+   * @returns {Promise<void>}
+   */
   async ngOnInit() {
     const issuingAgencyPublished365 = await this.metricService.getMetric('IssuingAgencyPublished365');
-    // tslint:disable-next-line: prefer-const
-    let labels365 = [];
-    // tslint:disable-next-line: prefer-const
-    let data365 = [];
-    // tslint:disable-next-line:prefer-for-of
-    for (let i = 0; i < issuingAgencyPublished365.length; i++) {
-      const keyName = this.getKeyName(issuingAgencyPublished365[i]);
-      labels365.push(issuingAgencyPublished365[i][keyName]);
-      data365.push(issuingAgencyPublished365[i]['count']);
+    const labels365 = [];
+    const data365 = [];
+    const agencyDataService = new AgencyDataService(this.factoryService);
+
+    for(const item of issuingAgencyPublished365){
+      labels365.push(agencyDataService.displayNameFull(item.issuingAgency));
+      data365.push(item.count);
     }
     this.data365Chart = new Chart(this.chart1.nativeElement, {
       type: 'pie',
@@ -118,7 +128,12 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  getKeyName(metricObject) {
+  /**
+   * Retrieves the appropriate key name from the given metric object.
+   * @param {any} metricObject - The metric object from which to retrieve the key name.
+   * @returns {string} The key name obtained from the metric object.
+   */
+  getKeyName(metricObject: any): string {
     // Determine the non-count key by popping the first one off, checking
     // if it's `count` and if it is, pop the next one as there are only
     // ever 2 attributes in the metric report.  This is how metabase creates
@@ -132,7 +147,12 @@ export class HomeComponent implements OnInit {
     return keyName;
   }
 
-  activateLoading(path) {
+  /**
+   * Activates the loading screen service and navigates to the specified path.
+   * @param {string} path - The path to navigate to.
+   * @returns {void}
+   */
+  activateLoading(path: any): void {
     this.loadingScreenService.setLoadingState(true, 'body');
     this.router.navigate(path);
   }
