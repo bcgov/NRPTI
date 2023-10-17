@@ -43,10 +43,11 @@ export class HomeComponent implements OnInit {
     const data365 = [];
     const agencyDataService = new AgencyDataService(this.factoryService);
 
-    for(const item of issuingAgencyPublished365){
+    for( const item of issuingAgencyPublished365){
       labels365.push(agencyDataService.displayNameFull(item.issuingAgency));
       data365.push(item.count);
     }
+
     this.data365Chart = new Chart(this.chart1.nativeElement, {
       type: 'pie',
       data: {
