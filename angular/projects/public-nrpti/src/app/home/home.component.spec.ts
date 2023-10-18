@@ -6,9 +6,7 @@ import { AgencyDataService } from '../../../../global/src/lib/utils/agency-data-
 
 class MockFactoryService {}
 
-class MockAgencyDataService {
-  
-}
+class MockAgencyDataService {}
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
