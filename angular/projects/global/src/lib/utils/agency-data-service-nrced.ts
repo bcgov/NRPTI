@@ -27,7 +27,7 @@ export class AgencyDataService {
     // Access cached agency data from FactoryService
     const agencyService = this.factoryService.applicationAgencyService;
     const agencyList = agencyService ? agencyService.getAgencies() : null;
-    return agencyList[agencyCode] || agencyCode;
+    return agencyList && agencyList[agencyCode] ? agencyList[agencyCode] : agencyCode;
   }
 
   /**
