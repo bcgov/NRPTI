@@ -1,5 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { FactoryService } from '../services/factory.service';
+import { AgencyDataService } from '../../../../global/src/lib/utils/agency-data-service-nrced';
 
 @Component({
   selector: 'app-home',
@@ -7,9 +9,12 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, AfterViewInit {
-  constructor(public route: ActivatedRoute) {}
+  agencyDataService: AgencyDataService;
+  constructor(public route: ActivatedRoute, private factoryService: FactoryService) {}
 
-  ngOnInit() {}
+  async ngOnInit() {
+    this.agencyDataService = new AgencyDataService(this.factoryService);
+  }
 
   ngAfterViewInit() {
     this.route.params.subscribe(params => {
