@@ -26,32 +26,60 @@
 
         <ul>
           <li>
-            <a target="_blank" href="https://www2.gov.bc.ca/gov/content?id=CD405A2E90BA41578FE96B069AF7A7AE">
-              Ministry of Agriculture and Food
+            <a
+              target="_blank"
+              rel="noopener"
+              href="https://www2.gov.bc.ca/gov/content?id=CD405A2E90BA41578FE96B069AF7A7AE"
+            >
+              {{ agencyDataService.displayNameFull('AGENCY_AGRI') }}
             </a>
           </li>
           <li>
-            <a target="_blank" href="https://www2.gov.bc.ca/gov/content?id=8D06A3903A9B40CABAF93E863FDF029E">
-              Ministry of Environment and Climate Change Strategy
+            <a
+              target="_blank"
+              rel="noopener"
+              href="https://www2.gov.bc.ca/gov/content?id=8D06A3903A9B40CABAF93E863FDF029E"
+            >
+              {{ agencyDataService.displayNameFull('AGENCY_ENV') }}
             </a>
           </li>
           <li>
-            <a target="_blank" href="https://www2.gov.bc.ca/gov/content?id=6CFB2526E5FB4231B6959A2BA40777F2">
-              Ministry of Energy, Mines, and Low Carbon Innovation
+            <a
+              target="_blank"
+              rel="noopener"
+              href="https://www2.gov.bc.ca/gov/content?id=6CFB2526E5FB4231B6959A2BA40777F2"
+            >
+              {{ agencyDataService.displayNameFull('AGENCY_EMLI') }}
             </a>
           </li>
           <li>
-            <a target="_blank" href="https://www2.gov.bc.ca/gov/content?id=A90244BA9C1B4BC6A63304C413DB75EA">
-              Ministry of Forests
+            <a
+              target="_blank"
+              rel="noopener"
+              href="https://www2.gov.bc.ca/gov/content?id=A90244BA9C1B4BC6A63304C413DB75EA"
+            >
+              {{ agencyDataService.displayNameFull('AGENCY_FLNRO') }}
             </a>
           </li>
-          <li><a target="_blank" href="https://www.alc.gov.bc.ca/">Agricultural Land Commission</a></li>
           <li>
-            <a target="_blank" href="https://www2.gov.bc.ca/gov/content?id=5F147660F02946B391C4F6BD96520F54">
-              Environmental Assessment Office
+            <a target="_blank" rel="noopener" href="https://www.alc.gov.bc.ca/">
+              {{ agencyDataService.displayNameFull('AGENCY_ALC') }}
             </a>
           </li>
-          <li><a target="_blank" href="https://www.bc-er.ca/">BC Energy Regulator</a></li>
+          <li>
+            <a
+              target="_blank"
+              rel="noopener"
+              href="https://www2.gov.bc.ca/gov/content?id=5F147660F02946B391C4F6BD96520F54"
+            >
+              {{ agencyDataService.displayNameFull('AGENCY_EAO') }}
+            </a>
+          </li>
+          <li>
+            <a target="_blank" rel="noopener" href="https://www.bc-er.ca/">
+              {{ agencyDataService.displayNameFull('AGENCY_OGC') }}
+            </a>
+          </li>
         </ul>
       </div>
 
@@ -90,7 +118,7 @@
         <label>Environmental Compliance on Twitter</label>
         <p>
           Follow
-          <a target="_blank" href="https://twitter.com/@ComplianceBC">@ComplianceBC</a>
+          <a target="_blank" rel="noopener" href="https://twitter.com/@ComplianceBC">@ComplianceBC</a>
           for updates on the enforcement of environmental regulations in the province.
         </p>
 
@@ -98,30 +126,34 @@
 
         <label class="headerText">Environmental Project Information Centre (EPIC)</label>
         <p>
-          Learn more about how the Environmental Assessment Office neutrally administers a process that is predictable,
-          transparent, timely, procedurally fair, and holds all participants accountable.
+          Learn more about how the {{ agencyDataService.displayNameFull('AGENCY_EAO') }} neutrally administers a process
+          that is predictable, transparent, timely, procedurally fair, and holds all participants accountable.
         </p>
 
         <a
           class="btn content-btn-dark page-bottom-btn"
           title="View more information"
           target="_blank"
+          rel="noopener"
           href="https://projects.eao.gov.bc.ca/"
         >
           Go To EPIC
         </a>
         <hr />
 
-        <label class="headerText">B.C. Energy Regulator Compliance and Enforcement</label>
+        <label class="headerText">
+          {{ agencyDataService.displayNameFull('AGENCY_OGC') }} Compliance and Enforcement
+        </label>
         <p>View compliance and enforcement information on energy resource activities across the province.</p>
 
         <a
           class="btn content-btn-dark page-bottom-btn"
           title="View more information"
           target="_blank"
+          rel="noopener"
           href="https://www.bc-er.ca/data-reports/compliance-enforcement/"
         >
-          B.C. Energy Regulator Compliance and Enforcement
+          {{ agencyDataService.displayNameFull('AGENCY_OGC') }} Compliance and Enforcement
         </a>
         <hr />
       </div>
@@ -138,7 +170,9 @@
             agencies.
           </p>
           <strong><p>Click the link below to begin!</p></strong>
-          <a class="btn content-btn-dark page-bottom-btn" title="View more information" href="/records">FIND RECORDS</a>
+          <a class="btn content-btn-dark page-bottom-btn" title="View more information" href="/records" rel="noopener">
+            FIND RECORDS
+          </a>
         </div>
       </div>
 
@@ -150,14 +184,22 @@
           <p>
             <strong>Need to report a poacher, predator or polluter?</strong>
             <br />
-            <a target="_blank" href="https://www2.gov.bc.ca/gov/content?id=20E35E0BDAD94E498BE3314F929A0196">
+            <a
+              target="_blank"
+              href="https://www2.gov.bc.ca/gov/content?id=20E35E0BDAD94E498BE3314F929A0196"
+              rel="noopener"
+            >
               Call the RAPP Line
             </a>
           </p>
           <p>
             <strong>Need to report unauthorized or damaging activities to natural resources or on crown lands?</strong>
             <br />
-            <a target="_blank" href="https://www2.gov.bc.ca/gov/content?id=AC21588174384780BD192B4B81B301D4">
+            <a
+              target="_blank"
+              href="https://www2.gov.bc.ca/gov/content?id=AC21588174384780BD192B4B81B301D4"
+              rel="noopener"
+            >
               Fill out a natural resource violation report
             </a>
           </p>
@@ -166,7 +208,7 @@
             <br />
             Please contact us at:
             <br />
-            <a href="mailto:NRCED@gov.bc.ca">NRCED@gov.bc.ca</a>
+            <a rel="noopener" href="mailto:NRCED@gov.bc.ca">NRCED@gov.bc.ca</a>
           </p>
         </div>
       </div>
