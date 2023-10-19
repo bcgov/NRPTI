@@ -19,7 +19,7 @@ exports.protectedOptions = function (args, res, next) {
 
 exports.protectedGet = async function (args, res, next) {
   let collectionId = null;
-  if (args.swagger.params.collectionId?.value) {
+  if (args.swagger.params.collectionId && args.swagger.params.collectionId.value) {
     collectionId = args.swagger.params.collectionId.value
   } else {
     defaultLog.info(`protectedGet - you must provide an id to get`);
@@ -47,7 +47,7 @@ exports.protectedPut = async function (args, res, next) {
   }
 
   let collectionId = null;
-  if (args.swagger.params.collectionId?.value) {
+  if (args.swagger.params.collectionId && args.swagger.params.collectionId.value) {
     collectionId = args.swagger.params.collectionId.value;
   } else {
     defaultLog.info(`protectedPut - you must provide an id to update`);
@@ -55,7 +55,7 @@ exports.protectedPut = async function (args, res, next) {
     next();
   }
   let incomingObj = {};
-  if (args.swagger.params.collection?.value) {
+  if (args.swagger.params.collection && args.swagger.params.collection.value) {
     incomingObj = args.swagger.params.collection.value;
   } else {
     defaultLog.info(`protectedPut - you must provide an object`);
@@ -112,7 +112,7 @@ const updateCollection = async function(incomingObj, collectionId, displayName) 
     if (recordsToAdd.length > 0) {
       // Need to know the status of the collection in order to make sure the records match.
       const collection = await collectionDB.findOne({ _id: new ObjectId(collectionId) });
-      if (!collection?.read) {
+      if (!collection || !collection.read) {
         defaultLog.info(`protectedPut - error locating collection`);
         throw new Error(`protectedPut - error locating collection`)
       }
@@ -198,7 +198,7 @@ exports.protectedPost = async function (args, res, next) {
   }
 
   let incomingObj = {};
-  if (args.swagger.params.collection?.value) {
+  if (args.swagger.params.collection && args.swagger.params.collection.value) {
     incomingObj = args.swagger.params.collection.value
   } else {
     defaultLog.info(`protectedPost - you must provide an id to post`);
@@ -227,7 +227,7 @@ exports.protectedPost = async function (args, res, next) {
 
 exports.protectedDelete = async function (args, res, next) {
   let collectionId = null;
-  if (args.swagger.params.collectionId?.value) {
+  if (args.swagger.params.collectionId && args.swagger.params.collectionId.value) {
     collectionId = args.swagger.params.collectionId.value
   } else {
     defaultLog.info(`protectedDelete - you must provide an id to delete`);
@@ -262,7 +262,7 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
 
   try {
     for (const collection of collections) {
-      if (collection.records?.length) {
+      if (collection.records && collection.records.length) {
         defaultLog.debug('collection : ', JSON.stringify(collection._id));
         const recordAggregate = [
           {
@@ -292,7 +292,7 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
         // any error in a step should cause the rest of the steps to be skipped and log that error
         for (const record of records) {
           defaultLog.debug('publishing record docs, recordId: ', JSON.stringify(record._id) );
-          if (record.documents?.length) {
+          if (record.documents && record.documents.length) {
 
             for (const document of record.documents) {
               if (document.key) {
@@ -370,7 +370,7 @@ exports.publishCollections = async function (mineId, auth_payload) {
   // Publish every collection, their records, and their documents.
   try {
     for (const collection of collections) {
-      if (collection.records?.length) {
+      if (collection.records && collection.records.length) {
         defaultLog.debug('collection : ', JSON.stringify(collection._id));
         const recordAggregate = [
           {
@@ -399,7 +399,7 @@ exports.publishCollections = async function (mineId, auth_payload) {
         // Publish all documents of all records.
         for (const record of records) {
         // Update the S3 object properties for each document.
-          if (record.documents?.length) {
+          if (record.documents && record.documents.length) {
             defaultLog.debug('publishing record s3 docs, recordId: ', JSON.stringify(record._id))
             for (const document of record.documents) {
               if (document.key) {
@@ -531,7 +531,7 @@ const createCollection = async function (collectionObj, user) {
   collectionObj.date && (collection.date = collectionObj.date);
   collectionObj.type && (collection.type = collectionObj.type);
   collectionObj.agency && (collection.agency = collectionObj.agency);
-  collectionObj.records?.length && (collection.records = collectionObj.records);
+  collectionObj.records && collectionObj.records.length && (collection.records = collectionObj.records);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (collectionObj.addRole && collectionObj.addRole === 'public') {
