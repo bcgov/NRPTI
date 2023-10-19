@@ -665,13 +665,13 @@ exports.publicGet = async function (args, res, next) {
   args.swagger.params.subset.value = ['redactedRecord'];
 
   // if we are searching for data that does not require redaction, we should search on the main database subset.
-  if (args.swagger.params.dataset?.value) {
+  if (args.swagger.params.dataset && args.swagger.params.dataset.value) {
     if (SKIP_REDACTION_SCHEMA_NAMES.includes(String(args.swagger.params.dataset.value))) {
       args.swagger.params.subset.value = ['nrpti'];
       defaultLog.info(`Searching on non-redacted database despite public search query: '${args.swagger.params.dataset.value}' is not a redacted dataset. `);
     }
   }
-  if (args.swagger.params._schemaName?.value) {
+  if (args.swagger.params._schemaName && args.swagger.params._schemaName.value) {
     if (SKIP_REDACTION_SCHEMA_NAMES.includes(String(args.swagger.params._schemaName.value))) {
       args.swagger.params.subset.value = ['nrpti'];
       defaultLog.info(`Searching on non-redacted database despite public search query: '${args.swagger.params._schemaName.value}' is not a redacted schema. `);
@@ -774,7 +774,7 @@ const executeQuery = async function (args, res, next) {
   defaultLog.info('populate:', populate);
   defaultLog.info('subset:', subset);
 
-  let roles = args.swagger.params.auth_payload?.client_roles || ['public'];
+  let roles = args.swagger.params.auth_payload ? args.swagger.params.auth_payload.client_roles : ['public'];
 
   defaultLog.info('Searching Collection:', dataset);
 
