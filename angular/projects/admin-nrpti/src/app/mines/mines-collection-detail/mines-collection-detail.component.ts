@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MinesCollectionRecordTableRowComponent } from './mines-collection-detail-record-row/mines-collection-detail-record-row.component';
 import { IColumnObject, LoadingScreenService, TableObject } from 'nrpti-angular-components';
 import moment from 'moment';
+import { FactoryService } from '../../services/factory.service';
+import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
 
 @Component({
   selector: 'app-mines-collection-detail',
@@ -12,6 +14,7 @@ import moment from 'moment';
   styleUrls: ['./mines-collection-detail.component.scss']
 })
 export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
+  agencyDataService: AgencyDataService;
   private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   public collection = null;
@@ -61,12 +64,13 @@ export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     public router: Router,
     private loadingScreenService: LoadingScreenService,
-    public changeDetectionRef: ChangeDetectorRef
+    public changeDetectionRef: ChangeDetectorRef,
+    private factoryService: FactoryService
   ) {}
 
   ngOnInit() {
+    this.agencyDataService = new AgencyDataService(this.factoryService);
     this.loadingScreenService.setLoadingState(true, 'main');
-
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
       if (!res || !res.collection) {
         this.router.navigate(['mines']);
