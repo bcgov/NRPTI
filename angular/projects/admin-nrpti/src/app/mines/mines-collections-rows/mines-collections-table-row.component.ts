@@ -7,6 +7,7 @@ import { FactoryService } from '../../services/factory.service';
 import { StateIDs, StateStatus } from '../../../../../common/src/app/utils/record-constants';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
+import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
 
 @Component({
   selector: 'tr[app-mines-collections-table-row]',
@@ -32,6 +33,11 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
     this.setOrRemoveCollectionAddEditState();
 
     this.changeDetectionRef.detectChanges();
+  }
+
+  displayName(agency) {
+    const agencyDataService = new AgencyDataService(this.factoryService);
+    return agencyDataService.displayNameFull(agency);
   }
 
   /**

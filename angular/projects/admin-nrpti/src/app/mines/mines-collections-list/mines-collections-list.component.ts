@@ -60,7 +60,7 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
     {
       name: 'Agency',
       value: 'agency',
-      width: 'col-2'
+      width: 'col-1'
     },
     {
       name: 'Type',
