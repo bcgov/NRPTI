@@ -12,6 +12,17 @@ describe('BaseRecordUtils', () => {
     });
   });
 
+  describe('findExistingRecord', () => {
+    it('should return null if _sourceRefStringId is not provided', async () => {
+      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Inspection);
+      const nrptiRecord = { _sourceRefStringId: null };
+
+      const result = await baseRecordUtils.findExistingRecord(nrptiRecord);
+
+      expect(result).toBeNull();
+    });
+  });
+
   describe('transformRecord', () => {
     it('throws error if no csvRow provided', () => {
       const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.Inspection);
