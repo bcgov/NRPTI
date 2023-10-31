@@ -174,7 +174,7 @@
                 <em *ngIf="formGroup.get('record').value.isLink" class="material-icons ml-2">link</em>
               </td>
               <td data-label="Agency" class="col-33">
-                {{ formGroup.get('record').value.issuingAgency || formGroup.get('record').value.agency || '-' }}
+                {{ this.displayName(formGroup.get('record').value.issuingAgency)|| this.displayName(formGroup.get('record').value.agency) || '-' }}
               </td>
               <td data-label="Source System" class="col-2">
                 {{ formGroup.get('record').value.sourceSystemRef || '-' }}
