@@ -32,6 +32,74 @@ describe('NroCsvDataSource', () => {
     });
   });
 
+  describe('run', () => {
+    it('updates the status and runs batch processing', async () => {
+      const taskAuditRecord = { updateTaskRecord: jest.fn(() => {}) };
+      const dataSource = new NroCsvDataSource(taskAuditRecord, null, null, null);
+      dataSource.csvRows = [{}, {}, {}];
+
+      dataSource.batchProcessRecords = jest.fn();
+
+      const status = await dataSource.run();
+
+      expect(status).toEqual({
+        itemTotal: 3,
+        itemsProcessed: 0,
+        individualRecordStatus: []
+      });
+
+      expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({
+        status: 'Running',
+        itemTotal: 3
+      });
+
+      expect(dataSource.batchProcessRecords).toHaveBeenCalled();
+    });
+  });
+
+  describe('batchProcessRecords', () => {
+    it('throws an error if recordTypeConfig is not found', async () => {
+      const dataSource = new NroCsvDataSource();
+      dataSource.csvRows = [{}];
+
+      try {
+        await dataSource.batchProcessRecords();
+      } catch (error) {
+        expect(error.message).toEqual('batchProcessRecords - failed to find matching recordTypeConfig.');
+      }
+    });
+
+    it('processes records in batches according to the batch size', async () => {
+      const recordTypeConfig = { getUtil: () => ({}) };
+      const dataSource = new NroCsvDataSource();
+      dataSource.csvRows = Array.from({ length: 275 }, (_, i) => ({ id: i }));
+
+      dataSource.getRecordTypeConfig = jest.fn(() => recordTypeConfig);
+      dataSource.processRecord = jest.fn();
+
+      await dataSource.batchProcessRecords();
+
+      expect(dataSource.processRecord).toHaveBeenCalledWith({ id: 0 }, recordTypeConfig);
+      expect(dataSource.processRecord).toHaveBeenCalledWith({ id: 99 }, recordTypeConfig);
+      expect(dataSource.processRecord).toHaveBeenCalledWith({ id: 199 }, recordTypeConfig);
+      expect(dataSource.processRecord).toHaveBeenCalledWith({ id: 274 }, recordTypeConfig);
+    });
+
+    it('handles errors during processing and updates the status', async () => {
+      const recordTypeConfig = { getUtil: () => ({}) };
+      const dataSource = new NroCsvDataSource();
+      dataSource.csvRows = [{ id: 1 }, { id: 2 }, { id: 3 }];
+
+      dataSource.getRecordTypeConfig = jest.fn(() => recordTypeConfig);
+      dataSource.processRecord = jest.fn().mockRejectedValueOnce(new Error('Some error'));
+
+      await dataSource.batchProcessRecords();
+
+      expect(dataSource.status.message).toEqual('batchProcessRecords - unexpected error');
+      expect(dataSource.status.error).toEqual('Some error');
+    });
+  });
+
   describe('processRecord', () => {
     it('sets an error if csvRow is null', async () => {
       const dataSource = new NroCsvDataSource();
@@ -123,6 +191,31 @@ describe('NroCsvDataSource', () => {
       expect(dataSource.status.itemsProcessed).toEqual(1);
 
       expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({ itemsProcessed: 1 });
+    });
+  });
+
+  describe('getRecordTypeConfig', () => {
+    it('returns the correct object when the recordType is "Order"', () => {
+      const dataSource = new NroCsvDataSource();
+      dataSource.recordType = 'Order';
+  
+      const result = dataSource.getRecordTypeConfig();
+  
+      expect(result).toEqual(
+        expect.objectContaining({
+          getUtil: expect.any(Function),
+        })
+      );
+      expect(result.getUtil).toEqual(expect.any(Function));
+    });
+  
+    it('returns null when the recordType is not "Order"', () => {
+      const dataSource = new NroCsvDataSource();
+      dataSource.recordType = 'InvalidRecordType';
+  
+      const result = dataSource.getRecordTypeConfig();
+  
+      expect(result).toBeNull();
     });
   });
 });
