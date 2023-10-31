@@ -161,23 +161,6 @@ export class Picklists {
   ];
   public static readonly penaltyTypePicklist = ['Years', 'Days', 'Dollars', 'Hours', 'Other'];
 
-  public static readonly agencyPicklist = [
-    'Agricultural Land Commission 1',
-    'BC Energy Regulator 1',
-    'BC Parks 1',
-    'BC Wildfire Service 1',
-    'Climate Action Secretariat 1',
-    'Conservation Officer Service 1',
-    'Environmental Assessment Office 1',
-    'LNG Secretariat 1',
-    'Ministry of Agriculture and Food 1',
-    'Ministry of Energy Mines and Low Carbon Innovation 1',
-    'Ministry of Environment and Climate Change Strategy 1',
-    'Ministry of Forests 1',
-    'Ministry of Water, Land and Resource Stewardship 1',
-    'Natural Resource Officers 1'
-  ];
-
   public static getAgencyNames(factoryService: FactoryService) {
     const agencyDataService = new AgencyDataService(factoryService);
     return agencyDataService.getAgencyNames();
