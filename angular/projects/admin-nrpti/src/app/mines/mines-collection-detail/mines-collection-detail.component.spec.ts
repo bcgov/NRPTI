@@ -9,6 +9,12 @@ import { DatePipe } from '@angular/common';
 import { CommonModule } from '../../../../../common/src/app/common.module';
 import { DialogService } from 'ng2-bootstrap-modal';
 import { MatSlideToggleModule } from '@angular/material';
+import { FactoryService } from '../../services/factory.service';
+import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
+
+class MockFactoryService {}
+
+class MockAgencyDataService {}
 
 describe('MinesCollectionDetailComponent', () => {
   const testBedHelper = new TestBedHelper<MinesCollectionDetailComponent>(MinesCollectionDetailComponent);
@@ -25,7 +31,9 @@ describe('MinesCollectionDetailComponent', () => {
         DatePipe,
         DialogService,
         { provide: Router, useValue: mockRouter },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute }
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: FactoryService, useClass: MockFactoryService },
+        { provide: AgencyDataService, useClass: MockAgencyDataService }
       ]
     }).compileComponents();
   });

@@ -25,6 +25,8 @@ import {
 import { Mine } from '../../../../../common/src/app/models/bcmi/mine';
 import { StateIDs, StateStatus, Picklists } from '../../../../../common/src/app/utils/record-constants';
 import { MiscUtils } from '../../utils/constants/misc';
+import { FactoryService } from '../../services/factory.service';
+import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
 
 /**
  * Mine list page component.
@@ -53,12 +55,12 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
     {
       name: 'Collection Name',
       value: 'name',
-      width: 'col-4'
+      width: 'col-2'
     },
     {
       name: 'Agency',
       value: 'agency',
-      width: 'col-1'
+      width: 'col-2'
     },
     {
       name: 'Type',
@@ -98,7 +100,8 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
     private storeService: StoreService,
     private loadingScreenService: LoadingScreenService,
     private tableTemplateUtils: TableTemplateUtils,
-    private _changeDetectionRef: ChangeDetectorRef
+    private _changeDetectionRef: ChangeDetectorRef,
+    private factoryService: FactoryService
   ) {
     // Advance search filter set up.
     const dateFilter = new FilterObject(
@@ -126,9 +129,11 @@ export class MinesCollectionsListComponent implements OnInit, OnDestroy {
       FilterType.MultiSelect,
       'Agency',
       new MultiSelectDefinition(
-        Picklists.collectionAgencyPicklist.map(value => {
-          const displayValue = Utils.convertAcronyms(value);
-          return { value: value, displayValue: displayValue, selected: false, display: true };
+        Picklists.getAgencyNames(this.factoryService).map(value => {
+          const agencyDataService = new AgencyDataService(this.factoryService);
+          const displayValue = agencyDataService.displayNameFull(value);
+          const picklistCodes = Picklists.getAgencyCode(this.factoryService, value);
+          return { value: picklistCodes, displayValue: displayValue, selected: false, display: true };
         }),
         'Begin typing to filter agencies...',
         ''
