@@ -269,11 +269,11 @@ class CoreDataSource {
     const { records: permits } = await integrationUtils.getRecords(url, getAuthHeader(this.client_token));
 
     // First, any mines with 'X' as their second character are considered exploratory. Remove them.
-    const nonExploratoryPermits = permits.filter(permit => permit.permit_no[1].toLowerCase() !== 'x');
+    // const nonExploratoryPermits = permits.filter(permit => permit.permit_no[1].toLowerCase() !== 'x');
 
     // Second, mine must not be historical which is indicated by an authorized year of '9999' on the latest amendment.
     let validPermit;
-    for (const permit of nonExploratoryPermits) {
+    for (const permit of permits) {
       // Confirm that the most recent amendment is not historical, which is always the first index.
       // If 'null' then it is considered valid.
       // Otherwise, if the status is O, it's valid. (date 9999 check removed)
