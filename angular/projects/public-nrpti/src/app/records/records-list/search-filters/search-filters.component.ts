@@ -5,7 +5,6 @@ import { Picklists, Constants } from '../../../../../../common/src/app/utils/rec
 import { IMutliSelectOption } from '../../../../../../common/src/app/autocomplete-multi-select/autocomplete-multi-select.component';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Utils } from 'nrpti-angular-components';
 
 /**
  * List page component.
