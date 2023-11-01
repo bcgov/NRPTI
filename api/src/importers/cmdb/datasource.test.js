@@ -32,6 +32,65 @@ describe('CmdbCsvDataSource', () => {
     });
   });
 
+  describe('run', () => {
+    it('updates the status and runs batch processing', async () => {
+      const taskAuditRecord = { updateTaskRecord: jest.fn(() => {}) };
+      const dataSource = new CmdbCsvDataSource(taskAuditRecord, null, null, null);
+      dataSource.csvRows = [{}, {}, {}];
+
+      dataSource.batchProcessRecords = jest.fn();
+
+      const status = await dataSource.run();
+
+      expect(status).toEqual({
+        itemTotal: 3,
+        itemsProcessed: 0,
+        individualRecordStatus: []
+      });
+
+      expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({
+        status: 'Running',
+        itemTotal: 3
+      });
+
+      expect(dataSource.batchProcessRecords).toHaveBeenCalled();
+    });
+  });
+
+  describe('batchProcessRecords', () => {
+    it('handles batch processing of csv rows', async () => {
+      const taskAuditRecord = { updateTaskRecord: jest.fn(() => {}) };
+      const dataSource = new CmdbCsvDataSource(taskAuditRecord, null, 'Inspection', []);
+  
+      dataSource.csvRows = [
+        { 'inspection id': '1', 'regulation section': 'Section A' },
+        { 'inspection id': '2', 'regulation section': 'Section B' },
+        { 'inspection id': '1', 'regulation section': 'Section C' },
+        { 'inspection id': '3', 'regulation section': 'Section D' },
+      ];
+  
+      const recordTypeUtils = {
+        transformRecord: jest.fn(),
+        findExistingRecord: jest.fn(),
+        createItem: jest.fn(() => [{ status: 'success' }]),
+        updateRecord: jest.fn(() => [{ status: 'success' }]),
+      };
+  
+      const recordTypeConfig = {
+        getUtil: jest.fn(() => recordTypeUtils),
+      };
+  
+      dataSource.getRecordTypeConfig = jest.fn(() => recordTypeConfig);
+  
+      await dataSource.batchProcessRecords();
+  
+      expect(recordTypeUtils.transformRecord).toHaveBeenCalledTimes(4);
+      expect(recordTypeUtils.createItem).toHaveBeenCalledTimes(4);
+      expect(dataSource.status.itemsProcessed).toEqual(4);
+      expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({ itemsProcessed: 4 });
+    });
+  });
+
   describe('processRecord', () => {
     it('sets an error if csvRow is null', async () => {
       const dataSource = new CmdbCsvDataSource();
@@ -80,13 +139,9 @@ describe('CmdbCsvDataSource', () => {
       await dataSource.processRecord(csvRow, recordTypeConfig);
 
       expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow, outcomeDescription);
-
       expect(recordTypeUtils.findExistingRecord).toHaveBeenCalledWith({ transformed: true });
-
       expect(recordTypeUtils.createItem).toHaveBeenCalledWith({ transformed: true });
-
       expect(dataSource.status.itemsProcessed).toEqual(1);
-
       expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({ itemsProcessed: 1 });
     });
 
@@ -117,13 +172,9 @@ describe('CmdbCsvDataSource', () => {
       await dataSource.processRecord(csvRow, recordTypeConfig);
 
       expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow, outcomeDescription);
-
       expect(recordTypeUtils.findExistingRecord).toHaveBeenCalledWith({ transformed: true });
-
       expect(recordTypeUtils.updateRecord).toHaveBeenCalledWith({ transformed: true }, { _id: 123 });
-
       expect(dataSource.status.itemsProcessed).toEqual(1);
-
       expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({ itemsProcessed: 1 });
     });
   });
