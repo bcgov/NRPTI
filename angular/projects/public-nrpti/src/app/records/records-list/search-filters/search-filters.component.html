@@ -62,21 +62,6 @@
           ></app-autocomplete-multi-select>
         </div>
       </div>
-      <!-- temporarily hidden as per https://bcmines.atlassian.net/browse/PTI-513 -->
-      <div [hidden]="true">
-        <div class="label-pair">
-          <label for="agencyFilter">Responsible Agency</label>
-          <span *ngIf="agencyCount" class="grey-subtext ml-2">({{ agencyCount }} selected)</span>
-          <app-autocomplete-multi-select
-            id="agencyFilter"
-            [control]="formGroup.get('agency')"
-            [options]="agencyOptions"
-            [reset]="resetControls"
-            [placeholderText]="'Pick one or more'"
-            (numSelected)="agencyCount = $event"
-          ></app-autocomplete-multi-select>
-        </div>
-      </div>
       <div>
         <div class="label-pair">
           <label for="actFilter">Issued under which Act</label>

@@ -5,7 +5,6 @@ import { Picklists, Constants } from '../../../../../../common/src/app/utils/rec
 import { IMutliSelectOption } from '../../../../../../common/src/app/autocomplete-multi-select/autocomplete-multi-select.component';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Utils } from 'nrpti-angular-components';
 
 /**
  * List page component.
@@ -31,11 +30,6 @@ export class SearchFiltersComponent implements OnInit, OnDestroy {
 
   public loading = true;
   public resetControls: EventEmitter<void> = new EventEmitter<void>();
-
-  public agencyOptions: IMutliSelectOption[] = Picklists.agencyPicklist.map(value => {
-    const displayValue = Utils.convertAcronyms(value);
-    return { value: value, displayValue: displayValue, selected: false, display: true };
-  });
   public activityTypeOptions: IMutliSelectOption[] = Object.values(Picklists.activityTypePicklistNRCED).map(item => {
     return { value: item._schemaName, displayValue: item.displayName, selected: false, display: true };
   });
