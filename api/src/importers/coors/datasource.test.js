@@ -32,6 +32,73 @@ describe('CoorsCsvDataSource', () => {
     });
   });
 
+  describe('run', () => {
+    it('sets itemTotal and updates task record status', async () => {
+      const taskAuditRecord = { updateTaskRecord: jest.fn() };
+      const dataSource = new CoorsCsvDataSource(taskAuditRecord, null, null, [{}, {}]);
+
+      await dataSource.run();
+
+      expect(dataSource.status.itemTotal).toEqual(2);
+      expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({
+        status: 'Running',
+        itemTotal: 2,
+      });
+    });
+  });
+
+  describe('batchProcessRecords', () => {
+    it('processes csvRows in batches', async () => {
+      const taskAuditRecord = { updateTaskRecord: jest.fn() };
+      const fakeCsvRows = [
+        {
+          id: 1,
+          enforcement_outcome: 'GTYJ',
+        },
+        {
+          id: 2,
+          enforcement_outcome: 'Other',
+        },
+      ];
+      const dataSource = new CoorsCsvDataSource(taskAuditRecord, null, "Ticket", fakeCsvRows);
+
+      dataSource.processRecord = jest.fn();
+
+      await dataSource.batchProcessRecords();
+  
+      expect(dataSource.processRecord).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('getRecordTypeConfig', () => {
+    it('returns the correct record type config for Ticket', () => {
+      const dataSource = new CoorsCsvDataSource(null, null, 'Ticket', null);
+      const config = dataSource.getRecordTypeConfig();
+      expect(config).toBeDefined();
+      expect(config.getUtil).toBeDefined();
+    });
+
+    it('returns the correct record type config for Court Conviction', () => {
+      const dataSource = new CoorsCsvDataSource(null, null, 'Court Conviction', null);
+      const config = dataSource.getRecordTypeConfig();
+      expect(config).toBeDefined();
+      expect(config.getUtil).toBeDefined();
+    });
+
+    it('returns the correct record type config for Administrative Sanction', () => {
+      const dataSource = new CoorsCsvDataSource(null, null, 'Administrative Sanction', null);
+      const config = dataSource.getRecordTypeConfig();
+      expect(config).toBeDefined();
+      expect(config.getUtil).toBeDefined();
+    });
+
+    it('returns null for an unknown record type', () => {
+      const dataSource = new CoorsCsvDataSource(null, null, 'Unknown Record Type', null);
+      const config = dataSource.getRecordTypeConfig();
+      expect(config).toBeNull();
+    });
+  });
+
   describe('processRecord', () => {
     it('sets an error if csvRow is null', async () => {
       const dataSource = new CoorsCsvDataSource();
@@ -77,15 +144,10 @@ describe('CoorsCsvDataSource', () => {
       };
 
       await dataSource.processRecord(csvRow, recordTypeConfig);
-
       expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow);
-
       expect(recordTypeUtils.findExistingRecord).toHaveBeenCalledWith({ transformed: true });
-
       expect(recordTypeUtils.createItem).toHaveBeenCalledWith({ transformed: true });
-
       expect(dataSource.status.itemsProcessed).toEqual(1);
-
       expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({ itemsProcessed: 1 });
     });
 
@@ -113,15 +175,10 @@ describe('CoorsCsvDataSource', () => {
       };
 
       await dataSource.processRecord(csvRow, recordTypeConfig);
-
       expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow);
-
       expect(recordTypeUtils.findExistingRecord).toHaveBeenCalledWith({ transformed: true });
-
       expect(recordTypeUtils.updateRecord).toHaveBeenCalledWith({ transformed: true }, { _id: 123 });
-
       expect(dataSource.status.itemsProcessed).toEqual(1);
-
       expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({ itemsProcessed: 1 });
     });
   });
