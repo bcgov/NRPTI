@@ -32,6 +32,34 @@ describe('AlcCsvDataSource', () => {
     });
   });
 
+  describe('run', () => {
+    it('sets itemTotal and updates task record status', async () => {
+      const taskAuditRecord = { updateTaskRecord: jest.fn() };
+      const dataSource = new AlcCsvDataSource(taskAuditRecord, null, null, [{}, {}]);
+
+      await dataSource.run();
+
+      expect(dataSource.status.itemTotal).toEqual(2);
+      expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({
+        status: 'Running',
+        itemTotal: 2,
+      });
+    });
+  });
+
+  describe('batchProcessRecords', () => {
+    it('processes csvRows in batches', async () => {
+      const taskAuditRecord = { updateTaskRecord: jest.fn() };
+      const dataSource = new AlcCsvDataSource(taskAuditRecord, null, "Ticket", new Array(201));
+
+      dataSource.processRecord = jest.fn();
+
+      await dataSource.batchProcessRecords();
+  
+      expect(dataSource.processRecord).toHaveBeenCalledTimes(201);
+    });
+  });
+
   describe('processRecord', () => {
     it('sets an error if csvRow is null', async () => {
       const dataSource = new AlcCsvDataSource();
@@ -79,13 +107,9 @@ describe('AlcCsvDataSource', () => {
       await dataSource.processRecord(csvRow, recordTypeConfig);
 
       expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow);
-
       expect(recordTypeUtils.findExistingRecord).toHaveBeenCalledWith({ transformed: true });
-
       expect(recordTypeUtils.createItem).toHaveBeenCalledWith({ transformed: true });
-
       expect(dataSource.status.itemsProcessed).toEqual(1);
-
       expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({ itemsProcessed: 1 });
     });
 
@@ -115,13 +139,9 @@ describe('AlcCsvDataSource', () => {
       await dataSource.processRecord(csvRow, recordTypeConfig);
 
       expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow);
-
       expect(recordTypeUtils.findExistingRecord).toHaveBeenCalledWith({ transformed: true });
-
       expect(recordTypeUtils.updateRecord).toHaveBeenCalledWith({ transformed: true }, { _id: 123 });
-
       expect(dataSource.status.itemsProcessed).toEqual(1);
-
       expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({ itemsProcessed: 1 });
     });
   });
