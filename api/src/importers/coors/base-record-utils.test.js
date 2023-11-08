@@ -1,7 +1,6 @@
 const BaseRecordUtils = require('./base-record-utils');
 const RecordController = require('../../controllers/record-controller');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
-const mongoose = require('mongoose');
 const moment = require('moment');
 
 describe('BaseRecordUtils', () => {
