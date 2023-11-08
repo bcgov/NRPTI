@@ -32,6 +32,60 @@ describe('NroCsvDataSource', () => {
     });
   });
 
+  describe('run', () => {
+    it('sets itemTotal and updates task record status', async () => {
+      const taskAuditRecord = { updateTaskRecord: jest.fn(() => {}) };
+      const dataSource = new NroCsvDataSource(taskAuditRecord, null, null, [
+        {
+          'report status': 'Complete'
+        }, {
+          'report status': 'Complete'
+        }
+      ]);
+
+      await dataSource.run();
+
+      expect(dataSource.status.itemTotal).toEqual(2);
+      expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({
+        status: 'Running',
+        itemTotal: 2,
+      });
+    });
+  });
+
+  describe('batchProcessRecords', () => {
+    it('processes csvRows in batches', async () => {
+      const taskAuditRecord = { updateTaskRecord: jest.fn(() => {}) };
+      const dataSource = new NroCsvDataSource(taskAuditRecord, null, "Inspection", [
+        {
+          'report status': 'Complete'
+        }, {
+          'report status': 'Complete'
+        }
+      ]);
+      
+      dataSource.processRecord = jest.fn();
+
+      await dataSource.batchProcessRecords();
+  
+      expect(dataSource.processRecord).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('getRecordTypeConfig', () => {
+    it('returns the correct record type config for Inspection', () => {
+      const dataSource = new NroCsvDataSource(null, null, "Inspection", [
+        {
+          'report status': 'Complete'
+        }
+      ]);
+
+      const config = dataSource.getRecordTypeConfig();
+      expect(config).toBeDefined();
+      expect(config.getUtil).toBeDefined();
+    });
+  });
+
   describe('processRecord', () => {
     it('sets an error if csvRow is null', async () => {
       const dataSource = new NroCsvDataSource();
@@ -79,13 +133,9 @@ describe('NroCsvDataSource', () => {
       await dataSource.processRecord(csvRow, recordTypeConfig);
 
       expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow);
-
       expect(recordTypeUtils.findExistingRecord).toHaveBeenCalledWith({ transformed: true });
-
       expect(recordTypeUtils.createItem).toHaveBeenCalledWith({ transformed: true });
-
       expect(dataSource.status.itemsProcessed).toEqual(1);
-
       expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({ itemsProcessed: 1 });
     });
 
@@ -115,13 +165,9 @@ describe('NroCsvDataSource', () => {
       await dataSource.processRecord(csvRow, recordTypeConfig);
 
       expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow);
-
       expect(recordTypeUtils.findExistingRecord).toHaveBeenCalledWith({ transformed: true });
-
       expect(recordTypeUtils.updateRecord).toHaveBeenCalledWith({ transformed: true }, { _id: 123 });
-
       expect(dataSource.status.itemsProcessed).toEqual(1);
-
       expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({ itemsProcessed: 1 });
     });
   });
