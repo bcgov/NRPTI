@@ -39,7 +39,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
   // Pick lists
   public agencies = Picklists.getAgencyNames(this.factoryService);
   public authors = Picklists.authorPicklist;
-  public defaultAgency = '';
+  public defaultAgency = 'AGENCY_EMLI';
 
   // Documents
   public documents = [];
@@ -477,11 +477,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
         this.myForm.get('dateIssued').value
       ));
     (this.myForm.controls.issuingAgency.dirty || this.defaultAgency) &&
-      (administrativePenalty['issuingAgency'] = Picklists.getAgencyCode(
-        this.factoryService,
-        this.myForm.controls.issuingAgency.value
-      ));
-    // (administrativePenalty['issuingAgency'] = this.myForm.controls.issuingAgency.value);
+      (administrativePenalty['issuingAgency'] = this.myForm.controls.issuingAgency.value);
     this.myForm.controls.author.dirty && (administrativePenalty['author'] = this.myForm.controls.author.value);
 
     if (this.myForm.get('association._epicProjectId').dirty) {
