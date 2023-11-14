@@ -17,7 +17,7 @@ describe('AgenciesComponent', () => {
   };
 
   const loggerServiceMock = {
-    level: 0 
+    level: 0
   };
 
   const toastServiceMock = {
@@ -32,7 +32,7 @@ describe('AgenciesComponent', () => {
         { provide: IssuingAgencyService, useValue: issuingAgencyServiceMock },
         { provide: LoggerService, useValue: loggerServiceMock },
         { provide: ToastService, useValue: toastServiceMock },
-        FactoryService 
+        FactoryService
       ]
     });
     fixture = TestBed.createComponent(AgenciesComponent);
