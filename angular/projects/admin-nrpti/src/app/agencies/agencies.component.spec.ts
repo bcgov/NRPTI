@@ -17,7 +17,7 @@ describe('AgenciesComponent', () => {
   };
 
   const loggerServiceMock = {
-    level: 0 // You can mock other properties/methods as needed
+    level: 0 
   };
 
   const toastServiceMock = {
@@ -32,7 +32,7 @@ describe('AgenciesComponent', () => {
         { provide: IssuingAgencyService, useValue: issuingAgencyServiceMock },
         { provide: LoggerService, useValue: loggerServiceMock },
         { provide: ToastService, useValue: toastServiceMock },
-        FactoryService // You can provide other services and dependencies here
+        FactoryService 
       ]
     });
     fixture = TestBed.createComponent(AgenciesComponent);
@@ -52,7 +52,7 @@ describe('AgenciesComponent', () => {
     expect(component.agencyList).toEqual(['-Select-']);
     expect(component.updatedData).toEqual({ agencies: [] });
   });
-  // You can write more test cases for other methods and components' behavior
+
 
   it('should handle the selected agency change', () => {
     const selectedAgency = 'SelectedAgency';
@@ -61,5 +61,3 @@ describe('AgenciesComponent', () => {
     expect(component.choiceMade).toBe(true);
   });
 });
-
-// Additional test suites and test cases can be added as needed
