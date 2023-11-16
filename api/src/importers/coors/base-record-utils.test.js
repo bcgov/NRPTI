@@ -1,6 +1,7 @@
 const BaseRecordUtils = require('./base-record-utils');
 const RecordController = require('../../controllers/record-controller');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+const moment = require('moment');
 
 describe('BaseRecordUtils', () => {
   describe('constructor', () => {
@@ -8,6 +9,44 @@ describe('BaseRecordUtils', () => {
       expect(() => {
         new BaseRecordUtils(null);
       }).toThrow('BaseRecordUtils - required recordType must be non-null.');
+    });
+  });
+
+  describe('findExistingRecord', () => {
+    it('returns existing NRPTI master record if found', async () => {
+      const RECORD_TYPE = { Ticket: { _schemaName: 'Ticket', displayName: 'Ticket' } };
+      const baseRecordUtils = new BaseRecordUtils('authPayload', RECORD_TYPE.Ticket);
+  
+      const nrptiRecord = { _sourceRefCoorsId: '123' };
+  
+      const masterRecordModelMock = {
+        findOne: jest.fn().mockReturnValue({
+          populate: jest.fn().mockResolvedValue({
+            test: 'existingRecord',
+            _flavourRecords: [{ _id: 321, _schemaName: 'flavourSchema' }],
+          }),
+        }),
+      };
+      const mongoose = require('mongoose');
+      jest.spyOn(mongoose, 'model').mockReturnValue(masterRecordModelMock);
+  
+      const result = await baseRecordUtils.findExistingRecord(nrptiRecord);
+  
+      expect(result).toEqual({ test: 'existingRecord', _flavourRecords: [{ _id: 321, _schemaName: 'flavourSchema' }] });
+      expect(masterRecordModelMock.findOne).toHaveBeenCalledWith({
+        _schemaName: 'Ticket',
+        _sourceRefCoorsId: '123',
+      });
+    });
+  
+    it('returns null if _sourceRefCoorsId is null', async () => {
+      const baseRecordUtils = new BaseRecordUtils('authPayload', RECORD_TYPE.Ticket);
+  
+      const nrptiRecord = { _sourceRefCoorsId: null };
+  
+      const result = await baseRecordUtils.findExistingRecord(nrptiRecord);
+  
+      expect(result).toBeNull();
     });
   });
 
@@ -197,4 +236,29 @@ describe('BaseRecordUtils', () => {
       expect(result).toEqual({ test: 'record' });
     });
   });
+
+  describe('handleConvictionPenalties', () => {  
+    it('appends penalty and returns updated penalties array when penalty does not exist', () => {
+      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.CourtConviction);
+  
+      const existingRecord = { dateAdded: moment(), dateUpdated: moment(), penalties: [{ type: 'Fined', penalty: { type: 'Dollars', value: 50 } }] };
+      const updatedPenalty = { type: 'Imprisonment', penalty: { type: 'Months', value: 12 } };
+  
+      const result = baseRecordUtils.handleConvictionPenalties(updatedPenalty, existingRecord);
+  
+      expect(result).toEqual([{ type: 'Fined', penalty: { type: 'Dollars', value: 50 } }, { type: 'Imprisonment', penalty: { type: 'Months', value: 12 } }]);
+    });
+  
+    it('does not append penalty and returns the existing penalties array when penalty already exists', () => {
+      const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.CourtConviction);
+  
+      const existingRecord = { dateAdded: moment(), dateUpdated: moment(), penalties: [{ type: 'Fined', penalty: { type: 'Dollars', value: 50 } }] };
+      const updatedPenalty = { type: 'Fined', penalty: { type: 'Dollars', value: 50 } };
+  
+      const result = baseRecordUtils.handleConvictionPenalties(updatedPenalty, existingRecord);
+  
+      expect(result).toEqual([{ type: 'Fined', penalty: { type: 'Dollars', value: 50 } }]);
+    });
+  });
+
 });
