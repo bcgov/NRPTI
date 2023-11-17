@@ -2,8 +2,8 @@ const AdministrativePenalty = require('./administrative-penalties-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const { createURLDocument } = require('../../controllers/document-controller');
 
-const createAdminPenaltyInstance = (authPayload, baseCsvRow) => {
-  return new AdministrativePenalty(authPayload, RECORD_TYPE.AdministrativePenalty._schemaName, baseCsvRow);
+const createAdminPenaltyInstance = (authPayload, recordType, baseCsvRow) => {
+  return new AdministrativePenalty(authPayload, recordType, baseCsvRow);
 };
 
 describe('AdministrativePenalty', () => {
