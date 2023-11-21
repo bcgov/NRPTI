@@ -151,6 +151,7 @@ describe('AdministrativePenalty', () => {
     });
 
     afterAll(async () => {
+      mongoose.connection.db.dropDatabase();
       await mongoose.connections.close();
     });
 
@@ -213,6 +214,7 @@ describe('AdministrativePenalty', () => {
     });
 
     afterAll(async () => {
+      mongoose.connection.db.dropDatabase();
       await mongoose.connections.close();
     });
 

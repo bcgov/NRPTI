@@ -91,6 +91,7 @@ describe('orders-utils testing', () => {
     });
 
     afterAll(async () => {
+      mongoose.connection.db.dropDatabase();
       await mongoose.connections.close();
     });
 
