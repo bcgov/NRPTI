@@ -1,26 +1,25 @@
-const ObjectID = require('mongodb').ObjectID;
-const Warnings = require('./warnings-utils');
+const Orders = require('./orders-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const mongoose = require('mongoose');
 const { createURLDocument } = require('../../controllers/document-controller');
 
-describe('warnings-utils', () => {
-  const warnings = new Warnings('authPayload', RECORD_TYPE.Warning, null);
-
+describe('orders-utils testing', () => {
+  const orders = new Orders('authPayload', RECORD_TYPE.Order, null);
+  
   describe('transformRecord', () => {
 
     it('throws an error if null csvRow parameter provided', () => {
-      expect(() => warnings.transformRecord(null)).toThrow('transformRecord - required csvRow must be non-null.');
+      expect(() => orders.transformRecord(null)).toThrow('transformRecord - required csvRow must be non-null.');
     });
 
     it('returns basic fields if empty csvRow parameter provided', () => {
-      const result = warnings.transformRecord({});
+      const result = orders.transformRecord({});
 
       expect(result).toEqual({
-        _schemaName: 'Warning',
-        _sourceRefOgcWarningId: undefined,
+        _schemaName: 'Order',
+        _sourceRefOgcOrderId: undefined,
 
-        recordType: 'Warning',
+        recordType: 'Order',
         dateIssued: null,
         document: {
           fileName: undefined,
@@ -31,37 +30,46 @@ describe('warnings-utils', () => {
         author: 'AGENCY_OGC',
         location: 'British Columbia',
         recordName: undefined,
+        legislation: [
+          {
+            act: 'Oil and Gas Activities Act',
+            section: null,
+            legislationDescription: "Action Order"
+          }
+        ],
         sourceSystemRef: 'bcogc'
       });
     });
 
     it('transforms csv row fields into NRPTI record fields', () => {
-      const result = warnings.transformRecord({
-        Title: 'Warning Letter 20-111',
-        'Date Issued': '07/17/2020',
-        Proponent: 'Coastal GasLink Pipeline Ltd.',
-        Filename: 'Warning-letter-sample.pdf',
-        'File URL': 'https://www.bc-er.ca/some/file/Warning-letter-sample.pdf'
-
+      const result = orders.transformRecord({
+        Title: 'General Order 123',
+        Proponent: 'Test Proponent',
+        Filename: 'sample-order.pdf',
+        'File URL': 'https://www.example.com/sample-order.pdf'
       });
 
       expect(result).toEqual({
-        _schemaName: 'Warning',
-        _sourceRefOgcWarningId: 'Warning Letter 20-111',
-
-        recordType: 'Warning',
-        dateIssued: expect.any(Date),
+        _schemaName: 'Order',
+        _sourceRefOgcOrderId: 'General Order 123',
+        dateIssued: null,
+        recordType: 'Order',
         document: {
-          fileName: 'Warning-letter-sample.pdf',
-          url: 'https://www.bc-er.ca/some/file/Warning-letter-sample.pdf'
+          fileName: 'sample-order.pdf',
+          url: 'https://www.example.com/sample-order.pdf'
         },
-        issuedTo: { companyName: 'Coastal GasLink Pipeline Ltd.', type: 'Company' },
+        issuedTo: { companyName: 'Test Proponent', type: 'Company' },
         issuingAgency: 'AGENCY_OGC',
         author: 'AGENCY_OGC',
         location: 'British Columbia',
-        recordName: 'Warning-letter-sample.pdf',
-        projectName: 'Coastal Gaslink',
-        _epicProjectId: new ObjectID('588511c4aaecd9001b825604'),
+        recordName: 'General Order 123',
+        legislation: [
+          {
+            act: 'Oil and Gas Activities Act',
+            section: 49,
+            legislationDescription: 'General Order'
+          }
+        ],
 
         sourceSystemRef: 'bcogc'
       });
@@ -102,7 +110,7 @@ describe('warnings-utils', () => {
     }));
 
     it('throws error when nrptiRecord is not provided', async () => {
-      await expect(warnings.createItem(null)).rejects.toThrow(
+      await expect(orders.createItem(null)).rejects.toThrow(
         'createItem - required nrptiRecord must be non-null.'
       );
     });
@@ -118,7 +126,7 @@ describe('warnings-utils', () => {
         'Filename': 'Filename',
         'File URL': 'File URL',
       };
-      const nrptiRecord = await warnings.transformRecord(baseCsvRow);
+      const nrptiRecord = await orders.transformRecord(baseCsvRow);
 
       const result = await createURLDocument(nrptiRecord.document.fileName, 'BCOGC Import', nrptiRecord.document.url, ['public'])
       const resultRead = [...result.read];
@@ -133,37 +141,77 @@ describe('warnings-utils', () => {
   });
 
   describe('findExistingRecord', () => {
-    it('returns null if _sourceRefOgcWarningId is not provided in nrptiRecord', async () => {
-      const result = await warnings.findExistingRecord({});
-  
+    it('returns null if _sourceRefOgcOrderId is not provided in nrptiRecord', async () => {
+      const result = await orders.findExistingRecord({});
+
       expect(result).toBeNull();
     });
-  
-    it('finds and populates existing record by _sourceRefOgcWarningId', async () => {
+
+    it('finds and populates existing record by _sourceRefOgcOrderId', async () => {
       const mockFindOne = jest.fn().mockReturnValue({
         populate: jest.fn().mockResolvedValue({
           _id: 'mockId',
-          _schemaName: 'Warning',
+          _schemaName: 'Order',
           _flavourRecords: [{ _id: 'flavourId', _schemaName: 'Flavour' }]
         })
       });
-  
+
       mongoose.model = jest.fn().mockReturnValue({ findOne: mockFindOne });
-  
-      const nrptiRecord = { _sourceRefOgcWarningId: 'existingWarningId' };
-  
-      const result = await warnings.findExistingRecord(nrptiRecord);
-  
+
+      const nrptiRecord = { _sourceRefOgcOrderId: 'existingOrderId' };
+
+      const result = await orders.findExistingRecord(nrptiRecord);
+
       expect(result).toEqual({
         _id: 'mockId',
-        _schemaName: 'Warning',
+        _schemaName: 'Order',
         _flavourRecords: [{ _id: 'flavourId', _schemaName: 'Flavour' }]
       });
       expect(mockFindOne).toHaveBeenCalledWith({
-        _schemaName: 'Warning',
-        _sourceRefOgcWarningId: 'existingWarningId'
+        _schemaName: 'Order',
+        _sourceRefOgcOrderId: 'existingOrderId'
       });
       expect(mockFindOne().populate).toHaveBeenCalledWith('_flavourRecords', '_id _schemaName');
+    });
+  });
+
+  describe('getOrderSection', () => {
+    const orders = new Orders('authPayload', RECORD_TYPE.Order, null);
+
+    it('returns 49 for "General Order" in csvRow Title', () => {
+      const csvRow = { Title: 'This is a General Order' };
+      const result = orders.getOrderSection(csvRow);
+      expect(result).toBe(49);
+    });
+
+    it('returns 50 for "Action Order" in csvRow Title', () => {
+      const csvRow = { Title: 'This is an Action Order' };
+      const result = orders.getOrderSection(csvRow);
+      expect(result).toBe(50);
+    });
+
+    it('returns null for a non-specific title in csvRow Title', () => {
+      const csvRow = { Title: 'This is something else' };
+      const result = orders.getOrderSection(csvRow);
+      expect(result).toBeNull();
+    });
+
+    it('returns 49 for partial match with "General Order" in csvRow Title', () => {
+      const csvRow = { Title: 'General Order is mentioned here' };
+      const result = orders.getOrderSection(csvRow);
+      expect(result).toBe(49);
+    });
+
+    it('returns 50 for partial match with "Action Order" in csvRow Title', () => {
+      const csvRow = { Title: 'An Action Order is mentioned here' };
+      const result = orders.getOrderSection(csvRow);
+      expect(result).toBe(50);
+    });
+
+    it('returns null if Title is not provided in csvRow', () => {
+      const csvRow = { SomeOtherField: 'This is something else' };
+      const result = orders.getOrderSection(csvRow);
+      expect(result).toBeNull();
     });
   });
 });
