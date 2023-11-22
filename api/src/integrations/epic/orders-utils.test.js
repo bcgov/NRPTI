@@ -1,17 +1,17 @@
-const Inspections = require('./inspections-utils');
+const Orders = require('./orders-utils');
 const BaseRecordUtils = require('./base-record-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 
-describe('Inspections', () => {
-  let inspectionsInstance;
+describe('Orders', () => {
+  let ordersInstance;
 
   beforeEach(() => {
-    inspectionsInstance = new Inspections('auth_payload', RECORD_TYPE.Inspection);
+    ordersInstance = new Orders('auth_payload', RECORD_TYPE.Order);
   });
 
   describe('transformRecord', () => {
     it('should throw an error if no record is provided', async () => {
-      await expect(inspectionsInstance.transformRecord(null)).rejects.toThrow(
+      await expect(ordersInstance.transformRecord(null)).rejects.toThrow(
         'transformRecord - required record must be non-null.'
       );
     });
@@ -23,7 +23,7 @@ describe('Inspections', () => {
 
       const epicRecord = {
         _id: '588511d0aaecd9001b826192',
-        _schemaName: 'Inspection',
+        _schemaName: 'Order',
         _sourceRefId: 1,
         legislation: 2002,
         project: {
@@ -34,12 +34,11 @@ describe('Inspections', () => {
         }
       };
 
-      const transformedRecord = await inspectionsInstance.transformRecord(epicRecord);
+      const transformedRecord = await ordersInstance.transformRecord(epicRecord);
 
       expect(transformedRecord.legislation.length).toBe(1);
       expect(transformedRecord.legislation[0].act).toBe('Environmental Assessment Act');
-      expect(transformedRecord.legislation[0].section).toBe('33');
-      expect(transformedRecord.legislation[0].subSection).toBe('1');
+      expect(transformedRecord.legislation[0].section).toBe('34');
       expect(transformedRecord.issuingAgency).toBe('AGENCY_EAO');
     });
     
@@ -50,7 +49,7 @@ describe('Inspections', () => {
 
       const epicRecord = {
         _id: '588511d0aaecd9001b826192',
-        _schemaName: 'Inspection',
+        _schemaName: 'Order',
         _sourceRefId: 1,
         legislation: 2018,
         project: {
@@ -61,12 +60,11 @@ describe('Inspections', () => {
         }
       };
 
-      const transformedRecord = await inspectionsInstance.transformRecord(epicRecord);
+      const transformedRecord = await ordersInstance.transformRecord(epicRecord);
 
       expect(transformedRecord.legislation.length).toBe(1);
       expect(transformedRecord.legislation[0].act).toBe('Environmental Assessment Act');
-      expect(transformedRecord.legislation[0].section).toBe('49');
-      expect(transformedRecord.legislation[0].subSection).toBe('3');
+      expect(transformedRecord.legislation[0].section).toBe('53');
       expect(transformedRecord.issuingAgency).toBe('AGENCY_EAO');
     });
 
@@ -77,7 +75,7 @@ describe('Inspections', () => {
 
       const epicRecord = {
         _id: '588511d0aaecd9001b826192',
-        _schemaName: 'Inspection',
+        _schemaName: 'Order',
         _sourceRefId: 1,
         legislation: 2009,
         project: {
@@ -88,7 +86,7 @@ describe('Inspections', () => {
         }
       };
 
-      const transformedRecord = await inspectionsInstance.transformRecord(epicRecord);
+      const transformedRecord = await ordersInstance.transformRecord(epicRecord);
 
       expect(transformedRecord.legislation.length).toBe(1);
       expect(transformedRecord.legislation[0].act).toBe('');
@@ -103,7 +101,7 @@ describe('Inspections', () => {
         name: 'Proponent Name'
       };
 
-      const companyName = inspectionsInstance.getCompanyName(proponentWithCompany);
+      const companyName = ordersInstance.getCompanyName(proponentWithCompany);
       expect(companyName).toBe('Company Name');
     });
 
@@ -112,7 +110,7 @@ describe('Inspections', () => {
         name: 'Proponent Name'
       };
 
-      const proponentName = inspectionsInstance.getCompanyName(proponentWithoutCompany);
+      const proponentName = ordersInstance.getCompanyName(proponentWithoutCompany);
       expect(proponentName).toBe('Proponent Name');
     });
   });
