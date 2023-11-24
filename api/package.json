@@ -38,6 +38,9 @@
     ],
     "testResultsProcessor": "jest-sonar-reporter",
     "globalSetup": "./test/setup.js",
+    "setupFiles": [
+      "./test/setEnvVars.js"
+    ],
     "globalTeardown": "./test/teardown.js",
     "testEnvironment": "node"
   },
