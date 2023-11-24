@@ -534,13 +534,13 @@ describe('NrisDataSource', () => {
   });
 
   describe('updateRecord', () => {
-    it('should call updateRecords without a new record and throw an error', async () => {
+    it('should call updateRecord without a new record and throw an error', async () => {
       const dataSource = new NrisDataSource();
 
       await expect(dataSource.updateRecord(null, { testRecord: 'testRecord' })).rejects.toThrow('updateRecord - required newRecord must be non-null.');
     });
 
-    it('should call updateRecords without an existing record and throw an erorr', async () => {
+    it('should call updateRecord without an existing record and throw an erorr', async () => {
       const dataSource = new NrisDataSource();
 
       await expect(dataSource.updateRecord({ testRecord: 'testRecord' }, null)).rejects.toThrow('updateRecord - required existingRecord must be non-null.');
