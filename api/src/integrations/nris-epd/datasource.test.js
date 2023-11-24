@@ -1,7 +1,7 @@
 const NrisDataSource = require('./datasource');
 const integrationUtils = require('../integration-utils');
 const mockingoose = require('mockingoose');
-// eslint-disable-next-line no-undef
+// eslint-disable-next-line no-unused-vars
 const fs = require('fs');
 const axios = require('axios');
 const defaultLogger = require('../../utils/logger')('nris-epd/datasource');
