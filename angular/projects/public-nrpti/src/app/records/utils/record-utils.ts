@@ -9,8 +9,8 @@ import { TicketDetailComponent } from '../tickets/ticket-detail/ticket-detail.co
 import { WarningDetailComponent } from '../warnings/warning-detail/warning-detail.component';
 import { CourtConvictionDetailComponent } from '../court-convictions/court-conviction-detail/court-conviction-detail.component';
 import { Penalty } from '../../../../../common/src/app/models/master/common-models/penalty';
-import { Utils } from 'nrpti-angular-components';
-
+import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service-nrced';
+import { FactoryService } from '../../services/factory.service';
 export class RecordUtils {
   /**
    * Given a record type, return the matching detail component type, or null if no matching component found.
@@ -101,7 +101,7 @@ export class RecordUtils {
    * @param {any[]} data Array of record to be covnerted to CSV
    * @memberof RecordUtils
    */
-  static exportToCsv(data: any[]): void {
+  static exportToCsv(data: any[], factoryService: FactoryService): void {
     const csvHeaders = [
       'Record Type',
       'Issued On',
@@ -126,6 +126,8 @@ export class RecordUtils {
     let output = '';
     output = `${csvHeaders.join(',')}\n`;
 
+    const agencyDataService = new AgencyDataService(factoryService);
+
     for (const row of data) {
       let line = [];
       line.push(escapeCsvString(row['recordType']));
@@ -143,7 +145,7 @@ export class RecordUtils {
       }
 
       line.push(escapeCsvString(row['summary']));
-      line.push(escapeCsvString(Utils.displayNameFull(row['issuingAgency'])));
+      line.push(escapeCsvString(agencyDataService.displayNameFull(row['issuingAgency'])));
 
       const legislation = Array.isArray(row['legislation']) ? row['legislation'][0] : row['legislation'];
 

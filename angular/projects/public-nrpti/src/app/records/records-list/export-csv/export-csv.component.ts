@@ -64,7 +64,7 @@ export class ExportCsvComponent implements OnInit {
       }
 
       if (allRecords.length) {
-        RecordUtils.exportToCsv(allRecords);
+        RecordUtils.exportToCsv(allRecords, this.factoryService);
       }
 
       this.downloading = false;

@@ -40,7 +40,7 @@ describe('RecordUtils', () => {
       spyOn(window.URL, 'createObjectURL').and.callThrough();
 
       // Executing exportToCsv function
-      RecordUtils.exportToCsv(mockData);
+      RecordUtils.exportToCsv(mockData, null);
 
       // Ensuring expected behaviour
       expect(document.createElement).toHaveBeenCalledTimes(1);
