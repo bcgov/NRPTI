@@ -33,14 +33,17 @@ const expectedOutput = `Record Type,Issued On,Issued To,Summary,Issuing Agency,L
 describe('RecordUtils', () => {
   describe('exportToCsv', () => {
     it('should call the download function with the expected data', () => {
+      // Mock FactoryService
+      const factoryServiceMock = jasmine.createSpyObj('FactoryService', ['getApplicationAgencyService']);
+
       // Defining spies
       const downloadSpy = jasmine.createSpyObj('a', ['click']);
       spyOn(moment.prototype, 'format').and.returnValue('this-is-the-time');
       spyOn(document, 'createElement').and.returnValue(downloadSpy);
       spyOn(window.URL, 'createObjectURL').and.callThrough();
 
-      // Executing exportToCsv function
-      RecordUtils.exportToCsv(mockData);
+      // Executing exportToCsv function with the mocked FactoryService
+      RecordUtils.exportToCsv(mockData, factoryServiceMock);
 
       // Ensuring expected behaviour
       expect(document.createElement).toHaveBeenCalledTimes(1);
