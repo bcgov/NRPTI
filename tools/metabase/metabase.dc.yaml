@@ -13,10 +13,10 @@ objects:
       lookupPolicy:
         local: false
       tags:
-        - name: latest
+        - name: 0.47
           from:
             kind: DockerImage
-            name: docker-remote.artifacts.developer.gov.bc.ca/metabase/metabase
+            name: image-registry.apps.silver.devops.gov.bc.ca/f00029-tools/metabase/metabase
           referencePolicy:
             type: Local
   - kind: DeploymentConfig
