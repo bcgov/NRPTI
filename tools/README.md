@@ -338,3 +338,28 @@ Once you have `sonar-scanner` installed, ensure that you are in the same directo
 ```sh
 sonar-scanner -Dsonar.host.url='CHANGEURLHERE' -Dsonar.projectKey='CHANGEPROJECTKEYHERE' -Dsonar.projectName='NR Get Token (CHANGEBRANCHNAMEHERE)'
 ```
+### Metabase Update
+
+1. Login to oc console
+2. Switch to tools namespace
+3. Make a backup of currently used image: 
+```sh
+oc tag metabase:latest metabase:<current_version>
+``` 
+4. Pull latest metabase image locally & tag it 
+```sh
+docker pull metabase/metabase:latest
+docker tag metabase/metabase:latest image-registry.apps.silver.devops.gov.bc.ca/f00029-tools/metabase:<version>
+``` 
+5. Login to OC registry
+```sh
+oc registry login
+``` 
+6. Push the image to imagestream
+```sh
+docker push image-registry.apps.silver.devops.gov.bc.ca/f00029-tools/metabase:<version>
+``` 
+7. Verify the image in imagestream: https://console.apps.silver.devops.gov.bc.ca/k8s/ns/f00029-tools/imagestreams/metabase
+8. Update tools/metabase/metabase.dc.yaml to reflect the new version & merge it to master
+9. Update Metabase Deployment Config yaml in the dev/test/prod namespace to reflect the new version: https://console.apps.silver.devops.gov.bc.ca/k8s/ns/f00029-dev/deploymentconfigs/metabase/yaml 
+Note: this step is necessary as the deployment config from the source code is not being picked up by oc
