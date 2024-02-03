@@ -15,7 +15,7 @@ Angular front-ends for the Natural Resources Public Transparency Interface (NRPT
 | node       | 10.x.x - 14.x.x | https://nodejs.org/en/  | JavaScript Runtime                        |
 | npm        | latest          | https://www.npmjs.com/  | Node Package Manager                      |
 | ng         | 7.x.x           | https://cli.angular.io/ | Angular CLI                               |
-| yarn       | latest          | https://yarnpkg.com/en/ | Package Manager (more efficient than npm) |
+
 
 _Note: This app also requires [`bcgov/nrpti/api`](https://github.com/bcgov/NRPTI/tree/master/api) to handle its requests and authentication._
 
@@ -29,17 +29,6 @@ _Note: Use `@angular/cli`. Do not use `@angular/angular-cli`._
 
 ```
 npm install -g @angular/cli
-```
-
-## Install [Yarn](https://yarnpkg.com/lang/en/docs/install/#alternatives-tab)
-
-Newer versions of NodeJS (14.9.x and 16.9.x) come bundled with Yarn. To enable:
-```sh
-corepack enable
-```
-Otherwise:
-```sh
-npm install -g yarn
 ```
 
 # Angular Multi-Project Workspace
@@ -60,14 +49,16 @@ During development, a library can be built and symlinked instead of published. T
 
 # Build and Run
 
-## Dev
+0. Downgrade your node version
 
-### Serve
+    ```
+    nvm use <version>
+    ```
 
 1. Download dependencies
 
     ```
-    yarn
+    npm install
     ```
 
 2. Build library/symlink
@@ -87,55 +78,6 @@ During development, a library can be built and symlinked instead of published. T
       ```
 
       _Note: This will run all angular applications in parallel, in the same console._
-
-    - Serve specific app
-
-      ```
-      npm start:<project-name>
-      ```
-
-### Build
-
-1. Download dependencies
-
-    ```
-    yarn
-    ```
-
-2. Build library/symlink and apps
-
-    - Build library/symlink and all apps
-
-      ```
-      npm run build
-      ```
-
-    - Build specific library/symlink and specific app(s)
-
-      ```
-      npm run build:library:dev
-      npm run build:app:<project-name>
-      ```
-
-## Prod
-
-1. Download dependencies
-
-    ```
-    yarn
-    ```
-
-2. Run the build(s)
-
-    The build artifacts will be stored in the `./dist/<project-name>` directory.
-
-    _Note: This assumes all necessary libraries have been published and are included as dependencies in `package.json`_
-
-    - Build all apps
-
-      ```
-      npm run build:prod
-      ```
 
 # Linting and Formatting
 
