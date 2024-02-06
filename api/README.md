@@ -33,13 +33,18 @@ npm install
 ```
 brew services start mongodb-community@3.6
 ```
-3. Run the app
+3. Run the migrations locally
+```
+db-migrate up -e local
+```
+> _Note: you may need to adjust Minio env variables, or skip the loadMemDocs migration_
+4. Run the app
 ```
 npm start
 ```
-4. Go to http://localhost:3000/api/docs to verify that the application is running.
+5. Go to http://localhost:3000/api/docs to verify that the application is running.
 
-    _Note: To change the default port edit `swagger.yaml`._
+>_Note: To change the default port edit `swagger.yaml`._
 
 # Linting and Formatting
 
