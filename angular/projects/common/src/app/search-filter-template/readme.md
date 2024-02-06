@@ -1,6 +1,6 @@
 # Common Search Component
 
-The common search component allows you to create a Keyword and advanced filter search on any screen, while keeping behaviour and UI consistent accross all host screens in the application.
+The common search component allows you to create a Keyword and advanced filter search on any screen, while keeping behaviour and UI consistent across all host screens in the application.
 
 The documentation below contains references on how to use the component. The classes themselves are also fully documented so you can get the general idea for usage by viewing classes and contructors.
 
@@ -86,29 +86,20 @@ The component has the following parameters and event handlers
 
 You can pass in values to a combination of parameters. Their function is described below.
 
-`title` Sets the title of the search component. Usually this is "Keyword Search". This is `required`.
-
-`tooltip` Tooltip sets the text to display when a user mouses over the tooltip icon to the right of the title. This is `required`.
-
-`keywordWatermark` Sets the watermark text to place inside the keyword search box. If no text is supplied this will default to "Type keyword search words".
-
-`subsets` Is a list of subset objects that will display in a dropdown menu to the left of the keyword search box. Subset objects are described in detail below. Defaults to `null`.
-
-`advancedFilters` Is a boolean value that indicates whether or not the advanced filter panel will display. Defaults to `false`.
-
-`advancedFilterTitle` Is a text string for a title label on your advanced filter panel. Defaults to `null`.
-
-`advancedFilterText` Is a text string that will include a description or summary at the top of the advanced filters panel. Defaults to `null`.
-
-`attachPanelToDiv` allows you to specify a div tag on your host component where the advanced filters panel will be moved to.
-
-`showAdvancedFilters` Is a boolean value that indicates whether or not the advanced filter panel will be open by default. Defaults to `false`.
-
-`filterItemPanelSize` Is a number between 1 and 12 that will set the default column size for all panels. Defaults to `4`.
-
-`filters` Is an array containing your filter definitions. Filter definitions are described in detail below. Defaults to `[]`.
-
-`searchOnFilterChange` Is a boolean that indicates whether or not a search will be triggered when a filter value changes. Defaults to `false`.
+|Parameter|Description|
+|---------|-----------|
+|`title`|Sets the title of the search component. Usually this is "Keyword Search". This is `required`.|
+|`tooltip`|Tooltip sets the text to display when a user mouses over the tooltip icon to the right of the title. This is `required`.|
+|`keywordWatermark`|Sets the watermark text to place inside the keyword search box. If no text is supplied this will default to "Type keyword search words".
+|`subsets`|Is a list of subset objects that will display in a dropdown menu to the left of the keyword search box. Subset objects are described in detail below. Defaults to `null`.|
+|`advancedFilters`|Is a boolean value that indicates whether or not the advanced filter panel will display. Defaults to `false`.|
+|`advancedFilterTitle`|Is a text string for a title label on your advanced filter panel. Defaults to `null`.|
+|`advancedFilterText`|Is a text string that will include a description or summary at the top of the advanced filters panel. Defaults to `null`.|
+|`attachPanelToDiv`|allows you to specify a div tag on your host component where the advanced filters panel will be moved to.|
+|`showAdvancedFilters`|Is a boolean value that indicates whether or not the advanced filter panel will be open by default. Defaults to `false`.|
+|`filterItemPanelSize`|Is a number between 1 and 12 that will set the default column size for all panels. Defaults to `4`.|
+|`filters`|Is an array containing your filter definitions. Filter definitions are described in detail below. Defaults to `[]`.|
+|`searchOnFilterChange`|Is a boolean that indicates whether or not a search will be triggered when a filter value changes. Defaults to `false`.|
 
 ### Event Handlers
 
@@ -127,13 +118,12 @@ The event returns a `searchPackage` object, which contains the following details
 }
 ```
 
-`keywords` will contain the text entered into the keyword search text box.
-
-`keywordsChanged` is a boolean value indicating if the keyword has changed since the last search request.
-
-`subset` contains the subset value, or null if no subsets are available.
-
-`filters` contains a key-value pair of your API filters. It's best to ensure the filter object ID's and return values map directly to your API query parameters for ease of use. More details about that are below in the `Filter Definitions` section.
+|Parameter|Description|
+|---------|-----------|
+|`keywords`|will contain the text entered into the keyword search text box.|
+|`keywordsChanged`| is a boolean value indicating if the keyword has changed since the last search request.|
+|`subset`| contains the subset value, or `null` if no subsets are available.|
+|`filters`| contains a key-value pair of your API filters. It's best to ensure the filter object ID's and return values map directly to your API query parameters for ease of use. More details about that are below in the `Filter Definitions` section.|
 
 #### Reset Controls Event
 
@@ -162,12 +152,11 @@ A subset object has the following structure:
   selectedSubset: SubsetOption = null
 }
 ```
-
-`options` contains an array of SubsetOption objects, and represents each option in the dropdown.
-
-`defaultSubset` contains the subset object to use as a default setting, or if not included, the first option in the `options` array.
-
-`selectedSubset` is the currently selected subset, or the first option in the `options` array, in case you want the selection to be different then the expected default.
+|Parameter|Description|
+|---------|-----------|
+|`options`| contains an array of SubsetOption objects, and represents each option in the dropdown.|
+|`defaultSubset`| contains the subset object to use as a default setting, or if not included, the first option in the `options` array.|
+|`selectedSubset`| is the currently selected subset, or the first option in the `options` array, in case you want the selection to be different then the expected default.|
 
 A subset option object is the option definition, and has the following structure:
 
@@ -180,7 +169,7 @@ A subset option object is the option definition, and has the following structure
 
 where `subset` is the id/code value that you'd pass back to the API for subset queries, and `subsetLabel` is the label shown for the subset in the dropdown.
 
-### Exampe usage
+### Example usage
 
 ```typescript
 const subsetOptions = [
@@ -208,10 +197,10 @@ The `FilterObject` has the following structure:
   itemPanelSize: number = 4
 }
 ```
-
-`id` represents the id of the filter. For some filters, it is recommended to use the API filter value as the filter id. Exceptions are filters with multiple ID's, such as date ranges. This is `required`.
-
-`type` is the type of filter you want to use. This can technically be derived from the filterDefinition, however we include an explicit type to allow for overloading `FilterDefinition` objects where possible (checkbox/radio button, for example). There is a `FilterType` enum in the `filter-objects.ts` file you can use for this:
+|Parameter|Description|
+|---------|-----------|
+|`id`| represents the id of the filter. For some filters, it is recommended to use the API filter value as the filter id. Exceptions are filters with multiple ID's, such as date ranges. This is `required`.|
+|`type`| is the type of filter you want to use. This can technically be derived from the filterDefinition, however we include an explicit type to allow for overloading `FilterDefinition` objects where possible (checkbox/radio button, for example). There is a `FilterType` enum in the `filter-objects.ts` file you can use for this:
 
 ```typescript
 export enum FilterType {
@@ -224,11 +213,11 @@ export enum FilterType {
 }
 ```
 
-`name` is the name/label for the filter. This value will be displayed as the filters header title. If you do not want a header label to display, set this value to null or an empty string.
-
-`filterDefinition` is the actual definition of the filter. As mentioned above, the type is determined by the `type` attribute, and the instructions are placed in the filter definition. The `FilterDefinition` object itself is just an abstract class used as a point of inheritance for the filter definition classes. As you can see in the `FilterType` enum, we currently have 5 unique filter types, however Radio and Checkbox definitions are identical so we overload the class for both.
-
-`itemPanelSize` is the panel size, between 1 and 12, for the filter panel. This will override any value supplied by the search components `filterItemPanelSize` value. Defaults to `4`
+|Parameter|Description|
+|---------|-----------|
+|`name`| is the name/label for the filter. This value will be displayed as the filters header title. If you do not want a header label to display, set this value to `null` or an empty string.|
+|`filterDefinition`| is the actual definition of the filter. As mentioned above, the type is determined by the `type` attribute, and the instructions are placed in the filter definition. The `FilterDefinition` object itself is just an abstract class used as a point of inheritance for the filter definition classes. As you can see in the `FilterType` enum, we currently have 5 unique filter types, however Radio and Checkbox definitions are identical so we overload the class for both.|
+|`itemPanelSize`| is the panel size, between 1 and 12, for the filter panel. This will override any value supplied by the search components `filterItemPanelSize` value. Defaults to `4`|
 
 ### DateFilterDefinition
 
@@ -245,21 +234,18 @@ The `DateFilterDefinition` object is used for date range filters.
 }
 ```
 
-`startDateId` is the id to use for the range start date, and is best if it matches your api query param id. `Required`.
-
-`startDateLabel` is the label to use for the range start date. `Required`.
-
-`endDateId` is the id to use for the range end date, and is best if it matches your api query param id. `Required`.
-
-`endDateLabel` is the label to use for the range end date. `Required`.
-
-`minDate` is the minimum allowed date a user can select in the date range components. Defaults to `January 1, 1900`.
-
-`maxDate` is the maximum allowed date a user can select in the date range components. Defaults to `Now`.
+|Parameter|Description|
+|---------|-----------|
+|`startDateId`| is the id to use for the range start date, and is best if it matches your api query param id. `Required`.
+|`startDateLabel`| is the label to use for the range start date. `Required`.|
+|`endDateId`| is the id to use for the range end date, and is best if it matches your api query param id. `Required`.|
+|`endDateLabel`| is the label to use for the range end date. `Required`.|
+|`minDate`| is the minimum allowed date a user can select in the date range components. Defaults to `January 1, 1900`.|
+|`maxDate`| is the maximum allowed date a user can select in the date range components. Defaults to `Now`.|
 
 ### CheckOrRadioFilterDefinition
 
-The `CheckOrRadioFilerDefinition` is a coponent that allows you to define a group o radio buttons or check boxes, used for boolean or general "exists" filters.
+The `CheckOrRadioFilerDefinition` is a component that allows you to define a group of radio buttons or check boxes, used for boolean or general "exists" filters.
 
 ```typescript
 {
@@ -267,12 +253,15 @@ The `CheckOrRadioFilerDefinition` is a coponent that allows you to define a grou
   grouped: boolean = false
 }
 ```
+|Parameter|Description|
+|---------|-----------|
+|`options`| is an array of `OptionItems` that define the selected options.|
+|`grouped`| is a boolean value for Check Box filters only, and indicates if the checkbox values should all be grouped together on search. See the Record page Projects filter for an example.|
 
-`options` is an array of `OptionItems` that define the selected options.
-
-`grouped` is a boolean value for Check Box filters only, and indicates if the check box values should all be grouped together on search. See the Record page Projects filter for an example.
+### OptionItem
 
 `OptionItem` has an extended class, `RadioOptionItem` used for radio buttons.
+
 
 ```typescript
 // Check box Option
@@ -289,14 +278,12 @@ The `CheckOrRadioFilerDefinition` is a coponent that allows you to define a grou
   isChecked: boolean = false,
 }
 ```
-
-`id` is the id value for the option, best mapped to your api query param value. `Required`.
-
-`label` is the text label for the option to display in the UI. `Required`.
-
-`isChecked` is a boolean value indicating if the box should be checked by default. Defaults to `false`.
-
-`value` is for Radio buttons only, and indicates the value to return when the radio button is active. Checkbox values only return true and false.
+|Parameter|Description|
+|---------|-----------|
+|`id`| is the id value for the option, best mapped to your api query param value. `Required`.|
+|`label`| is the text label for the option to display in the UI. `Required`.|
+|`isChecked`| is a boolean value indicating if the box should be checked by default. Defaults to `false`.|
+|`value`| is for Radio buttons only, and indicates the value to return when the radio button is active. Checkbox values only return true and false.|
 
 ### MultiSelectDefinition
 
@@ -311,13 +298,12 @@ The `CheckOrRadioFilerDefinition` is a coponent that allows you to define a grou
 }
 ```
 
-`options` is an array of `IMultiSelectOption` objects, that will appear when a user types ahead or clicks in the text box. `Required`.
-
-`placeholder` is the placeholder text to display in the text box. Defaults to `Begin typing to filter`.
-
-`subtext` is a text string to display beside the title. Defaults to `Select all that apply...`.
-
-`useChips` is a boolean that indicates if the selected options from the multiselect should display as a list of chips above the dropdown component. Defaults to `true`
+|Parameter|Description|
+|---------|-----------|
+|`options`| is an array of `IMultiSelectOption` objects, that will appear when a user types ahead or clicks in the text box. `Required`.|
+|`placeholder`| is the placeholder text to display in the text box. Defaults to `Begin typing to filter`.|
+|`subtext`| is a text string to display beside the title. Defaults to `Select all that apply...`.|
+|`useChips`| is a boolean that indicates if the selected options from the multiselect should display as a list of chips above the dropdown component. Defaults to `true`|
 
 ### DropdownDefinition
 
@@ -329,14 +315,13 @@ The `CheckOrRadioFilerDefinition` is a coponent that allows you to define a grou
   multiselect: boolean = true
 }
 ```
-
-`options` is an array of string values to display in the dropdown. The string will be returned literally on selection. It would be ideal to extend this component to support Label and Value in the future.
-
-`multiselect` is a boolean value indicating if the dropdown filter allows for multiselection. Defaults to `true`.
-
+|Parameter|Description|
+|---------|-----------|
+|`options`| is an array of string values to display in the dropdown. The string will be returned literally on selection. It would be ideal to extend this component to support Label and Value in the future.|
+|`multiselect`| is a boolean value indicating if the dropdown filter allows for multiselection. Defaults to `true`.|
 ### Slider Toggle Definition
 
-`SliderToggleFilterDefinition` creates a toggle switch style check box. These behave the same as the check box filters, except they are not groupable. Slider toggles do not have an indeterminate state, so currently when turned 'off' the slider will not return a false value, but a null value.
+|`SliderToggleFilterDefinition`| creates a toggle switch style check box. These behave the same as the check box filters, except they are not groupable. Slider toggles do not have an indeterminate state, so currently when turned 'off' the slider will not return a false value, but a null value.
 
 ```typescript
 {
