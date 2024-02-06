@@ -19,7 +19,7 @@ Run using the command `docker-compose up` to begin building and running the `api
 
 ## Install [NodeJS](https://nodejs.org/download/release/latest-v14.x/)
 
-_Note: NVM can be used to install anad manage multiple versions of NodeJS and npm ([Windows version]((https://github.com/coreybutler/nvm-windows)), [Unix / Linux / macOS version](https://github.com/nvm-sh/nvm))._
+_Note: NVM can be used to install and manage multiple versions of NodeJS and npm ([Windows version]((https://github.com/coreybutler/nvm-windows)), [Unix / Linux / macOS version](https://github.com/nvm-sh/nvm))._
 
 ## Install [MongoDB](https://docs.mongodb.com/v3.6/installation/)
 
