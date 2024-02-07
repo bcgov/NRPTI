@@ -6,12 +6,12 @@ As part of the BCDevOps community, each project will have 4 OpenShift namespaces
 
 | Namespace | Description |
 | --- | --- |
-| Dev | development "environment", will contain a deployment from the master branch and N deployments for [pull requests](https://help.github.com/en/articles/about-pull-requests). |
-| Test | test and Quality Assurance, will contain deployment from master branch. Promotions to be manually approved. |
-| Prod | production. The user ready application. Promotions to be manually approved. |
-| Tools | devops namespace. |
+| Dev | development "environment", will contain a deployment from the master branch. [Pull requests](https://help.github.com/en/articles/about-pull-requests). |
+| Test | Test and Quality Assurance, will contain deployment from master branch. Promotions to be manually approved. |
+| Prod | Production. The user-ready application. Promotions to be manually approved. |
+| Tools | DevOps namespace. |
 
-The tools directory contains all the infrastructure-as-code that we use for devops. Although there are many ways to build/test/deploy, this is the way we are doing it.  We currently rely less on OpenShift to do promotions, and more on our own Continuous Integration/Continuous Delivery ([CI/CD](https://en.wikipedia.org/wiki/CI/CD)).  This affords us more control over the workflow and add tooling as needed.  Currently, the tools in use are: Jenkins and Sonarqube.
+The tools directory contains all the infrastructure-as-code that we use for DevOps. Although there are many ways to build/test/deploy, this is the way we are doing it.  We currently rely less on OpenShift to do promotions, and more on our own Continuous Integration/Continuous Delivery ([CI/CD](https://en.wikipedia.org/wiki/CI/CD)).  This affords us more control over the workflow and add tooling as needed.  Currently, the tools in use are: Jenkins and Sonarqube.
 
 ## Prerequisites
 
@@ -23,66 +23,87 @@ You will need to install the OpenShift command line tools and have them in your 
 
 You will need a github account and token (preferrably a team shared account) with access to your repo: [New Personal Access Token](https://github.com/settings/tokens/new?scopes=repo,read:user,user:email,admin:repo_hook).
 
-## Environment Variables
+## DevOps Tools Deployment
 
-For simplicity sake, we will be setting all our project specific values as environment variables and substitute them into the oc commands.  The following are just examples and will need to be changed to your specific projects/namespaces, credentials, etc.
+### Deploying With OpenShift 
 
-### DevOps Tools Repository
+Deploying NRPTI/NRCED means we change the tags in OpenShift, moving the tags forward to their new realm. For example, the newest build added to the master branch will be `dev`, or will be using the `:latest` tag; the `test` realm will have the `:test` tag; and `prod` realm is using the `:prod` tag. Therefore, the general flow is: 
 
-Configure environment variables to access and run DevOps Tools scripts.
+1. From the CLI, connect to the f00029-tools realm 
+2. Tag to back up the old version that’s currently in the realm. 
 
-```sh
-export tools_repo_owner=bcgov
-export tools_repo_name=nr-showcase-devops-tools
-export tools_repo_url=https://github.com/$tools_repo_owner/$tools_repo_name.git
-export tools_repo_ref=master
-export tools_repo_raw=https://raw.githubusercontent.com/$tools_repo_owner/$tools_repo_name/$tools_repo_ref
-export templates_url=$tools_repo_raw/tools/jenkins/openshift
+For example, 
+
+```
+oc tag nrpti-api:test nrpti-api:test-backup  
 ```
 
-### Namespace Enumeration
+That moves the current test version (:test) to a backup (:test-backup) 
 
-Configure the 4 environment namespaces for your application.
+Tag the new version to replace the old version 
 
-```sh
-export ns_prefix=<your-namespace-prefix>
-export tools=$ns_prefix-tools
-export dev=$ns_prefix-dev
-export test=$ns_prefix-test
-export prod=$ns_prefix-prod
+```
+oc tag nrpti-api:latest nrpti-api:test 
 ```
 
-### Github Repository and Credentials for Application
+That moves the dev version (`:latest`) to replace the old test version (`:test`) 
 
-Configure your application repository details.  This is the application that will be built and deployed by the pipeline.
+You will need to do this for each app that needs an update. If you only made changes to the API, you’ll only have to make the change to `nrpti-api`; if you only made changes to NRCED, then you’ll only have to make changes to `public-nrced`, etc. 
 
+---
+ 
+### Moving `dev` (`:latest`) to `test`
+
+Moving the **API** from `dev` (`:latest`) to `test` 
 ```sh
-export gh_username=<github account>
-export gh_password=<personal access token, see above>
-export repo_owner=<your github account>
-export repo_name=<your application repo>
+oc project f00029-tools 
+oc tag nrpti-api:test nrpti-api:test-backup  
+oc tag nrpti-api:latest nrpti-api:test 
 ```
 
-### Application Details
-
-Configure any remaining application specific details here.
+Moving the **App** from `dev` (`:latest`) to `test` 
 
 ```sh
-export app_name=<your application acronym/short name>
-export app_domain=pathfinder.gov.bc.ca
+oc project f00029-tools 
+oc tag nrpti:test nrpti:test-backup 
+oc tag nrpti:lastest nrpti:test 
 ```
 
-### Login to OpenShift
-
-Once you have all of the environment variables defined, login to Openshift via web console, click your login name at top tight and click "Copy Login Command".  Go to your terminal, go to your project root and paste the copy command.
-
-### Go to Tools Namespace/Project
-
-Once logged into the OpenShift console, go to your tools project.  Each oc command should use the `-n <NAMESPACE>` option, but being in your tools project is just another safeguard.
+Moving **NRCED** from `dev` (`:latest`) to `test` 
 
 ```sh
-oc project $tools
+oc project f00029-tools 
+oc tag public-nrced:test public-nrced:test-backup
+oc tag public-nrced:latest public-nrced:test 
+``` 
+---
+### Moving `test` to `production` 
+
+Moving the **API** from `test` to `prod` 
+
+```sh
+oc project f00029-tools 
+oc tag nrpti-api:prod nrpti-api:prod-backup 
+oc tag nrpti-api:test nrpti-api:prod 
 ```
+
+Moving the **App** from `test` to `prod` 
+
+```sh
+oc project f00029-tools 
+oc tag nrpti:prod nrpti:prod-backup 
+oc tag nrpti:test nrpti:prod 
+```
+
+Moving **NRCED** from `test` to `prod` 
+
+```sh
+oc project f00029-tools 
+oc tag public-nrced:prod public-nrced:prod-backup  
+oc tag public-nrced:test public-nrced:prod 
+```
+
+You can find the other names and tags of the `ImageStreams` in tools in OpenShift. 
 
 ## SonarQube
 

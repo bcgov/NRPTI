@@ -4,7 +4,11 @@ API for the Natural Resources Public Transparency Interface (NRPTI).
 
 * [api](https://github.com/bcgov/nrpti/api) - back-end that serves all admin and public requests.
 
-# Prerequisites
+# Running with Docker
+
+Run using the command `docker-compose up` to begin building and running the `api`
+
+# Running Locally without Docker
 
 | Technology | Version         | Website                                     | Description                               |
 |------------|-----------------|---------------------------------------------|-------------------------------------------|
@@ -15,47 +19,32 @@ API for the Natural Resources Public Transparency Interface (NRPTI).
 
 ## Install [NodeJS](https://nodejs.org/download/release/latest-v14.x/)
 
-_Note: NVM can be used to install anad manage multiple versions of NodeJS and npm ([Windows version]((https://github.com/coreybutler/nvm-windows)), [Unix / Linux / macOS version](https://github.com/nvm-sh/nvm))._
-
-## Install [Yarn](https://yarnpkg.com/lang/en/docs/install/#alternatives-tab)
-
-Newer versions of NodeJS (14.9.x and 16.9.x) come bundled with Yarn. To enable:
-```sh
-corepack enable
-```
-Otherwise:
-```sh
-npm install -g yarn
-```
+_Note: NVM can be used to install and manage multiple versions of NodeJS and npm ([Windows version]((https://github.com/coreybutler/nvm-windows)), [Unix / Linux / macOS version](https://github.com/nvm-sh/nvm))._
 
 ## Install [MongoDB](https://docs.mongodb.com/v3.6/installation/)
-
-## Environment Variables
-
-The API requires a number of environment variables to be set. Some for the API and others to connection to external sources.
-
-For Core
-
-- client_id
-- client_secret
-- grant_type
-- oidc
-
 
 # Build and Run
 
 1. Download dependencies
 ```
-yarn install
+npm install
 ```
 2. Start MongoDB
-3. Run the app
+```
+brew services start mongodb-community@3.6
+```
+3. Run the migrations locally
+```
+db-migrate up -e local
+```
+> _Note: you may need to adjust Minio env variables, or skip the loadMemDocs migration_
+4. Run the app
 ```
 npm start
 ```
-4. Go to http://localhost:3000/api/docs to verify that the application is running.
+5. Go to http://localhost:3000/api/docs to verify that the application is running.
 
-    _Note: To change the default port edit `swagger.yaml`._
+>_Note: To change the default port edit `swagger.yaml`._
 
 # Linting and Formatting
 
@@ -150,9 +139,14 @@ This project contains two kinds of unit tests.  Regular unit tests and API unit 
   * Note: the `package.json` `tests` command sets the `UPLOAD_DIRECTORY` environment variable, the command for which may be OS specific and therefore may need adjusting depending on your machines OS.
 
 ```
-npm run tests
+npm run test
 ```
 
+Run individual test suites using the relative command. For example:
+
+```
+npm run test api/src/importers/alc/base-record-utils.test.js
+```
 
 ## API Tests
 
@@ -246,11 +240,38 @@ This project uses [Keycloak](https://www.keycloak.org/) to handle authentication
 # Records
 
 ## sourceSystemRef
-Each record has an attribute called sourceSystemRef. We currently have the following source systems:
+Each record has an attribute called sourceSystemRef. The source system references where a record has been imported/uploaded from into NRPTI. These are the different sources:
 
-- nrpti
-- nris-epd
-- nris-emli
-- ocers-csv
-- epic
-- core
+- `nrpti`
+- `nris-epd`
+  - Imported from Ministry of Environment and Climate Change Strategy (Formerly Environmental Protection Division (EPD))
+- `nris-emli`
+  - Imported from Energy, Mines and Low Carbon Innovation (EMLI)
+- `epic`
+  - Imported from Environmental Assessments in British Columbia's EPIC application.
+- `core`
+  - Imported from EMLI's CORE application.
+- `bcogc`
+  - Imported from BC Energy Regulator (formerly BC Oil and Gas Commission (BCOGC))
+- `bcogc-csv`
+  - Imported as a CSV from BC Energy Regulator (formerly BC Oil and Gas Commission (BCOGC))
+- `ocers-csv`
+  - Imported from Online Compliance and Enforcement Reporting System (OCERS)
+- `lng-csv`
+  - Imported as a CSV from from BC Energy Regulator (formerly Liquefied natural gas (LNG)) 
+- `agri-mis-csv`
+  - Imported as a CSV from the Ministry of Agriculture and Food (AGRI)
+- `agri-cmdb-csv`
+  - Imported as a CSV from the Ministry of Agriculture and Food (AGRI)
+- `nris-flnr-csv`
+  - Imporated as a CSV from the Ministry of Forests (NRIS-FLNRO)
+- `coors-csv`
+  - Imported as a CSV from the Conservation Officer Online Reporting (COORS).
+- `era-csv`
+  - Imported as a CSV from the Natural Resource Office: The Enforcement Action, Administrative Review
+and Appeal Tracking System  (NRO-ERA) 
+- `ams-csv`
+  - Imported as a CSV from the Authorize Management System (AMS) 
+- `alc-csv`
+  - Imported as a CSV from the Agricultural Land Commission (ALC) 
+- `mem-admin`

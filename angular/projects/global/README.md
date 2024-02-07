@@ -30,10 +30,6 @@ There are two configurable parts to this implementation, each front-end has it's
 
 The current approach in the API is to be environment variable driven, see `protectedGetConfig` in `config.js` below.  All environments need to have the appropriate environment variables set so that the API can serve out the correct config for each dev/test/prod Angular app.
 
-## Running unit tests
-
-Run `ng test global` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
