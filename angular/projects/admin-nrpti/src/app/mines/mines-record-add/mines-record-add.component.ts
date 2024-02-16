@@ -69,7 +69,7 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
       !this.myForm.get('recordAgency').value ||
       !this.myForm.get('recordType').value
     ) {
-      alert('Please fill all manditory fields related to record.');
+      alert('Please fill all mandatory fields related to record.');
       return;
     }
 
