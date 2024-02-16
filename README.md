@@ -62,3 +62,4 @@ A list of recommended/helpful VS Code extensions.
 # How to Contribute
 
 Fork the [repo](https://github.com/bcgov/NRPTI) and create pull requests against the [master](https://github.com/bcgov/NRPTI/tree/master) branch.
+
