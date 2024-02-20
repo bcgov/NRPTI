@@ -59,7 +59,7 @@ class Inspections extends BaseRecordUtils {
 
     inspection['legislation'] = [
       {
-        act: 'Oil and Gas Activities Act',
+        act: 'Energy Resource Activities Act',
         section: '57',
         subSection: '4',
         legislationDescription: 'Inspection to verify compliance with regulatory requirement'

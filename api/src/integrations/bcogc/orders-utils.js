@@ -56,7 +56,7 @@ class Orders extends BaseRecordUtils {
 
     order['legislation'] = [
       {
-        act: 'Oil and Gas Activities Act',
+        act: 'Energy Resource Activities Act',
         section: this.getOrderSection(csvRow),
         legislationDescription: this.getOrderSection(csvRow) === 49 ? 'General Order' : 'Action Order'
       }

@@ -58,7 +58,7 @@ function getRegulation(csvRow) {
   }
 
   if (csvRow['regulation name'] === 'OGAA') {
-    return 'Oil and Gas activities Act';
+    return 'Energy Resource Activities Act';
   }
 
   if (csvRow['regulation name'] === 'D&PR') {
