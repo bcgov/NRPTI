@@ -36,7 +36,7 @@ describe('AdministrativePenalty', () => {
         'penalties': [penalties],
         'legislation': [
           {
-            'act': 'Oil and Gas Activities Act',
+            'act': 'Energy Resource Activities Act',
             'section': 63,
             'offence': 'Penalty for failure to comply with the Act or associated regulations'
           }

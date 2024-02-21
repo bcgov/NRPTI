@@ -104,7 +104,7 @@ describe('getRegulation', () => {
   it('returns matching regulation if csvRow "regulation name" is "OGAA"', () => {
     const result = CsvUtils.getRegulation({ 'regulation name': 'OGAA' });
 
-    expect(result).toEqual('Oil and Gas activities Act');
+    expect(result).toEqual('Energy Resource Activities Act');
   });
 
   it('returns matching regulation if csvRow "regulation name" is "D&PR"', () => {

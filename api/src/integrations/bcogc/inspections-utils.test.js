@@ -23,7 +23,7 @@ describe('transformRecord', () => {
       issuingAgency: 'AGENCY_OGC',
       author: 'AGENCY_OGC',
       recordName: '-',
-      legislation: [{ act: 'Oil and Gas Activities Act', section: '57', subSection: '4', legislationDescription: 'Inspection to verify compliance with regulatory requirement' }],
+      legislation: [{ act: 'Energy Resource Activities Act', section: '57', subSection: '4', legislationDescription: 'Inspection to verify compliance with regulatory requirement' }],
       location: 'British Columbia',
       description:
         'Inspection to verify compliance with regulatory requirements. Activities Inspected: -; Inspection Result: -',
@@ -61,7 +61,7 @@ describe('transformRecord', () => {
       recordName: 'Inspection Number 123456',
       legislation: [
         {
-          act: 'Oil and Gas Activities Act',
+          act: 'Energy Resource Activities Act',
           section: '57',
           subSection: '4',
           legislationDescription: 'Inspection to verify compliance with regulatory requirement'

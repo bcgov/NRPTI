@@ -32,7 +32,7 @@ describe('orders-utils testing', () => {
         recordName: undefined,
         legislation: [
           {
-            act: 'Oil and Gas Activities Act',
+            act: 'Energy Resource Activities Act',
             section: null,
             legislationDescription: "Action Order"
           }
@@ -65,7 +65,7 @@ describe('orders-utils testing', () => {
         recordName: 'General Order 123',
         legislation: [
           {
-            act: 'Oil and Gas Activities Act',
+            act: 'Energy Resource Activities Act',
             section: 49,
             legislationDescription: 'General Order'
           }

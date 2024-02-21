@@ -652,7 +652,7 @@ export class Picklists {
     'New Relationship Trust Act': [],
     "Nisga'a Final Agreement Act": [],
     'Off-Road Vehicle Act': ['Off-Road Vehicle Regulation'],
-    'Oil and Gas Activities Act': [
+    'Energy Resource Activities Act': [
       'Administrative Penalties Regulation',
       'Consultation and Notification Regulation',
       'Direction No. 1 to the Oil and Gas Commission',
@@ -662,7 +662,7 @@ export class Picklists {
       'Fee, Levy and Security Regulation',
       'Geophysical Exploration Regulation',
       'Liquefied Natural Gas Facility Regulation',
-      'Oil and Gas Activities Act General Regulation',
+      'Energy Resource Activities Act General Regulation',
       'Oil and Gas Road Regulation',
       'Pipeline Crossings Regulation',
       'Pipeline Regulation',
@@ -891,7 +891,7 @@ export class Picklists {
           description: 'Penalty for failure to comply with the Act or associated regulations'
         }
       },
-      'Oil and Gas Activities Act': {
+      'Energy Resource Activities Act': {
         '63': {
           description: 'Penalty for failure to comply with the Act or associated regulations'
         }
@@ -1912,7 +1912,7 @@ export class Picklists {
           description: 'IPMA Order'
         }
       },
-      'Oil and Gas Activities Act': {
+      'Energy Resource Activities Act': {
         '49': {
           description: 'General Order'
         },
