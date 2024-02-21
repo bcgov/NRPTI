@@ -1,8 +1,7 @@
 {
-  "defaultEnv": "local",
-  "local": {
-    "driver": "mongodb",
-        "database": "dbname",
-        "host": "localhost"
+  "local": { 
+    "driver": "mongodb", 
+    "database": "nrpti-dev",
+    "host": "localhost"
   }
 }
