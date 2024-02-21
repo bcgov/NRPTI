@@ -5,14 +5,38 @@ By default, MongoDB will be running on localhost:27017
 
 Follow [these instructions](https://db-migrate.readthedocs.io/en/latest/Getting%20Started/configuration/) to create a `database.json` file in the api directory.
 
+If running the database without Docker, you'll need to create the `database.json` file under the `api` directory,and set the `"host"` as `"localhost"`.
+
+```json
+{
+    "local": { 
+        "driver": "mongodb", 
+        "database": "nrpti-dev",
+        "host": "localhost" 
+    }
+}
+```
+
+If you're running the database in Docker, you'll need to create the `database.json` file under the `api` directory, and set the `"host"` as `"nrpti-mongo"`.
+
+```json
+{
+    "local": { 
+        "driver": "mongodb", 
+        "database": "nrpti-dev",
+        "host": "nrpti-mongo"
+    }
+}
+```
+
 ## Running Migration Commands Locally ## 
-Run `npm i db-migrate` to install the db-migrate library
+Run `npm i -g db-migrate` to install the db-migrate library
 
 Run the command `db-migrate create <nameOfMigration>` to create the migration file in api/migrations
 
 Run `db-migrate up <nameOfMigration> -e local` to run the individual migration locally. Run `db-migrate down <nameOfMigration> -e local` to tear the down the migration locally.
 
-## Running Migration on Dev or Prod ## 
+## Running Migration on Dev, Test, or Prod ## 
 Migrations are manually run on dev and prod through OpenShift.
 
 Run your migrations locally and on dev before running against prod. Back up prod before running the migrations.

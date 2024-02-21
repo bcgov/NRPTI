@@ -77,7 +77,7 @@ export class AgenciesComponent implements OnInit {
       }
     } catch (error) {
       this.toastService.addMessage(
-        'An error has occured while saving',
+        'An error has occurred while saving',
         'Save unsuccessful',
         Constants.ToastTypes.ERROR
       );
