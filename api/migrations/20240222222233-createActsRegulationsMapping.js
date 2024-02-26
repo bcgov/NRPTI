@@ -18,11 +18,9 @@ exports.up = async function(db) {
   const mClient = await db.connection.connect(db.connectionString, { native_parser: true });
 
   try {
-    let promises = [];
-    const nrptiCollection = mClient.collection('nrpti');
+    const actsRegulationsMappingCollection = mClient.collection('acts_regulations_mapping');
         const actsRegulationsMappingData = {
-          '_schemaName': 'ApplicationAgency',
-          'agencyCode': 'AGENCY_OGC',
+          'actCode': 'ACT_ERA',
           'act': { 'name': 'Energy Resource Activities Act',
           'regulations': [
             'Administrative Penalties Regulation',
@@ -42,13 +40,8 @@ exports.up = async function(db) {
           ]
         }
         };
-    promises.push(
-      nrptiCollection.findOneAndUpdate(
-        { _schemaName: actsRegulationsMappingData['_schemaName'], agencyCode: actsRegulationsMappingData['agencyCode']  },
-        { $set: { parentAct: actsRegulationsMappingData['act']} }
-      )
-    );
-    await Promise.all(promises);
+    const result = await actsRegulationsMappingCollection.insertOne(actsRegulationsMappingData);
+    console.log(`Document inserted with ID: ${result.insertedId}`);
     
   } catch (err) {
     console.log('Error on index creation: ', err);
