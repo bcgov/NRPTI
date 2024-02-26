@@ -29,7 +29,8 @@ exports.up = async function(db) {
       }
     );
         const actsRegulationsMappingData = {
-          'Energy Resource Activities Act': [
+          'act': 'Energy Resource Activities Act',
+          'regulations': [
             'Administrative Penalties Regulation',
             'Consultation and Notification Regulation',
             'Direction No. 1 to the Oil and Gas Commission',
