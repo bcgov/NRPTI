@@ -119,6 +119,12 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   inspection.read = utils.ApplicationAdminRoles;
   inspection.write = utils.ApplicationAdminRoles;
 
+  if (incomingObj.sourceSystemRef === 'nris-epd') {
+    // Add admin:env-epd to the read and write permissions
+    inspection.read.push(utils.ApplicationRoles.ADMIN_ENV_EPD);
+    inspection.write.push(utils.ApplicationRoles.ADMIN_ENV_EPD);
+  }
+
   // set forward references
   if (flavourIds && flavourIds.length) {
     flavourIds.forEach(id => {
@@ -380,6 +386,12 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   // set permissions and meta
   inspectionNRCED.read = utils.ApplicationAdminRoles;
   inspectionNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  
+  if (incomingObj.sourceSystemRef === 'nris-epd') {
+    // Add admin:env-epd to the read and write permissions
+    inspectionNRCED.read.push(utils.ApplicationRoles.ADMIN_ENV_EPD);
+    inspectionNRCED.write.push(utils.ApplicationRoles.ADMIN_ENV_EPD);
+  }
 
   inspectionNRCED.addedBy = args.swagger.params.auth_payload.displayName;
   inspectionNRCED.dateAdded = new Date();
