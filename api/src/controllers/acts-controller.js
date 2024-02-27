@@ -7,6 +7,12 @@ const queryActions = require('../utils/query-actions');
 const mongodb = require('../utils/mongodb');
 const RECORD_TYPE = require('../utils/constants/record-type-enum');
 const defaultLog = require('../utils/logger')('record');
+const axios = require('axios');
+
+const BC_LAWS_XML_ENDPOINT_BEGINNING = "https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/";
+const BC_LAWS_XML_ENDPOINT_ENDING = "_01/xml";
+
+const BCOGC_ID = "08036"
 
 exports.protectedOptions = function (args, res, next) {
   console.log('protectedOptions>>>>>>>');
@@ -51,3 +57,28 @@ const actCode = args.swagger.params.actCode.value;
 
   queryActions.sendResponse(res, 200, actInfo);
 };
+
+async function getLawXml(id){
+  try{
+      const response = await axios.get(BC_LAWS_XML_ENDPOINT_BEGINNING + id + BC_LAWS_XML_ENDPOINT_ENDING)
+      return response.data;
+  } catch (error) {
+      console.error("Failed to fetch XML:", error);
+      return null;
+  }
+}
+
+async function parseXml(xmlString){
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+  return xmlDoc;
+}
+
+exports.updateOgcActName = async function(){
+  const xmlData = await getLawXml(BCOGC_ID);
+  if (xmlData){
+      const parsedData = await parseXml(xmlData);
+      const title = parsedData['act:act']['act:title']
+      return title;
+  }
+}
