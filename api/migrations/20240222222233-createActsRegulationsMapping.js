@@ -20,6 +20,7 @@ exports.up = async function(db) {
   try {
     const actsRegulationsMappingCollection = mClient.collection('acts_regulations_mapping');
         const actsRegulationsMappingData = {
+          '_schemaName': 'ActsRegulations',
           'actCode': 'ACT_ERA',
           'act': { 'name': 'Energy Resource Activities Act',
           'regulations': [

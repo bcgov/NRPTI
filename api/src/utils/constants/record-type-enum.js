@@ -148,6 +148,12 @@ const RECORD_TYPE = Object.freeze({
     displayName: 'ApplicationAgency',
     recordControllerName: 'agencies',
     flavours: {}
+  },
+  ActsRegulations: {
+    _schemaName: 'ActsRegulations',
+    displayName: 'ActsRegulations',
+    recordControllerName: 'acts-controller',
+    flavours: {}
   }
 });
 module.exports = RECORD_TYPE;
