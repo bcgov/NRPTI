@@ -27,7 +27,7 @@ exports.publicGet = async function(args, res, next) {
 
 console.log('publicGet>>>>>>>');
 
-console.log('args>>>>>>>' + args);
+console.log('args>>>>>>>' + args.swagger.params.actCode.value);
 
   let agencyList;
 
