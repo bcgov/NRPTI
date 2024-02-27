@@ -22,29 +22,32 @@ exports.protectedOptions = function (args, res, next) {
  * @description Get API for retrieving agency code and names from the database.
  */
 exports.publicGet = async function(args, res, next) {
- // const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
-//  const collectionDB = db.collection('acts_regulations_mapping');
+ const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+ const actsRegulationsCollection = db.collection('acts_regulations_mapping');
 
 console.log('publicGet>>>>>>>');
 
 console.log('args>>>>>>>' + args.swagger.params.actCode.value);
 
-  let agencyList;
+const actCode = args.swagger.params.actCode.value;
 
-  // try {
-  //   // Obtain documents with Application Agency Schema
-  //   let agencyDocuments = await collectionDB.find({ _schemaName: RECORD_TYPE.ApplicationAgency._schemaName }).toArray();
-  //   // Using map function to iterate through the original array and creates
-  //   // a new array with objects containing only the _id, agencyCode, and agencyName properties.
-  //   agencyList = agencyDocuments.map(item => ({
-  //     _id: item._id,
-  //     agencyCode: item.agencyCode,
-  //     agencyName: item.agencyName
-  //   }));
-  // } catch (error) {
-  //   defaultLog.log(error);
-  //   throw error;
-  // }
+  let actInfo;
 
-  queryActions.sendResponse(res, 200, agencyList);
+  try {
+    // Obtain documents with Application Agency Schema
+    let act = await actsRegulationsCollection.find({ _schemaName: RECORD_TYPE.ActsRegulations._schemaName, actCode: actCode}).toArray();
+    // Using map function to iterate through the original array and creates
+    // a new array with objects containing only the _id, agencyCode, and agencyName properties.
+    actInfo = act.map(item => ({
+      _id: item._id,
+      actName: item.act['name'],
+      regulations: item.act['regulations'],
+    }));
+    console.log('actinfo>>>' + JSON.stringify(actInfo));
+  } catch (error) {
+    defaultLog.log(error);
+    throw error;
+  }
+
+  queryActions.sendResponse(res, 200, actInfo);
 };
