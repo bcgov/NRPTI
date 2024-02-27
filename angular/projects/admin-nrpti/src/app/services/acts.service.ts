@@ -4,15 +4,15 @@ import { HttpClient } from '@angular/common/http';
 import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
-export class MetricService {
+export class ActService {
   constructor(public apiService: ApiService, public http: HttpClient) {}
 
-  public getAct(code: string): Promise<any> {
-    if (!code) {
-      throw Error('MetricService - getMetric - missing required code param');
+  public getParentAct(actCode: string): Promise<any> {
+    if (!actCode) {
+      throw Error('ActService - agencyCode - missing required code param');
     }
 
-    const queryString = `metric/${code}/data`;
+    const queryString = `parentAct/${actCode}`;
     return this.http.get<any>(`${this.apiService.pathAPI}/${queryString}`).toPromise();
   }
 }

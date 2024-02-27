@@ -73,6 +73,20 @@
           </button>
         </div>
       </div>
+      <div *ngIf="showSourceSystemEPIC" class="col-sm mb-3">
+        <label>Get Act From DB</label>
+        <div>
+          <button
+            type="button"
+            [disabled]="buttonActions['epic']"
+            class="btn btn-primary"
+            title="Start EDB Call"
+            (click)="getParentAct('ACT_ERA')"
+          >
+            Call DB
+          </button>
+        </div>
+      </div>
     </div>
   </section>
 

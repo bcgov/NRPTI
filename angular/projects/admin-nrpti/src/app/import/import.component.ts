@@ -181,6 +181,17 @@ export class ImportComponent implements OnInit, OnDestroy {
     this.toastService.addMessage(dataSourceType, 'Job Started', Constants.ToastTypes.SUCCESS);
   }
 
+  async getParentAct(agencyCode: string) {
+    console.log('getParentAct>>>>>>called');
+    await this.factoryService
+      .getParentAct(agencyCode);
+
+     
+
+    // Send this notification to the toast service
+    this.toastService.addMessage(agencyCode, 'DB/API called', Constants.ToastTypes.SUCCESS);
+  }
+
   ngOnDestroy() {
     this.alive = false;
   }

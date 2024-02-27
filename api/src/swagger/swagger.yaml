@@ -2121,3 +2121,31 @@ paths:
           description: "Success"
         '403':
           description: 'Access Denied'
+  /parentAct/{actCode}:
+    x-swagger-router-controller: acts-controller
+    options:
+      tags:
+        - act
+      summary: 'get act'
+      operationId: publicGet
+      responses:
+        '200':
+          description: "Success"
+        '403':
+          description: 'Access Denied'
+    get:
+      tags:
+        - act
+      summary: 'get act'
+      operationId: publicGet
+      parameters:
+        - name: actCode
+          in: path
+          description: 'Specific act information you want to fetch'
+          required: true
+          type: string
+      responses:
+        '200':
+          description: "Success"
+        '403':
+          description: 'Access Denied'
