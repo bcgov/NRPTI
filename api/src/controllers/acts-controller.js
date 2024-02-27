@@ -8,6 +8,12 @@ const mongodb = require('../utils/mongodb');
 const RECORD_TYPE = require('../utils/constants/record-type-enum');
 const defaultLog = require('../utils/logger')('record');
 
+exports.protectedOptions = function (args, res, next) {
+  console.log('protectedOptions>>>>>>>');
+  res.status(200).send();
+};
+
+
 /**
  * @async
  * @param {Object} args - Request arguments.
@@ -19,7 +25,9 @@ exports.publicGet = async function(args, res, next) {
  // const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
 //  const collectionDB = db.collection('acts_regulations_mapping');
 
-  print('args>>>>>>>' + args.swagger.params.data.value);
+console.log('publicGet>>>>>>>');
+
+console.log('args>>>>>>>' + args);
 
   let agencyList;
 

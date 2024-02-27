@@ -2127,7 +2127,13 @@ paths:
       tags:
         - act
       summary: 'get act'
-      operationId: publicGet
+      operationId: protectedOptions
+      parameters:
+        - name: actCode
+          in: path
+          required: true
+          description: The code of the parentAct
+          type: string
       responses:
         '200':
           description: "Success"
