@@ -22,7 +22,7 @@ exports.up = async function(db) {
         const actsRegulationsMappingData = {
           '_schemaName': 'ActsRegulations',
           'actCode': 'ACT_ERA',
-          'act': { 'name': 'Energy Resource Activities Act',
+          'act': { 'title': 'Energy Resource Activities Act',
           'regulations': [
             'Administrative Penalties Regulation',
             'Consultation and Notification Regulation',

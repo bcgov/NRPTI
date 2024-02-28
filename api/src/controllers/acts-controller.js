@@ -28,57 +28,81 @@ exports.protectedOptions = function (args, res, next) {
  * @description Get API for retrieving agency code and names from the database.
  */
 exports.publicGet = async function(args, res, next) {
- const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
- const actsRegulationsCollection = db.collection('acts_regulations_mapping');
-
-console.log('publicGet>>>>>>>');
-
 console.log('args>>>>>>>' + args.swagger.params.actCode.value);
-
 const actCode = args.swagger.params.actCode.value;
-
-  let actInfo;
-
+let actInfo = null;
   try {
-    // Obtain documents with Application Agency Schema
-    let act = await actsRegulationsCollection.find({ _schemaName: RECORD_TYPE.ActsRegulations._schemaName, actCode: actCode}).toArray();
-    // Using map function to iterate through the original array and creates
-    // a new array with objects containing only the _id, agencyCode, and agencyName properties.
-    actInfo = act.map(item => ({
-      _id: item._id,
-      actName: item.act['name'],
-      regulations: item.act['regulations'],
-    }));
-    console.log('actinfo>>>' + JSON.stringify(actInfo));
+    let actTitleFromAPI = await getActTitleFromAPI(BCOGC_ID);
+    let actTitleFromDB = await getActTitleFromDB(actCode);
+
+    console.log('actTitleFromAPI>>>>' + actTitleFromAPI);
+    console.log('actTitleFromDB>>>>' + actTitleFromDB);
+
+      if(actTitleFromAPI !== actTitleFromDB){
+        console.log('Title>>>>>>>>> is the different');
+        updateTitle(actCode, actTitleFromAPI);
+      }
+      actInfo = {
+      actTitleFromDB: actTitleFromDB,
+      actTitleFromAPI: actTitleFromAPI
+    };
+
   } catch (error) {
     defaultLog.log(error);
     throw error;
   }
-
   queryActions.sendResponse(res, 200, actInfo);
 };
 
-async function getLawXml(id){
+let updateTitle = async( actCode, actTitleFromAPI ) => {
+  try{
+  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const actsRegulationsCollection = db.collection('acts_regulations_mapping');
+  await actsRegulationsCollection.update(
+    { actCode: actCode },
+    { $set: { "act.title": actTitleFromAPI } }
+  );
+  } catch (error) {
+    console.error("updateTitle: Failed to update DB:", error);
+  }
+
+}
+
+async function getActTitleFromAPI(id){
   try{
       const response = await axios.get(BC_LAWS_XML_ENDPOINT_BEGINNING + id + BC_LAWS_XML_ENDPOINT_ENDING)
-      return response.data;
+      let actTitle = getTitleFromXML(response.data);
+      return (actTitle);
   } catch (error) {
-      console.error("Failed to fetch XML:", error);
-      return null;
+      console.error("getActTitleFromAPI: Failed to fetch XML:", error);
   }
 }
 
-async function parseXml(xmlString){
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(xmlString, "text/xml");
-  return xmlDoc;
-}
-
-exports.updateOgcActName = async function(){
-  const xmlData = await getLawXml(BCOGC_ID);
-  if (xmlData){
-      const parsedData = await parseXml(xmlData);
-      const title = parsedData['act:act']['act:title']
-      return title;
+async function getActTitleFromDB(actCode){
+  try{
+    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const actsRegulationsCollection = db.collection('acts_regulations_mapping');
+    let act = await actsRegulationsCollection.find({ _schemaName: RECORD_TYPE.ActsRegulations._schemaName, actCode: actCode}).toArray();
+    let actTitleFromDB = act[0]['act']['title'];
+    return (actTitleFromDB);
+  } catch (error) {
+      console.error("getActTitleFromDB: Failed to fetch data from DB:", error);
   }
 }
+
+function getTitleFromXML(responseXML){
+  let actTitle = '';
+  let startIndex = 0;
+  try{
+    const titleStart = '<act:title>';
+    const titleEnd = '</act:title>';
+    const titleStartIndex = responseXML.indexOf(titleStart, startIndex);
+    const titleEndIndex = responseXML.indexOf(titleEnd, titleStart);
+    actTitle = responseXML.substring(titleStartIndex + titleStart.length, titleEndIndex);
+} catch (error) {
+    console.error("getTitleFromXML: Failed to parse XML:", error);
+    return null;
+}
+  return actTitle;
+}
+
