@@ -40,13 +40,14 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
     // force-reload so we always have latest data
     // When autofocusing, we want to limit our search to the one entry to prevent it getting lost in results
     if (params.autofocus) {
-      return this.factoryService.getRecord(params.autofocus, "").pipe(catchError(
-        (error: any) => {
-        if (error.status === 400) {
-          // If the search fails, handle the error by returning an Observable of an empty array
-          return of([]);
-        }
-      }))
+      return this.factoryService.getRecord(params.autofocus, '').pipe(
+        catchError((error: any) => {
+          if (error.status === 400) {
+            // If the search fails, handle the error by returning an Observable of an empty array
+            return of([]);
+          }
+        })
+      );
     }
     return this.factoryService.getRecords(
       keywords,
