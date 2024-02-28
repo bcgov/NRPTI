@@ -92,7 +92,7 @@ export class FactoryService {
    * @memberof FactoryService
    */
   public getRecord(recordId: string, schema: string, populate = false): Observable<SearchResults[]> {
-    if (!recordId || !schema) {
+    if (!recordId || schema === undefined) {
       return of([] as SearchResults[]);
     }
     return this.searchService.getItem(this.apiService.pathAPI, recordId, schema, populate);

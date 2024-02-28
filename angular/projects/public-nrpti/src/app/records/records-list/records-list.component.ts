@@ -120,23 +120,30 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         this.router.navigate(['/']);
         return;
       }
+      const records =
+        (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || // Multiple Records Search
+        res.records || // Single Record search
+        []; // No Entries Found
 
-      const records = (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || [];
+      const { autofocus } = this.queryParams;
       this.tableData.items = records.map(record => {
+        if (record.data) {
+          record = record.data;
+        } // Single results have an extra layer of nested data, this removes the layer
         // Set autofocus to auto open record card
-        if (this.queryParams.autofocus && this.queryParams.autofocus === record._id) {
+        if (autofocus && autofocus === record._id) {
           record.autofocus = true;
         }
         return { rowData: record };
       });
-
       this.tableData.totalListItems =
         (res.records[0] &&
           res.records[0].data &&
           res.records[0].data.meta &&
           res.records[0].data.meta[0] &&
-          res.records[0].data.meta[0].searchResultsTotal) ||
-        0;
+          res.records[0].data.meta[0].searchResultsTotal) || // Multiple results
+        res.records.length || // Single or nil results
+        0; // No entries found
 
       this.tableData.columns = this.tableColumns;
 
