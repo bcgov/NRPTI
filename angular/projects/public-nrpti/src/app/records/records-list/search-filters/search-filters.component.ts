@@ -5,6 +5,7 @@ import { Picklists, Constants } from '../../../../../../common/src/app/utils/rec
 import { IMutliSelectOption } from '../../../../../../common/src/app/autocomplete-multi-select/autocomplete-multi-select.component';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { FactoryService } from '../../../services/factory.service';
 
 /**
  * List page component.
@@ -33,7 +34,11 @@ export class SearchFiltersComponent implements OnInit, OnDestroy {
   public activityTypeOptions: IMutliSelectOption[] = Object.values(Picklists.activityTypePicklistNRCED).map(item => {
     return { value: item._schemaName, displayValue: item.displayName, selected: false, display: true };
   });
-  public actOptions: IMutliSelectOption[] = Picklists.getAllActs().map(value => {
+
+  public actOptions: IMutliSelectOption[] = Picklists.getActCode(this.factoryService).map(value => {
+   // Picklists.setActTitle('123');
+   Picklists.ACT_ERA = 'Actorrrr';
+    console.log('getAllActs callsed');
     return { value: value, displayValue: value, selected: false, display: true };
   });
   public regulationOptions: IMutliSelectOption[] = Picklists.getAllRegulations().map(value => {
@@ -47,7 +52,10 @@ export class SearchFiltersComponent implements OnInit, OnDestroy {
 
   public datepickerMinDate = Constants.DatepickerMinDate;
 
-  constructor(public router: Router, public route: ActivatedRoute, private _changeDetectionRef: ChangeDetectorRef) {}
+  constructor(public router: Router, public route: ActivatedRoute, private _changeDetectionRef: ChangeDetectorRef, private factoryService: FactoryService) {
+    console.log('ConstructorCalled>>>>>.')
+    
+  }
 
   ngOnInit(): void {
     this.loading = false;

@@ -181,16 +181,20 @@ export class ImportComponent implements OnInit, OnDestroy {
     this.toastService.addMessage(dataSourceType, 'Job Started', Constants.ToastTypes.SUCCESS);
   }
 
-  async getParentAct(actCode: string) {
+  async getActTitle(actCode: string) {
     console.log('getParentAct>>>>>>called');
     let actInfo = await this.factoryService
-      .getParentAct(actCode);
+      .getActTitle(actCode);
 
      
 
     // Send this notification to the toast service
+    // this.toastService.addMessage('Act Code ' + actCode
+    // , 'Act Title From DB: ' + JSON.stringify(actInfo['actTitleFromDB']) + '<br>' +'Act Title From API: ' + JSON.stringify(actInfo['actTitleFromAPI'])
+    // , Constants.ToastTypes.SUCCESS);
+
     this.toastService.addMessage('Act Code ' + actCode
-    , 'Act Title From DB: ' + JSON.stringify(actInfo['actTitleFromDB']) + '<br>' +'Act Title From API: ' + JSON.stringify(actInfo['actTitleFromAPI'])
+    , JSON.stringify(actInfo)
     , Constants.ToastTypes.SUCCESS);
   }
 

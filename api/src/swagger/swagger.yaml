@@ -2121,7 +2121,7 @@ paths:
           description: "Success"
         '403':
           description: 'Access Denied'
-  /parentAct/{actCode}:
+  /actTitle/{actCode}:
     x-swagger-router-controller: acts-controller
     options:
       tags:

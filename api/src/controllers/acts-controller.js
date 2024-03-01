@@ -27,32 +27,61 @@ exports.protectedOptions = function (args, res, next) {
  * @param {Function} next - Next function in the middleware chain.
  * @description Get API for retrieving agency code and names from the database.
  */
+
 exports.publicGet = async function(args, res, next) {
-console.log('args>>>>>>>' + args.swagger.params.actCode.value);
-const actCode = args.swagger.params.actCode.value;
-let actInfo = null;
-  try {
-    let actTitleFromAPI = await getActTitleFromAPI(BCOGC_ID);
-    let actTitleFromDB = await getActTitleFromDB(actCode);
+  console.log('args>>>>>>>' + args.swagger.params.actCode.value);
+  const actCode = args.swagger.params.actCode.value;
+  let actInfo = null;
+    try {
+      // let actTitleFromAPI = await getActTitleFromAPI(BCOGC_ID);
+      let actTitleFromDB = await getActTitleFromDB(actCode);
+  
+      // console.log('actTitleFromAPI>>>>' + actTitleFromAPI);
+      console.log('actTitleFromDB>>>>' + actTitleFromDB);
+  
+        // if(actTitleFromAPI !== actTitleFromDB){
+        //   console.log('Title>>>>>>>>> is the different');
+        //   updateTitle(actCode, actTitleFromAPI);
+        // }
+        actInfo = {
+        [actCode]: actTitleFromDB
+      };
+  
+    } catch (error) {
+      defaultLog.log(error);
+      throw error;
+    }
+    queryActions.sendResponse(res, 200, actInfo);
+  };
 
-    console.log('actTitleFromAPI>>>>' + actTitleFromAPI);
-    console.log('actTitleFromDB>>>>' + actTitleFromDB);
 
-      if(actTitleFromAPI !== actTitleFromDB){
-        console.log('Title>>>>>>>>> is the different');
-        updateTitle(actCode, actTitleFromAPI);
-      }
-      actInfo = {
-      actTitleFromDB: actTitleFromDB,
-      actTitleFromAPI: actTitleFromAPI
-    };
 
-  } catch (error) {
-    defaultLog.log(error);
-    throw error;
-  }
-  queryActions.sendResponse(res, 200, actInfo);
-};
+// exports.publicGet = async function(args, res, next) {
+// console.log('args>>>>>>>' + args.swagger.params.actCode.value);
+// const actCode = args.swagger.params.actCode.value;
+// let actInfo = null;
+//   try {
+//     let actTitleFromAPI = await getActTitleFromAPI(BCOGC_ID);
+//     let actTitleFromDB = await getActTitleFromDB(actCode);
+
+//     console.log('actTitleFromAPI>>>>' + actTitleFromAPI);
+//     console.log('actTitleFromDB>>>>' + actTitleFromDB);
+
+//       if(actTitleFromAPI !== actTitleFromDB){
+//         console.log('Title>>>>>>>>> is the different');
+//         updateTitle(actCode, actTitleFromAPI);
+//       }
+//       actInfo = {
+//       actTitleFromDB: actTitleFromDB,
+//       actTitleFromAPI: actTitleFromAPI
+//     };
+
+//   } catch (error) {
+//     defaultLog.log(error);
+//     throw error;
+//   }
+//   queryActions.sendResponse(res, 200, actInfo);
+// };
 
 let updateTitle = async( actCode, actTitleFromAPI ) => {
   try{

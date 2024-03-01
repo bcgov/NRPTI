@@ -7,12 +7,12 @@ import { ApiService } from './api.service';
 export class ActService {
   constructor(public apiService: ApiService, public http: HttpClient) {}
 
-  public getParentAct(actCode: string): Promise<any> {
+  public getActTitle(actCode: string): Promise<any> {
     if (!actCode) {
       throw Error('ActService - agencyCode - missing required code param');
     }
 
-    const queryString = `parentAct/${actCode}`;
+    const queryString = `actTitle/${actCode}`;
     return this.http.get<any>(`${this.apiService.pathAPI}/${queryString}`).toPromise();
   }
 }
