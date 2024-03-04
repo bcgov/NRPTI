@@ -179,6 +179,12 @@ export class Picklists {
 
   public static ACT_ERA = '';
 
+  // public static setActCode() {
+  // //  const actDataService = new ActDataService(factoryService);
+  //  Picklists.ACT_ERA = 'Energy Resouce 123'
+
+  // }
+
   public static getActCode(factoryService: FactoryServiceNRCED) {
     const actDataService = new ActDataService(factoryService);
     let ACT_ERA = actDataService.getActTitle();
@@ -814,7 +820,7 @@ export class Picklists {
    * @static
    * @memberof Picklists
    */
-  public static readonly legislationActsMappedToRegulations = {
+  public static legislationActsMappedToRegulations = {
     'Agricultural Land Commission Act': ['Agricultural Land Reserve Use, Subdivision and Procedure Regulation'],
     'Agrologists Act': [],
     'Animal Health Act': [
@@ -1333,6 +1339,7 @@ export class Picklists {
    * @returns {string[]} sorted array of acts
    */
   public static getAllActs = function(): string[] {
+    Picklists.ACT_ERA = '123';
     return Object.keys(this.legislationActsMappedToRegulations).sort((a, b) => a.localeCompare(b));
   };
 
