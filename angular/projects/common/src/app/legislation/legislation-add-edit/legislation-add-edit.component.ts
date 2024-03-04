@@ -5,6 +5,7 @@ import { Legislation } from '../../models/master/common-models/legislation';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Utils } from 'nrpti-angular-components';
+// import { FactoryService } from '../../../../../admin-nrpti/src/app/services/factory.service';
 
 @Component({
   selector: 'app-legislation-add-edit',
@@ -26,6 +27,8 @@ export class LegislationAddEditComponent implements OnInit {
   // cache acts
   public readonly actsMappedToRegulations: { [key: string]: string[] } = Picklists.legislationActsMappedToRegulations;
   public readonly allActs = Object.keys(this.actsMappedToRegulations).sort();
+  // public readonly actsMappedToRegulations = Picklists.getAllActs1(this.factoryService); 
+  // public readonly allActs = Object.keys(this.actsMappedToRegulations).sort();
 
   // cache regulations
   public readonly regulationsMappedToActs: {

@@ -3,7 +3,7 @@ import { Legislation } from '../models/master/common-models/legislation';
 import { AgencyDataService } from '../../../../../projects/global/src/lib/utils/agency-data-service';
 import { FactoryService } from '../../../../../projects/admin-nrpti/src/app/services/factory.service';
 import { ActDataService } from '../../../../../projects/global/src/lib/utils/act-data-service-nrced';
-import { FactoryService as FactoryServiceNRCED } from '../../../../public-nrpti/src/app/services/factory.service'; 
+
 export class EpicProjectIds {
   public static readonly lngCanadaId = '588511d0aaecd9001b826192';
   public static readonly coastalGaslinkId = '588511c4aaecd9001b825604';
@@ -185,7 +185,7 @@ export class Picklists {
 
   // }
 
-  public static getActCode(factoryService: FactoryServiceNRCED) {
+  public static getAllActs1(factoryService: any) {
     const actDataService = new ActDataService(factoryService);
     let ACT_ERA = actDataService.getActTitle();
 
@@ -703,8 +703,12 @@ export class Picklists {
       'Yale First Nation Final Agreement Act': [],
       'Zero Net Deforestation Act': []
     };
-   // return legislationActsMappedToRegulations;
-    return Object.keys(legislationActsMappedToRegulations).sort((a, b) => a.localeCompare(b));
+    // switch(stringRequired){
+    //   case true: return legislationActsMappedToRegulations; break;
+    //   case false: return Object.keys(legislationActsMappedToRegulations).sort((a, b) => a.localeCompare(b)); break;
+    // }
+    return legislationActsMappedToRegulations;
+   // return Object.keys(legislationActsMappedToRegulations).sort((a, b) => a.localeCompare(b));
   }
 
   public static setActTitle(actTitle) {
@@ -1339,7 +1343,6 @@ export class Picklists {
    * @returns {string[]} sorted array of acts
    */
   public static getAllActs = function(): string[] {
-    Picklists.ACT_ERA = '123';
     return Object.keys(this.legislationActsMappedToRegulations).sort((a, b) => a.localeCompare(b));
   };
 
