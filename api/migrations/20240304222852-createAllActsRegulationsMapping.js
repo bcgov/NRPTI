@@ -16,13 +16,31 @@ exports.setup = function(options, seedLink) {
 
 exports.up = async function(db) {
   const mClient = await db.connection.connect(db.connectionString, { native_parser: true });
-
+/*
+  { '_schemaName': 'ActsRegulationsMapping',
+  'actCode': ,
+  'actName': ,
+  'regulations':
+},
+*/
   try {
     const actsRegulationsMappingCollection = mClient.collection('acts_regulations_mapping');
-        const actsRegulationsMappingData = {
-          '_schemaName': 'ActsRegulationsMapping',
-          'actsRegulationsMapping':  {
-            'Agricultural Land Commission Act': ['Agricultural Land Reserve Use, Subdivision and Procedure Regulation'],
+        const actsRegulationsMappingData = 
+            [
+            { '_schemaName': 'ActsRegulationsMapping',
+              'actCode': 'ACT_ALC',
+              'actName': 'Agricultural Land Commission Act',
+              'regulations':['Agricultural Land Reserve Use, Subdivision and Procedure Regulation']
+            },
+            { '_schemaName': 'ActsRegulationsMapping',
+            'actCode': 'ACT_AGR',
+            'actName': 'Agricultural Land Commission Act',
+            'regulations':['Agricultural Land Reserve Use, Subdivision and Procedure Regulation']
+          },
+            
+          ]
+            
+
             'Agrologists Act': [],
             'Animal Health Act': [
               'Animal Products and Byproducts Regulation',
@@ -387,6 +405,7 @@ exports.up = async function(db) {
             'New Relationship Trust Act': [],
             "Nisga'a Final Agreement Act": [],
             'Off-Road Vehicle Act': ['Off-Road Vehicle Regulation'],
+            '__schemaName':'ActsRegulations'
             'ACT_ERA': {
               'actName': 'Energy Resource Activities Act',
               'regulations':[
