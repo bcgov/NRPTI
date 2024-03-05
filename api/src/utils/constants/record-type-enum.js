@@ -149,9 +149,9 @@ const RECORD_TYPE = Object.freeze({
     recordControllerName: 'agencies',
     flavours: {}
   },
-  ActsRegulations: {
-    _schemaName: 'ActsRegulations',
-    displayName: 'ActsRegulations',
+  ActsRegulationsMapping: {
+    _schemaName: 'ActsRegulationsMapping',
+    displayName: 'ActsRegulationsMapping',
     recordControllerName: 'acts-controller',
     flavours: {}
   }

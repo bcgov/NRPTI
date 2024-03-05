@@ -34,18 +34,19 @@ exports.publicGet = async function(args, res, next) {
   let actInfo = null;
     try {
       // let actTitleFromAPI = await getActTitleFromAPI(BCOGC_ID);
-      let actTitleFromDB = await getActTitleFromDB(actCode);
+      //let actTitleFromDB = await getActTitleFromDB(actCode);
+      await getAllActsAndRegulationsFromDB();
   
       // console.log('actTitleFromAPI>>>>' + actTitleFromAPI);
-      console.log('actTitleFromDB>>>>' + actTitleFromDB);
+     // console.log('actTitleFromDB>>>>' + actTitleFromDB);
   
         // if(actTitleFromAPI !== actTitleFromDB){
         //   console.log('Title>>>>>>>>> is the different');
         //   updateTitle(actCode, actTitleFromAPI);
         // }
-        actInfo = {
-        [actCode]: actTitleFromDB
-      };
+      //   actInfo = {
+      //   [actCode]: actTitleFromDB
+      // };
   
     } catch (error) {
       defaultLog.log(error);
@@ -114,6 +115,26 @@ async function getActTitleFromDB(actCode){
     let act = await actsRegulationsCollection.find({ _schemaName: RECORD_TYPE.ActsRegulations._schemaName, actCode: actCode}).toArray();
     let actTitleFromDB = act[0]['act']['title'];
     return (actTitleFromDB);
+  } catch (error) {
+      console.error("getActTitleFromDB: Failed to fetch data from DB:", error);
+  }
+}
+
+async function getAllActsAndRegulationsFromDB(){
+  try{
+    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const actsRegulationsCollection = db.collection('acts_regulations_mapping');
+    let actsRegulationsMapResponse = await actsRegulationsCollection.find({ _schemaName: RECORD_TYPE.ActsRegulationsMapping._schemaName}).toArray();
+  // console.log('ActsRegulationsMapping>>>' + JSON.stringify(actsRegulationsMap));
+    let actsRegulationsMap = {};
+    for (let actRegulations of actsRegulationsMapResponse){
+      //console.log('objects>>>' + JSON.stringify(actRegulations));
+      actsRegulationsMap[actRegulations['actName']] = actRegulations['regulations'];
+    }
+    console.log('actsRegulationsMap>>>' + JSON.stringify(actsRegulationsMap));
+    // let actTitleFromDB = act[0]['act']['title'];
+    return (actsRegulationsMap);
+   // return ('hello');
   } catch (error) {
       console.error("getActTitleFromDB: Failed to fetch data from DB:", error);
   }
