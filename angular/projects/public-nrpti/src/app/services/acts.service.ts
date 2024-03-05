@@ -16,7 +16,7 @@ import { HttpClient } from '@angular/common/http';
 export class ActService {
   private api: string;
   //private agencies: { [key: string]: string } = {};
-  private actInfo = '';
+  private actsRegulationsMap = null;
 
   /**
    * @constructor
@@ -48,11 +48,11 @@ export class ActService {
    */
    refreshAct(): Observable<void> {
     return new Observable<void>(observer => {
-      let actCode = 'ACT_ERA'
-      const apiEndpoint = `${this.api}/actTitle/${actCode}`;
-      const getActTitle = this.http.get<{ [key: string]: string }>(apiEndpoint);
+    //  let actCode = 'ACT_ERA'
+      const apiEndpoint = `${this.api}/acts-regulations`;
+      const getActsRegulationsURL = this.http.get<{ [key: string]: string }>(apiEndpoint);
 
-      getActTitle.subscribe(
+      getActsRegulationsURL.subscribe(
         response => {
           // Data transformation to make the data easier to work with
           // const agencyList = {};
@@ -61,7 +61,7 @@ export class ActService {
           //     agencyList[response[record]['agencyCode']] = response[record]['agencyName'];
           //   }
           // }
-          this.actInfo = response['ACT_ERA'];
+          this.actsRegulationsMap = response;
           observer.next();
           observer.complete();
         },
@@ -77,9 +77,9 @@ export class ActService {
    * Get the list of agencies.
    * @returns {Object} A dictionary of agency codes and names.
    */
-    getERA() {
-      console.log('getERA>>>actInfo>>>' + JSON.stringify(this.actInfo) );
-      return this.actInfo;
+    getAllActsAndRegulations() {
+      console.log('getAllActsAndRegulations>>>actInfo>>>' + JSON.stringify(this.actsRegulationsMap) );
+      return this.actsRegulationsMap;
     }
 
   //   /**

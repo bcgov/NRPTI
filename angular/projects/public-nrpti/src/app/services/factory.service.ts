@@ -256,9 +256,9 @@ export class FactoryService {
    * @memberof FactoryService
    */
     public getActService(): Observable<void> {
-      if (this.actService.getERA.length === 0) {
+      if (this.actService.getAllActsAndRegulations.length === 0) {
         this.actService.refreshAct().subscribe(() => {
-          this.actService.getERA();
+          this.actService.getAllActsAndRegulations();
         });
       }
       return this.actService.refreshAct();

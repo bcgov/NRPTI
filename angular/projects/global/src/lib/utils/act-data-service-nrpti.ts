@@ -4,13 +4,15 @@
  * @class AgencyDataService
  */
 
-import { FactoryService } from '../../../../public-nrpti/src/app/services/factory.service';
+import { FactoryService } from "../../../../admin-nrpti/src/app/services/factory.service";
+
+
 
 /**
  * @class
  * @description Service for accessing issuing agencies from ApplicationAgencyService.
  */
-export class ActDataServiceNRCED {
+export class ActDataServiceNRPTI {
   /**
    * @constructor
    * @param {FactoryService} factoryService - the factory service for accessing application agency data.

@@ -5,7 +5,7 @@ import { Legislation } from '../../models/master/common-models/legislation';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Utils } from 'nrpti-angular-components';
-// import { FactoryService } from '../../../../../admin-nrpti/src/app/services/factory.service';
+import { FactoryService } from '../../../../../admin-nrpti/src/app/services/factory.service';
 
 @Component({
   selector: 'app-legislation-add-edit',
@@ -25,7 +25,7 @@ export class LegislationAddEditComponent implements OnInit {
   protected ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   // cache acts
-  public readonly actsMappedToRegulations: { [key: string]: string[] } = Picklists.legislationActsMappedToRegulations;
+  public readonly actsMappedToRegulations: { [key: string]: string[] } = Picklists.getAllActs1(this.factoryService);
   public readonly allActs = Object.keys(this.actsMappedToRegulations).sort();
   // public readonly actsMappedToRegulations = Picklists.getAllActs1(this.factoryService); 
   // public readonly allActs = Object.keys(this.actsMappedToRegulations).sort();
@@ -42,7 +42,7 @@ export class LegislationAddEditComponent implements OnInit {
   public debouncedFilterActsPicklist = this.utils.debounced(200, args => this.filterActsPicklist(args));
   public debouncedFilterRegulationsPicklist = this.utils.debounced(200, args => this.filterRegulationsPicklist(args));
 
-  constructor(public utils: Utils, protected _changeDetectionRef: ChangeDetectorRef) {}
+  constructor(public utils: Utils, protected _changeDetectionRef: ChangeDetectorRef, private factoryService: FactoryService) {}
 
   ngOnInit(): void {
     if (this.formGroup.controls.act.value && this.formGroup.controls.regulation.value) {
