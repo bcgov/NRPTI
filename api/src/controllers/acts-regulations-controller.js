@@ -29,13 +29,13 @@ exports.protectedOptions = function (args, res, next) {
  */
 
 exports.publicGet = async function(args, res, next) {
-  console.log('args>>>>>>>' + args.swagger.params.actCode.value);
-  const actCode = args.swagger.params.actCode.value;
-  let actInfo = null;
+ // console.log('args>>>>>>>' + args.swagger.params.actCode.value);
+  //const actCode = args.swagger.params.actCode.value;
+  let actsAndRegulationsMap = null;
     try {
       // let actTitleFromAPI = await getActTitleFromAPI(BCOGC_ID);
       //let actTitleFromDB = await getActTitleFromDB(actCode);
-      await getAllActsAndRegulationsFromDB();
+       actsAndRegulationsMap = await getAllActsAndRegulationsFromDB();
   
       // console.log('actTitleFromAPI>>>>' + actTitleFromAPI);
      // console.log('actTitleFromDB>>>>' + actTitleFromDB);
@@ -52,7 +52,7 @@ exports.publicGet = async function(args, res, next) {
       defaultLog.log(error);
       throw error;
     }
-    queryActions.sendResponse(res, 200, actInfo);
+    queryActions.sendResponse(res, 200, actsAndRegulationsMap);
   };
 
 

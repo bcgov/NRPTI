@@ -181,10 +181,10 @@ export class ImportComponent implements OnInit, OnDestroy {
     this.toastService.addMessage(dataSourceType, 'Job Started', Constants.ToastTypes.SUCCESS);
   }
 
-  async getActTitle(actCode: string) {
+  async getAllActsAndRegulations() {
     console.log('getParentAct>>>>>>called');
-    let actInfo = await this.factoryService
-      .getActTitle(actCode);
+    let actsRegulationsMap = await this.factoryService
+      .getAllActsAndRegulations();
 
      
 
@@ -193,8 +193,8 @@ export class ImportComponent implements OnInit, OnDestroy {
     // , 'Act Title From DB: ' + JSON.stringify(actInfo['actTitleFromDB']) + '<br>' +'Act Title From API: ' + JSON.stringify(actInfo['actTitleFromAPI'])
     // , Constants.ToastTypes.SUCCESS);
 
-    this.toastService.addMessage('Act Code ' + actCode
-    , JSON.stringify(actInfo)
+    this.toastService.addMessage('Act actsRegulationsMap ' + actsRegulationsMap
+    , JSON.stringify(actsRegulationsMap)
     , Constants.ToastTypes.SUCCESS);
   }
 

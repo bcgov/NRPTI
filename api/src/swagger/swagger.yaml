@@ -2121,19 +2121,13 @@ paths:
           description: "Success"
         '403':
           description: 'Access Denied'
-  /actTitle/{actCode}:
-    x-swagger-router-controller: acts-controller
+  /acts-regulations:
+    x-swagger-router-controller: acts-regulations-controller
     options:
       tags:
-        - act
-      summary: 'get act'
+        - acts-regulations
+      summary: 'get all acts and regulations'
       operationId: protectedOptions
-      parameters:
-        - name: actCode
-          in: path
-          required: true
-          description: The code of the parentAct
-          type: string
       responses:
         '200':
           description: "Success"
@@ -2141,15 +2135,9 @@ paths:
           description: 'Access Denied'
     get:
       tags:
-        - act
-      summary: 'get act'
+        - acts-regulations
+      summary: 'get all acts and regulations'
       operationId: publicGet
-      parameters:
-        - name: actCode
-          in: path
-          description: 'Specific act information you want to fetch'
-          required: true
-          type: string
       responses:
         '200':
           description: "Success"

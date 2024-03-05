@@ -415,9 +415,9 @@ export class FactoryService {
    * @returns {Observable<object>}
    * @memberof FactoryService
    */
-    public getActTitle(agencyCode: string): Promise<any> {
+    public getAllActsAndRegulations(): Promise<any> {
       console.log('Factory_Service>>>>getParentAct');
-      return this.actService.getActTitle(agencyCode);
+      return this.actService.getAllActsAndRegulations();
     }
 
   /**
