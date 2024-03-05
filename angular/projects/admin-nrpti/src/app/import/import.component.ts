@@ -186,12 +186,7 @@ export class ImportComponent implements OnInit, OnDestroy {
     let actsRegulationsMap = await this.factoryService
       .getAllActsAndRegulations();
 
-     
-
     // Send this notification to the toast service
-    // this.toastService.addMessage('Act Code ' + actCode
-    // , 'Act Title From DB: ' + JSON.stringify(actInfo['actTitleFromDB']) + '<br>' +'Act Title From API: ' + JSON.stringify(actInfo['actTitleFromAPI'])
-    // , Constants.ToastTypes.SUCCESS);
 
     this.toastService.addMessage('Act actsRegulationsMap ' + actsRegulationsMap
     , JSON.stringify(actsRegulationsMap)

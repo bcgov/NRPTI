@@ -18,63 +18,15 @@ export class ActDataServiceNRCED {
   constructor(private factoryService: FactoryService) {}
 
   /**
-   * Get the full name of the agency based on the agency's code
-   * retrieved from the agency data using the FactoryService.
-   * @param {string} agencyCode - an agency's code
-   * @returns {string} - the agency's full name
+   * Get all Acts and Regulations
+   * @returns {[string: string]} 
    */
-  // displayNameFull(agencyCode): string {
-  //   // Access cached agency data from FactoryService
-  //   const agencyService = this.factoryService.applicationAgencyService;
-  //   const agencyList = agencyService ? agencyService.getAgencies() : null;
-  //   return agencyList && agencyList[agencyCode] ? agencyList[agencyCode] : agencyCode;
-  // }
 
-  /**
-   * Get an array of agency codes.
-   * @returns {string[]} - an array of agency codes
-   */
-  // getAgencyCodes(): string[] {
-  //   const agencyService = this.factoryService.applicationAgencyService;
-  //   const agencyList = agencyService ? agencyService.getAgencies() : null;
-
-  //   return agencyList ? Object.keys(agencyList) : [];
-  // }
-
-  /**
-   * Get an array of agency names.
-   * @returns {string[]} - an array of agency names
-   */
-  // getAgencyNames(): string[] {
-  //   const agencyService = this.factoryService.applicationAgencyService;
-  //   const agencyList = agencyService ? agencyService.getAgencies() : null;
-
-  //   return agencyList ? Object.values(agencyList) : [];
-  // }
-
-  /**
-   * Get the agency code based on the agency's name
-   * @param {string} agencyName - the name of an agency
-   * @returns {string} - the agency's code
-   */
-  // getAgencyCode(agencyName: string): string {
-  //   const agencyService = this.factoryService.applicationAgencyService;
-  //   const agencyList = agencyService ? agencyService.getAgencies() : null;
-
-  //   if (agencyList) {
-  //     for (const key in agencyList) {
-  //       if (agencyList.hasOwnProperty(key) && agencyList[key] === agencyName) {
-  //         return key; // Return the key if the value matches
-  //       }
-  //     }
   getAllActsAndRegulations(){
     const actService = this.factoryService.actService;
     const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
     console.log('getActTitle actInfo>>>' + JSON.stringify(actsRegulationsMap));
     return actsRegulationsMap;
   }
-//    }
-    // Return a default value or handle the case where agencyList is undefined or empty
-  //  return '';
- // }
+
 }

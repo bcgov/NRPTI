@@ -179,14 +179,6 @@ export class Picklists {
     return agencyDataService.getAgencyCodes();
   }
 
-  public static ACT_ERA = '';
-
-  // public static setActCode() {
-  // //  const actDataService = new ActDataService(factoryService);
-  //  Picklists.ACT_ERA = 'Energy Resouce 123'
-
-  // }
-
   public static getAllActs1(factoryService: any) {
     let actDataService;
     switch (true) {
@@ -199,39 +191,12 @@ export class Picklists {
       default:
           break;
   }
-    // if(factoryService instanceof FactoryServiceNRPTI){
-
-    //     actDataService = new ActDataServiceNRPTI(factoryService); 
-        
-    // }else (factoryService instanceof FactoryServiceNRCED)
-    // {
-    //   actDataService = new ActDataServiceNRCED(factoryService); 
-    // }
- //   const actDataService = new ActDataServiceNRCED(factoryService);
     let legislationActsMappedToRegulations = actDataService.getAllActsAndRegulations();
 
     console.log('getAllActs1>>>' + JSON.stringify(legislationActsMappedToRegulations));
-
-   // return agencyDataService.getAgencyCode(agencyName);
-
-    
-    // switch(stringRequired){
-    //   case true: return legislationActsMappedToRegulations; break;
-    //   case false: return Object.keys(legislationActsMappedToRegulations).sort((a, b) => a.localeCompare(b)); break;
-    // }
     return legislationActsMappedToRegulations;
    // return Object.keys(legislationActsMappedToRegulations).sort((a, b) => a.localeCompare(b));
   }
-
-  public static setActTitle(actTitle) {
-
-   console.log('setActTitleCalled')
-   // let actInfo = factoryService.getActTitle(actCode);
-    //Picklists.ACT_ERA = actInfo[actCode];
-    Picklists.ACT_ERA = actTitle;
-
-  }
-
   public static readonly entityTypePicklist = ['Company', 'Individual'];
 
   public static readonly authorPicklist = ['BC Government', 'Proponent', 'Other'];
@@ -702,7 +667,7 @@ export class Picklists {
     'New Relationship Trust Act': [],
     "Nisga'a Final Agreement Act": [],
     'Off-Road Vehicle Act': ['Off-Road Vehicle Regulation'],
-    [Picklists.ACT_ERA]: [
+    'Energy Resource Activities Act': [
       'Administrative Penalties Regulation',
       'Consultation and Notification Regulation',
       'Direction No. 1 to the Oil and Gas Commission',
