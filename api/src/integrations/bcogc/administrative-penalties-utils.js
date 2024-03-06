@@ -30,7 +30,7 @@ class AdministrativePenalty extends BaseRecordUtils {
    * @returns an order object matching the format expected by the API record post/put controllers.
    * @memberof AdministrativePenalty
    */
-  transformRecord(csvRow) {
+  transformRecord(csvRow, actName) {
     if (!csvRow) {
       throw Error('transformRecord - required csvRow must be non-null.');
     }
@@ -47,7 +47,7 @@ class AdministrativePenalty extends BaseRecordUtils {
 
     penalty['legislation'] = [
       {
-        act: 'Energy Resource Activities Act',
+        act: actName,
         section: 63,
         offence: 'Penalty for failure to comply with the Act or associated regulations'
       }

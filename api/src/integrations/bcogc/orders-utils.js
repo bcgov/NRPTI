@@ -31,7 +31,7 @@ class Orders extends BaseRecordUtils {
    * @returns an order object matching the format expected by the API record post/put controllers.
    * @memberof Orders
    */
-  transformRecord(csvRow) {
+  transformRecord(csvRow, actName) {
     if (!csvRow) {
       throw Error('transformRecord - required csvRow must be non-null.');
     }
@@ -56,7 +56,7 @@ class Orders extends BaseRecordUtils {
 
     order['legislation'] = [
       {
-        act: 'Energy Resource Activities Act',
+        act: actName,
         section: this.getOrderSection(csvRow),
         legislationDescription: this.getOrderSection(csvRow) === 49 ? 'General Order' : 'Action Order'
       }

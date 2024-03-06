@@ -31,7 +31,7 @@ exports.protectedOptions = function (args, res, next) {
 exports.publicGet = async function(args, res, next) {
   let actsAndRegulationsMap = null;
     try {
-       actsAndRegulationsMap = await getAllActsAndRegulationsFromDB();
+       actsAndRegulationsMap = await exports.getAllActsAndRegulationsFromDB();
   
     } catch (error) {
       defaultLog.log(error);
@@ -64,19 +64,19 @@ async function getActTitleFromAPI(id){
   }
 }
 
-async function getActTitleFromDB(actCode){
+exports.getActTitleFromDB = async function(actCode){
   try{
     const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
     const actsRegulationsCollection = db.collection('acts_regulations_mapping');
-    let act = await actsRegulationsCollection.find({ _schemaName: RECORD_TYPE.ActsRegulations._schemaName, actCode: actCode}).toArray();
-    let actTitleFromDB = act[0]['act']['title'];
+    let act = await actsRegulationsCollection.find({ _schemaName: RECORD_TYPE.ActsRegulationsMapping._schemaName, actCode: actCode}).toArray();
+    let actTitleFromDB = act[0]['actName'];
     return (actTitleFromDB);
   } catch (error) {
       console.error("getActTitleFromDB: Failed to fetch data from DB:", error);
   }
 }
 
-async function getAllActsAndRegulationsFromDB(){
+exports.getAllActsAndRegulationsFromDB = async function(){
   try{
     const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
     const actsRegulationsCollection = db.collection('acts_regulations_mapping');

@@ -3,6 +3,8 @@ const cheerio = require('cheerio');
 const defaultLog = require('../../utils/logger')('bcogc-datasource');
 const integrationUtils = require('../integration-utils');
 const { getCsvRowsFromString } = require('../../utils/csv-helpers');
+const { getActTitleFromDB } = require('../../controllers/acts-regulations-controller')
+const { energyActCode } = require('../../utils/constants/legislation-code-map.js');
 
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const BCOGC_UTILS_TYPES = require('./bcogc-utils-types-enum');
@@ -40,6 +42,7 @@ class OgcCsvDataSource {
   async run() {
     defaultLog.info('run - import bcogc');
 
+    this.actName = await getActTitleFromDB(energyActCode);
     const csvs = await this.fetchAllBcogcCsvs();
 
     this.status.itemTotal = csvs.getLength();
@@ -112,7 +115,7 @@ class OgcCsvDataSource {
       const recordTypeUtils = recordTypeConfig.getUtil(this.auth_payload, csvRow);
 
       // Perform any data transformations necessary to convert the csv row into a NRPTI record
-      const nrptiRecord = recordTypeUtils.transformRecord(csvRow);
+      const nrptiRecord = recordTypeUtils.transformRecord(csvRow, this.actName);
 
       // Check if this record already exists
       const existingRecord = await recordTypeUtils.findExistingRecord(nrptiRecord);

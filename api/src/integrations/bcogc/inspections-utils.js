@@ -31,11 +31,11 @@ class Inspections extends BaseRecordUtils {
    * @returns a inspection object matching the format expected by the API record post/put controllers.
    * @memberof Inspections
    */
-  transformRecord(csvRow) {
+  transformRecord(csvRow, actName) {
     if (!csvRow) {
       throw Error('transformRecord - required csvRow must be non-null.');
     }
-
+    
     csvRow = this.cleanCsvRow(csvRow);
 
     const inspection = { ...super.transformRecord(csvRow) };
@@ -59,7 +59,7 @@ class Inspections extends BaseRecordUtils {
 
     inspection['legislation'] = [
       {
-        act: 'Energy Resource Activities Act',
+        act: actName,
         section: '57',
         subSection: '4',
         legislationDescription: 'Inspection to verify compliance with regulatory requirement'
