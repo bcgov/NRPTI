@@ -8,12 +8,7 @@ const mongodb = require('../utils/mongodb');
 const RECORD_TYPE = require('../utils/constants/record-type-enum');
 const defaultLog = require('../utils/logger')('record');
 const axios = require('axios');
-
-const BC_LAWS_XML_ENDPOINT_BEGINNING = "https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/";
-const BC_LAWS_XML_ENDPOINT_ENDING = "_01/xml";
-
-const BCOGC_ID = "08036"
-
+const LEGISLATION_CODES = require('../utils/constants/legislation-code-map');
 exports.protectedOptions = function (args, res, next) {
   console.log('protectedOptions>>>>>>>');
   res.status(200).send();
@@ -40,28 +35,47 @@ exports.publicGet = async function(args, res, next) {
     queryActions.sendResponse(res, 200, actsAndRegulationsMap);
   };
 
-let updateTitle = async( actCode, actTitleFromAPI ) => {
+// let updateTitle = async( actCode, actTitleFromAPI ) => {
+//   try{
+//   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+//   const actsRegulationsCollection = db.collection('acts_regulations_mapping');
+//   await actsRegulationsCollection.update(
+//     { actCode: actCode },
+//     { $set: { "act.title": actTitleFromAPI } }
+//   );
+//   } catch (error) {
+//     console.error("updateTitle: Failed to update DB:", error);
+//   }
+
+// }
+
+
+let updateTitlesInDB = async(actMap) => {
   try{
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const actsRegulationsCollection = db.collection('acts_regulations_mapping');
+  for(let [actCode,actTitle] in actMap){
   await actsRegulationsCollection.update(
-    { actCode: actCode },
-    { $set: { "act.title": actTitleFromAPI } }
+    { _schemaName: "ActsRegulationsMapping", actCode: actCode},
+    { $set: { actName : actTitle } }
   );
+  }
   } catch (error) {
-    console.error("updateTitle: Failed to update DB:", error);
+    console.error("updateTitlesInDB: Failed to update DB:", error);
   }
 
 }
 
-async function getActTitleFromAPI(id){
-  try{
-      const response = await axios.get(BC_LAWS_XML_ENDPOINT_BEGINNING + id + BC_LAWS_XML_ENDPOINT_ENDING)
-      let actTitle = getTitleFromXML(response.data);
-      return (actTitle);
-  } catch (error) {
-      console.error("getActTitleFromAPI: Failed to fetch XML:", error);
-  }
+exports.updateActTitles = async function(res){
+  let actMap = {};
+  let actTitle = '';
+for (let act in LEGISLATION_CODES){
+  const response = await axios.get(act['energyActAPI']);
+  actTitle = getTitleFromXML(response.data);
+  actMap[act['energyActCode']] = actTitle;
+}
+updateTitlesInDB(actMap);
+queryActions.sendResponse(res, 200, actMap.length + ' acts updated');
 }
 
 exports.getActTitleFromDB = async function(actCode){

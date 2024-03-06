@@ -2143,3 +2143,25 @@ paths:
           description: "Success"
         '403':
           description: 'Access Denied'
+  /acts-regulations/update:
+    x-swagger-router-controller: acts-regulations-controller
+    options:
+      tags:
+        - acts-regulations-update
+      summary: 'update all acts'
+      operationId: protectedOptions
+      responses:
+        '200':
+          description: "Success"
+        '403':
+          description: 'Access Denied'
+    get:
+      tags:
+        - acts-regulations-update
+      summary: 'update all acts'
+      operationId: updateActTitles
+      responses:
+        '200':
+          description: "Success"
+        '403':
+          description: 'Access Denied'
