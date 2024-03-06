@@ -38,7 +38,7 @@ export class SearchFiltersComponent implements OnInit, OnDestroy {
   public actOptions: IMutliSelectOption[] = this.allActsProcessed.map(value => {
     return { value: value, displayValue: value, selected: false, display: true };
   });
-  public regulationOptions: IMutliSelectOption[] = Picklists.getAllRegulations().map(value => {
+  public regulationOptions: IMutliSelectOption[] = Picklists.getAllRegulations(this.factoryService).map(value => {
     return { value: value, displayValue: value, selected: false, display: true };
   });
 

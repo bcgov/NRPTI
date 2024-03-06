@@ -25,7 +25,28 @@ export class ActDataServiceNRPTI {
   getAllActsAndRegulations(){
     const actService = this.factoryService.actService;
     const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
-    console.log('getActTitle actInfo>>>' + JSON.stringify(actsRegulationsMap));
+    console.log('getAllActsAndRegulations actInfo>>>' + JSON.stringify(actsRegulationsMap));
     return actsRegulationsMap;
+  }
+  getAllActs(){
+    const actService = this.factoryService.actService;
+    const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
+    console.log('getAllActs actInfo>>>' + JSON.stringify(actsRegulationsMap));
+    return Object.keys(actsRegulationsMap).sort((a, b) => a.localeCompare(b));
+  }
+  getAllRegulations(){
+    const actService = this.factoryService.actService;
+    let actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
+    console.log('getAllActs actInfo>>>' + JSON.stringify(actsRegulationsMap));
+   // return Object.keys(actsRegulationsMap).sort((a, b) => a.localeCompare(b));
+
+    const regulations = [];
+
+    Object.keys(actsRegulationsMap).forEach(act =>
+      regulations.push(...actsRegulationsMap[act])
+    );
+
+    return Array.from(new Set<string>(regulations)).sort((a, b) => a.localeCompare(b));
+
   }
 }

@@ -30,6 +30,7 @@ import {
 import { FactoryService } from '../../services/factory.service';
 import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
 
+
 /**
  * List page component.
  *
@@ -177,7 +178,8 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       FilterType.MultiSelect,
       'Issued Under which Act',
       new MultiSelectDefinition(
-        Picklists.getAllActs().map(value => {
+        Picklists.getAllActsTitles(this.factoryService).map(value => {
+          console.log(value);
           return { value: value, displayValue: value, selected: false, display: true };
         }),
         'Begin typing to filter acts...',
@@ -216,7 +218,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       FilterType.MultiSelect,
       'Issued Under which Regulation',
       new MultiSelectDefinition(
-        Picklists.getAllRegulations().map(value => {
+        Picklists.getAllRegulations(this.factoryService).map(value => {
           return { value: value, displayValue: value, selected: false, display: true };
         }),
         'Begin typing to filter regulations...',

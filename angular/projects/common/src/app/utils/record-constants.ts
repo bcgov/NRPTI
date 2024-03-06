@@ -197,6 +197,11 @@ export class Picklists {
     return legislationActsMappedToRegulations;
    // return Object.keys(legislationActsMappedToRegulations).sort((a, b) => a.localeCompare(b));
   }
+  public static getAllActsTitles(factoryService: any) {
+    let actDataService = new ActDataServiceNRPTI(factoryService);
+    
+    return actDataService.getAllActs();
+  }
   public static readonly entityTypePicklist = ['Company', 'Individual'];
 
   public static readonly authorPicklist = ['BC Government', 'Proponent', 'Other'];
@@ -302,7 +307,7 @@ export class Picklists {
    * @memberof Picklists
    */
   public static legislationActsMappedToRegulations = {
-    'Agricultural Land Commission Act': ['Agricultural Land Reserve Use, Subdivision and Procedure Regulation'],
+    'Agricultural Land Commission Act_3': ['Agricultural Land Reserve Use, Subdivision and Procedure Regulation'],
     'Agrologists Act': [],
     'Animal Health Act': [
       'Animal Products and Byproducts Regulation',
@@ -819,9 +824,9 @@ export class Picklists {
    * @memberof Picklists
    * @returns {string[]} sorted array of acts
    */
-  public static getAllActs = function(): string[] {
-    return Object.keys(this.legislationActsMappedToRegulations).sort((a, b) => a.localeCompare(b));
-  };
+  // public static getAllActs = function(): string[] {
+  //   return Object.keys(this.legislationActsMappedToRegulations).sort((a, b) => a.localeCompare(b));
+  // };
 
   /**
    * Returns an array of all supported regulation strings.
@@ -830,15 +835,20 @@ export class Picklists {
    * @memberof Picklists
    * @returns {string[]} sorted array of regulations
    */
-  public static getAllRegulations = function(): string[] {
-    const regulations = [];
-
-    Object.keys(this.legislationActsMappedToRegulations).forEach(act =>
-      regulations.push(...this.legislationActsMappedToRegulations[act])
-    );
-
-    return Array.from(new Set<string>(regulations)).sort((a, b) => a.localeCompare(b));
+  public static getAllRegulations = function(factoryService: any): string[] {
+    let actDataService = new ActDataServiceNRPTI(factoryService);
+    return actDataService.getAllRegulations();
   };
+
+  // public static getAllRegulations = function(): string[] {
+  //   const regulations = [];
+
+  //   Object.keys(this.legislationActsMappedToRegulations).forEach(act =>
+  //     regulations.push(...this.legislationActsMappedToRegulations[act])
+  //   );
+
+  //   return Array.from(new Set<string>(regulations)).sort((a, b) => a.localeCompare(b));
+  // };
 
   /**
    * Returns an object containing a mapping of regulations to acts.
