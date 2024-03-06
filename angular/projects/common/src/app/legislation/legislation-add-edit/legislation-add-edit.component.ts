@@ -33,7 +33,7 @@ export class LegislationAddEditComponent implements OnInit {
   // cache regulations
   public readonly regulationsMappedToActs: {
     [key: string]: string[];
-  } = Picklists.getLegislationRegulationsMappedToActs();
+  } = Picklists.getLegislationRegulationsMappedToActs(this.factoryService);
   public readonly allRegulations = Object.keys(this.regulationsMappedToActs).sort();
 
   public filteredActs: string[] = [];
