@@ -48,7 +48,6 @@ objects:
 
                       echo -e "Updating ACTS\n"
                               curl -H "Authorization: Bearer ${TOKEN}" \
-                                -H "Content-Type: application/json" \
                                 ${NRPTI_API_URL}/acts-regulations/update
 
                       echo -e "-------- RUNNING IMPORTERS --------\n"
