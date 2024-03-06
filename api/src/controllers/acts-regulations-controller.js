@@ -70,13 +70,13 @@ let updateTitlesInDB = async(actMap) => {
 exports.updateActTitles = async function(args, res, next){
   let actMap = {};
   let actTitle = '';
-for (let act of LEGISLATION_CODES){
-  const response = await axios.get(act['actAPI']);
-  actTitle = getTitleFromXML(response.data);
-  actMap[act['actCode']] = actTitle;
-}
-updateTitlesInDB(actMap);
-queryActions.sendResponse(res, 200,'Acts updated');
+  for (const [actCode, {actAPI}] of Object.entries(LEGISLATION_CODES)){
+    const response = await axios.get(actAPI);
+    actTitle = getTitleFromXML(response.data);
+    actMap[actCode] = actTitle;
+  }
+  updateTitlesInDB(actMap);
+  queryActions.sendResponse(res, 200,'Acts updated');
 }
 
 exports.getActTitleFromDB = async function(actCode){

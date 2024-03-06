@@ -4,7 +4,6 @@ const defaultLog = require('../../utils/logger')('bcogc-datasource');
 const integrationUtils = require('../integration-utils');
 const { getCsvRowsFromString } = require('../../utils/csv-helpers');
 const { getActTitleFromDB } = require('../../controllers/acts-regulations-controller')
-const { energyActCode } = require('../../utils/constants/legislation-code-map.js');
 
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const BCOGC_UTILS_TYPES = require('./bcogc-utils-types-enum');
@@ -12,6 +11,7 @@ const BCOGC_INSPECTIONS_CSV_ENDPOINT = process.env.BCOGC_INSPECTIONS_CSV_ENDPOIN
 const BCOGC_ORDERS_CSV_ENDPOINT = process.env.BCOGC_ORDERS_CSV_ENDPOINT || 'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/enforcement-order';
 const BCOGC_PENALTIES_CSV_ENDPOINT = process.env.BCOGC_PENALTIES_CSV_ENDPOINT || 'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/contravention-decision';
 const BCOGC_WARNING_CSV_ENDPOINT = process.env.BCOGC_WARNING_CSV_ENDPOINT  || 'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/warning-letter';
+const ENERGY_ACT_CODE = 'ACT_103'
 
 class OgcCsvDataSource {
   /**
@@ -42,7 +42,7 @@ class OgcCsvDataSource {
   async run() {
     defaultLog.info('run - import bcogc');
 
-    this.actName = await getActTitleFromDB(energyActCode);
+    this.actName = await getActTitleFromDB(ENERGY_ACT_CODE);
     const csvs = await this.fetchAllBcogcCsvs();
 
     this.status.itemTotal = csvs.getLength();
