@@ -13,7 +13,7 @@ exports.setup = function(options, seedLink) {
   type = dbm.dataType;
   seed = seedLink;
 };
-
+// update Oil and Gas Activities Act
 exports.up = async function(db) {
   const mClient = await db.connection.connect(db.connectionString, { native_parser: true });
   try {
