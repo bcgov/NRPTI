@@ -25,7 +25,7 @@ export class LegislationAddEditComponent implements OnInit {
   protected ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
 
   // cache acts
-  public readonly actsMappedToRegulations: { [key: string]: string[] } = Picklists.getAllActs1(this.factoryService);
+  public readonly actsMappedToRegulations: { [key: string]: string[] } = Picklists.getAllActs(this.factoryService);
   public readonly allActs = Object.keys(this.actsMappedToRegulations).sort();
 
   // cache regulations
