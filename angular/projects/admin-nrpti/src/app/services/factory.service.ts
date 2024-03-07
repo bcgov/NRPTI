@@ -162,12 +162,12 @@ export class FactoryService {
    * @type {ActService}
    * @memberof FactoryService
    */
-    public get actService(): ActService {
-      if (!this._actService) {
-        this._actService = this.injector.get(ActService);
-      }
-      return this._actService;
+  public get actService(): ActService {
+    if (!this._actService) {
+      this._actService = this.injector.get(ActService);
     }
+    return this._actService;
+  }
 
   public get documentService(): DocumentService {
     if (!this._documentService) {
@@ -413,14 +413,14 @@ export class FactoryService {
    * @returns {Observable<void>} An observable that resolves when agency data is fetched.
    * @memberof FactoryService
    */
-    public getAllActsAndRegulations(): Observable<void>  {
-      if (this.actService.getAllActsAndRegulations.length === 0) {
-        this.actService.refreshAct().subscribe(() => {
-          this.actService.getAllActsAndRegulations();
-        });
-      }
-      return this.actService.refreshAct();
+  public getAllActsAndRegulations(): Observable<void> {
+    if (this.actService.getAllActsAndRegulations.length === 0) {
+      this.actService.refreshAct().subscribe(() => {
+        this.actService.getAllActsAndRegulations();
+      });
     }
+    return this.actService.refreshAct();
+  }
 
   /**
    * Publish a record.

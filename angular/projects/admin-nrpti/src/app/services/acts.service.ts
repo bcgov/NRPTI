@@ -33,9 +33,9 @@ export class ActService {
     await this.refreshAct().toPromise();
   }
   /**
-    * Refresh the list of agencies from the API.
-    * @returns {Observable<void>} An observable that completes when agencies are refreshed.
-    */
+   * Refresh the list of agencies from the API.
+   * @returns {Observable<void>} An observable that completes when agencies are refreshed.
+   */
   refreshAct(): Observable<void> {
     return new Observable<void>(observer => {
       const apiEndpoint = `${this.api}/acts-regulations`;
@@ -59,6 +59,6 @@ export class ActService {
    * @returns {Object} A dictionary of acts and regulations.
    */
   getAllActsAndRegulations() {
-      return this.actsRegulationsMap;
+    return this.actsRegulationsMap;
   }
 }

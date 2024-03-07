@@ -19,14 +19,13 @@ export class ActDataServiceNRCED {
 
   /**
    * Get all Acts and Regulations
-   * @returns {[string: string]} 
+   * @returns {[string: string]}
    */
 
-  getAllActsAndRegulations(){
+  getAllActsAndRegulations() {
     const actService = this.factoryService.actService;
     const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
     console.log('getActTitle actInfo>>>' + JSON.stringify(actsRegulationsMap));
     return actsRegulationsMap;
   }
-
 }

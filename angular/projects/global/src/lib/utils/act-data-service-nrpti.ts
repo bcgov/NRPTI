@@ -4,7 +4,7 @@
  * @class AgencyDataService
  */
 
-import { FactoryService } from "../../../../admin-nrpti/src/app/services/factory.service";
+import { FactoryService } from '../../../../admin-nrpti/src/app/services/factory.service';
 
 /**
  * @class
@@ -22,53 +22,49 @@ export class ActDataServiceNRPTI {
    * retrieved from the act data using the FactoryService.
    * @returns {string: [string]} - All Acts and Regulations
    */
-  getAllActsAndRegulations(){
+  getAllActsAndRegulations() {
     const actService = this.factoryService.actService;
     const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
     console.log('getAllActsAndRegulations actInfo>>>' + JSON.stringify(actsRegulationsMap));
     return actsRegulationsMap;
   }
-  getAllActs(){
+  getAllActs() {
     const actService = this.factoryService.actService;
     const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
     console.log('getAllActs actInfo>>>' + JSON.stringify(actsRegulationsMap));
     return Object.keys(actsRegulationsMap).sort((a, b) => a.localeCompare(b));
   }
-  getAllRegulations(){
+  getAllRegulations() {
     const actService = this.factoryService.actService;
-    let actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
+    const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
     console.log('getAllActs actInfo>>>' + JSON.stringify(actsRegulationsMap));
-   // return Object.keys(actsRegulationsMap).sort((a, b) => a.localeCompare(b));
+    // return Object.keys(actsRegulationsMap).sort((a, b) => a.localeCompare(b));
 
     const regulations = [];
 
-    Object.keys(actsRegulationsMap).forEach(act =>
-      regulations.push(...actsRegulationsMap[act])
-    );
+    Object.keys(actsRegulationsMap).forEach(act => regulations.push(...actsRegulationsMap[act]));
 
     return Array.from(new Set<string>(regulations)).sort((a, b) => a.localeCompare(b));
-
   }
-     getLegislationRegulationsMappedToActs = function(factoryService: any): { [key: string]: string[] } {
-{
-    const actService = this.factoryService.actService;
-    const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
-    console.log('getAllActsAndRegulations actInfo>>>' + JSON.stringify(actsRegulationsMap));
-  //  return actsRegulationsMap;
-        const regulations = {};
+  getLegislationRegulationsMappedToActs = function(factoryService: any): { [key: string]: string[] } {
+    {
+      const actService = this.factoryService.actService;
+      const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
+      console.log('getAllActsAndRegulations actInfo>>>' + JSON.stringify(actsRegulationsMap));
+      //  return actsRegulationsMap;
+      const regulations = {};
 
-    Object.keys(actsRegulationsMap).forEach(act =>
-      actsRegulationsMap[act].map(regulation => {
-        if (regulations[regulation]) {
-          regulations[regulation].push(act);
-        } else {
-          regulations[regulation] = [act];
-        }
-      })
-    );
+      Object.keys(actsRegulationsMap).forEach(act =>
+        actsRegulationsMap[act].map(regulation => {
+          if (regulations[regulation]) {
+            regulations[regulation].push(act);
+          } else {
+            regulations[regulation] = [act];
+          }
+        })
+      );
 
-    return regulations;
-  }
-}
-
+      return regulations;
+    }
+  };
 }

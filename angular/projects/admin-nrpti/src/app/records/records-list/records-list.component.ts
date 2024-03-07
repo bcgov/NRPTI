@@ -30,7 +30,6 @@ import {
 import { FactoryService } from '../../services/factory.service';
 import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
 
-
 /**
  * List page component.
  *

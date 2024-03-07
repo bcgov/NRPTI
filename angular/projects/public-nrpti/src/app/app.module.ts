@@ -36,7 +36,11 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
   return () => overlay.scrollStrategies.close();
 }
 
-export function initConfig(configService: ConfigService, applicationAgency: ApplicationAgencyService, actService: ActService) {
+export function initConfig(
+  configService: ConfigService,
+  applicationAgency: ApplicationAgencyService,
+  actService: ActService
+) {
   return async () => {
     await configService.init();
     await applicationAgency.init();

@@ -40,7 +40,11 @@ export class LegislationAddEditComponent implements OnInit {
   public debouncedFilterActsPicklist = this.utils.debounced(200, args => this.filterActsPicklist(args));
   public debouncedFilterRegulationsPicklist = this.utils.debounced(200, args => this.filterRegulationsPicklist(args));
 
-  constructor(public utils: Utils, protected _changeDetectionRef: ChangeDetectorRef, private factoryService: FactoryService) {}
+  constructor(
+    public utils: Utils,
+    protected _changeDetectionRef: ChangeDetectorRef,
+    private factoryService: FactoryService
+  ) {}
 
   ngOnInit(): void {
     if (this.formGroup.controls.act.value && this.formGroup.controls.regulation.value) {

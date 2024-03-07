@@ -183,23 +183,23 @@ export class Picklists {
     let actDataService;
     switch (true) {
       case factoryService instanceof FactoryServiceNRPTI:
-          actDataService = new ActDataServiceNRPTI(factoryService);
-          break;
+        actDataService = new ActDataServiceNRPTI(factoryService);
+        break;
       case factoryService instanceof FactoryServiceNRCED:
-          actDataService = new ActDataServiceNRCED(factoryService);
-          break;
+        actDataService = new ActDataServiceNRCED(factoryService);
+        break;
       default:
-          break;
-  }
-    let legislationActsMappedToRegulations = actDataService.getAllActsAndRegulations();
+        break;
+    }
+    const legislationActsMappedToRegulations = actDataService.getAllActsAndRegulations();
 
     console.log('getAllActs1>>>' + JSON.stringify(legislationActsMappedToRegulations));
     return legislationActsMappedToRegulations;
-   // return Object.keys(legislationActsMappedToRegulations).sort((a, b) => a.localeCompare(b));
+    // return Object.keys(legislationActsMappedToRegulations).sort((a, b) => a.localeCompare(b));
   }
   public static getAllActsTitles(factoryService: any) {
-    let actDataService = new ActDataServiceNRPTI(factoryService);
-    
+    const actDataService = new ActDataServiceNRPTI(factoryService);
+
     return actDataService.getAllActs();
   }
   public static readonly entityTypePicklist = ['Company', 'Individual'];
@@ -290,7 +290,7 @@ export class Picklists {
     'Permit',
     'Report'
   ];
-  
+
   public static readonly collectionAgencyCodePicklist = ['AGENCY_EAO', 'AGENCY_EMLI', 'AGENCY_ENV'];
 
   /**
@@ -836,7 +836,7 @@ export class Picklists {
    * @returns {string[]} sorted array of regulations
    */
   public static getAllRegulations = function(factoryService: any): string[] {
-    let actDataService = new ActDataServiceNRPTI(factoryService);
+    const actDataService = new ActDataServiceNRPTI(factoryService);
     return actDataService.getAllRegulations();
   };
 
@@ -881,7 +881,7 @@ export class Picklists {
   // };
 
   public static getLegislationRegulationsMappedToActs = function(factoryService: any): { [key: string]: string[] } {
-    let actDataService = new ActDataServiceNRPTI(factoryService);
+    const actDataService = new ActDataServiceNRPTI(factoryService);
     return actDataService.getLegislationRegulationsMappedToActs(factoryService);
   };
 

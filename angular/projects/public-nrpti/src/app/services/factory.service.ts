@@ -85,20 +85,19 @@ export class FactoryService {
     return this._applicationAgencyService;
   }
 
-
-    /**
+  /**
    * Inject agency service if it hasn't already been injected.
    *
    * @readonly
    * @type {ApiService}
    * @memberof FactoryService
    */
-    public get actService(): ActService {
-      if (!this._actService) {
-        this._actService = this.injector.get(ActService);
-      }
-      return this._actService;
+  public get actService(): ActService {
+    if (!this._actService) {
+      this._actService = this.injector.get(ActService);
     }
+    return this._actService;
+  }
   /**
    * Return the record for the given _id.
    *
@@ -250,17 +249,17 @@ export class FactoryService {
     return this.applicationAgencyService.refreshAgencies();
   }
 
-    /**
+  /**
    * Get act data. If data is not cached, fetch it from the actService.
    * @returns {Observable<void>} An observable that resolves when agency data is fetched.
    * @memberof FactoryService
    */
-    public getActService(): Observable<void> {
-      if (this.actService.getAllActsAndRegulations.length === 0) {
-        this.actService.refreshAct().subscribe(() => {
-          this.actService.getAllActsAndRegulations();
-        });
-      }
-      return this.actService.refreshAct();
+  public getActService(): Observable<void> {
+    if (this.actService.getAllActsAndRegulations.length === 0) {
+      this.actService.refreshAct().subscribe(() => {
+        this.actService.getAllActsAndRegulations();
+      });
     }
+    return this.actService.refreshAct();
+  }
 }
