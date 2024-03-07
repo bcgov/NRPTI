@@ -31,15 +31,13 @@ export class ActService {
   async init() {
     this.api = `${this.configService.config['API_LOCATION']}${this.configService.config['API_PATH']}`;
     await this.refreshAct().toPromise();
-  }
-  
-   /**
-   * Refresh the list of agencies from the API.
-   * @returns {Observable<void>} An observable that completes when agencies are refreshed.
-   */
-   refreshAct(): Observable<void> {
+  }  
+  /**
+    * Refresh the list of agencies from the API.
+    * @returns {Observable<void>} An observable that completes when agencies are refreshed.
+    */
+  refreshAct(): Observable<void> {
     return new Observable<void>(observer => {
-    //  let actCode = 'ACT_ERA'
       const apiEndpoint = `${this.api}/acts-regulations`;
       const getActsRegulationsURL = this.http.get<{ [key: string]: string }>(apiEndpoint);
 
@@ -56,12 +54,11 @@ export class ActService {
       );
     });
   }
-
-    /**
+  /**
    * Get the list of agencies.
    * @returns {Object} A dictionary of acts and regulations.
    */
-    getAllActsAndRegulations() {
+  getAllActsAndRegulations() {
       return this.actsRegulationsMap;
-    }
+  }
 }
