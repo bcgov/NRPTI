@@ -31,7 +31,7 @@ export class ActService {
   async init() {
     this.api = `${this.configService.config['API_LOCATION']}${this.configService.config['API_PATH']}`;
     await this.refreshAct().toPromise();
-  }  
+  }   
   /**
     * Refresh the list of agencies from the API.
     * @returns {Observable<void>} An observable that completes when agencies are refreshed.
