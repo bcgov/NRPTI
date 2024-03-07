@@ -9,6 +9,7 @@ import { SharedModule } from '../../../shared.module';
 import { CommonModule } from '../../../../../../common/src/app/common.module';
 import { GlobalModule, Utils } from 'nrpti-angular-components';
 import { ShareRecordButtonComponent } from '../../share-record-button/share-record-button.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('SearchFiltersComponent', () => {
   const testBedHelper = new TestBedHelper<SearchFiltersComponent>(SearchFiltersComponent);
@@ -27,7 +28,8 @@ describe('SearchFiltersComponent', () => {
         GlobalModule,
         NgxPaginationModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        HttpClientTestingModule
       ],
       declarations: [SearchFiltersComponent, ShareRecordButtonComponent],
       providers: [

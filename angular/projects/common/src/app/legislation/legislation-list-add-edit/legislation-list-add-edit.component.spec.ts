@@ -5,7 +5,7 @@ import { TestBedHelper } from './../../spec/spec-utils';
 import { LegislationListAddEditComponent } from './legislation-list-add-edit.component';
 import { LegislationAddEditComponent } from './../legislation-add-edit/legislation-add-edit.component';
 import { Utils } from 'nrpti-angular-components';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('LegislationListAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<LegislationListAddEditComponent>(LegislationListAddEditComponent);
@@ -13,7 +13,7 @@ describe('LegislationListAddEditComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [LegislationListAddEditComponent, LegislationAddEditComponent],
-      imports: [FormsModule, ReactiveFormsModule, MatAutocompleteModule, HttpClientModule],
+      imports: [FormsModule, ReactiveFormsModule, MatAutocompleteModule, HttpClientTestingModule],
       providers: [Utils]
     }).compileComponents();
   });

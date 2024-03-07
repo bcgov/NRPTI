@@ -25,7 +25,6 @@ export class ActDataServiceNRPTI {
   getAllActsAndRegulations() {
     const actService = this.factoryService.actService;
     const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
-    console.log('getAllActsAndRegulations actInfo>>>' + JSON.stringify(actsRegulationsMap));
     return actsRegulationsMap;
   }
   getAllActs() {
@@ -37,21 +36,14 @@ export class ActDataServiceNRPTI {
   getAllRegulations() {
     const actService = this.factoryService.actService;
     const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
-    console.log('getAllActs actInfo>>>' + JSON.stringify(actsRegulationsMap));
-    // return Object.keys(actsRegulationsMap).sort((a, b) => a.localeCompare(b));
-
     const regulations = [];
-
     Object.keys(actsRegulationsMap).forEach(act => regulations.push(...actsRegulationsMap[act]));
-
     return Array.from(new Set<string>(regulations)).sort((a, b) => a.localeCompare(b));
   }
   getLegislationRegulationsMappedToActs = function(factoryService: any): { [key: string]: string[] } {
     {
       const actService = this.factoryService.actService;
       const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
-      console.log('getAllActsAndRegulations actInfo>>>' + JSON.stringify(actsRegulationsMap));
-      //  return actsRegulationsMap;
       const regulations = {};
 
       Object.keys(actsRegulationsMap).forEach(act =>
