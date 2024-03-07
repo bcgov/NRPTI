@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
 import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
 import { FactoryService } from '../../services/factory.service';
 import { SchemaLists } from '../../../../../common/src/app/utils/record-constants';
 import { RecordUtils } from '../utils/record-utils';
+import { catchError } from 'rxjs/operators';
 
 declare var window: any;
 
@@ -37,6 +38,17 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
     const filterParams = RecordUtils.buildFilterParams(params);
 
     // force-reload so we always have latest data
+    // When autofocusing, we want to limit our search to the one entry to prevent it getting lost in results
+    if (params.autofocus) {
+      return this.factoryService.getRecord(params.autofocus, '').pipe(
+        catchError((error: any) => {
+          if (error.status === 400) {
+            // If the search fails, handle the error by returning an Observable of an empty array
+            return of([]);
+          }
+        })
+      );
+    }
     return this.factoryService.getRecords(
       keywords,
       schemaList,
