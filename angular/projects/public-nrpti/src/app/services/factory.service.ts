@@ -251,7 +251,7 @@ export class FactoryService {
   }
 
     /**
-   * Get agency data. If data is not cached, fetch it from the ApplicationAgencyService.
+   * Get act data. If data is not cached, fetch it from the actService.
    * @returns {Observable<void>} An observable that resolves when agency data is fetched.
    * @memberof FactoryService
    */

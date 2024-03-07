@@ -409,15 +409,17 @@ export class FactoryService {
   }
 
     /**
-   * Sends request to start an import task.
-   *
-   * @param {ITaskParams} taskParams import task parameters
-   * @returns {Observable<object>}
+   * Get act data. If data is not cached, fetch it from the actService.
+   * @returns {Observable<void>} An observable that resolves when agency data is fetched.
    * @memberof FactoryService
    */
-    public getAllActsAndRegulations(): Promise<any> {
-      console.log('Factory_Service>>>>getParentAct');
-      return this.actService.getAllActsAndRegulations();
+    public getAllActsAndRegulations(): Observable<void>  {
+      if (this.actService.getAllActsAndRegulations.length === 0) {
+        this.actService.refreshAct().subscribe(() => {
+          this.actService.getAllActsAndRegulations();
+        });
+      }
+      return this.actService.refreshAct();
     }
 
   /**

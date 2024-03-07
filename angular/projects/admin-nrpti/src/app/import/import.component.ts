@@ -180,19 +180,6 @@ export class ImportComponent implements OnInit, OnDestroy {
     // Send this notification to the toast service
     this.toastService.addMessage(dataSourceType, 'Job Started', Constants.ToastTypes.SUCCESS);
   }
-
-  async getAllActsAndRegulations() {
-    console.log('getParentAct>>>>>>called');
-    let actsRegulationsMap = await this.factoryService
-      .getAllActsAndRegulations();
-
-    // Send this notification to the toast service
-
-    this.toastService.addMessage('Act actsRegulationsMap ' + actsRegulationsMap
-    , JSON.stringify(actsRegulationsMap)
-    , Constants.ToastTypes.SUCCESS);
-  }
-
   ngOnDestroy() {
     this.alive = false;
   }

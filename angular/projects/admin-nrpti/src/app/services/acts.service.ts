@@ -15,7 +15,6 @@ import { HttpClient } from '@angular/common/http';
 @Injectable()
 export class ActService {
   private api: string;
-  //private agencies: { [key: string]: string } = {};
   private actsRegulationsMap = null;
 
   /**
@@ -63,7 +62,6 @@ export class ActService {
    * @returns {Object} A dictionary of acts and regulations.
    */
     getAllActsAndRegulations() {
-      console.log('getAllActsAndRegulations>>>actInfo>>>' + JSON.stringify(this.actsRegulationsMap) );
       return this.actsRegulationsMap;
     }
 }

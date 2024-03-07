@@ -10,7 +10,6 @@ const defaultLog = require('../utils/logger')('record');
 const axios = require('axios');
 const LEGISLATION_CODES = require('../utils/constants/legislation-code-map');
 exports.protectedOptions = function (args, res, next) {
-  console.log('protectedOptions>>>>>>>');
   res.status(200).send();
 };
 
@@ -34,22 +33,7 @@ exports.publicGet = async function(args, res, next) {
     }
     queryActions.sendResponse(res, 200, actsAndRegulationsMap);
   };
-
-// let updateTitle = async( actCode, actTitleFromAPI ) => {
-//   try{
-//   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
-//   const actsRegulationsCollection = db.collection('acts_regulations_mapping');
-//   await actsRegulationsCollection.update(
-//     { actCode: actCode },
-//     { $set: { "act.title": actTitleFromAPI } }
-//   );
-//   } catch (error) {
-//     console.error("updateTitle: Failed to update DB:", error);
-//   }
-
-// }
-
-
+// update act titles in db
 let updateTitlesInDB = async(actMap) => {
   try{
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
@@ -96,21 +80,17 @@ exports.getAllActsAndRegulationsFromDB = async function(){
     const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
     const actsRegulationsCollection = db.collection('acts_regulations_mapping');
     let actsRegulationsMapResponse = await actsRegulationsCollection.find({ _schemaName: RECORD_TYPE.ActsRegulationsMapping._schemaName}).toArray();
-  // console.log('ActsRegulationsMapping>>>' + JSON.stringify(actsRegulationsMap));
     let actsRegulationsMap = {};
     for (let actRegulations of actsRegulationsMapResponse){
-      //console.log('objects>>>' + JSON.stringify(actRegulations));
       actsRegulationsMap[actRegulations['actName']] = actRegulations['regulations'];
     }
-    console.log('actsRegulationsMap>>>' + JSON.stringify(actsRegulationsMap));
-    // let actTitleFromDB = act[0]['act']['title'];
     return (actsRegulationsMap);
-   // return ('hello');
+
   } catch (error) {
-      console.error("getActTitleFromDB: Failed to fetch data from DB:", error);
+      console.error("getAllActsAndRegulationsFromDB: Failed to fetch data from DB:", error);
   }
 }
-
+// fetch act title from api
 function getTitleFromXML(responseXML){
   let actTitle = '';
   let startIndex = 0;

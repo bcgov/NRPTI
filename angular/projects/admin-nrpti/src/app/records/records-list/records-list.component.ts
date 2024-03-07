@@ -169,10 +169,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       )
     );
 
-    // let allActs = Picklists.getAllActs(this.factoryService);
-    // let allActsProcessed = Object.keys(allActs).sort((a, b) => a.localeCompare(b));
-
-
     const issuedUnderActFilter = new FilterObject(
       'act',
       FilterType.MultiSelect,
