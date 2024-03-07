@@ -30,7 +30,6 @@ export class ActDataServiceNRPTI {
   getAllActs() {
     const actService = this.factoryService.actService;
     const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
-    console.log('getAllActs actInfo>>>' + JSON.stringify(actsRegulationsMap));
     return Object.keys(actsRegulationsMap).sort((a, b) => a.localeCompare(b));
   }
   getAllRegulations() {
