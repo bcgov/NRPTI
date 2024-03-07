@@ -14,6 +14,11 @@ exports.setup = function(options, seedLink) {
   seed = seedLink;
 };
 
+/**
+ * @summary Creates a collection to act as the local source of truth for Act and regulation names.
+ * Read by the front end for populating lists of these values
+ * Read by the backend for inserting relevant information into records being submitted
+ */
 exports.up = async function(db) {
   const mClient = await db.connection.connect(db.connectionString, { native_parser: true });
 /*

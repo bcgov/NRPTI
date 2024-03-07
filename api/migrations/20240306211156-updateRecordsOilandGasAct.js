@@ -13,7 +13,7 @@ exports.setup = function(options, seedLink) {
   type = dbm.dataType;
   seed = seedLink;
 };
-// update Oil and Gas Activities Act
+// update all records that have Oil and Gas Activities Act to Energy Resource Activities Act
 exports.up = async function(db) {
   const mClient = await db.connection.connect(db.connectionString, { native_parser: true });
   try {

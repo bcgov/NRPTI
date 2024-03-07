@@ -27,7 +27,7 @@ class Inspections extends BaseRecordUtils {
 
   /**
    * Convert the csv row object into the object expected by the API record post/put controllers.
-   *
+   * @param {string} actName a string that is the latest known act name governing this type of record <'Energy Resource Activities Act' on 2024-03-06>
    * @returns a inspection object matching the format expected by the API record post/put controllers.
    * @memberof Inspections
    */
