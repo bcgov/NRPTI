@@ -13,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
  * @description Service for managing issuing agencies.
  */
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ActService {
   private api: string;

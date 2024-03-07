@@ -13,7 +13,7 @@ describe('LegislationListAddEditComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [LegislationListAddEditComponent, LegislationAddEditComponent],
-      imports: [FormsModule, ReactiveFormsModule, MatAutocompleteModule,HttpClientModule],
+      imports: [FormsModule, ReactiveFormsModule, MatAutocompleteModule, HttpClientModule],
       providers: [Utils]
     }).compileComponents();
   });
