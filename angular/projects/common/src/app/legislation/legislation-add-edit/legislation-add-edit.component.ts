@@ -27,8 +27,6 @@ export class LegislationAddEditComponent implements OnInit {
   // cache acts
   public readonly actsMappedToRegulations: { [key: string]: string[] } = Picklists.getAllActs1(this.factoryService);
   public readonly allActs = Object.keys(this.actsMappedToRegulations).sort();
-  // public readonly actsMappedToRegulations = Picklists.getAllActs1(this.factoryService); 
-  // public readonly allActs = Object.keys(this.actsMappedToRegulations).sort();
 
   // cache regulations
   public readonly regulationsMappedToActs: {

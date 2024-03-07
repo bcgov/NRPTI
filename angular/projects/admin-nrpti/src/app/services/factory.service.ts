@@ -155,7 +155,7 @@ export class FactoryService {
     return this._taskService;
   }
 
-    /**
+  /**
    * Inject task service if it hasn't already been injected.
    *
    * @readonly
@@ -408,7 +408,7 @@ export class FactoryService {
     return this.taskService.startTask(taskParams);
   }
 
-    /**
+  /**
    * Get act data. If data is not cached, fetch it from the actService.
    * @returns {Observable<void>} An observable that resolves when agency data is fetched.
    * @memberof FactoryService
