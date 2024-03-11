@@ -174,7 +174,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       'Issued Under which Act',
       new MultiSelectDefinition(
         Picklists.getAllActsTitles(this.factoryService).map(value => {
-          console.log(value);
           return { value: value, displayValue: value, selected: false, display: true };
         }),
         'Begin typing to filter acts...',

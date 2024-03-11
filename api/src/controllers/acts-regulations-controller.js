@@ -41,15 +41,15 @@ exports.publicGet = async function(args, res, next) {
  */
 let updateTitlesInDB = async(actMap) => {
   try{
-  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
-  const actsRegulationsCollection = db.collection('acts_regulations_mapping');
-  for(let [actCode,actTitle] of Object.entries(actMap)){
-  await actsRegulationsCollection.update(
-    { _schemaName: "ActsRegulationsMapping", actCode: actCode},
-    { $set: { actName : actTitle } }
-  );
-  console.log('updated actCode - ' + actCode + 'actTitle - ' + actTitle);
-  }
+    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const actsRegulationsCollection = db.collection('acts_regulations_mapping');
+    for(let [actCode,actTitle] of Object.entries(actMap)){
+      await actsRegulationsCollection.update(
+        { _schemaName: "ActsRegulationsMapping", actCode: actCode},
+        { $set: { actName : actTitle } }
+      );
+      console.log('updated actCode - ' + actCode + 'actTitle - ' + actTitle);
+    }
   } catch (error) {
     console.error("updateTitlesInDB: Failed to update DB:", error);
   }

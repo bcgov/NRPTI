@@ -28,7 +28,7 @@ export class ActService {
 
   /**
    * Initialize the service by setting the API endpoint and refreshing agencies.
-   * @asyncx
+   * @async
    */
   async init() {
     this.api = `${this.configService.config['API_LOCATION']}${this.configService.config['API_PATH']}`;

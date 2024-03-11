@@ -35,7 +35,6 @@ class Inspections extends BaseRecordUtils {
     if (!csvRow) {
       throw Error('transformRecord - required csvRow must be non-null.');
     }
-    
     csvRow = this.cleanCsvRow(csvRow);
 
     const inspection = { ...super.transformRecord(csvRow) };
