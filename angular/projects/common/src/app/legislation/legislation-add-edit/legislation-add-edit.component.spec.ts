@@ -14,7 +14,7 @@ describe('LegislationAddEditComponent', () => {
     TestBed.configureTestingModule({
       declarations: [LegislationAddEditComponent],
       imports: [ReactiveFormsModule, FactoryService, MatAutocompleteModule, HttpClientTestingModule],
-      providers: [Utils]
+      providers: [Utils, FactoryService]
     }).compileComponents();
   });
 
