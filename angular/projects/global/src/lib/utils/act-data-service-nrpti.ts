@@ -30,44 +30,43 @@ export class ActDataServiceNRPTI {
   getAllActs() {
     const actService = this.factoryService.actService;
     const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
-    if (!actsRegulationsMap){return [];};
+    if (!actsRegulationsMap) {
+      return [];
+    }
     return Object.keys(actsRegulationsMap).sort((a, b) => a.localeCompare(b));
   }
   getAllRegulations() {
     const actService = this.factoryService.actService;
     const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
-    if (!actsRegulationsMap){return [];};
+    if (!actsRegulationsMap) {
+      return [];
+    }
     const regulations = [];
-    Object.keys(actsRegulationsMap).forEach(act => {
-      const regs = actsRegulationsMap[act];
-      for (let i = 0; i < regs.length; i++) {
-        regulations.push(regs[i]);
-      }
-    });
+    Object.keys(actsRegulationsMap).forEach(act => regulations.push(...actsRegulationsMap[act]));
     return Array.from(new Set<string>(regulations)).sort((a, b) => a.localeCompare(b));
   }
   getLegislationRegulationsMappedToActs = function(factoryService: any): { [key: string]: string[] } {
-      const actService = this.factoryService.actService;
-      if (!actService) {
-        // Return an empty object or handle the lack of actService appropriately
-        console.error('ActService is not available.');
-        return {};
-      }
-      const actsRegulationsMap = actService.getAllActsAndRegulations();
-      const regulationsMappedToActs: { [key: string]: string[] } = {};
+    const actService = this.factoryService.actService;
+    if (!actService) {
+      // Return an empty object or handle the lack of actService appropriately
+      console.error('ActService is not available.');
+      return {};
+    }
+    const actsRegulationsMap = actService.getAllActsAndRegulations();
+    const regulationsMappedToActs: { [key: string]: string[] } = {};
 
-      for (const act in actsRegulationsMap) {
-        if (actsRegulationsMap.hasOwnProperty(act)) {
-          const regulations = actsRegulationsMap[act];
-          for (const regulation of regulations) {
-            if (!regulationsMappedToActs[regulation]) {
-              regulationsMappedToActs[regulation] = [];
-            }
-            regulationsMappedToActs[regulation].push(act);
+    for (const act in actsRegulationsMap) {
+      if (actsRegulationsMap.hasOwnProperty(act)) {
+        const regulations = actsRegulationsMap[act];
+        for (const regulation of regulations) {
+          if (!regulationsMappedToActs[regulation]) {
+            regulationsMappedToActs[regulation] = [];
           }
+          regulationsMappedToActs[regulation].push(act);
         }
       }
-    
-      return regulationsMappedToActs;
-  }
+    }
+
+    return regulationsMappedToActs;
+  };
 }
