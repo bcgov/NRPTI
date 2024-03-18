@@ -24,7 +24,7 @@ export class ActDataServiceNRCED {
 
   getAllActsAndRegulations() {
     const actService = this.factoryService.actService;
-    const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
+    const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : {};
     return actsRegulationsMap;
   }
 }

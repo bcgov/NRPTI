@@ -309,7 +309,7 @@ export class Picklists {
    */
   public static getAllRegulations(factoryService: any): string[] {
     const actDataService = new ActDataServiceNRPTI(factoryService);
-    return actDataService.getAllRegulations();
+    return actDataService ? actDataService.getAllRegulations() : [];
   }
   /**
    * Returns an object containing a mapping of regulations to acts.

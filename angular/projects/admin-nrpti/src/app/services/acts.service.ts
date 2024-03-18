@@ -17,7 +17,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ActService {
   private api: string;
-  private actsRegulationsMap = null;
+  private actsRegulationsMap = {};
 
   /**
    * @constructor
