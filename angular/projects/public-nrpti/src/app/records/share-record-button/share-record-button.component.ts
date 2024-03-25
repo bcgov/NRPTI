@@ -39,9 +39,8 @@ export class ShareRecordButtonComponent implements OnInit, OnDestroy {
     if (this.recordId === 'searchbox') {
       delete tree.root.children.primary.segments[0].parameters['autofocus'];
     } else {
-      tree.root.children.primary.segments[0].parameters['autofocus'] = this.recordId;
+      tree.root.children.primary.segments[0].parameters = { autofocus: this.recordId };
     }
-
     return `${window.location.origin}${this.router.serializeUrl(tree)}`;
   }
 
