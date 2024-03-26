@@ -27,4 +27,17 @@ export class ActDataServiceNRCED {
     const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : {};
     return actsRegulationsMap;
   }
+
+  /**
+   * Get the full name of the agency based on the agency's code
+   * retrieved from the agency data using the FactoryService.
+   * @param {string} actCode - an agency's code
+   * @returns {string} - the agency's full name
+   */
+  displayActTitleFull(actCode): string {
+    // Access cached act data from FactoryService
+    const actService = this.factoryService.actService;
+    const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : {};
+    return actsRegulationsMap && actsRegulationsMap[actCode] ? actsRegulationsMap[actCode] : actCode;
+  }
 }
