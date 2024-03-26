@@ -21,3 +21,4 @@ db.createCollection("migrations", {capped: false});
 db.createCollection("nrpti", {capped: false});
 db.createCollection("record_name_subset", {capped: false});
 db.createCollection("redacted_record_subset", {capped: false});
+db.createCollection("acts_regulations_mapping", {capped: false});

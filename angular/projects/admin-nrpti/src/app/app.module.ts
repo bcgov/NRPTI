@@ -59,16 +59,19 @@ import { CanDeactivateGuard } from './guards/can-deactivate-guard.service';
 import { TokenInterceptor } from './utils/token-interceptor';
 import { RecordUtils } from './records/utils/record-utils';
 import { CollectionService } from './services/collection.service';
+import { ActService } from './services/acts.service';
 
 export function initConfig(
   configService: ConfigService,
   keycloakService: KeycloakService,
-  applicationAgency: ApplicationAgencyService
+  applicationAgency: ApplicationAgencyService,
+  actService: ActService
 ) {
   return async () => {
     await configService.init();
     await keycloakService.init();
     await applicationAgency.init();
+    await actService.init();
   };
 }
 
@@ -115,7 +118,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     {
       provide: APP_INITIALIZER,
       useFactory: initConfig,
-      deps: [ConfigService, KeycloakService, ApplicationAgencyService],
+      deps: [ConfigService, KeycloakService, ApplicationAgencyService, ActService],
       multi: true
     },
     {
@@ -144,7 +147,8 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     NewsListResolver,
     CanActivateGuard,
     CanDeactivateGuard,
-    RecordUtils
+    RecordUtils,
+    ActService
   ],
   entryComponents: [ConfirmComponent, HomeComponent, ImportComponent, ImportTableRowsComponent],
   bootstrap: [AppComponent]

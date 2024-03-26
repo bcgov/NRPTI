@@ -2,6 +2,10 @@ const Orders = require('./orders-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const mongoose = require('mongoose');
 const { createURLDocument } = require('../../controllers/document-controller');
+const { getActTitleFromDB } = require('../../controllers/acts-regulations-controller')
+const { energyActCode } = require('../../utils/constants/legislation-code-map.js');
+
+const actName = getActTitleFromDB(energyActCode);
 
 describe('orders-utils testing', () => {
   const orders = new Orders('authPayload', RECORD_TYPE.Order, null);
@@ -32,7 +36,7 @@ describe('orders-utils testing', () => {
         recordName: undefined,
         legislation: [
           {
-            act: 'Energy Resource Activities Act',
+            act: actName,
             section: null,
             legislationDescription: "Action Order"
           }
