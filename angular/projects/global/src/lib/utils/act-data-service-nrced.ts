@@ -24,8 +24,15 @@ export class ActDataServiceNRCED {
 
   getAllActsAndRegulations() {
     const actService = this.factoryService.actService;
-    const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : {};
-    return actsRegulationsMap;
+    const actsRegulationsData = actService ? actService.getAllActsAndRegulations() : null;
+    if(actsRegulationsData){
+      const actsRegulationsMap = Object.keys(actsRegulationsData).reduce((acc, key) => {
+        const { actName, regulations } = actsRegulationsData[key];
+        acc[actName] = regulations;
+        return acc;
+      }, {});
+      return actsRegulationsMap;
+    } else {return {}};
   }
 
   /**
@@ -37,7 +44,7 @@ export class ActDataServiceNRCED {
   displayActTitleFull(actCode): string {
     // Access cached act data from FactoryService
     const actService = this.factoryService.actService;
-    const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : {};
-    return actsRegulationsMap && actsRegulationsMap[actCode] ? actsRegulationsMap[actCode] : actCode;
+    const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
+    return actsRegulationsMap && actsRegulationsMap[actCode] ? actsRegulationsMap[actCode]['actName'] : actCode;
   }
 }

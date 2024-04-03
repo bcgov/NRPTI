@@ -106,7 +106,7 @@ exports.getAllActsAndRegulationsFromDB = async function(){
     let actsRegulationsMapResponse = await actsRegulationsCollection.find({ _schemaName: RECORD_TYPE.ActsRegulationsMapping._schemaName}).toArray();
     let actsRegulationsMap = {};
     for (let actRegulations of actsRegulationsMapResponse){
-      actsRegulationsMap[actRegulations['actName']] = actRegulations['regulations'];
+      actsRegulationsMap[actRegulations['actCode']] = {'actName':actRegulations['actName'], 'regulations':actRegulations['regulations']};
     }
     return (actsRegulationsMap);
 
