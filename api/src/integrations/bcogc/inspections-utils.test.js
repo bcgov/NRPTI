@@ -1,6 +1,10 @@
 const ObjectID = require('mongodb').ObjectID;
 const Inspections = require('./inspections-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
+const { getActTitleFromDB } = require('../../controllers/acts-regulations-controller')
+const { energyActCode } = require('../../utils/constants/legislation-code-map.js');
+
+const actName = getActTitleFromDB(energyActCode);
 
 describe('transformRecord', () => {
   const inspections = new Inspections('authPayload', RECORD_TYPE.Inspection, null);
@@ -23,7 +27,7 @@ describe('transformRecord', () => {
       issuingAgency: 'AGENCY_OGC',
       author: 'AGENCY_OGC',
       recordName: '-',
-      legislation: [{ act: 'Energy Resource Activities Act', section: '57', subSection: '4', legislationDescription: 'Inspection to verify compliance with regulatory requirement' }],
+      legislation: [{ act: actName, section: '57', subSection: '4', legislationDescription: 'Inspection to verify compliance with regulatory requirement' }],
       location: 'British Columbia',
       description:
         'Inspection to verify compliance with regulatory requirements. Activities Inspected: -; Inspection Result: -',

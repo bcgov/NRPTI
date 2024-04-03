@@ -53,7 +53,6 @@ describe('AgenciesComponent', () => {
     expect(component.updatedData).toEqual({ agencies: [] });
   });
 
-
   it('should handle the selected agency change', () => {
     const selectedAgency = 'SelectedAgency';
     component.onSelected(selectedAgency);

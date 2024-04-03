@@ -30,15 +30,21 @@ import { DocumentService } from './services/document.service';
 import { FactoryService } from './services/factory.service';
 import { ConfigService, LoggerService } from 'nrpti-angular-components';
 import { ApplicationAgencyService } from './services/application-agency.service';
+import { ActService } from './services/acts.service';
 
 export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrategy {
   return () => overlay.scrollStrategies.close();
 }
 
-export function initConfig(configService: ConfigService, applicationAgency: ApplicationAgencyService) {
+export function initConfig(
+  configService: ConfigService,
+  applicationAgency: ApplicationAgencyService,
+  actService: ActService
+) {
   return async () => {
     await configService.init();
     await applicationAgency.init();
+    await actService.init();
   };
 }
 
@@ -64,7 +70,7 @@ export function initConfig(configService: ConfigService, applicationAgency: Appl
     {
       provide: APP_INITIALIZER,
       useFactory: initConfig,
-      deps: [ConfigService, ApplicationAgencyService],
+      deps: [ConfigService, ApplicationAgencyService, ActService],
       multi: true
     },
     {
@@ -77,7 +83,8 @@ export function initConfig(configService: ConfigService, applicationAgency: Appl
     DocumentService,
     FactoryService,
     LoggerService,
-    ApplicationAgencyService
+    ApplicationAgencyService,
+    ActService
   ],
   entryComponents: [ConfirmComponent, HomeComponent],
   bootstrap: [AppComponent]

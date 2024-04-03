@@ -1,6 +1,10 @@
 const AdministrativePenalty = require('./administrative-penalties-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const { createURLDocument } = require('../../controllers/document-controller');
+const { getActTitleFromDB } = require('../../controllers/acts-regulations-controller')
+const { energyActCode } = require('../../utils/constants/legislation-code-map.js');
+
+const actName = getActTitleFromDB(energyActCode);
 
 const createAdminPenaltyInstance = (authPayload, recordType, baseCsvRow) => {
   return new AdministrativePenalty(authPayload, recordType, baseCsvRow);
@@ -36,7 +40,7 @@ describe('AdministrativePenalty', () => {
         'penalties': [penalties],
         'legislation': [
           {
-            'act': 'Energy Resource Activities Act',
+            'act': actName,
             'section': 63,
             'offence': 'Penalty for failure to comply with the Act or associated regulations'
           }

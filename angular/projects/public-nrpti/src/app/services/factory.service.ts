@@ -3,6 +3,7 @@ import { Observable, of } from 'rxjs';
 import { ApiService } from './api.service';
 import { SearchService, SearchResults, InjectComponentService } from 'nrpti-angular-components';
 import { ApplicationAgencyService } from './application-agency.service';
+import { ActService } from './acts.service';
 /**
  * Facade service for all public-nrced services.
  *
@@ -17,6 +18,7 @@ export class FactoryService {
   private _searchService: SearchService;
   private _injectComponentService: InjectComponentService;
   private _applicationAgencyService: ApplicationAgencyService;
+  private _actService: ActService;
 
   constructor(private injector: Injector) {
     // The following items are loaded by a file that is only present on cluster builds.
@@ -83,6 +85,19 @@ export class FactoryService {
     return this._applicationAgencyService;
   }
 
+  /**
+   * Inject agency service if it hasn't already been injected.
+   *
+   * @readonly
+   * @type {ApiService}
+   * @memberof FactoryService
+   */
+  public get actService(): ActService {
+    if (!this._actService) {
+      this._actService = this.injector.get(ActService);
+    }
+    return this._actService;
+  }
   /**
    * Return the record for the given _id.
    *
@@ -232,5 +247,19 @@ export class FactoryService {
       });
     }
     return this.applicationAgencyService.refreshAgencies();
+  }
+
+  /**
+   * Get act data. If data is not cached, fetch it from the actService.
+   * @returns {Observable<void>} An observable that resolves when agency data is fetched.
+   * @memberof FactoryService
+   */
+  public getActService(): Observable<void> {
+    if (this.actService.getAllActsAndRegulations.length === 0) {
+      this.actService.refreshAct().subscribe(() => {
+        this.actService.getAllActsAndRegulations();
+      });
+    }
+    return this.actService.refreshAct();
   }
 }

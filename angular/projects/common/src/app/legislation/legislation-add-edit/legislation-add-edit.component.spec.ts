@@ -3,7 +3,10 @@ import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material';
 import { TestBedHelper } from '../../spec/spec-utils';
 import { LegislationAddEditComponent } from './legislation-add-edit.component';
-import { Utils } from 'nrpti-angular-components';
+import { Utils, ConfigService } from 'nrpti-angular-components';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FactoryService } from '../../../../../admin-nrpti/src/app/services/factory.service';
+
 
 describe('LegislationAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<LegislationAddEditComponent>(LegislationAddEditComponent);
@@ -11,8 +14,8 @@ describe('LegislationAddEditComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [LegislationAddEditComponent],
-      imports: [ReactiveFormsModule, MatAutocompleteModule],
-      providers: [Utils]
+      imports: [ReactiveFormsModule, MatAutocompleteModule, HttpClientTestingModule],
+      providers: [Utils, ConfigService, FactoryService]
     }).compileComponents();
   });
 

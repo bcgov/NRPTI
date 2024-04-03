@@ -27,15 +27,14 @@ class Inspections extends BaseRecordUtils {
 
   /**
    * Convert the csv row object into the object expected by the API record post/put controllers.
-   *
+   * @param {string} actName a string that is the latest known act name governing this type of record <'Energy Resource Activities Act' on 2024-03-06>
    * @returns a inspection object matching the format expected by the API record post/put controllers.
    * @memberof Inspections
    */
-  transformRecord(csvRow) {
+  transformRecord(csvRow, actName) {
     if (!csvRow) {
       throw Error('transformRecord - required csvRow must be non-null.');
     }
-
     csvRow = this.cleanCsvRow(csvRow);
 
     const inspection = { ...super.transformRecord(csvRow) };
@@ -59,7 +58,7 @@ class Inspections extends BaseRecordUtils {
 
     inspection['legislation'] = [
       {
-        act: 'Energy Resource Activities Act',
+        act: actName,
         section: '57',
         subSection: '4',
         legislationDescription: 'Inspection to verify compliance with regulatory requirement'

@@ -14,6 +14,7 @@ import { CollectionService } from './collection.service';
 import { MineService } from './mine.service';
 import { MapLayerInfoService } from './map-layer-info.service';
 import { ApplicationAgencyService } from './application-agency.service';
+import { ActService } from './acts.service';
 
 /**
  * Facade service for all admin-nrpti services.
@@ -37,6 +38,7 @@ export class FactoryService {
   private _configService: ConfigService;
   private _mapLayerInfoService: MapLayerInfoService;
   private _applicationAgencyService: ApplicationAgencyService;
+  private _actService: ActService;
 
   constructor(private injector: Injector) {
     // The following items are loaded by a file that is only present on cluster builds.
@@ -151,6 +153,20 @@ export class FactoryService {
       this._taskService = this.injector.get(TaskService);
     }
     return this._taskService;
+  }
+
+  /**
+   * Inject task service if it hasn't already been injected.
+   *
+   * @readonly
+   * @type {ActService}
+   * @memberof FactoryService
+   */
+  public get actService(): ActService {
+    if (!this._actService) {
+      this._actService = this.injector.get(ActService);
+    }
+    return this._actService;
   }
 
   public get documentService(): DocumentService {
@@ -390,6 +406,20 @@ export class FactoryService {
    */
   public startTask(taskParams: ITaskParams): Observable<object> {
     return this.taskService.startTask(taskParams);
+  }
+
+  /**
+   * Get act data. If data is not cached, fetch it from the actService.
+   * @returns {Observable<void>} An observable that resolves when agency data is fetched.
+   * @memberof FactoryService
+   */
+  public getAllActsAndRegulations(): Observable<void> {
+    if (this.actService.getAllActsAndRegulations.length === 0) {
+      this.actService.refreshAct().subscribe(() => {
+        this.actService.getAllActsAndRegulations();
+      });
+    }
+    return this.actService.refreshAct();
   }
 
   /**

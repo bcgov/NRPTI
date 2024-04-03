@@ -180,7 +180,6 @@ export class ImportComponent implements OnInit, OnDestroy {
     // Send this notification to the toast service
     this.toastService.addMessage(dataSourceType, 'Job Started', Constants.ToastTypes.SUCCESS);
   }
-
   ngOnDestroy() {
     this.alive = false;
   }
