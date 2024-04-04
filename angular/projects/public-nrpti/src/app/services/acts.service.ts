@@ -46,6 +46,7 @@ export class ActService {
       getActsRegulationsURL.subscribe(
         response => {
           this.actsRegulationsData = response;
+
           observer.next();
           observer.complete();
         },
