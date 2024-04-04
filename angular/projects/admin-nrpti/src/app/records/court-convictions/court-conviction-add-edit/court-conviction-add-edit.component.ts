@@ -10,6 +10,7 @@ import { Utils as CommonUtils } from '../../../../../../common/src/app/utils/uti
 import { RecordUtils } from '../../utils/record-utils';
 import { Constants } from '../../../utils/constants/misc';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
+import { ActDataServiceNRPTI } from '../../../../../../global/src/lib/utils/act-data-service-nrpti';
 
 @Component({
   selector: 'app-court-conviction-add-edit',
@@ -522,6 +523,11 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (courtConviction['legislation'] = this.parseLegislationsFormGroups());
+      //swapping legislation with actCode
+      const actTitle = courtConviction['legislation'][0]['act'];
+      const dataservice = new ActDataServiceNRPTI(this.factoryService);
+      const actCode = dataservice.getCodeFromTitle(actTitle);
+      courtConviction['legislation'][0]['act'] = actCode;
 
     this.myForm.get('penalties').dirty && (courtConviction['penalties'] = this.parsePenaltiesFormGroups());
 

@@ -11,6 +11,7 @@ import { RecordUtils } from '../../utils/record-utils';
 import { LoadingScreenService, LoggerService, StoreService } from 'nrpti-angular-components';
 import { Constants } from '../../../utils/constants/misc';
 import { AgencyDataService } from '../../../../../../global/src/lib/utils/agency-data-service';
+import { ActDataServiceNRPTI } from '../../../../../../global/src/lib/utils/act-data-service-nrpti';
 
 @Component({
   selector: 'app-administrative-penalty-add-edit',
@@ -542,7 +543,12 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty &&
       (administrativePenalty['legislation'] = this.parseLegislationsFormGroups());
-
+    //swapping legislation with actCode
+    const actTitle = administrativePenalty['legislation'][0]['act'];
+    const dataservice = new ActDataServiceNRPTI(this.factoryService);
+    const actCode = dataservice.getCodeFromTitle(actTitle);
+    administrativePenalty['legislation'][0]['act'] = actCode;
+    
     this.myForm.get('penalties').dirty && (administrativePenalty['penalties'] = this.parsePenaltiesFormGroups());
 
     // NRCED flavour
