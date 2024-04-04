@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
 import { FactoryService } from '../services/factory.service';
 import { EpicProjectIds, SchemaLists } from '../../../../common/src/app/utils/record-constants';
+import { ActDataServiceNRPTI } from '../../../../global/src/lib/utils/act-data-service-nrpti';
 
 @Injectable()
 export class RecordsResolver implements Resolve<Observable<object>> {
@@ -19,7 +20,8 @@ export class RecordsResolver implements Resolve<Observable<object>> {
     if (params.activityType) {
       schemaList = params.activityType.split(',');
     }
-
+    console.log('************** Records-resolver params *****************');
+    console.log(params);
     let keywords = '';
     if (params.keywords) {
       keywords = params.keywords;
@@ -55,6 +57,15 @@ export class RecordsResolver implements Resolve<Observable<object>> {
 
     if (params.act) {
       or['legislation.act'] = params.act;
+      //adds the actCode associated with each act to the query obj
+      const dataservice = new ActDataServiceNRPTI(this.factoryService);
+      const actList = params.act.split(',');
+      actList.forEach((actName) => {
+        let actCode = dataservice.getCodeFromTitle(actName);
+        if(actCode){
+          or['legislation.act'] += ',' + actCode;
+        }
+      });
     }
 
     if (params.regulation) {
