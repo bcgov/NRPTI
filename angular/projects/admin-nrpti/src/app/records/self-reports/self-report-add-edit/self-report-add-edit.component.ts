@@ -266,11 +266,11 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (selfReport['legislation'] = this.parseLegislationsFormGroups());
-      //swapping legislation with actCode
-      const actTitle = selfReport['legislation'][0]['act'];
-      const dataservice = new ActDataServiceNRPTI(this.factoryService);
-      const actCode = dataservice.getCodeFromTitle(actTitle);
-      selfReport['legislation'][0]['act'] = actCode;
+    // swapping legislation with actCode
+    const actTitle = selfReport['legislation'][0]['act'];
+    const dataservice = new ActDataServiceNRPTI(this.factoryService);
+    const actCode = dataservice.getCodeFromTitle(actTitle);
+    selfReport['legislation'][0]['act'] = actCode;
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
     if (this.myForm.controls.projectName.dirty) {

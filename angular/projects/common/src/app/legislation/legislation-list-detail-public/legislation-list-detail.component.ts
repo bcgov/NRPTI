@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectorRef, Input, OnDestroy, OnChanges, Simp
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Utils as CommonUtils } from './../../utils/utils';
-import { FactoryService} from '../../../../../public-nrpti/src/app/services/factory.service';
+import { FactoryService } from '../../../../../public-nrpti/src/app/services/factory.service';
 
 @Component({
   selector: 'app-legislation-list-detail-public',
@@ -21,7 +21,12 @@ export class LegislationListDetailComponent implements OnInit, OnDestroy, OnChan
 
   public activeTab = 'detail';
 
-  constructor(public route: ActivatedRoute, public router: Router, public _changeDetectionRef: ChangeDetectorRef, private factoryService: FactoryService,) {}
+  constructor(
+    public route: ActivatedRoute,
+    public router: Router,
+    public _changeDetectionRef: ChangeDetectorRef,
+    private factoryService: FactoryService
+  ) {}
 
   ngOnInit(): void {
     this._changeDetectionRef.detectChanges();

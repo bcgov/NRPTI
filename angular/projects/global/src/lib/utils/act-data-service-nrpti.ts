@@ -25,14 +25,16 @@ export class ActDataServiceNRPTI {
   getAllActsAndRegulations() {
     const actService = this.factoryService.actService;
     const actsRegulationsData = actService ? actService.getAllActsAndRegulations() : null;
-    if(actsRegulationsData){
+    if (actsRegulationsData) {
       const actsRegulationsMap = Object.keys(actsRegulationsData).reduce((acc, key) => {
         const { actName, regulations } = actsRegulationsData[key];
         acc[actName] = regulations;
         return acc;
       }, {});
       return actsRegulationsMap;
-    } else {return {};}
+    } else {
+      return {};
+    }
   }
 
   /**
@@ -46,11 +48,11 @@ export class ActDataServiceNRPTI {
     if (!actsRegulationsData) {
       return [];
     }
-    let actsList = Object.values(actsRegulationsData).map( (act : any) => act.actName);
+    const actsList = Object.values(actsRegulationsData).map((act: any) => act.actName);
     return actsList.sort((a, b) => a.localeCompare(b));
   }
 
-    /**
+  /**
    * Get all the regulations
    * retrieved from the act data using the FactoryService.
    * @returns {[string]} - An array with all unique Regulations
@@ -66,7 +68,7 @@ export class ActDataServiceNRPTI {
     return Array.from(new Set<string>(allRegulations)).sort((a, b) => a.localeCompare(b));
   }
 
-    /**
+  /**
    * Get all the regulations mapped to associated acts
    * retrieved from the act data using the FactoryService.
    * @returns {string: [string]} - All Regulations mapped to arrays of their associated actNames
@@ -91,13 +93,13 @@ export class ActDataServiceNRPTI {
     });
     return regulationsToActsMap;
   };
-   /**
+  /**
    * Get the full name of the act based on the act's code
    * retrieved from the agency data using the FactoryService.
    * @param {string} actCode - an act's code
    * @returns {string} - the act's full name
    */
-   displayActTitleFull(actCode): string {
+  displayActTitleFull(actCode): string {
     // Access cached act data from FactoryService
     const actService = this.factoryService.actService;
     const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : {};

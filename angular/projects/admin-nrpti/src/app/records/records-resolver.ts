@@ -57,12 +57,12 @@ export class RecordsResolver implements Resolve<Observable<object>> {
 
     if (params.act) {
       or['legislation.act'] = params.act;
-      //adds the actCode associated with each act to the query obj
+      // adds the actCode associated with each act to the query obj
       const dataservice = new ActDataServiceNRPTI(this.factoryService);
       const actList = params.act.split(',');
-      actList.forEach((actName) => {
-        let actCode = dataservice.getCodeFromTitle(actName);
-        if(actCode){
+      actList.forEach(actName => {
+        const actCode = dataservice.getCodeFromTitle(actName);
+        if (actCode) {
           or['legislation.act'] += ',' + actCode;
         }
       });

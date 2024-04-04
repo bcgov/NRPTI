@@ -308,11 +308,11 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (annualReport['legislation'] = this.parseLegislationsFormGroups());
-      //swapping legislation with actCode
-      const actTitle = annualReport['legislation'][0]['act'];
-      const dataservice = new ActDataServiceNRPTI(this.factoryService);
-      const actCode = dataservice.getCodeFromTitle(actTitle);
-      annualReport['legislation'][0]['act'] = actCode;
+    // swapping legislation with actCode
+    const actTitle = annualReport['legislation'][0]['act'];
+    const dataservice = new ActDataServiceNRPTI(this.factoryService);
+    const actCode = dataservice.getCodeFromTitle(actTitle);
+    annualReport['legislation'][0]['act'] = actCode;
     if (
       this.myForm.get('issuedTo.type').dirty ||
       this.myForm.get('issuedTo.companyName').dirty ||

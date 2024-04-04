@@ -523,11 +523,11 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (courtConviction['legislation'] = this.parseLegislationsFormGroups());
-      //swapping legislation with actCode
-      const actTitle = courtConviction['legislation'][0]['act'];
-      const dataservice = new ActDataServiceNRPTI(this.factoryService);
-      const actCode = dataservice.getCodeFromTitle(actTitle);
-      courtConviction['legislation'][0]['act'] = actCode;
+    // swapping legislation with actCode
+    const actTitle = courtConviction['legislation'][0]['act'];
+    const dataservice = new ActDataServiceNRPTI(this.factoryService);
+    const actCode = dataservice.getCodeFromTitle(actTitle);
+    courtConviction['legislation'][0]['act'] = actCode;
 
     this.myForm.get('penalties').dirty && (courtConviction['penalties'] = this.parsePenaltiesFormGroups());
 

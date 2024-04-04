@@ -20,7 +20,8 @@ export class Utils {
 
     const legistrationStrings = [];
     if (obj.act) {
-      if(obj.act.substring(0,4) === ACT_CODE_BEGINNING){ //Checks if the value is an intermediate code instead of the actual act name
+      if (obj.act.substring(0, 4) === ACT_CODE_BEGINNING) {
+        // Checks if the value is an intermediate code instead of the actual act name
         let actDataService;
         switch (true) {
           case factoryService instanceof FactoryServiceNRPTI:
@@ -34,9 +35,9 @@ export class Utils {
         }
         const actName = actDataService.displayActTitleFull(obj.act);
         legistrationStrings.push(actName);
-      } else{
+      } else {
         legistrationStrings.push(obj.act);
-      }      
+      }
     }
 
     if (obj.regulation) {

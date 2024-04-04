@@ -421,11 +421,11 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (order['legislation'] = this.parseLegislationsFormGroups());
-      //swapping legislation with actCode
-      const actTitle = order['legislation'][0]['act'];
-      const dataservice = new ActDataServiceNRPTI(this.factoryService);
-      const actCode = dataservice.getCodeFromTitle(actTitle);
-      order['legislation'][0]['act'] = actCode;
+    // swapping legislation with actCode
+    const actTitle = order['legislation'][0]['act'];
+    const dataservice = new ActDataServiceNRPTI(this.factoryService);
+    const actCode = dataservice.getCodeFromTitle(actTitle);
+    order['legislation'][0]['act'] = actCode;
 
     // NRCED flavour
     if (this.myForm.controls.nrcedSummary.dirty || this.myForm.controls.publishNrced.dirty) {

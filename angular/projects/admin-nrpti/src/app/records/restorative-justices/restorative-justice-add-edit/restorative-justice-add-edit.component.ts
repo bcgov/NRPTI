@@ -454,11 +454,11 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
     }
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (restorativeJustice['legislation'] = this.parseLegislationsFormGroups());
-          //swapping legislation with actCode
-          const actTitle = restorativeJustice['legislation'][0]['act'];
-          const dataservice = new ActDataServiceNRPTI(this.factoryService);
-          const actCode = dataservice.getCodeFromTitle(actTitle);
-          restorativeJustice['legislation'][0]['act'] = actCode;
+    // swapping legislation with actCode
+    const actTitle = restorativeJustice['legislation'][0]['act'];
+    const dataservice = new ActDataServiceNRPTI(this.factoryService);
+    const actCode = dataservice.getCodeFromTitle(actTitle);
+    restorativeJustice['legislation'][0]['act'] = actCode;
 
     this.myForm.get('penalties').dirty && (restorativeJustice['penalties'] = this.parsePenaltiesFormGroups());
 

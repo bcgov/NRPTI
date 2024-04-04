@@ -25,14 +25,16 @@ export class ActDataServiceNRCED {
   getAllActsAndRegulations() {
     const actService = this.factoryService.actService;
     const actsRegulationsData = actService ? actService.getAllActsAndRegulations() : null;
-    if(actsRegulationsData){
+    if (actsRegulationsData) {
       const actsRegulationsMap = Object.keys(actsRegulationsData).reduce((acc, key) => {
         const { actName, regulations } = actsRegulationsData[key];
         acc[actName] = regulations;
         return acc;
       }, {});
       return actsRegulationsMap;
-    } else {return {}};
+    } else {
+      return {};
+    }
   }
 
   /**

@@ -386,7 +386,7 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (certificateAmendment['legislation'] = this.parseLegislationsFormGroups());
-    //swapping legislation with actCode
+    // swapping legislation with actCode
     const actTitle = certificateAmendment['legislation'][0]['act'];
     const dataservice = new ActDataServiceNRPTI(this.factoryService);
     const actCode = dataservice.getCodeFromTitle(actTitle);
