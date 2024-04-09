@@ -20,8 +20,7 @@ export class RecordsResolver implements Resolve<Observable<object>> {
     if (params.activityType) {
       schemaList = params.activityType.split(',');
     }
-    console.log('************** Records-resolver params *****************');
-    console.log(params);
+
     let keywords = '';
     if (params.keywords) {
       keywords = params.keywords;
