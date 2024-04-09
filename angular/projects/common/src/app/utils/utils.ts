@@ -20,7 +20,7 @@ export class Utils {
 
     const legistrationStrings = [];
     if (obj.act) {
-      if (obj.act.substring(0, 4) === ACT_CODE_BEGINNING) {
+      if (obj.act.substring(0, ACT_CODE_BEGINNING.length) === ACT_CODE_BEGINNING) {
         // Checks if the value is an intermediate code instead of the actual act name
         let actDataService;
         switch (true) {
