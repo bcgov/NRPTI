@@ -11,7 +11,7 @@ import { RecordUtils } from '../../utils/record-utils';
 import { LoadingScreenService, LoggerService } from 'nrpti-angular-components';
 import { Constants } from '../../../utils/constants/misc';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
-import { ActDataServiceNRPTI } from '../../../../../../global/src/lib/utils/act-data-service-nrpti';
+
 @Component({
   selector: 'app-self-report-add-edit',
   templateUrl: './self-report-add-edit.component.html',
@@ -266,11 +266,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (selfReport['legislation'] = this.parseLegislationsFormGroups());
-    // swapping legislation with actCode
-    const actTitle = selfReport['legislation'][0]['act'];
-    const dataservice = new ActDataServiceNRPTI(this.factoryService);
-    const actCode = dataservice.getCodeFromTitle(actTitle);
-    selfReport['legislation'][0]['act'] = actCode;
+    this.recordUtils.replaceActTitleWithCode(selfReport, this.factoryService);
     // Project name logic
     // If LNG Canada or Coastal Gaslink are selected we need to put it their corresponding OIDs
     if (this.myForm.controls.projectName.dirty) {

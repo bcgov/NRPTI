@@ -11,7 +11,6 @@ import { RecordUtils } from '../../utils/record-utils';
 import { LoadingScreenService, StoreService } from 'nrpti-angular-components';
 import { Constants } from '../../../utils/constants/misc';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
-import { ActDataServiceNRPTI } from '../../../../../../global/src/lib/utils/act-data-service-nrpti';
 
 @Component({
   selector: 'app-report-add-edit',
@@ -377,11 +376,7 @@ export class ReportAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (report['legislation'] = this.parseLegislationsFormGroups());
-    // swapping legislation with actCode
-    const actTitle = report['legislation'][0]['act'];
-    const dataservice = new ActDataServiceNRPTI(this.factoryService);
-    const actCode = dataservice.getCodeFromTitle(actTitle);
-    report['legislation'][0]['act'] = actCode;
+    this.recordUtils.replaceActTitleWithCode(report, this.factoryService);
 
     // nrced flavour
     if (this.myForm.controls.nrcedDescription.dirty || this.myForm.controls.publishNrced.dirty) {

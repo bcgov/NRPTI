@@ -74,6 +74,7 @@ import { AnnualReportBCMIDetailComponent } from '../annual-reports/annual-report
 
 // other
 import { RecordComponent } from './record-component';
+import { ActDataServiceNRPTI } from '../../../../../global/src/lib/utils/act-data-service-nrpti';
 
 export class RecordUtils {
   /**
@@ -251,4 +252,24 @@ export class RecordUtils {
 
     return instance;
   }
+
+    /**
+ * Replaces the 'act' value in the given record object with a corresponding act code.
+ * @param {Object} record - The object containing legislation information.
+ * @param {ServiceFactory} factoryService - The service factory used to create data service instances.
+ * @returns {void} Modifies the record object in place.
+ */
+replaceActTitleWithCode(record, factoryService) {
+  if (!record || !record.legislation || !record.legislation[0] || !record.legislation[0].act) {
+      throw new Error("Missing or invalid record. Unable to read act name. Not using act code");
+  }
+
+  const actTitle = record.legislation[0].act;
+  const dataservice = new ActDataServiceNRPTI(factoryService);
+  const actCode = dataservice.getCodeFromTitle(actTitle);
+  if (!actCode) {
+      throw new Error("Act code not found for the given title. Not using act code");
+  }
+  record.legislation[0].act = actCode;
+}
 }

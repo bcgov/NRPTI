@@ -11,7 +11,7 @@ import { RecordUtils } from '../../utils/record-utils';
 import { LoadingScreenService, LoggerService } from 'nrpti-angular-components';
 import { Constants } from '../../../utils/constants/misc';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
-import { ActDataServiceNRPTI } from '../../../../../../global/src/lib/utils/act-data-service-nrpti';
+
 @Component({
   selector: 'app-restorative-justice-add-edit',
   templateUrl: './restorative-justice-add-edit.component.html',
@@ -454,11 +454,7 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
     }
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (restorativeJustice['legislation'] = this.parseLegislationsFormGroups());
-    // swapping legislation with actCode
-    const actTitle = restorativeJustice['legislation'][0]['act'];
-    const dataservice = new ActDataServiceNRPTI(this.factoryService);
-    const actCode = dataservice.getCodeFromTitle(actTitle);
-    restorativeJustice['legislation'][0]['act'] = actCode;
+    this.recordUtils.replaceActTitleWithCode(restorativeJustice, this.factoryService);
 
     this.myForm.get('penalties').dirty && (restorativeJustice['penalties'] = this.parsePenaltiesFormGroups());
 
