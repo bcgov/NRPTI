@@ -270,6 +270,12 @@ export class FactoryService {
       this.userInRole(role)
     );
   }
+  //Returns true if user is not in any admin:bcmi/lng/nrced roles 
+  userInAnyTopAdminRoles() {
+    return (
+      (this.userInAdminRole() || this.userInBcmiRole() || this.userInLngRole() || this.userInNrcedRole())
+    )
+  }
 
   isFlavourEditEnabled(requiredRoles: string[]) {
     for (const role of requiredRoles) {
