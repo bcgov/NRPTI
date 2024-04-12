@@ -4,11 +4,11 @@ import { Observable } from 'rxjs/Observable';
 import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
 import { FactoryService } from '../services/factory.service';
 import { EpicProjectIds, SchemaLists } from '../../../../common/src/app/utils/record-constants';
-import { ActDataServiceNRPTI } from '../../../../global/src/lib/utils/act-data-service-nrpti';
+import { RecordUtils } from './utils/record-utils';
 
 @Injectable()
 export class RecordsResolver implements Resolve<Observable<object>> {
-  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) {}
+  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils, private recordUtils: RecordUtils) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const params = { ...route.params };
@@ -55,16 +55,8 @@ export class RecordsResolver implements Resolve<Observable<object>> {
     }
 
     if (params.act) {
-      or['legislation.act'] = params.act;
-      // adds the actCode associated with each act to the query obj
-      const dataservice = new ActDataServiceNRPTI(this.factoryService);
-      const actList = params.act.split(',');
-      actList.forEach(actName => {
-        const actCode = dataservice.getCodeFromTitle(actName);
-        if (actCode) {
-          or['legislation.act'] += ',' + actCode;
-        }
-      });
+      or['legislation.act'] = this.recordUtils.appendActCodesToActNames(params.act, this.factoryService);
+      console.log("**** Params = " + params.act + "    ||| or = " + or['legislation.act']);
     }
 
     if (params.regulation) {
