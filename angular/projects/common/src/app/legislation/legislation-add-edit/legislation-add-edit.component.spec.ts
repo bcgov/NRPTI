@@ -7,7 +7,6 @@ import { Utils, ConfigService } from 'nrpti-angular-components';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FactoryService } from '../../../../../admin-nrpti/src/app/services/factory.service';
 
-
 describe('LegislationAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<LegislationAddEditComponent>(LegislationAddEditComponent);
 
