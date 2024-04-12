@@ -60,7 +60,6 @@ export class RecordsResolver implements Resolve<Observable<object>> {
 
     if (params.act) {
       or['legislation.act'] = this.recordUtils.appendActCodesToActNames(params.act, this.factoryService);
-      console.log('**** Params = ' + params.act + '    ||| or = ' + or['legislation.act']);
     }
 
     if (params.regulation) {
