@@ -250,7 +250,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
       legislations.push(
         new FormGroup({
           act: new FormControl({
-            value: leg.act || '',
+            value: this.recordUtils.replaceActCodeWithTitle(leg.act, this.factoryService) || '',
             disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           regulation: new FormControl({
