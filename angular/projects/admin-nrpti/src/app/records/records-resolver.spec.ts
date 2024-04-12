@@ -20,7 +20,7 @@ describe('RecordsResolver', () => {
       providers: [
         { provide: FactoryService, useValue: spyFactoryService },
         { provide: TableTemplateUtils, useValue: spyTableTemplateUtils },
-        { provide: RecordUtils, useValue: spyRecordUtils}
+        { provide: RecordUtils, useValue: spyRecordUtils }
       ]
     }).compileComponents();
   });
