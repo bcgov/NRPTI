@@ -260,6 +260,7 @@ export class RecordUtils {
    * @returns {void} Modifies the record object in place.
    */
   replaceActTitleWithCode(record, factoryService) {
+    console.log("******replaceActTitleWithCode record : " + JSON.stringify(record));
     if (!record || !record.legislation || !record.legislation[0] || !record.legislation[0].act) {
       throw new Error('Missing or invalid record. Unable to read act name. Not using act code');
     }
@@ -289,5 +290,20 @@ export class RecordUtils {
       }
     });
     return actsString;
+  }
+
+  /**
+   * Replaces the 'act' value in the given record object with a corresponding act code.
+   * @param {string} actCode - an intermediate code mapped to a title
+   * @param {ServiceFactory} factoryService - The service factory used to create data service instances.
+   * @returns {string} The title associated with the act code
+   */
+  replaceActCodeWithTitle(actCode, factoryService) {
+    if (!actCode) {
+      return actCode;
+    }
+    const dataservice = new ActDataServiceNRPTI(factoryService);
+    const actTitle = dataservice.displayActTitleFull(actCode);
+    return actTitle;
   }
 }
