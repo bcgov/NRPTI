@@ -6,18 +6,21 @@ import { of } from 'rxjs';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { TableObject } from 'nrpti-angular-components';
 import { EpicProjectIds } from '../../../../common/src/app/utils/record-constants';
+import { RecordUtils } from './utils/record-utils';
 
 describe('RecordsResolver', () => {
   const spyFactoryService = jasmine.createSpyObj<FactoryService>('FactoryService', ['getRecords']);
   const spyTableTemplateUtils = jasmine.createSpyObj<TableTemplateUtils>('TableTemplateUtils', [
     'updateTableObjectWithUrlParams'
   ]);
+  const spyRecordUtils = jasmine.createSpyObj<RecordUtils>('RecordUtils', ['appendActCodesToActNames']);
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         { provide: FactoryService, useValue: spyFactoryService },
-        { provide: TableTemplateUtils, useValue: spyTableTemplateUtils }
+        { provide: TableTemplateUtils, useValue: spyTableTemplateUtils },
+        { provide: RecordUtils, useValue: spyRecordUtils}
       ]
     }).compileComponents();
   });
@@ -25,8 +28,9 @@ describe('RecordsResolver', () => {
   it('should create', async(() => {
     const factoryService = TestBed.get(FactoryService);
     const tableTemplateUtils = TestBed.get(TableTemplateUtils);
+    const recordUtils = TestBed.get(RecordUtils);
 
-    const recordsResolver = new RecordsResolver(factoryService, tableTemplateUtils);
+    const recordsResolver = new RecordsResolver(factoryService, tableTemplateUtils, recordUtils);
 
     expect(recordsResolver).toBeTruthy();
   }));
@@ -34,6 +38,7 @@ describe('RecordsResolver', () => {
   describe('resolve', () => {
     let factoryServiceSpy: jasmine.SpyObj<FactoryService>;
     let tableTemplateUtilsSpy: jasmine.SpyObj<TableTemplateUtils>;
+    let recordUtilsSpy: jasmine.SpyObj<RecordUtils>;
 
     describe('with empty/null route parameters', () => {
       const activatedRouteSnapshot: ActivatedRouteSnapshot = {
@@ -57,12 +62,13 @@ describe('RecordsResolver', () => {
       beforeAll(async(() => {
         factoryServiceSpy = TestBed.get(FactoryService);
         tableTemplateUtilsSpy = TestBed.get(TableTemplateUtils);
+        recordUtilsSpy = TestBed.get(RecordUtils);
 
         factoryServiceSpy.getRecords.calls.reset();
         factoryServiceSpy.getRecords.and.returnValue(of({}));
         tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({ currentPage: 1, pageSize: 25 });
 
-        const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy);
+        const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy, recordUtilsSpy);
 
         recordsResolver.resolve(activatedRouteSnapshot);
       }));
@@ -133,12 +139,13 @@ describe('RecordsResolver', () => {
       beforeAll(async(() => {
         factoryServiceSpy = TestBed.get(FactoryService);
         tableTemplateUtilsSpy = TestBed.get(TableTemplateUtils);
+        recordUtilsSpy = TestBed.get(RecordUtils);
 
         factoryServiceSpy.getRecords.calls.reset();
         factoryServiceSpy.getRecords.and.returnValue(of({}));
         tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({ currentPage: 1, pageSize: 25 });
 
-        const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy);
+        const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy, recordUtilsSpy);
 
         recordsResolver.resolve(activatedRouteSnapshot);
       }));
@@ -209,12 +216,13 @@ describe('RecordsResolver', () => {
       beforeAll(async(() => {
         factoryServiceSpy = TestBed.get(FactoryService);
         tableTemplateUtilsSpy = TestBed.get(TableTemplateUtils);
+        recordUtilsSpy = TestBed.get(RecordUtils);
 
         factoryServiceSpy.getRecords.calls.reset();
         factoryServiceSpy.getRecords.and.returnValue(of({}));
         tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({ currentPage: 1, pageSize: 25 });
 
-        const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy);
+        const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy, recordUtilsSpy);
 
         recordsResolver.resolve(activatedRouteSnapshot);
       }));
@@ -285,12 +293,13 @@ describe('RecordsResolver', () => {
       beforeAll(async(() => {
         factoryServiceSpy = TestBed.get(FactoryService);
         tableTemplateUtilsSpy = TestBed.get(TableTemplateUtils);
+        recordUtilsSpy = TestBed.get(RecordUtils);
 
         factoryServiceSpy.getRecords.calls.reset();
         factoryServiceSpy.getRecords.and.returnValue(of({}));
         tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({ currentPage: 1, pageSize: 25 });
 
-        const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy);
+        const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy, recordUtilsSpy);
 
         recordsResolver.resolve(activatedRouteSnapshot);
       }));
@@ -361,12 +370,13 @@ describe('RecordsResolver', () => {
       beforeAll(async(() => {
         factoryServiceSpy = TestBed.get(FactoryService);
         tableTemplateUtilsSpy = TestBed.get(TableTemplateUtils);
+        recordUtilsSpy = TestBed.get(RecordUtils);
 
         factoryServiceSpy.getRecords.calls.reset();
         factoryServiceSpy.getRecords.and.returnValue(of({}));
         tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({ currentPage: 1, pageSize: 25 });
 
-        const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy);
+        const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy, recordUtilsSpy);
 
         recordsResolver.resolve(activatedRouteSnapshot);
       }));
@@ -437,12 +447,13 @@ describe('RecordsResolver', () => {
       beforeAll(async(() => {
         factoryServiceSpy = TestBed.get(FactoryService);
         tableTemplateUtilsSpy = TestBed.get(TableTemplateUtils);
+        recordUtilsSpy = TestBed.get(RecordUtils);
 
         factoryServiceSpy.getRecords.calls.reset();
         factoryServiceSpy.getRecords.and.returnValue(of({}));
         tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({ currentPage: 1, pageSize: 25 });
 
-        const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy);
+        const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy, recordUtilsSpy);
 
         recordsResolver.resolve(activatedRouteSnapshot);
       }));
