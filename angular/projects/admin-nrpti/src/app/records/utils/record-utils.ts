@@ -261,14 +261,14 @@ export class RecordUtils {
    */
   replaceActTitleWithCode(record, factoryService) {
     if (!record || !record.legislation || !record.legislation[0] || !record.legislation[0].act) {
-        throw new Error("Missing or invalid record. Unable to read act name. Not using act code");
+      throw new Error('Missing or invalid record. Unable to read act name. Not using act code');
     }
 
     const actTitle = record.legislation[0].act;
     const dataservice = new ActDataServiceNRPTI(factoryService);
     const actCode = dataservice.getCodeFromTitle(actTitle);
     if (!actCode) {
-        throw new Error("Act code not found for the given title. Not using act code");
+      throw new Error('Act code not found for the given title. Not using act code');
     }
     record.legislation[0].act = actCode;
   }
@@ -279,7 +279,7 @@ export class RecordUtils {
    * @param {ServiceFactory} factoryService - The service factory used to create data service instances.
    * @returns {void} Modifies the object in place.
    */
-  appendActCodesToActNames(actsString, factoryService){
+  appendActCodesToActNames(actsString, factoryService) {
     const dataservice = new ActDataServiceNRPTI(factoryService);
     const actList = actsString.split(',');
     actList.forEach(actName => {
