@@ -260,16 +260,15 @@ export class RecordUtils {
    * @returns {void} Modifies the record object in place.
    */
   replaceActTitleWithCode(record, factoryService) {
-    console.log("******replaceActTitleWithCode record : " + JSON.stringify(record));
     if (!record || !record.legislation || !record.legislation[0] || !record.legislation[0].act) {
-      throw new Error('Missing or invalid record. Unable to read act name. Not using act code');
+      return;
     }
 
     const actTitle = record.legislation[0].act;
     const dataservice = new ActDataServiceNRPTI(factoryService);
     const actCode = dataservice.getCodeFromTitle(actTitle);
     if (!actCode) {
-      throw new Error('Act code not found for the given title. Not using act code');
+      return;
     }
     record.legislation[0].act = actCode;
   }
