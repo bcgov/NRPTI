@@ -39,9 +39,9 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
   }
 
   private disableEdit() {
-    // Disable edit button if user is in a limited role and record does not have the same write role
+    // Disable edit button if user is not in any admin:bcmi/lng/nrced roles and record does not have the same write role
     for (const role of Constants.ApplicationLimitedRoles) {
-      if (this.factoryService.userOnlyInLimitedRole(role) && !this.rowData.write.includes(role)) {
+      if (!this.factoryService.userInAnyTopAdminRoles() && !this.rowData.write.includes(role)) {
         this.showEdit = false;
       }
     }

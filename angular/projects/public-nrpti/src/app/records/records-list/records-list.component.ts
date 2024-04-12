@@ -142,9 +142,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
           res.records[0].data.meta &&
           res.records[0].data.meta[0] &&
           res.records[0].data.meta[0].searchResultsTotal) || // Multiple results
-        (res.records[0] &&
-          !res.records[0].data.hasOwnProperty('searchResults') &&
-          1) || // Single results (autofocus param)
+        (res.records[0] && !res.records[0].data.hasOwnProperty('searchResults') && 1) || // Single results (autofocus param)
         0; // No entries found
 
       this.tableData.columns = this.tableColumns;
