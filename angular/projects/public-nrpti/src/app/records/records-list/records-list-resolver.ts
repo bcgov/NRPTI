@@ -25,9 +25,13 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
       schemaList = params.activityType.split(',');
     }
 
+    if(params.act){
+      params.act = RecordUtils.appendActCodesToActNames(params.act, this.factoryService);
+    }
+
     let keywords = '';
     if (params.keywords) {
-      keywords = params.keywords;
+      keywords = params.keywords;    
     }
 
     // This checks for the search parameter that was put in above along with an equal, for example q= or s=

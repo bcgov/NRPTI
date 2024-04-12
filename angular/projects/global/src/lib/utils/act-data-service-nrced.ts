@@ -49,4 +49,21 @@ export class ActDataServiceNRCED {
     const actsRegulationsMap = actService ? actService.getAllActsAndRegulations() : null;
     return actsRegulationsMap && actsRegulationsMap[actCode] ? actsRegulationsMap[actCode]['actName'] : actCode;
   }
+
+  /**
+   * Get the intermediate act code based on the full act name
+   * retrieved from the act data using the FactoryService.
+   * @param {string} actTitle - an act's full name
+   * @returns {string} - the act's itermediate code else null if no code can be found
+   */
+  getCodeFromTitle(actTitle): string {
+    const actService = this.factoryService.actService;
+    const actsRegulationsData = actService ? actService.getAllActsAndRegulations() : {};
+    for (const [actCode, actDetails] of Object.entries(actsRegulationsData)) {
+      if (actDetails['actName'] === actTitle) {
+        return actCode;
+      }
+    }
+    return null;
+  }
 }
