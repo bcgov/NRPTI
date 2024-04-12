@@ -13,15 +13,13 @@ export class Utils {
    * @memberof Utils
    */
   public static buildLegislationString(obj: Legislation, factoryService: any): string {
-    const ACT_CODE_BEGINNING = 'ACT_';
     if (!obj) {
       return '';
     }
 
     const legistrationStrings = [];
     if (obj.act) {
-      if (obj.act.substring(0, ACT_CODE_BEGINNING.length) === ACT_CODE_BEGINNING) {
-        // Checks if the value is an intermediate code instead of the actual act name
+      if (this.isActCode(obj.act)) {
         let actDataService;
         switch (true) {
           case factoryService instanceof FactoryServiceNRPTI:
@@ -89,5 +87,16 @@ export class Utils {
    */
   public static isObject(obj) {
     return obj && typeof obj === 'object' && obj.constructor.name === 'Object';
+  }
+
+  /**
+   * Check if an act value is an act code
+   *
+   * @param {string} act a string value that should be the actName
+   * @returns {boolean} if the value is an act code, return true. Else false.
+   */
+  private static isActCode(act) {
+    const ACT_CODE_BEGINNING = 'ACT_';
+    return act.substring(0, ACT_CODE_BEGINNING.length) === ACT_CODE_BEGINNING;
   }
 }
