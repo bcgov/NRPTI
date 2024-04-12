@@ -297,6 +297,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (permit['legislation'] = this.parseLegislationsFormGroups());
+    this.recordUtils.replaceActTitleWithCode(permit, this.factoryService);
 
     // LNG flavour
     if (this.myForm.controls.lngDescription.dirty || this.myForm.controls.publishLng.dirty) {

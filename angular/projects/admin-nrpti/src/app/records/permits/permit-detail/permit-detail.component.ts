@@ -59,7 +59,7 @@ export class PermitDetailComponent extends RecordDetailComponent implements OnIn
 
   populateTextFields() {
     if (this.data && this.data._master && this.data._master.legislation) {
-      this.legislationString = CommonUtils.buildLegislationString(this.data._master.legislation);
+      this.legislationString = CommonUtils.buildLegislationString(this.data._master.legislation, this.factoryService);
     }
   }
 

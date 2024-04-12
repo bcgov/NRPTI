@@ -522,6 +522,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (courtConviction['legislation'] = this.parseLegislationsFormGroups());
+    this.recordUtils.replaceActTitleWithCode(courtConviction, this.factoryService);
 
     this.myForm.get('penalties').dirty && (courtConviction['penalties'] = this.parsePenaltiesFormGroups());
 

@@ -376,7 +376,7 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (correspondence['legislation'] = this.parseLegislationsFormGroups());
-
+    this.recordUtils.replaceActTitleWithCode(correspondence, this.factoryService);
     // nrced flavour
     if (this.myForm.controls.nrcedDescription.dirty || this.myForm.controls.publishNrced.dirty) {
       correspondence['CorrespondenceNRCED'] = {};

@@ -453,7 +453,7 @@ export class TicketAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (ticket['legislation'] = this.parseLegislationsFormGroups());
-
+    this.recordUtils.replaceActTitleWithCode(ticket, this.factoryService);
     this.myForm.get('penalties').dirty && (ticket['penalties'] = this.parsePenaltiesFormGroups());
 
     // NRCED flavour

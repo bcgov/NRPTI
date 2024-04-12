@@ -17,7 +17,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ActService {
   private api: string;
-  private actsRegulationsMap = {};
+  private actsRegulationsData = {};
 
   /**
    * @constructor
@@ -45,7 +45,7 @@ export class ActService {
 
       getActsRegulationsURL.subscribe(
         response => {
-          this.actsRegulationsMap = response;
+          this.actsRegulationsData = response;
           observer.next();
           observer.complete();
         },
@@ -61,6 +61,6 @@ export class ActService {
    * @returns {Object} A dictionary of acts and regulations.
    */
   getAllActsAndRegulations() {
-    return this.actsRegulationsMap;
+    return this.actsRegulationsData;
   }
 }

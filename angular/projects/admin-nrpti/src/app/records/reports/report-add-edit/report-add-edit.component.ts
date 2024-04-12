@@ -376,6 +376,7 @@ export class ReportAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (report['legislation'] = this.parseLegislationsFormGroups());
+    this.recordUtils.replaceActTitleWithCode(report, this.factoryService);
 
     // nrced flavour
     if (this.myForm.controls.nrcedDescription.dirty || this.myForm.controls.publishNrced.dirty) {

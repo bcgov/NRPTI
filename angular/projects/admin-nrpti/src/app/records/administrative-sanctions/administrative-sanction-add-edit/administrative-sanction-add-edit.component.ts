@@ -458,6 +458,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
     this.myForm.get('legislations').dirty &&
       (administrativeSanction['legislation'] = this.parseLegislationsFormGroups());
 
+    this.recordUtils.replaceActTitleWithCode(administrativeSanction, this.factoryService);
     this.myForm.get('penalties').dirty && (administrativeSanction['penalties'] = this.parsePenaltiesFormGroups());
 
     // NRCED flavour

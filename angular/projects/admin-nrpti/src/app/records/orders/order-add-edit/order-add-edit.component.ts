@@ -420,6 +420,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (order['legislation'] = this.parseLegislationsFormGroups());
+    this.recordUtils.replaceActTitleWithCode(order, this.factoryService);
 
     // NRCED flavour
     if (this.myForm.controls.nrcedSummary.dirty || this.myForm.controls.publishNrced.dirty) {

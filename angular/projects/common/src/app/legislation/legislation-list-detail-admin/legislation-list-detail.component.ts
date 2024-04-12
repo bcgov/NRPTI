@@ -1,6 +1,7 @@
 import { Legislation } from './../../models/master/common-models/legislation';
 import { Component, Input, OnInit, ChangeDetectorRef, SimpleChanges, OnChanges } from '@angular/core';
 import { Utils as CommonUtils } from './../../utils/utils';
+import { FactoryService } from '../../../../../../projects/admin-nrpti/src/app/services/factory.service';
 
 @Component({
   selector: 'app-legislation-list-detail-admin',
@@ -16,7 +17,7 @@ export class LegislationListDetailComponent implements OnInit, OnChanges {
 
   public preparedData = [];
 
-  constructor(public _changeDetectionRef: ChangeDetectorRef) {}
+  constructor(public _changeDetectionRef: ChangeDetectorRef, private factoryService: FactoryService) {}
 
   ngOnInit(): void {
     this._changeDetectionRef.detectChanges();
@@ -35,6 +36,6 @@ export class LegislationListDetailComponent implements OnInit, OnChanges {
   }
 
   populateTextField(legislation: Legislation) {
-    return CommonUtils.buildLegislationString(legislation);
+    return CommonUtils.buildLegislationString(legislation, this.factoryService);
   }
 }

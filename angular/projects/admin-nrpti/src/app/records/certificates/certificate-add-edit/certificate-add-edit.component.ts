@@ -295,7 +295,7 @@ export class CertificateAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (certificate['legislation'] = this.parseLegislationsFormGroups());
-
+    this.recordUtils.replaceActTitleWithCode(certificate, this.factoryService);
     // LNG flavour
     if (this.myForm.controls.lngDescription.dirty || this.myForm.controls.publishLng.dirty) {
       certificate['CertificateLNG'] = {};

@@ -414,6 +414,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (inspection['legislation'] = this.parseLegislationsFormGroups());
+    this.recordUtils.replaceActTitleWithCode(inspection, this.factoryService);
 
     // NRCED flavour
     if (this.myForm.controls.nrcedSummary.dirty || this.myForm.controls.publishNrced.dirty) {

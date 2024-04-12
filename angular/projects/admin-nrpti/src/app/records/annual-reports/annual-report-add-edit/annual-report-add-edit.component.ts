@@ -307,6 +307,7 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (annualReport['legislation'] = this.parseLegislationsFormGroups());
+    this.recordUtils.replaceActTitleWithCode(annualReport, this.factoryService);
 
     if (
       this.myForm.get('issuedTo.type').dirty ||
