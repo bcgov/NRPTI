@@ -542,6 +542,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty &&
       (administrativePenalty['legislation'] = this.parseLegislationsFormGroups());
+
     this.recordUtils.replaceActTitleWithCode(administrativePenalty, this.factoryService);
     this.myForm.get('penalties').dirty && (administrativePenalty['penalties'] = this.parsePenaltiesFormGroups());
 
