@@ -31,7 +31,7 @@ export class RecordDetailComponent extends RecordComponent {
 
     // Disable edit button if user is in a limited role and record does not have the same write role
     for (const role of Constants.ApplicationLimitedRoles) {
-      if (this.factoryService.userOnlyInLimitedRole(role) && !record.write.includes(role)) {
+      if (!this.factoryService.userInAnyTopAdminRoles() && !record.write.includes(role)) {
         this.showEdit = false;
       }
     }
