@@ -275,3 +275,56 @@ and Appeal Tracking System  (NRO-ERA)
 - `alc-csv`
   - Imported as a CSV from the Agricultural Land Commission (ALC) 
 - `mem-admin`
+
+
+# Setting up Legislation data dynamic updates
+
+The names of the agencies and the legislation that is attached to records can change. All acts and associated regulations are mapped out in the act-regulations-mapping collection in the database. BCLaws hosts an API that returns a current act name (and other data) from consistent endpoints.  
+
+To make it so act names are automatically checked against this API and updated as needed, you need two pieces of information : 
+
+ - 1. actCode : Every record in the act-regulations-mapping collection in the DB has a unique actCode that is mapped to actual legislation values (actName and regulations). You need the actCode that is mapped to whatever actName you are working on. (Example actCode : ‘ACT_103’ ) 
+
+ - 2. BCLaws-API-URL: each act is associated with a unique code and endpoint. There are at least two different endpoints that return XML. Use the one that ends in “_01/xml”. 
+  ( Example endpoint : https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/08036_01/xml ) 
+
+  How to find BCLaws URL:  
+
+    - 1. Go to https://www.bclaws.gov.bc.ca/civix/content/complete/statreg/?xsl=/templates/browse.xsl .  
+
+    - 2. Browse the alphabetized list of public statutes and regulations and click the act you are looking for.  
+
+    - 3. Copy the link that is the act name.  
+
+    - 4. Append “/xml” to that URL. 
+
+  NOTE 1: If the act name has changed and you only have the old name, searching here for the old name will give you the current name. 
+
+  NOTE 2: When an act name changes, this endpoint is updated to the new name, so the URL should never need to be updated. 
+
+Steps to follow:  
+
+  1. Make a new key-value pair in the LEGISLATION_CODES object located in api/src/utils/constants/legislation-code-map.js formatted as:
+
+    ```
+    , 
+
+    <actCode>: { 
+
+    actApi: <BCLaws-API-URL> 
+
+    } 
+  ```
+
+    The act name associated with this actCode will now be automatically updated during a daily cronJob. This will affect options lists (mainly search filters) in the front end. 
+    NOTE: Future work could be moving this URL to the DB act-regulations-mapping collection and updating the endpoint that the cronjob calls to search through this collection for URLs, rather than manually adding entries to that constants file. 
+
+  2. Run a migration to change the actName value to the act code. Instead of having the actual act name attached to records, we replace it with the intermediate act code which is mapped to the most recent name and is updated during a daily cronjob. This ensures that no further migrations need to be done on these records to update the act name.  
+  NOTE: For instructions on how to create and run a migration, see the README in api/migrations/README.md 
+
+    - The migration should update all records where actName == the old/current act name so that actName = the actCode. 
+
+  3. Update any relevant integration utilities. The integration utilities do the ETL process on records imported from several government sources. Some of these sources do NOT include legislation data. In some cases, the integration utilities add hard-coded legislation data, including actName, to the records as they are written to the DB. Where that occurs, these utilities should be updated to write the relevant actCode instead of the actual act name. 
+  NOTE: The integration utlities are part of a cronJob that imports and updates records daily. Cases where the legislation data is included in these imports and used in the records are acceptable as it is presumed that the data from these sources is already updated when necessary. 
+
+The app should now be fully set-up to dynamically use the most up-to-date value for this specific act name. Another one down, only ~145~ 144 more to go.

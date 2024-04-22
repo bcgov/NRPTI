@@ -305,7 +305,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
       legislations.push(
         new FormGroup({
           act: new FormControl({
-            value: leg.act || '',
+            value: this.recordUtils.replaceActCodeWithTitle(leg.act, this.factoryService) || '',
             disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           regulation: new FormControl({
@@ -543,6 +543,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     this.myForm.get('legislations').dirty &&
       (administrativePenalty['legislation'] = this.parseLegislationsFormGroups());
 
+    this.recordUtils.replaceActTitleWithCode(administrativePenalty, this.factoryService);
     this.myForm.get('penalties').dirty && (administrativePenalty['penalties'] = this.parsePenaltiesFormGroups());
 
     // NRCED flavour

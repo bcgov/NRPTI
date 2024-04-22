@@ -243,7 +243,7 @@ export class TicketAddEditComponent implements OnInit, OnDestroy {
       legislations.push(
         new FormGroup({
           act: new FormControl({
-            value: leg.act || '',
+            value: this.recordUtils.replaceActCodeWithTitle(leg.act, this.factoryService) || '',
             disabled: this.currentRecord && this.currentRecord.sourceSystemRef !== 'nrpti'
           }),
           regulation: new FormControl({
@@ -453,7 +453,7 @@ export class TicketAddEditComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:max-line-length
     this.myForm.get('legislations').dirty && (ticket['legislation'] = this.parseLegislationsFormGroups());
-
+    this.recordUtils.replaceActTitleWithCode(ticket, this.factoryService);
     this.myForm.get('penalties').dirty && (ticket['penalties'] = this.parsePenaltiesFormGroups());
 
     // NRCED flavour

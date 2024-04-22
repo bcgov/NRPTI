@@ -55,7 +55,7 @@ export class WarningDetailComponent extends RecordDetailComponent implements OnI
 
   populateTextFields() {
     if (this.data && this.data._master && this.data._master.legislation) {
-      this.legislationString = CommonUtils.buildLegislationString(this.data._master.legislation);
+      this.legislationString = CommonUtils.buildLegislationString(this.data._master.legislation, this.factoryService);
     }
   }
 

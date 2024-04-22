@@ -1,4 +1,8 @@
 import { Legislation } from '../models/master/common-models/legislation';
+import { FactoryService as FactoryServiceNRPTI } from '../../../../../projects/admin-nrpti/src/app/services/factory.service';
+import { ActDataServiceNRCED } from '../../../../../projects/global/src/lib/utils/act-data-service-nrced';
+import { FactoryService as FactoryServiceNRCED } from '../../../../public-nrpti/src/app/services/factory.service';
+import { ActDataServiceNRPTI } from '../../../../global/src/lib/utils/act-data-service-nrpti';
 
 export class Utils {
   /**
@@ -8,15 +12,30 @@ export class Utils {
    * @returns {string} formatted legislation string, or empty string if no legislation values are set.
    * @memberof Utils
    */
-  public static buildLegislationString(obj: Legislation): string {
+  public static buildLegislationString(obj: Legislation, factoryService: any): string {
     if (!obj) {
       return '';
     }
 
     const legistrationStrings = [];
-
     if (obj.act) {
-      legistrationStrings.push(obj.act);
+      if (this.isActCode(obj.act)) {
+        let actDataService;
+        switch (true) {
+          case factoryService instanceof FactoryServiceNRPTI:
+            actDataService = new ActDataServiceNRPTI(factoryService);
+            break;
+          case factoryService instanceof FactoryServiceNRCED:
+            actDataService = new ActDataServiceNRCED(factoryService);
+            break;
+          default:
+            break;
+        }
+        const actName = actDataService.displayActTitleFull(obj.act);
+        legistrationStrings.push(actName);
+      } else {
+        legistrationStrings.push(obj.act);
+      }
     }
 
     if (obj.regulation) {
@@ -68,5 +87,16 @@ export class Utils {
    */
   public static isObject(obj) {
     return obj && typeof obj === 'object' && obj.constructor.name === 'Object';
+  }
+
+  /**
+   * Check if an act value is an act code
+   *
+   * @param {string} act a string value that should be the actName
+   * @returns {boolean} if the value is an act code, return true. Else false.
+   */
+  private static isActCode(act) {
+    const ACT_CODE_BEGINNING = 'ACT_';
+    return act.substring(0, ACT_CODE_BEGINNING.length) === ACT_CODE_BEGINNING;
   }
 }

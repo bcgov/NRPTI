@@ -4,10 +4,15 @@ import { Observable } from 'rxjs/Observable';
 import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
 import { FactoryService } from '../services/factory.service';
 import { EpicProjectIds, SchemaLists } from '../../../../common/src/app/utils/record-constants';
+import { RecordUtils } from './utils/record-utils';
 
 @Injectable()
 export class RecordsResolver implements Resolve<Observable<object>> {
-  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) {}
+  constructor(
+    private factoryService: FactoryService,
+    private tableTemplateUtils: TableTemplateUtils,
+    private recordUtils: RecordUtils
+  ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const params = { ...route.params };
@@ -54,7 +59,7 @@ export class RecordsResolver implements Resolve<Observable<object>> {
     }
 
     if (params.act) {
-      or['legislation.act'] = params.act;
+      or['legislation.act'] = this.recordUtils.appendActCodesToActNames(params.act, this.factoryService);
     }
 
     if (params.regulation) {
