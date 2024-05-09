@@ -14,6 +14,7 @@ const s3 = new AWS.S3({
   s3ForcePathStyle: true
 });
 const NRIS_FLNRO_KEY = 'fme-exports/NRIS-FLNRO-Inspections.csv';
+const NRIS_ALC_KEY = 'fme-exports/NRIS-ALC-Inspections.csv';
 
 /**
  * Stream csv from S3, validate, and parse to json expected by csv-importer
@@ -28,9 +29,9 @@ exports.getAndParseFmeCsv = async function(dataSourceType, recordType) {
     return;
   }
 
-  let flnroCsv;
+  let importCsv;
   try {
-    flnroCsv = s3.getObject({
+    importCsv = s3.getObject({
       Bucket: process.env.OBJECT_STORE_bucket_name,
       Key: s3Key,
     }).createReadStream();
@@ -39,7 +40,7 @@ exports.getAndParseFmeCsv = async function(dataSourceType, recordType) {
     return;
   }
 
-  const parsedCsv = await readAndParseCsvFile(flnroCsv, dataSourceType, recordType)
+  const parsedCsv = await readAndParseCsvFile(importCsv, dataSourceType, recordType)
 
   if (!parsedCsv) {
     defaultLog.info(`Error retrieving and parsing ${recordType} csv for FME source ${dataSourceType}`)
@@ -63,6 +64,12 @@ function getCsvKey(dataSourceType, recordType) {
   if (dataSourceType === 'nris-flnr-csv') {
     if (recordType === 'Inspection') {
       return NRIS_FLNRO_KEY;
+    }
+  }
+
+  if (dataSourceType === 'nris-alc-csv') {
+    if (recordType === 'Inspection') {
+      return NRIS_ALC_KEY;
     }
   }
 

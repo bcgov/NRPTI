@@ -1,6 +1,7 @@
 const csvToJson = require('csvtojson');
 const moment = require('moment-timezone');
 const flnrCsv = require('./constants/csv/flnro-inspections-csv');
+const alcCsv = require('./constants/csv/alc-inspections-csv');
 const defaultLog = require('./logger')('csv-import');
 
 /**
@@ -337,6 +338,12 @@ function getCsvRequiredFieldsArray(dataSourceType, recordType) {
     }
   }
 
+  if (dataSourceType === 'nris-alc-csv') {
+    if (recordType === 'Inspection') {
+      return alcCsv.alcInspectionCsvRequiredFields;
+    }
+  }
+
   return null;
 }
 
@@ -357,6 +364,12 @@ function getCsvRequiredFormatsArray(dataSourceType, recordType) {
   if (dataSourceType === 'nris-flnr-csv') {
     if (recordType === 'Inspection') {
       return flnrCsv.flnrInspectionCsvRequiredFormats;
+    }
+  }
+
+  if (dataSourceType === 'nris-alc-csv') {
+    if (recordType === 'Inspection') {
+      return alcCsv.alcInspectionCsvRequiredFormats;
     }
   }
 
@@ -381,6 +394,11 @@ function getCsvDateFieldsArray(dataSourceType, recordType) {
       return flnrCsv.flnrInspectionCsvDateFields;
     }
   }
+  if (dataSourceType === 'nris-alc-csv') {
+    if (recordType === 'Inspection') {
+      return alcCsv.alcInspectionCsvDateFields;
+    }
+  }
 
   return null;
 }
@@ -403,6 +421,12 @@ function getCsvRequiredHeadersArray(dataSourceType, recordType) {
       return flnrCsv.flnrInspectionCsvRequiredHeaders;
     }
   }
+  if (dataSourceType === 'nris-alc-csv') {
+    if (recordType === 'Inspection') {
+      return alcCsv.alcInspectionCsvRequiredHeaders;
+    }
+  }
+
 
   return null;
 }
