@@ -70,7 +70,7 @@ exports.updateActTitles = async function(args, res, next){
   let actTitle = '';
   for (const [actCode, {actAPI}] of Object.entries(LEGISLATION_CODES)){
     const response = await axios.get(actAPI);
-    actTitle = parseTitleFromXML(response.data);
+    actTitle = this.parseTitleFromXML(response.data);
     actMap[actCode] = actTitle;
   }
   updateTitlesInDB(actMap);
@@ -91,6 +91,7 @@ exports.getActTitleFromDB = async function(actCode){
     return (actTitleFromDB);
   } catch (error) {
       console.error("getActTitleFromDB: Failed to fetch data from DB:", error);
+      return actCode;
   }
 }
 
@@ -119,7 +120,7 @@ exports.getAllActsAndRegulationsFromDB = async function(){
  * @param {string} responseXML xml as a string from the BCLaws API
  * @return {string} the title of the act
  */
-function parseTitleFromXML(responseXML){
+exports.parseTitleFromXML = function(responseXML){
   let actTitle = '';
   let startIndex = 0;
   try{
@@ -127,11 +128,14 @@ function parseTitleFromXML(responseXML){
     const titleEnd = '</act:title>';
     const titleStartIndex = responseXML.indexOf(titleStart, startIndex);
     const titleEndIndex = responseXML.indexOf(titleEnd, titleStart);
-    actTitle = responseXML.substring(titleStartIndex + titleStart.length, titleEndIndex);
+
+    if(titleStartIndex >= 0 && titleEndIndex >= 0){ //indexOf() returns -1 if no matches are found
+      actTitle = responseXML.substring(titleStartIndex + titleStart.length, titleEndIndex);
+    } else throw new Error('act:title not found in XML');
+
 } catch (error) {
     console.error("parseTitleFromXML: Failed to parse XML:", error);
     return null;
 }
   return actTitle;
 }
-
