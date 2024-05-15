@@ -34,12 +34,12 @@ describe('LegislationListDetailComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display an actCode when the backend cannot return the legislation code map', async () =>{
-    const testActCode = "ACT_103";
-    const testLegislation = new Legislation({"act":testActCode});
+  it('should display an actCode when the backend cannot return the legislation code map', async () => {
+    const testActCode = 'ACT_103';
+    const testLegislation = new Legislation({ act: testActCode });
     component.data = [testLegislation];
     fixture.detectChanges();
-    let gridEl = fixture.nativeElement.querySelector(".grid-item-value");
+    const gridEl = fixture.nativeElement.querySelector('.grid-item-value');
     expect(gridEl.textContent).toContain(testActCode);
   });
 });
