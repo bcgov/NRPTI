@@ -37,9 +37,11 @@ describe('LegislationListDetailComponent', () => {
   it('should display an actCode when the backend cannot return the legislation code map', async () => {
     const testActCode = 'ACT_103';
     const testLegislation = new Legislation({ act: testActCode });
-    component.data = [testLegislation];
+
+    component.data = [testLegislation];//populates the component with legislation data, which will then be parsed by buildLegislationString() and added as a grid item
     fixture.detectChanges();
     const gridEl = fixture.nativeElement.querySelector('.grid-item-value');
+
     expect(gridEl.textContent).toContain(testActCode);
   });
 });
