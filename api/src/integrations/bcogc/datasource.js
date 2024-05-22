@@ -115,7 +115,7 @@ class OgcCsvDataSource {
       const recordTypeUtils = recordTypeConfig.getUtil(this.auth_payload, csvRow);
 
       // Perform any data transformations necessary to convert the csv row into a NRPTI record
-      const nrptiRecord = recordTypeUtils.transformRecord(csvRow, this.actName);
+      const nrptiRecord = recordTypeUtils.transformRecord(csvRow, this.actName || ENERGY_ACT_CODE);
 
       // Check if this record already exists
       const existingRecord = await recordTypeUtils.findExistingRecord(nrptiRecord);
