@@ -17,7 +17,7 @@ describe('orders-utils testing', () => {
     });
 
     it('returns basic fields if empty csvRow parameter provided', () => {
-      const result = orders.transformRecord({});
+      const result = orders.transformRecord({}, actName);
 
       expect(result).toEqual({
         _schemaName: 'Order',
@@ -51,7 +51,7 @@ describe('orders-utils testing', () => {
         Proponent: 'Test Proponent',
         Filename: 'sample-order.pdf',
         'File URL': 'https://www.example.com/sample-order.pdf'
-      });
+      }, actName);
 
       expect(result).toEqual({
         _schemaName: 'Order',
@@ -69,7 +69,7 @@ describe('orders-utils testing', () => {
         recordName: 'General Order 123',
         legislation: [
           {
-            act: 'Energy Resource Activities Act',
+            act: actName,
             section: 49,
             legislationDescription: 'General Order'
           }
