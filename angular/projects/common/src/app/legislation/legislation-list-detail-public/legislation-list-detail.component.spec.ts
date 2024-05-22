@@ -38,7 +38,8 @@ describe('LegislationListDetailComponent', () => {
     const testActCode = 'ACT_103';
     const testLegislation = new Legislation({ act: testActCode });
 
-    component.data = [testLegislation];//populates the component with legislation data, which will then be parsed by buildLegislationString() and added as a grid item
+    // populates the component with legislation data, which will then be parsed by buildLegislationString() and added as a grid item
+    component.data = [testLegislation];
     fixture.detectChanges();
     const gridEl = fixture.nativeElement.querySelector('.grid-item-value');
 
