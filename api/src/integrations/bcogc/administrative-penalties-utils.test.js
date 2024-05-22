@@ -98,7 +98,7 @@ describe('AdministrativePenalty', () => {
         description: ''
       });
   
-      const result = administrativePenalty.transformRecord(baseCsvRow);
+      const result = administrativePenalty.transformRecord(baseCsvRow, actName);
   
       expect(result).toEqual(expectedResult);
     });
@@ -112,7 +112,7 @@ describe('AdministrativePenalty', () => {
         description: 'Although a contravention occurred, a penalty was not assessed. See the attached document for additional details.'
       });
 
-      const result = administrativePenalty.transformRecord(baseCsvRow);
+      const result = administrativePenalty.transformRecord(baseCsvRow, actName);
   
       expect(result).toEqual(expectedResult);
     });
@@ -126,7 +126,7 @@ describe('AdministrativePenalty', () => {
         description: 'No contravention was found to have occurred, and no penalty was assessed. See the attached document for additional details.'
       });
 
-      const result = administrativePenalty.transformRecord(baseCsvRow);
+      const result = administrativePenalty.transformRecord(baseCsvRow, actName);
   
       expect(result).toEqual(expectedResult);
     });

@@ -5,6 +5,7 @@ const BCOGC_INSPECTIONS_CSV_ENDPOINT = process.env.BCOGC_INSPECTIONS_CSV_ENDPOIN
 const BCOGC_ORDERS_CSV_ENDPOINT = process.env.BCOGC_ORDERS_CSV_ENDPOINT || 'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/enforcement-order';
 const BCOGC_PENALTIES_CSV_ENDPOINT = process.env.BCOGC_PENALTIES_CSV_ENDPOINT || 'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/contravention-decision';
 const BCOGC_WARNING_CSV_ENDPOINT = process.env.BCOGC_WARNING_CSV_ENDPOINT  || 'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/warning-letter';
+const ENERGY_ACT_CODE = 'ACT_103' //unique code for Energy related activities that map to updated legislation names in the acts_regulations_mapping collection in the db
 
 describe('OgcCsvDataSource', () => {
   describe('constructor', () => {
@@ -147,7 +148,7 @@ describe('OgcCsvDataSource', () => {
 
       await dataSource.processRecord(csvRow, recordTypeConfig);
 
-      expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow);
+      expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow, ENERGY_ACT_CODE );
       expect(recordTypeUtils.findExistingRecord).toHaveBeenCalledWith({ transformed: true });
       expect(recordTypeUtils.createItem).toHaveBeenCalledWith({ transformed: true });
       expect(dataSource.status.itemsProcessed).toEqual(1);
@@ -179,7 +180,7 @@ describe('OgcCsvDataSource', () => {
 
       await dataSource.processRecord(csvRow, recordTypeConfig);
 
-      expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow);
+      expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow, ENERGY_ACT_CODE);
       expect(recordTypeUtils.findExistingRecord).toHaveBeenCalledWith({ transformed: true });
       expect(recordTypeUtils.updateRecord).toHaveBeenCalledWith({ transformed: true }, { _id: 123 });
       expect(dataSource.status.itemsProcessed).toEqual(1);
