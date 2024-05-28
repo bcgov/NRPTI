@@ -14,7 +14,7 @@ describe('transformRecord', () => {
   });
 
   it('returns basic fields if empty csvRow parameter provided', () => {
-    const result = inspections.transformRecord({});
+    const result = inspections.transformRecord({}, actName);
 
     expect(result).toEqual({
       _schemaName: 'Inspection',
@@ -50,7 +50,7 @@ describe('transformRecord', () => {
       description: 'description123',
       'activities inspected': 'activitiesInspection123',
       status: 'statusCancelled'
-    });
+    }, actName);
 
     expect(result).toEqual({
       _schemaName: 'Inspection',
@@ -65,7 +65,7 @@ describe('transformRecord', () => {
       recordName: 'Inspection Number 123456',
       legislation: [
         {
-          act: 'Energy Resource Activities Act',
+          act: actName,
           section: '57',
           subSection: '4',
           legislationDescription: 'Inspection to verify compliance with regulatory requirement'
