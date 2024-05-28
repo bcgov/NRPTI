@@ -2,7 +2,6 @@
  * @description This service provides methods to fetch and store issuing agencies.
  * @class ApplicationAgencyService
  */
-
 import { Injectable } from '@angular/core';
 import { ConfigService } from 'nrpti-angular-components';
 import { Observable } from 'rxjs';
@@ -10,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 
 /**
  * @class
- * @description Service for managing issuing agencies.
+ * @description Service for serving up-to-date map of actCode to actName and regulations.
  */
 @Injectable({
   providedIn: 'root'
@@ -27,7 +26,7 @@ export class ActService {
   constructor(private configService: ConfigService, public http: HttpClient) {}
 
   /**
-   * Initialize the service by setting the API endpoint and refreshing agencies.
+   * Initialize the service by setting the API endpoint and refreshing acts.
    * @async
    */
   async init() {
@@ -35,8 +34,8 @@ export class ActService {
     await this.refreshAct().toPromise();
   }
   /**
-   * Refresh the list of agencies from the API.
-   * @returns {Observable<void>} An observable that completes when agencies are refreshed.
+   * Refresh the map of actCodes from the API.
+   * @returns {Observable<void>} An observable that completes when acts are refreshed.
    */
   refreshAct(): Observable<void> {
     return new Observable<void>(observer => {
@@ -58,8 +57,8 @@ export class ActService {
     });
   }
   /**
-   * Get the list of agencies.
-   * @returns {Object} A dictionary of agency codes and names.
+   * Get the list of acts and regualtions mapped to an actCode.
+   * @returns {Object} A dictionary of act codes, names, and regulations.
    */
   getAllActsAndRegulations() {
     return this.actsRegulationsData;
