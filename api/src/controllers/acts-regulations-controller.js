@@ -95,6 +95,19 @@ exports.getActTitleFromDB = async function(actCode){
   }
 }
 
+exports.getActCodeFromActTitle = async function(actName){
+  try{
+    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const actsRegulationsCollection = db.collection('acts_regulations_mapping');
+    let act = await actsRegulationsCollection.find({ _schemaName: RECORD_TYPE.ActsRegulationsMapping._schemaName, actName: actName}).toArray();
+    let actCodeFromDB = act[0]['actCode'];
+    return (actCodeFromDB);
+  } catch (error) {
+      console.error("getActCodeFromActTitle: Failed to fetch data from DB:", error);
+      return actName;
+  }
+}
+
 /**
  * @async
  * @return {Object} an object that has the legislative act names as keys and an array of the regulations associated with those acts as values
