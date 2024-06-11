@@ -25,10 +25,6 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
       schemaList = params.activityType.split(',');
     }
 
-    if (params.act) {
-      params.act = RecordUtils.appendActCodesToActNames(params.act, this.factoryService);
-    }
-
     let keywords = '';
     if (params.keywords) {
       keywords = params.keywords;
