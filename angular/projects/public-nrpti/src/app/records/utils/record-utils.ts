@@ -152,9 +152,9 @@ export class RecordUtils {
       const legislation = Array.isArray(row['legislation']) ? row['legislation'][0] : row['legislation'];
 
       if (legislation) {
-        if(legislation['act'] && legislation['act'].startsWith("ACT_")){
+        if (legislation['act'] && legislation['act'].startsWith('ACT_')) {
           const actTitle = dataService.displayActTitleFull(legislation['act']);
-          if(actTitle){
+          if (actTitle) {
             line.push(escapeCsvString(actTitle));
           }
         } else {
@@ -197,7 +197,6 @@ export class RecordUtils {
 
     download(`nrced-export-${moment().format('YYYY-MM-DD')}.csv`, output);
   }
-
 }
 
 /**
