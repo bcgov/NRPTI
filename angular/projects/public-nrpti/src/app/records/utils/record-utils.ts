@@ -11,7 +11,6 @@ import { CourtConvictionDetailComponent } from '../court-convictions/court-convi
 import { Penalty } from '../../../../../common/src/app/models/master/common-models/penalty';
 import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service-nrced';
 import { FactoryService } from '../../services/factory.service';
-import { ActDataServiceNRCED } from '../../../../../global/src/lib/utils/act-data-service-nrced';
 export class RecordUtils {
   /**
    * Given a record type, return the matching detail component type, or null if no matching component found.
@@ -190,23 +189,6 @@ export class RecordUtils {
     download(`nrced-export-${moment().format('YYYY-MM-DD')}.csv`, output);
   }
 
-  /**
-   * Adds the act code to a list of act names for a search query
-   * @param {Object} actsSTring - a string of comma-seperated act names.
-   * @param {ServiceFactory} factoryService - The service factory used to create data service instances.
-   * @returns {string} a string with comma-serparated act names followed by comma sperated act codes
-   */
-  static appendActCodesToActNames(actsString, factoryService) {
-    const dataservice = new ActDataServiceNRCED(factoryService);
-    const actList = actsString.split(',');
-    actList.forEach(actName => {
-      const actCode = dataservice.getCodeFromTitle(actName);
-      if (actCode) {
-        actsString += ',' + actCode;
-      }
-    });
-    return actsString;
-  }
 }
 
 /**
