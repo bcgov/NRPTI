@@ -11,6 +11,7 @@ import { CourtConvictionDetailComponent } from '../court-convictions/court-convi
 import { Penalty } from '../../../../../common/src/app/models/master/common-models/penalty';
 import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service-nrced';
 import { FactoryService } from '../../services/factory.service';
+import { ActDataServiceNRCED } from '../../../../../global/src/lib/utils/act-data-service-nrced';
 export class RecordUtils {
   /**
    * Given a record type, return the matching detail component type, or null if no matching component found.
@@ -127,6 +128,7 @@ export class RecordUtils {
     output = `${csvHeaders.join(',')}\n`;
 
     const agencyDataService = new AgencyDataService(factoryService);
+    const dataService = new ActDataServiceNRCED(factoryService);
 
     for (const row of data) {
       let line = [];
@@ -150,7 +152,14 @@ export class RecordUtils {
       const legislation = Array.isArray(row['legislation']) ? row['legislation'][0] : row['legislation'];
 
       if (legislation) {
-        line.push(escapeCsvString(legislation['act']));
+        if (legislation['act'] && legislation['act'].startsWith('ACT_')) {
+          const actTitle = dataService.displayActTitleFull(legislation['act']);
+          if (actTitle) {
+            line.push(escapeCsvString(actTitle));
+          }
+        } else {
+          line.push(escapeCsvString(legislation['act']));
+        }
         line.push(escapeCsvString(legislation['regulation']));
         line.push(escapeCsvString(legislation['section']));
         line.push(escapeCsvString(legislation['subSection']));
@@ -188,7 +197,6 @@ export class RecordUtils {
 
     download(`nrced-export-${moment().format('YYYY-MM-DD')}.csv`, output);
   }
-
 }
 
 /**
