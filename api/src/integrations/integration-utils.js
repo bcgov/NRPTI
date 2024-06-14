@@ -84,7 +84,11 @@ exports.getRecords = async function(url, options = undefined) {
       }
     };
 
+    try{
     const res = await axios.post(CORE_TOKEN_ENDPOINT, QS.stringify(requestBody), config);
+    } catch (excception ){
+      console.log(excception);
+    }
 
     const payload = res.data ? res.data : null;
 

@@ -473,6 +473,7 @@ describe('NrisDataSource', () => {
           { attachmentId: 'attachmentId1', fileType: 'Other' },
           { attachmentId: 'attachmentId2', fileType: 'Final Report' },
           { attachmentId: 'attachmentId3', fileType: 'Report', attachmentComment: 'Inspection Report'},
+          { attachmentId: 'attachmentId3', fileType: 'Report', attachmentComment: 'Inspection Report', attachmentDate: "2020-01-10 11:50"},
           { attachmentId: 'attachmentId4', fileType: 'Report', attachmentComment: 'Inspection Report', attachmentDate: "2024-06-06" },
         ],
       };
