@@ -72,7 +72,7 @@ exports.protectedPut = async function (args, res, next) {
 
   const sanitizedObj = PutUtils.validateObjectAgainstModel(MineBCMI, incomingObj);
 
-  if (!sanitizedObj || sanitizedObj === {}) {
+  if (!sanitizedObj || Object.keys(sanitizedObj).length === 0) {
     // skip, as there are no changes to master record
     return;
   }
