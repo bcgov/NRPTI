@@ -123,7 +123,7 @@ class CoreDataSource {
       const verifiedMines = await this.getVerifiedMines();
       const minesWithDetails = await this.addMinesDetails(verifiedMines);
 
-      return minesWithDetails;
+      return minesWithDetails.filter(x => x.mine_name === "Silvertip Mine");
     } catch (error) {
       defaultLog.error(`getAllRecordData - unexpected error: ${error.message}`);
       throw error;
@@ -230,12 +230,12 @@ class CoreDataSource {
 
       // Create a new collections if possible.
       if (savedRecord._schemaName === 'MineBCMI') {
-        await this.createorUpdateCollections(collectionUtils, permitInfo.permit, savedRecord);
+        await this.createorUpdateCollections(collectionUtils, permitUtils, permitInfo.permit, savedRecord);
       } else {
         if (!savedRecord.length > 0 || savedRecord[0].status !== 'success') {
           throw Error('processRecord - savedRecord is null.');
         }
-        await this.createorUpdateCollections(collectionUtils, permitInfo.permit, savedRecord[0].object[0]);
+        await this.createorUpdateCollections(collectionUtils, permitUtils, permitInfo.permit, savedRecord[0].object[0]);
       }
 
       this.status.itemsProcessed++;
@@ -511,7 +511,7 @@ class CoreDataSource {
     return completeRecords;
   }
 
-  async createorUpdateCollections(collectionUtils, permit, mineRecord) {
+  async createorUpdateCollections(collectionUtils,permitUtils, permit, mineRecord) {
     if (!collectionUtils) {
       throw new Error('createorUpdateCollections - param collectionUtils is null.');
     }
@@ -540,7 +540,7 @@ class CoreDataSource {
           project: mineRecord._id,
           name: amendment.description !== null ? amendment.description : 'Permit Documents',
           date: amendment.issue_date ? new Date(amendment.issue_date) : null,
-          type: amendment.permit_amendment_type_code === 'OGP' ? 'Permit' : 'Permit Amendment',
+          type: permitUtils.getPermitType(amendment.permit_amendment_type_code),
           agency: 'AGENCY_EMLI',
           records: (existingPermits && existingPermits.map(permit => permit._id)) || []
         };
@@ -556,12 +556,14 @@ class CoreDataSource {
         if (
           existingCollection.name !== amendment.description ||
           Date.parse(existingCollection.date) !== Date.parse(amendment.issue_date) ||
-          existingCollection.records.length != existingPermits.length
+          existingCollection.records.length != existingPermits.length ||
+          existingCollection.type != permitUtils.getPermitType(amendment.permit_amendment_type_code)
         ) {
           const updateCollection = {
             _sourceRefCoreCollectionId: amendment.permit_amendment_guid,
             name: amendment.description,
             date: amendment.issue_date ? new Date(amendment.issue_date) : null,
+            type: permitUtils.getPermitType(amendment.permit_amendment_type_code),
             records: (existingPermits && existingPermits.map(permit => permit._id)) || []
           };
 
