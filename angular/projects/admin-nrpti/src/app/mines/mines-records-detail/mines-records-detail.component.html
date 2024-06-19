@@ -42,6 +42,8 @@
                 ? 'Original Permit'
                 : record && record.typeCode && record.typeCode === 'AMD'
                 ? 'Permit Amendment'
+                : record && record.typeCode && record.TypeCode === 'ALG'
+                ? 'Amalgamated Permit'
                 : '-'
             }}
           </span>

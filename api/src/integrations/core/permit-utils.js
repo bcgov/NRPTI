@@ -117,7 +117,7 @@ class Permits extends BaseRecordUtils {
       case 'ALG':
         return 'Amalgamated Permit';
       default:
-        return 'Permit Amendment'
+        return 'Permit Amendment' //AMD
     }
   }
 }

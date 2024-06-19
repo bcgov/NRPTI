@@ -49,7 +49,7 @@ export class MinesRecordsEditComponent implements OnInit {
       return item.displayName;
     })
     .sort();
-  public permitTypes = ['OGP', 'AMD'];
+  public permitTypes = ['ALG','OGP', 'AMD'];
 
   public recordAgencies = Picklists.collectionAgencyCodePicklist;
 
