@@ -274,24 +274,6 @@ export class RecordUtils {
   }
 
   /**
-   * Adds the act code to a list of act names for a search query
-   * @param {Object} actsSTring - a string of comma-seperated act names.
-   * @param {ServiceFactory} factoryService - The service factory used to create data service instances.
-   * @returns {string} a string with comma-serparated act names followed by comma sperated act codes
-   */
-  appendActCodesToActNames(actsString, factoryService) {
-    const dataservice = new ActDataServiceNRPTI(factoryService);
-    const actList = actsString.split(',');
-    actList.forEach(actName => {
-      const actCode = dataservice.getCodeFromTitle(actName);
-      if (actCode) {
-        actsString += ',' + actCode;
-      }
-    });
-    return actsString;
-  }
-
-  /**
    * Replaces the 'act' value in the given record object with a corresponding act code.
    * @param {string} actCode - an intermediate code mapped to a title
    * @param {ServiceFactory} factoryService - The service factory used to create data service instances.

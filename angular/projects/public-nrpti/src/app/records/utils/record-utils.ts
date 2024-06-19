@@ -128,6 +128,7 @@ export class RecordUtils {
     output = `${csvHeaders.join(',')}\n`;
 
     const agencyDataService = new AgencyDataService(factoryService);
+    const dataService = new ActDataServiceNRCED(factoryService);
 
     for (const row of data) {
       let line = [];
@@ -151,7 +152,14 @@ export class RecordUtils {
       const legislation = Array.isArray(row['legislation']) ? row['legislation'][0] : row['legislation'];
 
       if (legislation) {
-        line.push(escapeCsvString(legislation['act']));
+        if (legislation['act'] && legislation['act'].startsWith('ACT_')) {
+          const actTitle = dataService.displayActTitleFull(legislation['act']);
+          if (actTitle) {
+            line.push(escapeCsvString(actTitle));
+          }
+        } else {
+          line.push(escapeCsvString(legislation['act']));
+        }
         line.push(escapeCsvString(legislation['regulation']));
         line.push(escapeCsvString(legislation['section']));
         line.push(escapeCsvString(legislation['subSection']));
@@ -188,24 +196,6 @@ export class RecordUtils {
     }
 
     download(`nrced-export-${moment().format('YYYY-MM-DD')}.csv`, output);
-  }
-
-  /**
-   * Adds the act code to a list of act names for a search query
-   * @param {Object} actsSTring - a string of comma-seperated act names.
-   * @param {ServiceFactory} factoryService - The service factory used to create data service instances.
-   * @returns {string} a string with comma-serparated act names followed by comma sperated act codes
-   */
-  static appendActCodesToActNames(actsString, factoryService) {
-    const dataservice = new ActDataServiceNRCED(factoryService);
-    const actList = actsString.split(',');
-    actList.forEach(actName => {
-      const actCode = dataservice.getCodeFromTitle(actName);
-      if (actCode) {
-        actsString += ',' + actCode;
-      }
-    });
-    return actsString;
   }
 }
 

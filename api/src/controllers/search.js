@@ -9,6 +9,7 @@ let moment = require('moment');
 let fuzzySearch = require('../utils/fuzzySearch');
 const { ApplicationAdminRoles, ApplicationLimitedAdminRoles, SKIP_REDACTION_SCHEMA_NAMES } = require('../utils/constants/misc');
 const { userIsOnlyInRole } = require('../utils/auth-utils');
+const {getActCodeFromActTitle} = require('../controllers/acts-regulations-controller');
 
 function isEmpty(obj) {
   for (const key in obj) {
@@ -38,6 +39,21 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
   return await Promise.all(
     Object.keys(queryString).map(async item => {
       let entry = queryString[item];
+
+      //Append legislation codes from mapping table
+      if(item === "legislation.act"){
+        if(entry instanceof String || typeof(entry) === 'string'){
+          entry = [entry];
+        }
+        for(const title of entry){
+          if(!title.startsWith("ACT_")){
+            const actCode = await getActCodeFromActTitle(title);
+            if(actCode != title){
+              entry.push(actCode);
+            }
+          }
+        }
+      }
 
       // If $in on an array, go through all the members of the array and convert their value
       if (Array.isArray(entry) && comparisonOperator === '$in') {
