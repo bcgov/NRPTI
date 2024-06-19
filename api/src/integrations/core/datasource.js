@@ -123,7 +123,7 @@ class CoreDataSource {
       const verifiedMines = await this.getVerifiedMines();
       const minesWithDetails = await this.addMinesDetails(verifiedMines);
 
-      return minesWithDetails.filter(x => x.mine_name === "Silvertip Mine");
+      return minesWithDetails;
     } catch (error) {
       defaultLog.error(`getAllRecordData - unexpected error: ${error.message}`);
       throw error;
