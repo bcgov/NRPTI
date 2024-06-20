@@ -472,16 +472,20 @@ describe('NrisDataSource', () => {
         attachment: [
           { attachmentId: 'attachmentId1', fileType: 'Other' },
           { attachmentId: 'attachmentId2', fileType: 'Final Report' },
+          { attachmentId: 'attachmentId3', fileType: 'Report', attachmentComment: 'Inspection Report'},
+          { attachmentId: 'attachmentId3', fileType: 'Report', attachmentComment: 'Inspection Report', attachmentDate: "2020-01-10 11:50"},
+          { attachmentId: 'attachmentId4', fileType: 'Report', attachmentComment: 'Inspection Report', attachmentDate: "2024-06-06" },
         ],
       };
   
       const newRecord = {};
       await dataSource.createRecordAttachments(record, newRecord);
   
-      expect(dataSource.getFileFromNRIS).toHaveBeenCalledTimes(1);
+      expect(dataSource.getFileFromNRIS).toHaveBeenCalledTimes(2);
       expect(dataSource.getFileFromNRIS).toHaveBeenCalledWith('sampleAssessmentId', 'attachmentId2');
+      expect(dataSource.getFileFromNRIS).toHaveBeenCalledWith('sampleAssessmentId', 'attachmentId4');
   
-      expect(dataSource.putFileS3).toHaveBeenCalledTimes(1);
+      expect(dataSource.putFileS3).toHaveBeenCalledTimes(2);
     });
   });
 
