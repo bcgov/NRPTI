@@ -274,6 +274,7 @@ export class Picklists {
 
   public static readonly collectionTypePicklist = [
     'Annual Report',
+    'Amalgamated Permit',
     'Certificate Amendment',
     'Certificate',
     'Compliance Self Report',

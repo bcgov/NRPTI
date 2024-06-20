@@ -109,6 +109,17 @@ class Permits extends BaseRecordUtils {
 
     return permits;
   }
+
+  getPermitType(typeCode) {
+    switch(typeCode){
+      case 'OGP':
+        return 'Permit';
+      case 'ALG':
+        return 'Amalgamated Permit';
+      default:
+        return 'Permit Amendment' //AMD
+    }
+  }
 }
 
 module.exports = Permits;

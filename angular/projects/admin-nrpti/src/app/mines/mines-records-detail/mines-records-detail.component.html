@@ -37,13 +37,7 @@
         <div class="flex-container mb-2">
           <label for="type" class="med mr-2">Permit Type:</label>
           <span id="type" name="type">
-            {{
-              record && record.typeCode && record.typeCode === 'OGP'
-                ? 'Original Permit'
-                : record && record.typeCode && record.typeCode === 'AMD'
-                ? 'Permit Amendment'
-                : '-'
-            }}
+            {{ this.permitType(record) }}
           </span>
         </div>
       </div>

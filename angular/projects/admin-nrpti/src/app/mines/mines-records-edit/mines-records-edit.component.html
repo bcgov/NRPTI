@@ -67,8 +67,8 @@
         <div class="label-pair" *ngIf="myForm.get('recordType').value === 'Permit'">
           <label for="typeCode">Permit Type</label>
           <select name="typeCode" id="typeCode" formControlName="typeCode" class="form-control">
-            <option *ngFor="let typeCode of permitTypes" [ngValue]="typeCode">
-              {{ typeCode === 'OGP' ? 'Original Permit' : 'Permit Amendment' }}
+            <option *ngFor="let typeCode of recordUtils.minePermitTypes" [ngValue]="typeCode">
+              {{ recordUtils.minePermitName(typeCode) }}
             </option>
           </select>
         </div>

@@ -77,214 +77,228 @@ import { RecordComponent } from './record-component';
 import { ActDataServiceNRPTI } from '../../../../../global/src/lib/utils/act-data-service-nrpti';
 
 export class RecordUtils {
-  /**
-   * Given a single record object, find the matching model based on the records _schemaName, and return a new instance.
-   * Returns null if no matching model found.
-   *
-   * @static
-   * @param {*} data
-   * @returns {object} new instance of record model, or null.
-   * @memberof RecordUtils
-   */
-  static getRecordModelInstance(data: any): object {
-    if (!data || !data._schemaName) {
-      return null;
-    }
+         /**
+          * Given a single record object, find the matching model based on the
+          * records _schemaName, and return a new instance.
+          * Returns null if no matching model found.
+          *
+          * @static
+          * @param {*} data
+          * @returns {object} new instance of record model, or null.
+          * @memberof RecordUtils
+          */
+         static getRecordModelInstance(data: any): object {
+           if (!data || !data._schemaName) {
+             return null;
+           }
 
-    // We can find and create the model instance via reflection
-    // This only works when our Schema Name is IDENTICAL to the class name
-    // So when creating new models/flavours for records, always ensure the class
-    // name and schema name match, case sensitive.
-    // If you're getting errors here, you've likely named your model class
-    // something different, so make sure you fix the name so it matches your Schema
-    return this.getReflectiveInstance(models, data._schemaName, data);
-  }
+           // We can find and create the model instance via reflection
+           // This only works when our Schema Name is IDENTICAL to the class name
+           // So when creating new models/flavours for records, always ensure the class
+           // name and schema name match, case sensitive.
+           // If you're getting errors here, you've likely named your model class
+           // something different, so make sure you fix the name so it matches your Schema
+           return this.getReflectiveInstance(models, data._schemaName, data);
+         }
 
-  /**
-   * Given a record type, return the matching detail component type, or null if no matching component found.
-   * Returns null if no matching detail component found.
-   *
-   * @static
-   * @param {string} recordType
-   * @returns {Type<RecordComponent>} the record detail component, or null.
-   * @memberof RecordUtils
-   */
-  static getRecordDetailComponent(recordType: string): Type<RecordComponent> {
-    if (!recordType) {
-      return null;
-    }
+         /**
+          * Given a record type, return the matching detail component type, or null if no matching component found.
+          * Returns null if no matching detail component found.
+          *
+          * @static
+          * @param {string} recordType
+          * @returns {Type<RecordComponent>} the record detail component, or null.
+          * @memberof RecordUtils
+          */
+         static getRecordDetailComponent(recordType: string): Type<RecordComponent> {
+           if (!recordType) {
+             return null;
+           }
 
-    // we can't use a reflective visitor with these because
-    // importing from RecordModule would cause circular dependencies.
-    switch (recordType) {
-      case 'OrderNRCED':
-        return OrderNRCEDDetailComponent;
-      case 'OrderLNG':
-        return OrderLNGDetailComponent;
-      case 'InspectionNRCED':
-        return InspectionNRCEDDetailComponent;
-      case 'InspectionLNG':
-        return InspectionLNGDetailComponent;
-      case 'CertificateLNG':
-        return CertificateLNGDetailComponent;
-      case 'PermitLNG':
-        return PermitLNGDetailComponent;
-      case 'AgreementLNG':
-        return AgreementLNGDetailComponent;
-      case 'SelfReportLNG':
-        return SelfReportLNGDetailComponent;
-      case 'RestorativeJusticeNRCED':
-        return RestorativeJusticeNRCEDDetailComponent;
-      case 'RestorativeJusticeLNG':
-        return RestorativeJusticeLNGDetailComponent;
-      case 'TicketLNG':
-        return TicketLNGDetailComponent;
-      case 'TicketNRCED':
-        return TicketNRCEDDetailComponent;
-      case 'AdministrativePenaltyLNG':
-        return AdministrativePenaltyLNGDetailComponent;
-      case 'AdministrativePenaltyNRCED':
-        return AdministrativePenaltyNRCEDDetailComponent;
-      case 'AdministrativePenaltyBCMI':
-        return AdministrativePenaltyBCMIDetailComponent;
-      case 'AdministrativeSanctionLNG':
-        return AdministrativeSanctionLNGDetailComponent;
-      case 'AdministrativeSanctionNRCED':
-        return AdministrativeSanctionNRCEDDetailComponent;
-      case 'WarningLNG':
-        return WarningLNGDetailComponent;
-      case 'WarningNRCED':
-        return WarningNRCEDDetailComponent;
-      case 'ConstructionPlanLNG':
-        return ConstructionPlanLNGDetailComponent;
-      case 'ManagementPlanLNG':
-        return ManagementPlanLNGDetailComponent;
-      case 'CourtConvictionBCMI':
-        return CourtConvictionBCMIDetailComponent;
-      case 'CourtConvictionLNG':
-        return CourtConvictionLNGDetailComponent;
-      case 'CourtConvictionNRCED':
-        return CourtConvictionNRCEDDetailComponent;
-      case 'CertificateAmendmentLNG':
-        return CertificateAmendmentLNGDetailComponent;
-      case 'CertificateAmendmentBCMI':
-        return CertificateAmendmentBCMIDetailComponent;
-      case 'CorrespondenceNRCED':
-        return CorrespondenceNRCEDDetailComponent;
-      case 'CorrespondenceBCMI':
-        return CorrespondenceBCMIDetailComponent;
-      case 'ReportNRCED':
-        return ReportNRCEDDetailComponent;
-      case 'ReportBCMI':
-        return ReportBCMIDetailComponent;
-      case 'DamSafetyInspectionNRCED':
-        return DamSafetyInspectionNRCEDDetailComponent;
-      case 'DamSafetyInspectionBCMI':
-        return DamSafetyInspectionBCMIDetailComponent;
-      case 'AnnualReportBCMI':
-        return AnnualReportBCMIDetailComponent;
-      default:
-        return null;
-    }
-  }
+           // we can't use a reflective visitor with these because
+           // importing from RecordModule would cause circular dependencies.
+           switch (recordType) {
+             case 'OrderNRCED':
+               return OrderNRCEDDetailComponent;
+             case 'OrderLNG':
+               return OrderLNGDetailComponent;
+             case 'InspectionNRCED':
+               return InspectionNRCEDDetailComponent;
+             case 'InspectionLNG':
+               return InspectionLNGDetailComponent;
+             case 'CertificateLNG':
+               return CertificateLNGDetailComponent;
+             case 'PermitLNG':
+               return PermitLNGDetailComponent;
+             case 'AgreementLNG':
+               return AgreementLNGDetailComponent;
+             case 'SelfReportLNG':
+               return SelfReportLNGDetailComponent;
+             case 'RestorativeJusticeNRCED':
+               return RestorativeJusticeNRCEDDetailComponent;
+             case 'RestorativeJusticeLNG':
+               return RestorativeJusticeLNGDetailComponent;
+             case 'TicketLNG':
+               return TicketLNGDetailComponent;
+             case 'TicketNRCED':
+               return TicketNRCEDDetailComponent;
+             case 'AdministrativePenaltyLNG':
+               return AdministrativePenaltyLNGDetailComponent;
+             case 'AdministrativePenaltyNRCED':
+               return AdministrativePenaltyNRCEDDetailComponent;
+             case 'AdministrativePenaltyBCMI':
+               return AdministrativePenaltyBCMIDetailComponent;
+             case 'AdministrativeSanctionLNG':
+               return AdministrativeSanctionLNGDetailComponent;
+             case 'AdministrativeSanctionNRCED':
+               return AdministrativeSanctionNRCEDDetailComponent;
+             case 'WarningLNG':
+               return WarningLNGDetailComponent;
+             case 'WarningNRCED':
+               return WarningNRCEDDetailComponent;
+             case 'ConstructionPlanLNG':
+               return ConstructionPlanLNGDetailComponent;
+             case 'ManagementPlanLNG':
+               return ManagementPlanLNGDetailComponent;
+             case 'CourtConvictionBCMI':
+               return CourtConvictionBCMIDetailComponent;
+             case 'CourtConvictionLNG':
+               return CourtConvictionLNGDetailComponent;
+             case 'CourtConvictionNRCED':
+               return CourtConvictionNRCEDDetailComponent;
+             case 'CertificateAmendmentLNG':
+               return CertificateAmendmentLNGDetailComponent;
+             case 'CertificateAmendmentBCMI':
+               return CertificateAmendmentBCMIDetailComponent;
+             case 'CorrespondenceNRCED':
+               return CorrespondenceNRCEDDetailComponent;
+             case 'CorrespondenceBCMI':
+               return CorrespondenceBCMIDetailComponent;
+             case 'ReportNRCED':
+               return ReportNRCEDDetailComponent;
+             case 'ReportBCMI':
+               return ReportBCMIDetailComponent;
+             case 'DamSafetyInspectionNRCED':
+               return DamSafetyInspectionNRCEDDetailComponent;
+             case 'DamSafetyInspectionBCMI':
+               return DamSafetyInspectionBCMIDetailComponent;
+             case 'AnnualReportBCMI':
+               return AnnualReportBCMIDetailComponent;
+             default:
+               return null;
+           }
+         }
 
-  // links is an array of objects that contain documents without upfile and with url already populated.
-  // documents is an array of objects that contain documents with upfile and without url.
-  // documentsToDelete is an array of objectIds whicfh map to existing documents in the database.
-  async handleDocumentChanges(links = [], documents = [], documentsToDelete = [], recordId, factoryService) {
-    const promises = [];
+         // links is an array of objects that contain documents without upfile and with url already populated.
+         // documents is an array of objects that contain documents with upfile and without url.
+         // documentsToDelete is an array of objectIds whicfh map to existing documents in the database.
+         async handleDocumentChanges(links = [], documents = [], documentsToDelete = [], recordId, factoryService) {
+           const promises = [];
 
-    // Handle adding links
-    links.forEach(async link => {
-      const formData = new FormData();
-      formData.append('fileName', link.fileName);
-      formData.append('url', link.url);
-      promises.push(factoryService.createDocument(formData, recordId));
-    });
+           // Handle adding links
+           links.forEach(async link => {
+             const formData = new FormData();
+             formData.append('fileName', link.fileName);
+             formData.append('url', link.url);
+             promises.push(factoryService.createDocument(formData, recordId));
+           });
 
-    // Handle adding S3 Docs
-    documents.forEach(async doc => {
-      const formData = new FormData();
-      formData.append('fileName', doc.fileName);
-      formData.append('upfile', doc.upfile);
-      promises.push(factoryService.createDocument(formData, recordId));
-    });
+           // Handle adding S3 Docs
+           documents.forEach(async doc => {
+             const formData = new FormData();
+             formData.append('fileName', doc.fileName);
+             formData.append('upfile', doc.upfile);
+             promises.push(factoryService.createDocument(formData, recordId));
+           });
 
-    // Handle deleting documents
-    documentsToDelete.forEach(async docId => {
-      promises.push(factoryService.deleteDocument(docId, recordId));
-    });
+           // Handle deleting documents
+           documentsToDelete.forEach(async docId => {
+             promises.push(factoryService.deleteDocument(docId, recordId));
+           });
 
-    // Execute
-    return Promise.all(promises).catch(e => {
-      alert('Server Error: ' + e.error);
-    });
-  }
+           // Execute
+           return Promise.all(promises).catch(e => {
+             alert('Server Error: ' + e.error);
+           });
+         }
 
-  parseResForErrors(res) {
-    if (!res || !res.length || !res[0] || !res[0].length || !res[0][0]) {
-      alert('Failed to save record.');
-    }
+         parseResForErrors(res) {
+           if (!res || !res.length || !res[0] || !res[0].length || !res[0][0]) {
+             alert('Failed to save record.');
+           }
 
-    if (res[0][0].status === 'failure') {
-      alert('Failed to save master record.');
-    }
+           if (res[0][0].status === 'failure') {
+             alert('Failed to save master record.');
+           }
 
-    if (res[0][0].flavours) {
-      let flavourFailure = false;
-      res[0][0].flavours.forEach(flavour => {
-        if (flavour.status === 'failure') {
-          flavourFailure = true;
-        }
-      });
-      if (flavourFailure) {
-        alert('Failed to save one or more flavour records');
-      }
-    }
-  }
+           if (res[0][0].flavours) {
+             let flavourFailure = false;
+             res[0][0].flavours.forEach(flavour => {
+               if (flavour.status === 'failure') {
+                 flavourFailure = true;
+               }
+             });
+             if (flavourFailure) {
+               alert('Failed to save one or more flavour records');
+             }
+           }
+         }
 
-  static getReflectiveInstance(context: any, name: string, ...args: any[]) {
-    const instance = Object.create(context[name].prototype);
+         static getReflectiveInstance(context: any, name: string, ...args: any[]) {
+           const instance = Object.create(context[name].prototype);
 
-    if (args) {
-      instance.constructor.apply(instance, args);
-    }
+           if (args) {
+             instance.constructor.apply(instance, args);
+           }
 
-    return instance;
-  }
+           return instance;
+         }
 
-  /**
-   * Replaces the 'act' value in the given record object with a corresponding act code.
-   * @param {Object} record - The object containing legislation information.
-   * @param {ServiceFactory} factoryService - The service factory used to create data service instances.
-   * @returns {void} Modifies the record object in place.
-   */
-  replaceActTitleWithCode(record, factoryService) {
-    if (!record || !record.legislation || !record.legislation[0] || !record.legislation[0].act) {
-      return;
-    }
+         /**
+          * Replaces the 'act' value in the given record object with a corresponding act code.
+          * @param {Object} record - The object containing legislation information.
+          * @param {ServiceFactory} factoryService - The service factory used to create data service instances.
+          * @returns {void} Modifies the record object in place.
+          */
+         replaceActTitleWithCode(record, factoryService) {
+           if (!record || !record.legislation || !record.legislation[0] || !record.legislation[0].act) {
+             return;
+           }
 
-    const actTitle = record.legislation[0].act;
-    const dataservice = new ActDataServiceNRPTI(factoryService);
-    const actCode = dataservice.getCodeFromTitle(actTitle);
-    if (!actCode) {
-      return;
-    }
-    record.legislation[0].act = actCode;
-  }
+           const actTitle = record.legislation[0].act;
+           const dataservice = new ActDataServiceNRPTI(factoryService);
+           const actCode = dataservice.getCodeFromTitle(actTitle);
+           if (!actCode) {
+             return;
+           }
+           record.legislation[0].act = actCode;
+         }
 
-  /**
-   * Replaces the 'act' value in the given record object with a corresponding act code.
-   * @param {string} actCode - an intermediate code mapped to a title
-   * @param {ServiceFactory} factoryService - The service factory used to create data service instances.
-   * @returns {string} The title associated with the act code
-   */
-  replaceActCodeWithTitle(actCode, factoryService) {
-    if (!actCode) {
-      return actCode;
-    }
-    const dataservice = new ActDataServiceNRPTI(factoryService);
-    const actTitle = dataservice.displayActTitleFull(actCode);
-    return actTitle;
-  }
-}
+         /**
+          * Replaces the 'act' value in the given record object with a corresponding act code.
+          * @param {string} actCode - an intermediate code mapped to a title
+          * @param {ServiceFactory} factoryService - The service factory used to create data service instances.
+          * @returns {string} The title associated with the act code
+          */
+         replaceActCodeWithTitle(actCode, factoryService) {
+           if (!actCode) {
+             return actCode;
+           }
+           const dataservice = new ActDataServiceNRPTI(factoryService);
+           const actTitle = dataservice.displayActTitleFull(actCode);
+           return actTitle;
+         }
+
+         public minePermitTypes = ['ALG', 'OGP', 'AMD'];
+
+         minePermitName(typeCode: string): string {
+           switch (typeCode) {
+             case 'OGP':
+               return 'Permit';
+             case 'ALG':
+               return 'Amalgamated Permit';
+             default:
+               return 'Permit Amendment'; // AMD
+           }
+         }
+       }
