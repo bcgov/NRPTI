@@ -287,4 +287,15 @@ export class RecordUtils {
     const actTitle = dataservice.displayActTitleFull(actCode);
     return actTitle;
   }
+
+  permitName(typeCode: string): string {
+    switch (typeCode) {
+      case 'OGP':
+        return 'Permit';
+      case 'ALG':
+        return 'Amalgamated Permit';
+      default:
+        return 'Permit Amendment'; // AMD
+    }
+  }
 }

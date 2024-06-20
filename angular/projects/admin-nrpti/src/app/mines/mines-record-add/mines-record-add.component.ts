@@ -179,17 +179,6 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
     return agencyDataService.displayNameFull(agency);
   }
 
-  permitName(typeCode) {
-    switch (typeCode) {
-      case 'OGP':
-        return 'Permit';
-      case 'ALG':
-        return 'Amalgamated Permit';
-      default:
-        return 'Permit Amendment' //AMD
-    }
-  }
-
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();

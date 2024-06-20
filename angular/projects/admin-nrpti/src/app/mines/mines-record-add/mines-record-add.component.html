@@ -45,8 +45,8 @@
             <span class="red-asterisk">*</span>
           </label>
           <select name="typeCode" id="typeCode" formControlName="typeCode" class="form-control">
-            <option *ngFor="let typeCode of permitTypes" [ngValue]="typeCode">
-              {{ this.permitType(record) }}
+            <option *ngFor="let typeCode of recordUtils.minePermitTypes" [ngValue]="typeCode">
+              {{ recordUtils.permitType(record) }}
             </option>
           </select>
         </div>
