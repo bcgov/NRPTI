@@ -43,7 +43,7 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
       return item.displayName;
     })
     .sort();
-  public permitTypes = ['ALG','OGP', 'AMD'];
+  public permitTypes = ['ALG', 'OGP', 'AMD'];
 
   // Documents
   public documents = [];

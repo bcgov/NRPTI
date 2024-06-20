@@ -46,7 +46,9 @@
           </label>
           <select name="typeCode" id="typeCode" formControlName="typeCode" class="form-control">
             <option *ngFor="let typeCode of permitTypes" [ngValue]="typeCode">
-              {{ typeCode === 'OGP' ? 'Original Permit' : typeCode === 'ALG' ? 'Amalgamated Permit' : 'Permit Amendment' }}
+              {{
+                typeCode === 'OGP' ? 'Original Permit' : typeCode === 'ALG' ? 'Amalgamated Permit' : 'Permit Amendment'
+              }}
             </option>
           </select>
         </div>
