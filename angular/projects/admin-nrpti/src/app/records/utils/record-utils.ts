@@ -78,7 +78,8 @@ import { ActDataServiceNRPTI } from '../../../../../global/src/lib/utils/act-dat
 
 export class RecordUtils {
          /**
-          * Given a single record object, find the matching model based on the records _schemaName, and return a new instance.
+          * Given a single record object, find the matching model based on the
+          * records _schemaName, and return a new instance.
           * Returns null if no matching model found.
           *
           * @static
