@@ -54,7 +54,7 @@ module.exports = require('../../utils/model-schema-generator')(
     amendmentStatusCode: { type: String, default: '' },
     // Amendment doc type code, either OGP (original permit) or AMD (Amendment)
     // If the Type is AMD, the OGP document ref will be applied to the originalPermit
-    typeCode: { type: String, default: 'OGP' }, // OGP or AMD
+    typeCode: { type: String, default: 'OGP' }, // OGP or AMD or ALG
     // Original Permit GUID, only populated for AMD types
     originalPermit: { type: 'ObjectId', default: null, index: true },
 
