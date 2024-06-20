@@ -20,6 +20,7 @@ const NRIS_EMLI_API_ENDPOINT =
   process.env.NRIS_EMLI_API_ENDPOINT || 'https://api.nrs.gov.bc.ca/nrisws-api/v1/emprInspections';
 const NRIS_username = process.env.NRIS_username || null;
 const NRIS_password = process.env.NRIS_password || null;
+const NRIS_ATTACHMENT_DATE = process.env.NRIS_ATTACHMENT_DATE || '2024-06-01';
 const RETRY_LIMIT = 10;
 
 class NrisDataSource {
@@ -296,16 +297,30 @@ class NrisDataSource {
   // Gets the files and saves them for a record's attachment.
   async createRecordAttachments(record, newRecord) {
     for (let i = 0; i < record.attachment.length; i++) {
-      if (record.attachment[i].fileType === 'Final Report') {
-        const tempFileData = await this.getFileFromNRIS(record.assessmentId, record.attachment[i].attachmentId);
+      const attachment = record.attachment[i];
+      if (this.isAttachmentAllowed(attachment)) {
+        const tempFileData = await this.getFileFromNRIS(record.assessmentId, attachment.attachmentId);
         if (tempFileData) {
-          defaultLog.info('Uploading attachmentId:', record.attachment[i].attachmentId, 'to S3');
+          defaultLog.info('Uploading attachmentId:', attachment.attachmentId, 'to S3');
           const fileContent = fs.readFileSync(tempFileData.tempFilePath);
           await this.putFileS3(fileContent, tempFileData.fileName, newRecord);
           fs.unlinkSync(tempFileData.tempFilePath);
         }
       }
     }
+  }
+
+  isAttachmentAllowed(attachment){
+    //Allow final reports
+    if (attachment.fileType === 'Final Report') {
+      return true;
+    }
+    //Allow inspection reports if they were created after a specific date (June 1st)
+    if (attachment.fileType === 'Report') {
+      return attachment.attachmentComment.toLowerCase() === "inspection report" 
+      && attachment.attachmentDate != null && moment(attachment.attachmentDate).isAfter(NRIS_ATTACHMENT_DATE);
+    } 
+    return false;
   }
 
   // Grabs a file from NRIS datasource
