@@ -304,6 +304,17 @@ export class MinesRecordsEditComponent implements OnInit {
     return agencyDataService.displayNameFull(agency);
   }
 
+  permitName(typeCode) {
+    switch (typeCode) {
+      case 'OGP':
+        return 'Permit';
+      case 'ALG':
+        return 'Amalgamated Permit';
+      default:
+        return 'Permit Amendment' //AMD
+    }
+  }
+
   /**
    * Cancel editing.
    *
