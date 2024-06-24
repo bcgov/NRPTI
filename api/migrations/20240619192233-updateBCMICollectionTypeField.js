@@ -23,7 +23,7 @@ exports.up = async function(db) {
     const nrpti = await mClient.collection('nrpti');
 
     const collections = await nrpti.find({ _schemaName: 'CollectionBCMI' }).toArray();
-    const permits = await nrpti.find({ _schemaName: 'PermitBCMI' }).toArray();
+    const permits = await nrpti.find({ _schemaName: { $in: ['Permit', 'PermitBCMI'] } }).toArray();
 
     let count = 0;
 
