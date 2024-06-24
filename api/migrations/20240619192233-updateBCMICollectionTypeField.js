@@ -6,8 +6,8 @@ var seed;
 
 /**
  * Update the 'type' of CollectionBCMI entries
- * Checks each permit in the 'record' array for its typeCode
- * Assigns the type to the Collection based on the permit's typeCode, with ALG having priority
+ * Checks each permit in the 'record' array if it has a status and if that status is ALG
+ * Updates the 'type' of the collection to 'Amalgamated Permit' if the above is true.
  */
 exports.setup = function(options, seedLink) {
   dbm = options.dbmigrate;
@@ -28,27 +28,11 @@ exports.up = async function(db) {
     let count = 0;
 
     collections.forEach(async collection => {
-      let typeCode = '';
-      // Go through each record attached to each collection
-      // For each record, check the typeCode
       const oldType = collection.type;
       for (const recordId of collection.records) {
         const record = permits.find(permit => permit._id.toString() == recordId.toString());
-        // ALG takes precedence, so don't overwrite
-        if (record && record.typeCode && typeCode != record.typeCode && typeCode != 'ALG') {
-          typeCode = record.typeCode;
-        }
-      }
-      if (typeCode) {
-        switch (typeCode) {
-          case 'OGP':
-            collection.type = 'Permit';
-            break;
-          case 'ALG':
-            collection.type = 'Amalgamated Permit';
-            break;
-          default:
-            collection.type = 'Permit Amendment';
+        if (record && record.status && record.status == 'ALG') {
+          collection.type = 'Amalgamated Permit';
         }
         if (oldType != collection.type) {
           count += 1;
@@ -57,7 +41,7 @@ exports.up = async function(db) {
       }
     });
 
-    console.log('**** Finished updating ' + count + ' bcmi collection types ****');
+    console.log('**** Finished updating ' + count + ' bcmi collection types to Amalgamated Permit ****');
   } catch (error) {
     console.error(`Migration did not complete. Error processing collections: ${error.message}`);
   }
