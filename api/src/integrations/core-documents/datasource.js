@@ -40,7 +40,7 @@ class CoreDocumentsDataSource {
 
     try {
       // Get Core API access token.
-      this.client_token = await getCoreAccessToken(CORE_CLIENT_ID, CORE_CLIENT_SECRET, CORE_GRANT_TYPE);
+      await this.setClientToken();
 
       // Run main process.
       await this.updateRecords();
@@ -68,17 +68,17 @@ class CoreDocumentsDataSource {
       const jobCount = process.env.PARALLEL_IMPORT_LIMIT ? parseInt(process.env.PARALLEL_IMPORT_LIMIT) : 1;
 
       const permits = await this.getPermits();
-
-      this.status.itemTotal = permits.length;
+      const numPermits = permits.length;
+      this.status.itemTotal = numPermits;
       await this.taskAuditRecord.updateTaskRecord({ itemTotal: this.status.itemTotal });
 
       const permitUtils = new PermitUtils(this.auth_payload, RECORD_TYPE.Permit);
 
       // Push records to proccess into a Promise array to be processed in parallel.
-      for (let i = 0; i < permits.length; i += jobCount) {
+      for (let i = 0; i < numPermits; i += jobCount) {
         const promises = [];
-        for (let j = 0; j < jobCount && i + j < permits.length; j++) {
-          defaultLog.info(`Processing permit ${i + j + 1} out of ${permits.length}`);
+        for (let j = 0; j < jobCount && i + j < numPermits; j++) {
+          defaultLog.info(`Processing permit ${i + j + 1} out of ${numPermits}`);
           promises.push(this.processRecord(permits[i + j], permitUtils));
         }
 
@@ -161,7 +161,9 @@ class CoreDocumentsDataSource {
     if (!documentId) {
       throw new Error('getDownloadToken - param documentId must not be null');
     }
-
+    if (this.isAPITokenExpired(this.apiAccessExpiry)) {
+      this.setClientToken();
+    }
     try {
       const url = getIntegrationUrl(CORE_API_HOST, `/api/download-token/${documentId}`);
       const { token_guid } = await integrationUtils.getRecords(url, getAuthHeader(this.client_token));
@@ -269,11 +271,50 @@ class CoreDocumentsDataSource {
       const transformedAmendment = permitUtils.transformRecord(permit);
       const result = await permitUtils.updateRecord(transformedAmendment, permit);
 
-      if(result.length && result[0].status && result[0].status === 'failure')
+      if (result.length && result[0].status && result[0].status === 'failure')
         throw Error(`permitUtils.updateRecord failed: ${result[0].errorMessage}`);
     } catch (error) {
       throw new Error(`updateAmendment - unexpected error: ${error.message}`);
     }
+  }
+
+  /**
+   * Sets the CORE API token and marks when the token will expire
+   *
+   * @memberof CoreDocumentsDataSource
+   */
+  async setClientToken() {
+    console.log('Updating Client Token...');
+    const apiAccess = await getCoreAccessToken(CORE_CLIENT_ID, CORE_CLIENT_SECRET, CORE_GRANT_TYPE);
+    this.apiAccessExpiry = this.setExpiryTime(apiAccess.expires_in);
+    this.client_token = apiAccess.access_token;
+    console.log('Client Token updated.');
+  }
+
+  /**
+   * Gives a time for when the given duration will pass with a buffer
+   *
+   * @param {int} tokenDuration the number of seconds that the token is valid for.
+   * @returns {int} the epoch time when the token is expected to expire ( - the buffer ) = current time + token duration - buffer
+   *
+   * @memberof CoreDocumentsDataSource
+   */
+  getExpiryTime(tokenDuration) {
+    const TIME_BUFFER = 30000;
+    const SECONDS_TO_MILLISECONDS_MULTIPLIER = 1000;
+    return Date.now() + tokenDuration * SECONDS_TO_MILLISECONDS_MULTIPLIER - TIME_BUFFER;
+  }
+
+  /**
+   * checks if the given time has passed
+   *
+   * @param {int} expiryTime the epoch time we are checking for
+   * @returns {boolean} true if the provided time is in the past
+   *
+   * @memberof CoreDocumentsDataSource
+   */
+  isAPITokenExpired(expiryTime) {
+    return Date.now() >= expiryTime;
   }
 }
 
