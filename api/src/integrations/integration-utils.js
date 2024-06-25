@@ -56,7 +56,7 @@ exports.getRecords = async function(url, options = undefined) {
    * @param {string} clientId Core client ID.
    * @param {string} clientSecret Core client secret.
    * @param {string} grantType Core SSO grant type.
-   * @returns {string} Core API access token.
+   * @returns {Object?} payload - the res.data obj which includes the access_token as well as its time to live.
    * @memberof CoreDataSource
    */
   exports.getCoreAccessToken = async function(clientId, clientSecret, grantType) {
@@ -73,9 +73,9 @@ exports.getRecords = async function(url, options = undefined) {
     }
 
     const requestBody = {
-        client_id: clientId,
-        client_secret: clientSecret,
-        grant_type: grantType
+      client_id: clientId,
+      client_secret: clientSecret,
+      grant_type: grantType
     };
 
     const config = {
@@ -92,12 +92,12 @@ exports.getRecords = async function(url, options = undefined) {
       throw new Error('coreLogin - unable to log in to Core API.');
     }
 
-    return payload.access_token;
-  }
+    return payload;
+  };
 
   /**
    * Creates the authentication header for protected requests.
-   * 
+   *
    * @param {string} token Bearer token.
    * @param {object} additionalOptions Additional HTTP options.
    * @returns {object} Axios header with the bearer token set
@@ -110,4 +110,4 @@ exports.getRecords = async function(url, options = undefined) {
       },
       ...additionalOptions
     };
-  }
+  };
