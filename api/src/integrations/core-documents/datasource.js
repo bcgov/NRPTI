@@ -286,7 +286,7 @@ class CoreDocumentsDataSource {
   async setClientToken() {
     console.log('Updating Client Token...');
     const apiAccess = await getCoreAccessToken(CORE_CLIENT_ID, CORE_CLIENT_SECRET, CORE_GRANT_TYPE);
-    this.apiAccessExpiry = this.setExpiryTime(apiAccess.expires_in);
+    this.apiAccessExpiry = this.getExpiryTime(apiAccess.expires_in);
     this.client_token = apiAccess.access_token;
     console.log('Client Token updated.');
   }
@@ -302,7 +302,7 @@ class CoreDocumentsDataSource {
   getExpiryTime(tokenDuration) {
     const TIME_BUFFER = 30000;
     const SECONDS_TO_MILLISECONDS_MULTIPLIER = 1000;
-    return Date.now() + tokenDuration * SECONDS_TO_MILLISECONDS_MULTIPLIER - TIME_BUFFER;
+    return Date.now() + ( tokenDuration * SECONDS_TO_MILLISECONDS_MULTIPLIER ) - TIME_BUFFER;
   }
 
   /**
