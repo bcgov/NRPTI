@@ -250,6 +250,42 @@ class CoreDataSource {
   }
 
   /**
+   * Gets all valid permits for a Core mine. A valid permit must meet the following criteria:
+   *  - Must not be historical
+   * .
+   *
+   * @param {object} nrptiRecord NRPTI record
+   * @returns {object} Valid permit.
+   * @memberof CoreDataSource
+   */
+  async getMinePermits(nrptiRecord) {
+    if (!nrptiRecord) {
+      throw Error('getMinePermits - required nrptiRecord is null.');
+    }
+
+    // Get permits with detailed information.
+    const url = getIntegrationUrl(CORE_API_HOST, `/api/mines/${nrptiRecord._sourceRefId}/permits`);
+    const { records: permits } = await integrationUtils.getRecords(url, getAuthHeader(this.client_token));
+
+    return permits.filter(p => this.isValidPermit(p,nrptiRecord));
+  }
+
+  isValidPermit(permit,nrptiRecord){
+    //Mine must not be historical which is indicated by an authorized year of '9999' on the latest amendment.
+    if((permit.permit_amendments.length && !permit.permit_amendments[0].authorization_end_date) 
+      || permit.permit_status_code === 'O'){
+
+      // Do not use 'G-4-352' for Lumby
+      // https://bcmines.atlassian.net/browse/NRPT-684
+      if (nrptiRecord.name === 'Lumby Mine' && permit.permit_no === 'G-4-352') {
+        return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Gets valid permit for a Core mine. A valid permit must meet the following criteria:
    *  - Must not be exploratory
    *  - Must not be historical
@@ -259,33 +295,20 @@ class CoreDataSource {
    * @returns {object} Valid permit.
    * @memberof CoreDataSource
    */
-  async getMinePermit(nrptiRecord) {
-    if (!nrptiRecord) {
-      throw Error('getMinePermit - required nrptiRecord is null.');
+  getValidPermit(permits) {
+    // First, any mines with 'X' as their second character are considered exploratory. Remove them unless they are the only valid permits
+    let nonExploratoryPermits = permits.filter(permit => permit.permit_no[1].toLowerCase() !== 'x');
+    if(nonExploratoryPermits.length === 0){
+      nonExploratoryPermits = permits;
     }
 
-    // Get permits with detailed information.
-    const url = getIntegrationUrl(CORE_API_HOST, `/api/mines/${nrptiRecord._sourceRefId}/permits`);
-    const { records: permits } = await integrationUtils.getRecords(url, getAuthHeader(this.client_token));
-
-    // First, any mines with 'X' as their second character are considered exploratory. Remove them.
-    // const nonExploratoryPermits = permits.filter(permit => permit.permit_no[1].toLowerCase() !== 'x');
 
     // Second, mine must not be historical which is indicated by an authorized year of '9999' on the latest amendment.
     let validPermit;
-    for (const permit of permits) {
+    for (const permit of nonExploratoryPermits) {
       // Confirm that the most recent amendment is not historical, which is always the first index.
       // If 'null' then it is considered valid.
       // Otherwise, if the status is O, it's valid. (date 9999 check removed)
-      if (
-        (permit.permit_amendments.length && !permit.permit_amendments[0].authorization_end_date) ||
-        permit.permit_status_code === 'O'
-      ) {
-        // Do not use 'G-4-352' for Lumby
-        // https://bcmines.atlassian.net/browse/NRPT-684
-        if (nrptiRecord.name === 'Lumby Mine' && permit.permit_no === 'G-4-352') {
-          continue;
-        }
 
         // There should only be a single record. If there is more then we need to identify the most
         // recent permit as the official valid permit
@@ -309,7 +332,6 @@ class CoreDataSource {
         } else {
           validPermit = permit;
         }
-      }
     }
 
     return validPermit;
@@ -332,14 +354,18 @@ class CoreDataSource {
       throw new Error('createMinePermit - nrptiRecord is required');
     }
 
-    const permit = await this.getMinePermit(nrptiRecord);
+    const permits = await this.getMinePermits(nrptiRecord);
+    const validPermit = this.getValidPermit(permits);
 
-    if (!permit) {
+    if (!validPermit) {
       throw new Error('createMinePermit - Cannot find valid permit');
     }
 
     // Transform the permit and amendments into single permits. Each document in an amendment will create a single permit.
-    const transformedPermits = await permitUtils.transformRecord(permit, nrptiRecord);
+    let transformedPermits = [];
+    for (const permit of permits) {
+      transformedPermits = transformedPermits.concat(await permitUtils.transformRecord(permit, nrptiRecord));
+    }
 
     // To trigger flavour for this import.
     const preparedPermits = transformedPermits.map(amendment => ({ ...amendment, PermitBCMI: {} }));
@@ -348,9 +374,9 @@ class CoreDataSource {
     await Promise.all(promises);
 
     return {
-      permitNumber: permit.permit_no,
-      permittee: permit.current_permittee,
-      permit
+      permitNumber: validPermit.permit_no,
+      permittee: validPermit.current_permittee,
+      validPermit
     };
   }
 
@@ -364,17 +390,21 @@ class CoreDataSource {
    */
   async updateMinePermit(permitUtils, mineRecord) {
     // Get the updated Core permit.
-    const permit = await this.getMinePermit(mineRecord);
+    const permits = await this.getMinePermits(mineRecord);
+    const validPermit = this.getValidPermit(permits);
 
-    if (!permit || !permit.permit_amendments || !permit.permit_amendments.length) {
+    if (!validPermit || !validPermit.permit_amendments || !validPermit.permit_amendments.length) {
       throw new Error('updateMinePermit - Cannot find valid permit');
     }
 
     // Get the current permits for the mine.
-    const currentPermits = await permitUtils.getMinePermits(mineRecord._sourceRefId);
+    const currentPermits = await permitUtils.getCurrentMinePermits(mineRecord._sourceRefId);
 
     // Transform into permits.
-    const transformedPermits = permitUtils.transformRecord(permit, mineRecord);
+    let transformedPermits = [];
+    for (const permit of permits) {
+      transformedPermits = transformedPermits.concat(await permitUtils.transformRecord(permit, mineRecord));
+    }
 
     // Find the new permits that need to be created, otherwise update the permits if needed
     const newPermits = [];
@@ -416,9 +446,9 @@ class CoreDataSource {
     await Promise.all(promises);
 
     return {
-      permitNumber: permit.permit_no,
-      permittee: permit.current_permittee,
-      permit
+      permitNumber: validPermit.permit_no,
+      permittee: validPermit.current_permittee,
+      validPermit
     };
   }
 
