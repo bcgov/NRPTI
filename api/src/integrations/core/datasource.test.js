@@ -147,14 +147,14 @@ describe('Core DataSource', () => {
     });
   });
 
-  describe('getMinePermit', () => {
+  describe('getMinePermits', () => {
     
-    it('throws an error when no permit is found in getMinePermit method', async () => {
+    it('throws an error when no permit is found in getMinePermits method', async () => {
       const nrptiRecord = null;
       
       const dataSource = new DataSource(null);
       
-      await expect(dataSource.getMinePermit(nrptiRecord)).rejects.toThrow('getMinePermit - required nrptiRecord is null.');
+      await expect(dataSource.getMinePermits(nrptiRecord)).rejects.toThrow('getMinePermits - required nrptiRecord is null.');
     });
   });
 
