@@ -231,13 +231,13 @@ describe('Permits class', () => {
     });
   });
 
-  describe('getMinePermits method', () => {
+  describe('getCurrentMinePermits method', () => {
     it('returns null if no existing record found', async () => {
       mongoose.model = jest.fn(() => ({
         find: jest.fn(() => null),
       }));
 
-      const result = await permitsInstance.getMinePermits('123');
+      const result = await permitsInstance.getCurrentMinePermits('123');
       expect(result).toBeNull();
     });
 
@@ -247,7 +247,7 @@ describe('Permits class', () => {
         find: jest.fn(() => existingRecord),
       }));
 
-      const result = await permitsInstance.getMinePermits('123');
+      const result = await permitsInstance.getCurrentMinePermits('123');
       expect(result).toEqual(existingRecord);
     });
   });
