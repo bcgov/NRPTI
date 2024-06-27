@@ -270,17 +270,14 @@ class CoreDataSource {
     return permits.filter(p => this.isValidPermit(p,nrptiRecord));
   }
 
-  isValidPermit(permit,nrptiRecord){
+  isValidPermit(permit,nrptiRecord) {
     //Mine must not be historical which is indicated by an authorized year of '9999' on the latest amendment.
-    if((permit.permit_amendments.length && !permit.permit_amendments[0].authorization_end_date) 
-      || permit.permit_status_code === 'O'){
+    if ((permit.permit_amendments.length && !permit.permit_amendments[0].authorization_end_date) 
+      || permit.permit_status_code === 'O') {
 
       // Do not use 'G-4-352' for Lumby
       // https://bcmines.atlassian.net/browse/NRPT-684
-      if (nrptiRecord.name === 'Lumby Mine' && permit.permit_no === 'G-4-352') {
-        return false;
-      }
-      return true;
+      return !nrptiRecord.name === 'Lumby Mine' && permit.permit_no === 'G-4-352';
     }
     return false;
   }
@@ -298,7 +295,7 @@ class CoreDataSource {
   getValidPermit(permits) {
     // First, any mines with 'X' as their second character are considered exploratory. Remove them unless they are the only valid permits
     let nonExploratoryPermits = permits.filter(permit => permit.permit_no[1].toLowerCase() !== 'x');
-    if(nonExploratoryPermits.length === 0){
+    if (nonExploratoryPermits.length === 0) {
       nonExploratoryPermits = permits;
     }
 
