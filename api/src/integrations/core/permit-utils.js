@@ -103,7 +103,7 @@ class Permits extends BaseRecordUtils {
     return await super.updateRecord(newPermit, existingPermit);
   }
 
-  async getMinePermits(mineId) {
+  async getCurrentMinePermits(mineId) {
     const Permit = mongoose.model('Permit');
     const permits = await Permit.find({ _schemaName: 'Permit', mineGuid: mineId });
 
