@@ -43,7 +43,8 @@ class CoreDataSource {
 
     try {
       // Get a new API access token.
-      this.client_token = await getCoreAccessToken(CORE_CLIENT_ID, CORE_CLIENT_SECRET, CORE_GRANT_TYPE);
+      const apiAccess = await getCoreAccessToken(CORE_CLIENT_ID, CORE_CLIENT_SECRET, CORE_GRANT_TYPE);
+      this.client_token = apiAccess.access_token;
 
       // Run main process.
       await this.updateRecords();

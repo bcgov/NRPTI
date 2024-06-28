@@ -66,7 +66,7 @@ Moving the **App** from `dev` (`:latest`) to `test`
 ```sh
 oc project f00029-tools 
 oc tag nrpti:test nrpti:test-backup 
-oc tag nrpti:lastest nrpti:test 
+oc tag nrpti:latest nrpti:test 
 ```
 
 Moving **NRCED** from `dev` (`:latest`) to `test` 
