@@ -775,20 +775,6 @@ const executeQuery = async function (args, res, next) {
   let nor = args.swagger.params.nor ? args.swagger.params.nor.value : '';
   let _in = args.swagger.params._in ? args.swagger.params._in.value : '';
   let subset = args.swagger.params.subset ? args.swagger.params.subset.value : null;
-  defaultLog.info('Searching keywords:', keywords);
-  defaultLog.info('Searching datasets:', dataset);
-  defaultLog.info('Searching project:', project);
-  defaultLog.info('pageNum:', pageNum);
-  defaultLog.info('pageSize:', pageSize);
-  defaultLog.info('sortBy:', sortBy);
-  defaultLog.info('caseSensitive:', caseSensitive);
-  defaultLog.info('and:', and);
-  defaultLog.info('or:', or);
-  defaultLog.info('nor:', nor);
-  defaultLog.info('_in:', _in);
-  defaultLog.info('_id:', _id);
-  defaultLog.info('populate:', populate);
-  defaultLog.info('subset:', subset);
 
   let roles = args.swagger.params.auth_payload ? args.swagger.params.auth_payload.client_roles : ['public'];
 
