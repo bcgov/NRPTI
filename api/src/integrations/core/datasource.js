@@ -230,12 +230,12 @@ class CoreDataSource {
 
       // Create a new collections if possible.
       if (savedRecord._schemaName === 'MineBCMI') {
-        await this.createorUpdateCollections(collectionUtils, permitUtils, permitInfo.permit, savedRecord);
+        await this.createorUpdateCollections(collectionUtils, permitUtils, permitInfo.validPermit, savedRecord);
       } else {
         if (!savedRecord.length > 0 || savedRecord[0].status !== 'success') {
           throw Error('processRecord - savedRecord is null.');
         }
-        await this.createorUpdateCollections(collectionUtils, permitUtils, permitInfo.permit, savedRecord[0].object[0]);
+        await this.createorUpdateCollections(collectionUtils, permitUtils, permitInfo.validPermit, savedRecord[0].object[0]);
       }
 
       this.status.itemsProcessed++;
@@ -277,7 +277,7 @@ class CoreDataSource {
 
       // Do not use 'G-4-352' for Lumby
       // https://bcmines.atlassian.net/browse/NRPT-684
-      return !nrptiRecord.name === 'Lumby Mine' && permit.permit_no === 'G-4-352';
+      return !(nrptiRecord.name === 'Lumby Mine' && permit.permit_no === 'G-4-352');
     }
     return false;
   }

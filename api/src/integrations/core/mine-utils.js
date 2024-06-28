@@ -132,7 +132,7 @@ class Mines extends BaseRecordUtils {
     // The permit information is updated separately and the NRPTI record will not contain it.
     // Copy permit information over before updating to preserve it.
     nrptiRecord.permittee = permitInfo.permittee;
-    nrptiRecord.permit = permitInfo.permit;
+    nrptiRecord.permit = permitInfo.validPermit;
     nrptiRecord.permitNumber = permitInfo.permitNumber;
 
     return super.updateRecord(nrptiRecord, existingRecord);
