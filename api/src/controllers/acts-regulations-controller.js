@@ -70,7 +70,7 @@ exports.updateActTitles = async function(args, res, next){
   let actTitle = '';
   for (const [actCode, {actAPI}] of Object.entries(LEGISLATION_CODES)){
     const response = await axios.get(actAPI);
-    actTitle = this.parseTitleFromXML(response.data);
+    actTitle = exports.parseTitleFromXML(response.data);
     actMap[actCode] = actTitle;
   }
   updateTitlesInDB(actMap);
