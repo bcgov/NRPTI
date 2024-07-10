@@ -58,7 +58,7 @@ export class MinesCollectionsListResolver implements Resolve<Observable<object>>
       }
 
       if (params.bcmiTabType.includes('Authorizations')) {
-        or['type'] += 'Permit,Permit Amendment,Certificate,Certificate Amendment';
+        or['type'] += 'Amalgamated Permit,Permit,Permit Amendment,Certificate,Certificate Amendment';
       }
 
       if (params.bcmiTabType.includes('Compliance Oversight')) {
