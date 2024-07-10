@@ -229,14 +229,16 @@ class CoreDataSource {
         throw Error('processRecord - permitInfo is null.');
       }
 
-      // Create a new collections if possible.
-      if (savedRecord._schemaName === 'MineBCMI') {
-        await this.createorUpdateCollections(collectionUtils, permitUtils, permitInfo.validPermit, savedRecord);
-      } else {
-        if (!savedRecord.length > 0 || savedRecord[0].status !== 'success') {
-          throw Error('processRecord - savedRecord is null.');
+      for (let permit of permitInfo.permits){
+        // Create a new collections if possible.
+        if (savedRecord._schemaName === 'MineBCMI') {
+          await this.createorUpdateCollections(collectionUtils, permitUtils, permit, savedRecord);
+        } else {
+          if (!savedRecord.length > 0 || savedRecord[0].status !== 'success') {
+            throw Error('processRecord - savedRecord is null.');
+          }
+          await this.createorUpdateCollections(collectionUtils, permitUtils, permit, savedRecord[0].object[0]);
         }
-        await this.createorUpdateCollections(collectionUtils, permitUtils, permitInfo.validPermit, savedRecord[0].object[0]);
       }
 
       this.status.itemsProcessed++;
@@ -374,7 +376,8 @@ class CoreDataSource {
     return {
       permitNumber: validPermit.permit_no,
       permittee: validPermit.current_permittee,
-      validPermit
+      validPermit,
+      permits
     };
   }
 
@@ -446,7 +449,8 @@ class CoreDataSource {
     return {
       permitNumber: validPermit.permit_no,
       permittee: validPermit.current_permittee,
-      validPermit
+      validPermit,
+      permits
     };
   }
 
@@ -580,12 +584,13 @@ class CoreDataSource {
 
         await collectionUtils.createItem(collection);
       } else {
-        // NRPT-549 Update the collection if name, date and number of permits have changed
+        // NRPT-549 Update the collection if name, date, number of permits have changed or permissions don't match
         if (
-          existingCollection.name !== amendment.description ||
-          Date.parse(existingCollection.date) !== Date.parse(amendment.issue_date) ||
+          (amendment.description != null && existingCollection.name !== amendment.description) ||
+          (amendment.issue_date != null && Date.parse(existingCollection.date) !== Date.parse(amendment.issue_date)) ||
           existingCollection.records.length != existingPermits.length ||
-          existingCollection.type != permitUtils.getPermitType(amendment.permit_amendment_type_code)
+          existingCollection.type != permitUtils.getPermitType(amendment.permit_amendment_type_code) ||
+          existingPermits.some( p => p.read.includes('public') !== existingCollection.read.includes('public'))
         ) {
           const updateCollection = {
             _sourceRefCoreCollectionId: amendment.permit_amendment_guid,
