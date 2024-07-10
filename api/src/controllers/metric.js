@@ -49,7 +49,7 @@ exports.protectedGetData = async function (args, res, next) {
   // Future: Set read/write roles on metric, guard against execution at this point.
   const metric = await Metric.findOne(query);
 
-  if (!metric.operation) {
+  if (!metric || !metric.operation) {
     return QueryActions.sendResponse(res, 400, {});
   }
 
