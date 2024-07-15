@@ -532,6 +532,7 @@ const createCollection = async function (collectionObj, user) {
   collectionObj.type && (collection.type = collectionObj.type);
   collectionObj.agency && (collection.agency = collectionObj.agency);
   collectionObj.records && collectionObj.records.length && (collection.records = collectionObj.records);
+  collectionObj.permitNumber && (collection.permitNumber = collectionObj.permitNumber)
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (collectionObj.addRole && collectionObj.addRole === 'public') {

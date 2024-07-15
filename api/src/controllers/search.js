@@ -11,6 +11,9 @@ const { ApplicationAdminRoles, ApplicationLimitedAdminRoles, SKIP_REDACTION_SCHE
 const { userIsOnlyInRole } = require('../utils/auth-utils');
 const {getActCodeFromActTitle} = require('../controllers/acts-regulations-controller');
 
+//Set log level
+defaultLog.transports.console.level = 'info';
+
 function isEmpty(obj) {
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
@@ -34,7 +37,7 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
   }
 
   let queryString = qs.parse(field);
-  defaultLog.info('queryString:', queryString);
+  defaultLog.debug('queryString:', queryString);
   // Note that we need map and not forEach here because Promise.all uses the returned array!
   return await Promise.all(
     Object.keys(queryString).map(async item => {
@@ -704,16 +707,16 @@ exports.protectedGet = function (args, res, next) {
 // Generates the main match query
 const generateMatchesForAggregation = async function (and, or, nor, searchProperties, properties, schemaName, _in) {
   const andExpArray = (await generateExpArray(and)) || [];
-  defaultLog.info('andExpArray:', andExpArray);
+  defaultLog.debug('andExpArray:', andExpArray);
 
   const orExpArray = (await generateExpArray(or)) || [];
-  defaultLog.info('orExpArray:', orExpArray);
+  defaultLog.debug('orExpArray:', orExpArray);
 
   const norExpArray = (await generateExpArray(nor, '$and', '$ne')) || [];
-  defaultLog.info('norExpArray:', norExpArray);
+  defaultLog.debug('norExpArray:', norExpArray);
 
   const inExpArray = (await generateExpArray(_in, '$and', '$in')) || [];
-  defaultLog.info('inExpArray:', JSON.stringify(inExpArray));
+  defaultLog.debug('inExpArray:', JSON.stringify(inExpArray));
 
   const expArrays = [];
   if (andExpArray.length === 1) {
@@ -778,11 +781,15 @@ const executeQuery = async function (args, res, next) {
 
   let roles = args.swagger.params.auth_payload ? args.swagger.params.auth_payload.client_roles : ['public'];
 
-  defaultLog.info('Searching Collection:', dataset);
+  if(!roles.includes('public')){
+    roles.push('public');
+  }
 
-  defaultLog.info('******************************************************************');
-  defaultLog.info(roles);
-  defaultLog.info('******************************************************************');
+  defaultLog.debug('Searching Collection:', dataset);
+
+  defaultLog.debug('******************************************************************');
+  defaultLog.debug(roles);
+  defaultLog.debug('******************************************************************');
 
   QueryUtils.audit(args,
     'Search',
@@ -801,15 +808,15 @@ const executeQuery = async function (args, res, next) {
     sortingValue[sortField] = sortDirection;
   });
 
-  defaultLog.info('sortingValue:', sortingValue);
-  defaultLog.info('sortField:', sortField);
-  defaultLog.info('sortDirection:', sortDirection);
+  defaultLog.debug('sortingValue:', sortingValue);
+  defaultLog.debug('sortField:', sortField);
+  defaultLog.debug('sortDirection:', sortDirection);
 
   if (dataset[0] === 'Item') {
     defaultLog.info('ITEM GET', { _id: args.swagger.params._id.value });
 
     if (!args.swagger.params._id.value || !ObjectID.isValid(args.swagger.params._id.value)) {
-      defaultLog.info(`Error searching for item: ${args.swagger.params._id.value}, Error: Invalid Item ID supplied`)
+      defaultLog.warn(`Error searching for item: ${args.swagger.params._id.value}, Error: Invalid Item ID supplied`)
       return QueryActions.sendResponse(
         res,
         400,
@@ -1003,7 +1010,7 @@ const executeQuery = async function (args, res, next) {
       }
       QueryActions.sendResponse(res, 200, data);
     } catch (error) {
-      defaultLog.info(`search - error during lookup for item with itemId: ${_id}`);
+      defaultLog.warn(`search - error during lookup for item with itemId: ${_id}`);
       defaultLog.debug(error);
       return QueryActions.sendResponse(res, 400, {});
     }
@@ -1011,7 +1018,7 @@ const executeQuery = async function (args, res, next) {
     defaultLog.info('COLLECTION DOCUMENTS GET', { _id: args.swagger.params._id.value });
 
     if (!args.swagger.params._id.value || !ObjectID.isValid(args.swagger.params._id.value)) {
-      defaultLog.info(`Error searching for item: ${args.swagger.params._id.value}, Error: Invalid Item ID supplied`)
+      defaultLog.warn(`Error searching for item: ${args.swagger.params._id.value}, Error: Invalid Item ID supplied`)
       return QueryActions.sendResponse(
         res,
         400,
@@ -1105,14 +1112,14 @@ const executeQuery = async function (args, res, next) {
 
       QueryActions.sendResponse(res, 200, data);
     } catch (error) {
-      defaultLog.info(`search - error during lookup for collection document with documentId: ${_id}`);
+      defaultLog.warn(`search - error during lookup for collection document with documentId: ${_id}`);
       defaultLog.debug(error);
       return QueryActions.sendResponse(res, 400, {});
     }
 
   } else if (dataset[0] !== 'Item' && dataset[0] !== 'CollectionDocuments') {
-    defaultLog.info('Searching Dataset:', dataset);
-    defaultLog.info('sortField:', sortField);
+    defaultLog.debug('Searching Dataset:', dataset);
+    defaultLog.debug('sortField:', sortField);
 
     let itemData = await searchCollection(
       roles,

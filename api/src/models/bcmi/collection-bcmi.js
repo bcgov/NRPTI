@@ -43,7 +43,8 @@ module.exports = require('../../utils/model-schema-generator')(
     updatedBy: { type: String, default: '' },
     datePublished: { type: Date, default: null },
     sourceSystemRef: { type: String, default: 'nrpti' },
-    publishedBy: { type: String, default: '' }
+    publishedBy: { type: String, default: '' },
+    permitNumber: {type: String, default: ''}
   },
   'nrpti'
 );
