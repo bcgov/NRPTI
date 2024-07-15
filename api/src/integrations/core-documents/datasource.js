@@ -1,18 +1,14 @@
 'use strict';
 const mongoose = require('mongoose');
-const axios = require('axios');
 const fs = require('fs');
 
 const defaultLog = require('../../utils/logger')('core-datasource');
-const integrationUtils = require('../integration-utils');
 const DocumentController = require('../../controllers/document-controller');
 const PermitUtils = require('./permit-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
-const { getCoreAccessToken, getIntegrationUrl, getAuthHeader } = require('../integration-utils');
+const { getIntegrationUrl } = require('../integration-utils');
+const CoreUtil = require('../core-util');
 
-const CORE_CLIENT_ID = process.env.CORE_CLIENT_ID || null;
-const CORE_CLIENT_SECRET = process.env.CORE_CLIENT_SECRET || null;
-const CORE_GRANT_TYPE = process.env.CORE_GRANT_TYPE || null;
 const CORE_API_HOST = process.env.CORE_API_HOST || 'https://minesdigitalservices.pathfinder.gov.bc.ca';
 const CORE_DOC_MANAGER_HOST =
   process.env.CORE_DOC_MANAGER_HOST || 'https://minesdigitalservices.gov.bc.ca/document-manager';
@@ -24,10 +20,11 @@ class CoreDocumentsDataSource {
    * @param {*} taskAuditRecord audit record hook for this import instance
    * @param {*} auth_payload information about the user account that started this update.
    * @memberof CoreDocumentsDataSource
-   */
+   */ 
   constructor(taskAuditRecord, auth_payload) {
     this.taskAuditRecord = taskAuditRecord;
     this.auth_payload = auth_payload;
+    this.coreUtil = new CoreUtil();
 
     // Set initial status
     this.status = { itemsProcessed: 0, itemTotal: 0, individualRecordStatus: [] };
@@ -39,8 +36,6 @@ class CoreDocumentsDataSource {
     await this.taskAuditRecord.updateTaskRecord({ status: 'Running' });
 
     try {
-      // Get Core API access token.
-      await this.setClientToken();
 
       // Run main process.
       await this.updateRecords();
@@ -161,12 +156,9 @@ class CoreDocumentsDataSource {
     if (!documentId) {
       throw new Error('getDownloadToken - param documentId must not be null');
     }
-    if (this.isAPITokenExpired(this.apiAccessExpiry)) {
-      this.setClientToken();
-    }
     try {
       const url = getIntegrationUrl(CORE_API_HOST, `/api/download-token/${documentId}`);
-      const { token_guid } = await integrationUtils.getRecords(url, getAuthHeader(this.client_token));
+      const { token_guid } = await this.coreUtil.getRecords(url);
       return token_guid;
     } catch (error) {
       throw `getDownloadToken - unexpected error: ${error.message}`;
@@ -196,14 +188,14 @@ class CoreDocumentsDataSource {
       // Get a download token.
       const downloadToken = await this.getDownloadToken(documentId);
 
-      const url = `${CORE_DOC_MANAGER_HOST}/documents?token=${downloadToken}`;
+      const url = getIntegrationUrl(CORE_DOC_MANAGER_HOST,'/documents',{"token": downloadToken });
 
-      const res = await axios.get(url, getAuthHeader(this.client_token, { responseType: 'stream' }));
+      const res = await this.coreUtil.getRecords(url, { responseType: 'stream' });
 
       const tempFilePath = `${uploadDir}/${documentName}`;
       // Attempt to save locally.
       await new Promise((resolve, reject) => {
-        res.data
+        res
           .pipe(fs.createWriteStream(tempFilePath))
           .on('finish', resolve)
           .on('error', error => reject(error));
@@ -278,44 +270,6 @@ class CoreDocumentsDataSource {
     }
   }
 
-  /**
-   * Sets the CORE API token and marks when the token will expire
-   *
-   * @memberof CoreDocumentsDataSource
-   */
-  async setClientToken() {
-    console.log('Updating Client Token...');
-    const apiAccess = await getCoreAccessToken(CORE_CLIENT_ID, CORE_CLIENT_SECRET, CORE_GRANT_TYPE);
-    this.apiAccessExpiry = this.getExpiryTime(apiAccess.expires_in);
-    this.client_token = apiAccess.access_token;
-    console.log('Client Token updated.');
-  }
-
-  /**
-   * Gives a time for when the given duration will pass with a buffer
-   *
-   * @param {int} tokenDuration the number of seconds that the token is valid for.
-   * @returns {int} the epoch time when the token is expected to expire ( - the buffer ) = current time + token duration - buffer
-   *
-   * @memberof CoreDocumentsDataSource
-   */
-  getExpiryTime(tokenDuration) {
-    const TIME_BUFFER = 30000;
-    const SECONDS_TO_MILLISECONDS_MULTIPLIER = 1000;
-    return Date.now() + ( tokenDuration * SECONDS_TO_MILLISECONDS_MULTIPLIER ) - TIME_BUFFER;
-  }
-
-  /**
-   * checks if the given time has passed
-   *
-   * @param {int} expiryTime the epoch time we are checking for
-   * @returns {boolean} true if the provided time is in the past
-   *
-   * @memberof CoreDocumentsDataSource
-   */
-  isAPITokenExpired(expiryTime) {
-    return Date.now() >= expiryTime;
-  }
 }
 
 module.exports = CoreDocumentsDataSource;

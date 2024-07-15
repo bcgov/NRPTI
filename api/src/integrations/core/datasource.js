@@ -2,19 +2,15 @@
 
 const mongoose = require('mongoose');
 
-const integrationUtils = require('../integration-utils');
 const MineUtils = require('./mine-utils');
 const PermitUtils = require('./permit-utils');
 const CollectionUtils = require('./collection-utils');
 const defaultLog = require('../../utils/logger')('core-datasource');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
-const { getIntegrationUrl, getCoreAccessToken, getAuthHeader } = require('../integration-utils');
+const CoreUtil = require('../core-util');
 
 const CORE_API_BATCH_SIZE = process.env.CORE_API_BATCH_SIZE || 300;
-
-const CORE_CLIENT_ID = process.env.CORE_CLIENT_ID || null;
-const CORE_CLIENT_SECRET = process.env.CORE_CLIENT_SECRET || null;
-const CORE_GRANT_TYPE = process.env.CORE_GRANT_TYPE || null;
+const {getIntegrationUrl } = require('../integration-utils');
 
 const CORE_API_HOST = process.env.CORE_API_HOST || 'https://minesdigitalservices.gov.bc.ca';
 const CORE_API_PATH_MINES = process.env.CORE_API_PATH_MINES || '/api/mines';
@@ -34,6 +30,7 @@ class CoreDataSource {
 
     // Set initial status
     this.status = { itemsProcessed: 0, itemTotal: 0, individualRecordStatus: [] };
+    this.coreUtil = new CoreUtil();
   }
 
   // This requires no auth setup, so just call the local updater function.
@@ -42,10 +39,6 @@ class CoreDataSource {
     await this.taskAuditRecord.updateTaskRecord({ status: 'Running' });
 
     try {
-      // Get a new API access token.
-      const apiAccess = await getCoreAccessToken(CORE_CLIENT_ID, CORE_CLIENT_SECRET, CORE_GRANT_TYPE);
-      this.client_token = apiAccess.access_token;
-
       // Run main process.
       await this.updateRecords();
 
@@ -152,7 +145,7 @@ class CoreDataSource {
 
       // Get the up to date commodity types for records.
       const url = getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_COMMODITIES);
-      const { records: commodityTypes } = await integrationUtils.getRecords(url, getAuthHeader(this.client_token));
+      const { records: commodityTypes } = await this.coreUtil.getRecords(url);
 
       // Process each core record.
       for (const record of coreRecords) {
@@ -268,7 +261,7 @@ class CoreDataSource {
 
     // Get permits with detailed information.
     const url = getIntegrationUrl(CORE_API_HOST, `/api/mines/${nrptiRecord._sourceRefId}/permits`);
-    const { records: permits } = await integrationUtils.getRecords(url, getAuthHeader(this.client_token));
+    const { records: permits } = await this.coreUtil.getRecords(url);
 
     return permits.filter(p => this.isValidPermit(p,nrptiRecord));
   }
@@ -476,7 +469,7 @@ class CoreDataSource {
         const url = getIntegrationUrl(CORE_API_HOST, CORE_API_PATH_MINES, queryParams);
 
         // Get Core records
-        const data = await integrationUtils.getRecords(url, getAuthHeader(this.client_token));
+        const data = await this.coreUtil.getRecords(url);
         // Get records from response and add to total.
         const newRecords = (data && data.mines) || [];
         mineRecords = [...mineRecords, ...newRecords];
@@ -524,7 +517,7 @@ class CoreDataSource {
       const mineDetailsUrl = getIntegrationUrl(CORE_API_HOST, mineDetailsPath);
 
       try {
-        const mineDetails = await integrationUtils.getRecords(mineDetailsUrl, getAuthHeader(this.client_token));
+        const mineDetails = await this.coreUtil.getRecords(mineDetailsUrl);
 
         const latitude = (mineDetails.mine_location && mineDetails.mine_location.latitude) || 0.0;
         const longitude = (mineDetails.mine_location && mineDetails.mine_location.longitude) || 0.0;
@@ -566,41 +559,47 @@ class CoreDataSource {
 
       const existingCollection = await collectionUtils.findExistingRecord(amendment.permit_amendment_guid);
 
-      if (!existingCollection) {
-        const collection = {
-          _sourceRefCoreCollectionId: amendment.permit_amendment_guid,
-          project: mineRecord._id,
-          name: amendment.description !== null ? amendment.description : 'Permit Documents',
-          date: amendment.issue_date ? new Date(amendment.issue_date) : null,
-          type: permitUtils.getPermitType(amendment.permit_amendment_type_code),
-          agency: 'AGENCY_EMLI',
-          records: (existingPermits && existingPermits.map(permit => permit._id)) || []
-        };
+      if (existingPermits && existingPermits.length > 0) {
 
-        // Determine if the collection should be published or not based on the mine status.
-        if (mineRecord.read && mineRecord.read.includes('public')) {
-          collection.addRole = 'public';
-        }
-
-        await collectionUtils.createItem(collection);
-      } else {
-        // NRPT-549 Update the collection if name, date, number of permits have changed or permissions don't match
-        if (
-          (amendment.description != null && existingCollection.name !== amendment.description) ||
-          (amendment.issue_date != null && Date.parse(existingCollection.date) !== Date.parse(amendment.issue_date)) ||
-          existingCollection.records.length != existingPermits.length ||
-          existingCollection.type != permitUtils.getPermitType(amendment.permit_amendment_type_code) ||
-          existingPermits.some( p => p.read.includes('public') !== existingCollection.read.includes('public'))
-        ) {
-          const updateCollection = {
+        if (!existingCollection) {
+          const collection = {
             _sourceRefCoreCollectionId: amendment.permit_amendment_guid,
-            name: amendment.description,
+            project: mineRecord._id,
+            name: amendment.description !== null ? amendment.description : 'Permit Documents',
             date: amendment.issue_date ? new Date(amendment.issue_date) : null,
             type: permitUtils.getPermitType(amendment.permit_amendment_type_code),
-            records: (existingPermits && existingPermits.map(permit => permit._id)) || []
+            agency: 'AGENCY_EMLI',
+            records: (existingPermits && existingPermits.map(permit => permit._id)) || [],
+            permitNumber: amendment.permit_no != null ? amendment.permit_no: ''
           };
 
-          await collectionUtils.updateItem(updateCollection, existingCollection);
+          // Determine if the collection should be published or not based on the mine status.
+          if (mineRecord.read && mineRecord.read.includes('public')) {
+            collection.addRole = 'public';
+          }
+
+          await collectionUtils.createItem(collection);
+        } else {
+          // NRPT-549 Update the collection if name, date, number of permits have changed or permissions don't match
+          if (
+            (amendment.description != null && existingCollection.name !== amendment.description) ||
+            (amendment.issue_date != null && Date.parse(existingCollection.date) !== Date.parse(amendment.issue_date)) ||
+            existingCollection.records.length != existingPermits.length ||
+            existingCollection.type != permitUtils.getPermitType(amendment.permit_amendment_type_code) ||
+            existingPermits.some( p => p.read.includes('public') !== existingCollection.read.includes('public')) ||
+            (amendment.permit_no != null && existingCollection.permitNumber != amendment.permit_no)
+          ) {
+            const updateCollection = {
+              _sourceRefCoreCollectionId: amendment.permit_amendment_guid,
+              name: amendment.description,
+              date: amendment.issue_date ? new Date(amendment.issue_date) : null,
+              type: permitUtils.getPermitType(amendment.permit_amendment_type_code),
+              records: (existingPermits && existingPermits.map(permit => permit._id)) || [],
+              permitNumber: amendment.permit_no
+            };
+
+            await collectionUtils.updateItem(updateCollection, existingCollection);
+          }
         }
       }
     }
