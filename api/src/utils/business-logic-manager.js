@@ -2,6 +2,7 @@ const QueryActions = require('./query-actions');
 const DocumentController = require('../controllers/document-controller');
 const moment = require('moment');
 const constants = require('./constants/misc');
+const AgencyController = require('../controllers/agencies');
 
 /**
  * Apply business logic changes to a record. Updates the provided updateObj, and returns it.
@@ -109,7 +110,7 @@ exports.isRecordConsideredAnonymous = isRecordConsideredAnonymous;
  * @param {*} issuingAgency
  * @returns true if the issuedTo is considered anonymous, false otherwise.
  */
-function isIssuedToConsideredAnonymous(issuedTo, issuingAgency) {
+async function isIssuedToConsideredAnonymous(issuedTo, issuingAgency) {
   if (!issuedTo) {
     // can't determine if issuedTo is anonymous or not as it doesn't exist
     // If we assume anonymous, then any record type that doesn't use issuedTo
@@ -122,9 +123,14 @@ function isIssuedToConsideredAnonymous(issuedTo, issuingAgency) {
     // only individuals can be anonymous
     return false;
   }
-
+  const agencyCode = await AgencyController.getAgencyCodeFromName(issuingAgency);
   // check if the issuingAgency has legislative authority to publish names
-  if (issuingAgency && !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(issuingAgency)) {
+  if (
+    issuingAgency &&
+    (!constants.AUTHORIZED_PUBLISH_AGENCIES.includes(issuingAgency) &&
+      !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(agencyCode)
+    )
+  ) {
     // name is anonymous, issuing agency cannot publish names
     return true;
   }
