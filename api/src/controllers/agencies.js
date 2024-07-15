@@ -92,3 +92,31 @@ exports.protectedPut = async function(args, res, next) {
   queryActions.sendResponse(res, 200, result);
   next();
 };
+
+exports.getAgencyCodeFromName = async function(agencyName){
+  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const collectionDB = db.collection('nrpti');
+
+  try {
+    let agencyList;
+    // Obtain documents with Application Agency Schema
+    let agencyDocuments = await collectionDB.find({ _schemaName: RECORD_TYPE.ApplicationAgency._schemaName }).toArray();
+    // Using map function to iterate through the original array and creates
+    // a new array with objects containing only the _id, agencyCode, and agencyName properties.
+    agencyList = await agencyDocuments.map(item => ({
+      agencyCode: item.agencyCode,
+      agencyName: item.agencyName
+    }));
+
+    for( const agency of agencyList){
+      if(agency.agencyName == agencyName){
+        return agency.agencyCode;
+      }
+    }
+    throw (new Error(`no agency code found for ${agencyName}` ));
+  } catch(error){
+    defaultLog.info(`getAgencyCodeFromName - agencies controller - error getting agencyCode for ${agencyName}`);
+    defaultLog.debug(error);
+    return agencyName
+  }
+};
