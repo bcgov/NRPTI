@@ -92,3 +92,72 @@ exports.protectedPut = async function(args, res, next) {
   queryActions.sendResponse(res, 200, result);
   next();
 };
+
+exports.getAgencyNameFromCode = function(agencyName){
+  const AGENCY_NAME_CODE_MAP = [
+    {
+      agencyCode: 'AGENCY_ALC',
+      agencyName: 'Agricultural Land Commission'
+    },
+    {
+      agencyCode: 'AGENCY_WF',
+      agencyName: 'BC Wildfire Service'
+    },
+    {
+      agencyCode: 'AGENCY_ENV_COS',
+      agencyName: 'Conservation Officer Service'
+    },
+    {
+      agencyCode: 'AGENCY_EAO',
+      agencyName: 'Environmental Assessment Office'
+    },
+    {
+      agencyCode: 'AGENCY_EMLI',
+      agencyName: 'Ministry of Energy Mines and Low Carbon Innovation'
+    },
+    {
+      agencyCode: 'AGENCY_ENV',
+      agencyName: 'Ministry of Environment and Climate Change Strategy'
+    },
+    {
+      agencyCode: 'AGENCY_ENV_BCPARKS',
+      agencyName: 'BC Parks'
+    },
+    {
+      agencyCode: 'AGENCY_OGC',
+      agencyName: 'BC Energy Regulator'
+    },
+    {
+      agencyCode: 'AGENCY_LNG',
+      agencyName: 'LNG Secretariat'
+    },
+    {
+      agencyCode: 'AGENCY_AGRI',
+      agencyName: 'Ministry of Agriculture and Food'
+    },
+    {
+      agencyCode: 'AGENCY_FLNRO',
+      agencyName: 'Ministry of Forests'
+    },
+    {
+      agencyCode: 'AGENCY_FLNR_NRO',
+      agencyName: 'Natural Resource Officers'
+    },
+    {
+      agencyCode: 'AGENCY_WLRS',
+      agencyName: 'Ministry of Water, Land and Resource Stewardship'
+    },
+    {
+      agencyCode: 'AGENCY_CAS',
+      agencyName: 'Climate Action Secretariat'
+    }
+  ];
+
+  for(const agency of AGENCY_NAME_CODE_MAP){
+    if(agency.agencyCode === agencyName){
+      return agency.agencyName;
+    }
+  }
+
+  throw new Error("Error in getAgencyCodeFromName : No code found for ", agencyName);
+};

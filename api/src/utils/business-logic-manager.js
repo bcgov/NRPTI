@@ -2,6 +2,7 @@ const QueryActions = require('./query-actions');
 const DocumentController = require('../controllers/document-controller');
 const moment = require('moment');
 const constants = require('./constants/misc');
+const agenciesController = require('../controllers/agencies');
 
 /**
  * Apply business logic changes to a record. Updates the provided updateObj, and returns it.
@@ -124,7 +125,8 @@ function isIssuedToConsideredAnonymous(issuedTo, issuingAgency) {
   }
 
   // check if the issuingAgency has legislative authority to publish names
-  if (issuingAgency && !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(issuingAgency)) {
+  if (issuingAgency && !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(issuingAgency) 
+                    && !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(agenciesController.getAgencyNameFromCode(issuingAgency))) {
     // name is anonymous, issuing agency cannot publish names
     return true;
   }
