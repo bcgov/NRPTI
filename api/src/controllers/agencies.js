@@ -93,7 +93,7 @@ exports.protectedPut = async function(args, res, next) {
   next();
 };
 
-exports.getAgencyNameFromCode = function(agencyName){
+exports.getAgencyCodeFromName = function(agencyName){
   const AGENCY_NAME_CODE_MAP = [
     {
       agencyCode: 'AGENCY_ALC',
@@ -154,8 +154,8 @@ exports.getAgencyNameFromCode = function(agencyName){
   ];
 
   for(const agency of AGENCY_NAME_CODE_MAP){
-    if(agency.agencyCode === agencyName){
-      return agency.agencyName;
+    if(agency.agencyName === agencyName){
+      return agency.agencyCode;
     }
   }
 
