@@ -126,7 +126,7 @@ function isIssuedToConsideredAnonymous(issuedTo, issuingAgency) {
 
   // check if the issuingAgency has legislative authority to publish names
   if (issuingAgency && !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(issuingAgency) 
-                    && !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(agenciesController.getAgencyCodeFromName(issuingAgency))) {
+                    && !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(agenciesController.getAgencyCodeFromNameBandaid(issuingAgency))) {
     // name is anonymous, issuing agency cannot publish names
     return true;
   }
