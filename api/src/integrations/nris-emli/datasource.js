@@ -380,7 +380,7 @@ class NrisDataSource {
       utils.ApplicationRoles.ADMIN_BCMI
     ];
     let s3ACLRole = null;
-    if (!BusinessLogicManager.isDocumentConsideredAnonymous(newRecord)) {
+    if (await !BusinessLogicManager.isDocumentConsideredAnonymous(newRecord)) {
       readRoles.push('public');
       s3ACLRole = 'public-read';
     }

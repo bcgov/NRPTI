@@ -305,7 +305,7 @@ exports.protectedPublish = async function (args, res, next) {
     if (published.documents) {
       for (const docId of published.documents) {
         // only allow a publish if the record is not anonymous
-        if (!businessLogicManager.isDocumentConsideredAnonymous(published)) {
+        if (await !businessLogicManager.isDocumentConsideredAnonymous(published)) {
           await documentController.publishDocument(docId, args.swagger.params.auth_payload);
         }
       }

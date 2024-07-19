@@ -11,7 +11,7 @@ const AgencyController = require('../controllers/agencies');
  * @param {*} sanitizedObj
  * @returns updateObj
  */
-exports.applyBusinessLogicOnPut = function(updateObj, sanitizedObj) {
+exports.applyBusinessLogicOnPut = async function(updateObj, sanitizedObj) {
   if (!sanitizedObj) {
     return updateObj;
   }
@@ -23,7 +23,7 @@ exports.applyBusinessLogicOnPut = function(updateObj, sanitizedObj) {
     return updateObj;
 
   } else {
-    if (isRecordConsideredAnonymous(sanitizedObj)) {
+    if (await isRecordConsideredAnonymous(sanitizedObj)) {
       updateObj.$pull['issuedTo.read'] = 'public';
     } else {
       updateObj.$addToSet['issuedTo.read'] = 'public';
@@ -39,13 +39,13 @@ exports.applyBusinessLogicOnPut = function(updateObj, sanitizedObj) {
  * @param {*} record
  * @returns record
  */
-exports.applyBusinessLogicOnPost = function(record) {
+exports.applyBusinessLogicOnPost = async function(record) {
   if (!record) {
     return record;
   }
 
   // apply anonymous business logic
-  if (isRecordConsideredAnonymous(record)) {
+  if (await isRecordConsideredAnonymous(record)) {
     record.issuedTo && (record.issuedTo = QueryActions.removePublicReadRole(record.issuedTo));
   } else {
     record.issuedTo && (record.issuedTo = QueryActions.addPublicReadRole(record.issuedTo));
@@ -65,7 +65,7 @@ exports.applyBusinessLogicOnPost = function(record) {
  * @param {*} record
  * @returns boolean true if the record is considered anonymous, false otherwise.
  */
-function isRecordConsideredAnonymous(record) {
+async function isRecordConsideredAnonymous(record) {
   // if the record is null, assume anonymous
   if (!record) {
     return true;
@@ -74,7 +74,7 @@ function isRecordConsideredAnonymous(record) {
   // if we don't have an 'issuedTo' attribute on the doc, it should not be
   // considered anonymous. Some record types do not include an issuedTo section
   // by default.
-  let isAnonymous = record.issuedTo ? isIssuedToConsideredAnonymous(record.issuedTo, record.issuingAgency) : false;
+  let isAnonymous = record.issuedTo ? await isIssuedToConsideredAnonymous(record.issuedTo, record.issuingAgency) : false;
 
   if (record.sourceSystemRef && record.sourceSystemRef.toLowerCase() === 'ocers-csv') {
     // records imported from OCERS are not anonymous
@@ -162,7 +162,7 @@ exports.isIssuedToConsideredAnonymous = isIssuedToConsideredAnonymous;
  * @param {*} masterRecord
  * @returns true if the document is considered anonymous, false otherwise.
  */
-function isDocumentConsideredAnonymous(masterRecord) {
+async function isDocumentConsideredAnonymous(masterRecord) {
   if (!masterRecord) {
     // can't determine if document is anonymous or not, must assume anonymous
     // only fail here if we have a null master. Empty document array shouldn't
@@ -171,7 +171,7 @@ function isDocumentConsideredAnonymous(masterRecord) {
     return true;
   }
 
-  return isRecordConsideredAnonymous(masterRecord);
+  return await isRecordConsideredAnonymous(masterRecord);
 }
 
 exports.isDocumentConsideredAnonymous = isDocumentConsideredAnonymous;

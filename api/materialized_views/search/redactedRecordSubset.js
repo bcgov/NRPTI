@@ -8,12 +8,12 @@ const BusinessLogicManager = require('../../src/utils/business-logic-manager');
  *
  * @param {*} record
  */
-function redactRecord(record) {
+async function redactRecord(record) {
   let redactedRecord = record.toObject();
   const issuedTo = record.issuedTo;
   const issuingAgency = record.issuingAgency;
 
-  if ( BusinessLogicManager.isIssuedToConsideredAnonymous(issuedTo, issuingAgency) ) {
+  if ( await BusinessLogicManager.isIssuedToConsideredAnonymous(issuedTo, issuingAgency) ) {
     // Remove the issuedTo completely so that it shows up as "Unpublished" on NRCED public.
     delete redactedRecord.issuedTo;
 
@@ -33,7 +33,7 @@ function redactRecord(record) {
  */
 async function saveOneRecord(record) {
 
-  const redactedRecord = redactRecord(record);
+  const redactedRecord = await redactRecord(record);
 
   try {
     defaultLog.info('Updating redacted_record_subset');
@@ -59,7 +59,7 @@ exports.saveOneRecord = saveOneRecord;
  */
 async function updateOneRecord(record) {
 
-  const redactedRecord = redactRecord(record);
+  const redactedRecord = await redactRecord(record);
 
   try {
     defaultLog.info('Updating redacted_record_subset');

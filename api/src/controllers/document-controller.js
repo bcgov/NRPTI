@@ -68,7 +68,7 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
       }
     }
 
-    if (!businessLogicManager.isDocumentConsideredAnonymous(masterRecord)) {
+    if (await !businessLogicManager.isDocumentConsideredAnonymous(masterRecord)) {
       readRoles.push('public');
       s3ACLRole = 'public-read';
     }

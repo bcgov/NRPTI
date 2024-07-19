@@ -50,9 +50,9 @@ exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;
  */
 exports.createItem = async function(args, res, next, incomingObj) {
   const flavourFunctions = {
-    AdministrativePenaltyLNG: this.createLNG,
-    AdministrativePenaltyNRCED: this.createNRCED,
-    AdministrativePenaltyBCMI: this.createBCMI
+    AdministrativePenaltyLNG: await this.createLNG,
+    AdministrativePenaltyNRCED: await this.createNRCED,
+    AdministrativePenaltyBCMI: await this.createBCMI
   };
 
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
@@ -219,7 +219,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created lng administrativePenalty record
  */
-exports.createLNG = function(args, res, next, incomingObj) {
+exports.createLNG = async function(args, res, next, incomingObj) {
   // Confirm user has correct role to create this type of record.
   if (
     !userHasValidRoles(
@@ -318,7 +318,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
     administrativePenaltyLNG.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  administrativePenaltyLNG = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyLNG);
+  administrativePenaltyLNG = await BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyLNG);
 
   return administrativePenaltyLNG;
 };
@@ -352,7 +352,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced administrativePenalty record
  */
-exports.createNRCED = function(args, res, next, incomingObj) {
+exports.createNRCED = async function(args, res, next, incomingObj) {
   // Confirm user has correct role to create this type of record.
   if (
     !userHasValidRoles(
@@ -457,7 +457,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     administrativePenaltyNRCED.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  administrativePenaltyNRCED = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyNRCED);
+  administrativePenaltyNRCED = await BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyNRCED);
 
   return administrativePenaltyNRCED;
 };
@@ -497,7 +497,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced administrativePenalty record
  */
- exports.createBCMI = function(args, res, next, incomingObj) {
+ exports.createBCMI = async function(args, res, next, incomingObj) {
   // Confirm user has correct role to create this type of record.
   if (
     !userHasValidRoles(
@@ -601,7 +601,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     administrativePenaltyBCMI.publishedBy = args.swagger.params.auth_payload.displayName;
   }
 
-  administrativePenaltyBCMI = BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyBCMI);
+  administrativePenaltyBCMI = await BusinessLogicManager.applyBusinessLogicOnPost(administrativePenaltyBCMI);
 
   return administrativePenaltyBCMI;
 };

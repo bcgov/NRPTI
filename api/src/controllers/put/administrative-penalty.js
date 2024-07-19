@@ -41,9 +41,9 @@ const AdministrativePenaltyPost = require('../post/administrative-penalty');
  */
 exports.editRecord = async function (args, res, next, incomingObj, overridePutParams = null) {
   const flavourFunctions = {
-    AdministrativePenaltyLNG: this.editLNG,
-    AdministrativePenaltyNRCED: this.editNRCED,
-    AdministrativePenaltyBCMI: this.editBCMI
+    AdministrativePenaltyLNG: await this.editLNG,
+    AdministrativePenaltyNRCED: await this.editNRCED,
+    AdministrativePenaltyBCMI: await this.editBCMI
   }
   return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, AdministrativePenaltyPost, 'AdministrativePenalty', flavourFunctions, overridePutParams);
 };
@@ -93,7 +93,7 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
 
   const sanitizedObj = PutUtils.validateObjectAgainstModel(AdministrativePenalty, incomingObj);
 
-  if (!sanitizedObj || sanitizedObj === {}) {
+  if (!sanitizedObj || Object.keys(sanitizedObj).length === 0) {
     // skip, as there are no changes to master record
     return;
   }
@@ -149,7 +149,7 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns edited lng administrativePenalty record
  */
-exports.editLNG = function (args, res, next, incomingObj) {
+exports.editLNG = async function (args, res, next, incomingObj) {
   delete incomingObj._id;
 
   // Reject any changes to permissions
@@ -180,7 +180,7 @@ exports.editLNG = function (args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
+  updateObj = await BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
 
   return updateObj;
 };
@@ -219,7 +219,7 @@ exports.editLNG = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns edited nrced administrativePenalty record
  */
-exports.editNRCED = function (args, res, next, incomingObj) {
+exports.editNRCED = async function (args, res, next, incomingObj) {
   delete incomingObj._id;
 
   // Reject any changes to permissions
@@ -250,7 +250,7 @@ exports.editNRCED = function (args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
+  updateObj = await BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
 
   return updateObj;
 };
@@ -289,7 +289,7 @@ exports.editNRCED = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns edited nrced administrativePenalty record
  */
- exports.editBCMI = function (args, res, next, incomingObj) {
+ exports.editBCMI = async function (args, res, next, incomingObj) {
   delete incomingObj._id;
 
   // Reject any changes to permissions
@@ -320,7 +320,7 @@ exports.editNRCED = function (args, res, next, incomingObj) {
     updateObj.$set['publishedBy'] = '';
   }
 
-  updateObj = BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
+  updateObj = await BusinessLogicManager.applyBusinessLogicOnPut(updateObj, sanitizedObj);
 
   return updateObj;
 };
