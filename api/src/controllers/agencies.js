@@ -162,11 +162,7 @@ exports.getAgencyCodeFromNameBandaid = function(agencyName){
     }
   ];
 
-  for(const agency of AGENCY_NAME_CODE_MAP){
-    if(agency.agencyName === agencyName){
-      return agency.agencyCode;
-    }
-  }
+  const agency = AGENCY_NAME_CODE_MAP.find(agency => agency.agencyName === agencyName);
 
-  return null; // if no matching code is found, return null
+  return agency ? agency.agencyCode : null; // if no matching code is found, return null
 };
