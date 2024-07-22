@@ -100,7 +100,7 @@ exports.protectedPut = async function(args, res, next) {
  * This function was implemented as a temporary fix because the async version proved difficult to implement.
  * This should be replaced
  * @param {*} agencyName 
- * @returns {string} agencyCode
+ * @returns {string} agencyCode if matching code is found, else null
  */
 exports.getAgencyCodeFromNameBandaid = function(agencyName){
   const AGENCY_NAME_CODE_MAP = [
@@ -168,5 +168,5 @@ exports.getAgencyCodeFromNameBandaid = function(agencyName){
     }
   }
 
-  return agencyName; // if no matching code is found, just return the passed-in name
+  return null; // if no matching code is found, return null
 };
