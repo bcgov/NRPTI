@@ -92,3 +92,77 @@ exports.protectedPut = async function(args, res, next) {
   queryActions.sendResponse(res, 200, result);
   next();
 };
+
+/** 
+ * gets the intermediate code (agencyCode) for the given agencyName
+ * A synchronous version of getAgencyCodeFromName. Instead of using the db to lookup values,
+ * this function uses some hardcoded constants.
+ * This function was implemented as a temporary fix because the async version proved difficult to implement.
+ * This should be replaced
+ * @param {*} agencyName 
+ * @returns {string} agencyCode if matching code is found, else null
+ */
+exports.getAgencyCodeFromNameBandaid = function(agencyName){
+  const AGENCY_NAME_CODE_MAP = [
+    {
+      agencyCode: 'AGENCY_ALC',
+      agencyName: 'Agricultural Land Commission'
+    },
+    {
+      agencyCode: 'AGENCY_WF',
+      agencyName: 'BC Wildfire Service'
+    },
+    {
+      agencyCode: 'AGENCY_ENV_COS',
+      agencyName: 'Conservation Officer Service'
+    },
+    {
+      agencyCode: 'AGENCY_EAO',
+      agencyName: 'Environmental Assessment Office'
+    },
+    {
+      agencyCode: 'AGENCY_EMLI',
+      agencyName: 'Ministry of Energy Mines and Low Carbon Innovation'
+    },
+    {
+      agencyCode: 'AGENCY_ENV',
+      agencyName: 'Ministry of Environment and Climate Change Strategy'
+    },
+    {
+      agencyCode: 'AGENCY_ENV_BCPARKS',
+      agencyName: 'BC Parks'
+    },
+    {
+      agencyCode: 'AGENCY_OGC',
+      agencyName: 'BC Energy Regulator'
+    },
+    {
+      agencyCode: 'AGENCY_LNG',
+      agencyName: 'LNG Secretariat'
+    },
+    {
+      agencyCode: 'AGENCY_AGRI',
+      agencyName: 'Ministry of Agriculture and Food'
+    },
+    {
+      agencyCode: 'AGENCY_FLNRO',
+      agencyName: 'Ministry of Forests'
+    },
+    {
+      agencyCode: 'AGENCY_FLNR_NRO',
+      agencyName: 'Natural Resource Officers'
+    },
+    {
+      agencyCode: 'AGENCY_WLRS',
+      agencyName: 'Ministry of Water, Land and Resource Stewardship'
+    },
+    {
+      agencyCode: 'AGENCY_CAS',
+      agencyName: 'Climate Action Secretariat'
+    }
+  ];
+
+  const agency = AGENCY_NAME_CODE_MAP.find(agency => agency.agencyName === agencyName);
+
+  return agency ? agency.agencyCode : null; // if no matching code is found, return null
+};
