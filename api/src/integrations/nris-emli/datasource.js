@@ -20,7 +20,6 @@ const NRIS_EMLI_API_ENDPOINT =
   process.env.NRIS_EMLI_API_ENDPOINT || 'https://api.nrs.gov.bc.ca/nrisws-api/v1/emprInspections';
 const NRIS_username = process.env.NRIS_username || null;
 const NRIS_password = process.env.NRIS_password || null;
-const NRIS_ATTACHMENT_DATE = process.env.NRIS_ATTACHMENT_DATE || '2024-06-01';
 const RETRY_LIMIT = 10;
 
 class NrisDataSource {
