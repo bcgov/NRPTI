@@ -779,7 +779,7 @@ const executeQuery = async function (args, res, next) {
   let _in = args.swagger.params._in ? args.swagger.params._in.value : '';
   let subset = args.swagger.params.subset ? args.swagger.params.subset.value : null;
 
-  let roles = args.swagger.params.auth_payload ? args.swagger.params.auth_payload.client_roles : ['public'];
+  let roles = args.swagger.params.auth_payload && args.swagger.params.auth_payload.client_roles ? args.swagger.params.auth_payload.client_roles : ['public'];
 
   if(!roles.includes('public')){
     roles.push('public');

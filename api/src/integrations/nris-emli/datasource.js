@@ -20,7 +20,6 @@ const NRIS_EMLI_API_ENDPOINT =
   process.env.NRIS_EMLI_API_ENDPOINT || 'https://api.nrs.gov.bc.ca/nrisws-api/v1/emprInspections';
 const NRIS_username = process.env.NRIS_username || null;
 const NRIS_password = process.env.NRIS_password || null;
-const NRIS_ATTACHMENT_DATE = process.env.NRIS_ATTACHMENT_DATE || '2024-06-01';
 const RETRY_LIMIT = 10;
 
 class NrisDataSource {
@@ -211,9 +210,7 @@ class NrisDataSource {
 
     if (record.inspection.inspectionSubType !== 'Mine Inspection') return false;
 
-    if (record.assessmentSubType !== 'Compliance Review' && record.assessmentSubType !== 'Inspection') return false;
-
-    if (record.inspection.inspectionType[0] === 'Audit') return false;
+    if (record.assessmentSubType !== 'Inspection - Desktop' && record.assessmentSubType !== 'Inspection - Site Visit') return false;
 
     return true;
   }
@@ -312,15 +309,7 @@ class NrisDataSource {
 
   isAttachmentAllowed(attachment){
     //Allow final reports
-    if (attachment.fileType === 'Final Report') {
-      return true;
-    }
-    //Allow inspection reports if they were created after a specific date (June 1st)
-    if (attachment.fileType === 'Report') {
-      return attachment.attachmentComment.toLowerCase() === "inspection report" 
-      && attachment.attachmentDate != null && moment(attachment.attachmentDate).isAfter(NRIS_ATTACHMENT_DATE);
-    } 
-    return false;
+    return attachment.fileType === 'Final Report' && attachment.attachmentMediaType === 'application/pdf'
   }
 
   // Grabs a file from NRIS datasource
