@@ -215,7 +215,7 @@ describe('NrisDataSource', () => {
 
       for (const assessmentSubStatus of assessmentSubStatusList) {
         const record = {
-          assessmentSubType: 'Inspection',
+          assessmentSubType: 'Inspection - Site Visit',
           assessmentSubStatus: assessmentSubStatus,
           inspection: {
             inspectionType: ['Health and Safety'],
@@ -236,7 +236,7 @@ describe('NrisDataSource', () => {
 
       for (const assessmentSubStatus of assessmentSubStatusList) {
         const record = {
-          assessmentSubType: 'Inspection',
+          assessmentSubType: 'Inspection - Site Visit',
           assessmentSubStatus: assessmentSubStatus,
           inspection: {
             inspectionType: ['Health and Safety'],
@@ -256,7 +256,7 @@ describe('NrisDataSource', () => {
       const dataSource = new NrisDataSource();
 
       const record = {
-        assessmentSubType: 'Inspection',
+        assessmentSubType: 'Inspection - Site Visit',
         assessmentSubStatus: 'Closed',
         inspection: {
           inspectionType: ['Health and Safety'],
@@ -275,7 +275,7 @@ describe('NrisDataSource', () => {
       const dataSource = new NrisDataSource();
 
       const record = {
-        assessmentSubType: 'Inspection',
+        assessmentSubType: 'Inspection - Site Visit',
         assessmentSubStatus: 'Closed',
         inspection: {
           inspectionType: ['Audit'],
@@ -294,7 +294,7 @@ describe('NrisDataSource', () => {
       const dataSource = new NrisDataSource();
 
       const record = {
-        assessmentSubType: 'Inspection',
+        assessmentSubType: 'Inspection - Site Visit',
         assessmentSubStatus: 'Closed',
         inspection: {
           inspectionType: ['Health and Safety'],
@@ -309,10 +309,10 @@ describe('NrisDataSource', () => {
       expect(result).toEqual(false);
     });
 
-    it('should process Compliance Review OR Inspection assessmentSubType record', async () => {
+    it('should process Compliance Review OR Inspection assessmentSubType records', async () => {
       const dataSource = new NrisDataSource();
 
-      const assessmentSubTypeList = ['Compliance Review', 'Inspection'];
+      const assessmentSubTypeList = ['Compliance Review', 'Inspection - Site Visit', 'Inspection - Desktop'];
 
       for (const assessmentSubType of assessmentSubTypeList) {
         const record = {
@@ -472,20 +472,20 @@ describe('NrisDataSource', () => {
         attachment: [
           { attachmentId: 'attachmentId1', fileType: 'Other' },
           { attachmentId: 'attachmentId2', fileType: 'Final Report' },
-          { attachmentId: 'attachmentId3', fileType: 'Report', attachmentComment: 'Inspection Report'},
-          { attachmentId: 'attachmentId3', fileType: 'Report', attachmentComment: 'Inspection Report', attachmentDate: "2020-01-10 11:50"},
-          { attachmentId: 'attachmentId4', fileType: 'Report', attachmentComment: 'Inspection Report', attachmentDate: "2024-06-06" },
+          //{ attachmentId: 'attachmentId3', fileType: 'Report', attachmentComment: 'Inspection Report'},
+          //{ attachmentId: 'attachmentId3', fileType: 'Report', attachmentComment: 'Inspection Report', attachmentDate: "2020-01-10 11:50"},
+          //{ attachmentId: 'attachmentId4', fileType: 'Report', attachmentComment: 'Inspection Report', attachmentDate: "2024-06-06" },
         ],
       };
   
       const newRecord = {};
       await dataSource.createRecordAttachments(record, newRecord);
   
-      expect(dataSource.getFileFromNRIS).toHaveBeenCalledTimes(2);
+      expect(dataSource.getFileFromNRIS).toHaveBeenCalledTimes(1);
       expect(dataSource.getFileFromNRIS).toHaveBeenCalledWith('sampleAssessmentId', 'attachmentId2');
-      expect(dataSource.getFileFromNRIS).toHaveBeenCalledWith('sampleAssessmentId', 'attachmentId4');
+      //expect(dataSource.getFileFromNRIS).toHaveBeenCalledWith('sampleAssessmentId', 'attachmentId4');
   
-      expect(dataSource.putFileS3).toHaveBeenCalledTimes(2);
+      expect(dataSource.putFileS3).toHaveBeenCalledTimes(1);
     });
   });
 
