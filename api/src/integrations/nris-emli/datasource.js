@@ -271,7 +271,7 @@ class NrisDataSource {
     newRecord.recordName = `EMLI Inspection - ${record.assessmentId}`;
 
     let parentMine;
-    if(record.location.locationId){
+    if (record.location.locationId) {
       const MineBCMIModel = mongoose.model(RECORD_TYPE.MineBCMI._schemaName);
       parentMine = await MineBCMIModel
       .findOne({
@@ -280,7 +280,7 @@ class NrisDataSource {
       })
     }
 
-    if(parentMine != null){
+    if (parentMine != null) {
       newRecord.projectName = parentMine.name;
     } else {
       newRecord.projectName = record.location.locationName;

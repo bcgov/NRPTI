@@ -102,7 +102,7 @@ describe('IntegrationUtils', () => {
 
       const token = await IntegrationUtils.getCoreAccessToken('123', 'abc', 'client_auth');
 
-      expect(token).toEqual('testToken');
+      expect(token.access_token).toEqual('testToken');
       expect(mockAxios).toHaveBeenCalled();
     });
   });
