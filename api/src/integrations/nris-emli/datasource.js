@@ -269,7 +269,23 @@ class NrisDataSource {
     }
 
     newRecord.recordName = `EMLI Inspection - ${record.assessmentId}`;
-    newRecord.projectName = record.location.locationName;
+
+    let parentMine;
+    if(record.location.locationId){
+      const MineBCMIModel = mongoose.model(RECORD_TYPE.MineBCMI._schemaName);
+      parentMine = await MineBCMIModel
+      .findOne({
+        _schemaName: RECORD_TYPE.MineBCMI._schemaName,
+        mineNo: record.location.locationId
+      })
+    }
+
+    if(parentMine != null){
+      newRecord.projectName = parentMine.name;
+    } else {
+      newRecord.projectName = record.location.locationName;
+    }
+
     const permitNo =
       record.authorization && record.authorization.sourceId ? `; Permit No.: ${record.authorization.sourceId}` : '';
     newRecord.description = `Inspection No.: ${record.assessmentId}; Inspection Type: ${record.inspection.inspectionType[0]}${permitNo}`;
