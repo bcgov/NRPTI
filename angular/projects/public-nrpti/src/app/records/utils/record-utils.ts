@@ -91,14 +91,14 @@ export class RecordUtils {
       filterParams['legislation.regulation'] = params.regulation;
     }
 
-    if (params.companyName){
+    if (params.companyName) {
       filterParams['issuedTo.companyName'] = params.companyName;
     }
 
-    if(params.project){
+    if (params.project) {
       filterParams['projectName'] = params.project;
     }
-    
+
     return filterParams;
   }
 
