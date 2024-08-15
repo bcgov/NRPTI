@@ -46,6 +46,7 @@ class Mines extends BaseRecordUtils {
       ...super.transformRecord(mineRecord),
       _sourceRefId: mineRecord.mine_guid,
       name: mineRecord.mine_name,
+      mineNo: mineRecord.mine_no,
       status: this.getLatestStatus(mineRecord),
       commodities: this.getCommodities(mineRecord, commodityTypes),
       tailingsImpoundments: mineRecord.mine_tailings_storage_facilities.length,

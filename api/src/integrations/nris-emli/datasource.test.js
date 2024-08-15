@@ -271,25 +271,6 @@ describe('NrisDataSource', () => {
       expect(result).toEqual(true);
     });
 
-    it('should not process audit record', async () => {
-      const dataSource = new NrisDataSource();
-
-      const record = {
-        assessmentSubType: 'Inspection - Site Visit',
-        assessmentSubStatus: 'Closed',
-        inspection: {
-          inspectionType: ['Audit'],
-          inspctReportSentDate: moment()
-            .subtract(43, 'days')
-            .format(),
-          inspectionSubType: 'Mine Inspection'
-        }
-      };
-
-      const result = dataSource.shouldProcessRecord(record);
-      expect(result).toEqual(false);
-    });
-
     it('should not process non Mine Inspection record', async () => {
       const dataSource = new NrisDataSource();
 
@@ -309,10 +290,10 @@ describe('NrisDataSource', () => {
       expect(result).toEqual(false);
     });
 
-    it('should process Compliance Review OR Inspection assessmentSubType records', async () => {
+    it('should process inspection assessmentSubType records', async () => {
       const dataSource = new NrisDataSource();
 
-      const assessmentSubTypeList = ['Compliance Review', 'Inspection - Site Visit', 'Inspection - Desktop'];
+      const assessmentSubTypeList = ['Inspection - Site Visit', 'Inspection - Desktop'];
 
       for (const assessmentSubType of assessmentSubTypeList) {
         const record = {
@@ -471,7 +452,7 @@ describe('NrisDataSource', () => {
         assessmentId: 'sampleAssessmentId',
         attachment: [
           { attachmentId: 'attachmentId1', fileType: 'Other' },
-          { attachmentId: 'attachmentId2', fileType: 'Final Report' },
+          { attachmentId: 'attachmentId2', fileType: 'Final Report', attachmentMediaType: 'application/pdf'},
           //{ attachmentId: 'attachmentId3', fileType: 'Report', attachmentComment: 'Inspection Report'},
           //{ attachmentId: 'attachmentId3', fileType: 'Report', attachmentComment: 'Inspection Report', attachmentDate: "2020-01-10 11:50"},
           //{ attachmentId: 'attachmentId4', fileType: 'Report', attachmentComment: 'Inspection Report', attachmentDate: "2024-06-06" },

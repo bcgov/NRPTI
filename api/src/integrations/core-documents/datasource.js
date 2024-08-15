@@ -1,12 +1,13 @@
 'use strict';
 const mongoose = require('mongoose');
 const fs = require('fs');
+const axios = require('axios');
 
 const defaultLog = require('../../utils/logger')('core-datasource');
 const DocumentController = require('../../controllers/document-controller');
 const PermitUtils = require('./permit-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
-const { getIntegrationUrl } = require('../integration-utils');
+const { getIntegrationUrl, getAuthHeader } = require('../integration-utils');
 const CoreUtil = require('../core-util');
 
 const CORE_API_HOST = process.env.CORE_API_HOST || 'https://minesdigitalservices.pathfinder.gov.bc.ca';
@@ -188,14 +189,15 @@ class CoreDocumentsDataSource {
       // Get a download token.
       const downloadToken = await this.getDownloadToken(documentId);
 
-      const url = getIntegrationUrl(CORE_DOC_MANAGER_HOST,'/documents',{"token": downloadToken });
+      const url = `${CORE_DOC_MANAGER_HOST}/documents?token=${downloadToken}`;
 
-      const res = await this.coreUtil.getRecords(url, { responseType: 'stream' });
+      await this.coreUtil.checkTokenExpiry();
+      const res = await axios.get(url, getAuthHeader(this.coreUtil.client_token, { responseType: 'stream' }));
 
       const tempFilePath = `${uploadDir}/${documentName}`;
       // Attempt to save locally.
       await new Promise((resolve, reject) => {
-        res
+        res.data
           .pipe(fs.createWriteStream(tempFilePath))
           .on('finish', resolve)
           .on('error', error => reject(error));

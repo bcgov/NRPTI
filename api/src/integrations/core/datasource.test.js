@@ -1,6 +1,8 @@
 const DataSource = require('./datasource');
 const defaultLogger = require('../../utils/logger')('core-datasource');
 const integrationUtils = require('../integration-utils');
+const coreUtil = require('../core-util');
+const moment = require('moment-timezone');
 
 const mockedTaskAuditRecord = { updateTaskRecord: jest.fn() };
 const mockedAuthPayload = 'auth_payload';
@@ -64,6 +66,8 @@ describe('Core DataSource', () => {
   describe('getAllRecordData', () => {
     it('should handle unexpected error during data retrieval', async () => {
       const dataSource = new DataSource(mockedTaskAuditRecord, mockedAuthPayload);
+      dataSource.coreUtil.apiAccessExpiry = new moment(new Date()).add(2, 'w');
+      dataSource.coreUtil.client_token = 'test_token';
       integrationUtils.getRecords = jest.fn(() => { throw new Error('Test error') });
 
       await expect(dataSource.getAllRecordData()).rejects.toThrow('Test error');
@@ -72,9 +76,8 @@ describe('Core DataSource', () => {
 
   describe('processRecords', () => {
     it('calls `processRecord` on all records', async () => {
-      integrationUtils.getRecords = jest.fn(() => ({
-        records: []
-      }));
+
+      jest.spyOn(coreUtil.prototype, 'getRecords').mockReturnValue(Promise.resolve({ records: [] }));
 
       const mockGetIntegrationUrl = jest.fn(() => {
         return 'test/path';
@@ -198,9 +201,10 @@ describe('Core DataSource', () => {
     
     it('should call getRecords in the getVerifiedMines call', async () => {
       const dataSource = new DataSource(null);
-      dataSource.client_token = 'testToken';
 
-      const spy = jest.spyOn(integrationUtils, 'getRecords');
+      dataSource.coreUtil.apiAccessExpiry = new moment(new Date()).add(2, 'w');
+      dataSource.coreUtil.client_token = 'test_token';
+      const spy = jest.spyOn(coreUtil.prototype, 'getRecords');
       
       await dataSource.getVerifiedMines();
   

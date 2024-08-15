@@ -5,6 +5,8 @@ const axios = require('axios');
 const { Readable } = require('stream');
 const DocumentController = require('../../controllers/document-controller');
 const permitUtils = require('./permit-utils');
+const coreUtil = require('../core-util');
+const moment = require('moment-timezone');
 
 jest.mock('../../controllers/document-controller');
 jest.mock('axios');
@@ -93,7 +95,7 @@ describe('CoreDocumentsDataSource', () => {
       const dataSource = new DataSource();
 
       jest.spyOn(integrationUtils, 'getIntegrationUrl').mockReturnValue('/test/');
-      jest.spyOn(integrationUtils, 'getRecords').mockReturnValue(Promise.resolve({ token_guid: 'testing' }));
+      jest.spyOn(coreUtil.prototype, 'getRecords').mockReturnValue(Promise.resolve({ token_guid: 'testing' }));
 
       const token = await dataSource.getDownloadToken('testing');
 
@@ -123,11 +125,13 @@ describe('CoreDocumentsDataSource', () => {
       const mockResponseStream = new Readable();
       mockResponseStream.push('file content');
       mockResponseStream.push(null);
-      const mockResponse = { data: mockResponseStream };
+      const mockResponse = { data: mockResponseStream, status: 200 };
 
       axios.get.mockResolvedValue(mockResponse);
 
       const dataSource = new DataSource();
+      dataSource.coreUtil.apiAccessExpiry = new moment(new Date()).add(2, 'w');
+      dataSource.coreUtil.client_token = 'test_token';
 
       dataSource.getDownloadToken = jest.fn().mockResolvedValue(mockDownloadToken);
 

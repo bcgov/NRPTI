@@ -266,8 +266,8 @@ class NrisDataSource {
         case 'Corporation':
           newRecord.issuedTo = {
             type: 'Company',
-            companyName: record.client[0].orgName || '',
-            fullName: record.client[0].orgName || ''
+            companyName: record.client[0].orgName.trim() || '',
+            fullName: record.client[0].orgName.trim() || ''
           };
           break;
         case 'P':
@@ -295,6 +295,22 @@ class NrisDataSource {
     if (record.location && Number(record.location.latitude) && Number(record.location.longitude)) {
       newRecord.centroid = [Number(record.location.longitude), Number(record.location.latitude)];
     }
+
+    if (newRecord.issuedTo.type === 'Company' && newRecord.issuedTo.companyName !== '') {
+      const MineBCMIModel = mongoose.model(RECORD_TYPE.MineBCMI._schemaName);
+      let parentMines = await MineBCMIModel
+        .find({
+          _schemaName: RECORD_TYPE.MineBCMI._schemaName,
+          permittee: {'$regex': newRecord.issuedTo.companyName, $options: 'i'}
+        })
+
+      if (parentMines.length > 0) {
+        let mine = parentMines.find( parent => newRecord.location.toLowerCase().includes(parent.name.toLowerCase()));
+        if (mine != null) {
+          newRecord.projectName = mine.name;
+        }
+      }
+    } 
 
     if (record.complianceStatus) {
       newRecord.outcomeDescription = record.complianceStatus;

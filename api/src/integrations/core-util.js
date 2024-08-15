@@ -34,13 +34,20 @@ class CoreUtil {
     }
 
     /**
+     * Checks if the current token is valid and requests a new token if necessasary
+     */
+    async checkTokenExpiry(){
+        if (this.client_token == null || Date.now() >= this.apiAccessExpiry) {
+            await this.getToken();
+        }
+    }
+
+    /**
      * Wrapper for integration-utils.getRecords with additional logic to check if the token is expired
      * 
      */
     async getRecords(url, additionalOptions = {}) {
-        if (this.client_token == null || Date.now() >= this.apiAccessExpiry) {
-            await this.getToken();
-        }
+        await this.checkTokenExpiry();
         return await integrationUtils.getRecords(url, getAuthHeader(this.client_token, additionalOptions));
     }
 }

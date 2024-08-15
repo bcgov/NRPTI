@@ -176,7 +176,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       activityType: new FormControl((this.queryParams && this.queryParams.activityType) || ''),
       agency: new FormControl((this.queryParams && this.queryParams.agency) || ''),
       act: new FormControl((this.queryParams && this.queryParams.act) || ''),
-      regulation: new FormControl((this.queryParams && this.queryParams.regulation) || '')
+      regulation: new FormControl((this.queryParams && this.queryParams.regulation) || ''),
+      companyName: new FormControl((this.queryParams && this.queryParams.companyName) || ''),
+      project: new FormControl((this.queryParams && this.queryParams.project) || '')
     });
   }
 
@@ -339,6 +341,10 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       } else {
         delete this.queryParams['regulation'];
       }
+
+      delete this.queryParams['companyName'];
+
+      delete this.queryParams['project'];
 
       delete this.queryParams['autofocus'];
 
