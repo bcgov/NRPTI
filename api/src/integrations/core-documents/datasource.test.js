@@ -132,7 +132,6 @@ describe('CoreDocumentsDataSource', () => {
       const dataSource = new DataSource();
       dataSource.coreUtil.apiAccessExpiry = new moment(new Date()).add(2, 'w');
       dataSource.coreUtil.client_token = 'test_token';
-      //TODO FIX THISSSS!!
 
       dataSource.getDownloadToken = jest.fn().mockResolvedValue(mockDownloadToken);
 
