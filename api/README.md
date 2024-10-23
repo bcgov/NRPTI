@@ -17,6 +17,8 @@ Run using the command `docker-compose up` to begin building and running the `api
 | yarn       | latest          | https://yarnpkg.com/en/                     | Package Manager (more efficient than npm) |
 | mongodb    | 3.4 - 3.6       | https://docs.mongodb.com/v3.6/installation/ | NoSQL database                            |
 
+_Note: Node 14.21.3 is highly recommended._
+
 ## Install [NodeJS](https://nodejs.org/download/release/latest-v14.x/)
 
 _Note: NVM can be used to install and manage multiple versions of NodeJS and npm ([Windows version]((https://github.com/coreybutler/nvm-windows)), [Unix / Linux / macOS version](https://github.com/nvm-sh/nvm))._
