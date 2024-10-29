@@ -1,5 +1,3 @@
-![API tests](https://github.com/bcgov/NRPTI/workflows/API%20tests/badge.svg) ![Front-End tests](https://github.com/bcgov/NRPTI/workflows/Front-End%20tests/badge.svg)
-
 # NRPTI  
 
 Natural Resources Public Transparency Initiative monorepo.  This supports the LNG Regulatory interface, Natural Resource Compliance and Enforcement Database, and soon the BC Mines Information site.
@@ -20,7 +18,11 @@ All documents uploaded to the NRPTI system are first checked by the ClamAV anti-
 
 # Running it locally
 
-Please see the READMEs in the `angular/` and `api/` subdirectories.
+To run NRPTI locally, run the `api/` subdirectory and then the `angular/` subdirectory. See [api/README.md](api/README.md) for instructions to begin the process.
+
+If you already have the API running, see [angular/README.md](angular/README.md) for instructions to run the frontend.
+
+_Note: NRPTI Does not work in Firefox. Please use Safari or Chrome._
 
 # VSCode Extensions
 
