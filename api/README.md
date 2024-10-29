@@ -2,51 +2,94 @@
 
 API for the Natural Resources Public Transparency Interface (NRPTI).
 
-* [api](https://github.com/bcgov/nrpti/api) - back-end that serves all admin and public requests.
+* [api](../api) - back-end that serves all admin and public requests.
 
-# Running with Docker
-
-Run using the command `docker-compose up` to begin building and running the `api`
-
-# Running Locally without Docker
+# Requirements
 
 | Technology | Version         | Website                                     | Description                               |
 |------------|-----------------|---------------------------------------------|-------------------------------------------|
 | node       | 10.x.x - 14.x.x | https://nodejs.org/en/                      | JavaScript Runtime                        |
 | npm        | latest          | https://www.npmjs.com/                      | Node Package Manager                      |
-| yarn       | latest          | https://yarnpkg.com/en/                     | Package Manager (more efficient than npm) |
-| mongodb    | 3.4 - 3.6       | https://docs.mongodb.com/v3.6/installation/ | NoSQL database                            |
+| mongodb    | 3.6             | https://docs.mongodb.com/v3.6/installation/ | NoSQL database                            |
+| pyenv      | latest          | Homebrew (Mac) or pip (Windows)             | Python version manager                    |
 
-_Note: Node 14.21.3 is highly recommended._
+_NOTE: Although NRPTI uses Node 10 on OpenShift, this guide will instruct you to use Node 14.21.3. This has been the most successful for installing and running NRPTI locally._
+
+# Optional
+
+| Technology | Version         | Website                                     | Description                               |
+|------------|-----------------|---------------------------------------------|-------------------------------------------|
+| docker     | latest          | https://docs.docker.com/engine/install/     | Containerisation platform                 |
+
+# Running Locally
 
 ## Install [NodeJS](https://nodejs.org/download/release/latest-v14.x/)
 
-_Note: NVM can be used to install and manage multiple versions of NodeJS and npm ([Windows version]((https://github.com/coreybutler/nvm-windows)), [Unix / Linux / macOS version](https://github.com/nvm-sh/nvm))._
+_Note: NVM can be used to install and manage multiple versions of NodeJS and npm ([Windows version]((https://github.com/coreybutler/nvm-windows)), [Unix / Linux / macOS version](https://github.com/nvm-sh/nvm)). It's highly recommended to use NVM when working on this project._
+
+## Install Pyenv
+#### On Mac:
+```
+brew install pyenv
+```
+#### On Windows:
+```
+pip install pyenv-win
+```
 
 ## Install [MongoDB](https://docs.mongodb.com/v3.6/installation/)
 
 # Build and Run
+0. Use Python 2.7 and Node 14!
+
+    ```
+    nvm use 14.21.3
+    pyenv global 2.7
+    ```
 
 1. Download dependencies
-```
-npm install
-```
-2. Start MongoDB
-```
-brew services start mongodb-community@3.6
-```
-3. Run the migrations locally
-```
-db-migrate up -e local
-```
-> _Note: you may need to adjust Minio env variables, or skip the loadMemDocs migration_
-4. Run the app
-```
-npm start
-```
-5. Go to http://localhost:3000/api/docs to verify that the application is running.
 
->_Note: To change the default port edit `swagger.yaml`._
+    ```
+    npm install
+    ```
+    _NOTE FOR WINDOWS INSTALL: if you are using pyenv and still getting errors related to python2 or node-sass, run this command to set the python2 path in the npm config :_
+    ```
+    npm config set python "C:\path\to\python.exe"
+    ```
+
+2. In this folder, change database.json.sample to database.json
+
+3. Start MongoDB
+
+    #### With Docker:
+    ```
+    cd ../
+    docker-compose up mongo
+    cd api
+    ```
+    #### Without Docker:
+    ```
+    brew services start mongodb-community@3.6
+    ```
+
+4. Run the migrations locally
+
+    ```
+    db-migrate up -e local
+    ```
+    _Note: you may need to adjust Minio env variables, or delete the loadMemDocs migration._
+
+5. Run the app
+
+    ```
+    npm start
+    ```
+
+6. Open http://localhost:3000/api/docs in Safari or Chrome to verify that the application is running.
+
+    _Note: To change the default port edit `swagger.yaml`._
+
+To continue local set-up with the front-end, see [bcgoc/angular/README.md](../angular/README.md).
 
 # Linting and Formatting
 
@@ -65,24 +108,24 @@ These 2 linters (tslint, Prettier) do have overlapping rules.  To avoid weird ru
 * ESlint: eslint.json
 * Prettier: .prettierrc .prettierignore
 
-## Run Linters
-
-* Lint the `*.js` files using `ESLint`.
-```
-npm run lint
-```
-
-## Run Linters + Formatters
+## Run Linters + Formatters + Auto Fix
 
 _Note: In the worst case scenario, where linting/formatting has been neglected, then these `lint-fix` commands have the potential to create 100's of file changes.  In this case, it is recommended to only run these commands as part of a separate commit._
 
 _Note: Not all linting/formatting errors can be automatically fixed, and will require human intervention._
 
-* Lint and fix the `*.js` files using `ESLint` + `Prettier`.
+- Lint the `*.js` files using `ESLint`.
 
-```
-npm run lint-fix
-```
+    ```
+    npm run lint
+    ```
+
+- Lint and fix the `*.js` files using `ESLint` + `Prettier`.
+
+    ```
+    npm run lint-fix
+    ```
+_Note: Remember to use Node 14 when running the linter! Newer versions will error._
 
 # API Specification
 
@@ -140,15 +183,17 @@ This project contains two kinds of unit tests.  Regular unit tests and API unit 
 * Run the unit and api tests.
   * Note: the `package.json` `tests` command sets the `UPLOAD_DIRECTORY` environment variable, the command for which may be OS specific and therefore may need adjusting depending on your machines OS.
 
-```
-npm run test
-```
+  ```
+  npm run test
+  ```
 
-Run individual test suites using the relative command. For example:
+* Run individual test suites using the relative command. For example:
 
-```
-npm run test api/src/importers/alc/base-record-utils.test.js
-```
+  ```
+  npm run test api/src/importers/alc/base-record-utils.test.js
+  ```
+
+_Note: Remember to use Node 14 when running tests! Newer versions will error._
 
 ## API Tests
 

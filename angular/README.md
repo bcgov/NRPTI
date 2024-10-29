@@ -2,11 +2,11 @@
 
 Angular front-ends for the Natural Resources Public Transparency Interface (NRPTI) application.
 
-- [admin-nrpti](https://github.com/bcgov/nrpti/angular/projects/admin-nrpti) - front-end for nrced admin users.
-- [public-nrced](https://github.com/bcgov/nrpti/angular/projects/public-nrpti) - front-end for nrced public users.
-- [public-lng](https://github.com/bcgov/nrpti/angular/projects/public-lng) - front-end for lng public users.
-- [common](https://github.com/bcgov/nrpti/angular/projects/common) - common components for NRPTI front-end sites.
-- [global](https://github.com/bcgov/nrpti/angular/projects/global) - global components for angular front-end sites.
+- [admin-nrpti](projects/admin-nrpti) - front-end for nrced admin users.
+- [public-nrced](projects/public-nrpti) - front-end for nrced public users.
+- [public-lng](projects/public-lng) - front-end for lng public users.
+- [common](projects/common) - common components for NRPTI front-end sites.
+- [global](projects/global) - global components for angular front-end sites.
 
 # Prerequisites
 
@@ -16,13 +16,15 @@ Angular front-ends for the Natural Resources Public Transparency Interface (NRPT
 | npm        | latest          | https://www.npmjs.com/  | Node Package Manager                      |
 | ng         | 7.x.x           | https://cli.angular.io/ | Angular CLI                               |
 
-_Note: Node 14.21.3 is highly recommended._
+_NOTE: Although NRPTI uses Node 10 on OpenShift, this guide will instruct you to use Node 14.21.3. This has been the most successful for installing and running NRPTI locally._
 
-_Note: This app also requires [`bcgov/nrpti/api`](https://github.com/bcgov/NRPTI/tree/master/api) to handle its requests and authentication._
+_Note: This app also requires [`bcgov/nrpti/api`](../api) to handle its requests and authentication. If you haven't already, please follow the README in that folder to get the API running._
 
-## Install [Node + NPM](https://nodejs.org/en/)
+_Note: NRPTI Does not work in Firefox. Please use Safari or Chrome._
 
-_Note: NVM can be used to install and manage multiple versions of NodeJS and npm ([Windows version]((https://github.com/coreybutler/nvm-windows)), [Unix / Linux / macOS version](https://github.com/nvm-sh/nvm))._
+## Install [Node](https://nodejs.org/download/release/latest-v14.x/)
+
+_Note: NVM can be used to install and manage multiple versions of NodeJS and npm ([Windows version]((https://github.com/coreybutler/nvm-windows)), [Unix / Linux / macOS version](https://github.com/nvm-sh/nvm)). It's highly recommended to use NVM when working on this project._
 
 ## Install [Angular CLI](https://cli.angular.io/)
 
@@ -50,16 +52,21 @@ During development, a library can be built and symlinked instead of published. T
 
 # Build and Run
 
-0. Downgrade your node version
+0. Use Python 2.7 and Node 14!
 
     ```
-    nvm use <version>
+    nvm use 14.21.3
+    pyenv global 2.7
     ```
 
 1. Download dependencies
 
     ```
     npm install
+    ```
+    _NOTE FOR WINDOWS INSTALL: if you are using pyenv and still getting errors related to python2 or node-sass, run this command to set the python2 path in the npm config :_
+    ```
+    npm config set python "C:\path\to\python.exe"
     ```
 
 2. Build library/symlink
@@ -79,6 +86,8 @@ During development, a library can be built and symlinked instead of published. T
       ```
 
       _Note: This will run all angular applications in parallel, in the same console._
+
+      _Note: Remember to use Safari or Chrome._
 
 # Linting and Formatting
 
@@ -101,6 +110,8 @@ Recommend installing the [VSCode Prettier extension](https://github.com/prettier
 
 ## Run Linters + Formatters + Auto Fix
 
+_Note: In the worst case scenario, where linting/formatting has been neglected, then these `lint-fix` commands have the potential to create 100's of file changes.  In this case, it is recommended to only run these commands as part of a separate commit._
+
 _Note: Not all linting/formatting errors can be automatically fixed, and will require human intervention._
 
 - Run all linters and fix all problems, in series
@@ -114,6 +125,7 @@ _Note: Not all linting/formatting errors can be automatically fixed, and will re
   ```
   npm run lint:ts
   ```
+_Note: Remember to use Node 14 when running the linter! Newer versions will error._
 
 # Testing
 
@@ -144,6 +156,7 @@ When viewing test output in the browser, via localhost:9876, Firefox produces so
   ```
   npm run test-ci
   ```
+_Note: Remember to use Node 14 when running tests! Newer versions will error._
 
 # Code Scaffolding Using Angular CLI
 
