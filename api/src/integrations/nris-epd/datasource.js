@@ -69,13 +69,20 @@ class NrisDataSource {
       this.token = payload.access_token;
       defaultLog.info('NRIS API token expires:', (payload.expires_in / 60 / 60).toFixed(2), ' hours');
 
-      // Hardcoded to start in October 1, 2017.
-      // Set a startDate and temporary endDate, which defines the first query.  This is because NRIS will 500/timeout
-      // if we set a range larger than a few months.  After which, increment both the startDate and endDate to get the
-      // next month, until we reach the final stop date of December 31, 2019
-      let startDate = moment('2017-10-01');
-      let endDate = moment(startDate).add(1, 'M');
+      // If today is the first of the month, import (update) all data from October 1, 2017
+      // Otherwise, only import (update) the past year of data
+      let startDate;
       let stopDate = moment();
+      if (stopDate.date() === 1) {
+        startDate = moment('2017-10-01');
+      } else {
+        startDate = moment(stopDate).subtract(1, 'year');
+      }
+
+      // Set a temporary endDate, which defines the first query.  This is because NRIS will 500/timeout if we
+      // set a range larger than a few months.  After which, increment both the startDate and endDate to get the
+      // next month, until we reach the current day
+      let endDate = moment(startDate).add(1, 'M');
 
       let statusObject = {
         status: 'Complete',
