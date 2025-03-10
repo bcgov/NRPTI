@@ -3,8 +3,7 @@ import { ConfigService, LoggerService } from 'nrpti-angular-components';
 import { JwtUtil } from '../utils/jwt-utils';
 import { Observable } from 'rxjs';
 import { Constants } from '../utils/constants/misc';
-
-declare let Keycloak: any;
+import * as Keycloak from 'keycloak-js';
 
 @Injectable()
 export class KeycloakService {
@@ -26,14 +25,13 @@ export class KeycloakService {
       // Bootup KC
       const keycloak_client_id = this.configService.config['KEYCLOAK_CLIENT_ID'];
 
-      return new Promise<void>((resolve, reject) => {
         const config = {
           url: this.keycloakUrl,
           realm: this.keycloakRealm,
           clientId: !keycloak_client_id ? 'nrpti-4869' : keycloak_client_id
         };
 
-        // console.log('KC Auth init.');
+         console.log('KC Auth init.');
 
         this.keycloakAuth = new Keycloak(config);
 
@@ -62,35 +60,26 @@ export class KeycloakService {
         // Try to get refresh tokens in the background
         this.keycloakAuth.onTokenExpired = () => {
           this.keycloakAuth
-            .updateToken()
-            .success(refreshed => {
+            .updateToken(30)
+            .then(refreshed => {
               this.logger.log(`KC refreshed token?: ${refreshed}`);
               this.refreshMenuCache();
             })
-            .error(err => {
+            .catch(err => {
               this.logger.log(`KC refresh error: ${err}`);
             });
         };
 
-        // Initialize.
-        this.keycloakAuth
-          .init({
-            pkceMethod: 'S256'
-          })
-          .success(auth => {
-            // console.log('KC Refresh Success?:', this.keycloakAuth.authServerUrl);
-            this.logger.log(`KC Success: ${auth}`);
-            if (!auth) {
-              this.keycloakAuth.login({ idpHint: 'idir' });
-            } else {
-              resolve();
-            }
-          })
-          .error(err => {
-            this.logger.log(`KC error: ${err}`);
-            reject();
-          });
-      });
+        try {
+          const auth = await this.keycloakAuth.init({ pkceMethod: 'S256' });
+          this.logger.log(`KC Success: ${auth}`);
+          if (!auth) {
+            this.keycloakAuth.login({ idpHint: 'idir' });
+          }
+        } catch (err) {
+          this.logger.log(`KC error: ${err}`);
+        }
+
     }
   }
 

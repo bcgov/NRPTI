@@ -39,7 +39,7 @@ export class ProjectLinkPipe implements PipeTransform {
       }
 
       if (bcmiMine) {
-        return `<a href="${bcmiUrl}/p/${bcmiMine._id}/overview" target="_blank">${str}</a>`;
+        return `<a href="${bcmiUrl}/mine/${bcmiMine._id}/overview" target="_blank">${str}</a>`;
       }
     } catch {
       this.logger.error('Error determining application URLs.');
