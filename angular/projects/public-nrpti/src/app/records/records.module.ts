@@ -39,7 +39,7 @@ import { RecordsListResolver } from './records-list/records-list-resolver';
     NrptiCommonModule,
     SharedModule,
     NgxPaginationModule,
-    NgbModule.forRoot(),
+    NgbModule,
     InlineSVGModule.forRoot(),
     RecordsRoutingModule
   ],

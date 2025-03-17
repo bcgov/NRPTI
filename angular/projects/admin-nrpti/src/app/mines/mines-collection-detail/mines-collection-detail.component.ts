@@ -9,13 +9,14 @@ import { FactoryService } from '../../services/factory.service';
 import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-mines-collection-detail',
   templateUrl: './mines-collection-detail.component.html',
   styleUrls: ['./mines-collection-detail.component.scss']
 })
 export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
   agencyDataService: AgencyDataService;
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public collection = null;
   public lastEditedSubText = null;

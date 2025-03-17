@@ -11,12 +11,13 @@ import { UrlValidator } from '../../../../../common/src/app/form-validators/vali
 import moment from 'moment';
 
 @Component({
+  standalone: false,
   selector: 'app-mines-add-edit',
   templateUrl: './mines-add-edit.component.html',
   styleUrls: ['./mines-add-edit.component.scss']
 })
 export class MinesAddEditComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public loading = true;
   public mine: Mine;

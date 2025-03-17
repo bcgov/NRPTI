@@ -10,12 +10,13 @@ import { LoggerService } from 'nrpti-angular-components';
 import { Constants } from '../../../utils/constants/misc';
 
 @Component({
+  standalone: false,
   selector: 'app-inspection-lng-detail',
   templateUrl: './inspection-lng-detail.component.html',
   styleUrls: ['./inspection-lng-detail.component.scss']
 })
 export class InspectionLNGDetailComponent extends RecordComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public isPublished: boolean;
 

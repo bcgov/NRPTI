@@ -53,7 +53,7 @@ describe('PermitAddEditComponent', () => {
         ReactiveFormsModule,
         GlobalModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [PermitAddEditComponent],
       providers: [

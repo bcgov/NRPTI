@@ -52,7 +52,7 @@ describe('ManagementPlanAddEditComponent', () => {
         ReactiveFormsModule,
         GlobalModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [ManagementPlanAddEditComponent],
       providers: [

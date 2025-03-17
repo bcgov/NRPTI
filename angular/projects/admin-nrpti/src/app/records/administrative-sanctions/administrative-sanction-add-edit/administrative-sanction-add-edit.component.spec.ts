@@ -59,7 +59,7 @@ describe('AdministrativeSanctionAddEditComponent', () => {
         CommonModule,
         MatSlideToggleModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [AdministrativeSanctionAddEditComponent],
       providers: [

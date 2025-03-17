@@ -4,6 +4,7 @@ import { DataService } from '../../services/data.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
+  standalone: false,
   selector: 'app-nations',
   templateUrl: './nations.component.html',
   styleUrls: ['./nations.component.scss']

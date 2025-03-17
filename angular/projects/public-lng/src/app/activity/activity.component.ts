@@ -11,6 +11,7 @@ import { Activity } from '../models/activity';
  * @implements {OnInit}
  */
 @Component({
+  standalone: false,
   selector: 'app-activity',
   templateUrl: './activity.component.html',
   styleUrls: ['./activity.component.scss']

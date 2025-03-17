@@ -142,7 +142,7 @@ import { AnnualReportBCMIDetailComponent } from './annual-reports/annual-report-
     NrptiCommonModule,
     SharedModule,
     NgxPaginationModule,
-    NgbModule.forRoot(),
+    NgbModule,
     InlineSVGModule.forRoot(),
     RecordsRoutingModule,
     MatTooltipModule,

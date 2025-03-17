@@ -39,12 +39,13 @@ import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-da
  * @implements {OnDestroy}
  */
 @Component({
+  standalone: false,
   selector: 'app-mines-records-list',
   templateUrl: './mines-records-list.component.html',
   styleUrls: ['./mines-records-list.component.scss']
 })
 export class MinesRecordsListComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public SearchSubsets = SearchSubsets; // make available in tempalte
   public mine: Mine;

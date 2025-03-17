@@ -8,12 +8,13 @@ import { DatePipe } from '@angular/common';
 import { FactoryService } from '../../../services/factory.service';
 
 @Component({
+  standalone: false,
   selector: 'app-dam-safety-inspection-bcmi-detail',
   templateUrl: './dam-safety-inspection-bcmi-detail.component.html',
   styleUrls: ['./dam-safety-inspection-bcmi-detail.component.scss']
 })
 export class DamSafetyInspectionBCMIDetailComponent extends RecordComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public isPublished: boolean;
 

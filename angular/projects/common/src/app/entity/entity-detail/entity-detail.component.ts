@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ChangeDetectorRef, SimpleChanges, OnChanges }
 import { Entity, ENTITY_TYPE } from '../../models/master/common-models/entity';
 
 @Component({
+  standalone: false,
   selector: 'app-entity-detail',
   templateUrl: './entity-detail.component.html',
   styleUrls: ['./entity-detail.component.scss']

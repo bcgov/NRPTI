@@ -4,6 +4,7 @@ import { Utils as CommonUtils } from './../../utils/utils';
 import { FactoryService } from '../../../../../../projects/admin-nrpti/src/app/services/factory.service';
 
 @Component({
+  standalone: false,
   selector: 'app-legislation-list-detail-admin',
   templateUrl: './legislation-list-detail.component.html',
   styleUrls: ['./legislation-list-detail.component.scss']

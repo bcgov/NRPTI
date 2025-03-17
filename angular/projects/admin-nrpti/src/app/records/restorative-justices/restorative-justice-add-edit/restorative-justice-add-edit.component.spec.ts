@@ -57,7 +57,7 @@ describe('RestorativeJusticeAddEditComponent', () => {
         CommonModule,
         MatSlideToggleModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [RestorativeJusticeAddEditComponent],
       providers: [

@@ -3,6 +3,7 @@ import { FormArray, FormGroup, FormControl } from '@angular/forms';
 import { Picklists } from '../../utils/record-constants';
 
 @Component({
+  standalone: false,
   selector: 'app-penalty-add-edit',
   templateUrl: './penalty-add-edit.component.html',
   styleUrls: ['./penalty-add-edit.component.scss']

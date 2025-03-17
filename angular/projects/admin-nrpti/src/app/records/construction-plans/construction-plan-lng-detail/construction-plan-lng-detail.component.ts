@@ -9,12 +9,13 @@ import { FactoryService } from '../../../services/factory.service';
 import { LoggerService } from 'nrpti-angular-components';
 
 @Component({
+  standalone: false,
   selector: 'app-construction-plan-lng-detail',
   templateUrl: './construction-plan-lng-detail.component.html',
   styleUrls: ['./construction-plan-lng-detail.component.scss']
 })
 export class ConstructionPlanLNGDetailComponent extends RecordComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public isPublished: boolean;
 

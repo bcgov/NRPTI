@@ -9,6 +9,7 @@ import { Utils as GlobalUtils } from 'nrpti-angular-components';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service-nrced';
 
 @Component({
+  standalone: false,
   selector: 'app-administrative-penalty-detail',
   templateUrl: './administrative-penalty-detail.component.html',
   styleUrls: ['./administrative-penalty-detail.component.scss']
@@ -16,7 +17,7 @@ import { AgencyDataService } from '../../../../../../../projects/global/src/lib/
 export class AdministrativePenaltyDetailComponent implements OnInit, OnChanges, OnDestroy {
   @Input() data: any;
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public loading = true;
   public activeTab = 'detail';

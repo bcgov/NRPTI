@@ -10,12 +10,13 @@ import { FactoryService } from '../../../services/factory.service';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-dam-safety-inspection-detail',
   templateUrl: './dam-safety-inspection-detail.component.html',
   styleUrls: ['./dam-safety-inspection-detail.component.scss']
 })
 export class DamSafetyInspectionDetailComponent extends RecordDetailComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public legislationString = '';
 

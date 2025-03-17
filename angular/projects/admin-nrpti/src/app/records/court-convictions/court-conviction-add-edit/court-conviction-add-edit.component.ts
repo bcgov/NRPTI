@@ -12,12 +12,13 @@ import { Constants } from '../../../utils/constants/misc';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-court-conviction-add-edit',
   templateUrl: './court-conviction-add-edit.component.html',
   styleUrls: ['./court-conviction-add-edit.component.scss']
 })
 export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
-  protected ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  protected ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public loading = true;
   public isEditing = false;

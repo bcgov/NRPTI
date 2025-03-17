@@ -13,6 +13,7 @@ import { FactoryService } from '../services/factory.service';
  * @module HomeComponent
  */
 @Component({
+  standalone: false,
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']

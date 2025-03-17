@@ -45,7 +45,7 @@ export function initConfig(configService: ConfigService) {
     CommonModule,
     FormsModule,
     HttpClientModule,
-    NgbModule.forRoot(),
+    NgbModule,
     NgxPageScrollCoreModule.forRoot({ scrollOffset: 50, easingLogic: easingLogic }),
     NgxPageScrollModule,
     SharedModule,

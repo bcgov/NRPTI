@@ -78,6 +78,7 @@ const markerIconLg = L.icon({
 });
 
 @Component({
+  standalone: false,
   selector: 'app-map',
   templateUrl: './app-map.component.html',
   styleUrls: ['./app-map.component.scss']
@@ -99,7 +100,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
   });
   // private oldZoom: number = null;
   private isMapReady = false;
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   private layersGroup = L.layerGroup();
 

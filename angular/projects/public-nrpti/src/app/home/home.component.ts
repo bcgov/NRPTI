@@ -4,6 +4,7 @@ import { FactoryService } from '../services/factory.service';
 import { AgencyDataService } from '../../../../global/src/lib/utils/agency-data-service-nrced';
 
 @Component({
+  standalone: false,
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']

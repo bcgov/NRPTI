@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { StoreService } from 'nrpti-angular-components';
 
 @Component({
+  standalone: false,
   selector: 'app-toggle-button',
   templateUrl: './toggle-button.component.html',
   styleUrls: ['./toggle-button.component.scss']

@@ -44,7 +44,7 @@ describe('MinesRecordsEditComponent', () => {
         CommonModule,
         MatSlideToggleModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [MinesRecordsEditComponent],
       providers: [

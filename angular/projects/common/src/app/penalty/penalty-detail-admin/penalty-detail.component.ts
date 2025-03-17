@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ChangeDetectorRef, SimpleChanges, OnChanges }
 import { Penalty } from '../../models/master/common-models/penalty';
 
 @Component({
+  standalone: false,
   selector: 'app-penalty-detail-admin',
   templateUrl: './penalty-detail.component.html',
   styleUrls: ['./penalty-detail.component.scss']

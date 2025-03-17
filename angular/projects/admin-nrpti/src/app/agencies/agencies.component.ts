@@ -6,6 +6,7 @@ import { ToastService } from '../services/toast.service';
 import { FactoryService } from '../services/factory.service';
 
 @Component({
+  standalone: false,
   selector: 'app-agencies',
   templateUrl: './agencies.component.html',
   styleUrls: ['./agencies.component.scss']

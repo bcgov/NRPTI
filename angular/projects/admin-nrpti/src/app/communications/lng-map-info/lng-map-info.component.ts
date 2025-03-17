@@ -7,12 +7,13 @@ import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 @Component({
+  standalone: false,
   selector: 'app-lng-map-info',
   templateUrl: './lng-map-info.component.html',
   styleUrls: ['./lng-map-info.component.scss']
 })
 export class LngMapInfoComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public loading = true;
   public mapForm: FormGroup;

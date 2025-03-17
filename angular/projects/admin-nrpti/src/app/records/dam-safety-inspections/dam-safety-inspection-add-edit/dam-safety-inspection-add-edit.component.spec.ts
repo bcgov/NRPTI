@@ -52,7 +52,7 @@ describe('DamSafetyInspectionAddEditComponent', () => {
         ReactiveFormsModule,
         GlobalModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [DamSafetyInspectionAddEditComponent],
       providers: [

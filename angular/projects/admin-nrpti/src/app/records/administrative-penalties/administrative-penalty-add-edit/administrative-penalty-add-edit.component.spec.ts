@@ -60,7 +60,7 @@ describe('AdministrativePenaltyAddEditComponent', () => {
         CommonModule,
         MatSlideToggleModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [AdministrativePenaltyAddEditComponent],
       providers: [

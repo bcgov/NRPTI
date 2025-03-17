@@ -11,7 +11,7 @@ describe('EntityAddEditComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, MatSlideToggleModule, NgbModule.forRoot()],
+      imports: [ReactiveFormsModule, MatSlideToggleModule, NgbModule],
       declarations: [EntityAddEditComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();

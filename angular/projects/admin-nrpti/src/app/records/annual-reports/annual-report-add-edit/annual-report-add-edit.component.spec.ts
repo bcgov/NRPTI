@@ -52,7 +52,7 @@ describe('AnnualReportAddEditComponent', () => {
         ReactiveFormsModule,
         GlobalModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [AnnualReportAddEditComponent],
       providers: [

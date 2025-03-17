@@ -24,12 +24,13 @@ import { FactoryService } from '../../services/factory.service';
  * @implements {OnDestroy}
  */
 @Component({
+  standalone: false,
   selector: 'app-records-list',
   templateUrl: './records-list.component.html',
   styleUrls: ['./records-list.component.scss']
 })
 export class RecordsListComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public messageIn: EventEmitter<ITableMessage> = new EventEmitter<ITableMessage>();
 

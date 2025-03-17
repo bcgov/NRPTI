@@ -48,7 +48,7 @@ describe('WarningAddEditComponent', () => {
         CommonModule,
         MatSlideToggleModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [WarningAddEditComponent],
       providers: [

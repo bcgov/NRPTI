@@ -60,7 +60,7 @@ describe('MinesCourtConvictionsAddEditComponent', () => {
         CommonModule,
         MatSlideToggleModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [MinesCourtConvictionsAddEditComponent],
       providers: [

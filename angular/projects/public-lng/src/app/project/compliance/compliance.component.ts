@@ -4,6 +4,7 @@ import { DataService } from '../../services/data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
+  standalone: false,
   selector: 'app-compliance',
   templateUrl: './compliance.component.html',
   styleUrls: ['./compliance.component.scss']

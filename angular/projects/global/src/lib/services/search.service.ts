@@ -80,21 +80,21 @@ export class SearchService {
     if (populate) {
       queryString += `&populate=${populate}`;
     }
-    if (and && and !== {}) {
+    if (and && Object.keys(and).length !== 0) {
       Object.keys(and).map(key => {
         and[key].split(',').map(item => {
           queryString += `&and[${key}]=${item}`;
         });
       });
     }
-    if (or && or !== {}) {
+    if (or && Object.keys(or).length !== 0) {
       Object.keys(or).map(key => {
         or[key].split(',').map(item => {
           queryString += `&or[${key}]=${item}`;
         });
       });
     }
-    if (nor && nor !== {}) {
+    if (nor && Object.keys(nor).length !== 0) {
       Object.keys(nor).map(key => {
         nor[key].split(',').map(item => {
           queryString += `&nor[${key}]=${item}`;

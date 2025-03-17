@@ -36,6 +36,7 @@ import { DOCUMENT } from '@angular/common';
  * @implements {OnDestroy}
  */
 @Component({
+  standalone: false,
   selector: 'search-filter-template',
   templateUrl: './search-filter-template.component.html',
   styleUrls: ['./search-filter-template.component.scss'],

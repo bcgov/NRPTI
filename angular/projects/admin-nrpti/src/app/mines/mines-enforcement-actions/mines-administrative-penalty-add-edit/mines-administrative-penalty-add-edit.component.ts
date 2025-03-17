@@ -10,6 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 import { AgencyDataService } from '../../../../../../global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-mines-administrative-penalty-add-edit',
   templateUrl: './mines-administrative-penalty-add-edit.component.html',
   styleUrls: ['./mines-administrative-penalty-add-edit.component.scss']

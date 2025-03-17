@@ -9,6 +9,7 @@ import { StoreService } from 'nrpti-angular-components';
 import { AgencyDataService } from '../../../../../../../global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-mines-court-convictions-detail',
   templateUrl: './mines-court-convictions-detail.component.html',
   styleUrls: ['../../../../records/court-convictions/court-conviction-detail/court-conviction-detail.component.scss']

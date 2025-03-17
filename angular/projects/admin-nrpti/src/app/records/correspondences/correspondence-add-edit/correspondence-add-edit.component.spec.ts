@@ -51,7 +51,7 @@ describe('CorrespondenceAddEditComponent', () => {
         ReactiveFormsModule,
         GlobalModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [CorrespondenceAddEditComponent],
       providers: [

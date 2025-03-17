@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 
 @Component({
+  standalone: false,
   selector: 'app-authorizations',
   templateUrl: './authorizations.component.html',
   styleUrls: ['./authorizations.component.scss']

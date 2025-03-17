@@ -1,4 +1,4 @@
-import { Input } from '@angular/core';
+import { Directive, Input } from '@angular/core';
 
 import { FactoryService } from '../../services/factory.service';
 import { Constants } from '../../utils/constants/misc';
@@ -9,6 +9,7 @@ import { Constants } from '../../utils/constants/misc';
  * @export
  * @class TableRowComponent
  */
+@Directive()
 export class RecordComponent {
   /**
    * The specific data used by the component.

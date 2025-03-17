@@ -48,3 +48,5 @@ api/database.json
 api/migrations/*.csv
 
 NRPTI.iml
+
+angular/.angular/

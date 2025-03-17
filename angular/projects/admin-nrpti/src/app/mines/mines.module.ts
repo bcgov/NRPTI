@@ -52,7 +52,7 @@ import { MinesCourtConvictionsDetailComponent } from './mines-enforcement-action
     NrptiCommonModule,
     SharedModule,
     NgxPaginationModule,
-    NgbModule.forRoot(),
+    NgbModule,
     MinesRoutingModule,
     MatTooltipModule,
     NgbDropdownModule,

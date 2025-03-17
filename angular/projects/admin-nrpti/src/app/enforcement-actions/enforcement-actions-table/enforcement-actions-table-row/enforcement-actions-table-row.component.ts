@@ -9,12 +9,13 @@ import { LoggerService } from 'nrpti-angular-components';
 import { RecordUtils } from '../../../records/utils/record-utils';
 
 @Component({
+  standalone: false,
   selector: 'tr[app-enforcement-actions-table-row]',
   templateUrl: './enforcement-actions-table-row.component.html',
   styleUrls: ['./enforcement-actions-table-row.component.scss']
 })
 export class EnforcementActionsTableRowComponent extends TableRowComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public bcmiFlavour: any;
   public isPublished = false;

@@ -4,6 +4,7 @@ import { IBreadcrumb, LoadingScreenService, StoreService } from 'nrpti-angular-c
 import { FactoryService } from './services/factory.service';
 
 @Component({
+  standalone: false,
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']

@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-explore-panel',
   templateUrl: './explore-panel.component.html',
   styleUrls: ['./explore-panel.component.scss']
@@ -16,7 +17,7 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
   @Output() updateFilters = new EventEmitter();
   @Output() hideSidePanel = new EventEmitter();
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   readonly minDate = new Date('01-01-1900'); // first app created
   readonly maxDate = new Date(); // today

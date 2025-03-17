@@ -62,7 +62,7 @@ describe('MinesAdministrativePenaltyAddEditComponent', () => {
         CommonModule,
         MatSlideToggleModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [MinesAdministrativePenaltyAddEditComponent],
       providers: [

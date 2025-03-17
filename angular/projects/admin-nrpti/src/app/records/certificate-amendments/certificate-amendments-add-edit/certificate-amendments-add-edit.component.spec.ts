@@ -52,7 +52,7 @@ describe('CertificateAddEditComponent', () => {
         ReactiveFormsModule,
         GlobalModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [CertificateAmendmentAddEditComponent],
       providers: [

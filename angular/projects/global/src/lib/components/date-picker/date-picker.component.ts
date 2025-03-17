@@ -6,7 +6,7 @@ import {
   ChangeDetectorRef,
   OnInit,
   EventEmitter,
-  OnDestroy
+  OnDestroy,
 } from '@angular/core';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl } from '@angular/forms';
@@ -15,9 +15,10 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'lib-date-picker',
   templateUrl: './date-picker.component.html',
-  styleUrls: ['./date-picker.component.scss']
+  styleUrls: ['./date-picker.component.scss'],
 })
 export class DatePickerComponent implements OnInit, OnChanges, OnDestroy {
   @Input() control: FormControl;
@@ -28,7 +29,7 @@ export class DatePickerComponent implements OnInit, OnChanges, OnDestroy {
   @Input() reset: EventEmitter<any>;
   @Input() required = false;
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public ngbDate: NgbDateStruct = null;
   public minNgbDate: NgbDateStruct = null;

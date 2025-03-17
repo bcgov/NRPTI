@@ -48,6 +48,7 @@ export interface IMutliSelectOption {
 }
 
 @Component({
+  standalone: false,
   selector: 'app-autocomplete-multi-select',
   templateUrl: './autocomplete-multi-select.component.html',
   styleUrls: ['./autocomplete-multi-select.component.scss']
@@ -65,7 +66,7 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
   @ViewChild('multiAutocompleteFilter', { read: ElementRef }) multiAutocompleteFilter: ElementRef<HTMLInputElement>;
   @ViewChild(MatAutocompleteTrigger) trigger;
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public updatedPaceholderText = '';
 

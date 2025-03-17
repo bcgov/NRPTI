@@ -59,7 +59,7 @@ describe('InspectionAddEditComponent', () => {
         CommonModule,
         MatSlideToggleModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [InspectionAddEditComponent],
       providers: [

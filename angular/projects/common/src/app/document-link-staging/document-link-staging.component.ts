@@ -2,6 +2,7 @@ import { Component, ChangeDetectorRef, EventEmitter, Output, Input } from '@angu
 import { Document } from '../models/document';
 
 @Component({
+  standalone: false,
   selector: 'app-document-link-staging',
   templateUrl: './document-link-staging.component.html',
   styleUrls: ['./document-link-staging.component.scss']

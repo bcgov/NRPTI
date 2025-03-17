@@ -8,12 +8,13 @@ import { RecordUtils } from '../../utils/record-utils';
 import { FactoryService } from '../../../services/factory.service';
 
 @Component({
+  standalone: false,
   selector: 'app-agreement-detail',
   templateUrl: './agreement-detail.component.html',
   styleUrls: ['./agreement-detail.component.scss']
 })
 export class AgreementDetailComponent extends RecordDetailComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
     public route: ActivatedRoute,

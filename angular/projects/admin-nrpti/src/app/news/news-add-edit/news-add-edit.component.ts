@@ -11,12 +11,13 @@ import { FactoryService } from '../../services/factory.service';
 import { Constants } from '../../utils/constants/misc';
 
 @Component({
+  standalone: false,
   selector: 'app-news-add-edit',
   templateUrl: './news-add-edit.component.html',
   styleUrls: ['./news-add-edit.component.scss']
 })
 export class NewsAddEditComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public loading = true;
   public isEditing = false;

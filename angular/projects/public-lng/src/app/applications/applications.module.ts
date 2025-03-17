@@ -13,7 +13,7 @@ import { AppMapComponent } from './app-map/app-map.component';
 import { MarkerPopupComponent } from './app-map/marker-popup/marker-popup.component';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, NgbModule.forRoot(), RouterModule, SharedModule],
+  imports: [CommonModule, FormsModule, NgbModule, RouterModule, SharedModule],
   declarations: [ApplicationsComponent, AppMapComponent, MarkerPopupComponent],
   entryComponents: [MarkerPopupComponent]
 })

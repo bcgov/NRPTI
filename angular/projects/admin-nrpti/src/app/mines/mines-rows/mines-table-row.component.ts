@@ -5,6 +5,7 @@ import { Entity } from '../../../../../common/src/app/models/master/common-model
 import { Regions } from '../../../../../common/src/app/constants/mine';
 
 @Component({
+  standalone: false,
   selector: 'tr[app-mines-table-row]',
   templateUrl: './mines-table-row.component.html',
   styleUrls: ['./mines-table-row.component.scss']

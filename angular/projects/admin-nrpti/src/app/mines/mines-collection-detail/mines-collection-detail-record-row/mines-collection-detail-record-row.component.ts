@@ -5,6 +5,7 @@ import moment from 'moment';
 import { TableRowComponent } from 'nrpti-angular-components';
 
 @Component({
+  standalone: false,
   selector: 'tr[app-mines-collection-record-table-row]',
   templateUrl: './mines-collection-detail-record-row.component.html',
   styleUrls: ['./mines-collection-detail-record-row.component.scss']

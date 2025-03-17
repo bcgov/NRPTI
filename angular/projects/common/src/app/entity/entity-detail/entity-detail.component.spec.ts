@@ -9,7 +9,7 @@ describe('EntityDetailComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatSlideToggleModule, NgbModule.forRoot()],
+      imports: [MatSlideToggleModule, NgbModule],
       declarations: [EntityDetailComponent]
     }).compileComponents();
   });

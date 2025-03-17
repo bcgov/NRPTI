@@ -15,6 +15,7 @@ import { FactoryService } from '../../../services/factory.service';
  * @implements {OnDestroy}
  */
 @Component({
+  standalone: false,
   selector: 'app-search-filters',
   templateUrl: './search-filters.component.html',
   styleUrls: ['./search-filters.component.scss']
@@ -26,7 +27,7 @@ export class SearchFiltersComponent implements OnInit, OnDestroy {
   @Output() closeButton: EventEmitter<void> = new EventEmitter<void>();
   @Output() clearKeywordSearch: EventEmitter<void> = new EventEmitter<void>();
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public loading = true;
   public resetControls: EventEmitter<void> = new EventEmitter<void>();

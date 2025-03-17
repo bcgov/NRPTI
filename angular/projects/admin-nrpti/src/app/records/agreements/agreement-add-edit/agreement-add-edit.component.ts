@@ -12,12 +12,13 @@ import { LoadingScreenService, LoggerService } from 'nrpti-angular-components';
 import { Constants } from '../../../utils/constants/misc';
 
 @Component({
+  standalone: false,
   selector: 'app-agreement-add-edit',
   templateUrl: './agreement-add-edit.component.html',
   styleUrls: ['./agreement-add-edit.component.scss']
 })
 export class AgreementAddEditComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public loading = true;
   public isEditing = false;

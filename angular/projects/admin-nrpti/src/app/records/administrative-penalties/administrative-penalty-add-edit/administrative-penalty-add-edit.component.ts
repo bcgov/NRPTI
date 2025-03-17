@@ -13,12 +13,13 @@ import { Constants } from '../../../utils/constants/misc';
 import { AgencyDataService } from '../../../../../../global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-administrative-penalty-add-edit',
   templateUrl: './administrative-penalty-add-edit.component.html',
   styleUrls: ['./administrative-penalty-add-edit.component.scss']
 })
 export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy {
-  protected ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  protected ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public loading = true;
   public isEditing = false;

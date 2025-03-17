@@ -8,12 +8,13 @@ import { DialogService } from 'ng2-bootstrap-modal';
 import { FactoryService } from '../../services/factory.service';
 
 @Component({
+  standalone: false,
   selector: 'app-news-detail',
   templateUrl: './news-detail.component.html',
   styleUrls: ['./news-detail.component.scss']
 })
 export class NewsDetailComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public record = null;
 

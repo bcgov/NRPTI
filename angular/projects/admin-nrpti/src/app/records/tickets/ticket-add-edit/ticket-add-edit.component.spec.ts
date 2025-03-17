@@ -57,7 +57,7 @@ describe('TicketAddEditComponent', () => {
         CommonModule,
         MatSlideToggleModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [TicketAddEditComponent],
       providers: [

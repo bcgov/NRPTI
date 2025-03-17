@@ -35,6 +35,7 @@ const ROLE_DATA_SOURCES = {
 };
 
 @Component({
+  standalone: false,
   selector: 'app-import-csv',
   templateUrl: './import-csv.component.html',
   styleUrls: ['./import-csv.component.scss']

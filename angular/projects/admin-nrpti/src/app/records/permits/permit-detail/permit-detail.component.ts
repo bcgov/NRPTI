@@ -11,12 +11,13 @@ import { StoreService } from 'nrpti-angular-components';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-permit-detail',
   templateUrl: './permit-detail.component.html',
   styleUrls: ['./permit-detail.component.scss']
 })
 export class PermitDetailComponent extends RecordDetailComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public legislationString = '';
   public mine = [];

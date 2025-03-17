@@ -59,7 +59,7 @@ describe('OrderAddEditComponent', () => {
         CommonModule,
         MatSlideToggleModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [OrderAddEditComponent],
       providers: [

@@ -52,7 +52,7 @@ describe('AgreementAddEditComponent', () => {
         ReactiveFormsModule,
         GlobalModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [AgreementAddEditComponent],
       providers: [

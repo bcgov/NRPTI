@@ -14,9 +14,10 @@ import { TableObject } from './table-object';
 import { ITableMessage } from './table-row-component';
 
 @Component({
+  standalone: false,
   selector: 'lib-table-template',
   templateUrl: './table-template.component.html',
-  styleUrls: ['./table-template.component.scss']
+  styleUrls: ['./table-template.component.scss'],
 })
 export class TableTemplateComponent implements OnInit, OnChanges, OnDestroy {
   @Input() data: TableObject;

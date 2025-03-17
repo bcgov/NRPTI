@@ -40,7 +40,7 @@ describe('CourtConvictionAddEditComponent', () => {
         CommonModule,
         MatSlideToggleModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [CourtConvictionAddEditComponent],
       providers: [

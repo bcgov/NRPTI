@@ -4,6 +4,7 @@ import { TableRowComponent } from 'nrpti-angular-components';
 import { Router } from '@angular/router';
 
 @Component({
+  standalone: false,
   selector: 'tr[app-news-table-row]',
   templateUrl: './news-table-row.component.html',
   styleUrls: ['./news-table-row.component.scss']

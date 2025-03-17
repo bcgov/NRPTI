@@ -9,6 +9,7 @@ import { StoreService } from 'nrpti-angular-components';
 import { AgencyDataService } from '../../../../../../global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-mines-administrative-penalty-detail',
   templateUrl: './mines-administrative-penalty-detail.component.html',
   styleUrls: [

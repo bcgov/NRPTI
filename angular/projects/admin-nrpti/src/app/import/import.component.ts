@@ -18,6 +18,7 @@ import { Constants } from '../utils/constants/misc';
 import { ToastService } from '../services/toast.service';
 
 @Component({
+  standalone: false,
   selector: 'app-import',
   templateUrl: './import.component.html',
   styleUrls: ['./import.component.scss']

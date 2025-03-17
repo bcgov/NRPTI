@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormGroup, FormControl } from '@angular/forms';
 
 @Component({
+  standalone: false,
   selector: 'app-legislation-list-add-edit',
   templateUrl: './legislation-list-add-edit.component.html',
   styleUrls: ['./legislation-list-add-edit.component.scss']

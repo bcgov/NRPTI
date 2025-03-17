@@ -6,6 +6,7 @@ import { Entity } from '../../../../../common/src/app/models/master/common-model
 import { Constants } from '../../utils/constants/misc';
 
 @Component({
+  standalone: false,
   selector: 'tr[app-records-table-row]',
   templateUrl: './records-table-row.component.html',
   styleUrls: ['./records-table-row.component.scss']

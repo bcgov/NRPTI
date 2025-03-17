@@ -22,7 +22,7 @@ import { NationsTableRowsComponent } from '../nations/nations-rows/nations-table
     GlobalModule,
     NrptiCommonModule,
     FormsModule,
-    NgbModule.forRoot(),
+    NgbModule,
     RouterModule,
     SharedModule,
     GlobalModule

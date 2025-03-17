@@ -46,7 +46,7 @@ describe('MinesCollectionsAddEditComponent', () => {
         MinesModule,
         MatSlideToggleModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       providers: [
         Utils,

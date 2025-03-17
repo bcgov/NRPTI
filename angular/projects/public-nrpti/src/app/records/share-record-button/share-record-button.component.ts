@@ -3,12 +3,13 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
 @Component({
+  standalone: false,
   selector: 'app-share-record-button',
   templateUrl: './share-record-button.component.html',
   styleUrls: ['./share-record-button.component.scss']
 })
 export class ShareRecordButtonComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   @Input() recordId = 'searchbox';
   @Input() buttonText = 'Share Record';

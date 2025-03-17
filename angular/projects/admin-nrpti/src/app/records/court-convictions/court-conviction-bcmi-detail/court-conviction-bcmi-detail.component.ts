@@ -10,12 +10,13 @@ import { LoggerService } from 'nrpti-angular-components';
 import { Constants } from '../../../utils/constants/misc';
 
 @Component({
+  standalone: false,
   selector: 'app-court-conviction-bcmi-detail',
   templateUrl: './court-conviction-bcmi-detail.component.html',
   styleUrls: ['./court-conviction-bcmi-detail.component.scss']
 })
 export class CourtConvictionBCMIDetailComponent extends RecordComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public isPublished: boolean;
 

@@ -4,6 +4,7 @@ import { Picklists, Constants } from '../../utils/record-constants';
 import { ENTITY_TYPE } from '../../models/master/common-models/entity';
 
 @Component({
+  standalone: false,
   selector: 'app-entity-add-edit',
   templateUrl: './entity-add-edit.component.html',
   styleUrls: ['./entity-add-edit.component.scss']

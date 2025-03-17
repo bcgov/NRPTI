@@ -5,6 +5,7 @@ import { TestBedHelper } from '../../../../../common/src/app/spec/spec-utils';
 import { Utils } from '../../utils/utils';
 
 @Component({
+  standalone: false,
   template: `
     <textarea libAutoGrowTextArea minRows="1" maxRows="5" rows="2"></textarea>
   `

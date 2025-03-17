@@ -10,12 +10,13 @@ import { LoggerService } from 'nrpti-angular-components';
 import { Constants } from '../../../utils/constants/misc';
 
 @Component({
+  standalone: false,
   selector: 'app-restorative-justice-lng-detail',
   templateUrl: './restorative-justice-lng-detail.component.html',
   styleUrls: ['./restorative-justice-lng-detail.component.scss']
 })
 export class RestorativeJusticeLNGDetailComponent extends RecordComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public isPublished: boolean;
 

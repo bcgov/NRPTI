@@ -29,7 +29,7 @@ import { NewsDetailComponent } from './news-detail/news-detail.component';
     ReactiveFormsModule,
     NrptiCommonModule,
     NgxPaginationModule,
-    NgbModule.forRoot(),
+    NgbModule,
     InlineSVGModule.forRoot(),
     NewsRoutingModule
   ],

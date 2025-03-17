@@ -52,7 +52,7 @@ describe('ReportAddEditComponent', () => {
         ReactiveFormsModule,
         GlobalModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [ReportAddEditComponent],
       providers: [

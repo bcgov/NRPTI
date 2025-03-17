@@ -52,7 +52,7 @@ describe('ConstructionPlanAddEditComponent', () => {
         ReactiveFormsModule,
         GlobalModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [ConstructionPlanAddEditComponent],
       providers: [

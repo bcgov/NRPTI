@@ -18,6 +18,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Directive({
+  standalone: false,
   selector: '[libTableRow]'
 })
 export class TableRowDirective implements OnInit, OnChanges, OnDestroy {
@@ -27,7 +28,7 @@ export class TableRowDirective implements OnInit, OnChanges, OnDestroy {
   @Input() messageIn: EventEmitter<ITableMessage> = new EventEmitter<ITableMessage>();
   @Output() messageOut: EventEmitter<ITableMessage> = new EventEmitter<ITableMessage>();
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
     public viewContainerRef: ViewContainerRef,
