@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { TestBedHelper } from '../../spec/spec-utils';
 import { EntityDetailComponent } from './entity-detail.component';
-import { MatSlideToggleModule } from '@angular/material';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 describe('EntityDetailComponent', () => {

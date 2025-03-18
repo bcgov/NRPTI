@@ -8,7 +8,7 @@ import { GlobalModule } from 'nrpti-angular-components';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Utils } from 'nrpti-angular-components';
-import { MatSlideToggleModule } from '@angular/material';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { LoadingScreenService } from 'nrpti-angular-components';
 import { TestBedHelper, ActivatedRouteStub } from '../../../../../common/src/app/spec/spec-utils';
 import { CommonModule } from '@angular/common';

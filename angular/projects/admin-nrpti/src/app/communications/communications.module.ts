@@ -27,7 +27,6 @@ import { LngMapInfoResolver } from './lng-map-info/lng-map-info-resolver';
   ],
   declarations: [CommunicationsComponent, LngMapInfoComponent],
   providers: [LngMapInfoResolver],
-  entryComponents: [CommunicationsComponent],
   exports: []
 })
 export class CommunicationsModule {}

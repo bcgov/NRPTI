@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgbModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { InlineSVGModule } from 'ng-inline-svg';
+import { InlineSVGModule } from 'ng-inline-svg-2';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
@@ -247,98 +247,6 @@ import { AnnualReportBCMIDetailComponent } from './annual-reports/annual-report-
     AnnualReportBCMIDetailComponent
   ],
   providers: [],
-  entryComponents: [
-    // records
-    RecordsTableRowComponent,
-    // orders
-    OrderAddEditComponent,
-    OrderLNGDetailComponent,
-    OrderNRCEDDetailComponent,
-    // inspections
-    InspectionAddEditComponent,
-    InspectionNRCEDDetailComponent,
-    InspectionLNGDetailComponent,
-    // certificates
-    CertificateAddEditComponent,
-    CertificateDetailComponent,
-    CertificateLNGDetailComponent,
-    // permits
-    PermitAddEditComponent,
-    PermitDetailComponent,
-    PermitLNGDetailComponent,
-    // agreements
-    AgreementDetailComponent,
-    AgreementAddEditComponent,
-    AgreementLNGDetailComponent,
-    // self reports
-    SelfReportAddEditComponent,
-    SelfReportDetailComponent,
-    SelfReportLNGDetailComponent,
-    // restorative justices
-    RestorativeJusticeAddEditComponent,
-    RestorativeJusticeDetailComponent,
-    RestorativeJusticeNRCEDDetailComponent,
-    RestorativeJusticeLNGDetailComponent,
-    // tickets
-    TicketAddEditComponent,
-    TicketDetailComponent,
-    TicketNRCEDDetailComponent,
-    TicketLNGDetailComponent,
-    // administrative penalties
-    AdministrativePenaltyAddEditComponent,
-    AdministrativePenaltyDetailComponent,
-    AdministrativePenaltyNRCEDDetailComponent,
-    AdministrativePenaltyLNGDetailComponent,
-    AdministrativePenaltyBCMIDetailComponent,
-    // administrative sanctions
-    AdministrativeSanctionAddEditComponent,
-    AdministrativeSanctionDetailComponent,
-    AdministrativeSanctionNRCEDDetailComponent,
-    AdministrativeSanctionLNGDetailComponent,
-    // warnings
-    WarningAddEditComponent,
-    WarningDetailComponent,
-    WarningNRCEDDetailComponent,
-    WarningLNGDetailComponent,
-    // construction plans
-    ConstructionPlanDetailComponent,
-    ConstructionPlanAddEditComponent,
-    ConstructionPlanLNGDetailComponent,
-    // management plans
-    ManagementPlanAddEditComponent,
-    ManagementPlanDetailComponent,
-    ManagementPlanLNGDetailComponent,
-    // court convictions
-    CourtConvictionAddEditComponent,
-    CourtConvictionDetailComponent,
-    CourtConvictionNRCEDDetailComponent,
-    CourtConvictionLNGDetailComponent,
-    CourtConvictionBCMIDetailComponent,
-    // certificate amendments
-    CertificateAmendmentAddEditComponent,
-    CertificateAmendmentDetailComponent,
-    CertificateAmendmentBCMIDetailComponent,
-    CertificateAmendmentLNGDetailComponent,
-    // correspondence
-    CorrespondenceAddEditComponent,
-    CorrespondenceDetailComponent,
-    CorrespondenceBCMIDetailComponent,
-    CorrespondenceNRCEDDetailComponent,
-    // report
-    ReportAddEditComponent,
-    ReportDetailComponent,
-    ReportBCMIDetailComponent,
-    ReportNRCEDDetailComponent,
-    // dam safety inspection
-    DamSafetyInspectionAddEditComponent,
-    DamSafetyInspectionDetailComponent,
-    DamSafetyInspectionBCMIDetailComponent,
-    DamSafetyInspectionNRCEDDetailComponent,
-    // annual report
-    AnnualReportAddEditComponent,
-    AnnualReportDetailComponent,
-    AnnualReportBCMIDetailComponent
-  ],
   exports: [
     AdministrativePenaltyAddEditComponent,
     AdministrativePenaltyDetailComponent,

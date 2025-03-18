@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
-import { MatSlideToggleModule } from '@angular/material';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { TestBedHelper } from '../../spec/spec-utils';
 import { EntityAddEditComponent } from './entity-add-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';

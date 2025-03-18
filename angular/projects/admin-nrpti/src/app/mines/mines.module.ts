@@ -6,7 +6,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { NgbModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
-import { MatSlideToggleModule, MatCheckboxModule } from '@angular/material';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { EditorModule } from '@tinymce/tinymce-angular';
 
@@ -87,14 +88,6 @@ import { MinesCourtConvictionsDetailComponent } from './mines-enforcement-action
     MinesCourtConvictionsDetailComponent
   ],
   providers: [EnforcementActionsResolver],
-  entryComponents: [
-    MinesTableRowComponent,
-    MinesRecordsTableRowComponent,
-    MinesCollectionsTableRowComponent,
-    MinesCollectionRecordTableRowComponent,
-    EnforcementActionsTableRowComponent,
-    MinesAdministrativePenaltyDetailComponent
-  ],
   exports: [MinesRecordAddComponent]
 })
 export class MinesModule {}

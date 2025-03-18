@@ -26,7 +26,6 @@ import { AgenciesResolver } from './agencies.resolver';
   ],
   declarations: [AgenciesComponent],
   providers: [AgenciesResolver],
-  entryComponents: [AgenciesComponent],
   exports: []
 })
 export class AgenciesModule {}

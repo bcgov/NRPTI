@@ -8,7 +8,7 @@ import { RecordDetailDirective } from '../../records/utils/record-detail.directi
 import { DatePipe } from '@angular/common';
 import { CommonModule } from '../../../../../common/src/app/common.module';
 import { DialogService } from 'ng2-bootstrap-modal';
-import { MatSlideToggleModule } from '@angular/material';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 describe('MinesDetailComponent', () => {
   const testBedHelper = new TestBedHelper<MinesDetailComponent>(MinesDetailComponent);

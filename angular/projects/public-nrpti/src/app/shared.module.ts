@@ -1,13 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {
-  MatSnackBarModule,
-  MatSlideToggleModule,
-  MatAutocompleteModule,
-  MatCheckboxModule,
-  MatSelectModule,
-  MatTooltipModule
-} from '@angular/material';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { OrderByPipe } from './pipes/order-by.pipe';
 import { NewlinesPipe } from './pipes/newlines.pipe';

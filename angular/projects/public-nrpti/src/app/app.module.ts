@@ -7,7 +7,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { Overlay, CloseScrollStrategy } from '@angular/cdk/overlay';
-import { MAT_AUTOCOMPLETE_SCROLL_STRATEGY } from '@angular/material';
+import { MAT_AUTOCOMPLETE_SCROLL_STRATEGY } from '@angular/material/autocomplete';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 // modules
@@ -31,6 +31,7 @@ import { FactoryService } from './services/factory.service';
 import { ConfigService, LoggerService } from 'nrpti-angular-components';
 import { ApplicationAgencyService } from './services/application-agency.service';
 import { ActService } from './services/acts.service';
+import { RouterModule } from '@angular/router';
 
 export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrategy {
   return () => overlay.scrollStrategies.close();
@@ -54,6 +55,7 @@ export function initConfig(
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    RouterModule,
     ReactiveFormsModule,
     HttpClientModule,
     ScrollingModule,
@@ -86,7 +88,6 @@ export function initConfig(
     ApplicationAgencyService,
     ActService
   ],
-  entryComponents: [ConfirmComponent, HomeComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

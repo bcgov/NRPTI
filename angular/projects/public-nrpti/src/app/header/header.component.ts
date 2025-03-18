@@ -29,7 +29,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    const isIEOrEdge = /msie\s|trident\/|edge\//i.test(window.navigator.userAgent);
+    const isIEOrEdge = /msie\s|trident\/|edge\//i.test((window.navigator as any).userAgent);
     const browser_alert = document.getElementById('browser-alert');
     if (isIEOrEdge) {
       browser_alert.hidden = false;

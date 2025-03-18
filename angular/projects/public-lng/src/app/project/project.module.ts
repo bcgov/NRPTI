@@ -33,6 +33,5 @@ import { PlansComponent } from './plans/plans.component';
     DateInputComponent,
     PlansComponent
   ],
-  entryComponents: []
 })
 export class ProjectModule {}

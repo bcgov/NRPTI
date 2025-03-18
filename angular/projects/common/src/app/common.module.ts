@@ -2,17 +2,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  MatSelectModule,
-  MatAutocompleteModule,
-  MatCheckboxModule,
-  MatSlideToggleModule,
-  MatChipsModule,
-  MatChipList,
-  MatIconModule
-} from '@angular/material';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 
 // modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -77,7 +74,7 @@ import { StoreService } from 'nrpti-angular-components';
     DragDropModule,
     MatTooltipModule
   ],
-  providers: [MatChipList, StoreService],
+  providers: [StoreService],
   exports: [
     FileUploadComponent,
     DocumentLinkStagingComponent,

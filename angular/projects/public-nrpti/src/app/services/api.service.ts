@@ -20,7 +20,7 @@ export class ApiService {
   env: 'local' | 'dev' | 'test' | 'prod';
 
   constructor(public http: HttpClient, private configService: ConfigService, private logger: LoggerService) {
-    this.isMS = window.navigator.msSaveOrOpenBlob ? true : false;
+    this.isMS = (window.navigator as any).msSaveOrOpenBlob ? true : false;
 
     this.env = this.configService.config['ENVIRONMENT'];
 
@@ -77,7 +77,7 @@ export class ApiService {
     const filename = document.fileName;
 
     if (this.isMS) {
-      window.navigator.msSaveBlob(blob, filename);
+      (window.navigator as any).msSaveBlob(blob, filename);
     } else {
       const url = window.URL.createObjectURL(blob);
       const a = window.document.createElement('a');
@@ -96,7 +96,7 @@ export class ApiService {
     const filename = document.fileName;
 
     if (this.isMS) {
-      window.navigator.msSaveBlob(blob, filename);
+      (window.navigator as any).msSaveBlob(blob, filename);
     } else {
       const tab = window.open();
       const fileURL = URL.createObjectURL(blob);

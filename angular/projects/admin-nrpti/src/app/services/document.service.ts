@@ -75,7 +75,7 @@ export class DocumentService {
     const filename = document.fileName;
 
     if (this.apiService.isMS) {
-      window.navigator.msSaveBlob(blob, filename);
+      (window.navigator as any).msSaveBlob(blob, filename);
     } else {
       const url = window.URL.createObjectURL(blob);
       const a = window.document.createElement('a');
@@ -94,7 +94,7 @@ export class DocumentService {
     const filename = document.fileName;
 
     if (this.apiService.isMS) {
-      window.navigator.msSaveBlob(blob, filename);
+      (window.navigator as any).msSaveBlob(blob, filename);
     } else {
       const tab = window.open();
       const fileURL = URL.createObjectURL(blob);

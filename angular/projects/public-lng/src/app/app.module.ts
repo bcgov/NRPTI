@@ -31,6 +31,7 @@ import { DataService } from './services/data.service';
 import { FaqComponent } from './faq/faq.component';
 import { SearchService, ConfigService, LoggerService } from 'nrpti-angular-components';
 import { MapLayerInfoService } from './services/map-layer-info.service';
+import { RouterModule } from '@angular/router';
 
 export function initConfig(configService: ConfigService) {
   return () => configService.init();
@@ -44,6 +45,7 @@ export function initConfig(configService: ConfigService) {
     GlobalModule,
     CommonModule,
     FormsModule,
+    RouterModule,
     HttpClientModule,
     NgbModule,
     NgxPageScrollCoreModule.forRoot({ scrollOffset: 50, easingLogic: easingLogic }),
@@ -69,7 +71,6 @@ export function initConfig(configService: ConfigService) {
     MapLayerInfoService,
     Utils
   ],
-  entryComponents: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

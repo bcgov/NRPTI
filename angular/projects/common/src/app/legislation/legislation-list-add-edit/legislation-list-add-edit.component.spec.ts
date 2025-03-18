@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, FormArray, FormGroup, FormControl } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { TestBedHelper } from './../../spec/spec-utils';
 import { LegislationListAddEditComponent } from './legislation-list-add-edit.component';
 import { LegislationAddEditComponent } from './../legislation-add-edit/legislation-add-edit.component';

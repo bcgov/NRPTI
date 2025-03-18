@@ -34,12 +34,6 @@ import { NationsTableRowsComponent } from '../nations/nations-rows/nations-table
     PlansTableRowsComponent,
     NationsTableRowsComponent
   ],
-  entryComponents: [
-    ComplianceTableRowsComponent,
-    AuthorizationsTableRowsComponent,
-    PlansTableRowsComponent,
-    NationsTableRowsComponent
-  ],
   exports: [DocumentsComponent]
 })
 export class DocumentsModule {}

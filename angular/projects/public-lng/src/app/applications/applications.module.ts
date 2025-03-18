@@ -14,7 +14,6 @@ import { MarkerPopupComponent } from './app-map/marker-popup/marker-popup.compon
 
 @NgModule({
   imports: [CommonModule, FormsModule, NgbModule, RouterModule, SharedModule],
-  declarations: [ApplicationsComponent, AppMapComponent, MarkerPopupComponent],
-  entryComponents: [MarkerPopupComponent]
+  declarations: [ApplicationsComponent, AppMapComponent, MarkerPopupComponent]
 })
 export class ApplicationsModule {}
