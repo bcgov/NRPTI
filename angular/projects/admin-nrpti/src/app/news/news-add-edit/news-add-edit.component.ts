@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ActivityTypes } from '../../../../../global/src/lib/utils/activity-types.enum';
 import { Utils } from 'nrpti-angular-components';

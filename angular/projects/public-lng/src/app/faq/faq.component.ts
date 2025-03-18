@@ -1,10 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  standalone: false,
   selector: 'app-faq',
   templateUrl: './faq.component.html',
-  styleUrls: ['./faq.component.scss']
+  styleUrls: ['./faq.component.scss'],
+  imports: [CommonModule]
 })
 export class FaqComponent implements OnInit {
   constructor() {}

@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { Picklists, EpicProjectIds } from '../../../../../../common/src/app/utils/record-constants';
 import { FactoryService } from '../../../services/factory.service';

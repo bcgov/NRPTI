@@ -97,7 +97,7 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
         return;
       }
 
-      if (response.code === 409) {
+      if (response['code'] === 409) {
         // object was already published
         alert('Mine is already published.');
         return;
@@ -119,7 +119,7 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
         return;
       }
 
-      if (response.code === 409) {
+      if (response['code'] === 409) {
         // object was already unpublished
         alert('Mine is already unpublished.');
         return;

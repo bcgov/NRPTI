@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 import { filter } from 'rxjs/operators';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LoadingScreenService } from 'nrpti-angular-components';
 import { KeycloakService } from '../services/keycloak.service';

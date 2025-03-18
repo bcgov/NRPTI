@@ -93,7 +93,7 @@ export class EnforcementActionsTableRowComponent extends TableRowComponent imple
             return;
           }
 
-          if (response.code === 409) {
+          if (response['code'] === 409) {
             // object was already published
             return;
           }
@@ -125,7 +125,7 @@ export class EnforcementActionsTableRowComponent extends TableRowComponent imple
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already unpublished
           return;
         }

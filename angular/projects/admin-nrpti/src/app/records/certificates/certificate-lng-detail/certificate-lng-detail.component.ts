@@ -66,7 +66,7 @@ export class CertificateLNGDetailComponent extends RecordComponent implements On
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already published
           return;
         }
@@ -94,7 +94,7 @@ export class CertificateLNGDetailComponent extends RecordComponent implements On
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already unpublished
           return;
         }

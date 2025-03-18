@@ -63,7 +63,7 @@ export class DamSafetyInspectionBCMIDetailComponent extends RecordComponent impl
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already published
           return;
         }
@@ -90,7 +90,7 @@ export class DamSafetyInspectionBCMIDetailComponent extends RecordComponent impl
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already unpublished
           return;
         }

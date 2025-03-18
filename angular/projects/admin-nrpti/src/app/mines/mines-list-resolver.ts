@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
 import { FactoryService } from '../services/factory.service';
 

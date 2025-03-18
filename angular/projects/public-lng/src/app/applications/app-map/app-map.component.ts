@@ -59,7 +59,7 @@ const layers: {
 const minimapLayers = { ...layers };
 
 const markerIcon = L.icon({
-  iconUrl: 'assets/images/baseline-location-24px.svg',
+  iconUrl: '../../assets/images/baseline-location-24px.svg',
   // Retina Icon is not needed here considering we're using an SVG. Enable if you want to change to a raster asset.
   // iconRetinaUrl: 'assets/images/marker-icon-2x-yellow.svg',
   iconSize: [36, 36],
@@ -68,7 +68,7 @@ const markerIcon = L.icon({
 });
 
 const markerIconLg = L.icon({
-  iconUrl: 'assets/images/baseline-location_on-24px.svg',
+  iconUrl: '../../assets/images/baseline-location_on-24px.svg',
   // Retina Icon is not needed here considering we're using an SVG. Enable if you want to change to a raster asset.
   // iconRetinaUrl: 'assets/images/marker-icon-yellow-lg.svg',
   iconSize: [48, 48],

@@ -8,7 +8,7 @@ import { DialogService } from 'ng2-bootstrap-modal';
 import { LoadingScreenService, Utils, StoreService } from 'nrpti-angular-components';
 import { of } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { Picklists, StateIDs, StateStatus } from '../../../../../common/src/app/utils/record-constants';
 import { ConfirmComponent } from '../../confirm/confirm.component';
 import { FactoryService } from '../../services/factory.service';
