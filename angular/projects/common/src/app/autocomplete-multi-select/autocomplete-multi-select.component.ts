@@ -77,7 +77,7 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
     this.initializeFormControlValue();
 
     if (this.reset) {
-      this.reset.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => this.resetComponent());
+      (this.reset as any).pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => this.resetComponent());
     }
 
     this.updatePlaceholderTextValue();

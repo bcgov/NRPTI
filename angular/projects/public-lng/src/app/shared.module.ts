@@ -12,8 +12,8 @@ import { LinkifyPipe } from './pipes/linkify.pipe';
 import { ActivityComponent } from './activity/activity.component';
 
 @NgModule({
-  imports: [BrowserModule, MatProgressBarModule, MatSnackBarModule],
-  declarations: [OrderByPipe, NewlinesPipe, ObjectFilterPipe, LinkifyPipe, ActivityComponent],
+  imports: [BrowserModule, MatProgressBarModule, MatSnackBarModule, ActivityComponent],
+  declarations: [OrderByPipe, NewlinesPipe, ObjectFilterPipe, LinkifyPipe],
   exports: [
     MatProgressBarModule,
     MatSnackBarModule,

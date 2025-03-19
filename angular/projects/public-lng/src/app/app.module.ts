@@ -6,7 +6,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPageScrollCoreModule } from 'ngx-page-scroll-core';
 import { NgxPageScrollModule } from 'ngx-page-scroll';
-import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 
 // modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -52,8 +51,8 @@ export function initConfig(configService: ConfigService) {
     NgxPageScrollModule,
     SharedModule,
     ApplicationsModule,
-    ProjectModule,
-    BootstrapModalModule.forRoot({ container: document.body })
+    ProjectModule
+    // BootstrapModalModule.forRoot({ container: document.body })
   ],
   declarations: [AppComponent, ContactComponent, HeaderComponent, FooterComponent, FaqComponent, HomeComponent],
   providers: [

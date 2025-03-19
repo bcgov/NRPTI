@@ -3,8 +3,7 @@ import { ConfigService, LoggerService } from 'nrpti-angular-components';
 import { JwtUtil } from '../utils/jwt-utils';
 import { Observable } from 'rxjs';
 import { Constants } from '../utils/constants/misc';
-
-declare let Keycloak: any;
+import Keycloak from 'keycloak-js';
 
 @Injectable()
 export class KeycloakService {
@@ -26,71 +25,60 @@ export class KeycloakService {
       // Bootup KC
       const keycloak_client_id = this.configService.config['KEYCLOAK_CLIENT_ID'];
 
-      return new Promise<void>((resolve, reject) => {
-        const config = {
-          url: this.keycloakUrl,
-          realm: this.keycloakRealm,
-          clientId: !keycloak_client_id ? 'nrpti-4869' : keycloak_client_id
-        };
+      const config = {
+        url: this.keycloakUrl,
+        realm: this.keycloakRealm,
+        clientId: !keycloak_client_id ? 'nrpti-4869' : keycloak_client_id
+      };
 
-        // console.log('KC Auth init.');
+      // console.log('KC Auth init.');
 
-        this.keycloakAuth = new Keycloak(config);
+      this.keycloakAuth = new Keycloak(config);
 
-        this.keycloakAuth.onAuthSuccess = () => {
-          // console.log('onAuthSuccess');
-          this.refreshMenuCache();
-        };
+      this.keycloakAuth.onAuthSuccess = () => {
+        // console.log('onAuthSuccess');
+        this.refreshMenuCache();
+      };
 
-        this.keycloakAuth.onAuthError = () => {
-          // console.log('onAuthError');
-        };
+      this.keycloakAuth.onAuthError = () => {
+        // console.log('onAuthError');
+      };
 
-        this.keycloakAuth.onAuthRefreshSuccess = () => {
-          // console.log('onAuthRefreshSuccess');
-          this.refreshMenuCache();
-        };
+      this.keycloakAuth.onAuthRefreshSuccess = () => {
+        // console.log('onAuthRefreshSuccess');
+        this.refreshMenuCache();
+      };
 
-        this.keycloakAuth.onAuthRefreshError = () => {
-          // console.log('onAuthRefreshError');
-        };
+      this.keycloakAuth.onAuthRefreshError = () => {
+        // console.log('onAuthRefreshError');
+      };
 
-        this.keycloakAuth.onAuthLogout = () => {
-          // console.log('onAuthLogout');
-        };
+      this.keycloakAuth.onAuthLogout = () => {
+        // console.log('onAuthLogout');
+      };
 
-        // Try to get refresh tokens in the background
-        this.keycloakAuth.onTokenExpired = () => {
-          this.keycloakAuth
-            .updateToken()
-            .success(refreshed => {
-              this.logger.log(`KC refreshed token?: ${refreshed}`);
-              this.refreshMenuCache();
-            })
-            .error(err => {
-              this.logger.log(`KC refresh error: ${err}`);
-            });
-        };
-
-        // Initialize.
+      // Try to get refresh tokens in the background
+      this.keycloakAuth.onTokenExpired = () => {
         this.keycloakAuth
-          .init({
-            pkceMethod: 'S256'
+          .updateToken()
+          .then(refreshed => {
+            this.logger.log(`KC refreshed token?: ${refreshed}`);
+            this.refreshMenuCache();
           })
-          .success(auth => {
-            // console.log('KC Refresh Success?:', this.keycloakAuth.authServerUrl);
-            this.logger.log(`KC Success: ${auth}`);
-            if (!auth) {
-              this.keycloakAuth.login({ idpHint: 'idir' });
-            } else {
-              resolve();
-            }
-          })
-          .error(err => {
-            this.logger.log(`KC error: ${err}`);
-            reject();
+          .catch(err => {
+            this.logger.log(`KC refresh error: ${err}`);
           });
-      });
+      };
+
+      try {
+        const auth = await this.keycloakAuth.init({ pkceMethod: 'S256' });
+        this.logger.log(`KC Success: ${auth}`);
+        if (!auth) {
+          this.keycloakAuth.login({ idpHint: 'idir' });
+        }
+      } catch (err) {
+        this.logger.log(`KC error: ${err}`);
+      }
     }
   }
 

@@ -184,7 +184,7 @@
                 {{ formGroup.get('record').value.sourceSystemRef || '-' }}
               </td>
               <td data-label="Date" class="col-2">
-                {{ formGroup.get('record').value.dateIssued | date: 'mediumDate' || '-' }}
+                {{ (formGroup.get('record').value.dateIssued | date: 'mediumDate') || '-' }}
               </td>
               <td class="col-1">
                 <div class="d-xl-flex">

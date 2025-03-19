@@ -59,18 +59,18 @@ const layers: {
 const minimapLayers = { ...layers };
 
 const markerIcon = L.icon({
-  iconUrl: '../../assets/images/baseline-location-24px.svg',
+  iconUrl: '/src/assets/images/baseline-location-24px.svg',
   // Retina Icon is not needed here considering we're using an SVG. Enable if you want to change to a raster asset.
-  // iconRetinaUrl: 'assets/images/marker-icon-2x-yellow.svg',
+  // iconRetinaUrl: '/src/assets/images/marker-icon-2x-yellow.svg',
   iconSize: [36, 36],
   iconAnchor: [18, 36],
   tooltipAnchor: [16, -28]
 });
 
 const markerIconLg = L.icon({
-  iconUrl: '../../assets/images/baseline-location_on-24px.svg',
+  iconUrl: '/src/assets/images/baseline-location_on-24px.svg',
   // Retina Icon is not needed here considering we're using an SVG. Enable if you want to change to a raster asset.
-  // iconRetinaUrl: 'assets/images/marker-icon-yellow-lg.svg',
+  // iconRetinaUrl: '/src/assets/images/marker-icon-yellow-lg.svg',
   iconSize: [48, 48],
   iconAnchor: [24, 48]
   // popupAnchor: [1, -34], // TODO: update, if needed

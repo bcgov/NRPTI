@@ -1,5 +1,5 @@
-@import '../../assets/styles/base/base.scss';
-@import '../../assets/styles/components/drag-drop.scss';
+@use '../..assets/styles/base/base.scss' as *;
+@use '../..assets/styles/components/drag-drop.scss' as *;
 
 $link-label-font-size-sm: 0.875rem;
 $link-label-font-size-md: 1rem;

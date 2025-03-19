@@ -44,7 +44,7 @@
             ],
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/dist/keycloak.min.js",
+              "node_modules/keycloak-js/lib/keycloak.js",
               "node_modules/tinymce/tinymce.min.js"
             ]
           },
@@ -94,7 +94,7 @@
             "tsConfig": "projects/admin-nrpti/tsconfig.spec.json",
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/dist/keycloak.min.js"
+              "node_modules/keycloak-js/lib/keycloak.js"
             ],
             "watch": false,
             "codeCoverage": true,
@@ -119,7 +119,7 @@
             "tsConfig": "projects/admin-nrpti/tsconfig.spec.json",
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/dist/keycloak.min.js"
+              "node_modules/keycloak-js/lib/keycloak.js"
             ],
             "watch": true,
             "codeCoverage": false,
@@ -182,7 +182,7 @@
             ],
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/dist/keycloak.min.js"
+              "node_modules/keycloak-js/lib/keycloak.js"
             ]
           },
           "configurations": {
@@ -231,7 +231,7 @@
             "tsConfig": "projects/public-nrpti/tsconfig.spec.json",
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/dist/keycloak.min.js"
+              "node_modules/keycloak-js/lib/keycloak.js"
             ],
             "watch": false,
             "codeCoverage": true,
@@ -256,7 +256,7 @@
             "tsConfig": "projects/public-nrpti/tsconfig.spec.json",
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/dist/keycloak.min.js"
+              "node_modules/keycloak-js/lib/keycloak.js"
             ],
             "watch": true,
             "codeCoverage": false,

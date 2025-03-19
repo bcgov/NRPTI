@@ -1,4 +1,4 @@
-@import "assets/styles/base/base.scss";
+@use "assets/styles/base/base.scss" as *;
 
 :host {
   @include flex(1 1 auto);
@@ -19,7 +19,7 @@ a {
 
 .watermark {
   display: inline-block;
-  background: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(../../assets/images/homepage.jpeg);
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(assets/images/homepage.jpeg);
   background-size: 100% 100%;
   background-repeat: no-repeat;
   width: 100%;

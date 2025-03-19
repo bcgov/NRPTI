@@ -16,8 +16,6 @@ Angular front-ends for the Natural Resources Public Transparency Interface (NRPT
 | npm        | latest          | https://www.npmjs.com/  | Node Package Manager                      |
 | ng         | 7.x.x           | https://cli.angular.io/ | Angular CLI                               |
 
-_Note: Node 14.21.3 is highly recommended._
-
 _Note: This app also requires [`bcgov/nrpti/api`](https://github.com/bcgov/NRPTI/tree/master/api) to handle its requests and authentication._
 
 ## Install [Node + NPM](https://nodejs.org/en/)

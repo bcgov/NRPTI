@@ -9,7 +9,7 @@
   <hr />
   <div class="row label-pair ml-1 mb-2">
     <label class="font-weight-bold mr-1">Date:</label>
-    <div>{{ record.date | date: 'medium' || '-' }}</div>
+    <div>{{ (record.date | date: 'medium') || '-' }}</div>
   </div>
   <div class="row label-pair ml-1 mb-2">
     <label class="font-weight-bold mr-1">Title:</label>

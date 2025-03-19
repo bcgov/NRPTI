@@ -54,7 +54,7 @@ export class DatePickerComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     this.ngbDate = this.control.value || null;
     if (this.reset) {
-      this.reset.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => this.clearDate());
+      (this.reset as any).pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => this.clearDate());
     }
   }
 

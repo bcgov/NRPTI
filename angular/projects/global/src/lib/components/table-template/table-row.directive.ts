@@ -74,12 +74,12 @@ export class TableRowDirective implements OnInit, OnChanges, OnDestroy {
     componentInstance.tableData = this.tableData;
 
     // subscribe to the components outbound messages and forward them to table template
-    componentInstance.messageOut.pipe(takeUntil(this.ngUnsubscribe)).subscribe(msg => {
+    (componentInstance.messageOut as any).pipe(takeUntil(this.ngUnsubscribe)).subscribe(msg => {
       this.messageOut.emit(msg);
     });
 
     // subscribe to table templates inbound messages and forward them to row component
-    this.messageIn.pipe(takeUntil(this.ngUnsubscribe)).subscribe(msg => {
+    (this.messageIn as any).pipe(takeUntil(this.ngUnsubscribe)).subscribe(msg => {
       componentInstance.messageIn.emit(msg);
     });
   }

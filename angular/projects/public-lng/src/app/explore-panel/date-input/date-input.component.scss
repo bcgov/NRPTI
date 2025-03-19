@@ -1,4 +1,4 @@
-@import "assets/styles/base/base.scss";
+@use "assets/styles/base/base.scss" as *;
 
 $date-input-btn-color: $gray7;
 $date-input-btn-color-active: $gray9;

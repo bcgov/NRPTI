@@ -21,7 +21,7 @@ $gray2:                         #e9ecef;
     border-radius: 1rem;
     border: 2px solid transparent;
     background-color: $gray2;
-    background-image: url("../../assets/images/baseline-remove-24px.svg");
+    background-image: url("../..assets/images/baseline-remove-24px.svg");
     background-position: 8px center;
     background-repeat: no-repeat;
     background-size: 18px;
@@ -60,7 +60,7 @@ $gray2:                         #e9ecef;
     + label {
       color: $gray9;
       background-color: $select-badge-active-bg;
-      background-image: url("../../assets/images/baseline-check-24px.svg");
+      background-image: url("../..assets/images/baseline-check-24px.svg");
     }
 
     ~ button {

@@ -1,5 +1,5 @@
-@import "../../../assets/styles/base/base.scss";
-@import "../../../../../admin-nrpti/src/assets/styles/components/add-edit.scss";
+@use "../../..assets/styles/base/base.scss" as *;
+@import "../../../../../admin-nrptiassets/styles/components/add-edit.scss";
 
 mat-slide-toggle {
   display: block;

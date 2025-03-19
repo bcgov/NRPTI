@@ -34,7 +34,7 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
 
   ngOnInit() {
     // listen for messages sent from parent
-    this.messageIn.pipe(takeUntil(this.ngUnsubscribe)).subscribe(msg => {
+    (this.messageIn as any).pipe(takeUntil(this.ngUnsubscribe)).subscribe(msg => {
       if (msg.label === 'rowClicked' && msg.data._id === this.rowData._id) {
         this.insertDetailsComponent();
       } else {

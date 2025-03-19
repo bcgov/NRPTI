@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { BootstrapModalModule } from 'ng2-bootstrap-modal';
+// import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { Overlay, CloseScrollStrategy } from '@angular/cdk/overlay';
 import { MAT_AUTOCOMPLETE_SCROLL_STRATEGY } from '@angular/material/autocomplete';
 import { ScrollingModule } from '@angular/cdk/scrolling';
@@ -66,7 +66,7 @@ export function initConfig(
     AppRoutingModule, // <-- module import order matters - https://angular.io/guide/router#module-import-order-matters
     NgbModule,
     NgxPaginationModule,
-    BootstrapModalModule.forRoot({ container: document.body })
+    // BootstrapModalModule.forRoot({ container: document.body })
   ],
   providers: [
     {

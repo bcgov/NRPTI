@@ -61,7 +61,7 @@ export class SearchFiltersComponent implements OnInit, OnDestroy {
     this.loading = false;
 
     if (this.reset) {
-      this.reset.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => this.clearSearchFilters());
+      (this.reset as any).pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => this.clearSearchFilters());
     }
 
     this._changeDetectionRef.detectChanges();
