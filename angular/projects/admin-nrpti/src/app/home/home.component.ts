@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { LoadingScreenService } from 'nrpti-angular-components';
 import { KeycloakService } from '../services/keycloak.service';
 import { Chart } from 'chart.js';
@@ -13,10 +13,10 @@ import { FactoryService } from '../services/factory.service';
  * @module HomeComponent
  */
 @Component({
-  standalone: false,
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  imports: [RouterModule]
 })
 export class HomeComponent implements OnInit {
   @ViewChild('chart1') chart1;

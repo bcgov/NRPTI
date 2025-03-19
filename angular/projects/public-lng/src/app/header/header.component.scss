@@ -235,7 +235,7 @@
 // Navbar Brand
 .navbar-brand {
   height: 3.4375rem;
-  background-image: url("assets/images/bcgov-header-vert-SM.png");
+  background-image: url("~/src/assets/images/bcgov-header-vert-SM.png");
   background-position: 8px center;
   background-repeat: no-repeat;
   white-space: normal;
@@ -267,7 +267,7 @@
 @media (min-width: 1024px) {
   .navbar-brand {
     height: 4.2rem;
-    background-image: url("assets/images/bcgov-header-vert-MD.png");
+    background-image: url("~/src/assets/images/bcgov-header-vert-MD.png");
     background-position: 10px center;
   }
 

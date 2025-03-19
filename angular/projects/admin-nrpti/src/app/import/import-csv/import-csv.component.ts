@@ -6,6 +6,7 @@ import { FactoryService } from '../../services/factory.service';
 import { ITaskParams } from '../../services/task.service';
 import { CsvConstants, IRequiredFormat, IDateField } from '../../utils/constants/csv-constants';
 import { Constants } from '../../utils/constants/misc';
+import { FormsModule } from '@angular/forms';
 
 const DEFAULT_DATA_SOURCES = [
   { displayName: 'ALC', value: 'alc-csv' },
@@ -35,10 +36,10 @@ const ROLE_DATA_SOURCES = {
 };
 
 @Component({
-  standalone: false,
   selector: 'app-import-csv',
   templateUrl: './import-csv.component.html',
-  styleUrls: ['./import-csv.component.scss']
+  styleUrls: ['./import-csv.component.scss'],
+  imports: [FormsModule]
 })
 export class ImportCSVComponent implements OnInit {
   public dataSourceTypes = DEFAULT_DATA_SOURCES;
