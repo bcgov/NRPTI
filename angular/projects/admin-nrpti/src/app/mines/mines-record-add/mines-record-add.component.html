@@ -58,15 +58,11 @@
         (documentsChanged)="documents = $event"
       ></app-document-link-staging>
       <div *ngIf="collectionId; else recordSave" class="d-flex justify-content-end mb-1">
-        <button class="btn btn-primary" type="submit" (click)="submit()" title="Save record">
-          Add to Collection
-        </button>
+        <button class="btn btn-primary" type="submit" (click)="submit()" title="Save record">Add to Collection</button>
       </div>
       <ng-template #recordSave>
         <div class="d-flex justify-content-end mb-1">
-          <button class="btn btn-primary" type="submit" (click)="submit()" title="Save record">
-            Save Record
-          </button>
+          <button class="btn btn-primary" type="submit" (click)="submit()" title="Save record">Save Record</button>
         </div>
       </ng-template>
     </div>

@@ -5,7 +5,10 @@ import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class NewsService {
-  constructor(public apiService: ApiService, public http: HttpClient) {}
+  constructor(
+    public apiService: ApiService,
+    public http: HttpClient
+  ) {}
 
   public createNews(news: any): Promise<any> {
     if (!news) {

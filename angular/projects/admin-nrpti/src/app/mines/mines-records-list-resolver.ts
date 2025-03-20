@@ -7,7 +7,10 @@ import { SchemaLists } from '../../../../common/src/app/utils/record-constants';
 
 @Injectable()
 export class MinesRecordsListResolver implements Resolve<Observable<object>> {
-  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) {}
+  constructor(
+    private factoryService: FactoryService,
+    private tableTemplateUtils: TableTemplateUtils
+  ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const params = { ...route.params };

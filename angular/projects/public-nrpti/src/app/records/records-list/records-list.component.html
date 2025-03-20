@@ -1,9 +1,7 @@
 <main class="container-fluid-padding">
   <div *ngIf="!loading">
     <div class="mt-0 px-4">
-      <h1 class="row justify-content-center">
-        Natural Resource Compliance and Enforcement Database
-      </h1>
+      <h1 class="row justify-content-center">Natural Resource Compliance and Enforcement Database</h1>
 
       <p class="row">
         This site can be used to search for compliance and enforcement actions taken by natural resource agencies
@@ -82,15 +80,11 @@
               <div ngbDropdownMenu>
                 <button ngbDropdownItem (click)="changeSort('-dateIssued')">
                   {{ sortingDisplay['-dateIssued'] }}
-                  <i *ngIf="tableData.sortBy === '-dateIssued'" class="align-middle material-icons">
-                    check_circle
-                  </i>
+                  <i *ngIf="tableData.sortBy === '-dateIssued'" class="align-middle material-icons">check_circle</i>
                 </button>
                 <button ngbDropdownItem (click)="changeSort('+recordType')">
                   {{ sortingDisplay['+recordType'] }}
-                  <i *ngIf="tableData.sortBy === '+recordType'" class="align-middle material-icons">
-                    check_circle
-                  </i>
+                  <i *ngIf="tableData.sortBy === '+recordType'" class="align-middle material-icons">check_circle</i>
                 </button>
                 <button ngbDropdownItem (click)="changeSort('+issuedTo.fullName')">
                   {{ sortingDisplay['+issuedTo.fullName'] }}
@@ -100,18 +94,14 @@
                 </button>
                 <button ngbDropdownItem (click)="changeSort('+location')">
                   {{ sortingDisplay['+location'] }}
-                  <i *ngIf="tableData.sortBy === '+location'" class="align-middle material-icons">
-                    check_circle
-                  </i>
+                  <i *ngIf="tableData.sortBy === '+location'" class="align-middle material-icons">check_circle</i>
                 </button>
               </div>
             </div>
           </div>
         </div>
 
-        <div *ngIf="!loading && tableData.totalListItems <= 0">
-          No Records found.
-        </div>
+        <div *ngIf="!loading && tableData.totalListItems <= 0">No Records found.</div>
         <div class="list-scrollable">
           <lib-table-template
             *ngIf="!loading && tableData.totalListItems > 0"

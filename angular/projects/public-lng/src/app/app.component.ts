@@ -16,7 +16,10 @@ export class AppComponent implements OnInit, OnDestroy {
   hostname: string;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  constructor(public router: Router, private api: ApiService) {
+  constructor(
+    public router: Router,
+    private api: ApiService
+  ) {
     // ref: https://stackoverflow.com/questions/5899783/detect-safari-using-jquery
     this.isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 

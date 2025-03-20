@@ -24,7 +24,10 @@ export class HeaderComponent implements OnInit {
   isAuthenticated: boolean;
   environment: string;
 
-  constructor(public factoryService: FactoryService, public router: Router) {
+  constructor(
+    public factoryService: FactoryService,
+    public router: Router
+  ) {
     this.environment = this.factoryService.getEnvironment();
   }
 

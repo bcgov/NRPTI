@@ -6,7 +6,10 @@ import { FactoryService } from '../services/factory.service';
 
 @Injectable()
 export class MinesCollectionsListResolver implements Resolve<Observable<object>> {
-  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) {}
+  constructor(
+    private factoryService: FactoryService,
+    private tableTemplateUtils: TableTemplateUtils
+  ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const params = { ...route.params };

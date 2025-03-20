@@ -35,9 +35,7 @@
           >
             {{ (isPublished && 'Published') || 'Not Published' }}
           </mat-slide-toggle>
-          <span *ngIf="!canPublish && !isPublished" class="red-subtext">
-            All fields are required to publish
-          </span>
+          <span *ngIf="!canPublish && !isPublished" class="red-subtext">All fields are required to publish</span>
         </div>
       </div>
     </div>

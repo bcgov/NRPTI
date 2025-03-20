@@ -15,7 +15,10 @@ export class MinesTableRowComponent extends TableRowComponent implements OnInit 
 
   public entityString = '';
 
-  constructor(private router: Router, public changeDetectionRef: ChangeDetectorRef) {
+  constructor(
+    private router: Router,
+    public changeDetectionRef: ChangeDetectorRef
+  ) {
     super();
   }
 

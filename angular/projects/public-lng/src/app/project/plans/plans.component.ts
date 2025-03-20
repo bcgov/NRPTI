@@ -46,7 +46,11 @@ export class PlansComponent implements OnInit {
     }
   ];
 
-  constructor(private dataService: DataService, private router: Router, private route: ActivatedRoute) {
+  constructor(
+    private dataService: DataService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     this.route.parent.params.subscribe(params => {
       this.id = params.id;
       this.text = this.dataService.getText(this.id, this.pageType);
@@ -62,7 +66,7 @@ export class PlansComponent implements OnInit {
   filterChange(event) {
     // Generate new route keeping old params
     // tslint:disable-next-line: prefer-const
-    let newParams = {};
+    const newParams = {};
 
     // save default set of params, tack on new ones.
     this.route.params.subscribe(params => {

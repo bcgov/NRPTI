@@ -9,7 +9,10 @@ export class MapLayerInfoService {
   private data: BehaviorSubject<SearchResult>;
   private fetchDataConfig: any;
 
-  constructor(private configService: ConfigService, private searchService: SearchService) {
+  constructor(
+    private configService: ConfigService,
+    private searchService: SearchService
+  ) {
     this.data = new BehaviorSubject<SearchResult>(new SearchResult());
     this.fetchDataConfig = this.configService.config['DEFAULT_IMPORT_TABLE_QUERY_PARAMS'];
   }
@@ -64,7 +67,7 @@ export class MapLayerInfoService {
     }
 
     // tslint:disable-next-line: prefer-const
-    let searchResult = new SearchResult();
+    const searchResult = new SearchResult();
 
     if (res && res[0] && res[0].data) {
       if (res[0].data.searchResults) {

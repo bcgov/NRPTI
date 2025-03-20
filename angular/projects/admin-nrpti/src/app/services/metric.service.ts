@@ -5,7 +5,10 @@ import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class MetricService {
-  constructor(public apiService: ApiService, public http: HttpClient) {}
+  constructor(
+    public apiService: ApiService,
+    public http: HttpClient
+  ) {}
 
   public getMetric(code: string): Promise<any> {
     if (!code) {

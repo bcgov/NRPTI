@@ -91,7 +91,7 @@ export class NewsListComponent implements OnInit, OnDestroy {
       this.tableData.items = records.map(record => {
         // On the fly, create a conversion of the schema to reflect system name.
         // tslint:disable-next-line: prefer-const
-        let data = { ...record };
+        const data = { ...record };
         data.system = data._schemaName.split('Activity')[1];
         return { rowData: data };
       });

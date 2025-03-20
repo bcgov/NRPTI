@@ -15,7 +15,10 @@ import { FactoryService } from '../services/factory.service';
  */
 @Injectable()
 export class CanActivateGuard implements CanActivate {
-  constructor(public factoryService: FactoryService, public router: Router) {}
+  constructor(
+    public factoryService: FactoryService,
+    public router: Router
+  ) {}
 
   public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     if (!this.factoryService.isAuthenticated()) {

@@ -22,7 +22,10 @@ export class ApplicationAgencyService {
    * @param {ConfigService} configService - The configuration service.
    * @param {HttpClient} http - The HTTP client for making API requests.
    */
-  constructor(private configService: ConfigService, public http: HttpClient) {}
+  constructor(
+    private configService: ConfigService,
+    public http: HttpClient
+  ) {}
 
   /**
    * Initialize the service by setting the API endpoint and refreshing agencies.

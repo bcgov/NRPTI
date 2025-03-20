@@ -89,9 +89,7 @@
   </section>
 
   <section class="mb-1 pb-1">
-    <div *ngIf="!tableData.totalListItems">
-      No Mines found.
-    </div>
+    <div *ngIf="!tableData.totalListItems">No Mines found.</div>
 
     <lib-table-template
       *ngIf="tableData.totalListItems > 0"

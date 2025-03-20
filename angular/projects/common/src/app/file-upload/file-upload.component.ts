@@ -122,11 +122,7 @@ export class FileUploadComponent {
     });
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < files.length; i++) {
-      const ext =
-        files[i].name
-          .toUpperCase()
-          .split('.')
-          .pop() || files[i].name;
+      const ext = files[i].name.toUpperCase().split('.').pop() || files[i].name;
       if (!extensions.includes(ext)) {
         this.errors.push('Invalid extension: ' + files[i].name);
         setTimeout(() => (this.errors = []), 5000);

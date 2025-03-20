@@ -24,7 +24,10 @@ export class HeaderComponent {
   isAuthenticated: boolean;
   environment: string;
 
-  constructor(public factoryService: FactoryService, public router: Router) {
+  constructor(
+    public factoryService: FactoryService,
+    public router: Router
+  ) {
     router.events.subscribe(() => {
       this.isAuthenticated = this.factoryService.isAuthenticated();
       this.welcomeMsg = this.factoryService.getWelcomeMessage();

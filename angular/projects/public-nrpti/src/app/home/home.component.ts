@@ -11,7 +11,10 @@ import { AgencyDataService } from '../../../../global/src/lib/utils/agency-data-
 })
 export class HomeComponent implements OnInit, AfterViewInit {
   agencyDataService: AgencyDataService;
-  constructor(public route: ActivatedRoute, private factoryService: FactoryService) {}
+  constructor(
+    public route: ActivatedRoute,
+    private factoryService: FactoryService
+  ) {}
 
   async ngOnInit() {
     debugger;

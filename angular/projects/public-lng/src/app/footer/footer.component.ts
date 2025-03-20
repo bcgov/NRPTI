@@ -9,5 +9,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent {
-  constructor(public api: ApiService, public router: Router) {}
+  constructor(
+    public api: ApiService,
+    public router: Router
+  ) {}
 }

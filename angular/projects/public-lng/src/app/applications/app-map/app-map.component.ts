@@ -246,7 +246,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
         position: 'topright'
       },
 
-      onAdd: function(map) {
+      onAdd: function (map) {
         this._mainMap = map;
         this._container = L.DomUtil.create('div', 'popup-fixed');
         L.DomEvent.disableClickPropagation(this._container);
@@ -254,7 +254,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
         return this._container;
       },
-      addTo: function(map) {
+      addTo: function (map) {
         L.Control.prototype.addTo.call(this, map);
       }
     });
@@ -539,8 +539,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
                 title: 'COASTAL GASLINK PIPELINE',
                 subtitle: 'Coastal Gasline Pipeline Ltd.',
                 descTitle: 'Application Description',
-                desc:
-                  'A 670-kilometre pipeline that will supply the LNG Canada export facility with gas from northeastern British Columbia.',
+                desc: 'A 670-kilometre pipeline that will supply the LNG Canada export facility with gas from northeastern British Columbia.',
                 routerLink: '/project/2'
               })
             );
@@ -551,8 +550,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
                 title: 'LNG CANADA',
                 subtitle: 'LNG Canada',
                 descTitle: 'Application Description',
-                desc:
-                  'A large-scale natural gas processing and export facility located in Kitimat, British Columbia. After natural gas is converted into a liquid form it will be shipped to Asia and other markets.',
+                desc: 'A large-scale natural gas processing and export facility located in Kitimat, British Columbia. After natural gas is converted into a liquid form it will be shipped to Asia and other markets.',
                 routerLink: '/project/1'
               })
             );
@@ -653,7 +651,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
         zoom: this.minimapZoom
       },
 
-      onAdd: function(map) {
+      onAdd: function (map) {
         this._mainMap = map;
 
         this._container = L.DomUtil.create('div', 'leaflet-custom-minimap');
@@ -679,7 +677,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
         return this._container;
       },
 
-      addTo: function(map) {
+      addTo: function (map) {
         L.Control.prototype.addTo.call(this, map);
         this._miniMap.setView(this.options.center, 12);
         return this;

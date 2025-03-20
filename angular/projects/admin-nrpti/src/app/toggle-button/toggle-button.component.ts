@@ -11,7 +11,10 @@ export class ToggleButtonComponent implements OnInit {
   public showSideContent = window.innerWidth > 768 ? true : false;
   public userClosedSideContent = false;
 
-  constructor(private storeService: StoreService, private _changeDetectionRef: ChangeDetectorRef) {}
+  constructor(
+    private storeService: StoreService,
+    private _changeDetectionRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.storeService.stateChange.subscribe((state: object) => {

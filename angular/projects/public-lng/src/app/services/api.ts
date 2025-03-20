@@ -10,7 +10,10 @@ export class ApiService {
   public apiPath: string;
   public env: 'local' | 'dev' | 'test' | 'prod';
 
-  constructor(private configService: ConfigService, private logger: LoggerService) {
+  constructor(
+    private configService: ConfigService,
+    private logger: LoggerService
+  ) {
     this.isMS = (window.navigator as any).msSaveOrOpenBlob ? true : false;
 
     this.env = this.configService.config['ENVIRONMENT'];

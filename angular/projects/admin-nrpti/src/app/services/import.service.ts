@@ -70,7 +70,7 @@ export class ImportService {
     }
 
     // tslint:disable-next-line: prefer-const
-    let searchResult = new SearchResult();
+    const searchResult = new SearchResult();
 
     if (res && res[0] && res[0].data) {
       if (res[0].data.searchResults) {

@@ -16,7 +16,11 @@ export class PenaltyDetailComponent implements OnInit, OnDestroy, OnChanges {
 
   public activeTab = 'detail';
 
-  constructor(public route: ActivatedRoute, public router: Router, public _changeDetectionRef: ChangeDetectorRef) {}
+  constructor(
+    public route: ActivatedRoute,
+    public router: Router,
+    public _changeDetectionRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this._changeDetectionRef.detectChanges();

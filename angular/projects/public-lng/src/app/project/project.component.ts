@@ -11,7 +11,10 @@ export class ProjectComponent implements OnInit {
   public id: string;
   public project: string;
 
-  constructor(private route: ActivatedRoute, public router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    public router: Router
+  ) {}
 
   ngOnInit() {
     this.route.params.subscribe(params => {

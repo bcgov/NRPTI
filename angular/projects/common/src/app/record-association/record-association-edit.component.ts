@@ -28,7 +28,11 @@ export class RecordAssociationEditComponent implements OnInit {
   public mineType: '';
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  constructor(public factoryService: FactoryService, private storeService: StoreService, private utils: Utils) {}
+  constructor(
+    public factoryService: FactoryService,
+    private storeService: StoreService,
+    private utils: Utils
+  ) {}
 
   ngOnInit() {
     this.storeService.stateChange.subscribe((state: object) => {

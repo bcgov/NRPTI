@@ -13,7 +13,10 @@ export class KeycloakService {
   private keycloakRealm: string;
   private menus: {} = {};
 
-  constructor(private configService: ConfigService, private logger: LoggerService) {}
+  constructor(
+    private configService: ConfigService,
+    private logger: LoggerService
+  ) {}
 
   async init() {
     // Load up the config service data

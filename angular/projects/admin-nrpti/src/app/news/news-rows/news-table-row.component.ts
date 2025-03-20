@@ -12,7 +12,10 @@ import { Router } from '@angular/router';
 export class NewsTableRowComponent extends TableRowComponent implements OnInit {
   public dropdownItems = ['Edit', 'Delete'];
 
-  constructor(private router: Router, public changeDetectionRef: ChangeDetectorRef) {
+  constructor(
+    private router: Router,
+    public changeDetectionRef: ChangeDetectorRef
+  ) {
     super();
   }
 

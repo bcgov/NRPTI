@@ -88,9 +88,9 @@ export class HomeComponent implements OnInit {
     // RecordByType
     const recordTypes = await this.metricService.getMetric('RecordByType');
     // tslint:disable-next-line: prefer-const
-    let typeLabels = [];
+    const typeLabels = [];
     // tslint:disable-next-line: prefer-const
-    let typeData = [];
+    const typeData = [];
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < recordTypes.length; i++) {
       const keyName = this.getKeyName(recordTypes[i]);

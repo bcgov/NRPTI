@@ -8,7 +8,10 @@ export class ConfigService {
   // defaults
   private configuration = {};
 
-  constructor(private httpClient: HttpClient, public http: HttpClient) {}
+  constructor(
+    private httpClient: HttpClient,
+    public http: HttpClient
+  ) {}
 
   /**
    * Initialize the Config Service.  Get configuration data from front-end build, or back-end if nginx

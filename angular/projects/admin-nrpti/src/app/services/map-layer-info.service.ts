@@ -5,7 +5,10 @@ import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class MapLayerInfoService {
-  constructor(public apiService: ApiService, public http: HttpClient) {}
+  constructor(
+    public apiService: ApiService,
+    public http: HttpClient
+  ) {}
 
   /**
    * @param {string} application targeted application eg. 'LNG'

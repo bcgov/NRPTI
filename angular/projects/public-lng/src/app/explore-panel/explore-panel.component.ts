@@ -28,7 +28,10 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
   public textFilterKeys: any[];
   public filter = [];
 
-  constructor(private _changeDetectionRef: ChangeDetectorRef, private route: ActivatedRoute) {
+  constructor(
+    private _changeDetectionRef: ChangeDetectorRef,
+    private route: ActivatedRoute
+  ) {
     this.textFilterKeys = [];
   }
 
@@ -84,7 +87,7 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
   public applyAllFilters() {
     // Only add dateRange* conditionally.
     // tslint:disable-next-line: prefer-const
-    let filterQuery = this.textFilterKeys;
+    const filterQuery = this.textFilterKeys;
     delete filterQuery['dateRangeFromFilter'];
     delete filterQuery['dateRangeToFilter'];
 

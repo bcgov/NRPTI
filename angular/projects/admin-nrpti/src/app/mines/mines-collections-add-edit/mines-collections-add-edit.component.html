@@ -36,15 +36,11 @@
               (click)="submit()"
               title="Update collection"
             >
-              <i class="material-icons mr-1">
-                save
-              </i>
+              <i class="material-icons mr-1">save</i>
               Update
             </button>
             <button *ngIf="!isEditing" class="btn btn-primary" type="submit" (click)="submit()" title="Save collection">
-              <i class="material-icons mr-1">
-                save
-              </i>
+              <i class="material-icons mr-1">save</i>
               Save
             </button>
           </div>
@@ -133,7 +129,7 @@
       (addedRecord)="updateRecordList($event)"
     ></app-mines-record-add>
 
-    <section class=" my-3 py-3">
+    <section class="my-3 py-3">
       <div *ngIf="!myForm.get('collectionRecords').value || !myForm.get('collectionRecords').value.length">
         No records have been added to this collection.
       </div>
@@ -146,18 +142,10 @@
         <thead class="thead-light">
           <tr>
             <th class="col-1"></th>
-            <th class="col-3">
-              Record Name
-            </th>
-            <th id="idJustToShutSonarCloudUp" class="col-3">
-              Agency
-            </th>
-            <th class="col-2">
-              Source System
-            </th>
-            <th class="col-2">
-              Date
-            </th>
+            <th class="col-3">Record Name</th>
+            <th id="idJustToShutSonarCloudUp" class="col-3">Agency</th>
+            <th class="col-2">Source System</th>
+            <th class="col-2">Date</th>
             <th class="col-1"></th>
           </tr>
         </thead>
@@ -229,9 +217,7 @@
   <div class="d-flex justify-content-between mt-4 mb-3">
     <div *ngIf="isEditing" class="col-6 mr-2 col-md-5 mr-md-0 col-lg-4 col-xl-3">
       <button type="button" class="btn btn-outline-dark mb-1" (click)="deleteCollection()" title="Delete">
-        <i class="material-icons mr-1">
-          delete_forever
-        </i>
+        <i class="material-icons mr-1">delete_forever</i>
         Delete
       </button>
       <span class="grey-subtext d-block">
@@ -243,15 +229,11 @@
       <div class="d-flex justify-content-end mb-1">
         <button type="button" class="btn btn-link" (click)="cancel()" title="Cancel">Cancel</button>
         <button *ngIf="isEditing" class="btn btn-primary" type="submit" (click)="submit()" title="Update collection">
-          <i class="material-icons mr-1">
-            save
-          </i>
+          <i class="material-icons mr-1">save</i>
           Update
         </button>
         <button *ngIf="!isEditing" class="btn btn-primary" type="submit" (click)="submit()" title="Save collection">
-          <i class="material-icons mr-1">
-            save
-          </i>
+          <i class="material-icons mr-1">save</i>
           Save
         </button>
       </div>

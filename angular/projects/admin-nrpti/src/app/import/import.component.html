@@ -81,9 +81,7 @@
   </section>
 
   <section>
-    <div *ngIf="!loading && tableData.totalListItems === 0">
-      No Records found.
-    </div>
+    <div *ngIf="!loading && tableData.totalListItems === 0">No Records found.</div>
 
     <lib-table-template
       *ngIf="!loading && tableData.totalListItems != 0"

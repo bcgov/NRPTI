@@ -32,7 +32,10 @@ export class S3SignedUrlAnchorComponent implements OnInit, OnChanges, OnDestroy 
 
   public isS3Document = false;
 
-  constructor(public factoryService: FactoryService, public _changeDetectionRef: ChangeDetectorRef) {}
+  constructor(
+    public factoryService: FactoryService,
+    public _changeDetectionRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.isS3Document = !!this.document.key;

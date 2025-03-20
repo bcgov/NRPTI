@@ -11,7 +11,11 @@ import { TableRowComponent } from 'nrpti-angular-components';
   styleUrls: ['./mines-collection-detail-record-row.component.scss']
 })
 export class MinesCollectionRecordTableRowComponent extends TableRowComponent implements OnInit {
-  constructor(public changeDetectionRef: ChangeDetectorRef, public route: ActivatedRoute, private router: Router) {
+  constructor(
+    public changeDetectionRef: ChangeDetectorRef,
+    public route: ActivatedRoute,
+    private router: Router
+  ) {
     super();
   }
 

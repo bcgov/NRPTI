@@ -15,7 +15,8 @@ import { AgencyDataService } from '../../../../../../global/src/lib/utils/agency
   templateUrl: './mines-administrative-penalty-add-edit.component.html',
   styleUrls: ['./mines-administrative-penalty-add-edit.component.scss']
 })
-export class MinesAdministrativePenaltyAddEditComponent extends AdministrativePenaltyAddEditComponent
+export class MinesAdministrativePenaltyAddEditComponent
+  extends AdministrativePenaltyAddEditComponent
   implements OnInit {
   public componentTitle = 'BCMI Administrative Penalty Record';
   public defaultAgency = 'AGENCY_EMLI';

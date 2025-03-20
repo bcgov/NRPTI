@@ -18,7 +18,10 @@ export class LegislationListDetailComponent implements OnInit, OnChanges {
 
   public preparedData = [];
 
-  constructor(public _changeDetectionRef: ChangeDetectorRef, private factoryService: FactoryService) {}
+  constructor(
+    public _changeDetectionRef: ChangeDetectorRef,
+    private factoryService: FactoryService
+  ) {}
 
   ngOnInit(): void {
     this._changeDetectionRef.detectChanges();

@@ -19,7 +19,7 @@ export class ComplianceResolver implements Resolve<Observable<object>> {
     const project = this._apiService.getProjectObjectId(route.parent.url[1].path);
 
     // tslint:disable-next-line: prefer-const
-    let filterParams = { ...route.params };
+    const filterParams = { ...route.params };
 
     // Clear out all the standard table template params
     delete filterParams.sortBy;

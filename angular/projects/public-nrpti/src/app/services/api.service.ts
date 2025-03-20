@@ -19,7 +19,11 @@ export class ApiService {
   pathAPI: string;
   env: 'local' | 'dev' | 'test' | 'prod';
 
-  constructor(public http: HttpClient, private configService: ConfigService, private logger: LoggerService) {
+  constructor(
+    public http: HttpClient,
+    private configService: ConfigService,
+    private logger: LoggerService
+  ) {
     this.isMS = (window.navigator as any).msSaveOrOpenBlob ? true : false;
 
     this.env = this.configService.config['ENVIRONMENT'];
@@ -67,9 +71,7 @@ export class ApiService {
 
   private downloadResource(id: string): Promise<Blob> {
     const queryString = `document/${id}/download`;
-    return this.http
-      .get<Blob>(this.pathAPI + '/' + queryString, { responseType: 'blob' as 'json' })
-      .toPromise();
+    return this.http.get<Blob>(this.pathAPI + '/' + queryString, { responseType: 'blob' as 'json' }).toPromise();
   }
 
   public async downloadDocument(document: Document): Promise<void> {

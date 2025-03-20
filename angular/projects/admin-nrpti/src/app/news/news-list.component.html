@@ -3,9 +3,7 @@
     <div class="col-6"></div>
     <div class="col-6 text-right">
       <div ngbDropdown class="">
-        <button class="btn btn-primary" ngbDropdownToggle>
-          Add News Item
-        </button>
+        <button class="btn btn-primary" ngbDropdownToggle>Add News Item</button>
         <div ngbDropdownMenu>
           <button ngbDropdownItem (click)="add('lng')">LNG Activity</button>
         </div>
@@ -13,9 +11,7 @@
     </div>
   </div>
 
-  <div *ngIf="!loading && tableData.totalListItems === 0">
-    No Records found.
-  </div>
+  <div *ngIf="!loading && tableData.totalListItems === 0">No Records found.</div>
 
   <lib-table-template
     *ngIf="!loading && tableData.totalListItems != 0"
