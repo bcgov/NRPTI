@@ -24,6 +24,7 @@ export class AgencyDataService {
    * @returns {string} - the agency's full name
    */
   displayNameFull(agencyCode): string {
+    debugger
     // Access cached agency data from FactoryService
     const agencyService = this.factoryService.applicationAgencyService;
     const agencyList = agencyService ? agencyService.getAgencies() : null;

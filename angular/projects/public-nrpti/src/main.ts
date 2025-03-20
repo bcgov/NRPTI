@@ -8,5 +8,5 @@ import { environment } from './environments/environment';
 if (environment.production) {
   enableProdMode();
 }
-
+debugger
 platformBrowserDynamic().bootstrapModule(AppModule);

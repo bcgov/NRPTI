@@ -65,29 +65,29 @@ $popup-title-bg: #036;
 
 // Status Iconography
 .commenting-open {
-  background: url('assets/images/baseline-insert_comment-24px.svg');
+  background: url('/assets/images/baseline-insert_comment-24px.svg');
 }
 
 .commenting-closed {
-  background: url('assets/images/baseline-cancel-24px.svg');
+  background: url('/assets/images/baseline-cancel-24px.svg');
 }
 
 .under-review {
-  background: url('assets/images/baseline-access_time-24px.svg');
+  background: url('/assets/images/baseline-access_time-24px.svg');
 }
 
 .review-complete,
 .unknown {
-  background: url('assets/images/outline-info-24px.svg');
+  background: url('/assets/images/outline-info-24px.svg');
 }
 
 .approved {
-  background: url('assets/images/baseline-check-24px.svg');
+  background: url('/assets/images/baseline-check-24px.svg');
 }
 
 .abandoned,
 .not-approved {
-  background: url('assets/images/baseline-cancel-24px.svg');
+  background: url('/assets/images/baseline-cancel-24px.svg');
 }
 
 .meta-container {

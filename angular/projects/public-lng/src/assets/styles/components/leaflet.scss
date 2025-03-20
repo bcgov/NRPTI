@@ -144,7 +144,7 @@
 .marker-cluster-medium,
 .marker-cluster-large {
   background-color: transparent !important;
-  background-image: url('assets/images/cluster-pin.svg');
+  background-image: url('/assets/images/cluster-pin.svg');
   background-size: 100%;
   background-repeat: no-repeat;
 
@@ -164,7 +164,7 @@
 .leaflet-touch .leaflet-control-layers-toggle {
   width: 32px;
   height: 32px;
-  background: url('assets/images/baseline-layers-24px.svg') no-repeat center 5px;
+  background: url('/assets/images/baseline-layers-24px.svg') no-repeat center 5px;
 }
 
 .leaflet-top.leaflet-right .leaflet-control {
