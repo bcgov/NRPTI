@@ -26,14 +26,12 @@ export class BreadcrumbComponent implements OnInit {
 
   public ngOnInit() {
     // Subscribe to the NavigationEnd event
-    this.router.events.pipe(
-      filter((e) => e instanceof NavigationEnd)
-    ).subscribe(() => {
-        // Set breadcrumbs
-        const root: ActivatedRoute = this.activatedRoute.root;
-        this.breadcrumbs = this.getBreadcrumbs(root);
-        this.activeBreadcrumb = this.breadcrumbs.pop();
-      });
+    this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {
+      // Set breadcrumbs
+      const root: ActivatedRoute = this.activatedRoute.root;
+      this.breadcrumbs = this.getBreadcrumbs(root);
+      this.activeBreadcrumb = this.breadcrumbs.pop();
+    });
   }
 
   /**

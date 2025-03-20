@@ -46,14 +46,7 @@ describe('DamSafetyInspectionAddEditComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        FormsModule,
-        ReactiveFormsModule,
-        GlobalModule,
-        NgxPaginationModule,
-        NgbModule
-      ],
+      imports: [RouterTestingModule, FormsModule, ReactiveFormsModule, GlobalModule, NgxPaginationModule, NgbModule],
       declarations: [DamSafetyInspectionAddEditComponent],
       providers: [
         Utils,

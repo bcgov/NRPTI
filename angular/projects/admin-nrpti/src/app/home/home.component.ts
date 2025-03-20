@@ -16,7 +16,7 @@ import { FactoryService } from '../services/factory.service';
   standalone: false,
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
   @ViewChild('chart1') chart1;

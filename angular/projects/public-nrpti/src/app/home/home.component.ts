@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   constructor(public route: ActivatedRoute, private factoryService: FactoryService) {}
 
   async ngOnInit() {
-    debugger
+    debugger;
     this.agencyDataService = new AgencyDataService(this.factoryService);
   }
 

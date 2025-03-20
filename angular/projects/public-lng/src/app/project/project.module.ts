@@ -32,6 +32,6 @@ import { PlansComponent } from './plans/plans.component';
     ExplorePanelComponent,
     DateInputComponent,
     PlansComponent
-  ],
+  ]
 })
 export class ProjectModule {}

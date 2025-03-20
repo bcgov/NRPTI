@@ -113,7 +113,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     AppRoutingModule, // <-- module import order matters - https://angular.io/guide/router#module-import-order-matters
     NgbModule,
     NgxPaginationModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot()
     // BootstrapModalModule.forRoot({ container: document.body })
   ],
   providers: [

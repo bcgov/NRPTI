@@ -46,14 +46,7 @@ describe('SelfReportAddEditComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        FormsModule,
-        ReactiveFormsModule,
-        GlobalModule,
-        NgxPaginationModule,
-        NgbModule
-      ],
+      imports: [RouterTestingModule, FormsModule, ReactiveFormsModule, GlobalModule, NgxPaginationModule, NgbModule],
       declarations: [SelfReportAddEditComponent],
       providers: [
         Utils,

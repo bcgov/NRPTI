@@ -65,7 +65,7 @@ export function initConfig(
     RecordsModule,
     AppRoutingModule, // <-- module import order matters - https://angular.io/guide/router#module-import-order-matters
     NgbModule,
-    NgxPaginationModule,
+    NgxPaginationModule
     // BootstrapModalModule.forRoot({ container: document.body })
   ],
   providers: [
