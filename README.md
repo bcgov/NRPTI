@@ -31,7 +31,6 @@ A list of recommended/helpful VS Code extensions.
 
 ## Linting/Formatting
 
-- TSLint
 - ESLint
 - Prettier - Code formatter
 - EditorConfig for VS Code
