@@ -9,12 +9,13 @@ import { FactoryService } from '../../../services/factory.service';
 import { LoggerService } from 'nrpti-angular-components';
 
 @Component({
+  standalone: false,
   selector: 'app-agreement-lng-detail',
   templateUrl: './agreement-lng-detail.component.html',
   styleUrls: ['./agreement-lng-detail.component.scss']
 })
 export class AgreementLNGDetailComponent extends RecordComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public isPublished: boolean;
 
@@ -65,7 +66,7 @@ export class AgreementLNGDetailComponent extends RecordComponent implements OnIn
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already published
           return;
         }
@@ -93,7 +94,7 @@ export class AgreementLNGDetailComponent extends RecordComponent implements OnIn
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already unpublished
           return;
         }

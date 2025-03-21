@@ -10,12 +10,13 @@ import { FactoryService } from '../../../services/factory.service';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-certificate-detail',
   templateUrl: './certificate-detail.component.html',
   styleUrls: ['./certificate-detail.component.scss']
 })
 export class CertificateDetailComponent extends RecordDetailComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public legislationString = '';
 

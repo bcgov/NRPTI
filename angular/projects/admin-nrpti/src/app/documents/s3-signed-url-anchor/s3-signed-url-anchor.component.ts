@@ -15,6 +15,7 @@ import { Document } from '../../../../../common/src/app/models';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-s3-signed-url-anchor',
   templateUrl: './s3-signed-url-anchor.component.html',
   styleUrls: ['./s3-signed-url-anchor.component.scss']
@@ -24,14 +25,17 @@ export class S3SignedUrlAnchorComponent implements OnInit, OnChanges, OnDestroy 
 
   @ViewChild('signedUrlAnchor') anchor: ElementRef<HTMLElement>;
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   private fetchInProgress = false;
   private clickInProgress = false;
 
   public isS3Document = false;
 
-  constructor(public factoryService: FactoryService, public _changeDetectionRef: ChangeDetectorRef) {}
+  constructor(
+    public factoryService: FactoryService,
+    public _changeDetectionRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.isS3Document = !!this.document.key;

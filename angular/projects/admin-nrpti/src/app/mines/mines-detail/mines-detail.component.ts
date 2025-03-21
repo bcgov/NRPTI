@@ -9,12 +9,13 @@ import moment from 'moment';
 import { MiscUtils } from '../../utils/constants/misc';
 
 @Component({
+  standalone: false,
   selector: 'app-mines-detail',
   templateUrl: './mines-detail.component.html',
   styleUrls: ['./mines-detail.component.scss']
 })
 export class MinesDetailComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public mine = null;
   public canPublish = false;
@@ -96,7 +97,7 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
         return;
       }
 
-      if (response.code === 409) {
+      if (response['code'] === 409) {
         // object was already published
         alert('Mine is already published.');
         return;
@@ -118,7 +119,7 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
         return;
       }
 
-      if (response.code === 409) {
+      if (response['code'] === 409) {
         // object was already unpublished
         alert('Mine is already unpublished.');
         return;

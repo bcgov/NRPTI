@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
 import { FactoryService } from '../services/factory.service';
 import { EpicProjectIds, SchemaLists } from '../../../../common/src/app/utils/record-constants';
 
 @Injectable()
 export class RecordsResolver implements Resolve<Observable<object>> {
-  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) {}
+  constructor(
+    private factoryService: FactoryService,
+    private tableTemplateUtils: TableTemplateUtils
+  ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const params = { ...route.params };

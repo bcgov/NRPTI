@@ -4,13 +4,17 @@ import { FactoryService } from '../services/factory.service';
 import { AgencyDataService } from '../../../../global/src/lib/utils/agency-data-service-nrced';
 
 @Component({
+  standalone: false,
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, AfterViewInit {
   agencyDataService: AgencyDataService;
-  constructor(public route: ActivatedRoute, private factoryService: FactoryService) {}
+  constructor(
+    public route: ActivatedRoute,
+    private factoryService: FactoryService
+  ) {}
 
   async ngOnInit() {
     this.agencyDataService = new AgencyDataService(this.factoryService);

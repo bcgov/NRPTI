@@ -23,12 +23,13 @@ import { EnforcementActionsTableRowComponent } from './enforcement-actions-table
  * @implements {OnDestroy}
  */
 @Component({
+  standalone: false,
   selector: 'app-enforcement-actions-table',
   templateUrl: './enforcement-actions-table.component.html',
   styleUrls: ['./enforcement-actions-table.component.scss']
 })
 export class EnforcementActionsTableComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
   public tableData: TableObject = new TableObject({
     component: EnforcementActionsTableRowComponent,
     pageSize: 25,

@@ -19,8 +19,12 @@ export class ApiService {
   pathAPI: string;
   env: 'local' | 'dev' | 'test' | 'prod';
 
-  constructor(public http: HttpClient, private configService: ConfigService, private logger: LoggerService) {
-    this.isMS = window.navigator.msSaveOrOpenBlob ? true : false;
+  constructor(
+    public http: HttpClient,
+    private configService: ConfigService,
+    private logger: LoggerService
+  ) {
+    this.isMS = (window.navigator as any).msSaveOrOpenBlob ? true : false;
 
     this.env = this.configService.config['ENVIRONMENT'];
 
@@ -67,9 +71,7 @@ export class ApiService {
 
   private downloadResource(id: string): Promise<Blob> {
     const queryString = `document/${id}/download`;
-    return this.http
-      .get<Blob>(this.pathAPI + '/' + queryString, { responseType: 'blob' as 'json' })
-      .toPromise();
+    return this.http.get<Blob>(this.pathAPI + '/' + queryString, { responseType: 'blob' as 'json' }).toPromise();
   }
 
   public async downloadDocument(document: Document): Promise<void> {
@@ -77,7 +79,7 @@ export class ApiService {
     const filename = document.fileName;
 
     if (this.isMS) {
-      window.navigator.msSaveBlob(blob, filename);
+      (window.navigator as any).msSaveBlob(blob, filename);
     } else {
       const url = window.URL.createObjectURL(blob);
       const a = window.document.createElement('a');
@@ -96,7 +98,7 @@ export class ApiService {
     const filename = document.fileName;
 
     if (this.isMS) {
-      window.navigator.msSaveBlob(blob, filename);
+      (window.navigator as any).msSaveBlob(blob, filename);
     } else {
       const tab = window.open();
       const fileURL = URL.createObjectURL(blob);

@@ -2,17 +2,15 @@ import { NgModule } from '@angular/core';
 
 // modules
 import { BrowserModule } from '@angular/platform-browser';
-import {
-  MatSnackBarModule,
-  MatSlideToggleModule,
-  MatAutocompleteModule,
-  MatCheckboxModule,
-  MatSelectModule,
-  MatMenuModule
-} from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GlobalModule } from 'nrpti-angular-components';
 import { CommonModule as NrptiCommonModule } from '../../../../common/src/app/common.module';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
 
 // pipes
 import { DatePipe } from '@angular/common';
@@ -26,8 +24,8 @@ import { LinkifyPipe } from '../pipes/linkify.pipe';
     BrowserModule,
     GlobalModule,
     NrptiCommonModule,
-    MatSlideToggleModule,
     MatSnackBarModule,
+    MatSlideToggleModule,
     MatAutocompleteModule,
     MatCheckboxModule,
     MatSelectModule,
@@ -47,7 +45,6 @@ import { LinkifyPipe } from '../pipes/linkify.pipe';
     OrderByPipe,
     NewlinesPipe,
     LinkifyPipe
-  ],
-  entryComponents: []
+  ]
 })
 export class SharedModule {}

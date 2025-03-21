@@ -10,12 +10,13 @@ import { LoggerService } from 'nrpti-angular-components';
 import { Constants } from '../../../utils/constants/misc';
 
 @Component({
+  standalone: false,
   selector: 'app-court-conviction-lng-detail',
   templateUrl: './court-conviction-lng-detail.component.html',
   styleUrls: ['./court-conviction-lng-detail.component.scss']
 })
 export class CourtConvictionLNGDetailComponent extends RecordComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public isPublished: boolean;
 
@@ -78,7 +79,7 @@ export class CourtConvictionLNGDetailComponent extends RecordComponent implement
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already published
           return;
         }
@@ -106,7 +107,7 @@ export class CourtConvictionLNGDetailComponent extends RecordComponent implement
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already unpublished
           return;
         }

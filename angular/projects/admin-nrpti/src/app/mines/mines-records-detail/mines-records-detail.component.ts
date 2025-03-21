@@ -7,12 +7,13 @@ import { CollectionBCMI } from '../../../../../common/src/app/models/bcmi';
 import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
 import { FactoryService } from '../../services/factory.service';
 @Component({
+  standalone: false,
   selector: 'app-mines-records-detail',
   templateUrl: './mines-records-detail.component.html',
   styleUrls: ['./mines-records-detail.component.scss']
 })
 export class MinesRecordDetailComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public record: any;
   public collections: [CollectionBCMI];

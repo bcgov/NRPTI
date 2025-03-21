@@ -12,12 +12,12 @@ Run using the command `docker-compose up` to begin building and running the `api
 
 | Technology | Version         | Website                                     | Description                               |
 |------------|-----------------|---------------------------------------------|-------------------------------------------|
-| node       | 10.x.x - 14.x.x | https://nodejs.org/en/                      | JavaScript Runtime                        |
+| node       | 18.17.0         | https://nodejs.org/en/                      | JavaScript Runtime                        |
 | npm        | latest          | https://www.npmjs.com/                      | Node Package Manager                      |
 | yarn       | latest          | https://yarnpkg.com/en/                     | Package Manager (more efficient than npm) |
 | mongodb    | 3.4 - 3.6       | https://docs.mongodb.com/v3.6/installation/ | NoSQL database                            |
 
-## Install [NodeJS](https://nodejs.org/download/release/latest-v14.x/)
+## Install [NodeJS](https://nodejs.org/en/blog/release/v18.17.0)
 
 _Note: NVM can be used to install and manage multiple versions of NodeJS and npm ([Windows version]((https://github.com/coreybutler/nvm-windows)), [Unix / Linux / macOS version](https://github.com/nvm-sh/nvm))._
 
@@ -50,17 +50,17 @@ npm start
 
 ## Info
 
-Linting and formatting is handled by a combiation of `TSlint` and `Prettier`.  The reason for this, is that you get the best of both worlds: TSlint's larger selection of linting rules with Prettier's robust formatting rules.
+Linting and formatting is handled by a combiation of `ESLint` and `Prettier`.  The reason for this, is that you get the best of both worlds: ESLint's larger selection of linting rules with Prettier's robust formatting rules.
 
-These 2 linters (tslint, Prettier) do have overlapping rules.  To avoid weird rule interactions, TSlint has been configured to defer any overlapping rules to Prettier, via the use of `tslint-config-prettier` in `tslint.json`.
+These 2 linters (ESLint, Prettier) do have overlapping rules.  To avoid weird rule interactions, ESLint has been configured to defer any overlapping rules to Prettier, via the use of `eslint-config-prettier`.
 
 ### Technolgies used
 
-[TSLint](https://palantir.github.io/tslint/), [Prettier](https://prettier.io/)
+[ESLint](https://ESLint.org/), [Prettier](https://prettier.io/)
 
 ### Configuration files
 
-* ESlint: eslint.json
+* ESLint: eslint.json
 * Prettier: .prettierrc .prettierignore
 
 ## Run Linters

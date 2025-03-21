@@ -15,7 +15,7 @@ import { FactoryService } from '../services/factory.service';
 export class TokenInterceptor implements HttpInterceptor {
   private refreshTokenInProgress = false;
 
-  private tokenRefreshedSource = new Subject();
+  private tokenRefreshedSource = new Subject<void>();
   private tokenRefreshed$ = this.tokenRefreshedSource.asObservable();
 
   constructor(public factoryService: FactoryService) {}

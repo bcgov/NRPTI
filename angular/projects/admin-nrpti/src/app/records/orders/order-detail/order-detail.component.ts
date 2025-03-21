@@ -10,12 +10,13 @@ import { FactoryService } from '../../../services/factory.service';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-order-detail',
   templateUrl: './order-detail.component.html',
   styleUrls: ['./order-detail.component.scss']
 })
 export class OrderDetailComponent extends RecordDetailComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public legislationString = '';
 

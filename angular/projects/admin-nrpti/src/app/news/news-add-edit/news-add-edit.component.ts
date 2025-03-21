@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ActivityTypes } from '../../../../../global/src/lib/utils/activity-types.enum';
 import { Utils } from 'nrpti-angular-components';
@@ -11,12 +11,13 @@ import { FactoryService } from '../../services/factory.service';
 import { Constants } from '../../utils/constants/misc';
 
 @Component({
+  standalone: false,
   selector: 'app-news-add-edit',
   templateUrl: './news-add-edit.component.html',
   styleUrls: ['./news-add-edit.component.scss']
 })
 export class NewsAddEditComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public loading = true;
   public isEditing = false;

@@ -46,14 +46,7 @@ describe('AgreementAddEditComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        FormsModule,
-        ReactiveFormsModule,
-        GlobalModule,
-        NgxPaginationModule,
-        NgbModule.forRoot()
-      ],
+      imports: [RouterTestingModule, FormsModule, ReactiveFormsModule, GlobalModule, NgxPaginationModule, NgbModule],
       declarations: [AgreementAddEditComponent],
       providers: [
         Utils,

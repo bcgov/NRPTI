@@ -13,12 +13,13 @@ import { Constants } from '../../../utils/constants/misc';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-inspection-add-edit',
   templateUrl: './inspection-add-edit.component.html',
   styleUrls: ['./inspection-add-edit.component.scss']
 })
 export class InspectionAddEditComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public loading = true;
   public isEditing = false;
@@ -412,7 +413,7 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.outcomeDescription.dirty &&
       (inspection['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
 
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line max-line-length
     this.myForm.get('legislations').dirty && (inspection['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(inspection, this.factoryService);
 

@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { InlineSVGModule } from 'ng-inline-svg';
+import { InlineSVGModule } from 'ng-inline-svg-2';
 
 // modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -39,7 +39,7 @@ import { RecordsListResolver } from './records-list/records-list-resolver';
     NrptiCommonModule,
     SharedModule,
     NgxPaginationModule,
-    NgbModule.forRoot(),
+    NgbModule,
     InlineSVGModule.forRoot(),
     RecordsRoutingModule
   ],
@@ -59,17 +59,6 @@ import { RecordsListResolver } from './records-list/records-list-resolver';
     ShareRecordButtonComponent
   ],
   providers: [RecordsListResolver],
-  entryComponents: [
-    AdministrativePenaltyDetailComponent,
-    AdministrativeSanctionDetailComponent,
-    CourtConvictionDetailComponent,
-    InspectionDetailComponent,
-    OrderDetailComponent,
-    RecordsTableRowComponent,
-    RestorativeJusticeDetailComponent,
-    TicketDetailComponent,
-    WarningDetailComponent
-  ],
   exports: []
 })
 export class RecordsModule {}

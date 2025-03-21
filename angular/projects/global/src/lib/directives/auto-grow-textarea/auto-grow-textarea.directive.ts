@@ -13,6 +13,7 @@ import { Utils } from '../../utils/utils';
  * @implements {OnInit}
  */
 @Directive({
+  standalone: false,
   selector: '[libAutoGrowTextArea]'
 })
 export class AutoGrowTextAreaDirective implements OnInit {

@@ -38,7 +38,7 @@ import { LoadingScreenService } from './services/loading-screen.service';
  * @class GlobalModule
  */
 @NgModule({
-  imports: [BrowserModule, FormsModule, ReactiveFormsModule, NgbModule.forRoot(), NgxPaginationModule],
+  imports: [BrowserModule, FormsModule, ReactiveFormsModule, NgbModule, NgxPaginationModule],
   declarations: [
     ButtonSpinnerComponent,
     TableRowDirective,

@@ -5,7 +5,10 @@ import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class MineService {
-  constructor(public apiService: ApiService, public http: HttpClient) {}
+  constructor(
+    public apiService: ApiService,
+    public http: HttpClient
+  ) {}
 
   public createMine(mine: any): Promise<any> {
     if (!mine) {

@@ -10,6 +10,7 @@ import { ToastService } from './services/toast.service';
 import { Constants } from './utils/constants/misc';
 
 @Component({
+  standalone: false,
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']

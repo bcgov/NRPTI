@@ -31,7 +31,10 @@ export interface ITaskParams {
  */
 @Injectable({ providedIn: 'root' })
 export class TaskService {
-  constructor(public apiService: ApiService, public http: HttpClient) {}
+  constructor(
+    public apiService: ApiService,
+    public http: HttpClient
+  ) {}
 
   /**
    * Send request to start a task.

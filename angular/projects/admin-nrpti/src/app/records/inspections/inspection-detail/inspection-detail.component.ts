@@ -10,12 +10,13 @@ import { FactoryService } from '../../../services/factory.service';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-inspection-detail',
   templateUrl: './inspection-detail.component.html',
   styleUrls: ['./inspection-detail.component.scss']
 })
 export class InspectionDetailComponent extends RecordDetailComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public legislationString = '';
 

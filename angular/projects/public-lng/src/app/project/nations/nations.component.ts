@@ -4,6 +4,7 @@ import { DataService } from '../../services/data.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
+  standalone: false,
   selector: 'app-nations',
   templateUrl: './nations.component.html',
   styleUrls: ['./nations.component.scss']
@@ -14,7 +15,10 @@ export class NationsComponent implements OnInit {
   public id: string;
   public text: string[];
 
-  constructor(private dataService: DataService, private route: ActivatedRoute) {
+  constructor(
+    private dataService: DataService,
+    private route: ActivatedRoute
+  ) {
     this.route.parent.params.subscribe(params => {
       this.id = params.id;
 

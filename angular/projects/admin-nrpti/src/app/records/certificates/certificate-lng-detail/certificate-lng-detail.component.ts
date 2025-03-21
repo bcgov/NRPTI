@@ -9,12 +9,13 @@ import { FactoryService } from '../../../services/factory.service';
 import { LoggerService } from 'nrpti-angular-components';
 
 @Component({
+  standalone: false,
   selector: 'app-certificate-lng-detail',
   templateUrl: './certificate-lng-detail.component.html',
   styleUrls: ['./certificate-lng-detail.component.scss']
 })
 export class CertificateLNGDetailComponent extends RecordComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public isPublished: boolean;
 
@@ -65,7 +66,7 @@ export class CertificateLNGDetailComponent extends RecordComponent implements On
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already published
           return;
         }
@@ -93,7 +94,7 @@ export class CertificateLNGDetailComponent extends RecordComponent implements On
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already unpublished
           return;
         }

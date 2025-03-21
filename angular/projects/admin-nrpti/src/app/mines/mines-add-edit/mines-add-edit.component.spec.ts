@@ -35,7 +35,7 @@ describe('MinesAddEditComponent', () => {
         GlobalModule,
         NgxPaginationModule,
         EditorModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [MinesAddEditComponent],
       providers: [

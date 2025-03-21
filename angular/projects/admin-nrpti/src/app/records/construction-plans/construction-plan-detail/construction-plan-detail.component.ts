@@ -9,12 +9,13 @@ import { FactoryService } from '../../../services/factory.service';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-construction-plan-detail',
   templateUrl: './construction-plan-detail.component.html',
   styleUrls: ['./construction-plan-detail.component.scss']
 })
 export class ConstructionPlanDetailComponent extends RecordDetailComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
     public route: ActivatedRoute,

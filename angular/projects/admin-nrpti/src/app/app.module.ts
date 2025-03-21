@@ -5,9 +5,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { BootstrapModalModule } from 'ng2-bootstrap-modal';
+// import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { Overlay, CloseScrollStrategy } from '@angular/cdk/overlay';
-import { MAT_AUTOCOMPLETE_SCROLL_STRATEGY } from '@angular/material';
+import { MAT_AUTOCOMPLETE_SCROLL_STRATEGY } from '@angular/material/autocomplete';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 // modules
@@ -60,6 +60,7 @@ import { TokenInterceptor } from './utils/token-interceptor';
 import { RecordUtils } from './records/utils/record-utils';
 import { CollectionService } from './services/collection.service';
 import { ActService } from './services/acts.service';
+import { RouterModule } from '@angular/router';
 
 export function initConfig(
   configService: ConfigService,
@@ -102,6 +103,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     ScrollingModule,
     GlobalModule,
     CommonModule,
+    RouterModule,
     SharedModule,
     RecordsModule,
     NewsModule,
@@ -109,10 +111,10 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     CommunicationsModule,
     AgenciesModule,
     AppRoutingModule, // <-- module import order matters - https://angular.io/guide/router#module-import-order-matters
-    NgbModule.forRoot(),
+    NgbModule,
     NgxPaginationModule,
-    ToastrModule.forRoot(),
-    BootstrapModalModule.forRoot({ container: document.body })
+    ToastrModule.forRoot()
+    // BootstrapModalModule.forRoot({ container: document.body })
   ],
   providers: [
     {
@@ -150,7 +152,6 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     RecordUtils,
     ActService
   ],
-  entryComponents: [ConfirmComponent, HomeComponent, ImportComponent, ImportTableRowsComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

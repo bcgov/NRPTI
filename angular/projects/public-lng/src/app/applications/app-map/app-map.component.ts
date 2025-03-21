@@ -25,12 +25,12 @@ import { MapLayerInfoService } from '../../services/map-layer-info.service';
 import { SearchResult } from 'nrpti-angular-components';
 
 declare module 'leaflet' {
-  // tslint:disable-next-line:interface-name
+  // eslint-disable-next-line interface-name
   export interface Marker<P = any> {
     dispositionId: number;
   }
 
-  // tslint:disable-next-line:interface-name
+  // eslint-disable-next-line interface-name
   export interface RendererOptions {
     tolerance: number;
   }
@@ -59,18 +59,18 @@ const layers: {
 const minimapLayers = { ...layers };
 
 const markerIcon = L.icon({
-  iconUrl: 'assets/images/baseline-location-24px.svg',
+  iconUrl: '/src/assets/images/baseline-location-24px.svg',
   // Retina Icon is not needed here considering we're using an SVG. Enable if you want to change to a raster asset.
-  // iconRetinaUrl: 'assets/images/marker-icon-2x-yellow.svg',
+  // iconRetinaUrl: '/src/assets/images/marker-icon-2x-yellow.svg',
   iconSize: [36, 36],
   iconAnchor: [18, 36],
   tooltipAnchor: [16, -28]
 });
 
 const markerIconLg = L.icon({
-  iconUrl: 'assets/images/baseline-location_on-24px.svg',
+  iconUrl: '/src/assets/images/baseline-location_on-24px.svg',
   // Retina Icon is not needed here considering we're using an SVG. Enable if you want to change to a raster asset.
-  // iconRetinaUrl: 'assets/images/marker-icon-yellow-lg.svg',
+  // iconRetinaUrl: '/src/assets/images/marker-icon-yellow-lg.svg',
   iconSize: [48, 48],
   iconAnchor: [24, 48]
   // popupAnchor: [1, -34], // TODO: update, if needed
@@ -78,6 +78,7 @@ const markerIconLg = L.icon({
 });
 
 @Component({
+  standalone: false,
   selector: 'app-map',
   templateUrl: './app-map.component.html',
   styleUrls: ['./app-map.component.scss']
@@ -99,7 +100,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
   });
   // private oldZoom: number = null;
   private isMapReady = false;
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   private layersGroup = L.layerGroup();
 
@@ -182,7 +183,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
       'https://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}',
       {
         attribution:
-          // tslint:disable-next-line:max-line-length
+          // eslint-disable-next-line max-line-length
           'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri',
         maxZoom: 10.4,
         noWrap: true
@@ -192,7 +193,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
       'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}',
       {
         attribution:
-          // tslint:disable-next-line:max-line-length
+          // eslint-disable-next-line max-line-length
           'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC',
         maxZoom: 16.4,
         noWrap: true
@@ -202,7 +203,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
       'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
       {
         attribution:
-          // tslint:disable-next-line:max-line-length
+          // eslint-disable-next-line max-line-length
           'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community',
         maxZoom: 17.5,
         noWrap: true
@@ -212,7 +213,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
       'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       {
         attribution:
-          // tslint:disable-next-line:max-line-length
+          // eslint-disable-next-line max-line-length
           'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
         maxZoom: 16.4,
         noWrap: true
@@ -224,7 +225,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
       'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
       {
         attribution:
-          // tslint:disable-next-line:max-line-length
+          // eslint-disable-next-line max-line-length
           'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community',
         maxZoom: 17.5,
         noWrap: true
@@ -245,7 +246,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
         position: 'topright'
       },
 
-      onAdd: function(map) {
+      onAdd: function (map) {
         this._mainMap = map;
         this._container = L.DomUtil.create('div', 'popup-fixed');
         L.DomEvent.disableClickPropagation(this._container);
@@ -253,7 +254,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
         return this._container;
       },
-      addTo: function(map) {
+      addTo: function (map) {
         L.Control.prototype.addTo.call(this, map);
       }
     });
@@ -538,8 +539,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
                 title: 'COASTAL GASLINK PIPELINE',
                 subtitle: 'Coastal Gasline Pipeline Ltd.',
                 descTitle: 'Application Description',
-                desc:
-                  'A 670-kilometre pipeline that will supply the LNG Canada export facility with gas from northeastern British Columbia.',
+                desc: 'A 670-kilometre pipeline that will supply the LNG Canada export facility with gas from northeastern British Columbia.',
                 routerLink: '/project/2'
               })
             );
@@ -550,8 +550,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
                 title: 'LNG CANADA',
                 subtitle: 'LNG Canada',
                 descTitle: 'Application Description',
-                desc:
-                  'A large-scale natural gas processing and export facility located in Kitimat, British Columbia. After natural gas is converted into a liquid form it will be shipped to Asia and other markets.',
+                desc: 'A large-scale natural gas processing and export facility located in Kitimat, British Columbia. After natural gas is converted into a liquid form it will be shipped to Asia and other markets.',
                 routerLink: '/project/1'
               })
             );
@@ -652,7 +651,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
         zoom: this.minimapZoom
       },
 
-      onAdd: function(map) {
+      onAdd: function (map) {
         this._mainMap = map;
 
         this._container = L.DomUtil.create('div', 'leaflet-custom-minimap');
@@ -678,7 +677,7 @@ export class AppMapComponent implements OnInit, AfterViewInit, OnDestroy {
         return this._container;
       },
 
-      addTo: function(map) {
+      addTo: function (map) {
         L.Control.prototype.addTo.call(this, map);
         this._miniMap.setView(this.options.center, 12);
         return this;

@@ -1,4 +1,4 @@
-@import "~assets/styles/base/base.scss";
+@use 'assets/styles/base/base.scss' as *;
 
 .form-group {
   margin-bottom: 2rem;
@@ -61,7 +61,7 @@
     border-radius: 1rem;
     border: 2px solid transparent;
     background-color: $gray2;
-    background-image: url("~assets/images/baseline-remove-24px.svg");
+    background-image: url('/assets/images/baseline-remove-24px.svg');
     background-position: 8px center;
     background-repeat: no-repeat;
     background-size: 18px;
@@ -100,7 +100,7 @@
     + label {
       color: $gray9;
       background-color: $select-badge-active-bg;
-      background-image: url("~assets/images/baseline-check-24px.svg");
+      background-image: url('/assets/images/baseline-check-24px.svg');
     }
 
     ~ button {

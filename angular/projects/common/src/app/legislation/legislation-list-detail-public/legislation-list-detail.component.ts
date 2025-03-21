@@ -6,6 +6,7 @@ import { Utils as CommonUtils } from './../../utils/utils';
 import { FactoryService } from '../../../../../public-nrpti/src/app/services/factory.service';
 
 @Component({
+  standalone: false,
   selector: 'app-legislation-list-detail-public',
   templateUrl: './legislation-list-detail.component.html',
   styleUrls: ['./legislation-list-detail.component.scss']
@@ -17,7 +18,7 @@ export class LegislationListDetailComponent implements OnInit, OnDestroy, OnChan
   @Input() firstDescriptionLabel: string;
   @Input() subsequentDescriptionLabel: string;
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public activeTab = 'detail';
 

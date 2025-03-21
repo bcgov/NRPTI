@@ -12,12 +12,13 @@ import { Constants } from '../../../utils/constants/misc';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-court-conviction-add-edit',
   templateUrl: './court-conviction-add-edit.component.html',
   styleUrls: ['./court-conviction-add-edit.component.scss']
 })
 export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
-  protected ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  protected ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public loading = true;
   public isEditing = false;
@@ -520,7 +521,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
       courtConviction['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
 
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line max-line-length
     this.myForm.get('legislations').dirty && (courtConviction['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(courtConviction, this.factoryService);
 

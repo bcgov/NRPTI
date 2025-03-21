@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-explore-panel',
   templateUrl: './explore-panel.component.html',
   styleUrls: ['./explore-panel.component.scss']
@@ -16,7 +17,7 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
   @Output() updateFilters = new EventEmitter();
   @Output() hideSidePanel = new EventEmitter();
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   readonly minDate = new Date('01-01-1900'); // first app created
   readonly maxDate = new Date(); // today
@@ -27,7 +28,10 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
   public textFilterKeys: any[];
   public filter = [];
 
-  constructor(private _changeDetectionRef: ChangeDetectorRef, private route: ActivatedRoute) {
+  constructor(
+    private _changeDetectionRef: ChangeDetectorRef,
+    private route: ActivatedRoute
+  ) {
     this.textFilterKeys = [];
   }
 
@@ -82,8 +86,8 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
 
   public applyAllFilters() {
     // Only add dateRange* conditionally.
-    // tslint:disable-next-line: prefer-const
-    let filterQuery = this.textFilterKeys;
+    // eslint-disable-next-line  prefer-const
+    const filterQuery = this.textFilterKeys;
     delete filterQuery['dateRangeFromFilter'];
     delete filterQuery['dateRangeToFilter'];
 

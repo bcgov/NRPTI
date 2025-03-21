@@ -10,7 +10,7 @@ describe('LinkAddEditComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [LinkAddEditComponent],
-      imports: [FormsModule, ReactiveFormsModule, NgbModule.forRoot()]
+      imports: [FormsModule, ReactiveFormsModule, NgbModule]
     }).compileComponents();
   });
 

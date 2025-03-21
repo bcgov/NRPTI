@@ -23,12 +23,13 @@ import { MinesTableRowComponent } from '../mines-rows/mines-table-row.component'
  * @implements {OnDestroy}
  */
 @Component({
+  standalone: false,
   selector: 'app-mines-list',
   templateUrl: './mines-list.component.html',
   styleUrls: ['./mines-list.component.scss']
 })
 export class MinesListComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public tableData: TableObject = new TableObject({
     component: MinesTableRowComponent,

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/forkJoin';
+import { Observable } from 'rxjs';
 import { TableTemplateUtils, TableObject, SearchService } from 'nrpti-angular-components';
 import { ApiService } from '../../services/api';
 
@@ -19,8 +18,8 @@ export class PlansResolver implements Resolve<Observable<object>> {
 
     const project = this._apiService.getProjectObjectId(route.parent.url[1].path);
 
-    // tslint:disable-next-line: prefer-const
-    let filterParams = { ...route.params };
+    // eslint-disable-next-line  prefer-const
+    const filterParams = { ...route.params };
 
     // Clear out all the standard table template params
     delete filterParams.sortBy;

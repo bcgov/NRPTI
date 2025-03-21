@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FactoryService } from '../services/factory.service';
 
 @Component({
+  standalone: false,
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
@@ -23,12 +24,15 @@ export class HeaderComponent implements OnInit {
   isAuthenticated: boolean;
   environment: string;
 
-  constructor(public factoryService: FactoryService, public router: Router) {
+  constructor(
+    public factoryService: FactoryService,
+    public router: Router
+  ) {
     this.environment = this.factoryService.getEnvironment();
   }
 
   ngOnInit() {
-    const isIEOrEdge = /msie\s|trident\/|edge\//i.test(window.navigator.userAgent);
+    const isIEOrEdge = /msie\s|trident\/|edge\//i.test((window.navigator as any).userAgent);
     const browser_alert = document.getElementById('browser-alert');
     if (isIEOrEdge) {
       browser_alert.hidden = false;

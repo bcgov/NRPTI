@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FactoryService } from '../services/factory.service';
 
 @Component({
+  standalone: false,
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
@@ -23,7 +24,10 @@ export class HeaderComponent {
   isAuthenticated: boolean;
   environment: string;
 
-  constructor(public factoryService: FactoryService, public router: Router) {
+  constructor(
+    public factoryService: FactoryService,
+    public router: Router
+  ) {
     router.events.subscribe(() => {
       this.isAuthenticated = this.factoryService.isAuthenticated();
       this.welcomeMsg = this.factoryService.getWelcomeMessage();

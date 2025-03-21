@@ -4,15 +4,13 @@
 <td scope="row" data-label="Type" class="col-1">{{ rowData.recordType }}</td>
 <td scope="row" data-label="Date" class="col-2">{{ rowData.dateIssued | date: 'LLLL d, y' }}</td>
 <td scope="row" data-label="Description" class="col-2">{{ rowData.description }}</td>
-<td scope="row" data-label="Download" style="text-align: center;" class="col-1">
+<td scope="row" data-label="Download" style="text-align: center" class="col-1">
   <a
     *ngIf="rowData.documents && rowData.documents.length > 0"
     class="btn content-btn-dark page-bottom-btn"
     href="{{ rowData.documents[0].url }}"
     target="_blank"
   >
-    <i class="material-icons">
-      cloud_download
-    </i>
+    <i class="material-icons">cloud_download</i>
   </a>
 </td>

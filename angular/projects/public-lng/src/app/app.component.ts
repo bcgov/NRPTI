@@ -6,6 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ApiService } from './services/api';
 
 @Component({
+  standalone: false,
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
@@ -13,9 +14,12 @@ import { ApiService } from './services/api';
 export class AppComponent implements OnInit, OnDestroy {
   isSafari: boolean;
   hostname: string;
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  constructor(public router: Router, private api: ApiService) {
+  constructor(
+    public router: Router,
+    private api: ApiService
+  ) {
     // ref: https://stackoverflow.com/questions/5899783/detect-safari-using-jquery
     this.isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 

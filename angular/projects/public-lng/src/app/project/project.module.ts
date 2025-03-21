@@ -21,7 +21,7 @@ import { NationsComponent } from './nations/nations.component';
 import { PlansComponent } from './plans/plans.component';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, NgbModule.forRoot(), RouterModule, DocumentsModule, GlobalModule, SharedModule],
+  imports: [CommonModule, FormsModule, NgbModule, RouterModule, DocumentsModule, GlobalModule, SharedModule],
   declarations: [
     ProjectComponent,
     OverviewComponent,
@@ -32,7 +32,6 @@ import { PlansComponent } from './plans/plans.component';
     ExplorePanelComponent,
     DateInputComponent,
     PlansComponent
-  ],
-  entryComponents: []
+  ]
 })
 export class ProjectModule {}

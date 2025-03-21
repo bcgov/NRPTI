@@ -8,6 +8,7 @@ import { Utils } from 'nrpti-angular-components';
 import { FactoryService } from '../../../../../admin-nrpti/src/app/services/factory.service';
 
 @Component({
+  standalone: false,
   selector: 'app-legislation-add-edit',
   templateUrl: './legislation-add-edit.component.html',
   styleUrls: ['./legislation-add-edit.component.scss']
@@ -22,7 +23,7 @@ export class LegislationAddEditComponent implements OnInit {
   @Input() hideParagraph = false;
   @Input() renderColumns = false;
 
-  protected ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  protected ngUnsubscribe: Subject<void> = new Subject<void>();
 
   // cache acts
   public readonly actsMappedToRegulations: { [key: string]: string[] } = Picklists.getAllActs(this.factoryService);

@@ -5,13 +5,14 @@ import { Application } from '../../../models/application';
 import { UrlService } from '../../../services/url.service';
 
 @Component({
+  standalone: false,
   templateUrl: './marker-popup.component.html',
   styleUrls: ['./marker-popup.component.scss']
 })
 export class MarkerPopupComponent implements OnInit, OnDestroy {
   public id: string;
   public app: Application = null;
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(public urlService: UrlService) {}
 

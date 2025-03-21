@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { TableObject, TableTemplateUtils } from 'nrpti-angular-components';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { FactoryService } from '../services/factory.service';
 
 @Injectable()
 export class MinesCollectionsListResolver implements Resolve<Observable<object>> {
-  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) {}
+  constructor(
+    private factoryService: FactoryService,
+    private tableTemplateUtils: TableTemplateUtils
+  ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const params = { ...route.params };

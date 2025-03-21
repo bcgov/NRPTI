@@ -8,12 +8,13 @@ import { DatePipe } from '@angular/common';
 import { FactoryService } from '../../../services/factory.service';
 
 @Component({
+  standalone: false,
   selector: 'app-report-bcmi-detail',
   templateUrl: './report-bcmi-detail.component.html',
   styleUrls: ['./report-bcmi-detail.component.scss']
 })
 export class ReportBCMIDetailComponent extends RecordComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public isPublished: boolean;
 
@@ -62,7 +63,7 @@ export class ReportBCMIDetailComponent extends RecordComponent implements OnInit
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already published
           return;
         }
@@ -89,7 +90,7 @@ export class ReportBCMIDetailComponent extends RecordComponent implements OnInit
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already unpublished
           return;
         }

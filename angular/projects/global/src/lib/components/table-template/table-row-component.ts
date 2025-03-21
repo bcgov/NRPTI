@@ -1,5 +1,5 @@
 import { TableObject } from './table-object';
-import { EventEmitter, Output, Input } from '@angular/core';
+import { EventEmitter, Output, Input, Directive } from '@angular/core';
 
 /**
  * Generic message event for all input/output messages.
@@ -30,6 +30,7 @@ export interface ITableMessage {
  * @export
  * @class TableRowComponent
  */
+@Directive()
 export class TableRowComponent {
   /**
    * The specific row data used by the component.

@@ -20,7 +20,10 @@ All documents uploaded to the NRPTI system are first checked by the ClamAV anti-
 
 # Running it locally
 
-Please see the READMEs in the `angular/` and `api/` subdirectories.
+**IMPORTANT:** Please read through this confluence page before running anything.
+https://apps.nrs.gov.bc.ca/int/confluence/pages/viewpage.action?pageId=208740091
+
+See the READMEs in the `angular/` and `api/` subdirectories for further instructions.
 
 # VSCode Extensions
 
@@ -28,7 +31,6 @@ A list of recommended/helpful VS Code extensions.
 
 ## Linting/Formatting
 
-- TSLint
 - ESLint
 - Prettier - Code formatter
 - EditorConfig for VS Code

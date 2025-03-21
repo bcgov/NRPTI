@@ -22,19 +22,13 @@ import { NationsTableRowsComponent } from '../nations/nations-rows/nations-table
     GlobalModule,
     NrptiCommonModule,
     FormsModule,
-    NgbModule.forRoot(),
+    NgbModule,
     RouterModule,
     SharedModule,
     GlobalModule
   ],
   declarations: [
     DocumentsComponent,
-    ComplianceTableRowsComponent,
-    AuthorizationsTableRowsComponent,
-    PlansTableRowsComponent,
-    NationsTableRowsComponent
-  ],
-  entryComponents: [
     ComplianceTableRowsComponent,
     AuthorizationsTableRowsComponent,
     PlansTableRowsComponent,

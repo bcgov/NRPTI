@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { AppMapComponent } from './app-map/app-map.component';
 
 @Component({
+  standalone: false,
   selector: 'app-applications',
   templateUrl: './applications.component.html',
   styleUrls: ['./applications.component.scss']
@@ -10,7 +11,7 @@ import { AppMapComponent } from './app-map/app-map.component';
 export class ApplicationsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('appmap') appmap: AppMapComponent;
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   // Temporary to satisfy template
   public isLoading = false;

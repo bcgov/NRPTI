@@ -10,12 +10,13 @@ import { FactoryService } from '../../../services/factory.service';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-court-conviction-detail',
   templateUrl: './court-conviction-detail.component.html',
   styleUrls: ['./court-conviction-detail.component.scss']
 })
 export class CourtConvictionDetailComponent extends RecordDetailComponent implements OnInit, OnDestroy {
-  protected ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  protected ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public legislationString = '';
 

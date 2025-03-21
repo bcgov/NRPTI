@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { Utils as GlobalUtils } from 'nrpti-angular-components';
 
 @Component({
+  standalone: false,
   selector: 'tr[app-plans-table-rows]',
   templateUrl: './plans-table-rows.component.html',
   styleUrls: ['./plans-table-rows.component.scss']
@@ -13,7 +14,7 @@ import { Utils as GlobalUtils } from 'nrpti-angular-components';
 export class PlansTableRowsComponent extends TableRowComponent implements OnInit, OnDestroy {
   public dropdownItems = ['Edit', 'Delete'];
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor() {
     super();

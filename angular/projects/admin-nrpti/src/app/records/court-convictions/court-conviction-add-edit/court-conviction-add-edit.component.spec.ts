@@ -10,7 +10,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Utils } from 'nrpti-angular-components';
 import { CommonModule } from '../../../../../../common/src/app/common.module';
-import { MatSlideToggleModule } from '@angular/material';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { RecordUtils } from '../../utils/record-utils';
 import { FactoryService } from '../../../services/factory.service';
 
@@ -40,7 +40,7 @@ describe('CourtConvictionAddEditComponent', () => {
         CommonModule,
         MatSlideToggleModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [CourtConvictionAddEditComponent],
       providers: [

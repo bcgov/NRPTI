@@ -4,6 +4,7 @@ import { TableRowComponent } from 'nrpti-angular-components';
 import { Subject } from 'rxjs';
 
 @Component({
+  standalone: false,
   selector: 'tr[app-import-table-rows]',
   templateUrl: './import-table-rows.component.html',
   styleUrls: ['./import-table-rows.component.scss']
@@ -11,7 +12,7 @@ import { Subject } from 'rxjs';
 export class ImportTableRowsComponent extends TableRowComponent implements OnInit, OnDestroy {
   public dropdownItems = ['Edit', 'Delete'];
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor() {
     super();

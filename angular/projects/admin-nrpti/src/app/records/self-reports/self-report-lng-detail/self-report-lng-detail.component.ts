@@ -9,12 +9,13 @@ import { FactoryService } from '../../../services/factory.service';
 import { LoggerService } from 'nrpti-angular-components';
 
 @Component({
+  standalone: false,
   selector: 'app-self-report-lng-detail',
   templateUrl: './self-report-lng-detail.component.html',
   styleUrls: ['./self-report-lng-detail.component.scss']
 })
 export class SelfReportLNGDetailComponent extends RecordComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public isPublished: boolean;
 
@@ -65,7 +66,7 @@ export class SelfReportLNGDetailComponent extends RecordComponent implements OnI
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already published
           return;
         }
@@ -93,7 +94,7 @@ export class SelfReportLNGDetailComponent extends RecordComponent implements OnI
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already unpublished
           return;
         }

@@ -9,6 +9,7 @@ import { Constants } from '../../utils/constants/misc';
 import { AgencyDataService } from '../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-mines-record-add',
   templateUrl: './mines-record-add.component.html',
   styleUrls: ['./mines-record-add.component.scss']
@@ -20,7 +21,7 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
   @Output() addedRecord: EventEmitter<object> = new EventEmitter<object>();
   @ViewChild(DatePickerComponent) DatePicker: DatePickerComponent;
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   // flags
   public loading = true;

@@ -10,13 +10,14 @@ import { Subject, of } from 'rxjs';
 import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'tr[app-mines-collections-table-row]',
   templateUrl: './mines-collections-table-row.component.html',
   styleUrls: ['./mines-collections-table-row.component.scss']
 })
 export class MinesCollectionsTableRowComponent extends TableRowComponent implements OnInit, OnDestroy {
   public isEditingCollection: boolean;
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
     private router: Router,

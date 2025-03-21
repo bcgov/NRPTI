@@ -69,8 +69,8 @@ export class ImportService {
       this.eventService.setError(new EventObject(EventKeywords.ERROR, error, 'Import Service'));
     }
 
-    // tslint:disable-next-line: prefer-const
-    let searchResult = new SearchResult();
+    // eslint-disable-next-line  prefer-const
+    const searchResult = new SearchResult();
 
     if (res && res[0] && res[0].data) {
       if (res[0].data.searchResults) {

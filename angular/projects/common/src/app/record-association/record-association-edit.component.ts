@@ -13,6 +13,7 @@ import { Utils } from 'nrpti-angular-components';
  * @class RecordAssociationEditComponent
  */
 @Component({
+  standalone: false,
   selector: 'record-association-edit',
   templateUrl: './record-association-edit.component.html',
   styleUrls: ['./record-association-edit.component.scss']
@@ -25,9 +26,13 @@ export class RecordAssociationEditComponent implements OnInit {
   @Output() mineLocation = new EventEmitter();
 
   public mineType: '';
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  constructor(public factoryService: FactoryService, private storeService: StoreService, private utils: Utils) {}
+  constructor(
+    public factoryService: FactoryService,
+    private storeService: StoreService,
+    private utils: Utils
+  ) {}
 
   ngOnInit() {
     this.storeService.stateChange.subscribe((state: object) => {

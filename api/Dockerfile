@@ -1,4 +1,4 @@
-FROM node:18.15.0-alpine AS base
+FROM node:18.17.0-alpine AS base
 
 # Directory used in container
 WORKDIR /usr/api/
@@ -9,7 +9,7 @@ COPY . .
 ##################
 ### PROD IMAGE ###
 ##################
-FROM node:18.15.0-alpine AS prod
+FROM node:18.17.0-alpine AS prod
 ENV NODE_ENV=production
 
 # Add curl for health check

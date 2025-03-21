@@ -6,6 +6,7 @@ import { Entity } from '../../../../../common/src/app/models/master/common-model
 import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'tr[app-mines-records-table-row]',
   templateUrl: './mines-records-table-row.component.html',
   styleUrls: ['./mines-records-table-row.component.scss']

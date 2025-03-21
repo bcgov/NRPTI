@@ -13,12 +13,13 @@ import { Constants } from '../../../utils/constants/misc';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-administrative-sanction-add-edit',
   templateUrl: './administrative-sanction-add-edit.component.html',
   styleUrls: ['./administrative-sanction-add-edit.component.scss']
 })
 export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public loading = true;
   public isEditing = false;
@@ -454,7 +455,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
       administrativeSanction['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
 
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line max-line-length
     this.myForm.get('legislations').dirty &&
       (administrativeSanction['legislation'] = this.parseLegislationsFormGroups());
 

@@ -14,7 +14,7 @@
  * Learn more in https://angular.io/guide/browser-support
  */
 
-/***************************************************************************************************
+/** *************************************************************************************************
  * BROWSER POLYFILLS
  */
 
@@ -49,12 +49,13 @@ import 'web-animations-js'; // Run `npm install --save web-animations-js`.
 import 'core-js/es7/reflect';
 import 'core-js/es7/array';
 
-/***************************************************************************************************
+/** *************************************************************************************************
  * Zone JS is required by Angular itself.
  */
-import 'zone.js/dist/zone'; // Included with Angular CLI.
+import 'zone.js'; // Included with Angular CLI.
+import 'zone.js/testing';
 
-/***************************************************************************************************
+/** *************************************************************************************************
  * APPLICATION IMPORTS
  */
 
@@ -70,18 +71,20 @@ import 'intl/locale-data/jsonp/en.js';
 // https://github.com/uxitten/polyfill/blob/master/string.polyfill.js
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
 if (!String.prototype.padStart) {
-  String.prototype.padStart = function padStart(targetLength, padString) {
-    // tslint:disable-next-line:no-bitwise
-    targetLength = targetLength >> 0; // truncate if number or convert non-number to 0;
-    padString = String(typeof padString !== 'undefined' ? padString : ' ');
-    if (this.length > targetLength) {
-      return String(this);
-    } else {
-      targetLength = targetLength - this.length;
-      if (targetLength > padString.length) {
-        padString += padString.repeat(targetLength / padString.length); // append to original to ensure we are longer than needed
+  Object.defineProperty(String.prototype, 'padStart', {
+    value: function (targetLength, padString) {
+      // eslint-disable-next-line no-bitwise
+      targetLength = targetLength >> 0; // truncate if number or convert non-number to 0;
+      padString = String(typeof padString !== 'undefined' ? padString : ' ');
+      if (this.length > targetLength) {
+        return String(this);
+      } else {
+        targetLength = targetLength - this.length;
+        if (targetLength > padString.length) {
+          padString += padString.repeat(targetLength / padString.length); // append to original to ensure we are longer than needed
+        }
+        return padString.slice(0, targetLength) + String(this);
       }
-      return padString.slice(0, targetLength) + String(this);
     }
-  };
+  });
 }

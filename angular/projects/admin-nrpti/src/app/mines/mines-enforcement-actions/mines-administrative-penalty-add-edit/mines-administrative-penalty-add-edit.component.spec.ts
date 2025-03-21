@@ -11,7 +11,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Utils } from 'nrpti-angular-components';
 import { RecordUtils } from '../../../records/utils/record-utils';
 import { CommonModule } from '../../../../../../common/src/app/common.module';
-import { MatSlideToggleModule } from '@angular/material';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { LoadingScreenService } from 'nrpti-angular-components';
 import { FactoryService } from '../../../services/factory.service';
 import { EventEmitter } from '@angular/core';
@@ -62,7 +62,7 @@ describe('MinesAdministrativePenaltyAddEditComponent', () => {
         CommonModule,
         MatSlideToggleModule,
         NgxPaginationModule,
-        NgbModule.forRoot()
+        NgbModule
       ],
       declarations: [MinesAdministrativePenaltyAddEditComponent],
       providers: [

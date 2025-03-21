@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
 import { FactoryService } from '../services/factory.service';
 
 @Injectable()
 export class NewsListResolver implements Resolve<Observable<object>> {
-  constructor(private factoryService: FactoryService, private tableTemplateUtils: TableTemplateUtils) {}
+  constructor(
+    private factoryService: FactoryService,
+    private tableTemplateUtils: TableTemplateUtils
+  ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.

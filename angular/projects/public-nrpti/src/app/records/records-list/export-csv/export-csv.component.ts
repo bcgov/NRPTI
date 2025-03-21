@@ -15,6 +15,7 @@ const RECORDS_PER_REQUEST = 5000;
  * @implements {OnInit}
  */
 @Component({
+  standalone: false,
   selector: 'app-export-csv',
   templateUrl: './export-csv.component.html',
   styleUrls: ['./export-csv.component.scss']

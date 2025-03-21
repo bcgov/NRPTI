@@ -4,6 +4,7 @@ import { DigitOnlyDirective } from './digit-only.directive';
 import { TestBedHelper } from '../../../../../common/src/app/spec/spec-utils';
 
 @Component({
+  standalone: false,
   template: `
     <input [libDigitOnly] />
   `

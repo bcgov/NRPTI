@@ -13,12 +13,13 @@ import { Constants } from '../../../utils/constants/misc';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-self-report-add-edit',
   templateUrl: './self-report-add-edit.component.html',
   styleUrls: ['./self-report-add-edit.component.scss']
 })
 export class SelfReportAddEditComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public loading = true;
   public isEditing = false;
@@ -264,7 +265,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
       (selfReport['issuingAgency'] = this.myForm.controls.issuingAgency.value);
     this.myForm.controls.author.dirty && (selfReport['author'] = this.myForm.controls.author.value);
 
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line max-line-length
     this.myForm.get('legislations').dirty && (selfReport['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(selfReport, this.factoryService);
     // Project name logic

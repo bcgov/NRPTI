@@ -9,12 +9,13 @@ import { AgencyDataService } from '../../../../../../../projects/global/src/lib/
 import { FactoryService } from '../../../services/factory.service';
 
 @Component({
+  standalone: false,
   selector: 'app-management-plan-detail',
   templateUrl: './management-plan-detail.component.html',
   styleUrls: ['./management-plan-detail.component.scss']
 })
 export class ManagementPlanDetailComponent extends RecordComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
     public route: ActivatedRoute,

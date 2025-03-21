@@ -11,7 +11,7 @@
       "schematics": {
         "@schematics/angular:component": {
           "prefix": "app",
-          "styleext": "scss"
+          "style": "scss"
         },
         "@schematics/angular:directive": {
           "prefix": "app"
@@ -44,7 +44,7 @@
             ],
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/dist/keycloak.min.js",
+              "node_modules/keycloak-js/lib/keycloak.js",
               "node_modules/tinymce/tinymce.min.js"
             ]
           },
@@ -53,7 +53,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -71,19 +70,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "admin-nrpti:build",
+            "buildTarget": "admin-nrpti:build",
             "port": 4200
           },
           "configurations": {
             "production": {
-              "browserTarget": "admin-nrpti:build:production"
+              "buildTarget": "admin-nrpti:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "admin-nrpti:build"
+            "buildTarget": "admin-nrpti:build"
           }
         },
         "test": {
@@ -95,7 +94,7 @@
             "tsConfig": "projects/admin-nrpti/tsconfig.spec.json",
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/dist/keycloak.min.js"
+              "node_modules/keycloak-js/lib/keycloak.js"
             ],
             "watch": false,
             "codeCoverage": true,
@@ -120,7 +119,7 @@
             "tsConfig": "projects/admin-nrpti/tsconfig.spec.json",
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/dist/keycloak.min.js"
+              "node_modules/keycloak-js/lib/keycloak.js"
             ],
             "watch": true,
             "codeCoverage": false,
@@ -156,7 +155,7 @@
       "schematics": {
         "@schematics/angular:component": {
           "prefix": "app",
-          "styleext": "scss"
+          "style": "scss"
         },
         "@schematics/angular:directive": {
           "prefix": "app"
@@ -183,7 +182,7 @@
             ],
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/dist/keycloak.min.js"
+              "node_modules/keycloak-js/lib/keycloak.js"
             ]
           },
           "configurations": {
@@ -191,7 +190,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -209,19 +207,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "public-nrced:build",
+            "buildTarget": "public-nrced:build",
             "port": 4400
           },
           "configurations": {
             "production": {
-              "browserTarget": "public-nrced:build:production"
+              "buildTarget": "public-nrced:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "public-nrced:build"
+            "buildTarget": "public-nrced:build"
           }
         },
         "test": {
@@ -233,7 +231,7 @@
             "tsConfig": "projects/public-nrpti/tsconfig.spec.json",
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/dist/keycloak.min.js"
+              "node_modules/keycloak-js/lib/keycloak.js"
             ],
             "watch": false,
             "codeCoverage": true,
@@ -258,7 +256,7 @@
             "tsConfig": "projects/public-nrpti/tsconfig.spec.json",
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/dist/keycloak.min.js"
+              "node_modules/keycloak-js/lib/keycloak.js"
             ],
             "watch": true,
             "codeCoverage": false,
@@ -294,7 +292,7 @@
       "schematics": {
         "@schematics/angular:component": {
           "prefix": "app",
-          "styleext": "scss"
+          "style": "scss"
         },
         "@schematics/angular:directive": {
           "prefix": "app"
@@ -338,7 +336,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -356,19 +353,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "public-lng:build",
+            "buildTarget": "public-lng:build",
             "port": 4300
           },
           "configurations": {
             "production": {
-              "browserTarget": "public-lng:build:production"
+              "buildTarget": "public-lng:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "public-lng:build"
+            "buildTarget": "public-lng:build"
           }
         },
         "test": {
@@ -455,7 +452,7 @@
       "schematics": {
         "@schematics/angular:component": {
           "prefix": "lib",
-          "styleext": "scss"
+          "style": "scss"
         },
         "@schematics/angular:directive": {
           "prefix": "lib"
@@ -463,7 +460,7 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/global/tsconfig.lib.json",
             "project": "projects/global/ng-package.json"
@@ -499,7 +496,7 @@
       "schematics": {
         "@schematics/angular:component": {
           "prefix": "common",
-          "styleext": "scss"
+          "style": "scss"
         },
         "@schematics/angular:directive": {
           "prefix": "common"
@@ -521,8 +518,7 @@
             "styles": [
               "projects/common/src/styles.scss"
             ],
-            "scripts": [],
-            "es5BrowserSupport": true
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -535,7 +531,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -554,18 +549,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "common:build"
+            "buildTarget": "common:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "common:build:production"
+              "buildTarget": "common:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "common:build"
+            "buildTarget": "common:build"
           }
         },
         "test": {
@@ -599,5 +594,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

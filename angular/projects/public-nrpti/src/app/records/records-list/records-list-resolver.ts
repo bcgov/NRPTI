@@ -7,11 +7,14 @@ import { SchemaLists } from '../../../../../common/src/app/utils/record-constant
 import { RecordUtils } from '../utils/record-utils';
 import { catchError } from 'rxjs/operators';
 
-declare var window: any;
+declare let window: any;
 
 @Injectable()
 export class RecordsListResolver implements Resolve<Observable<object>> {
-  constructor(public factoryService: FactoryService, public tableTemplateUtils: TableTemplateUtils) {}
+  constructor(
+    public factoryService: FactoryService,
+    public tableTemplateUtils: TableTemplateUtils
+  ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
     const params = { ...route.params };

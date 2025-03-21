@@ -7,7 +7,10 @@ import { Pipe, PipeTransform } from '@angular/core';
  * @class NewlinesPipe
  * @implements {PipeTransform}
  */
-@Pipe({ name: 'newlines' })
+@Pipe({
+  standalone: false,
+  name: 'newlines'
+})
 export class NewlinesPipe implements PipeTransform {
   transform(str: string): string {
     if (!str) {

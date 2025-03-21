@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormGroup, FormControl, FormArray } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { TestBedHelper } from '../../spec/spec-utils';
 import { PenaltyAddEditComponent } from './penalty-add-edit.component';
 import { GlobalModule, Utils } from 'nrpti-angular-components';

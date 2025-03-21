@@ -19,7 +19,10 @@ export class IssuingAgencyService {
    * @param {ApiService} apiService - The API service for handling API requests.
    * @param {HttpClient} http - The HTTP client for making API requests.
    */
-  constructor(public apiService: ApiService, public http: HttpClient) {}
+  constructor(
+    public apiService: ApiService,
+    public http: HttpClient
+  ) {}
 
   /**
    * Get the list of issuing agencies from the API.

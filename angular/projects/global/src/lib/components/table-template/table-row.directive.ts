@@ -18,6 +18,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Directive({
+  standalone: false,
   selector: '[libTableRow]'
 })
 export class TableRowDirective implements OnInit, OnChanges, OnDestroy {
@@ -27,7 +28,7 @@ export class TableRowDirective implements OnInit, OnChanges, OnDestroy {
   @Input() messageIn: EventEmitter<ITableMessage> = new EventEmitter<ITableMessage>();
   @Output() messageOut: EventEmitter<ITableMessage> = new EventEmitter<ITableMessage>();
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(
     public viewContainerRef: ViewContainerRef,
@@ -73,12 +74,12 @@ export class TableRowDirective implements OnInit, OnChanges, OnDestroy {
     componentInstance.tableData = this.tableData;
 
     // subscribe to the components outbound messages and forward them to table template
-    componentInstance.messageOut.pipe(takeUntil(this.ngUnsubscribe)).subscribe(msg => {
+    (componentInstance.messageOut as any).pipe(takeUntil(this.ngUnsubscribe)).subscribe(msg => {
       this.messageOut.emit(msg);
     });
 
     // subscribe to table templates inbound messages and forward them to row component
-    this.messageIn.pipe(takeUntil(this.ngUnsubscribe)).subscribe(msg => {
+    (this.messageIn as any).pipe(takeUntil(this.ngUnsubscribe)).subscribe(msg => {
       componentInstance.messageIn.emit(msg);
     });
   }

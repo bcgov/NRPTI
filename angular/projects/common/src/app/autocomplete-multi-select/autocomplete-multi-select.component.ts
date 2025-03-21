@@ -14,7 +14,7 @@ import {
 import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MatAutocompleteTrigger } from '@angular/material';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 export interface IMutliSelectOption {
   /**
@@ -48,6 +48,7 @@ export interface IMutliSelectOption {
 }
 
 @Component({
+  standalone: false,
   selector: 'app-autocomplete-multi-select',
   templateUrl: './autocomplete-multi-select.component.html',
   styleUrls: ['./autocomplete-multi-select.component.scss']
@@ -65,7 +66,7 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
   @ViewChild('multiAutocompleteFilter', { read: ElementRef }) multiAutocompleteFilter: ElementRef<HTMLInputElement>;
   @ViewChild(MatAutocompleteTrigger) trigger;
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public updatedPaceholderText = '';
 
@@ -76,7 +77,7 @@ export class AutoCompleteMultiSelectComponent implements OnInit, OnChanges, OnDe
     this.initializeFormControlValue();
 
     if (this.reset) {
-      this.reset.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => this.resetComponent());
+      (this.reset as any).pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => this.resetComponent());
     }
 
     this.updatePlaceholderTextValue();

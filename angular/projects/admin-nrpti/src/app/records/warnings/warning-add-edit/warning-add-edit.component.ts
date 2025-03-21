@@ -13,12 +13,13 @@ import { Constants } from '../../../utils/constants/misc';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-warning-add-edit',
   templateUrl: './warning-add-edit.component.html',
   styleUrls: ['./warning-add-edit.component.scss']
 })
 export class WarningAddEditComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public loading = true;
   public isEditing = false;
@@ -386,7 +387,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.outcomeDescription.dirty &&
       (warning['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
 
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line max-line-length
     this.myForm.get('legislations').dirty && (warning['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(warning, this.factoryService);
     // NRCED flavour

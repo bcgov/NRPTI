@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { InlineSVGModule } from 'ng-inline-svg';
+import { InlineSVGModule } from 'ng-inline-svg-2';
 
 // modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -29,13 +29,12 @@ import { NewsDetailComponent } from './news-detail/news-detail.component';
     ReactiveFormsModule,
     NrptiCommonModule,
     NgxPaginationModule,
-    NgbModule.forRoot(),
+    NgbModule,
     InlineSVGModule.forRoot(),
     NewsRoutingModule
   ],
   declarations: [NewsListComponent, NewsAddEditComponent, NewsTableRowComponent, NewsDetailComponent],
   providers: [],
-  entryComponents: [NewsTableRowComponent, NewsDetailComponent],
   exports: []
 })
 export class NewsModule {}

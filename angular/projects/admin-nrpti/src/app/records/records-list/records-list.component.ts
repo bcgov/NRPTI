@@ -39,12 +39,13 @@ import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-da
  * @implements {OnDestroy}
  */
 @Component({
+  standalone: false,
   selector: 'app-records-list',
   templateUrl: './records-list.component.html',
   styleUrls: ['./records-list.component.scss']
 })
 export class RecordsListComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
   public loading = true;
 
   public SearchSubsets = SearchSubsets; // make available in tempalte

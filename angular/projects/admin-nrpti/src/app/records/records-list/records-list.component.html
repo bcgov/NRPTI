@@ -14,9 +14,7 @@
   <div class="row mt-3 mb-3">
     <div class="col-12 text-right">
       <div ngbDropdown placement="bottom-right">
-        <button class="btn btn-primary" ngbDropdownToggle>
-          Add Record
-        </button>
+        <button class="btn btn-primary" ngbDropdownToggle>Add Record</button>
         <div ngbDropdownMenu>
           <button
             *ngIf="addEnabled('ADMINISTRATIVE_PENALTY')"
@@ -72,9 +70,7 @@
     </div>
   </div>
 
-  <div *ngIf="tableData.totalListItems === 0">
-    No Records found.
-  </div>
+  <div *ngIf="tableData.totalListItems === 0">No Records found.</div>
 
   <lib-table-template
     *ngIf="tableData.totalListItems != 0"

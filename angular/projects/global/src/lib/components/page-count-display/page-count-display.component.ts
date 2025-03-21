@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
+  standalone: false,
   selector: 'lib-page-count-display',
   templateUrl: './page-count-display.component.html',
   styleUrls: ['./page-count-display.component.scss']

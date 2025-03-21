@@ -1,6 +1,7 @@
 import { Component, ChangeDetectorRef, EventEmitter, Output, Input, OnInit } from '@angular/core';
 
 @Component({
+  standalone: false,
   selector: 'app-document-edit',
   templateUrl: './document-edit.component.html',
   styleUrls: ['./document-edit.component.scss']

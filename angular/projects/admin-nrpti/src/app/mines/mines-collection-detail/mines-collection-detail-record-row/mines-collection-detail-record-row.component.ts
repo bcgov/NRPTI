@@ -5,12 +5,17 @@ import moment from 'moment';
 import { TableRowComponent } from 'nrpti-angular-components';
 
 @Component({
+  standalone: false,
   selector: 'tr[app-mines-collection-record-table-row]',
   templateUrl: './mines-collection-detail-record-row.component.html',
   styleUrls: ['./mines-collection-detail-record-row.component.scss']
 })
 export class MinesCollectionRecordTableRowComponent extends TableRowComponent implements OnInit {
-  constructor(public changeDetectionRef: ChangeDetectorRef, public route: ActivatedRoute, private router: Router) {
+  constructor(
+    public changeDetectionRef: ChangeDetectorRef,
+    public route: ActivatedRoute,
+    private router: Router
+  ) {
     super();
   }
 

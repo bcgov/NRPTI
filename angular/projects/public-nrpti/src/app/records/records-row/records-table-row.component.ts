@@ -9,6 +9,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Entity } from '../../../../../common/src/app/models/master/common-models/entity';
 
 @Component({
+  standalone: false,
   selector: 'tr[app-records-table-row]',
   templateUrl: './records-table-row.component.html',
   styleUrls: ['./records-table-row.component.scss']
@@ -16,7 +17,7 @@ import { Entity } from '../../../../../common/src/app/models/master/common-model
 export class RecordsTableRowComponent extends TableRowComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('detailsComponentContainer', { read: ViewContainerRef }) toggleView: ViewContainerRef;
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public dropdownItems = ['Edit', 'Delete'];
 
@@ -33,7 +34,7 @@ export class RecordsTableRowComponent extends TableRowComponent implements OnIni
 
   ngOnInit() {
     // listen for messages sent from parent
-    this.messageIn.pipe(takeUntil(this.ngUnsubscribe)).subscribe(msg => {
+    (this.messageIn as any).pipe(takeUntil(this.ngUnsubscribe)).subscribe(msg => {
       if (msg.label === 'rowClicked' && msg.data._id === this.rowData._id) {
         this.insertDetailsComponent();
       } else {

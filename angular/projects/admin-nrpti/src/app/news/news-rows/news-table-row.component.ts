@@ -4,6 +4,7 @@ import { TableRowComponent } from 'nrpti-angular-components';
 import { Router } from '@angular/router';
 
 @Component({
+  standalone: false,
   selector: 'tr[app-news-table-row]',
   templateUrl: './news-table-row.component.html',
   styleUrls: ['./news-table-row.component.scss']
@@ -11,7 +12,10 @@ import { Router } from '@angular/router';
 export class NewsTableRowComponent extends TableRowComponent implements OnInit {
   public dropdownItems = ['Edit', 'Delete'];
 
-  constructor(private router: Router, public changeDetectionRef: ChangeDetectorRef) {
+  constructor(
+    private router: Router,
+    public changeDetectionRef: ChangeDetectorRef
+  ) {
     super();
   }
 

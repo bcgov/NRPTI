@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { Picklists, EpicProjectIds } from '../../../../../../common/src/app/utils/record-constants';
 import { FactoryService } from '../../../services/factory.service';
@@ -13,12 +13,13 @@ import { Constants } from '../../../utils/constants/misc';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-order-add-edit',
   templateUrl: './order-add-edit.component.html',
   styleUrls: ['./order-add-edit.component.scss']
 })
 export class OrderAddEditComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public loading = true;
   public isEditing = false;
@@ -418,7 +419,7 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.outcomeDescription.dirty &&
       (order['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
 
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line max-line-length
     this.myForm.get('legislations').dirty && (order['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(order, this.factoryService);
 

@@ -6,6 +6,7 @@ import { ToastService } from '../services/toast.service';
 import { Constants } from '../utils/constants/misc';
 
 @Component({
+  standalone: false,
   selector: 'app-enforcement-actions',
   templateUrl: './enforcement-actions.component.html',
   styleUrls: ['./enforcement-actions.component.scss']

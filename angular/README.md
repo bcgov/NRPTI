@@ -16,7 +16,6 @@ Angular front-ends for the Natural Resources Public Transparency Interface (NRPT
 | npm        | latest          | https://www.npmjs.com/  | Node Package Manager                      |
 | ng         | 7.x.x           | https://cli.angular.io/ | Angular CLI                               |
 
-
 _Note: This app also requires [`bcgov/nrpti/api`](https://github.com/bcgov/NRPTI/tree/master/api) to handle its requests and authentication._
 
 ## Install [Node + NPM](https://nodejs.org/en/)
@@ -83,18 +82,18 @@ During development, a library can be built and symlinked instead of published. T
 
 ## Info
 
-Linting and formatting is handled by a combiation of `TSlint` and `Prettier`. The reason for this, is that you get the best of both worlds: TSlint's larger selection of linting rules with Prettier's robust formatting rules.
+Linting and formatting is handled by a combiation of `ESLint` and `Prettier`. The reason for this, is that you get the best of both worlds: ESLint's larger selection of linting rules with Prettier's robust formatting rules.
 
-These 2 linters (tslint, Prettier) do have overlapping rules. To avoid weird rule interactions, TSlint has been configured to defer any overlapping rules to Prettier, via the use of `tslint-config-prettier` in `tslint.json`.
+These 2 linters (eslint, Prettier) do have overlapping rules. To avoid weird rule interactions, ESLint has been configured to defer any overlapping rules to Prettier, via the use of `ESLint-config-prettier`.
 
 Recommend installing the [VSCode Prettier extension](https://github.com/prettier/prettier-vscode), so Prettier's formatting can be applied on-the-fly.
 
 ### Technolgies used
 
-[TSLint](https://palantir.github.io/tslint/), [Prettier](https://prettier.io/)
+[ESLint](https://ESLint.org/), [Prettier](https://prettier.io/)
 ### Configuration files
 
-- TSlint: tslint.json
+- ESLint: .ESLintrc.js
 - Prettier: .prettierrc .prettierignore
 - lint-staged: .lintstagedrc
 
@@ -108,7 +107,7 @@ _Note: Not all linting/formatting errors can be automatically fixed, and will re
   npm run lint
   ```
 
-- Lint and fix the `*.ts` files using `TSLint` + `Prettier`.
+- Lint and fix the `*.ts` files using `ESLint` + `Prettier`.
 
   ```
   npm run lint:ts

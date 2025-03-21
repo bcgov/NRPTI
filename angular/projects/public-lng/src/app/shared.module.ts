@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { MatProgressBarModule, MatSnackBarModule } from '@angular/material';
-import { NgxTextOverflowClampModule } from 'ngx-text-overflow-clamp';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { OrderByPipe } from './pipes/order-by.pipe';
 import { NewlinesPipe } from './pipes/newlines.pipe';
@@ -12,12 +12,11 @@ import { LinkifyPipe } from './pipes/linkify.pipe';
 import { ActivityComponent } from './activity/activity.component';
 
 @NgModule({
-  imports: [BrowserModule, MatProgressBarModule, MatSnackBarModule, NgxTextOverflowClampModule],
-  declarations: [OrderByPipe, NewlinesPipe, ObjectFilterPipe, LinkifyPipe, ActivityComponent],
+  imports: [BrowserModule, MatProgressBarModule, MatSnackBarModule, ActivityComponent],
+  declarations: [OrderByPipe, NewlinesPipe, ObjectFilterPipe, LinkifyPipe],
   exports: [
     MatProgressBarModule,
     MatSnackBarModule,
-    NgxTextOverflowClampModule,
     OrderByPipe,
     NewlinesPipe,
     ObjectFilterPipe,

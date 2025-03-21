@@ -13,12 +13,13 @@ import { Constants } from '../../../utils/constants/misc';
 import { AgencyDataService } from '../../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-annual-report-add-edit',
   templateUrl: './annual-report-add-edit.component.html',
   styleUrls: ['./annual-report-add-edit.component.scss']
 })
 export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public loading = true;
   public isEditing = false;
@@ -305,7 +306,7 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.issuingAgency.dirty &&
       (annualReport['issuingAgency'] = this.myForm.controls.issuingAgency.value);
 
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line max-line-length
     this.myForm.get('legislations').dirty && (annualReport['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(annualReport, this.factoryService);
 

@@ -7,7 +7,7 @@ describe('publish', () => {
 
       let response = await queryActions.publish(record);
 
-      expect(response.code).toEqual(409);
+      expect(response['code']).toEqual(409);
       expect(response.message).toEqual('Object already published');
     });
   });
@@ -64,8 +64,8 @@ describe('unPublish', () => {
 
       let response = await queryActions.unPublish(record);
 
-      if (response.code) {
-        expect(response.code).toEqual(409);
+      if (response['code']) {
+        expect(response['code']).toEqual(409);
         expect(response.message).toEqual('Object already unpublished');
       }
     });

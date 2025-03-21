@@ -7,6 +7,7 @@ import { Directive, ElementRef, HostListener, Input } from '@angular/core';
  * @class DigitOnlyDirective
  */
 @Directive({
+  standalone: false,
   selector: '[libDigitOnly]'
 })
 export class DigitOnlyDirective {

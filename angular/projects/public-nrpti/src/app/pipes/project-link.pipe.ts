@@ -9,7 +9,10 @@ import { StoreService, ConfigService, LoggerService } from 'nrpti-angular-compon
  * @class LinkifyPipe
  * @implements {PipeTransform}
  */
-@Pipe({ name: 'projectLink' })
+@Pipe({
+  standalone: false,
+  name: 'projectLink'
+})
 export class ProjectLinkPipe implements PipeTransform {
   constructor(
     private storeService: StoreService,

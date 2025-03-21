@@ -1,14 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import {
-  MatAutocompleteModule,
-  MatTooltipModule,
-  MatSelectModule,
-  MatCheckboxModule,
-  MatSlideToggleModule,
-  MatChipsModule,
-  MatIconModule
-} from '@angular/material';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 import { TestBedHelper } from '../spec/spec-utils';
 import { SearchFilterTemplateComponent } from './search-filter-template.component';
 import { GlobalModule, Utils } from 'nrpti-angular-components';

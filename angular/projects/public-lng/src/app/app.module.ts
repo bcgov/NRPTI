@@ -6,7 +6,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPageScrollCoreModule } from 'ngx-page-scroll-core';
 import { NgxPageScrollModule } from 'ngx-page-scroll';
-import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 
 // modules
 import { GlobalModule } from 'nrpti-angular-components';
@@ -31,6 +30,7 @@ import { DataService } from './services/data.service';
 import { FaqComponent } from './faq/faq.component';
 import { SearchService, ConfigService, LoggerService } from 'nrpti-angular-components';
 import { MapLayerInfoService } from './services/map-layer-info.service';
+import { RouterModule } from '@angular/router';
 
 export function initConfig(configService: ConfigService) {
   return () => configService.init();
@@ -44,14 +44,15 @@ export function initConfig(configService: ConfigService) {
     GlobalModule,
     CommonModule,
     FormsModule,
+    RouterModule,
     HttpClientModule,
-    NgbModule.forRoot(),
+    NgbModule,
     NgxPageScrollCoreModule.forRoot({ scrollOffset: 50, easingLogic: easingLogic }),
     NgxPageScrollModule,
     SharedModule,
     ApplicationsModule,
-    ProjectModule,
-    BootstrapModalModule.forRoot({ container: document.body })
+    ProjectModule
+    // BootstrapModalModule.forRoot({ container: document.body })
   ],
   declarations: [AppComponent, ContactComponent, HeaderComponent, FooterComponent, FaqComponent, HomeComponent],
   providers: [
@@ -69,7 +70,6 @@ export function initConfig(configService: ConfigService) {
     MapLayerInfoService,
     Utils
   ],
-  entryComponents: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

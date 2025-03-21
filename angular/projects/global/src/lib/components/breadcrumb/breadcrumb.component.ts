@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd, PRIMARY_OUTLET, Params } from '@angular/router';
-import 'rxjs/add/operator/filter';
+import { filter } from 'rxjs';
 
 export interface IBreadcrumb {
   label: string;
@@ -9,6 +9,7 @@ export interface IBreadcrumb {
 }
 
 @Component({
+  standalone: false,
   selector: 'lib-breadcrumb',
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.scss']
@@ -19,20 +20,21 @@ export class BreadcrumbComponent implements OnInit {
   public breadcrumbs: IBreadcrumb[];
   public activeBreadcrumb: IBreadcrumb;
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router) {
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {
     this.breadcrumbs = [];
   }
 
   public ngOnInit() {
     // Subscribe to the NavigationEnd event
-    this.router.events
-      .filter(event => event instanceof NavigationEnd)
-      .subscribe(() => {
-        // Set breadcrumbs
-        const root: ActivatedRoute = this.activatedRoute.root;
-        this.breadcrumbs = this.getBreadcrumbs(root);
-        this.activeBreadcrumb = this.breadcrumbs.pop();
-      });
+    this.router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(() => {
+      // Set breadcrumbs
+      const root: ActivatedRoute = this.activatedRoute.root;
+      this.breadcrumbs = this.getBreadcrumbs(root);
+      this.activeBreadcrumb = this.breadcrumbs.pop();
+    });
   }
 
   /**

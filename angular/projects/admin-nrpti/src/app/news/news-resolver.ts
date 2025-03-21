@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { FactoryService } from '../services/factory.service';
 import { News } from '../../../../common/src/app/models/master/common-models/news';
 import { of } from 'rxjs';

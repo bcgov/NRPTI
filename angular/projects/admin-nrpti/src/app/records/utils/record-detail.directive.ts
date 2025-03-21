@@ -20,6 +20,7 @@ import { RecordUtils } from './record-utils';
  * @implements {OnInit}
  */
 @Directive({
+  standalone: false,
   selector: '[appRecordDetail]'
 })
 export class RecordDetailDirective implements OnInit, OnChanges {

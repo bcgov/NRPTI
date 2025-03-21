@@ -8,6 +8,7 @@ export interface IDataModel {
 }
 
 @Component({
+  standalone: false,
   templateUrl: './confirm.component.html',
   styleUrls: ['./confirm.component.scss']
 })

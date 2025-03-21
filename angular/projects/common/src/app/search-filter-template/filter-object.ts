@@ -140,7 +140,11 @@ export class OptionItem {
    * @param {boolean} [isChecked=false] Is this checkbox checked by default?
    * @memberof OptionItem
    */
-  constructor(public id: string, public label: string, public isChecked: boolean = false) {}
+  constructor(
+    public id: string,
+    public label: string,
+    public isChecked: boolean = false
+  ) {}
 }
 
 /**
@@ -162,7 +166,12 @@ export class RadioOptionItem extends OptionItem {
    * @param {boolean} [isChecked=false] Is this option selected by default
    * @memberof RadioOptionItem
    */
-  constructor(public id: string, public label: string, public value: string, public isChecked: boolean = false) {
+  constructor(
+    public id: string,
+    public label: string,
+    public value: string,
+    public isChecked: boolean = false
+  ) {
     super(id, label, isChecked);
   }
 }
@@ -210,7 +219,10 @@ export class DropdownDefinition extends FilterDefinition {
    * @param {boolean} [multiselect=true] Should this dropdown allow for multiselection?
    * @memberof DropdownDefinition
    */
-  constructor(public options: string[] = [], public multiselect: boolean = true) {
+  constructor(
+    public options: string[] = [],
+    public multiselect: boolean = true
+  ) {
     super();
   }
 }
@@ -230,7 +242,10 @@ export class SliderToggleFilterDefinition extends FilterDefinition {
    * @param {OptionItem} onOption an ID and label for the on postition
    * @memberof SliderToggleFilterDefinition
    */
-  constructor(public offOption: OptionItem, public onOption: OptionItem) {
+  constructor(
+    public offOption: OptionItem,
+    public onOption: OptionItem
+  ) {
     super();
   }
 }

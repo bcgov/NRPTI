@@ -10,12 +10,13 @@ import { LoggerService } from 'nrpti-angular-components';
 import { Constants } from '../../../utils/constants/misc';
 
 @Component({
+  standalone: false,
   selector: 'app-administrative-sanction-nrced-detail',
   templateUrl: './administrative-sanction-nrced-detail.component.html',
   styleUrls: ['./administrative-sanction-nrced-detail.component.scss']
 })
 export class AdministrativeSanctionNRCEDDetailComponent extends RecordComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public isPublished: boolean;
 
@@ -78,7 +79,7 @@ export class AdministrativeSanctionNRCEDDetailComponent extends RecordComponent 
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already published
           return;
         }
@@ -106,7 +107,7 @@ export class AdministrativeSanctionNRCEDDetailComponent extends RecordComponent 
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already unpublished
           return;
         }

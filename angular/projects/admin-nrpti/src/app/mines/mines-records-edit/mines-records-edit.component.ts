@@ -15,12 +15,13 @@ import { ToastService } from '../../services/toast.service';
 import { AgencyDataService } from '../../../../../../projects/global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-mines-records-edit',
   templateUrl: './mines-records-edit.component.html',
   styleUrls: ['./mines-records-edit.component.scss']
 })
 export class MinesRecordsEditComponent implements OnInit {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   // flags
   public loading = true;

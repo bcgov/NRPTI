@@ -8,7 +8,10 @@ import LinkifyIt from 'linkify-it';
  * @class LinkifyPipe
  * @implements {PipeTransform}
  */
-@Pipe({ name: 'linkify' })
+@Pipe({
+  standalone: false,
+  name: 'linkify'
+})
 export class LinkifyPipe implements PipeTransform {
   transform(str: string): string {
     if (!str) {

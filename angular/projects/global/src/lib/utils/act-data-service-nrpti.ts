@@ -73,7 +73,7 @@ export class ActDataServiceNRPTI {
    * retrieved from the act data using the FactoryService.
    * @returns {string: [string]} - All Regulations mapped to arrays of their associated actNames
    */
-  getLegislationRegulationsMappedToActs = function(factoryService: any): { [key: string]: string[] } {
+  getLegislationRegulationsMappedToActs = function (factoryService: any): { [key: string]: string[] } {
     const actService = this.factoryService.actService;
     if (!actService) {
       console.error('ActService is not available.');

@@ -3,7 +3,7 @@ import { FormControl, FormGroup, FormArray } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingScreenService } from 'nrpti-angular-components';
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { Mine, Link } from '../../../../../common/src/app/models/bcmi/mine';
 import { FactoryService } from '../../services/factory.service';
 import { Picklists } from '../../../../../common/src/app/utils/record-constants';
@@ -11,12 +11,13 @@ import { UrlValidator } from '../../../../../common/src/app/form-validators/vali
 import moment from 'moment';
 
 @Component({
+  standalone: false,
   selector: 'app-mines-add-edit',
   templateUrl: './mines-add-edit.component.html',
   styleUrls: ['./mines-add-edit.component.scss']
 })
 export class MinesAddEditComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public loading = true;
   public mine: Mine;

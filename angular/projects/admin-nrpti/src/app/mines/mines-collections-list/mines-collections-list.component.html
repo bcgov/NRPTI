@@ -30,9 +30,7 @@
   </section>
 
   <section class="mb-1 pb-1">
-    <div *ngIf="!tableData.totalListItems">
-      No Collections found.
-    </div>
+    <div *ngIf="!tableData.totalListItems">No Collections found.</div>
 
     <lib-table-template
       *ngIf="tableData.totalListItems > 0"

@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
+  standalone: false,
   selector: 'lib-button-spinner',
   templateUrl: './button-spinner.component.html',
   styleUrls: ['./button-spinner.component.scss']

@@ -8,12 +8,13 @@ import { DatePipe } from '@angular/common';
 import { FactoryService } from '../../../services/factory.service';
 
 @Component({
+  standalone: false,
   selector: 'app-certificate-amendment-lng-detail',
   templateUrl: './certificate-amendments-lng-detail.component.html',
   styleUrls: ['./certificate-amendments-lng-detail.component.scss']
 })
 export class CertificateAmendmentLNGDetailComponent extends RecordComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public isPublished: boolean;
 
@@ -62,7 +63,7 @@ export class CertificateAmendmentLNGDetailComponent extends RecordComponent impl
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already published
           return;
         }
@@ -89,7 +90,7 @@ export class CertificateAmendmentLNGDetailComponent extends RecordComponent impl
           return;
         }
 
-        if (response.code === 409) {
+        if (response['code'] === 409) {
           // object was already unpublished
           return;
         }

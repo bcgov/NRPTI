@@ -13,6 +13,7 @@ import { FactoryService } from '../services/factory.service';
  * @module HomeComponent
  */
 @Component({
+  standalone: false,
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
@@ -86,11 +87,11 @@ export class HomeComponent implements OnInit {
 
     // RecordByType
     const recordTypes = await this.metricService.getMetric('RecordByType');
-    // tslint:disable-next-line: prefer-const
-    let typeLabels = [];
-    // tslint:disable-next-line: prefer-const
-    let typeData = [];
-    // tslint:disable-next-line:prefer-for-of
+    // eslint-disable-next-line  prefer-const
+    const typeLabels = [];
+    // eslint-disable-next-line  prefer-const
+    const typeData = [];
+    // eslint-disable-next-line prefer-for-of
     for (let i = 0; i < recordTypes.length; i++) {
       const keyName = this.getKeyName(recordTypes[i]);
       typeLabels.push(recordTypes[i][keyName]);

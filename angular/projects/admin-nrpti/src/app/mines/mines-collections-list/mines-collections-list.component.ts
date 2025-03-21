@@ -37,12 +37,13 @@ import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-da
  * @implements {OnDestroy}
  */
 @Component({
+  standalone: false,
   selector: 'app-mines-collections-list',
   templateUrl: './mines-collections-list.component.html',
   styleUrls: ['./mines-collections-list.component.scss']
 })
 export class MinesCollectionsListComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public tableData: TableObject = new TableObject({
     component: MinesCollectionsTableRowComponent,

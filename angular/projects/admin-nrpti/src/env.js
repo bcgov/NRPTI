@@ -15,7 +15,7 @@
     window.__env.KEYCLOAK_URL = 'https://dev.loginproxy.gov.bc.ca/auth';
     window.__env.KEYCLOAK_REALM = 'standard';
     window.__env.KEYCLOAK_ENABLED = true;
-    
+
     // This is a hardcoded variable that does not come from the backend
     window.__env.APPLICATION = 'NRPTI';
     window.__env.FEATURE_FLAG = {

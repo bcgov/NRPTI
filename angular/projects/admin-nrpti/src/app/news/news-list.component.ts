@@ -14,12 +14,13 @@ import { NewsTableRowComponent } from './news-rows/news-table-row.component';
 import { LoadingScreenService } from 'nrpti-angular-components';
 
 @Component({
+  standalone: false,
   selector: 'app-news-list',
   templateUrl: './news-list.component.html',
   styleUrls: ['./news-list.component.scss']
 })
 export class NewsListComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
   public loading = true;
   public typeFilters = [];
   public navigationObject;
@@ -89,8 +90,8 @@ export class NewsListComponent implements OnInit, OnDestroy {
       const records = (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || [];
       this.tableData.items = records.map(record => {
         // On the fly, create a conversion of the schema to reflect system name.
-        // tslint:disable-next-line: prefer-const
-        let data = { ...record };
+        // eslint-disable-next-line  prefer-const
+        const data = { ...record };
         data.system = data._schemaName.split('Activity')[1];
         return { rowData: data };
       });

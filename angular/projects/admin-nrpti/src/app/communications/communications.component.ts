@@ -2,7 +2,7 @@ import { LngMapInfoComponent } from './lng-map-info/lng-map-info.component';
 import { Component, OnInit, OnDestroy, ViewChild, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { CommunicationsPackage } from '../../../../common/src/app/models/master/common-models/communications-package';
 import { MapInfo } from './../../../../common/src/app/models/master/common-models/map-info';
@@ -12,6 +12,7 @@ import { Constants } from '../utils/constants/misc';
 import { ToastService } from '../services/toast.service';
 
 @Component({
+  standalone: false,
   selector: 'communications-add',
   templateUrl: './communications.component.html',
   styleUrls: ['./communications.component.scss']
@@ -20,7 +21,7 @@ export class CommunicationsComponent implements OnInit, OnDestroy {
   @ViewChild(DatePickerComponent) DatePicker: DatePickerComponent;
   @ViewChild(LngMapInfoComponent) LngMapInfoComponent: LngMapInfoComponent;
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
   public resetDates: EventEmitter<void> = new EventEmitter<void>();
   public selectedApp: EventEmitter<void> = new EventEmitter<void>();
 

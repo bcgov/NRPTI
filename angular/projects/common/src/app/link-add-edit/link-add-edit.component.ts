@@ -10,6 +10,7 @@ import { UrlValidator } from '../form-validators/validators';
  * @class LinkAddEditComponent
  */
 @Component({
+  standalone: false,
   selector: 'app-link-add-edit',
   templateUrl: './link-add-edit.component.html',
   styleUrls: ['./link-add-edit.component.scss']

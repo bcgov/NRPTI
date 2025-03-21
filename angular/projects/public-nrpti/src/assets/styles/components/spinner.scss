@@ -6,14 +6,14 @@
   height: $spinner-lg;
   margin-top: calc(-#{$spinner-lg} / 1.5);
   margin-left: calc(-#{$spinner-lg} / 2);
-  background-image: url(./assets/images/spinner.png);
+  background-image: url('/assets/images/spinner.png');
 }
 
 .spinner {
   position: absolute;
   top: 50%;
   left: 50%;
-  background-image: url(./assets/images/spinner.png);
+  background-image: url('/assets/images/spinner.png');
   background-size: 100%;
 
   &.spinner-sm {
@@ -58,7 +58,7 @@
     background: $spinner-invert-bg;
 
     .spinner-new {
-      background-image: url(./assets/images/spinner.png);
+      background-image: url('/assets/images/spinner.png');
     }
   }
 
@@ -133,7 +133,7 @@
     margin-top: -0.1rem;
     margin-right: 0.5rem;
     display: inline-block;
-    background-image: url(./assets/images/spinner-inverted.png);
+    background-image: url('/assets/images/spinner-inverted.png');
     width: 1rem;
     height: 1rem;
   }

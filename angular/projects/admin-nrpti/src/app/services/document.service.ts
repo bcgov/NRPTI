@@ -13,7 +13,10 @@ import { HttpClient } from '@angular/common/http';
  */
 @Injectable({ providedIn: 'root' })
 export class DocumentService {
-  constructor(public apiService: ApiService, public http: HttpClient) {}
+  constructor(
+    public apiService: ApiService,
+    public http: HttpClient
+  ) {}
 
   /**
    * Return all documents that match the provided filters.
@@ -75,7 +78,7 @@ export class DocumentService {
     const filename = document.fileName;
 
     if (this.apiService.isMS) {
-      window.navigator.msSaveBlob(blob, filename);
+      (window.navigator as any).msSaveBlob(blob, filename);
     } else {
       const url = window.URL.createObjectURL(blob);
       const a = window.document.createElement('a');
@@ -94,7 +97,7 @@ export class DocumentService {
     const filename = document.fileName;
 
     if (this.apiService.isMS) {
-      window.navigator.msSaveBlob(blob, filename);
+      (window.navigator as any).msSaveBlob(blob, filename);
     } else {
       const tab = window.open();
       const fileURL = URL.createObjectURL(blob);

@@ -15,7 +15,10 @@ export class UrlService {
   private _params: Params = {};
   private _fragment: string = null;
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router) {
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {
     // create a new observable that publishes only the NavigationEnd event
     // used for subscribers to know when to refresh their parameters
     // NB: use share() so this fires only once each time even with multiple subscriptions

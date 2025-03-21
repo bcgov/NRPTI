@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { TestBedHelper } from '../../spec/spec-utils';
 import { PenaltyDetailComponent } from './penalty-detail.component';
 import { Penalty } from '../../models/master/common-models/penalty';

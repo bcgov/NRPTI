@@ -10,12 +10,13 @@ import { FactoryService } from '../../../services/factory.service';
 import { AgencyDataService } from '../../../../../../global/src/lib/utils/agency-data-service';
 
 @Component({
+  standalone: false,
   selector: 'app-administrative-penalty-detail',
   templateUrl: './administrative-penalty-detail.component.html',
   styleUrls: ['./administrative-penalty-detail.component.scss']
 })
 export class AdministrativePenaltyDetailComponent extends RecordDetailComponent implements OnInit, OnDestroy {
-  protected ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  protected ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public legislationString = '';
 

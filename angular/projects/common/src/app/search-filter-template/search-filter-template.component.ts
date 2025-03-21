@@ -36,6 +36,7 @@ import { DOCUMENT } from '@angular/common';
  * @implements {OnDestroy}
  */
 @Component({
+  standalone: false,
   selector: 'search-filter-template',
   templateUrl: './search-filter-template.component.html',
   styleUrls: ['./search-filter-template.component.scss'],
@@ -81,7 +82,11 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
    * @param {Utils} utils Utils class for date conversion
    * @memberof SearchFilterTemplateComponent
    */
-  constructor(private router: Router, public utils: Utils, @Inject(DOCUMENT) document) {}
+  constructor(
+    private router: Router,
+    public utils: Utils,
+    @Inject(DOCUMENT) document
+  ) {}
 
   ngOnDestroy(): void {}
 
@@ -234,7 +239,7 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
       this.showAdvancedFilters = showAdvancedFiltersSetting;
     }
   }
-  /*****************************************************
+  /** ***************************************************
    *  Events/Emitters
    *****************************************************/
 
@@ -304,7 +309,7 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
     this.searchEvent.emit(searchPackage);
   }
 
-  /*****************************************************
+  /** ***************************************************
    *  Utility and Helper functions
    *****************************************************/
 

@@ -15,6 +15,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'lib-date-picker',
   templateUrl: './date-picker.component.html',
   styleUrls: ['./date-picker.component.scss']
@@ -28,7 +29,7 @@ export class DatePickerComponent implements OnInit, OnChanges, OnDestroy {
   @Input() reset: EventEmitter<any>;
   @Input() required = false;
 
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public ngbDate: NgbDateStruct = null;
   public minNgbDate: NgbDateStruct = null;
@@ -36,7 +37,10 @@ export class DatePickerComponent implements OnInit, OnChanges, OnDestroy {
 
   public loading = true;
 
-  constructor(private _changeDetectionRef: ChangeDetectorRef, private utils: Utils) {}
+  constructor(
+    private _changeDetectionRef: ChangeDetectorRef,
+    private utils: Utils
+  ) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.minDate && changes.minDate.currentValue) {
@@ -53,7 +57,7 @@ export class DatePickerComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     this.ngbDate = this.control.value || null;
     if (this.reset) {
-      this.reset.pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => this.clearDate());
+      (this.reset as any).pipe(takeUntil(this.ngUnsubscribe)).subscribe(() => this.clearDate());
     }
   }
 

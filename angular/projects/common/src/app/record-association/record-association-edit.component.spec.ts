@@ -17,7 +17,7 @@ describe('RecordAssociationEditComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [RecordAssociationEditComponent],
-      imports: [FormsModule, ReactiveFormsModule, NgbModule.forRoot()],
+      imports: [FormsModule, ReactiveFormsModule, NgbModule],
       providers: [Utils, { provide: StoreService, useValue: mockStoreService }]
     }).compileComponents();
   });

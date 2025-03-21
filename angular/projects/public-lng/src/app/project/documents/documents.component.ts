@@ -20,6 +20,7 @@ import { PlansTableRowsComponent } from '../plans/plans-rows/plans-table-rows.co
  * @implements {OnInit}
  */
 @Component({
+  standalone: false,
   selector: 'app-documents',
   templateUrl: './documents.component.html',
   styleUrls: ['./documents.component.scss']
@@ -31,7 +32,7 @@ export class DocumentsComponent implements OnInit {
   private basePath: string;
 
   public tableData: TableObject;
-  private ngUnsubscribe: Subject<boolean> = new Subject<boolean>();
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
   public loading = true;
 
   constructor(
