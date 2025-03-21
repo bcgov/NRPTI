@@ -1,11 +1,5 @@
 // This file is required by karma.conf.js and loads recursively all the .spec and framework files
 
-import 'zone.js/long-stack-trace-zone';
-import 'zone.js/proxy.js';
-import 'zone.js/sync-test';
-import 'zone.js/jasmine-patch';
-import 'zone.js/async-test';
-import 'zone.js/fake-async-test';
 import { getTestBed } from '@angular/core/testing';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 

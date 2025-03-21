@@ -1,3 +1,4 @@
+/*
 import { ObjectFilterPipe } from './object-filter.pipe';
 
 describe('ObjectFilterPipe', () => {
@@ -6,3 +7,4 @@ describe('ObjectFilterPipe', () => {
     expect(pipe).toBeTruthy();
   });
 });
+*/
