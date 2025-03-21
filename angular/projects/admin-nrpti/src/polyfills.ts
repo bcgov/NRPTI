@@ -70,7 +70,7 @@ import 'zone.js/testing';
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
 if (!String.prototype.padStart) {
   String.prototype.padStart = function padStart(targetLength, padString) {
-    // tslint:disable-next-line:no-bitwise
+    // eslint-disable-next-line no-bitwise
     targetLength = targetLength >> 0; // truncate if number or convert non-number to 0;
     padString = String(typeof padString !== 'undefined' ? padString : ' ');
     if (this.length > targetLength) {

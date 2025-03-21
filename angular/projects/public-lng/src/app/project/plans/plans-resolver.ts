@@ -18,7 +18,7 @@ export class PlansResolver implements Resolve<Observable<object>> {
 
     const project = this._apiService.getProjectObjectId(route.parent.url[1].path);
 
-    // tslint:disable-next-line: prefer-const
+    // eslint-disable-next-line  prefer-const
     const filterParams = { ...route.params };
 
     // Clear out all the standard table template params

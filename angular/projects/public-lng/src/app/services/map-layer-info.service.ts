@@ -66,7 +66,7 @@ export class MapLayerInfoService {
       console.log(error);
     }
 
-    // tslint:disable-next-line: prefer-const
+    // eslint-disable-next-line  prefer-const
     const searchResult = new SearchResult();
 
     if (res && res[0] && res[0].data) {

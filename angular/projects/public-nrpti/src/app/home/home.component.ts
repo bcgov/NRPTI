@@ -17,7 +17,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ) {}
 
   async ngOnInit() {
-    debugger;
     this.agencyDataService = new AgencyDataService(this.factoryService);
   }
 

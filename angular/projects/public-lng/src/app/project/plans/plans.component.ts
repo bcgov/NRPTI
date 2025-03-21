@@ -65,7 +65,7 @@ export class PlansComponent implements OnInit {
 
   filterChange(event) {
     // Generate new route keeping old params
-    // tslint:disable-next-line: prefer-const
+    // eslint-disable-next-line  prefer-const
     const newParams = {};
 
     // save default set of params, tack on new ones.

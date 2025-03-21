@@ -84,7 +84,7 @@ During development, a library can be built and symlinked instead of published. T
 
 Linting and formatting is handled by a combiation of `ESLint` and `Prettier`. The reason for this, is that you get the best of both worlds: ESLint's larger selection of linting rules with Prettier's robust formatting rules.
 
-These 2 linters (tslint, Prettier) do have overlapping rules. To avoid weird rule interactions, TSlint has been configured to defer any overlapping rules to Prettier, via the use of `ESLint-config-prettier`.
+These 2 linters (eslint, Prettier) do have overlapping rules. To avoid weird rule interactions, ESLint has been configured to defer any overlapping rules to Prettier, via the use of `ESLint-config-prettier`.
 
 Recommend installing the [VSCode Prettier extension](https://github.com/prettier/prettier-vscode), so Prettier's formatting can be applied on-the-fly.
 

@@ -73,7 +73,7 @@ import 'intl/locale-data/jsonp/en.js';
 if (!String.prototype.padStart) {
   Object.defineProperty(String.prototype, 'padStart', {
     value: function (targetLength, padString) {
-      // tslint:disable-next-line:no-bitwise
+      // eslint-disable-next-line no-bitwise
       targetLength = targetLength >> 0; // truncate if number or convert non-number to 0;
       padString = String(typeof padString !== 'undefined' ? padString : ' ');
       if (this.length > targetLength) {

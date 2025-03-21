@@ -540,7 +540,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
       administrativePenalty['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
 
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line max-line-length
     this.myForm.get('legislations').dirty &&
       (administrativePenalty['legislation'] = this.parseLegislationsFormGroups());
 

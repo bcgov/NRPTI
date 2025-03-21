@@ -86,7 +86,7 @@ export class ExplorePanelComponent implements OnInit, OnDestroy {
 
   public applyAllFilters() {
     // Only add dateRange* conditionally.
-    // tslint:disable-next-line: prefer-const
+    // eslint-disable-next-line  prefer-const
     const filterQuery = this.textFilterKeys;
     delete filterQuery['dateRangeFromFilter'];
     delete filterQuery['dateRangeToFilter'];

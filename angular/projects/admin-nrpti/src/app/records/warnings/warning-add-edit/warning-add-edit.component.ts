@@ -387,7 +387,7 @@ export class WarningAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.outcomeDescription.dirty &&
       (warning['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
 
-    // tslint:disable-next-line:max-line-length
+    // eslint-disable-next-line max-line-length
     this.myForm.get('legislations').dirty && (warning['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(warning, this.factoryService);
     // NRCED flavour
