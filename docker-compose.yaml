@@ -49,16 +49,16 @@ services:
   ############################################################################################
   ###                                        ANGULAR                                       ###
   ############################################################################################
-  angular:
-    container_name: nrpti-angular
+  nrpti:
+    container_name: admin-nrpti
     build:
       context: ./angular
       dockerfile: Dockerfile
     ports:
-      - 4200:4200
-      - 4300:4300
-      - 4400:4400
-    # Also this does depend on the backend being up, I just didn't add it for test purposes
+      - 80:80
+    depends_on:
+      api:
+        condition: service_started
 
 #############################################################################################
 ###                                       Network                                         ###

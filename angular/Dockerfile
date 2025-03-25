@@ -15,13 +15,16 @@ RUN npm install
 # Copy the rest of the application code
 COPY . /app
 
-# Build everything
-RUN npm run build:prod
+# Build common folders and the NRPTI app
+RUN npm run build:prod:only-nrpti
 
-# Serve the production builds
-CMD ["npm", "run", "start-prod"]
+# Serve the app with NGINX
+FROM nginx:alpine
 
-# Expose the ports
-EXPOSE 4200 4200
-EXPOSE 4300 4300
-EXPOSE 4400 4400
+COPY --from=base /app/dist/admin-nrpti /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80 80
+
+# Start NGINX server
+CMD ["nginx", "-g", "daemon off;"]
