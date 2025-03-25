@@ -1,4 +1,4 @@
-@import 'assets/styles/components/mine.scss';
+@use 'assets/styles/components/mine.scss' as *;
 
 .summary-label {
   font-size: small !important;

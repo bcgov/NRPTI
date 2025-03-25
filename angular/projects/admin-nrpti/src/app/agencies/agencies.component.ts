@@ -9,7 +9,7 @@ import { FactoryService } from '../services/factory.service';
   standalone: false,
   selector: 'app-agencies',
   templateUrl: './agencies.component.html',
-  styleUrls: ['./agencies.component.scss']
+  styleUrls: ['../../assets/styles/base/base.scss', '../../assets/styles/components/add-edit.scss']
 })
 export class AgenciesComponent implements OnInit {
   public loading = false;

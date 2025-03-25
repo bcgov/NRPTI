@@ -10,7 +10,7 @@ import { Subject } from 'rxjs';
   standalone: false,
   selector: 'app-lng-map-info',
   templateUrl: './lng-map-info.component.html',
-  styleUrls: ['./lng-map-info.component.scss']
+  styleUrls: ['../../../assets/styles/base/base.scss', '../../../assets/styles/components/add-edit.scss']
 })
 export class LngMapInfoComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();

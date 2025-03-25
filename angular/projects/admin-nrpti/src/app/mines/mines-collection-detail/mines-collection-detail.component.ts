@@ -12,7 +12,7 @@ import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-da
   standalone: false,
   selector: 'app-mines-collection-detail',
   templateUrl: './mines-collection-detail.component.html',
-  styleUrls: ['./mines-collection-detail.component.scss']
+  styleUrls: ['../../../assets/styles/components/mine.scss']
 })
 export class MinesCollectionDetailComponent implements OnInit, OnDestroy {
   agencyDataService: AgencyDataService;

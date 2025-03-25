@@ -38,7 +38,7 @@ const ROLE_DATA_SOURCES = {
   standalone: false,
   selector: 'app-import-csv',
   templateUrl: './import-csv.component.html',
-  styleUrls: ['./import-csv.component.scss']
+  styleUrls: ['../../../assets/styles/base/base.scss', '../../../assets/styles/components/add-edit.scss']
 })
 export class ImportCSVComponent implements OnInit {
   public dataSourceTypes = DEFAULT_DATA_SOURCES;

@@ -40,7 +40,7 @@ import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-da
   standalone: false,
   selector: 'app-mines-collections-list',
   templateUrl: './mines-collections-list.component.html',
-  styleUrls: ['./mines-collections-list.component.scss']
+  styleUrls: ['../../../assets/styles/components/mine.scss']
 })
 export class MinesCollectionsListComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
