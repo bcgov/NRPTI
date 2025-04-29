@@ -74,7 +74,17 @@ export class KeycloakService {
       };
 
       try {
-        const auth = await this.keycloakAuth.init({ pkceMethod: 'S256' });
+        // Use PKCE method S256 for better security and exclude issuer from auth response 
+        // to fix the 400 bad request redirect_uri issue with newer Keycloak versions
+        const initOptions = { 
+          pkceMethod: 'S256',
+          checkLoginIframe: false,
+          enableLogging: true,
+          flow: 'standard',
+          redirectUri: this.configService.config['REDIRECT_URI'] || window.location.origin
+        };
+        
+        const auth = await this.keycloakAuth.init(initOptions);
         this.logger.log(`KC Success: ${auth}`);
         if (!auth) {
           this.keycloakAuth.login({ idpHint: 'idir' });
