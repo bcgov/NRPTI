@@ -15,7 +15,7 @@ services:
     networks:
       - nrpti
     healthcheck:
-      test: echo 'db.runCommand({serverStatus:1}).ok' | mongo admin -u ${MONGO_USERNAME:-nrpti-admin} -p ${MONGO_PASSWORD:-nrpti-admin} --quiet | grep 1
+      test: echo 'db.runCommand({serverStatus:1}).ok' | mongo nrpti-dev -u ${MONGO_USERNAME:-nrpti-admin} -p ${MONGO_PASSWORD:-nrpti-admin} --quiet | grep 1
       interval: 20s
       timeout: 30s
       retries: 5
@@ -52,9 +52,9 @@ services:
   # This works but it's not great for security reasons apparently
   # See this: https://v17.angular.io/guide/deployment
   ############################################################################################
-  ###                                        ANGULAR                                       ###
+  ###                                        ANGULAR ADMIN (NRPTI)                                 ###
   ############################################################################################
-  nrpti:
+  admin-nrpti:
     container_name: admin-nrpti
     build:
       context: ./angular
@@ -65,22 +65,45 @@ services:
       api:
         condition: service_started
     environment:
-      DEBUG_MODE: false
-      ENVIRONMENT: dev
-      API_LOCATION: http://localhost:3000
-      API_PATH: /api
-      API_PUBLIC_PATH: /api/public
-      KEYCLOAK_CLIENT_ID: nrpti-4869
-      KEYCLOAK_URL: https://dev.loginproxy.gov.bc.ca/auth
-      KEYCLOAK_REALM: standard
-      KEYCLOAK_ENABLED: true
-      APPLICATION: NRPTI
-      FEATURE_FLAG_NRIS_EMLI_IMPORTER: true
-      IMPORT_TABLE_INTERVAL: 15000
-      IMPORT_TABLE_PAGE_SIZE: 20
-      IMPORT_TABLE_SORT_BY: -startDate
-      HOST_URL: http://localhost:80
-      REDIRECT_URI: http://localhost:80
+      - DEBUG_MODE=false
+      - ENVIRONMENT=dev
+      - API_LOCATION=http://localhost:3000
+      - API_PATH=/api
+      - API_PUBLIC_PATH=/api/public
+      - KEYCLOAK_CLIENT_ID=nrpti-4869
+      - KEYCLOAK_URL=https://dev.loginproxy.gov.bc.ca/auth
+      - KEYCLOAK_REALM=standard
+      - KEYCLOAK_ENABLED=true
+      - APPLICATION=NRPTI
+      - FEATURE_FLAG_NRIS_EMLI_IMPORTER=true
+      - IMPORT_TABLE_INTERVAL=15000
+      - IMPORT_TABLE_PAGE_SIZE=20
+      - IMPORT_TABLE_SORT_BY=-startDate
+      - HOST_URL=http://localhost:80
+      - REDIRECT_URI=http://localhost:80
+
+  ############################################################################################
+  ###                                        ANGULAR PUBLIC (NRCED)                                ###
+  ############################################################################################
+  public-nrpti:
+    container_name: public-nrpti
+    build:
+      context: ./angular
+      dockerfile: Dockerfile-public-nrpti
+    ports:
+      - 4200:80
+    depends_on:
+      api:
+        condition: service_started
+    environment:
+      - DEBUG_MODE=false
+      - ENVIRONMENT=dev
+      - API_LOCATION=http://localhost:3000
+      - API_PATH=/api
+      - API_PUBLIC_PATH=/api/public
+      - FEATURE_FLAG_NRIS_EMLI_IMPORTER=true
+      - HOST_URL=http://localhost:4200
+      - APPLICATION=NRCED
 
 #############################################################################################
 ###                                       Network                                         ###
