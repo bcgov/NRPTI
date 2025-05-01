@@ -50,3 +50,8 @@ api/migrations/*.csv
 NRPTI.iml
 
 angular/.angular/
+
+# Environment files
+**/.env
+**/.env.*
+!**/.env.example

@@ -2,12 +2,10 @@
 
 /* This architecture roughly follows https://sass-guidelin.es/#the-7-1-pattern */
 
-//@import "~mygovbc-bootstrap-theme/dist/mygovbc-bootstrap-theme.min.css";
+// Base
+@use "assets/styles/base/base.scss" as *;
 
 @import "~bootstrap/dist/css/bootstrap.css";
-
-// Base
-@import "assets/styles/base/base.scss";
 
 // Helpers
 @import "assets/styles/base/helpers.scss";

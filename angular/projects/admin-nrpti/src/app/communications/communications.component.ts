@@ -15,7 +15,7 @@ import { ToastService } from '../services/toast.service';
   standalone: false,
   selector: 'communications-add',
   templateUrl: './communications.component.html',
-  styleUrls: ['./communications.component.scss']
+  styleUrls: ['../../assets/styles/base/base.scss', '../../assets/styles/components/add-edit.scss']
 })
 export class CommunicationsComponent implements OnInit, OnDestroy {
   @ViewChild(DatePickerComponent) DatePicker: DatePickerComponent;

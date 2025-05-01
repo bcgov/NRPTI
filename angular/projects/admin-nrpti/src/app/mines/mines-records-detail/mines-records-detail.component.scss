@@ -1,4 +1,4 @@
-@import 'assets/styles/components/mine.scss';
+@use 'assets/styles/components/mine.scss' as *;
 
 .header-text {
   margin-left: 0.25rem;

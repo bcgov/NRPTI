@@ -3,7 +3,7 @@
 /* This architecture roughly follows https://sass-guidelin.es/#the-7-1-pattern */
 
 // Base
-@import "assets/styles/base/base.scss";
+@use "assets/styles/base/base.scss" as *;
 
 // Helpers
 @import "assets/styles/base/helpers.scss";

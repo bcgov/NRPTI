@@ -6,13 +6,26 @@
     window.__env.debugMode = false;
 
     // Environment name
-    window.__env.ENVIRONMENT = 'local';  // local | dev | test | prod
+    window.__env.ENVIRONMENT = 'dev';  // local | dev | test | prod
 
-    window.__env.API_LOCATION = 'http://localhost:3000';
+    // API and authentication settings
+    if (window.__env.ENVIRONMENT === 'local' || window.__env.ENVIRONMENT === 'dev') {
+        window.__env.API_LOCATION = 'http://localhost:3000';
+    } else if (window.__env.ENVIRONMENT === 'prod') {
+        window.__env.API_LOCATION = 'https://nrpti-api-f00029-prod.apps.silver.devops.gov.bc.ca';
+    } else {
+        // For dev or test environments
+        window.__env.API_LOCATION = window.location.origin;
+    }
+    
     window.__env.API_PATH = '/api';
     window.__env.API_PUBLIC_PATH = '/api/public';
     window.__env.KEYCLOAK_CLIENT_ID = 'nrpti-4869';
-    window.__env.KEYCLOAK_URL = 'https://dev.loginproxy.gov.bc.ca/auth';
+    if (window.__env.ENVIRONMENT === 'local' || window.__env.ENVIRONMENT === 'dev') {
+        window.__env.KEYCLOAK_URL = 'https://dev.loginproxy.gov.bc.ca/auth';
+    } else {
+        window.__env.KEYCLOAK_URL = 'https://loginproxy.gov.bc.ca/auth';
+    }
     window.__env.KEYCLOAK_REALM = 'standard';
     window.__env.KEYCLOAK_ENABLED = true;
 
