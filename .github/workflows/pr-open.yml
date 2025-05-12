@@ -29,3 +29,16 @@ jobs:
           tag: ${{ github.event.number }}
           tag_fallback: latest
           triggers: ('${{ matrix.package }}/')
+
+  # https://github.com/bcgov/action-deploy-ghcr
+  deploys:
+    name: Deploys (${{ github.event.number }})
+    needs: [builds]
+    secrets: inherit
+    uses: ./.github/workflows/.deploy.yml
+    with:
+      db-memory-request: 100Mi
+      db-pvc-size: 192Mi
+      min-replicas: 1
+      max-replicas: 1
+      triggers: ('api/' 'angular/')
