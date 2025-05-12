@@ -19,23 +19,34 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        package: [api, angular]
+        include:
+          - package: api
+            directory: api
+            dockerfile: Dockerfile
+          - package: admin-nrpti
+            directory: angular
+            dockerfile: Dockerfile
+          - package: public-nrpti
+            directory: angular
+            dockerfile: Dockerfile-public-nrpti
     timeout-minutes: 10
     steps:
       - uses: bcgov/action-builder-ghcr@ace71f7a527ca6fc43c15c7806314be5a4579d2c # v2.3.0
         with:
           keep_versions: 50
           package: ${{ matrix.package }}
+          context: ${{ matrix.directory }}
+          dockerfile: ${{ matrix.directory }}/${{ matrix.dockerfile }}
           tag: ${{ github.event.number }}
           tag_fallback: latest
-          triggers: ('${{ matrix.package }}/')
+          triggers: ('${{ matrix.directory }}/')
 
   # https://github.com/bcgov/action-deploy-ghcr
   deploys:
     name: Deploys (${{ github.event.number }})
     needs: [builds]
     secrets: inherit
-    uses: ./.github/workflows/.deploy.yml
+    uses: ./.github/workflows/deploy.yml
     with:
       db-memory-request: 100Mi
       db-pvc-size: 192Mi
