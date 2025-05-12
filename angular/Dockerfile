@@ -25,8 +25,8 @@ RUN npm install -g serve
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
-# Expose port 80
-EXPOSE 80
+# Expose port 4200
+EXPOSE 4200
 
 # Use the entrypoint script
 CMD ["/app/entrypoint.sh"]

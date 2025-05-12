@@ -60,7 +60,7 @@ services:
       context: ./angular
       dockerfile: Dockerfile
     ports:
-      - 80:80
+      - 4200:4200
     depends_on:
       api:
         condition: service_started
@@ -79,8 +79,6 @@ services:
       - IMPORT_TABLE_INTERVAL=15000
       - IMPORT_TABLE_PAGE_SIZE=20
       - IMPORT_TABLE_SORT_BY=-startDate
-      - HOST_URL=http://localhost:80
-      - REDIRECT_URI=http://localhost:80
 
   ############################################################################################
   ###                                        ANGULAR PUBLIC (NRCED)                                ###
@@ -91,7 +89,7 @@ services:
       context: ./angular
       dockerfile: Dockerfile-public-nrpti
     ports:
-      - 4200:80
+      - 4400:4400
     depends_on:
       api:
         condition: service_started
