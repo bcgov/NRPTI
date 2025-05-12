@@ -35,8 +35,8 @@ jobs:
         with:
           keep_versions: 50
           package: ${{ matrix.package }}
-          context: ${{ matrix.directory }}
-          dockerfile: ${{ matrix.directory }}/${{ matrix.dockerfile }}
+          build_context: ${{ matrix.directory }}
+          build_file: ${{ matrix.directory }}/${{ matrix.dockerfile }}
           tag: ${{ github.event.number }}
           tag_fallback: latest
           triggers: ('${{ matrix.directory }}/')
