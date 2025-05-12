@@ -3,9 +3,6 @@
 # Update env.js with environment variables
 cd /app/dist/public-nrced
 
-# Get the actual hostname from the HOST_URL environment variable or use a default
-ACTUAL_URL=${HOST_URL:-http://localhost}
-
 # Create or update env.js with environment variables
 cat > env.js << EOF
 (function (window) {
@@ -33,4 +30,4 @@ cat > env.js << EOF
 EOF
 
 # Start the server
-exec serve -s /app/dist/public-nrced -p 80 
+exec serve -s /app/dist/public-nrced -p 4400

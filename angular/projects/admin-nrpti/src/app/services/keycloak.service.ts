@@ -81,7 +81,7 @@ export class KeycloakService {
           checkLoginIframe: false,
           enableLogging: true,
           flow: 'standard',
-          redirectUri: this.configService.config['REDIRECT_URI'] || window.location.origin
+          redirectUri: window.location.origin
         };
         
         const auth = await this.keycloakAuth.init(initOptions);

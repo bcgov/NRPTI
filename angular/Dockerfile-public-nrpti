@@ -14,8 +14,12 @@ RUN npm install
 COPY . /app
 
 # Build for production - clean, build library, and build public-nrpti
-RUN npm run build:library
-RUN npm run build:app:public-nrced
+RUN npm run build:library && \
+    cd dist/nrpti-angular-components && \
+    npm link && \
+    cd /app && \
+    npm link nrpti-angular-components && \
+    npm run build:app:public-nrced
 
 # Install a simple server to serve static files
 RUN npm install -g serve
@@ -25,7 +29,7 @@ COPY entrypoint-public-nrpti.sh /app/entrypoint-public-nrpti.sh
 RUN chmod +x /app/entrypoint-public-nrpti.sh
 
 # Expose port 80
-EXPOSE 80
+EXPOSE 4300
 
 # Use the entrypoint script
 CMD ["/app/entrypoint-public-nrpti.sh"] 
