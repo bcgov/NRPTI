@@ -23,6 +23,7 @@ on:
         description: List of directories to trigger the deployment
         default: ''
         type: string
+permissions: {}
 
 jobs:
   init:
