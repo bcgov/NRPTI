@@ -14,8 +14,12 @@ RUN npm install
 COPY . /app
 
 # Build for production - clean, build library, and build public-nrpti
-RUN npm run build:library
-RUN npm run build:app:public-nrced
+RUN npm run build:library && \
+    cd dist/nrpti-angular-components && \
+    npm link && \
+    cd /app && \
+    npm link nrpti-angular-components && \
+    npm run build:app:public-nrced
 
 # Install a simple server to serve static files
 RUN npm install -g serve
