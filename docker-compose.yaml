@@ -75,12 +75,7 @@ services:
       - KEYCLOAK_REALM=standard
       - KEYCLOAK_ENABLED=true
       - APPLICATION=NRPTI
-      - FEATURE_FLAG_NRIS_EMLI_IMPORTER=true
-      - IMPORT_TABLE_INTERVAL=15000
-      - IMPORT_TABLE_PAGE_SIZE=20
-      - IMPORT_TABLE_SORT_BY=-startDate
-
-  ############################################################################################
+     ############################################################################################
   ###                                        ANGULAR PUBLIC (NRCED)                                ###
   ############################################################################################
   public-nrpti:
