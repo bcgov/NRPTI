@@ -41,11 +41,11 @@ jobs:
           tag_fallback: latest
           triggers: ('${{ matrix.directory }}/')
 
-  # https://github.com/bcgov/action-deploy-ghcr
-  deploys:
-    name: Deploys (${{ github.event.number }})
-    needs: [builds]
-    secrets: inherit
-    uses: ./.github/workflows/deploy.yml
-    with:
-      triggers: ('api/' 'angular/')
+  # # https://github.com/bcgov/action-deploy-ghcr
+  # deploys:
+  #   name: Deploys (${{ github.event.number }})
+  #   needs: [builds]
+  #   secrets: inherit
+  #   uses: ./.github/workflows/deploy.yml
+  #   with:
+  #     triggers: ('api/' 'angular/')
