@@ -48,8 +48,4 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/deploy.yml
     with:
-      db-memory-request: 100Mi
-      db-pvc-size: 192Mi
-      min-replicas: 1
-      max-replicas: 1
       triggers: ('api/' 'angular/')
