@@ -41,6 +41,21 @@ jobs:
           tag_fallback: latest
           triggers: ('${{ matrix.directory }}/')
 
+  deploy:
+    name: Deploy
+    needs: [builds]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy
+        uses: bcgov/action-deployer-openshift@v4.0.0
+        with:
+          oc_namespace: ${{ vars.oc_namespace }}
+          oc_server: ${{ vars.oc_server }}
+          oc_token: ${{ secrets.oc_token }}
+          file: ./tools/api/api.dc.yaml
+          overwrite: true
+
   # # https://github.com/bcgov/action-deploy-ghcr
   # deploys:
   #   name: Deploys (${{ github.event.number }})
