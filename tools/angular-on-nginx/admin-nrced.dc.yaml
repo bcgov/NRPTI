@@ -17,7 +17,7 @@ objects:
           targetPort: 8080
       selector:
         app: ${GROUP_NAME}
-        deploymentconfig: ${NAME}
+        deployment: ${NAME}
       type: ClusterIP
   - kind: Route
     apiVersion: route.openshift.io/v1
@@ -37,8 +37,8 @@ objects:
         termination: edge
         insecureEdgeTerminationPolicy: Redirect
       wildcardPolicy: None
-  - kind: DeploymentConfig
-    apiVersion: apps.openshift.io/v1
+  - kind: Deployment
+    apiVersion: apps/v1
     metadata:
       name: ${NAME}
       labels:
@@ -46,7 +46,7 @@ objects:
         role: frontend
     spec:
       strategy:
-        type: Rolling
+        type: RollingUpdate
       triggers:
         - type: ImageChange
           imageChangeParams:
@@ -57,19 +57,19 @@ objects:
               kind: ImageStreamTag
               namespace: ${RUNTIME_IMAGE_NAMESPACE}
               name: ${NAME}:${RUNTIME_IMAGE_TAG}
-        - type: ConfigChange
       replicas: 1
       revisionHistoryLimit: 5
       test: false
       selector:
-        app: ${GROUP_NAME}
-        deploymentconfig: ${NAME}
+        matchLabels:
+          app: ${GROUP_NAME}
+          deploymentconfig: ${NAME}
       template:
         metadata:
           creationTimestamp: null
           labels:
             app: ${GROUP_NAME}
-            deploymentconfig: ${NAME}
+            deployment: ${NAME}
             role: frontend
         spec:
           containers:
