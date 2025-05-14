@@ -68,7 +68,8 @@ objects:
               name: ${APP_IMAGE_NAME}:${APP_DEPLOYMENT_TAG}
       replicas: 1
       selector:
-        name: ${NAME}-api
+        matchLabels:
+          name: ${NAME}-api
       template:
         metadata:
           name: ${NAME}-api
