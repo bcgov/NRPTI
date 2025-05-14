@@ -45,15 +45,24 @@ jobs:
     name: Deploy
     needs: [builds]
     runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        include:
+          - component: api
+            file: ./tools/api/api.dc.yaml
+          - component: admin-nrpti
+            file: ./tools/angular-on-nginx/admin-nrced.dc.yaml
+          - component: public-nrpti
+            file: ./tools/angular-on-nginx/public-nrced.dc.yaml
     steps:
       - uses: actions/checkout@v3
-      - name: Deploy
+      - name: Deploy ${{ matrix.component }}
         uses: bcgov/action-deployer-openshift@v4.0.0
         with:
           oc_namespace: ${{ vars.oc_namespace }}
           oc_server: ${{ vars.oc_server }}
           oc_token: ${{ secrets.oc_token }}
-          file: ./tools/api/api.dc.yaml
+          file: ${{ matrix.file }}
           overwrite: true
 
   # # https://github.com/bcgov/action-deploy-ghcr
