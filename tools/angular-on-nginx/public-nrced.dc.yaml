@@ -47,26 +47,14 @@ objects:
     spec:
       strategy:
         type: RollingUpdate
-      triggers:
-        - type: ImageChange
-          imageChangeParams:
-            automatic: true
-            containerNames:
-              - ${NAME}
-            from:
-              kind: ImageStreamTag
-              namespace: ${RUNTIME_IMAGE_NAMESPACE}
-              name: ${RUNTIME_IMAGE_NAME}:${RUNTIME_IMAGE_TAG}
       replicas: 1
       revisionHistoryLimit: 5
-      test: false
       selector:
         matchLabels:
           app: ${GROUP_NAME}
           deployment: ${NAME}
       template:
         metadata:
-          creationTimestamp: null
           labels:
             app: ${GROUP_NAME}
             deployment: ${NAME}
