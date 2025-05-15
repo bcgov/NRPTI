@@ -1,5 +1,5 @@
 kind: Template
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 metadata:
   name: ${NAME}-api
   labels:
@@ -46,8 +46,8 @@ objects:
       tls:
         termination: edge
       wildcardPolicy: None
-  - kind: DeploymentConfig
-    apiVersion: v1
+  - kind: Deployment
+    apiVersion: apps/v1
     metadata:
       name: ${NAME}-api
       labels:
@@ -55,7 +55,7 @@ objects:
         role: api
     spec:
       strategy:
-        type: Rolling
+        type: RollingUpdate
       triggers:
         - type: ImageChange
           imageChangeParams:
@@ -66,10 +66,10 @@ objects:
               kind: ImageStreamTag
               namespace: ${APP_IMAGE_NAMESPACE}
               name: ${APP_IMAGE_NAME}:${APP_DEPLOYMENT_TAG}
-        - type: ConfigChange
       replicas: 1
       selector:
-        name: ${NAME}-api
+        matchLabels:
+          name: ${NAME}-api
       template:
         metadata:
           name: ${NAME}-api
@@ -193,8 +193,8 @@ objects:
           targetPort: 27017
       selector:
         name: ${NAME}-mongodb
-  - kind: DeploymentConfig
-    apiVersion: v1
+  - kind: Deployment
+    apiVersion: apps/v1
     metadata:
       name: ${NAME}-mongodb
       labels:
@@ -213,10 +213,10 @@ objects:
               kind: ImageStreamTag
               namespace: ${APP_IMAGE_NAMESPACE}
               name: mongodb:${MONGO_VER}
-        - type: ConfigChange
       replicas: 1
       selector:
-        name: ${NAME}-mongodb
+        matchLabels:
+          name: ${NAME}-mongodb
       template:
         metadata:
           name: ${NAME}-mongodb

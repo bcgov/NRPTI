@@ -1,0 +1,82 @@
+name: Deploys
+
+on:
+  workflow_call:
+    inputs:
+      ### Required
+      # Nothing! Only `secrets: inherit` is required
+
+      ### Typical / recommended
+      environment:
+        description: GitHub/OpenShift environment; usually PR number, test or prod
+        default: ''
+        type: string
+      tag:
+        description: Container tag; usually PR number
+        default: ${{ github.event.number }}
+        type: string
+      target:
+        description: Deployment target; usually PR number, test or prod
+        default: ${{ github.event.number }}
+        type: string
+      triggers:
+        description: List of directories to trigger the deployment
+        default: ''
+        type: string
+permissions: {}
+
+jobs:
+  init:
+    name: Deploy (init)
+    environment: ${{ inputs.environment }}
+    runs-on: ubuntu-24.04
+    steps:
+      
+      - name: OpenShift Init
+        id: trigger
+        uses: bcgov/action-deployer-openshift@v4.0.0
+        with:
+          oc_namespace: ${{ vars.OC_NAMESPACE }}
+          oc_server: ${{ vars.OC_SERVER }}
+          oc_token: ${{ secrets.OC_TOKEN }}
+          file: common/openshift.init.yml
+          overwrite: true
+          parameters:
+          triggers: ${{ inputs.triggers }}
+
+  deploy:
+    name: Deploy
+    environment: ${{ inputs.environment }}
+    needs: [init]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        name: [api, admin-nrpti, public-nrpti]
+        include:
+          - name: api
+            directory: api
+            dockerfile: Dockerfile
+          - name: admin-nrpti
+            directory: angular
+            dockerfile: Dockerfile
+          - name: public-nrpti
+            directory: angular
+            dockerfile: Dockerfile-public-nrpti
+   
+    # steps:
+    #   - name: OpenShift Deploy
+    #     uses: bcgov/action-deployer-openshift@v4.0.0
+    #     with:
+    #       oc_namespace: ${{ vars.OC_NAMESPACE }}
+    #       oc_server: ${{ vars.OC_SERVER }}
+    #       oc_token: ${{ secrets.OC_TOKEN }}
+    #       file: ${{ matrix.directory }}/openshift.${{ matrix.name }}.deploy.yml
+    #       overwrite: true
+    #       parameters: |
+    #         -p NAME=${{ matrix.name }}
+    #         -p TAG=${{ inputs.tag }}
+    #         -p TARGET=${{ inputs.target }}
+    #         -p DIRECTORY=${{ matrix.directory }}
+    #         -p DOCKERFILE=${{ matrix.dockerfile }}
+   
