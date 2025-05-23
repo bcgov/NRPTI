@@ -73,7 +73,7 @@ parameters:
     value: nodejs
   - name: SOURCE_IMAGE_TAG
     required: true
-    value: "10"
+    value: "18"
   - name: SOURCE_IMAGE_NAMESPACE
     required: true
     value: openshift
