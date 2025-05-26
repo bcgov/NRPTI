@@ -55,7 +55,7 @@ objects:
         - type: GitHub
           github:
             secretReference:
-              name: github-build-webhook
+              name: github
 parameters:
   - description: A name used for all objects
     displayName: Name
