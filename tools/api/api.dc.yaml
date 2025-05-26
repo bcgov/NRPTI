@@ -46,7 +46,7 @@ objects:
       tls:
         termination: edge
       wildcardPolicy: None
-  - kind: Deployment
+  - kind: DeploymentConfig
     apiVersion: apps/v1
     metadata:
       name: ${NAME}-api
@@ -55,7 +55,7 @@ objects:
         role: api
     spec:
       strategy:
-        type: RollingUpdate
+        type: Rolling
       triggers:
         - type: ImageChange
           imageChangeParams:
@@ -66,6 +66,7 @@ objects:
               kind: ImageStreamTag
               namespace: ${APP_IMAGE_NAMESPACE}
               name: ${APP_IMAGE_NAME}:${APP_DEPLOYMENT_TAG}
+        - type: ConfigChange
       replicas: 1
       selector:
         matchLabels:
@@ -193,7 +194,7 @@ objects:
           targetPort: 27017
       selector:
         name: ${NAME}-mongodb
-  - kind: Deployment
+  - kind: DeploymentConfig
     apiVersion: apps/v1
     metadata:
       name: ${NAME}-mongodb
