@@ -50,6 +50,10 @@ objects:
         contextDir: angular
       triggers:
         - type: ConfigChange
+        - type: GitHub
+          github:
+            secretReference:
+              name: github
       runPolicy: Serial
 parameters:
   - description: A name used for all objects

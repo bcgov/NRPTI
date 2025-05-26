@@ -52,6 +52,10 @@ objects:
       successfulBuildsHistoryLimit: 5
       triggers:
         - type: ConfigChange
+        - type: GitHub
+          github:
+            secretReference:
+              name: github
 parameters:
   - description: A name used for all objects
     displayName: Name
