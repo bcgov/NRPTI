@@ -20,15 +20,16 @@ jobs:
     strategy:
       matrix:
         include:
-          - package: api
-            directory: api
-            dockerfile: Dockerfile
-          - package: admin-nrpti
-            directory: angular
-            dockerfile: Dockerfile
-          - package: public-nrpti
-            directory: angular
-            dockerfile: Dockerfile-public-nrpti
+          - package: ''
+        #   - package: api
+        #     directory: api
+        #     dockerfile: Dockerfile
+        #   - package: admin-nrpti
+        #     directory: angular
+        #     dockerfile: Dockerfile
+        #   - package: public-nrpti
+        #     directory: angular
+        #     dockerfile: Dockerfile-public-nrpti
     timeout-minutes: 10
     steps:
       - uses: bcgov/action-builder-ghcr@ace71f7a527ca6fc43c15c7806314be5a4579d2c # v2.3.0

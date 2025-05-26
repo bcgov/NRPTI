@@ -52,17 +52,17 @@ jobs:
     timeout-minutes: 10
     strategy:
       matrix:
-        name: [api, admin-nrpti, public-nrpti]
-        include:
-          - name: api
-            directory: api
-            dockerfile: Dockerfile
-          - name: admin-nrpti
-            directory: angular
-            dockerfile: Dockerfile
-          - name: public-nrpti
-            directory: angular
-            dockerfile: Dockerfile-public-nrpti
+        name: []
+        # include:
+          # - name: api
+          #   directory: api
+          #   dockerfile: Dockerfile
+          # - name: admin-nrpti
+          #   directory: angular
+          #   dockerfile: Dockerfile
+          # - name: public-nrpti
+          #   directory: angular
+          #   dockerfile: Dockerfile-public-nrpti
    
     # steps:
     #   - name: OpenShift Deploy
