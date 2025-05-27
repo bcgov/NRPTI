@@ -13,11 +13,11 @@
 }
 
 .filter-footer {
-  @include flex-box();
-  @include flex-direction(row-reverse);
+  margin-top: 1rem;
 
   &__button {
     background-color: $primary;
+    min-height: 40px;
   }
 }
 
@@ -53,6 +53,14 @@
   .label-single,
   .label-pair {
     max-width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  
+  .label-single {
+    align-items: flex-start;
+    padding-top: 1.5rem; // Align with the checkbox in label-pair
   }
 }
 

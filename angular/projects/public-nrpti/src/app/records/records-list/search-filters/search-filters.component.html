@@ -90,11 +90,9 @@
       </div>
     </form>
     <div class="filter-footer">
-      <div class="row px-3">
-        <div class="align-self-end m-1">
-          <app-share-record-button buttonText="Share Filtered Results"></app-share-record-button>
-        </div>
-        <button class="filter-footer__button btn btn-secondary align-self-end m-1" (click)="clearSearchFilters()">
+      <div class="d-flex justify-content-center align-items-center px-3 py-2">
+        <app-share-record-button buttonText="Share Filtered Results" class="mr-2"></app-share-record-button>
+        <button class="filter-footer__button btn btn-secondary" (click)="clearSearchFilters()">
           Clear Filters
         </button>
       </div>

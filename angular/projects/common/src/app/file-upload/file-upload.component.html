@@ -5,7 +5,7 @@
   <ng-container *ngIf="fileExt.length > 0">Acceptable file types: {{ fileExt.slice().join(', ') }}</ng-container>
 </div>
 
-<div draggable="true" ngClass="{{ dragDropClass }}">
+<div draggable="true" [ngClass]="dragDropClass">
   <div class="row">
     <div class="col-md-12 text-center">
       <a href="javascript:void(0)" (click)="file.click()">
