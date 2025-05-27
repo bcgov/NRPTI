@@ -13,11 +13,11 @@
 }
 
 .filter-footer {
-  @include flex-box();
-  @include flex-direction(row-reverse);
+  margin-top: 1rem;
 
   &__button {
     background-color: $primary;
+    min-height: 40px;
   }
 }
 

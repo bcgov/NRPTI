@@ -38,6 +38,9 @@ import 'core-js/es/weak-set';
 import 'core-js/es/object';
 import 'core-js/es/array';
 
+/* Angular localize polyfill for i18n functionality used by NgBootstrap */
+import '@angular/localize/init';
+
 /** IE10 and IE11 requires the following for NgClass support on SVG elements */
 // import 'classlist.js';  // Run `npm install --save classlist.js`.
 
