@@ -36,13 +36,13 @@
   [matAutocomplete]="multiAutocomplete"
 />
 <mat-autocomplete #multiAutocomplete="matAutocomplete">
-  <mat-option (click)="selectNone()" title="Select none" value="Clear Selected">Clear Selected</mat-option>
+  <mat-option (click)="selectNone(); $event.preventDefault(); $event.stopPropagation()" title="Select none">Clear Selected</mat-option>
   <ng-container *ngFor="let option of options">
     <mat-option
       *ngIf="option.display"
       class="multi-select-option p-0"
-      [value]="option.value"
       title="{{ option.displayValue }}"
+      (click)="$event.preventDefault(); $event.stopPropagation()"
     >
       <div
         class="py-0 px-3"
