@@ -1,6 +1,6 @@
 ![API tests](https://github.com/bcgov/NRPTI/workflows/API%20tests/badge.svg) ![Front-End tests](https://github.com/bcgov/NRPTI/workflows/Front-End%20tests/badge.svg)
 
-# NRPTI  
+# NRPTI
 
 Natural Resources Public Transparency Initiative monorepo.  This supports the LNG Regulatory interface, Natural Resource Compliance and Enforcement Database, and soon the BC Mines Information site.
 
