@@ -161,21 +161,37 @@ export class RecordUtils {
 
       const issuedTo = row['issuedTo'];
       if (issuedTo) {
+        let issuedToValue = '';
         if (issuedTo['type'] === 'Company') {
-          line.push(escapeCsvString(issuedTo['companyName']));
+          issuedToValue = issuedTo['companyName'];
         } else {
-          line.push(escapeCsvString(issuedTo['fullName']));
+          issuedToValue = issuedTo['fullName'];
         }
+        
+        // Skip if the issued to value is "Unpublished"
+        if (issuedToValue === 'Unpublished') {
+          unpublishedCount++;
+          console.log('⚠️ Skipping unpublished record in CSV export:', {
+            _id: row['_id'],
+            recordType: row['recordType'],
+            dateIssued: row['dateIssued'],
+            read: row['read'],
+            issuedTo: row['issuedTo']
+          });
+          continue;
+        }
+        
+        line.push(escapeCsvString(issuedToValue));
       } else {
-        line.push('Unpublished');
         unpublishedCount++;
-        console.log('⚠️ Unpublished record found in CSV export:', {
+        console.log('⚠️ Skipping unpublished record in CSV export:', {
           _id: row['_id'],
           recordType: row['recordType'],
           dateIssued: row['dateIssued'],
           read: row['read'],
           issuedTo: row['issuedTo']
         });
+        continue;
       }
 
       line.push(escapeCsvString(row['summary']));
