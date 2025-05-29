@@ -111,6 +111,19 @@ export class RecordUtils {
    * @memberof RecordUtils
    */
   static exportToCsv(data: any[], factoryService: FactoryService): void {
+    console.log('📊 CSV GENERATION STARTED');
+    console.log('📈 Input data for CSV:', {
+      totalRecords: data.length,
+      sampleRecords: data.slice(0, 3).map(r => ({
+        _id: r._id,
+        recordType: r.recordType,
+        dateIssued: r.dateIssued,
+        issuedTo: r.issuedTo,
+        read: r.read,
+        location: r.location
+      }))
+    });
+
     const csvHeaders = [
       'Record Type',
       'Issued On',
@@ -138,6 +151,9 @@ export class RecordUtils {
     const agencyDataService = new AgencyDataService(factoryService);
     const dataService = new ActDataServiceNRCED(factoryService);
 
+    let processedCount = 0;
+    let unpublishedCount = 0;
+
     for (const row of data) {
       let line = [];
       line.push(escapeCsvString(row['recordType']));
@@ -145,13 +161,37 @@ export class RecordUtils {
 
       const issuedTo = row['issuedTo'];
       if (issuedTo) {
+        let issuedToValue = '';
         if (issuedTo['type'] === 'Company') {
-          line.push(escapeCsvString(issuedTo['companyName']));
+          issuedToValue = issuedTo['companyName'];
         } else {
-          line.push(escapeCsvString(issuedTo['fullName']));
+          issuedToValue = issuedTo['fullName'];
         }
+        
+        // Skip if the issued to value is "Unpublished"
+        if (issuedToValue === 'Unpublished') {
+          unpublishedCount++;
+          console.log('⚠️ Skipping unpublished record in CSV export:', {
+            _id: row['_id'],
+            recordType: row['recordType'],
+            dateIssued: row['dateIssued'],
+            read: row['read'],
+            issuedTo: row['issuedTo']
+          });
+          continue;
+        }
+        
+        line.push(escapeCsvString(issuedToValue));
       } else {
-        line.push('Unpublished');
+        unpublishedCount++;
+        console.log('⚠️ Skipping unpublished record in CSV export:', {
+          _id: row['_id'],
+          recordType: row['recordType'],
+          dateIssued: row['dateIssued'],
+          read: row['read'],
+          issuedTo: row['issuedTo']
+        });
+        continue;
       }
 
       line.push(escapeCsvString(row['summary']));
@@ -201,7 +241,15 @@ export class RecordUtils {
       line.push(escapeCsvString(row['outcomeDescription']));
 
       output += `${line.join(',')}\n`;
+      processedCount++;
     }
+
+    console.log('📋 CSV EXPORT SUMMARY:', {
+      inputRecords: data.length,
+      processedRecords: processedCount,
+      unpublishedRecords: unpublishedCount,
+      csvSize: output.length
+    });
 
     download(`nrced-export-${moment().format('YYYY-MM-DD')}.csv`, output);
   }
