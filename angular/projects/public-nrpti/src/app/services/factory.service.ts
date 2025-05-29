@@ -144,6 +144,22 @@ export class FactoryService {
     nor: object = {},
     _in: object = {}
   ): Observable<any[]> {
+    console.log('🔧 FACTORY SERVICE getRecords called with:', {
+      keys,
+      dataset,
+      fields,
+      pageNum,
+      pageSize,
+      sortBy,
+      and,
+      populate,
+      or,
+      subset,
+      nor,
+      _in,
+      apiPath: this.getApiPath()
+    });
+
     return this.searchService.getSearchResults(
       this.getApiPath(),
       keys,

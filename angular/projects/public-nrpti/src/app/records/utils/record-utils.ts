@@ -111,6 +111,19 @@ export class RecordUtils {
    * @memberof RecordUtils
    */
   static exportToCsv(data: any[], factoryService: FactoryService): void {
+    console.log('📊 CSV GENERATION STARTED');
+    console.log('📈 Input data for CSV:', {
+      totalRecords: data.length,
+      sampleRecords: data.slice(0, 3).map(r => ({
+        _id: r._id,
+        recordType: r.recordType,
+        dateIssued: r.dateIssued,
+        issuedTo: r.issuedTo,
+        read: r.read,
+        location: r.location
+      }))
+    });
+
     const csvHeaders = [
       'Record Type',
       'Issued On',
@@ -138,6 +151,9 @@ export class RecordUtils {
     const agencyDataService = new AgencyDataService(factoryService);
     const dataService = new ActDataServiceNRCED(factoryService);
 
+    let processedCount = 0;
+    let unpublishedCount = 0;
+
     for (const row of data) {
       let line = [];
       line.push(escapeCsvString(row['recordType']));
@@ -152,6 +168,14 @@ export class RecordUtils {
         }
       } else {
         line.push('Unpublished');
+        unpublishedCount++;
+        console.log('⚠️ Unpublished record found in CSV export:', {
+          _id: row['_id'],
+          recordType: row['recordType'],
+          dateIssued: row['dateIssued'],
+          read: row['read'],
+          issuedTo: row['issuedTo']
+        });
       }
 
       line.push(escapeCsvString(row['summary']));
@@ -201,7 +225,15 @@ export class RecordUtils {
       line.push(escapeCsvString(row['outcomeDescription']));
 
       output += `${line.join(',')}\n`;
+      processedCount++;
     }
+
+    console.log('📋 CSV EXPORT SUMMARY:', {
+      inputRecords: data.length,
+      processedRecords: processedCount,
+      unpublishedRecords: unpublishedCount,
+      csvSize: output.length
+    });
 
     download(`nrced-export-${moment().format('YYYY-MM-DD')}.csv`, output);
   }
