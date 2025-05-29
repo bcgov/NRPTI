@@ -101,8 +101,10 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * @memberof RecordsListComponent
    */
   ngOnInit(): void {
+    console.log('📱 RECORDS LIST COMPONENT INIT');
     this.loadingScreenService.setLoadingState(true, 'body');
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params: Params) => {
+      console.log('🔄 Route params changed:', params);
       this.queryParams = { ...params };
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
       this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, this.tableData);
@@ -111,11 +113,20 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         this.tableData.sortBy = '-dateIssued';
       }
 
+      console.log('📊 Updated table data configuration:', {
+        currentPage: this.tableData.currentPage,
+        pageSize: this.tableData.pageSize,
+        sortBy: this.tableData.sortBy
+      });
+
       this._changeDetectionRef.detectChanges();
     });
 
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
+      console.log('📥 COMPONENT RECEIVED DATA FROM RESOLVER:', res);
+      
       if (!res || !res.records) {
+        console.error('❌ No records data received from resolver');
         alert("Uh-oh, couldn't load NRPTI records");
         // project not found --> navigate back to home
         this.router.navigate(['/']);
@@ -125,6 +136,13 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || // Multiple Records Search
         res.records || // Single Record search
         []; // No Entries Found
+
+      console.log('📋 PROCESSING RECORDS FOR DISPLAY:', {
+        rawRecords: records.length,
+        isMultipleSearch: !!(res.records[0] && res.records[0].data && res.records[0].data.searchResults),
+        isSingleSearch: !!res.records && !res.records[0]?.data?.hasOwnProperty('searchResults'),
+        sampleRecord: records[0]
+      });
 
       const { autofocus } = this.queryParams;
       this.tableData.items = records.map(record => {
@@ -145,6 +163,13 @@ export class RecordsListComponent implements OnInit, OnDestroy {
           res.records[0].data.meta[0].searchResultsTotal) || // Multiple results
         (res.records[0] && !res.records[0].data.hasOwnProperty('searchResults') && 1) || // Single results (autofocus param)
         0; // No entries found
+
+      console.log('📊 FINAL DISPLAY DATA SETUP:', {
+        displayedItems: this.tableData.items.length,
+        totalListItems: this.tableData.totalListItems,
+        queryParams: this.queryParams,
+        tableDataSortBy: this.tableData.sortBy
+      });
 
       this.tableData.columns = this.tableColumns;
 

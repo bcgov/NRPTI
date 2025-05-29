@@ -5,7 +5,7 @@ import { TableTemplateUtils, TableObject } from 'nrpti-angular-components';
 import { FactoryService } from '../../services/factory.service';
 import { SchemaLists } from '../../../../../common/src/app/utils/record-constants';
 import { RecordUtils } from '../utils/record-utils';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 
 declare let window: any;
 
@@ -17,7 +17,11 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
   ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<object> {
+    console.log('🔍 DISPLAY DATA RESOLVER STARTED');
+    
     const params = { ...route.params };
+    console.log('📊 Display Parameters:', params);
+    
     // set filters handled by table template
     const tableObject = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, new TableObject());
 
@@ -33,16 +37,28 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
       keywords = params.keywords;
     }
 
+    console.log('📋 Display Query Configuration:', {
+      schemaList: schemaList,
+      keywords: keywords,
+      tableObject: {
+        currentPage: tableObject.currentPage,
+        pageSize: tableObject.pageSize,
+        sortBy: tableObject.sortBy
+      }
+    });
+
     // This checks for the search parameter that was put in above along with an equal, for example q= or s=
     if (params.keywords) {
       window.snowplow('trackSiteSearch', [decodeURIComponent(params.keywords)]);
     }
 
     const filterParams = RecordUtils.buildFilterParams(params);
+    console.log('🔧 Display Filter Parameters:', filterParams);
 
     // force-reload so we always have latest data
     // When autofocusing, we want to limit our search to the one entry to prevent it getting lost in results
     if (params.autofocus) {
+      console.log('🎯 Autofocus mode for record:', params.autofocus);
       return this.factoryService.getRecord(params.autofocus, '').pipe(
         catchError((error: any) => {
           if (error.status === 400) {
@@ -52,6 +68,8 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
         })
       );
     }
+    
+    console.log('🌐 Making display API call...');
     return this.factoryService.getRecords(
       keywords,
       schemaList,
@@ -62,6 +80,38 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
       {},
       false,
       filterParams
+    ).pipe(
+      tap((result: any) => {
+        console.log('📥 Display API Response:', result);
+        if (result && result[0] && result[0].data) {
+          const searchResults = result[0].data.searchResults || [];
+          const meta = result[0].data.meta || [];
+          
+          console.log('📋 DISPLAY DATA SUMMARY:', {
+            totalRecords: meta[0]?.searchResultsTotal || 0,
+            returnedRecords: searchResults.length,
+            currentPage: tableObject.currentPage,
+            pageSize: tableObject.pageSize,
+            sampleRecord: searchResults[0]
+          });
+
+          // Analyze publication status for display data
+          const publishedCount = searchResults.filter(record => 
+            record.read && record.read.includes('public') && record.issuedTo
+          ).length;
+          const unpublishedCount = searchResults.filter(record => 
+            !record.issuedTo || !record.read || !record.read.includes('public')
+          ).length;
+          
+          console.log('🔍 DISPLAY PUBLICATION STATUS:', {
+            totalRecords: searchResults.length,
+            publishedRecords: publishedCount,
+            unpublishedRecords: unpublishedCount,
+            recordsWithIssuedTo: searchResults.filter(r => r.issuedTo).length,
+            recordsWithoutIssuedTo: searchResults.filter(r => !r.issuedTo).length
+          });
+        }
+      })
     );
   }
 }
