@@ -158,8 +158,6 @@ export class RecordUtils {
         }
         
         line.push(escapeCsvString(issuedToValue));
-      } else {
-        continue;
       }
 
       line.push(escapeCsvString(row['summary']));
