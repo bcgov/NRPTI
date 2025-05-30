@@ -145,19 +145,11 @@ export class RecordUtils {
 
       const issuedTo = row['issuedTo'];
       if (issuedTo) {
-        let issuedToValue = '';
         if (issuedTo['type'] === 'Company') {
-          issuedToValue = issuedTo['companyName'];
+          line.push(escapeCsvString(issuedTo['companyName']));
         } else {
-          issuedToValue = issuedTo['fullName'];
+          line.push(escapeCsvString(issuedTo['fullName']));
         }
-        
-        // Skip if the issued to value is "Unpublished"
-        if (issuedToValue === 'Unpublished') {
-          continue;
-        }
-        
-        line.push(escapeCsvString(issuedToValue));
       }
 
       line.push(escapeCsvString(row['summary']));
