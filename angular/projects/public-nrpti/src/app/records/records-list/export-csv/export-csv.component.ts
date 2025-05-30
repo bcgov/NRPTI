@@ -5,7 +5,7 @@ import { FactoryService } from '../../../services/factory.service';
 import { SchemaLists } from '../../../../../../common/src/app/utils/record-constants';
 import { RecordUtils } from '../../utils/record-utils';
 
-const RECORDS_PER_REQUEST = 2500;
+const RECORDS_PER_REQUEST = 10000;
 
 /**
  * Export CSV component.
