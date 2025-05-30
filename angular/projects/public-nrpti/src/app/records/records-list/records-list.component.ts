@@ -126,6 +126,10 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         res.records || // Single Record search
         []; // No Entries Found
 
+      // Console log all returned list items
+      console.log('All returned records:', records);
+      console.log('Number of records:', records.length);
+
       const { autofocus } = this.queryParams;
       this.tableData.items = records.map(record => {
         if (record.data) {
@@ -137,6 +141,10 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         }
         return { rowData: record };
       });
+
+      // Console log the processed table items
+      console.log('Processed table items:', this.tableData.items);
+      
       this.tableData.totalListItems =
         (res.records[0] &&
           res.records[0].data &&
