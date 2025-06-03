@@ -86,9 +86,9 @@ export class ExportCsvComponent implements OnInit {
       page,
       RECORDS_PER_REQUEST,
       this.queryParams.sortBy || '-dateIssued',
-      {},
+      RecordUtils.buildFilterParams(this.queryParams),
       false,
-      RecordUtils.buildFilterParams(this.queryParams)
+      {}
     );
   }
 }
