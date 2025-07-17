@@ -30,12 +30,13 @@ objects:
             spec:
               containers:
                 - name: ${CRON_NAME}
-                  image: registry.access.redhat.com/ubi8/python-38
+                  image: 'registry.access.redhat.com/ubi8/python-38'
                   command:
                     - bash
-                    - -c
+                    - '-c'
                     - |-
-                      echo -e "-------- STARTING CRON --------\n" echo -e "-------- GETTING ACCESS TOKEN --------\n"
+                      echo -e "-------- STARTING CRON --------\n" 
+                      echo -e "-------- GETTING ACCESS TOKEN --------\n"
                       TOKEN=$(curl -X POST "${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/token" \
                         -H "Content-Type: application/x-www-form-urlencoded" \
                         -d "grant_type=client_credentials" \
