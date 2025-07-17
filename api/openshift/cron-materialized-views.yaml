@@ -40,7 +40,7 @@ objects:
                         -H "Content-Type: application/x-www-form-urlencoded" \
                         -d "grant_type=client_credentials" \
                         -d "client_id=${KEYCLOAK_CLIENT_ID}" \
-                        -d "client_secret=${KEYCLOAK_CLIENT_SECRET}" | python -c "import sys, json; print json.load(sys.stdin)['access_token']")
+                        -d "client_secret=${KEYCLOAK_CLIENT_SECRET}" | python3 -c "import sys, json; print (json.load(sys.stdin)['access_token'])")
 
                       echo -e "-------- UPDATING SUBSETS --------\n"
                       echo -e "Updating issuedTo subset\n"
