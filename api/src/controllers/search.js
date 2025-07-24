@@ -302,10 +302,15 @@ const issuedToRedaction = function (roles) {
         fullRecord: 1,
         issuedToAge: {
           $cond: {
-            if: { $ne: [{ $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }, null] },
+            if: {
+              $and: [
+                { $ne: [{ $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }, null] },
+                { $ne: [{ $arrayElemAt: ['$fullRecord.dateIssued'] }, null] },
+              ]
+            },
             then: {
               $subtract: [
-                { $year: { date: new Date() } },
+                { $year: { date: { $arrayElemAt: ['$fullRecord.dateIssued', 0] } } },
                 { $year: { date: { $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] } } }
               ]
             },
