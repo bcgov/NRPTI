@@ -19,8 +19,8 @@ RUN apk --update --no-cache add curl
 WORKDIR /usr/api/
 
 # Install packages. Needed even for compiled build.
-COPY package.json .
-RUN yarn
+COPY package*.json .
+RUN npm install
 
 # Copy compiled build from base
 COPY --from=base /usr/api .
