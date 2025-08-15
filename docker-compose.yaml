@@ -57,8 +57,8 @@ services:
   admin-nrpti:
     container_name: admin-nrpti
     build:
-      context: ./angular
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: angular/projects/admin-nrpti/Dockerfile
     ports:
       - 4200:4200
     depends_on:
@@ -81,8 +81,8 @@ services:
   public-nrpti:
     container_name: public-nrpti
     build:
-      context: ./angular
-      dockerfile: Dockerfile-public-nrpti
+      context: .
+      dockerfile: angular/projects/public-nrpti/Dockerfile
     ports:
       - 4400:4400
     depends_on:

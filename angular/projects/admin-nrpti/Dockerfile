@@ -4,16 +4,16 @@
 FROM node:18.19-alpine
 
 # Set the working directory
-WORKDIR /app/
+WORKDIR /app
 
 # Copy package.json and package-lock.json first to leverage Docker cache
-COPY package*.json ./
+COPY ./angular/package*.json ./
 
 # Install dependencies
 RUN npm install
 
 # Copy the rest of the application code
-COPY . /app
+COPY . .
 
 # Build for production - clean, build library, and build admin-nrpti
 RUN npm run build:prod:only-nrpti
@@ -22,7 +22,7 @@ RUN npm run build:prod:only-nrpti
 RUN npm install -g serve
 
 # Make entrypoint script executable
-COPY entrypoint.sh /app/entrypoint.sh
+COPY ./angular/projects/admin-nrpti/entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
 # Expose port 4200
