@@ -1,5 +1,5 @@
-@use "assets/styles/base/base.scss" as *;
-@import "assets/styles/components/add-edit.scss";
+@use "assets/styles/base/base.scss" as base;
+@use "assets/styles/components/add-edit.scss";
 
 .search-filter {
 
@@ -9,21 +9,21 @@
     }
 
     .keyword-search {
-      @include flex-box();
-      @include flex(0 0 auto);
-      @include flex-direction(row);
+      @include base.flex-box();
+      @include base.flex(0 0 auto);
+      @include base.flex-direction(row);
 
       height: 2.5rem;
-      border: 2px solid $primary;
+      border: 2px solid base.$primary;
 
       &__input {
-        @include flex(1 1 auto);
+        @include base.flex(1 1 auto);
       }
 
       &__button {
-        @include flex(0 0 auto);
+        @include base.flex(0 0 auto);
 
-        background-color: $primary;
+        background-color: base.$primary;
 
         i {
           color: white;
@@ -32,7 +32,7 @@
     }
 
     .open-advanced-filters {
-      background-color: $primary;
+      background-color: base.$primary;
     }
   }
 
@@ -49,7 +49,7 @@
 }
 
 .sort-button {
-  background-color: $primary;
+  background-color: base.$primary;
 }
 
 .grey-subtext_no-italics {

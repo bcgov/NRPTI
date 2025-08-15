@@ -1,3 +1,5 @@
+@use "assets/styles/base/base.scss" as base;
+
 .btn {
   border-radius: 0.25rem;
   font-weight: 400;
@@ -31,7 +33,7 @@
 }
 
 .btn-inverted {
-  background: darken($gold, 5%);
+  background: darken(base.$gold, 5%);
   text-transform: uppercase;
   font-size: 0.9375rem;
   font-weight: 700;

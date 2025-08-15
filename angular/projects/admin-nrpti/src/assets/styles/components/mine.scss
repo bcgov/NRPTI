@@ -1,6 +1,6 @@
-@import 'assets/styles/base/base.scss';
-@import 'assets/styles/components/add-edit.scss';
-@import 'assets/styles/components/slide-toggle.scss';
+@use 'assets/styles/base/base.scss';
+@use 'assets/styles/components/add-edit.scss';
+@use 'assets/styles/components/slide-toggle.scss';
 
 .heading-bar {
   margin: -18px -24px 32px;

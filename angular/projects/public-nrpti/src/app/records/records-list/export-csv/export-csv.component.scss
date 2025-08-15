@@ -1,7 +1,7 @@
-@use 'assets/styles/base/base.scss' as *;
+@use 'assets/styles/base/base.scss' as base;
 
 .export-button {
-  background-color: $primary;
+  background-color: base.$primary;
 }
 
 .rotate {

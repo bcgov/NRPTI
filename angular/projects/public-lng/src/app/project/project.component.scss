@@ -1,8 +1,8 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 // Fill vertical space
 :host {
-  @include flex(1 1 auto);
+  @include base.flex(1 1 auto);
 
   display: block;
   background: $white;
@@ -46,7 +46,7 @@
   }
 
   .project-app-header--flex {
-    @include flex(0 0 auto);
+    @include base.flex(0 0 auto);
 
     position: relative;
     border-bottom-width: 1px;

@@ -1,4 +1,4 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 .hero-banner {
   position: relative;
@@ -47,7 +47,7 @@
     cursor: pointer;
 
     + span {
-      @include flex(0 0 auto);
+      @include base.flex(0 0 auto);
 
       padding: 0.65rem 0.4rem;
       vertical-align: middle;

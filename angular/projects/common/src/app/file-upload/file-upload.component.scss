@@ -1,4 +1,4 @@
-@use "../../assets/styles/base/base.scss" as *;
+@use "../../assets/styles/base/base.scss" as base;
 
 @function repeater($item, $count) {
   $string: "";
@@ -43,7 +43,7 @@
 }
 
 .droparea {
-  border-color: $fc-focus-border-color;
+  border-color: base.$fc-focus-border-color;
   background-color: #eff;
 }
 

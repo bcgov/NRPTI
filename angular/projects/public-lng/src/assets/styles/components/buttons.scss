@@ -1,3 +1,5 @@
+@use "assets/styles/base/base.scss" as base;
+
 .btn {
   transition: all linear 0.2s;
   cursor: pointer;
@@ -35,7 +37,7 @@
 }
 
 .btn-inverted {
-  background: darken($gold, 5%);
+  background: darken(base.$gold, 5%);
   font-size: 0.9375rem;
   font-weight: 700;
 }

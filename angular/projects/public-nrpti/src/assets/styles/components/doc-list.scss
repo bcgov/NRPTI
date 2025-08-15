@@ -1,3 +1,5 @@
+@use "assets/styles/base/base.scss" as base;
+
 $doc-list-link-color: #007bff;
 
 // Document List Shared Styling
@@ -6,8 +8,8 @@ $doc-list-link-color: #007bff;
   padding: 0;
 
   li {
-    @include flex-box();
-    @include flex-direction(row);
+    @include base.flex-box();
+    @include base.flex-direction(row);
 
     background: #f7f8fa;
 
@@ -40,7 +42,7 @@ $doc-list-link-color: #007bff;
 
     // Icon Column
     &.icon {
-      @include flex(0 0 auto);
+      @include base.flex(0 0 auto);
 
       padding-left: 0.75rem;
 
@@ -59,14 +61,14 @@ $doc-list-link-color: #007bff;
 
     // Name Column
     &.name {
-      @include flex(1 1 auto);
+      @include base.flex(1 1 auto);
 
       font-size: 0.875rem;
     }
 
     // Actions Column
     &.actions {
-      @include flex(0 0 auto);
+      @include base.flex(0 0 auto);
     }
   }
 
@@ -78,7 +80,7 @@ $doc-list-link-color: #007bff;
 
 // Document List Publish Actions
 .publish-actions {
-  @include flex(0 0 auto);
+  @include base.flex(0 0 auto);
 
   padding-right: 0;
   overflow: visible;

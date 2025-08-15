@@ -1,6 +1,6 @@
-@use 'assets/styles/base/base.scss' as *;
+@use 'assets/styles/base/base.scss' as base;
 
 .share {
-  background-color: $primary;
+  background-color: base.$primary;
   min-height: 40px;
 }

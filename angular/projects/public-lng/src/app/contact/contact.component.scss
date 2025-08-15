@@ -1,7 +1,7 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 :host {
-  @include flex(1 1 auto);
+  @include base.flex(1 1 auto);
 
   display: block;
   background: $white;

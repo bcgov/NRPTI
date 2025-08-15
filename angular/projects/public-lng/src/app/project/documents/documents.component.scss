@@ -1,9 +1,9 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 // basic page layout
 
 .flex {
-  @include flex-box();
+  @include base.flex-box();
 }
 
 .flex-column {
@@ -37,7 +37,7 @@
 }
 
 .documents-view {
-  @include flex-box();
+  @include base.flex-box();
 
   flex-direction: column;
   min-height: 40rem;

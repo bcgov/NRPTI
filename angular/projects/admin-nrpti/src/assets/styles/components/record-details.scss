@@ -1,4 +1,4 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 .detail-page {
   .content-section {
@@ -32,8 +32,8 @@
 
             &.button-edit {
               color: $white;
-              background-color: $primary;
-              border: 1px solid $primary;
+              background-color: base.$primary;
+              border: 1px solid base.$primary;
             }
 
             &.button-publish {

@@ -1,3 +1,5 @@
+@use 'assets/styles/base/base.scss' as base;
+
 .leaflet-container {
   font-family: 'myriad-pro', Calibri, Arial, sans-serif;
 
@@ -112,7 +114,7 @@
   align-items: center;
   font-weight: bold;
   background-color: $gold;
-  color: $primary;
+  color: base.$primary;
   padding: 5px 10px;
 }
 

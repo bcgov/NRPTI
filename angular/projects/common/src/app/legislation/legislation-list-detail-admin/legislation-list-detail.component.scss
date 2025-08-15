@@ -1,4 +1,4 @@
-@use "../../../assets/styles/base/base.scss" as *;
+@use "../../../assets/styles/base/base.scss" as base;
 
 .section-1 {
   grid-template-columns: 6fr 6fr;
@@ -17,7 +17,7 @@
 }
 
 .legislation-divider:not(:first-of-type) {
-  border-top: 1px solid $fc-border-color;
+  border-top: 1px solid base.$fc-border-color;
   margin-left: 0.75rem;
   margin-bottom: 1rem;
 }

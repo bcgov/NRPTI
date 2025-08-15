@@ -1,4 +1,4 @@
-@use 'assets/styles/base/base.scss' as *;
+@use 'assets/styles/base/base.scss' as base;
 
 $map-control-button-bg: #fff;
 
@@ -68,7 +68,7 @@ $map-control-button-bg: #fff;
   align-items: center;
   font-weight: bold;
   background-color: $gold;
-  color: $primary;
+  color: base.$primary;
   padding: 5px 10px;
 }
 

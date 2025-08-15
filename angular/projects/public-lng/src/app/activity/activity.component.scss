@@ -1,10 +1,10 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 $icon-padding: 2rem;
 $vertical-line-width: 0.2rem;
 
 .activity-list {
-  @include flex-box();
+  @include base.flex-box();
 
   flex-direction: column;
 }
@@ -20,7 +20,7 @@ $vertical-line-width: 0.2rem;
 
 // Contact Blocks
 .activity-item {
-  @include flex-box();
+  @include base.flex-box();
 
   flex-direction: row;
   min-height: 7rem;
@@ -39,7 +39,7 @@ $vertical-line-width: 0.2rem;
   }
 
   .block-right {
-    @include flex-box();
+    @include base.flex-box();
 
     flex: 1;
     flex-direction: column;
@@ -52,7 +52,7 @@ $vertical-line-width: 0.2rem;
   }
 
   .inner-block-top {
-    @include flex-box();
+    @include base.flex-box();
 
     flex-direction: row;
 
@@ -65,7 +65,7 @@ $vertical-line-width: 0.2rem;
   }
 
   .inner-block-bottom {
-    @include flex-box();
+    @include base.flex-box();
 
     flex-direction: row;
 

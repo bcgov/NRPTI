@@ -1,4 +1,4 @@
-@use 'assets/styles/base/base.scss' as *;
+@use 'assets/styles/base/base.scss' as base;
 
 .form-group {
   margin-bottom: 2rem;
@@ -16,12 +16,12 @@
 
 // Date Range Inputs
 .date-range {
-  @include flex-box();
-  @include flex-direction(row);
+  @include base.flex-box();
+  @include base.flex-direction(row);
 }
 
 .date-range__input {
-  @include flex(1 1 auto);
+  @include base.flex(1 1 auto);
 }
 
 .date-range__spacer {

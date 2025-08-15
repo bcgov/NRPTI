@@ -1,5 +1,5 @@
-@use "assets/styles/base/base.scss" as *;
-@import "assets/styles/components/add-edit.scss";
+@use "assets/styles/base/base.scss" as base;
+@use "assets/styles/components/add-edit.scss";
 
 .filter-header {
   background-color: #003366;
@@ -8,7 +8,7 @@
   border-bottom-right-radius: 5px;
 
   &__button {
-    background-color: $primary;
+    background-color: base.$primary;
   }
 }
 
@@ -16,7 +16,7 @@
   margin-top: 1rem;
 
   &__button {
-    background-color: $primary;
+    background-color: base.$primary;
     min-height: 40px;
   }
 }
@@ -31,10 +31,10 @@
 }
 
 .date-container {
-  @include flex-box();
+  @include base.flex-box();
 
   .date-separator {
-    @include flex-box();
+    @include base.flex-box();
 
     margin: 0 1%;
     font-weight: 600;

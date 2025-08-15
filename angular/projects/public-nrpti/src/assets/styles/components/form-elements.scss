@@ -1,28 +1,30 @@
+@use "assets/styles/base/base.scss" as base;
+
 .form-control {
-  border-color: $fc-border-color;
-  background: $fc-bg;
+  border-color: base.$fc-border-color;
+  background: base.$fc-bg;
   font-size: 0.9375rem;
 
   &:focus {
-    border-color: $fc-focus-border-color;
+    border-color: base.$fc-focus-border-color;
   }
 }
 
 input {
   &.form-control {
-    height: $fc-height;
+    height: base.$fc-height;
   }
 
   &[type="text"],
   &[type="email"],
   &[type="number"] {
-    @include placeholder {
-      color: $fc-placeholder-color;
+    @include base.placeholder {
+      color: base.$fc-placeholder-color;
     }
 
-    height: $fc-height;
+    height: base.$fc-height;
     padding: 0.75rem;
-    box-shadow: $fc-inner-shadow inset;
+    box-shadow: base.$fc-inner-shadow inset;
   }
 }
 
@@ -35,19 +37,19 @@ input[type=number]::-webkit-outer-spin-button {
 select {
   &.form-control {
     &:not([size]):not([multiple]) {
-      height: $fc-height;
+      height: base.$fc-height;
       padding: 0 0.5rem;
     }
   }
 }
 
 textarea {
-  @include placeholder {
-    color: $fc-placeholder-color;
+  @include base.placeholder {
+    color: base.$fc-placeholder-color;
   }
 
   resize: vertical;
-  box-shadow: $fc-inner-shadow inset;
+  box-shadow: base.$fc-inner-shadow inset;
 }
 
 .control-label {

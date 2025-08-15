@@ -1,6 +1,8 @@
+@use "assets/styles/base/base.scss" as base;
+
 .feature-block {
-  @include flex-box();
-  @include flex-direction(column);
+  @include base.flex-box();
+  @include base.flex-direction(column);
 
   position: relative;
   padding: 1rem;
@@ -10,15 +12,15 @@
   text-align: center;
 
   &__header {
-    @include flex(0 0 auto);
+    @include base.flex(0 0 auto);
   }
 
   &__body {
-    @include flex(1 1 auto);
+    @include base.flex(1 1 auto);
   }
 
   &__footer {
-    @include flex(0 0 auto);
+    @include base.flex(0 0 auto);
   }
 
   &.dark {
