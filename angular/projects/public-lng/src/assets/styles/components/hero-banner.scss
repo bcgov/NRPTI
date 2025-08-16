@@ -2,7 +2,7 @@
 
 .hero-banner {
   position: relative;
-  background-color: $white;
+  background-color: base.$white;
 }
 
 .hero-banner__content {
@@ -47,7 +47,7 @@
     cursor: pointer;
 
     + span {
-      @include base.flex(0 0 auto);
+      @include flex(0 0 auto);
 
       padding: 0.65rem 0.4rem;
       vertical-align: middle;

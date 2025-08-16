@@ -69,7 +69,7 @@ lib-breadcrumb {
   @include base.flex-direction(column);
 
   width: calc(100% - #{$side-content-width});
-  background-color: $white;
+  background-color: base.$white;
   z-index: 2;
 
   .content-component {

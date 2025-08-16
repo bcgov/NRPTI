@@ -43,7 +43,7 @@
 }
 
 .grey-subtext {
-  color: $gray6;
+  color: base.$gray6;
   font-size: 15px;
   font-style: italic;
 }
@@ -53,7 +53,7 @@
 }
 
 .grey-subtext_no-italics {
-  color: $gray6;
+  color: base.$gray6;
   font-size: 15px;
 }
 

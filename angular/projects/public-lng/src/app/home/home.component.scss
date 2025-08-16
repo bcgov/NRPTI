@@ -4,7 +4,7 @@
   @include base.flex(1 1 auto);
 
   display: block;
-  background: $white;
+  background: base.$white;
 }
 
 h3 {
@@ -52,7 +52,7 @@ p {
   align-items: center;
   padding: 5px 10px;
   font-weight: 600;
-  background-color: $primary7;
+  background-color: base.$primary7;
 }
 
 #map-btn #btn-icon-right {
@@ -85,7 +85,7 @@ p {
 #right-column .card-name {
   font-size: 14px;
   font-weight: 600;
-  color: $gray6;
+  color: base.$gray6;
   margin-bottom: 0.5rem;
 }
 

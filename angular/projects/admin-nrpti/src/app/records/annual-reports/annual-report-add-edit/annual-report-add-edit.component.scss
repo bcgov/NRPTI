@@ -1,15 +1,15 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 @use "assets/styles/components/add-edit.scss";
 
 .grey-subtext {
-  color: $gray6;
+  color: base.$gray6;
   font-size: 15px;
   font-style: italic;
 }
 
 .blue-header {
   display: inline-block;
-  color: $content-header-color;
+  color: base.$content-header-color;
 }
 
 .right-justified-action-btn {

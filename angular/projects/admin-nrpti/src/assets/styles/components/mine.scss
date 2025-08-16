@@ -1,12 +1,12 @@
-@use 'assets/styles/base/base.scss';
+@use 'assets/styles/base/base.scss' as base;
 @use 'assets/styles/components/add-edit.scss';
-@use 'assets/styles/components/slide-toggle.scss';
+@use 'assets/styles/components/slide-toggle.scss' as st;
 
 .heading-bar {
   margin: -18px -24px 32px;
   padding: 14px 24px;
-  background: $side-content-nested-bg-color;
-  color: $white;
+  background: base.$side-content-nested-bg-color;
+  color: base.$white;
 
   > div {
     height: 2.5rem;
@@ -14,16 +14,16 @@
 }
 
 h1 {
-  color: $white;
-  font-size: $mine-header-font-size;
-  font-weight: $mine-header-font-weight;
+  color: base.$white;
+  font-size: base.$mine-header-font-size;
+  font-weight: base.$mine-header-font-weight;
   text-transform: uppercase;
 }
 
 h2 {
-  color: $mine-primary-font-color;
-  font-size: $mine-header-font-size;
-  font-weight: $mine-header-font-weight;
+  color: base.$mine-primary-font-color;
+  font-size: base.$mine-header-font-size;
+  font-weight: base.$mine-header-font-weight;
   text-transform: uppercase;
 }
 
@@ -32,19 +32,19 @@ label {
 
   &.sm,
   :not(.med) {
-    font-size: $mine-body-font-size-sm;
-    font-weight: $mine-body-font-weight-sm;
+    font-size: base.$mine-body-font-size-sm;
+    font-weight: base.$mine-body-font-weight-sm;
   }
 
   &.med {
-    font-size: $mine-body-font-size-md;
-    font-weight: $mine-body-font-weight-md;
+    font-size: base.$mine-body-font-size-md;
+    font-weight: base.$mine-body-font-weight-md;
   }
 }
 
 select {
-  font-size: $mine-body-font-size-md;
-  font-weight: $mine-body-font-weight-sm;
+  font-size: base.$mine-body-font-size-md;
+  font-weight: base.$mine-body-font-weight-sm;
   border: 1px solid #ababab;
 
   &:focus {
@@ -55,8 +55,8 @@ select {
 
 textarea,
 input[type='text'] {
-  font-size: $mine-body-font-size-md;
-  font-weight: $mine-body-font-weight-sm;
+  font-size: base.$mine-body-font-size-md;
+  font-weight: base.$mine-body-font-weight-sm;
   border-radius: 2px;
   box-shadow: none;
   -webkit-appearance: none;
@@ -68,27 +68,27 @@ input[type='text'] {
   }
 }
 
-@include slide-toggle($mine-published-font-color, $mine-unpublished-font-color);
+@include st.slide-toggle(base.$mine-published-font-color, base.$mine-unpublished-font-color);
 .publish-toggle {
-  font-size: $mine-publish-font-size;
-  font-weight: $mine-publish-font-weight;
+  font-size: base.$mine-publish-font-size;
+  font-weight: base.$mine-publish-font-weight;
 
   &.published {
-    color: $mine-published-font-color;
+    color: base.$mine-published-font-color;
   }
 
   &.unpublished {
-    color: $mine-unpublished-font-color;
+    color: base.$mine-unpublished-font-color;
   }
 }
 
 .add-records-btn {
-  color: $white;
-  background-color: $mine-add-record-btn;
+  color: base.$white;
+  background-color: base.$mine-add-record-btn;
 }
 
 .grey-subtext {
-  color: $gray6;
+  color: base.$gray6;
   font-size: 15px;
   font-style: italic;
 }
@@ -96,11 +96,11 @@ input[type='text'] {
 .red-subtext {
   font-size: 15px;
   font-style: italic;
-  color: $mine-publish-error;
+  color: base.$mine-publish-error;
 }
 
 .action-drop-button {
-  border: 3px solid $white;
+  border: 3px solid base.$white;
 }
 
 .link-list {

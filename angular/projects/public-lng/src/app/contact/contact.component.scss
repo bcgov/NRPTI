@@ -4,7 +4,7 @@
   @include base.flex(1 1 auto);
 
   display: block;
-  background: $white;
+  background: base.$white;
 }
 
 // .h-align {
@@ -60,7 +60,7 @@ a.min-link {
   vertical-align: bottom;
 
   .inner-block {
-    border: 1px solid $gray8;
+    border: 1px solid base.$gray8;
 
     .inner-block-top {
       padding: 1rem;
@@ -70,8 +70,8 @@ a.min-link {
 
     .inner-block-bottom {
       padding: 1rem;
-      background: $gray4;
-      color: $white;
+      background: base.$gray4;
+      color: base.$white;
     }
   }
 
@@ -105,11 +105,11 @@ a.min-link {
     font-size: 32px !important;
 
     i {
-      color: $black;
+      color: base.$black;
       font-size: 20px;
 
       &-light {
-        color: $white;
+        color: base.$white;
       }
     }
   }

@@ -69,7 +69,7 @@ main {
   color: $feature-block-color;
   background-color: $feature-block-bg;
   text-align: center;
-  border: 1px solid $black;
+  border: 1px solid base.$black;
 
   h5 {
     padding-top: 0.5rem;
@@ -80,11 +80,11 @@ main {
 
 .feature-block {
   color: $feature-block-color;
-  border: 1px solid $black;
+  border: 1px solid base.$black;
   text-align: center;
 
   p {
-    color: $black;
+    color: base.$black;
     font-size: 0.875rem;
   }
 

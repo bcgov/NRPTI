@@ -1,4 +1,4 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 $date-input-btn-color: $gray7;
 $date-input-btn-color-active: $gray9;
@@ -45,7 +45,7 @@ $date-input-border-color-active: $primary1;
   &:focus,
   &:hover {
     color: $date-input-btn-color-active;
-    background-color: $gray2;
+    background-color: base.gray2;
   }
 }
 
@@ -56,7 +56,7 @@ input {
 
 input.form-control {
   border: none;
-  background: $white;
+  background: base.$white;
 }
 
 // Validation
@@ -65,5 +65,5 @@ input.form-control {
 }
 
 .form-control.is-invalid {
-  border-color: $fc-invalid-color;
+  border-color: base.$fc-invalid-color;
 }

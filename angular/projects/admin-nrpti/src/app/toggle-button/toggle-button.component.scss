@@ -1,7 +1,7 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 button {
-  background: $aside-toggle-button-color;
+  background: base.$aside-toggle-button-color;
   border-radius: 0 6px 6px 0;
   height: 48px;
   width: 35px;
@@ -12,7 +12,7 @@ button {
   &::after,
   &::before {
     content: '';
-    border-left: 3px solid $white;
+    border-left: 3px solid base.$white;
     height: 13px;
     position: absolute;
     pointer-events: none;

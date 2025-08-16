@@ -4,7 +4,7 @@
   @include base.flex(1 1 auto);
 
   display: block;
-  background: $white;
+  background: base.$white;
 }
 
 .slideshow {

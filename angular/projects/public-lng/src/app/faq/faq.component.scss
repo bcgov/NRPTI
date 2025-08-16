@@ -4,7 +4,7 @@
   @include base.flex(1 1 auto);
 
   display: block;
-  background: $white;
+  background: base.$white;
 }
 
 .hero-banner__content {
@@ -17,7 +17,7 @@
 }
 
 .question {
-  color: $gray6;
+  color: base.$gray6;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -47,7 +47,7 @@
 #show-hide-all {
   cursor: pointer;
   font-family: monospace;
-  color: $gray6;
+  color: base.$gray6;
 }
 
 #show-hide-all:hover {

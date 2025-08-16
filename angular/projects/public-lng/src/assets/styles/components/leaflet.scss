@@ -9,7 +9,7 @@
     padding: 0.5rem 0;
     width: 2rem;
     height: 2rem;
-    color: $gray6;
+    color: base.$gray6;
     border-radius: 0.25rem;
     font-size: 24px; // default material-icon size
     font-weight: normal;
@@ -18,8 +18,8 @@
     &:active,
     &:focus,
     &:hover {
-      color: $gray9;
-      background: $gray1;
+      color: base.$gray9;
+      background: base.$gray1;
     }
   }
 }
@@ -106,7 +106,7 @@
 
 #map .popup-date {
   font-weight: 600;
-  color: $gray6;
+  color: base.$gray6;
 }
 
 #map .btn-popup {

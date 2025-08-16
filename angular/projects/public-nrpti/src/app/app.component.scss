@@ -38,6 +38,6 @@ app-footer {
   @include base.flex(1 1 auto);
   @include base.flex-direction(column);
 
-  background-color: $white;
+  background-color: base.$white;
   z-index: 2;
 }

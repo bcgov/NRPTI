@@ -130,7 +130,7 @@
 
 .content-btn {
   padding: 0.5rem;
-  background: $lightgray;
+  background: base.$lightgray;
   color: $link-color;
   font-size: 0.875rem;
   font-weight: 600;
@@ -138,8 +138,8 @@
 
   &:focus,
   &:hover {
-    border-color: $gold;
-    background: $gold;
+    border-color: base.$gold;
+    background: base.$gold;
   }
 
   &:not([href]):not([tabindex]) {
@@ -170,8 +170,8 @@
   right: 1rem;
   padding: 0.5rem;
   opacity: 0;
-  border-color: $gold;
-  background: $gold;
+  border-color: base.$gold;
+  background: base.$gold;
   z-index: 9999;
   transform: translateY(1rem);
   transition: all ease-out 0.2s;
@@ -204,7 +204,7 @@
   padding-bottom: 0.35rem;
   padding-left: 0;
   overflow: hidden;
-  color: $gray6;
+  color: base.$gray6;
   background-color: transparent;
   transition: all ease-out 0.2s;
   cursor: pointer;
@@ -217,8 +217,8 @@
   &:active,
   &:focus,
   &:hover {
-    color: $gray9;
-    background-color: $gray2;
+    color: base.$gray9;
+    background-color: base.$gray2;
   }
 }
 
@@ -227,13 +227,13 @@
   width: 2rem;
   height: 2rem;
   padding: 0;
-  color: $gray6;
+  color: base.$gray6;
 
   &:active,
   &:focus,
   &:hover {
-    color: $gray9;
-    background: $gray1;
+    color: base.$gray9;
+    background: base.$gray1;
   }
 }
 

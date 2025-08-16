@@ -31,7 +31,7 @@
             font-weight: 600;
 
             &.button-edit {
-              color: $white;
+              color: base.$white;
               background-color: base.$primary;
               border: 1px solid base.$primary;
             }
@@ -76,7 +76,7 @@
       .grid-section-border {
         display: grid;
         padding-bottom: 1px;
-        border-bottom: 1px solid $fc-border-color;
+        border-bottom: 1px solid base.$fc-border-color;
       }
 
       .grid-section {
@@ -156,7 +156,7 @@
 }
 
 .grey-subtext {
-  color: $gray6;
+  color: base.$gray6;
   font-size: 15px;
   font-style: italic;
 }
