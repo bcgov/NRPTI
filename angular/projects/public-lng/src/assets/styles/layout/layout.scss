@@ -1,3 +1,5 @@
+@use "assets/styles/base/base.scss" as base;
+
 // Container
 .container {
   margin: 0 auto;
@@ -44,11 +46,11 @@
 }
 
 .btn-primary {
-  background: $primary;
+  background: base.$primary;
   border: 0;
 
   &:hover {
-    background: $primary;
+    background: base.$primary;
   }
 }
 
@@ -88,16 +90,16 @@ hr {
 
 // Flex panel
 .flex-panel {
-  @include flex-box();
-  @include flex-direction(column);
+  @include base.flex-box();
+  @include base.flex-direction(column);
 
   background: $gray0;
 }
 
 .flex-panel__header {
-  @include flex-box();
-  @include flex-direction(row);
-  @include flex(0 0 auto);
+  @include base.flex-box();
+  @include base.flex-direction(row);
+  @include base.flex(0 0 auto);
 
   padding: 0.75rem 1.5rem;
   height: 4rem;
@@ -106,7 +108,7 @@ hr {
   background: #fff;
 
   .title {
-    @include flex(1 1 auto);
+    @include base.flex(1 1 auto);
 
     margin: 0;
     letter-spacing: -0.01rem;
@@ -121,5 +123,5 @@ hr {
 }
 
 .flex-panel__footer {
-  @include flex(0 0 auto);
+  @include base.flex(0 0 auto);
 }

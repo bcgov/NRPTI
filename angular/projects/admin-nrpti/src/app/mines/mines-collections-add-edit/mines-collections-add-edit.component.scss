@@ -1,6 +1,6 @@
-@import "assets/styles/components/mine.scss";
-@import "assets/styles/components/add-edit.scss";
-@import "assets/styles/components/drag-drop.scss";
+@use "assets/styles/components/mine.scss";
+@use "assets/styles/components/add-edit.scss";
+@use "assets/styles/components/drag-drop.scss";
 
 // Copied from table-template.component.scss to help match styling used there.
 .table {

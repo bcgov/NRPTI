@@ -49,54 +49,54 @@ services:
       mongo:
         condition: service_healthy
 
-  # This works but it's not great for security reasons apparently
-  # See this: https://v17.angular.io/guide/deployment
-  ############################################################################################
-  ###                                        ANGULAR ADMIN (NRPTI)                                 ###
-  ############################################################################################
-  admin-nrpti:
-    container_name: admin-nrpti
-    build:
-      context: ./angular
-      dockerfile: Dockerfile
-    ports:
-      - 4200:4200
-    depends_on:
-      api:
-        condition: service_started
-    environment:
-      - DEBUG_MODE=false
-      - ENVIRONMENT=dev
-      - API_LOCATION=http://localhost:3000
-      - API_PATH=/api
-      - API_PUBLIC_PATH=/api/public
-      - KEYCLOAK_CLIENT_ID=nrpti-4869
-      - KEYCLOAK_URL=https://dev.loginproxy.gov.bc.ca/auth
-      - KEYCLOAK_REALM=standard
-      - KEYCLOAK_ENABLED=true
-      - APPLICATION=NRPTI
-     ############################################################################################
-  ###                                        ANGULAR PUBLIC (NRCED)                                ###
-  ############################################################################################
-  public-nrpti:
-    container_name: public-nrpti
-    build:
-      context: ./angular
-      dockerfile: Dockerfile-public-nrpti
-    ports:
-      - 4400:4400
-    depends_on:
-      api:
-        condition: service_started
-    environment:
-      - DEBUG_MODE=false
-      - ENVIRONMENT=dev
-      - API_LOCATION=http://localhost:3000
-      - API_PATH=/api
-      - API_PUBLIC_PATH=/api/public
-      - FEATURE_FLAG_NRIS_EMLI_IMPORTER=true
-      - HOST_URL=http://localhost:4200
-      - APPLICATION=NRCED
+  # # This works but it's not great for security reasons apparently
+  # # See this: https://v17.angular.io/guide/deployment
+  # ############################################################################################
+  # ###                                        ANGULAR ADMIN (NRPTI)                                 ###
+  # ############################################################################################
+  # admin-nrpti:
+  #   container_name: admin-nrpti
+  #   build:
+  #     context: ./angular
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 4200:4200
+  #   depends_on:
+  #     api:
+  #       condition: service_started
+  #   environment:
+  #     - DEBUG_MODE=false
+  #     - ENVIRONMENT=dev
+  #     - API_LOCATION=http://localhost:3000
+  #     - API_PATH=/api
+  #     - API_PUBLIC_PATH=/api/public
+  #     - KEYCLOAK_CLIENT_ID=nrpti-4869
+  #     - KEYCLOAK_URL=https://dev.loginproxy.gov.bc.ca/auth
+  #     - KEYCLOAK_REALM=standard
+  #     - KEYCLOAK_ENABLED=true
+  #     - APPLICATION=NRPTI
+  #    ############################################################################################
+  # ###                                        ANGULAR PUBLIC (NRCED)                                ###
+  # ############################################################################################
+  # public-nrpti:
+  #   container_name: public-nrpti
+  #   build:
+  #     context: ./angular
+  #     dockerfile: Dockerfile-public-nrpti
+  #   ports:
+  #     - 4400:4400
+  #   depends_on:
+  #     api:
+  #       condition: service_started
+  #   environment:
+  #     - DEBUG_MODE=false
+  #     - ENVIRONMENT=dev
+  #     - API_LOCATION=http://localhost:3000
+  #     - API_PATH=/api
+  #     - API_PUBLIC_PATH=/api/public
+  #     - FEATURE_FLAG_NRIS_EMLI_IMPORTER=true
+  #     - HOST_URL=http://localhost:4200
+  #     - APPLICATION=NRCED
 
 #############################################################################################
 ###                                       Network                                         ###

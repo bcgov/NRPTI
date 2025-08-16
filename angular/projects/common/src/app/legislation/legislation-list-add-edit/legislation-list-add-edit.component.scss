@@ -1,11 +1,11 @@
-@use "../../../assets/styles/base/base.scss" as *;
+@use "../../../assets/styles/base/base.scss" as base;
 
 .delete-btn {
   margin-bottom: 1rem;
 }
 
 .legislation-divider {
-  border-top: 1px solid $fc-border-color;
+  border-top: 1px solid base.$fc-border-color;
   margin-bottom: 1rem;
 }
 
@@ -13,38 +13,38 @@
   @extend .label-pair;
 
   @media screen and (min-width: 800px) {
-    @include flex-box();
-    @include flex-direction(column);
+    @include base.flex-box();
+    @include base.flex-direction(column);
 
     margin-right: 1%;
     vertical-align: top;
 
     &.flex-xsm {
-      @include flex-box();
-      @include flex-direction(column);
-      @include flex(1 1);
+      @include base.flex-box();
+      @include base.flex-direction(column);
+      @include base.flex(1 1);
     }
 
     &.flex-sm {
-      @include flex-box();
-      @include flex-direction(column);
-      @include flex(10 2);
+      @include base.flex-box();
+      @include base.flex-direction(column);
+      @include base.flex(10 2);
 
       min-width: 10rem;
     }
 
     &.flex-med {
-      @include flex-box();
-      @include flex-direction(column);
-      @include flex(20 3);
+      @include base.flex-box();
+      @include base.flex-direction(column);
+      @include base.flex(20 3);
 
       min-width: 10rem;
     }
 
     &.flex-lrg {
-      @include flex-box();
-      @include flex-direction(column);
-      @include flex(30 4);
+      @include base.flex-box();
+      @include base.flex-direction(column);
+      @include base.flex(30 4);
 
       min-width: 10rem;
     }
@@ -67,11 +67,11 @@ label {
 .label-single {
   @extend .label-pair;
 
-  padding-top: $fc-line-height + 0.25rem;
+  padding-top: base.$fc-line-height + 0.25rem;
 }
 
 .label-pair {
-  line-height: $fc-line-height;
+  line-height: base.$fc-line-height;
   margin-bottom: 1rem;
   position: relative;
 

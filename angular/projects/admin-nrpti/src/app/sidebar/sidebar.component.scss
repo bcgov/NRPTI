@@ -1,4 +1,4 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 /* The side navigation menu */
 .sidebar {
@@ -32,7 +32,7 @@
 }
 
 .mine-nav {
-  background: $side-content-nested-bg-color;
+  background: base.$side-content-nested-bg-color;
   padding: 0 0 12px 5px;
 }
 

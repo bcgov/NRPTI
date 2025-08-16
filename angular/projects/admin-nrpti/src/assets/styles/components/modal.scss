@@ -1,5 +1,5 @@
 .modal-header {
-  background-color: $white;
+  background-color: base.$white;
 
   .modal-title {
     font-weight: bold;
@@ -11,7 +11,7 @@
 }
 
 .modal-body {
-  background-color: $modal-bg;
+  background-color: base.$modal-bg;
 
   textarea {
     width: 100%;
@@ -21,5 +21,5 @@
 }
 
 .modal-footer {
-  background-color: $white;
+  background-color: base.$white;
 }

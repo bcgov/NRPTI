@@ -31,7 +31,7 @@
 
   thead {
     background: $table-header-bg;
-    border-bottom: 2px solid $white;
+    border-bottom: 2px solid base.$white;
 
     tr {
       background: #e8eff5;
@@ -40,7 +40,7 @@
 
     th {
       padding: 0.5rem;
-      border-bottom: 3px solid $lightgray;
+      border-bottom: 3px solid base.$lightgray;
       vertical-align: middle;
       text-shadow: none;
       font-size: 0.875rem;
@@ -52,7 +52,7 @@
         user-select: none;
 
         &:hover {
-          border-bottom-color: $table-header-sort-active;
+          border-bottom-color: base.$table-header-sort-active;
         }
 
         &.sort-asc,

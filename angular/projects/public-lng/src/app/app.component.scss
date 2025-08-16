@@ -1,10 +1,10 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 :host {
   display: block;
 
-  @include flex-box();
-  @include flex-direction(column);
+  @include base.flex-box();
+  @include base.flex-direction(column);
 
   min-height: 100vh;
   background: #036;

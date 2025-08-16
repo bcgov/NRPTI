@@ -1,7 +1,7 @@
-@use 'assets/styles/base/base.scss' as *;
+@use 'assets/styles/base/base.scss' as base;
 
 .nav-tabs {
-  @include flex-flow(row wrap);
+  @include base.flex-flow(row wrap);
   border-bottom: none;
 
   .nav-link {
@@ -34,7 +34,7 @@
 
 @media (min-width: 768px) {
   .nav-tabs {
-    @include flex-flow(row nowrap);
+    @include base.flex-flow(row nowrap);
     margin-bottom: 2.5rem;
     border-bottom: 2px solid $tab-nav-border-color;
     background-color: $tab-nav-bg;

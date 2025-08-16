@@ -1,4 +1,4 @@
-@use "../../assets/styles/base/base.scss" as *;
+@use "../../assets/styles/base/base.scss" as base;
 
 @function repeater($item, $count) {
   $string: "";
@@ -27,7 +27,7 @@
   border-radius: 0.4rem;
   border-width: 3px;
   border-color: #ddd;
-  background-color: $white;
+  background-color: base.$white;
   color: #bbb;
   font-size: 1rem;
 
@@ -43,7 +43,7 @@
 }
 
 .droparea {
-  border-color: $fc-focus-border-color;
+  border-color: base.$fc-focus-border-color;
   background-color: #eff;
 }
 
@@ -65,14 +65,14 @@
 
     li .name {
       padding-right: 0.5rem;
-      background-color: $white;
+      background-color: base.$white;
     }
 
     li .value {
       float: right;
       clear: right;
       padding-left: 0.5rem;
-      background-color: $white;
+      background-color: base.$white;
       margin-top: -2px;
 
       .btn i + span {

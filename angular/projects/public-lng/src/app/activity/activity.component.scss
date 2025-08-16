@@ -1,26 +1,26 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 $icon-padding: 2rem;
 $vertical-line-width: 0.2rem;
 
 .activity-list {
-  @include flex-box();
+  @include base.flex-box();
 
   flex-direction: column;
 }
 
 .activity-link {
   text-decoration: none;
-  color: $gray8;
+  color: base.$gray8;
 }
 
 .activity-link:hover {
-  background: $gray1;
+  background: base.$gray1;
 }
 
 // Contact Blocks
 .activity-item {
-  @include flex-box();
+  @include base.flex-box();
 
   flex-direction: row;
   min-height: 7rem;
@@ -39,12 +39,12 @@ $vertical-line-width: 0.2rem;
   }
 
   .block-right {
-    @include flex-box();
+    @include base.flex-box();
 
     flex: 1;
     flex-direction: column;
     padding: 1rem 2rem 1rem $icon-padding+0.25rem;
-    border-bottom: 1px solid $gray4;
+    border-bottom: 1px solid base.$gray4;
 
     .extend-border {
       padding-left: 2rem !important;
@@ -52,7 +52,7 @@ $vertical-line-width: 0.2rem;
   }
 
   .inner-block-top {
-    @include flex-box();
+    @include base.flex-box();
 
     flex-direction: row;
 
@@ -65,7 +65,7 @@ $vertical-line-width: 0.2rem;
   }
 
   .inner-block-bottom {
-    @include flex-box();
+    @include base.flex-box();
 
     flex-direction: row;
 
@@ -81,13 +81,13 @@ $vertical-line-width: 0.2rem;
     font-size: 1rem;
     font-weight: 700;
     text-transform: uppercase;
-    color: $gray8;
+    color: base.$gray8;
   }
 
   p {
     margin-bottom: 1rem;
     line-height: 1.25rem;
-    color: $gray7;
+    color: base.$gray7;
   }
 
   a {
@@ -97,7 +97,7 @@ $vertical-line-width: 0.2rem;
 
   strong {
     font-weight: 600;
-    color: $gray8;
+    color: base.$gray8;
   }
 
   img.activity-icon {
@@ -118,7 +118,7 @@ $vertical-line-width: 0.2rem;
       font-size: 20px;
 
       &-light {
-        color: $white;
+        color: base.$white;
       }
     }
   }
@@ -127,7 +127,7 @@ $vertical-line-width: 0.2rem;
 .material-icons-activity {
   position: absolute;
   font-size: 4rem;
-  color: $gray7;
+  color: base.$gray7;
   top: 12%;
 }
 
@@ -138,7 +138,7 @@ $vertical-line-width: 0.2rem;
   width: 100%;
   top: 0;
   margin-left: $vertical-line-width/2; // half the width of the line
-  border-right: $vertical-line-width solid $gray5;
+  border-right: $vertical-line-width solid base.$gray5;
 }
 
 // pagination

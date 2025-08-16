@@ -1,18 +1,18 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 .alert-contents {
-  @include flex-box();
-  @include flex-direction(row);
+  @include base.flex-box();
+  @include base.flex-direction(row);
 
   align-items: center;
 }
 
 .alert-contents i {
-  @include flex(0 0 auto);
+  @include base.flex(0 0 auto);
 
   margin-right: 1rem;
 }
 
 .alert-msg {
-  @include flex(1 1 auto);
+  @include base.flex(1 1 auto);
 }

@@ -1,4 +1,4 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 .app-header {
   @include clearfix;
@@ -25,7 +25,7 @@
   }
 
   .app-header--flex {
-    @include flex(0 0 auto);
+    @include base.flex(0 0 auto);
 
     position: relative;
     border-bottom-width: 2px;

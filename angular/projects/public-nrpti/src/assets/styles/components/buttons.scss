@@ -1,3 +1,5 @@
+@use "assets/styles/base/base.scss" as base;
+
 .btn {
   border-radius: 0.25rem;
   font-weight: 400;
@@ -5,8 +7,8 @@
   cursor: pointer;
 
   &.inverted {
-    color: $white;
-    border: 2px solid $white;
+    color: base.$white;
+    border: 2px solid base.$white;
     background: transparent;
     text-transform: uppercase;
     font-weight: 700;
@@ -14,8 +16,8 @@
     &:active,
     &:focus,
     &:hover {
-      border-color: $gold;
-      background: darken($gold, 8%);
+      border-color: base.$gold;
+      background: darken(base.$gold, 8%);
       text-transform: uppercase;
       font-weight: 700;
     }
@@ -31,7 +33,7 @@
 }
 
 .btn-inverted {
-  background: darken($gold, 5%);
+  background: darken(base.$gold, 5%);
   text-transform: uppercase;
   font-size: 0.9375rem;
   font-weight: 700;
@@ -51,7 +53,7 @@ main {
 
 .content-btn {
   padding: 0.5rem;
-  background: $lightgray;
+  background: base.$lightgray;
   color: $link-color;
   font-size: 0.875rem;
   font-weight: 600;
@@ -62,8 +64,8 @@ main {
 
   &:focus,
   &:hover {
-    border-color: $gold;
-    background: $gold;
+    border-color: base.$gold;
+    background: base.$gold;
   }
 
   &:not([href]):not([tabindex]) {
@@ -81,7 +83,7 @@ main {
 
   &:focus,
   &:hover {
-    color: $white;
+    color: base.$white;
     border-color: #007bff;
     background: #007bff;
   }
@@ -98,7 +100,7 @@ main {
 
   &:focus,
   &:hover {
-    color: $white;
+    color: base.$white;
     border-color: #dc3545;
     background: #dc3545;
   }
@@ -111,8 +113,8 @@ main {
   right: 1rem;
   padding: 0.5rem;
   opacity: 0;
-  border-color: $gold;
-  background: $gold;
+  border-color: base.$gold;
+  background: base.$gold;
   transform: translateY(1rem);
   transition: all ease-out 0.2s;
 
@@ -124,8 +126,8 @@ main {
 
 // Submit Button
 .submit-btn {
-  border-color: $gold;
-  background: $gold;
+  border-color: base.$gold;
+  background: base.$gold;
   font-size: 0.9375rem;
   font-weight: 700;
 }

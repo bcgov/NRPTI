@@ -1,4 +1,4 @@
-@use '../../assets/styles/base/base.scss' as *;
+@use '../../assets/styles/base/base.scss' as base;
 @use '../../assets/styles/components/drag-drop.scss' as *;
 
 $link-label-font-size-sm: 0.875rem;
@@ -40,9 +40,9 @@ form {
 }
 
 .validation-error {
-  font-size: $validator-font-size;
-  font-weight: $validator-font-weight;
-  color: $validator-font-color;
+  font-size: base.$validator-font-size;
+  font-weight: base.$validator-font-weight;
+  color: base.$validator-font-color;
 }
 
 
@@ -53,7 +53,7 @@ label {
 }
 
 .label-pair {
-  line-height: $fc-line-height;
+  line-height: base.$fc-line-height;
   margin-bottom: 1rem;
   position: relative;
 

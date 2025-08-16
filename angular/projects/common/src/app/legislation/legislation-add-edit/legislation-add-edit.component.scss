@@ -1,4 +1,4 @@
-@use "../../../assets/styles/base/base.scss" as *;
+@use "../../../assets/styles/base/base.scss" as base;
 
 .flex-container {
   &__row {
@@ -45,7 +45,7 @@ section {
 }
 
 .label-pair {
-  line-height: $fc-line-height;
+  line-height: base.$fc-line-height;
   margin-bottom: 1rem;
   position: relative;
 

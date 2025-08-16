@@ -1,10 +1,10 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 :host {
   display: block;
 
-  @include flex-box();
-  @include flex-direction(column);
+  @include base.flex-box();
+  @include base.flex-direction(column);
 
   position: fixed;
   top: 0;
@@ -15,7 +15,7 @@
 }
 
 app-header {
-  @include flex(0 0 auto);
+  @include base.flex(0 0 auto);
 }
 
 app-footer {
@@ -23,9 +23,9 @@ app-footer {
 }
 
 .app-body {
-  @include flex-box();
-  @include flex(1 1 auto);
-  @include flex-direction(row);
+  @include base.flex-box();
+  @include base.flex(1 1 auto);
+  @include base.flex-direction(row);
 
   background: #fff;
   position: relative;
@@ -34,10 +34,10 @@ app-footer {
 }
 
 .body-content {
-  @include flex-box();
-  @include flex(1 1 auto);
-  @include flex-direction(column);
+  @include base.flex-box();
+  @include base.flex(1 1 auto);
+  @include base.flex-direction(column);
 
-  background-color: $white;
+  background-color: base.$white;
   z-index: 2;
 }
