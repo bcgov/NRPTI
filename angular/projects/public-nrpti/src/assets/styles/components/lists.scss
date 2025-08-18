@@ -1,15 +1,17 @@
+@use "assets/styles/base/base.scss" as base;
+
 .nv-list {
   margin: 0;
   padding: 0;
   list-style-type: none;
 
   li {
-    @include clearfix();
+    @include base.clearfix();
 
     margin-top: 1px;
     padding: 0.5rem 1rem;
     font-size: 0.9375rem;
-    background: $nv-list-bg;
+    background: base.$nv-list-bg;
   }
 
   span {
@@ -30,10 +32,10 @@
   border: none;
 
   &:nth-child(odd) {
-    background: $list-row-bg;
+    background: base.$list-row-bg;
   }
 
   &:nth-child(even) {
-    background: $list-row-alt-bg;
+    background: base.$list-row-alt-bg;
   }
 }

@@ -17,7 +17,7 @@
 }
 
 .project-app-header {
-  @include clearfix;
+  @include base.clearfix;
 
   position: relative;
   padding: 0;
@@ -42,7 +42,7 @@
   }
 
   .nav-link.active-link {
-    background: $gray2;
+    background: base.$gray2;
   }
 
   .project-app-header--flex {
@@ -53,14 +53,14 @@
     border-bottom-color: base.$gray5;
     // background: $gray6;
     // color: $white;
-    color: $gray8;
+    color: base.$gray8;
   }
 
   .project-app-header--solid {
     border-bottom: 1px solid base.$gray5;
     // background: $gray6;
     // color: $white;
-    color: $gray8;
+    color: base.$gray8;
   }
 }
 
@@ -95,7 +95,7 @@
       display: none;
       margin-top: 1px;
       margin-left: 0.25rem;
-      font-size: $mn-font-size;
+      font-size: base.$mn-font-size;
       font-weight: 700;
       vertical-align: top;
     }
@@ -133,8 +133,8 @@
       z-index: 1001; // +1 to keep above dropdown menus
       padding: 0.875rem 1rem;
       border-top: 1px solid base.$mn-border-color;
-      // color: $mn-color;
-      color: $gray8;
+      // color: base.$mn-color;
+      color: base.$gray8;
       text-transform: uppercase;
       white-space: nowrap;
       font-size: base.$mn-font-size;
@@ -244,7 +244,7 @@
         &.dropdown {
           &.show {
             .dropdown-toggle {
-              color: $mn-color;
+              color: base.$mn-color;
             }
 
             .dropdown-menu {

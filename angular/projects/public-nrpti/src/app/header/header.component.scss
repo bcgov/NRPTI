@@ -1,7 +1,7 @@
 @use "assets/styles/base/base.scss" as base;
 
 .app-header {
-  @include clearfix;
+  @include base.clearfix;
 
   padding: 0;
   border-bottom: 2px solid base.$gold;
@@ -270,7 +270,7 @@
 .navbar-brand__version {
   margin-top: -0.1rem;
   display: inline-block;
-  color: $gold;
+  color: base.$gold;
   font-size: 0.5rem;
   font-weight: 700;
   vertical-align: top;

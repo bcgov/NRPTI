@@ -45,7 +45,7 @@
   display: none;
 }
 #map .popup-header {
-  background-color: $primary6;
+  background-color: base.$primary6;
   color: white;
   padding: 0.5rem;
   border-radius: 0.5rem 0.5rem 0 0;
@@ -56,10 +56,10 @@
 }
 
 .map-popup-content-fixed .popup-content {
-  border: 3px solid $primary6;
+border: 3px solid base.$primary6;
   padding: 0.5rem;
   border-radius: 0 0 0.5rem 0.5rem;
-  background-color: $gray1;
+  background-color: base.$gray1;
 }
 
 #map .popup-hr {
@@ -95,13 +95,13 @@
 
 #map .popup-desc-title {
   font-weight: 600;
-  color: $primary6;
+  color: base.$primary6;
   margin-bottom: 0.2rem;
 }
 
 #map .popup-value {
   font-weight: 600;
-  color: $primary6;
+  color: base.$primary6;
 }
 
 #map .popup-date {
@@ -113,7 +113,7 @@
   display: flex;
   align-items: center;
   font-weight: bold;
-  background-color: $gold;
+  background-color: base.$gold;
   color: base.$primary;
   padding: 5px 10px;
 }

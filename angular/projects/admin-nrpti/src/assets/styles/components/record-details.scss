@@ -37,15 +37,15 @@
             }
 
             &.button-publish {
-              color: $button-publish-text-color;
-              background-color: $button-publish-bg-color;
-              border: 1px solid $button-publish-border-color;
+              color: base.$button-publish-text-color;
+              background-color: base.$button-publish-bg-color;
+              border: 1px solid base.$button-publish-border-color;
             }
 
             &.button-unpublish {
-              color: $button-unpublish-text-color;
-              background-color: $button-unpublish-bg-color;
-              border: 1px solid $button-unpublish-border-color;
+              color: base.$button-unpublish-text-color;
+              background-color: base.$button-unpublish-bg-color;
+              border: 1px solid base.$button-unpublish-border-color;
             }
 
             span {
@@ -152,7 +152,7 @@
 
 .blue-header {
   display: inline-block;
-  color: $content-header-color;
+  color: base.$content-header-color;
 }
 
 .grey-subtext {

@@ -92,8 +92,8 @@ th {
   .sort {
     position: relative;
     margin-left: 0.15rem;
-    width: calc(#{$table-sort-icon-size} * 2);
-    height: calc(#{$table-sort-icon-size} * 2);
+    width: calc(#{base.$table-sort-icon-size} * 2);
+    height: calc(#{base.$table-sort-icon-size} * 2);
     display: inline-block;
 
     &::before,

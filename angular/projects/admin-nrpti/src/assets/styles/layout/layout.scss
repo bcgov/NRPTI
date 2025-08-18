@@ -41,7 +41,7 @@ body-content {
 
 .btn-outline-primary {
   border: 1px solid base.$primary;
-  color: $black;
+  color: base.$black;
 
   &:hover {
     background: base.$primary !important;

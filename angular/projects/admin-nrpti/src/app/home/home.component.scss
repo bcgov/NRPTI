@@ -42,10 +42,10 @@
 
     &--list {
       li {
-        @include align-items(start);
+        @include base.align-items(start);
 
         + li {
-          border-top: 1px solid $white;
+          border-top: 1px solid base.$white;
         }
       }
 

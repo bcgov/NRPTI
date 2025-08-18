@@ -1,9 +1,9 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 .app-footer {
-  border-top: 4px solid $gold;
-  background: $footer-bg;
-  color: $footer-color;
+  border-top: 4px solid base.$gold;
+  background: base.$footer-bg;
+  color: base.$footer-color;
 
   .container {
     padding: 0.5rem 1.5rem;
@@ -20,11 +20,11 @@
   }
 
   a {
-    color: $footer-color;
+    color: base.$footer-color;
 
     &:focus,
     &:hover {
-      color: $gold;
+      color: base.$gold;
     }
   }
 

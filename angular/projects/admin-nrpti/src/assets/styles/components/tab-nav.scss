@@ -7,7 +7,7 @@
   .nav-link {
     padding: 0.75rem 0.2rem;
     border: none;
-    background: $tab-sm-bg;
+    background: base.$tab-sm-bg;
     text-align: center;
     text-transform: uppercase;
     font-weight: 700;
@@ -25,8 +25,8 @@
       border-radius: 0;
 
       &.active {
-        color: $tab-sm-active-color;
-        background-color: $tab-sm-active-bg;
+        color: base.$tab-sm-active-color;
+        background-color: base.$tab-sm-active-bg;
       }
     }
   }
@@ -36,8 +36,8 @@
   .nav-tabs {
     @include base.flex-flow(row nowrap);
     margin-bottom: 2.5rem;
-    border-bottom: 2px solid $tab-nav-border-color;
-    background-color: $tab-nav-bg;
+    border-bottom: 2px solid base.$tab-nav-border-color;
+    background-color: base.$tab-nav-bg;
 
     .nav-item {
       margin-bottom: -2px;
@@ -49,22 +49,22 @@
     .nav-link {
       position: relative;
       padding: 0.75rem;
-      color: rgba($tab-color, 0.8);
+      color: rgba(base.$tab-color, 0.8);
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
       background-color: transparent;
       font-size: 0.85rem;
 
       &:hover {
-        background-color: $tab-hover-bg;
-        box-shadow: 0 -2px 0 $tab-nav-border-color inset;
+        background-color: base.$tab-hover-bg;
+        box-shadow: 0 -2px 0 base.$tab-nav-border-color inset;
       }
 
       &.active {
-        color: $tab-color;
-        background-color: $tab-active-bg;
-        box-shadow: 0 2px 0 $tab-nav-border-color inset, 2px 0 $tab-nav-border-color inset,
-          -2px 0 $tab-nav-border-color inset;
+        color: base.$tab-color;
+        background-color: base.$tab-active-bg;
+        box-shadow: 0 2px 0 base.$tab-nav-border-color inset, 2px 0 base.$tab-nav-border-color inset,
+          -2px 0 base.$tab-nav-border-color inset;
       }
     }
   }

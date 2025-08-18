@@ -1,13 +1,13 @@
-@use 'assets/styles/base/base.scss' as *;
+@use 'assets/styles/base/base.scss' as base;
 
 // style the wrapping <tr></tr> tags
 :host-context(tr) {
-  border: 1px solid $mn-border-color;
+  border: 1px solid base.$mn-border-color;
   border-radius: 6px;
   margin-bottom: 0.25rem;
 
   &:hover {
-    background-color: $table-row-hover-bg;
+    background-color: base.$table-row-hover-bg;
   }
 }
 

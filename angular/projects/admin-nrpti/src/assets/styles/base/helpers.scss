@@ -1,10 +1,12 @@
+@use "assets/styles/base/base.scss" as base;
+
 .bg-dark {
-  color: $bg-dark-color;
-  background-color: $bg-dark;
+  color: base.$bg-dark-color;
+  background-color: base.$bg-dark;
 }
 
 .bg-dark-link {
-  color: $bg-dark-link-color;
+  color: base.$bg-dark-link-color;
 }
 
 .amp {

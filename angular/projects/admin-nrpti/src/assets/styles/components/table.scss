@@ -1,3 +1,5 @@
+@use "assets/styles/base/base.scss" as base;
+
 .table {
   width: 100%;
   table-layout: fixed;
@@ -30,7 +32,7 @@
   }
 
   thead {
-    background: $table-header-bg;
+    background: base.$table-header-bg;
     border-bottom: 2px solid base.$white;
 
     tr {
@@ -96,8 +98,8 @@ th {
   .sort {
     position: relative;
     margin-left: 0.15rem;
-    width: calc(#{$table-sort-icon-size} * 2);
-    height: calc(#{$table-sort-icon-size} * 2);
+    width: calc(#{base.$table-sort-icon-size} * 2);
+    height: calc(#{base.$table-sort-icon-size} * 2);
     display: inline-block;
 
     &::before,
@@ -111,13 +113,13 @@ th {
 
     &::before {
       top: -1px;
-      border-width: 0 $table-sort-icon-size $table-sort-icon-size $table-sort-icon-size;
+      border-width: 0 base.$table-sort-icon-size base.$table-sort-icon-size base.$table-sort-icon-size;
     }
 
     &::after {
       content: " ";
       bottom: -1px;
-      border-width: $table-sort-icon-size $table-sort-icon-size 0 $table-sort-icon-size;
+      border-width: base.$table-sort-icon-size base.$table-sort-icon-size 0 base.$table-sort-icon-size;
     }
 
     &.sort-asc,

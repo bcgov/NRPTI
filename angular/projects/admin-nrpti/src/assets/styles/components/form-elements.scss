@@ -24,7 +24,7 @@ input {
 
     height: base.$fc-height;
     padding: 0.75rem;
-    box-shadow: $fc-inner-shadow inset;
+    box-shadow: base.$fc-inner-shadow inset;
   }
 }
 

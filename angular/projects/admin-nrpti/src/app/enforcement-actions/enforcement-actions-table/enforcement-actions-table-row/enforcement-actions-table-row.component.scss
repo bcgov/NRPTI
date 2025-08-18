@@ -1,12 +1,12 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 .published-green {
-  color: $mine-published-font-color;
+  color: base.$mine-published-font-color;
 }
 
 :host-context(tr) {
   &:hover {
-    background-color: $table-row-hover-bg;
+    background-color: base.$table-row-hover-bg;
     cursor: pointer;
   }
 }

@@ -14,7 +14,7 @@
 
 // Contact Blocks
 .block-container {
-  @include clearfix();
+  @include base.clearfix();
 
   margin: -0.75rem;
 }

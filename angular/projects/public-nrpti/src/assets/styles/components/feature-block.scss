@@ -7,8 +7,8 @@
   position: relative;
   padding: 1rem;
   background-size: 200%;
-  background-color: $feature-block-bg;
-  color: $feature-block-color;
+  background-color: base.$feature-block-bg;
+  color: base.$feature-block-color;
   text-align: center;
 
   &__header {
@@ -24,20 +24,20 @@
   }
 
   &.dark {
-    background-color: $feature-block-bg;
-    color: $feature-block-color;
+    background-color: base.$feature-block-bg;
+    color: base.$feature-block-color;
 
     a:not([class^="btn"]) {
-      color: $gold;
+      color: base.$gold;
     }
   }
 
   &.light {
-    background-color: $feature-block-light-bg;
-    color: $feature-block-light-color;
+    background-color: base.$feature-block-light-bg;
+    color: base.$feature-block-light-color;
 
     a:not[class^="btn"] {
-      color: $feature-block-primary;
+      color: base.$feature-block-primary;
     }
   }
 
@@ -77,7 +77,7 @@
     bottom: 0;
     left: 0;
     z-index: 999;
-    background-color: rgba($feature-block-bg, 0.8);
+    background-color: rgba(base.$feature-block-bg, 0.8);
     text-align: center;
 
     &__txt {
@@ -88,7 +88,7 @@
       margin-top: -0.75rem;
       transform: translate(50%, -50%) rotate(-15deg);
       transform-origin: 50% 50%;
-      color: $gold;
+      color: base.$gold;
       text-transform: uppercase;
       font-size: 1.5rem;
       font-weight: bold;

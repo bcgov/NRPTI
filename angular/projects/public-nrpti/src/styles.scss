@@ -3,40 +3,41 @@
 /* This architecture roughly follows https://sass-guidelin.es/#the-7-1-pattern */
 
 // Base
-@use "assets/styles/base/base.scss" as *;
-
-@import "~bootstrap/dist/css/bootstrap.css";
+@use "assets/styles/base/base.scss" as base;
 
 // Helpers
-@import "assets/styles/base/helpers.scss";
+@use "assets/styles/base/helpers.scss";
 
 // Layout
-@import "assets/styles/layout/layout.scss";
+@use "assets/styles/layout/layout.scss";
 
 // Typography
-@import "assets/styles/base/typography.scss";
+@use "assets/styles/base/typography.scss";
 
 // Icons
-@import "assets/styles/base/material-icons.scss";
+@use "assets/styles/base/material-icons.scss";
 
 // Components
-@import "assets/styles/components/accordion.scss";
-@import "assets/styles/components/aside.scss";
-@import "assets/styles/components/badge.scss";
-@import "assets/styles/components/buttons.scss";
-@import "assets/styles/components/card.scss";
-@import "assets/styles/components/doc-list.scss";
-@import "assets/styles/components/filter-bar.scss";
-@import "assets/styles/components/form-elements.scss";
-@import "assets/styles/components/lists.scss";
-@import "assets/styles/components/material.scss";
-@import "assets/styles/components/modal.scss";
-@import "assets/styles/components/pagination.scss";
-@import "assets/styles/components/spinner.scss";
-@import "assets/styles/components/tab-nav.scss";
-@import "assets/styles/components/table.scss";
-@import "assets/styles/components/record-details.scss"; // record list detail expand
+@use "assets/styles/components/accordion.scss";
+@use "assets/styles/components/aside.scss";
+@use "assets/styles/components/badge.scss";
+@use "assets/styles/components/buttons.scss";
+@use "assets/styles/components/card.scss";
+@use "assets/styles/components/doc-list.scss";
+@use "assets/styles/components/filter-bar.scss";
+@use "assets/styles/components/form-elements.scss";
+@use "assets/styles/components/lists.scss";
+@use "assets/styles/components/material.scss";
+@use "assets/styles/components/modal.scss";
+@use "assets/styles/components/pagination.scss";
+@use "assets/styles/components/spinner.scss";
+@use "assets/styles/components/tab-nav.scss";
+@use "assets/styles/components/table.scss";
+@use "assets/styles/components/record-details.scss"; // record list detail expand
 
 // Third-party Components
+@import "~bootstrap/dist/css/bootstrap.css";
+
 // Required for Angular Material styling: (ref: https://material.angular.io/guide/theming)
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+

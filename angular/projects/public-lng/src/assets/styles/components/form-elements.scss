@@ -1,4 +1,4 @@
-@use "../../assets/styles/base/base.scss" as base;
+@use "assets/styles/base/base.scss" as base;
 
 // Form Label
 label {
@@ -87,7 +87,7 @@ input {
   &[type="email"],
   &[type="number"] {
     height: 2.5rem;
-    box-shadow: 0.1rem 0.1rem 0.2rem inset $gray2;
+    box-shadow: 0.1rem 0.1rem 0.2rem inset base.$gray2;
 
     @include base.placeholder {
       color: base.$fc-placeholder-color;
@@ -104,7 +104,7 @@ input[type=number]::-webkit-outer-spin-button {
 select {
   &.form-control {
     &:not([size]):not([multiple]) {
-      height: $fc-height;
+      height: base.$fc-height;
       padding: 0 0.5rem;
     }
   }
@@ -137,7 +137,7 @@ textarea.form-control {
   padding: 0.5rem 1rem;
   font-weight: 600;
   color: #fff;
-  background: $fc-invalid-color;
+  background: base.$fc-invalid-color;
 
   &::after {
     content: ' ';

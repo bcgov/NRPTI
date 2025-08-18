@@ -51,7 +51,7 @@ lib-breadcrumb {
 
 .side-content {
   @include base.flex-box();
-  @include base.flex(0 0 $side-content-width);
+  @include base.flex(0 0 base.$side-content-width);
 
   position: relative;
   transition: 0.3s;
@@ -68,7 +68,7 @@ lib-breadcrumb {
   @include base.flex(1 1 auto);
   @include base.flex-direction(column);
 
-  width: calc(100% - #{$side-content-width});
+  width: calc(100% - #{base.$side-content-width});
   background-color: base.$white;
   z-index: 2;
 
