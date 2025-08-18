@@ -45,7 +45,7 @@ $gray2:                         #e9ecef;
   input:focus,
   input:active {
     + label {
-      color: $gray9;
+      color: base.$gray9;
       border-color: $select-badge-active-border-color;
       background-color: $select-badge-hover-bg;
     }
@@ -53,14 +53,14 @@ $gray2:                         #e9ecef;
 
   input:hover {
     + label {
-      color: $gray9;
+      color: base.$gray9;
       background-color: $select-badge-hover-bg;
     }
   }
 
   input:checked {
     + label {
-      color: $gray9;
+      color: base.$gray9;
       background-color: $select-badge-active-bg;
       background-image: url("../../assets/images/baseline-check-24px.svg");
     }

@@ -27,7 +27,7 @@
 }
 
 .question:hover {
-  color: $gray8;
+  color: base.$gray8;
 }
 
 .question[aria-expanded="false"] i {
@@ -51,7 +51,7 @@
 }
 
 #show-hide-all:hover {
-  color: $gray8;
+  color: base.$gray8;
 }
 
 #top-hr {
