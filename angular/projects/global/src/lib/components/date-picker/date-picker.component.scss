@@ -30,7 +30,7 @@ $gray2: #e9ecef;
   &:active,
   &:focus,
   &:hover {
-    color: base.$gray9;
+    color: $gray9;
     border-color: $primary1;
   }
 }
@@ -47,7 +47,7 @@ $gray2: #e9ecef;
   &:active,
   &:focus,
   &:hover {
-    color: base.$gray9;
+    color: $gray9;
     background-color: $gray2;
   }
 }
