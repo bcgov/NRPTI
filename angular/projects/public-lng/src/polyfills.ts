@@ -33,7 +33,8 @@ import 'core-js/es/regexp';
 import 'core-js/es/map';
 import 'core-js/es/set';
 import 'core-js/es/reflect';
-import 'core-js/client/shim';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 
 /** IE8 object-fit/position support */
 import 'object-fit-images';

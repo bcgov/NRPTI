@@ -1,3 +1,6 @@
+@use "sass:color";
+@use "assets/styles/base/base.scss" as base;
+
 .btn {
   transition: all linear 0.2s;
   cursor: pointer;
@@ -10,8 +13,8 @@
     &:active,
     &:focus,
     &:hover {
-      border-color: $gold;
-      background: darken($gold, 8%);
+      border-color: base.$gold;
+      background: color.adjust(base.$gold, $lightness: 8%);
     }
   }
 
@@ -35,7 +38,7 @@
 }
 
 .btn-inverted {
-  background: darken($gold, 5%);
+  background: color.adjust(base.$gold, $lightness: 5%);
   font-size: 0.9375rem;
   font-weight: 700;
 }
@@ -128,20 +131,20 @@
 
 .content-btn {
   padding: 0.5rem;
-  background: $lightgray;
-  color: $link-color;
+  background: base.$lightgray;
+  color: base.$link-color;
   font-size: 0.875rem;
   font-weight: 600;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
 
   &:focus,
   &:hover {
-    border-color: $gold;
-    background: $gold;
+    border-color: base.$gold;
+    background: base.$gold;
   }
 
   &:not([href]):not([tabindex]) {
-    color: $link-color;
+    color: base.$link-color;
   }
 }
 
@@ -168,8 +171,8 @@
   right: 1rem;
   padding: 0.5rem;
   opacity: 0;
-  border-color: $gold;
-  background: $gold;
+  border-color: base.$gold;
+  background: base.$gold;
   z-index: 9999;
   transform: translateY(1rem);
   transition: all ease-out 0.2s;
@@ -202,7 +205,7 @@
   padding-bottom: 0.35rem;
   padding-left: 0;
   overflow: hidden;
-  color: $gray6;
+  color: base.$gray6;
   background-color: transparent;
   transition: all ease-out 0.2s;
   cursor: pointer;
@@ -215,8 +218,8 @@
   &:active,
   &:focus,
   &:hover {
-    color: $gray9;
-    background-color: $gray2;
+    color: base.$gray9;
+    background-color: base.$gray2;
   }
 }
 
@@ -225,13 +228,13 @@
   width: 2rem;
   height: 2rem;
   padding: 0;
-  color: $gray6;
+  color: base.$gray6;
 
   &:active,
   &:focus,
   &:hover {
-    color: $gray9;
-    background: $gray1;
+    color: base.$gray9;
+    background: base.$gray1;
   }
 }
 

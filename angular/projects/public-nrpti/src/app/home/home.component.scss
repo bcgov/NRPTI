@@ -1,7 +1,7 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 :host {
-  @include flex(1 1 auto);
+  @include base.flex(1 1 auto);
 
   display: block;
   color: #036;
@@ -66,25 +66,25 @@ main {
 }
 
 .feature-block-header {
-  color: $feature-block-color;
-  background-color: $feature-block-bg;
+  color: base.$feature-block-color;
+  background-color: base.$feature-block-bg;
   text-align: center;
-  border: 1px solid $black;
+  border: 1px solid base.$black;
 
   h5 {
     padding-top: 0.5rem;
-    background-color: $feature-block-bg;
+    background-color: base.$feature-block-bg;
     font-size: 1.25rem;
   }
 }
 
 .feature-block {
-  color: $feature-block-color;
-  border: 1px solid $black;
+  color: base.$feature-block-color;
+  border: 1px solid base.$black;
   text-align: center;
 
   p {
-    color: $black;
+    color: base.$black;
     font-size: 0.875rem;
   }
 

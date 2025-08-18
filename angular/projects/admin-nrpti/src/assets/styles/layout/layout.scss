@@ -1,4 +1,4 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 html,
 body {
@@ -23,38 +23,38 @@ body-content {
 }
 
 .bg-primary {
-  background: $primary !important;
+  background: base.$primary !important;
 }
 
 .btn-primary {
-  background: $primary !important;
+  background: base.$primary !important;
   border: 0;
 
   &:hover {
-    background: $primary !important;
+    background: base.$primary !important;
   }
 
   &:active {
-    background: $primary !important;
+    background: base.$primary !important;
   }
 }
 
 .btn-outline-primary {
-  border: 1px solid $primary;
-  color: $black;
+  border: 1px solid base.$primary;
+  color: base.$black;
 
   &:hover {
-    background: $primary !important;
+    background: base.$primary !important;
   }
 
   &:active {
-    background: $primary !important;
+    background: base.$primary !important;
   }
 }
 
 .dropdown-item {
   &:active {
-    background: $primary !important;
+    background: base.$primary !important;
   }
 }
 
@@ -210,10 +210,10 @@ hr {
 
 // Page Title Container
 .title-container {
-  @include flex-box();
+  @include base.flex-box();
 
   &__title {
-    @include flex(1 1 auto);
+    @include base.flex(1 1 auto);
 
     margin: 0;
 
@@ -224,7 +224,7 @@ hr {
   }
 
   &__actions {
-    @include flex(0 0 auto);
+    @include base.flex(0 0 auto);
 
     .btn {
       min-width: 5rem;

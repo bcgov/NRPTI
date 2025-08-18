@@ -3,31 +3,31 @@
 /* This architecture roughly follows https://sass-guidelin.es/#the-7-1-pattern */
 
 // Base
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 // Helpers
-@import "assets/styles/base/helpers.scss";
+@use "assets/styles/base/helpers.scss";
 
 // Layout
-@import "assets/styles/layout/layout.scss";
+@use "assets/styles/layout/layout.scss";
 
 // Typography
-@import "assets/styles/base/typography.scss";
+@use "assets/styles/base/typography.scss";
 
 // Material Icons
-@import "assets/styles/base/material-icons.scss";
+@use "assets/styles/base/material-icons.scss";
+
+// Components
+@use "assets/styles/components/buttons.scss";
+@use "assets/styles/components/doc-list.scss";
+@use "assets/styles/components/form-elements.scss";
+@use "assets/styles/components/hero-banner.scss";
+@use "assets/styles/components/leaflet.scss";
+@use "assets/styles/components/modal.scss";
+@use "assets/styles/components/pagination.scss";
+@use "assets/styles/components/spinner.scss";
+@use "assets/styles/components/tab-nav.scss";
+@use "assets/styles/components/table.scss";
 
 // Material Snackbar
 @import "~@angular/material/prebuilt-themes/indigo-pink.css"; // see https://material.angular.io/guide/theming
-
-// Components
-@import "assets/styles/components/buttons.scss";
-@import "assets/styles/components/doc-list.scss";
-@import "assets/styles/components/form-elements.scss";
-@import "assets/styles/components/hero-banner.scss";
-@import "assets/styles/components/leaflet.scss";
-@import "assets/styles/components/modal.scss";
-@import "assets/styles/components/pagination.scss";
-@import "assets/styles/components/spinner.scss";
-@import "assets/styles/components/tab-nav.scss";
-@import "assets/styles/components/table.scss";

@@ -1,4 +1,6 @@
-$doc-list-link-color: $primary2;
+@use "assets/styles/base/base.scss" as base;
+
+$doc-list-link-color: base.$primary2;
 
 // Document List Shared Styling
 .doc-list {
@@ -12,12 +14,12 @@ $doc-list-link-color: $primary2;
 }
 
 .doc-list__item {
-  @include flex-box();
-  @include flex-direction(row);
+  @include base.flex-box();
+  @include base.flex-direction(row);
 
   align-items: center;
   border-radius: 0.2rem;
-  background: $gray2;
+  background: base.$gray2;
 }
 
 .doc-list__item + .doc-list__item {
@@ -29,8 +31,8 @@ a.doc-list__item {
   transition: all ease-out 0.2s;
 
   &:hover {
-    color: $color-inverted;
-    background: $primary0;
+    color: base.$color-inverted;
+    background: base.$primary0;
     text-decoration: none;
   }
 }
@@ -77,17 +79,17 @@ a.doc-list__item {
 
 // Default Cell behaviors
 .cell.doc-list__item-icon {
-  @include flex(0 0 auto);
+  @include base.flex(0 0 auto);
 
   padding-right: 0;
 }
 
 // Name
 .cell.doc-list__item-name {
-  @include flex(1 1 auto);
+  @include base.flex(1 1 auto);
 }
 
 // Actions
 .cell.doc-list__item-actions {
-  @include flex(0 0 auto);
+  @include base.flex(0 0 auto);
 }

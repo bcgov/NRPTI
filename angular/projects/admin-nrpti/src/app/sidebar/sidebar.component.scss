@@ -1,10 +1,10 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 /* The side navigation menu */
 .sidebar {
   margin: 0;
   padding: 20px 0 15px 0px;
-  width: $side-content-width;
+  width:base.$side-content-width;
   background-color: #38598a;
   position: fixed;
 
@@ -32,7 +32,7 @@
 }
 
 .mine-nav {
-  background: $side-content-nested-bg-color;
+  background: base.$side-content-nested-bg-color;
   padding: 0 0 12px 5px;
 }
 
@@ -90,7 +90,7 @@
 
 /* Main content */
 .main {
-  margin-left: $side-content-width; /* Same as the width of the sidenav */
+  margin-left: base.$side-content-width; /* Same as the width of the sidenav */
   font-size: 20px; /* Increased text to enable scrolling */
   padding: 0 10px;
 }

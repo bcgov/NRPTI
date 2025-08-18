@@ -26,6 +26,11 @@
             "main": "projects/admin-nrpti/src/main.ts",
             "tsConfig": "projects/admin-nrpti/tsconfig.app.json",
             "polyfills": "projects/admin-nrpti/src/polyfills.ts",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "projects/admin-nrpti/src"
+              ]
+            },
             "assets": [
               "projects/admin-nrpti/src/assets",
               "projects/admin-nrpti/src/favicon.ico",
@@ -170,6 +175,11 @@
             "main": "projects/public-nrpti/src/main.ts",
             "tsConfig": "projects/public-nrpti/tsconfig.app.json",
             "polyfills": "projects/public-nrpti/src/polyfills.ts",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "projects/public-nrpti/src"
+              ]
+            },
             "assets": [
               "projects/public-nrpti/src/assets",
               "projects/public-nrpti/src/favicon.ico",
@@ -307,6 +317,11 @@
             "main": "projects/public-lng/src/main.ts",
             "tsConfig": "projects/public-lng/tsconfig.app.json",
             "polyfills": "projects/public-lng/src/polyfills.ts",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "projects/public-lng/src"
+              ]
+            },
             "assets": [
               "projects/public-lng/src/assets",
               "projects/public-lng/src/favicon.ico",

@@ -1,11 +1,11 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 // Page structure
 :host {
-  @include flex(1 1 auto);
+  @include base.flex(1 1 auto);
 
   display: block;
-  background: $white;
+  background: base.$white;
 }
 
 .overview-content {
@@ -47,7 +47,7 @@
 // details box
 
 .details-outer {
-  border: 1px solid $black;
+  border: 1px solid base.$black;
   height: 100%;
 
   .details-inner {
@@ -57,11 +57,11 @@
       margin-bottom: 0.5rem;
 
       .details-header {
-        border-bottom: 1px solid $black;
+        border-bottom: 1px solid base.$black;
 
         strong {
           font-weight: 600;
-          color: $gray8;
+          color: base.$gray8;
         }
       }
 
@@ -76,7 +76,7 @@
 
 .map-outer {
   position: relative;
-  border: 1px solid $black;
+  border: 1px solid base.$black;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -86,7 +86,7 @@
     bottom: 0;
     right: 0.4rem;
     font-size: 1.5rem;
-    color: $white;
+    color: base.$white;
     z-index: 1001; // must be larger than .card-image
     pointer-events: none;
   }

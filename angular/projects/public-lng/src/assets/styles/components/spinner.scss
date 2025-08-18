@@ -1,11 +1,13 @@
+@use 'assets/styles/base/base.scss' as base;
+
 .spinner-new {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: $spinner-lg;
-  height: $spinner-lg;
-  margin-top: -calc(#{$spinner-lg} / 1.5);
-  margin-left: -calc(#{$spinner-lg} / 2);
+  width: base.$spinner-lg;
+  height: base.$spinner-lg;
+  margin-top: -calc(#{base.$spinner-lg} / 1.5);
+  margin-left: -calc(#{base.$spinner-lg} / 2);
   background-image: url('/assets/images/spinner.png');
 }
 
@@ -17,17 +19,17 @@
   background-size: 100%;
 
   &.spinner-sm {
-    width: $spinner-sm;
-    height: $spinner-sm;
-    margin-top: -calc(#{$spinner-sm} / 1.5);
-    margin-left: -calc(#{$spinner-sm} / 2);
+    width: base.$spinner-sm;
+    height: base.$spinner-sm;
+    margin-top: -calc(#{base.$spinner-sm} / 1.5);
+    margin-left: -calc(#{base.$spinner-sm} / 2);
   }
 
   &.spinner-lg {
-    width: $spinner-lg;
-    height: $spinner-lg;
-    margin-top: -calc(#{$spinner-lg} / 1.5);
-    margin-left: -calc(#{$spinner-lg} / 2);
+    width: base.$spinner-lg;
+    height: base.$spinner-lg;
+    margin-top: -calc(#{base.$spinner-lg} / 1.5);
+    margin-left: -calc(#{base.$spinner-lg} / 2);
   }
 }
 
@@ -49,13 +51,13 @@
   left: 0;
   right: 0;
   padding: 5%;
-  background: $spinner-bg;
+  background: base.$spinner-bg;
   z-index: 9999; // to keep above everything else
   transition: all linear 0.5s;
 
   &.inverted,
   &.transparent {
-    background: $spinner-invert-bg;
+    background: base.$spinner-invert-bg;
 
     .spinner-new {
       background-image: url('/assets/images/spinner.png');
@@ -63,7 +65,7 @@
   }
 
   &.inverted {
-    background: $spinner-invert-bg;
+    background: base.$spinner-invert-bg;
   }
 
   &.transparent {

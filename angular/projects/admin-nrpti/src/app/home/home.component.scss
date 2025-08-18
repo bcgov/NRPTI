@@ -1,8 +1,8 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 .project-list {
   &__options {
-    @include flex(0 0 auto);
+    @include base.flex(0 0 auto);
 
     padding: 1rem 0;
 
@@ -42,10 +42,10 @@
 
     &--list {
       li {
-        @include align-items(start);
+        @include base.align-items(start);
 
         + li {
-          border-top: 1px solid $white;
+          border-top: 1px solid base.$white;
         }
       }
 
@@ -72,7 +72,7 @@
       width: 100%;
 
       tr {
-        @include flex-box();
+        @include base.flex-box();
       }
 
       th {
@@ -81,7 +81,7 @@
         padding-right: 0.75rem;
 
         &.project-table__name-col {
-          @include flex(1 1 auto);
+          @include base.flex(1 1 auto);
         }
       }
     }

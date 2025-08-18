@@ -1,3 +1,5 @@
+@use "assets/styles/base/base.scss" as base;
+
 aside {
   section {
     + section {
@@ -5,7 +7,7 @@ aside {
     }
 
     h5 {
-      color: $aside-title-color;
+      color: base.$aside-title-color;
       text-transform: uppercase;
       font-size: 0.9375rem;
       font-weight: 700;
@@ -18,6 +20,6 @@ aside {
   }
 
   .card-body {
-    background: $aside-bg;
+    background: base.$aside-bg;
   }
 }

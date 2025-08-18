@@ -1,3 +1,5 @@
+@use "assets/styles/base/base.scss" as base;
+
 $tab-border-width: 3px;
 
 .nav-tabs {
@@ -11,9 +13,9 @@ $tab-border-width: 3px;
 
 .nav-tabs .nav-link {
   padding: 0.4rem 1rem;
-  color: $gray5;
+  color: base.$gray5;
   border: none;
-  border-bottom: $tab-border-width solid $gray3;
+  border-bottom: $tab-border-width solid base.$gray3;
   border-radius: 0;
   background: transparent;
   letter-spacing: -0.02rem;
@@ -24,13 +26,13 @@ $tab-border-width: 3px;
 
   &:active,
   &:hover {
-    border-color: $gray5;
+    border-color: base.$gray5;
   }
 }
 
 .nav-tabs .nav-link.active {
-  color: $primary0;
-  border-bottom-color: $primary0;
+  color: base.$primary0;
+  border-bottom-color: base.$primary0;
   background: transparent;
 }
 

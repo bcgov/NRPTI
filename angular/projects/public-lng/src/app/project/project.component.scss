@@ -1,15 +1,15 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 // Fill vertical space
 :host {
-  @include flex(1 1 auto);
+  @include base.flex(1 1 auto);
 
   display: block;
-  background: $white;
+  background: base.$white;
 }
 
 #project-header {
-  background: $gray6;
+  background: base.$gray6;
   color: white;
   font-weight: 700;
   padding: 0.3rem 0.7rem;
@@ -17,14 +17,14 @@
 }
 
 .project-app-header {
-  @include clearfix;
+  @include base.clearfix;
 
   position: relative;
   padding: 0;
-  border-bottom: 1px solid $gray5;
+  border-bottom: 1px solid base.$gray5;
   // background: $gray6;
   // color: $white;
-  color: $gray8;
+  color: base.$gray8;
   z-index: 1004;
 }
 
@@ -42,25 +42,25 @@
   }
 
   .nav-link.active-link {
-    background: $gray2;
+    background: base.$gray2;
   }
 
   .project-app-header--flex {
-    @include flex(0 0 auto);
+    @include base.flex(0 0 auto);
 
     position: relative;
     border-bottom-width: 1px;
-    border-bottom-color: $gray5;
+    border-bottom-color: base.$gray5;
     // background: $gray6;
     // color: $white;
-    color: $gray8;
+    color: base.$gray8;
   }
 
   .project-app-header--solid {
-    border-bottom: 1px solid $gray5;
+    border-bottom: 1px solid base.$gray5;
     // background: $gray6;
     // color: $white;
-    color: $gray8;
+    color: base.$gray8;
   }
 }
 
@@ -71,9 +71,9 @@
   margin-left: auto;
   margin-right: 0.5rem;
   padding: 0.5rem 0.4rem;
-  border: 2px solid $gray4;
+  border: 2px solid base.$gray4;
   // color: $white;
-  color: $gray8;
+  color: base.$gray8;
   font-size: medium;
   font-weight: 600;
   outline: none; // override user agent stylesheet default
@@ -95,7 +95,7 @@
       display: none;
       margin-top: 1px;
       margin-left: 0.25rem;
-      font-size: $mn-font-size;
+      font-size: base.$mn-font-size;
       font-weight: 700;
       vertical-align: top;
     }
@@ -132,12 +132,12 @@
       position: relative;
       z-index: 1001; // +1 to keep above dropdown menus
       padding: 0.875rem 1rem;
-      border-top: 1px solid $mn-border-color;
-      // color: $mn-color;
-      color: $gray8;
+      border-top: 1px solid base.$mn-border-color;
+      // color: base.$mn-color;
+      color: base.$gray8;
       text-transform: uppercase;
       white-space: nowrap;
-      font-size: $mn-font-size;
+      font-size: base.$mn-font-size;
       font-weight: 700;
       cursor: pointer;
     }
@@ -145,7 +145,7 @@
     .dropdown {
       &.show {
         .dropdown-toggle {
-          color: $gray7;
+          color: base.$gray7;
         }
       }
     }
@@ -159,8 +159,8 @@
 
       .dropdown-item {
         padding: 0.5rem 1rem;
-        color: $mn-color;
-        font-size: $mn-dropdown-menu-size;
+        color: base.$mn-color;
+        font-size: base.$mn-dropdown-menu-size;
         white-space: normal;
         cursor: pointer;
 
@@ -181,7 +181,7 @@
           background: transparent;
 
           strong {
-            color: $mn-hover-color;
+            color: base.$mn-hover-color;
           }
 
           .dd-item-desc {
@@ -221,7 +221,7 @@
         }
 
         &:hover {
-          background-color: $gray3;
+          background-color: base.$gray3;
         }
       }
 
@@ -244,7 +244,7 @@
         &.dropdown {
           &.show {
             .dropdown-toggle {
-              color: $mn-color;
+              color: base.$mn-color;
             }
 
             .dropdown-menu {

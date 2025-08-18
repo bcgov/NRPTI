@@ -1,4 +1,4 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 .pagination {
   text-align: center;
@@ -38,7 +38,7 @@
 
     &.current {
       transition: all linear 0.2s !important;
-      background-color: $pgn-btn-active-bg;
+      background-color: base.$pgn-btn-active-bg;
     }
   }
 }

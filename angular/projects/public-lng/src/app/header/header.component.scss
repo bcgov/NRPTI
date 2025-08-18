@@ -1,13 +1,13 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 .app-header {
-  @include clearfix;
+  @include base.clearfix;
 
   position: relative;
   padding: 0;
-  border-bottom: 2px solid $gold;
-  background: $header-bg;
-  color: $header-font-color;
+  border-bottom: 2px solid base.$gold;
+  background: base.$header-bg;
+  color: base.$header-font-color;
   z-index: 1005;
 }
 
@@ -25,19 +25,19 @@
   }
 
   .app-header--flex {
-    @include flex(0 0 auto);
+    @include base.flex(0 0 auto);
 
     position: relative;
     border-bottom-width: 2px;
-    border-bottom-color: $gold;
-    background: $header-bg;
-    color: $header-font-color;
+    border-bottom-color: base.$gold;
+    background: base.$header-bg;
+    color: base.$header-font-color;
   }
 
   .app-header--solid {
-    border-bottom: 2px solid $gold;
-    background: $header-bg;
-    color: $header-font-color;
+    border-bottom: 2px solid base.$gold;
+    background: base.$header-bg;
+    color: base.$header-font-color;
   }
 }
 
@@ -45,8 +45,8 @@
 .navbar-toggler {
   margin-right: 0.5rem;
   padding: 0.5rem 0.4rem;
-  border: 2px solid $gold;
-  color: $gold;
+  border: 2px solid base.$gold;
+  color: base.$gold;
   font-size: medium;
   font-weight: 600;
   outline: none; // override user agent stylesheet default
@@ -69,7 +69,7 @@
       display: none;
       margin-top: 1px;
       margin-left: 0.25rem;
-      font-size: $mn-font-size;
+      font-size: base.$mn-font-size;
       font-weight: 700;
       vertical-align: top;
     }
@@ -89,7 +89,7 @@
 // NAVBAR
 .navbar {
   padding: 0;
-  background-color: $header-bg;
+  background-color: base.$header-bg;
   z-index: 1000;
 
   .navbar-nav {
@@ -99,11 +99,11 @@
       position: relative;
       z-index: 1001; // +1 to keep above dropdown menus
       padding: 0.875rem 1rem;
-      border-top: 1px solid $mn-border-color;
-      color: $mn-color;
+      border-top: 1px solid base.$mn-border-color;
+      color: base.$mn-color;
       text-transform: uppercase;
       white-space: nowrap;
-      font-size: $mn-font-size;
+      font-size: base.$mn-font-size;
       font-weight: 700;
       cursor: pointer;
     }
@@ -111,7 +111,7 @@
     .dropdown {
       &.show {
         .dropdown-toggle {
-          color: $gold;
+          color: base.$gold;
         }
       }
     }
@@ -126,8 +126,8 @@
 
       .dropdown-item {
         padding: 0.5rem 1rem;
-        color: $mn-color;
-        font-size: $mn-dropdown-menu-size;
+        color: base.$mn-color;
+        font-size: base.$mn-dropdown-menu-size;
         white-space: normal;
         cursor: pointer;
 
@@ -148,7 +148,7 @@
           background: transparent;
 
           strong {
-            color: $mn-hover-color;
+            color: base.$mn-hover-color;
           }
 
           .dd-item-desc {
@@ -202,7 +202,7 @@
         &.dropdown {
           &.show {
             .dropdown-toggle {
-              color: $mn-color;
+              color: base.$mn-color;
             }
 
             .dropdown-menu {
@@ -258,7 +258,7 @@
 .navbar-brand__version {
   margin-top: -0.1rem;
   display: inline-block;
-  color: $gold;
+  color: base.$gold;
   font-size: 0.5rem;
   font-weight: 700;
   vertical-align: top;

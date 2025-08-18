@@ -1,5 +1,7 @@
+@use "assets/styles/base/base.scss" as base;
+
 .modal-header {
-  @include flex-box();
+  @include base.flex-box();
 
   justify-content: flex-end;
   align-items: center;
@@ -9,7 +11,7 @@
   padding-left: 1.5rem;
 
   .close-btn {
-    @include flex(0 0 auto);
+    @include base.flex(0 0 auto);
 
     margin-top: 0;
     margin-right: -0.75rem;
@@ -17,7 +19,7 @@
 }
 
 .modal-title {
-  @include flex(1 1 auto);
+  @include base.flex(1 1 auto);
 
   letter-spacing: -0.03rem;
   line-height: 1.65rem;
@@ -26,7 +28,7 @@
 
 .modal-body {
   padding: 1.5rem;
-  background: $gray0;
+  background: base.$gray0;
 }
 
 .modal-footer {

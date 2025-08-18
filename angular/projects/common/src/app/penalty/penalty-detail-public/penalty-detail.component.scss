@@ -1,4 +1,4 @@
-@use "../../../assets/styles/base/base.scss" as *;
+@use "../../../assets/styles/base/base.scss" as base;
 
 .grid-section-1 {
   display: grid;
@@ -19,7 +19,7 @@
 }
 
 .penalty-divider {
-  border-top: 1px solid $fc-border-color;
+  border-top: 1px solid base.$fc-border-color;
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
 }

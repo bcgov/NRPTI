@@ -1,4 +1,4 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 html,
 body {
@@ -174,10 +174,10 @@ hr {
 
 // Page Title Container
 .title-container {
-  @include flex-box();
+  @include base.flex-box();
 
   &__title {
-    @include flex(1 1 auto);
+    @include base.flex(1 1 auto);
 
     margin: 0;
 
@@ -188,7 +188,7 @@ hr {
   }
 
   &__actions {
-    @include flex(0 0 auto);
+    @include base.flex(0 0 auto);
 
     .btn {
       min-width: 5rem;

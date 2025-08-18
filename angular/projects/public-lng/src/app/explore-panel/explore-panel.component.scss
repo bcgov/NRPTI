@@ -1,4 +1,4 @@
-@use 'assets/styles/base/base.scss' as *;
+@use 'assets/styles/base/base.scss' as base;
 
 .form-group {
   margin-bottom: 2rem;
@@ -16,12 +16,12 @@
 
 // Date Range Inputs
 .date-range {
-  @include flex-box();
-  @include flex-direction(row);
+  @include base.flex-box();
+  @include base.flex-direction(row);
 }
 
 .date-range__input {
-  @include flex(1 1 auto);
+  @include base.flex(1 1 auto);
 }
 
 .date-range__spacer {
@@ -57,10 +57,10 @@
     padding-right: 1rem;
     padding-bottom: 0.2rem;
     padding-left: 2rem;
-    color: $gray7;
+    color: base.$gray7;
     border-radius: 1rem;
     border: 2px solid transparent;
-    background-color: $gray2;
+    background-color: base.$gray2;
     background-image: url('/assets/images/baseline-remove-24px.svg');
     background-position: 8px center;
     background-repeat: no-repeat;
@@ -83,28 +83,28 @@
   input:focus,
   input:active {
     + label {
-      color: $gray9;
-      border-color: $select-badge-active-border-color;
-      background-color: $select-badge-hover-bg;
+      color: base.$gray9;
+      border-color: base.$select-badge-active-border-color;
+      background-color: base.$select-badge-hover-bg;
     }
   }
 
   input:hover {
     + label {
-      color: $gray9;
-      background-color: $select-badge-hover-bg;
+      color: base.$gray9;
+      background-color: base.$select-badge-hover-bg;
     }
   }
 
   input:checked {
     + label {
-      color: $gray9;
-      background-color: $select-badge-active-bg;
+      color: base.$gray9;
+      background-color: base.$select-badge-active-bg;
       background-image: url('/assets/images/baseline-check-24px.svg');
     }
 
     ~ button {
-      background-color: $select-badge-active-bg;
+      background-color: base.$select-badge-active-bg;
     }
   }
 }

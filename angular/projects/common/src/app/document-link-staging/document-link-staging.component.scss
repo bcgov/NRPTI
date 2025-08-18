@@ -1,4 +1,4 @@
-@use "../../assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 .addLink {
   margin-top: 17px;
@@ -27,5 +27,5 @@ label {
 
 .helper-text {
   font-size: .8rem;
-  color: $font-gray;
+  color: base.$font-gray;
 }

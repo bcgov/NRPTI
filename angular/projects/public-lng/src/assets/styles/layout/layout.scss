@@ -1,3 +1,5 @@
+@use "assets/styles/base/base.scss" as base;
+
 // Container
 .container {
   margin: 0 auto;
@@ -11,7 +13,7 @@
     margin-bottom: 1.15rem;
     line-height: 2.15rem;
     font-size: 2.25rem;
-    color: $gray8;
+    color: base.$gray8;
   }
 
   h2 {
@@ -19,14 +21,14 @@
     letter-spacing: -0.02rem;
     line-height: 2rem;
     font-size: 1.75rem;
-    color: $gray7;
+    color: base.$gray7;
   }
 
   h3 {
     margin-bottom: 1.5rem;
     line-height: 1.75rem;
     font-size: x-large;
-    color: $gray7;
+    color: base.$gray7;
 
     span {
       margin-top: 0.5rem;
@@ -39,16 +41,16 @@
   p {
     line-height: 1.4rem;
     font-size: 0.9375rem;
-    color: $gray7;
+    color: base.$gray7;
   }
 }
 
 .btn-primary {
-  background: $primary;
+  background: base.$primary;
   border: 0;
 
   &:hover {
-    background: $primary;
+    background: base.$primary;
   }
 }
 
@@ -88,25 +90,25 @@ hr {
 
 // Flex panel
 .flex-panel {
-  @include flex-box();
-  @include flex-direction(column);
+  @include base.flex-box();
+  @include base.flex-direction(column);
 
-  background: $gray0;
+  background: base.$gray0;
 }
 
 .flex-panel__header {
-  @include flex-box();
-  @include flex-direction(row);
-  @include flex(0 0 auto);
+  @include base.flex-box();
+  @include base.flex-direction(row);
+  @include base.flex(0 0 auto);
 
   padding: 0.75rem 1.5rem;
   height: 4rem;
   align-items: center;
-  border-bottom: 1px solid $gray2;
+  border-bottom: 1px solid base.$gray2;
   background: #fff;
 
   .title {
-    @include flex(1 1 auto);
+    @include base.flex(1 1 auto);
 
     margin: 0;
     letter-spacing: -0.01rem;
@@ -121,5 +123,5 @@ hr {
 }
 
 .flex-panel__footer {
-  @include flex(0 0 auto);
+  @include base.flex(0 0 auto);
 }

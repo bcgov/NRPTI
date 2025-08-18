@@ -1,9 +1,9 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 // basic page layout
 
 .flex {
-  @include flex-box();
+  @include base.flex-box();
 }
 
 .flex-column {
@@ -37,7 +37,7 @@
 }
 
 .documents-view {
-  @include flex-box();
+  @include base.flex-box();
 
   flex-direction: column;
   min-height: 40rem;
@@ -92,7 +92,7 @@
 
   .filter-panel {
     overflow-x: hidden;
-    background: $white;
+    background: base.$white;
     box-shadow: 0 0.3rem 0.3rem rgba(0, 0, 0, 0.25);
     transition: transform ease-out 0.2s;
     transform: translateX(-120%);

@@ -1,3 +1,5 @@
+@use "assets/styles/base/base.scss" as base;
+
 .detail-page {
   .nav-section {
     font-weight: 600;
@@ -138,7 +140,7 @@
 }
 
 .grey-subtext {
-  color: $gray6;
+  color: base.$gray6;
   font-size: 15px;
   font-style: italic;
 }

@@ -1,9 +1,9 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 .app-footer {
-  border-top: 4px solid $gold;
-  background: $footer-bg;
-  color: $footer-color;
+  border-top: 4px solid base.$gold;
+  background: base.$footer-bg;
+  color: base.$footer-color;
 
   .container {
     padding-top: 1.5rem;
@@ -16,7 +16,7 @@
     text-align: center;
     margin-bottom: 1.5rem;
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid $bg-dark-border-color;
+    border-bottom: 1px solid base.$bg-dark-border-color;
 
     &.last {
       margin-bottom: 0;
@@ -27,7 +27,7 @@
 
   h4 {
     margin-bottom: 1rem;
-    color: $color-inverted;
+    color: base.$color-inverted;
     font-size: medium;
     font-weight: bold;
   }
@@ -52,22 +52,22 @@
   }
 
   a {
-    color: $footer-color;
+    color: base.$footer-color;
 
     &.feedback-link {
-      color: $gold;
+      color: base.$gold;
     }
 
     &:focus,
     &:hover {
-      color: $gold;
+      color: base.$gold;
     }
   }
 
   .footer-admin {
     margin-top: 1.5rem;
     padding-top: 1.5rem;
-    border-top: 1px solid $bg-dark-border-color;
+    border-top: 1px solid base.$bg-dark-border-color;
 
     .gov-links {
       text-align: center;
@@ -109,7 +109,7 @@
 
     h4 {
       padding-bottom: 1rem;
-      border-bottom: 1px solid $bg-dark-border-color;
+      border-bottom: 1px solid base.$bg-dark-border-color;
     }
 
     .footer-admin {

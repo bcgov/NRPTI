@@ -1,3 +1,5 @@
+@use "assets/styles/base/base.scss" as base;
+
 // Form Label
 label {
   font-size: 0.875rem;
@@ -49,7 +51,7 @@ fieldset {
   + fieldset {
     margin-top: 2.5rem;
     padding-top: 2rem;
-    border-top: 1px solid $fc-border-color;
+    border-top: 1px solid base.$fc-border-color;
   }
 }
 
@@ -62,12 +64,12 @@ legend {
 
 // Form Items
 .form-control {
-  border-color: $fc-border-color;
-  background: $fc-bg;
+  border-color: base.$fc-border-color;
+  background: base.$fc-bg;
   font-size: 0.9375rem;
 
   &:focus {
-    border-color: $fc-focus-border-color;
+    border-color: base.$fc-focus-border-color;
   }
 }
 
@@ -85,10 +87,10 @@ input {
   &[type="email"],
   &[type="number"] {
     height: 2.5rem;
-    box-shadow: 0.1rem 0.1rem 0.2rem inset $gray2;
+    box-shadow: 0.1rem 0.1rem 0.2rem inset base.$gray2;
 
-    @include placeholder {
-      color: $fc-placeholder-color;
+    @include base.placeholder {
+      color: base.$fc-placeholder-color;
     }
   }
 }
@@ -102,7 +104,7 @@ input[type=number]::-webkit-outer-spin-button {
 select {
   &.form-control {
     &:not([size]):not([multiple]) {
-      height: $fc-height;
+      height: base.$fc-height;
       padding: 0 0.5rem;
     }
   }
@@ -113,18 +115,18 @@ textarea.form-control {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
 
-  @include placeholder {
-    color: $fc-placeholder-color;
+  @include base.placeholder {
+    color: base.$fc-placeholder-color;
   }
 
   resize: vertical;
-  box-shadow: $fc-inner-shadow inset;
+  box-shadow: base.$fc-inner-shadow inset;
 }
 
 // Input Group
 .input-group-btn {
   .btn-icon {
-    border-color: $fc-border-color;
+    border-color: base.$fc-border-color;
   }
 }
 
@@ -135,7 +137,7 @@ textarea.form-control {
   padding: 0.5rem 1rem;
   font-weight: 600;
   color: #fff;
-  background: $fc-invalid-color;
+  background: base.$fc-invalid-color;
 
   &::after {
     content: ' ';
@@ -145,7 +147,7 @@ textarea.form-control {
     width: 1rem;
     height: 1rem;
     border-right: 0.5rem solid transparent;
-    border-bottom: 0.5rem solid $fc-invalid-color;
+    border-bottom: 0.5rem solid base.$fc-invalid-color;
     border-left: 0.5rem solid transparent;
   }
 }
@@ -155,17 +157,17 @@ textarea.form-control {
 }
 
 .form-control.is-invalid {
-  border-color: $fc-invalid-color;
+  border-color: base.$fc-invalid-color;
 }
 
 .input-group.is-invalid {
   .form-control {
-    border-color: $fc-invalid-color;
+    border-color: base.$fc-invalid-color;
   }
 
   .input-group-btn {
     .btn-icon {
-      border-color: $fc-invalid-color;
+      border-color: base.$fc-invalid-color;
     }
   }
 }

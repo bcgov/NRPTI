@@ -305,7 +305,7 @@ const issuedToRedaction = function (roles) {
             if: {
               $and: [
                 { $ne: [{ $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }, null] },
-                { $ne: [{ $arrayElemAt: ['$fullRecord.dateIssued'] }, null] },
+                { $ne: [{ $arrayElemAt: ['$fullRecord.dateIssued', 0] }, null] },
               ]
             },
             then: {

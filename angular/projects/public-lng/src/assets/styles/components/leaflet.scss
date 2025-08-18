@@ -1,3 +1,5 @@
+@use 'assets/styles/base/base.scss' as base;
+
 .leaflet-container {
   font-family: 'myriad-pro', Calibri, Arial, sans-serif;
 
@@ -7,7 +9,7 @@
     padding: 0.5rem 0;
     width: 2rem;
     height: 2rem;
-    color: $gray6;
+    color: base.$gray6;
     border-radius: 0.25rem;
     font-size: 24px; // default material-icon size
     font-weight: normal;
@@ -16,8 +18,8 @@
     &:active,
     &:focus,
     &:hover {
-      color: $gray9;
-      background: $gray1;
+      color: base.$gray9;
+      background: base.$gray1;
     }
   }
 }
@@ -43,7 +45,7 @@
   display: none;
 }
 #map .popup-header {
-  background-color: $primary6;
+  background-color: base.$primary6;
   color: white;
   padding: 0.5rem;
   border-radius: 0.5rem 0.5rem 0 0;
@@ -54,10 +56,10 @@
 }
 
 .map-popup-content-fixed .popup-content {
-  border: 3px solid $primary6;
+border: 3px solid base.$primary6;
   padding: 0.5rem;
   border-radius: 0 0 0.5rem 0.5rem;
-  background-color: $gray1;
+  background-color: base.$gray1;
 }
 
 #map .popup-hr {
@@ -93,26 +95,26 @@
 
 #map .popup-desc-title {
   font-weight: 600;
-  color: $primary6;
+  color: base.$primary6;
   margin-bottom: 0.2rem;
 }
 
 #map .popup-value {
   font-weight: 600;
-  color: $primary6;
+  color: base.$primary6;
 }
 
 #map .popup-date {
   font-weight: 600;
-  color: $gray6;
+  color: base.$gray6;
 }
 
 #map .btn-popup {
   display: flex;
   align-items: center;
   font-weight: bold;
-  background-color: $gold;
-  color: $primary;
+  background-color: base.$gold;
+  color: base.$primary;
   padding: 5px 10px;
 }
 

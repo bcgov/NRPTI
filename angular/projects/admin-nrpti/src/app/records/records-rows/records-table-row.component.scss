@@ -1,4 +1,4 @@
-@use "assets/styles/base/base.scss" as *;
+@use "assets/styles/base/base.scss" as base;
 
 .showPointer {
   &:hover {
@@ -8,6 +8,6 @@
 
 :host-context(tr) {
   &:hover {
-    background-color: $table-row-hover-bg;
+    background-color: base.$table-row-hover-bg;
   }
 }
