@@ -323,12 +323,12 @@ export class KeycloakService {
     return new Observable(observer => {
       this.keycloakAuth
         .updateToken(30)
-        .success(refreshed => {
+        .then(refreshed => {
           this.logger.log(`KC refreshed token?: ${refreshed}`);
           observer.next();
           observer.complete();
         })
-        .error(err => {
+        .catch(err => {
           this.logger.log(`KC refresh error: ${err}`);
           observer.error();
         });
