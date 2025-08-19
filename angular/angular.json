@@ -49,7 +49,6 @@
             ],
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/lib/keycloak.js",
               "node_modules/tinymce/tinymce.min.js"
             ]
           },
@@ -241,7 +240,6 @@
             "tsConfig": "projects/public-nrpti/tsconfig.spec.json",
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/lib/keycloak.js"
             ],
             "watch": false,
             "codeCoverage": true,
@@ -265,8 +263,7 @@
             "polyfills": "projects/public-nrpti/src/polyfills.ts",
             "tsConfig": "projects/public-nrpti/tsconfig.spec.json",
             "scripts": [
-              "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/lib/keycloak.js"
+              "node_modules/moment/min/moment.min.js"
             ],
             "watch": true,
             "codeCoverage": false,
