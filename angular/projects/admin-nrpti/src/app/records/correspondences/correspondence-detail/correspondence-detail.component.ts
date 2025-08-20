@@ -39,13 +39,15 @@ export class CorrespondenceDetailComponent extends RecordDetailComponent impleme
 
       const record = res.records[0] && res.records[0].data;
 
-      this.data = {
-        _master: new Correspondence(record),
-        flavourData:
-          (record.flavours &&
-            record.flavours.map(flavourRecord => RecordUtils.getRecordModelInstance(flavourRecord))) ||
-          []
-      };
+      // TODO: (NRPTI-1351) I refactored the following to resolve the issue with records serving up no data.
+      // This logic is duplicate across the record detail components
+      // this.data = {
+      //   _master: new Correspondence(record),
+      //   flavourData:
+      //     (record.flavours &&
+      //       record.flavours.map(flavourRecord => RecordUtils.getRecordModelInstance(flavourRecord))) ||
+      //     []
+      // };
 
       this.populateTextFields();
       this.disableEdit();
