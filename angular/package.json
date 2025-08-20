@@ -94,7 +94,7 @@
     "ngx-toastr": "^10.0.4",
     "object-fit-images": "~3.2.4",
     "papaparse": "~5.2.0",
-    "popper.js": "~1.14.7",
+    "popper.js": "~1.16.1",
     "rxjs": "~6.3.3",
     "rxjs-compat": "^6.5.3",
     "tinymce": "~5.6.0",
