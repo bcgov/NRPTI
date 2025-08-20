@@ -39,7 +39,8 @@ export class InspectionDetailComponent extends RecordDetailComponent implements 
 
       const record = res.records[0] && res.records[0].data;
 
-      // TODO: I refactored the following to resolve the issue with records serving up no data. 
+      // TODO: I refactored the following to resolve the issue with records serving up no data.
+      // This logic is duplicate across the record detail components
       // this.data = {
       //   _master: new Inspection(record),
       //   flavourData:
