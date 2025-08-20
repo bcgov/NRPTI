@@ -37,6 +37,9 @@ services:
       - KEYCLOAK_CLIENT_ID=nrpti-4869
       - KEYCLOAK_URL=https://dev.loginproxy.gov.bc.ca/auth
       - KEYCLOAK_REALM=standard
+      - NRIS_username=${NRIS_username}
+      - NRIS_password=${NRIS_password}
+
     ports: 
       - 3000:3000
     # healthcheck:
