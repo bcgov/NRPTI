@@ -59,9 +59,9 @@ export class PermitDetailComponent extends RecordDetailComponent implements OnIn
       this.data.flavourData = [];
       if (record?.flavours.length > 0) {
         const data = record.flavours.map(flavourRecord => {
-          return this.data.flavourData.append(RecordUtils.getRecordModelInstance(flavourRecord));
+          return this.data.flavourData.push(RecordUtils.getRecordModelInstance(flavourRecord));
         })
-        this.data.flavourData.append(data)
+        this.data.flavourData.push(data)
       }
 
       this.mine = mines.filter(elem => elem._sourceRefId === this.data._master.mineGuid);

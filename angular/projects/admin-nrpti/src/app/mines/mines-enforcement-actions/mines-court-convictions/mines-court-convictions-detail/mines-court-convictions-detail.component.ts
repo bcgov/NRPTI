@@ -54,9 +54,9 @@ export class MinesCourtConvictionsDetailComponent extends CourtConvictionDetailC
       this.data.flavourData = [];
       if (record?.flavours.length > 0) {
         const data = record.flavours.map(flavourRecord => {
-          return this.data.flavourData.append(RecordUtils.getRecordModelInstance(flavourRecord));
+          return this.data.flavourData.push(RecordUtils.getRecordModelInstance(flavourRecord));
         })
-        this.data.flavourData.append(data)
+        this.data.flavourData.push(data)
       }
 
       const mines = this.storeService.getItem('mines') || [];
