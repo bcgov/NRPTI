@@ -40,6 +40,8 @@ export class MinesAdministrativePenaltyDetailComponent extends AdministrativePen
 
       const record = res.record[0] && res.record[0].data;
 
+      // TODO: (NRPTI-1351) I refactored the following to resolve the issue with records serving up no data.
+      // This logic is duplicate across the record detail components
       // this.data = {
       //   _master: new AdministrativePenalty(record),
       //   flavourData:
@@ -54,9 +56,9 @@ export class MinesAdministrativePenaltyDetailComponent extends AdministrativePen
       this.data.flavourData = [];
       if (record?.flavours.length > 0) {
         const data = record.flavours.map(flavourRecord => {
-          return this.data.flavourData.append(RecordUtils.getRecordModelInstance(flavourRecord));
+          return this.data.flavourData.push(RecordUtils.getRecordModelInstance(flavourRecord));
         })
-        this.data.flavourData.append(data)
+        this.data.flavourData.push(data)
       }
 
       const mines = this.storeService.getItem('mines') || [];
