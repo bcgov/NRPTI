@@ -7,8 +7,6 @@ WORKDIR /app
 # Copy package.json and package-lock.json first to leverage Docker cache
 COPY ./angular/package*.json ./
 
-# RUN npm install --package-lock-only
-
 # Install dependencies
 RUN npm install
 
@@ -25,7 +23,6 @@ RUN npm run library:link
 
 RUN npm run build:app:public-nrced
 
-# Expose port 4200
-# EXPOSE 4300
+EXPOSE 4300
 
-CMD ["npm" "start"]
+# CMD ["npm" "start"]
