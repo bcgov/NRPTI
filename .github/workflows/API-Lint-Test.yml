@@ -1,7 +1,7 @@
 name: API linting & tests
 permissions:
   contents: read
-  
+
 on: [pull_request]
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
           api:
             - 'api/**'
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
+      uses: actions/setup-node@9ced9a43a244f3ac94f13bfd896db8c8f30da67a
       with:
         node-version: ${{ matrix.node-version }}
     - name: npm install
