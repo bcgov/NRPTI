@@ -38,10 +38,10 @@
 #     #    npm run lint
 #     #  env:
 #     #    CI: true
-#     # - name: test
-#     #   if: steps.filter.outputs.api == 'true'
-#     #   run: |
-#     #     cd api        
-#     #     npm run test
-#     #   env:
-#     #     CI: true
+#     - name: test
+#       if: steps.filter.outputs.api == 'true'
+#       run: |
+#         cd api        
+#         npm run test
+#       env:
+#         CI: true

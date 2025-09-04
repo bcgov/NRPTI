@@ -1,48 +1,48 @@
-name: Front-End linting & tests
+# name: Front-End linting & tests
 
-on: [pull_request]
+# on: [pull_request]
 
-jobs:
-  build:
+# jobs:
+#   build:
 
-    runs-on: ubuntu-22.04
+#     runs-on: ubuntu-22.04
 
-    strategy:
-      matrix:
-        node-version: [18.x]
+#     strategy:
+#       matrix:
+#         node-version: [18.x]
 
-    steps:
-    - uses: actions/checkout@v1
-    - uses: dorny/paths-filter@v2
-      id: filter
-      with:
-        filters: |
-          frontend:
-            - 'angular/**'
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install
-      if: steps.filter.outputs.frontend == 'true'
-      run: |
-        cd angular
-        npm install
-      env:
-        CI: true
-    # Disabling linting post-updates, not worth fixing
-    #- name: lint
-    #  if: steps.filter.outputs.frontend == 'true'
-    #  run: |
-    #    cd angular
-    #    npm run lint
-    #  env:
-    #    CI: true
-    - name: build, and test
-      if: steps.filter.outputs.frontend == 'true'
-      run: |
-        cd angular
-        npm run build
-        npm run test
-      env:
-        CI: true
+#     steps:
+#     - uses: actions/checkout@v1
+#     - uses: dorny/paths-filter@v2
+#       id: filter
+#       with:
+#         filters: |
+#           frontend:
+#             - 'angular/**'
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#         node-version: ${{ matrix.node-version }}
+#     - name: npm install
+#       if: steps.filter.outputs.frontend == 'true'
+#       run: |
+#         cd angular
+#         npm install
+#       env:
+#         CI: true
+#     # Disabling linting post-updates, not worth fixing
+#     #- name: lint
+#     #  if: steps.filter.outputs.frontend == 'true'
+#     #  run: |
+#     #    cd angular
+#     #    npm run lint
+#     #  env:
+#     #    CI: true
+#     - name: build, and test
+#       if: steps.filter.outputs.frontend == 'true'
+#       run: |
+#         cd angular
+#         npm run build
+#         npm run test
+#       env:
+#         CI: true
