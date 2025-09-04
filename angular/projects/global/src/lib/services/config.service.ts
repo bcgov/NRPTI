@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class ConfigService {
     try {
       // Attempt to get application via this.httpClient. This uses the url of the application that you are running it from
       // This will not work for local because it will try and get localhost:4200/api instead of 3000/api...
-      this.configuration = await this.httpClient.get(`api/config/${application}`).toPromise();
+      this.configuration = await firstValueFrom(this.httpClient.get(`api/config/${application}`))
 
       console.log('Configuration:', this.configuration);
       if (this.configuration['debugMode']) {
@@ -33,9 +34,8 @@ export class ConfigService {
       try {
         // This try is to attempt to get config in your local environment.
         // It will try and do a get on localhost:3000/api/config...
-        const res = await this.http
-          .get<any>(`${window['__env']['API_LOCATION']}${window['__env']['API_PATH']}/config/${application}`)
-          .toPromise();
+        const res = await firstValueFrom(this.http
+          .get<any>(`${window['__env']['API_LOCATION']}${window['__env']['API_PATH']}/config/${application}`))
         this.configuration = window['__env'];
         this.configuration = { ...this.configuration, ...res };
       } catch (error) {
