@@ -1,5 +1,7 @@
 name: API linting & tests
-
+permissions:
+  contents: read
+  
 on: [pull_request]
 
 jobs:
@@ -12,15 +14,15 @@ jobs:
         node-version: [18.x]
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: dorny/paths-filter@v3
+    - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
+    - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
       id: filter
       with:
         filters: |
           api:
             - 'api/**'
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v5
+      uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
       with:
         node-version: ${{ matrix.node-version }}
     - name: npm install
