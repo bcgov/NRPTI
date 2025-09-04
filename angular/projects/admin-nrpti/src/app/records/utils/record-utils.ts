@@ -245,13 +245,9 @@ export class RecordUtils {
   }
 
   static getReflectiveInstance(context: any, name: string, ...args: any[]) {
-    const instance = Object.create(context[name].prototype);
+    const instance = context[name];
 
-    if (args) {
-      instance.constructor.apply(instance, args);
-    }
-
-    return instance;
+    return new instance(...args);
   }
 
   /**

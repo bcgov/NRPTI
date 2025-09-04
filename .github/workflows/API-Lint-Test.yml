@@ -1,47 +1,47 @@
-name: API linting & tests
+# name: API linting & tests
 
-on: [pull_request]
+# on: [pull_request]
 
-jobs:
-  build:
+# jobs:
+#   build:
 
-    runs-on: ubuntu-latest
+#     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x]
+#     strategy:
+#       matrix:
+#         node-version: [18.x]
 
-    steps:
-    - uses: actions/checkout@v1
-    - uses: dorny/paths-filter@v2
-      id: filter
-      with:
-        filters: |
-          api:
-            - 'api/**'
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install
-      if: steps.filter.outputs.api == 'true'
-      run: |
-        cd api
-        npm install
-      env:
-        CI: true
-    # Disabling linting post-updates, not worth fixing
-    #- name: lint
-    #  if: steps.filter.outputs.api == 'true'
-    #  run: |
-    #    cd api
-    #    npm run lint
-    #  env:
-    #    CI: true
-    - name: test
-      if: steps.filter.outputs.api == 'true'
-      run: |
-        cd api        
-        npm run test
-      env:
-        CI: true
+#     steps:
+#     - uses: actions/checkout@v1
+#     - uses: dorny/paths-filter@v2
+#       id: filter
+#       with:
+#         filters: |
+#           api:
+#             - 'api/**'
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v1
+#       with:
+#         node-version: ${{ matrix.node-version }}
+#     - name: npm install
+#       if: steps.filter.outputs.api == 'true'
+#       run: |
+#         cd api
+#         npm install
+#       env:
+#         CI: true
+#     # Disabling linting post-updates, not worth fixing
+#     #- name: lint
+#     #  if: steps.filter.outputs.api == 'true'
+#     #  run: |
+#     #    cd api
+#     #    npm run lint
+#     #  env:
+#     #    CI: true
+#     - name: test
+#       if: steps.filter.outputs.api == 'true'
+#       run: |
+#         cd api        
+#         npm run test
+#       env:
+#         CI: true

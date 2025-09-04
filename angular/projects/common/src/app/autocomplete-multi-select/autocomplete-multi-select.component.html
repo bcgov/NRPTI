@@ -1,5 +1,5 @@
-<mat-chip-list #chipList *ngIf="useChips">
-  <div class="mat-chip-list-wrapper-override">
+<mat-chip-grid #chipGrid *ngIf="useChips">
+  <div class="mat-chip-grid-wrapper-override">
     <input
       #multiAutocompleteFilter
       name="multiAutocompleteFilter"
@@ -10,7 +10,7 @@
       (keyup)="filterPicklist($event)"
       (keydown)="handleEnter($event)"
       [matAutocomplete]="multiAutocomplete"
-      [matChipInputFor]="chipList"
+      [matChipInputFor]="chipGrid"
     />
     <mat-chip
       *ngFor="let option of options | callback: filterOptions"
@@ -22,7 +22,7 @@
       <mat-icon matChipRemove>cancel</mat-icon>
     </mat-chip>
   </div>
-</mat-chip-list>
+</mat-chip-grid>
 <input
   *ngIf="!useChips"
   #multiAutocompleteFilter
