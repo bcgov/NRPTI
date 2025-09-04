@@ -1,70 +1,70 @@
-name: PR
+# name: PR
 
-on:
-  pull_request:
+# on:
+#   pull_request:
 
-concurrency:
-  # Cancel in progress for PR open and close
-  group: ${{ github.event.number }}
-  cancel-in-progress: true
+# concurrency:
+#   # Cancel in progress for PR open and close
+#   group: ${{ github.event.number }}
+#   cancel-in-progress: true
 
-permissions: {}
+# permissions: {}
 
-jobs:
+# jobs:
   # https://github.com/bcgov/action-builder-ghcr
-  builds:
-    name: Builds
-    permissions:
-      packages: write
-    runs-on: ubuntu-24.04
-    strategy:
-      matrix:
-        include:
-          - package: ''
-        #   - package: api
-        #     directory: api
-        #     dockerfile: Dockerfile
-        #   - package: admin-nrpti
-        #     directory: angular
-        #     dockerfile: Dockerfile
-        #   - package: public-nrpti
-        #     directory: angular
-        #     dockerfile: Dockerfile-public-nrpti
-    timeout-minutes: 10
-    steps:
-      - uses: bcgov/action-builder-ghcr@ace71f7a527ca6fc43c15c7806314be5a4579d2c # v2.3.0
-        with:
-          keep_versions: 50
-          package: ${{ matrix.package }}
-          build_context: ${{ matrix.directory }}
-          build_file: ${{ matrix.directory }}/${{ matrix.dockerfile }}
-          tag: ${{ github.event.number }}
-          tag_fallback: latest
-          triggers: ('${{ matrix.directory }}/')
+  # builds:
+  #   name: Builds
+  #   permissions:
+  #     packages: write
+  #   runs-on: ubuntu-24.04
+  #   strategy:
+  #     matrix:
+  #       include:
+  #         - package: ''
+  #       #   - package: api
+  #       #     directory: api
+  #       #     dockerfile: Dockerfile
+  #       #   - package: admin-nrpti
+  #       #     directory: angular
+  #       #     dockerfile: Dockerfile
+  #       #   - package: public-nrpti
+  #       #     directory: angular
+  #       #     dockerfile: Dockerfile-public-nrpti
+  #   timeout-minutes: 10
+  #   steps:
+  #     - uses: bcgov/action-builder-ghcr@ace71f7a527ca6fc43c15c7806314be5a4579d2c # v2.3.0
+  #       with:
+  #         keep_versions: 50
+  #         package: ${{ matrix.package }}
+  #         build_context: ${{ matrix.directory }}
+  #         build_file: ${{ matrix.directory }}/${{ matrix.dockerfile }}
+  #         tag: ${{ github.event.number }}
+  #         tag_fallback: latest
+  #         triggers: ('${{ matrix.directory }}/')
 
-  deploy:
-    name: Deploy
-    needs: [builds]
-    runs-on: ubuntu-24.04
-    strategy:
-      matrix:
-        include:
-          - component: api
-            file: ./tools/api/api.dc.yaml
-          - component: admin-nrpti
-            file: ./tools/angular-on-nginx/admin-nrced.dc.yaml
-          - component: public-nrpti
-            file: ./tools/angular-on-nginx/public-nrced.dc.yaml
-    steps:
-      - uses: actions/checkout@v3
-      - name: Deploy ${{ matrix.component }}
-        uses: bcgov/action-deployer-openshift@v4.0.0
-        with:
-          oc_namespace: ${{ vars.oc_namespace }}
-          oc_server: ${{ vars.oc_server }}
-          oc_token: ${{ secrets.oc_token }}
-          file: ${{ matrix.file }}
-          overwrite: true
+  # deploy:
+  #   name: Deploy
+  #   needs: [builds]
+  #   runs-on: ubuntu-24.04
+  #   strategy:
+  #     matrix:
+  #       include:
+  #         - component: api
+  #           file: ./tools/api/api.dc.yaml
+  #         - component: admin-nrpti
+  #           file: ./tools/angular-on-nginx/admin-nrced.dc.yaml
+  #         - component: public-nrpti
+  #           file: ./tools/angular-on-nginx/public-nrced.dc.yaml
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Deploy ${{ matrix.component }}
+  #       uses: bcgov/action-deployer-openshift@v4.0.0
+  #       with:
+  #         oc_namespace: ${{ vars.oc_namespace }}
+  #         oc_server: ${{ vars.oc_server }}
+  #         oc_token: ${{ secrets.oc_token }}
+  #         file: ${{ matrix.file }}
+  #         overwrite: true
 
   # # https://github.com/bcgov/action-deploy-ghcr
   # deploys:
