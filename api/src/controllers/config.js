@@ -10,6 +10,7 @@ const NrptiConfig = require('./config/nrpti');
 const { featureFlag: FeatureFlag } = require('../models/index');
 
 const CheckRole = function (roles, roleName, includeSysadmin = false) {
+  console.log("CheckRole");
   if (includeSysadmin) {
     if (!roles.includes('sysadmin') &&
       !roles.includes(roleName)) {
