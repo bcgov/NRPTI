@@ -10,6 +10,7 @@ import {
 } from 'nrpti-angular-components';
 import { ImportTableRowsComponent } from '../import/import-rows/import-table-rows.component';
 import { takeWhile } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { ImportService } from '../services/import.service';
 import { SearchResult } from 'nrpti-angular-components';
@@ -167,12 +168,12 @@ export class ImportComponent implements OnInit, OnDestroy {
   }
 
   async startJob(dataSourceType: string) {
-    await this.factoryService
+    await firstValueFrom(this.factoryService
       .startTask({
         dataSourceType: dataSourceType,
         taskType: 'import'
       })
-      .toPromise();
+    );
 
     this.buttonActions[dataSourceType] = true;
     setTimeout(() => {
