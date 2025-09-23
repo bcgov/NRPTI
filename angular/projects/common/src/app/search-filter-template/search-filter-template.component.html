@@ -18,7 +18,7 @@
   <div class="row">
     <div class="col">
       <div class="input-group mb-3">
-        <div *ngIf="subsets" ngbDropdown class="input-group-prepend">
+        <div *ngIf="subsets" ngbDropdown>
           <button class="btn btn-outline-secondary" id="dropdown" ngbDropdownToggle>
             {{
               subsets.selectedSubset !== null ? subsets.selectedSubset.subsetLabel : subsets.defaultSubset.subsetLabel
@@ -48,7 +48,7 @@
           (aria-label)="(keywordWatermark || 'Type keyword to search')"
           aria-describedby="basic-addon2"
         />
-        <div *ngIf="keywordSearchWords && keywordSearchWords.length > 0" class="input-group-append">
+        <div *ngIf="keywordSearchWords && keywordSearchWords.length > 0">
           <button class="btn btn-outline-primary" type="button" (click)="clearSearchTerms()">
             <i class="material-icons align-middle">close</i>
           </button>
@@ -65,7 +65,7 @@
   <!-- Advanced Filters toggle -->
   <div *ngIf="advancedFilters" class="row mb-3">
     <div class="col">
-      <button class="btn btn-primary float-right" (click)="toggleAdvancedFilters()">
+      <button class="btn btn-primary float-end" (click)="toggleAdvancedFilters()">
         {{ showAdvancedFilters ? 'Close' : 'Open' }} Advanced Filters
         <i class="material-icons align-middle">
           {{ showAdvancedFilters ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
@@ -241,6 +241,6 @@
     </div>
   </form>
   <section class="mt-4 reset-button">
-    <button class="btn btn-primary float-right" (click)="clearFilters()">Reset Filters</button>
+    <button class="btn btn-primary float-end" (click)="clearFilters()">Reset Filters</button>
   </section>
 </div>

@@ -8,8 +8,8 @@
       <h2>NRPTI - Authenticated Access</h2>
     </div>
 
-    <div class="card-deck">
-      <div class="card" *ngIf="keycloakService.isMenuEnabled('Imports')">
+    <div class="d-flex gap-3">
+      <div class="card flex-fill" *ngIf="keycloakService.isMenuEnabled('Imports')">
         <div class="card-body">
           <h3 class="card-title">Import</h3>
           <p class="card-text">Import records from EPIC/NRIS/COORS.</p>
@@ -18,7 +18,7 @@
           <a [routerLink]="['/imports']">Imports</a>
         </div>
       </div>
-      <div class="card">
+      <div class="card flex-fill">
         <div class="card-body">
           <h3 class="card-title">Records</h3>
           <p class="card-text">Show all records in the system.</p>
@@ -28,8 +28,8 @@
         </div>
       </div>
     </div>
-    <div class="mt-2 card-deck">
-      <div class="card">
+    <div class="mt-2 d-flex gap-3">
+      <div class="card flex-fill">
         <div class="card-body">
           <h3 class="card-title">Agency Records</h3>
           <p class="card-text">Records by Agency published to NRCED over the last 365 days</p>
@@ -39,8 +39,8 @@
         </div>
       </div>
     </div>
-    <div class="mt-2 card-deck">
-      <div class="card">
+    <div class="mt-2 d-flex gap-3">
+      <div class="card flex-fill">
         <div class="card-body">
           <h3 class="card-title">Records by Type</h3>
           <p class="card-text">Records by Type Published to NRCED</p>
