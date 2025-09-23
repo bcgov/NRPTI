@@ -1,5 +1,9 @@
 @use "assets/styles/base/base.scss" as base;
 
+::ng-deep .breadcrumb {
+  padding: .75rem 1rem;
+}
+
 :host {
   display: block;
 
@@ -84,4 +88,8 @@ lib-breadcrumb {
 
 .breadcrumb-section {
   z-index: 3;
+}
+
+::ng-deep input.form-control[name="recordType"] {
+  background-color: #e9ecef !important;
 }

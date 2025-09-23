@@ -9,6 +9,10 @@
     margin-bottom: none !important;
     border: none;
 
+    // Bootstrap 5 updated table styles breaking current tables. Reverting to Bootstrap 4.
+    --bs-table-bg: transparent;
+    --bs-table-border-color: #dee2e6; 
+
     thead {
       tr {
         background: #e8eff5;
@@ -142,4 +146,9 @@
       }
     }
   }
+}
+
+// Using ::ng-deep to get around Angular view encapsulation
+::ng-deep .ng-star-inserted, .ng-star-inserted span {
+  text-decoration: none !important;
 }
