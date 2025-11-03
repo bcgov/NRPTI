@@ -4,8 +4,11 @@
     "outDir": "../../out-tsc/lib",
     "baseUrl": "src",
     "inlineSources": true,
+    "typeRoots": ["../../node_modules/@types"],
+     "types": ["node"]
   },
   "angularCompilerOptions": {
+    "compilationMode": "partial",
     "annotateForClosureCompiler": false,
     "skipTemplateCodegen": true,
     "strictMetadataEmit": true,
