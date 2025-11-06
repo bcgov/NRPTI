@@ -24,7 +24,8 @@ import { ToastrModule } from 'ngx-toastr';
 
 // components
 import { AppComponent } from './app.component';
-import { ConfirmComponent } from './confirm/confirm.component';
+// import { ConfirmComponent } from './confirm/confirm.component';
+import { ConfirmComponentNew } from './confirm/confirm.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
@@ -88,7 +89,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
     ImportComponent,
     ImportCSVComponent,
     ToggleButtonComponent,
-    ConfirmComponent,
+    ConfirmComponentNew,
     HeaderComponent,
     SidebarComponent,
     FooterComponent,

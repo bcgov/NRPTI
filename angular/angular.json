@@ -207,6 +207,15 @@
             ]
           },
           "configurations": {
+            "development": {
+              "aot": false,
+              "buildOptimizer": false,
+                "optimization": {
+                  "scripts": false,
+                  "styles": false,
+                  "fonts": false
+                }
+            },
             "production": {
               "optimization": true,
               "outputHashing": "all",
@@ -232,6 +241,9 @@
             "port": 4400
           },
           "configurations": {
+            "development": {
+              "buildTarget": "public-nrced:build:development"
+            },
             "production": {
               "buildTarget": "public-nrced:build:production"
             }

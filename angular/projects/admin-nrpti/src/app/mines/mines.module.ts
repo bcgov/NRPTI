@@ -20,7 +20,6 @@ import { DocumentsModule } from '../documents/documents.module';
 import { RecordsModule } from '../records/records.module';
 
 // mines
-import { ConfirmComponentNew } from './../confirm/confirm.component';
 import { MinesTableRowComponent } from './mines-rows/mines-table-row.component';
 import { MinesListComponent } from './mines-list/mines-list.component';
 import { MinesDetailComponent } from './mines-detail/mines-detail.component';
@@ -66,7 +65,6 @@ import { MinesCourtConvictionsDetailComponent } from './mines-enforcement-action
     RecordsModule
   ],
   declarations: [
-    ConfirmComponentNew,
     MinesListComponent,
     MinesTableRowComponent,
     MinesDetailComponent,

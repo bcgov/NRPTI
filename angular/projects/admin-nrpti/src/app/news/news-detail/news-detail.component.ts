@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { takeUntil } from 'rxjs/operators';
 import { News } from '../../../../../common/src/app/models/master/common-models/news';
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmComponent } from '../../confirm/confirm.component';
-import { DialogService } from 'ng2-bootstrap-modal';
+import { ConfirmComponentNew } from '../../confirm/confirm.component';
+// import { DialogService } from 'ng2-bootstrap-modal';
 import { FactoryService } from '../../services/factory.service';
 
 @Component({
@@ -23,7 +24,8 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
     public router: Router,
     private factoryService: FactoryService,
     public changeDetectionRef: ChangeDetectorRef,
-    private dialogService: DialogService
+    // private dialogService: DialogService,
+    private modalService: BsModalService
   ) {}
 
   ngOnInit() {
@@ -40,30 +42,55 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  delete_old() {
+    // this.dialogService
+    //   .addDialog(
+    //     ConfirmComponent,
+    //     {
+    //       title: 'Confirm Deletion',
+    //       message: 'Do you really want to delete this News Item?',
+    //       okOnly: false
+    //     },
+    //     {
+    //       backdropColor: 'rgba(0, 0, 0, 0.5)'
+    //     }
+    //   )
+    //   .pipe(takeUntil(this.ngUnsubscribe))
+    //   .subscribe(async isConfirmed => {
+    //     if (isConfirmed) {
+    //       try {
+    //         await this.factoryService.deleteNews(this.record._id);
+    //         this.router.navigate(['news']);
+    //       } catch (e) {
+    //         alert('Could not delete News Item');
+    //       }
+    //     }
+    //   });
+  }
+
   delete() {
-    this.dialogService
-      .addDialog(
-        ConfirmComponent,
-        {
-          title: 'Confirm Deletion',
-          message: 'Do you really want to delete this News Item?',
-          okOnly: false
-        },
-        {
-          backdropColor: 'rgba(0, 0, 0, 0.5)'
-        }
-      )
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(async isConfirmed => {
-        if (isConfirmed) {
-          try {
-            await this.factoryService.deleteNews(this.record._id);
-            this.router.navigate(['news']);
-          } catch (e) {
-            alert('Could not delete News Item');
-          }
-        }
-      });
+    // Open the modal
+    const modalRef: BsModalRef = this.modalService.show(ConfirmComponentNew, {
+      initialState: {
+        title: 'Confirm Deletion',
+        message: 'Do you really want to delete this News Item?',
+        okOnly: false
+      },
+      class: 'modal-md',          // medium modal size
+      ignoreBackdropClick: true   // equivalent to disableClose
+    });
+
+    // Subscribe to the result
+    modalRef.content.onClose.subscribe(async (isConfirmed: boolean) => {
+      if (!isConfirmed) return;
+
+      try {
+        await this.factoryService.deleteNews(this.record._id);
+        this.router.navigate(['news']);
+      } catch (e) {
+        alert('Could not delete News Item');
+      }
+    });
   }
 
   navigateToEditPage() {
