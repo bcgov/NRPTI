@@ -53,6 +53,15 @@
             ]
           },
           "configurations": {
+            "development": {
+              "aot": false,
+              "buildOptimizer": false,
+                "optimization": {
+                  "scripts": false,
+                  "styles": false,
+                  "fonts": false
+                }
+            },
             "production": {
               "optimization": true,
               "outputHashing": "all",
@@ -61,7 +70,7 @@
               "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true,
+              "buildOptimizer": false,
               "fileReplacements": [
                 {
                   "replace": "projects/admin-nrpti/src/environments/environment.ts",
@@ -78,6 +87,9 @@
             "port": 4200
           },
           "configurations": {
+            "development": {
+              "buildTarget": "admin-nrpti:build:development"
+            },
             "production": {
               "buildTarget": "admin-nrpti:build:production"
             }

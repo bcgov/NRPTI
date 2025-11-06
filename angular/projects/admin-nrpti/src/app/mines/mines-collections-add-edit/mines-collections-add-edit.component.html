@@ -95,7 +95,7 @@
           </div>
         </div>
         <div class="col-7 col-lg-6 col-xl-6">
-          <div class="text-right mb-3">
+          <div class="text-end mb-3">
             <button
               class="btn btn-primary"
               (click)="onAddRecordsToCollection()"
@@ -135,7 +135,7 @@
       </div>
 
       <table
-        class="table"
+        class="table table-borderless"
         *ngIf="myForm.get('collectionRecords').value && myForm.get('collectionRecords').value.length"
         aria-describedby="List of Records for Collection"
       >
