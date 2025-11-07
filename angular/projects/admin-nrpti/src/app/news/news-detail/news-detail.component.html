@@ -7,35 +7,35 @@
     </div>
   </div>
   <hr />
-  <div class="row label-pair ms-1 mb-2">
+  <div class="d-flex label-pair ms-1 mb-2">
     <label class="fw-bold me-1">Date:</label>
     <div>{{ (record.date | date: 'medium') || '-' }}</div>
   </div>
-  <div class="row label-pair ms-1 mb-2">
+  <div class="d-flex label-pair ms-1 mb-2">
     <label class="fw-bold me-1">Title:</label>
     <div>{{ record.title || '-' }}</div>
   </div>
-  <div class="row label-pair ms-1 mb-2">
+  <div class="d-flex label-pair ms-1 mb-2">
     <label class="fw-bold me-1">Content:</label>
     <div>{{ record.description || '-' }}</div>
   </div>
-  <div class="row label-pair ms-1 mb-2">
+  <div class="d-flex label-pair ms-1 mb-2">
     <label class="fw-bold me-1">Type:</label>
     <div>{{ record.type || '-' }}</div>
   </div>
-  <div class="row label-pair ms-1 mb-2">
+  <div class="d-flex label-pair ms-1 mb-2">
     <label class="fw-bold me-1">Project:</label>
     <div>{{ record.projectName || 'None' }}</div>
   </div>
-  <div class="row label-pair ms-1 mb-2">
+  <div class="d-flex label-pair ms-1 mb-2">
     <label class="fw-bold me-1">System:</label>
     <div>{{ record.system | uppercase }}</div>
   </div>
-  <div class="row label-pair ms-1 mb-2">
+  <div class="d-flex label-pair ms-1 mb-2">
     <label class="fw-bold me-1">URL:</label>
     <div>{{ record.url || '-' }}</div>
   </div>
-  <div class="row ms-1 mt-5">
+  <div class="d-flex ms-1 mt-5">
     <button class="btn btn-outline-primary me-1" (click)="delete()">Delete</button>
   </div>
 </main>

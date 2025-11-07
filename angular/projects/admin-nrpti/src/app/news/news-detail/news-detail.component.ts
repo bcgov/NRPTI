@@ -5,7 +5,6 @@ import { News } from '../../../../../common/src/app/models/master/common-models/
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmComponentNew } from '../../confirm/confirm.component';
-// import { DialogService } from 'ng2-bootstrap-modal';
 import { FactoryService } from '../../services/factory.service';
 
 @Component({
@@ -24,7 +23,6 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
     public router: Router,
     private factoryService: FactoryService,
     public changeDetectionRef: ChangeDetectorRef,
-    // private dialogService: DialogService,
     private modalService: BsModalService
   ) {}
 
@@ -42,32 +40,6 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  delete_old() {
-    // this.dialogService
-    //   .addDialog(
-    //     ConfirmComponent,
-    //     {
-    //       title: 'Confirm Deletion',
-    //       message: 'Do you really want to delete this News Item?',
-    //       okOnly: false
-    //     },
-    //     {
-    //       backdropColor: 'rgba(0, 0, 0, 0.5)'
-    //     }
-    //   )
-    //   .pipe(takeUntil(this.ngUnsubscribe))
-    //   .subscribe(async isConfirmed => {
-    //     if (isConfirmed) {
-    //       try {
-    //         await this.factoryService.deleteNews(this.record._id);
-    //         this.router.navigate(['news']);
-    //       } catch (e) {
-    //         alert('Could not delete News Item');
-    //       }
-    //     }
-    //   });
-  }
-
   delete() {
     // Open the modal
     const modalRef: BsModalRef = this.modalService.show(ConfirmComponentNew, {
@@ -76,8 +48,8 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
         message: 'Do you really want to delete this News Item?',
         okOnly: false
       },
-      class: 'modal-md',          // medium modal size
-      ignoreBackdropClick: true   // equivalent to disableClose
+      class: 'modal-md',
+      ignoreBackdropClick: true
     });
 
     // Subscribe to the result

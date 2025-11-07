@@ -1,18 +1,22 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Subject, of } from 'rxjs';
+// import { Subject, of } from 'rxjs';
+import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Picklists, StateStatus, StateIDs } from '../../../../../common/src/app/utils/record-constants';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecordUtils } from '../../records/utils/record-utils';
 import { FactoryService } from '../../services/factory.service';
 import { LoadingScreenService, Utils, StoreService } from 'nrpti-angular-components';
-import { DialogService } from 'ng2-bootstrap-modal';
+// import { DialogService } from 'ng2-bootstrap-modal';
+import { ConfirmComponentNew } from '../../confirm/confirm.component';
 import moment from 'moment';
-import { ConfirmComponent } from '../../confirm/confirm.component';
-import { takeUntil, catchError } from 'rxjs/operators';
+// import { ConfirmComponent } from '../../confirm/confirm.component';
+// import { takeUntil, catchError } from 'rxjs/operators';
+import { takeUntil, catchError, of } from 'rxjs';
 import { Constants } from '../../utils/constants/misc';
 import { ToastService } from '../../services/toast.service';
 import { AgencyDataService } from '../../../../../../projects/global/src/lib/utils/agency-data-service';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   standalone: false,
@@ -21,6 +25,7 @@ import { AgencyDataService } from '../../../../../../projects/global/src/lib/uti
   styleUrls: ['./mines-records-edit.component.scss']
 })
 export class MinesRecordsEditComponent implements OnInit {
+  bsModalRef?: BsModalRef<ConfirmComponentNew>;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   // flags
@@ -66,7 +71,8 @@ export class MinesRecordsEditComponent implements OnInit {
     private factoryService: FactoryService,
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
-    private dialogService: DialogService,
+    // private dialogService: DialogService,
+    private modalService: BsModalService,
     private storeService: StoreService,
     private _changeDetectionRef: ChangeDetectorRef,
     private toastService: ToastService
@@ -203,38 +209,79 @@ export class MinesRecordsEditComponent implements OnInit {
    *
    * @memberof MinesRecordsTableRowComponent
    */
-  deleteRecord() {
-    this.dialogService
-      .addDialog(
-        ConfirmComponent,
-        { title: 'Confirm Deletion', message: 'Do you really want to delete this Record?', okOnly: false },
-        { backdropColor: 'rgba(0, 0, 0, 0.5)' }
-      )
-      .pipe(
-        takeUntil(this.ngUnsubscribe),
-        catchError(() => {
-          alert('Failed to delete record.');
-          return of(null);
-        })
-      )
-      .subscribe(async isConfirmed => {
-        if (!isConfirmed) {
-          return;
-        }
+  deleteRecord_old() {
+    // this.dialogService
+      // .addDialog(
+      //   ConfirmComponent,
+      //   { title: 'Confirm Deletion', message: 'Do you really want to delete this Record?', okOnly: false },
+      //   { backdropColor: 'rgba(0, 0, 0, 0.5)' }
+      // )
+      // .pipe(
+      //   takeUntil(this.ngUnsubscribe),
+      //   catchError(() => {
+      //     alert('Failed to delete record.');
+      //     return of(null);
+      //   })
+      // )
+      // .subscribe(async isConfirmed => {
+      //   if (!isConfirmed) {
+      //     return;
+      //   }
 
-        try {
-          for (const flavour of this.record.flavours) {
-            if (flavour._schemaName.includes('BCMI')) {
-              await this.factoryService.deleteMineRecord(flavour._id);
-              break;
-            }
-          }
-          this.router.navigate(['mines', this.mine._id, 'records']);
-        } catch (e) {
-          alert('Could not delete Record.');
+      //   try {
+      //     for (const flavour of this.record.flavours) {
+      //       if (flavour._schemaName.includes('BCMI')) {
+      //         await this.factoryService.deleteMineRecord(flavour._id);
+      //         break;
+      //       }
+      //     }
+      //     this.router.navigate(['mines', this.mine._id, 'records']);
+      //   } catch (e) {
+      //     alert('Could not delete Record.');
+      //   }
+      // });
+  }
+
+    deleteRecord() {
+      // TODO: this needs to be updated
+      this.bsModalRef = this.modalService.show(ConfirmComponentNew, {
+        class: 'modal-dialog-centered',
+        initialState: {
+          title: 'Confirm Deletion',
+          message: 'Do you really want to delete this Record?',
+          okOnly: false
         }
       });
-  }
+
+      // Subscribe to the close event
+      this.bsModalRef.content?.onClose
+        .pipe(
+          takeUntil(this.ngUnsubscribe),
+          catchError(() => {
+            alert('Failed to delete record.');
+            return of(null);
+          })
+        )
+        .subscribe(async (isConfirmed) => {
+          if (!isConfirmed) {
+            return;
+          }
+
+          try {
+            // Find and delete the matching BCMI flavour
+            for (const flavour of this.record.flavours) {
+              if (flavour._schemaName.includes('BCMI')) {
+                await this.factoryService.deleteMineRecord(flavour._id);
+                break;
+              }
+            }
+
+            this.router.navigate(['mines', this.mine._id, 'records']);
+          } catch (e) {
+            alert('Could not delete Record.');
+          }
+        });
+    }
 
   /**
    * Submit form data to API.

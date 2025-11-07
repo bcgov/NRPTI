@@ -1,12 +1,9 @@
 import { ChangeDetectorRef, Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-// import { DialogService } from 'ng2-bootstrap-modal';
-// import { MatDialog } from '@angular/material/dialog';
 import { TableRowComponent, StoreService } from 'nrpti-angular-components';
 import { ConfirmComponentNew } from '../../confirm/confirm.component';
 import { FactoryService } from '../../services/factory.service';
 import { StateIDs, StateStatus } from '../../../../../common/src/app/utils/record-constants';
-// import { takeUntil, catchError } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
 
@@ -33,8 +30,6 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
     public changeDetectionRef: ChangeDetectorRef,
     public factoryService: FactoryService,
     private modalService: BsModalService
-    // private matDialog: MatDialog,
-    // private dialogService: DialogService
   ) {
     super();
   }
@@ -90,67 +85,6 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
    *
    * @memberof MinesCollectionsTableRowComponent
    */
-  deleteCollection_old() {
-    // this.dialogService
-    //   .addDialog(
-    //     ConfirmComponent,
-    //     { title: 'Confirm Deletion', message: 'Do you really want to delete this Collection?', okOnly: false },
-    //     { backdropColor: 'rgba(0, 0, 0, 0.5)' }
-    //   )
-    //   .pipe(
-    //     takeUntil(this.ngUnsubscribe),
-    //     catchError(() => {
-    //       alert('Failed to delete collection.');
-    //       return of(null);
-    //     })
-    //   )
-    //   .subscribe(async isConfirmed => {
-    //     if (!isConfirmed) {
-    //       return;
-    //     }
-
-    //     try {
-    //       await this.factoryService.deleteCollection(this.rowData._id);
-
-    //       // update tableData to remove deleted collection
-    //       this.tableData.items = this.tableData.items.filter(item => item.rowData._id !== this.rowData._id);
-    //     } catch (e) {
-    //       alert('Could not delete Collection.');
-    //     }
-    //   });
-  }
-
-    /**
-   * Delete the collection.
-   *
-   * @memberof MinesCollectionsTableRowComponent
-   */
-  deleteCollection_new() {
-    // const dialogRef = this.matDialog.open(ConfirmComponentNew, {
-    //   data: {
-    //     title: 'Confirm Deletion',
-    //     message: 'Do you really want to delete this Collection?',
-    //     okOnly: false
-    //   },
-    //   disableClose: true,
-    //   width: '500px',
-    //   maxWidth: '800px'
-    // });
-
-    // dialogRef.afterClosed().subscribe(async (isConfirmed: boolean) => {
-    //   if (!isConfirmed) return;
-
-    //   try {
-    //     await this.factoryService.deleteCollection(this.rowData._id);
-
-    //     // update tableData to remove deleted collection
-    //     this.tableData.items = this.tableData.items.filter(item => item.rowData._id !== this.rowData._id);
-    //   } catch (e) {
-    //     alert('Could not delete Collection.');
-    //   }
-    // });
-  }
-
   deleteCollection() {
     // Open the modal
     this.modalRef = this.modalService.show(ConfirmComponentNew, {
@@ -159,8 +93,8 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
         message: 'Do you really want to delete this Collection?',
         okOnly: false
       },
-      class: 'modal-md',          // medium modal size
-      ignoreBackdropClick: true   // equivalent to disableClose
+      class: 'modal-md',
+      ignoreBackdropClick: true
     });
 
     // Subscribe to the result
