@@ -25,7 +25,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
   styleUrls: ['./mines-records-edit.component.scss']
 })
 export class MinesRecordsEditComponent implements OnInit {
-  bsModalRef?: BsModalRef<ConfirmComponentNew>;
+  modalRef?: BsModalRef<ConfirmComponentNew>;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   // flags
@@ -244,7 +244,7 @@ export class MinesRecordsEditComponent implements OnInit {
 
     deleteRecord() {
       // TODO: this needs to be updated
-      this.bsModalRef = this.modalService.show(ConfirmComponentNew, {
+      this.modalRef = this.modalService.show(ConfirmComponentNew, {
         class: 'modal-dialog-centered',
         initialState: {
           title: 'Confirm Deletion',
@@ -254,7 +254,7 @@ export class MinesRecordsEditComponent implements OnInit {
       });
 
       // Subscribe to the close event
-      this.bsModalRef.content?.onClose
+      this.modalRef.content?.onClose
         .pipe(
           takeUntil(this.ngUnsubscribe),
           catchError(() => {
