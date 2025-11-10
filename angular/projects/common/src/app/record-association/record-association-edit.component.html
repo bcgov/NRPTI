@@ -3,7 +3,7 @@
     <div *ngIf="this.epicProjects && !minesOnly" class="flex-container mb-2">
       <div class="label-pair">
         <label for="_epicProjectId">EPIC Project</label>
-        <select name="_epicProjectId" id="_epicProjectId" formControlName="_epicProjectId" class="form-control">
+        <select name="_epicProjectId" id="_epicProjectId" formControlName="_epicProjectId" class="form-select">
           <option *ngFor="let project of epicProjects" [ngValue]="project._id">
             {{ project.name }}
           </option>
@@ -12,7 +12,7 @@
     </div>
     <div class="label-pair">
       <label for="mineGuid">Mine Name</label>
-      <select name="mineGuid" id="mineGuid" formControlName="mineGuid" class="form-control">
+      <select name="mineGuid" id="mineGuid" formControlName="mineGuid" class="form-select">
         <option *ngFor="let mine of mines" [ngValue]="mine._sourceRefId">
           {{ mine.name }}
         </option>

@@ -33,7 +33,7 @@
       <div class="flex-container">
         <div class="label-pair">
           <label for="recordSubtype">Record Sub-Type</label>
-          <select name="recordSubtype" id="recordSubtype" formControlName="recordSubtype" class="form-control">
+          <select name="recordSubtype" id="recordSubtype" formControlName="recordSubtype" class="form-select">
             <option *ngFor="let subtype of permitSubtypes" [ngValue]="subtype">{{ subtype }}</option>
           </select>
         </div>
@@ -49,7 +49,7 @@
         </div>
         <div class="label-pair">
           <label for="issuingAgencygency">Issuing Agency</label>
-          <select name="issuingAgencyency" id="issuingAgency" formControlName="issuingAgency" class="form-control">
+          <select name="issuingAgencyency" id="issuingAgency" formControlName="issuingAgency" class="form-select">
             <option *ngFor="let issuingAgency of agencies" [ngValue]="issuingAgency">
               {{ this.displayName(issuingAgency) }}
             </option>
