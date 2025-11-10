@@ -404,7 +404,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.ngUnsubscribe),
         catchError(() => {
-          alert('Failed to confirm publication.');
+          alert('Failed to delete record.');
           return of(null);
         })
       )
@@ -459,42 +459,38 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
           collection['records'] = this.parseRecordsFormGroups();
         }
 
-        try {
-          if (this.isEditing) {
-            collection['_id'] = this.collection._id;
-            const res = await this.factoryService.editCollection(collection);
+        if (this.isEditing) {
+          collection['_id'] = this.collection._id;
+          const res = await this.factoryService.editCollection(collection);
 
-            if (!res || !res._id) {
-              alert('Failed to update collection.');
-            } else {
-              this.router.navigate([
-                'mines',
-                this.collection.project,
-                'collections',
-                this.collection._id,
-                'detail'
-              ]);
-            }
+          if (!res || !res._id) {
+            alert('Failed to create collection.');
           } else {
-            collection['project'] = this.route.snapshot.paramMap.get('mineId');
-            const res = await this.factoryService.createCollection(collection);
-
-            if (!res || !res._id) {
-              alert('Failed to create collection.');
-            } else {
-              this.router.navigate([
-                'mines',
-                res.project,
-                'collections',
-                res._id,
-                'detail'
-              ]);
-            }
+            this.loadingScreenService.setLoadingState(false, 'main');
+            this.router.navigate([
+              'mines',
+              this.collection.project,
+              'collections',
+              this.collection._id,
+              'detail'
+            ]);
           }
-        } catch (e) {
-          alert('An error occurred while saving the collection.');
-        } finally {
-          this.loadingScreenService.setLoadingState(false, 'main');
+        } else {
+          collection['project'] = this.route.snapshot.paramMap.get('mineId');
+          const res = await this.factoryService.createCollection(collection);
+
+          if (!res || !res._id) {
+            alert('Failed to create collection.');
+          } else {
+            this.loadingScreenService.setLoadingState(false, 'main');
+            this.router.navigate([
+              'mines',
+              res.project,
+              'collections',
+              res._id,
+              'detail'
+            ]);
+          }
         }
       });
   }
@@ -505,19 +501,27 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesCollectionsTableRowComponent
    */
   deleteCollection() {
-    // Open the modal
-    this.modalRef = this.modalService.show(ConfirmComponent, {
-      initialState: {
-        title: 'Confirm Deletion',
-        message: 'Do you really want to delete this Collection?',
-        okOnly: false
-      },
-      class: 'modal-md',        // medium size modal
-      ignoreBackdropClick: true // equivalent to disableClose
-    });
+  // Open the modal
+  this.modalRef = this.modalService.show(ConfirmComponent, {
+    initialState: {
+      title: 'Confirm Deletion',
+      message: 'Do you really want to delete this Collection?',
+      okOnly: false
+    },
+    class: 'modal-md',        // medium size modal
+    ignoreBackdropClick: true // equivalent to disableClose
+  });
 
-    // Subscribe to the result emitted by the modal
-    this.modalRef.content.onClose.subscribe(async (isConfirmed: boolean) => {
+  // Subscribe to the result emitted by the modal, with RxJS safety
+  this.modalRef.content.onClose
+    ?.pipe(
+      takeUntil(this.ngUnsubscribe), // unsubscribe automatically when component is destroyed
+      catchError(err => {
+        alert('Failed to delete collection.');
+        return of(null); // return a fallback value
+      })
+    )
+    .subscribe(async (isConfirmed: boolean) => {
       if (!isConfirmed) return;
 
       try {
@@ -528,7 +532,8 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
         alert('Could not delete Collection.');
       }
     });
-  }
+}
+
 
   /**
    * Cancel editing.

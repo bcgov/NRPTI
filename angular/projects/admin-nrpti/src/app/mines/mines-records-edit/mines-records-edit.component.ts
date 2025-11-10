@@ -199,7 +199,7 @@ export class MinesRecordsEditComponent implements OnInit {
     }
   }
 
-  deleteRecord() {
+  deleteRecord_old() {
     this.modalRef = this.modalService.show(ConfirmComponent, {
       class: 'modal-dialog-centered',
       initialState: {

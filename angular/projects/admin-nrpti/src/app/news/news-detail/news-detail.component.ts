@@ -40,7 +40,7 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  delete() {
+  delete_old() {
     // Open the modal
     const modalRef: BsModalRef = this.modalService.show(ConfirmComponent, {
       initialState: {
@@ -64,6 +64,36 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  delete() {
+  // Open the modal
+  const modalRef: BsModalRef = this.modalService.show(ConfirmComponent, {
+    initialState: {
+      title: 'Confirm Deletion',
+      message: 'Do you really want to delete this News Item?',
+      okOnly: false
+    },
+    class: 'modal-md',
+    ignoreBackdropClick: true
+  });
+
+  // Subscribe to the modal's onClose Observable with RxJS operators
+  modalRef.content.onClose
+    ?.pipe(takeUntil(this.ngUnsubscribe))
+    .subscribe(async (isConfirmed: boolean) => {
+      if (!isConfirmed) return;
+
+      try {
+        await this.factoryService.deleteNews(this.record._id);
+
+        // Navigate after deletion
+        this.router.navigate(['news']);
+      } catch (e) {
+        alert('Could not delete News Item');
+      }
+    });
+}
+
 
   navigateToEditPage() {
     this.router.navigate(['news', this.record.system, this.record._id, 'edit']);

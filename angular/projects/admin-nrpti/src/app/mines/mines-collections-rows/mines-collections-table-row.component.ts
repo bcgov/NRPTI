@@ -5,6 +5,7 @@ import { ConfirmComponent } from '../../confirm/confirm.component';
 import { FactoryService } from '../../services/factory.service';
 import { StateIDs, StateStatus } from '../../../../../common/src/app/utils/record-constants';
 import { Subject } from 'rxjs';
+import { takeUntil, catchError } from 'rxjs/operators';
 import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
 
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -80,31 +81,39 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
     this.router.navigate([this.rowData._id, 'edit'], { relativeTo: this.route });
   }
 
-  /**
-   * Delete the collection.
-   *
-   * @memberof MinesCollectionsTableRowComponent
-   */
-  deleteCollection() {
-    // Open the modal
-    this.modalRef = this.modalService.show(ConfirmComponent, {
-      initialState: {
-        title: 'Confirm Deletion',
-        message: 'Do you really want to delete this Collection?',
-        okOnly: false
-      },
-      class: 'modal-md',
-      ignoreBackdropClick: true
-    });
+/**
+ * Delete the collection.
+ *
+ * @memberof MinesCollectionsTableRowComponent
+ */
+deleteCollection() {
+  // Open the modal
+  this.modalRef = this.modalService.show(ConfirmComponent, {
+    initialState: {
+      title: 'Confirm Deletion',
+      message: 'Do you really want to delete this Collection?',
+      okOnly: false
+    },
+    class: 'modal-md',
+    ignoreBackdropClick: true
+  });
 
-    // Subscribe to the result
-    this.modalRef.content.onClose.subscribe(async (isConfirmed: boolean) => {
+  // Subscribe to the modal's onClose observable with RxJS operators
+  this.modalRef.content.onClose
+    ?.pipe(
+      takeUntil(this.ngUnsubscribe), // automatically unsubscribe when component is destroyed
+      catchError(err => {
+        alert('Failed to delete collection.');
+        return of(null); // fallback value so the subscriber still executes
+      })
+    )
+    .subscribe(async (isConfirmed: boolean) => {
       if (!isConfirmed) return;
 
       try {
         await this.factoryService.deleteCollection(this.rowData._id);
 
-        // update tableData to remove deleted collection
+        // Remove the deleted collection from the table
         this.tableData.items = this.tableData.items.filter(
           item => item.rowData._id !== this.rowData._id
         );
@@ -112,7 +121,8 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
         alert('Could not delete Collection.');
       }
     });
-  }
+}
+
 
   /**
    * Sets the initial collectionState state, or removes it from the store if it is invalid.
