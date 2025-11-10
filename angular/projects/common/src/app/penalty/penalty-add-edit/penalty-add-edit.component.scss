@@ -10,6 +10,18 @@
   margin-bottom: 1rem;
 }
 
+.input-group {
+  .input-group-append {
+    display: flex;
+    
+    select.form-select {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-left: 0;
+    }
+  }
+}
+
 .label-pair-flex {
   @extend .label-pair;
 

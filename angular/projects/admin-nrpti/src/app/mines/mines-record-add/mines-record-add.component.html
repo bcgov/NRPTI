@@ -14,7 +14,7 @@
             Agency
             <span class="red-asterisk">*</span>
           </label>
-          <select name="recordAgency" id="recordAgency" formControlName="recordAgency" class="form-control">
+          <select name="recordAgency" id="recordAgency" formControlName="recordAgency" class="form-select">
             <option *ngFor="let agency of recordAgencies" [ngValue]="agency">
               {{ this.displayName(agency) }}
             </option>
@@ -33,7 +33,7 @@
             Type
             <span class="red-asterisk">*</span>
           </label>
-          <select name="recordType" id="recordType" formControlName="recordType" class="form-control">
+          <select name="recordType" id="recordType" formControlName="recordType" class="form-select">
             <option *ngFor="let recordType of recordTypeNamesBCMI" [ngValue]="recordType">
               {{ recordType }}
             </option>
@@ -44,7 +44,7 @@
             Permit Type
             <span class="red-asterisk">*</span>
           </label>
-          <select name="typeCode" id="typeCode" formControlName="typeCode" class="form-control">
+          <select name="typeCode" id="typeCode" formControlName="typeCode" class="form-select">
             <option *ngFor="let typeCode of recordUtils.minePermitTypes" [ngValue]="typeCode">
               {{ recordUtils.minePermitName(typeCode) }}
             </option>

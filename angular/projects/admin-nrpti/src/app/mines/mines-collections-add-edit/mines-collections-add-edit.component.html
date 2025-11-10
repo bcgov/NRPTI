@@ -70,7 +70,7 @@
         </div>
         <div class="label-pair">
           <label for="collectionType">Collection Type</label>
-          <select name="collectionType" id="collectionType" formControlName="collectionType" class="form-control">
+          <select name="collectionType" id="collectionType" formControlName="collectionType" class="form-select">
             <option *ngFor="let collectionType of collectionTypes" [ngValue]="collectionType">
               {{ collectionType }}
             </option>
@@ -78,7 +78,7 @@
         </div>
         <div class="label-pair">
           <label for="collectionAgency">Agency</label>
-          <select name="collectionAgency" id="collectionAgency" formControlName="collectionAgency" class="form-control">
+          <select name="collectionAgency" id="collectionAgency" formControlName="collectionAgency" class="form-select">
             <option *ngFor="let collectionAgency of collectionAgencies" [ngValue]="collectionAgency">
               {{ this.displayName(collectionAgency) }}
             </option>

@@ -17,7 +17,7 @@
             [libDigitOnly]="formGroup.get('penalty.type').value !== 'Other'"
           />
           <div class="input-group-append">
-            <select name="type" id="type" formControlName="type" class="form-control">
+            <select name="type" id="type" formControlName="type" class="form-select">
               <option *ngFor="let penaltyType of penaltyTypes" [ngValue]="penaltyType">
                 {{ penaltyType }}
               </option>
@@ -27,7 +27,7 @@
       </div>
       <div class="label-pair-flex flex-sm">
         <label for="type">Type</label>
-        <select name="type" id="type" formControlName="type" class="form-control">
+        <select name="type" id="type" formControlName="type" class="form-select">
           <option *ngFor="let type of courtConvictionSubtypes" [ngValue]="type">
             {{ type }}
           </option>

@@ -56,7 +56,7 @@
         </div>
         <div class="label-pair">
           <label for="recordType">Record Type</label>
-          <select name="recordType" id="recordType" formControlName="recordType" class="form-control">
+          <select name="recordType" id="recordType" formControlName="recordType" class="form-select">
             <option *ngFor="let recordType of recordTypeNamesBCMI" [ngValue]="recordType">
               {{ recordType }}
             </option>
@@ -64,7 +64,7 @@
         </div>
         <div class="label-pair" *ngIf="myForm.get('recordType').value === 'Permit'">
           <label for="typeCode">Permit Type</label>
-          <select name="typeCode" id="typeCode" formControlName="typeCode" class="form-control">
+          <select name="typeCode" id="typeCode" formControlName="typeCode" class="form-select">
             <option *ngFor="let typeCode of recordUtils.minePermitTypes" [ngValue]="typeCode">
               {{ recordUtils.minePermitName(typeCode) }}
             </option>
@@ -72,7 +72,7 @@
         </div>
         <div class="label-pair">
           <label for="recordAgency">Agency</label>
-          <select name="recordAgency" id="recordAgency" formControlName="recordAgency" class="form-control">
+          <select name="recordAgency" id="recordAgency" formControlName="recordAgency" class="form-select">
             <option *ngFor="let recordAgency of recordAgencies" [ngValue]="recordAgency">
               {{ this.displayName(recordAgency) }}
             </option>

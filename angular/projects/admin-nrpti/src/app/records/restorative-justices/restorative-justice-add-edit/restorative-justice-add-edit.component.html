@@ -54,7 +54,7 @@
         </div>
         <div class="label-pair">
           <label for="issuingAgency">Issuing Agency</label>
-          <select name="issuingAgency" id="issuingAgency" formControlName="issuingAgency" class="form-control">
+          <select name="issuingAgency" id="issuingAgency" formControlName="issuingAgency" class="form-select">
             <option *ngFor="let agency of agencies" [ngValue]="agency">
               {{ this.displayName(agency) }}
             </option>
@@ -62,7 +62,7 @@
         </div>
         <div class="label-pair">
           <label for="author">Author</label>
-          <select name="author" id="author" formControlName="author" class="form-control">
+          <select name="author" id="author" formControlName="author" class="form-select">
             <option *ngFor="let author of authors" [ngValue]="author">{{ author }}</option>
           </select>
         </div>
