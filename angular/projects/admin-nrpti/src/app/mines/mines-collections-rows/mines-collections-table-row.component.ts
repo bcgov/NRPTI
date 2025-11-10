@@ -4,7 +4,7 @@ import { TableRowComponent, StoreService } from 'nrpti-angular-components';
 import { ConfirmComponent } from '../../confirm/confirm.component';
 import { FactoryService } from '../../services/factory.service';
 import { StateIDs, StateStatus } from '../../../../../common/src/app/utils/record-constants';
-import { Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
 
