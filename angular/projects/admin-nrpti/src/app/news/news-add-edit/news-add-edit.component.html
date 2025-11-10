@@ -23,7 +23,7 @@
       </div>
       <div class="label-pair mr-5 mt-4">
         <label for="type" class="font-weight-bold mr-1">Type:</label>
-        <select [compareWith]="compareTypeSelection" name="type" id="type" formControlName="type" class="form-control">
+        <select [compareWith]="compareTypeSelection" name="type" id="type" formControlName="type" class="form-select">
           <option *ngFor="let type of activityTypes" [ngValue]="type">{{ type }}</option>
         </select>
       </div>
