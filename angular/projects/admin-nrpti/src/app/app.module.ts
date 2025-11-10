@@ -24,7 +24,6 @@ import { ToastrModule } from 'ngx-toastr';
 
 // components
 import { AppComponent } from './app.component';
-// import { ConfirmComponent } from './confirm/confirm.component';
 import { ConfirmComponent } from './confirm/confirm.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';

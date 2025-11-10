@@ -6,12 +6,6 @@ export interface ConfirmData {
   message: string;
   okOnly: boolean;
 }
-export interface IDataModel {
-  title: string;
-  message: string;
-  okOnly: boolean;
-}
-
 @Component({
   standalone: false,
   templateUrl: './confirm.component.html',

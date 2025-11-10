@@ -384,7 +384,6 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesCollectionsAddEditComponent
    */
   async submit() {
-    // TODO: revisit this update
     const numRecords = this.myForm.get('collectionRecords').value.length;
     const message = numRecords
       ? `This will publish the current collection and ${numRecords} record(s), do you want to proceed?`

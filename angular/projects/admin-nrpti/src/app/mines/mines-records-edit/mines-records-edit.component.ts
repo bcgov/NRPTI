@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-// import { Subject, of } from 'rxjs';
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Picklists, StateStatus, StateIDs } from '../../../../../common/src/app/utils/record-constants';
@@ -9,7 +8,6 @@ import { FactoryService } from '../../services/factory.service';
 import { LoadingScreenService, Utils, StoreService } from 'nrpti-angular-components';
 import { ConfirmComponent } from '../../confirm/confirm.component';
 import moment from 'moment';
-// import { takeUntil, catchError } from 'rxjs/operators';
 import { takeUntil, catchError, of } from 'rxjs';
 import { Constants } from '../../utils/constants/misc';
 import { ToastService } from '../../services/toast.service';
@@ -202,7 +200,6 @@ export class MinesRecordsEditComponent implements OnInit {
   }
 
   deleteRecord() {
-    // TODO: this needs to be updated
     this.modalRef = this.modalService.show(ConfirmComponent, {
       class: 'modal-dialog-centered',
       initialState: {
