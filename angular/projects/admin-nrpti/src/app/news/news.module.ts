@@ -30,7 +30,7 @@ import { NewsDetailComponent } from './news-detail/news-detail.component';
     NrptiCommonModule,
     NgxPaginationModule,
     NgbModule,
-    InlineSVGModule.forRoot(),
+    InlineSVGModule,
     NewsRoutingModule
   ],
   declarations: [NewsListComponent, NewsAddEditComponent, NewsTableRowComponent, NewsDetailComponent],

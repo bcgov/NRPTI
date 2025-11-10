@@ -4,17 +4,17 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import moment from 'moment';
-import { DialogService } from 'ng2-bootstrap-modal';
 import { LoadingScreenService, Utils, StoreService } from 'nrpti-angular-components';
-import { of } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { takeUntil, catchError } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
 import { Picklists, StateIDs, StateStatus } from '../../../../../common/src/app/utils/record-constants';
 import { ConfirmComponent } from '../../confirm/confirm.component';
 import { FactoryService } from '../../services/factory.service';
 import { RecordUtils } from '../../records/utils/record-utils';
 import { Constants } from '../../utils/constants/misc';
 import { AgencyDataService } from '../../../../../../projects/global/src/lib/utils/agency-data-service';
+
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   standalone: false,
@@ -23,8 +23,9 @@ import { AgencyDataService } from '../../../../../../projects/global/src/lib/uti
   styleUrls: ['./mines-collections-add-edit.component.scss']
 })
 export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+  modalRef?: BsModalRef;
 
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
   // flags
   public loading = true;
   public isEditing = false;
@@ -67,7 +68,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     private recordUtils: RecordUtils,
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
-    private dialogService: DialogService,
+    private modalService: BsModalService,
     private storeService: StoreService,
     private _changeDetectionRef: ChangeDetectorRef
   ) {}
@@ -383,21 +384,23 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesCollectionsAddEditComponent
    */
   async submit() {
-    const message = this.myForm.get('collectionRecords').value.length
-      ? `This will publish the current collection and ${
-          this.myForm.get('collectionRecords').value.length
-        } record(s), do you want to proceed?`
+    const numRecords = this.myForm.get('collectionRecords').value.length;
+    const message = numRecords
+      ? `This will publish the current collection and ${numRecords} record(s), do you want to proceed?`
       : 'There are no records in this collection, it will not display on BCMI, do you want to proceed?';
-    this.dialogService
-      .addDialog(
-        ConfirmComponent,
-        {
-          title: 'Confirm Publication',
-          message,
-          okOnly: false
-        },
-        { backdropColor: 'rgba(0, 0, 0, 0.5)' }
-      )
+
+    // Open the confirmation modal
+    this.modalRef = this.modalService.show(ConfirmComponent, {
+      class: 'modal-dialog-centered',
+      initialState: {
+        title: 'Confirm Publication',
+        message,
+        okOnly: false
+      }
+    });
+
+    // Subscribe to modal close
+    this.modalRef.content?.onClose
       .pipe(
         takeUntil(this.ngUnsubscribe),
         catchError(() => {
@@ -405,19 +408,26 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
           return of(null);
         })
       )
-      .subscribe(async isConfirmed => {
-        if (!isConfirmed) {
-          return;
-        }
+      .subscribe(async (isConfirmed) => {
+        if (!isConfirmed) return;
+
         this.loadingScreenService.setLoadingState(true, 'main');
 
-        const collection = {};
+        const collection: any = {};
 
-        this.myForm.get('collectionName').dirty && (collection['name'] = this.myForm.get('collectionName').value);
-        this.myForm.get('collectionDate').dirty &&
-          (collection['date'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('collectionDate').value));
-        this.myForm.get('collectionType').dirty && (collection['type'] = this.myForm.get('collectionType').value);
-        this.myForm.get('collectionAgency').dirty && (collection['agency'] = this.myForm.get('collectionAgency').value);
+        if (this.myForm.get('collectionName').dirty)
+          collection['name'] = this.myForm.get('collectionName').value;
+
+        if (this.myForm.get('collectionDate').dirty)
+          collection['date'] = this.utils.convertFormGroupNGBDateToJSDate(
+            this.myForm.get('collectionDate').value
+          );
+
+        if (this.myForm.get('collectionType').dirty)
+          collection['type'] = this.myForm.get('collectionType').value;
+
+        if (this.myForm.get('collectionAgency').dirty)
+          collection['agency'] = this.myForm.get('collectionAgency').value;
 
         // Add records first
         if (this.myForm.get('collectionRecords').dirty) {
@@ -425,7 +435,8 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
             delete obj.record.savePending;
             const res = await this.factoryService.createMineRecord(obj.record);
             this.recordUtils.parseResForErrors(res);
-            // API responds with the master and BCMI flavour records that were created. First record is the BCMI flavour and second is the master.
+
+            // The API responds with master and BCMI flavour records that were created.
             const createdRecord = res && res[0] && res[0].length && res[0][0] && res[0][0].object;
 
             await this.recordUtils.handleDocumentChanges(
@@ -435,33 +446,50 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
               createdRecord[1]._id,
               this.factoryService
             );
-            const updatedRecordList = this.myForm.get('collectionRecords').value.map(item => {
-              return item.record.recordName === createdRecord[0].recordName ? { record: createdRecord[0] } : item;
-            });
+
+            const updatedRecordList = this.myForm.get('collectionRecords').value.map((item) =>
+              item.record.recordName === createdRecord[0].recordName
+                ? { record: createdRecord[0] }
+                : item
+            );
+
             this.myForm.get('collectionRecords').patchValue(updatedRecordList);
           }
+
           collection['records'] = this.parseRecordsFormGroups();
         }
 
         if (this.isEditing) {
           collection['_id'] = this.collection._id;
-
           const res = await this.factoryService.editCollection(collection);
+
           if (!res || !res._id) {
             alert('Failed to create collection.');
           } else {
             this.loadingScreenService.setLoadingState(false, 'main');
-            this.router.navigate(['mines', this.collection.project, 'collections', this.collection._id, 'detail']);
+            this.router.navigate([
+              'mines',
+              this.collection.project,
+              'collections',
+              this.collection._id,
+              'detail'
+            ]);
           }
         } else {
           collection['project'] = this.route.snapshot.paramMap.get('mineId');
-
           const res = await this.factoryService.createCollection(collection);
+
           if (!res || !res._id) {
             alert('Failed to create collection.');
           } else {
             this.loadingScreenService.setLoadingState(false, 'main');
-            this.router.navigate(['mines', res.project, 'collections', res._id, 'detail']);
+            this.router.navigate([
+              'mines',
+              res.project,
+              'collections',
+              res._id,
+              'detail'
+            ]);
           }
         }
       });
@@ -473,32 +501,39 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesCollectionsTableRowComponent
    */
   deleteCollection() {
-    this.dialogService
-      .addDialog(
-        ConfirmComponent,
-        { title: 'Confirm Deletion', message: 'Do you really want to delete this Collection?', okOnly: false },
-        { backdropColor: 'rgba(0, 0, 0, 0.5)' }
-      )
-      .pipe(
-        takeUntil(this.ngUnsubscribe),
-        catchError(() => {
-          alert('Failed to delete collection.');
-          return of(null);
-        })
-      )
-      .subscribe(async isConfirmed => {
-        if (!isConfirmed) {
-          return;
-        }
+  // Open the modal
+  this.modalRef = this.modalService.show(ConfirmComponent, {
+    initialState: {
+      title: 'Confirm Deletion',
+      message: 'Do you really want to delete this Collection?',
+      okOnly: false
+    },
+    class: 'modal-md',        // medium size modal
+    ignoreBackdropClick: true // equivalent to disableClose
+  });
 
-        try {
-          await this.factoryService.deleteCollection(this.collection._id);
-          this.router.navigate(['mines', this.collection.project, 'collections']);
-        } catch (e) {
-          alert('Could not delete Collection.');
-        }
-      });
-  }
+  // Subscribe to the result emitted by the modal, with RxJS safety
+  this.modalRef.content.onClose
+    ?.pipe(
+      takeUntil(this.ngUnsubscribe), // unsubscribe automatically when component is destroyed
+      catchError(err => {
+        alert('Failed to delete collection.');
+        return of(null); // return a fallback value
+      })
+    )
+    .subscribe(async (isConfirmed: boolean) => {
+      if (!isConfirmed) return;
+
+      try {
+        await this.factoryService.deleteCollection(this.collection._id);
+        // Navigate after deletion
+        this.router.navigate(['mines', this.collection.project, 'collections']);
+      } catch (e) {
+        alert('Could not delete Collection.');
+      }
+    });
+}
+
 
   /**
    * Cancel editing.

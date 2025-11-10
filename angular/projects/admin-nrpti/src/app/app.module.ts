@@ -37,6 +37,7 @@ import { ToggleButtonComponent } from './toggle-button/toggle-button.component';
 
 // services
 import { ApiService } from './services/api.service';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { DocumentService } from './services/document.service';
 import { FactoryService } from './services/factory.service';
 import { KeycloakService } from './services/keycloak.service';
@@ -135,6 +136,7 @@ export function overlayScrollFactory(overlay: Overlay): () => CloseScrollStrateg
       deps: [Overlay]
     },
     ApiService,
+    BsModalService,
     DocumentService,
     FactoryService,
     RecordService,

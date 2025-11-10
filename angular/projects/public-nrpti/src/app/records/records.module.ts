@@ -40,7 +40,7 @@ import { RecordsListResolver } from './records-list/records-list-resolver';
     SharedModule,
     NgxPaginationModule,
     NgbModule,
-    InlineSVGModule.forRoot(),
+    InlineSVGModule
     RecordsRoutingModule
   ],
   declarations: [

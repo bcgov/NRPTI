@@ -53,6 +53,15 @@
             ]
           },
           "configurations": {
+            "development": {
+              "aot": false,
+              "buildOptimizer": false,
+                "optimization": {
+                  "scripts": false,
+                  "styles": false,
+                  "fonts": false
+                }
+            },
             "production": {
               "optimization": true,
               "outputHashing": "all",
@@ -78,6 +87,9 @@
             "port": 4200
           },
           "configurations": {
+            "development": {
+              "buildTarget": "admin-nrpti:build:development"
+            },
             "production": {
               "buildTarget": "admin-nrpti:build:production"
             }
@@ -195,6 +207,15 @@
             ]
           },
           "configurations": {
+            "development": {
+              "aot": false,
+              "buildOptimizer": false,
+                "optimization": {
+                  "scripts": false,
+                  "styles": false,
+                  "fonts": false
+                }
+            },
             "production": {
               "optimization": true,
               "outputHashing": "all",
@@ -220,6 +241,9 @@
             "port": 4400
           },
           "configurations": {
+            "development": {
+              "buildTarget": "public-nrced:build:development"
+            },
             "production": {
               "buildTarget": "public-nrced:build:production"
             }

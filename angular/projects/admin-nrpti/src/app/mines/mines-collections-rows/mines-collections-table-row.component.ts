@@ -1,13 +1,16 @@
 import { ChangeDetectorRef, Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DialogService } from 'ng2-bootstrap-modal';
 import { TableRowComponent, StoreService } from 'nrpti-angular-components';
 import { ConfirmComponent } from '../../confirm/confirm.component';
 import { FactoryService } from '../../services/factory.service';
 import { StateIDs, StateStatus } from '../../../../../common/src/app/utils/record-constants';
-import { takeUntil, catchError } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
+import { takeUntil, catchError } from 'rxjs/operators';
 import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
+
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+
+
 
 @Component({
   standalone: false,
@@ -16,6 +19,8 @@ import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-da
   styleUrls: ['./mines-collections-table-row.component.scss']
 })
 export class MinesCollectionsTableRowComponent extends TableRowComponent implements OnInit, OnDestroy {
+  modalRef?: BsModalRef;
+  
   public isEditingCollection: boolean;
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -25,7 +30,7 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
     private storeService: StoreService,
     public changeDetectionRef: ChangeDetectorRef,
     public factoryService: FactoryService,
-    private dialogService: DialogService
+    private modalService: BsModalService
   ) {
     super();
   }
@@ -76,40 +81,48 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
     this.router.navigate([this.rowData._id, 'edit'], { relativeTo: this.route });
   }
 
-  /**
-   * Delete the collection.
-   *
-   * @memberof MinesCollectionsTableRowComponent
-   */
-  deleteCollection() {
-    this.dialogService
-      .addDialog(
-        ConfirmComponent,
-        { title: 'Confirm Deletion', message: 'Do you really want to delete this Collection?', okOnly: false },
-        { backdropColor: 'rgba(0, 0, 0, 0.5)' }
-      )
-      .pipe(
-        takeUntil(this.ngUnsubscribe),
-        catchError(() => {
-          alert('Failed to delete collection.');
-          return of(null);
-        })
-      )
-      .subscribe(async isConfirmed => {
-        if (!isConfirmed) {
-          return;
-        }
+/**
+ * Delete the collection.
+ *
+ * @memberof MinesCollectionsTableRowComponent
+ */
+deleteCollection() {
+  // Open the modal
+  this.modalRef = this.modalService.show(ConfirmComponent, {
+    initialState: {
+      title: 'Confirm Deletion',
+      message: 'Do you really want to delete this Collection?',
+      okOnly: false
+    },
+    class: 'modal-md',
+    ignoreBackdropClick: true
+  });
 
-        try {
-          await this.factoryService.deleteCollection(this.rowData._id);
+  // Subscribe to the modal's onClose observable with RxJS operators
+  this.modalRef.content.onClose
+    ?.pipe(
+      takeUntil(this.ngUnsubscribe), // automatically unsubscribe when component is destroyed
+      catchError(err => {
+        alert('Failed to delete collection.');
+        return of(null); // fallback value so the subscriber still executes
+      })
+    )
+    .subscribe(async (isConfirmed: boolean) => {
+      if (!isConfirmed) return;
 
-          // update tableData to remove deleted collection
-          this.tableData.items = this.tableData.items.filter(item => item.rowData._id !== this.rowData._id);
-        } catch (e) {
-          alert('Could not delete Collection.');
-        }
-      });
-  }
+      try {
+        await this.factoryService.deleteCollection(this.rowData._id);
+
+        // Remove the deleted collection from the table
+        this.tableData.items = this.tableData.items.filter(
+          item => item.rowData._id !== this.rowData._id
+        );
+      } catch (e) {
+        alert('Could not delete Collection.');
+      }
+    });
+}
+
 
   /**
    * Sets the initial collectionState state, or removes it from the store if it is invalid.
