@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Subject } from 'rxjs';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 export interface ConfirmData {
@@ -17,7 +17,7 @@ export interface IDataModel {
   templateUrl: './confirm.component.html',
   styleUrls: ['./confirm.component.scss']
 })
-export class ConfirmComponentNew implements ConfirmData, OnInit {
+export class ConfirmComponent implements ConfirmData {
   title = 'Confirm';
   message = 'Are you sure?';
   okOnly = false;
@@ -25,10 +25,6 @@ export class ConfirmComponentNew implements ConfirmData, OnInit {
   public onClose: Subject<boolean> = new Subject<boolean>();
 
   constructor(public bsModalRef: BsModalRef) {}
-
-  ngOnInit() {
-    console.log('ConfirmComponentNew okOnly =', this.okOnly);
-  }
 
   confirm() {
     this.onClose.next(true);

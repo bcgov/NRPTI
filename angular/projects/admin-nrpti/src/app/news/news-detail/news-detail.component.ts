@@ -4,7 +4,7 @@ import { takeUntil } from 'rxjs/operators';
 import { News } from '../../../../../common/src/app/models/master/common-models/news';
 import { Subject } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmComponentNew } from '../../confirm/confirm.component';
+import { ConfirmComponent } from '../../confirm/confirm.component';
 import { FactoryService } from '../../services/factory.service';
 
 @Component({
@@ -42,7 +42,7 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
 
   delete() {
     // Open the modal
-    const modalRef: BsModalRef = this.modalService.show(ConfirmComponentNew, {
+    const modalRef: BsModalRef = this.modalService.show(ConfirmComponent, {
       initialState: {
         title: 'Confirm Deletion',
         message: 'Do you really want to delete this News Item?',

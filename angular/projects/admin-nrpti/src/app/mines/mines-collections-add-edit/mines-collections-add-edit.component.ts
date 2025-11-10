@@ -8,7 +8,7 @@ import { LoadingScreenService, Utils, StoreService } from 'nrpti-angular-compone
 import { takeUntil, catchError } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
 import { Picklists, StateIDs, StateStatus } from '../../../../../common/src/app/utils/record-constants';
-import { ConfirmComponentNew } from '../../confirm/confirm.component';
+import { ConfirmComponent } from '../../confirm/confirm.component';
 import { FactoryService } from '../../services/factory.service';
 import { RecordUtils } from '../../records/utils/record-utils';
 import { Constants } from '../../utils/constants/misc';
@@ -68,7 +68,6 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
     private recordUtils: RecordUtils,
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
-    // private dialogService: DialogService,
     private modalService: BsModalService,
     private storeService: StoreService,
     private _changeDetectionRef: ChangeDetectorRef
@@ -384,96 +383,6 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    *
    * @memberof MinesCollectionsAddEditComponent
    */
-  async submit_old() {
-    // const message = this.myForm.get('collectionRecords').value.length
-    //   ? `This will publish the current collection and ${
-    //       this.myForm.get('collectionRecords').value.length
-    //     } record(s), do you want to proceed?`
-    //   : 'There are no records in this collection, it will not display on BCMI, do you want to proceed?';
-    // this.dialogService
-    //   .addDialog(
-    //     ConfirmComponent,
-    //     {
-    //       title: 'Confirm Publication',
-    //       message,
-    //       okOnly: false
-    //     },
-    //     { backdropColor: 'rgba(0, 0, 0, 0.5)' }
-    //   )
-    //   .pipe(
-    //     takeUntil(this.ngUnsubscribe),
-    //     catchError(() => {
-    //       alert('Failed to delete record.');
-    //       return of(null);
-    //     })
-    //   )
-    //   .subscribe(async isConfirmed => {
-    //     if (!isConfirmed) {
-    //       return;
-    //     }
-    //     this.loadingScreenService.setLoadingState(true, 'main');
-
-    //     const collection = {};
-
-    //     this.myForm.get('collectionName').dirty && (collection['name'] = this.myForm.get('collectionName').value);
-    //     this.myForm.get('collectionDate').dirty &&
-    //       (collection['date'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('collectionDate').value));
-    //     this.myForm.get('collectionType').dirty && (collection['type'] = this.myForm.get('collectionType').value);
-    //     this.myForm.get('collectionAgency').dirty && (collection['agency'] = this.myForm.get('collectionAgency').value);
-
-    //     // Add records first
-    //     if (this.myForm.get('collectionRecords').dirty) {
-    //       for (const obj of this.pendingRecords) {
-    //         delete obj.record.savePending;
-    //         const res = await this.factoryService.createMineRecord(obj.record);
-    //         this.recordUtils.parseResForErrors(res);
-    //         // API responds with the master and BCMI flavour records that were created. First record is the BCMI flavour and second is the master.
-    //         const createdRecord = res && res[0] && res[0].length && res[0][0] && res[0][0].object;
-
-    //         await this.recordUtils.handleDocumentChanges(
-    //           obj.links,
-    //           obj.documents,
-    //           [],
-    //           createdRecord[1]._id,
-    //           this.factoryService
-    //         );
-    //         const updatedRecordList = this.myForm.get('collectionRecords').value.map(item => {
-    //           return item.record.recordName === createdRecord[0].recordName ? { record: createdRecord[0] } : item;
-    //         });
-    //         this.myForm.get('collectionRecords').patchValue(updatedRecordList);
-    //       }
-    //       collection['records'] = this.parseRecordsFormGroups();
-    //     }
-
-    //     if (this.isEditing) {
-    //       collection['_id'] = this.collection._id;
-
-    //       const res = await this.factoryService.editCollection(collection);
-    //       if (!res || !res._id) {
-    //         alert('Failed to create collection.');
-    //       } else {
-    //         this.loadingScreenService.setLoadingState(false, 'main');
-    //         this.router.navigate(['mines', this.collection.project, 'collections', this.collection._id, 'detail']);
-    //       }
-    //     } else {
-    //       collection['project'] = this.route.snapshot.paramMap.get('mineId');
-
-    //       const res = await this.factoryService.createCollection(collection);
-    //       if (!res || !res._id) {
-    //         alert('Failed to create collection.');
-    //       } else {
-    //         this.loadingScreenService.setLoadingState(false, 'main');
-    //         this.router.navigate(['mines', res.project, 'collections', res._id, 'detail']);
-    //       }
-    //     }
-    //   });
-  }
-
-  /**
-   * Submit form data to API.
-   *
-   * @memberof MinesCollectionsAddEditComponent
-   */
   async submit() {
     // TODO: revisit this update
     const numRecords = this.myForm.get('collectionRecords').value.length;
@@ -482,7 +391,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
       : 'There are no records in this collection, it will not display on BCMI, do you want to proceed?';
 
     // Open the confirmation modal
-    this.modalRef = this.modalService.show(ConfirmComponentNew, {
+    this.modalRef = this.modalService.show(ConfirmComponent, {
       class: 'modal-dialog-centered',
       initialState: {
         title: 'Confirm Publication',
@@ -598,7 +507,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    */
   deleteCollection() {
     // Open the modal
-    this.modalRef = this.modalService.show(ConfirmComponentNew, {
+    this.modalRef = this.modalService.show(ConfirmComponent, {
       initialState: {
         title: 'Confirm Deletion',
         message: 'Do you really want to delete this Collection?',

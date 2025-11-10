@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TableRowComponent, StoreService } from 'nrpti-angular-components';
-import { ConfirmComponentNew } from '../../confirm/confirm.component';
+import { ConfirmComponent } from '../../confirm/confirm.component';
 import { FactoryService } from '../../services/factory.service';
 import { StateIDs, StateStatus } from '../../../../../common/src/app/utils/record-constants';
 import { Subject } from 'rxjs';
@@ -87,7 +87,7 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
    */
   deleteCollection() {
     // Open the modal
-    this.modalRef = this.modalService.show(ConfirmComponentNew, {
+    this.modalRef = this.modalService.show(ConfirmComponent, {
       initialState: {
         title: 'Confirm Deletion',
         message: 'Do you really want to delete this Collection?',
