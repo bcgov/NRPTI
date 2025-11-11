@@ -97,7 +97,6 @@
     "moment": "~2.24.0",
     "mygovbc-bootstrap-theme": "~0.4.1",
     "ng-inline-svg-2": "~20.0.1",
-    "ng2-bootstrap-modal": "^1.0.1",
     "ngx-page-scroll": "~14.0.1",
     "ngx-page-scroll-core": "~14.0.1",
     "ngx-pagination": "^6.0.3",
