@@ -2,14 +2,14 @@
   <div class="modal-content">
     <div class="modal-header">
       <h4 class="modal-title" [innerHTML]="title || 'Confirm'"></h4>
-      <button type="button" class="close" (click)="close()">&times;</button>
+      <button type="button" class="close" (click)="cancel()">&times;</button>
     </div>
     <div class="modal-body">
       <p [innerHTML]="message || 'Are you sure?'"></p>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-primary" (click)="confirm()">OK</button>
-      <button type="button" class="btn btn-light" (click)="close()" *ngIf="!okOnly">Cancel</button>
+      <button type="button" class="btn btn-light" (click)="cancel()" *ngIf="!okOnly">Cancel</button>
     </div>
   </div>
 </div>
