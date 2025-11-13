@@ -12,15 +12,17 @@ Angular front-ends for the Natural Resources Public Transparency Interface (NRPT
 
 | Technology | Version         | Website                 | Description                               |
 | ---------- | --------------- | ----------------------- | ----------------------------------------- |
-| node       | 10.x.x - 14.x.x | https://nodejs.org/en/  | JavaScript Runtime                        |
+| node       | 18.19.1         | https://nodejs.org/en/  | JavaScript Runtime                        |
 | npm        | latest          | https://www.npmjs.com/  | Node Package Manager                      |
-| ng         | 7.x.x           | https://cli.angular.io/ | Angular CLI                               |
+| ng         | 19.2.4          | https://cli.angular.io/ | Angular CLI                               |
 
 _Note: This app also requires [`bcgov/nrpti/api`](https://github.com/bcgov/NRPTI/tree/master/api) to handle its requests and authentication._
 
 ## Install [Node + NPM](https://nodejs.org/en/)
 
 _Note: NVM can be used to install and manage multiple versions of NodeJS and npm ([Windows version]((https://github.com/coreybutler/nvm-windows)), [Unix / Linux / macOS version](https://github.com/nvm-sh/nvm))._
+
+We have a .nvmrc file. You can run "nvm use" to use the appropriate version of node. When we update the node version we also need to update the .nvmrc file.
 
 ## Install [Angular CLI](https://cli.angular.io/)
 
@@ -45,6 +47,15 @@ Traditional Angular applications which can be built and served.
 Angular libraries must be published to NPM, or similar, and be imported into an Applications package.json
 
 During development, a library can be built and symlinked instead of published. This eliminates the need to constantly publish a work-in-progress library.
+
+# Run Locally Using Docker Compose (2025 update):
+
+  ```docker compose up --build```
+
+  This will serve the 4 services we are concerned with (mongo, api, admin-nrpti, public-nrpti(nrced))
+
+  admin-nrpti: http://localhost:4200
+  public-nrpti: http://localhost:4400
 
 # Build and Run
 
