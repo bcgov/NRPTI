@@ -36,7 +36,6 @@ export class MinesCollectionsTableRowComponent extends TableRowComponent impleme
   }
 
   ngOnInit() {
-    console.log("Deploy Test");
     this.setOrRemoveCollectionAddEditState();
 
     this.changeDetectionRef.detectChanges();
