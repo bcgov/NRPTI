@@ -5,7 +5,11 @@
     "types": [
       "jasmine",
       "node"
-    ]
+    ],
+    "paths": {
+      "nrpti-angular-components": ["../../dist/nrpti-angular-components"],
+      "nrpti-angular-components/*": ["../../dist/nrpti-angular-components/*"]
+    }
   },
   "files": [
     "src/test.ts",

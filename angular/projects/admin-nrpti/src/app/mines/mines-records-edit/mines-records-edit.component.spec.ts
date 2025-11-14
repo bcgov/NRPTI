@@ -1,5 +1,5 @@
 import { MinesRecordsEditComponent } from './mines-records-edit.component';
-import { async, TestBed } from '@angular/core/testing';
+import { waitForAsync, TestBed } from '@angular/core/testing';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -14,7 +14,7 @@ import { TestBedHelper, ActivatedRouteStub } from '../../../../../common/src/app
 import { CommonModule } from '@angular/common';
 import { RecordUtils } from '../../records/utils/record-utils';
 import { FactoryService } from '../../services/factory.service';
-import { DialogService } from 'ng2-bootstrap-modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
 
 describe('MinesRecordsEditComponent', () => {
   const testBedHelper = new TestBedHelper<MinesRecordsEditComponent>(MinesRecordsEditComponent);
@@ -34,7 +34,7 @@ describe('MinesRecordsEditComponent', () => {
     }
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
@@ -50,7 +50,7 @@ describe('MinesRecordsEditComponent', () => {
       providers: [
         Utils,
         RecordUtils,
-        DialogService,
+        BsModalService,
         { provide: LoadingScreenService, useValue: mockLoadingScreenService },
         { provide: Location, useValue: mockLocation },
         { provide: Router, useValue: mockRouter },

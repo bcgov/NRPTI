@@ -107,6 +107,11 @@
             "main": "projects/admin-nrpti/src/test.ts",
             "karmaConfig": "karma.conf.js",
             "polyfills": "projects/admin-nrpti/src/polyfills.ts",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "projects/admin-nrpti/src"
+              ]
+            },
             "tsConfig": "projects/admin-nrpti/tsconfig.spec.json",
             "scripts": [
               "node_modules/moment/min/moment.min.js",

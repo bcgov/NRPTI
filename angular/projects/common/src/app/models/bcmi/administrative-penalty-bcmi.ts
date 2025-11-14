@@ -12,7 +12,7 @@ import { RecordModel } from '../record-model-abstract';
 export class AdministrativePenaltyBCMI extends RecordModel {
   _epicProjectId: string;
   _epicMilestoneId: string;
-  mineGuid: string;
+  declare mineGuid: string;
   unlistedMine: string;
   unlistedMineType: string;
 

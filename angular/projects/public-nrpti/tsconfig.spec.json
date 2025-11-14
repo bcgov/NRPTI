@@ -2,11 +2,15 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/spec",
-    "baseUrl": "src",
+    "baseUrl": "./",
     "types": [
       "jasmine",
       "node"
-    ]
+    ],
+    "paths": {
+      "nrpti-angular-components": ["../../dist/nrpti-angular-components"],
+      "nrpti-angular-components/*": ["../../dist/nrpti-angular-components/*"]
+    }
   },
   "files": [
     "src/test.ts",
@@ -14,6 +18,6 @@
   ],
   "include": [
     "src/**/*.spec.ts",
-    "**/*.d.ts"
+    "**/*.d.ts",
   ]
 }

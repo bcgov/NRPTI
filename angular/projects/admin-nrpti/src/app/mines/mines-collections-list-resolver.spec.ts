@@ -50,7 +50,7 @@ describe('MinesCollectionsListResolver', () => {
         pathFromRoot: null,
         paramMap: null,
         queryParamMap: null
-      };
+      } as Partial<ActivatedRouteSnapshot> as ActivatedRouteSnapshot;
 
       beforeAll(() => {
         factoryServiceSpy = TestBed.get(FactoryService);
@@ -58,7 +58,7 @@ describe('MinesCollectionsListResolver', () => {
 
         factoryServiceSpy.getRecords.calls.reset();
         factoryServiceSpy.getRecords.and.returnValue(of({}));
-        tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({ currentPage: 1, pageSize: 25 });
+        tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({ currentPage: 1, pageSize: 25 } as Partial<TableObject> as TableObject);
 
         const minesCollectionsListResolver = new MinesCollectionsListResolver(factoryServiceSpy, tableTemplateUtilsSpy);
 

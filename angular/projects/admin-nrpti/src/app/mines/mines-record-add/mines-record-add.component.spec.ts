@@ -1,10 +1,10 @@
-import { async, TestBed } from '@angular/core/testing';
+import { waitForAsync, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { DialogService } from 'ng2-bootstrap-modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { GlobalModule, LoadingScreenService, Utils, StoreService } from 'nrpti-angular-components';
 import { CommonModule } from '../../../../../common/src/app/common.module';
@@ -33,7 +33,7 @@ describe('MinesAddEditComponent', () => {
     }
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
@@ -50,7 +50,7 @@ describe('MinesAddEditComponent', () => {
       providers: [
         Utils,
         RecordUtils,
-        DialogService,
+        BsModalService,
         StoreService,
         { provide: LoadingScreenService, useValue: mockLoadingScreenService },
         { provide: Router, useValue: mockRouter },
@@ -60,7 +60,7 @@ describe('MinesAddEditComponent', () => {
     }).compileComponents();
   }));
 
-  it('should create', async(() => {
+  it('should create', waitForAsync(() => {
     const { component } = testBedHelper.createComponent();
 
     expect(component).toBeTruthy();

@@ -15,8 +15,8 @@ export class AnnualReport extends RecordModel {
   legislation: Legislation[];
   documents: object[];
   description: string;
-  dateAdded: Date;
-  dateUpdated: Date;
+  declare dateAdded: Date;
+  declare dateUpdated: Date;
   datePublished: Date;
   publishedBy: string;
   isBcmiPublished: boolean;
