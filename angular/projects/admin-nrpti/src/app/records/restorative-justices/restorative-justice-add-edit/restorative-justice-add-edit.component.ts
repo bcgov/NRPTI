@@ -34,7 +34,7 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
   public nrcedPublishSubtext = 'Not published';
 
   // Pick lists
-  public agencies = Picklists.getAgencyCodes(this.factoryService);
+  public agencies: any[];
   public authors = Picklists.authorPicklist;
   private defaultAgency = '';
 
@@ -55,7 +55,9 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) {
+    this.agencies = Picklists.getAgencyCodes(this.factoryService);
+  }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {

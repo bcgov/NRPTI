@@ -26,26 +26,33 @@ export class LegislationAddEditComponent implements OnInit {
   protected ngUnsubscribe: Subject<void> = new Subject<void>();
 
   // cache acts
-  public readonly actsMappedToRegulations: { [key: string]: string[] } = Picklists.getAllActs(this.factoryService);
-  public readonly allActs = Object.keys(this.actsMappedToRegulations).sort();
+  public actsMappedToRegulations: { [key: string]: string[] };
+  public allActs: string[];
 
   // cache regulations
-  public readonly regulationsMappedToActs: {
+  public regulationsMappedToActs: {
     [key: string]: string[];
-  } = Picklists.getLegislationRegulationsMappedToActs(this.factoryService);
-  public readonly allRegulations = Object.keys(this.regulationsMappedToActs).sort();
+  };
+  public allRegulations: string[];
 
   public filteredActs: string[] = [];
   public filteredRegulations: string[] = [];
 
-  public debouncedFilterActsPicklist = this.utils.debounced(200, args => this.filterActsPicklist(args));
-  public debouncedFilterRegulationsPicklist = this.utils.debounced(200, args => this.filterRegulationsPicklist(args));
+  public debouncedFilterActsPicklist: any;
+  public debouncedFilterRegulationsPicklist: any;
 
   constructor(
     public utils: Utils,
     protected _changeDetectionRef: ChangeDetectorRef,
     private factoryService: FactoryService
-  ) {}
+  ) {
+    this.debouncedFilterActsPicklist = this.utils.debounced(200, args => this.filterActsPicklist(args));
+    this.debouncedFilterRegulationsPicklist = this.utils.debounced(200, args => this.filterRegulationsPicklist(args));
+    this.actsMappedToRegulations = Picklists.getAllActs(this.factoryService);
+    this.allActs = Object.keys(this.actsMappedToRegulations).sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
+    this.regulationsMappedToActs = Picklists.getLegislationRegulationsMappedToActs(this.factoryService);
+    this.allRegulations = Object.keys(this.regulationsMappedToActs).sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
+  }
 
   ngOnInit(): void {
     if (this.formGroup.controls.act.value && this.formGroup.controls.regulation.value) {

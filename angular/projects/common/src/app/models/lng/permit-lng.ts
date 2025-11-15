@@ -10,7 +10,7 @@ import { RecordModel } from '../record-model-abstract';
 export class PermitLNG extends RecordModel {
   _epicProjectId: string;
   _epicMilestoneId: string;
-  mineGuid: string;
+  declare mineGuid: string;
 
   recordSubtype: string;
   dateIssued: Date;

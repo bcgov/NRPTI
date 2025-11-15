@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { DialogService } from 'ng2-bootstrap-modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { GlobalModule } from 'nrpti-angular-components';
 import { CommonModule } from '../../../../../common/src/app/common.module';
 import { TestBedHelper, ActivatedRouteStub } from '../../../../../common/src/app/spec/spec-utils';
@@ -30,7 +30,7 @@ describe('MinesCollectionsTableRowComponent', () => {
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: FactoryService, useClass: MockFactoryService },
         { provide: AgencyDataService, useClass: MockAgencyDataService },
-        DialogService
+        BsModalService
       ]
     }).compileComponents();
   });

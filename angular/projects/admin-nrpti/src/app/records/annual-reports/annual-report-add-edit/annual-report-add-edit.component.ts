@@ -32,7 +32,7 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
   public bcmiPublishSubtext = 'Not published';
 
   // Pick lists
-  public agencies = Picklists.getAgencyCodes(this.factoryService);
+  public agencies: any[];
 
   public datepickerMinDate = Constants.DatepickerMinDate;
   public datepickerMaxDate = Constants.DatepickerMaxDate;
@@ -50,7 +50,9 @@ export class AnnualReportAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) {
+    this.agencies = Picklists.getAgencyCodes(this.factoryService);
+  }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {

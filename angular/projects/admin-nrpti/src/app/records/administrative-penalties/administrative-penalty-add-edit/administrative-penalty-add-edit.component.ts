@@ -38,7 +38,7 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
   public bcmiPublishSubtext = 'Not published';
 
   // Pick lists
-  public agencies = Picklists.getAgencyNames(this.factoryService);
+  public agencies: any[];
   public authors = Picklists.authorPicklist;
   public defaultAgency = 'AGENCY_EMLI';
 
@@ -61,7 +61,9 @@ export class AdministrativePenaltyAddEditComponent implements OnInit, OnDestroy 
     protected _changeDetectionRef: ChangeDetectorRef,
     // @ts-ignore used by record-association component
     protected storeService: StoreService
-  ) {}
+  ) {
+    this.agencies = Picklists.getAgencyNames(this.factoryService);
+  }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {

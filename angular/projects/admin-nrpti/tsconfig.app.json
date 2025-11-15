@@ -3,7 +3,10 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "baseUrl": "src",
+    "typeRoots": ["node_modules/@types"],
     "types": [
+      "jasmine", 
+      "node",
       "arcgis-js-api"
     ]
   },

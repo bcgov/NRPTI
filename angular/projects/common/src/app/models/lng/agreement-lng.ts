@@ -12,7 +12,7 @@ export class AgreementLNG extends RecordModel {
 
   dateIssued: Date;
   nationName: string;
-  projectName: string;
+  declare projectName: string;
   documents: object[];
 
   description: string;

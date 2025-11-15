@@ -32,7 +32,7 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
   public lngPublishSubtext = 'Not published';
 
   // Pick lists
-  public agencies = Picklists.getAgencyCodes(this.factoryService);
+  public agencies: any[];
   public authors = Picklists.authorPicklist;
 
   // Documents
@@ -52,7 +52,9 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) {
+    this.agencies = Picklists.getAgencyCodes(this.factoryService);
+  }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
