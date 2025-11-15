@@ -57,7 +57,7 @@ describe('MinesRecordsListResolver', () => {
         tableTemplateUtilsSpy = TestBed.get(TableTemplateUtils);
 
         factoryServiceSpy.getRecords.calls.reset();
-        factoryServiceSpy.getRecords.and.returnValue(of({}));
+        factoryServiceSpy.getRecords.and.returnValue(of([]));
         tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({ currentPage: 1, pageSize: 25 } as Partial<TableObject> as TableObject);
 
         const minesRecordsListResolver = new MinesRecordsListResolver(factoryServiceSpy, tableTemplateUtilsSpy);
@@ -127,7 +127,7 @@ describe('MinesRecordsListResolver', () => {
         tableTemplateUtilsSpy = TestBed.get(TableTemplateUtils);
 
         factoryServiceSpy.getRecords.calls.reset();
-        factoryServiceSpy.getRecords.and.returnValue(of({}));
+        factoryServiceSpy.getRecords.and.returnValue(of([]));
         tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({ currentPage: 1, pageSize: 25 } as Partial<TableObject> as TableObject);
 
         const minesRecordsListResolver = new MinesRecordsListResolver(factoryServiceSpy, tableTemplateUtilsSpy);

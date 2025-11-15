@@ -34,7 +34,7 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
   public bcmiPublishSubtext = 'Not published';
 
   // Pick lists
-  public agencies = Picklists.getAgencyCodes(this.factoryService);
+  public agencies: any[];
 
   // Documents
   public documents = [];
@@ -53,7 +53,9 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) {
+    this.agencies = Picklists.getAgencyCodes(this.factoryService);
+  }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {

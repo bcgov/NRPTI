@@ -203,7 +203,7 @@ describe('MinesAddEditComponent', () => {
       component.populateTextFields();
 
       expect(component.lastEditedSubText).toContain('Last Edited on ');
-    });
+    }); 
 
     it('sets the lastEditedSubText if dateUpdated is null and dateAdded is not null', () => {
       const { component } = testBedHelper.createComponent();

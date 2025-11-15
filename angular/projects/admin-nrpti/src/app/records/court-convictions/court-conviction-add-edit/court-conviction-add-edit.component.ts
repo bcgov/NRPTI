@@ -35,7 +35,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
   public bcmiPublishSubtext = 'Not published';
 
   // Pick lists
-  public agencies = Picklists.getAgencyCodes(this.factoryService);
+  public agencies: any[];
   public authors = Picklists.authorPicklist;
   public courtConvictionSubtypes = Picklists.courtConvictionSubtypePicklist;
   protected defaultAgency = '';
@@ -59,7 +59,9 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
     protected _changeDetectionRef: ChangeDetectorRef,
     // @ts-ignore used by record-association component
     protected storeService: StoreService
-  ) {}
+  ) {
+    this.agencies = Picklists.getAgencyCodes(this.factoryService);
+  }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {

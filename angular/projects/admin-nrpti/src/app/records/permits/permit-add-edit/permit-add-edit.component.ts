@@ -33,7 +33,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
 
   // Pick lists
   public permitSubtypes = Picklists.permitSubtypePicklist;
-  public agencies = Picklists.getAgencyCodes(this.factoryService);
+  public agencies: any[];
   private defaultAgency = '';
 
   // Documents
@@ -54,7 +54,9 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     private loadingScreenService: LoadingScreenService,
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
-  ) {}
+  ) {
+     this.agencies = Picklists.getAgencyCodes(this.factoryService);
+  }
 
   ngOnInit() {
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
