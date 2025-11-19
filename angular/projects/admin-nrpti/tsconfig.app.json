@@ -4,11 +4,7 @@
     "outDir": "../out-tsc/app",
     "baseUrl": "./",
     "typeRoots": ["node_modules/@types"],
-    "types": [
-      "jasmine", 
-      "node",
-      "arcgis-js-api"
-    ]
+    "types": []
   },
   "exclude": [
     "src/test.ts",

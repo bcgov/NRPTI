@@ -4,9 +4,7 @@
     "outDir": "../out-tsc/spec",
     "baseUrl": "./",
     "types": [
-      "jasmine",
-      "node",
-      "arcgis-js-api"
+      "jasmine"
     ],
     "paths": {
       "nrpti-angular-components": ["../../dist/nrpti-angular-components"],
