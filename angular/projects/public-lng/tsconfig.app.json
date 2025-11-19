@@ -3,9 +3,7 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "baseUrl": "src",
-    "types": [
-      "arcgis-js-api"
-    ]
+    "types": []
   },
   "exclude": [
     "src/test.ts",

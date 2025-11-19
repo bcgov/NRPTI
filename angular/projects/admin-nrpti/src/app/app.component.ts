@@ -45,11 +45,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.mineSubscription) {
-      this.mineSubscription.unsubscribe();
+      this.mineSubscription?.unsubscribe();
     }
 
     if (this.epicProjectSubscription) {
-      this.epicProjectSubscription.unsubscribe();
+      this.epicProjectSubscription?.unsubscribe();
     }
 
     this.storeService.stateChange.subscribe((state: object) => {
@@ -122,7 +122,7 @@ export class AppComponent implements OnInit, OnDestroy {
       .getSearchResults(this.factoryService.apiService.pathAPI, '', ['MineBCMI'], [], 1, 100000, '+name')
       .subscribe((mineResults: any[]) => {
         this.setStoreServiceItem('mines', mineResults[0].data.searchResults);
-        minesSub.unsubscribe();
+        minesSub?.unsubscribe();
       });
 
     // Update every 4 hours
@@ -152,7 +152,7 @@ export class AppComponent implements OnInit, OnDestroy {
       .getSearchResults(this.factoryService.apiService.pathAPI, '', ['EPICProject'], [], 1, 100000, '+name')
       .subscribe((epicProjectResults: any[]) => {
         this.setStoreServiceItem('epicProjects', epicProjectResults[0].data.searchResults);
-        epicSub.unsubscribe();
+        epicSub?.unsubscribe();
       });
 
     // Update every 4 hours
@@ -217,6 +217,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.alive = false;
-    this.toastSubscription.unsubscribe();
+    this.toastSubscription?.unsubscribe();
   }
 }

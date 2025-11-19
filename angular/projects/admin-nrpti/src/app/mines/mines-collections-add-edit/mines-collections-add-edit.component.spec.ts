@@ -4,7 +4,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { DialogService } from 'ng2-bootstrap-modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { GlobalModule, LoadingScreenService, Utils, StoreService } from 'nrpti-angular-components';
 import { CommonModule } from '../../../../../common/src/app/common.module';
@@ -51,7 +51,7 @@ describe('MinesCollectionsAddEditComponent', () => {
       providers: [
         Utils,
         RecordUtils,
-        DialogService,
+        BsModalService,
         StoreService,
         { provide: LoadingScreenService, useValue: mockLoadingScreenService },
         { provide: Router, useValue: mockRouter },

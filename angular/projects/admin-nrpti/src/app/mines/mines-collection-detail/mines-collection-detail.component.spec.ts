@@ -7,7 +7,7 @@ import { GlobalModule } from 'nrpti-angular-components';
 import { RecordDetailDirective } from '../../records/utils/record-detail.directive';
 import { DatePipe } from '@angular/common';
 import { CommonModule } from '../../../../../common/src/app/common.module';
-import { DialogService } from 'ng2-bootstrap-modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FactoryService } from '../../services/factory.service';
 import { AgencyDataService } from '../../../../../global/src/lib/utils/agency-data-service';
@@ -29,7 +29,7 @@ describe('MinesCollectionDetailComponent', () => {
       declarations: [MinesCollectionDetailComponent, RecordDetailDirective],
       providers: [
         DatePipe,
-        DialogService,
+        BsModalService,
         { provide: Router, useValue: mockRouter },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: FactoryService, useClass: MockFactoryService },

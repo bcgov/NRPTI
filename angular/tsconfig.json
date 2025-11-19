@@ -1,16 +1,17 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "module": "es2015",
     "moduleResolution": "bundler",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es5",
+    "target": "es2022",
+    "module": "esnext",
+    "useDefineForClassFields": false,
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -26,11 +27,11 @@
     "allowSyntheticDefaultImports": true,
     "preserveSymlinks": true,
     "paths": {
-      "global": [
-        "dist/global"
+      "nrpti-angular-components": [
+        "./dist/nrpti-angular-components"
       ],
-      "global/*": [
-        "dist/global/*"
+      "nrpti-angular-components/*": [
+        "./dist/nrpti-angular-components/*"
       ],
       "@angular/*": [
         // Necessary during development for libraries when using `yarn link` to reference local unpublished packages:

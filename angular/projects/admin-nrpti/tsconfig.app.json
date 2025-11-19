@@ -2,10 +2,9 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/app",
-    "baseUrl": "src",
-    "types": [
-      "arcgis-js-api"
-    ]
+    "baseUrl": "./",
+    "typeRoots": ["node_modules/@types"],
+    "types": []
   },
   "exclude": [
     "src/test.ts",
