@@ -34,14 +34,10 @@ export class SearchFiltersComponent implements OnInit, OnDestroy {
   public activityTypeOptions: IMutliSelectOption[] = Object.values(Picklists.activityTypePicklistNRCED).map(item => {
     return { value: item._schemaName, displayValue: item.displayName, selected: false, display: true };
   });
-  public allActs = Picklists.getAllActs(this.factoryService);
-  public allActsProcessed = Object.keys(this.allActs).sort((a, b) => a.localeCompare(b));
-  public actOptions: IMutliSelectOption[] = this.allActsProcessed.map(value => {
-    return { value: value, displayValue: value, selected: false, display: true };
-  });
-  public regulationOptions: IMutliSelectOption[] = Picklists.getAllRegulations(this.factoryService).map(value => {
-    return { value: value, displayValue: value, selected: false, display: true };
-  });
+  public allActs: any[]
+  public allActsProcessed: any[]
+  public actOptions: IMutliSelectOption[]
+  public regulationOptions: IMutliSelectOption[]
 
   public agencyCount = 0;
   public activityTypeCount = 0;
@@ -55,7 +51,16 @@ export class SearchFiltersComponent implements OnInit, OnDestroy {
     public route: ActivatedRoute,
     private _changeDetectionRef: ChangeDetectorRef,
     private factoryService: FactoryService
-  ) {}
+  ) {
+    this.allActs = Picklists.getAllActs(this.factoryService);
+    this.allActsProcessed = Object.keys(this.allActs).sort((a, b) => a.localeCompare(b));
+    this.actOptions = this.allActsProcessed.map(value => {
+    return { value: value, displayValue: value, selected: false, display: true };
+  });
+    this.regulationOptions = Picklists.getAllRegulations(this.factoryService).map(value => {
+    return { value: value, displayValue: value, selected: false, display: true };
+  });
+  }
 
   ngOnInit(): void {
     this.loading = false;

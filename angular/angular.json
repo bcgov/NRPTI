@@ -114,8 +114,7 @@
             },
             "tsConfig": "projects/admin-nrpti/tsconfig.spec.json",
             "scripts": [
-              "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/lib/keycloak.js"
+              "node_modules/moment/min/moment.min.js"
             ],
             "watch": false,
             "codeCoverage": true,
@@ -266,6 +265,11 @@
             "main": "projects/public-nrpti/src/test.ts",
             "karmaConfig": "karma.conf.js",
             "polyfills": "projects/public-nrpti/src/polyfills.ts",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "projects/public-nrpti/src"
+              ]
+            },
             "tsConfig": "projects/public-nrpti/tsconfig.spec.json",
             "scripts": [
               "node_modules/moment/min/moment.min.js",
@@ -609,6 +613,11 @@
           "options": {
             "main": "projects/common/src/test.ts",
             "polyfills": "projects/common/src/polyfills.ts",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "projects/common/src"
+              ]
+            },
             "tsConfig": "projects/common/tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "styles": [

@@ -61,7 +61,10 @@ describe('LinkAddEditComponent', () => {
         item: null,
         container: null,
         previousContainer: null,
-        isPointerOverContainer: null
+        isPointerOverContainer: null,
+        distance: null,
+        dropPoint: null,
+        event: null
       });
 
       expect(component.formArray.value.length).toEqual(3);

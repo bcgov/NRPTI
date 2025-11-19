@@ -503,7 +503,7 @@ describe('ImportCSVComponent', () => {
       factoryServiceSpy.startTask.calls.reset();
     });
 
-    it('does nothing if this.dataSourceType is null', () => {
+    it('does nothing if this.dataSourceType is null', async () => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
@@ -511,12 +511,12 @@ describe('ImportCSVComponent', () => {
       component.recordType = 'recordType';
       component.csvFiles = [new File([], 'fileA', {})];
 
-      component.startJob().then(() => {
-        expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
-      });
+      await component.startJob();
+
+      expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
     });
 
-    it('does nothing if this.recordType is null', () => {
+    it('does nothing if this.recordType is null', async () => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
@@ -524,12 +524,12 @@ describe('ImportCSVComponent', () => {
       component.recordType = null;
       component.csvFiles = [new File([], 'fileA', {})];
 
-      component.startJob().then(() => {
-        expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
-      });
+      await component.startJob();
+
+      expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
     });
 
-    it('does nothing if this.csvFiles is null or empty', () => {
+    it('does nothing if this.csvFiles is null or empty', async () => {
       const { component } = testBedHelper.createComponent();
 
       // set initial component state
@@ -537,12 +537,12 @@ describe('ImportCSVComponent', () => {
       component.recordType = 'recordType';
       component.csvFiles = [];
 
-      component.startJob().then(() => {
-        expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
-      });
+      await component.startJob();
+
+      expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(0);
     });
 
-    it('calls FactoryService.startTask', () => {
+    it('calls FactoryService.startTask', async () => {
       // set FactoryService mock behaviour
       factoryServiceSpy.startTask.and.returnValue(of());
 
@@ -559,9 +559,9 @@ describe('ImportCSVComponent', () => {
       // mock component methods
       component.onFileDelete = jasmine.createSpy('onFileDelete');
 
-      component.startJob().then(() => {
-        expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(1);
-      });
+      await component.startJob()
+
+      expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(1);
 
       expect(factoryServiceSpy.startTask).toHaveBeenCalledWith({
         dataSourceType: 'dataSourceType',

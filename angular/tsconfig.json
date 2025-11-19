@@ -5,12 +5,13 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "module": "es2020",
     "moduleResolution": "bundler",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "esnext",
+    "target": "es2022",
+    "module": "esnext",
+    "useDefineForClassFields": false,
     "typeRoots": [
       "node_modules/@types"
     ],
