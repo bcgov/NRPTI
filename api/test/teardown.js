@@ -1,5 +1,5 @@
-const mongoDbMemoryServer = require('./memory-db-server');
+// const mongoDbMemoryServer = require('./memory-db-server');
 
 module.exports = async function() {
-  await mongoDbMemoryServer.stop();
+  // await mongoDbMemoryServer.stop();
 };

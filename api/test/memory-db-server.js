@@ -1,29 +1,43 @@
-const mongoMemoryServer = require('mongodb-memory-server');
+// const { MongoMemoryServer } = require('mongodb-memory-server');
 
-class MemoryDatabaseServer {
-  constructor() {
-    this.mongoServer = new mongoMemoryServer.default({
-      instance: {
-        dbName: 'nrpti-dev'
-      },
-      binary: {
-        version: '3.6.3'
-      },
-      autoStart: false
-    });
-  }
+// class MemoryDatabaseServer {
+//   constructor() {
+//     this.mongoServer = null
+//   }
 
-  async start() {
-    return this.mongoServer.start();
-  }
+//   async start() {
 
-  async stop() {
-    return this.mongoServer.stop();
-  }
+//     if (!this.mongoServer) {
+//       this.mongoServer = new MongoMemoryServer({
+//         instance: {
+//           dbName: 'nrpti-dev'
+//         },
+//         binary: {
+//           version: '3.6.3'
+//         },
+//         autoStart: false
+//       });
+//       await this.mongoServer.start();
+//     }
 
-  async getConnectionString() {
-    return this.mongoServer.getConnectionString();
-  }
-}
+//     return this.mongoServer;
+    
+//   }
 
-module.exports = new MemoryDatabaseServer();
+//   async stop() {
+//     if (this.mongoServer) {
+//       await this.mongoServer.stop();
+//       this.mongoServer = null;
+//     }
+
+//   }
+
+//   async getConnectionString() {
+//     if (this.mongoServer) {
+//       return this.mongoServer.getConnectionString();
+//     }
+
+//   }
+// }
+
+// module.exports = new MemoryDatabaseServer();

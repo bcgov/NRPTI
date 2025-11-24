@@ -1,0 +1,1 @@
+global.File = class File {};
