@@ -54,7 +54,7 @@ jobs:
     #       sleep 2
     #     done
     - name: Install MongoDB driver
-      run: npm install mongodb
+      run: npm install mongodb@3.6
     - name: Setup Mongo DB
       if: steps.filter.outputs.api == 'true'
       run: node ./mongoSeed/mongo-seed-CI.js
