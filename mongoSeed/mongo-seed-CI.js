@@ -1,25 +1,41 @@
-// seed-mongo.js
 const { MongoClient } = require('mongodb');
 
 async function main() {
-    const client = new MongoClient(process.env.MONGO_URI);
-    await client.connect();
-    const db = client.db('nrpti-dev');
-    const user = process.env.MONGO_USER || 'nrpti-admin';
-    const pwd = process.env.MONGO_PASSWORD || 'nrpti-admin';
+  const client = new MongoClient(process.env.MONGO_URI);
+  await client.connect();
+  const db = client.db('nrpti-dev');
+  const user = process.env.MONGO_USER || 'nrpti-admin';
+  const pwd = process.env.MONGO_PASSWORD || 'nrpti-admin';
 
-    await db.addUser(user, pwd, { roles: ['readWrite'] });
-    await db.createCollection("audit", {capped: false});
-    await db.createCollection("description_summary_subset", {capped: false});
-    await db.createCollection("location_subset", {capped: false});
-    await db.createCollection("migrations", {capped: false});
-    await db.createCollection("nrpti", {capped: false});
-    await db.createCollection("record_name_subset", {capped: false});
-    await db.createCollection("redacted_record_subset", {capped: false});
-    await db.createCollection("acts_regulations_mapping", {capped: false});
+  // Create the user using db.command
+  await db.command({
+    createUser: user,
+    pwd: pwd,
+    roles: ['readWrite']
+  });
 
-    await client.close();
-    console.log('Mongo seeded');
+  // Create collections
+  const collections = [
+    "audit",
+    "description_summary_subset",
+    "location_subset",
+    "migrations",
+    "nrpti",
+    "record_name_subset",
+    "redacted_record_subset",
+    "acts_regulations_mapping"
+  ];
+
+  for (const col of collections) {
+    // Only create if it doesn't exist
+    const existing = await db.listCollections({ name: col }).toArray();
+    if (existing.length === 0) {
+      await db.createCollection(col, { capped: false });
+    }
+  }
+
+  await client.close();
+  console.log('Mongo seeded successfully!');
 }
 
 main().catch(err => {
