@@ -46,13 +46,13 @@ jobs:
         npm install
       env:
         CI: true
-    - name: Wait for Mongo
-      if: steps.filter.outputs.api == 'true'
-      run: |
-        until mongosh --eval "db.adminCommand('ping')" ; do
-          echo "Waiting for Mongo to be ready..."
-          sleep 2
-        done
+    # - name: Wait for Mongo
+    #   if: steps.filter.outputs.api == 'true'
+    #   run: |
+    #     until mongosh --eval "db.adminCommand('ping')" ; do
+    #       echo "Waiting for Mongo to be ready..."
+    #       sleep 2
+    #     done
     - name: Setup Mongo DB
       if: steps.filter.outputs.api == 'true'
       run: mongosh "mongodb://localhost:27017/nrpti-dev" ./mongoSeed/init/init.js
