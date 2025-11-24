@@ -53,6 +53,8 @@ jobs:
     #       echo "Waiting for Mongo to be ready..."
     #       sleep 2
     #     done
+    - name: Install MongoDB driver
+      run: npm install mongodb
     - name: Setup Mongo DB
       if: steps.filter.outputs.api == 'true'
       run: node ./mongoSeed/mongo-seed-CI.js
