@@ -23,7 +23,7 @@ jobs:
         env:
           MONGO_INITDB_DATABASE: nrpti-dev
         options: >-
-          --health-cmd "mongosh --eval 'db.adminCommand({ ping: 1 })'"
+          --health-cmd "mongo --quiet --eval 'db.adminCommand({ ping: 1 })'"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
