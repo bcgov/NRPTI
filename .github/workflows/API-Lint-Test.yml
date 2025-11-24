@@ -17,7 +17,7 @@ jobs:
         node-version: [18.x]
     services:
       mongo:
-        image: mongo:3.6
+        image: mongo:4
         ports:
           - 27017:27017
         env:
