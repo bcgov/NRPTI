@@ -55,8 +55,9 @@ jobs:
     #     done
     - name: Setup Mongo DB
       if: steps.filter.outputs.api == 'true'
-      run: mongosh "mongodb://localhost:27017/nrpti-dev" ./mongoSeed/init/init.js
+      run: node ./mongoSeed/mongo-seed-CI.js
       env:
+        MONGO_URI: mongodb://localhost:27017/nrpti-dev
         MONGO_USER: ${{ secrets.MONGO_USER }}
         MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
     - name: test
