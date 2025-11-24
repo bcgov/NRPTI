@@ -4,10 +4,12 @@
  */
 
 const db = new Mongo().getDB('nrpti-dev');
+const user = process.env.MONGO_USER || 'nrpti-admin';
+const pwd = process.env.MONGO_PASSWORD || 'nrpti-admin';
 
 db.createUser({
-  user: "nrpti-admin",
-  pwd: "nrpti-admin",
+  user,
+  pwd,
   roles: [{
     role: 'readWrite',
     db: 'nrpti-dev',
