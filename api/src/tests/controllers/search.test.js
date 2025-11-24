@@ -8,7 +8,7 @@ describe('generateExpArray', () => {
     it('returns undefined if no field paramter provided ', async () => {
       const result = await searchController.generateExpArray();
 
-      expect(result).toBe("results");
+      expect(result).toBe(undefined);
     });
 
     it('returns undefined if null field paramter provided ', async () => {
