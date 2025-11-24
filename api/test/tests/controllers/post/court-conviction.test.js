@@ -3,7 +3,7 @@ const { generateSwaggerParams } = require('../../../factories/factory_helper')
 const { ApplicationRoles } = require('../../../../src/utils/constants/misc');
 
 // May require additional time for downloading MongoDB binaries
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 600000;
+jest.DEFAULT_TIMEOUT_INTERVAL = 600000;
 
 require('../../../../src/models');
 

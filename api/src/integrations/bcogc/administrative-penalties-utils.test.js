@@ -144,9 +144,9 @@ describe('AdministrativePenalty', () => {
     const Document = require ('../../models/document');
     const utils = require('../../utils/constants/misc');
     const mongo = 'mongodb://127.0.0.1/nrpti-testing'
-    mongoose.connect(mongo);
 
     beforeAll(async () => {
+      await mongoose.connect(mongo);
       await Document.remove({});
     });
     
@@ -155,8 +155,8 @@ describe('AdministrativePenalty', () => {
     });
 
     afterAll(async () => {
-      mongoose.connection.db.dropDatabase();
-      await mongoose.connections.close();
+      await mongoose.connection.db.dropDatabase();
+      await mongoose.connection.close();
     });
 
     jest.fn('../../controllers/document-controller', () => ({
@@ -207,9 +207,9 @@ describe('AdministrativePenalty', () => {
     const AdminPenalty = require ('../../models/master/administrativePenalty');
     const utils = require('../../utils/constants/misc');
     const mongo = 'mongodb://127.0.0.1/nrpti-testing'
-    mongoose.connect(mongo);
 
     beforeAll(async () => {
+      await mongoose.connect(mongo);
       await AdminPenalty.remove({});
     });
     
@@ -218,8 +218,8 @@ describe('AdministrativePenalty', () => {
     });
 
     afterAll(async () => {
-      mongoose.connection.db.dropDatabase();
-      await mongoose.connections.close();
+      await mongoose.connection.db.dropDatabase();
+      await mongoose.connection.close();
     });
 
     jest.fn('../../controllers/document-controller', () => ({

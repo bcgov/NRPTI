@@ -55,7 +55,7 @@ describe('Search Controller Testing', () => {
       )
   });
 
-  test('Invalid ObjectId returns 400 error', async (done) => {
+  test('Invalid ObjectId returns 400 error', async () => {
     const roles = ['sysadmin']
     app.get(searchEndpoint, (req, res) => {
       const params = test_util.buildParams(req.query)
@@ -63,22 +63,16 @@ describe('Search Controller Testing', () => {
       return search.protectedGet(paramsWithValues, res, next);
     });
 
-    request(app)
+    const res = await request(app)
       .get(searchEndpoint)
       // must use QS to preserve the array, supertest will create a string value from single obj array
       .query(qs.stringify({ dataset: ['Item'], _id: 'invalidObjectId' }))
-      .expect(400)
-      .end((err, res) => {
-        if (err) {
-          console.log(err)
-          return done(err)
-        }
-        expect(res.body).toMatch('Error searching for item invalidObjectId. Invalid item id supplied')
-        return done()
-      });
+      .expect(400);
+
+      expect(res.body).toMatch('Error searching for item invalidObjectId. Invalid item id supplied')
   })
 
-  test('Search for Item returns record', (done) => {
+  test('Search for Item returns record', async () => {
     const orderId = generated_things[0]._id.toString();
     const roles = ['sysadmin'];
     app.get(searchEndpoint, async (req, res) => {
@@ -87,23 +81,17 @@ describe('Search Controller Testing', () => {
       return search.protectedGet(paramsWithValues, res, next)
     });
 
-    request(app)
+    const res = await request(app)
       .get(searchEndpoint)
       .query(qs.stringify({ dataset: ['Item'], _schemaName: 'Order', _id: orderId }))
       .expect(200)
-      .expect('Content-Type', 'application/json')
-      .end((err, res) => {
-        if (err) {
-          console.log(err)
-          return done(err)
-        }
-        expect(res.body.length).toBe(1)
-        expect(res.body[0]._id).toMatch(orderId)
-        return done();
-      })
+      .expect('Content-Type', 'application/json');
+
+      expect(res.body.length).toBe(1)
+      expect(res.body[0]._id).toMatch(orderId)
   })
 
-  test('IssuedTo name redacted for underage individual', (done) => {
+  test('IssuedTo name redacted for underage individual', async () => {
     const roles = [];
     const orderId = generated_underage[0]._id.toString();
     app.get(searchEndpoint, (req, res) => {
@@ -112,29 +100,22 @@ describe('Search Controller Testing', () => {
       return search.protectedGet(paramsWithValues, res, next)
     });
 
-    request(app)
+    const res = await request(app)
       .get(searchEndpoint)
       .query(qs.stringify({ dataset: ['Item'], _schemaName: 'Order', _id: orderId, populate: true }))
       .expect(200)
-      .expect('Content-Type', 'application/json')
-      .end((err, res) => {
-        if (err) {
-          console.log(err)
-          return done(err)
-        }
-        expect(res.body.length).toBe(1)
-        let record = res.body[0];
-        expect(record._id).toMatch(orderId)
-        expect(record.issuedTo.firstName).toBe(unpublished_val)
-        expect(record.issuedTo.lastName).toBe(unpublished_val)
-        expect(record.issuedTo.fullName).toBe(unpublished_val)
-        expect(record.issuedTo.birthDate).toBeFalsy()
-        return done();
-      })
+      .expect('Content-Type', 'application/json');
 
+      expect(res.body.length).toBe(1)
+      let record = res.body[0];
+      expect(record._id).toMatch(orderId)
+      expect(record.issuedTo.firstName).toBe(unpublished_val)
+      expect(record.issuedTo.lastName).toBe(unpublished_val)
+      expect(record.issuedTo.fullName).toBe(unpublished_val)
+      expect(record.issuedTo.birthDate).toBeFalsy()
   })
 
-  test('IssuedTo name published for adults', async (done) => {
+  test('IssuedTo name published for adults', async () => {
     const roles = ['admin:nrced'];
     const orderId = generated_ofAge[0]._id.toString();
     const expected = generated_ofAge[0];
@@ -144,28 +125,22 @@ describe('Search Controller Testing', () => {
       return search.protectedGet(paramsWithValues, res, next)
     });
 
-    request(app)
+    const res = await request(app)
       .get(searchEndpoint)
       .query(qs.stringify({ dataset: ['Item'], _schemaName: 'Order', _id: orderId, populate: true }))
       .expect(200)
-      .expect('Content-Type', 'application/json')
-      .end((err, res) => {
-        if (err) {
-          console.log(err)
-          return done(err)
-        }
-        expect(res.body.length).toBe(1)
-        let record = res.body[0];
-        expect(record._id).toMatch(orderId)
-        expect(record.issuedTo.firstName).toBe(expected.issuedTo.firstName)
-        expect(record.issuedTo.lastName).toBe(expected.issuedTo.lastName)
-        expect(record.issuedTo.fullName).toBe(expected.issuedTo.fullName)
-        expect(record.issuedTo.dateOfBirth).toBe(expected.issuedTo.dateOfBirth.toISOString())
-        return done();
-      })
+      .expect('Content-Type', 'application/json');
+
+      expect(res.body.length).toBe(1)
+      let record = res.body[0];
+      expect(record._id).toMatch(orderId)
+      expect(record.issuedTo.firstName).toBe(expected.issuedTo.firstName)
+      expect(record.issuedTo.lastName).toBe(expected.issuedTo.lastName)
+      expect(record.issuedTo.fullName).toBe(expected.issuedTo.fullName)
+      expect(record.issuedTo.dateOfBirth).toBe(expected.issuedTo.dateOfBirth.toISOString())
   })
 
-  test('IssuedTo redacted for wildfire role', async (done) => {
+  test('IssuedTo redacted for wildfire role', async () => {
     const roles = ['admin:wf'];
     // factory defaults generate write arrays without wf role
     const orderId = generated_underage[1]._id.toString();
@@ -175,28 +150,22 @@ describe('Search Controller Testing', () => {
       return search.protectedGet(paramsWithValues, res, next)
     });
 
-    request(app)
+    const res = await request(app)
       .get(searchEndpoint)
       .query(qs.stringify({ dataset: ['Item'], _schemaName: 'Order', _id: orderId, populate: true }))
       .expect(200)
-      .expect('Content-Type', 'application/json')
-      .end((err, res) => {
-        if (err) {
-          console.log(err)
-          return done(err)
-        }
-        expect(res.body.length).toBe(1)
-        let record = res.body[0];
-        expect(record._id).toMatch(orderId)
-        expect(record.issuedTo.firstName).toBe(unpublished_val)
-        expect(record.issuedTo.lastName).toBe(unpublished_val)
-        expect(record.issuedTo.fullName).toBe(unpublished_val)
-        expect(record.issuedTo.dateOfBirth).toBeFalsy()
-        return done();
-      })
+      .expect('Content-Type', 'application/json');
+
+      expect(res.body.length).toBe(1)
+      let record = res.body[0];
+      expect(record._id).toMatch(orderId)
+      expect(record.issuedTo.firstName).toBe(unpublished_val)
+      expect(record.issuedTo.lastName).toBe(unpublished_val)
+      expect(record.issuedTo.fullName).toBe(unpublished_val)
+      expect(record.issuedTo.dateOfBirth).toBeFalsy()
   })
 
-  test('IssuedTo company name is not redacted', async (done) => {
+  test('IssuedTo company name is not redacted', async () => {
     const roles = ['admin:nrced'];
     const orderId = generated_Company[0]._id.toString();
     const expected = generated_Company[0];
@@ -208,30 +177,24 @@ describe('Search Controller Testing', () => {
       return search.protectedGet(paramsWithValues, res, next)
     });
 
-    request(app)
+    const res = await request(app)
       .get(searchEndpoint)
       .query(qs.stringify({ dataset: ['Item'], _schemaName: 'Order', _id: orderId, populate: true }))
       .expect(200)
-      .expect('Content-Type', 'application/json')
-      .end((err, res) => {
-        if (err) {
-          console.log(err)
-          return done(err)
-        }
-        expect(res.body.length).toBe(1)
-        let record = res.body[0];
-        expect(record._id).toMatch(orderId)
-        expect(record.issuedTo.type).toBe(CONSTANTS.IssuedToEntityTypes.Company)
-        expect(record.issuedTo.companyName).toBe(expected.issuedTo.companyName)
-        expect(record.issuedTo.firstName).toBe(redactExpectation || '')
-        expect(record.issuedTo.lastName).toBe(redactExpectation || '')
-        expect(record.issuedTo.fullName).toBe(redactExpectation || '')
-        expect(record.issuedTo.dateOfBirth).toBeFalsy()
-        return done();
-      })
+      .expect('Content-Type', 'application/json');
+
+      expect(res.body.length).toBe(1)
+      let record = res.body[0];
+      expect(record._id).toMatch(orderId)
+      expect(record.issuedTo.type).toBe(CONSTANTS.IssuedToEntityTypes.Company)
+      expect(record.issuedTo.companyName).toBe(expected.issuedTo.companyName)
+      expect(record.issuedTo.firstName).toBe(redactExpectation || '')
+      expect(record.issuedTo.lastName).toBe(redactExpectation || '')
+      expect(record.issuedTo.fullName).toBe(redactExpectation || '')
+      expect(record.issuedTo.dateOfBirth).toBeFalsy()
   })
 
-  test('Lookup by dataset returns items', async (done) => {
+  test('Lookup by dataset returns items', async () => {
     const roles = ['sysadmin', 'admin:nrced'];
     app.get(searchEndpoint, (req, res) => {
       const params = test_util.buildParams(req.query)
@@ -239,19 +202,12 @@ describe('Search Controller Testing', () => {
       return search.protectedGet(paramsWithValues, res, next)
     });
 
-    request(app)
+    const res = await request(app)
       .get(searchEndpoint)
       .query({ dataset: ['Order', 'Inspection'] })
       .expect(200)
-      .expect('Content-Type', 'application/json')
-      .end((err, res) => {
-        if (err) {
-          console.log(err)
-          return done(err)
-        }
-        console.log(JSON.stringify(res.body))
-        expect(res.body[0].searchResults.length).toBe(11)
-        return done();
-      })
+      .expect('Content-Type', 'application/json');
+
+      expect(res.body[0].searchResults.length).toBe(11)
   })
 })

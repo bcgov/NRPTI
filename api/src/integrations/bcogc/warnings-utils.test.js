@@ -84,7 +84,7 @@ describe('warnings-utils', () => {
 
     afterAll(async () => {
       mongoose.connection.db.dropDatabase();
-      await mongoose.connections.close();
+      await mongoose.connection.close();
     });
 
     jest.fn('../../controllers/document-controller', () => ({

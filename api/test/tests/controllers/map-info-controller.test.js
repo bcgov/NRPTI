@@ -40,7 +40,7 @@ describe('Map-Info Controller Testing', () => {
     nrptiCollection.insertOne(testObj);
   });
 
-  test('Protectd post returns 400 with invalid post body', async done => {
+  test('Protectd post returns 400 with invalid post body', async () => {
     const roles = ['sysadmin'];
 
     app.post(endpoint, (req, res) => {
@@ -49,22 +49,15 @@ describe('Map-Info Controller Testing', () => {
       return mapInfo.protectedPost(paramsWithValues, res, next);
     });
 
-    request(app)
+    const res = await request(app)
       .post(endpoint)
       .send({})
-      .expect(400)
-      .end((err, res) => {
-        if (err) {
-          console.log(err);
-          return done(err);
-        }
+      .expect(400);
 
-        expect(res.body).toMatch('protectedPost - error: invalid post body');
-        return done();
-      });
+      expect(res.body).toMatch('protectedPost - error: invalid post body');
   });
 
-  test('Protectd post returns 200 with invalid post body', async done => {
+  test('Protectd post returns 200 with invalid post body', async () => {
     const roles = ['sysadmin'];
     const postObj = {
       application: 'LNG',
@@ -82,16 +75,11 @@ describe('Map-Info Controller Testing', () => {
       return mapInfo.protectedPost(paramsWithValues, res, next);
     });
 
-    request(app)
+    const res = await request(app)
       .post(endpoint)
       .send(postObj)
-      .expect(200)
-      .end((err, res) => {
-        if (err) {
-          console.log(err);
-          return done(err);
-        }
-
+      .expect(200);
+ 
         expect(res.body._schemaName).toMatch('MapLayerInfo');
         expect(res.body.location).toMatch(postObj.data.location);
         expect(res.body.length).toMatch(postObj.data.length);
@@ -100,8 +88,6 @@ describe('Map-Info Controller Testing', () => {
         expect(res.body.read).toContain(ApplicationRoles.ADMIN);
         expect(res.body.read).toContain(ApplicationRoles.ADMIN_LNG);
         expect(res.body.read).toContain(ApplicationRoles.PUBLIC);
-        return done();
-      });
   });
 
   // Manually running this test through swagger works, this test does not. 
@@ -143,7 +129,7 @@ describe('Map-Info Controller Testing', () => {
   //     });
   // });
 
-  test('Protectd delete returns 200', async done => {
+  test('Protectd delete returns 200', async () => {
     const roles = ['sysadmin'];
 
     app.delete(endpoint, (req, res) => {
@@ -152,19 +138,11 @@ describe('Map-Info Controller Testing', () => {
       return mapInfo.protectedDelete(paramsWithValues, res, next);
     });
 
-    request(app)
+    const res = await request(app)
       .delete(endpoint)
       .query({ mapInfoId: testObjectId.toString() })
-      .expect(200)
-      .end((err, res) => {
-        if (err) {
-          console.log(err);
-          return done(err);
-        }
+      .expect(200);
 
-        expect(res.body).toEqual({ n: 1, ok: 1 });
-
-        return done();
-      });
+      expect(res.body).toEqual({ n: 1, ok: 1 });
   });
 });
