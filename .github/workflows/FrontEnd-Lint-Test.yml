@@ -37,6 +37,9 @@ jobs:
       run: |
         cd angular
         npx ng build global
-        npm run test
+        npm run admin-nrpti:test-ci
+        npm run common:test
+        npm run global:test
+        npm run public-nrced:test
       env:
         CI: true
