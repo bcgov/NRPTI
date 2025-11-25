@@ -36,7 +36,7 @@ jobs:
       if: steps.filter.outputs.frontend == 'true'
       run: |
         cd angular
-        ng build global
+        npx ng build global
         npm run test
       env:
         CI: true
