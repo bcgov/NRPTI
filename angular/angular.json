@@ -141,7 +141,7 @@
               "node_modules/moment/min/moment.min.js",
               "node_modules/keycloak-js/lib/keycloak.js"
             ],
-            "watch": true,
+            "watch": false,
             "codeCoverage": false,
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",

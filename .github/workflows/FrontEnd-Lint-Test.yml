@@ -9,6 +9,7 @@ permissions: {}
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     strategy:
       matrix:
         node-version: [18.x]
@@ -37,6 +38,6 @@ jobs:
       run: |
         cd angular
         npx ng build global
-        npx ng run admin-nrpti:test-ci
+        npx ng run admin-nrpti:test-ci --watch=false
       env:
         CI: true
