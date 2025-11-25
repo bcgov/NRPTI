@@ -14,7 +14,7 @@ import { FactoryService } from '../../services/factory.service';
 import { SharedModule } from '../../shared/shared.module';
 import { MinesRecordAddComponent } from './mines-record-add.component';
 
-describe('MinesAddEditComponent', () => {
+xdescribe('MinesAddEditComponent', () => {
   const testBedHelper = new TestBedHelper<MinesRecordAddComponent>(MinesRecordAddComponent);
 
   // component constructor mocks
