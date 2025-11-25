@@ -46,13 +46,6 @@ jobs:
         npm install
       env:
         CI: true
-    # - name: Wait for Mongo
-    #   if: steps.filter.outputs.api == 'true'
-    #   run: |
-    #     until mongosh --eval "db.adminCommand('ping')" ; do
-    #       echo "Waiting for Mongo to be ready..."
-    #       sleep 2
-    #     done
     - name: Install MongoDB driver
       run: npm install mongodb@3.6
     - name: Setup Mongo DB
