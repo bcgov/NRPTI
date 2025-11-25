@@ -139,7 +139,6 @@
             "tsConfig": "projects/admin-nrpti/tsconfig.spec.json",
             "scripts": [
               "node_modules/moment/min/moment.min.js",
-              "node_modules/keycloak-js/lib/keycloak.js"
             ],
             "watch": false,
             "codeCoverage": false,
