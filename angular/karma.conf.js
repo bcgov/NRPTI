@@ -37,7 +37,7 @@ module.exports = function (config) {
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
-    autoWatch: true,
+    autoWatch: process.env.CI === 'true' ? false : true,
     browsers: process.env.CI === 'true' ? ['ChromeHeadlessNoSandbox'] : ['ChromeHeadless'],
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
@@ -47,6 +47,7 @@ module.exports = function (config) {
           '--user-data-dir=/tmp/chrome-test-profile',
           '--disable-web-security',
           '--disable-gpu',
+          '--disable-dev-shm-usage',
           '--disable-background-networking',
           '--disable-default-apps',
           '--disable-extensions',
@@ -70,7 +71,7 @@ module.exports = function (config) {
         ]
       }
     },
-    singleRun: false,
+    singleRun: process.env.CI === 'true' ? true : false,
     restartOnFileChange: true
   });
 };
