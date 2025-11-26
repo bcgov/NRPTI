@@ -41,5 +41,6 @@ jobs:
         npx ng run admin-nrpti:test-ci --watch=false
         npx ng run public-nrced:test-ci --watch=false
         npx ng run common:test --watch=false
+        npx ng run global:test --watch=false
       env:
         CI: true
