@@ -39,5 +39,6 @@ jobs:
         cd angular
         npx ng build global
         npx ng run admin-nrpti:test-ci --watch=false
+        npx ng run public-nrced:test-ci --watch=false
       env:
         CI: true
