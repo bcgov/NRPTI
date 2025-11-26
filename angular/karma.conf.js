@@ -37,40 +37,51 @@ module.exports = function (config) {
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
-    autoWatch: true,
-    browsers: ['ChromeHeadless'],
+    browserDisconnectTimeout: 50000,
+    browserNoActivityTimeout: 50000,
+    captureTimeout: 100000,
+    autoWatch: process.env.CI === 'true' ? false : true,
+    browsers: process.env.CI === 'true' ? ['ChromeHeadlessNoSandbox'] : ['ChromeHeadless'],
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
-        flags: [
-          '--no-sandbox', // required to run without privileges in docker
-          '--user-data-dir=/tmp/chrome-test-profile',
-          '--disable-web-security',
-          '--disable-gpu',
-          '--disable-background-networking',
-          '--disable-default-apps',
-          '--disable-extensions',
-          '--disable-sync',
-          '--disable-translate',
-          '--headless',
-          '--hide-scrollbars',
-          '--metrics-recording-only',
-          '--mute-audio',
-          '--no-first-run',
-          '--safebrowsing-disable-auto-update',
-          '--ignore-certificate-errors',
-          '--ignore-ssl-errors',
-          '--ignore-certificate-errors-spki-list',
-          '--remote-debugging-port=9222',
-          '--remote-debugging-address=0.0.0.0',
-          '--disable-dev-shm-usage',
-          '--disable-setuid-sandbox',
-          '--disable-namespace-sandbox',
-          '--window-size=800x600'
-        ]
+        flags: process.env.CI === 'true' ?
+          [
+            '--no-sandbox',
+            '--disable-gpu',
+            '--disable-dev-shm-usage',
+            '--headless',
+            '--window-size=800x600'
+          ] :
+          [
+            '--no-sandbox', // required to run without privileges in docker
+            '--user-data-dir=/tmp/chrome-test-profile',
+            '--disable-web-security',
+            '--disable-gpu',
+            '--disable-background-networking',
+            '--disable-default-apps',
+            '--disable-extensions',
+            '--disable-sync',
+            '--disable-translate',
+            '--headless',
+            '--hide-scrollbars',
+            '--metrics-recording-only',
+            '--mute-audio',
+            '--no-first-run',
+            '--safebrowsing-disable-auto-update',
+            '--ignore-certificate-errors',
+            '--ignore-ssl-errors',
+            '--ignore-certificate-errors-spki-list',
+            '--remote-debugging-port=9222',
+            '--remote-debugging-address=0.0.0.0',
+            '--disable-dev-shm-usage',
+            '--disable-setuid-sandbox',
+            '--disable-namespace-sandbox',
+            '--window-size=800x600'
+          ]
       }
     },
-    singleRun: false,
+    singleRun: process.env.CI === 'true' ? true : false,
     restartOnFileChange: true
   });
 };

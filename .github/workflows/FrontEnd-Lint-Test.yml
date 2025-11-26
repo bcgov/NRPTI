@@ -1,48 +1,46 @@
-# name: Front-End linting & tests
+name: Front-End linting & tests
 
-# on: [pull_request]
+on: [pull_request, workflow_dispatch]
+concurrency:
+  group: ${{ github.event.number }}
+  cancel-in-progress: true
 
-# jobs:
-#   build:
+permissions: {}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node-version: [18.x]
 
-#     runs-on: ubuntu-22.04
-
-#     strategy:
-#       matrix:
-#         node-version: [18.x]
-
-#     steps:
-#     - uses: actions/checkout@v1
-#     - uses: dorny/paths-filter@v2
-#       id: filter
-#       with:
-#         filters: |
-#           frontend:
-#             - 'angular/**'
-#     - name: Use Node.js ${{ matrix.node-version }}
-#       uses: actions/setup-node@v1
-#       with:
-#         node-version: ${{ matrix.node-version }}
-#     - name: npm install
-#       if: steps.filter.outputs.frontend == 'true'
-#       run: |
-#         cd angular
-#         npm install
-#       env:
-#         CI: true
-#     # Disabling linting post-updates, not worth fixing
-#     #- name: lint
-#     #  if: steps.filter.outputs.frontend == 'true'
-#     #  run: |
-#     #    cd angular
-#     #    npm run lint
-#     #  env:
-#     #    CI: true
-#     - name: build, and test
-#       if: steps.filter.outputs.frontend == 'true'
-#       run: |
-#         cd angular
-#         npm run build
-#         npm run test
-#       env:
-#         CI: true
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50
+      id: filter
+      with:
+        filters: |
+          frontend:
+            - 'angular/**'
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm install
+      if: steps.filter.outputs.frontend == 'true'
+      run: |
+        cd angular
+        npm install
+      env:
+        CI: true
+    - name: build, and test
+      if: steps.filter.outputs.frontend == 'true'
+      run: |
+        cd angular
+        npx ng build global
+        npx ng run admin-nrpti:test-ci --watch=false
+        npx ng run public-nrced:test-ci --watch=false
+        npx ng run common:test --watch=false
+        npx ng run global:test --watch=false
+      env:
+        CI: true

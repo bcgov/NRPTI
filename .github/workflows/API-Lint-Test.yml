@@ -36,6 +36,7 @@ jobs:
           api:
             - 'api/**'
     - name: Use Node.js ${{ matrix.node-version }}
+      if: steps.filter.outputs.api == 'true'
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
@@ -46,14 +47,8 @@ jobs:
         npm install
       env:
         CI: true
-    # - name: Wait for Mongo
-    #   if: steps.filter.outputs.api == 'true'
-    #   run: |
-    #     until mongosh --eval "db.adminCommand('ping')" ; do
-    #       echo "Waiting for Mongo to be ready..."
-    #       sleep 2
-    #     done
     - name: Install MongoDB driver
+      if: steps.filter.outputs.api == 'true'
       run: npm install mongodb@3.6
     - name: Setup Mongo DB
       if: steps.filter.outputs.api == 'true'
