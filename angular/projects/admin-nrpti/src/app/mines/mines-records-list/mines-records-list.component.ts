@@ -429,6 +429,8 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       default:
         break;
     }
+    // TODO: resolve this eslint error
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.rowSelectedCount > 0 ? (this.anySelectedRecords = true) : (this.anySelectedRecords = false);
   }
 
