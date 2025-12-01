@@ -83,7 +83,7 @@ export class HomeComponent implements OnInit {
       options: {
         cutoutPercentage: 50
       }
-    }); 
+    });
 
     // RecordByType
     const recordTypes = await this.metricService.getMetric('RecordByType');
