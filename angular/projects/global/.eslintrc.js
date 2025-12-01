@@ -3,6 +3,7 @@ module.exports = {
   overrides: [
     {
       files: ["src/lib/**/*.ts"],
+      excludedFiles: ["src/lib/**/*.spec.ts", "src/lib/**/*.test.ts"],
       parser: "@typescript-eslint/parser",
       parserOptions: {
         project: ["projects/global/tsconfig.lib.json"]
@@ -22,7 +23,7 @@ module.exports = {
     },
     {
       // Dummy parser so that eslint ignores spec files.
-      files: ["src/lib/**/*.spec.ts"],
+      files: ["src/lib/**/*.spec.ts", "src/lib/**/*.*.spec.ts"],
       parser: "@typescript-eslint/parser",
       parserOptions: {
         project: null
