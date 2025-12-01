@@ -74,16 +74,16 @@ export class KeycloakService {
       };
 
       try {
-        // Use PKCE method S256 for better security and exclude issuer from auth response 
+        // Use PKCE method S256 for better security and exclude issuer from auth response
         // to fix the 400 bad request redirect_uri issue with newer Keycloak versions
-        const initOptions = { 
+        const initOptions = {
           pkceMethod: 'S256',
           checkLoginIframe: false,
           enableLogging: true,
           flow: 'standard',
           redirectUri: window.location.href
         };
-        
+
         const auth = await this.keycloakAuth.init(initOptions);
         this.logger.log(`KC Success: ${auth}`);
         if (!auth) {
@@ -332,7 +332,7 @@ export class KeycloakService {
           this.logger.log(`KC refresh error: ${err}`);
           observer.error();
         });
-
+      /* eslint-disable-next-line prefer-arrow/prefer-arrow-functions */
       return { unsubscribe() {} };
     });
   }

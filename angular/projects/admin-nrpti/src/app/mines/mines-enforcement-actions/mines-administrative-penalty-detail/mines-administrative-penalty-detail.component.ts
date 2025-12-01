@@ -13,7 +13,7 @@ import { AgencyDataService } from '../../../../../../global/src/lib/utils/agency
   selector: 'app-mines-administrative-penalty-detail',
   templateUrl: './mines-administrative-penalty-detail.component.html',
   styleUrls: [
-    '../../../records/administrative-penalties/administrative-penalty-detail/administrative-penalty-detail.component.scss'
+    '../../../records/administrative-penalties/administrative-penalty-detail/administrative-penalty-detail.component.scss' // eslint-disable-line max-len
   ]
 })
 export class MinesAdministrativePenaltyDetailComponent extends AdministrativePenaltyDetailComponent implements OnInit {

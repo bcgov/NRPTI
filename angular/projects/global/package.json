@@ -11,13 +11,13 @@
     "url": "https://github.com/bcgov/nrpti-angular-components"
   },
   "peerDependencies": {
+    "@angular-devkit/build-angular": "~19.2.3",
     "@angular/common": "~19.2.2",
     "@angular/core": "~19.2.2",
     "@angular/forms": "~19.2.2",
     "@angular/platform-browser": "~19.2.2",
     "@angular/platform-browser-dynamic": "~19.2.2",
     "@angular/router": "~19.2.2",
-    "@angular-devkit/build-angular": "~19.2.3",
     "@ng-bootstrap/ng-bootstrap": "~18.0.0",
     "core-js": "^2.6.10",
     "karma": "~6.4.4",

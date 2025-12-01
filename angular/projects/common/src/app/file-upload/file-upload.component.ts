@@ -62,7 +62,7 @@ export class FileUploadComponent {
     this.errors = []; // clear previous errors
 
     if (this.isValidFiles(files)) {
-      // eslint-disable-next-line prefer-for-of
+      // eslint-disable-next-line @typescript-eslint/prefer-for-of
       for (let i = 0; i < files.length; i++) {
         this.files.push(files[i]);
       }
@@ -120,7 +120,7 @@ export class FileUploadComponent {
     const extensions = this.fileExt.map(x => {
       return x.toUpperCase().trim();
     });
-    // eslint-disable-next-line prefer-for-of
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
     for (let i = 0; i < files.length; i++) {
       const ext = files[i].name.toUpperCase().split('.').pop() || files[i].name;
       if (!extensions.includes(ext)) {
@@ -134,7 +134,7 @@ export class FileUploadComponent {
 
   private validateFileSizes(files: FileList): boolean {
     let ret = true;
-    // eslint-disable-next-line prefer-for-of
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
     for (let i = 0; i < files.length; i++) {
       const fileSizeinMB = files[i].size / 1024 / 1024; // in MB
       const size = Math.round(fileSizeinMB * 100) / 100; // convert up to 2 decimal places

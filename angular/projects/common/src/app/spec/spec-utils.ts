@@ -31,9 +31,9 @@ export class TestBedHelper<T> {
    * - In tests that require custom mock behaviour, set up the mock behaviour before calling this.
    *
    * @param {boolean} [detectChanges=true] set to false if you want to manually call fixture.detectChanges(), etc.
-   *   Usually you want to control this when the timing of ngOnInit, and similar auto-exec functions, matters.
+   * Usually you want to control this when the timing of ngOnInit, and similar auto-exec functions, matters.
    * @returns @returns {{ component: T; fixture: ComponentFixture<T> }} Object containing the component and test
-   *   fixture.
+   * fixture.
    * @memberof TestBedHelper
    */
   public createComponent(detectChanges: boolean = true): { component: T; fixture: ComponentFixture<T> } {

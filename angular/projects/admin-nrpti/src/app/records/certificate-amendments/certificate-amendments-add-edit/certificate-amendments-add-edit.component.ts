@@ -386,7 +386,7 @@ export class CertificateAmendmentAddEditComponent implements OnInit, OnDestroy {
       certificateAmendment['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
 
-    // eslint-disable-next-line max-line-length
+    // eslint-disable-next-line max-len
     this.myForm.get('legislations').dirty && (certificateAmendment['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(certificateAmendment, this.factoryService);
     // LNG flavour

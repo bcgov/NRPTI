@@ -388,7 +388,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   /**
    * Sets the intial recordState, or removes it from store if it is invalid
    *
-   *  @memberof MinesRecordListComponent
+   * @memberof MinesRecordListComponent
    */
   setOrRemoveRecordAddEditState() {
     const tempRecordAddEditState = this.storeService.getItem(StateIDs.recordAddEdit);

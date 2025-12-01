@@ -523,7 +523,7 @@ export class CourtConvictionAddEditComponent implements OnInit, OnDestroy {
       courtConviction['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
 
-    // eslint-disable-next-line max-line-length
+    // eslint-disable-next-line max-len
     this.myForm.get('legislations').dirty && (courtConviction['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(courtConviction, this.factoryService);
 

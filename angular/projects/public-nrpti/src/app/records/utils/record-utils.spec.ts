@@ -27,8 +27,11 @@ const mockData = [
     outcomeDescription: 'The outcome was a success, hooray!'
   }
 ];
+
+/* eslint-disable max-len */
 const expectedOutput = `Record Type,Issued On,Issued To,Summary,Issuing Agency,Legislation Act,Regulation,Section,Sub Section,Paragraph,Description,Offence,Penalties,Site/Project,Location,Latitude,Longitude,Outcome Description
 "testRecord","2023-10-11","Company",This company doesnt exist,"In summary, this is a test","testCode","1","2","3","4","5","This sounds serious","None","","BC","1","2","The outcome was a success, hooray!"`;
+/* eslint-enable max-len */
 
 describe('RecordUtils', () => {
   describe('exportToCsv', () => {

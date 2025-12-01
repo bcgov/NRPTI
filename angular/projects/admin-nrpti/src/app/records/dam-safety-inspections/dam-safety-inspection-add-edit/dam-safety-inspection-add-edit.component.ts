@@ -381,7 +381,7 @@ export class DamSafetyInspectionAddEditComponent implements OnInit, OnDestroy {
       damSafetyInspection['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
 
-    // eslint-disable-next-line max-line-length
+    // eslint-disable-next-line max-len
     this.myForm.get('legislations').dirty && (damSafetyInspection['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(damSafetyInspection, this.factoryService);
     // nrced flavour

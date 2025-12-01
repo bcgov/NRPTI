@@ -455,7 +455,7 @@ export class RestorativeJusticeAddEditComponent implements OnInit, OnDestroy {
     if (this.myForm.controls.latitude.value && this.myForm.controls.longitude.value) {
       restorativeJustice['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
-    // eslint-disable-next-line max-line-length
+    // eslint-disable-next-line max-len
     this.myForm.get('legislations').dirty && (restorativeJustice['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(restorativeJustice, this.factoryService);
 

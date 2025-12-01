@@ -1,3 +1,4 @@
+// eslint-disable-next-line max-len
 // TODO: see if test can be fixed. Using routerLink creates errors with blank paths. See bug: https://github.com/angular/angular/issues/27674
 
 // import { TestBed } from '@angular/core/testing';

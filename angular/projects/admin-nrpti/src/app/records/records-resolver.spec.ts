@@ -61,7 +61,10 @@ xdescribe('RecordsResolver', () => {
 
         factoryServiceSpy.getRecords.calls.reset();
         factoryServiceSpy.getRecords.and.returnValue(of([]));
-        tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({ currentPage: 1, pageSize: 25 } as Partial<TableObject> as TableObject);
+        tableTemplateUtilsSpy
+          .updateTableObjectWithUrlParams.and.returnValue(
+            { currentPage: 1, pageSize: 25 } as Partial<TableObject> as TableObject
+          );
 
         const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy);
 
@@ -137,7 +140,10 @@ xdescribe('RecordsResolver', () => {
 
         factoryServiceSpy.getRecords.calls.reset();
         factoryServiceSpy.getRecords.and.returnValue(of([]));
-        tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({ currentPage: 1, pageSize: 25 } as Partial<TableObject> as TableObject);
+        tableTemplateUtilsSpy
+          .updateTableObjectWithUrlParams.and.returnValue(
+            { currentPage: 1, pageSize: 25 } as Partial<TableObject> as TableObject
+          );
 
         const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy);
 
@@ -213,7 +219,10 @@ xdescribe('RecordsResolver', () => {
 
         factoryServiceSpy.getRecords.calls.reset();
         factoryServiceSpy.getRecords.and.returnValue(of([]));
-        tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({ currentPage: 1, pageSize: 25 } as Partial<TableObject> as TableObject);
+        tableTemplateUtilsSpy
+          .updateTableObjectWithUrlParams.and.returnValue(
+            { currentPage: 1, pageSize: 25 } as Partial<TableObject> as TableObject
+          );
 
         const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy);
 
@@ -289,7 +298,10 @@ xdescribe('RecordsResolver', () => {
 
         factoryServiceSpy.getRecords.calls.reset();
         factoryServiceSpy.getRecords.and.returnValue(of([]));
-        tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({ currentPage: 1, pageSize: 25 } as Partial<TableObject> as TableObject);
+        tableTemplateUtilsSpy
+          .updateTableObjectWithUrlParams.and.returnValue(
+            { currentPage: 1, pageSize: 25 } as Partial<TableObject> as TableObject
+          );
 
         const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy);
 
@@ -365,7 +377,10 @@ xdescribe('RecordsResolver', () => {
 
         factoryServiceSpy.getRecords.calls.reset();
         factoryServiceSpy.getRecords.and.returnValue(of([]));
-        tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({ currentPage: 1, pageSize: 25 } as Partial<TableObject> as TableObject);
+        tableTemplateUtilsSpy
+          .updateTableObjectWithUrlParams.and.returnValue(
+            { currentPage: 1, pageSize: 25 } as Partial<TableObject> as TableObject
+          );
 
         const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy);
 
@@ -441,7 +456,10 @@ xdescribe('RecordsResolver', () => {
 
         factoryServiceSpy.getRecords.calls.reset();
         factoryServiceSpy.getRecords.and.returnValue(of([]));
-        tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({ currentPage: 1, pageSize: 25 } as Partial<TableObject> as TableObject);
+        tableTemplateUtilsSpy
+          .updateTableObjectWithUrlParams.and.returnValue(
+            { currentPage: 1, pageSize: 25 } as Partial<TableObject> as TableObject
+          );
 
         const recordsResolver = new RecordsResolver(factoryServiceSpy, tableTemplateUtilsSpy);
 

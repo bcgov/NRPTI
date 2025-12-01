@@ -107,7 +107,9 @@ deleteCollection() {
       })
     )
     .subscribe(async (isConfirmed: boolean) => {
-      if (!isConfirmed) return;
+      if (!isConfirmed) {
+        return;
+      }
 
       try {
         await this.factoryService.deleteCollection(this.rowData._id);

@@ -24,7 +24,8 @@ export class FactoryService {
     // The following items are loaded by a file that is only present on cluster builds.
     // Locally, this will be empty and local defaults will be used.
     // const remote_api_path = window.localStorage.getItem('from_admin_server--remote_api_path');
-    // // const remote_public_path = window.localStorage.getItem('from_admin_server--remote_public_path');  // available in case its ever needed
+    // // the following line is available in case its ever needed
+    // // const remote_public_path = window.localStorage.getItem('from_admin_server--remote_public_path');
     // const deployment_env = window.localStorage.getItem('from_admin_server--deployment_env');
     // this._pathAPI = 'http://localhost:3000/api/public';
   }
