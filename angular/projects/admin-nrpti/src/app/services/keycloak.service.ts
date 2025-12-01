@@ -332,7 +332,7 @@ export class KeycloakService {
           this.logger.log(`KC refresh error: ${err}`);
           observer.error();
         });
-      /* eslint-disable-next-line prefer-arrow/prefer-arrow-functions */
+
       return { unsubscribe() {} };
     });
   }

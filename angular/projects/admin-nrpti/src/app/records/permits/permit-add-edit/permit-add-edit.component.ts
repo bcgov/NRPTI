@@ -298,7 +298,6 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
       permit['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
 
-    // eslint-disable-next-line max-len
     this.myForm.get('legislations').dirty && (permit['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(permit, this.factoryService);
 

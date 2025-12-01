@@ -415,7 +415,6 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.outcomeDescription.dirty &&
       (inspection['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
 
-    // eslint-disable-next-line max-len
     this.myForm.get('legislations').dirty && (inspection['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(inspection, this.factoryService);
 

@@ -334,7 +334,6 @@ export class ImportCSVComponent implements OnInit {
       if (requiredFormat.type === 'date') {
         if (!moment(csvRowValuesArray[fieldIndex], requiredFormat.format).isValid()) {
           this.csvFileErrors.push(
-            // eslint-disable-next-line max-len
             `CSV row ${rowNumber}, field: ${requiredFormat.field} - has invalid format, required format: ${requiredFormat.format}`
           );
         }

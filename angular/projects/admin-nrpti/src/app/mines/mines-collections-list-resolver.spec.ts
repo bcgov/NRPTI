@@ -59,13 +59,10 @@ xdescribe('MinesCollectionsListResolver', () => {
 
         factoryServiceSpy.getRecords.calls.reset();
         factoryServiceSpy.getRecords.and.returnValue(of([]));
-        tableTemplateUtilsSpy
-          .updateTableObjectWithUrlParams
-          .and.returnValue(
-            {
-              currentPage: 1, pageSize: 25
-            } as Partial<TableObject> as TableObject
-          );
+        tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({
+          currentPage: 1,
+          pageSize: 25
+        } as Partial<TableObject> as TableObject);
 
         const minesCollectionsListResolver = new MinesCollectionsListResolver(factoryServiceSpy, tableTemplateUtilsSpy);
 

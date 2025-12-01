@@ -267,7 +267,6 @@ export class SelfReportAddEditComponent implements OnInit, OnDestroy {
       (selfReport['issuingAgency'] = this.myForm.controls.issuingAgency.value);
     this.myForm.controls.author.dirty && (selfReport['author'] = this.myForm.controls.author.value);
 
-    // eslint-disable-next-line max-len
     this.myForm.get('legislations').dirty && (selfReport['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(selfReport, this.factoryService);
     // Project name logic
