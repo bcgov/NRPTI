@@ -240,7 +240,7 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
     }
   }
   /** ***************************************************
-   *  Events/Emitters
+   * Events/Emitters
    *****************************************************/
 
   /**
@@ -310,7 +310,7 @@ export class SearchFilterTemplateComponent implements OnInit, AfterViewInit, OnD
   }
 
   /** ***************************************************
-   *  Utility and Helper functions
+   * Utility and Helper functions
    *****************************************************/
 
   // hides and displays the advanced filters

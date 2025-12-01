@@ -54,7 +54,9 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
 
     // Subscribe to the result
     modalRef.content.onClose.subscribe(async (isConfirmed: boolean) => {
-      if (!isConfirmed) return;
+      if (!isConfirmed) {
+        return;
+      }
 
       try {
         await this.factoryService.deleteNews(this.record._id);
@@ -81,7 +83,9 @@ export class NewsDetailComponent implements OnInit, OnDestroy {
   modalRef.content.onClose
     ?.pipe(takeUntil(this.ngUnsubscribe))
     .subscribe(async (isConfirmed: boolean) => {
-      if (!isConfirmed) return;
+      if (!isConfirmed) {
+        return;
+      }
 
       try {
         await this.factoryService.deleteNews(this.record._id);

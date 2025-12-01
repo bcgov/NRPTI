@@ -409,25 +409,31 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(async (isConfirmed) => {
-        if (!isConfirmed) return;
+        if (!isConfirmed) {
+          return;
+        }
 
         this.loadingScreenService.setLoadingState(true, 'main');
 
         const collection: any = {};
 
-        if (this.myForm.get('collectionName').dirty)
+        if (this.myForm.get('collectionName').dirty) {
           collection['name'] = this.myForm.get('collectionName').value;
+        }
 
-        if (this.myForm.get('collectionDate').dirty)
+        if (this.myForm.get('collectionDate').dirty) {
           collection['date'] = this.utils.convertFormGroupNGBDateToJSDate(
             this.myForm.get('collectionDate').value
           );
+          }
 
-        if (this.myForm.get('collectionType').dirty)
+        if (this.myForm.get('collectionType').dirty) {
           collection['type'] = this.myForm.get('collectionType').value;
+        }
 
-        if (this.myForm.get('collectionAgency').dirty)
+        if (this.myForm.get('collectionAgency').dirty) {
           collection['agency'] = this.myForm.get('collectionAgency').value;
+        }
 
         // Add records first
         if (this.myForm.get('collectionRecords').dirty) {
@@ -522,7 +528,9 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe(async (isConfirmed: boolean) => {
-      if (!isConfirmed) return;
+      if (!isConfirmed) {
+        return;
+      }
 
       try {
         await this.factoryService.deleteCollection(this.collection._id);

@@ -136,6 +136,8 @@ export class MinesDetailComponent implements OnInit, OnDestroy {
   togglePublish(): void {
     this.canPublish = this.checkCanPublish();
     if (this.canPublish) {
+      // TODO: resolve this eslint error
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       this.isPublished ? this.unPublish() : this.publish();
     }
   }

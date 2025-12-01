@@ -91,7 +91,7 @@ export class HomeComponent implements OnInit {
     const typeLabels = [];
     // eslint-disable-next-line  prefer-const
     const typeData = [];
-    // eslint-disable-next-line prefer-for-of
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
     for (let i = 0; i < recordTypes.length; i++) {
       const keyName = this.getKeyName(recordTypes[i]);
       typeLabels.push(recordTypes[i][keyName]);

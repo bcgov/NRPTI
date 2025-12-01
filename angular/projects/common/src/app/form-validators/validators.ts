@@ -14,7 +14,7 @@ export const UrlValidator = (control: AbstractControl): { [key: string]: any } |
 
   try {
     // will throw an error if url is invalid
-    // eslint-disable-next-line no-unused-expression
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     new URL(control.value).href;
   } catch (error) {
     return { urlInvalid: true };

@@ -25,12 +25,9 @@ import { MapLayerInfoService } from '../../services/map-layer-info.service';
 import { SearchResult } from 'nrpti-angular-components';
 
 declare module 'leaflet' {
-  // eslint-disable-next-line interface-name
   export interface Marker<P = any> {
     dispositionId: number;
   }
-
-  // eslint-disable-next-line interface-name
   export interface RendererOptions {
     tolerance: number;
   }

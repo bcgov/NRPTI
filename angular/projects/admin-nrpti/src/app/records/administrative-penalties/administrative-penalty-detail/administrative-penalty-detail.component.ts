@@ -48,7 +48,7 @@ export class AdministrativePenaltyDetailComponent extends RecordDetailComponent 
       //       record.flavours.map(flavourRecord => RecordUtils.getRecordModelInstance(flavourRecord))) ||
       //     []
       // };
-      
+
       this.data = {}
       const inspection = new AdministrativePenalty(record);
       this.data._master = inspection;

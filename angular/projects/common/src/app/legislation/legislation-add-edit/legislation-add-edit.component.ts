@@ -49,9 +49,13 @@ export class LegislationAddEditComponent implements OnInit {
     this.debouncedFilterActsPicklist = this.utils.debounced(200, args => this.filterActsPicklist(args));
     this.debouncedFilterRegulationsPicklist = this.utils.debounced(200, args => this.filterRegulationsPicklist(args));
     this.actsMappedToRegulations = Picklists.getAllActs(this.factoryService);
-    this.allActs = Object.keys(this.actsMappedToRegulations).sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
+    this.allActs = Object.keys(
+      this.actsMappedToRegulations).sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })
+    );
     this.regulationsMappedToActs = Picklists.getLegislationRegulationsMappedToActs(this.factoryService);
-    this.allRegulations = Object.keys(this.regulationsMappedToActs).sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' }));
+    this.allRegulations = Object.keys(
+      this.regulationsMappedToActs).sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' })
+    );
   }
 
   ngOnInit(): void {

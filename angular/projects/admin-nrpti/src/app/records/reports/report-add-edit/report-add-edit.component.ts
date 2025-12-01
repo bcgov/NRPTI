@@ -377,7 +377,7 @@ export class ReportAddEditComponent implements OnInit, OnDestroy {
       report['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
 
-    // eslint-disable-next-line max-line-length
+    // eslint-disable-next-line max-len
     this.myForm.get('legislations').dirty && (report['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(report, this.factoryService);
 

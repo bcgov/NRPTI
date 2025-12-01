@@ -7,18 +7,21 @@
 // import { RecordDetailDirective } from '../../utils/record-detail.directive';
 // import { DatePipe } from '@angular/common';
 // import { CommonModule } from '../../../../../../common/src/app/common.module';
+// eslint-disable-next-line max-len
 // import { DocumentAuthenticatedReadOnlyComponent } from '../../../documents/document-authenticated-read-only/document-authenticated-read-only.component';
 // import { S3SignedUrlAnchorComponent } from '../../../documents/s3-signed-url-anchor/s3-signed-url-anchor.component';
 // import { FactoryService } from '../../../services/factory.service';
 // import { EventEmitter } from '@angular/core';
 
 // describe('AdministrativePenaltyDetailComponent', () => {
+// eslint-disable-next-line max-len
 //   const testBedHelper = new TestBedHelper<AdministrativePenaltyDetailComponent>(AdministrativePenaltyDetailComponent);
 
 //   // component constructor mocks
 //   const mockRouter = jasmine.createSpyObj('Router', ['navigate']);
 //   const mockActivatedRoute = new ActivatedRouteStub();
 
+// eslint-disable-next-line max-len
 //   const mockFactoryService = jasmine.createSpyObj('FactoryService', ['userInLngRole', 'userInBcmiRole', 'userInNrcedRole', 'userOnlyInLimitedRole', 'userInRole']);
 //   mockFactoryService.userInLngRole.and.returnValue(true);
 //   mockFactoryService.userInBcmiRole.and.returnValue(true);

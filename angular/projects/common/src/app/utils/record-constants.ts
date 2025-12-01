@@ -313,6 +313,7 @@ export class Picklists {
     const actDataService = new ActDataServiceNRPTI(factoryService);
     return actDataService ? actDataService.getAllRegulations() : [];
   }
+  /* eslint-disable jsdoc/check-indentation */
   /**
    * Returns an object containing a mapping of regulations to acts.
    *
@@ -320,13 +321,14 @@ export class Picklists {
    * {
    *   "Regulation1": ["actA", "actB", ...]
    *   "Regulation2": ["actC", ...]
-   *   ...
+   * ...
    * }
    *
    * @static
    * @memberof Picklists
    * @returns {{ [key: string]: string[] }}
    */
+  /* eslint-enable jsdoc/check-indentation */
   public static getLegislationRegulationsMappedToActs(factoryService: any): { [key: string]: string[] } {
     const actDataService = new ActDataServiceNRPTI(factoryService);
     return actDataService.getLegislationRegulationsMappedToActs(factoryService);
@@ -344,6 +346,7 @@ export class Picklists {
    * @static
    * @memberof Picklists
    */
+  /* eslint-disable max-len */
   public static readonly legislationDescriptions = {
     AdministrativePenalty: {
       'Agricultural Land Commission Act': {
@@ -4633,6 +4636,7 @@ export class Picklists {
     return this.traverseObject(this.legislationDescriptions, nonNullPathValues);
   };
 
+  /* eslint-disable jsdoc/check-indentation */
   /**
    * Recursively descend the object until the end of the paths is reached, at which point return the value of the
    * final path property. If unable to descend through all paths provided, return null.
@@ -4640,7 +4644,7 @@ export class Picklists {
    * Example:
    *
    * obj = {
-   *    a: {
+   *   a: {
    *      b: {
    *         c: '123'
    *      }
@@ -4660,6 +4664,7 @@ export class Picklists {
    * @param {string[]} paths properties to descend, in order, through the object.
    * @returns the value found at the end of the path, or null
    */
+  /* eslint-enable jsdoc/check-indentation */
   public static traverseObject = function (obj: object, paths: string[]) {
     if (!obj || !paths || !paths.length) {
       return null;
@@ -4686,3 +4691,4 @@ export class Picklists {
     return null;
   };
 }
+/* eslint-enable max-len */

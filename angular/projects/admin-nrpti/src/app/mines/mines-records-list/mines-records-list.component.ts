@@ -388,7 +388,7 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
   /**
    * Sets the intial recordState, or removes it from store if it is invalid
    *
-   *  @memberof MinesRecordListComponent
+   * @memberof MinesRecordListComponent
    */
   setOrRemoveRecordAddEditState() {
     const tempRecordAddEditState = this.storeService.getItem(StateIDs.recordAddEdit);
@@ -429,6 +429,8 @@ export class MinesRecordsListComponent implements OnInit, OnDestroy {
       default:
         break;
     }
+    // TODO: resolve this eslint error
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.rowSelectedCount > 0 ? (this.anySelectedRecords = true) : (this.anySelectedRecords = false);
   }
 

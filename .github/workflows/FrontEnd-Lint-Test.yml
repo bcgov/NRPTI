@@ -33,6 +33,18 @@ jobs:
         npm install
       env:
         CI: true
+    
+    # Disabling linting post-updates, not worth fixing
+    - name: lint
+      if: steps.filter.outputs.frontend == 'true'
+      run: |
+        cd angular
+        npx eslint 'projects/admin-nrpti/src/app/**/*.ts'
+        npx eslint 'projects/public-nrpti/src/app/**/*.ts'
+        npx eslint 'projects/common/src/app/**/*.ts'
+        npx eslint 'projects/global/src/lib/**/*.ts'
+      env:
+       CI: true
     - name: build, and test
       if: steps.filter.outputs.frontend == 'true'
       run: |

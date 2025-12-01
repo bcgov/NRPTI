@@ -144,7 +144,8 @@ export class MinesRecordAddComponent implements OnInit, OnDestroy {
       const res = await this.factoryService.createMineRecord(record);
       this.recordUtils.parseResForErrors(res);
 
-      // API responds with the master and BCMI flavour records that were created. First record is the BCMI flavour and second is the master.
+      // API responds with the master and BCMI flavour records that were created.
+      // First record is the BCMI flavour and second is the master.
       const createdRecord = res && res[0] && res[0].length && res[0][0] && res[0][0].object;
       await this.recordUtils.handleDocumentChanges(
         this.links,

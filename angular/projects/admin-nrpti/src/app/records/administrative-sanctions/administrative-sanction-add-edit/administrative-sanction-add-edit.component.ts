@@ -457,7 +457,7 @@ export class AdministrativeSanctionAddEditComponent implements OnInit, OnDestroy
       administrativeSanction['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
 
-    // eslint-disable-next-line max-line-length
+    // eslint-disable-next-line max-len
     this.myForm.get('legislations').dirty &&
       (administrativeSanction['legislation'] = this.parseLegislationsFormGroups());
 
