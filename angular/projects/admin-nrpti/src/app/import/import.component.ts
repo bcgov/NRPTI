@@ -168,8 +168,8 @@ export class ImportComponent implements OnInit, OnDestroy {
   }
 
   async startJob(dataSourceType: string) {
-    await firstValueFrom(this.factoryService
-      .startTask({
+    await firstValueFrom(
+      this.factoryService.startTask({
         dataSourceType: dataSourceType,
         taskType: 'import'
       })

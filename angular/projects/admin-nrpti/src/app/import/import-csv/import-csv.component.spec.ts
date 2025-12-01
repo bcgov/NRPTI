@@ -559,7 +559,7 @@ describe('ImportCSVComponent', () => {
       // mock component methods
       component.onFileDelete = jasmine.createSpy('onFileDelete');
 
-      await component.startJob()
+      await component.startJob();
 
       expect(factoryServiceSpy.startTask).toHaveBeenCalledTimes(1);
 

@@ -17,7 +17,8 @@ import { AgencyDataService } from '../../../../../../global/src/lib/utils/agency
 })
 export class MinesAdministrativePenaltyAddEditComponent
   extends AdministrativePenaltyAddEditComponent
-  implements OnInit {
+  implements OnInit
+{
   public componentTitle = 'BCMI Administrative Penalty Record';
   public defaultAgency = 'AGENCY_EMLI';
   public defaultAuthor = 'BC Government';

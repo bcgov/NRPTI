@@ -14,14 +14,12 @@ import { Utils } from '../../utils/utils';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-/* eslint-disable @angular-eslint/prefer-standalone */
 @Component({
   standalone: false,
   selector: 'lib-date-picker',
   templateUrl: './date-picker.component.html',
   styleUrls: ['./date-picker.component.scss']
 })
-/* eslint-enable @angular-eslint/prefer-standalone */
 export class DatePickerComponent implements OnInit, OnChanges, OnDestroy {
   @Input() control: FormControl;
   @Input() isValidate = false;

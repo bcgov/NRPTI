@@ -421,7 +421,6 @@ export class OrderAddEditComponent implements OnInit, OnDestroy {
     this.myForm.controls.outcomeDescription.dirty &&
       (order['outcomeDescription'] = this.myForm.controls.outcomeDescription.value);
 
-    // eslint-disable-next-line max-len
     this.myForm.get('legislations').dirty && (order['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(order, this.factoryService);
 

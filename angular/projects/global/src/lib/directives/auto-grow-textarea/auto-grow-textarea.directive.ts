@@ -13,13 +13,10 @@ import { Utils } from '../../utils/utils';
  * @implements {OnInit}
  */
 
-/* eslint-disable @angular-eslint/prefer-standalone */
 @Directive({
   standalone: false,
   selector: '[libAutoGrowTextArea]'
 })
-/* eslint-enable @angular-eslint/prefer-standalone */
-
 export class AutoGrowTextAreaDirective implements OnInit {
   @Input() minRows = 1;
   @Input() maxRows = 5;

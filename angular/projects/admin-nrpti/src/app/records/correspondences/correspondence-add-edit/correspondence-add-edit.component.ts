@@ -377,7 +377,6 @@ export class CorrespondenceAddEditComponent implements OnInit, OnDestroy {
       correspondence['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
 
-    // eslint-disable-next-line max-len
     this.myForm.get('legislations').dirty && (correspondence['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(correspondence, this.factoryService);
     // nrced flavour

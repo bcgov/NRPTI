@@ -218,7 +218,7 @@ export class MinesRecordsEditComponent implements OnInit {
           return of(null);
         })
       )
-      .subscribe(async (isConfirmed) => {
+      .subscribe(async isConfirmed => {
         if (!isConfirmed) {
           return;
         }

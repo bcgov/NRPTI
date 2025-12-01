@@ -59,10 +59,10 @@ xdescribe('MinesRecordsListResolver', () => {
 
         factoryServiceSpy.getRecords.calls.reset();
         factoryServiceSpy.getRecords.and.returnValue(of([]));
-        tableTemplateUtilsSpy
-          .updateTableObjectWithUrlParams.and.returnValue(
-            { currentPage: 1, pageSize: 25 } as Partial<TableObject> as TableObject
-          );
+        tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({
+          currentPage: 1,
+          pageSize: 25
+        } as Partial<TableObject> as TableObject);
 
         const minesRecordsListResolver = new MinesRecordsListResolver(factoryServiceSpy, tableTemplateUtilsSpy);
 
@@ -132,10 +132,10 @@ xdescribe('MinesRecordsListResolver', () => {
 
         factoryServiceSpy.getRecords.calls.reset();
         factoryServiceSpy.getRecords.and.returnValue(of([]));
-        tableTemplateUtilsSpy
-          .updateTableObjectWithUrlParams.and.returnValue(
-            { currentPage: 1, pageSize: 25 } as Partial<TableObject> as TableObject
-          );
+        tableTemplateUtilsSpy.updateTableObjectWithUrlParams.and.returnValue({
+          currentPage: 1,
+          pageSize: 25
+        } as Partial<TableObject> as TableObject);
 
         const minesRecordsListResolver = new MinesRecordsListResolver(factoryServiceSpy, tableTemplateUtilsSpy);
 

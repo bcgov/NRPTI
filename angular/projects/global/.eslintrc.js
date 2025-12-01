@@ -9,7 +9,10 @@ module.exports = {
         project: ["projects/global/tsconfig.lib.json"]
       },
       plugins: ["@typescript-eslint", "@angular-eslint"],
-      extends: ["plugin:@angular-eslint/recommended"],
+      extends: [
+        "plugin:@angular-eslint/recommended",
+        "prettier"
+      ],
       rules: {
         "@angular-eslint/directive-selector": [
           "error",
@@ -29,6 +32,12 @@ module.exports = {
         project: null
       },
       rules: {}
-    }
+    },
+    {
+      files: ["*.component.ts", "*.directive.ts", "*.pipe.ts"],
+      rules: {
+        "@angular-eslint/prefer-standalone": "off"
+      }
+    },
   ]
 };

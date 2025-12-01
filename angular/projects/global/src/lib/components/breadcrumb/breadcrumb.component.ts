@@ -8,14 +8,12 @@ export interface IBreadcrumb {
   url: string;
 }
 
-/* eslint-disable @angular-eslint/prefer-standalone */
 @Component({
   standalone: false,
   selector: 'lib-breadcrumb',
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.scss']
 })
-/* eslint-enablep @angular-eslint/prefer-standalone */
 export class BreadcrumbComponent implements OnInit {
   @Output() navigateBreadcrumb: EventEmitter<any> = new EventEmitter();
 

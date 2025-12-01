@@ -1,4 +1,4 @@
-// TODO: Jasmine requires atleast one it() test 
+// TODO: Jasmine requires atleast one it() test
 // describe('TableTemplateUtils', () => {
 //   const mockPlatformLocation = jasmine.createSpyObj('PlatformLocation', ['getBaseHrefFromDOM']);
 //   mockPlatformLocation.getBaseHrefFromDOM.and.returnValue('http://test.com/');

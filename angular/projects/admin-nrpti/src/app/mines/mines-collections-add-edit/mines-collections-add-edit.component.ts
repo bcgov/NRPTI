@@ -408,7 +408,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
           return of(null);
         })
       )
-      .subscribe(async (isConfirmed) => {
+      .subscribe(async isConfirmed => {
         if (!isConfirmed) {
           return;
         }
@@ -422,10 +422,8 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
         }
 
         if (this.myForm.get('collectionDate').dirty) {
-          collection['date'] = this.utils.convertFormGroupNGBDateToJSDate(
-            this.myForm.get('collectionDate').value
-          );
-          }
+          collection['date'] = this.utils.convertFormGroupNGBDateToJSDate(this.myForm.get('collectionDate').value);
+        }
 
         if (this.myForm.get('collectionType').dirty) {
           collection['type'] = this.myForm.get('collectionType').value;
@@ -453,11 +451,11 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
               this.factoryService
             );
 
-            const updatedRecordList = this.myForm.get('collectionRecords').value.map((item) =>
-              item.record.recordName === createdRecord[0].recordName
-                ? { record: createdRecord[0] }
-                : item
-            );
+            const updatedRecordList = this.myForm
+              .get('collectionRecords')
+              .value.map(item =>
+                item.record.recordName === createdRecord[0].recordName ? { record: createdRecord[0] } : item
+              );
 
             this.myForm.get('collectionRecords').patchValue(updatedRecordList);
           }
@@ -473,13 +471,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
             alert('Failed to create collection.');
           } else {
             this.loadingScreenService.setLoadingState(false, 'main');
-            this.router.navigate([
-              'mines',
-              this.collection.project,
-              'collections',
-              this.collection._id,
-              'detail'
-            ]);
+            this.router.navigate(['mines', this.collection.project, 'collections', this.collection._id, 'detail']);
           }
         } else {
           collection['project'] = this.route.snapshot.paramMap.get('mineId');
@@ -489,13 +481,7 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
             alert('Failed to create collection.');
           } else {
             this.loadingScreenService.setLoadingState(false, 'main');
-            this.router.navigate([
-              'mines',
-              res.project,
-              'collections',
-              res._id,
-              'detail'
-            ]);
+            this.router.navigate(['mines', res.project, 'collections', res._id, 'detail']);
           }
         }
       });
@@ -507,41 +493,40 @@ export class MinesCollectionsAddEditComponent implements OnInit, OnDestroy {
    * @memberof MinesCollectionsTableRowComponent
    */
   deleteCollection() {
-  // Open the modal
-  this.modalRef = this.modalService.show(ConfirmComponent, {
-    initialState: {
-      title: 'Confirm Deletion',
-      message: 'Do you really want to delete this Collection?',
-      okOnly: false
-    },
-    class: 'modal-md',        // medium size modal
-    ignoreBackdropClick: true // equivalent to disableClose
-  });
-
-  // Subscribe to the result emitted by the modal, with RxJS safety
-  this.modalRef.content.onClose
-    ?.pipe(
-      takeUntil(this.ngUnsubscribe), // unsubscribe automatically when component is destroyed
-      catchError(err => {
-        alert('Failed to delete collection.');
-        return of(null); // return a fallback value
-      })
-    )
-    .subscribe(async (isConfirmed: boolean) => {
-      if (!isConfirmed) {
-        return;
-      }
-
-      try {
-        await this.factoryService.deleteCollection(this.collection._id);
-        // Navigate after deletion
-        this.router.navigate(['mines', this.collection.project, 'collections']);
-      } catch (e) {
-        alert('Could not delete Collection.');
-      }
+    // Open the modal
+    this.modalRef = this.modalService.show(ConfirmComponent, {
+      initialState: {
+        title: 'Confirm Deletion',
+        message: 'Do you really want to delete this Collection?',
+        okOnly: false
+      },
+      class: 'modal-md', // medium size modal
+      ignoreBackdropClick: true // equivalent to disableClose
     });
-}
 
+    // Subscribe to the result emitted by the modal, with RxJS safety
+    this.modalRef.content.onClose
+      ?.pipe(
+        takeUntil(this.ngUnsubscribe), // unsubscribe automatically when component is destroyed
+        catchError(err => {
+          alert('Failed to delete collection.');
+          return of(null); // return a fallback value
+        })
+      )
+      .subscribe(async (isConfirmed: boolean) => {
+        if (!isConfirmed) {
+          return;
+        }
+
+        try {
+          await this.factoryService.deleteCollection(this.collection._id);
+          // Navigate after deletion
+          this.router.navigate(['mines', this.collection.project, 'collections']);
+        } catch (e) {
+          alert('Could not delete Collection.');
+        }
+      });
+  }
 
   /**
    * Cancel editing.

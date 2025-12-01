@@ -23,14 +23,12 @@ export interface IPageSizePickerOption {
   value: number;
 }
 
-/* eslint-disable @angular-eslint/prefer-standalone */
 @Component({
   standalone: false,
   selector: 'lib-page-size-picker',
   templateUrl: './page-size-picker.component.html',
   styleUrls: ['./page-size-picker.component.scss']
 })
-/* eslint-enable @angular-eslint/prefer-standalone */
 export class PageSizePickerComponent {
   @Input() isDisabled = false;
   @Input() isHidden = false;

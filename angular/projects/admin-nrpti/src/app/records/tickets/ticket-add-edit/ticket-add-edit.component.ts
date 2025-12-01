@@ -454,7 +454,6 @@ export class TicketAddEditComponent implements OnInit, OnDestroy {
       ticket['centroid'] = [this.myForm.controls.longitude.value, this.myForm.controls.latitude.value];
     }
 
-    // eslint-disable-next-line max-len
     this.myForm.get('legislations').dirty && (ticket['legislation'] = this.parseLegislationsFormGroups());
     this.recordUtils.replaceActTitleWithCode(ticket, this.factoryService);
     this.myForm.get('penalties').dirty && (ticket['penalties'] = this.parsePenaltiesFormGroups());
