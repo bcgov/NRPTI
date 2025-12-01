@@ -50,15 +50,15 @@ export class MinesAdministrativePenaltyDetailComponent extends AdministrativePen
       //     []
       // };
 
-      this.data = {}
+      this.data = {};
       const inspection = new AdministrativePenalty(record);
       this.data._master = inspection;
       this.data.flavourData = [];
       if (record?.flavours.length > 0) {
         const data = record.flavours.map(flavourRecord => {
           return this.data.flavourData.push(RecordUtils.getRecordModelInstance(flavourRecord));
-        })
-        this.data.flavourData.push(data)
+        });
+        this.data.flavourData.push(data);
       }
 
       const mines = this.storeService.getItem('mines') || [];

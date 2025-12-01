@@ -49,15 +49,15 @@ export class OrderDetailComponent extends RecordDetailComponent implements OnIni
       //     []
       // };
 
-      this.data = {}
+      this.data = {};
       const inspection = new Order(record);
       this.data._master = inspection;
       this.data.flavourData = [];
       if (record?.flavours.length > 0) {
         const data = record.flavours.map(flavourRecord => {
           return this.data.flavourData.push(RecordUtils.getRecordModelInstance(flavourRecord));
-        })
-        this.data.flavourData.push(data)
+        });
+        this.data.flavourData.push(data);
       }
 
       this.populateTextFields();

@@ -55,7 +55,7 @@ export class PermitAddEditComponent implements OnInit, OnDestroy {
     private utils: Utils,
     private _changeDetectionRef: ChangeDetectorRef
   ) {
-     this.agencies = Picklists.getAgencyCodes(this.factoryService);
+    this.agencies = Picklists.getAgencyCodes(this.factoryService);
   }
 
   ngOnInit() {

@@ -32,6 +32,12 @@ module.exports = {
         project: null
       },
       rules: {}
-    }
+    },
+    {
+      files: ["*.component.ts", "*.directive.ts", "*.pipe.ts"],
+      rules: {
+        "@angular-eslint/prefer-standalone": "off"
+      }
+    },
   ]
 };

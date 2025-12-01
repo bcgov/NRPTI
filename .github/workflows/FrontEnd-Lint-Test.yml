@@ -43,6 +43,7 @@ jobs:
         npx eslint 'projects/public-nrpti/src/app/**/*.ts'
         npx eslint 'projects/common/src/app/**/*.ts'
         npx eslint 'projects/global/src/lib/**/*.ts'
+        npx prettier "projects/**/*.ts" --check
       env:
        CI: true
     - name: build, and test

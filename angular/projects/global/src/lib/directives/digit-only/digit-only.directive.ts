@@ -7,12 +7,10 @@ import { Directive, ElementRef, HostListener, Input } from '@angular/core';
  * @class DigitOnlyDirective
  */
 
-/* eslint-disable @angular-eslint/prefer-standalone */
 @Directive({
   standalone: false,
   selector: '[libDigitOnly]'
 })
-/* eslint-enable @angular-eslint/prefer-standalone */
 export class DigitOnlyDirective {
   /**
    * Enable or disable this directive.
