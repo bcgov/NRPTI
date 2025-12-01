@@ -17,10 +17,12 @@ import { InjectComponentService } from '../../services/inject-component.service'
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+/* eslint-disable @angular-eslint/prefer-standalone */
 @Directive({
   standalone: false,
   selector: '[libTableRow]'
 })
+/* eslint-enable @angular-eslint/prefer-standalone */
 export class TableRowDirective implements OnInit, OnChanges, OnDestroy {
   @Input('libTableRow') rowObject: IRowObject;
   @Input() tableData: TableObject;

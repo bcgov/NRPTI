@@ -13,12 +13,14 @@ import {
 import { TableObject } from './table-object';
 import { ITableMessage } from './table-row-component';
 
+/* eslint-disable @angular-eslint/prefer-standalone */
 @Component({
   standalone: false,
   selector: 'lib-table-template',
   templateUrl: './table-template.component.html',
   styleUrls: ['./table-template.component.scss']
 })
+/* eslint-enable @angular-eslint/prefer-standalone */
 export class TableTemplateComponent implements OnInit, OnChanges, OnDestroy {
   @Input() data: TableObject;
 
@@ -27,6 +29,7 @@ export class TableTemplateComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(public injector: Injector) {}
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit() {}
 
   ngOnChanges(changes: SimpleChanges) {
@@ -60,5 +63,6 @@ export class TableTemplateComponent implements OnInit, OnChanges, OnDestroy {
     this.messageOut.emit({ label: 'pageSize', data: pageSize });
   }
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnDestroy() {}
 }

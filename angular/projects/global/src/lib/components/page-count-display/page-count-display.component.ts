@@ -1,11 +1,13 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
+/* eslint-disable @angular-eslint/prefer-standalone */
 @Component({
   standalone: false,
   selector: 'lib-page-count-display',
   templateUrl: './page-count-display.component.html',
   styleUrls: ['./page-count-display.component.scss']
 })
+/* eslint-enable @angular-eslint/prefer-standalone */
 export class PageCountDisplayComponent implements OnChanges {
   @Input() isHidden = false;
   @Input() currentPageNum = 1;
