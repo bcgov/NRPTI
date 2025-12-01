@@ -42,7 +42,7 @@ jobs:
         npx eslint 'projects/admin-nrpti/src/app/**/*.ts'
         npx eslint 'projects/public-nrpti/src/app/**/*.ts'
         npx eslint 'projects/common/src/app/**/*.ts'
-        npx eslint 'projects/global/src/app/**/*.ts'
+        npx eslint 'projects/global/src/lib/**/*.ts'
       env:
        CI: true
     - name: build, and test
