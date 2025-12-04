@@ -27,7 +27,7 @@ const CertificateAmendmentPost = require('../post/certificate-amendment');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.editRecord = async function(args, res, next, incomingObj, overridePutParams = null) {
+exports.editRecord = async function (args, res, next, incomingObj, overridePutParams = null) {
   const flavourFunctions = {
     CertificateAmendmentBCMI: this.editBCMI,
     CertificateAmendmentLNG: this.editLNG
@@ -69,7 +69,7 @@ exports.editRecord = async function(args, res, next, incomingObj, overridePutPar
  * @param {*} incomingObj see example
  * @returns edited master certificate record
  */
-exports.editMaster = function(args, res, next, incomingObj, flavourIds) {
+exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
   delete incomingObj._id;
 
   // Reject any changes to master permissions
@@ -124,7 +124,7 @@ exports.editMaster = function(args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns edited BCMI certificate amendment record
  */
-exports.editBCMI = function(args, res, next, incomingObj) {
+exports.editBCMI = function (args, res, next, incomingObj) {
   delete incomingObj._id;
 
   // Reject any changes to permissions
@@ -180,7 +180,7 @@ exports.editBCMI = function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns edited BCMI certificate amendment record
  */
-exports.editLNG = function(args, res, next, incomingObj) {
+exports.editLNG = function (args, res, next, incomingObj) {
   delete incomingObj._id;
 
   // Reject any changes to permissions

@@ -28,7 +28,7 @@ const utils = require('../../utils/constants/misc');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createItem = async function(args, res, next, incomingObj) {
+exports.createItem = async function (args, res, next, incomingObj) {
   const flavourFunctions = {
     DamSafetyInspectionBCMI: this.createBCMI,
     DamSafetyInspectionNRCED: this.createNRCED
@@ -61,7 +61,7 @@ exports.createItem = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master annual report record
  */
-exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let DamSafetyInspection = mongoose.model('DamSafetyInspection');
   let damSafetyInspection = new DamSafetyInspection();
 
@@ -161,7 +161,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created bcmi DamSafetyInspection record
  */
-exports.createBCMI = function(args, res, next, incomingObj) {
+exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (
     !userHasValidRoles(
@@ -272,7 +272,7 @@ exports.createBCMI = function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced DamSafetyInspection record
  */
-exports.createNRCED = function(args, res, next, incomingObj) {
+exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (
     !userHasValidRoles(

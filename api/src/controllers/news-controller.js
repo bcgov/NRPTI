@@ -8,11 +8,11 @@ const utils = require('../utils/constants/misc');
 const mongoose = require('mongoose');
 const ObjectID = require('mongodb').ObjectID;
 
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedGet = async function(args, res, next) {
+exports.protectedGet = async function (args, res, next) {
   let newsId = null;
   if (args.swagger.params.newsId && args.swagger.params.newsId.value) {
     newsId = args.swagger.params.newsId.value;
@@ -35,7 +35,7 @@ exports.protectedGet = async function(args, res, next) {
   next();
 };
 
-exports.protectedPut = async function(args, res, next) {
+exports.protectedPut = async function (args, res, next) {
   let newsId = null;
   if (args.swagger.params.newsId && args.swagger.params.newsId.value) {
     newsId = args.swagger.params.newsId.value;
@@ -78,7 +78,7 @@ exports.protectedPut = async function(args, res, next) {
   next();
 };
 
-exports.protectedPost = async function(args, res, next) {
+exports.protectedPost = async function (args, res, next) {
   let incomingObj = {};
   if (args.swagger.params.news && args.swagger.params.news.value) {
     incomingObj = args.swagger.params.news.value;
@@ -117,7 +117,7 @@ exports.protectedPost = async function(args, res, next) {
   next();
 };
 
-exports.protectedDelete = async function(args, res, next) {
+exports.protectedDelete = async function (args, res, next) {
   let newsId = null;
   if (args.swagger.params.newsId && args.swagger.params.newsId.value) {
     newsId = args.swagger.params.newsId.value;

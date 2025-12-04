@@ -112,7 +112,7 @@ const ACCEPTED_DATA_TYPES = [
  * @param {*} res
  * @param {*} next
  */
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
 
@@ -124,7 +124,7 @@ exports.protectedOptions = function(args, res, next) {
  * @param {*} next
  * @returns
  */
-exports.protectedGet = function(args, res, next) {
+exports.protectedGet = function (args, res, next) {
   return queryActions.sendResponse(res, 501);
 };
 
@@ -171,7 +171,7 @@ exports.protectedGet = function(args, res, next) {
  *   ...
  * }
  */
-exports.protectedPost = async function(args, res, next) {
+exports.protectedPost = async function (args, res, next) {
   let promises = [];
 
   if (args.swagger.params.data && args.swagger.params.data.value) {
@@ -211,7 +211,7 @@ exports.protectedPost = async function(args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedPut = async function(args, res, next) {
+exports.protectedPut = async function (args, res, next) {
   let promises = [];
 
   if (args.swagger.params.data && args.swagger.params.data.value) {
@@ -241,7 +241,7 @@ exports.protectedPut = async function(args, res, next) {
   next();
 };
 
-exports.protectedDelete = async function(args, res, next) {
+exports.protectedDelete = async function (args, res, next) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const collection = db.collection('nrpti');
 
@@ -294,7 +294,7 @@ exports.protectedDelete = async function(args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedPublish = async function(args, res, next) {
+exports.protectedPublish = async function (args, res, next) {
   try {
     const recordData = args.swagger.params.record.value;
     defaultLog.info(`protectedPublish - recordId: ${recordData._id}`);
@@ -366,7 +366,7 @@ exports.protectedPublish = async function(args, res, next) {
  * @param {*} res
  * @param {*} next
  */
-exports.protectedUnPublish = async function(args, res, next) {
+exports.protectedUnPublish = async function (args, res, next) {
   try {
     const recordData = args.swagger.params.record.value;
     defaultLog.info(`protectedUnPublish - recordId: ${recordData._id}`);
@@ -437,11 +437,11 @@ exports.protectedUnPublish = async function(args, res, next) {
  * @param {*} next
  * @returns
  */
-exports.publicGet = function(args, res, next) {
+exports.publicGet = function (args, res, next) {
   return queryActions.sendResponse(res, 501);
 };
 
-const processPostRequest = async function(args, res, next, property, data) {
+const processPostRequest = async function (args, res, next, property, data) {
   if (data.length === 0) {
     return {
       status: 'success',
@@ -481,7 +481,7 @@ const processPostRequest = async function(args, res, next, property, data) {
 
 exports.processPostRequest = processPostRequest;
 
-const processPutRequest = async function(args, res, next, property, data, overridePutParams = null) {
+const processPutRequest = async function (args, res, next, property, data, overridePutParams = null) {
   if (data.length === 0) {
     return {
       status: 'success',

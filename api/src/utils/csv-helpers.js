@@ -11,7 +11,7 @@ const defaultLog = require('./logger')('csv-import');
  * @param {*} csvString
  * @returns {string[][]}
  */
-exports.getCsvRowsFromString = async function(csvString) {
+exports.getCsvRowsFromString = async function (csvString) {
   if (!csvString) {
     return null;
   }
@@ -43,7 +43,7 @@ exports.getCsvRowsFromString = async function(csvString) {
  *
  * @returns
  */
-exports.readAndParseCsvFile = async function(csvStream, dataSourceType, recordType) {
+exports.readAndParseCsvFile = async function (csvStream, dataSourceType, recordType) {
   // parse csv into an array of key-value pairs (header-value)
   const validatedCsvRows = await validateCsvFile(csvStream, dataSourceType, recordType);
 

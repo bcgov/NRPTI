@@ -21,7 +21,7 @@ const NRIS_FLNRO_KEY = 'fme-exports/NRIS-FLNRO-Inspections.csv';
  * @param {string} recordType record type to target, Eg. Inspection
  * @returns {string[]}
  */
-exports.getAndParseFmeCsv = async function(dataSourceType, recordType) {
+exports.getAndParseFmeCsv = async function (dataSourceType, recordType) {
   const s3Key = getCsvKey(dataSourceType, recordType);
   if (!s3Key) {
     defaultLog.info(`No S3 Key found for ${dataSourceType} - ${recordType}`);

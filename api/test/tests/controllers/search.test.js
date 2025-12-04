@@ -34,8 +34,8 @@ describe('Search Controller Testing', () => {
       {}
     );
     generated_underage = await generate_helper.generateSingleFactory('Order', 2, {}, { genUnderAge: true });
-    (generated_ofAge = await generate_helper.generateSingleFactory('Order', 2, {}, { genAdult: true })),
-      (generated_Company = await generate_helper.generateSingleFactory('Order', 2, {}, { genCompany: true }));
+    ((generated_ofAge = await generate_helper.generateSingleFactory('Order', 2, {}, { genAdult: true })),
+      (generated_Company = await generate_helper.generateSingleFactory('Order', 2, {}, { genCompany: true })));
   });
 
   test('Invalid ObjectId returns 400 error', async () => {

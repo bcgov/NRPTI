@@ -2,7 +2,7 @@ let mongoose = require('mongoose');
 const redactedRecordSubset = require('../../materialized_views/search/redactedRecordSubset');
 const Constants = require('./constants/misc');
 
-let genSchema = function(name, definition) {
+let genSchema = function (name, definition) {
   //
   // ensure
   //
@@ -61,7 +61,7 @@ let genSchema = function(name, definition) {
   if (pre) {
     schema.pre('save', pre);
   }
-  schema.pre('findOneAndUpdate', function() {
+  schema.pre('findOneAndUpdate', function () {
     const update = this.getUpdate();
     if (update.__v != null) {
       delete update.__v;
@@ -104,13 +104,13 @@ let genSchema = function(name, definition) {
     }
   }
   if (indexes && indexes.length) {
-    indexes.forEach(function(index) {
+    indexes.forEach(function (index) {
       schema.index(index.fields, index.options);
     });
   }
   if (virtuals) {
     // http://mongoosejs.com/docs/2.7.x/docs/virtuals.html
-    virtuals.forEach(function(virtual) {
+    virtuals.forEach(function (virtual) {
       let v = schema.virtual(virtual.name);
       if (virtual.get) v.get(virtual.get);
       if (virtual.set) v.set(virtual.set);
@@ -120,7 +120,7 @@ let genSchema = function(name, definition) {
   return schema;
 };
 
-module.exports = function(name, definition, collection) {
+module.exports = function (name, definition, collection) {
   if (!name || !definition || !collection) {
     console.error('No name, definition, or collection supplied when building schema');
     return;

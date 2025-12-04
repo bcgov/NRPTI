@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const BusinessLogicManager = require('./business-logic-manager');
 
-exports.validateObjectAgainstModel = function(mongooseModel, incomingObj) {
+exports.validateObjectAgainstModel = function (mongooseModel, incomingObj) {
   if (!incomingObj) {
     return;
   }
@@ -21,7 +21,7 @@ exports.validateObjectAgainstModel = function(mongooseModel, incomingObj) {
  * @param {*} validObj source of truth object to compare against
  * @returns a sanitized object that only contains fields that are also found in validObj
  */
-const sanitizeObject = function(objToTest, validObj) {
+const sanitizeObject = function (objToTest, validObj) {
   let sanitizedObj = {};
 
   let objToTestKeys = Object.keys(objToTest);
@@ -56,7 +56,7 @@ function isObject(item) {
  * @param {string} id master _id
  * @returns {object} master object with certain master-specific fields removed (like _id).
  */
-exports.fetchMasterForCreateFlavour = async function(schema, id, auth_payload) {
+exports.fetchMasterForCreateFlavour = async function (schema, id, auth_payload) {
   const Model = mongoose.model(schema);
   const masterRecord = await Model.findOne({ _schemaName: schema, _id: id, write: { $in: auth_payload.client_roles } });
 
@@ -75,7 +75,7 @@ exports.fetchMasterForCreateFlavour = async function(schema, id, auth_payload) {
   return masterObj;
 };
 
-exports.fetchMasterForReference = async function(schema, id) {
+exports.fetchMasterForReference = async function (schema, id) {
   const Model = mongoose.model(schema);
 
   const masterRecord = await Model.findOne({ _schemaName: schema, _id: id }).populate('_flavourRecords');
@@ -107,7 +107,7 @@ exports.fetchMasterForReference = async function(schema, id) {
  * @param {*} prefix prefix to add to the start of the flattened path (default: '')
  * @returns a flattened copy of the original obj
  */
-exports.getDotNotation = function(obj, target, prefix) {
+exports.getDotNotation = function (obj, target, prefix) {
   if (!obj) {
     return obj;
   }
@@ -126,7 +126,7 @@ exports.getDotNotation = function(obj, target, prefix) {
   return target;
 };
 
-exports.editRecordWithFlavours = async function(
+exports.editRecordWithFlavours = async function (
   args,
   res,
   next,

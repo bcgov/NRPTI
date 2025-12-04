@@ -35,7 +35,7 @@ function isEmpty(obj) {
  * @param {string} [comparisonOperator='$eq'] mongo comparison operator ('$eq', '$ne', '$in')
  * @returns {object[]} array of objects
  */
-let generateExpArray = async function(field, logicalOperator = '$or', comparisonOperator = '$eq') {
+let generateExpArray = async function (field, logicalOperator = '$or', comparisonOperator = '$eq') {
   if (!field) {
     return;
   }
@@ -125,7 +125,7 @@ exports.generateExpArray = generateExpArray;
  * @param {*} comparisonOperator mongo comparison operator ('$eq', '$ne', '$in')
  * @returns {object}
  */
-const getArrayExp = function(item, entry, logicalOperator, comparisonOperator) {
+const getArrayExp = function (item, entry, logicalOperator, comparisonOperator) {
   if (!item || !entry || !entry.length) {
     // Invalid
     return {};
@@ -139,7 +139,7 @@ const getArrayExp = function(item, entry, logicalOperator, comparisonOperator) {
 };
 exports.getArrayExp = getArrayExp;
 
-const getDateExp = function(item, entry, prefix = '') {
+const getDateExp = function (item, entry, prefix = '') {
   // Pluck the variable off the string because this is a date object.  It should
   // always start with either dateRangeFromFilter or dateRangeFromFilter
   const dateRangeFromSearchString = prefix + 'dateRangeFromFilter';
@@ -160,7 +160,7 @@ const getDateExp = function(item, entry, prefix = '') {
 };
 exports.getDateExp = getDateExp;
 
-const getHasDocumentsExp = function(entry) {
+const getHasDocumentsExp = function (entry) {
   // We're checking if there are docs in the record or not.
   if (entry === 'true') {
     return { $and: [{ documents: { $exists: true } }, { documents: { $not: { $size: 0 } } }] };
@@ -173,7 +173,7 @@ const getHasDocumentsExp = function(entry) {
 };
 exports.getHasDocumentsExp = getHasDocumentsExp;
 
-const getHasRecordsExp = function(entry) {
+const getHasRecordsExp = function (entry) {
   // We're checking if there are docs in the record or not.
   if (entry === 'true') {
     return { $and: [{ records: { $exists: true } }, { records: { $not: { $size: 0 } } }] };
@@ -194,7 +194,7 @@ exports.getHasRecordsExp = getHasRecordsExp;
  * @param {string} comparisonOperator mongo comparison operator ('$eq', '$ne', '$in')
  * @returns {object}
  */
-const getConvertedValue = function(item, entry, comparisonOperator) {
+const getConvertedValue = function (item, entry, comparisonOperator) {
   if (!item || !comparisonOperator) {
     return {};
   }
@@ -203,7 +203,7 @@ const getConvertedValue = function(item, entry, comparisonOperator) {
 };
 exports.getConvertedValue = getConvertedValue;
 
-const convertValue = function(item) {
+const convertValue = function (item) {
   if (isNaN(item) || item === null) {
     if (mongoose.Types.ObjectId.isValid(item) && mongoose.Types.ObjectId(item).toString() === item) {
       defaultLog.info('objectid', item);
@@ -229,7 +229,7 @@ const convertValue = function(item) {
   }
 };
 
-const handleDateStartItem = function(field, entry) {
+const handleDateStartItem = function (field, entry) {
   let date = new Date(entry);
 
   // Validate: valid date?
@@ -239,7 +239,7 @@ const handleDateStartItem = function(field, entry) {
   }
 };
 
-const handleDateEndItem = function(field, entry) {
+const handleDateEndItem = function (field, entry) {
   let date = new Date(entry);
 
   // Validate: valid date?
@@ -257,7 +257,7 @@ const handleDateEndItem = function(field, entry) {
  * @param {*} fieldName name of the array field to count.
  * @returns {object} aggregation pipeline stage
  */
-const addArrayCountField = function(fieldName) {
+const addArrayCountField = function (fieldName) {
   if (!fieldName) {
     return {};
   }
@@ -280,7 +280,7 @@ exports.addArrayCountField = addArrayCountField;
 // of any individual where the birthdate is null or the individual
 // is less then 19 years old. First step to do this is calculate their
 // age
-const issuedToRedaction = function(roles) {
+const issuedToRedaction = function (roles) {
   // Skip redaction if the record.write array matches the limited admin user's role.
   // Code would only reach this point if the user doesn't have any of the ApplicationAdminRoles.
   // Only skip redact if the current user's role matches what's on the records.write.  If for
@@ -376,7 +376,7 @@ const issuedToRedaction = function(roles) {
   ];
 };
 
-let searchCollection = async function(
+let searchCollection = async function (
   roles,
   keywords,
   schemaName,
@@ -689,7 +689,7 @@ let searchCollection = async function(
   return data;
 };
 
-exports.publicGet = async function(args, res, next) {
+exports.publicGet = async function (args, res, next) {
   // if we are doing a public record search, we should use the redacted subset to avoid data leaks
   // this subset cleans the data from any non publicly available information
   args.swagger.params.subset.value = ['redactedRecord'];
@@ -715,12 +715,12 @@ exports.publicGet = async function(args, res, next) {
   executeQuery(args, res, next);
 };
 
-exports.protectedGet = function(args, res, next) {
+exports.protectedGet = function (args, res, next) {
   executeQuery(args, res, next);
 };
 
 // Generates the main match query
-const generateMatchesForAggregation = async function(and, or, nor, searchProperties, properties, schemaName, _in) {
+const generateMatchesForAggregation = async function (and, or, nor, searchProperties, properties, schemaName, _in) {
   const andExpArray = (await generateExpArray(and)) || [];
   defaultLog.debug('andExpArray:', andExpArray);
 
@@ -772,7 +772,7 @@ const generateMatchesForAggregation = async function(and, or, nor, searchPropert
   return match;
 };
 
-const executeQuery = async function(args, res, next) {
+const executeQuery = async function (args, res, next) {
   if (!args.swagger.params.dataset.value) {
     defaultLog.info('Bad Request');
     next();
@@ -1186,6 +1186,6 @@ const executeQuery = async function(args, res, next) {
   next();
 };
 
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };

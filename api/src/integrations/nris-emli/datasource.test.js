@@ -242,9 +242,7 @@ describe('NrisDataSource', () => {
           assessmentSubStatus: assessmentSubStatus,
           inspection: {
             inspectionType: ['Health and Safety'],
-            inspctReportSentDate: moment()
-              .subtract(43, 'days')
-              .format(),
+            inspctReportSentDate: moment().subtract(43, 'days').format(),
             inspectionSubType: 'Mine Inspection'
           }
         };
@@ -262,9 +260,7 @@ describe('NrisDataSource', () => {
         assessmentSubStatus: 'Closed',
         inspection: {
           inspectionType: ['Health and Safety'],
-          inspctReportSentDate: moment()
-            .subtract(43, 'days')
-            .format(),
+          inspctReportSentDate: moment().subtract(43, 'days').format(),
           inspectionSubType: 'Mine Inspection'
         }
       };
@@ -281,9 +277,7 @@ describe('NrisDataSource', () => {
         assessmentSubStatus: 'Closed',
         inspection: {
           inspectionType: ['Health and Safety'],
-          inspctReportSentDate: moment()
-            .subtract(43, 'days')
-            .format(),
+          inspctReportSentDate: moment().subtract(43, 'days').format(),
           inspectionSubType: 'inspectionSubType'
         }
       };

@@ -30,7 +30,7 @@ app.use(bodyParser.json({ limit: '25mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '25mb', extended: true }));
 
 // Enable CORS
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   defaultLog.info(req.method, req.url);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE, HEAD');
@@ -48,7 +48,7 @@ if (HOSTNAME !== 'localhost:3000') {
   swaggerConfig.schemes = ['https'];
 }
 
-swaggerTools.initializeMiddleware(swaggerConfig, async function(middleware) {
+swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
   app.use(middleware.swaggerMetadata());
 
   // This prevents +/- params, such as sortBy
@@ -73,11 +73,11 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function(middleware) {
   app.use(middleware.swaggerUi(swaggerUIConfig));
 
   // audit call on response end
-  app.use(async function(req, res, next) {
-    req.on('data', function() {
+  app.use(async function (req, res, next) {
+    req.on('data', function () {
       // This is a no-op, here to adhere to Node.js Streaming API: https://nodejs.org/api/stream.html#stream_event_end
     });
-    req.on('end', async function() {
+    req.on('end', async function () {
       if (req.audits) {
         try {
           await Promise.all(req.audits);
@@ -91,7 +91,7 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function(middleware) {
 
   // Counterintuitively, we crash because we don't want the pod hanging around.  Let's just spin up
   // a new pod incase the mongo topology was destroyed, among other things.
-  process.on('unhandledRejection', function(reason) {
+  process.on('unhandledRejection', function (reason) {
     console.log('Unhandled Rejection:', reason);
     process.exit(1);
   });
@@ -135,7 +135,7 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function(middleware) {
       require('./src/models');
 
       // Start application
-      app.listen(3000, '0.0.0.0', function() {
+      app.listen(3000, '0.0.0.0', function () {
         defaultLog.info('Started server on port 3000');
       });
     },

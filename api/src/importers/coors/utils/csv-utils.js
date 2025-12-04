@@ -6,7 +6,7 @@ const MiscConstants = require('../../../utils/constants/misc');
  * @param {*} csvRow
  * @returns {string} the entity type.
  */
-exports.getEntityType = function(csvRow) {
+exports.getEntityType = function (csvRow) {
   if (!csvRow) {
     return null;
   }
@@ -24,7 +24,7 @@ exports.getEntityType = function(csvRow) {
  * @param {*} csvRow
  * @returns {string} issuing agency.
  */
-exports.getIssuingAgency = function(csvRow) {
+exports.getIssuingAgency = function (csvRow) {
   if (!csvRow) {
     return null;
   }
@@ -63,7 +63,7 @@ exports.getIssuingAgency = function(csvRow) {
  * @param {string} elem
  * @returns {string} penalty type
  */
-exports.getPenalty = function(elem) {
+exports.getPenalty = function (elem) {
   if (!elem) {
     return null;
   }
@@ -86,7 +86,7 @@ exports.getPenalty = function(elem) {
  * @param {string} elem
  * @returns {string} unit of penalty
  */
-exports.getPenaltyUnits = function(elem) {
+exports.getPenaltyUnits = function (elem) {
   if (!elem) {
     return null;
   }

@@ -26,12 +26,7 @@ function generateFakePerson({ firstName, middleName, lastName, genUnderAge, genA
   if (underage) {
     dateOfBirth = faker.date.past(12, today.toISOString());
   } else if (adult) {
-    dateOfBirth = faker.date.between(
-      '1960-01-01',
-      moment()
-        .subtract(20, 'years')
-        .toISOString()
-    );
+    dateOfBirth = faker.date.between('1960-01-01', moment().subtract(20, 'years').toISOString());
   } else {
     // faker expects simple date string or isostring
     dateOfBirth = faker.date.between('1960-01-01', today.toISOString());
@@ -95,14 +90,12 @@ function loadBcCities() {
   for (let i = 0; i < canada.cities.length; i++) {
     if ('bc' == canada.cities[i][1].toLowerCase())
       bcCities.push(
-        _.startCase(canada.cities[i][0].toLowerCase()).replace(/^([0-9a-zA-Z]+\s)*Mc([0-9a-zA-Z]*)(.*)/gi, function(
-          original,
-          before,
-          mcSecondPart,
-          theRest
-        ) {
-          return before || '' + 'Mc' + _.startCase(mcSecondPart) + theRest;
-        })
+        _.startCase(canada.cities[i][0].toLowerCase()).replace(
+          /^([0-9a-zA-Z]+\s)*Mc([0-9a-zA-Z]*)(.*)/gi,
+          function (original, before, mcSecondPart, theRest) {
+            return before || '' + 'Mc' + _.startCase(mcSecondPart) + theRest;
+          }
+        )
       );
   }
 }

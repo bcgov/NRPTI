@@ -9,7 +9,7 @@ const LngConfig = require('./config/lng');
 const NrptiConfig = require('./config/nrpti');
 const { featureFlag: FeatureFlag } = require('../models/index');
 
-const CheckRole = function(roles, roleName, includeSysadmin = false) {
+const CheckRole = function (roles, roleName, includeSysadmin = false) {
   if (includeSysadmin) {
     if (!roles.includes('sysadmin') && !roles.includes(roleName)) {
       throw new Error('Permission Denied. You are not an administrator for' + roleName);
@@ -21,7 +21,7 @@ const CheckRole = function(roles, roleName, includeSysadmin = false) {
   }
 };
 
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
 
@@ -30,7 +30,7 @@ exports.protectedOptions = function(args, res, next) {
  *
  * @returns {object}
  */
-exports.publicGetConfig = async function(args, res, next) {
+exports.publicGetConfig = async function (args, res, next) {
   console.log('Sent configuration data');
   let configurationData = {};
 
@@ -120,7 +120,7 @@ exports.publicGetConfig = async function(args, res, next) {
   QueryActions.sendResponse(res, 200, configurationData);
 };
 
-exports.protectedPostConfig = async function(args, res, next) {
+exports.protectedPostConfig = async function (args, res, next) {
   defaultLog.debug(' >> protectedPostConfig');
   let newObj = {};
 
@@ -171,7 +171,7 @@ exports.protectedPostConfig = async function(args, res, next) {
   defaultLog.debug(' << protectedPostConfig');
 };
 
-exports.protectedPutConfig = async function(args, res, next) {
+exports.protectedPutConfig = async function (args, res, next) {
   defaultLog.debug(' >> protectedPutConfig');
   let editedObj = {};
 

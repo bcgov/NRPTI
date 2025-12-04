@@ -13,11 +13,11 @@ const mongodb = require('../utils/mongodb');
 const PutUtils = require('../utils/put-utils');
 const { publishS3Document, unpublishS3Document } = require('../controllers/document-controller');
 
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedGet = async function(args, res, next) {
+exports.protectedGet = async function (args, res, next) {
   let collectionId = null;
   if (args.swagger.params.collectionId && args.swagger.params.collectionId.value) {
     collectionId = args.swagger.params.collectionId.value;
@@ -39,7 +39,7 @@ exports.protectedGet = async function(args, res, next) {
   next();
 };
 
-exports.protectedPut = async function(args, res, next) {
+exports.protectedPut = async function (args, res, next) {
   // Confirm user has correct role for this type of record.
   if (
     !userHasValidRoles(
@@ -80,7 +80,7 @@ exports.protectedPut = async function(args, res, next) {
   next();
 };
 
-const updateCollection = async function(incomingObj, collectionId, displayName) {
+const updateCollection = async function (incomingObj, collectionId, displayName) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const collectionDB = db.collection('nrpti');
 
@@ -194,11 +194,11 @@ const updateCollection = async function(incomingObj, collectionId, displayName) 
 exports.updateCollection = updateCollection;
 
 // This wrapper allows this controller to work with the record controller.
-exports.createItem = async function(args, res, next, collection) {
+exports.createItem = async function (args, res, next, collection) {
   return await createCollection(collection, args.swagger.params.auth_payload.displayName);
 };
 
-exports.protectedPost = async function(args, res, next) {
+exports.protectedPost = async function (args, res, next) {
   // Confirm user has correct role for this type of record.
   if (
     !userHasValidRoles(
@@ -237,7 +237,7 @@ exports.protectedPost = async function(args, res, next) {
   next();
 };
 
-exports.protectedDelete = async function(args, res, next) {
+exports.protectedDelete = async function (args, res, next) {
   let collectionId = null;
   if (args.swagger.params.collectionId && args.swagger.params.collectionId.value) {
     collectionId = args.swagger.params.collectionId.value;
@@ -265,7 +265,7 @@ exports.protectedDelete = async function(args, res, next) {
  * @param {*} mineId - Mine to update
  * @param {*} auth_payload - User authorization
  */
-exports.unpublishCollections = async function(mineId, auth_payload) {
+exports.unpublishCollections = async function (mineId, auth_payload) {
   mineId = new ObjectId(mineId);
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const nrpti = db.collection('nrpti');
@@ -389,7 +389,7 @@ exports.unpublishCollections = async function(mineId, auth_payload) {
  * @param {*} mineId
  * @param {*} auth_payload
  */
-exports.publishCollections = async function(mineId, auth_payload) {
+exports.publishCollections = async function (mineId, auth_payload) {
   mineId = new ObjectId(mineId);
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const nrpti = db.collection('nrpti');
@@ -506,7 +506,7 @@ exports.publishCollections = async function(mineId, auth_payload) {
   }
 };
 
-const checkRecordExistsInCollection = async function(records, collectionId, collectionRead, editing = false) {
+const checkRecordExistsInCollection = async function (records, collectionId, collectionRead, editing = false) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const collectionDB = db.collection('nrpti');
   let promises = [];
@@ -559,7 +559,7 @@ const checkRecordExistsInCollection = async function(records, collectionId, coll
   }
 };
 
-const createCollection = async function(collectionObj, user) {
+const createCollection = async function (collectionObj, user) {
   let CollectionBCMI = mongoose.model(RECORD_TYPE.CollectionBCMI._schemaName);
   let collection = new CollectionBCMI();
 
@@ -618,7 +618,7 @@ const createCollection = async function(collectionObj, user) {
 
 exports.createCollection = createCollection;
 
-const isMinePublished = async function(incomingObj) {
+const isMinePublished = async function (incomingObj) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const nrpti = db.collection('nrpti');
 

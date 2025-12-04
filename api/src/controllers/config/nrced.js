@@ -3,7 +3,7 @@ const { configData: ConfigData } = require('../../models/index');
 const utils = require('../../utils/constants/misc');
 const ConfigConsts = require('../../utils/constants/config');
 
-exports.CreateNRCEDConfig = async function(data, author) {
+exports.CreateNRCEDConfig = async function (data, author) {
   let configData = new ConfigData();
   configData._schemaName = 'ConfigData';
   configData.configApplication = ConfigConsts.CONFIG_APPS.NRCED;
@@ -57,7 +57,7 @@ exports.CreateNRCEDConfig = async function(data, author) {
   return await configData.save();
 };
 
-exports.EditNRCEDConfig = async function(_id, data, author) {
+exports.EditNRCEDConfig = async function (_id, data, author) {
   let configData = {};
   configData['dateUpdated'] = new Date();
   configData['updatedBy'] = author;

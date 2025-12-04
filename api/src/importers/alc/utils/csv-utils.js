@@ -6,7 +6,7 @@ const MiscConstants = require('../../../utils/constants/misc');
  * @param {*} csvRow
  * @returns {string} the outcome description string.
  */
-exports.getOutcomeDescription = function(csvRow) {
+exports.getOutcomeDescription = function (csvRow) {
   if (!csvRow) {
     return null;
   }
@@ -28,7 +28,7 @@ exports.getOutcomeDescription = function(csvRow) {
  * @param {*} csvRow
  * @returns {string} the entity type.
  */
-exports.getEntityType = function(csvRow) {
+exports.getEntityType = function (csvRow) {
   let options = [' Ltd.', ' Ltd', ' Inc.', ' Inc', ' Corp.', ' Corp'];
 
   function endsWithBusinessType(value, endings) {

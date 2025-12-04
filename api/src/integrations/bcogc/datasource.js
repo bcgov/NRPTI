@@ -265,9 +265,7 @@ class OgcCsvDataSource {
         $(row)
           .find('td')
           .each((index, td) => {
-            rowObject[csvHeadings[index]] = $(td)
-              .text()
-              .trim();
+            rowObject[csvHeadings[index]] = $(td).text().trim();
           });
         csvRows.push(rowObject);
       }

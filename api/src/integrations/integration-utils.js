@@ -14,7 +14,7 @@ const CORE_TOKEN_ENDPOINT =
  * @returns {Promise<any>} promise that resolves with the data property of the response object, or null.
  * @throws {Error} if any errors occur, or necessary function calls fail.
  */
-exports.getRecords = async function(url, options = undefined) {
+exports.getRecords = async function (url, options = undefined) {
   let response;
 
   try {
@@ -43,7 +43,7 @@ exports.getRecords = async function(url, options = undefined) {
  * @returns {URL} integration URL (see https://nodejs.org/api/url.html#url_url)
  * @memberof CoreDataSource
  */
-exports.getIntegrationUrl = function(hostname, pathname, queryParams = {}) {
+exports.getIntegrationUrl = function (hostname, pathname, queryParams = {}) {
   const query = QS.stringify(queryParams);
   const path = `${pathname}?${query}`;
   const url = new URL(path, hostname);
@@ -60,7 +60,7 @@ exports.getIntegrationUrl = function(hostname, pathname, queryParams = {}) {
  * @returns {Object?} payload - the res.data obj which includes the access_token as well as its time to live.
  * @memberof CoreDataSource
  */
-exports.getCoreAccessToken = async function(clientId, clientSecret, grantType) {
+exports.getCoreAccessToken = async function (clientId, clientSecret, grantType) {
   if (!clientId) {
     throw new Error('coreLogin - param clientId cannot be null.');
   }
@@ -104,7 +104,7 @@ exports.getCoreAccessToken = async function(clientId, clientSecret, grantType) {
  * @returns {object} Axios header with the bearer token set
  * @memberof CoreDataSource
  */
-exports.getAuthHeader = function(token, additionalOptions = {}) {
+exports.getAuthHeader = function (token, additionalOptions = {}) {
   return {
     headers: {
       Authorization: `Bearer ${token}`

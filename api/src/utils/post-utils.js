@@ -10,7 +10,7 @@ const { CSV_SOURCE_DEFAULT_ROLES } = require('./constants/misc');
  * @param {*} issuedToObj
  * @returns
  */
-exports.getIssuedToFullNameValue = function(issuedToObj) {
+exports.getIssuedToFullNameValue = function (issuedToObj) {
   if (!issuedToObj || !issuedToObj.type) {
     return '';
   }
@@ -49,7 +49,7 @@ exports.getIssuedToFullNameValue = function(issuedToObj) {
   }
 };
 
-exports.createRecordWithFlavours = async function(args, res, next, incomingObj, createMaster, flavourFunctions = {}) {
+exports.createRecordWithFlavours = async function (args, res, next, incomingObj, createMaster, flavourFunctions = {}) {
   let flavours = [];
   let flavourIds = [];
   let promises = [];
@@ -196,7 +196,7 @@ exports.createRecordWithFlavours = async function(args, res, next, incomingObj, 
  * @param {Array<string>} rolesToCheck The roles to check for
  * @returns {boolean} Indication if user if wildfire user
  */
-exports.setAdditionalRoleOnRecord = function(record, userRoles, rolesToCheck) {
+exports.setAdditionalRoleOnRecord = function (record, userRoles, rolesToCheck) {
   if (!record || !userRoles || !rolesToCheck) return;
 
   for (const role of rolesToCheck) {
@@ -229,7 +229,7 @@ exports.setAdditionalRoleOnRecord = function(record, userRoles, rolesToCheck) {
  * @param {Array<object>} incomingLegislationObjectArray the incoming array of legislation objects
  * @returns {Array<object>} recordLegislationArray the sanitized array of legislation objects
  */
-exports.populateLegislation = function(incomingLegislationObjectArray) {
+exports.populateLegislation = function (incomingLegislationObjectArray) {
   let recordLegislationArray = [];
 
   if (incomingLegislationObjectArray && incomingLegislationObjectArray.length >= 1) {

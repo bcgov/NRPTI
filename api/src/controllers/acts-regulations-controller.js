@@ -10,7 +10,7 @@ const defaultLog = require('../utils/logger')('record');
 const axios = require('axios');
 const LEGISLATION_CODES = require('../utils/constants/legislation-code-map');
 
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
 
@@ -21,7 +21,7 @@ exports.protectedOptions = function(args, res, next) {
  * @param {Function} next - Next function in the middleware chain.
  * @description Get API for retrieving agency code and names from the database.
  */
-exports.publicGet = async function(args, res, next) {
+exports.publicGet = async function (args, res, next) {
   let actsAndRegulationsMap = null;
   try {
     actsAndRegulationsMap = await exports.getAllActsAndRegulationsFromDB();
@@ -62,7 +62,7 @@ let updateTitlesInDB = async actMap => {
  * that we have a known BCLaws API endpoint for, stored in api/src/utils/constants/legislation-code-map.js
  * Acts as the endpoint for a cronjob that runs before the automated daily record import
  */
-exports.updateActTitles = async function(args, res, next) {
+exports.updateActTitles = async function (args, res, next) {
   let actMap = {};
   let actTitle = '';
   for (const [actCode, { actAPI }] of Object.entries(LEGISLATION_CODES)) {
@@ -79,7 +79,7 @@ exports.updateActTitles = async function(args, res, next) {
  * @param {string} actCode - a string that maps to a specific set of legislation in the act_regulations_mapping collection
  * @returns {string} the full title for the legislation associated with the provided actCode
  */
-exports.getActTitleFromDB = async function(actCode) {
+exports.getActTitleFromDB = async function (actCode) {
   try {
     const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
     const actsRegulationsCollection = db.collection('acts_regulations_mapping');
@@ -94,7 +94,7 @@ exports.getActTitleFromDB = async function(actCode) {
   }
 };
 
-exports.getActCodeFromActTitle = async function(actName) {
+exports.getActCodeFromActTitle = async function (actName) {
   try {
     const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
     const actsRegulationsCollection = db.collection('acts_regulations_mapping');
@@ -114,7 +114,7 @@ exports.getActCodeFromActTitle = async function(actName) {
  * @return {Object} an object that has the legislative act names as keys and an array of the regulations associated with those acts as values
  * @description provides a map of legislative acts and associated regulations from the db. Mimics a previously hardcoded set of constants.
  */
-exports.getAllActsAndRegulationsFromDB = async function() {
+exports.getAllActsAndRegulationsFromDB = async function () {
   try {
     const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
     const actsRegulationsCollection = db.collection('acts_regulations_mapping');
@@ -138,7 +138,7 @@ exports.getAllActsAndRegulationsFromDB = async function() {
  * @param {string} responseXML xml as a string from the BCLaws API
  * @return {string} the title of the act
  */
-exports.parseTitleFromXML = function(responseXML) {
+exports.parseTitleFromXML = function (responseXML) {
   let actTitle = '';
   let startIndex = 0;
   try {

@@ -49,10 +49,7 @@ describe('Map-Info Controller Testing', () => {
       return mapInfo.protectedPost(paramsWithValues, res, next);
     });
 
-    const res = await request(app)
-      .post(endpoint)
-      .send({})
-      .expect(400);
+    const res = await request(app).post(endpoint).send({}).expect(400);
 
     expect(res.body).toMatch('protectedPost - error: invalid post body');
   });
@@ -75,10 +72,7 @@ describe('Map-Info Controller Testing', () => {
       return mapInfo.protectedPost(paramsWithValues, res, next);
     });
 
-    const res = await request(app)
-      .post(endpoint)
-      .send(postObj)
-      .expect(200);
+    const res = await request(app).post(endpoint).send(postObj).expect(200);
 
     expect(res.body._schemaName).toMatch('MapLayerInfo');
     expect(res.body.location).toMatch(postObj.data.location);
@@ -138,10 +132,7 @@ describe('Map-Info Controller Testing', () => {
       return mapInfo.protectedDelete(paramsWithValues, res, next);
     });
 
-    const res = await request(app)
-      .delete(endpoint)
-      .query({ mapInfoId: testObjectId.toString() })
-      .expect(200);
+    const res = await request(app).delete(endpoint).query({ mapInfoId: testObjectId.toString() }).expect(200);
 
     expect(res.body).toEqual({ n: 1, ok: 1 });
   });

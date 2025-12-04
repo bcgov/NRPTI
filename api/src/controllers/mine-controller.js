@@ -8,11 +8,11 @@ const utils = require('../utils/constants/misc');
 const mongoose = require('mongoose');
 const CollectionController = require('./collection-controller');
 
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedGet = async function(args, res, next) {
+exports.protectedGet = async function (args, res, next) {
   let mineId = null;
   if (args.swagger.params.mineId && args.swagger.params.mineId.value) {
     mineId = args.swagger.params.mineId.value;
@@ -35,7 +35,7 @@ exports.protectedGet = async function(args, res, next) {
   next();
 };
 
-exports.protectedPut = async function(args, res, next) {
+exports.protectedPut = async function (args, res, next) {
   let incomingObj = {};
   if (args.swagger.params.mine && args.swagger.params.mine.value) {
     incomingObj = args.swagger.params.mine.value;
@@ -135,7 +135,7 @@ exports.protectedPut = async function(args, res, next) {
   }
 };
 
-exports.protectedPost = async function(args, res, next) {
+exports.protectedPost = async function (args, res, next) {
   let incomingObj = {};
   if (args.swagger.params.mine && args.swagger.params.mine.value) {
     incomingObj = args.swagger.params.mine.value;
@@ -205,7 +205,7 @@ exports.protectedPost = async function(args, res, next) {
   }
 };
 
-exports.protectedDelete = async function(args, res, next) {
+exports.protectedDelete = async function (args, res, next) {
   let mineId = null;
   if (args.swagger.params.mineId && args.swagger.params.mineId.value) {
     mineId = args.swagger.params.mineId.value;
@@ -228,7 +228,7 @@ exports.protectedDelete = async function(args, res, next) {
   next();
 };
 
-exports.protectedPublish = async function(args, res, next) {
+exports.protectedPublish = async function (args, res, next) {
   let mineId = null;
   if (args.swagger.params.mineId && args.swagger.params.mineId.value) {
     mineId = args.swagger.params.mineId.value;
@@ -255,7 +255,7 @@ exports.protectedPublish = async function(args, res, next) {
   next();
 };
 
-exports.protectedUnPublish = async function(args, res, next) {
+exports.protectedUnPublish = async function (args, res, next) {
   let mineId = null;
   if (args.swagger.params.mineId && args.swagger.params.mineId.value) {
     mineId = args.swagger.params.mineId.value;

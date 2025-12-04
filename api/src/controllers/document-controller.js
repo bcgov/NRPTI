@@ -20,11 +20,11 @@ const s3 = new AWS.S3({
   s3ForcePathStyle: true
 });
 
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedPost = async function(args, res, next) {
+exports.protectedPost = async function (args, res, next) {
   // Confirm user has correct role.
   if (
     args.swagger.params.fileName &&
@@ -200,7 +200,7 @@ exports.protectedPost = async function(args, res, next) {
   next();
 };
 
-exports.protectedDelete = async function(args, res, next) {
+exports.protectedDelete = async function (args, res, next) {
   if (
     args.swagger.params.docId &&
     args.swagger.params.docId.value &&
@@ -441,14 +441,14 @@ exports.uploadS3Document = uploadS3Document;
  * @returns
  */
 async function publishS3Document(s3Key) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     s3.putObjectAcl(
       {
         Bucket: process.env.OBJECT_STORE_bucket_name,
         Key: s3Key,
         ACL: 'public-read'
       },
-      function(err, data) {
+      function (err, data) {
         if (err) {
           reject(err);
         } else {
@@ -468,14 +468,14 @@ exports.publishS3Document = publishS3Document;
  * @returns
  */
 async function unpublishS3Document(s3Key) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     s3.putObjectAcl(
       {
         Bucket: process.env.OBJECT_STORE_bucket_name,
         Key: s3Key,
         ACL: 'authenticated-read'
       },
-      function(err, data) {
+      function (err, data) {
         if (err) {
           reject(err);
         } else {
@@ -556,7 +556,7 @@ exports.unpublishDocument = unpublishDocument;
  * @param {*} next
  * @returns
  */
-exports.protectedGetS3SignedURL = async function(args, res, next) {
+exports.protectedGetS3SignedURL = async function (args, res, next) {
   if (!args.swagger.params.docId || !args.swagger.params.docId.value) {
     defaultLog.warn('protectedGet - missing required docId param');
     return queryActions.sendResponse(res, 400, 'Missing required docId param');

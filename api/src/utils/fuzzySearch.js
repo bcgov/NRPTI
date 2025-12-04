@@ -6,7 +6,7 @@ let DEFAULT_NGRAM_SIZE = 2;
  * @param {number} nGramSize - The minimum nGram size to use (lower = fuzzier, but poorer performance)
  * @param {boolean} caseSensitive - should we care about case?
  */
-exports.createFuzzySearchString = function(keywords, nGramSize, caseSensitive) {
+exports.createFuzzySearchString = function (keywords, nGramSize, caseSensitive) {
   // if the passed-in nGramSize is null, <=0, or not a number, use the default
   nGramSize = nGramSize && parseInt(nGramSize) && nGramSize > 0 ? nGramSize : DEFAULT_NGRAM_SIZE;
 

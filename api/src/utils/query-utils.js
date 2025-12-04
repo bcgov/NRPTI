@@ -16,8 +16,8 @@ const DEFAULT_PAGESIZE = 100;
  * @param {*} fields array of fields that will have all non-allowed fields removed.
  * @returns array of fields that is a subset of allowedFields.
  */
-exports.getSanitizedFields = function(allowedFields, fields) {
-  return fields.filter(function(field) {
+exports.getSanitizedFields = function (allowedFields, fields) {
+  return fields.filter(function (field) {
     return allowedFields.indexOf(allowedFields, field) !== -1;
   });
 };
@@ -29,7 +29,7 @@ exports.getSanitizedFields = function(allowedFields, fields) {
  * @param {*} pageNum
  * @returns
  */
-exports.getSkipLimitParameters = function(pageSize, pageNum) {
+exports.getSkipLimitParameters = function (pageSize, pageNum) {
   const params = {};
 
   let ps = DEFAULT_PAGESIZE; // Default
@@ -47,7 +47,7 @@ exports.getSkipLimitParameters = function(pageSize, pageNum) {
   return params;
 };
 
-exports.audit = function(req, action, meta, authPayload, objId = null) {
+exports.audit = function (req, action, meta, authPayload, objId = null) {
   try {
     if (!req.audits) {
       req.audits = [];
@@ -58,7 +58,7 @@ exports.audit = function(req, action, meta, authPayload, objId = null) {
     defaultLog.error('Failed to add Audit log request. ' + err);
   }
 };
-exports.recordAction = async function(action, meta, authPayload, objId = null) {
+exports.recordAction = async function (action, meta, authPayload, objId = null) {
   try {
     let performedBy = authPayload
       ? JSON.stringify({

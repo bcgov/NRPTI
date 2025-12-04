@@ -13,7 +13,7 @@ const recordNameSubset = require('../../materialized_views/search/recordNameSubs
 const descriptionSummarySubset = require('../../materialized_views/search/descriptionSummarySubset');
 const outcomeDescriptionSubset = require('../../materialized_views/search/outcomeDescriptionSubset');
 
-exports.protectedOptions = async function(args, res, next) {
+exports.protectedOptions = async function (args, res, next) {
   res.status(200).send();
 };
 
@@ -37,7 +37,7 @@ updateMaterializedView:
   taskType: import,
   materializedViewSubset: descriptionSummary
 }*/
-exports.protectedCreateTask = async function(args, res, next) {
+exports.protectedCreateTask = async function (args, res, next) {
   // validate request parameters
   if (!args.swagger.params.task || !args.swagger.params.task.value) {
     defaultLog.error('protectedCreateTask - missing required request body');
@@ -169,7 +169,7 @@ exports.protectedCreateTask = async function(args, res, next) {
 };
 
 // Used to quickly run a task within the API runtime.
-exports.createTask = async function(dataSourceType) {
+exports.createTask = async function (dataSourceType) {
   const nrptiDataSource = getDataSourceConfig(dataSourceType);
 
   if (!nrptiDataSource) {

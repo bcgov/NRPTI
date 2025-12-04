@@ -169,7 +169,7 @@ const EPIC_RECORD_TYPE = Object.freeze({
    * @param {*} recordTypes  EPIC record types to return.
    * @returns flattened array of a subset of EPIC record types.
    */
-  getSome: function(recordTypes) {
+  getSome: function (recordTypes) {
     if (!recordTypes || recordTypes.length === 0) {
       return [];
     }
@@ -192,7 +192,7 @@ const EPIC_RECORD_TYPE = Object.freeze({
    *
    * @returns flattened array of all EPIC record types.
    */
-  getAll: function() {
+  getAll: function () {
     return [
       ...this.Order,
       ...this.Inspection,

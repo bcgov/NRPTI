@@ -7,7 +7,7 @@ const DocumentController = require('../document-controller');
 
 // This will fully delete a master record.
 // This includes documents and flavours.
-exports.deleteMasterRecord = async function(record) {
+exports.deleteMasterRecord = async function (record) {
   if (!record) {
     throw 'You must provide a record to delete a master record.';
   }
@@ -65,7 +65,7 @@ exports.deleteMasterRecord = async function(record) {
 
 // There is a specific check for BCMI flavours because
 // we need update the master record to no longer be associated with given mine.
-exports.deleteFlavourRecord = async function(flavourId, flavourType) {
+exports.deleteFlavourRecord = async function (flavourId, flavourType) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const collectionDB = db.collection('nrpti');
 
@@ -151,7 +151,7 @@ exports.deleteFlavourRecord = async function(flavourId, flavourType) {
 };
 
 // Delete items like news, collections or flavours.
-exports.deleteById = async function(idToDelete) {
+exports.deleteById = async function (idToDelete) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const collectionDB = db.collection('nrpti');
   return await collectionDB.deleteOne({ _id: new ObjectID(idToDelete) });

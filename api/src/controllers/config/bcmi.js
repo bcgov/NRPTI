@@ -3,7 +3,7 @@ const { configData: ConfigData } = require('../../models/index');
 const utils = require('../../utils/constants/misc');
 const ConfigConsts = require('../../utils/constants/config');
 
-exports.CreateBCMIConfig = async function(data, author) {
+exports.CreateBCMIConfig = async function (data, author) {
   let configData = new ConfigData();
   configData._schemaName = 'ConfigData';
   configData.configApplication = ConfigConsts.CONFIG_APPS.BCMI;
@@ -65,7 +65,7 @@ exports.CreateBCMIConfig = async function(data, author) {
   return await configData.save();
 };
 
-exports.EditBCMIConfig = async function(_id, data, author) {
+exports.EditBCMIConfig = async function (_id, data, author) {
   let configData = {};
   configData['dateUpdated'] = new Date();
   configData['updatedBy'] = author;
