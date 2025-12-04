@@ -1,6 +1,5 @@
 {
   "extends": ["eslint:recommended", "eslint-config-prettier"],
-  "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 2020
   },
