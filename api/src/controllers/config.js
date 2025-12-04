@@ -9,10 +9,9 @@ const LngConfig = require('./config/lng');
 const NrptiConfig = require('./config/nrpti');
 const { featureFlag: FeatureFlag } = require('../models/index');
 
-const CheckRole = function (roles, roleName, includeSysadmin = false) {
+const CheckRole = function(roles, roleName, includeSysadmin = false) {
   if (includeSysadmin) {
-    if (!roles.includes('sysadmin') &&
-      !roles.includes(roleName)) {
+    if (!roles.includes('sysadmin') && !roles.includes(roleName)) {
       throw new Error('Permission Denied. You are not an administrator for' + roleName);
     }
   } else {
@@ -20,9 +19,9 @@ const CheckRole = function (roles, roleName, includeSysadmin = false) {
       throw new Error('Permission Denied. You are not an administrator for' + roleName);
     }
   }
-}
+};
 
-exports.protectedOptions = function (args, res, next) {
+exports.protectedOptions = function(args, res, next) {
   res.status(200).send();
 };
 
@@ -31,8 +30,8 @@ exports.protectedOptions = function (args, res, next) {
  *
  * @returns {object}
  */
-exports.publicGetConfig = async function (args, res, next) {
-  console.log("Sent configuration data");
+exports.publicGetConfig = async function(args, res, next) {
+  console.log('Sent configuration data');
   let configurationData = {};
 
   configurationData['API_LOCATION'] = process.env.API_LOCATION;
@@ -121,7 +120,7 @@ exports.publicGetConfig = async function (args, res, next) {
   QueryActions.sendResponse(res, 200, configurationData);
 };
 
-exports.protectedPostConfig = async function (args, res, next) {
+exports.protectedPostConfig = async function(args, res, next) {
   defaultLog.debug(' >> protectedPostConfig');
   let newObj = {};
 
@@ -132,22 +131,34 @@ exports.protectedPostConfig = async function (args, res, next) {
     switch (args.swagger.params.app.value) {
       case ConfigConsts.CONFIG_APPS.BCMI:
         CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:bcmi', true);
-        newObj = await BcmiConfig.CreateBCMIConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
+        newObj = await BcmiConfig.CreateBCMIConfig(
+          args.swagger.params.data.value,
+          args.swagger.params.auth_payload.displayName
+        );
         break;
       case ConfigConsts.CONFIG_APPS.NRCED:
         CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:nrced', true);
-        newObj = await NrcedConfig.CreateNRCEDConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
+        newObj = await NrcedConfig.CreateNRCEDConfig(
+          args.swagger.params.data.value,
+          args.swagger.params.auth_payload.displayName
+        );
         break;
       case ConfigConsts.CONFIG_APPS.LNG:
         CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:lng', true);
-        newObj = await LngConfig.CreateLNGConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
+        newObj = await LngConfig.CreateLNGConfig(
+          args.swagger.params.data.value,
+          args.swagger.params.auth_payload.displayName
+        );
         break;
       case ConfigConsts.CONFIG_APPS.NRPTI:
         CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:nrpti', true);
-        newObj = await NrptiConfig.CreateLNGConfig(args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
+        newObj = await NrptiConfig.CreateLNGConfig(
+          args.swagger.params.data.value,
+          args.swagger.params.auth_payload.displayName
+        );
         break;
       default:
-        throw new Error('You did not provide a valid app.')
+        throw new Error('You did not provide a valid app.');
     }
   } catch (error) {
     defaultLog.info(`Error creating Config Package: ${error}`);
@@ -158,9 +169,9 @@ exports.protectedPostConfig = async function (args, res, next) {
   QueryActions.sendResponse(res, 201, newObj);
   next();
   defaultLog.debug(' << protectedPostConfig');
-}
+};
 
-exports.protectedPutConfig = async function (args, res, next) {
+exports.protectedPutConfig = async function(args, res, next) {
   defaultLog.debug(' >> protectedPutConfig');
   let editedObj = {};
 
@@ -172,7 +183,11 @@ exports.protectedPutConfig = async function (args, res, next) {
     switch (args.swagger.params.app.value) {
       case ConfigConsts.CONFIG_APPS.BCMI:
         CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:bcmi', true);
-        editedObj = await BcmiConfig.EditBCMIConfig(_id, args.swagger.params.data.value, args.swagger.params.auth_payload.displayName);
+        editedObj = await BcmiConfig.EditBCMIConfig(
+          _id,
+          args.swagger.params.data.value,
+          args.swagger.params.auth_payload.displayName
+        );
         break;
       case ConfigConsts.CONFIG_APPS.NRCED:
         CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:nrced', true);
@@ -184,7 +199,7 @@ exports.protectedPutConfig = async function (args, res, next) {
         CheckRole(args.swagger.params.auth_payload.client_roles, 'admin:nrpti', true);
         break;
       default:
-        throw new Error('You did not provide a valid app.')
+        throw new Error('You did not provide a valid app.');
     }
   } catch (error) {
     defaultLog.info(`Error editing Config Package: ${error}`);
@@ -195,4 +210,4 @@ exports.protectedPutConfig = async function (args, res, next) {
   QueryActions.sendResponse(res, 200, editedObj);
   next();
   defaultLog.debug(' << protectedPutConfig');
-}
+};

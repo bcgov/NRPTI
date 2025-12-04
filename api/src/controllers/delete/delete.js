@@ -3,13 +3,13 @@
 const ObjectID = require('mongodb').ObjectID;
 const mongodb = require('../../utils/mongodb');
 const defaultLog = require('../../utils/logger')('record');
-const DocumentController = require('../document-controller')
+const DocumentController = require('../document-controller');
 
 // This will fully delete a master record.
 // This includes documents and flavours.
-exports.deleteMasterRecord = async function (record) {
+exports.deleteMasterRecord = async function(record) {
   if (!record) {
-    throw 'You must provide a record to delete a master record.'
+    throw 'You must provide a record to delete a master record.';
   }
 
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
@@ -54,22 +54,18 @@ exports.deleteMasterRecord = async function (record) {
       }
     }
 
-    promises.push(
-      collectionDB.deleteMany(
-        { _id: { $in: idsToDelete } }
-      )
-    );
+    promises.push(collectionDB.deleteMany({ _id: { $in: idsToDelete } }));
 
     return await Promise.all(promises);
   } catch (error) {
     defaultLog.debug(error);
     throw error;
   }
-}
+};
 
 // There is a specific check for BCMI flavours because
 // we need update the master record to no longer be associated with given mine.
-exports.deleteFlavourRecord = async function (flavourId, flavourType) {
+exports.deleteFlavourRecord = async function(flavourId, flavourType) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const collectionDB = db.collection('nrpti');
 
@@ -87,18 +83,15 @@ exports.deleteFlavourRecord = async function (flavourId, flavourType) {
       case 'bcmi':
         // Update the master record
         promises.push(
-          collectionDB.findOneAndUpdate(
-            filter,
-            {
-              $set: {
-                mineGuid: null,
-                isBcmiPublished: false
-              },
-              $pull: {
-                _flavourRecords: new ObjectID(flavourId)
-              }
+          collectionDB.findOneAndUpdate(filter, {
+            $set: {
+              mineGuid: null,
+              isBcmiPublished: false
+            },
+            $pull: {
+              _flavourRecords: new ObjectID(flavourId)
             }
-          )
+          })
         );
 
         // We also have to find all collections and edit them accordingly.
@@ -121,33 +114,27 @@ exports.deleteFlavourRecord = async function (flavourId, flavourType) {
       case 'nrced':
         // Update the master record
         promises.push(
-          collectionDB.findOneAndUpdate(
-            filter,
-            {
-              $set: {
-                isNrcedPublished: false
-              },
-              $pull: {
-                _flavourRecords: new ObjectID(flavourId)
-              }
+          collectionDB.findOneAndUpdate(filter, {
+            $set: {
+              isNrcedPublished: false
+            },
+            $pull: {
+              _flavourRecords: new ObjectID(flavourId)
             }
-          )
+          })
         );
         break;
       case 'lng':
         // Update the master record
         promises.push(
-          collectionDB.findOneAndUpdate(
-            filter,
-            {
-              $set: {
-                isLngPublished: false
-              },
-              $pull: {
-                _flavourRecords: new ObjectID(flavourId)
-              }
+          collectionDB.findOneAndUpdate(filter, {
+            $set: {
+              isLngPublished: false
+            },
+            $pull: {
+              _flavourRecords: new ObjectID(flavourId)
             }
-          )
+          })
         );
         break;
       default:
@@ -161,13 +148,11 @@ exports.deleteFlavourRecord = async function (flavourId, flavourType) {
     defaultLog.debug(error);
     throw error;
   }
-}
+};
 
 // Delete items like news, collections or flavours.
-exports.deleteById = async function (idToDelete) {
+exports.deleteById = async function(idToDelete) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const collectionDB = db.collection('nrpti');
-  return await collectionDB.deleteOne(
-    { _id: new ObjectID(idToDelete) }
-  );
-}
+  return await collectionDB.deleteOne({ _id: new ObjectID(idToDelete) });
+};

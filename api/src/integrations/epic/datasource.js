@@ -68,7 +68,6 @@ class DataSource {
       for (const recordType of recordTypesToUpdate) {
         await this.updateRecordType(recordType);
       }
-
     } catch (error) {
       this.status.message = 'updateRecords - unexpected error';
       this.status.error = error.message;
@@ -238,7 +237,9 @@ class DataSource {
 
         // Create new documents (if any) and add reference to record
         nrptiRecord.documents = await recordTypeUtils.createDocument(epicRecord);
-        savedRecords = await recordTypeUtils.updateRecord(nrptiRecord, existingRecord, { forceMineBCMIGUIDUpdate: true });
+        savedRecords = await recordTypeUtils.updateRecord(nrptiRecord, existingRecord, {
+          forceMineBCMIGUIDUpdate: true
+        });
       } else {
         // Create new documents (if any) and add reference to record
         nrptiRecord.documents = await recordTypeUtils.createDocument(epicRecord);
@@ -348,7 +349,7 @@ class DataSource {
       { _id: mongoose.Types.ObjectId(response[0]._id) },
       {
         _id: mongoose.Types.ObjectId(response[0]._id),
-        _schemaName: "EPICProject",
+        _schemaName: 'EPICProject',
         name: response[0].name,
         read: ['sysadmin', 'public'],
         write: ['sysadmin']

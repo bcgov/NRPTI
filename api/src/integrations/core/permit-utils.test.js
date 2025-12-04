@@ -40,109 +40,97 @@ describe('Permits class', () => {
 
     // eslint-disable-next-line no-undef
     record = {
-      "_id": {
-        "$oid": "6123af29647c8716e95f1241"
+      _id: {
+        $oid: '6123af29647c8716e95f1241'
       },
-      "issuedTo": {
-        "type": "Company",
-        "companyName": "Test Company",
-        "fullName": "Test Company",
-        "read": [
-          "sysadmin",
-          "admin:nrced",
-          "admin:lng",
-          "admin:bcmi"
-        ],
-        "write": [
-          "sysadmin",
-          "admin:bcmi"
-        ]
+      issuedTo: {
+        type: 'Company',
+        companyName: 'Test Company',
+        fullName: 'Test Company',
+        read: ['sysadmin', 'admin:nrced', 'admin:lng', 'admin:bcmi'],
+        write: ['sysadmin', 'admin:bcmi']
       },
-      "_schemaName": "PermitBCMI",
-      "_sourceRefId": "18ac1234-7626-4d87-a8ab-25c4d056fc1d",
-      "_epicProjectId": null,
-      "_master": {
-        "$oid": "6123af29647c8716e95f1242"
+      _schemaName: 'PermitBCMI',
+      _sourceRefId: '18ac1234-7626-4d87-a8ab-25c4d056fc1d',
+      _epicProjectId: null,
+      _master: {
+        $oid: '6123af29647c8716e95f1242'
       },
-      "collectionId": {
-        "$oid": "64faf16272ee71001b3daaff"
+      collectionId: {
+        $oid: '64faf16272ee71001b3daaff'
       },
-      "read": [
-        "sysadmin",
-        "admin:nrced",
-        "admin:lng",
-        "admin:bcmi",
-        "public"
-      ],
-      "write": [
-        "sysadmin",
-        "admin:bcmi"
-      ],
-      "projectName": "Test Quarry",
-      "centroid": [
-        -123.52522,
-        48.59232
-      ],
-      "recordName": "Permit R-9-77_NoW 0123407-2020-01_20231030.pdf",
-      "recordType": "Permit",
-      "recordSubtype": "",
-      "mineGuid": "9f63a91d-0123-4723-ae64-3b685b6bc4d2",
-      "permitNumber": "R-9-77",
-      "permitStatusCode": "O",
-      "amendmentStatusCode": "ACT",
-      "typeCode": "ALG",
-      "originalPermit": null,
-      "receivedDate": null,
-      "dateIssued": {
-        "$date": "2023-10-30T07:00:00.000Z"
+      read: ['sysadmin', 'admin:nrced', 'admin:lng', 'admin:bcmi', 'public'],
+      write: ['sysadmin', 'admin:bcmi'],
+      projectName: 'Test Quarry',
+      centroid: [-123.52522, 48.59232],
+      recordName: 'Permit R-9-77_NoW 0123407-2020-01_20231030.pdf',
+      recordType: 'Permit',
+      recordSubtype: '',
+      mineGuid: '9f63a91d-0123-4723-ae64-3b685b6bc4d2',
+      permitNumber: 'R-9-77',
+      permitStatusCode: 'O',
+      amendmentStatusCode: 'ACT',
+      typeCode: 'ALG',
+      originalPermit: null,
+      receivedDate: null,
+      dateIssued: {
+        $date: '2023-10-30T07:00:00.000Z'
       },
-      "issuingAgency": "AGENCY_EMLI",
-      "authorizedEndDate": null,
-      "description": "",
-      "documents": [],
-      "sourceDateAdded": null,
-      "sourceDateUpdated": null,
-      "dateAdded": {
-        "$date": "2023-11-17T18:21:29.814Z"
+      issuingAgency: 'AGENCY_EMLI',
+      authorizedEndDate: null,
+      description: '',
+      documents: [],
+      sourceDateAdded: null,
+      sourceDateUpdated: null,
+      dateAdded: {
+        $date: '2023-11-17T18:21:29.814Z'
       },
-      "dateUpdated": null,
-      "datePublished": null,
-      "updatedBy": "",
-      "publishedBy": "",
-      "sourceSystemRef": "core",
-      "__v": 0
-    }
+      dateUpdated: null,
+      datePublished: null,
+      updatedBy: '',
+      publishedBy: '',
+      sourceSystemRef: 'core',
+      __v: 0
+    };
   });
 
   describe('constructor', () => {
     it('should throw an error if auth_payload is null', () => {
-      expect(() => new Permits(null, { _schemaName: 'mockSchemaName' })).toThrowError('PermitUtils - required auth_payload must be non-null.');
+      expect(() => new Permits(null, { _schemaName: 'mockSchemaName' })).toThrowError(
+        'PermitUtils - required auth_payload must be non-null.'
+      );
     });
 
     it('should throw an error if recordType is null', () => {
-      expect(() => new Permits('auth_payload', null)).toThrowError('PermitUtils - required recordType must be non-null.');
+      expect(() => new Permits('auth_payload', null)).toThrowError(
+        'PermitUtils - required recordType must be non-null.'
+      );
     });
   });
 
   describe('transformRecord method', () => {
     it('should throw an error if permit or permit amendments are null or empty', () => {
       // eslint-disable-next-line no-undef
-      expect(() => permitsInstance.transformRecord(null, record)).toThrowError('transformRecords - required permits must be non-null.');
+      expect(() => permitsInstance.transformRecord(null, record)).toThrowError(
+        'transformRecords - required permits must be non-null.'
+      );
     });
 
     it('should throw an error if mineRecord is null', () => {
       // eslint-disable-next-line no-undef
-      expect(() => permitsInstance.transformRecord(permit, null)).toThrowError('transformRecords - required mineRecord must be non-null.');
+      expect(() => permitsInstance.transformRecord(permit, null)).toThrowError(
+        'transformRecords - required mineRecord must be non-null.'
+      );
     });
 
     it('should return a transformed record', () => {
       // eslint-disable-next-line no-undef
       const permitRecord = permitsInstance.transformRecord(permit, record);
-      
+
       expect(permitRecord).toBeInstanceOf(Array);
       expect(permitRecord).toHaveLength(2);
     });
-    
+
     it('should have the correct structure for each permit record', () => {
       // eslint-disable-next-line no-undef
       const permitRecord = permitsInstance.transformRecord(permit, record);
@@ -179,7 +167,7 @@ describe('Permits class', () => {
   describe('findExistingRecord method', () => {
     it('returns null if no existing record found', async () => {
       mongoose.model = jest.fn(() => ({
-        findOne: jest.fn(() => null),
+        findOne: jest.fn(() => null)
       }));
 
       const result = await permitsInstance.findExistingRecord('permit_amendment_guid');
@@ -189,7 +177,7 @@ describe('Permits class', () => {
     it('returns existing collection record if found', async () => {
       const existingRecord = { _id: 123, _sourceDocumentRefId: 'permit_amendment_guid' };
       mongoose.model = jest.fn(() => ({
-        findOne: jest.fn(() => existingRecord),
+        findOne: jest.fn(() => existingRecord)
       }));
 
       const result = await permitsInstance.findExistingRecord('permit_amendment_guid');
@@ -198,34 +186,34 @@ describe('Permits class', () => {
   });
 
   const superMock = {
-    updateRecord: jest.fn(),
+    updateRecord: jest.fn()
   };
 
   describe('updateRecord method', () => {
     beforeEach(() => {
       jest.clearAllMocks();
     });
-  
+
     it('should call updateRecord with mocked data', async () => {
       const permitId = '123';
       const newPermit = { _id: '123' };
       const existingPermit = {
         _flavourRecords: [
           { _id: 'flavourRecordId1', _schemaName: 'schemaName1' },
-          { _id: 'flavourRecordId2', _schemaName: 'schemaName2' },
-        ],
+          { _id: 'flavourRecordId2', _schemaName: 'schemaName2' }
+        ]
       };
-  
+
       const findOneMock = jest.fn().mockReturnValue({
-        populate: jest.fn().mockResolvedValue(existingPermit),
+        populate: jest.fn().mockResolvedValue(existingPermit)
       });
-  
+
       mongoose.model.mockReturnValue({ findOne: findOneMock });
-  
+
       superMock.updateRecord.mockResolvedValue('Mocked result');
-  
+
       await permitsInstance.updateRecord(permitId, newPermit);
-  
+
       expect(mongoose.model).toHaveBeenCalledWith('Permit');
       expect(findOneMock).toHaveBeenCalledWith({ _id: permitId });
     });
@@ -234,7 +222,7 @@ describe('Permits class', () => {
   describe('getCurrentMinePermits method', () => {
     it('returns null if no existing record found', async () => {
       mongoose.model = jest.fn(() => ({
-        find: jest.fn(() => null),
+        find: jest.fn(() => null)
       }));
 
       const result = await permitsInstance.getCurrentMinePermits('123');
@@ -242,9 +230,9 @@ describe('Permits class', () => {
     });
 
     it('returns existing collection record if found', async () => {
-      const existingRecord = { mine: 'Mine Name'};
+      const existingRecord = { mine: 'Mine Name' };
       mongoose.model = jest.fn(() => ({
-        find: jest.fn(() => existingRecord),
+        find: jest.fn(() => existingRecord)
       }));
 
       const result = await permitsInstance.getCurrentMinePermits('123');

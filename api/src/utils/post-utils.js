@@ -223,7 +223,6 @@ exports.setAdditionalRoleOnRecord = function(record, userRoles, rolesToCheck) {
   }
 };
 
-
 /**
  * Takes in an array of legislation objects and returns the sanitized array
  *
@@ -234,26 +233,18 @@ exports.populateLegislation = function(incomingLegislationObjectArray) {
   let recordLegislationArray = [];
 
   if (incomingLegislationObjectArray && incomingLegislationObjectArray.length >= 1) {
-    incomingLegislationObjectArray.forEach( (leg, index) => {
-
+    incomingLegislationObjectArray.forEach((leg, index) => {
       recordLegislationArray.push({});
 
-      leg.act &&
-        (recordLegislationArray[index].act = leg.act);
-      leg.regulation &&
-        (recordLegislationArray[index].regulation = leg.regulation);
-      leg.section &&
-        (recordLegislationArray[index].section = leg.section);
-      leg.subSection &&
-        (recordLegislationArray[index].subSection = leg.subSection);
-      leg.paragraph &&
-        (recordLegislationArray[index].paragraph = leg.paragraph);
-      leg.offence &&
-        (recordLegislationArray[index].offence = leg.offence);
-      leg.legislationDescription &&
-        (recordLegislationArray[index].legislationDescription = leg.legislationDescription);
+      leg.act && (recordLegislationArray[index].act = leg.act);
+      leg.regulation && (recordLegislationArray[index].regulation = leg.regulation);
+      leg.section && (recordLegislationArray[index].section = leg.section);
+      leg.subSection && (recordLegislationArray[index].subSection = leg.subSection);
+      leg.paragraph && (recordLegislationArray[index].paragraph = leg.paragraph);
+      leg.offence && (recordLegislationArray[index].offence = leg.offence);
+      leg.legislationDescription && (recordLegislationArray[index].legislationDescription = leg.legislationDescription);
     });
   }
 
- return recordLegislationArray;
-}
+  return recordLegislationArray;
+};

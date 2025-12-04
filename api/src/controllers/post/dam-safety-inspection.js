@@ -28,11 +28,11 @@ const utils = require('../../utils/constants/misc');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createItem = async function (args, res, next, incomingObj) {
+exports.createItem = async function(args, res, next, incomingObj) {
   const flavourFunctions = {
     DamSafetyInspectionBCMI: this.createBCMI,
     DamSafetyInspectionNRCED: this.createNRCED
-  }
+  };
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
@@ -61,7 +61,7 @@ exports.createItem = async function (args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master annual report record
  */
-exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   let DamSafetyInspection = mongoose.model('DamSafetyInspection');
   let damSafetyInspection = new DamSafetyInspection();
 
@@ -71,8 +71,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._sourceRefId &&
     ObjectId.isValid(incomingObj._sourceRefId) &&
     (damSafetyInspection._sourceRefId = new ObjectId(incomingObj._sourceRefId));
-  incomingObj.mineGuid &&
-    (damSafetyInspection.mineGuid = incomingObj.mineGuid);
+  incomingObj.mineGuid && (damSafetyInspection.mineGuid = incomingObj.mineGuid);
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (damSafetyInspection.collectionId = new ObjectId(incomingObj.collectionId));
@@ -108,7 +107,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.lastName &&
     (damSafetyInspection.issuedTo.lastName = incomingObj.issuedTo.lastName);
-  incomingObj.issuedTo && (damSafetyInspection.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    (damSafetyInspection.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (damSafetyInspection.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
@@ -161,9 +161,14 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created bcmi DamSafetyInspection record
  */
-exports.createBCMI = function (args, res, next, incomingObj) {
+exports.createBCMI = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.client_roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI],
+      args.swagger.params.auth_payload.client_roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -176,8 +181,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj._sourceRefId &&
     ObjectId.isValid(incomingObj._sourceRefId) &&
     (damSafetyInspectionBCMI._sourceRefId = new ObjectId(incomingObj._sourceRefId));
-  incomingObj.mineGuid &&
-    (damSafetyInspectionBCMI.mineGuid = incomingObj.mineGuid);
+  incomingObj.mineGuid && (damSafetyInspectionBCMI.mineGuid = incomingObj.mineGuid);
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (damSafetyInspectionBCMI.collectionId = new ObjectId(incomingObj.collectionId));
@@ -201,7 +205,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   damSafetyInspectionBCMI.recordType = 'Dam Safety Inspection';
   damSafetyInspectionBCMI.issuedTo.read = utils.ApplicationAdminRoles;
   damSafetyInspectionBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
-  incomingObj.issuedTo && incomingObj.issuedTo.type && (damSafetyInspectionBCMI.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.type &&
+    (damSafetyInspectionBCMI.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
     (damSafetyInspectionBCMI.issuedTo.companyName = incomingObj.issuedTo.companyName);
@@ -214,7 +220,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.lastName &&
     (damSafetyInspectionBCMI.issuedTo.lastName = incomingObj.issuedTo.lastName);
-  incomingObj.issuedTo && (damSafetyInspectionBCMI.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    (damSafetyInspectionBCMI.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (damSafetyInspectionBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
@@ -265,9 +272,14 @@ exports.createBCMI = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced DamSafetyInspection record
  */
- exports.createNRCED = function (args, res, next, incomingObj) {
+exports.createNRCED = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.client_roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI],
+      args.swagger.params.auth_payload.client_roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -280,8 +292,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj._sourceRefId &&
     ObjectId.isValid(incomingObj._sourceRefId) &&
     (damSafetyInspectionNRCED._sourceRefId = new ObjectId(incomingObj._sourceRefId));
-  incomingObj.mineGuid &&
-    (damSafetyInspectionNRCED.mineGuid = incomingObj.mineGuid);
+  incomingObj.mineGuid && (damSafetyInspectionNRCED.mineGuid = incomingObj.mineGuid);
 
   // set permissions
   damSafetyInspectionNRCED.read = utils.ApplicationAdminRoles;
@@ -299,7 +310,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   damSafetyInspectionNRCED.recordType = 'DamSafetyInspection';
   damSafetyInspectionNRCED.issuedTo.read = utils.ApplicationAdminRoles;
   damSafetyInspectionNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
-  incomingObj.issuedTo && incomingObj.issuedTo.type && (damSafetyInspectionNRCED.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.type &&
+    (damSafetyInspectionNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
     (damSafetyInspectionNRCED.issuedTo.companyName = incomingObj.issuedTo.companyName);
@@ -312,7 +325,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.lastName &&
     (damSafetyInspectionNRCED.issuedTo.lastName = incomingObj.issuedTo.lastName);
-  incomingObj.issuedTo && (damSafetyInspectionNRCED.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    (damSafetyInspectionNRCED.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (damSafetyInspectionNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);

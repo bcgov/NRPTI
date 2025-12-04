@@ -42,7 +42,7 @@ describe('MisCsvDataSource', () => {
       expect(dataSource.status.itemTotal).toEqual(2);
       expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({
         status: 'Running',
-        itemTotal: 2,
+        itemTotal: 2
       });
     });
   });
@@ -50,19 +50,19 @@ describe('MisCsvDataSource', () => {
   describe('batchProcessRecords', () => {
     it('processes csvRows in batches', async () => {
       const taskAuditRecord = { updateTaskRecord: jest.fn(() => {}) };
-      const dataSource = new MisCsvDataSource(taskAuditRecord, null, "Inspection", [{}, {}]);
-      
+      const dataSource = new MisCsvDataSource(taskAuditRecord, null, 'Inspection', [{}, {}]);
+
       dataSource.processRecord = jest.fn();
 
       await dataSource.batchProcessRecords();
-  
+
       expect(dataSource.processRecord).toHaveBeenCalledTimes(2);
     });
   });
 
   describe('getRecordTypeConfig', () => {
     it('returns the correct record type config for Inspection', () => {
-      const dataSource = new MisCsvDataSource(null, null, "Inspection", [{}, {}]);
+      const dataSource = new MisCsvDataSource(null, null, 'Inspection', [{}, {}]);
 
       const config = dataSource.getRecordTypeConfig();
       expect(config).toBeDefined();

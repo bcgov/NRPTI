@@ -42,7 +42,7 @@ describe('CoorsCsvDataSource', () => {
       expect(dataSource.status.itemTotal).toEqual(2);
       expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({
         status: 'Running',
-        itemTotal: 2,
+        itemTotal: 2
       });
     });
   });
@@ -53,19 +53,19 @@ describe('CoorsCsvDataSource', () => {
       const fakeCsvRows = [
         {
           id: 1,
-          enforcement_outcome: 'GTYJ',
+          enforcement_outcome: 'GTYJ'
         },
         {
           id: 2,
-          enforcement_outcome: 'Other',
-        },
+          enforcement_outcome: 'Other'
+        }
       ];
-      const dataSource = new CoorsCsvDataSource(taskAuditRecord, null, "Ticket", fakeCsvRows);
+      const dataSource = new CoorsCsvDataSource(taskAuditRecord, null, 'Ticket', fakeCsvRows);
 
       dataSource.processRecord = jest.fn();
 
       await dataSource.batchProcessRecords();
-  
+
       expect(dataSource.processRecord).toHaveBeenCalledTimes(2);
     });
   });

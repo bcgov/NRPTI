@@ -3,15 +3,22 @@ const cheerio = require('cheerio');
 const defaultLog = require('../../utils/logger')('bcogc-datasource');
 const integrationUtils = require('../integration-utils');
 const { getCsvRowsFromString } = require('../../utils/csv-helpers');
-const { getActTitleFromDB } = require('../../controllers/acts-regulations-controller')
+const { getActTitleFromDB } = require('../../controllers/acts-regulations-controller');
 
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const BCOGC_UTILS_TYPES = require('./bcogc-utils-types-enum');
-const BCOGC_INSPECTIONS_CSV_ENDPOINT = process.env.BCOGC_INSPECTIONS_CSV_ENDPOINT || 'https://reports.bc-er.ca/ogc/f?p=200:501::CSV';
-const BCOGC_ORDERS_CSV_ENDPOINT = process.env.BCOGC_ORDERS_CSV_ENDPOINT || 'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/enforcement-order';
-const BCOGC_PENALTIES_CSV_ENDPOINT = process.env.BCOGC_PENALTIES_CSV_ENDPOINT || 'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/contravention-decision';
-const BCOGC_WARNING_CSV_ENDPOINT = process.env.BCOGC_WARNING_CSV_ENDPOINT  || 'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/warning-letter';
-const ENERGY_ACT_CODE = 'ACT_103' //unique code for Energy related activities that map to updated legislation names in the acts_regulations_mapping collection in the db
+const BCOGC_INSPECTIONS_CSV_ENDPOINT =
+  process.env.BCOGC_INSPECTIONS_CSV_ENDPOINT || 'https://reports.bc-er.ca/ogc/f?p=200:501::CSV';
+const BCOGC_ORDERS_CSV_ENDPOINT =
+  process.env.BCOGC_ORDERS_CSV_ENDPOINT ||
+  'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/enforcement-order';
+const BCOGC_PENALTIES_CSV_ENDPOINT =
+  process.env.BCOGC_PENALTIES_CSV_ENDPOINT ||
+  'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/contravention-decision';
+const BCOGC_WARNING_CSV_ENDPOINT =
+  process.env.BCOGC_WARNING_CSV_ENDPOINT ||
+  'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/warning-letter';
+const ENERGY_ACT_CODE = 'ACT_103'; //unique code for Energy related activities that map to updated legislation names in the acts_regulations_mapping collection in the db
 
 class OgcCsvDataSource {
   /**
@@ -46,7 +53,7 @@ class OgcCsvDataSource {
     const csvs = await this.fetchAllBcogcCsvs();
 
     this.status.itemTotal = csvs.getLength();
-    await this.taskAuditRecord.updateTaskRecord({ status: 'Running', itemTotal: this.status.itemTotal});
+    await this.taskAuditRecord.updateTaskRecord({ status: 'Running', itemTotal: this.status.itemTotal });
 
     await this.batchProcessRecords(csvs);
 
@@ -66,7 +73,6 @@ class OgcCsvDataSource {
 
       // Handle each csv type.
       for (const recordType of csvs.types) {
-
         const recordTypeConfig = BCOGC_UTILS_TYPES[recordType];
 
         if (!recordTypeConfig) {
@@ -134,7 +140,7 @@ class OgcCsvDataSource {
 
         await this.taskAuditRecord.updateTaskRecord({ itemsProcessed: this.status.itemsProcessed });
       } else {
-        console.log(csvRow)
+        console.log(csvRow);
         throw Error('processRecord - savedRecord is null.');
       }
     } catch (error) {
@@ -183,7 +189,7 @@ class OgcCsvDataSource {
     return this.processBcogcHtml(response.data, 'export-table');
   }
 
-    /**
+  /**
    * Scrapes rows of data from the BCOGC Order CSV.
    *
    * @returns {Promise<Array<*>>} array of objects for a processed CSV
@@ -200,7 +206,7 @@ class OgcCsvDataSource {
    * @returns {Promise<Array<*>>} array of objects for a processed CSV
    * @memberof OgcCsvDataSource
    */
-   async fetchBcogcWarningCsv() {
+  async fetchBcogcWarningCsv() {
     const response = await axios.get(BCOGC_WARNING_CSV_ENDPOINT);
     return this.processBcogcHtml(response.data, 'export-table');
   }
@@ -212,7 +218,6 @@ class OgcCsvDataSource {
    * @memberof OgcCsvDataSource
    */
   async fetchAllBcogcCsvs() {
-
     const inspections = await this.fetchBcogcInspectionCsv();
     const orders = await this.fetchBcogcOrderCsv();
     const penalties = await this.fetchBcogcPenaltyCsv();
@@ -223,8 +228,13 @@ class OgcCsvDataSource {
       [RECORD_TYPE.Order._schemaName]: orders,
       [RECORD_TYPE.AdministrativePenalty._schemaName]: penalties,
       [RECORD_TYPE.Warning._schemaName]: warnings,
-      types: [RECORD_TYPE.AdministrativePenalty._schemaName, RECORD_TYPE.Order._schemaName, RECORD_TYPE.Inspection._schemaName, RECORD_TYPE.Warning._schemaName],
-      getLength: () => orders.length + inspections.length + penalties.length + warnings.length,
+      types: [
+        RECORD_TYPE.AdministrativePenalty._schemaName,
+        RECORD_TYPE.Order._schemaName,
+        RECORD_TYPE.Inspection._schemaName,
+        RECORD_TYPE.Warning._schemaName
+      ],
+      getLength: () => orders.length + inspections.length + penalties.length + warnings.length
     };
   }
 
@@ -245,14 +255,20 @@ class OgcCsvDataSource {
     $(`table.${tableClass} tr`).each((index, row) => {
       // Get the headings.
       if (index === 0) {
-        $(row).find('th').each((index, th) => {
-          csvHeadings.push($(th).text());
-        });
+        $(row)
+          .find('th')
+          .each((index, th) => {
+            csvHeadings.push($(th).text());
+          });
       } else {
         const rowObject = {};
-        $(row).find('td').each((index, td) => {
-          rowObject[csvHeadings[index]] = $(td).text().trim();
-        });
+        $(row)
+          .find('td')
+          .each((index, td) => {
+            rowObject[csvHeadings[index]] = $(td)
+              .text()
+              .trim();
+          });
         csvRows.push(rowObject);
       }
     });

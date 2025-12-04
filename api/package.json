@@ -44,8 +44,8 @@
     "globalTeardown": "./test/teardown.js",
     "testEnvironment": "node",
     "testEnvironmentOptions": {
-    "url": "http://localhost/"
-  }
+      "url": "http://localhost/"
+    }
   },
   "jestSonar": {
     "reportPath": "coverage"

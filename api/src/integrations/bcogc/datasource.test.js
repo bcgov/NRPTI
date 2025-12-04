@@ -1,11 +1,18 @@
 const OgcCsvDataSource = require('./datasource');
 const axios = require('axios');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
-const BCOGC_INSPECTIONS_CSV_ENDPOINT = process.env.BCOGC_INSPECTIONS_CSV_ENDPOINT || 'https://reports.bc-er.ca/ogc/f?p=200:501::CSV';
-const BCOGC_ORDERS_CSV_ENDPOINT = process.env.BCOGC_ORDERS_CSV_ENDPOINT || 'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/enforcement-order';
-const BCOGC_PENALTIES_CSV_ENDPOINT = process.env.BCOGC_PENALTIES_CSV_ENDPOINT || 'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/contravention-decision';
-const BCOGC_WARNING_CSV_ENDPOINT = process.env.BCOGC_WARNING_CSV_ENDPOINT  || 'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/warning-letter';
-const ENERGY_ACT_CODE = 'ACT_103' //unique code for Energy related activities that map to updated legislation names in the acts_regulations_mapping collection in the db
+const BCOGC_INSPECTIONS_CSV_ENDPOINT =
+  process.env.BCOGC_INSPECTIONS_CSV_ENDPOINT || 'https://reports.bc-er.ca/ogc/f?p=200:501::CSV';
+const BCOGC_ORDERS_CSV_ENDPOINT =
+  process.env.BCOGC_ORDERS_CSV_ENDPOINT ||
+  'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/enforcement-order';
+const BCOGC_PENALTIES_CSV_ENDPOINT =
+  process.env.BCOGC_PENALTIES_CSV_ENDPOINT ||
+  'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/contravention-decision';
+const BCOGC_WARNING_CSV_ENDPOINT =
+  process.env.BCOGC_WARNING_CSV_ENDPOINT ||
+  'https://www.bc-er.ca/data-reports/compliance-enforcement/reports/warning-letter';
+const ENERGY_ACT_CODE = 'ACT_103'; //unique code for Energy related activities that map to updated legislation names in the acts_regulations_mapping collection in the db
 
 describe('OgcCsvDataSource', () => {
   describe('constructor', () => {
@@ -54,42 +61,55 @@ describe('OgcCsvDataSource', () => {
       const taskAuditRecord = { updateTaskRecord: jest.fn(() => {}) };
       const dataSource = new OgcCsvDataSource(taskAuditRecord, null, null, null);
 
-      const inspections = [{
-        Title: 'Inspection Letter 1234-1234',
-        'Date Issued': '11/30/2023',
-        Proponent: 'Company Ltd.',
-        Filename: 'Inspection-Letter-.pdf',
-        'File URL': 'www.example.com'
-      }]
-      const orders = [{
-        Title: 'Order Letter 1234-1234',
-        'Date Issued': '11/30/2023',
-        Proponent: 'Company Ltd.',
-        Filename: 'Order-Letter-.pdf',
-        'File URL': 'www.example.com'
-      }]
-      const penalties = [{
-        Title: 'AdminPenalty Letter 1234-1234',
-        'Date Issued': '11/30/2023',
-        Proponent: 'Company Ltd.',
-        Filename: 'AdminPenalty-Letter-.pdf',
-        'File URL': 'www.example.com'
-      }]
-      const warnings = [{
-        Title: 'Warning Letter 1234-1234',
-        'Date Issued': '11/30/2023',
-        Proponent: 'Company Ltd.',
-        Filename: 'Warning-Letter-.pdf',
-        'File URL': 'www.example.com'
-      }]
+      const inspections = [
+        {
+          Title: 'Inspection Letter 1234-1234',
+          'Date Issued': '11/30/2023',
+          Proponent: 'Company Ltd.',
+          Filename: 'Inspection-Letter-.pdf',
+          'File URL': 'www.example.com'
+        }
+      ];
+      const orders = [
+        {
+          Title: 'Order Letter 1234-1234',
+          'Date Issued': '11/30/2023',
+          Proponent: 'Company Ltd.',
+          Filename: 'Order-Letter-.pdf',
+          'File URL': 'www.example.com'
+        }
+      ];
+      const penalties = [
+        {
+          Title: 'AdminPenalty Letter 1234-1234',
+          'Date Issued': '11/30/2023',
+          Proponent: 'Company Ltd.',
+          Filename: 'AdminPenalty-Letter-.pdf',
+          'File URL': 'www.example.com'
+        }
+      ];
+      const warnings = [
+        {
+          Title: 'Warning Letter 1234-1234',
+          'Date Issued': '11/30/2023',
+          Proponent: 'Company Ltd.',
+          Filename: 'Warning-Letter-.pdf',
+          'File URL': 'www.example.com'
+        }
+      ];
 
       jest.spyOn(dataSource, 'fetchAllBcogcCsvs').mockResolvedValue({
         [RECORD_TYPE.Inspection._schemaName]: inspections,
         [RECORD_TYPE.Order._schemaName]: orders,
         [RECORD_TYPE.AdministrativePenalty._schemaName]: penalties,
         [RECORD_TYPE.Warning._schemaName]: warnings,
-        types: [RECORD_TYPE.AdministrativePenalty._schemaName, RECORD_TYPE.Order._schemaName, RECORD_TYPE.Inspection._schemaName, RECORD_TYPE.Warning._schemaName],
-        getLength: () => orders.length + inspections.length + penalties.length + warnings.length,
+        types: [
+          RECORD_TYPE.AdministrativePenalty._schemaName,
+          RECORD_TYPE.Order._schemaName,
+          RECORD_TYPE.Inspection._schemaName,
+          RECORD_TYPE.Warning._schemaName
+        ],
+        getLength: () => orders.length + inspections.length + penalties.length + warnings.length
       });
 
       await dataSource.run();
@@ -148,7 +168,7 @@ describe('OgcCsvDataSource', () => {
 
       await dataSource.processRecord(csvRow, recordTypeConfig);
 
-      expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow, ENERGY_ACT_CODE );
+      expect(recordTypeUtils.transformRecord).toHaveBeenCalledWith(csvRow, ENERGY_ACT_CODE);
       expect(recordTypeUtils.findExistingRecord).toHaveBeenCalledWith({ transformed: true });
       expect(recordTypeUtils.createItem).toHaveBeenCalledWith({ transformed: true });
       expect(dataSource.status.itemsProcessed).toEqual(1);
@@ -192,54 +212,54 @@ describe('OgcCsvDataSource', () => {
 
   describe('fetchAllBcogcCsvs', () => {
     let dataSource;
-  
+
     beforeEach(() => {
       const taskAuditRecord = { updateTaskRecord: jest.fn(() => {}) };
       dataSource = new OgcCsvDataSource(taskAuditRecord, null, null, null);
     });
-  
+
     afterEach(() => {
       jest.restoreAllMocks();
       dataSource = null;
     });
-  
+
     it('should fetch all CSV data', async () => {
       const mockResponseData = 'CSV Data';
-  
+
       jest.spyOn(axios, 'get').mockResolvedValue({ data: mockResponseData });
-  
+
       const result = await dataSource.fetchAllBcogcCsvs();
-  
+
       expect(axios.get).toHaveBeenCalledWith(BCOGC_INSPECTIONS_CSV_ENDPOINT, undefined);
       expect(axios.get).toHaveBeenCalledWith(BCOGC_ORDERS_CSV_ENDPOINT);
       expect(axios.get).toHaveBeenCalledWith(BCOGC_PENALTIES_CSV_ENDPOINT);
       expect(axios.get).toHaveBeenCalledWith(BCOGC_WARNING_CSV_ENDPOINT);
-  
+
       expect(result).toHaveProperty('Inspection');
       expect(result).toHaveProperty('Order');
       expect(result).toHaveProperty('AdministrativePenalty');
       expect(result).toHaveProperty('Warning');
     });
-  
+
     it('should have correct data types', async () => {
       const mockResponseData = 'CSV Data';
-  
+
       jest.spyOn(axios, 'get').mockResolvedValue({ data: mockResponseData });
-  
+
       const result = await dataSource.fetchAllBcogcCsvs();
-  
+
       expect(Array.isArray(result.Order)).toBe(true);
       expect(Array.isArray(result.AdministrativePenalty)).toBe(true);
       expect(Array.isArray(result.Warning)).toBe(true);
     });
-  
+
     it('should have a valid getLength function', async () => {
       const mockResponseData = 'CSV Data';
-  
+
       jest.spyOn(axios, 'get').mockResolvedValue({ data: mockResponseData });
-  
+
       const result = await dataSource.fetchAllBcogcCsvs();
-  
+
       expect(typeof result.getLength).toBe('function');
     });
   });
@@ -253,16 +273,15 @@ describe('OgcCsvDataSource', () => {
 
       expect(processedRows).toEqual([]);
     });
-    
+
     it('should process BCOGC HTML table correctly', async () => {
-      const mockHtmlResponse = '<table class="export-table"><tr><th>Heading 1</th><th>Heading 2</th></tr><tr><td>Data 1</td><td>Data 2</td></tr></table>';
+      const mockHtmlResponse =
+        '<table class="export-table"><tr><th>Heading 1</th><th>Heading 2</th></tr><tr><td>Data 1</td><td>Data 2</td></tr></table>';
 
       const dataSource = new OgcCsvDataSource();
       const result = await dataSource.processBcogcHtml(mockHtmlResponse, 'export-table');
-  
-      expect(result).toEqual([
-        { 'Heading 1': 'Data 1', 'Heading 2': 'Data 2' },
-      ]);
-    });    
+
+      expect(result).toEqual([{ 'Heading 1': 'Data 1', 'Heading 2': 'Data 2' }]);
+    });
   });
 });

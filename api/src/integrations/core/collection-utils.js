@@ -40,10 +40,9 @@ class Collections extends BaseRecordUtils {
    */
   async findExistingRecord(permit_amendment_guid) {
     const CollectionBCMI = mongoose.model(this.recordType._schemaName);
-    return await CollectionBCMI
-      .findOne({
-        _sourceRefCoreCollectionId: permit_amendment_guid
-      });
+    return await CollectionBCMI.findOne({
+      _sourceRefCoreCollectionId: permit_amendment_guid
+    });
   }
 
   /**
@@ -80,7 +79,6 @@ class Collections extends BaseRecordUtils {
       defaultLog.error(`Failed to save ${this.recordType._schemaName} record: ${error.message}`);
     }
   }
-
 }
 
 module.exports = Collections;

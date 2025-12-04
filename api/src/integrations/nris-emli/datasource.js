@@ -38,7 +38,7 @@ class NrisDataSource {
   }
 
   // Start running the task.
-  async run() {  
+  async run() {
     await this.taskAuditRecord.updateTaskRecord({ status: 'Running' });
 
     // First perform authentication against this datasource
@@ -121,22 +121,22 @@ class NrisDataSource {
         href: NRIS_EMLI_API_ENDPOINT + '?inspectionStartDate=' + startDate + '&inspectionEndDate=' + endDate
       };
       processingObject.url = url.href;
-      
+
       let records = null;
       const delaySeconds = 10;
 
       // Get records
-      for (let i = 1 ;; i++) {
+      for (let i = 1; ; i++) {
         try {
           defaultLog.info(`Getting NRIS records: attempt ${i}`);
           defaultLog.info(`NRIS Url: ${url}`);
           records = await integrationUtils.getRecords(url, { headers: { Authorization: 'Bearer ' + this.token } });
           break;
         } catch (error) {
-          if( i < RETRY_LIMIT){
-          defaultLog.info(`Failed to retrieve data from NRIS. error: ${error}`);
-          defaultLog.info(`Waiting ${delaySeconds} seconds before retry`);
-          await new Promise(resolve => setTimeout(resolve, delaySeconds*1000*i));
+          if (i < RETRY_LIMIT) {
+            defaultLog.info(`Failed to retrieve data from NRIS. error: ${error}`);
+            defaultLog.info(`Waiting ${delaySeconds} seconds before retry`);
+            await new Promise(resolve => setTimeout(resolve, delaySeconds * 1000 * i));
           } else {
             //re-throw the last error to handle at the higher level
             throw error;
@@ -163,14 +163,14 @@ class NrisDataSource {
           const existingRecord = await this.findExistingRecord(newRecord);
 
           if (existingRecord) {
-             if (newRecord.documents.length === 0) {
+            if (newRecord.documents.length === 0) {
               // create attachment if no existing document was found, if no "Final Report" is attached no document will be created
               if (NRIS_EMLI_DOCUMENT_BINARIES_ENABLED === 'true') {
                 await this.createRecordAttachments(records[i], newRecord);
               }
             }
 
-            await this.updateRecord(newRecord, existingRecord); 
+            await this.updateRecord(newRecord, existingRecord);
           } else {
             if (NRIS_EMLI_DOCUMENT_BINARIES_ENABLED === 'true') {
               await this.createRecordAttachments(records[i], newRecord);
@@ -210,7 +210,8 @@ class NrisDataSource {
 
     if (record.inspection.inspectionSubType !== 'Mine Inspection') return false;
 
-    if (record.assessmentSubType !== 'Inspection - Desktop' && record.assessmentSubType !== 'Inspection - Site Visit') return false;
+    if (record.assessmentSubType !== 'Inspection - Desktop' && record.assessmentSubType !== 'Inspection - Site Visit')
+      return false;
 
     return true;
   }
@@ -273,11 +274,10 @@ class NrisDataSource {
     let parentMine;
     if (record.location.locationId) {
       const MineBCMIModel = mongoose.model(RECORD_TYPE.MineBCMI._schemaName);
-      parentMine = await MineBCMIModel
-      .findOne({
+      parentMine = await MineBCMIModel.findOne({
         _schemaName: RECORD_TYPE.MineBCMI._schemaName,
         mineNo: record.location.locationId
-      })
+      });
     }
 
     if (parentMine != null) {
@@ -323,9 +323,9 @@ class NrisDataSource {
     }
   }
 
-  isAttachmentAllowed(attachment){
+  isAttachmentAllowed(attachment) {
     //Allow final reports
-    return attachment.fileType === 'Final Report' && attachment.attachmentMediaType === 'application/pdf'
+    return attachment.fileType === 'Final Report' && attachment.attachmentMediaType === 'application/pdf';
   }
 
   // Grabs a file from NRIS datasource

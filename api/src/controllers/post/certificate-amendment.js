@@ -28,11 +28,11 @@ const utils = require('../../utils/constants/misc');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createItem = async function (args, res, next, incomingObj) {
+exports.createItem = async function(args, res, next, incomingObj) {
   const flavourFunctions = {
     CertificateAmendmentBCMI: this.createBCMI,
     CertificateAmendmentLNG: this.createLNG
-  }
+  };
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
@@ -61,7 +61,7 @@ exports.createItem = async function (args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master certificate record
  */
-exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   let CertificateAmendment = mongoose.model('CertificateAmendment');
   let certificateAmendment = new CertificateAmendment();
 
@@ -77,8 +77,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (certificateAmendment._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
-  incomingObj.mineGuid &&
-    (certificateAmendment.mineGuid = incomingObj.mineGuid);
+  incomingObj.mineGuid && (certificateAmendment.mineGuid = incomingObj.mineGuid);
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (certificateAmendment.collectionId = new ObjectId(incomingObj.collectionId));
@@ -115,7 +114,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.lastName &&
     (certificateAmendment.issuedTo.lastName = incomingObj.issuedTo.lastName);
-  incomingObj.issuedTo && (certificateAmendment.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    (certificateAmendment.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (certificateAmendment.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
@@ -168,9 +168,14 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created bcmi certificate amendment record
  */
- exports.createLNG = function (args, res, next, incomingObj) {
+exports.createLNG = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.client_roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI],
+      args.swagger.params.auth_payload.client_roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -189,8 +194,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (certificateAmendmentLNG._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
-  incomingObj.mineGuid &&
-    (certificateAmendmentLNG.mineGuid = incomingObj.mineGuid);
+  incomingObj.mineGuid && (certificateAmendmentLNG.mineGuid = incomingObj.mineGuid);
 
   // set permissions
   certificateAmendmentLNG.read = utils.ApplicationAdminRoles;
@@ -209,7 +213,9 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   certificateAmendmentLNG.recordSubtype = 'Certificate';
   certificateAmendmentLNG.issuedTo.read = utils.ApplicationAdminRoles;
   certificateAmendmentLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
-  incomingObj.issuedTo && incomingObj.issuedTo.type && (certificateAmendmentLNG.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.type &&
+    (certificateAmendmentLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
     (certificateAmendmentLNG.issuedTo.companyName = incomingObj.issuedTo.companyName);
@@ -222,7 +228,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.lastName &&
     (certificateAmendmentLNG.issuedTo.lastName = incomingObj.issuedTo.lastName);
-  incomingObj.issuedTo && (certificateAmendmentLNG.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    (certificateAmendmentLNG.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (certificateAmendmentLNG.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
@@ -274,9 +281,14 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created bcmi certificate amendment record
  */
-exports.createBCMI = function (args, res, next, incomingObj) {
+exports.createBCMI = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.client_roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI],
+      args.swagger.params.auth_payload.client_roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -295,8 +307,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (certificateAmendmentBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
-  incomingObj.mineGuid &&
-    (certificateAmendmentBCMI.mineGuid = incomingObj.mineGuid);
+  incomingObj.mineGuid && (certificateAmendmentBCMI.mineGuid = incomingObj.mineGuid);
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (certificateAmendmentBCMI.collectionId = new ObjectId(incomingObj.collectionId));
@@ -321,7 +332,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   certificateAmendmentBCMI.recordSubtype = 'Certificate';
   certificateAmendmentBCMI.issuedTo.read = utils.ApplicationAdminRoles;
   certificateAmendmentBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
-  incomingObj.issuedTo && incomingObj.issuedTo.type && (certificateAmendmentBCMI.issuedTo.type = incomingObj.issuedTo.type);
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.type &&
+    (certificateAmendmentBCMI.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
     (certificateAmendmentBCMI.issuedTo.companyName = incomingObj.issuedTo.companyName);
@@ -334,7 +347,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.lastName &&
     (certificateAmendmentBCMI.issuedTo.lastName = incomingObj.issuedTo.lastName);
-  incomingObj.issuedTo && (certificateAmendmentBCMI.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    (certificateAmendmentBCMI.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (certificateAmendmentBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);

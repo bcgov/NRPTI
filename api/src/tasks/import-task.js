@@ -13,7 +13,6 @@ const recordNameSubset = require('../../materialized_views/search/recordNameSubs
 const descriptionSummarySubset = require('../../materialized_views/search/descriptionSummarySubset');
 const outcomeDescriptionSubset = require('../../materialized_views/search/outcomeDescriptionSubset');
 
-
 exports.protectedOptions = async function(args, res, next) {
   res.status(200).send();
 };

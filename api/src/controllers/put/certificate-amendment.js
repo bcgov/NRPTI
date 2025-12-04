@@ -27,14 +27,23 @@ const CertificateAmendmentPost = require('../post/certificate-amendment');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.editRecord = async function (args, res, next, incomingObj, overridePutParams = null) {
+exports.editRecord = async function(args, res, next, incomingObj, overridePutParams = null) {
   const flavourFunctions = {
     CertificateAmendmentBCMI: this.editBCMI,
     CertificateAmendmentLNG: this.editLNG
-  }
-  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, CertificateAmendmentPost, 'CertificateAmendment', flavourFunctions, overridePutParams);
+  };
+  return await PutUtils.editRecordWithFlavours(
+    args,
+    res,
+    next,
+    incomingObj,
+    this.editMaster,
+    CertificateAmendmentPost,
+    'CertificateAmendment',
+    flavourFunctions,
+    overridePutParams
+  );
 };
-
 
 /**
  * Performs all operations necessary to edit a master Certificate Amendment record.
@@ -60,7 +69,7 @@ exports.editRecord = async function (args, res, next, incomingObj, overridePutPa
  * @param {*} incomingObj see example
  * @returns edited master certificate record
  */
-exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
+exports.editMaster = function(args, res, next, incomingObj, flavourIds) {
   delete incomingObj._id;
 
   // Reject any changes to master permissions
@@ -84,7 +93,7 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
   const updateObj = { $set: dotNotatedObj };
 
   if (flavourIds && flavourIds.length) {
-    updateObj.$set = {...updateObj.$set };
+    updateObj.$set = { ...updateObj.$set };
     updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
   }
 
@@ -115,7 +124,7 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns edited BCMI certificate amendment record
  */
-exports.editBCMI = function (args, res, next, incomingObj) {
+exports.editBCMI = function(args, res, next, incomingObj) {
   delete incomingObj._id;
 
   // Reject any changes to permissions
@@ -147,7 +156,6 @@ exports.editBCMI = function (args, res, next, incomingObj) {
   return updateObj;
 };
 
-
 /**
  * Performs all operations necessary to edit a LNG Certificate amendment record.
  *
@@ -172,7 +180,7 @@ exports.editBCMI = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns edited BCMI certificate amendment record
  */
- exports.editLNG = function (args, res, next, incomingObj) {
+exports.editLNG = function(args, res, next, incomingObj) {
   delete incomingObj._id;
 
   // Reject any changes to permissions

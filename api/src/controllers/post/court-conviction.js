@@ -114,7 +114,6 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.unlistedMine && (courtConviction.unlistedMine = incomingObj.unlistedMine);
   incomingObj.unlistedMineType && (courtConviction.unlistedMineType = incomingObj.unlistedMineType);
 
-
   // set permissions
   courtConviction.read = utils.ApplicationAdminRoles;
   courtConviction.write = utils.ApplicationAdminRoles;

@@ -16,36 +16,36 @@ describe('BaseRecordUtils', () => {
     it('returns existing NRPTI master record if found', async () => {
       const RECORD_TYPE = { Ticket: { _schemaName: 'Ticket', displayName: 'Ticket' } };
       const baseRecordUtils = new BaseRecordUtils('authPayload', RECORD_TYPE.Ticket);
-  
+
       const nrptiRecord = { _sourceRefCoorsId: '123' };
-  
+
       const masterRecordModelMock = {
         findOne: jest.fn().mockReturnValue({
           populate: jest.fn().mockResolvedValue({
             test: 'existingRecord',
-            _flavourRecords: [{ _id: 321, _schemaName: 'flavourSchema' }],
-          }),
-        }),
+            _flavourRecords: [{ _id: 321, _schemaName: 'flavourSchema' }]
+          })
+        })
       };
       const mongoose = require('mongoose');
       jest.spyOn(mongoose, 'model').mockReturnValue(masterRecordModelMock);
-  
+
       const result = await baseRecordUtils.findExistingRecord(nrptiRecord);
-  
+
       expect(result).toEqual({ test: 'existingRecord', _flavourRecords: [{ _id: 321, _schemaName: 'flavourSchema' }] });
       expect(masterRecordModelMock.findOne).toHaveBeenCalledWith({
         _schemaName: 'Ticket',
-        _sourceRefCoorsId: '123',
+        _sourceRefCoorsId: '123'
       });
     });
-  
+
     it('returns null if _sourceRefCoorsId is null', async () => {
       const baseRecordUtils = new BaseRecordUtils('authPayload', RECORD_TYPE.Ticket);
-  
+
       const nrptiRecord = { _sourceRefCoorsId: null };
-  
+
       const result = await baseRecordUtils.findExistingRecord(nrptiRecord);
-  
+
       expect(result).toBeNull();
     });
   });
@@ -98,7 +98,7 @@ describe('BaseRecordUtils', () => {
         return Promise.resolve({ test: 'record' });
       });
 
-      const nrptiRecord = { newField: 'abc'};
+      const nrptiRecord = { newField: 'abc' };
       const existingRecord = { _id: 123, _flavourRecords: [{ _id: 321, _schemaName: 'flavourSchema' }] };
 
       const result = await baseRecordUtils.updateRecord(nrptiRecord, existingRecord);
@@ -133,8 +133,12 @@ describe('BaseRecordUtils', () => {
         return Promise.resolve({ test: 'record' });
       });
 
-      const nrptiRecord = { newField: 'abc', penalties: [{ type: 'Fined', penalty: { type: "Dollars", value: 100 }}]};
-      const existingRecord = { _id: 123, penalties: [{ type: 'Fined', penalty: { type: "Dollars", value: 50 }}], _flavourRecords: [{ _id: 321, _schemaName: 'flavourSchema' }] };
+      const nrptiRecord = { newField: 'abc', penalties: [{ type: 'Fined', penalty: { type: 'Dollars', value: 100 } }] };
+      const existingRecord = {
+        _id: 123,
+        penalties: [{ type: 'Fined', penalty: { type: 'Dollars', value: 50 } }],
+        _flavourRecords: [{ _id: 321, _schemaName: 'flavourSchema' }]
+      };
 
       const result = await baseRecordUtils.updateRecord(nrptiRecord, existingRecord);
 
@@ -148,7 +152,7 @@ describe('BaseRecordUtils', () => {
             _id: 123,
             newField: 'abc',
             updatedBy: '',
-            penalties: [{ type: 'Fined', penalty: { type: "Dollars", value: 100 }}],
+            penalties: [{ type: 'Fined', penalty: { type: 'Dollars', value: 100 } }],
             dateUpdated: expect.any(Date),
             sourceDateUpdated: expect.any(Date),
             flavourSchema: {
@@ -210,7 +214,7 @@ describe('BaseRecordUtils', () => {
         return Promise.resolve({ test: 'record' });
       });
 
-      const nrptiRecord = { newField: 'abc', penalties: []};
+      const nrptiRecord = { newField: 'abc', penalties: [] };
 
       const result = await baseRecordUtils.createItem(nrptiRecord);
 
@@ -237,28 +241,38 @@ describe('BaseRecordUtils', () => {
     });
   });
 
-  describe('handleConvictionPenalties', () => {  
+  describe('handleConvictionPenalties', () => {
     it('appends penalty and returns updated penalties array when penalty does not exist', () => {
       const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.CourtConviction);
-  
-      const existingRecord = { dateAdded: moment(), dateUpdated: moment(), penalties: [{ type: 'Fined', penalty: { type: 'Dollars', value: 50 } }] };
+
+      const existingRecord = {
+        dateAdded: moment(),
+        dateUpdated: moment(),
+        penalties: [{ type: 'Fined', penalty: { type: 'Dollars', value: 50 } }]
+      };
       const updatedPenalty = { type: 'Imprisonment', penalty: { type: 'Months', value: 12 } };
-  
+
       const result = baseRecordUtils.handleConvictionPenalties(updatedPenalty, existingRecord);
-  
-      expect(result).toEqual([{ type: 'Fined', penalty: { type: 'Dollars', value: 50 } }, { type: 'Imprisonment', penalty: { type: 'Months', value: 12 } }]);
+
+      expect(result).toEqual([
+        { type: 'Fined', penalty: { type: 'Dollars', value: 50 } },
+        { type: 'Imprisonment', penalty: { type: 'Months', value: 12 } }
+      ]);
     });
-  
+
     it('does not append penalty and returns the existing penalties array when penalty already exists', () => {
       const baseRecordUtils = new BaseRecordUtils(null, RECORD_TYPE.CourtConviction);
-  
-      const existingRecord = { dateAdded: moment(), dateUpdated: moment(), penalties: [{ type: 'Fined', penalty: { type: 'Dollars', value: 50 } }] };
+
+      const existingRecord = {
+        dateAdded: moment(),
+        dateUpdated: moment(),
+        penalties: [{ type: 'Fined', penalty: { type: 'Dollars', value: 50 } }]
+      };
       const updatedPenalty = { type: 'Fined', penalty: { type: 'Dollars', value: 50 } };
-  
+
       const result = baseRecordUtils.handleConvictionPenalties(updatedPenalty, existingRecord);
-  
+
       expect(result).toEqual([{ type: 'Fined', penalty: { type: 'Dollars', value: 50 } }]);
     });
   });
-
 });

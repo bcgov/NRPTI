@@ -23,7 +23,7 @@ describe('Collections', () => {
     it('returns null if no existing record found', async () => {
       const collectionUtils = new Collections({}, {});
       mongoose.model = jest.fn(() => ({
-        findOne: jest.fn(() => null),
+        findOne: jest.fn(() => null)
       }));
 
       const result = await collectionUtils.findExistingRecord('permit_amendment_guid');
@@ -34,7 +34,7 @@ describe('Collections', () => {
       const existingRecord = { _id: 123, _sourceRefCoreCollectionId: 'permit_amendment_guid' };
       const collectionUtils = new Collections({}, {});
       mongoose.model = jest.fn(() => ({
-        findOne: jest.fn(() => existingRecord),
+        findOne: jest.fn(() => existingRecord)
       }));
 
       const result = await collectionUtils.findExistingRecord('permit_amendment_guid');
@@ -50,9 +50,11 @@ describe('Collections', () => {
   describe('createItem', () => {
     it('throws an error if no nrptiRecord provided', async () => {
       const collectionUtils = new Collections({}, {});
-      await expect(collectionUtils.createItem(null)).rejects.toThrow('createItem - required nrptiRecord must be non-null.');
+      await expect(collectionUtils.createItem(null)).rejects.toThrow(
+        'createItem - required nrptiRecord must be non-null.'
+      );
     });
-  
+
     it('calls createCollection with correct arguments', async () => {
       const mockNrptiRecord = {
         _sourceRefCoreCollectionId: '1b0d6d2d-b2ee-5aa7-72b9-1e8f4e4c353f',
@@ -64,25 +66,32 @@ describe('Collections', () => {
         records: [],
         addRole: 'public'
       };
-  
+
       CollectionController.createCollection.mockResolvedValue('SomeReturnValue');
-  
+
       const collectionUtils = new Collections({}, {});
       await collectionUtils.createItem(mockNrptiRecord);
-  
-      expect(CollectionController.createCollection).toHaveBeenCalledWith(mockNrptiRecord, collectionUtils.auth_payload.displayName);
+
+      expect(CollectionController.createCollection).toHaveBeenCalledWith(
+        mockNrptiRecord,
+        collectionUtils.auth_payload.displayName
+      );
     });
   });
-  
+
   describe('updateItem', () => {
     it('throws an error if no updateObj provided', async () => {
       const collectionUtils = new Collections({}, {});
-      await expect(collectionUtils.updateItem(null, {})).rejects.toThrow('updateRecord - required updateObj must be non-null.');
+      await expect(collectionUtils.updateItem(null, {})).rejects.toThrow(
+        'updateRecord - required updateObj must be non-null.'
+      );
     });
-  
+
     it('throws an error if no existingRecord provided', async () => {
       const collectionUtils = new Collections({}, {});
-      await expect(collectionUtils.updateItem({}, null)).rejects.toThrow('updateRecord - required existingRecord must be non-null.');
+      await expect(collectionUtils.updateItem({}, null)).rejects.toThrow(
+        'updateRecord - required existingRecord must be non-null.'
+      );
     });
 
     it('calls createCollection with correct arguments', async () => {
@@ -106,13 +115,17 @@ describe('Collections', () => {
         records: [],
         addRole: 'public'
       };
-  
+
       CollectionController.updateCollection.mockResolvedValue('SomeReturnValue');
-  
+
       const collectionUtils = new Collections({}, {});
       await collectionUtils.updateItem(mockUpdateObj, mockExistingRecord);
-  
-      expect(CollectionController.updateCollection).toHaveBeenCalledWith(mockUpdateObj, mockExistingRecord._id, collectionUtils.auth_payload.displayName);
+
+      expect(CollectionController.updateCollection).toHaveBeenCalledWith(
+        mockUpdateObj,
+        mockExistingRecord._id,
+        collectionUtils.auth_payload.displayName
+      );
     });
   });
 });

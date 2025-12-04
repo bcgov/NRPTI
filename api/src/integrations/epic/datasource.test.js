@@ -102,9 +102,9 @@ describe('DataSource', () => {
       const mockResponse = [
         {
           searchResults: [
-            { _id: '123', _schemaName: 'test'}, 
-            { _id: '456', _schemaName: 'test'}, 
-            { _id: '789', _schemaName: 'test'}
+            { _id: '123', _schemaName: 'test' },
+            { _id: '456', _schemaName: 'test' },
+            { _id: '789', _schemaName: 'test' }
           ],
           meta: 'meta!'
         }
@@ -112,7 +112,7 @@ describe('DataSource', () => {
       jest.spyOn(require('../integration-utils'), 'getRecords').mockImplementation(() => {
         return Promise.resolve(mockResponse);
       });
-      
+
       const dataSource = new DataSource({ updateTaskRecord: jest.fn() }, null, { param1: 1 });
 
       // mock DataSource functions called by updateRecordType()
@@ -136,23 +136,28 @@ describe('DataSource', () => {
 
       const status = await dataSource.updateRecordType(recordType);
 
-      expect(dataSource.getIntegrationUrl).toHaveBeenCalledWith(
-        'projects.eao.gov.bc.ca',
-        '/api/public/search',
-        {
-          and: { milestone: '222', param1: 1, type: '111' },
-          dataset: 'Document',
-          pageNum: 0,
-          pageSize: Number.MAX_SAFE_INTEGER,
-          populate: false
-        }
-      );
+      expect(dataSource.getIntegrationUrl).toHaveBeenCalledWith('projects.eao.gov.bc.ca', '/api/public/search', {
+        and: { milestone: '222', param1: 1, type: '111' },
+        dataset: 'Document',
+        pageNum: 0,
+        pageSize: Number.MAX_SAFE_INTEGER,
+        populate: false
+      });
 
       expect(recordType.getUtil).toHaveBeenCalledTimes(1);
 
-      expect(dataSource.processRecord).toHaveBeenNthCalledWith(1, expect.anything(), { _id: '123', _schemaName: 'test' });
-      expect(dataSource.processRecord).toHaveBeenNthCalledWith(2, expect.anything(), { _id: '456', _schemaName: 'test' });
-      expect(dataSource.processRecord).toHaveBeenNthCalledWith(3, expect.anything(), { _id: '789', _schemaName: 'test' });
+      expect(dataSource.processRecord).toHaveBeenNthCalledWith(1, expect.anything(), {
+        _id: '123',
+        _schemaName: 'test'
+      });
+      expect(dataSource.processRecord).toHaveBeenNthCalledWith(2, expect.anything(), {
+        _id: '456',
+        _schemaName: 'test'
+      });
+      expect(dataSource.processRecord).toHaveBeenNthCalledWith(3, expect.anything(), {
+        _id: '789',
+        _schemaName: 'test'
+      });
 
       expect(status).toEqual({
         type: recordType,

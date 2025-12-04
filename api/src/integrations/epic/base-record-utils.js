@@ -8,7 +8,6 @@ const DocumentController = require('./../../controllers/document-controller');
 const RecordController = require('./../../controllers/record-controller');
 const utils = require('../../utils/constants/misc');
 
-
 const EPIC_PUBLIC_HOSTNAME = process.env.EPIC_PUBLIC_HOSTNAME || 'https://projects.eao.gov.bc.ca';
 
 /**
@@ -48,8 +47,19 @@ class BaseRecordUtils {
     const documents = [];
 
     if (epicRecord && epicRecord._id && epicRecord.documentFileName) {
-      const readRoles = [utils.ApplicationRoles.PUBLIC, utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_BCMI];
-      const writeRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_BCMI];
+      const readRoles = [
+        utils.ApplicationRoles.PUBLIC,
+        utils.ApplicationRoles.ADMIN_LNG,
+        utils.ApplicationRoles.ADMIN_NRCED,
+        utils.ApplicationRoles.ADMIN_NRCED,
+        utils.ApplicationRoles.ADMIN_BCMI
+      ];
+      const writeRoles = [
+        utils.ApplicationRoles.ADMIN_LNG,
+        utils.ApplicationRoles.ADMIN_NRCED,
+        utils.ApplicationRoles.ADMIN_NRCED,
+        utils.ApplicationRoles.ADMIN_BCMI
+      ];
 
       const savedDocument = await DocumentController.createURLDocument(
         epicRecord.documentFileName,
@@ -118,9 +128,15 @@ class BaseRecordUtils {
     if (epicRecord.project) {
       const MineBCMI = mongoose.model('MineBCMI');
       if (ObjectID.isValid(epicRecord.project)) {
-        mineRecord = await MineBCMI.findOne({ _schemaName: 'MineBCMI', _epicProjectIds: new ObjectID(epicRecord.project) });
+        mineRecord = await MineBCMI.findOne({
+          _schemaName: 'MineBCMI',
+          _epicProjectIds: new ObjectID(epicRecord.project)
+        });
       } else {
-        mineRecord = await MineBCMI.findOne({ _schemaName: 'MineBCMI', _epicProjectIds: new ObjectID(epicRecord.project._id) });
+        mineRecord = await MineBCMI.findOne({
+          _schemaName: 'MineBCMI',
+          _epicProjectIds: new ObjectID(epicRecord.project._id)
+        });
       }
     }
 
@@ -247,8 +263,7 @@ class BaseRecordUtils {
         if (
           (nrptiRecord._epicMilestoneId == '5cf00c03a266b7e1877504ef' ||
             nrptiRecord._epicMilestoneId == '5df79dd77b5abbf7da6f5201') &&
-          (nrptiRecord._schemaName === 'Order' ||
-            nrptiRecord._schemaName === 'Inspection')
+          (nrptiRecord._schemaName === 'Order' || nrptiRecord._schemaName === 'Inspection')
         ) {
           createObj[this.recordType.flavours.nrced._schemaName] = {
             summary: nrptiRecord.description || '',
@@ -288,11 +303,7 @@ class BaseRecordUtils {
     const lowercaseName = transformedRecord.recordName.toLowerCase();
 
     // Any document names that contain these terms are considered Fee Orders.
-    const orderTermsWhitelist = [
-      'fee order',
-      'order to pay fees',
-      'fee package'
-    ];
+    const orderTermsWhitelist = ['fee order', 'order to pay fees', 'fee package'];
 
     for (const term of orderTermsWhitelist) {
       if (lowercaseName.includes(term)) {

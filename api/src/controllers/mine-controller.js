@@ -8,14 +8,14 @@ const utils = require('../utils/constants/misc');
 const mongoose = require('mongoose');
 const CollectionController = require('./collection-controller');
 
-exports.protectedOptions = function (args, res, next) {
+exports.protectedOptions = function(args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedGet = async function (args, res, next) {
+exports.protectedGet = async function(args, res, next) {
   let mineId = null;
   if (args.swagger.params.mineId && args.swagger.params.mineId.value) {
-    mineId = args.swagger.params.mineId.value
+    mineId = args.swagger.params.mineId.value;
   } else {
     defaultLog.info(`protectedGet - you must provide an id to get`);
     queryActions.sendResponse(res, 400, {});
@@ -33,12 +33,12 @@ exports.protectedGet = async function (args, res, next) {
 
   queryActions.sendResponse(res, 200, obj);
   next();
-}
+};
 
-exports.protectedPut = async function (args, res, next) {
+exports.protectedPut = async function(args, res, next) {
   let incomingObj = {};
   if (args.swagger.params.mine && args.swagger.params.mine.value) {
-    incomingObj = args.swagger.params.mine.value
+    incomingObj = args.swagger.params.mine.value;
   } else {
     defaultLog.info(`protectedPost - you must provide mine data to put`);
     if (res) {
@@ -91,7 +91,7 @@ exports.protectedPut = async function (args, res, next) {
     updateObj.$set['datePublished'] = new Date();
     updateObj.$set['publishedBy'] = args.swagger.params.auth_payload.displayName;
     try {
-      await CollectionController.publishCollections(masterId, args.swagger.params.auth_payload)
+      await CollectionController.publishCollections(masterId, args.swagger.params.auth_payload);
     } catch (error) {
       defaultLog.info(`protectedPut - error publishing associated collections: ${updateObj}`);
       defaultLog.debug(error);
@@ -101,7 +101,7 @@ exports.protectedPut = async function (args, res, next) {
     updateObj.$set['datePublished'] = null;
     updateObj.$set['publishedBy'] = '';
     try {
-      await CollectionController.unpublishCollections(masterId, args.swagger.params.auth_payload)
+      await CollectionController.unpublishCollections(masterId, args.swagger.params.auth_payload);
     } catch (error) {
       defaultLog.info(`protectedPut - error unpublishing associated collections: ${updateObj}`);
       defaultLog.debug(error);
@@ -110,13 +110,14 @@ exports.protectedPut = async function (args, res, next) {
 
   let obj = null;
   try {
-    obj = await MineBCMI.findOneAndUpdate({
-      _id: masterId,
-      write: { $in: args.swagger.params.auth_payload.client_roles }
-    },
+    obj = await MineBCMI.findOneAndUpdate(
+      {
+        _id: masterId,
+        write: { $in: args.swagger.params.auth_payload.client_roles }
+      },
       updateObj,
       { new: true }
-    )
+    );
   } catch (error) {
     defaultLog.info(`protectedPut - error inserting mine: ${updateObj}`);
     defaultLog.debug(error);
@@ -132,12 +133,12 @@ exports.protectedPut = async function (args, res, next) {
   } else {
     return obj;
   }
-}
+};
 
-exports.protectedPost = async function (args, res, next) {
+exports.protectedPost = async function(args, res, next) {
   let incomingObj = {};
   if (args.swagger.params.mine && args.swagger.params.mine.value) {
-    incomingObj = args.swagger.params.mine.value
+    incomingObj = args.swagger.params.mine.value;
   } else {
     defaultLog.info(`protectedPost - you must provide data to post`);
     if (res) {
@@ -175,8 +176,8 @@ exports.protectedPost = async function (args, res, next) {
 
   // Set meta. If the args exist then use the auth otherwise check the incoming object. This occurs if
   // the system is creating the record.
-  mine.addedBy = args && args.swagger.params.auth_payload.displayName || incomingObj.addedBy;
-  mine.updatedBy = args && args.swagger.params.auth_payload.displayName || incomingObj.updatedBy;
+  mine.addedBy = (args && args.swagger.params.auth_payload.displayName) || incomingObj.addedBy;
+  mine.updatedBy = (args && args.swagger.params.auth_payload.displayName) || incomingObj.updatedBy;
   mine.dateAdded = new Date();
   mine.dateUpdated = new Date();
 
@@ -202,12 +203,12 @@ exports.protectedPost = async function (args, res, next) {
   } else {
     return obj;
   }
-}
+};
 
-exports.protectedDelete = async function (args, res, next) {
+exports.protectedDelete = async function(args, res, next) {
   let mineId = null;
   if (args.swagger.params.mineId && args.swagger.params.mineId.value) {
-    mineId = args.swagger.params.mineId.value
+    mineId = args.swagger.params.mineId.value;
   } else {
     defaultLog.info(`protectedDelete - you must provide an id to delete`);
     queryActions.sendResponse(res, 400, {});
@@ -225,12 +226,12 @@ exports.protectedDelete = async function (args, res, next) {
 
   queryActions.sendResponse(res, 200, obj);
   next();
-}
+};
 
-exports.protectedPublish = async function (args, res, next) {
+exports.protectedPublish = async function(args, res, next) {
   let mineId = null;
   if (args.swagger.params.mineId && args.swagger.params.mineId.value) {
-    mineId = args.swagger.params.mineId.value
+    mineId = args.swagger.params.mineId.value;
   } else {
     defaultLog.info(`protectedPublish - you must provide an id to publish`);
     queryActions.sendResponse(res, 400, {});
@@ -254,10 +255,10 @@ exports.protectedPublish = async function (args, res, next) {
   next();
 };
 
-exports.protectedUnPublish = async function (args, res, next) {
+exports.protectedUnPublish = async function(args, res, next) {
   let mineId = null;
   if (args.swagger.params.mineId && args.swagger.params.mineId.value) {
-    mineId = args.swagger.params.mineId.value
+    mineId = args.swagger.params.mineId.value;
   } else {
     defaultLog.info(`protectedUnPublish - you must provide an id to unpublish`);
     queryActions.sendResponse(res, 400, {});

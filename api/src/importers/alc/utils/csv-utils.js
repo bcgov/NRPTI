@@ -16,7 +16,7 @@ exports.getOutcomeDescription = function(csvRow) {
   const section = csvRow['section'];
 
   if (complianceStatus === 'Alleged Non-Compliance' && section) {
-    return  `${complianceStatus} - ${ceAction}; Alleged Contravention: ${section}`
+    return `${complianceStatus} - ${ceAction}; Alleged Contravention: ${section}`;
   }
 
   return `${complianceStatus} - ${ceAction}`;
@@ -29,25 +29,22 @@ exports.getOutcomeDescription = function(csvRow) {
  * @returns {string} the entity type.
  */
 exports.getEntityType = function(csvRow) {
+  let options = [' Ltd.', ' Ltd', ' Inc.', ' Inc', ' Corp.', ' Corp'];
 
-  let options = [" Ltd.", " Ltd", " Inc.", " Inc", " Corp.", " Corp"];
-
-
-  function endsWithBusinessType(value, endings){
+  function endsWithBusinessType(value, endings) {
     for (const ending of endings) {
       const pattern = new RegExp(`${ending}$`, 'i');
       if (pattern.test(value)) {
         return true;
       }
+    }
+    return false;
   }
-    return false
-  }
-
 
   if (!csvRow) {
     return null;
   }
-  if (endsWithBusinessType(csvRow['inspection property owner'], options)){
+  if (endsWithBusinessType(csvRow['inspection property owner'], options)) {
     return MiscConstants.IssuedToEntityTypes.Company;
   }
 

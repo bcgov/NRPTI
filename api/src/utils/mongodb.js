@@ -21,7 +21,7 @@ function MongoDriver(options) {
   }
 
   if (process.env.NODE_ENV === 'test') {
-    DB_CONNECTION = process.env.MONGO_URI
+    DB_CONNECTION = process.env.MONGO_URI;
   } else {
     DB_CONNECTION += '/' + (process.env.MONGODB_DATABASE || 'nrpti-dev');
   }

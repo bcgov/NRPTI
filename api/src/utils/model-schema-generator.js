@@ -89,7 +89,6 @@ let genSchema = function(name, definition) {
       definition._deletedBy = { type: String, default: 'system' };
 
       if (!Constants.SKIP_REDACTION_SCHEMA_NAMES.includes(name)) {
-
         schema.post('save', async record => {
           await redactedRecordSubset.saveOneRecord(record);
         });

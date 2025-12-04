@@ -42,7 +42,7 @@ describe('Inspections', () => {
       expect(transformedRecord.legislation[0].subSection).toBe('1');
       expect(transformedRecord.issuingAgency).toBe('AGENCY_EAO');
     });
-    
+
     it('should call transformRecord and provide legislation 2018 data', async () => {
       BaseRecordUtils.prototype.transformRecord = jest.fn().mockImplementation(() => {
         return {};

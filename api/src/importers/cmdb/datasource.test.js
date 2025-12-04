@@ -61,29 +61,29 @@ describe('CmdbCsvDataSource', () => {
     it('handles batch processing of csv rows', async () => {
       const taskAuditRecord = { updateTaskRecord: jest.fn(() => {}) };
       const dataSource = new CmdbCsvDataSource(taskAuditRecord, null, 'Inspection', []);
-  
+
       dataSource.csvRows = [
         { 'inspection id': '1', 'regulation section': 'Section A' },
         { 'inspection id': '2', 'regulation section': 'Section B' },
         { 'inspection id': '1', 'regulation section': 'Section C' },
-        { 'inspection id': '3', 'regulation section': 'Section D' },
+        { 'inspection id': '3', 'regulation section': 'Section D' }
       ];
-  
+
       const recordTypeUtils = {
         transformRecord: jest.fn(),
         findExistingRecord: jest.fn(),
         createItem: jest.fn(() => [{ status: 'success' }]),
-        updateRecord: jest.fn(() => [{ status: 'success' }]),
+        updateRecord: jest.fn(() => [{ status: 'success' }])
       };
-  
+
       const recordTypeConfig = {
-        getUtil: jest.fn(() => recordTypeUtils),
+        getUtil: jest.fn(() => recordTypeUtils)
       };
-  
+
       dataSource.getRecordTypeConfig = jest.fn(() => recordTypeConfig);
-  
+
       await dataSource.batchProcessRecords();
-  
+
       expect(recordTypeUtils.transformRecord).toHaveBeenCalledTimes(4);
       expect(recordTypeUtils.createItem).toHaveBeenCalledTimes(4);
       expect(dataSource.status.itemsProcessed).toEqual(4);
@@ -120,7 +120,7 @@ describe('CmdbCsvDataSource', () => {
       const dataSource = new CmdbCsvDataSource(taskAuditRecord, null, null, null);
 
       const csvRow = {};
-      const outcomeDescription  = ''
+      const outcomeDescription = '';
 
       const recordTypeConfig = { getUtil: () => recordTypeUtils };
       const recordTypeUtils = {
@@ -151,7 +151,7 @@ describe('CmdbCsvDataSource', () => {
       const dataSource = new CmdbCsvDataSource(taskAuditRecord, null, null, null);
 
       const csvRow = {};
-      const outcomeDescription  = ''
+      const outcomeDescription = '';
 
       const recordTypeConfig = { getUtil: () => recordTypeUtils };
       const recordTypeUtils = {

@@ -6,7 +6,7 @@ let DEFAULT_NGRAM_SIZE = 2;
  * @param {number} nGramSize - The minimum nGram size to use (lower = fuzzier, but poorer performance)
  * @param {boolean} caseSensitive - should we care about case?
  */
-exports.createFuzzySearchString = function (keywords, nGramSize, caseSensitive) {
+exports.createFuzzySearchString = function(keywords, nGramSize, caseSensitive) {
   // if the passed-in nGramSize is null, <=0, or not a number, use the default
   nGramSize = nGramSize && parseInt(nGramSize) && nGramSize > 0 ? nGramSize : DEFAULT_NGRAM_SIZE;
 
@@ -30,7 +30,7 @@ exports.createFuzzySearchString = function (keywords, nGramSize, caseSensitive) 
   // Cycle through each word, creating n-grams for each one
   // once we have the set of n-grams back, join them together
   // and append to the results string
-  cleanKeywordArray.forEach((word) => {
+  cleanKeywordArray.forEach(word => {
     // if the word is null or empty, or the same size as the min n-gram, we don't have to do anything
     if (word.length + 1 <= nGramSize) {
       // Our word is the size of the min n-gram, so just add it as is, and add a space
@@ -48,7 +48,7 @@ exports.createFuzzySearchString = function (keywords, nGramSize, caseSensitive) 
 
 /*
  * What is an n-gram? https://en.wikipedia.org/wiki/N-gram
-*/
+ */
 function createNGrams(word, nGramSize) {
   // our list of resulting n-grams
   let nGrams = [];

@@ -45,8 +45,8 @@ describe('transformRecord', () => {
       location: 'Mars',
       summary: 'Fined',
       penalty_amount: '10000000',
-      penalty_unit_code: 'Dollars',
-    }
+      penalty_unit_code: 'Dollars'
+    };
 
     expect(courtConvictions.transformRecord(mockRecord)).toEqual({
       _schemaName: 'CourtConviction',
@@ -66,7 +66,7 @@ describe('transformRecord', () => {
           regulation: mockRecord.regulation_description,
           section: mockRecord.section,
           subSection: mockRecord.sub_section,
-          offence: mockRecord.description,
+          offence: mockRecord.description
         }
       ],
       location: mockRecord.location,
@@ -76,14 +76,14 @@ describe('transformRecord', () => {
           description: '',
           penalty: {
             type: mockRecord.penalty_unit_code,
-            value: Number(mockRecord.penalty_amount),
+            value: Number(mockRecord.penalty_amount)
           },
           type: mockRecord.summary
         }
       ],
       sourceSystemRef: 'coors-csv'
-    })
-  })
+    });
+  });
 
   it('transforms CSV row fields into NRPTI record fields for GTYJ enforcement outcomes', () => {
     const mockRecord = {
@@ -100,8 +100,8 @@ describe('transformRecord', () => {
       description: 'This is a lil description of the thing',
       business_name: 'A Great Business',
       location_of_violation: 'Mars',
-      penalty: '10000000',
-    }
+      penalty: '10000000'
+    };
 
     expect(courtConvictions.transformRecord(mockRecord)).toEqual({
       _schemaName: 'CourtConviction',
@@ -121,7 +121,7 @@ describe('transformRecord', () => {
           regulation: mockRecord.regulation_description,
           section: mockRecord.section,
           subSection: mockRecord.sub_section,
-          offence: mockRecord.description,
+          offence: mockRecord.description
         }
       ],
       location: mockRecord.location_of_violation,
@@ -131,13 +131,13 @@ describe('transformRecord', () => {
           description: '',
           penalty: {
             type: 'Dollars',
-            value: Number(mockRecord.penalty),
+            value: Number(mockRecord.penalty)
           },
           type: 'Fined'
         }
       ],
       summary: 'Referred to Provincial Court as a disputed violation ticket.',
       sourceSystemRef: 'coors-csv'
-    })
-  })
+    });
+  });
 });

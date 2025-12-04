@@ -193,7 +193,13 @@ const EPIC_RECORD_TYPE = Object.freeze({
    * @returns flattened array of all EPIC record types.
    */
   getAll: function() {
-    return [...this.Order, ...this.Inspection, ...this.Certificate, ...this.ManagementPlan, ...this.CertificateAmendment];
+    return [
+      ...this.Order,
+      ...this.Inspection,
+      ...this.Certificate,
+      ...this.ManagementPlan,
+      ...this.CertificateAmendment
+    ];
   }
 });
 

@@ -28,11 +28,11 @@ const utils = require('../../utils/constants/misc');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createItem = async function (args, res, next, incomingObj) {
+exports.createItem = async function(args, res, next, incomingObj) {
   const flavourFunctions = {
     ReportBCMI: this.createBCMI,
     ReportNRCED: this.createNRCED
-  }
+  };
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
@@ -61,7 +61,7 @@ exports.createItem = async function (args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master  report record
  */
-exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   let Report = mongoose.model('Report');
   let report = new Report();
 
@@ -77,8 +77,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (report._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
-  incomingObj.mineGuid &&
-    (report.mineGuid = incomingObj.mineGuid);
+  incomingObj.mineGuid && (report.mineGuid = incomingObj.mineGuid);
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (report.collectionId = new ObjectId(incomingObj.collectionId));
@@ -118,9 +117,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.middleName &&
     (report.issuedTo.middleName = incomingObj.issuedTo.middleName);
-  incomingObj.issuedTo &&
-    incomingObj.issuedTo.lastName &&
-    (report.issuedTo.lastName = incomingObj.issuedTo.lastName);
+  incomingObj.issuedTo && incomingObj.issuedTo.lastName && (report.issuedTo.lastName = incomingObj.issuedTo.lastName);
   incomingObj.issuedTo && (report.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
@@ -174,9 +171,14 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created bcmi  report record
  */
-exports.createBCMI = function (args, res, next, incomingObj) {
+exports.createBCMI = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.client_roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI],
+      args.swagger.params.auth_payload.client_roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -194,8 +196,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (reportBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
-  incomingObj.mineGuid &&
-    (reportBCMI.mineGuid = incomingObj.mineGuid);
+  incomingObj.mineGuid && (reportBCMI.mineGuid = incomingObj.mineGuid);
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (reportBCMI.collectionId = new ObjectId(incomingObj.collectionId));
@@ -259,7 +260,6 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   return reportBCMI;
 };
 
-
 /**
  * Performs all operations necessary to create a nrced Report record.
  *
@@ -284,9 +284,14 @@ exports.createBCMI = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created bcmi  report record
  */
-exports.createNRCED = function (args, res, next, incomingObj) {
+exports.createNRCED = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.client_roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI],
+      args.swagger.params.auth_payload.client_roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -304,8 +309,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (reportNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
-  incomingObj.mineGuid &&
-    (reportNRCED.mineGuid = incomingObj.mineGuid);
+  incomingObj.mineGuid && (reportNRCED.mineGuid = incomingObj.mineGuid);
 
   // set permissions
   reportNRCED.read = utils.ApplicationAdminRoles;

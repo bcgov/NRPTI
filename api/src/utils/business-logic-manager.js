@@ -21,7 +21,6 @@ exports.applyBusinessLogicOnPut = function(updateObj, sanitizedObj) {
     // do not update the issuedTo roles if neither issuedTo field exist
     // some objects don't have issued to, so there is nothing to redact
     return updateObj;
-
   } else {
     if (isRecordConsideredAnonymous(sanitizedObj)) {
       updateObj.$pull['issuedTo.read'] = 'public';
@@ -125,10 +124,13 @@ function isIssuedToConsideredAnonymous(issuedTo, issuingAgency) {
   }
 
   const agencyCode = agenciesController.getAgencyCodeFromNameBandaid(issuingAgency);
-  
+
   // check if the issuingAgency has legislative authority to publish names
-  if (issuingAgency && !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(issuingAgency)
-                    && !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(agencyCode)) {
+  if (
+    issuingAgency &&
+    !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(issuingAgency) &&
+    !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(agencyCode)
+  ) {
     // name is anonymous, issuing agency cannot publish names
     return true;
   }

@@ -282,11 +282,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
 
   // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
   if (args) {
-    postUtils.setAdditionalRoleOnRecord(
-      ticketLNG,
-      args.swagger.params.auth_payload.client_roles,
-      ADDITIONAL_ROLES
-    );
+    postUtils.setAdditionalRoleOnRecord(ticketLNG, args.swagger.params.auth_payload.client_roles, ADDITIONAL_ROLES);
   }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
@@ -411,11 +407,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
 
   // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
   if (args) {
-    postUtils.setAdditionalRoleOnRecord(
-      ticketNRCED,
-      args.swagger.params.auth_payload.client_roles,
-      ADDITIONAL_ROLES
-    );
+    postUtils.setAdditionalRoleOnRecord(ticketNRCED, args.swagger.params.auth_payload.client_roles, ADDITIONAL_ROLES);
   }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']

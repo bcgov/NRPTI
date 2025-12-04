@@ -10,7 +10,7 @@ const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const CoreUtil = require('../core-util');
 
 const CORE_API_BATCH_SIZE = process.env.CORE_API_BATCH_SIZE || 300;
-const {getIntegrationUrl } = require('../integration-utils');
+const { getIntegrationUrl } = require('../integration-utils');
 
 const CORE_API_HOST = process.env.CORE_API_HOST || 'https://minesdigitalservices.gov.bc.ca';
 const CORE_API_PATH_MINES = process.env.CORE_API_PATH_MINES || '/api/mines';
@@ -222,7 +222,7 @@ class CoreDataSource {
         throw Error('processRecord - permitInfo is null.');
       }
 
-      for (let permit of permitInfo.permits){
+      for (let permit of permitInfo.permits) {
         // Create a new collections if possible.
         if (savedRecord._schemaName === 'MineBCMI') {
           await this.createorUpdateCollections(collectionUtils, permitUtils, permit, savedRecord);
@@ -263,14 +263,15 @@ class CoreDataSource {
     const url = getIntegrationUrl(CORE_API_HOST, `/api/mines/${nrptiRecord._sourceRefId}/permits`);
     const { records: permits } = await this.coreUtil.getRecords(url);
 
-    return permits.filter(p => this.isValidPermit(p,nrptiRecord));
+    return permits.filter(p => this.isValidPermit(p, nrptiRecord));
   }
 
-  isValidPermit(permit,nrptiRecord) {
+  isValidPermit(permit, nrptiRecord) {
     //Mine must not be historical which is indicated by an authorized year of '9999' on the latest amendment.
-    if ((permit.permit_amendments.length && !permit.permit_amendments[0].authorization_end_date) 
-      || permit.permit_status_code === 'O') {
-
+    if (
+      (permit.permit_amendments.length && !permit.permit_amendments[0].authorization_end_date) ||
+      permit.permit_status_code === 'O'
+    ) {
       // Do not use 'G-4-352' for Lumby
       // https://bcmines.atlassian.net/browse/NRPT-684
       return !(nrptiRecord.name === 'Lumby Mine' && permit.permit_no === 'G-4-352');
@@ -295,7 +296,6 @@ class CoreDataSource {
       nonExploratoryPermits = permits;
     }
 
-
     // Second, mine must not be historical which is indicated by an authorized year of '9999' on the latest amendment.
     let validPermit;
     for (const permit of nonExploratoryPermits) {
@@ -303,28 +303,28 @@ class CoreDataSource {
       // If 'null' then it is considered valid.
       // Otherwise, if the status is O, it's valid. (date 9999 check removed)
 
-        // There should only be a single record. If there is more then we need to identify the most
-        // recent permit as the official valid permit
-        if (validPermit) {
-          // we already have a valid permit. replace validPermit with whichever
-          // permit is more recent and carry on.
-          let validPermitNo;
-          let proposedPermitNo;
-          try {
-            validPermitNo = validPermit.permit_no.split('-');
-            proposedPermitNo = permit.permit_no.split('-');
+      // There should only be a single record. If there is more then we need to identify the most
+      // recent permit as the official valid permit
+      if (validPermit) {
+        // we already have a valid permit. replace validPermit with whichever
+        // permit is more recent and carry on.
+        let validPermitNo;
+        let proposedPermitNo;
+        try {
+          validPermitNo = validPermit.permit_no.split('-');
+          proposedPermitNo = permit.permit_no.split('-');
 
-            validPermit =
-              Number.parseInt(validPermitNo[validPermitNo.length - 1]) >
-                Number.parseInt(proposedPermitNo[proposedPermitNo.length - 1])
-                ? validPermit
-                : permit;
-          } catch (error) {
-            throw new Error(`Failed to parse permit numbers [ ${validPermitNo} / ${proposedPermitNo} ]`);
-          }
-        } else {
-          validPermit = permit;
+          validPermit =
+            Number.parseInt(validPermitNo[validPermitNo.length - 1]) >
+            Number.parseInt(proposedPermitNo[proposedPermitNo.length - 1])
+              ? validPermit
+              : permit;
+        } catch (error) {
+          throw new Error(`Failed to parse permit numbers [ ${validPermitNo} / ${proposedPermitNo} ]`);
         }
+      } else {
+        validPermit = permit;
+      }
     }
 
     return validPermit;
@@ -536,7 +536,7 @@ class CoreDataSource {
     return completeRecords;
   }
 
-  async createorUpdateCollections(collectionUtils,permitUtils, permit, mineRecord) {
+  async createorUpdateCollections(collectionUtils, permitUtils, permit, mineRecord) {
     if (!collectionUtils) {
       throw new Error('createorUpdateCollections - param collectionUtils is null.');
     }
@@ -560,7 +560,6 @@ class CoreDataSource {
       const existingCollection = await collectionUtils.findExistingRecord(amendment.permit_amendment_guid);
 
       if (existingPermits && existingPermits.length > 0) {
-
         if (!existingCollection) {
           const collection = {
             _sourceRefCoreCollectionId: amendment.permit_amendment_guid,
@@ -570,7 +569,7 @@ class CoreDataSource {
             type: permitUtils.getPermitType(amendment.permit_amendment_type_code),
             agency: 'AGENCY_EMLI',
             records: (existingPermits && existingPermits.map(permit => permit._id)) || [],
-            permitNumber: amendment.permit_no != null ? amendment.permit_no: ''
+            permitNumber: amendment.permit_no != null ? amendment.permit_no : ''
           };
 
           // Determine if the collection should be published or not based on the mine status.
@@ -583,10 +582,11 @@ class CoreDataSource {
           // NRPT-549 Update the collection if name, date, number of permits have changed or permissions don't match
           if (
             (amendment.description != null && existingCollection.name !== amendment.description) ||
-            (amendment.issue_date != null && Date.parse(existingCollection.date) !== Date.parse(amendment.issue_date)) ||
+            (amendment.issue_date != null &&
+              Date.parse(existingCollection.date) !== Date.parse(amendment.issue_date)) ||
             existingCollection.records.length != existingPermits.length ||
             existingCollection.type != permitUtils.getPermitType(amendment.permit_amendment_type_code) ||
-            existingPermits.some( p => p.read.includes('public') !== existingCollection.read.includes('public')) ||
+            existingPermits.some(p => p.read.includes('public') !== existingCollection.read.includes('public')) ||
             (amendment.permit_no != null && existingCollection.permitNumber != amendment.permit_no)
           ) {
             const updateCollection = {

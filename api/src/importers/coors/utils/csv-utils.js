@@ -42,7 +42,7 @@ exports.getIssuingAgency = function(csvRow) {
   if (caseNum.toLowerCase().startsWith('p-')) {
     return MiscConstants.CoorsCsvIssuingAgencies.BC_Parks;
   }
-  
+
   let act = '';
   if (csvRow['act']) {
     act = csvRow['act'];
@@ -57,7 +57,6 @@ exports.getIssuingAgency = function(csvRow) {
   return MiscConstants.CoorsCsvIssuingAgencies.Conservation_Officer_Service;
 };
 
-
 /**
  * Derive the penalty type
  *
@@ -70,16 +69,16 @@ exports.getPenalty = function(elem) {
   }
 
   let penaltyType = '';
-  MiscConstants.COURT_CONVICTION_PENALTY_TYPES.forEach( item => {
+  MiscConstants.COURT_CONVICTION_PENALTY_TYPES.forEach(item => {
     if (elem.toLowerCase() === item.toLowerCase()) {
       penaltyType = item;
-    } else if (elem.toLowerCase().startsWith('other'))  {
+    } else if (elem.toLowerCase().startsWith('other')) {
       penaltyType = 'Other';
     }
-  })
+  });
 
   return penaltyType;
-}
+};
 
 /**
  * Derive the unit type of penalty value (eg. Dollars)
@@ -93,11 +92,11 @@ exports.getPenaltyUnits = function(elem) {
   }
 
   let units = '';
-  MiscConstants.PENALTY_VALUE_TYPES.forEach( item => {
+  MiscConstants.PENALTY_VALUE_TYPES.forEach(item => {
     if (elem.toLowerCase() === item.toLowerCase()) {
       units = item;
     }
-  })
+  });
 
   return units;
-}
+};

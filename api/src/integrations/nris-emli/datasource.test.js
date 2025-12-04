@@ -63,9 +63,9 @@ describe('NrisDataSource', () => {
     it('executes run method successfully', async () => {
       const mockedTaskAuditRecord = { updateTaskRecord: jest.fn().mockResolvedValueOnce({ status: 'Running' }) };
       const dataSource = new NrisDataSource(mockedTaskAuditRecord);
-  
+
       await dataSource.run();
-  
+
       expect(mockedTaskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({ status: 'Running' });
     });
 
@@ -73,32 +73,34 @@ describe('NrisDataSource', () => {
       const mockedTaskAuditRecord = { updateTaskRecord: jest.fn().mockResolvedValueOnce({ status: 'Running' }) };
       const dataSource = new NrisDataSource(mockedTaskAuditRecord);
 
-      axios.get.mockImplementation(() => Promise.resolve({data : null}));
-      
+      axios.get.mockImplementation(() => Promise.resolve({ data: null }));
+
       const result = await dataSource.run();
       expect(result).toEqual({ status: 'Auth Error' });
     });
 
-    it("should run through updating the records", async () => {
+    it('should run through updating the records', async () => {
       const mockedTaskAuditRecord = { updateTaskRecord: jest.fn().mockResolvedValueOnce({ status: 'Running' }) };
       const dataSource = new NrisDataSource(mockedTaskAuditRecord);
 
-      axios.get.mockImplementation(() => Promise.resolve({
-        data : {
-          access_token: 'test',
-          expires_in: 3600,
-        }
-      }));
+      axios.get.mockImplementation(() =>
+        Promise.resolve({
+          data: {
+            access_token: 'test',
+            expires_in: 3600
+          }
+        })
+      );
 
       jest.spyOn(dataSource, 'updateRecords').mockImplementation(() => {
         return {
           status: 'Completed',
           message: 'updateRecordType - all done.',
           itemsProcessed: 0,
-          itemTotal: 0,
-        }
-      });    
-      
+          itemTotal: 0
+        };
+      });
+
       const result = await dataSource.run();
       expect(result).toEqual({
         status: 'Complete',
@@ -115,7 +117,7 @@ describe('NrisDataSource', () => {
 
       await expect(dataSource.createItem(null)).rejects.toThrow('createItem - required record must be non-null.');
     });
-    
+
     it('should call createItem and call processPostRequest', async () => {
       const dataSource = new NrisDataSource();
       const record = {
@@ -135,13 +137,13 @@ describe('NrisDataSource', () => {
     it('should call createItem but error out on processPostRequest', async () => {
       const dataSource = new NrisDataSource();
 
-      jest.spyOn(RecordController,'processPostRequest').mockRejectedValue(() => {
+      jest.spyOn(RecordController, 'processPostRequest').mockRejectedValue(() => {
         return [
           {
-            "status": "failure"
+            status: 'failure'
           }
-        ]
-     });
+        ];
+      });
 
       const errorSpy = jest.spyOn(defaultLogger, 'error').mockImplementation(() => {});
 
@@ -313,7 +315,7 @@ describe('NrisDataSource', () => {
 
     it('should not process other assessmentSubType record', async () => {
       const dataSource = new NrisDataSource();
-      
+
       const record = {
         assessmentSubType: 'assessmentSubType',
         assessmentSubStatus: 'Response Received',
@@ -345,38 +347,36 @@ describe('NrisDataSource', () => {
 
     it('should call updateRecords with an existing record to create a document', async () => {
       const dataSource = new NrisDataSource();
-      
+
       jest.spyOn(dataSource, 'shouldProcessRecord').mockImplementation(() => {
         return true;
       });
-      
+
       const createRecordAttachments = jest.spyOn(dataSource, 'createRecordAttachments').mockImplementation(() => {
         return {};
       });
-      
+
       // newRecord
       const transformRecord = jest.spyOn(dataSource, 'transformRecord').mockImplementation(() => {
         return {
-          "newRecord": "newRecord",
-          "documents": []
+          newRecord: 'newRecord',
+          documents: []
         };
       });
-      
+
       // existingRecord
       const findExistingRecord = jest.spyOn(dataSource, 'findExistingRecord').mockImplementation(() => {
         return {
-          "existingRecord": "existingRecord"
+          existingRecord: 'existingRecord'
         };
       });
-      
+
       const getRecords = jest.spyOn(integrationUtils, 'getRecords').mockImplementation(() => {
-        return [
-          { "testRecord": "testRecord" }
-        ];
+        return [{ testRecord: 'testRecord' }];
       });
-      
+
       const result = await dataSource.updateRecords('start date', 'end date');
-      
+
       expect(getRecords).toHaveBeenCalled(); // gets records
       expect(transformRecord).toHaveBeenCalled(); // calls to create newRecord
       expect(findExistingRecord).toHaveBeenCalled(); // calls to find existingRecord
@@ -384,29 +384,29 @@ describe('NrisDataSource', () => {
       expect(result.status).toEqual('Completed');
       expect(result.message).toEqual('updateRecordType - all done.');
     });
-    
+
     it('should call updateRecords with a new record, creates a document and the record', async () => {
       const dataSource = new NrisDataSource();
 
       jest.spyOn(dataSource, 'shouldProcessRecord').mockImplementation(() => {
         return true;
       });
-      
+
       const createRecordAttachments = jest.spyOn(dataSource, 'createRecordAttachments').mockImplementation(() => {
         return {};
       });
-      
+
       const createItem = jest.spyOn(dataSource, 'createItem').mockImplementation(() => {
         return {};
       });
-      
+
       // newRecord
       const transformRecord = jest.spyOn(dataSource, 'transformRecord').mockImplementation(() => {
         return {
-          "newRecord": "newRecord",
-          "documents": [
+          newRecord: 'newRecord',
+          documents: [
             {
-              "newDocument": "newDocument"
+              newDocument: 'newDocument'
             }
           ]
         };
@@ -418,9 +418,7 @@ describe('NrisDataSource', () => {
       });
 
       const getRecords = jest.spyOn(integrationUtils, 'getRecords').mockImplementation(() => {
-        return [
-          { "testRecord": "testRecord" }
-        ];
+        return [{ testRecord: 'testRecord' }];
       });
 
       const result = await dataSource.updateRecords('start date', 'end date');
@@ -438,34 +436,34 @@ describe('NrisDataSource', () => {
   describe('createRecordAttachments', () => {
     it('should be able to call putFileS3', async () => {
       const dataSource = new NrisDataSource();
-  
+
       dataSource.getFileFromNRIS = jest.fn().mockImplementation((assessmentId, attachmentId) => {
         return {
           tempFilePath: 'mocked/temp/path',
-          fileName: 'mockedFileName.txt',
+          fileName: 'mockedFileName.txt'
         };
       });
-  
+
       dataSource.putFileS3 = jest.fn().mockResolvedValue(true);
-  
+
       const record = {
         assessmentId: 'sampleAssessmentId',
         attachment: [
           { attachmentId: 'attachmentId1', fileType: 'Other' },
-          { attachmentId: 'attachmentId2', fileType: 'Final Report', attachmentMediaType: 'application/pdf'},
+          { attachmentId: 'attachmentId2', fileType: 'Final Report', attachmentMediaType: 'application/pdf' }
           //{ attachmentId: 'attachmentId3', fileType: 'Report', attachmentComment: 'Inspection Report'},
           //{ attachmentId: 'attachmentId3', fileType: 'Report', attachmentComment: 'Inspection Report', attachmentDate: "2020-01-10 11:50"},
           //{ attachmentId: 'attachmentId4', fileType: 'Report', attachmentComment: 'Inspection Report', attachmentDate: "2024-06-06" },
-        ],
+        ]
       };
-  
+
       const newRecord = {};
       await dataSource.createRecordAttachments(record, newRecord);
-  
+
       expect(dataSource.getFileFromNRIS).toHaveBeenCalledTimes(1);
       expect(dataSource.getFileFromNRIS).toHaveBeenCalledWith('sampleAssessmentId', 'attachmentId2');
       //expect(dataSource.getFileFromNRIS).toHaveBeenCalledWith('sampleAssessmentId', 'attachmentId4');
-  
+
       expect(dataSource.putFileS3).toHaveBeenCalledTimes(1);
     });
   });
@@ -478,9 +476,9 @@ describe('NrisDataSource', () => {
       const dataSource = new NrisDataSource();
 
       const errorSpy = jest.spyOn(defaultLogger, 'error').mockImplementation(() => {});
-      
+
       axios.get.mockImplementation(() => Promise.resolve(null));
-      
+
       try {
         await dataSource.getFileFromNRIS(MOCKED_INSPECTION_ID, MOCKED_ATTACHMENT_ID);
       } catch (error) {
@@ -493,9 +491,11 @@ describe('NrisDataSource', () => {
     it('should call putFileS3 and utilize the createS3Document method', async () => {
       const dataSource = new NrisDataSource();
 
-      const isDocumentConsideredAnonymous = jest.spyOn(BusinessLogicManager, 'isDocumentConsideredAnonymous').mockImplementation(() => {
-        return {};
-      });
+      const isDocumentConsideredAnonymous = jest
+        .spyOn(BusinessLogicManager, 'isDocumentConsideredAnonymous')
+        .mockImplementation(() => {
+          return {};
+        });
 
       const createS3Document = jest.spyOn(documentController, 'createS3Document').mockImplementation(() => {
         return {
@@ -503,15 +503,13 @@ describe('NrisDataSource', () => {
           s3Response: 'true'
         };
       });
-      
+
       const newRecord = {
         _id: '507f191e810c19729de860ea',
-        documents: [
-          '507f191e810c19729de860eb',
-        ],
+        documents: ['507f191e810c19729de860eb']
       };
 
-      await dataSource.putFileS3({file: 'File'}, {fileName: 'file name'}, {newRecord});
+      await dataSource.putFileS3({ file: 'File' }, { fileName: 'file name' }, { newRecord });
 
       expect(isDocumentConsideredAnonymous).toHaveBeenCalled();
       expect(createS3Document).toHaveBeenCalled();
@@ -522,22 +520,28 @@ describe('NrisDataSource', () => {
     it('should call updateRecord without a new record and throw an error', async () => {
       const dataSource = new NrisDataSource();
 
-      await expect(dataSource.updateRecord(null, { testRecord: 'testRecord' })).rejects.toThrow('updateRecord - required newRecord must be non-null.');
+      await expect(dataSource.updateRecord(null, { testRecord: 'testRecord' })).rejects.toThrow(
+        'updateRecord - required newRecord must be non-null.'
+      );
     });
 
     it('should call updateRecord without an existing record and throw an erorr', async () => {
       const dataSource = new NrisDataSource();
 
-      await expect(dataSource.updateRecord({ testRecord: 'testRecord' }, null)).rejects.toThrow('updateRecord - required existingRecord must be non-null.');
+      await expect(dataSource.updateRecord({ testRecord: 'testRecord' }, null)).rejects.toThrow(
+        'updateRecord - required existingRecord must be non-null.'
+      );
     });
 
     it('should build updateObj and continue to processPutRequest', async () => {
       const dataSource = new NrisDataSource();
 
       const processPutRequest = jest.spyOn(RecordController, 'processPutRequest').mockImplementation(() => {
-        return [{
-          "test": "test"
-        }];
+        return [
+          {
+            test: 'test'
+          }
+        ];
       });
 
       const newRecord = {
@@ -549,28 +553,28 @@ describe('NrisDataSource', () => {
         _id: '507f191e810c19729de860ea',
         _flavourRecords: [
           {
-            _id: '507f191e810c19729de860eb',
+            _id: '507f191e810c19729de860eb'
           }
         ],
-        dateAdded: "2020-01-27",
+        dateAdded: '2020-01-27'
       };
 
       const result = await dataSource.updateRecord(newRecord, existingRecord);
 
       expect(processPutRequest).toHaveBeenCalled();
-      expect(result).toEqual([{ "test": "test" }]);
+      expect(result).toEqual([{ test: 'test' }]);
     });
 
     it('should build updateObj but error out on processPutRequest', async () => {
       const dataSource = new NrisDataSource();
 
-      jest.spyOn(RecordController,'processPutRequest').mockRejectedValue(() => {
+      jest.spyOn(RecordController, 'processPutRequest').mockRejectedValue(() => {
         return [
           {
-            "status": "failure"
+            status: 'failure'
           }
-        ]
-     });
+        ];
+      });
 
       const errorSpy = jest.spyOn(defaultLogger, 'error').mockImplementation(() => {});
 
@@ -583,10 +587,10 @@ describe('NrisDataSource', () => {
         _id: '507f191e810c19729de860ea',
         _flavourRecords: [
           {
-            _id: '507f191e810c19729de860eb',
+            _id: '507f191e810c19729de860eb'
           }
         ],
-        dateAdded: "2020-01-27",
+        dateAdded: '2020-01-27'
       };
 
       try {

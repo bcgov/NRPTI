@@ -27,13 +27,22 @@ const AnnualReportPost = require('../post/annual-report');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.editRecord = async function (args, res, next, incomingObj, overridePutParams = null) {
+exports.editRecord = async function(args, res, next, incomingObj, overridePutParams = null) {
   const flavourFunctions = {
     AnnualReportBCMI: this.editBCMI
-  }
-  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, AnnualReportPost, 'AnnualReport', flavourFunctions, overridePutParams);
+  };
+  return await PutUtils.editRecordWithFlavours(
+    args,
+    res,
+    next,
+    incomingObj,
+    this.editMaster,
+    AnnualReportPost,
+    'AnnualReport',
+    flavourFunctions,
+    overridePutParams
+  );
 };
-
 
 /**
  * Performs all operations necessary to edit a master AnnualReport record.
@@ -59,7 +68,7 @@ exports.editRecord = async function (args, res, next, incomingObj, overridePutPa
  * @param {*} incomingObj see example
  * @returns edited master AnnualReport record
  */
-exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
+exports.editMaster = function(args, res, next, incomingObj, flavourIds) {
   delete incomingObj._id;
 
   // Reject any changes to master permissions
@@ -83,7 +92,7 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
   const updateObj = { $set: dotNotatedObj };
 
   if (flavourIds && flavourIds.length) {
-    updateObj.$set = {...updateObj.$set };
+    updateObj.$set = { ...updateObj.$set };
     updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
   }
 
@@ -114,7 +123,7 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns edited bcmi AnnualReport record
  */
-exports.editBCMI = function (args, res, next, incomingObj) {
+exports.editBCMI = function(args, res, next, incomingObj) {
   delete incomingObj._id;
 
   // Reject any changes to permissions

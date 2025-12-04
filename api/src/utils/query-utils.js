@@ -54,20 +54,19 @@ exports.audit = function(req, action, meta, authPayload, objId = null) {
     }
 
     req.audits.push(this.recordAction(action, meta, authPayload, objId));
-  } catch(err) {
+  } catch (err) {
     defaultLog.error('Failed to add Audit log request. ' + err);
   }
-}
+};
 exports.recordAction = async function(action, meta, authPayload, objId = null) {
   try {
-
     let performedBy = authPayload
-                      ? JSON.stringify({
-                          idir_userid: authPayload.idir_userid || null,
-                          displayName: authPayload.displayName || null,
-                          preferred_username: authPayload.preferred_username || null
-                        })
-                      : null;
+      ? JSON.stringify({
+          idir_userid: authPayload.idir_userid || null,
+          displayName: authPayload.displayName || null,
+          preferred_username: authPayload.preferred_username || null
+        })
+      : null;
 
     const Audit = mongoose.model('Audit');
     const audit = new Audit({
@@ -78,7 +77,7 @@ exports.recordAction = async function(action, meta, authPayload, objId = null) {
       performedBy: performedBy
     });
     return await audit.save();
-  } catch(err) {
+  } catch (err) {
     defaultLog.error('Failed to create Audit log. ' + err);
     return;
   }

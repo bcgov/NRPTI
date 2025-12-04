@@ -5,7 +5,7 @@ describe('EPIC_RECORD_TYPE', () => {
     it('should be defined', () => {
       expect(EPIC_RECORD_TYPE).toBeDefined();
     });
-  
+
     it('should have properties for different record types', () => {
       expect(EPIC_RECORD_TYPE).toHaveProperty('Order');
       expect(EPIC_RECORD_TYPE).toHaveProperty('Inspection');
@@ -14,7 +14,7 @@ describe('EPIC_RECORD_TYPE', () => {
       expect(EPIC_RECORD_TYPE).toHaveProperty('ManagementPlan');
     });
   });
-  
+
   describe('EPIC_RECORD_TYPE properties for Order', () => {
     it('should have an array of objects with specific properties for Orders', () => {
       expect(Array.isArray(EPIC_RECORD_TYPE.Order)).toBe(true);
@@ -42,7 +42,7 @@ describe('EPIC_RECORD_TYPE', () => {
         expect(inspection).toHaveProperty('getUtil');
       });
     });
-  
+
     it('Functions within the record objects should return instances of specific classes', () => {
       EPIC_RECORD_TYPE.Inspection.forEach(inspection => {
         const util = inspection.getUtil({});
@@ -60,7 +60,7 @@ describe('EPIC_RECORD_TYPE', () => {
         expect(certificate).toHaveProperty('getUtil');
       });
     });
-  
+
     it('Functions within the record objects should return instances of specific classes', () => {
       EPIC_RECORD_TYPE.Certificate.forEach(certificate => {
         const util = certificate.getUtil({});
@@ -78,7 +78,7 @@ describe('EPIC_RECORD_TYPE', () => {
         expect(certificateAmendment).toHaveProperty('getUtil');
       });
     });
-  
+
     it('Functions within the record objects should return instances of specific classes', () => {
       EPIC_RECORD_TYPE.CertificateAmendment.forEach(certificateAmendment => {
         const util = certificateAmendment.getUtil({});
@@ -96,7 +96,7 @@ describe('EPIC_RECORD_TYPE', () => {
         expect(managementPlan).toHaveProperty('getUtil');
       });
     });
-  
+
     it('Functions within the record objects should return instances of specific classes', () => {
       EPIC_RECORD_TYPE.ManagementPlan.forEach(managementPlan => {
         const util = managementPlan.getUtil({});
@@ -122,11 +122,7 @@ describe('EPIC_RECORD_TYPE', () => {
     });
 
     it('should return a subset of EPIC record types based on provided record types', () => {
-      const result = EPIC_RECORD_TYPE.getSome([
-        'Order',
-        'Certificate',
-        'ManagementPlan'
-      ]);
+      const result = EPIC_RECORD_TYPE.getSome(['Order', 'Certificate', 'ManagementPlan']);
 
       expect(result.some(obj => obj.type.name === 'Order')).toBe(true);
       expect(result.some(obj => obj.type.name === 'Certificate Package')).toBe(true);
@@ -141,7 +137,7 @@ describe('EPIC_RECORD_TYPE', () => {
       // Count all enum record types, excludes getSome and getAll
       let itemCount = 0;
       Object.keys(EPIC_RECORD_TYPE).forEach(key => {
-        if(key !== 'getSome' && key !== 'getAll') {
+        if (key !== 'getSome' && key !== 'getAll') {
           itemCount = itemCount + EPIC_RECORD_TYPE[key].length;
         }
       });

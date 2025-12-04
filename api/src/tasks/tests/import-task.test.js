@@ -32,9 +32,7 @@ describe('import-task', () => {
       };
 
       const res = await importTask.protectedCreateTask(mockArgs, {});
-      expect(res).toEqual(
-        {}
-      );
+      expect(res).toEqual({});
     });
 
     it('throws an error if required task.value param is missing', async () => {
@@ -54,9 +52,7 @@ describe('import-task', () => {
       };
 
       const res = await importTask.protectedCreateTask(mockArgs, {});
-      expect(res).toEqual(
-        {}
-      );
+      expect(res).toEqual({});
     });
 
     it('throws an error if required dataSourceType param is missing', async () => {
@@ -79,9 +75,7 @@ describe('import-task', () => {
       };
 
       const res = await importTask.protectedCreateTask(mockArgs, {});
-      expect(res).toEqual(
-        {}
-      );
+      expect(res).toEqual({});
     });
 
     it('throws an error if required taskType param is missing', async () => {
@@ -104,9 +98,7 @@ describe('import-task', () => {
       };
 
       const res = await importTask.protectedCreateTask(mockArgs, {});
-      expect(res).toEqual(
-        {}
-      );
+      expect(res).toEqual({});
     });
   });
 });

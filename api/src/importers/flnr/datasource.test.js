@@ -38,7 +38,8 @@ describe('NroCsvDataSource', () => {
       const dataSource = new NroCsvDataSource(taskAuditRecord, null, null, [
         {
           'report status': 'Complete'
-        }, {
+        },
+        {
           'report status': 'Complete'
         }
       ]);
@@ -48,7 +49,7 @@ describe('NroCsvDataSource', () => {
       expect(dataSource.status.itemTotal).toEqual(2);
       expect(taskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({
         status: 'Running',
-        itemTotal: 2,
+        itemTotal: 2
       });
     });
   });
@@ -56,25 +57,26 @@ describe('NroCsvDataSource', () => {
   describe('batchProcessRecords', () => {
     it('processes csvRows in batches', async () => {
       const taskAuditRecord = { updateTaskRecord: jest.fn(() => {}) };
-      const dataSource = new NroCsvDataSource(taskAuditRecord, null, "Inspection", [
+      const dataSource = new NroCsvDataSource(taskAuditRecord, null, 'Inspection', [
         {
           'report status': 'Complete'
-        }, {
+        },
+        {
           'report status': 'Complete'
         }
       ]);
-      
+
       dataSource.processRecord = jest.fn();
 
       await dataSource.batchProcessRecords();
-  
+
       expect(dataSource.processRecord).toHaveBeenCalledTimes(2);
     });
   });
 
   describe('getRecordTypeConfig', () => {
     it('returns the correct record type config for Inspection', () => {
-      const dataSource = new NroCsvDataSource(null, null, "Inspection", [
+      const dataSource = new NroCsvDataSource(null, null, 'Inspection', [
         {
           'report status': 'Complete'
         }

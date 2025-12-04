@@ -34,13 +34,23 @@ const OrderPost = require('../post/order');
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.editRecord = async function (args, res, next, incomingObj, overridePutParams = null) {
+exports.editRecord = async function(args, res, next, incomingObj, overridePutParams = null) {
   const flavourFunctions = {
     OrderLNG: this.editLNG,
     OrderNRCED: this.editNRCED,
     OrderBCMI: this.editBCMI
-  }
-  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, OrderPost, 'Order', flavourFunctions, overridePutParams);
+  };
+  return await PutUtils.editRecordWithFlavours(
+    args,
+    res,
+    next,
+    incomingObj,
+    this.editMaster,
+    OrderPost,
+    'Order',
+    flavourFunctions,
+    overridePutParams
+  );
 };
 
 /**
@@ -72,7 +82,7 @@ exports.editRecord = async function (args, res, next, incomingObj, overridePutPa
  * @param {*} incomingObj see example
  * @returns edited master order record
  */
-exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
+exports.editMaster = function(args, res, next, incomingObj, flavourIds) {
   delete incomingObj._id;
 
   // Reject any changes to master permissions
@@ -98,7 +108,7 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
   const updateObj = { $set: dotNotatedObj };
 
   if (flavourIds && flavourIds.length) {
-    updateObj.$set = {...updateObj.$set };
+    updateObj.$set = { ...updateObj.$set };
     updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
   }
 
@@ -134,7 +144,7 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns edited lng order record
  */
-exports.editLNG = function (args, res, next, incomingObj) {
+exports.editLNG = function(args, res, next, incomingObj) {
   delete incomingObj._id;
 
   // Reject any changes to permissions
@@ -199,7 +209,7 @@ exports.editLNG = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns edited nrced order record
  */
-exports.editNRCED = function (args, res, next, incomingObj) {
+exports.editNRCED = function(args, res, next, incomingObj) {
   delete incomingObj._id;
 
   // Reject any changes to permissions
@@ -264,7 +274,7 @@ exports.editNRCED = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns edited bcmi order record
  */
- exports.editBCMI = function (args, res, next, incomingObj) {
+exports.editBCMI = function(args, res, next, incomingObj) {
   delete incomingObj._id;
 
   // Reject any changes to permissions

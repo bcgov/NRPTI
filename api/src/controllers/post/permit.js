@@ -5,10 +5,7 @@ const { userHasValidRoles } = require('../../utils/auth-utils');
 const utils = require('../../utils/constants/misc');
 
 // Additional admin roles that can create this record, such as admin:wf or admin:flnro
-const ADDITIONAL_ROLES = [
-  utils.ApplicationRoles.ADMIN_ENV_EPD,
-  utils.ApplicationRoles.ADMIN_WLRS
-];
+const ADDITIONAL_ROLES = [utils.ApplicationRoles.ADMIN_ENV_EPD, utils.ApplicationRoles.ADMIN_WLRS];
 exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;
 
 /**
@@ -35,11 +32,11 @@ exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createItem = async function (args, res, next, incomingObj) {
+exports.createItem = async function(args, res, next, incomingObj) {
   const flavourFunctions = {
     PermitLNG: this.createLNG,
-    PermitBCMI: this.createBCMI,
-  }
+    PermitBCMI: this.createBCMI
+  };
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
@@ -68,7 +65,7 @@ exports.createItem = async function (args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master permit record
  */
-exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   let Permit = mongoose.model('Permit');
   let permit = new Permit();
 
@@ -142,11 +139,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
 
   // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
   if (args) {
-    postUtils.setAdditionalRoleOnRecord(
-      permit,
-      args.swagger.params.auth_payload.client_roles,
-      ADDITIONAL_ROLES
-    );
+    postUtils.setAdditionalRoleOnRecord(permit, args.swagger.params.auth_payload.client_roles, ADDITIONAL_ROLES);
   }
 
   return permit;
@@ -176,11 +169,13 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created lng permit record
  */
-exports.createLNG = function (args, res, next, incomingObj) {
+exports.createLNG = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles(
-    [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG, ...ADDITIONAL_ROLES],
-    args.swagger.params.auth_payload.client_roles)
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG, ...ADDITIONAL_ROLES],
+      args.swagger.params.auth_payload.client_roles
+    )
   ) {
     throw new Error('Missing valid user role.');
   }
@@ -249,11 +244,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
 
   // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
   if (args) {
-    postUtils.setAdditionalRoleOnRecord(
-      permitLNG,
-      args.swagger.params.auth_payload.client_roles,
-      ADDITIONAL_ROLES
-    );
+    postUtils.setAdditionalRoleOnRecord(permitLNG, args.swagger.params.auth_payload.client_roles, ADDITIONAL_ROLES);
   }
 
   return permitLNG;
@@ -268,13 +259,15 @@ exports.createLNG = function (args, res, next, incomingObj) {
  * @param {*} incomingObj
  * @returns created BCMI permit
  */
-exports.createBCMI = function (args, res, next, incomingObj) {
+exports.createBCMI = function(args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles(
-    [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, ...ADDITIONAL_ROLES],
-    args.swagger.params.auth_payload.client_roles)
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI, ...ADDITIONAL_ROLES],
+      args.swagger.params.auth_payload.client_roles
+    )
   ) {
-      throw new Error('Missing valid user role.');
+    throw new Error('Missing valid user role.');
   }
 
   let PermitBCMI = mongoose.model('PermitBCMI');
@@ -331,7 +324,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.amendmentStatusCode && (permitBCMI.amendmentStatusCode = incomingObj.amendmentStatusCode);
   incomingObj.typeCode && (permitBCMI.typeCode = incomingObj.typeCode);
   // originalPermit should be null unless the type is amendment
-  incomingObj.originalPermit && incomingObj.typeCode.toUpperCase() === 'AMD' && (permitBCMI.originalPermit = incomingObj.originalPermit);
+  incomingObj.originalPermit &&
+    incomingObj.typeCode.toUpperCase() === 'AMD' &&
+    (permitBCMI.originalPermit = incomingObj.originalPermit);
   incomingObj.receivedDate && (permitBCMI.receivedDate = incomingObj.receivedDate);
   incomingObj.issueDate && (permitBCMI.issueDate = incomingObj.issueDate);
   incomingObj.authorizedEndDate && (permitBCMI.authorizedEndDate = incomingObj.authorizedEndDate);
@@ -345,11 +340,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
 
   // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
   if (args) {
-    postUtils.setAdditionalRoleOnRecord(
-      permitBCMI,
-      args.swagger.params.auth_payload.client_roles,
-      ADDITIONAL_ROLES
-    );
+    postUtils.setAdditionalRoleOnRecord(permitBCMI, args.swagger.params.auth_payload.client_roles, ADDITIONAL_ROLES);
   }
 
   return permitBCMI;

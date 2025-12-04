@@ -11,7 +11,7 @@ class MisCsvDataSource {
    * @param {*} csvRows array of csv row objects to import
    * @memberof MisCsvDataSource
    */
-   constructor(taskAuditRecord, auth_payload, recordType, csvRows) {
+  constructor(taskAuditRecord, auth_payload, recordType, csvRows) {
     this.taskAuditRecord = taskAuditRecord;
     this.auth_payload = auth_payload;
     this.recordType = recordType;
@@ -27,7 +27,7 @@ class MisCsvDataSource {
    * @returns final status of importer
    * @memberof MisCsvDataSource
    */
-   async run() {
+  async run() {
     defaultLog.info('run - import agri-mis-csv');
 
     this.status.itemTotal = this.csvRows.length;
@@ -46,7 +46,7 @@ class MisCsvDataSource {
    *
    * @memberof MisCsvDataSource
    */
-   async batchProcessRecords() {
+  async batchProcessRecords() {
     try {
       let batchSize = process.env.CSV_IMPORT_BATCH_SIZE || 100;
 
@@ -73,14 +73,14 @@ class MisCsvDataSource {
     }
   }
 
-    /**
+  /**
    * Perform all steps necessary to process and save a single row of the csv file.
    *
    * @param {*} csvRow object of values for a single row
    * @param {*} recordTypeConfig object containing record type specific details
    * @memberof MisCsvDataSource
    */
-   async processRecord(csvRow, recordTypeConfig) {
+  async processRecord(csvRow, recordTypeConfig) {
     // set status defaults
     let recordStatus = {};
 
@@ -130,13 +130,13 @@ class MisCsvDataSource {
     }
   }
 
-    /**
+  /**
    * Supported Agri csv record type configs.
    *
    * @returns {*} object with getUtil method to create a new instance of the record type utils.
    * @memberof MisCsvDataSource
    */
-   getRecordTypeConfig() {
+  getRecordTypeConfig() {
     if (this.recordType === 'Inspection') {
       return {
         getUtil: (auth_payload, csvRow) => {

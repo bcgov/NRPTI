@@ -8,10 +8,10 @@ module.exports = require('../../utils/model-schema-generator')(
     _schemaName: { type: String, default: 'AdministrativePenalty', index: true },
     _epicProjectId: { type: 'ObjectId', default: null, index: true },
     _sourceRefId: { type: 'ObjectId', default: null, index: true },
-    _sourceRefOgcPenaltyId: {type: String, default: null },
+    _sourceRefOgcPenaltyId: { type: String, default: null },
     _epicMilestoneId: { type: 'ObjectId', default: null, index: true },
     mineGuid: { type: String, default: null, index: true },
-    unlistedMine: { type: String, default: '', index: true},
+    unlistedMine: { type: String, default: '', index: true },
     unlistedMineType: { type: String, default: '' },
 
     read: [{ type: String, trim: true, default: 'sysadmin' }],
@@ -24,14 +24,16 @@ module.exports = require('../../utils/model-schema-generator')(
     dateIssued: { type: Date, default: null },
     issuingAgency: { type: String, default: '' },
     author: { type: String, default: '' },
-    legislation: [{
-      act: { type: String, default: '' },
-      regulation: { type: String, default: '' },
-      section: { type: String, default: '' },
-      subSection: { type: String, default: '' },
-      paragraph: { type: String, default: '' },
-      offence: { type: String, default: '' }
-    }],
+    legislation: [
+      {
+        act: { type: String, default: '' },
+        regulation: { type: String, default: '' },
+        section: { type: String, default: '' },
+        subSection: { type: String, default: '' },
+        paragraph: { type: String, default: '' },
+        offence: { type: String, default: '' }
+      }
+    ],
     issuedTo: {
       write: [{ type: String, trim: true, default: 'sysadmin' }],
       read: [{ type: String, trim: true, default: 'sysadmin' }],
