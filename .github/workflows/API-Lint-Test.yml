@@ -47,6 +47,13 @@ jobs:
         npm install
       env:
         CI: true
+    - name: lint
+      if: steps.filter.outputs.api == 'true'
+      run: |
+        cd api
+        npx eslint .
+        npx prettier ./**/*.js --check --log-level warn
+        
     - name: Install MongoDB driver
       if: steps.filter.outputs.api == 'true'
       run: npm install mongodb@3.6
