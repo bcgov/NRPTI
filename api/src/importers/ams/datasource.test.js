@@ -198,23 +198,23 @@ describe('NroCsvDataSource', () => {
     it('returns the correct object when the recordType is "Order"', () => {
       const dataSource = new NroCsvDataSource();
       dataSource.recordType = 'Order';
-  
+
       const result = dataSource.getRecordTypeConfig();
-  
+
       expect(result).toEqual(
         expect.objectContaining({
-          getUtil: expect.any(Function),
+          getUtil: expect.any(Function)
         })
       );
       expect(result.getUtil).toEqual(expect.any(Function));
     });
-  
+
     it('returns null when the recordType is not "Order"', () => {
       const dataSource = new NroCsvDataSource();
       dataSource.recordType = 'InvalidRecordType';
-  
+
       const result = dataSource.getRecordTypeConfig();
-  
+
       expect(result).toBeNull();
     });
   });

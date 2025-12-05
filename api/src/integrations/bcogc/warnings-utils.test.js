@@ -8,7 +8,6 @@ describe('warnings-utils', () => {
   const warnings = new Warnings('authPayload', RECORD_TYPE.Warning, null);
 
   describe('transformRecord', () => {
-
     it('throws an error if null csvRow parameter provided', () => {
       expect(() => warnings.transformRecord(null)).toThrow('transformRecord - required csvRow must be non-null.');
     });
@@ -42,7 +41,6 @@ describe('warnings-utils', () => {
         Proponent: 'Coastal GasLink Pipeline Ltd.',
         Filename: 'Warning-letter-sample.pdf',
         'File URL': 'https://www.bc-er.ca/some/file/Warning-letter-sample.pdf'
-
       });
 
       expect(result).toEqual({
@@ -69,15 +67,15 @@ describe('warnings-utils', () => {
   });
 
   describe('createItem', () => {
-    const Document = require ('../../models/document');
+    const Document = require('../../models/document');
     const utils = require('../../utils/constants/misc');
-    const mongo = 'mongodb://127.0.0.1/nrpti-testing'
+    const mongo = 'mongodb://127.0.0.1/nrpti-testing';
     mongoose.connect(mongo);
 
     beforeAll(async () => {
       await Document.remove({});
     });
-    
+
     beforeEach(async () => {
       await Document.remove({});
     });
@@ -96,50 +94,50 @@ describe('warnings-utils', () => {
         document.addedBy = addedBy;
         document.url = url;
         document.read = [utils.ApplicationRoles.ADMIN, ...readRoles];
-        document.write = [utils.ApplicationRoles.ADMIN, ...writeRoles];;
+        document.write = [utils.ApplicationRoles.ADMIN, ...writeRoles];
 
         return document.save();
       })
     }));
 
     it('throws error when nrptiRecord is not provided', async () => {
-      await expect(warnings.createItem(null)).rejects.toThrow(
-        'createItem - required nrptiRecord must be non-null.'
-      );
+      await expect(warnings.createItem(null)).rejects.toThrow('createItem - required nrptiRecord must be non-null.');
     });
 
     it('creates a document', async () => {
       const baseCsvRow = {
-        'Title': '123',
-        'author': 'AGENCY_OGC',
-        'issuingAgency': 'AGENCY_OGC',
-        'recordName': 'record name',
+        Title: '123',
+        author: 'AGENCY_OGC',
+        issuingAgency: 'AGENCY_OGC',
+        recordName: 'record name',
         'Date Issued': '11-07-2023',
-        'Proponent': 'Proponent',
-        'Filename': 'Filename',
-        'File URL': 'File URL',
+        Proponent: 'Proponent',
+        Filename: 'Filename',
+        'File URL': 'File URL'
       };
       const nrptiRecord = await warnings.transformRecord(baseCsvRow);
 
-      const result = await createURLDocument(nrptiRecord.document.fileName, 'BCOGC Import', nrptiRecord.document.url, ['public'])
+      const result = await createURLDocument(nrptiRecord.document.fileName, 'BCOGC Import', nrptiRecord.document.url, [
+        'public'
+      ]);
       const resultRead = [...result.read];
       const resultWrite = [...result.write];
 
-      expect(result.fileName).toEqual('Filename')
-      expect(result.url).toEqual('File URL')
-      expect(result.addedBy).toEqual('BCOGC Import')
-      expect(resultRead).toEqual(['sysadmin', 'public'])
-      expect(resultWrite).toEqual(['sysadmin'])
+      expect(result.fileName).toEqual('Filename');
+      expect(result.url).toEqual('File URL');
+      expect(result.addedBy).toEqual('BCOGC Import');
+      expect(resultRead).toEqual(['sysadmin', 'public']);
+      expect(resultWrite).toEqual(['sysadmin']);
     });
   });
 
   describe('findExistingRecord', () => {
     it('returns null if _sourceRefOgcWarningId is not provided in nrptiRecord', async () => {
       const result = await warnings.findExistingRecord({});
-  
+
       expect(result).toBeNull();
     });
-  
+
     it('finds and populates existing record by _sourceRefOgcWarningId', async () => {
       const mockFindOne = jest.fn().mockReturnValue({
         populate: jest.fn().mockResolvedValue({
@@ -148,13 +146,13 @@ describe('warnings-utils', () => {
           _flavourRecords: [{ _id: 'flavourId', _schemaName: 'Flavour' }]
         })
       });
-  
+
       mongoose.model = jest.fn().mockReturnValue({ findOne: mockFindOne });
-  
+
       const nrptiRecord = { _sourceRefOgcWarningId: 'existingWarningId' };
-  
+
       const result = await warnings.findExistingRecord(nrptiRecord);
-  
+
       expect(result).toEqual({
         _id: 'mockId',
         _schemaName: 'Warning',

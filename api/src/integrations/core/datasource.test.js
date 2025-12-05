@@ -31,9 +31,9 @@ describe('Core DataSource', () => {
     it('executes run method successfully', async () => {
       const mockedTaskAuditRecord = { updateTaskRecord: jest.fn().mockResolvedValueOnce({ status: 'Running' }) };
       const dataSource = new DataSource(mockedTaskAuditRecord);
-  
+
       await dataSource.run();
-  
+
       expect(mockedTaskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({ status: 'Running' });
     });
   });
@@ -68,7 +68,9 @@ describe('Core DataSource', () => {
       const dataSource = new DataSource(mockedTaskAuditRecord, mockedAuthPayload);
       dataSource.coreUtil.apiAccessExpiry = new moment(new Date()).add(2, 'w');
       dataSource.coreUtil.client_token = 'test_token';
-      integrationUtils.getRecords = jest.fn(() => { throw new Error('Test error') });
+      integrationUtils.getRecords = jest.fn(() => {
+        throw new Error('Test error');
+      });
 
       await expect(dataSource.getAllRecordData()).rejects.toThrow('Test error');
     });
@@ -76,7 +78,6 @@ describe('Core DataSource', () => {
 
   describe('processRecords', () => {
     it('calls `processRecord` on all records', async () => {
-
       jest.spyOn(coreUtil.prototype, 'getRecords').mockReturnValue(Promise.resolve({ records: [] }));
 
       const mockGetIntegrationUrl = jest.fn(() => {
@@ -90,7 +91,7 @@ describe('Core DataSource', () => {
         return Promise.resolve();
       });
 
-      // Number of elements in array should be number of times 
+      // Number of elements in array should be number of times
       // processRecord is called.
       const mockRecords = [
         {
@@ -113,7 +114,9 @@ describe('Core DataSource', () => {
 
     it('throws error if missing coreRecords param', async () => {
       const dataSource = new DataSource();
-      await expect(dataSource.processRecords({}, null)).rejects.toThrow('processRecords - required coreRecords is null.');
+      await expect(dataSource.processRecords({}, null)).rejects.toThrow(
+        'processRecords - required coreRecords is null.'
+      );
     });
   });
 
@@ -121,7 +124,7 @@ describe('Core DataSource', () => {
     it('silently handles thrown error', async () => {
       const mockRecordUtils = {
         transformRecord: jest.fn(() => {
-          throw new Error('Test error')
+          throw new Error('Test error');
         })
       };
 
@@ -144,35 +147,38 @@ describe('Core DataSource', () => {
         mineUtils: {},
         permitUtils: {},
         collectionUtils: {}
-      }
+      };
       dataSource.processRecord(utils, [], null);
       expect(dataSource.status.individualRecordStatus[0].error).toEqual('processRecord - required coreRecord is null.');
     });
   });
 
   describe('getMinePermits', () => {
-    
     it('throws an error when no permit is found in getMinePermits method', async () => {
       const nrptiRecord = null;
-      
+
       const dataSource = new DataSource(null);
-      
-      await expect(dataSource.getMinePermits(nrptiRecord)).rejects.toThrow('getMinePermits - required nrptiRecord is null.');
+
+      await expect(dataSource.getMinePermits(nrptiRecord)).rejects.toThrow(
+        'getMinePermits - required nrptiRecord is null.'
+      );
     });
   });
 
   describe('createMinePermit', () => {
     it('throws an error when valid permit cannot be found in createMinePermit method', async () => {
       const permitUtils = {
-        transformRecord: jest.fn(),
+        transformRecord: jest.fn()
       };
-    
+
       const nrptiRecord = {};
-    
+
       const dataSource = new DataSource(null);
       dataSource.getMinePermit = jest.fn().mockResolvedValueOnce(null);
-    
-      await expect(dataSource.createMinePermit(permitUtils, nrptiRecord)).rejects.toThrow('createMinePermit - Cannot find valid permit');
+
+      await expect(dataSource.createMinePermit(permitUtils, nrptiRecord)).rejects.toThrow(
+        'createMinePermit - Cannot find valid permit'
+      );
     });
   });
 
@@ -181,33 +187,34 @@ describe('Core DataSource', () => {
       const permitUtils = {
         transformRecord: jest.fn(),
         getMinePermits: jest.fn(),
-        updateRecord: jest.fn(),
+        updateRecord: jest.fn()
       };
 
-      const mineRecord = {}
+      const mineRecord = {};
 
       const dataSource = new DataSource(null);
       dataSource.getMinePermit = jest.fn().mockResolvedValueOnce(null);
 
-      await expect(dataSource.updateMinePermit(permitUtils, mineRecord)).rejects.toThrow('updateMinePermit - Cannot find valid permit');
+      await expect(dataSource.updateMinePermit(permitUtils, mineRecord)).rejects.toThrow(
+        'updateMinePermit - Cannot find valid permit'
+      );
     });
   });
-
 
   describe('getVerifiedMines', () => {
     global.CORE_API_BATCH_SIZE = 1;
     global.CORE_API_HOST = 'testHost';
     global.CORE_API_PATHNAME = 'testPath';
-    
+
     it('should call getRecords in the getVerifiedMines call', async () => {
       const dataSource = new DataSource(null);
 
       dataSource.coreUtil.apiAccessExpiry = new moment(new Date()).add(2, 'w');
       dataSource.coreUtil.client_token = 'test_token';
       const spy = jest.spyOn(coreUtil.prototype, 'getRecords');
-      
+
       await dataSource.getVerifiedMines();
-  
+
       expect(spy).toHaveBeenCalled();
     });
   });
@@ -217,27 +224,27 @@ describe('Core DataSource', () => {
       const dataSource = new DataSource();
       const permit = {};
       const mineRecord = {};
-  
+
       await expect(dataSource.createorUpdateCollections(null, permit, mineRecord)).rejects.toThrow(
         'createorUpdateCollections - param collectionUtils is null.'
       );
     });
-  
+
     it('throws error if permit param is missing', async () => {
       const dataSource = new DataSource();
       const collectionUtils = {};
       const mineRecord = {};
-  
+
       await expect(dataSource.createorUpdateCollections(collectionUtils, null, mineRecord)).rejects.toThrow(
         'createorUpdateCollections - param permit is null.'
       );
     });
-  
+
     it('throws error if mineRecord param is missing', async () => {
       const dataSource = new DataSource();
       const collectionUtils = {};
       const permit = {};
-  
+
       await expect(dataSource.createorUpdateCollections(collectionUtils, permit, null)).rejects.toThrow(
         'createorUpdateCollections - param permit is null.'
       );

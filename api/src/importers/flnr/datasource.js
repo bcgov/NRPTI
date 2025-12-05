@@ -17,7 +17,7 @@ class NroCsvDataSource {
     this.recordType = recordType;
 
     // Only process records that are 'Complete'
-    if(csvRows) {
+    if (csvRows) {
       this.csvRows = csvRows.filter(row => row['report status'] && row['report status'] === 'Complete');
     }
 

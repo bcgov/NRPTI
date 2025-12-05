@@ -9,15 +9,20 @@ jest.mock('mongoose');
 jest.mock('../../utils/constants/misc');
 jest.mock('../../utils/post-utils');
 
-mongoose.model.mockImplementation((modelName) => {
-  if (modelName === 'Inspection' || modelName === 'InspectionLNG' || modelName === 'InspectionNRCED' || modelName === 'InspectionBCMI') {
+mongoose.model.mockImplementation(modelName => {
+  if (
+    modelName === 'Inspection' ||
+    modelName === 'InspectionLNG' ||
+    modelName === 'InspectionNRCED' ||
+    modelName === 'InspectionBCMI'
+  ) {
     // Return a constructor function for the 'Inspection' model
     return function Inspection() {
       return {
-          issuedTo: {
-            type: '',
-            companyName: '',
-            fullName: ''
+        issuedTo: {
+          type: '',
+          companyName: '',
+          fullName: ''
         },
         _schemaName: '',
         _epicProjectId: null,
@@ -39,7 +44,7 @@ mongoose.model.mockImplementation((modelName) => {
         author: '',
         projectName: '',
         location: '',
-        centroid: [ 0, 0],
+        centroid: [0, 0],
         outcomeStatus: '',
         outcomeDescription: '',
         documents: [],
@@ -60,16 +65,15 @@ mongoose.model.mockImplementation((modelName) => {
         InspectionLNG: {},
         InspectionNRCED: {},
         InspectionBCMI: {}
-      }
+      };
     };
   }
-  
 });
 
 const mockArgs = {
-  'swagger' : {
-    'params': {
-      'auth_payload': {
+  swagger: {
+    params: {
+      auth_payload: {
         exp: 1708644714,
         iat: 2208644414,
         auth_time: 2208642312,
@@ -84,7 +88,7 @@ const mockArgs = {
         scope: 'openid idir email profile',
         sid: '1234ba35-1234-4aee-bfe4-0a1234541b38',
         idir_user_guid: 'uid123123123123',
-        client_roles: [ 'sysadmin' ],
+        client_roles: ['sysadmin'],
         identity_provider: 'idir',
         idir_username: 'govuser',
         email_verified: false,
@@ -97,7 +101,7 @@ const mockArgs = {
       }
     }
   }
-}
+};
 
 function resetMockIncomingObj() {
   return {
@@ -109,7 +113,7 @@ function resetMockIncomingObj() {
     _schemaName: 'Inspection',
     _epicProjectId: null,
     _sourceRefId: null,
-    _sourceRefNrisId:  12345,
+    _sourceRefNrisId: 12345,
     _sourceRefAgriMisId: null,
     _sourceRefAgriCmdbId: null,
     _epicMilestoneId: null,
@@ -126,11 +130,12 @@ function resetMockIncomingObj() {
     author: 'Ministry of Environment and Climate Change Strategy',
     projectName: '',
     location: 'Fake Location',
-    centroid: [ -123,  54 ],
+    centroid: [-123, 54],
     outcomeStatus: '',
     outcomeDescription: 'Out of Compliance - Advisory',
-    documents: [ '5fc512344a47f70021abb1ce' ],
-    description: 'Trigger or reason for inspection: Incident; Authorization Number:  1234; Source of inspected requirement(s): Asphalt Plant Regulation',
+    documents: ['5fc512344a47f70021abb1ce'],
+    description:
+      'Trigger or reason for inspection: Incident; Authorization Number:  1234; Source of inspected requirement(s): Asphalt Plant Regulation',
     dateAdded: Date.now(),
     dateUpdated: Date.now(),
     addedBy: '',
@@ -144,7 +149,7 @@ function resetMockIncomingObj() {
     legislation: [
       {
         act: 'Environmental Management Act',
-        section:  109,
+        section: 109,
         legislationDescription: 'Inspection to verify compliance with regulatory requirement.'
       }
     ],
@@ -154,7 +159,8 @@ function resetMockIncomingObj() {
     InspectionNRCED: {
       _id: '5ece96d9512345001a084d39',
       addRole: 'public',
-      summary: 'Trigger or reason for inspection: Incident; Authorization Number:  1234; Source of inspected requirement(s): Asphalt Plant Regulation'
+      summary:
+        'Trigger or reason for inspection: Incident; Authorization Number:  1234; Source of inspected requirement(s): Asphalt Plant Regulation'
     },
     InspectionBCMI: { _id: '5fa2390e12341ea0861f5e4d', addRole: 'public' }
   };
@@ -215,7 +221,7 @@ describe('Inspection Module', () => {
       const mockNext = null;
 
       mockIncomingObj.sourceSystemRef = 'source-other';
-      console.log("mockIncomingObj: ", mockIncomingObj);
+      console.log('mockIncomingObj: ', mockIncomingObj);
       const result = await createNRCED(mockArgs, mockRes, mockNext, mockIncomingObj);
 
       expect(result).toBeDefined();
@@ -242,4 +248,3 @@ describe('Inspection Module', () => {
     });
   });
 });
-

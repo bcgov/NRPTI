@@ -11,7 +11,7 @@ const agenciesController = require('../controllers/agencies');
  * @param {*} sanitizedObj
  * @returns updateObj
  */
-exports.applyBusinessLogicOnPut = function(updateObj, sanitizedObj) {
+exports.applyBusinessLogicOnPut = function (updateObj, sanitizedObj) {
   if (!sanitizedObj) {
     return updateObj;
   }
@@ -21,7 +21,6 @@ exports.applyBusinessLogicOnPut = function(updateObj, sanitizedObj) {
     // do not update the issuedTo roles if neither issuedTo field exist
     // some objects don't have issued to, so there is nothing to redact
     return updateObj;
-
   } else {
     if (isRecordConsideredAnonymous(sanitizedObj)) {
       updateObj.$pull['issuedTo.read'] = 'public';
@@ -39,7 +38,7 @@ exports.applyBusinessLogicOnPut = function(updateObj, sanitizedObj) {
  * @param {*} record
  * @returns record
  */
-exports.applyBusinessLogicOnPost = function(record) {
+exports.applyBusinessLogicOnPost = function (record) {
   if (!record) {
     return record;
   }
@@ -125,10 +124,13 @@ function isIssuedToConsideredAnonymous(issuedTo, issuingAgency) {
   }
 
   const agencyCode = agenciesController.getAgencyCodeFromNameBandaid(issuingAgency);
-  
+
   // check if the issuingAgency has legislative authority to publish names
-  if (issuingAgency && !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(issuingAgency)
-                    && !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(agencyCode)) {
+  if (
+    issuingAgency &&
+    !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(issuingAgency) &&
+    !constants.AUTHORIZED_PUBLISH_AGENCIES.includes(agencyCode)
+  ) {
     // name is anonymous, issuing agency cannot publish names
     return true;
   }
@@ -181,7 +183,7 @@ exports.isDocumentConsideredAnonymous = isDocumentConsideredAnonymous;
  * @param {*} auth_payload
  * @returns savedDocuments
  */
-exports.updateDocumentRoles = async function(masterRecord, auth_payload) {
+exports.updateDocumentRoles = async function (masterRecord, auth_payload) {
   if (!masterRecord || !masterRecord.documents || !masterRecord.documents.length) {
     return null;
   }
@@ -226,7 +228,7 @@ exports.updateDocumentRoles = async function(masterRecord, auth_payload) {
  * @param {*} act
  * @returns {string} the act with applied business logic rules.
  */
-exports.applyBusinessLogicToAct = function(act) {
+exports.applyBusinessLogicToAct = function (act) {
   if (!act) {
     return null;
   }

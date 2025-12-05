@@ -31,7 +31,7 @@ const utils = require('../../utils/constants/misc');
 exports.createItem = async function (args, res, next, incomingObj) {
   const flavourFunctions = {
     AnnualReportBCMI: this.createBCMI
-  }
+  };
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
@@ -70,8 +70,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._sourceRefId &&
     ObjectId.isValid(incomingObj._sourceRefId) &&
     (annualReport._sourceRefId = new ObjectId(incomingObj._sourceRefId));
-  incomingObj.mineGuid &&
-    (annualReport.mineGuid = incomingObj.mineGuid);
+  incomingObj.mineGuid && (annualReport.mineGuid = incomingObj.mineGuid);
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (annualReport.collectionId = new ObjectId(incomingObj.collectionId));
@@ -161,7 +160,12 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.client_roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI],
+      args.swagger.params.auth_payload.client_roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -174,8 +178,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj._sourceRefId &&
     ObjectId.isValid(incomingObj._sourceRefId) &&
     (annualReportBCMI._sourceRefId = new ObjectId(incomingObj._sourceRefId));
-  incomingObj.mineGuid &&
-    (annualReportBCMI.mineGuid = incomingObj.mineGuid);
+  incomingObj.mineGuid && (annualReportBCMI.mineGuid = incomingObj.mineGuid);
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (annualReportBCMI.collectionId = new ObjectId(incomingObj.collectionId));
@@ -212,7 +215,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.lastName &&
     (annualReportBCMI.issuedTo.lastName = incomingObj.issuedTo.lastName);
-  incomingObj.issuedTo && (annualReportBCMI.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    (annualReportBCMI.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (annualReportBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);

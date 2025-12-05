@@ -1,7 +1,7 @@
 'use strict';
 
 const app = require('express')();
-const compression = require('compression')
+const compression = require('compression');
 const fs = require('fs');
 const swaggerTools = require('swagger-tools');
 const YAML = require('yamljs');
@@ -91,8 +91,8 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
 
   // Counterintuitively, we crash because we don't want the pod hanging around.  Let's just spin up
   // a new pod incase the mongo topology was destroyed, among other things.
-  process.on('unhandledRejection', function(reason) {
-    console.log("Unhandled Rejection:", reason);
+  process.on('unhandledRejection', function (reason) {
+    console.log('Unhandled Rejection:', reason);
     process.exit(1);
   });
 

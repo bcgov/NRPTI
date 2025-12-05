@@ -5,7 +5,6 @@ const Order = require('../../src/models/master/order.js');
 const factory_helper = require('./factory_helper.js');
 const CONSTANTS = require('../../src/utils/constants/misc.js');
 
-
 // TODO move to utils constants or something
 const agencyPicklist = [
   'Agricultural Land Commission',
@@ -25,16 +24,16 @@ const agencyPicklist = [
 
 const authorPicklist = ['BC Government', 'Proponent', 'Other'];
 
-const factoryName = 'Order'
+const factoryName = 'Order';
 
 // todo create factory for flavours
-factory.define(factoryName, Order, (buildOptions) => {
+factory.define(factoryName, Order, buildOptions => {
   if (buildOptions.faker) faker = buildOptions.faker;
   factory_helper.faker = faker;
 
-  let genUnderAge = (buildOptions.genUnderAge) ? buildOptions.genUnderAge : false;
-  let genAdult = (buildOptions.genAdult) ? buildOptions.genAdult : false;
-  let genCompany = (buildOptions.genCompany) ? buildOptions.genCompany: false;
+  let genUnderAge = buildOptions.genUnderAge ? buildOptions.genUnderAge : false;
+  let genAdult = buildOptions.genAdult ? buildOptions.genAdult : false;
+  let genCompany = buildOptions.genCompany ? buildOptions.genCompany : false;
 
   const issuedTo = factory_helper.generateIssuedTo(genUnderAge, genAdult, genCompany);
 
@@ -53,7 +52,6 @@ factory.define(factoryName, Order, (buildOptions) => {
     isBcmiPublished: faker.random.boolean(),
     read: CONSTANTS.ApplicationAdminRoles.concat(['public']),
     write: CONSTANTS.ApplicationAdminRoles
-
   };
   return attrs;
 });

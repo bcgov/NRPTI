@@ -21,7 +21,8 @@ class CoreDocumentsDataSource {
    * @param {*} taskAuditRecord audit record hook for this import instance
    * @param {*} auth_payload information about the user account that started this update.
    * @memberof CoreDocumentsDataSource
-   */ 
+   */
+
   constructor(taskAuditRecord, auth_payload) {
     this.taskAuditRecord = taskAuditRecord;
     this.auth_payload = auth_payload;
@@ -37,7 +38,6 @@ class CoreDocumentsDataSource {
     await this.taskAuditRecord.updateTaskRecord({ status: 'Running' });
 
     try {
-
       // Run main process.
       await this.updateRecords();
       await this.taskAuditRecord.updateTaskRecord({ itemsProcessed: this.status.itemsProcessed });
@@ -271,7 +271,6 @@ class CoreDocumentsDataSource {
       throw new Error(`updateAmendment - unexpected error: ${error.message}`);
     }
   }
-
 }
 
 module.exports = CoreDocumentsDataSource;

@@ -35,9 +35,11 @@ class Certificates extends BaseRecordUtils {
     return {
       ...(await super.transformRecord(epicRecord)),
       issuingAgency: 'AGENCY_EAO',
-      legislation: [{
-        act: (epicRecord.project && epicRecord.project.legislation) || ''
-      }]
+      legislation: [
+        {
+          act: (epicRecord.project && epicRecord.project.legislation) || ''
+        }
+      ]
     };
   }
 }

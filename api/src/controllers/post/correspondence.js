@@ -32,7 +32,7 @@ exports.createItem = async function (args, res, next, incomingObj) {
   const flavourFunctions = {
     CorrespondenceBCMI: this.createBCMI,
     CorrespondenceNRCED: this.createNRCED
-  }
+  };
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
@@ -76,8 +76,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (correspondence._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
-  incomingObj.mineGuid &&
-    (correspondence.mineGuid = incomingObj.mineGuid);
+  incomingObj.mineGuid && (correspondence.mineGuid = incomingObj.mineGuid);
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (correspondence.collectionId = new ObjectId(incomingObj.collectionId));
@@ -168,7 +167,12 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.client_roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI],
+      args.swagger.params.auth_payload.client_roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -187,8 +191,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (correspondenceBCMI._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
-  incomingObj.mineGuid &&
-    (correspondenceBCMI.mineGuid = incomingObj.mineGuid);
+  incomingObj.mineGuid && (correspondenceBCMI.mineGuid = incomingObj.mineGuid);
   incomingObj.collectionId &&
     ObjectId.isValid(incomingObj.collectionId) &&
     (correspondenceBCMI.collectionId = new ObjectId(incomingObj.collectionId));
@@ -225,7 +228,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.lastName &&
     (correspondenceBCMI.issuedTo.lastName = incomingObj.issuedTo.lastName);
-  incomingObj.issuedTo && (correspondenceBCMI.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    (correspondenceBCMI.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (correspondenceBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
@@ -251,7 +255,6 @@ exports.createBCMI = function (args, res, next, incomingObj) {
 
   return correspondenceBCMI;
 };
-
 
 /**
  * Performs all operations necessary to create a nrced Correspondence record.
@@ -279,7 +282,12 @@ exports.createBCMI = function (args, res, next, incomingObj) {
  */
 exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.client_roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI],
+      args.swagger.params.auth_payload.client_roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -298,8 +306,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj._epicMilestoneId &&
     ObjectId.isValid(incomingObj._epicMilestoneId) &&
     (correspondenceNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
-  incomingObj.mineGuid &&
-    (correspondenceNRCED.mineGuid = incomingObj.mineGuid);
+  incomingObj.mineGuid && (correspondenceNRCED.mineGuid = incomingObj.mineGuid);
 
   // set permissions
   correspondenceNRCED.read = utils.ApplicationAdminRoles;
@@ -330,7 +337,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.issuedTo &&
     incomingObj.issuedTo.lastName &&
     (correspondenceNRCED.issuedTo.lastName = incomingObj.issuedTo.lastName);
-  incomingObj.issuedTo && (correspondenceNRCED.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
+  incomingObj.issuedTo &&
+    (correspondenceNRCED.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
   incomingObj.issuedTo &&
     incomingObj.issuedTo.dateOfBirth &&
     (correspondenceNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);

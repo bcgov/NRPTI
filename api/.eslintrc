@@ -1,8 +1,7 @@
 {
   "extends": ["eslint:recommended", "eslint-config-prettier"],
-  "parser": "babel-eslint",
   "parserOptions": {
-    "ecmaVersion": 7
+    "ecmaVersion": 2020
   },
   "env": {
     "es6": true,
@@ -16,6 +15,11 @@
     "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false }],
     "no-async-promise-executor": 0,
     "no-var": "error",
-    "id-length": ["error", { "min": 1, "exceptions": ["_"] }]
+    "id-length": ["error", { "min": 1, "exceptions": ["_"] }],
+    "space-before-function-paren": "off",
+    "semi": "off",
+    "quotes": "off",
+    "comma-dangle": "off",
+    "indent": "off"
   }
 }

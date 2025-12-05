@@ -2,7 +2,6 @@
 
 const BaseRecordUtils = require('./base-record-utils');
 
-
 /**
  * CORE Mine record handler.
  *
@@ -51,7 +50,7 @@ class Mines extends BaseRecordUtils {
       commodities: this.getCommodities(mineRecord, commodityTypes),
       tailingsImpoundments: mineRecord.mine_tailings_storage_facilities.length,
       region: mineRecord.mine_region,
-      location : { type: 'Point', coordinates: mineRecord.coordinates },
+      location: { type: 'Point', coordinates: mineRecord.coordinates },
       permittee: '',
       permitNumber: '',
       permit: null
@@ -82,7 +81,9 @@ class Mines extends BaseRecordUtils {
         for (const typeDetail of mineType.mine_type_detail) {
           // Could be null if type is a disturbance instead of a commodity.
           if (typeDetail.mine_commodity_code) {
-            const commodity = commodityTypes.find(commodity => commodity.mine_commodity_code === typeDetail.mine_commodity_code);
+            const commodity = commodityTypes.find(
+              commodity => commodity.mine_commodity_code === typeDetail.mine_commodity_code
+            );
             commodities.push(commodity.description);
           }
         }
@@ -126,7 +127,7 @@ class Mines extends BaseRecordUtils {
       ...mineRecord,
       permitNumber: permitInfo.permitNumber,
       permittee: permitInfo.permittee
-    }
+    };
   }
 
   updateRecord(nrptiRecord, permitInfo, existingRecord) {

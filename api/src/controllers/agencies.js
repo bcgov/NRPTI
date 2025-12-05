@@ -15,7 +15,7 @@ const defaultLog = require('../utils/logger')('record');
  * @param {Function} next - Next function in the middleware chain.
  * @description Get API for retrieving agency code and names from the database.
  */
-exports.publicGet = async function(args, res, next) {
+exports.publicGet = async function (args, res, next) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const collectionDB = db.collection('nrpti');
 
@@ -59,7 +59,7 @@ exports.publicGet = async function(args, res, next) {
  *       ]
  *   }
  */
-exports.protectedPut = async function(args, res, next) {
+exports.protectedPut = async function (args, res, next) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   let promises = [];
   let result = null;
@@ -93,16 +93,16 @@ exports.protectedPut = async function(args, res, next) {
   next();
 };
 
-/** 
+/**
  * gets the intermediate code (agencyCode) for the given agencyName
  * A synchronous version of getAgencyCodeFromName. Instead of using the db to lookup values,
  * this function uses some hardcoded constants.
  * This function was implemented as a temporary fix because the async version proved difficult to implement.
  * This should be replaced
- * @param {*} agencyName 
+ * @param {*} agencyName
  * @returns {string} agencyCode if matching code is found, else null
  */
-exports.getAgencyCodeFromNameBandaid = function(agencyName){
+exports.getAgencyCodeFromNameBandaid = function (agencyName) {
   const AGENCY_NAME_CODE_MAP = [
     {
       agencyCode: 'AGENCY_ALC',

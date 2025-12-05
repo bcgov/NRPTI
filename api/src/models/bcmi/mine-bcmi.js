@@ -1,19 +1,16 @@
 let mongoose = require('mongoose');
 
-let GeoJSON = new mongoose.Schema(
-  {
-    type:
-    {
-      type: String,
-      enum: ['Point'],
-      required: true
-    },
-    coordinates:
-    {
-      type: [Number],
-      required: true
-    }
-  });
+let GeoJSON = new mongoose.Schema({
+  type: {
+    type: String,
+    enum: ['Point'],
+    required: true
+  },
+  coordinates: {
+    type: [Number],
+    required: true
+  }
+});
 
 module.exports = require('../../utils/model-schema-generator')(
   'MineBCMI',
@@ -26,7 +23,7 @@ module.exports = require('../../utils/model-schema-generator')(
     write: [{ type: String, trim: true, default: 'sysadmin' }],
 
     name: { type: String, default: '' },
-    mineNo: {type: String, default: ''},
+    mineNo: { type: String, default: '' },
     permitNumber: { type: String, default: '' },
     showPermitNumber: { type: Boolean, default: true },
     status: { type: String, default: '' },
@@ -34,7 +31,7 @@ module.exports = require('../../utils/model-schema-generator')(
     commodities: [{ type: String, default: '' }],
     tailingsImpoundments: { type: Number, default: 0 },
     region: { type: String, default: '' },
-    location: { type: GeoJSON, default: { type: 'Point', coordinates: [0.00, 0.00] } },
+    location: { type: GeoJSON, default: { type: 'Point', coordinates: [0.0, 0.0] } },
     permittee: { type: String, default: '' },
     summary: { type: String, default: '' },
     description: { type: String, default: '' },

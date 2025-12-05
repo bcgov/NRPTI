@@ -21,7 +21,7 @@ const SECRET = process.env.SECRET || 'defaultSecret';
  * @param {*} callback
  * @returns
  */
-exports.verifyToken = function(req, authOrSecDef, token, callback) {
+exports.verifyToken = function (req, authOrSecDef, token, callback) {
   defaultLog.info('verifying token');
   defaultLog.debug('token:', token);
 
@@ -68,7 +68,7 @@ exports.verifyToken = function(req, authOrSecDef, token, callback) {
  * @param {*} scopes
  * @returns
  */
-exports.issueToken = function(user, deviceId, scopes) {
+exports.issueToken = function (user, deviceId, scopes) {
   defaultLog.debug('Issuing new token');
   defaultLog.debug('user:', user);
   defaultLog.debug('deviceId:', deviceId);
@@ -112,7 +112,7 @@ exports.issueToken = function(user, deviceId, scopes) {
  * @param {*} sendError
  */
 function verifySecret(currentScopes, tokenString, secret, req, callback, sendError) {
-  jwt.verify(tokenString, secret, function(verificationError, decodedToken) {
+  jwt.verify(tokenString, secret, function (verificationError, decodedToken) {
     // check if the JWT was verified correctly
     if (verificationError == null && Array.isArray(currentScopes) && decodedToken && decodedToken.client_roles) {
       defaultLog.info('JWT decoded');
@@ -159,7 +159,7 @@ function verifySecret(currentScopes, tokenString, secret, req, callback, sendErr
  * @param {Array<string>|string} userRoles Roles to match against.
  * @returns {boolean} Indication if a match is found.
  */
-exports.userHasValidRoles = function(validRoles, userRoles) {
+exports.userHasValidRoles = function (validRoles, userRoles) {
   // Convert to array if a single value was used.
   if (!Array.isArray(validRoles)) {
     validRoles = [validRoles];
@@ -187,7 +187,7 @@ exports.userHasValidRoles = function(validRoles, userRoles) {
  * @param {string} targetRole The role to check for
  * @returns {boolean} Indication if user if wildfire user
  */
-exports.userIsOnlyInRole = function(userRoles, targetRole) {
+exports.userIsOnlyInRole = function (userRoles, targetRole) {
   if (!userRoles) return false;
 
   // Remove all the default user roles first

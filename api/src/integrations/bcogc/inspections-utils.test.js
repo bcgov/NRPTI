@@ -1,7 +1,7 @@
 const ObjectID = require('mongodb').ObjectID;
 const Inspections = require('./inspections-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
-const { getActTitleFromDB } = require('../../controllers/acts-regulations-controller')
+const { getActTitleFromDB } = require('../../controllers/acts-regulations-controller');
 const { energyActCode } = require('../../utils/constants/legislation-code-map.js');
 
 const actName = getActTitleFromDB(energyActCode);
@@ -27,7 +27,14 @@ describe('transformRecord', () => {
       issuingAgency: 'AGENCY_OGC',
       author: 'AGENCY_OGC',
       recordName: '-',
-      legislation: [{ act: actName, section: '57', subSection: '4', legislationDescription: 'Inspection to verify compliance with regulatory requirement' }],
+      legislation: [
+        {
+          act: actName,
+          section: '57',
+          subSection: '4',
+          legislationDescription: 'Inspection to verify compliance with regulatory requirement'
+        }
+      ],
       location: 'British Columbia',
       description:
         'Inspection to verify compliance with regulatory requirements. Activities Inspected: -; Inspection Result: -',
@@ -39,18 +46,21 @@ describe('transformRecord', () => {
   });
 
   it('transforms csv row fields into NRPTI record fields', () => {
-    const result = inspections.transformRecord({
-      contravention_enforcement_id: 123,
-      'inspection number': '123456',
-      'deficiency objectid': '321',
-      'inspection date': '15-Feb-19',
-      'regulation name': 'OGAA',
-      operator: 'Coastal GasLink Pipeline Ltd.',
-      location: 'British Columbia',
-      description: 'description123',
-      'activities inspected': 'activitiesInspection123',
-      status: 'statusCancelled'
-    }, actName);
+    const result = inspections.transformRecord(
+      {
+        contravention_enforcement_id: 123,
+        'inspection number': '123456',
+        'deficiency objectid': '321',
+        'inspection date': '15-Feb-19',
+        'regulation name': 'OGAA',
+        operator: 'Coastal GasLink Pipeline Ltd.',
+        location: 'British Columbia',
+        description: 'description123',
+        'activities inspected': 'activitiesInspection123',
+        status: 'statusCancelled'
+      },
+      actName
+    );
 
     expect(result).toEqual({
       _schemaName: 'Inspection',
@@ -73,7 +83,7 @@ describe('transformRecord', () => {
       ],
       location: 'British Columbia',
       projectName: 'Coastal Gaslink',
-      _epicProjectId: new ObjectID('588511c4aaecd9001b825604'),      
+      _epicProjectId: new ObjectID('588511c4aaecd9001b825604'),
       description:
         'Inspection to verify compliance with regulatory requirements. Activities Inspected: activitiesInspection123; Inspection Result: statusCancelled',
       summary: 'Inspection Number 123456',

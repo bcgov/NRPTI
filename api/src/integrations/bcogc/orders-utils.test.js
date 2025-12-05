@@ -2,16 +2,15 @@ const Orders = require('./orders-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const mongoose = require('mongoose');
 const { createURLDocument } = require('../../controllers/document-controller');
-const { getActTitleFromDB } = require('../../controllers/acts-regulations-controller')
+const { getActTitleFromDB } = require('../../controllers/acts-regulations-controller');
 const { energyActCode } = require('../../utils/constants/legislation-code-map.js');
 
 const actName = getActTitleFromDB(energyActCode);
 
 describe('orders-utils testing', () => {
   const orders = new Orders('authPayload', RECORD_TYPE.Order, null);
-  
-  describe('transformRecord', () => {
 
+  describe('transformRecord', () => {
     it('throws an error if null csvRow parameter provided', () => {
       expect(() => orders.transformRecord(null)).toThrow('transformRecord - required csvRow must be non-null.');
     });
@@ -38,7 +37,7 @@ describe('orders-utils testing', () => {
           {
             act: actName,
             section: null,
-            legislationDescription: "Action Order"
+            legislationDescription: 'Action Order'
           }
         ],
         sourceSystemRef: 'bcogc'
@@ -46,12 +45,15 @@ describe('orders-utils testing', () => {
     });
 
     it('transforms csv row fields into NRPTI record fields', () => {
-      const result = orders.transformRecord({
-        Title: 'General Order 123',
-        Proponent: 'Test Proponent',
-        Filename: 'sample-order.pdf',
-        'File URL': 'https://www.example.com/sample-order.pdf'
-      }, actName);
+      const result = orders.transformRecord(
+        {
+          Title: 'General Order 123',
+          Proponent: 'Test Proponent',
+          Filename: 'sample-order.pdf',
+          'File URL': 'https://www.example.com/sample-order.pdf'
+        },
+        actName
+      );
 
       expect(result).toEqual({
         _schemaName: 'Order',
@@ -81,15 +83,15 @@ describe('orders-utils testing', () => {
   });
 
   describe('createItem', () => {
-    const Document = require ('../../models/document');
+    const Document = require('../../models/document');
     const utils = require('../../utils/constants/misc');
-    const mongo = 'mongodb://127.0.0.1/nrpti-testing'
+    const mongo = 'mongodb://127.0.0.1/nrpti-testing';
     mongoose.connect(mongo);
 
     beforeAll(async () => {
       await Document.remove({});
     });
-    
+
     beforeEach(async () => {
       await Document.remove({});
     });
@@ -108,40 +110,40 @@ describe('orders-utils testing', () => {
         document.addedBy = addedBy;
         document.url = url;
         document.read = [utils.ApplicationRoles.ADMIN, ...readRoles];
-        document.write = [utils.ApplicationRoles.ADMIN, ...writeRoles];;
+        document.write = [utils.ApplicationRoles.ADMIN, ...writeRoles];
 
         return document.save();
       })
     }));
 
     it('throws error when nrptiRecord is not provided', async () => {
-      await expect(orders.createItem(null)).rejects.toThrow(
-        'createItem - required nrptiRecord must be non-null.'
-      );
+      await expect(orders.createItem(null)).rejects.toThrow('createItem - required nrptiRecord must be non-null.');
     });
 
     it('creates a document', async () => {
       const baseCsvRow = {
-        'Title': '123',
-        'author': 'AGENCY_OGC',
-        'issuingAgency': 'AGENCY_OGC',
-        'recordName': 'record name',
+        Title: '123',
+        author: 'AGENCY_OGC',
+        issuingAgency: 'AGENCY_OGC',
+        recordName: 'record name',
         'Date Issued': '11-07-2023',
-        'Proponent': 'Proponent',
-        'Filename': 'Filename',
-        'File URL': 'File URL',
+        Proponent: 'Proponent',
+        Filename: 'Filename',
+        'File URL': 'File URL'
       };
       const nrptiRecord = await orders.transformRecord(baseCsvRow);
 
-      const result = await createURLDocument(nrptiRecord.document.fileName, 'BCOGC Import', nrptiRecord.document.url, ['public'])
+      const result = await createURLDocument(nrptiRecord.document.fileName, 'BCOGC Import', nrptiRecord.document.url, [
+        'public'
+      ]);
       const resultRead = [...result.read];
       const resultWrite = [...result.write];
 
-      expect(result.fileName).toEqual('Filename')
-      expect(result.url).toEqual('File URL')
-      expect(result.addedBy).toEqual('BCOGC Import')
-      expect(resultRead).toEqual(['sysadmin', 'public'])
-      expect(resultWrite).toEqual(['sysadmin'])
+      expect(result.fileName).toEqual('Filename');
+      expect(result.url).toEqual('File URL');
+      expect(result.addedBy).toEqual('BCOGC Import');
+      expect(resultRead).toEqual(['sysadmin', 'public']);
+      expect(resultWrite).toEqual(['sysadmin']);
     });
   });
 

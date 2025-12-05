@@ -6,7 +6,7 @@ const MiscConstants = require('../../../utils/constants/misc');
  * @param {*} csvRow
  * @returns {{projectName: string, _epicProjectId: string}} object containing the project name and _epicProjectId.
  */
-exports.getProjectNameAndEpicProjectId = function(csvRow) {
+exports.getProjectNameAndEpicProjectId = function (csvRow) {
   if (!csvRow) {
     return null;
   }
@@ -30,7 +30,7 @@ exports.getProjectNameAndEpicProjectId = function(csvRow) {
  * @param {*} csvRow
  * @returns {string} outcome description.
  */
-exports.getOutcomeDescription = function(csvRow) {
+exports.getOutcomeDescription = function (csvRow) {
   if (!csvRow) {
     return null;
   }

@@ -43,9 +43,11 @@ class Orders extends BaseRecordUtils {
     order['author'] = 'AGENCY_OGC';
     order['issuingAgency'] = 'AGENCY_OGC';
     order['recordName'] = csvRow['Title'];
-    
+
     try {
-      order['dateIssued'] = csvRow['Date Issued'] ? moment.tz(csvRow['Date Issued'], "MM/DD/YYYY", "America/Vancouver").toDate() : null;
+      order['dateIssued'] = csvRow['Date Issued']
+        ? moment.tz(csvRow['Date Issued'], 'MM/DD/YYYY', 'America/Vancouver').toDate()
+        : null;
     } catch (error) {
       defaultLog.debug(csvRow['Date Issued'] + ' is not in the expected format MM/DD/YYYY');
       defaultLog.debug(error);
@@ -70,15 +72,14 @@ class Orders extends BaseRecordUtils {
     // Prepare for the document to be created later.
     order['document'] = {
       fileName: csvRow['Filename'],
-      url: csvRow['File URL'],
+      url: csvRow['File URL']
     };
 
     const projectDetails = CsvUtils.getProjectNameAndEpicProjectId(csvRow);
     // Only update NRPTI project details if the csv contains known project information
     if (projectDetails) {
       order['projectName'] = projectDetails.projectName;
-      order['_epicProjectId'] =
-        (projectDetails._epicProjectId && new ObjectID(projectDetails._epicProjectId)) || null;
+      order['_epicProjectId'] = (projectDetails._epicProjectId && new ObjectID(projectDetails._epicProjectId)) || null;
     }
 
     return order;
@@ -99,7 +100,12 @@ class Orders extends BaseRecordUtils {
 
     try {
       // Create the document for this record.
-      const document = await createURLDocument(nrptiRecord.document.fileName, 'BCOGC Import', nrptiRecord.document.url, ['public']);
+      const document = await createURLDocument(
+        nrptiRecord.document.fileName,
+        'BCOGC Import',
+        nrptiRecord.document.url,
+        ['public']
+      );
       // Remove temporary document property.
       delete nrptiRecord.document;
 
@@ -136,8 +142,8 @@ class Orders extends BaseRecordUtils {
 
   /**
    * Returns the order section based on the title.
-   * 
-   * @param {Object} csvRow 
+   *
+   * @param {Object} csvRow
    * @returns {number} Section number
    * @memberof Orders
    */

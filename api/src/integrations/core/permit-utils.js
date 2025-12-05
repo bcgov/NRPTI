@@ -111,13 +111,13 @@ class Permits extends BaseRecordUtils {
   }
 
   getPermitType(typeCode) {
-    switch(typeCode){
+    switch (typeCode) {
       case 'OGP':
         return 'Permit';
       case 'ALG':
         return 'Amalgamated Permit';
       default:
-        return 'Permit Amendment' //AMD
+        return 'Permit Amendment'; //AMD
     }
   }
 }

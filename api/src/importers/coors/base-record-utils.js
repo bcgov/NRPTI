@@ -168,26 +168,26 @@ class BaseRecordUtils {
    * @param {object} existingRecord The existing Convition from saved record
    * @returns {array} updated penalties array to save
    * @memberof BaseRecordUtils
-  */
+   */
   handleConvictionPenalties(updatedPenalty, existingRecord) {
     // check if this record was created or updated as part of this import job
     let createdAt = moment(existingRecord.dateAdded);
     let lastUpdated = moment(existingRecord.dateUpdated);
     let now = moment();
-    if (now.diff(createdAt, 'seconds') > 90  && now.diff(lastUpdated, 'seconds') > 60) {
+    if (now.diff(createdAt, 'seconds') > 90 && now.diff(lastUpdated, 'seconds') > 60) {
       // wipe penalties to ensure penalty edits in the source system aren't creating extra penalties in nrpti
-      existingRecord.penalties = []
+      existingRecord.penalties = [];
     }
 
     let penaltiesObj = existingRecord.penalties;
-    let exists = false
+    let exists = false;
     // check if penalty needs to be appended
     if (updatedPenalty && existingRecord.penalties) {
-      exists = this.penaltyExists(existingRecord.penalties, updatedPenalty)
+      exists = this.penaltyExists(existingRecord.penalties, updatedPenalty);
     }
     // copy existing penalty into new obj
     if (!exists) {
-      penaltiesObj.push(updatedPenalty)
+      penaltiesObj.push(updatedPenalty);
     }
     return penaltiesObj;
   }
@@ -199,10 +199,14 @@ class BaseRecordUtils {
    * @param {object} newPenalty The penalty parsed from the current csv row
    * @returns {boolean} if the penalty alread in the penalties array
    * @memberof BaseRecordUtils
-  */
+   */
   penaltyExists(existingPenalties, newPenalty) {
     for (let penalty of existingPenalties) {
-      if (newPenalty.type === penalty.type && newPenalty.penalty.type === penalty.penalty.type && newPenalty.penalty.value === penalty.penalty.value) {
+      if (
+        newPenalty.type === penalty.type &&
+        newPenalty.penalty.type === penalty.penalty.type &&
+        newPenalty.penalty.value === penalty.penalty.value
+      ) {
         return true;
       }
     }

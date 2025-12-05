@@ -26,11 +26,11 @@ class Warning extends BaseRecordUtils {
   }
 
   /**
- * Convert the csv row object into the object expected by the API record post/put controllers.
- *
- * @returns an order object matching the format expected by the API record post/put controllers.
- * @memberof Warning
- */
+   * Convert the csv row object into the object expected by the API record post/put controllers.
+   *
+   * @returns an order object matching the format expected by the API record post/put controllers.
+   * @memberof Warning
+   */
   transformRecord(csvRow) {
     if (!csvRow) {
       throw Error('transformRecord - required csvRow must be non-null.');
@@ -44,7 +44,9 @@ class Warning extends BaseRecordUtils {
     warning['issuingAgency'] = 'AGENCY_OGC';
     warning['recordName'] = csvRow['Filename'];
     try {
-      warning['dateIssued'] = csvRow['Date Issued'] ? moment.tz(csvRow['Date Issued'], "MM/DD/YYYY", "America/Vancouver").toDate() : null;
+      warning['dateIssued'] = csvRow['Date Issued']
+        ? moment.tz(csvRow['Date Issued'], 'MM/DD/YYYY', 'America/Vancouver').toDate()
+        : null;
     } catch (error) {
       defaultLog.debug(csvRow['Date Issued'] + ' is not in the expected format MM/DD/YYYY');
       defaultLog.debug(error);
@@ -60,7 +62,7 @@ class Warning extends BaseRecordUtils {
     // Prepare for the document to be created later.
     warning['document'] = {
       fileName: csvRow['Filename'],
-      url: csvRow['File URL'],
+      url: csvRow['File URL']
     };
 
     const projectDetails = CsvUtils.getProjectNameAndEpicProjectId(csvRow);
@@ -89,7 +91,12 @@ class Warning extends BaseRecordUtils {
 
     try {
       // Create the document for this record.
-      const document = await createURLDocument(nrptiRecord.document.fileName, 'BCOGC Import', nrptiRecord.document.url, ['public']);
+      const document = await createURLDocument(
+        nrptiRecord.document.fileName,
+        'BCOGC Import',
+        nrptiRecord.document.url,
+        ['public']
+      );
       // Remove temporary document property.
       delete nrptiRecord.document;
 

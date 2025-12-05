@@ -63,7 +63,7 @@ class AdministrativePenalty extends BaseRecordUtils {
     // Prepare for the document to be created later.
     penalty['document'] = {
       fileName: csvRow['Filename'],
-      url: csvRow['File URL'],
+      url: csvRow['File URL']
     };
 
     const projectDetails = CsvUtils.getProjectNameAndEpicProjectId(csvRow);
@@ -92,13 +92,18 @@ class AdministrativePenalty extends BaseRecordUtils {
 
     try {
       // Create the document for this record.
-      const document = await createURLDocument(nrptiRecord.document.fileName, 'BCOGC Import', nrptiRecord.document.url, ['public']);
+      const document = await createURLDocument(
+        nrptiRecord.document.fileName,
+        'BCOGC Import',
+        nrptiRecord.document.url,
+        ['public']
+      );
       // Remove temporary document property.
       delete nrptiRecord.document;
 
       return super.createItem({
         ...nrptiRecord,
-        documents: [ document._id ]
+        documents: [document._id]
       });
     } catch (error) {
       defaultLog.error(`Failed to create ${this.recordType._schemaName} record: ${error.message}`);
@@ -129,9 +134,9 @@ class AdministrativePenalty extends BaseRecordUtils {
 
   /**
    * Gets the penalty based on the value amount in the CSV row.
-   * 
+   *
    * @param {*} csvRow
-   * @returns {Array<Object>} Object containing the penalties 
+   * @returns {Array<Object>} Object containing the penalties
    * @memberof AdministrativePenalty
    */
   getPenalties(csvRow) {
@@ -139,32 +144,40 @@ class AdministrativePenalty extends BaseRecordUtils {
     let penaltyAmount = csvRow['Penalty Amount (CAD)'].substr(1);
 
     if (penaltyAmount === '') {
-      return [{
-        type: '',
-        penalty: null,
-        description: 'No contravention was found to have occurred, and no penalty was assessed. See the attached document for additional details.'
-      }];
+      return [
+        {
+          type: '',
+          penalty: null,
+          description:
+            'No contravention was found to have occurred, and no penalty was assessed. See the attached document for additional details.'
+        }
+      ];
     }
 
     penaltyAmount = parseInt(penaltyAmount, 10);
 
     if (penaltyAmount === 0) {
-      return [{
-        type: '',
-        penalty: null,
-        description: 'Although a contravention occurred, a penalty was not assessed. See the attached document for additional details.'
-      }];
+      return [
+        {
+          type: '',
+          penalty: null,
+          description:
+            'Although a contravention occurred, a penalty was not assessed. See the attached document for additional details.'
+        }
+      ];
     }
-    
+
     if (penaltyAmount > 0) {
-      return [{
-        type: 'Fined',
-        penalty: {
-          type: 'Dollars',
-          value: penaltyAmount
-        },
-        description: ''
-      }];
+      return [
+        {
+          type: 'Fined',
+          penalty: {
+            type: 'Dollars',
+            value: penaltyAmount
+          },
+          description: ''
+        }
+      ];
     }
 
     return [];

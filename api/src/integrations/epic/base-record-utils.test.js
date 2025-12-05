@@ -4,15 +4,15 @@ const mongoose = require('mongoose');
 const RecordController = require('../../controllers/record-controller');
 
 describe('BaseRecordUtils', () => {
-  const Document = require ('../../models/document');
+  const Document = require('../../models/document');
   const utils = require('../../utils/constants/misc');
-  const mongo = 'mongodb://127.0.0.1/nrpti-testing'
+  const mongo = 'mongodb://127.0.0.1/nrpti-testing';
   mongoose.connect(mongo);
 
   beforeAll(async () => {
     await Document.remove({});
   });
-  
+
   beforeEach(async () => {
     await Document.remove({});
   });
@@ -30,8 +30,19 @@ describe('BaseRecordUtils', () => {
       document.fileName = fileName;
       document.addedBy = addedBy;
       document.url = url;
-      document.read = [utils.ApplicationRoles.PUBLIC, utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_BCMI];
-      document.write = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_BCMI];;
+      document.read = [
+        utils.ApplicationRoles.PUBLIC,
+        utils.ApplicationRoles.ADMIN_LNG,
+        utils.ApplicationRoles.ADMIN_NRCED,
+        utils.ApplicationRoles.ADMIN_NRCED,
+        utils.ApplicationRoles.ADMIN_BCMI
+      ];
+      document.write = [
+        utils.ApplicationRoles.ADMIN_LNG,
+        utils.ApplicationRoles.ADMIN_NRCED,
+        utils.ApplicationRoles.ADMIN_NRCED,
+        utils.ApplicationRoles.ADMIN_BCMI
+      ];
 
       return document.save();
     })
@@ -59,7 +70,7 @@ describe('BaseRecordUtils', () => {
       const epicRecord = {
         _id: 123,
         displayName: 'docDisplay',
-        documentFileName: 'docFileName',
+        documentFileName: 'docFileName'
       };
 
       const actualDocument = await baseRecordUtils.createDocument(epicRecord);
@@ -186,22 +197,22 @@ describe('BaseRecordUtils', () => {
   describe('findExistingRecord', () => {
     it('returns existing NRPTI master record if found', async () => {
       const baseRecordUtils = new BaseRecordUtils('authPayload', RECORD_TYPE.Order);
-  
+
       const nrptiRecord = { _sourceRefId: '55153a8014829a865bbf700d' };
-  
+
       const masterRecordModelMock = {
         findOne: jest.fn().mockReturnValue({
           populate: jest.fn().mockResolvedValue({
             test: 'existingRecord',
-            _flavourRecords: [{ _id: 321, _schemaName: 'flavourSchema' }],
-          }),
-        }),
+            _flavourRecords: [{ _id: 321, _schemaName: 'flavourSchema' }]
+          })
+        })
       };
       const mongoose = require('mongoose');
       jest.spyOn(mongoose, 'model').mockReturnValue(masterRecordModelMock);
-  
+
       const result = await baseRecordUtils.findExistingRecord(nrptiRecord);
-  
+
       expect(result).toMatchObject(masterRecordModelMock.findOne().populate());
     });
   });
@@ -209,11 +220,11 @@ describe('BaseRecordUtils', () => {
   describe('updateRecord', () => {
     it('throws error if nrptiRecord is null', async () => {
       const baseRecordUtils = new BaseRecordUtils('auth_payload', RECORD_TYPE.Order);
-      
-      const nrptiRecord = null
+
+      const nrptiRecord = null;
       const existingRecord = {
         _id: '123'
-      }
+      };
 
       try {
         await baseRecordUtils.updateRecord(nrptiRecord, existingRecord);
@@ -221,57 +232,57 @@ describe('BaseRecordUtils', () => {
         expect(error).toEqual(new Error('updateRecord - required nrptiRecord must be non-null.'));
       }
     });
-    
+
     it('throws error if existingRecord is null', async () => {
       const baseRecordUtils = new BaseRecordUtils('auth_payload', RECORD_TYPE.Order);
-      
+
       const nrptiRecord = {
         _id: '123'
-      }
-      const existingRecord = null
-      
+      };
+      const existingRecord = null;
+
       try {
         await baseRecordUtils.updateRecord(nrptiRecord, existingRecord);
       } catch (error) {
         expect(error).toEqual(new Error('updateRecord - required existingRecord must be non-null.'));
       }
     });
-    
+
     it('successfully calls updateRecord to process the put request', async () => {
       const baseRecordUtils = new BaseRecordUtils('auth_payload', RECORD_TYPE.Order);
 
       const processPutRequestSpy = jest.spyOn(RecordController, 'processPutRequest').mockImplementation(() => {
         return Promise.resolve({ test: 'record' });
       });
-      
+
       const nrptiRecord = {
-        "_schemaName": "BCMI",
-        "_sourceRefId": "",
-        "issuingAgency": "AGENCY_EAO",
-        "recordName": "",
-        "recordType": RECORD_TYPE.Order.displayName,
-        "dateIssued": null,
-        "projectName": "",
-        "sourceDateAdded": null,
-        "sourceDateUpdated": null,
-        "sourceSystemRef": "epic"
-      }
-      
+        _schemaName: 'BCMI',
+        _sourceRefId: '',
+        issuingAgency: 'AGENCY_EAO',
+        recordName: '',
+        recordType: RECORD_TYPE.Order.displayName,
+        dateIssued: null,
+        projectName: '',
+        sourceDateAdded: null,
+        sourceDateUpdated: null,
+        sourceSystemRef: 'epic'
+      };
+
       const existingRecord = {
-        "id": "5e6e5f4e0f0c2a001b0b5f6b",
-        "_schemaName": "BCMI",
-        "_sourceRefId": "",
-        "issuingAgency": "AGENCY_EAO",
-        "recordName": "Test Record Name",
-        "recordType": RECORD_TYPE.Order.displayName,
-        "dateIssued": null,
-        "projectName": "Project Name",
-        "sourceDateAdded": null,
-        "sourceDateUpdated": null,
-        "sourceSystemRef": "epic",
-        "_flavourRecords": [{ _id: 321, _schemaName: 'flavourSchema' }],
-      }
-      
+        id: '5e6e5f4e0f0c2a001b0b5f6b',
+        _schemaName: 'BCMI',
+        _sourceRefId: '',
+        issuingAgency: 'AGENCY_EAO',
+        recordName: 'Test Record Name',
+        recordType: RECORD_TYPE.Order.displayName,
+        dateIssued: null,
+        projectName: 'Project Name',
+        sourceDateAdded: null,
+        sourceDateUpdated: null,
+        sourceSystemRef: 'epic',
+        _flavourRecords: [{ _id: 321, _schemaName: 'flavourSchema' }]
+      };
+
       await baseRecordUtils.updateRecord(nrptiRecord, existingRecord);
 
       expect(processPutRequestSpy).toHaveBeenCalledTimes(1);
@@ -320,7 +331,9 @@ describe('BaseRecordUtils', () => {
       try {
         await baseRecordUtils.isRecordFeeOrder();
       } catch (error) {
-        expect(error).toEqual(new Error('isRecordFeeOrder - required transformedRecord must be non-null and include recordName.'));
+        expect(error).toEqual(
+          new Error('isRecordFeeOrder - required transformedRecord must be non-null and include recordName.')
+        );
       }
     });
 
@@ -337,9 +350,9 @@ describe('BaseRecordUtils', () => {
         {
           recordName: 'fee package'
         }
-      ]
+      ];
 
-      transformedRecord.forEach((record) => {
+      transformedRecord.forEach(record => {
         const actual = baseRecordUtils.isRecordFeeOrder(record);
         expect(actual).toEqual(true);
       });

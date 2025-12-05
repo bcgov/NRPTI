@@ -7,9 +7,13 @@ let qs = require('qs');
 let mongodb = require('../utils/mongodb');
 let moment = require('moment');
 let fuzzySearch = require('../utils/fuzzySearch');
-const { ApplicationAdminRoles, ApplicationLimitedAdminRoles, SKIP_REDACTION_SCHEMA_NAMES } = require('../utils/constants/misc');
+const {
+  ApplicationAdminRoles,
+  ApplicationLimitedAdminRoles,
+  SKIP_REDACTION_SCHEMA_NAMES
+} = require('../utils/constants/misc');
 const { userIsOnlyInRole } = require('../utils/auth-utils');
-const {getActCodeFromActTitle} = require('../controllers/acts-regulations-controller');
+const { getActCodeFromActTitle } = require('../controllers/acts-regulations-controller');
 
 //Set log level
 defaultLog.transports.console.level = 'info';
@@ -44,14 +48,14 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
       let entry = queryString[item];
 
       //Append legislation codes from mapping table
-      if(item === "legislation.act"){
-        if(entry instanceof String || typeof(entry) === 'string'){
+      if (item === 'legislation.act') {
+        if (entry instanceof String || typeof entry === 'string') {
           entry = [entry];
         }
-        for(const title of entry){
-          if(!title.startsWith("ACT_")){
+        for (const title of entry) {
+          if (!title.startsWith('ACT_')) {
             const actCode = await getActCodeFromActTitle(title);
-            if(actCode != title){
+            if (actCode != title) {
               entry.push(actCode);
             }
           }
@@ -85,19 +89,19 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
       }
 
       if (item === 'isNrcedPublished' && entry === 'true') {
-        return { isNrcedPublished: true }
+        return { isNrcedPublished: true };
       } else if (item === 'isNrcedPublished' && entry === 'false') {
         return { $or: [{ isNrcedPublished: { $exists: false } }, { isNrcedPublished: false }] };
       }
       if (item === 'isLngPublished' && entry === 'true') {
-        return { isLngPublished: true }
+        return { isLngPublished: true };
       } else if (item === 'isLngPublished' && entry === 'false') {
-        return { $or: [{ isLngPublished: { $exists: false } }, { isLngPublished: false }] }
+        return { $or: [{ isLngPublished: { $exists: false } }, { isLngPublished: false }] };
       }
       if (item === 'isBcmiPublished' && entry === 'true') {
-        return { isBcmiPublished: true }
+        return { isBcmiPublished: true };
       } else if (item === 'isBcmiPublished' && entry === 'false') {
-        return { $or: [{ isBcmiPublished: { $exists: false } }, { isBcmiPublished: false }] }
+        return { $or: [{ isBcmiPublished: { $exists: false } }, { isBcmiPublished: false }] };
       }
       // Checks if root item is published
       if (item === 'isPublished' && entry === 'true') {
@@ -223,7 +227,7 @@ const convertValue = function (item) {
     // Number
     return parseInt(item);
   }
-}
+};
 
 const handleDateStartItem = function (field, entry) {
   let date = new Date(entry);
@@ -305,7 +309,7 @@ const issuedToRedaction = function (roles) {
             if: {
               $and: [
                 { $ne: [{ $arrayElemAt: ['$fullRecord.issuedTo.dateOfBirth', 0] }, null] },
-                { $ne: [{ $arrayElemAt: ['$fullRecord.dateIssued', 0] }, null] },
+                { $ne: [{ $arrayElemAt: ['$fullRecord.dateIssued', 0] }, null] }
               ]
             },
             then: {
@@ -400,7 +404,8 @@ let searchCollection = async function (
     // for now, limit fuzzy search to the mine search only. We can expand to all searches
     // later if desired
     if (schemaName.length === 1 && schemaName[0] === 'MineBCMI') {
-      keywords = keywords && keywords.length > 1 ? fuzzySearch.createFuzzySearchString(keywords, 4, caseSensitive) : keywords;
+      keywords =
+        keywords && keywords.length > 1 ? fuzzySearch.createFuzzySearchString(keywords, 4, caseSensitive) : keywords;
     }
     searchProperties = { $text: { $search: keywords, $caseSensitive: caseSensitive } };
   }
@@ -449,15 +454,18 @@ let searchCollection = async function (
   // has collection filter
   // If we detected the need for a hasCollection filter, add the field/match here
   if (hasCollectionTest) {
-    aggregation.push({
-      $addFields: {
-        hasCollection: {
-          $cond: [{ $eq: ['$collectionId', null] }, false, true]
+    aggregation.push(
+      {
+        $addFields: {
+          hasCollection: {
+            $cond: [{ $eq: ['$collectionId', null] }, false, true]
+          }
         }
+      },
+      {
+        $match: { hasCollection: hasCollection }
       }
-    }, {
-      $match: { hasCollection: hasCollection }
-    });
+    );
   }
 
   if (schemaName.length === 1 && schemaName[0] === 'CollectionBCMI') {
@@ -496,7 +504,7 @@ let searchCollection = async function (
     $project: {
       _id: 1,
       _flavourRecords: 1,
-      read: 1,
+      read: 1
     }
   };
 
@@ -557,9 +565,7 @@ let searchCollection = async function (
   searchResultAggregation.push({
     $replaceRoot: {
       newRoot: {
-        $mergeObjects: [
-          { $arrayElemAt: ["$fullRecord", 0] },
-          "$$ROOT"]
+        $mergeObjects: [{ $arrayElemAt: ['$fullRecord', 0] }, '$$ROOT']
       }
     }
   });
@@ -631,7 +637,7 @@ let searchCollection = async function (
     $project: {
       fullRecord: 0,
       issuedtoAge: 0,
-      skipRedact: 0,
+      skipRedact: 0
     }
   });
 
@@ -692,13 +698,17 @@ exports.publicGet = async function (args, res, next) {
   if (args.swagger.params.dataset && args.swagger.params.dataset.value) {
     if (SKIP_REDACTION_SCHEMA_NAMES.includes(String(args.swagger.params.dataset.value))) {
       args.swagger.params.subset.value = ['nrpti'];
-      defaultLog.info(`Searching on non-redacted database despite public search query: '${args.swagger.params.dataset.value}' is not a redacted dataset. `);
+      defaultLog.info(
+        `Searching on non-redacted database despite public search query: '${args.swagger.params.dataset.value}' is not a redacted dataset. `
+      );
     }
   }
   if (args.swagger.params._schemaName && args.swagger.params._schemaName.value) {
     if (SKIP_REDACTION_SCHEMA_NAMES.includes(String(args.swagger.params._schemaName.value))) {
       args.swagger.params.subset.value = ['nrpti'];
-      defaultLog.info(`Searching on non-redacted database despite public search query: '${args.swagger.params._schemaName.value}' is not a redacted schema. `);
+      defaultLog.info(
+        `Searching on non-redacted database despite public search query: '${args.swagger.params._schemaName.value}' is not a redacted schema. `
+      );
     }
   }
 
@@ -784,9 +794,12 @@ const executeQuery = async function (args, res, next) {
   let _in = args.swagger.params._in ? args.swagger.params._in.value : '';
   let subset = args.swagger.params.subset ? args.swagger.params.subset.value : null;
 
-  let roles = args.swagger.params.auth_payload && args.swagger.params.auth_payload.client_roles ? args.swagger.params.auth_payload.client_roles : ['public'];
+  let roles =
+    args.swagger.params.auth_payload && args.swagger.params.auth_payload.client_roles
+      ? args.swagger.params.auth_payload.client_roles
+      : ['public'];
 
-  if(!roles.includes('public')){
+  if (!roles.includes('public')) {
     roles.push('public');
   }
 
@@ -796,10 +809,12 @@ const executeQuery = async function (args, res, next) {
   defaultLog.debug(roles);
   defaultLog.debug('******************************************************************');
 
-  QueryUtils.audit(args,
+  QueryUtils.audit(
+    args,
     'Search',
     keywords,
-    args.swagger.params.auth_payload ? args.swagger.params.auth_payload
+    args.swagger.params.auth_payload
+      ? args.swagger.params.auth_payload
       : { idir_userid: null, displayName: 'public', preferred_username: 'public' }
   );
 
@@ -821,7 +836,7 @@ const executeQuery = async function (args, res, next) {
     defaultLog.info('ITEM GET', { _id: args.swagger.params._id.value });
 
     if (!args.swagger.params._id.value || !ObjectID.isValid(args.swagger.params._id.value)) {
-      defaultLog.warn(`Error searching for item: ${args.swagger.params._id.value}, Error: Invalid Item ID supplied`)
+      defaultLog.warn(`Error searching for item: ${args.swagger.params._id.value}, Error: Invalid Item ID supplied`);
       return QueryActions.sendResponse(
         res,
         400,
@@ -840,93 +855,106 @@ const executeQuery = async function (args, res, next) {
     // which can be sorted based on the original field (records).
     populate &&
       args.swagger.params._schemaName.value === 'CollectionBCMI' &&
-      aggregation.push({
-        $lookup: {
-          from: 'nrpti',
-          localField: 'records',
-          foreignField: '_id',
-          as: 'collectionRecords'
-        }
-      }, {
-        $unwind: {
-          path: "$collectionRecords",
-          preserveNullAndEmptyArrays: true
-        }
-      }, {
-        $lookup: {
-          from: "nrpti",
-          localField: "collectionRecords.documents",
-          foreignField: "_id",
-          as: "collectionRecords.documents",
-        }
-      }, {
-        $unwind: {
-          path: "$collectionRecords.documents",
-          preserveNullAndEmptyArrays: true
-        }
-      }, {
-        $addFields: {
-          'collectionRecords.isLink': {
-            $cond: {
-              if: { $cond: [{ $ifNull: ['$collectionRecords.documents', false] }, true, false] },
-              then: { $cond: [{ $ifNull: ['$collectionRecords.documents.key', false] }, false, true] },
-              else: false
+      aggregation.push(
+        {
+          $lookup: {
+            from: 'nrpti',
+            localField: 'records',
+            foreignField: '_id',
+            as: 'collectionRecords'
+          }
+        },
+        {
+          $unwind: {
+            path: '$collectionRecords',
+            preserveNullAndEmptyArrays: true
+          }
+        },
+        {
+          $lookup: {
+            from: 'nrpti',
+            localField: 'collectionRecords.documents',
+            foreignField: '_id',
+            as: 'collectionRecords.documents'
+          }
+        },
+        {
+          $unwind: {
+            path: '$collectionRecords.documents',
+            preserveNullAndEmptyArrays: true
+          }
+        },
+        {
+          $addFields: {
+            'collectionRecords.isLink': {
+              $cond: {
+                if: { $cond: [{ $ifNull: ['$collectionRecords.documents', false] }, true, false] },
+                then: { $cond: [{ $ifNull: ['$collectionRecords.documents.key', false] }, false, true] },
+                else: false
+              }
+            }
+          }
+        },
+        {
+          $group: {
+            _id: '$_id',
+            _schemaName: { $first: '$_schemaName' },
+            _master: { $first: '$_master' },
+            name: { $first: '$name' },
+            date: { $first: '$date' },
+            project: { $first: '$project' },
+            type: { $first: '$type' },
+            agency: { $first: '$agency' },
+            records: { $first: '$records' },
+            dateAdded: { $first: '$dateAdded' },
+            addedBy: { $first: '$addedBy' },
+            dateUpdated: { $first: '$dateUpdated' },
+            updatedBy: { $first: '$updatedBy' },
+            datePublished: { $first: '$datePublished' },
+            publishedBy: { $first: '$publishedBy' },
+            isBcmiPublished: { $first: '$isBcmiPublished' },
+            collectionRecords: { $push: '$collectionRecords' }
+          }
+        },
+        {
+          $project: {
+            _id: 1,
+            name: 1,
+            date: 1,
+            project: 1,
+            type: 1,
+            agency: 1,
+            records: 1,
+            dateAdded: 1,
+            addedBy: 1,
+            dateUpdated: 1,
+            updatedBy: 1,
+            datePublished: 1,
+            publishedBy: 1,
+            isBcmiPublished: 1,
+            collectionRecords: {
+              $filter: { input: '$collectionRecords', as: 'a', cond: { $ifNull: ['$$a._id', false] } }
             }
           }
         }
-      }, {
-        $group: {
-          _id: "$_id",
-          _schemaName: { $first: "$_schemaName" },
-          _master: { $first: "$_master" },
-          name: { $first: "$name" },
-          date: { $first: "$date" },
-          project: { $first: "$project" },
-          type: { $first: "$type" },
-          agency: { $first: "$agency" },
-          records: { $first: "$records" },
-          dateAdded: { $first: "$dateAdded" },
-          addedBy: { $first: "$addedBy" },
-          dateUpdated: { $first: "$dateUpdated" },
-          updatedBy: { $first: "$updatedBy" },
-          datePublished: { $first: "$datePublished" },
-          publishedBy: { $first: "$publishedBy" },
-          isBcmiPublished: { $first: "$isBcmiPublished" },
-          collectionRecords: { $push: "$collectionRecords" }
-        }
-      }, {
-        $project: {
-          _id: 1,
-          name: 1,
-          date: 1,
-          project: 1,
-          type: 1,
-          agency: 1,
-          records: 1,
-          dateAdded: 1,
-          addedBy: 1,
-          dateUpdated: 1,
-          updatedBy: 1,
-          datePublished: 1,
-          publishedBy: 1,
-          isBcmiPublished: 1,
-          collectionRecords: {
-            $filter: { input: "$collectionRecords", as: "a", cond: { $ifNull: ["$$a._id", false] } }
-          }
+      );
+
+    populate &&
+      aggregation.push({
+        $lookup: {
+          from: 'nrpti',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'fullRecord'
         }
       });
 
-    populate && aggregation.push({
-      $lookup: {
-        from: 'nrpti',
-        localField: '_id',
-        foreignField: '_id',
-        as: 'fullRecord'
-      }
-    });
-
     // Redact issued if user is only wildfire or read-only user
-    if (populate && !roles.some(r => ApplicationAdminRoles.indexOf(r) >= 0) && !(subset && subset.includes('redactedRecord'))) {
+    if (
+      populate &&
+      !roles.some(r => ApplicationAdminRoles.indexOf(r) >= 0) &&
+      !(subset && subset.includes('redactedRecord'))
+    ) {
       aggregation = aggregation.concat(issuedToRedaction(roles));
     }
 
@@ -934,9 +962,7 @@ const executeQuery = async function (args, res, next) {
       aggregation.push({
         $replaceRoot: {
           newRoot: {
-            $mergeObjects: [
-              { $arrayElemAt: ["$fullRecord", 0] },
-              "$$ROOT"]
+            $mergeObjects: [{ $arrayElemAt: ['$fullRecord', 0] }, '$$ROOT']
           }
         }
       });
@@ -1003,14 +1029,15 @@ const executeQuery = async function (args, res, next) {
       } else {
         const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
         const collection = db.collection('nrpti');
-        data = await collection.aggregate(aggregation, {
-          allowDiskUse: true,
-          collation: {
-            locale: 'en_US',
-            alternate: 'shifted',
-            numericOrdering: true
-          }
-        })
+        data = await collection
+          .aggregate(aggregation, {
+            allowDiskUse: true,
+            collation: {
+              locale: 'en_US',
+              alternate: 'shifted',
+              numericOrdering: true
+            }
+          })
           .toArray();
       }
       QueryActions.sendResponse(res, 200, data);
@@ -1019,11 +1046,12 @@ const executeQuery = async function (args, res, next) {
       defaultLog.debug(error);
       return QueryActions.sendResponse(res, 400, {});
     }
-  } else if (dataset[0] === 'CollectionDocuments') { // dataset == collection, id = collection id, flavourtype?
+  } else if (dataset[0] === 'CollectionDocuments') {
+    // dataset == collection, id = collection id, flavourtype?
     defaultLog.info('COLLECTION DOCUMENTS GET', { _id: args.swagger.params._id.value });
 
     if (!args.swagger.params._id.value || !ObjectID.isValid(args.swagger.params._id.value)) {
-      defaultLog.warn(`Error searching for item: ${args.swagger.params._id.value}, Error: Invalid Item ID supplied`)
+      defaultLog.warn(`Error searching for item: ${args.swagger.params._id.value}, Error: Invalid Item ID supplied`);
       return QueryActions.sendResponse(
         res,
         400,
@@ -1057,7 +1085,12 @@ const executeQuery = async function (args, res, next) {
       },
       // lookup the documents
       {
-        $lookup: { from: 'nrpti', localField: 'populatedRecords.documents', foreignField: '_id', as: 'populatedRecords.documents' }
+        $lookup: {
+          from: 'nrpti',
+          localField: 'populatedRecords.documents',
+          foreignField: '_id',
+          as: 'populatedRecords.documents'
+        }
       },
       // copy sort order into document objects
       {
@@ -1073,7 +1106,7 @@ const executeQuery = async function (args, res, next) {
       },
       // sort the docs
       {
-        $sort: { "_sort": 1 }
+        $sort: { _sort: 1 }
       },
       // redact based on scope
       {
@@ -1106,14 +1139,16 @@ const executeQuery = async function (args, res, next) {
     try {
       const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
       const collection = db.collection('nrpti');
-      data = await collection.aggregate(aggregation, {
-        allowDiskUse: true,
-        collation: {
-          locale: 'en_US',
-          alternate: 'shifted',
-          numericOrdering: true
-        }
-      }).toArray();
+      data = await collection
+        .aggregate(aggregation, {
+          allowDiskUse: true,
+          collation: {
+            locale: 'en_US',
+            alternate: 'shifted',
+            numericOrdering: true
+          }
+        })
+        .toArray();
 
       QueryActions.sendResponse(res, 200, data);
     } catch (error) {
@@ -1121,7 +1156,6 @@ const executeQuery = async function (args, res, next) {
       defaultLog.debug(error);
       return QueryActions.sendResponse(res, 400, {});
     }
-
   } else if (dataset[0] !== 'Item' && dataset[0] !== 'CollectionDocuments') {
     defaultLog.debug('Searching Dataset:', dataset);
     defaultLog.debug('sortField:', sortField);

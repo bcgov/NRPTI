@@ -39,14 +39,14 @@ class Permits extends BaseRecordUtils {
       throw Error('transformRecords - required amendment must be non-null.');
     }
 
-    return  {
+    return {
       ...super.transformRecord(permit),
       _sourceRefId: permit._sourceRefId || '',
       _flavourRecords: permit._flavourRecords || [],
       amendmentStatusCode: permit.amendmentStatusCode || '',
       typeCode: permit.typeCode || '',
       sourceDateAdded: permit.sourceDateAdded || null,
-      dateIssued:  permit.dateIssued || null,
+      dateIssued: permit.dateIssued || null,
       permitNumber: permit.permitNumber || '',
       permitStatusCode: permit.permitStatusCode || '',
       _sourceDocumentRefId: permit._sourceDocumentRefId || '',
@@ -54,7 +54,7 @@ class Permits extends BaseRecordUtils {
       mineGuid: permit.mineGuid || '',
       documents: permit.documents || [],
       agency: permit.agency || ''
-    }
+    };
   }
 }
 

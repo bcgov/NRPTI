@@ -7,7 +7,7 @@ const Delete = require('../controllers/delete/delete');
 const PutUtils = require('../utils/put-utils');
 const { mapLayerInfo: MapLayerInfo } = require('../models/index');
 
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
 
@@ -15,7 +15,7 @@ async function getMapLayerInfoSegment(segment) {
   return await MapLayerInfo.findOne({ _schemaName: 'MapLayerInfo', segment });
 }
 
-exports.protectedPost = async function(args, res, next) {
+exports.protectedPost = async function (args, res, next) {
   let incomingObj = {};
   let errorMsg = null;
   // Only accpet application: 'LNG' for now
@@ -77,7 +77,7 @@ exports.protectedPost = async function(args, res, next) {
   return queryActions.sendResponse(res, 200, obj.ops[0]);
 };
 
-exports.protectedPut = async function(args, res, next) {
+exports.protectedPut = async function (args, res, next) {
   let incomingObj = {};
   let errorMsg = null;
 
@@ -138,7 +138,7 @@ exports.protectedPut = async function(args, res, next) {
   return queryActions.sendResponse(res, 200, obj);
 };
 
-exports.protectedDelete = async function(args, res, next) {
+exports.protectedDelete = async function (args, res, next) {
   let mapInfoId = null;
   if (args.swagger.params.mapInfoId && args.swagger.params.mapInfoId.value) {
     mapInfoId = args.swagger.params.mapInfoId.value;

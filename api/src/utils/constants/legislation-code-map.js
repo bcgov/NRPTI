@@ -4,10 +4,10 @@
  */
 
 const LEGISLATION_CODES = Object.freeze({
-    ACT_103: {// related to legislation act name utilized by BCOGC import
-        actAPI: "https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/08036_01/xml"
-    },
+  ACT_103: {
+    // related to legislation act name utilized by BCOGC import
+    actAPI: 'https://www.bclaws.gov.bc.ca/civix/document/id/complete/statreg/08036_01/xml'
+  }
 });
-
 
 module.exports = LEGISLATION_CODES;

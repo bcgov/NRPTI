@@ -7,9 +7,7 @@ describe('BaseRecordUtils', () => {
     it('throws an error if no recordType provided', () => {
       expect(() => {
         new BaseRecordUtils({}, null);
-      })
-      .toThrow('BaseRecordUtils - required recordType must be non-null.');
-
+      }).toThrow('BaseRecordUtils - required recordType must be non-null.');
     });
   });
 
@@ -36,18 +34,22 @@ describe('BaseRecordUtils', () => {
       const result = baseRecordUtils.transformRecord(coreRecord);
 
       expect(result).toEqual(expectedResult);
-    })
+    });
   });
 
   describe('updateRecord', () => {
     it('throws error when nrptiRecord is not provided', async () => {
       const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.MineBCMI);
-      await expect(baseRecordUtils.updateRecord(null, {})).rejects.toThrow('updateRecord - required nrptiRecord must be non-null.');
+      await expect(baseRecordUtils.updateRecord(null, {})).rejects.toThrow(
+        'updateRecord - required nrptiRecord must be non-null.'
+      );
     });
 
     it('throws error when existingRecord is not provided', async () => {
       const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.MineBCMI);
-      await expect(baseRecordUtils.updateRecord({}, null)).rejects.toThrow('updateRecord - required existingRecord must be non-null.');
+      await expect(baseRecordUtils.updateRecord({}, null)).rejects.toThrow(
+        'updateRecord - required existingRecord must be non-null.'
+      );
     });
 
     it('calls `processPutRequest` when all arguments provided', async () => {
@@ -68,7 +70,9 @@ describe('BaseRecordUtils', () => {
   describe('createItem', () => {
     it('throws error when nrptiRecord is not provided', async () => {
       const baseRecordUtils = new BaseRecordUtils({}, RECORD_TYPE.MineBCMI);
-      await expect(baseRecordUtils.createItem(null)).rejects.toThrow('createItem - required nrptiRecord must be non-null.');
+      await expect(baseRecordUtils.createItem(null)).rejects.toThrow(
+        'createItem - required nrptiRecord must be non-null.'
+      );
     });
 
     it('calls `processPostRequest` when all arguments provided', async () => {

@@ -21,7 +21,9 @@ describe('Certificates', () => {
 
   describe('transformRecord', () => {
     it('should throw an error if epicRecord is not provided', async () => {
-      await expect(certificatesInstance.transformRecord()).rejects.toThrow('transformRecord - required record must be non-null.');
+      await expect(certificatesInstance.transformRecord()).rejects.toThrow(
+        'transformRecord - required record must be non-null.'
+      );
     });
 
     it('should call transformRecord on the record', async () => {

@@ -16,7 +16,7 @@ describe('publish', () => {
     test('it adds the public tag and saves it', async () => {
       let record = { read: [] };
       // stub save method to return itself
-      record.save = function() {
+      record.save = function () {
         return this;
       };
       record.markModified = () => {};
@@ -47,7 +47,7 @@ describe('unPublish', () => {
     test('it removes the public tag and saves it', async () => {
       let record = { read: ['public'] };
       // stub save method to return itself
-      record.save = function() {
+      record.save = function () {
         return this;
       };
       record.markModified = () => {};

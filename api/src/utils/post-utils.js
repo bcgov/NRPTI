@@ -10,7 +10,7 @@ const { CSV_SOURCE_DEFAULT_ROLES } = require('./constants/misc');
  * @param {*} issuedToObj
  * @returns
  */
-exports.getIssuedToFullNameValue = function(issuedToObj) {
+exports.getIssuedToFullNameValue = function (issuedToObj) {
   if (!issuedToObj || !issuedToObj.type) {
     return '';
   }
@@ -49,7 +49,7 @@ exports.getIssuedToFullNameValue = function(issuedToObj) {
   }
 };
 
-exports.createRecordWithFlavours = async function(args, res, next, incomingObj, createMaster, flavourFunctions = {}) {
+exports.createRecordWithFlavours = async function (args, res, next, incomingObj, createMaster, flavourFunctions = {}) {
   let flavours = [];
   let flavourIds = [];
   let promises = [];
@@ -196,7 +196,7 @@ exports.createRecordWithFlavours = async function(args, res, next, incomingObj, 
  * @param {Array<string>} rolesToCheck The roles to check for
  * @returns {boolean} Indication if user if wildfire user
  */
-exports.setAdditionalRoleOnRecord = function(record, userRoles, rolesToCheck) {
+exports.setAdditionalRoleOnRecord = function (record, userRoles, rolesToCheck) {
   if (!record || !userRoles || !rolesToCheck) return;
 
   for (const role of rolesToCheck) {
@@ -223,37 +223,28 @@ exports.setAdditionalRoleOnRecord = function(record, userRoles, rolesToCheck) {
   }
 };
 
-
 /**
  * Takes in an array of legislation objects and returns the sanitized array
  *
  * @param {Array<object>} incomingLegislationObjectArray the incoming array of legislation objects
  * @returns {Array<object>} recordLegislationArray the sanitized array of legislation objects
  */
-exports.populateLegislation = function(incomingLegislationObjectArray) {
+exports.populateLegislation = function (incomingLegislationObjectArray) {
   let recordLegislationArray = [];
 
   if (incomingLegislationObjectArray && incomingLegislationObjectArray.length >= 1) {
-    incomingLegislationObjectArray.forEach( (leg, index) => {
-
+    incomingLegislationObjectArray.forEach((leg, index) => {
       recordLegislationArray.push({});
 
-      leg.act &&
-        (recordLegislationArray[index].act = leg.act);
-      leg.regulation &&
-        (recordLegislationArray[index].regulation = leg.regulation);
-      leg.section &&
-        (recordLegislationArray[index].section = leg.section);
-      leg.subSection &&
-        (recordLegislationArray[index].subSection = leg.subSection);
-      leg.paragraph &&
-        (recordLegislationArray[index].paragraph = leg.paragraph);
-      leg.offence &&
-        (recordLegislationArray[index].offence = leg.offence);
-      leg.legislationDescription &&
-        (recordLegislationArray[index].legislationDescription = leg.legislationDescription);
+      leg.act && (recordLegislationArray[index].act = leg.act);
+      leg.regulation && (recordLegislationArray[index].regulation = leg.regulation);
+      leg.section && (recordLegislationArray[index].section = leg.section);
+      leg.subSection && (recordLegislationArray[index].subSection = leg.subSection);
+      leg.paragraph && (recordLegislationArray[index].paragraph = leg.paragraph);
+      leg.offence && (recordLegislationArray[index].offence = leg.offence);
+      leg.legislationDescription && (recordLegislationArray[index].legislationDescription = leg.legislationDescription);
     });
   }
 
- return recordLegislationArray;
-}
+  return recordLegislationArray;
+};

@@ -6,7 +6,7 @@ const MiscConstants = require('../../../utils/constants/misc');
  * @param {*} csvRow
  * @returns {object} the Legislation object.
  */
-exports.getLegislation = function(csvRow) {
+exports.getLegislation = function (csvRow) {
   if (!csvRow || !csvRow['function']) {
     return null;
   }
@@ -58,7 +58,7 @@ exports.getLegislation = function(csvRow) {
  * @param {*} csvRow
  * @returns {string} the outcome description string.
  */
-exports.getOutcomeDescription = function(csvRow) {
+exports.getOutcomeDescription = function (csvRow) {
   if (!csvRow) {
     return null;
   }
@@ -107,7 +107,7 @@ function stripAcronyms(actOrRegulation) {
  * @param {*} csvRow
  * @returns {object} the EPIC project name and id.
  */
-exports.getProjectNameAndEpicProjectId = function(csvRow) {
+exports.getProjectNameAndEpicProjectId = function (csvRow) {
   if (!csvRow) {
     return null;
   }
@@ -134,7 +134,7 @@ exports.getProjectNameAndEpicProjectId = function(csvRow) {
  * @param {*} csvRow
  * @returns {string} the entity type.
  */
-exports.getEntityType = function(csvRow) {
+exports.getEntityType = function (csvRow) {
   if (!csvRow) {
     return null;
   }

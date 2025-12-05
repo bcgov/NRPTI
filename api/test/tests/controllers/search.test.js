@@ -5,10 +5,8 @@ const generate_helper = require('../../data_generators/generate_helper');
 const search = require('../../../src/controllers/search');
 const CONSTANTS = require('../../../src/utils/constants/misc');
 
-
-require('../../../src/models/master/order')
-require('../../../src/models/audit')
-
+require('../../../src/models/master/order');
+require('../../../src/models/audit');
 
 // mock next function
 function next() {
@@ -35,31 +33,16 @@ describe('Search Controller Testing', () => {
       // pass any extra build options to factory eg. genUnderage
       {}
     );
-    generated_underage = await generate_helper.generateSingleFactory(
-      'Order',
-      2,
-      {},
-      { genUnderAge: true }
-    );
-    generated_ofAge = await generate_helper.generateSingleFactory(
-      'Order',
-      2,
-      {},
-      { genAdult: true }
-    ),
-      generated_Company = await generate_helper.generateSingleFactory(
-        'Order',
-        2,
-        {},
-        { genCompany: true }
-      )
+    generated_underage = await generate_helper.generateSingleFactory('Order', 2, {}, { genUnderAge: true });
+    ((generated_ofAge = await generate_helper.generateSingleFactory('Order', 2, {}, { genAdult: true })),
+      (generated_Company = await generate_helper.generateSingleFactory('Order', 2, {}, { genCompany: true })));
   });
 
   test('Invalid ObjectId returns 400 error', async () => {
-    const roles = ['sysadmin']
+    const roles = ['sysadmin'];
     app.get(searchEndpoint, (req, res) => {
-      const params = test_util.buildParams(req.query)
-      const paramsWithValues = test_util.createSwaggerParams(params, roles, testUser)
+      const params = test_util.buildParams(req.query);
+      const paramsWithValues = test_util.createSwaggerParams(params, roles, testUser);
       return search.protectedGet(paramsWithValues, res, next);
     });
 
@@ -69,16 +52,16 @@ describe('Search Controller Testing', () => {
       .query(qs.stringify({ dataset: ['Item'], _id: 'invalidObjectId' }))
       .expect(400);
 
-      expect(res.body).toMatch('Error searching for item invalidObjectId. Invalid item id supplied')
-  })
+    expect(res.body).toMatch('Error searching for item invalidObjectId. Invalid item id supplied');
+  });
 
   test('Search for Item returns record', async () => {
     const orderId = generated_things[0]._id.toString();
     const roles = ['sysadmin'];
     app.get(searchEndpoint, async (req, res) => {
-      const params = test_util.buildParams(req.query)
+      const params = test_util.buildParams(req.query);
       const paramsWithValues = test_util.createSwaggerParams(params, roles, testUser);
-      return search.protectedGet(paramsWithValues, res, next)
+      return search.protectedGet(paramsWithValues, res, next);
     });
 
     const res = await request(app)
@@ -87,17 +70,17 @@ describe('Search Controller Testing', () => {
       .expect(200)
       .expect('Content-Type', 'application/json');
 
-      expect(res.body.length).toBe(1)
-      expect(res.body[0]._id).toMatch(orderId)
-  })
+    expect(res.body.length).toBe(1);
+    expect(res.body[0]._id).toMatch(orderId);
+  });
 
   test('IssuedTo name redacted for underage individual', async () => {
     const roles = [];
     const orderId = generated_underage[0]._id.toString();
     app.get(searchEndpoint, (req, res) => {
-      const params = test_util.buildParams(req.query)
+      const params = test_util.buildParams(req.query);
       const paramsWithValues = test_util.createSwaggerParams(params, roles, testUser);
-      return search.protectedGet(paramsWithValues, res, next)
+      return search.protectedGet(paramsWithValues, res, next);
     });
 
     const res = await request(app)
@@ -106,23 +89,23 @@ describe('Search Controller Testing', () => {
       .expect(200)
       .expect('Content-Type', 'application/json');
 
-      expect(res.body.length).toBe(1)
-      let record = res.body[0];
-      expect(record._id).toMatch(orderId)
-      expect(record.issuedTo.firstName).toBe(unpublished_val)
-      expect(record.issuedTo.lastName).toBe(unpublished_val)
-      expect(record.issuedTo.fullName).toBe(unpublished_val)
-      expect(record.issuedTo.birthDate).toBeFalsy()
-  })
+    expect(res.body.length).toBe(1);
+    let record = res.body[0];
+    expect(record._id).toMatch(orderId);
+    expect(record.issuedTo.firstName).toBe(unpublished_val);
+    expect(record.issuedTo.lastName).toBe(unpublished_val);
+    expect(record.issuedTo.fullName).toBe(unpublished_val);
+    expect(record.issuedTo.birthDate).toBeFalsy();
+  });
 
   test('IssuedTo name published for adults', async () => {
     const roles = ['admin:nrced'];
     const orderId = generated_ofAge[0]._id.toString();
     const expected = generated_ofAge[0];
     app.get(searchEndpoint, (req, res) => {
-      const params = test_util.buildParams(req.query)
+      const params = test_util.buildParams(req.query);
       const paramsWithValues = test_util.createSwaggerParams(params, roles, testUser);
-      return search.protectedGet(paramsWithValues, res, next)
+      return search.protectedGet(paramsWithValues, res, next);
     });
 
     const res = await request(app)
@@ -131,23 +114,23 @@ describe('Search Controller Testing', () => {
       .expect(200)
       .expect('Content-Type', 'application/json');
 
-      expect(res.body.length).toBe(1)
-      let record = res.body[0];
-      expect(record._id).toMatch(orderId)
-      expect(record.issuedTo.firstName).toBe(expected.issuedTo.firstName)
-      expect(record.issuedTo.lastName).toBe(expected.issuedTo.lastName)
-      expect(record.issuedTo.fullName).toBe(expected.issuedTo.fullName)
-      expect(record.issuedTo.dateOfBirth).toBe(expected.issuedTo.dateOfBirth.toISOString())
-  })
+    expect(res.body.length).toBe(1);
+    let record = res.body[0];
+    expect(record._id).toMatch(orderId);
+    expect(record.issuedTo.firstName).toBe(expected.issuedTo.firstName);
+    expect(record.issuedTo.lastName).toBe(expected.issuedTo.lastName);
+    expect(record.issuedTo.fullName).toBe(expected.issuedTo.fullName);
+    expect(record.issuedTo.dateOfBirth).toBe(expected.issuedTo.dateOfBirth.toISOString());
+  });
 
   test('IssuedTo redacted for wildfire role', async () => {
     const roles = ['admin:wf'];
     // factory defaults generate write arrays without wf role
     const orderId = generated_underage[1]._id.toString();
     app.get(searchEndpoint, (req, res) => {
-      const params = test_util.buildParams(req.query)
+      const params = test_util.buildParams(req.query);
       const paramsWithValues = test_util.createSwaggerParams(params, roles, testUser);
-      return search.protectedGet(paramsWithValues, res, next)
+      return search.protectedGet(paramsWithValues, res, next);
     });
 
     const res = await request(app)
@@ -156,14 +139,14 @@ describe('Search Controller Testing', () => {
       .expect(200)
       .expect('Content-Type', 'application/json');
 
-      expect(res.body.length).toBe(1)
-      let record = res.body[0];
-      expect(record._id).toMatch(orderId)
-      expect(record.issuedTo.firstName).toBe(unpublished_val)
-      expect(record.issuedTo.lastName).toBe(unpublished_val)
-      expect(record.issuedTo.fullName).toBe(unpublished_val)
-      expect(record.issuedTo.dateOfBirth).toBeFalsy()
-  })
+    expect(res.body.length).toBe(1);
+    let record = res.body[0];
+    expect(record._id).toMatch(orderId);
+    expect(record.issuedTo.firstName).toBe(unpublished_val);
+    expect(record.issuedTo.lastName).toBe(unpublished_val);
+    expect(record.issuedTo.fullName).toBe(unpublished_val);
+    expect(record.issuedTo.dateOfBirth).toBeFalsy();
+  });
 
   test('IssuedTo company name is not redacted', async () => {
     const roles = ['admin:nrced'];
@@ -172,9 +155,9 @@ describe('Search Controller Testing', () => {
     const redactExpectation = 'Unpublished';
 
     app.get(searchEndpoint, (req, res) => {
-      const params = test_util.buildParams(req.query)
+      const params = test_util.buildParams(req.query);
       const paramsWithValues = test_util.createSwaggerParams(params, roles, testUser);
-      return search.protectedGet(paramsWithValues, res, next)
+      return search.protectedGet(paramsWithValues, res, next);
     });
 
     const res = await request(app)
@@ -183,23 +166,23 @@ describe('Search Controller Testing', () => {
       .expect(200)
       .expect('Content-Type', 'application/json');
 
-      expect(res.body.length).toBe(1)
-      let record = res.body[0];
-      expect(record._id).toMatch(orderId)
-      expect(record.issuedTo.type).toBe(CONSTANTS.IssuedToEntityTypes.Company)
-      expect(record.issuedTo.companyName).toBe(expected.issuedTo.companyName)
-      expect(record.issuedTo.firstName).toBe(redactExpectation || '')
-      expect(record.issuedTo.lastName).toBe(redactExpectation || '')
-      expect(record.issuedTo.fullName).toBe(redactExpectation || '')
-      expect(record.issuedTo.dateOfBirth).toBeFalsy()
-  })
+    expect(res.body.length).toBe(1);
+    let record = res.body[0];
+    expect(record._id).toMatch(orderId);
+    expect(record.issuedTo.type).toBe(CONSTANTS.IssuedToEntityTypes.Company);
+    expect(record.issuedTo.companyName).toBe(expected.issuedTo.companyName);
+    expect(record.issuedTo.firstName).toBe(redactExpectation || '');
+    expect(record.issuedTo.lastName).toBe(redactExpectation || '');
+    expect(record.issuedTo.fullName).toBe(redactExpectation || '');
+    expect(record.issuedTo.dateOfBirth).toBeFalsy();
+  });
 
   test('Lookup by dataset returns items', async () => {
     const roles = ['sysadmin', 'admin:nrced'];
     app.get(searchEndpoint, (req, res) => {
-      const params = test_util.buildParams(req.query)
+      const params = test_util.buildParams(req.query);
       const paramsWithValues = test_util.createSwaggerParams(params, roles, testUser);
-      return search.protectedGet(paramsWithValues, res, next)
+      return search.protectedGet(paramsWithValues, res, next);
     });
 
     const res = await request(app)
@@ -208,6 +191,6 @@ describe('Search Controller Testing', () => {
       .expect(200)
       .expect('Content-Type', 'application/json');
 
-      expect(res.body[0].searchResults.length).toBe(11)
-  })
-})
+    expect(res.body[0].searchResults.length).toBe(11);
+  });
+});

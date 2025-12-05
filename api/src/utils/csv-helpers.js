@@ -11,7 +11,7 @@ const defaultLog = require('./logger')('csv-import');
  * @param {*} csvString
  * @returns {string[][]}
  */
-exports.getCsvRowsFromString = async function(csvString) {
+exports.getCsvRowsFromString = async function (csvString) {
   if (!csvString) {
     return null;
   }
@@ -36,15 +36,14 @@ exports.getCsvRowsFromString = async function(csvString) {
     .fromString(csvString);
 
   return csvRows;
-}
+};
 
 /**
-  * Read the csv file data from S3 if all required parameters are valid.
-  *
-  * @returns
-  */
-exports.readAndParseCsvFile = async function(csvStream, dataSourceType, recordType) {
-
+ * Read the csv file data from S3 if all required parameters are valid.
+ *
+ * @returns
+ */
+exports.readAndParseCsvFile = async function (csvStream, dataSourceType, recordType) {
   // parse csv into an array of key-value pairs (header-value)
   const validatedCsvRows = await validateCsvFile(csvStream, dataSourceType, recordType);
 
@@ -59,22 +58,23 @@ exports.readAndParseCsvFile = async function(csvStream, dataSourceType, recordTy
   }
 
   return transformedValidatedCsvFile;
-}
+};
 
 /**
-  * Parse and validate the csv data for errors.
-  *
-  * @param {*} csvStream node stream object from s3 getObject stream
-  * @param {string} dataSourceType which datasource to transform csv to, Eg. nris-flnr-csv
-  * @param {string} recordType record type to target, Eg. Inspection
-  * @returns {string[]} parsed and validated csv file
-  * @returns
-  */
+ * Parse and validate the csv data for errors.
+ *
+ * @param {*} csvStream node stream object from s3 getObject stream
+ * @param {string} dataSourceType which datasource to transform csv to, Eg. nris-flnr-csv
+ * @param {string} recordType record type to target, Eg. Inspection
+ * @returns {string[]} parsed and validated csv file
+ * @returns
+ */
 async function validateCsvFile(csvStream, dataSourceType, recordType) {
   let headers = [];
   let headersValid = false;
   let lineNumber = 0;
-  const csvRows = await csvToJson({downstreamFormat: 'array'}).fromStream(csvStream)
+  const csvRows = await csvToJson({ downstreamFormat: 'array' })
+    .fromStream(csvStream)
     .preFileLine(fileLine => {
       let line = fileLine;
 
@@ -87,15 +87,14 @@ async function validateCsvFile(csvStream, dataSourceType, recordType) {
 
       return line;
     })
-    .on('header', (header) => {
+    .on('header', header => {
       headersValid = validateRequiredHeaders(header, dataSourceType, recordType);
       headers = header;
     })
-    .on('error', (error) => {
-      defaultLog.info(`Error reading csv stream for ${dataSourceType} - ${recordType}: ${error}`)
+    .on('error', error => {
+      defaultLog.info(`Error reading csv stream for ${dataSourceType} - ${recordType}: ${error}`);
       return;
-    })
-
+    });
 
   const fieldsValid = validateFields(headers, csvRows, dataSourceType, recordType);
 
@@ -108,14 +107,14 @@ async function validateCsvFile(csvStream, dataSourceType, recordType) {
 }
 
 /**
-  * Validate that the csv file contains all required headers.
-  *
-  * @param {string[]} csvHeaderRowValuesArray
-  * @param {string} dataSourceType which datasource to transform csv to, Eg. nris-flnr-csv
-  * @param {string} recordType record type to target, Eg. Inspection
-  * @returns
-  * @memberof ImportCSVComponent
-  */
+ * Validate that the csv file contains all required headers.
+ *
+ * @param {string[]} csvHeaderRowValuesArray
+ * @param {string} dataSourceType which datasource to transform csv to, Eg. nris-flnr-csv
+ * @param {string} recordType record type to target, Eg. Inspection
+ * @returns
+ * @memberof ImportCSVComponent
+ */
 function validateRequiredHeaders(csvHeaderRowValuesArray, dataSourceType, recordType) {
   if (!csvHeaderRowValuesArray || !csvHeaderRowValuesArray.length) {
     defaultLog.info(`Error parsing csv file: ${dataSourceType} - ${recordType}`);
@@ -134,7 +133,9 @@ function validateRequiredHeaders(csvHeaderRowValuesArray, dataSourceType, record
   );
 
   if (missingHeaders && missingHeaders.length) {
-    defaultLog.info(`CSV file for ${dataSourceType} - ${recordType} is missing required column headers: ${missingHeaders}`);
+    defaultLog.info(
+      `CSV file for ${dataSourceType} - ${recordType} is missing required column headers: ${missingHeaders}`
+    );
     return null;
   }
 
@@ -142,17 +143,17 @@ function validateRequiredHeaders(csvHeaderRowValuesArray, dataSourceType, record
 }
 
 /**
-   * Validate csv field values.
-   * - Check that the csv rows contain non-null/non-empty values for all required fields.
-   * - Check that the csv rows contain correctly formatted values for all fields that have a required format.
-   *
-   * Note: Not all fields with required formats are necessarily required fields, and so may be null or empty.
-   *
-   * @param {string[]} csvRows array of row objects, each of which is an k-v of header-values
-  * @param {string} dataSourceType which datasource to transform csv to, Eg. nris-flnr-csv
-  * @param {string} recordType record type to target, Eg. Inspection
-   * @returns
-   */
+ * Validate csv field values.
+ * - Check that the csv rows contain non-null/non-empty values for all required fields.
+ * - Check that the csv rows contain correctly formatted values for all fields that have a required format.
+ *
+ * Note: Not all fields with required formats are necessarily required fields, and so may be null or empty.
+ *
+ * @param {string[]} csvRows array of row objects, each of which is an k-v of header-values
+ * @param {string} dataSourceType which datasource to transform csv to, Eg. nris-flnr-csv
+ * @param {string} recordType record type to target, Eg. Inspection
+ * @returns
+ */
 function validateFields(header, csvRows, dataSourceType, recordType) {
   if (!header || !csvRows || !csvRows.length) {
     defaultLog.info(`Error validating fields for csv: ${dataSourceType} - ${recordType}`);
@@ -192,11 +193,7 @@ function validateFields(header, csvRows, dataSourceType, recordType) {
  * @param {string[]} requiredFieldsArray array of required columns
  * @param {number} rowNumber csv row number
  */
-function validateRequiredFields(
-  csvRowValuesArray,
-  requiredFieldsArray,
-  rowNumber
-) {
+function validateRequiredFields(csvRowValuesArray, requiredFieldsArray, rowNumber) {
   const missingFields = [];
 
   // determine if the csv row is missing any required fields
@@ -221,11 +218,7 @@ function validateRequiredFields(
  * @param {IRequiredFormat[]} requiredFormatsArray
  * @param {number} rowNumber csv row number
  */
-function validateRequiredFormats(
-  csvRowValuesArray,
-  requiredFormatsArray,
-  rowNumber
-) {
+function validateRequiredFormats(csvRowValuesArray, requiredFormatsArray, rowNumber) {
   // determine if the csv row is contains any fields whose values are not in the required format
   for (const requiredFormat of requiredFormatsArray) {
     // const fieldIndex = csvHeaderRowValuesArray.indexOf(requiredFormat.field);
@@ -291,15 +284,11 @@ function transformFields(csvRows, dataSourceType, recordType) {
  * @param {string[]} dateFieldsArray
  * @returns {string[]} csv row fields with transformed date fields
  */
-function transformDateFields(
-  csvRowValuesArray,
-  dateFieldsArray,
-) {
+function transformDateFields(csvRowValuesArray, dateFieldsArray) {
   const transformedCsvRowValuesArray = csvRowValuesArray;
 
   // determine if the csv row is contains any fields whose values are not in the required format
   for (const dateField of dateFieldsArray) {
-
     if (!csvRowValuesArray[dateField.field]) {
       // Field is empty, if it was required it will have already been accounted for in the required fields check.
       // If it is not required then no format needs to be enforced.
@@ -308,9 +297,11 @@ function transformDateFields(
 
     // transform dates into iso strings
     try {
-      transformedCsvRowValuesArray[dateField.field] = moment.tz(csvRowValuesArray[dateField.field], "America/Vancouver").toDate()
+      transformedCsvRowValuesArray[dateField.field] = moment
+        .tz(csvRowValuesArray[dateField.field], 'America/Vancouver')
+        .toDate();
     } catch (err) {
-      defaultLog.debug(`Error transforming csv date field: ${err}`)
+      defaultLog.debug(`Error transforming csv date field: ${err}`);
       transformedCsvRowValuesArray[dateField.field] = null;
     }
   }
@@ -319,13 +310,13 @@ function transformDateFields(
 }
 
 /**
-   * Get the array of required csv field values for the provided dataSourceType and recordType.
-   *
-   * @static
-   * @param {string} dataSourceType
-   * @param {string} recordType
-   * @returns array of csv required fields
-   */
+ * Get the array of required csv field values for the provided dataSourceType and recordType.
+ *
+ * @static
+ * @param {string} dataSourceType
+ * @param {string} recordType
+ * @returns array of csv required fields
+ */
 function getCsvRequiredFieldsArray(dataSourceType, recordType) {
   if (!dataSourceType || !recordType) {
     return null;
@@ -386,13 +377,13 @@ function getCsvDateFieldsArray(dataSourceType, recordType) {
 }
 
 /**
-   * Get the array of required csv headers for the provided dataSourceType and recordType.
-   *
-   * @static
-   * @param {string} dataSourceType
-   * @param {string} recordType
-   * @returns array of csv required headers
-   */
+ * Get the array of required csv headers for the provided dataSourceType and recordType.
+ *
+ * @static
+ * @param {string} dataSourceType
+ * @param {string} recordType
+ * @returns array of csv required headers
+ */
 function getCsvRequiredHeadersArray(dataSourceType, recordType) {
   if (!dataSourceType || !recordType) {
     return null;

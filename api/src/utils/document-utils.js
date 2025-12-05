@@ -15,15 +15,15 @@ const defaultLog = require('./logger')('documentUtils');
  * @param {*} buffer
  * @returns
  */
-exports.avScan = function(buffer) {
-  return new Promise(function(resolve, reject) {
+exports.avScan = function (buffer) {
+  return new Promise(function (resolve, reject) {
     let stream = require('stream');
     // Initiate the source
     let bufferStream = new stream.PassThrough();
     // Write your buffer
     bufferStream.end(buffer);
 
-    clamav.ping(CLAMAV_SERVICE_PORT, CLAMAV_SERVICE_HOST, 1000, function(error) {
+    clamav.ping(CLAMAV_SERVICE_PORT, CLAMAV_SERVICE_HOST, 1000, function (error) {
       if (error) {
         defaultLog.error(
           `ClamAV service: ${CLAMAV_SERVICE_HOST}:${CLAMAV_SERVICE_PORT} is not available: ${error.message}`
@@ -34,7 +34,7 @@ exports.avScan = function(buffer) {
 
         clamav
           .createScanner(CLAMAV_SERVICE_PORT, CLAMAV_SERVICE_HOST)
-          .scan(bufferStream, function(err, object, malicious) {
+          .scan(bufferStream, function (err, object, malicious) {
             if (error) {
               defaultLog.error('Virus scan error', error);
               resolve(false);

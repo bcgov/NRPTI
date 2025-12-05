@@ -62,7 +62,8 @@ class CmdbCsvDataSource {
       for (let i = 0; i < this.csvRows.length; i++) {
         let inspectionId = this.csvRows[i]['inspection id'];
         let regulationSection = this.csvRows[i]['regulation section'];
-        let outcomeDescription = 'Compliance issue(s) identified under the following acts or regulations: ' + regulationSection;
+        let outcomeDescription =
+          'Compliance issue(s) identified under the following acts or regulations: ' + regulationSection;
 
         if (recordInspectionIds.includes(inspectionId)) {
           let index = recordInspectionIds.indexOf(inspectionId);
@@ -85,7 +86,6 @@ class CmdbCsvDataSource {
 
         // need to await here because some rows are duplicate records
         await this.processRecord(this.csvRows[i], recordTypeConfig, outcomeDescription);
-
       }
     } catch (error) {
       this.status.message = 'batchProcessRecords - unexpected error';
@@ -96,12 +96,12 @@ class CmdbCsvDataSource {
   }
 
   /**
- * Perform all steps necessary to process and save a single row of the csv file.
- *
- * @param {*} csvRow object of values for a single row
- * @param {*} recordTypeConfig object containing record type specific details
- * @memberof CmdbCsvDataSource
- */
+   * Perform all steps necessary to process and save a single row of the csv file.
+   *
+   * @param {*} csvRow object of values for a single row
+   * @param {*} recordTypeConfig object containing record type specific details
+   * @memberof CmdbCsvDataSource
+   */
   async processRecord(csvRow, recordTypeConfig, outcomeDescription = '') {
     // set status defaults
     let recordStatus = {};
@@ -153,11 +153,11 @@ class CmdbCsvDataSource {
   }
 
   /**
- * Supported Agri csv record type configs.
- *
- * @returns {*} object with getUtil method to create a new instance of the record type utils.
- * @memberof CmdbCsvDataSource
- */
+   * Supported Agri csv record type configs.
+   *
+   * @returns {*} object with getUtil method to create a new instance of the record type utils.
+   * @memberof CmdbCsvDataSource
+   */
   getRecordTypeConfig() {
     if (this.recordType === 'Inspection') {
       return {

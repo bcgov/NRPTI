@@ -6,7 +6,7 @@ const MiscConstants = require('../../../utils/constants/misc');
  * @param {*} csvRow
  * @returns {string} the entity type.
  */
-exports.getEntityType = function(csvRow) {
+exports.getEntityType = function (csvRow) {
   if (!csvRow) {
     return null;
   }

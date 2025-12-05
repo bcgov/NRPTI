@@ -42,10 +42,10 @@ describe('Record Individual issuedTo redaction test', () => {
 
   test('Authorized issuing agency and person over 19 are not redacted', async () => {
     const testRecord = new TestModel({
-        issuedTo: generateIssuedTo( false, true, false ),
-        _schemaName: 'Schema',
-        issuingAgency: 'AGENCY_ENV_BCPARKS'
-      });
+      issuedTo: generateIssuedTo(false, true, false),
+      _schemaName: 'Schema',
+      issuingAgency: 'AGENCY_ENV_BCPARKS'
+    });
 
     await nrptiCollection.insertOne(testRecord);
     await redactedRecordSubset.saveOneRecord(testRecord);
@@ -60,7 +60,7 @@ describe('Record Individual issuedTo redaction test', () => {
 
   test('Authorized issuing agency and person under 19 are redacted', async () => {
     const testRecord = new TestModel({
-      issuedTo: generateIssuedTo( true, false, false ),
+      issuedTo: generateIssuedTo(true, false, false),
       _schemaName: 'Schema',
       issuingAgency: 'AGENCY_ENV_BCPARKS'
     });
@@ -76,7 +76,7 @@ describe('Record Individual issuedTo redaction test', () => {
 
   test('Unauthorized issuing agency and person over 19 are redacted', async () => {
     const testRecord = new TestModel({
-      issuedTo: generateIssuedTo( false, true, false ),
+      issuedTo: generateIssuedTo(false, true, false),
       _schemaName: 'Schema',
       issuingAgency: 'Unauthorized'
     });
@@ -92,11 +92,10 @@ describe('Record Individual issuedTo redaction test', () => {
 
   test('Unauthorized issuing agency and person under 19 are redacted', async () => {
     const testRecord = new TestModel({
-      issuedTo: generateIssuedTo( true, false, false ),
+      issuedTo: generateIssuedTo(true, false, false),
       _schemaName: 'Schema',
       issuingAgency: 'Unauthorized'
     });
-
 
     await nrptiCollection.insertOne(testRecord);
     await redactedRecordSubset.saveOneRecord(testRecord);
@@ -109,7 +108,7 @@ describe('Record Individual issuedTo redaction test', () => {
 
   test('Unauthorized issuing agency and company are not redacted', async () => {
     const testRecord = new TestModel({
-      issuedTo: generateIssuedTo( false, false, true ),
+      issuedTo: generateIssuedTo(false, false, true),
       _schemaName: 'Schema',
       issuingAgency: 'Unauthorized'
     });

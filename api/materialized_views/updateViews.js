@@ -4,7 +4,7 @@ const recordNameSubset = require('./search/recordNameSubset');
 const descriptionSummarySubset = require('./search/descriptionSummarySubset');
 const outcomeDescriptionSubset = require('./search/outcomeDescriptionSubset');
 
-let updateAllMaterializedViews = async function(defaultLog) {
+let updateAllMaterializedViews = async function (defaultLog) {
   await issedToSubset.update(defaultLog);
   await locationSubset.update(defaultLog);
   await recordNameSubset.update(defaultLog);

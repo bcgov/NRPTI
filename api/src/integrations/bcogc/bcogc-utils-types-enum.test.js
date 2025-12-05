@@ -1,15 +1,15 @@
 const BCOGC_UTILS_TYPES = require('./bcogc-utils-types-enum');
 
 const mockAuthPayload = 'authPayload';
-const mockCSVRow = { 
-    'Title': '123',
-    'author': 'AGENCY_OGC',
-    'issuingAgency': 'AGENCY_OGC',
-    'recordName': 'record name',
-    'Date Issued': '11-07-2023',
-    'Proponent': 'Proponent',
-    'Filename': 'Filename',
-    'File URL': 'File URL',
+const mockCSVRow = {
+  Title: '123',
+  author: 'AGENCY_OGC',
+  issuingAgency: 'AGENCY_OGC',
+  recordName: 'record name',
+  'Date Issued': '11-07-2023',
+  Proponent: 'Proponent',
+  Filename: 'Filename',
+  'File URL': 'File URL'
 };
 
 describe('BCOGC Utils Types Enum', () => {
@@ -36,7 +36,7 @@ describe('BCOGC Utils Types Enum', () => {
     expect(administrativePenaltyUtil.recordType.displayName).toBe('Administrative Penalty');
     expect(administrativePenaltyUtil.recordType.recordControllerName).toBe('administrativePenalties');
   });
-  
+
   it('should return Warning utility', () => {
     const warningUtil = BCOGC_UTILS_TYPES.Warning.getUtil(mockAuthPayload, mockCSVRow);
     expect(warningUtil).toBeDefined();

@@ -92,7 +92,7 @@ class CourtConvictions extends BaseRecordUtils {
           description: ''
         }
       ];
-      conviction['summary'] = 'Referred to Provincial Court as a disputed violation ticket.'
+      conviction['summary'] = 'Referred to Provincial Court as a disputed violation ticket.';
     } else {
       conviction['dateIssued'] = csvRow['final_decision_date'] || null;
       conviction['recordName'] = (csvRow['case_no'] && `Case Number ${csvRow['case_no']}`) || '';
